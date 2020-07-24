@@ -5,12 +5,12 @@ mod rotation_lambda;
 mod rotation_phi_gamma;
 mod rotation_identity;
 
-use crate::Transform;
-use rotation::Rotation;
-
 #[cfg(test)]
 mod tests {
   use super::*;
+
+  use crate::Transform;
+  use rotation::Rotation;
 
   fn in_delta_f64(actual: f64, expected: f64, delta: f64) -> bool {
     println!("expected actual delta {:?} {:?} {:?}", expected, actual, delta);

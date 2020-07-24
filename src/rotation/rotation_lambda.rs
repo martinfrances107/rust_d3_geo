@@ -24,6 +24,15 @@ where
   };
 }
 
+impl<T> RotationLambda<T>
+where
+  T: Float + FloatConst,
+{
+  pub fn new(delta_lambda: T) -> Self {
+    return Self { delta_lambda };
+  }
+}
+
 impl<T> Transform<T> for RotationLambda<T>
 where
   T: Float + FloatConst,

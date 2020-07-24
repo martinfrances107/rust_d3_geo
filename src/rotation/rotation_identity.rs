@@ -1,12 +1,12 @@
 use num_traits::Float;
 use num_traits::FloatConst;
-use std::f64::consts::PI;
 
 use crate::Transform;
-use crate::TransformIdentity;
 
 pub struct RotationIdentity {}
 
+// By design a stateless function.
+// TODO maybe add attributes to suggest inlining this where possible.
 fn normalise<T>(p: &[T; 2]) -> [T; 2]
 where
   T: Float + FloatConst,

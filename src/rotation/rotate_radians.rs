@@ -8,7 +8,7 @@ use super::rotation_lambda::RotationLambda;
 use super::rotation_identity::RotationIdentity;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
-pub fn rotate_radians<T>(delta_lambda_p: T, delta_phi: T, delta_gamma: T) -> Box<dyn Transform<T>>
+pub fn rotate_radians<T: 'static >(delta_lambda_p: T, delta_phi: T, delta_gamma: T) -> Box<dyn Transform<T>>
   where T: Float + FloatConst {
   let delta_lambda = delta_lambda_p % T::TAU();
   // Should I rotate by lambda, phi or gamma.
@@ -17,11 +17,11 @@ pub fn rotate_radians<T>(delta_lambda_p: T, delta_phi: T, delta_gamma: T) -> Box
   let by_gamma = !delta_gamma.is_zero();
 
   return match (by_lambda, by_gamma, by_phi) {
-    (true, true, true) | (true, true, false) | (true, false, true) => Box::new(Compose {
-      a: Box::new(RotationLambda { delta_lambda }),
-      b: Box::new(RotationPhiGamma::new(delta_phi, delta_gamma)),
-    }),
-    (true, false, false) =>  Box::new(RotationLambda { delta_lambda }),
+    (true, true, true) | (true, true, false) | (true, false, true) => Box::new(Compose::new(
+      Box::new(RotationLambda::new(delta_lambda)),
+      Box::new(RotationPhiGamma::new(delta_phi, delta_gamma)),
+    )),
+    (true, false, false) =>  Box::new(RotationLambda::new(delta_lambda)),
     (false, true, true) | (false, true, false) | (false, false, true) => {
       Box::new(RotationPhiGamma::new(delta_phi, delta_gamma))
     }
