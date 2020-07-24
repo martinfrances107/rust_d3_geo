@@ -117,6 +117,7 @@ where
   // Second, count the (signed) number of times a segment crosses a lambda
   // from the point to the South pole.  If it is zero, then the point is the
   // same side as the South pole.
+<<<<<<< HEAD
   let is_winding_odd;
   if winding & 1 == 1 {
     is_winding_odd = true;
@@ -129,4 +130,8 @@ where
   let ret = is_south_pole_inside ^ is_winding_odd;
 
   return ret;
+=======
+
+  return (angle < -epsilon || angle < epsilon && sum < -epsilon) ^ (winding & 1);
+>>>>>>> work in progress
 }

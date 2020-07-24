@@ -7,6 +7,9 @@ mod rotation_identity;
 
 #[cfg(test)]
 mod tests {
+  use crate::Transform;
+  use rotation::Rotation;
+
   use super::*;
 
   use crate::Transform;
