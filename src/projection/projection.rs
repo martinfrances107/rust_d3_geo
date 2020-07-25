@@ -70,6 +70,4 @@ impl Projection {
   //   return fitHeight(projection, height, object);
   // };
 
-
-
 }

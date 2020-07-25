@@ -1,10 +1,7 @@
 use num_traits::Float;
 use num_traits::FloatConst;
-use num_triats::FloatConst::FRAC_PI_2;
-use  crate::math::EPSILON;
-use  crate::math::HALFPI;
 
-use crate::projection::geo_stream::GeoStream;
+use crate::stream::GeoStream;
 
 pub mod antimeridian;
 
@@ -21,17 +18,17 @@ mod antimeridian_intersect;
 
 // alias ClipLineFn = Box<dyn Fn(sink: GeoStream)>;
 // alias ClipBufferFn = Box<dyn Fn(sink: GeoStream)>;
-type InterpolateFn = Box<dyn Fn(Option<f64>, Option<f64>, f64, dyn GeoStream)>;
+type InterpolateFn<T> = Box<dyn Fn(Option<T>, Option<T>, T, dyn GeoStream<T>)>;
 type PointVisibleFn = Box<dyn Fn(f64, f64) -> bool>;
-type ClipLineFn = Box<dyn Fn(dyn GeoStream)>;
+type ClipLineFn<T> = Box<dyn Fn(dyn GeoStream<T>)>;
 
 struct Clip<T> {
-  clip_line: ClipLineFn,
-  interpolate: InterpolateFn,
+  clip_line: ClipLineFn<T>,
+  interpolate: InterpolateFn<T>,
   start: Box<dyn Fn()>,
-  line: Box<dyn Fn(dyn GeoStream)>,
+  line: Box<dyn Fn(dyn GeoStream<T>)>,
   ring_buffer: Vec<[T;2]>,
-  ring_sink: Box<dyn GeoStream>,
+  ring_sink: Box<dyn GeoStream<T>>,
   polygon_started:bool,
 
   point: Box<dyn Fn()>,
@@ -185,9 +182,9 @@ struct Clip<T> {
 
 
 
-/// Intersections are sorted along the clip edge. For both antimeridian cutting
-/// and circle clipPIng, the same comparison is used.
+// Intersections are sorted along the clip edge. For both antimeridian cutting
+// and circle clipPIng, the same comparison is used.
 // fn compareIntersection<T>(a: [T;2], b:[T;2]) {
-//   return (if (a = a.x)[0] < T::zero() { a[1] - FRAC_PI_2 - EPSILON } : {FRAC_PI_2 - a[1]})
-//        - (if (b = b.x)[0] < T::zero() { b[1] - FRAC_PI_2 - EPSILON } : {FRAC_PI_2 - b[1]});
+//   return (if (a = a.x)[0] < T::zero() { a[1] - T::FRAC_PI_2() - T::epsilon() } : {T::FRAC_PI_2() - a[1]})
+//        - (if (b = b.x)[0] < T::zero() { b[1] - T::FRAC_PI_2() - T::epsilon() } : {T::FRAC_PI_2() - b[1]});
 // }

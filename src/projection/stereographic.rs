@@ -40,12 +40,12 @@ where
   }
 }
 
-pub fn stereographic<T>() -> GeoProjectionMutator<T>
-where T: Float{
+pub fn stereographic<T: 'static >() -> GeoProjectionMutator<T>
+where T: Float + FloatConst + FromPrimitive {
   let s = Box::new(StereographicRaw {});
   let mut projection = GeoProjectionMutator::from_projection_raw(s);
   projection.scale(T::from(250u8).unwrap());
-  projection.clip_angle(Some(142f64));
+  projection.clip_angle(Some(T::from_u8(142u8).unwrap()));
   return projection;
 }
 
@@ -53,18 +53,19 @@ where T: Float{
 mod tests {
   // Note this useful idiom: importing names from outer (for mod tests) scope.
   // use super::*;
+  use crate::projection::stereographic::stereographic;
 
-  // #[test]
-  // fn test_stereographic_unit() {
-  //   let s = StereographicRaw{};
+  #[test]
+  fn  test_stereographic_embedded() {
+    let stereo = stereographic();
 
-  //   assert_eq!(s.transform(&[  0f64,   0f64]), [ 0f64,  0f64]);
-  //   assert_eq!(s.transform(&[-90f64,   0f64]), [-1f64,  0f64]);
-  //   assert_eq!(s.transform(&[ 90f64,   0f64]), [ 1f64,  0f64]);
-  //   assert_eq!(s.transform(&[  0f64, -90f64]), [ 0f64,  1f64]);
-  //   assert_eq!(s.transform(&[  0f64,  90f64]), [ 0f64, -1f64]);
+    assert_eq!(stereo.projection.transform(&[  0f64,   0f64]), [ 0f64,  0f64]);
+    assert_eq!(stereo.projection.transform(&[-90f64,   0f64]), [-1f64,  0f64]);
+    assert_eq!(stereo.projection.transform(&[ 90f64,   0f64]), [ 1f64,  0f64]);
+    assert_eq!(stereo.projection.transform(&[  0f64, -90f64]), [ 0f64,  1f64]);
+    assert_eq!(stereo.projection.transform(&[  0f64,  90f64]), [ 0f64, -1f64]);
 
-  // }
+  }
 
   // #[test]
   // fn test_stereographic_embedded() {

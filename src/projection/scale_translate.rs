@@ -11,9 +11,16 @@ pub struct ScaleTranslate<F> {
   sy: F,
 }
 
+<<<<<<< HEAD
 impl<F> ScaleTranslate<F> {
   pub fn new(k: F, dx: F, dy: F, sx: F, sy: F) -> Box<Self> {
     return Box::new(ScaleTranslate { k, dx, dy, sx, sy });
+=======
+impl<T: 'static > ScaleTranslate<T>
+where T: Float {
+  pub fn new(k: T, dx: T, dy: T, sx: T, sy: T) -> Box<dyn Transform<T>> {
+    return Box::new(ScaleTranslate{k, dx, dy, sx, sy});
+>>>>>>> On the road to getting projection, still a mess. For the first time steregraphic test run and fail.
   }
 }
 

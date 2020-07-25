@@ -5,19 +5,19 @@ use num_traits::FloatConst;
 
 
 use crate::compose::Compose;
-use crate::rotation::rotate_radians::rotate_radians;
 use crate::resample::Resample;
+use crate::rotation::rotate_radians::rotate_radians;
+use crate::stream::GeoStream;
 use crate::Transform;
 use crate::clip::antimeridian::ClipAntimeridianState;
 // use crate::clip::circle::Circle;
 
 use super::geo_projection::GeoProjection;
-use super::geo_stream::GeoStream;
 use super::scale_translate::ScaleTranslate;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 
 pub struct GeoProjectionMutator<T>
-where T: Float {
+where T: Float + FromPrimitive{
   pub projection: Box<dyn Transform<T>>,
   k: T, // scale
   x: T,
@@ -32,8 +32,8 @@ where T: Float {
   sx: T,                            // reflectX
   sy: T,                            // reflectY
   theta: Option<T>,
-  preclip: Option<Box<dyn Fn(dyn GeoStream)>>,
-  postclip: Option<Box<dyn Fn(dyn GeoStream)>>,
+  preclip: Option<Box<dyn Fn(dyn GeoStream<T>)>>,
+  postclip: Option<Box<dyn Fn(dyn GeoStream<T>)>>,
   clip_antimeridian: Option<Box<dyn Transform<T>>>,
   x0: Option<T>,
   y0: Option<T>,
@@ -43,10 +43,10 @@ where T: Float {
   project_resample: Option<Box<dyn Transform<T>>>,
   project_transform: Option<Box<dyn Transform<T>>>,
   project_rotate_transform: Option<Box<dyn Transform<T>>>,
-  cache_stream: Option<Box<dyn GeoStream>>,
+  cache_stream: Option<Box<dyn GeoStream<T>>>,
 }
 
-impl<T> GeoProjectionMutator<T>
+impl<T: 'static > GeoProjectionMutator<T>
 where T: Float + FromPrimitive {
   //TODO set project so recenter can use it.
   // self.project;
@@ -55,10 +55,10 @@ where T: Float + FromPrimitive {
     return GeoProjectionMutator {
       projection,
       // scale
-      k: T::from_u8(150).unwrap(),
+      k: T::from_u8(150u8).unwrap(),
       // translate
-      x: T::from_u8(480).unwrap(),
-      y: T::from_u8(250).unwrap(),
+      x: T::from_u16(480u16).unwrap(),
+      y: T::from_u16(250u16).unwrap(),
       // center
       lambda: T::zero(),
       phi: T::zero(),
@@ -132,7 +132,7 @@ where T: Float + FromPrimitive {
   }
 }
 
-impl<T> GeoProjection<T> for GeoProjectionMutator<T>
+impl<T: 'static> GeoProjection<T> for GeoProjectionMutator<T>
 where T: Float + FloatConst + FromPrimitive {
   // fn stream(stream: GeoProjection) {
   //   matach cacheStream{
@@ -151,7 +151,7 @@ where T: Float + FloatConst + FromPrimitive {
   //   return self.preclip;
   // }
 
-  fn preclip(&mut self, preclip: Option<Box<dyn GeoStream>>) {
+  fn preclip(&mut self, preclip: Option<Box<dyn GeoStream<T>>>) {
     // self.preclip = preclip;
     self.theta = None;
     return self.reset();
@@ -161,7 +161,7 @@ where T: Float + FloatConst + FromPrimitive {
   //   return self.postclip;
   // }
 
-  fn postclip(&mut self, postclip: Option<Box<dyn GeoStream>>) {
+  fn postclip(&mut self, postclip: Option<Box<dyn GeoStream<T>>>) {
     // self.postclip = postclip;
     self.theta = None;
     return self.reset();
@@ -173,8 +173,8 @@ where T: Float + FloatConst + FromPrimitive {
 
   /// TODO dynamic cast and unwrap - Must find a better way.
   fn center(&mut self, p: [T; 2]) {
-    self.lambda = (p[0] % T::from_u8(360).unwrap()).to_radians();
-    self.phi = (p[1] % T::from_u8(360).unwrap()).to_radians();
+    self.lambda = (p[0] % T::from_u16(360u16).unwrap()).to_radians();
+    self.phi = (p[1] % T::from_u16(360u16).unwrap()).to_radians();
     self.recenter();
   }
 
@@ -229,9 +229,9 @@ where T: Float + FloatConst + FromPrimitive {
   }
 }
 
-fn generate<T>(raw: Box<dyn Transform<T>>) -> GeoProjectionMutator<T>
-where T: Float {
-  let mut g = GeoProjectionMutator::from_projection_raw(raw);
+fn generate<T: 'static>(raw: Box<dyn Transform<T>>) -> GeoProjectionMutator<T>
+where T: Float + FloatConst + FromPrimitive {
+  let mut g = GeoProjectionMutator::<T>::from_projection_raw(raw);
   g.recenter();
   return g;
 }

@@ -1,5 +1,4 @@
-// use crate::Transform;
-use super::geo_stream::GeoStream;
+use crate::stream::GeoStream;
 
 pub trait GeoProjection<T> {
 
@@ -40,7 +39,7 @@ pub trait GeoProjection<T> {
   //  * @param preclip A spherical clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
   //  * Pre-clipPIng operates on spherical coordinates, in radians.
   //  */
-  fn preclip(&mut self, preclip: Option<Box<dyn GeoStream>>);
+  fn preclip(&mut self, preclip: Option<Box<dyn GeoStream<T>>>);
 
   // /**
   //  * Returns the current cartesian clipPIng function.
@@ -53,7 +52,7 @@ pub trait GeoProjection<T> {
   //  * @param postclip A cartesian clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
   //  * Post-clipPIng operates on planar coordinates, in PIxels.
   //  */
-  fn postclip(&mut self, postclip: Option<Box<dyn GeoStream>>);
+  fn postclip(&mut self, postclip: Option<Box<dyn GeoStream<T>>>);
 
   // /**
   //  * Returns the current clip angle which defaults to null.

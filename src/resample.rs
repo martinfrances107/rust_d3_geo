@@ -5,7 +5,7 @@ use num_traits::FloatConst;
 // use crate::math::EPSILON;
 use crate::Transform;
 
-use crate::projection::geo_stream::GeoStream;
+use crate::stream::GeoStream;
 
 // import {cartesian} from "../cartesian.js";
 // import {transformer} from "../transform.js";
@@ -71,16 +71,16 @@ impl<T> Resample<T> {
     };
   }
 
-  fn resample_line_to(self,x0:T, y0:T, lambda0:T, a0:T, b0:T, c0:T, x1:T, y1:T, lambda1:T, a1:T, b1:T, c1:T, depth_p:u8, stream: Box<dyn GeoStream>)
+  fn resample_line_to(self,x0:T, y0:T, lambda0:T, a0:T, b0:T, c0:T, x1:T, y1:T, lambda1:T, a1:T, b1:T, c1:T, depth_p:u8, stream: Box<dyn GeoStream::<T>>)
   where T: Float + FloatConst {
     let mut depth = depth_p;
     let dx = x1 - x0;
     let dy = y1 - y0;
     let d2 = dx * dx + dy * dy;
-    let Float_4 = T::from(4u8).unwrap();
-    let Float_2 = T::from(2u8).unwrap();
+    let float_4 = T::from(4u8).unwrap();
+    let float_2 = T::from(2u8).unwrap();
     // if (d2 > 4 * delta2 && depth--) {
-    if d2 > Float_4 * self.delta2  {
+    if d2 > float_4 * self.delta2  {
       depth = depth - 1u8;
       if depth > 0u8 {
         let mut a = a0 + a1;
@@ -89,11 +89,15 @@ impl<T> Resample<T> {
         let m:T = (a * a + b * b + c * c).sqrt();
         c = c / m;
         let phi2 = c.asin();
-        let lambda2 = match ((c.abs() - T::one()).abs() < Float::epsilon(), (lambda0 - lambda1).abs() < Float::epsilon()) {
-          (true, _) | (_, true)   => {(lambda0 + lambda1) / Float_2},
+        let lambda2 = match ((c.abs() - T::one()).abs() < Float::epsilon(), (lambda0 - lambda1).abs() < T::epsilon()) {
+          (true, _) | (_, true)   => {(lambda0 + lambda1) / float_2},
           (false, false) => {b.atan2(a)}
         };
-        //  let lambda2 = abs(abs(c) - 1) < EPSILON || abs(lambda0 - lambda1) < EPSILON ? (lambda0 + lambda1) / 2 : b.atan2(a),
+        let f_2 = T::from(2u8).unwrap();
+        let lambda2 = match  (c.abs() - T::one()).abs() < T::epsilon() || (lambda0 - lambda1).abs() < T::epsilon() {
+          true =>  (lambda0 + lambda1) / f_2,
+          false =>  b.atan2(a),
+        };
         let p = self.project.transform(&[lambda2, phi2]);
         let x2 = p[0];
         let y2 = p[1];
@@ -105,10 +109,10 @@ impl<T> Resample<T> {
         // midpoint close to an end
         // angular distance
         // TODO must find a way to make this constants static
-        let Float_1_2 = T::from(0.5f64).unwrap();
-        let Float_1_3 = T::from(0.3f64).unwrap();
+        let float_1_2 = T::from(0.5f64).unwrap();
+        let float_1_3 = T::from(0.3f64).unwrap();
         if dz * dz / d2 > self.delta2 ||
-           ((dx * dx2 + dy * dy2) / d2 - Float_1_2).abs() > Float_1_3 ||
+           ((dx * dx2 + dy * dy2) / d2 - float_1_2).abs() > float_1_3 ||
            a0 * a1 + b0 * b1 + c0 * c1 < self.cos_min_distance {
           a = a / m;
           b = b /m;
