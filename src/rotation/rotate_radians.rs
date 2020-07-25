@@ -8,9 +8,9 @@ use super::rotation_lambda::RotationLambda;
 use super::rotation_identity::RotationIdentity;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
-pub fn rotate_radians<T: 'static >(delta_lambda_p: T, delta_phi: T, delta_gamma: T) -> Box<dyn Transform<T>>
-  where T: Float + FloatConst {
-  let delta_lambda = delta_lambda_p % T::TAU();
+pub fn rotate_radians<F: 'static >(delta_lambda_p: F, delta_phi: F, delta_gamma: F) -> Box<dyn Transform<F>>
+  where F: Float + FloatConst {
+  let delta_lambda = delta_lambda_p % F::TAU();
   // Should I rotate by lambda, phi or gamma.
   let by_lambda = !delta_lambda.is_zero();
   let by_phi = !delta_phi.is_zero();

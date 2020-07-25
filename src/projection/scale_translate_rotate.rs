@@ -2,27 +2,27 @@ use num_traits::Float;
 
 use crate::Transform;
 
-pub struct ScaleTranslateRotate<T>
+pub struct ScaleTranslateRotate<F>
 where
-  T: Float,
+  F: Float,
 {
-  a: T,
-  b: T,
-  ai: T,
-  bi: T,
-  ci: T,
-  fi: T,
-  dx: T,
-  dy: T,
-  sx: T,
-  sy: T,
+  a: F,
+  b: F,
+  ai: F,
+  bi: F,
+  ci: F,
+  fi: F,
+  dx: F,
+  dy: F,
+  sx: F,
+  sy: F,
 }
 
-impl<T> ScaleTranslateRotate<T>
+impl<F> ScaleTranslateRotate<F>
 where
-  T: Float,
+  F: Float,
 {
-  pub fn new(k: T, dx: T, dy: T, sx: T, sy: T, alpha: T) -> Box<Self> {
+  pub fn new(k: F, dx: F, dy: F, sx: F, sy: F, alpha: F) -> Box<Self> {
     let cos_alpha = alpha.cos();
     let sin_alpha = alpha.sin();
     return Box::new(ScaleTranslateRotate {
@@ -40,11 +40,11 @@ where
   }
 }
 
-impl<T> Transform<T> for ScaleTranslateRotate<T>
+impl<F> Transform<F> for ScaleTranslateRotate<F>
 where
-  T: Float,
+  F: Float,
 {
-  fn transform(&self, p: &[T; 2]) -> [T; 2] {
+  fn transform(&self, p: &[F; 2]) -> [F; 2] {
     let x = p[0] * self.sx;
     let y = p[1] * self.sy;
     return [
@@ -53,7 +53,7 @@ where
     ];
   }
 
-  fn invert(&self, p: &[T; 2]) -> [T; 2] {
+  fn invert(&self, p: &[F; 2]) -> [F; 2] {
     return [
       self.sx * (self.ai * p[0] - self.bi * p[1] + self.ci),
       self.sy * (self.fi - self.bi * p[0] - self.ai * p[1]),

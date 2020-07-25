@@ -3,44 +3,44 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
-pub struct RotationLambda<T>
+pub struct RotationLambda<F>
 where
-  T: Float + FloatConst,
+  F: Float + FloatConst,
 {
-  pub delta_lambda: T,
+  pub delta_lambda: F,
 }
 
 // TODO why can't I #[inline] this.
-fn forward_rotation_lambda<T>(delta_lambda: T, p: &[T; 2]) -> [T; 2]
+fn forward_rotation_lambda<F>(delta_lambda: F, p: &[F; 2]) -> [F; 2]
 where
-  T: Float + FloatConst,
+  F: Float + FloatConst,
 {
   let lambda = p[0] + delta_lambda;
   let phi = p[1];
-  return match (lambda > T::PI(), lambda < -T::PI()) {
+  return match (lambda > F::PI(), lambda < -F::PI()) {
     (false, false) => [lambda, phi],       // -PI <= lambda <= PI
-    (true, _) => [lambda - T::TAU(), phi], // lambda >  PI
-    (_, true) => [lambda + T::TAU(), phi], // lambda < -PI
+    (true, _) => [lambda - F::TAU(), phi], // lambda >  PI
+    (_, true) => [lambda + F::TAU(), phi], // lambda < -PI
   };
 }
 
-impl<T> RotationLambda<T>
+impl<F> RotationLambda<F>
 where
-  T: Float + FloatConst,
+  F: Float + FloatConst,
 {
-  pub fn new(delta_lambda: T) -> Self {
+  pub fn new(delta_lambda: F) -> Self {
     return Self { delta_lambda };
   }
 }
 
-impl<T> Transform<T> for RotationLambda<T>
+impl<F> Transform<F> for RotationLambda<F>
 where
-  T: Float + FloatConst,
+  F: Float + FloatConst,
 {
-  fn transform(&self, coordinates: &[T; 2]) -> [T; 2] {
+  fn transform(&self, coordinates: &[F; 2]) -> [F; 2] {
     return forward_rotation_lambda(self.delta_lambda, coordinates);
   }
-  fn invert(&self, coordinates: &[T; 2]) -> [T; 2] {
+  fn invert(&self, coordinates: &[F; 2]) -> [F; 2] {
     return forward_rotation_lambda(-self.delta_lambda, coordinates);
   }
 }

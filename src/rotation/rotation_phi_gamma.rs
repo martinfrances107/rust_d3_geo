@@ -3,21 +3,21 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
-pub struct RotationPhiGamma<T>
+pub struct RotationPhiGamma<F>
 where
-  T: Float + FloatConst,
+  F: Float + FloatConst,
 {
-  cos_delta_phi: T,
-  sin_delta_phi: T,
-  cos_delta_gamma: T,
-  sin_delta_gamma: T,
+  cos_delta_phi: F,
+  sin_delta_phi: F,
+  cos_delta_gamma: F,
+  sin_delta_gamma: F,
 }
 
-impl<T> RotationPhiGamma<T>
+impl<F> RotationPhiGamma<F>
 where
-  T: Float + FloatConst,
+  F: Float + FloatConst,
 {
-  pub fn new(delta_phi: T, delta_gamma: T) -> Self {
+  pub fn new(delta_phi: F, delta_gamma: F) -> Self {
     return Self {
       cos_delta_phi: delta_phi.cos(),
       sin_delta_phi: delta_phi.sin(),
@@ -27,11 +27,11 @@ where
   }
 }
 
-impl<T> Transform<T> for RotationPhiGamma<T>
+impl<F> Transform<F> for RotationPhiGamma<F>
 where
-  T: Float + FloatConst,
+  F: Float + FloatConst,
 {
-  fn transform(&self, p: &[T; 2]) -> [T; 2] {
+  fn transform(&self, p: &[F; 2]) -> [F; 2] {
     let lambda = p[0];
     let phi = p[1];
 
@@ -48,7 +48,7 @@ where
     ];
   }
 
-  fn invert(&self, p: &[T; 2]) -> [T; 2] {
+  fn invert(&self, p: &[F; 2]) -> [F; 2] {
     let lambda = p[0];
     let phi = p[1];
 

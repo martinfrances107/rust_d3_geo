@@ -7,28 +7,28 @@ pub struct RotationIdentity {}
 
 // By design a stateless function.
 // TODO maybe add attributes to suggest inlining this where possible.
-fn normalise<T>(p: &[T; 2]) -> [T; 2]
+fn normalise<F>(p: &[F; 2]) -> [F; 2]
 where
-  T: Float + FloatConst,
+  F: Float + FloatConst,
 {
   let lambda = p[0];
   let phi = p[1];
 
-  return match lambda.abs() > T::PI() {
-    true => [lambda + (-lambda / T::TAU()).round() * T::TAU(), phi],
+  return match lambda.abs() > F::PI() {
+    true => [lambda + (-lambda / F::TAU()).round() * F::TAU(), phi],
     false => [lambda, phi],
   };
 }
 
-impl<T> Transform<T> for RotationIdentity
+impl<F> Transform<F> for RotationIdentity
 where
-  T: Float + FloatConst,
+  F: Float + FloatConst,
 {
-  fn transform(&self, p: &[T; 2]) -> [T; 2] {
+  fn transform(&self, p: &[F; 2]) -> [F; 2] {
     return normalise(p);
   }
 
-  fn invert(&self, p: &[T; 2]) -> [T; 2] {
+  fn invert(&self, p: &[F; 2]) -> [F; 2] {
     return normalise(p);
   }
 }
