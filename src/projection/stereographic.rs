@@ -19,7 +19,7 @@ struct StereographicRaw {}
 
 impl<T> Transform<T> for StereographicRaw
 where
-  T: Float,
+  T: Float + FromPrimitive + FloatConst,
 {
   fn transform(&self, &p: &[T; 2]) -> [T; 2] {
     let x = p[0];
@@ -40,10 +40,11 @@ where
   }
 }
 
-pub fn stereographic<T>() -> GeoProjectionMutator<T> {
+pub fn stereographic<T>() -> GeoProjectionMutator<T>
+where T: Float{
   let s = Box::new(StereographicRaw {});
   let mut projection = GeoProjectionMutator::from_projection_raw(s);
-  projection.scale(250f64);
+  projection.scale(T::from(250u8).unwrap());
   projection.clip_angle(Some(142f64));
   return projection;
 }

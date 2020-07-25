@@ -3,6 +3,7 @@ use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
+
 use crate::compose::Compose;
 use crate::rotation::rotate_radians::rotate_radians;
 use crate::resample::Resample;
@@ -15,7 +16,8 @@ use super::geo_stream::GeoStream;
 use super::scale_translate::ScaleTranslate;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 
-pub struct GeoProjectionMutator<T> {
+pub struct GeoProjectionMutator<T>
+where T: Float {
   pub projection: Box<dyn Transform<T>>,
   k: T, // scale
   x: T,
@@ -48,7 +50,8 @@ impl<T> GeoProjectionMutator<T>
 where T: Float + FromPrimitive {
   //TODO set project so recenter can use it.
   // self.project;
-  pub fn from_projection_raw(projection: Box<dyn Transform<T>>) -> GeoProjectionMutator<T> {
+  pub fn from_projection_raw(projection: Box<dyn Transform<T>>) -> GeoProjectionMutator<T>
+  where T: Float + FromPrimitive {
     return GeoProjectionMutator {
       projection,
       // scale
@@ -74,7 +77,7 @@ where T: Float + FromPrimitive {
       y0: None,
       x1: None,
       y1: None,       //postclip = identity, // post-clip extent
-      delta2: 0.5f64, // precision
+      delta2: T::from(0.5f64).unwrap(), // precision
       project_resample: None,
       project_transform: None,
       project_rotate_transform: None,
@@ -129,8 +132,8 @@ where T: Float + FromPrimitive {
   }
 }
 
-impl<T> GeoProjection for GeoProjectionMutator<T>
-where T: Float + FromPrimitive {
+impl<T> GeoProjection<T> for GeoProjectionMutator<T>
+where T: Float + FloatConst + FromPrimitive {
   // fn stream(stream: GeoProjection) {
   //   matach cacheStream{
   //     Some(Cache::Stream) => {
@@ -168,9 +171,10 @@ where T: Float + FromPrimitive {
     return [self.lambda.to_degrees(), self.phi.to_degrees()];
   }
 
+  /// TODO dynamic cast and unwrap - Must find a better way.
   fn center(&mut self, p: [T; 2]) {
-    self.lambda = p[0] % 360f64 * RADIANS;
-    self.phi = p[1] % 360f64 * RADIANS;
+    self.lambda = (p[0] % T::from_u8(360).unwrap()).to_radians();
+    self.phi = (p[1] % T::from_u8(360).unwrap()).to_radians();
     self.recenter();
   }
 
@@ -210,7 +214,8 @@ where T: Float + FromPrimitive {
   }
 
   fn scale(&mut self, scale: T) {
-    self.k += scale;
+    // self.k += scale;
+    self.k = self.k + scale;
   }
 
   fn get_translation(&self) -> [T; 2] {
@@ -218,13 +223,14 @@ where T: Float + FromPrimitive {
   }
 
   fn translate(&mut self, t: [T; 2]) {
-    self.x += t[0];
-    self.y += t[1];
+    self.x = self.x +  t[0];
+    self.y = self.y +  t[1];
     self.recenter();
   }
 }
 
-fn generate<T>(raw: Box<dyn Transform<T>>) -> GeoProjectionMutator<T> {
+fn generate<T>(raw: Box<dyn Transform<T>>) -> GeoProjectionMutator<T>
+where T: Float {
   let mut g = GeoProjectionMutator::from_projection_raw(raw);
   g.recenter();
   return g;

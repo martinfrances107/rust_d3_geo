@@ -1,5 +1,4 @@
 use num_traits::Float;
-use num_traits::FloatConst;
 
 use crate::Transform;
 
