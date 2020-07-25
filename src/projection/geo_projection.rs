@@ -1,6 +1,6 @@
 use crate::stream::GeoStream;
 
-pub trait GeoProjection<T> {
+pub trait GeoProjection<F> {
 
   // /**
   //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
@@ -14,7 +14,7 @@ pub trait GeoProjection<T> {
   // /**
   //  * Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
   //  */
-  fn get_center(&self) -> [T;2];
+  fn get_center(&self) -> [F;2];
 
   // /**
   //  * Sets the projection’s center to the specified center,
@@ -23,7 +23,7 @@ pub trait GeoProjection<T> {
   //  *
   //  * @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
   //  */
-  fn center(&mut self, point: [T;2]);
+  fn center(&mut self, point: [F;2]);
 
   // /**
   //  * Returns the current spherical clipPIng function.
@@ -39,7 +39,7 @@ pub trait GeoProjection<T> {
   //  * @param preclip A spherical clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
   //  * Pre-clipPIng operates on spherical coordinates, in radians.
   //  */
-  fn preclip(&mut self, preclip: Option<Box<dyn GeoStream<T>>>);
+  fn preclip(&mut self, preclip: Option<Box<dyn GeoStream<F>>>);
 
   // /**
   //  * Returns the current cartesian clipPIng function.
@@ -52,14 +52,14 @@ pub trait GeoProjection<T> {
   //  * @param postclip A cartesian clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
   //  * Post-clipPIng operates on planar coordinates, in PIxels.
   //  */
-  fn postclip(&mut self, postclip: Option<Box<dyn GeoStream<T>>>);
+  fn postclip(&mut self, postclip: Option<Box<dyn GeoStream<F>>>);
 
   // /**
   //  * Returns the current clip angle which defaults to null.
   //  *
   //  * null switches to antimeridian cutting rather than small-circle clipPIng.
   //  */
-  fn get_clip_angle(&self)-> Option<T>;
+  fn get_clip_angle(&self)-> Option<F>;
 
   // /**
   //  * Switches to antimeridian cutting rather than small-circle clipPIng.
@@ -67,7 +67,7 @@ pub trait GeoProjection<T> {
   //  *
   //  * @param angle Set to null to switch to antimeridian cutting.
   //  */
-  fn clip_angle(&mut self, angle:Option<T>);
+  fn clip_angle(&mut self, angle:Option<F>);
 
   // /**
   //  * Sets the projection’s clipPIng circle radius to the specified angle in degrees and returns the projection.
@@ -294,7 +294,7 @@ pub trait GeoProjection<T> {
   //  *
   //  * The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
   //  */
-  fn get_scale(&self) -> T;
+  fn get_scale(&self) -> F;
 
   // /**
   //  * Sets the projection’s scale factor to the specified value and returns the projection.
@@ -302,13 +302,13 @@ pub trait GeoProjection<T> {
   //  *
   //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
   //  */
-  fn scale(&mut self, scale: T);
+  fn scale(&mut self, scale: F);
 
   // /**
   //  * Returns the current translation offset which defaults to [480, 250] and places ⟨0°,0°⟩ at the center of a 960×500 area.
   //  * The translation offset determines the PIxel coordinates of the projection’s center.
   //  */
-  fn get_translation(&self) -> [T;2];
+  fn get_translation(&self) -> [F;2];
 
   // /**
   //  * Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
@@ -316,7 +316,7 @@ pub trait GeoProjection<T> {
   //  *
   //  * @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
   //  */
-  fn translate(&mut self, t:[T;2]);
+  fn translate(&mut self, t:[F;2]);
 
 }
 

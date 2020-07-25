@@ -8,28 +8,28 @@ use super::geo_projection::GeoProjection;
 use super::geo_projection_mutator::GeoProjectionMutator;
 
 // TODO must find a standard way to multiply by 2
-fn angle<T>(z: T) -> T
+fn angle<F>(z: F) -> F
 where
-  T: Float + FromPrimitive,
+  F: Float + FromPrimitive,
 {
-  return T::from_u8(2u8).unwrap() * z.atan();
+  return F::from_u8(2u8).unwrap() * z.atan();
 }
 
 struct StereographicRaw {}
 
-impl<T> Transform<T> for StereographicRaw
+impl<F> Transform<F> for StereographicRaw
 where
-  T: Float + FromPrimitive + FloatConst,
+  F: Float + FromPrimitive + FloatConst,
 {
-  fn transform(&self, &p: &[T; 2]) -> [T; 2] {
+  fn transform(&self, &p: &[F; 2]) -> [F; 2] {
     let x = p[0];
     let y = p[1];
     let cy = y.cos();
-    let k = T::one() + x.cos() * cy;
+    let k = F::one() + x.cos() * cy;
     return [cy * x.sin() / k, y.sin() / k];
   }
 
-  fn invert(&self, p: &[T; 2]) -> [T; 2] {
+  fn invert(&self, p: &[F; 2]) -> [F; 2] {
     let x = p[0];
     let y = p[1];
     let z = (x * x + y * y).sqrt();
@@ -40,12 +40,12 @@ where
   }
 }
 
-pub fn stereographic<T: 'static >() -> GeoProjectionMutator<T>
-where T: Float + FloatConst + FromPrimitive {
+pub fn stereographic<F: 'static >() -> GeoProjectionMutator<F>
+where F: Float + FloatConst + FromPrimitive {
   let s = Box::new(StereographicRaw {});
   let mut projection = GeoProjectionMutator::from_projection_raw(s);
-  projection.scale(T::from(250u8).unwrap());
-  projection.clip_angle(Some(T::from_u8(142u8).unwrap()));
+  projection.scale(F::from(250u8).unwrap());
+  projection.clip_angle(Some(F::from_u8(142u8).unwrap()));
   return projection;
 }
 

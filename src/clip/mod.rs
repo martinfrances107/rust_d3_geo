@@ -18,24 +18,24 @@ mod antimeridian_intersect;
 
 // alias ClipLineFn = Box<dyn Fn(sink: GeoStream)>;
 // alias ClipBufferFn = Box<dyn Fn(sink: GeoStream)>;
-type InterpolateFn<T> = Box<dyn Fn(Option<T>, Option<T>, T, dyn GeoStream<T>)>;
+type InterpolateFn<F> = Box<dyn Fn(Option<F>, Option<F>, F, dyn GeoStream<F>)>;
 type PointVisibleFn = Box<dyn Fn(f64, f64) -> bool>;
-type ClipLineFn<T> = Box<dyn Fn(dyn GeoStream<T>)>;
+type ClipLineFn<F> = Box<dyn Fn(dyn GeoStream<F>)>;
 
-struct Clip<T> {
-  clip_line: ClipLineFn<T>,
-  interpolate: InterpolateFn<T>,
+struct Clip<F> {
+  clip_line: ClipLineFn<F>,
+  interpolate: InterpolateFn<F>,
   start: Box<dyn Fn()>,
-  line: Box<dyn Fn(dyn GeoStream<T>)>,
-  ring_buffer: Vec<[T;2]>,
-  ring_sink: Box<dyn GeoStream<T>>,
+  line: Box<dyn Fn(dyn GeoStream<F>)>,
+  ring_buffer: Vec<[F;2]>,
+  ring_sink: Box<dyn GeoStream<F>>,
   polygon_started:bool,
 
   point: Box<dyn Fn()>,
   point_visible: PointVisibleFn,
-  polygon: Vec<[T;2]>,
-  segments: Vec<[T;2]>,
-  ring: Vec<[T;2]>,
+  polygon: Vec<[F;2]>,
+  segments: Vec<[F;2]>,
+  ring: Vec<[F;2]>,
 }
 
 // impl Clip {
@@ -184,7 +184,7 @@ struct Clip<T> {
 
 // Intersections are sorted along the clip edge. For both antimeridian cutting
 // and circle clipPIng, the same comparison is used.
-// fn compareIntersection<T>(a: [T;2], b:[T;2]) {
-//   return (if (a = a.x)[0] < T::zero() { a[1] - T::FRAC_PI_2() - T::epsilon() } : {T::FRAC_PI_2() - a[1]})
-//        - (if (b = b.x)[0] < T::zero() { b[1] - T::FRAC_PI_2() - T::epsilon() } : {T::FRAC_PI_2() - b[1]});
+// fn compareIntersection<F>(a: [F;2], b:[F;2]) {
+//   return (if (a = a.x)[0] < F::zero() { a[1] - F::FRAC_PI_2() - F::epsilon() } : {F::FRAC_PI_2() - a[1]})
+//        - (if (b = b.x)[0] < F::zero() { b[1] - F::FRAC_PI_2() - F::epsilon() } : {F::FRAC_PI_2() - b[1]});
 // }

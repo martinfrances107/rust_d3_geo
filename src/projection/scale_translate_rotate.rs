@@ -1,11 +1,9 @@
 use num_traits::Float;
 
 use crate::Transform;
-use super::scale_translate::ScaleTranslate;
 
 #[derive(Debug)]
 pub struct ScaleTranslateRotate<F>
-
 where
   F: Float,
 {

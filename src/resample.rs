@@ -25,76 +25,76 @@ const MAXDEPTH:u8 = 16u8; // maximum depth of subdivision
 //   });
 // }
 
-pub struct Resample<T> {
-  project: Box<dyn Transform<T>>,
-  delta2: T,
+pub struct Resample<F> {
+  project: Box<dyn Transform<F>>,
+  delta2: F,
 
-  lambda00:T,
-  x00:T,
-  y00:T,
-  a00:T,
-  b00:T,
-  c00:T, // first point
+  lambda00:F,
+  x00:F,
+  y00:F,
+  a00:F,
+  b00:F,
+  c00:F, // first point
 
-  lambda0:T,
-  x0:T,
-  y0:T,
-  a0:T,
-  b0:T,
-  c0:T, // previous point
+  lambda0:F,
+  x0:F,
+  y0:F,
+  a0:F,
+  b0:F,
+  c0:F, // previous point
 
-  cos_min_distance: T,
+  cos_min_distance: F,
 
 }
 
-impl<T> Resample<T> {
-  pub fn new(project:Box<dyn Transform<T>>, delta2: T) -> Self
-  where T: Float + FromPrimitive + FloatConst{
+impl<F> Resample<F> {
+  pub fn new(project:Box<dyn Transform<F>>, delta2: F) -> Self
+  where F: Float + FromPrimitive + FloatConst{
     return Self{
       project,
       delta2,
 
-      lambda00:T::zero(),
-      x00:T::zero(),
-      y00:T::zero(),
-      a00:T::zero(),
-      b00:T::zero(),
-      c00:T::zero(), // first point
+      lambda00:F::zero(),
+      x00:F::zero(),
+      y00:F::zero(),
+      a00:F::zero(),
+      b00:F::zero(),
+      c00:F::zero(), // first point
 
-      lambda0:T::zero(),
-      x0:T::zero(),
-      y0:T::zero(),
-      a0:T::zero(),
-      b0:T::zero(),
-      c0:T::zero(), // previous point
-      cos_min_distance: (T::from(30u8).unwrap().to_radians()).cos() // cos(minimum angular distance)
+      lambda0:F::zero(),
+      x0:F::zero(),
+      y0:F::zero(),
+      a0:F::zero(),
+      b0:F::zero(),
+      c0:F::zero(), // previous point
+      cos_min_distance: (F::from(30u8).unwrap().to_radians()).cos() // cos(minimum angular distance)
     };
   }
 
-  fn resample_line_to(self,x0:T, y0:T, lambda0:T, a0:T, b0:T, c0:T, x1:T, y1:T, lambda1:T, a1:T, b1:T, c1:T, depth_p:u8, stream: Box<dyn GeoStream::<T>>)
-  where T: Float + FloatConst {
+  fn resample_line_to(self,x0:F, y0:F, lambda0:F, a0:F, b0:F, c0:F, x1:F, y1:F, lambda1:F, a1:F, b1:F, c1:F, depth_p:u8, stream: Box<dyn GeoStream::<F>>)
+  where F: Float + FloatConst {
     let mut depth = depth_p;
     let dx = x1 - x0;
     let dy = y1 - y0;
     let d2 = dx * dx + dy * dy;
-    let float_4 = T::from(4u8).unwrap();
-    let float_2 = T::from(2u8).unwrap();
+    let float_4 = F::from(4u8).unwrap();
+    let float_2 = F::from(2u8).unwrap();
     // if (d2 > 4 * delta2 && depth--) {
     if d2 > float_4 * self.delta2  {
       depth = depth - 1u8;
       if depth > 0u8 {
         let mut a = a0 + a1;
         let mut b = b0 + b1;
-        let mut c:T = c0 + c1;
-        let m:T = (a * a + b * b + c * c).sqrt();
+        let mut c:F = c0 + c1;
+        let m:F = (a * a + b * b + c * c).sqrt();
         c = c / m;
         let phi2 = c.asin();
-        let lambda2 = match ((c.abs() - T::one()).abs() < Float::epsilon(), (lambda0 - lambda1).abs() < T::epsilon()) {
+        let lambda2 = match ((c.abs() - F::one()).abs() < Float::epsilon(), (lambda0 - lambda1).abs() < F::epsilon()) {
           (true, _) | (_, true)   => {(lambda0 + lambda1) / float_2},
           (false, false) => {b.atan2(a)}
         };
-        let f_2 = T::from(2u8).unwrap();
-        let lambda2 = match  (c.abs() - T::one()).abs() < T::epsilon() || (lambda0 - lambda1).abs() < T::epsilon() {
+        let f_2 = F::from(2u8).unwrap();
+        let lambda2 = match  (c.abs() - F::one()).abs() < F::epsilon() || (lambda0 - lambda1).abs() < F::epsilon() {
           true =>  (lambda0 + lambda1) / f_2,
           false =>  b.atan2(a),
         };
@@ -109,8 +109,8 @@ impl<T> Resample<T> {
         // midpoint close to an end
         // angular distance
         // TODO must find a way to make this constants static
-        let float_1_2 = T::from(0.5f64).unwrap();
-        let float_1_3 = T::from(0.3f64).unwrap();
+        let float_1_2 = F::from(0.5f64).unwrap();
+        let float_1_3 = F::from(0.3f64).unwrap();
         if dz * dz / d2 > self.delta2 ||
            ((dx * dx2 + dy * dy2) / d2 - float_1_2).abs() > float_1_3 ||
            a0 * a1 + b0 * b1 + c0 * c1 < self.cos_min_distance {

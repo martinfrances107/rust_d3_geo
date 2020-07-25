@@ -4,36 +4,36 @@ use num_traits::FloatConst;
 
 use crate::stream::GeoStream;
 
-fn antimeridian_interpolate<T>(
-  from: Option<[T; 2]>,
-  to: [T; 2],
-  direction: T,
-  stream: &mut Box<dyn GeoStream<T>>,
+fn antimeridian_interpolate<F>(
+  from: Option<[F; 2]>,
+  to: [F; 2],
+  direction: F,
+  stream: &mut Box<dyn GeoStream<F>>,
 ) where
-  T: Float + FloatConst,
+  F: Float + FloatConst,
 {
-  let phi: T;
+  let phi: F;
   match from {
     None => {
       // phi = direction * HALFPI;
-      phi = direction * T::FRAC_PI_2();
-      stream.point(-T::PI(), phi);
-      stream.point(T::zero(), phi);
-      stream.point(T::PI(), phi);
-      stream.point(T::PI(), T::zero());
-      stream.point(T::PI(), -phi);
-      stream.point(T::zero(), -phi);
-      stream.point(-T::PI(), -phi);
-      stream.point(-T::PI(), T::zero());
-      stream.point(-T::PI(), phi);
+      phi = direction * F::FRAC_PI_2();
+      stream.point(-F::PI(), phi);
+      stream.point(F::zero(), phi);
+      stream.point(F::PI(), phi);
+      stream.point(F::PI(), F::zero());
+      stream.point(F::PI(), -phi);
+      stream.point(F::zero(), -phi);
+      stream.point(-F::PI(), -phi);
+      stream.point(-F::PI(), F::zero());
+      stream.point(-F::PI(), phi);
     }
-    Some(from) => match (from[0] - to[0]).abs() > T::epsilon() {
+    Some(from) => match (from[0] - to[0]).abs() > F::epsilon() {
       true => {
-        let lambda: T = if from[0] < to[0] { T::PI() } else { -T::PI() };
-        let f_2 = T::from(2u8).unwrap();
+        let lambda: F = if from[0] < to[0] { F::PI() } else { -F::PI() };
+        let f_2 = F::from(2u8).unwrap();
         phi = direction * lambda / f_2;
         stream.point(-lambda, phi);
-        stream.point(T::zero(), phi);
+        stream.point(F::zero(), phi);
         stream.point(lambda, phi);
       }
       false => {
