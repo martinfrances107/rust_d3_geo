@@ -1,4 +1,6 @@
-mod rotation;
+#[allow(unused_imports)]
+mod adder;
+mod cartesian;
 mod compose;
 mod cartesian;
 
