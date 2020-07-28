@@ -9,10 +9,11 @@ where
   F: Float + FloatConst,
 {
   pub delta_lambda: F,
+  pub neg_delta_lambda: F,
 }
 
 // TODO why can't I #[inline] this.
-fn forward_rotation_lambda<F>(delta_lambda: F, p: &[F; 2]) -> [F; 2]
+fn forward_rotation_lambda<'a, F>(delta_lambda: F, p: &'a [F; 2]) -> [F; 2]
 where
   F: Float + FloatConst,
 {
@@ -25,16 +26,18 @@ where
   };
 }
 
-impl<F> RotationLambda<F>
+impl<'a, F> RotationLambda<F>
 where
   F: Float + FloatConst,
 {
-  pub fn new(delta_lambda: F) -> Self {
-    return Self { delta_lambda };
+  pub fn new(delta_lambda_p: &'a F) -> Self {
+    let delta_lambda = *delta_lambda_p;
+    let neg_delta_lambda = -delta_lambda;
+    return Self { delta_lambda, neg_delta_lambda };
   }
 }
 
-impl<F> Transform<F> for RotationLambda<F>
+impl<'a, F> Transform<F> for RotationLambda<F>
 where
   F: Float + FloatConst,
 {
@@ -42,6 +45,10 @@ where
     return forward_rotation_lambda(self.delta_lambda, coordinates);
   }
   fn invert(&self, coordinates: &[F; 2]) -> [F; 2] {
-    return forward_rotation_lambda(-self.delta_lambda, coordinates);
+
+    // TODO must come back and optimise this.
+    return forward_rotation_lambda(self.neg_delta_lambda, coordinates);
+
   }
 }
+

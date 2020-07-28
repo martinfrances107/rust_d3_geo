@@ -17,7 +17,7 @@ impl<F> RotationPhiGamma<F>
 where
   F: Float + FloatConst,
 {
-  pub fn new(delta_phi: F, delta_gamma: F) -> Self {
+  pub fn new(delta_phi: &F, delta_gamma: &F) -> Self {
     return Self {
       cos_delta_phi: delta_phi.cos(),
       sin_delta_phi: delta_phi.sin(),

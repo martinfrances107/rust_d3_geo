@@ -4,7 +4,7 @@ use num_traits::FloatConst;
 
 use crate::stream::GeoStream;
 
-fn antimeridian_interpolate<F>(
+pub fn interpolate<F>(
   from: Option<[F; 2]>,
   to: [F; 2],
   direction: F,
@@ -42,27 +42,3 @@ fn antimeridian_interpolate<F>(
     },
   }
 }
-
-// function clipAntimeridianInterpolate(from, to, direction, stream) {
-//   var phi;
-//   if (from == null) {
-//     phi = direction * halfPI;
-//     stream.point(-PI, phi);
-//     stream.point(0, phi);
-//     stream.point(PI, phi);
-//     stream.point(PI, 0);
-//     stream.point(PI, -phi);
-//     stream.point(0, -phi);
-//     stream.point(-PI, -phi);
-//     stream.point(-PI, 0);
-//     stream.point(-PI, phi);
-//   } else if (abs(from[0] - to[0]) > EPSILON) {
-//     var lambda = from[0] < to[0] ? PI : -PI;
-//     phi = direction * lambda / 2;
-//     stream.point(-lambda, phi);
-//     stream.point(0, phi);
-//     stream.point(lambda, phi);
-//   } else {
-//     stream.point(to[0], to[1]);
-//   }
-// }

@@ -2,8 +2,8 @@ use num_traits::Float;
 
 use crate::Transform;
 
-#[derive(Debug)]
-pub struct ScaleTranslate<F> {
+pub struct ScaleTranslate<F>
+where F: Float {
   k: F,
   dx: F,
   dy: F,
@@ -11,9 +11,10 @@ pub struct ScaleTranslate<F> {
   sy: F,
 }
 
-impl<F> ScaleTranslate<F> {
-  pub fn new(k: F, dx: F, dy: F, sx: F, sy: F) -> Box<Self> {
-    return Box::new(ScaleTranslate { k, dx, dy, sx, sy });
+impl <'a, F: 'static >ScaleTranslate<F>
+where F: Float {
+  pub fn new(k: F, dx: F, dy: F, sx: F, sy: F) -> Box<dyn Transform<F>> {
+    return Box::new(ScaleTranslate::<F>{ k, dx, dy, sx, sy });
   }
 }
 

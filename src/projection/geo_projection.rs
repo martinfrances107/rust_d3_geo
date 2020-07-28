@@ -302,7 +302,7 @@ pub trait GeoProjection<F> {
   //  *
   //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
   //  */
-  fn scale(&mut self, scale: F);
+  fn scale(&mut self, scale: &F);
 
   // /**
   //  * Returns the current translation offset which defaults to [480, 250] and places ⟨0°,0°⟩ at the center of a 960×500 area.
@@ -316,7 +316,7 @@ pub trait GeoProjection<F> {
   //  *
   //  * @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
   //  */
-  fn translate(&mut self, t:[F;2]);
+  fn translate(&mut self, t: &[F;2]);
 
 }
 

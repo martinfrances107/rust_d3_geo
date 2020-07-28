@@ -1,8 +1,12 @@
+use num_traits::Float;
+use num_traits::FloatConst;
+
 // Define the default implementation of the trait.
 use crate::stream::GeoStream;
 
 /// Define the default implementation of the trait.
-pub trait TransformStream<F> {
+pub trait TransformStream<F>
+where F: Float {
   fn stream(&self) -> Box<dyn GeoStream<F>>;
   fn point(&mut self, x: F, y: F) { self.stream().point(x, y); }
   fn sphere(&self) { self.stream().sphere(); }

@@ -19,11 +19,14 @@ where
   sy: F,
 }
 
-impl<F> ScaleTranslateRotate<F>
+impl<'a, F: 'static> ScaleTranslateRotate<F>
 where
   F: Float,
 {
-  pub fn new(k: F, dx: F, dy: F, sx: F, sy: F, alpha: F) -> Box<Self> {
+  pub fn new(k: F, dx: F, dy: F, sx: F, sy: F, alpha: F) -> Box<dyn Transform<F>> {
+    if alpha.is_zero() {
+      return ScaleTranslate::new(k, dx, dy, sx, sy)
+    }
     let cos_alpha = alpha.cos();
     let sin_alpha = alpha.sin();
     return Box::new(ScaleTranslateRotate {

@@ -2,7 +2,7 @@ use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-pub fn antimeridian_intersect<F>(lambda0: F, phi0: F, lambda1: F, phi1: F) -> F
+pub fn intersect<F>(lambda0: F, phi0: F, lambda1: F, phi1: F) -> F
 where
   F: Float,
 {

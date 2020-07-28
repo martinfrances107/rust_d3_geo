@@ -4,7 +4,7 @@ use num_traits::FloatConst;
 
 use crate::stream::GeoStream;
 
-use super::antimeridian_intersect::antimeridian_intersect;
+use super::intersect::intersect;
 
 // import clip from "./index.js";
 
@@ -22,37 +22,33 @@ const NO_INTERSECTIONS: u8 = 1u8;
 // There were intersectoins and the first and last sections should be rejoined.
 const INTERSECTION_REJOIN: u8 = 2u8;
 
-pub trait ClipAntimeridian<F> {
-  fn line_start(&mut self);
-  fn point(&mut self, p: [F; 2]);
-  fn line_end(&mut self);
-  fn clean(&mut self) -> Option<u8>;
-}
+use crate::clip::ClipLineTrait;
 
-pub struct ClipAntimeridianState<F> {
+
+pub struct ClipAntimeridianLine<F> {
+  clean: Option<u8>,
   lambda0: F,
   phi0: F,
   sign0: F,
-  clean: Option<u8>,
-  stream: Box<dyn GeoStream<F>>,
+  stream: Box<dyn ClipLineTrait<F>>,
 }
 
-impl<F> ClipAntimeridianState<F>
+impl<F> ClipAntimeridianLine<F>
 where
   F: Float,
 {
-  fn new(stream: Box<dyn GeoStream<F>>) -> Self {
+  pub fn new(stream: Box<dyn ClipLineTrait<F>>) -> Self {
     return Self {
-      stream,
+      clean: None, // no intersections
       lambda0: F::nan(),
       phi0: F::nan(),
       sign0: F::nan(),
-      clean: None, // no intersections
+      stream,
     };
   }
 }
 
-impl<F> ClipAntimeridian<F> for ClipAntimeridianState<F>
+impl<F> ClipLineTrait<F> for ClipAntimeridianLine<F>
 where
   F: Float + FloatConst + FromPrimitive,
 {
@@ -61,9 +57,7 @@ where
     self.clean = Some(NO_INTERSECTIONS);
   }
 
-  fn point(&mut self, p: [F; 2]) {
-    let mut lambda1 = p[0];
-    let phi1 = p[1];
+  fn point(&mut self, lambda1: F, phi1: F) {
     let sign1 = match lambda1 > F::zero() {
       true => F::PI(),
       false => -F::PI(),
@@ -96,7 +90,7 @@ where
       if (lambda1 - sign1).abs() < F::epsilon() {
         lambda1 = lambda1 - sign1 * F::epsilon();
       }
-      self.phi0 = antimeridian_intersect(self.lambda0, self.phi0, lambda1, phi1);
+      self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
       self.stream.point(self.sign0, self.phi0);
       self.stream.line_end();
       //  self.stream.line_start();

@@ -1,134 +1,160 @@
 use num_traits::Float;
 use num_traits::FloatConst;
 
-use crate::stream::GeoStream;
-
 pub mod antimeridian;
+mod rejoin;
+mod buffer;
 
-mod antimeridian_interpolate;
-mod antimeridian_intersect;
+use crate::polygon_contains::polygon_contains;
+use super::stream::GeoStream;
 
-// import clipBuffer from "./buffer.js";
-// import clipRejoin from "./rejoin.js";
-// import {epsilon, halfPI} from "../math.js";
-// import polygonContains from "../polygonContains.js";
-// import {merge} from "d3-array";
+use buffer::ClipBuffer;
 
-// export default function(pointVisible, clipLine, interpolate, start) {
+use rejoin::rejoin;
 
-// alias ClipLineFn = Box<dyn Fn(sink: GeoStream)>;
-// alias ClipBufferFn = Box<dyn Fn(sink: GeoStream)>;
+pub trait ClipLineTrait<F> {
+  fn line_start(&mut self);
+  fn point(&mut self, lambda1_p : F, phi1: F);
+  fn line_end(&mut self);
+  fn clean(&mut self) -> Option<u8>;
+}
+
+// CompareIntersections param type!!!
+struct Ci<F>
+where F: Float {
+  x: [F;2],
+}
+
 type InterpolateFn<F> = Box<dyn Fn(Option<F>, Option<F>, F, dyn GeoStream<F>)>;
-type PointVisibleFn = Box<dyn Fn(f64, f64) -> bool>;
-type ClipLineFn<F> = Box<dyn Fn(dyn GeoStream<F>)>;
+type PointVisibleFn<F> = Box<dyn Fn(F, F) -> bool>;
+type ClipLineFn<F> = Box<dyn Fn(dyn ClipLineTrait<F>)>;
+type CompareIntersectionFn<F> = Box<dyn Fn(Ci<F>, Ci<F>) -> F>;
 
-struct Clip<F> {
+struct Clip<F>
+where F: Float {
   clip_line: ClipLineFn<F>,
   interpolate: InterpolateFn<F>,
-  start: Box<dyn Fn()>,
-  line: Box<dyn Fn(dyn GeoStream<F>)>,
-  ring_buffer: Vec<[F;2]>,
-  ring_sink: Box<dyn GeoStream<F>>,
-  polygon_started:bool,
 
-  point: Box<dyn Fn()>,
-  point_visible: PointVisibleFn,
-  polygon: Vec<[F;2]>,
-  segments: Vec<[F;2]>,
+  // point: Box<dyn Fn()>,
+  // point: [F;2],
+  point_visible: PointVisibleFn<F>,
+  polygon_started:bool,
+  polygon: Option<Vec<(F,F,bool)>>,
+  ring_buffer: Box<ClipBuffer<F>>,
+  ring_sink: Box<dyn ClipLineTrait<F>>,
+  segments: Option<Vec<(F,F,bool)>> ,
+  sink: Box<dyn GeoStream<F>>,
+  start: [F;2],
   ring: Vec<[F;2]>,
 }
 
-// impl Clip {
-//   fn new(point_visible: PointVisibleFn, clip_line: ClipLineFn, interpolate: InterpolateFn, start:f64) -> Self {
-//     return Self{
-//       interpolate,
-//       clip_line,
-//       // line: clipLine(sink:GeoStream),
-//       point_visible,
-//       polygon: None,
-//       // polygon_started:false,
-//       ring: Vec::new(),
-//       ring_buffer: clipBuffer(),
-//       ring_sink: clip_line(ringBuffer),
-//       segments: None,
-//     };
-//    }
+impl<F> Clip<F>
+where F: Float {
+  fn new(point_visible: PointVisibleFn<F>, clip_line: ClipLineFn<F>, interpolate: InterpolateFn<F>, start: [F;2], sink : Box<dyn GeoStream<F>>) -> Self {
+    let ring_buffer = Box::new(ClipBuffer::<F>::new());
+    return Self {
+      interpolate,
+      clip_line,
+      // line: clipLine(sink:GeoStream),
+      point_visible,
+      polygon: None,
+      polygon_started:false,
+      ring: Vec::new(),
+      ring_buffer: ring_buffer,
+      ring_sink: clip_line(ring_buffer),
+      segments: None,
+      sink,
+      start,
+    };
+  }
 
-//    fn validSegment(segment: &Vec<[f64;2]>) -> bool {
+  fn point(&mut self, lambda:F, phi:F) {
+    if (self.point_visible)(lambda, phi) {
+      self.sink.point(lambda, phi);
+    }
+  }
+
+  fn point_line(&mut self,lambda: F, phi:F) {
+    (*self.clip_line.point)(lambda, phi);
+  }
+
+  fn line_start(&mut self) {
+    self.clip.point = self.point_line;
+    self.line.line_start();
+  }
+
+  fn line_end(&mut self) {
+    self.clip.point = self.point;
+    self.line.line_end();
+  }
+
+
+
+  //    fn validSegment(segment: &Vec<[f64;2]>) -> bool {
 //     return segment.len() > 1;
 //   }
-// }
+}
 
-// impl GeoStream for Clip {
+impl<F> GeoStream<F> for Clip<F>
+where F: Float {
 
-//      fn point(&mut self, lambda:f64, phi:f64) {
-//        self.point(lambda, phi);
-//      }
+     fn point(&mut self, lambda:F, phi:F) {
+       self.point(lambda, phi);
+     }
 
-//      fn line_start(&mut self) {
-//       self.line_start();
-//      }
+     fn line_start(&mut self) {
+      self.line_start();
+     }
 
-//     fn line_end(&mut self) {
-//       self.line_end();
-//     }
+    fn line_end(&mut self) {
+      self.line_end();
+    }
 
-//     fn polygon_start(&mut self) {
-//       // self.point = pointRing;
-//       // self.lineStart = ringStart;
-//       // self.lineEnd = ringEnd;
-//       self.segments.clear();
-//       self.polygon.clear();
-//     }
+      fn polygon_start(&mut self) {
+        self.point = self.pointRing;
+        self.line_start = self.ringStart;
+        self.line_end = self.ringEnd;
 
-//     fn polygon_end(&mut self) {
-//         // point = point;
-//         // clip.lineStart = lineStart;
-//         // clip.lineEnd = lineEnd;
-//         // segments = merge(segments);
-//         let  startInside = polygon_contains(self.polygon, self.start);
-//         if self.segments.len() > 0 {
-//           if (!polygonStarted) self.sink.polygonStart(), self.polygonStarted = true;
-//           clipRejoin(segments, compareIntersection, startInside, interpolate, sink);
-//         } else if (start_inside) {
-//           if (!polygon_started) {
-//             self.sink.polygonStart();
-//             self.polygon_started = true;
-//           }
-//           sink.lineStart();
-//           self.interpolate(None, None, 1, sink);
-//           sink.lineEnd();
-//         }
-//         if (polygonStarted) sink.polygonEnd(), polygonStarted = false;
-//         segments = polygon = None;
-//       }
+        self.segments.clear();
+        self.polygon.clear();
+      }
 
-//     fn sphere(&mut self) {
-//         sink.polygonStart();
-//         sink.lineStart();
-//         self.interpolate(None, None, 1, sink);
-//         sink.lineEnd();
-//         sink.polygonEnd();
-//       }
-//     };
+    fn polygon_end(&mut self) {
+        // point = point;
+        // clip.lineStart = lineStart;
+        // clip.lineEnd = lineEnd;
+        // segments = merge(segments);
+        let  start_inside = polygon_contains(self.polygon, self.start);
+        if let Some(segments) = self.segments {
+          if !self.polygon_started {
+            self.sink.polygon_start();
+            self.polygon_started = true;
+          }
+          rejoin(segments, compare_intersection, start_inside, self.interpolate, self.sink);
+        } else if start_inside {
+          if !self.polygon_started {
+            self.sink.polygon_start();
+            self.polygon_started = true;
+          }
+          self.sink.line_start();
+          (self.interpolate)(None, None, F::one(), self.sink);
+          self.sink.line_end();
+        }
+        if self.polygon_started {
+          self.sink.polygon_end();
+          self.polygon_started = false;
+        }
+        self.segments = None;
+        self.polygon = None;
+      }
 
-//     fn point(&mut self, lambda:f64, phi:f64) {
-//       if (pointVisible(lambda, phi)) self.sink.point(lambda, phi);
-//     }
-
-//     fn point_line(&mut self,lambda: f64, phi:f64) {
-//       self.line.point(lambda, phi);
-//     }
-
-//     fn line_start(&mut self) {
-//       self.clip.point = pointLine;
-//       self.line.lineStart();
-//     }
-
-//     fn line_end(&mut self) {
-//       self.clip.point = point;
-//       self.line.lineEnd();
-//     }
+    fn sphere(&mut self) {
+        self.sink.polygon_start();
+        self.sink.line_start();
+        (self.interpolate)(None, None, F::one(), self.sink);
+        self.sink.line_end();
+        self.sink.polygon_end();
+      }
 
 //     // fn pointRing(&self,lambda: f64, phi: f64) {
 //     //   self.ring.push([lambda, phi]);
@@ -180,11 +206,31 @@ struct Clip<F> {
 //   }
 
 
+}
 
 
 // Intersections are sorted along the clip edge. For both antimeridian cutting
 // and circle clipPIng, the same comparison is used.
-// fn compareIntersection<F>(a: [F;2], b:[F;2]) {
-//   return (if (a = a.x)[0] < F::zero() { a[1] - F::FRAC_PI_2() - F::epsilon() } : {F::FRAC_PI_2() - a[1]})
-//        - (if (b = b.x)[0] < F::zero() { b[1] - F::FRAC_PI_2() - F::epsilon() } : {F::FRAC_PI_2() - b[1]});
+fn compare_intersection<F>(a: Ci<F>, b: Ci<F>) -> F
+where F: Float + FloatConst {
+  let a_dashed = a.x;
+  let part1 = match a_dashed[0] < F::zero() {
+    true => { a_dashed[1] - F::FRAC_PI_2() - F::epsilon()},
+    false => { F::FRAC_PI_2() - a_dashed[1] }
+  };
+  let b_dashed = b.x;
+  let part2 = match b_dashed[0] < F::zero() {
+    true => {b_dashed[1] - F::FRAC_PI_2() - F::epsilon()},
+    false => { F::FRAC_PI_2() - b_dashed[1] }
+  };
+
+  return part1 - part2;
+}
+
+
+// Intersections are sorted along the clip edge. For both antimeridian cutting
+// and circle clipping, the same comparison is used.
+// function compareIntersection(a, b) {
+//   return ((a = a.x)[0] < 0 ? a[1] - halfPi - epsilon : halfPi - a[1])
+//        - ((b = b.x)[0] < 0 ? b[1] - halfPi - epsilon : halfPi - b[1]);
 // }

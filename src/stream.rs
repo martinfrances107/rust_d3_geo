@@ -1,7 +1,7 @@
 use num_traits::Float;
 
 pub trait GeoStream<F>
-where F: Float {
+where F: Float {<<<<
   #[allow(unused_variables)]
   fn point(&mut self, x: F, y: F) {}
   fn sphere(&mut self) {}
