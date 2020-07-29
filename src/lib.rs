@@ -1,11 +1,12 @@
-#![allow(unused_variables)]
-#![allow(dead_code)]
-#![allow(unused_imports)]
+// #![allow(unused_variables)]
+// #![allow(dead_code)]
+// #![allow(unused_imports)]
 
 // mod adder;
 mod cartesian;
 mod circle;
 mod compose;
+mod polygon_contains;
 mod stream;
 
 /// Common to Projection, Rotation.
