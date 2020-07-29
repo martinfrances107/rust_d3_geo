@@ -1,5 +1,4 @@
 use num_traits::Float;
-use num_traits::FloatConst;
 
 pub trait GeoStream<F>
 where F: Float {

@@ -9,16 +9,23 @@ use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-// export default function() {
-//   return new Adder;
-// }
+static temp64: Adder<f64> = Adder::new();
+static temp32: Adder<f32> = Adder<f32>::new();
+// static tempF: Adder<F> = Adder<F>::new();
 
-// function Adder() {
-//   this.reset();
-// }
+
 pub struct Adder<F>{
   s: F,
   t: F,
+}
+
+fn add_local<F>(mut adder: Adder<F>, a: F, b: F)
+where F: Float{
+  let x = a+ b;
+  adder.s = a + b;
+  let bv = x - a;
+  let av = x - bv;
+  adder.t = (a - av) + (b - bv);
 }
 
 impl <F>Adder<F>
@@ -53,16 +60,9 @@ where F: Float + FloatConst + FromPrimitive {
 
 }
 
-static temp: Adder<F> = Adder::new();
+// static temp: Adder<f64> = Adder::new();
 
-pub fn add_local<F>(mut adder: Adder<F>, a: F, b: F)
-where F: Float{
-  let x = a+ b;
-  adder.s = a + b;
-  let bv = x - a;
-  let av = x - bv;
-  adder.t = (a - av) + (b - bv);
-}
+
 
 
 // export default function() {

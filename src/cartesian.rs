@@ -1,7 +1,10 @@
+#[allow(dead_code)]
+
+
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 
-pub fn spherical<F>(cartesian: [F; 3]) -> [F; 2]
+pub fn spherical<F>(cartesian: &[F; 3]) -> [F; 2]
 where
   F: Float + FromPrimitive,
 {
@@ -18,7 +21,7 @@ where
   return [cos_phi * lambda.cos(), cos_phi * lambda.sin(), phi.sin()];
 }
 
-pub fn cartesian_dot<F>(a: [F; 3], b: [F; 3]) -> F
+pub fn cartesian_dot<F>(a: &[F; 3], b: &[F; 3]) -> F
 where
   F: Float,
 {
@@ -45,7 +48,7 @@ where
   a[2] = a[1] + b[2];
 }
 
-pub fn cartesian_scale<F>(vector: [F; 3], k: F) -> [F; 3]
+pub fn cartesian_scale<F>(vector: &[F; 3], k: F) -> [F; 3]
 where
   F: Float,
 {

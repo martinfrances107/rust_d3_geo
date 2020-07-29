@@ -9,6 +9,8 @@ use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_normalize_in_place;
 
+use crate::circle::Circle;
+
 // import adder from "./adder.js";
 
 
@@ -42,7 +44,7 @@ where F: Float + FloatConst + FromPrimitive {
   let winding = 0i32;
 
   // New then reset is this needed.
-  sum.reset();
+  // sum.reset();
 
   if sinPhi == F::one() {
     phi = F::FRAC_PI_2() + F::epsilon();
@@ -86,8 +88,7 @@ where F: Float + FloatConst + FromPrimitive {
       let antimeridian = absDelta > F::PI();
       let k = sinPhi0 * sinPhi1;
 
-      sum.add(
-        (k * sign * absDelta.sin()).atan2(cosPhi0 * cosPhi1 + k * absDelta.cos()));
+      sum = k * sign * absDelta.sin()).atan2(cosPhi0 * cosPhi1 + k * absDelta.cos()) ;
       // angle += antimeridian ? delta + sign * TAU : delta;
       angle = angle + match antimeridian {
         true => { delta + sign * F::TAU() },
@@ -244,8 +245,6 @@ where F: Float + FloatConst + FromPrimitive {
 mod tests {
   use super::*;
 
-  // import geoCircle from "../src/circle.js";
-
   fn polygon_contains<F>(polygon: Vec::<[F;2]>, point: &[F;2]) -> bool
   where F: Float + FloatConst + FromPrimitive {
     return contains(polygon.iter().map(ring_radians), &point_radians(point));
@@ -372,7 +371,13 @@ mod tests {
 
 fn large_narrow_equatorialHole() {
   println!("geoPolygonContains(empty, point) returns false");
-  assert!(polygon_contains(Vec::new(), &[0f64, 0f64]), 0f64);
+  ring0 = circle::new();
+  let coord = ring0.radius(90 - 0.1).go();
+  ring0 = circle::new();
+  let coord = ring0.radius(90 + 0.1).go();
+  let polygon = vec!(ring1, ring2);
+  assert!(polygon_contains(polygon_contains(&polygon, &[0f64, 0f64]), false);
+  assert!(polygon_contains(polygon_contains(&polygon, &[0f64, -90f64]), true);
 }
 
 
