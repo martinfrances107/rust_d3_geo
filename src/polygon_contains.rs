@@ -248,13 +248,13 @@ mod tests {
 
   fn polygon_contains<F>(polygon: Vec::<[F;2]>, point: &[F;2]) -> bool
   where F: Float + FloatConst + FromPrimitive {
-    return contains(polygon.map(ring_radians), &point_radians(point));
+    return contains(polygon.iter().map(ring_radians), &point_radians(point));
   }
 
   #[test]
-  fn empty_return_false() {
+  fn polygon_contains_empty_return_false() {
     println!("geoPolygonContains(empty, point) returns false");
-    assert!(polygon_contains(Vec::new(), &[0f64, 0f64]), 0f64);
+    assert!(polygon_contains(Vec::new(), &[0f64, 0f64]), false);
   }
 
 // tape("geoPolygonContains(simple, point) returns the expected value", function(test) {
@@ -263,6 +263,15 @@ mod tests {
 //   test.equal(polygonContains(polygon, [0.1, 0.1]), 1);
 //   test.end();
 // });
+  #[test]
+  fn polygon_contains_simple() {
+  println!("geoPolygonContains(empty, point) returns false");
+  let polygon = vec!([0f64, 0f64], [0f64, 1f64], [1f64, 1f64], [1f64, 0f64], [0f64, 0f64]);
+  assert!(polygon_contains(polygon, &[0.1f64, 2f64]), false);
+  assert!(polygon_contains(polygon, &[0.1f64, 0.1f64]), true);
+  }
+
+
 
 // tape("geoPolygonContains(smallCircle, point) returns the expected value", function(test) {
 //   var polygon = geoCircle().radius(60)().coordinates;

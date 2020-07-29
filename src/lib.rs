@@ -1,8 +1,8 @@
 #[allow(unused_imports)]
 mod adder;
 mod cartesian;
+mod circle;
 mod compose;
-mod cartesian;
 
 /// Common to Projection, Rotation.
 pub trait Transform<F> {
