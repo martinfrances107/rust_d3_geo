@@ -8,9 +8,9 @@ pub mod cartesian;
 pub mod circle;
 /// polygon_contains has a integration test.
 pub mod polygon_contains;
+pub mod rotation;
 
 mod compose;
-mod rotation;
 mod stream;
 
 /// Common to Projection, Rotation.
