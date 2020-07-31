@@ -9,21 +9,23 @@ use crate::cartesian::cartesian_normalize_in_place;
 
 // import adder from "./adder.js";
 
-
 // var sum = adder();
 
-fn longitude<F>(point: &[F;2]) -> F
-where F: Float + FloatConst {
+fn longitude<F>(point: &[F; 2]) -> F
+where
+  F: Float + FloatConst,
+{
   if point[0].abs() <= F::PI() {
     return point[0];
-  }
-  else {
-    return point[0].signum() * ( (point[0] + F::PI()).abs() % F::TAU()-F::PI());
+  } else {
+    return point[0].signum() * ((point[0] + F::PI()).abs() % F::TAU() - F::PI());
   }
 }
 
-pub fn contains<F>(polygon: Vec<&Vec<[F;2]>>, point: &[F;2]) -> bool
-where F: Float + FloatConst + FromPrimitive {
+pub fn contains<F>(polygon: Vec<&Vec<[F; 2]>>, point: &[F; 2]) -> bool
+where
+  F: Float + FloatConst + FromPrimitive,
+{
   let lambda = longitude(point);
   let mut phi = point[1];
   let sin_phi = phi.sin();
@@ -38,8 +40,7 @@ where F: Float + FloatConst + FromPrimitive {
 
   if sin_phi == F::one() {
     phi = F::FRAC_PI_2() + F::epsilon();
-  }
-  else if sin_phi == -F::one() {
+  } else if sin_phi == -F::one() {
     phi = -F::FRAC_PI_2() - F::epsilon();
   }
 
@@ -51,7 +52,9 @@ where F: Float + FloatConst + FromPrimitive {
 
     ring = polygon_i;
     m = ring.len();
-    if polygon.is_empty() {continue};
+    if polygon.is_empty() {
+      continue;
+    };
 
     let mut point0 = *ring.last().unwrap();
     let mut lambda0 = longitude(&point0);
@@ -76,41 +79,38 @@ where F: Float + FloatConst + FromPrimitive {
       // sum.add(atan2(k * sign * sin(absDelta), cosPhi0 * cosPhi1 + k * cos(absDelta)));
       sum = sum + (k * sign * abs_delta.sin()).atan2(cos_phi0 * cos_phi1 + k * abs_delta.cos());
       // angle += antimeridian ? delta + sign * TAU : delta;
-      angle = angle + match antimeridian {
-        true => { delta + sign * F::TAU() },
-        false => { delta },
-      };
+      angle = angle
+        + match antimeridian {
+          true => delta + sign * F::TAU(),
+          false => delta,
+        };
 
       // Are the longitudes either side of the point’s meridian (lambda),
       // and are the latitudes smaller than the parallel (phi)?
       // if antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda {
-      if antimeridian ^ ( lambda0 >= lambda ) ^ ( lambda1 >= lambda )  {
+      if antimeridian ^ (lambda0 >= lambda) ^ (lambda1 >= lambda) {
         let mut arc = cartesian_cross(&cartesian(&point0), &cartesian(&point1));
         cartesian_normalize_in_place(&mut arc);
         let mut intersection = cartesian_cross(&normal, &arc);
         cartesian_normalize_in_place(&mut intersection);
 
-//         var phiArc = (antimeridian ^ delta >= 0 ? -1 : 1) * asin(intersection[2]);
+        //         var phiArc = (antimeridian ^ delta >= 0 ? -1 : 1) * asin(intersection[2]);
         let phi_arc: F;
-        if antimeridian ^ (delta >= F::zero() ) {
+        if antimeridian ^ (delta >= F::zero()) {
+          phi_arc = -intersection[2].asin();
+        } else {
           phi_arc = -intersection[2].asin();
         }
-        else {
-          phi_arc = -intersection[2].asin();
-        }
 
-
-//         if (phi > phiArc || phi === phiArc && (arc[0] || arc[1])) {
-//           winding += antimeridian ^ delta >= 0 ? 1 : -1;
-//         }
-
+        //         if (phi > phiArc || phi === phiArc && (arc[0] || arc[1])) {
+        //           winding += antimeridian ^ delta >= 0 ? 1 : -1;
+        //         }
 
         if phi > phi_arc || phi == phi_arc && (!arc[0].is_zero() || !arc[1].is_zero()) {
-           match  delta >= F::zero() {
-            true => { winding = winding + 1 },
-            false => { winding = winding -1 },
+          match delta >= F::zero() {
+            true => winding = winding + 1,
+            false => winding = winding - 1,
           };
-
         }
       }
 
@@ -120,7 +120,6 @@ where F: Float + FloatConst + FromPrimitive {
       cos_phi0 = cos_phi1;
       point0 = point1;
     }
-
   }
 
   // First, determine whether the South pole is inside or outside:
@@ -142,17 +141,14 @@ where F: Float + FloatConst + FromPrimitive {
     is_winding_odd = false;
   }
 
-  return
-    (angle < -F::epsilon() || angle < F::epsilon() && sum < -F::epsilon()) ^ is_winding_odd;
+  return (angle < -F::epsilon() || angle < F::epsilon() && sum < -F::epsilon()) ^ is_winding_odd;
 }
-
 
 // use std::f64::PI;
 // use crate::math::HALFPI;
 // use crate::math::QUATERPI;
 // use crate::math::EPSILON;
 // use crate::math::TAU;
-
 
 // // import adder from "./adder.js";
 // // import {cartesian, cartesianCross, cartesianNormalizeInPlace} from "./cartesian.js";
@@ -233,4 +229,3 @@ where F: Float + FloatConst + FromPrimitive {
 
 //   return (angle < -F::epsion()|| angle <F::epsion()&& sum < -epsilon) ^ (winding & 1);
 // }
-

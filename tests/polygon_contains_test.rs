@@ -5,23 +5,18 @@ use num_traits::FloatConst;
 use rust_d3_geo::circle::Circle;
 use rust_d3_geo::polygon_contains::contains;
 
-
 // function ringRadians(ring) {
 //   return ring = ring.map(pointRadians), ring.pop(), ring;
 // }
 
-fn ring_radians<F>(ring: &Vec<[F; 2]>) -> &Vec<[F;2]>
+fn ring_radians<F>(ring: &Vec<[F; 2]>) -> &Vec<[F; 2]>
 where
   F: Float,
 {
-  let mut out: Vec<[F;2]> = ring.iter().map(point_radians).collect();
+  let mut out: Vec<[F; 2]> = ring.iter().map(point_radians).collect();
   out.pop();
   return ring;
 }
-
-// function pointRadians(point) {
-//   return [point[0] * Math.PI / 180, point[1] * Math.PI / 180];
-// }
 
 fn point_radians<F>(point: &[F; 2]) -> [F; 2]
 where
@@ -30,21 +25,12 @@ where
   return [point[0].to_radians(), point[1].to_radians()];
 }
 
-
-// function polygonContains(polygon, point) {
-//   return contains(polygon.map(ringRadians), pointRadians(point));
-// }
-
-
 fn polygon_contains<F>(polygon: Vec<&Vec<[F; 2]>>, point: &[F; 2]) -> bool
 where
   F: Float + FloatConst + FromPrimitive,
 {
-  let polygon_radians: Vec<&Vec<[F;2]>> = polygon.into_iter().map(ring_radians).collect();
-  return contains(
-    polygon_radians,
-    &point_radians(point),
-  );
+  let polygon_radians: Vec<&Vec<[F; 2]>> = polygon.into_iter().map(ring_radians).collect();
+  return contains(polygon_radians, &point_radians(point));
 }
 
 #[test]
@@ -62,14 +48,14 @@ fn polygon_contains_empty_return_false() {
 #[test]
 fn polygon_contains_simple() {
   println!("geoPolygonContains(empty, point) returns false");
-  let ring: Vec::<[f64;2]> = vec![
+  let ring: Vec<[f64; 2]> = vec![
     [0f64, 0f64],
     [0f64, 1f64],
     [1f64, 1f64],
     [1f64, 0f64],
     [0f64, 0f64],
   ];
-  let mut polygon: Vec<&Vec<[f64;2]>> = Vec::new();
+  let mut polygon: Vec<&Vec<[f64; 2]>> = Vec::new();
   polygon.push(&ring);
   assert!(contains(polygon, &[0.1f64, 2f64]), false);
   // assert!(contains(polygon, &[0.1f64, 0.1f64]), true);
@@ -185,7 +171,7 @@ fn large_narrow_equatorial_hole() {
   let ring1 = &mut circle2.coordinates[0];
   // ring1.reverse();
   // let polygon = vec![ring0, ring1];
-  let mut polygon: Vec<&Vec<[f64;2]>> = Vec::new();
+  let mut polygon: Vec<&Vec<[f64; 2]>> = Vec::new();
   polygon.push(ring0);
   polygon.push(ring1);
   assert!(polygon_contains(polygon, &[0f64, 0f64]), false);
@@ -335,4 +321,3 @@ fn large_narrow_equatorial_hole() {
 //   test.equal(polygonContains(polygon, [30, 80]), 1);
 //   test.end();
 // });
-

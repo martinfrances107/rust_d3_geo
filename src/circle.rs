@@ -43,7 +43,7 @@ pub struct Circle<F> {
   radius: F,
   precision: F,
   ring: Vec<[F; 2]>,
-  pub coordinates: Vec<Vec<[F;2]>>,
+  pub coordinates: Vec<Vec<[F; 2]>>,
   rotate: Box<dyn Transform<F>>,
 }
 
@@ -51,7 +51,7 @@ impl<F: 'static> Circle<F>
 where
   F: Float + FloatConst + FromPrimitive,
 {
-  pub fn new(center_p: Option<[F;2]>, radius_p: Option<F>, precision_p: Option<F> ) -> Self {
+  pub fn new(center_p: Option<[F; 2]>, radius_p: Option<F>, precision_p: Option<F>) -> Self {
     let center = center_p.unwrap_or([F::zero(), F::zero()]);
     let radius = radius_p.unwrap_or(F::from(90u8).unwrap());
     let precision = precision_p.unwrap_or(F::from(6u8).unwrap());
@@ -62,7 +62,7 @@ where
     // c = {type: "Polygon", coordinates: [ring]};
     // ring = rotate = null;
 
-    let mut c =  Self {
+    let mut c = Self {
       center,
       coordinates,
       precision,
@@ -189,11 +189,9 @@ where
   where
     F: Float,
   {
-
-     let x_rotated = self.rotate.invert(&[x, y]);
-      x_rotated[0].to_degrees();
-      x_rotated[1].to_degrees();
-     self.ring.push(x_rotated);
-   }
-
+    let x_rotated = self.rotate.invert(&[x, y]);
+    x_rotated[0].to_degrees();
+    x_rotated[1].to_degrees();
+    self.ring.push(x_rotated);
+  }
 }
