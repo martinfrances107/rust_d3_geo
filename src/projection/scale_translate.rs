@@ -2,6 +2,7 @@ use num_traits::Float;
 
 use crate::Transform;
 
+#[derive(Debug)]
 pub struct ScaleTranslate<F> {
   k: F,
   dx: F,

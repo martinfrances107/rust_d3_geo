@@ -38,6 +38,7 @@ where
   return (radius_signed + F::TAU() - F::epsilon()) % F::TAU();
 }
 
+
 pub struct Circle<F> {
   center: [F; 2],
   radius: F,

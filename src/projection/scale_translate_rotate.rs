@@ -2,6 +2,7 @@ use num_traits::Float;
 
 use crate::Transform;
 
+#[derive(Debug)]
 pub struct ScaleTranslateRotate<F>
 where
   F: Float,
