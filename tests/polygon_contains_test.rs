@@ -1,3 +1,10 @@
+mod polygon_contains_test {
+  extern crate pretty_assertions;
+
+#[cfg(test)]
+use pretty_assertions::{assert_eq};
+
+use std::fmt::Debug;
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
@@ -5,38 +12,27 @@ use num_traits::FloatConst;
 use rust_d3_geo::circle::Circle;
 use rust_d3_geo::polygon_contains::contains;
 
-// function ringRadians(ring) {
-//   return ring = ring.map(pointRadians), ring.pop(), ring;
-// }
-
-fn ring_radians<F>(ring: &Vec<[F; 2]>) -> &Vec<[F; 2]>
+fn polygon_contains<F>(polygon_ref: &Vec<&Vec<[F; 2]>>, point: &[F; 2]) -> bool
 where
-  F: Float,
+  F: Float + FloatConst + FromPrimitive + Debug,
 {
-  let mut out: Vec<[F; 2]> = ring.iter().map(point_radians).collect();
-  out.pop();
-  return ring;
-}
-
-fn point_radians<F>(point: &[F; 2]) -> [F; 2]
-where
-  F: Float,
-{
-  return [point[0].to_radians(), point[1].to_radians()];
-}
-
-fn polygon_contains<F>(polygon: Vec<&Vec<[F; 2]>>, point: &[F; 2]) -> bool
-where
-  F: Float + FloatConst + FromPrimitive,
-{
+  let polygon = polygon_ref.clone();
   let polygon_radians: Vec<&Vec<[F; 2]>> = polygon.into_iter().map(ring_radians).collect();
   return contains(polygon_radians, &point_radians(point));
 }
 
+// tape("geoPolygonContains(empty, point) returns false", function(test) {
+//   test.equal(polygonContains([], [0, 0]), 0);
+//   test.end();
+// });
+
 #[test]
-fn polygon_contains_empty_return_false() {
-  println!("geoPolygonContains(empty, point) returns false");
-  assert!(contains(Vec::new(), &[0f64, 0f64]), false);
+fn empty_return_false() {
+  // println!("geoPolygonContains(empty, point) returns false");
+  let polygon: Vec<&Vec<[f64; 2]>> = Vec::new();
+  let contained = polygon_contains(&polygon, &[0f64, 0f64]);
+  println!("contained {:?}", contained);
+  assert_eq!(contained, false);
 }
 
 // tape("geoPolygonContains(simple, point) returns the expected value", function(test) {
@@ -45,8 +41,9 @@ fn polygon_contains_empty_return_false() {
 //   test.equal(polygonContains(polygon, [0.1, 0.1]), 1);
 //   test.end();
 // });
+
 #[test]
-fn polygon_contains_simple() {
+fn simple() {
   println!("geoPolygonContains(empty, point) returns false");
   let ring: Vec<[f64; 2]> = vec![
     [0f64, 0f64],
@@ -57,8 +54,9 @@ fn polygon_contains_simple() {
   ];
   let mut polygon: Vec<&Vec<[f64; 2]>> = Vec::new();
   polygon.push(&ring);
-  assert!(contains(polygon, &[0.1f64, 2f64]), false);
-  // assert!(contains(polygon, &[0.1f64, 0.1f64]), true);
+
+  assert_eq!(polygon_contains(&polygon, &[0.1f64, 2f64]), false);
+  assert_eq!(polygon_contains(&polygon, &[0.1f64, 0.1f64]), true);
 }
 
 // tape("geoPolygonContains(smallCircle, point) returns the expected value", function(test) {
@@ -67,6 +65,24 @@ fn polygon_contains_simple() {
 //   test.equal(polygonContains(polygon, [1, 1]), 1);
 //   test.end();
 // });
+
+#[test]
+fn small_circle() {
+  // println!("geoPolygonContains(smallCircle, point) returns the expected value");
+
+  let circle1 = Circle::new(Some([0f64, -90f64]), Some(60f64), None);
+  // circle1.center(&[0f64, -90f64]);
+  // circle1.radius(60f64);
+  let ring = &circle1.coordinates[0];
+
+  let mut polygon: Vec<&Vec<[f64; 2]>> = Vec::new();
+  polygon.push(&ring);
+let ret1 = polygon_contains(&polygon, &[-180f64, 0f64]);
+  assert_eq!(ret1 , false);
+  assert_eq!(polygon_contains(&polygon, &[1f64, 1f64]), true);
+}
+
+
 
 // tape("geoPolygonContains wraps longitudes", function(test) {
 //   var polygon = geoCircle().center([300, 0])().coordinates;
@@ -127,6 +143,23 @@ fn polygon_contains_simple() {
 //   test.end();
 // });
 
+
+#[test]
+fn large_near_south_pole() {
+  println!("geoPolygonContains(largeNearSouthPole, point) returns the expected value");
+  let ring: Vec<[f64; 2]> = vec![
+    [-60f64, 80f64],
+    [60f64, 80f64],
+    [180f64, 80f64],
+    [-60f64, 80f64],
+  ];
+  let mut polygon: Vec<&Vec<[f64; 2]>> = Vec::new();
+  polygon.push(&ring);
+
+  assert_eq!(polygon_contains(&polygon, &[0.0, 85.0]), false);
+  assert_eq!(polygon_contains(&polygon, &[0f64, 0f64]), true);
+}
+
 // tape("geoPolygonContains(largeNearNorthPole, point) returns the expected value", function(test) {
 //   var polygon = [[[60, -80], [-60, -80], [-180, -80], [60, -80]]];
 //   test.equal(polygonContains(polygon, [0, -85]), 0);
@@ -169,13 +202,12 @@ fn large_narrow_equatorial_hole() {
   let mut circle2 = Circle::new(None, None, None);
   circle2.radius(90f64 + 0.1f64);
   let ring1 = &mut circle2.coordinates[0];
-  // ring1.reverse();
-  // let polygon = vec![ring0, ring1];
+  ring1.reverse();
   let mut polygon: Vec<&Vec<[f64; 2]>> = Vec::new();
   polygon.push(ring0);
   polygon.push(ring1);
-  assert!(polygon_contains(polygon, &[0f64, 0f64]), false);
-  // assert!(polygon_contains(polygon, &[0f64, -90f64]), true);
+  assert_eq!(polygon_contains(&polygon, &[0f64, 0f64]), false);
+  assert_eq!(polygon_contains(&polygon, &[0f64, -90f64]), true);
 }
 
 // tape("geoPolygonContains(largeNarrowEquatorialStrip, point) returns the expected value", function(test) {
@@ -321,3 +353,21 @@ fn large_narrow_equatorial_hole() {
 //   test.equal(polygonContains(polygon, [30, 80]), 1);
 //   test.end();
 // });
+
+fn ring_radians<F>(ring: &Vec<[F; 2]>) -> &Vec<[F; 2]>
+where
+  F: Float,
+{
+  let mut out: Vec<[F; 2]> = ring.iter().map(point_radians).collect();
+  out.pop();
+  return ring;
+}
+
+fn point_radians<F>(point: &[F; 2]) -> [F; 2]
+where
+  F: Float,
+{
+  return [point[0].to_radians(), point[1].to_radians()];
+}
+
+}

@@ -1,7 +1,7 @@
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
-
+use std::fmt::Debug;
 // use super::adder::Adder;
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_cross;
@@ -24,7 +24,7 @@ where
 
 pub fn contains<F>(polygon: Vec<&Vec<[F; 2]>>, point: &[F; 2]) -> bool
 where
-  F: Float + FloatConst + FromPrimitive,
+  F: Float + FloatConst + FromPrimitive + Debug,
 {
   let lambda = longitude(point);
   let mut phi = point[1];
@@ -45,14 +45,11 @@ where
   }
 
   // for (var i = 0, n = polygon.len(); i < n; ++i) {
-  for polygon_i in polygon.iter() {
-    let ring;
-    let m;
+  for polygon_i in polygon {
     // if (!(m = (ring = polygon[i]).length)) continue;
-
-    ring = polygon_i;
-    m = ring.len();
-    if polygon.is_empty() {
+    let ring = polygon_i;
+    let m = ring.len();
+    if ring.is_empty() {
       continue;
     };
 
@@ -141,91 +138,7 @@ where
     is_winding_odd = false;
   }
 
-  return (angle < -F::epsilon() || angle < F::epsilon() && sum < -F::epsilon()) ^ is_winding_odd;
+  let cond1 = angle < -F::epsilon() || angle < F::epsilon() && sum < -F::epsilon();
+  let ret = cond1 ^ is_winding_odd;
+  return ret;
 }
-
-// use std::f64::PI;
-// use crate::math::HALFPI;
-// use crate::math::QUATERPI;
-// use crate::math::EPSILON;
-// use crate::math::TAU;
-
-// // import adder from "./adder.js";
-// // import {cartesian, cartesianCross, cartesianNormalizeInPlace} from "./cartesian.js";
-// // import {abs, asin, atan2, cos, epsilon, halfPI, PI, quarterPI, sign, sin, TAU} from "./math.js";
-
-// var sum = adder();
-
-// function longitude(point) {
-//   if (abs(point[0]) <= PI)
-//     return point[0];
-//   else
-//     return sign(point[0]) * ((abs(point[0]) + PI) % TAU - PI);
-// }
-
-// export default function(polygon, point) {
-//   var lambda = longitude(point),
-//       phi = point[1],
-//       sinPhi = sin(phi),
-//       normal = [sin(lambda), -cos(lambda), 0],
-//       angle = 0,
-//       winding = 0;
-
-//   sum.reset();
-
-//   if (sinPhi === 1) phi = halfPI + epsilon;
-//   else if (sinPhi === -1) phi = -halfPI - epsilon;
-
-//   for (var i = 0, n = polygon.len(); i < n; ++i) {
-//     if (!(m = (ring = polygon[i]).len())) continue;
-//     var ring,
-//         m,
-//         point0 = ring[m - 1],
-//         lambda0 = longitude(point0),
-//         phi0 = point0[1] / 2 + quarterPI,
-//         sinPhi0 = sin(phi0),
-//         cosPhi0 = cos(phi0);
-
-//     for (var j = 0; j < m; ++j, lambda0 = lambda1, sinPhi0 = sinPhi1, cosPhi0 = cosPhi1, point0 = point1) {
-//       var point1 = ring[j],
-//           lambda1 = longitude(point1),
-//           phi1 = point1[1] / 2 + quarterPI,
-//           sinPhi1 = sin(phi1),
-//           cosPhi1 = cos(phi1),
-//           delta = lambda1 - lambda0,
-//           sign = delta >= 0 ? 1 : -1,
-//           absDelta = sign * delta,
-//           antimeridian = absDelta > PI,
-//           k = sinPhi0 * sinPhi1;
-
-//       sum.add(atan2(k * sign * sin(absDelta), cosPhi0 * cosPhi1 + k * cos(absDelta)));
-//       angle += antimeridian ? delta + sign * TAU : delta;
-
-//       // Are the longitudes either side of the point’s meridian (lambda),
-//       // and are the latitudes smaller than the parallel (phi)?
-//       if (antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda) {
-//         var arc = cartesianCross(cartesian(point0), cartesian(point1));
-//         cartesianNormalizeInPlace(arc);
-//         var intersection = cartesianCross(normal, arc);
-//         cartesianNormalizeInPlace(intersection);
-//         var phiArc = (antimeridian ^ delta >= 0 ? -1 : 1) * asin(intersection[2]);
-//         if (phi > phiArc || phi === phiArc && (arc[0] || arc[1])) {
-//           winding += antimeridian ^ delta >= 0 ? 1 : -1;
-//         }
-//       }
-//     }
-//   }
-
-//   // First, determine whether the South pole is inside or outside:
-//   //
-//   // It is inside if:
-//   // * the polygon winds around it in a clockwise direction.
-//   // * the polygon does not (cumulatively) wind around it, but has a negative
-//   //   (counter-clockwise) area.
-//   //
-//   // Second, count the (signed) number of times a segment crosses a lambda
-//   // from the point to the South pole.  If it is zero, then the point is the
-//   // same side as the South pole.
-
-//   return (angle < -F::epsion()|| angle <F::epsion()&& sum < -epsilon) ^ (winding & 1);
-// }
