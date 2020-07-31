@@ -3,10 +3,14 @@
 // #![allow(unused_imports)]
 
 // mod adder;
-mod cartesian;
-mod circle;
+pub mod cartesian;
+/// Circle is used in intgration tests.
+pub mod circle;
+/// polygon_contains has a integration test.
+pub mod polygon_contains;
+
 mod compose;
-mod polygon_contains;
+mod rotation;
 mod stream;
 
 /// Common to Projection, Rotation.

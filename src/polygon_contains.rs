@@ -22,24 +22,24 @@ where F: Float + FloatConst {
   }
 }
 
-fn contains<F>(polygon: Vec<Vec<[F;2]>>, point: &[F;2]) -> bool
+pub fn contains<F>(polygon: Vec<&Vec<[F;2]>>, point: &[F;2]) -> bool
 where F: Float + FloatConst + FromPrimitive {
   let lambda = longitude(point);
-  let phi = point[1];
-  let sinPhi = phi.sin();
+  let mut phi = point[1];
+  let sin_phi = phi.sin();
   let normal = [lambda.sin(), -lambda.cos(), F::zero()];
-  let angle = F::zero();
+  let mut angle = F::zero();
   // let sum = Adder::<F>::new();
-  let sum = F::zero();
-  let winding = 0i32;
+  let mut sum = F::zero();
+  let mut winding = 0i32;
 
   // New then reset is this needed.
   // sum.reset();
 
-  if sinPhi == F::one() {
+  if sin_phi == F::one() {
     phi = F::FRAC_PI_2() + F::epsilon();
   }
-  else if sinPhi == -F::one() {
+  else if sin_phi == -F::one() {
     phi = -F::FRAC_PI_2() - F::epsilon();
   }
 
@@ -47,39 +47,34 @@ where F: Float + FloatConst + FromPrimitive {
   for polygon_i in polygon.iter() {
     let ring;
     let m;
-    // if (!(m = (ring = polygon).len())) continue;
+    // if (!(m = (ring = polygon[i]).length)) continue;
 
     ring = polygon_i;
     m = ring.len();
     if polygon.is_empty() {continue};
 
-    let point0 = ring.last().unwrap();
-    let point1;
-    let lambda0 = longitude(&point0);
-    let lambda1;
+    let mut point0 = *ring.last().unwrap();
+    let mut lambda0 = longitude(&point0);
     let phi0 = point0[1] / F::from(2u8).unwrap() + F::FRAC_PI_4();
-    let phi1;
-    let sinPhi0 = phi0.sin();
-    let sinPhi1;
-    let cosPhi0 = phi0.cos();
-    let cosPhi1;
+    let mut sin_phi0 = phi0.sin();
+    let mut cos_phi0 = phi0.cos();
 
     // for (var j = 0; j < m; ++j, lambda0 = lambda1, sinPhi0 = sinPhi1, cosPhi0 = cosPhi1, point0 = point1) {
     for j in 0..m {
       let point1 = ring[j];
       let lambda1 = longitude(&point1);
       let phi1 = point1[1] / F::from(2u8).unwrap() + F::FRAC_PI_4();
-      let sinPhi1 = phi1.sin();
-      let cosPhi1 = phi1.cos();
+      let sin_phi1 = phi1.sin();
+      let cos_phi1 = phi1.cos();
       let delta = lambda1 - lambda0;
       // let sign = delta >= 0 ? 1 : -1;
       let sign = delta.signum();
-      let absDelta = sign * delta;
-      let antimeridian = absDelta > F::PI();
-      let k = sinPhi0 * sinPhi1;
+      let abs_delta = sign * delta;
+      let antimeridian = abs_delta > F::PI();
+      let k = sin_phi0 * sin_phi1;
 
       // sum.add(atan2(k * sign * sin(absDelta), cosPhi0 * cosPhi1 + k * cos(absDelta)));
-      sum = sum + (k * sign * absDelta.sin()).atan2(cosPhi0 * cosPhi1 + k * absDelta.cos());
+      sum = sum + (k * sign * abs_delta.sin()).atan2(cos_phi0 * cos_phi1 + k * abs_delta.cos());
       // angle += antimeridian ? delta + sign * TAU : delta;
       angle = angle + match antimeridian {
         true => { delta + sign * F::TAU() },
@@ -89,18 +84,20 @@ where F: Float + FloatConst + FromPrimitive {
       // Are the longitudes either side of the point’s meridian (lambda),
       // and are the latitudes smaller than the parallel (phi)?
       // if antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda {
-      if antimeridian ^ lambda0 >= lambda ^ lambda1 &&
-         lambda ^ lambda1 >= lambda {
-        let arc = cartesian_cross(&cartesian(&point0), &cartesian(&point1));
+      if antimeridian ^ ( lambda0 >= lambda ) ^ ( lambda1 >= lambda )  {
+        let mut arc = cartesian_cross(&cartesian(&point0), &cartesian(&point1));
         cartesian_normalize_in_place(&mut arc);
-        let intersection = cartesian_cross(&normal, &arc);
+        let mut intersection = cartesian_cross(&normal, &arc);
         cartesian_normalize_in_place(&mut intersection);
 
 //         var phiArc = (antimeridian ^ delta >= 0 ? -1 : 1) * asin(intersection[2]);
-        let phiArc = match antimeridian ^ delta >= 0 {
-          true =>  {  intersection[2].asin()},
-          false => { -intersection[2].asin()}
-        };
+        let phi_arc: F;
+        if antimeridian ^ (delta >= F::zero() ) {
+          phi_arc = -intersection[2].asin();
+        }
+        else {
+          phi_arc = -intersection[2].asin();
+        }
 
 
 //         if (phi > phiArc || phi === phiArc && (arc[0] || arc[1])) {
@@ -108,7 +105,7 @@ where F: Float + FloatConst + FromPrimitive {
 //         }
 
 
-        if phi > phiArc || phi == phiArc && (!arc[0].is_zero() || !arc[1].is_zero()) {
+        if phi > phi_arc || phi == phi_arc && (!arc[0].is_zero() || !arc[1].is_zero()) {
            match  delta >= F::zero() {
             true => { winding = winding + 1 },
             false => { winding = winding -1 },
@@ -117,13 +114,12 @@ where F: Float + FloatConst + FromPrimitive {
         }
       }
 
+      // loop is about the restart
+      lambda0 = lambda1;
+      sin_phi0 = sin_phi1;
+      cos_phi0 = cos_phi1;
+      point0 = point1;
     }
-
-    // loop is about the restart
-    lambda0 = lambda1;
-    sinPhi0 = sinPhi1;
-    cosPhi0 = cosPhi1;
-    point0 = point1;
 
   }
 
@@ -137,11 +133,17 @@ where F: Float + FloatConst + FromPrimitive {
   // Second, count the (signed) number of times a segment crosses a lambda
   // from the point to the South pole.  If it is zero, then the point is the
   // same side as the South pole.
+  // return (angle < -epsilon || angle < epsilon && sum < -epsilon) ^ (winding & 1);
+  // let is_winding_odd = match winding & 1;
+  let is_winding_odd;
+  if winding % 2 == 1 {
+    is_winding_odd = true;
+  } else {
+    is_winding_odd = false;
+  }
 
   return
-    (angle < -F::epsilon() ||
-    angle <F::epsilon() &&
-    sum < -F::epsilon()) ^ (winding & 1);
+    (angle < -F::epsilon() || angle < F::epsilon() && sum < -F::epsilon()) ^ is_winding_odd;
 }
 
 
