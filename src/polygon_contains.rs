@@ -11,14 +11,21 @@ use crate::cartesian::cartesian_normalize_in_place;
 
 // var sum = adder();
 
+// function longitude(point) {
+//   if (abs(point[0]) <= pi)
+//     return point[0];
+//   else
+//     return sign(point[0]) * ((abs(point[0]) + pi) % tau - pi);
+// }
+
 fn longitude<F>(point: &[F; 2]) -> F
 where
-  F: Float + FloatConst,
+  F: Float + FloatConst + Debug,
 {
   if point[0].abs() <= F::PI() {
     return point[0];
   } else {
-    return point[0].signum() * ((point[0] + F::PI()).abs() % F::TAU() - F::PI());
+    return point[0].signum() * ((point[0].abs() + F::PI()) % F::TAU() - F::PI());
   }
 }
 
@@ -38,9 +45,6 @@ where
   // New then reset is this needed.
   // sum.reset();
 
-  // if (sinPhi === 1) phi = halfPi + epsilon;
-  // else if (sinPhi === -1) phi = -halfPi - epsilon;
-
   if sin_phi == F::one() {
     phi = F::FRAC_PI_2() + F::epsilon();
   } else if sin_phi == -F::one() {
@@ -48,18 +52,13 @@ where
   }
 
   // for (var i = 0, n = polygon.len(); i < n; ++i) {
-  // println!("polygon_i {:?}", polygon);
   for polygon_i in polygon {
-    // if (!(m = (ring = polygon[i]).length)) continue;
     let ring = polygon_i;
     let m = ring.len();
     if ring.is_empty() {
       continue;
     };
 
-
-    // println!("m = {}", m);
-    // println!("ring = {:?}", ring);
     let mut point0 = *ring.last().unwrap();
     let mut lambda0 = longitude(&point0);
     let phi0 = point0[1] / F::from(2u8).unwrap() + F::FRAC_PI_4();
@@ -68,6 +67,7 @@ where
 
     // println!("looping {:?}", m);
     // for (var j = 0; j < m; ++j, lambda0 = lambda1, sinPhi0 = sinPhi1, cosPhi0 = cosPhi1, point0 = point1) {
+    // println!("ring {:?}", ring);
     for j in 0..m {
       let point1 = ring[j];
       let lambda1 = longitude(&point1);
@@ -75,7 +75,6 @@ where
       let sin_phi1 = phi1.sin();
       let cos_phi1 = phi1.cos();
       let delta = lambda1 - lambda0;
-      // let sign = delta >= 0 ? 1 : -1;
       let sign = delta.signum();
       let abs_delta = sign * delta;
       let antimeridian = abs_delta > F::PI();
@@ -83,7 +82,6 @@ where
 
       // sum.add(atan2(k * sign * sin(absDelta), cosPhi0 * cosPhi1 + k * cos(absDelta)));
       sum = sum + (k * sign * abs_delta.sin()).atan2(cos_phi0 * cos_phi1 + k * abs_delta.cos());
-      // angle += antimeridian ? delta + sign * TAU : delta;
       angle = angle
         + match antimeridian {
           true => delta + sign * F::TAU(),
@@ -95,27 +93,17 @@ where
       // if antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda {
       // if (antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda) {
       if antimeridian ^ (lambda0 >= lambda) ^ (lambda1 >= lambda) {
-        println!("inside complex xor if antimaeridian is {:?}", antimeridian);
         let mut arc = cartesian_cross(&cartesian(&point0), &cartesian(&point1));
-// println!("arc {:?}", arc);
         cartesian_normalize_in_place(&mut arc);
-// println!("arc {:?}", arc);
+        // println!("arc {:?}", arc);
         let mut intersection = cartesian_cross(&normal, &arc);
-// println!("intersection {:?}", intersection);
         cartesian_normalize_in_place(&mut intersection);
-// println!("intersection {:?}", intersection);
-        // var phiArc = (antimeridian ^ delta >= 0 ? -1 : 1) * asin(intersection[2]);
         let phi_arc: F;
         if antimeridian ^ (delta >= F::zero()) {
           phi_arc = -(intersection[2].asin());
         } else {
           phi_arc = intersection[2].asin();
         }
-        println!("phi arc = {:?}", phi_arc);
-        // if (phi > phiArc || phi === phiArc && (arc[0] || arc[1])) {
-        // if (phi > phiArc || phi === phiArc && (arc[0] || arc[1])) {
-        //           winding += antimeridian ^ delta >= 0 ? 1 : -1;
-        //         }
 
         if phi > phi_arc || phi == phi_arc && (!arc[0].is_zero() || !arc[1].is_zero()) {
           match antimeridian ^ (delta >= F::zero()) {
@@ -133,8 +121,6 @@ where
     }
   }
 
-  // println!("sum {:?}", sum);
-  // println!("angle {:?}", angle);
   // First, determine whether the South pole is inside or outside:
   //
   // It is inside if:
@@ -153,11 +139,10 @@ where
   } else {
     is_winding_odd = false;
   }
-//   println!("mod {:?}", winding & 1);
-//   println!("is winding odd {:?}", is_winding_odd);
-// println!("winding {:?}", winding);
-  let is_south_pole_inside = angle < -F::epsilon() || angle < F::epsilon() && sum < -F::epsilon();
-  // println!("angle check {:?}", is_south_pole_inside);
+
+  let epsilon = F::from(1e-6).unwrap();
+  // let is_south_pole_inside = angle < -F::epsilon() || angle < F::epsilon() && sum < -F::epsilon();
+  let is_south_pole_inside = angle < -epsilon || angle < epsilon && sum < -epsilon;
   let ret = is_south_pole_inside ^ is_winding_odd;
 
   return ret;
