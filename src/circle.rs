@@ -42,7 +42,7 @@ pub struct Circle<F> {
 
 impl<F: 'static> Circle<F>
 where
-  F: Float + FloatConst + FromPrimitive + Debug,
+  F: Float + FloatConst + FromPrimitive,
 {
   pub fn new(center_p: Option<[F; 2]>, radius_p: Option<F>, precision_p: Option<F>) -> Self {
     let center = center_p.unwrap_or([F::zero(), F::zero()]);
@@ -96,7 +96,7 @@ where
     p0: Option<[F; 2]>,
     p1: Option<[F; 2]>,
   ) where
-    F: Float + FloatConst + FromPrimitive + Debug,
+    F: Float + FloatConst + FromPrimitive
   {
     if delta.is_zero() {
       return;
@@ -180,7 +180,7 @@ where
 
 impl<F> GeoStream<F> for Circle<F>
 where
-  F: Float + Debug,
+  F: Float
 {
   fn point(&mut self, x: F, y: F)
   where

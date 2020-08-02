@@ -1,26 +1,17 @@
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
-use std::fmt::Debug;
 // use super::adder::Adder;
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_normalize_in_place;
 
 // import adder from "./adder.js";
-
 // var sum = adder();
-
-// function longitude(point) {
-//   if (abs(point[0]) <= pi)
-//     return point[0];
-//   else
-//     return sign(point[0]) * ((abs(point[0]) + pi) % tau - pi);
-// }
 
 fn longitude<F>(point: &[F; 2]) -> F
 where
-  F: Float + FloatConst + Debug,
+  F: Float + FloatConst
 {
   if point[0].abs() <= F::PI() {
     return point[0];
@@ -31,7 +22,7 @@ where
 
 pub fn contains<F>(polygon: Vec<Vec<[F; 2]>>, point: &[F; 2]) -> bool
 where
-  F: Float + FloatConst + FromPrimitive + Debug,
+  F: Float + FloatConst + FromPrimitive
 {
   let lambda = longitude(point);
   let mut phi = point[1];
@@ -51,7 +42,6 @@ where
     phi = -F::FRAC_PI_2() - F::epsilon();
   }
 
-  // for (var i = 0, n = polygon.len(); i < n; ++i) {
   for polygon_i in polygon {
     let ring = polygon_i;
     let m = ring.len();
@@ -65,9 +55,6 @@ where
     let mut sin_phi0 = phi0.sin();
     let mut cos_phi0 = phi0.cos();
 
-    // println!("looping {:?}", m);
-    // for (var j = 0; j < m; ++j, lambda0 = lambda1, sinPhi0 = sinPhi1, cosPhi0 = cosPhi1, point0 = point1) {
-    // println!("ring {:?}", ring);
     for j in 0..m {
       let point1 = ring[j];
       let lambda1 = longitude(&point1);
@@ -95,7 +82,6 @@ where
       if antimeridian ^ (lambda0 >= lambda) ^ (lambda1 >= lambda) {
         let mut arc = cartesian_cross(&cartesian(&point0), &cartesian(&point1));
         cartesian_normalize_in_place(&mut arc);
-        // println!("arc {:?}", arc);
         let mut intersection = cartesian_cross(&normal, &arc);
         cartesian_normalize_in_place(&mut intersection);
         let phi_arc: F;
@@ -113,7 +99,7 @@ where
         }
       }
 
-      // loop is about the restart
+      // Loop is about the restart.
       lambda0 = lambda1;
       sin_phi0 = sin_phi1;
       cos_phi0 = cos_phi1;
@@ -131,8 +117,6 @@ where
   // Second, count the (signed) number of times a segment crosses a lambda
   // from the point to the South pole.  If it is zero, then the point is the
   // same side as the South pole.
-  // return (angle < -epsilon || angle < epsilon && sum < -epsilon) ^ (winding & 1);
-  // let is_winding_odd = match winding & 1;
   let is_winding_odd;
   if winding & 1 == 1 {
     is_winding_odd = true;
@@ -141,7 +125,6 @@ where
   }
 
   let epsilon = F::from(1e-6).unwrap();
-  // let is_south_pole_inside = angle < -F::epsilon() || angle < F::epsilon() && sum < -F::epsilon();
   let is_south_pole_inside = angle < -epsilon || angle < epsilon && sum < -epsilon;
   let ret = is_south_pole_inside ^ is_winding_odd;
 

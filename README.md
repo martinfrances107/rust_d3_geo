@@ -1,7 +1,7 @@
 # rust_d3_geo
 
 
-This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into a RUST library crate/package. It is in a very early development phase. That is only one sub module 'rotaions' has gone through phase 1.
+This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into a RUST library crate/package. It is in a very early development phase. That is only sub modules 'rotaions' and 'polygon_contains' has gone through phase 1.
 
 ## Phase 1
 
