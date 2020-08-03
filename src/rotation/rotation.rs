@@ -9,15 +9,15 @@ pub struct Rotation<F> {
 }
 
 impl<F: 'static> Rotation<F> {
-  pub fn new(delta_lambda: &F, delta_phi: &F, delta_gamma: &F) -> Self
+  pub fn new(delta_lambda: F, delta_phi: F, delta_gamma: F) -> Self
   where
     F: Float + FloatConst,
   {
     return Self {
       rotate: rotate_radians(
-        &delta_lambda.to_radians(),
-        &delta_phi.to_radians(),
-        &delta_gamma.to_radians(),
+        delta_lambda.to_radians(),
+        delta_phi.to_radians(),
+        delta_gamma.to_radians(),
       ),
     };
   }
