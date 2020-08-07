@@ -1,89 +1,95 @@
-// A collection of functions that mutate a GeoProjection struct.
+// A collection of functions that mutate a Projection struct.
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-
 use crate::compose::Compose;
-use crate::resample::Resample;
+// use crate::resample::Resample;
 use crate::rotation::rotate_radians::rotate_radians;
-use crate::stream::GeoStream;
+// use crate::stream::Stream;
+use crate::transform_stream::TransformStream;
+use crate::transform_stream::TransformStreamIdentity;
 use crate::Transform;
-use crate::TransformIdentity;
+use crate::TransformState;
 // use crate::clip::antimeridian::ClipAntimeridianState;
 use crate::clip::antimeridian::generate_antimeridian;
 // use crate::clip::circle::Circle;
 
-use super::geo_projection::GeoProjection;
-use super::geo_stream_wrapper::GeoStreamWrapper;
+use super::projection::Projection;
+// use super::stream_wrapper::StreamWrapper;
 use super::scale_translate::ScaleTranslate;
 use super::scale_translate_rotate::ScaleTranslateRotate;
+use super::transform_radians::TransformRadians;
+use super::transform_rotate::TransformRotate;
+// use super::stream_wrapper::StreamWrapper;
 
-pub struct GeoProjectionMutator<'a, F>
-where F: Float + FromPrimitive{
+pub struct ProjectionMutator<F>
+where F: Float + FloatConst + FromPrimitive {
   // The mutator lives as long a the proejction it contnains.
-  pub projection: &'a Box<dyn Transform<F>>,
-  k: F, // scale
-  x: F,
-  y: F, // translate
-  lambda: F,
-  phi: F, // center
+  pub projection: Box<dyn Transform<F>>,
+  alpha: Option<F>,                 // post-rotate angle
+  cache: Option<Box<dyn TransformStream<F>>>,
+  cache_stream: Option<Box<dyn TransformStream<F>>>,
+  clip_antimeridian: Option<Box<dyn Transform<F>>>,
+  delta2: F,     // precision
   delta_lambda: F,
   delta_phi: F,
   delta_gamma: F,
+  k: F, // scale
+  project_resample: Box<dyn TransformStream<F>>,
+  project_transform: Box<dyn Transform<F>>,
+  project_rotate_transform: Box<dyn Transform<F>>,
+  phi: F, // center
+  preclip: Box<dyn TransformStream<F>>,
+  postclip: Option<Box<dyn TransformStream<F>>>,
+  x: F,
+  y: F, // translate
+  lambda: F,
   rotate: Box<dyn Transform<F>>, //rotate, // pre-rotate
-  alpha: Option<F>,                 // post-rotate angle
   sx: F,                            // reflectX
   sy: F,                            // reflectY
   theta: Option<F>,
-  preclip: Box<dyn Fn(dyn GeoStream<F>)>,
-  postclip: Option<Box<dyn Fn(dyn GeoStream<F>)>>,
-  clip_antimeridian: Option<Box<dyn Transform<F>>>,
   x0: Option<F>,
   y0: Option<F>,
   x1: Option<F>,
   y1: Option<F>, // post-clip extent
-  delta2: F,     // precision
-  project_resample: Box<dyn Transform<F>>,
-  project_transform: Box<dyn Transform<F>>,
-  project_rotate_transform: Box<dyn Transform<F>>,
-  cache_stream: Option<Box<dyn GeoStream<F>>>,
 }
 
-impl<'a, F: 'static> GeoProjectionMutator<'a, F>
-where F: Float + FromPrimitive {
-  pub fn from_projection_raw(projection: &'a Box<dyn Transform<F>>) -> GeoProjectionMutator<F>
-  where F: Float + FromPrimitive {
-    return GeoProjectionMutator {
+impl<F> ProjectionMutator<F>
+where F: Float + FloatConst + FromPrimitive + 'static {
+  pub fn from_projection_raw(projection: Box<dyn Transform<F>>) -> ProjectionMutator<F>
+  where F: Float + FloatConst + FromPrimitive {
+    return ProjectionMutator {
+      alpha: None,  // post-rotate angle
+      cache: None,
+      cache_stream: None,
+      clip_antimeridian: None,
+      delta2: F::from(0.5f64).unwrap(), // precision
+      delta_lambda: F::zero(),
+      delta_phi: F::zero(),
+      delta_gamma: F::zero(),
       projection,
       // scale
       k: F::from_u8(150u8).unwrap(),
       // translate
-      x: F::from_u16(480u16).unwrap(),
-      y: F::from_u16(250u16).unwrap(),
       // center
       lambda: F::zero(),
       phi: F::zero(),
-      delta_lambda: F::zero(),
-      delta_phi: F::zero(),
-      delta_gamma: F::zero(),
-      rotate: Box::new(TransformIdentity{}), // pre-rotate
-      alpha: None,  // post-rotate angle
+      rotate: Box::new(TransformState{}), // pre-rotate
+      preclip:  Box::new(generate_antimeridian::<F>()),
+      postclip: None,
       sx: F::one(),     // reflectX
       sy: F::one(),     // reflectX
-      theta: None,  // clipAntimeridian, // pre-clip angle
-      preclip:  None,
-      postclip: None,
-      clip_antimeridian: None,
+      theta: None,   // pre-clip angle
+      x: F::from_u16(480u16).unwrap(),
       x0: None,
       y0: None,
       x1: None,
       y1: None,       //postclip = identity, // post-clip extent
-      delta2: F::from(0.5f64).unwrap(), // precision
-      project_resample: Box::new(TransformIdentity{}),
-      project_transform: Box::new(TransformIdentity{}),
-      project_rotate_transform: Box::new(TransformIdentity{}),
-      cache_stream: Option::None,
+      y: F::from_u16(250u16).unwrap(),
+      project_resample: Box::new(TransformStreamIdentity{}),
+      project_transform: Box::new(TransformState{}),
+      project_rotate_transform: Box::new(TransformState{}),
     };
   }
 
@@ -92,7 +98,7 @@ where F: Float + FromPrimitive {
   }
 
   fn recenter(&mut self)
-  where F: Float + FloatConst {
+  where F: Float + FloatConst + FromPrimitive {
     let center;
     let transform: Box<dyn Transform<F>>;
     match self.alpha {
@@ -120,10 +126,10 @@ where F: Float + FromPrimitive {
         );
       }
     };
-    self.rotate = rotate_radians(&self.delta_lambda, &self.delta_phi,&self.delta_gamma);
-    self.project_transform = Box::new(Compose{a:*self.projection, b:transform});
-    self.project_rotate_transform = Box::new(Compose{a: self.rotate, b:self.project_transform});
-    self.project_rotate_transform = Box::new(Compose{a: self.rotate, b:self.project_transform});
+    self.rotate = rotate_radians(self.delta_lambda, self.delta_phi,self.delta_gamma);
+    // self.project_transform = Box::new(Compose{a:self.projection, b:transform});
+    // self.project_rotate_transform = Box::new(Compose{a: self.rotate, b:self.project_transform});
+    // self.project_rotate_transform = Box::new(Compose{a: self.rotate, b:self.project_transform});
     // self.project_resample = Some(
 
     //   Box::new(
@@ -135,31 +141,39 @@ where F: Float + FromPrimitive {
   }
 }
 
-impl<'a, F: 'static > GeoStreamWrapper<F> for GeoProjectionMutator<'a, F>
+impl<F> TransformStream<F> for ProjectionMutator<F>
 where F: Float + FloatConst + FromPrimitive {
-  fn stream(stream: dyn GeoStream<F>) ->  dyn GeoStream<F> {
+  fn stream(&mut self, stream: Box<dyn TransformStream<F>>) {
 
-        // cache = transformRadians (
-        //   // transformRotate(self.rotate)(self.preclip(self.projectResample(self.postclip(cacheStream= stream))))
-        // );
+    // projection.stream = function(stream) {
+    //   return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
+    // };
 
-    return stream;
+    // match self.cache {
+    //   Some(cache) =>  {
+    //     // return cache;
+    //   },
+    //   None => {
+    //       // if self.cache_stream.unwrap() == stream {
+    //       //   return stream;
+    //       // } else {
+    //       //   let post_clip_s = self.postclip.stream(stream);
+    //       //   let resample_s = self.resample(post_clip_s, None);
+    //       //   let t_rotate = TransformRotate::<F>{rotate: self.rotate, stream: post_clip_s};
+    //       //   let t_radians = TransformRadians{stream: t_rotate};
+    //       //   // self.cache =  transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
+    //       //   // self.cache =  TransformRadians<F>{ stream : TransformRotate{self.rotate(self.preclip(self.projectResample(postclip(cacheStream = stream)))}};
+    //       //   self.cache = t_radians;
+    //       //   return self.cache;
+    //       // }
+    //       // return self.cache.unwrap();
+    //   }
+    // }
   }
 }
 
-
-
-impl<'a, F: 'static > GeoProjection<F> for GeoProjectionMutator<'a, F>
-where F: Float + FloatConst + FromPrimitive {
-  // fn stream(stream: GeoProjection) {
-  //   matach cacheStream {
-  //     Some(Cache::Stream) => {
-  //       cache = transformRadians (
-  //         transformRotate(self.rotate)(self.preclip(self.projectResample(self.postclip(cacheStream= stream)))));
-  //     },
-  //     None => {}
-  //   }
-  // }
+impl<F:> Projection<F> for ProjectionMutator<F>
+where F: Float + FloatConst + FromPrimitive + 'static{
 
   // projection.stream = function(stream) {
   //   return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
@@ -169,7 +183,7 @@ where F: Float + FloatConst + FromPrimitive {
   //   return self.preclip;
   // }
 
-  fn preclip(&mut self, preclip: Option<Box<dyn GeoStream<F>>>) {
+  fn preclip(&mut self, preclip: Option<Box<dyn TransformStream<F>>>) {
     // self.preclip = preclip;
     self.theta = None;
     return self.reset();
@@ -179,7 +193,7 @@ where F: Float + FloatConst + FromPrimitive {
   //   return self.postclip;
   // }
 
-  fn postclip(&mut self, postclip: Option<Box<dyn GeoStream<F>>>) {
+  fn postclip(&mut self, postclip: Option<Box<dyn TransformStream<F>>>) {
     // self.postclip = postclip;
     self.theta = None;
     return self.reset();
@@ -213,15 +227,14 @@ where F: Float + FloatConst + FromPrimitive {
 
 
   fn clip_angle(&mut self, angle: Option<F>) {
-    match (self.preclip.as_ref(), angle) {
-      (Some(preclip),Some(angle))  => {
+    match  angle {
+      Some(angle)  => {
         self.theta = Some(angle.to_radians());
         // return ClipCircle<F>::new(self.theta);
       },
-      (_,_) => {
+      None => {
         self.theta = None;
-        // self.preclip = Some(ClipAntimeridianState::new());
-        self.preclip=Some(generate_antimeridian());
+        // self.preclip = generate_antimeridian<F>();
         self.reset();
       }
 
@@ -247,9 +260,9 @@ where F: Float + FloatConst + FromPrimitive {
   }
 }
 
-fn generate<F: 'static>(raw: &Box<dyn Transform<F>>) -> GeoProjectionMutator<F>
+fn generate<F: 'static>(raw: Box<dyn Transform<F>>) -> ProjectionMutator<F>
 where F: Float + FloatConst + FromPrimitive {
-  let mut g = GeoProjectionMutator::<F>::from_projection_raw(raw);
+  let mut g = ProjectionMutator::<F>::from_projection_raw(raw);
   g.recenter();
   return g;
 }

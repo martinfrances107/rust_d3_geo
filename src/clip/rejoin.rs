@@ -1,31 +1,40 @@
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
-use num_traits::FloatConst;
 
-use crate::stream::GeoStream;
+// use crate::stream::GeoStream;
 use crate::point_equal::point_equal;
+use crate::transform_stream::TransformStream;
 
-use super::InterpolateFn;
 use super::CompareIntersectionFn;
+use super::InterpolateFn;
 
 // import pointEqual from "../pointEqual.js";
 
-type MeshPoint<F> = (F,F,bool);
+type MeshPoint<F> = [F; 3];
 
 struct Intersection<F>
-where F: Float {
+where
+  F: Float,
+{
   x: MeshPoint<F>,
   z: Option<Vec<MeshPoint<F>>>,
-  o: Option<MeshPoint<F>>,// another intersection,
-  e: bool, // is any entry?
-  v: bool, // visited
-  n: Option<MeshPoint<F>>, // next
-  p: Option<MeshPoint<F>>, // previous
+  o: Option<Box<Intersection<F>>>, // another intersection,
+  e: bool,                         // is any entry?
+  v: bool,                         // visited
+  n: Option<MeshPoint<F>>,         // next
+  p: Option<MeshPoint<F>>,         // previous
 }
 
 impl<F> Intersection<F>
-where F: Float {
-  fn new(point: MeshPoint<F>, points: Option<Vec<MeshPoint<F>>>, other: Option<MeshPoint<F>>, entry: bool) -> Self {
+where
+  F: Float,
+{
+  fn new(
+    point: MeshPoint<F>,
+    points: Option<Vec<MeshPoint<F>>>,
+    other: Option<Box<Intersection<F>>>,
+    entry: bool,
+  ) -> Self {
     return Self {
       x: point,
       z: points,
@@ -35,7 +44,6 @@ where F: Float {
       n: None,
       p: None,
     };
-
   }
 }
 
@@ -52,46 +60,64 @@ where F: Float {
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
-pub fn rejoin<F>(segments: Vec<Vec<(F,F,bool)>>, compare_intersection: CompareIntersectionFn<F>, start_inside: bool, interpolate: InterpolateFn<F>, stream: Box<dyn GeoStream<F>>)
-where F: Float + FromPrimitive {
+pub fn rejoin<F>(
+  segments: Vec<Vec<MeshPoint<F>>>,
+  compare_intersection: CompareIntersectionFn<F>,
+  start_inside: bool,
+  interpolate: InterpolateFn<F>,
+  mut stream: Box<dyn TransformStream<F>>,
+) where
+  F: Float + FromPrimitive,
+{
   let subject = Vec::<Intersection<F>>::new();
-  let clip: Vec<[F;2]>;
+  let clip = Vec::<Intersection<F>>::new();
   // let i,
-  let n:usize;
+  // let n: usize;
 
   for segment in segments.iter() {
-    n = segment.len() - 1;
-    if n <= 0 {return};
-    let p0 = segment[0];
-    let p1 = segment[n];
-    let x;
+    let n = segment.len() - 1;
+    if n <= 0 {
+      return;
+    };
+    let mut p0 = segment[0];
+    let mut p1 = segment[n];
+    //  let mut x: Intersection<F>;
 
     if point_equal(p0, p1) {
-      if !p0.2 && !p1.2 {
+      if !p0[2].is_zero() && !p1[2].is_zero() {
         stream.line_start();
-        let i;
+        // let i: usize;
         // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
-        for i in  0..n {
+        for i in 0..n {
           p0 = segment[i];
-          stream.point(p0.0, p0.1);
+          stream.point(p0[0], p0[1], None);
         }
         stream.line_end();
         return;
       }
       // handle degenerate cases by moving the point
       // p1[0] += 2F * F::epsilon();
-      p1.0 = p1.0 + F::from(2u8: u8).unwrap() * F::epsilon();
+      p1[0] = p1[0] + F::from(2u8).unwrap() * F::epsilon();
     }
 
-    let x = Intersection::new(p0, Some(segment), None, true);
-    subject.push(x);
-    x.o = Some(Intersection::new(p0, None, Some(x), false));
-    clip.push(x.o);
-    x = Intersection::new(p1, Some(segment), None, false);
-    subject.push(x);
-    x.o = Intersection::new(p1, None, Some(x), true);
-    clip.push(x.o);
-
+    // let mut x = Intersection::new(p0, Some(segment.to_vec()), None, true);
+    // subject.push(x);
+    // x.o = Some(Box::new(Intersection::new(
+    //   p0,
+    //   None,
+    //   Some(Box::new(x)),
+    //   false,
+    // )));
+    // clip.push(*x.o.unwrap());
+    // x = Intersection::new(p1, Some(segment.to_vec()), None, false);
+    // subject.push(x);
+    // x.o = Some(Box::new(Intersection::new(
+    //   p1,
+    //   None,
+    //   Some(Box::new(x)),
+    //   true,
+    // )));
+    // clip.push(*x.o.unwrap());
   }
 }
 
@@ -172,24 +198,46 @@ where F: Float + FromPrimitive {
 //   }
 // }
 
-
-fn link<F>(array: Vec<MeshPoint<F>>)
-where F: Float {
-  if array.is_empty() { return };
-  let n = array.len();
-
-  let i:usize = 0usize;
-  let a = array[0];
-  let b;
-  while  (i = i + 1) < n {
-    a.n = b = array[i];
-    b.p = a;
-    a = b;
-  }
-  a.n = b = array[0];
-  b.p = a;
+struct LinkNP<'a, T> {
+  value: T,
+  n: Option<&'a LinkNP<'a, T>>,
+  p: Option<&'a LinkNP<'a, T>>,
 }
 
+fn link<F>(array: Vec<MeshPoint<F>>)
+where
+  F: Float,
+{
+  if array.is_empty() {
+    return;
+  };
+  let n = array.len();
+
+  let i: usize = 0usize;
+  let mut a = LinkNP {
+    value: array[0],
+    n: None,
+    p: None,
+  };
+  let mut b: LinkNP<MeshPoint<F>>;
+  for i in 1..n {
+    b = LinkNP {
+      value: array[i],
+      n: None,
+      p: None,
+    };
+    // a.n = Some(&b);
+    // b.p = Some(&a);
+    a = b;
+  }
+  b = LinkNP {
+    value: array[i],
+    n: None,
+    p: None,
+  };
+  // a.n = Some(&b);
+  // b.p = Some(&a);
+}
 
 // function link(array) {
 //   if (!(n = array.length)) return;

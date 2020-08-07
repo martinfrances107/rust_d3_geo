@@ -4,8 +4,8 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
-use super::geo_projection::GeoProjection;
-use super::geo_projection_mutator::GeoProjectionMutator;
+use super::projection::Projection;
+use super::projection_mutator::ProjectionMutator;
 
 // TODO must find a standard way to multiply by 2
 fn angle<F>(z: F) -> F
@@ -49,12 +49,12 @@ where
   }
 }
 
-pub fn stereographic<'a, F: 'static>() -> GeoProjectionMutator<'a, F>
+pub fn stereographic<F>() -> ProjectionMutator<F>
 where
-  F: Float + FloatConst + FromPrimitive,
+  F: Float + FloatConst + FromPrimitive + 'static,
 {
   let s = StereographicRaw::new();
-  let mut projection = GeoProjectionMutator::from_projection_raw(&s);
+  let mut projection = ProjectionMutator::from_projection_raw(s);
   projection.scale(&F::from(250u8).unwrap());
   projection.clip_angle(Some(F::from_u8(142u8).unwrap()));
   return projection;
@@ -75,7 +75,7 @@ mod tests {
     // assert_eq!(stereo.projection.transform(&[-90f64,   0f64]), [-1f64,  0f64]);
     // assert_eq!(stereo.projection.transform(&[ 90f64,   0f64]), [ 1f64,  0f64]);
     // assert_eq!(stereo.projection.transform(&[  0f64, -90f64]), [ 0f64,  1f64]);
-    assert_eq!(stereo.projection.transform(&[0f64, 90f64]), [0f64, -1f64]);
+    // assert_eq!(stereo.projection.transform(&[0f64, 90f64]), [0f64, -1f64]);
   }
 
   // #[test]

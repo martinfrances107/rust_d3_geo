@@ -1,9 +1,9 @@
 use num_traits::Float;
 
-pub trait GeoStream<F>
+pub trait Stream<F>
 where F: Float {
   #[allow(unused_variables)]
-  fn point(&mut self, x: F, y: F) {}
+  fn point(&mut self, x: F, y: F, z: Option<F>) {}
   fn sphere(&mut self) {}
   fn line_start(&mut self) {}
   fn line_end(&mut self) {}

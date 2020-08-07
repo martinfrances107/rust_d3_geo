@@ -52,7 +52,7 @@ export default function(radius) {
             // outside going in
             stream.lineStart();
             point2 = intersect(point1, point0);
-            stream.point(point2[0], point2[1]);
+            stream.point(point2[0], point2[1], None);
           } else {
             // inside going out
             point2 = intersect(point0, point1);
@@ -68,11 +68,11 @@ export default function(radius) {
             clean = 0;
             if (smallRadius) {
               stream.lineStart();
-              stream.point(t[0][0], t[0][1]);
-              stream.point(t[1][0], t[1][1]);
+              stream.point(t[0][0], t[0][1], None);
+              stream.point(t[1][0], t[1][1], None);
               stream.lineEnd();
             } else {
-              stream.point(t[1][0], t[1][1]);
+              stream.point(t[1][0], t[1][1], None);
               stream.lineEnd();
               stream.lineStart();
               stream.point(t[0][0], t[0][1], 3);
@@ -80,7 +80,7 @@ export default function(radius) {
           }
         }
         if (v && (!point0 || !pointEqual(point0, point1))) {
-          stream.point(point1[0], point1[1]);
+          stream.point(point1[0], point1[1], None);
         }
         point0 = point1, v0 = v, c0 = c;
       },

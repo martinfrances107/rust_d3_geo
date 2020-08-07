@@ -1,3 +1,5 @@
+use num_traits::Float;
+
 use crate::Transform;
 
 pub struct Compose<F> {
@@ -11,7 +13,8 @@ impl<F> Compose<F> {
   }
 }
 
-impl<F> Transform<F> for Compose<F> {
+impl<F> Transform<F> for Compose<F>
+where F: Float {
   // Apply A then B.
   fn transform(&self, coordinates: &[F; 2]) -> [F; 2] {
     let temp = self.a.transform(coordinates);

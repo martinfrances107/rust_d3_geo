@@ -13,7 +13,7 @@ use crate::cartesian::spherical;
 use crate::Transform;
 
 use crate::rotation::rotate_radians::rotate_radians;
-use crate::stream::GeoStream;
+use crate::stream::Stream;
 
 /// Returns the signed angle of a cartesian point relative to [cosRadius, 0, 0].
 fn circle_radius<F>(cos_radius: F, point_p: [F; 2]) -> F
@@ -145,7 +145,7 @@ where
     while cond {
       // println!("circle enter for loop t = {:?}", t);
       point = spherical(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
-      self.point(point[0], point[1]);
+      self.point(point[0], point[1], None);
 
       t = t - step;
       cond = match direction > F::zero() {
@@ -178,11 +178,11 @@ where
   // return circle;
 }
 
-impl<F> GeoStream<F> for Circle<F>
+impl<F> Stream<F> for Circle<F>
 where
   F: Float
 {
-  fn point(&mut self, x: F, y: F)
+  fn point(&mut self, x: F, y: F, z: Option<F>)
   where
     F: Float,
   {

@@ -1,40 +1,35 @@
 use num_traits::Float;
-use num_traits::FloatConst;
+
+// use crate::stream::GeoStream;
+use crate::transform_stream::TransformStream;
 
 #[derive(Clone, Copy)]
 struct LineTuple<F>
-where F: Float {
+where
+  F: Float,
+{
   x: F,
   y: F,
-  m: u16,
+  m: Option<F>,
 }
 
 pub struct ClipBuffer<F>
-where F: Float {
+where
+  F: Float,
+{
   lines: Vec<Vec<LineTuple<F>>>,
   line: Vec<LineTuple<F>>,
 }
 
 impl<F> ClipBuffer<F>
-where F: Float {
+where
+  F: Float,
+{
   pub fn new() -> Self {
     return Self {
-      lines:Vec::new(),
+      lines: Vec::new(),
       line: Vec::new(),
     };
-  }
-
-  fn point(&mut self, x: F, y: F, m :u16) {
-    self.line.push(LineTuple{x,y,m});
-  }
-
-  fn lineStart(&mut self) {
-      self.line.clear();
-      self.lines.push(self.line);
-  }
-
-  fn lineEnd(&self) {
-    // no-op.
   }
 
   fn rejoin(&mut self) {
@@ -49,14 +44,30 @@ where F: Float {
   }
 
   fn result(&mut self) -> Vec<Vec<LineTuple<F>>> {
-    let result = self.lines;
     self.lines.clear();
     self.line.clear();
-    return result;
+    let result = &self.lines;
+    return result.to_vec();
   }
 }
 
+impl<'a, F> TransformStream<F> for ClipBuffer<F>
+where
+  F: Float,
+{
+  fn point(&mut self, x: F, y: F, m: Option<F>) {
+    self.line.push(LineTuple { x, y, m });
+  }
 
+  fn line_start(&mut self) {
+    self.line.clear();
+    // self.lines.push(self.line);
+  }
+
+  fn line_end(&mut self) {
+    // no-op.
+  }
+}
 // import noop from "../noop.js";
 
 // export default function() {
