@@ -26,6 +26,7 @@ pub trait ClipLine<'a, F> {
 }
 
 // CompareIntersections param type!!!
+#[derive(Debug)]
 pub struct Ci<F>
 where
   F: Float,
@@ -35,7 +36,7 @@ where
 
 type InterpolateFn<F> = Box<dyn Fn(Option<F>, Option<F>, F, dyn Stream<F>)>;
 type PointVisibleFn<F> = Box<dyn Fn(F, F, Option<F>) -> bool>;
-type ClipLineFn<F> = dyn Fn(Box<dyn ClipLine<F>>) -> Box<dyn ClipLine<F>>;
+// type ClipLineFn<F> = dyn Fn(Box<dyn ClipLine<F>>) -> Box<dyn ClipLine<F>>;
 type CompareIntersectionFn<F> = Box<dyn Fn(Ci<F>, Ci<F>) -> F>;
 
 pub struct Clip<F>

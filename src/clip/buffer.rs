@@ -3,7 +3,7 @@ use num_traits::Float;
 // use crate::stream::GeoStream;
 use crate::transform_stream::TransformStream;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 struct LineTuple<F>
 where
   F: Float,
@@ -12,7 +12,7 @@ where
   y: F,
   m: Option<F>,
 }
-
+#[derive(Debug)]
 pub struct ClipBuffer<F>
 where
   F: Float,

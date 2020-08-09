@@ -8,10 +8,10 @@ pub struct Rotation<F> {
   rotate: Box<dyn Transform<F>>,
 }
 
-impl<F: 'static> Rotation<F> {
+impl<F> Rotation<F> {
   pub fn new(delta_lambda: F, delta_phi: F, delta_gamma: F) -> Self
   where
-    F: Float + FloatConst,
+    F: Float + FloatConst + 'static,
   {
     return Self {
       rotate: rotate_radians(

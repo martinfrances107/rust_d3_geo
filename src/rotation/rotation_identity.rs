@@ -3,6 +3,7 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
+#[derive(Clone, Debug)]
 pub struct RotationIdentity {}
 
 // By design a stateless function.
@@ -18,6 +19,15 @@ where
     true => [lambda + (-lambda / F::TAU()).round() * F::TAU(), phi],
     false => [lambda, phi],
   };
+}
+
+impl RotationIdentity {
+  pub fn new() -> Self
+  // where
+  //   F: Float + FloatConst
+  {
+    return RotationIdentity{};
+  }
 }
 
 impl<F> Transform<F> for RotationIdentity

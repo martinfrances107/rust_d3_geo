@@ -22,6 +22,8 @@ mod transform_stream;
 
 /// Common to Projection, Rotation.
 /// Defaults to the identity transform.
+///
+#[derive(Debug)]
 struct TransformState {}
 impl <F>Transform<F> for TransformState
 where F: Float {}

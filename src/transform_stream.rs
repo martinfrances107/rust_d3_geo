@@ -3,6 +3,7 @@ use num_traits::Float;
 // Define the default implementation of the trait.
 // use crate::stream::GeoStream;
 
+#[derive(Debug)]
 pub struct TransformStreamIdentity {}
 
 impl TransformStreamIdentity {

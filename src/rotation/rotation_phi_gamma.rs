@@ -3,6 +3,7 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
+#[derive(Debug)]
 pub struct RotationPhiGamma<F>
 where
   F: Float + FloatConst,

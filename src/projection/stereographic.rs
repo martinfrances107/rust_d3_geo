@@ -24,6 +24,17 @@ impl StereographicRaw {
   {
     return Box::new(StereographicRaw {});
   }
+
+  pub fn gen_projection_mutator<'a, F>() -> ProjectionMutator<F>
+  where
+    F: Float + FloatConst + FromPrimitive + 'static
+  {
+    let s = StereographicRaw::new();
+    let mut projection = ProjectionMutator::from_projection_raw(s);
+    projection.scale(&F::from(250u8).unwrap());
+    projection.clip_angle(Some(F::from_u8(142u8).unwrap()));
+    return projection;
+  }
 }
 
 impl<F> Transform<F> for StereographicRaw
@@ -49,17 +60,6 @@ where
   }
 }
 
-pub fn stereographic<F>() -> ProjectionMutator<F>
-where
-  F: Float + FloatConst + FromPrimitive + 'static,
-{
-  let s = StereographicRaw::new();
-  let mut projection = ProjectionMutator::from_projection_raw(s);
-  projection.scale(&F::from(250u8).unwrap());
-  projection.clip_angle(Some(F::from_u8(142u8).unwrap()));
-  return projection;
-}
-
 #[cfg(test)]
 mod tests {
 
@@ -67,7 +67,7 @@ mod tests {
 
   #[test]
   fn test_stereographic_embedded() {
-    let mut stereo = stereographic();
+    let mut stereo = StereographicRaw::gen_projection_mutator();
     stereo.translate(&[0f64, 0f64]);
     stereo.scale(&1f64);
 

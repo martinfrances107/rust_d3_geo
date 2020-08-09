@@ -23,6 +23,7 @@ use super::transform_radians::TransformRadians;
 use super::transform_rotate::TransformRotate;
 // use super::stream_wrapper::StreamWrapper;
 
+
 pub struct ProjectionMutator<F>
 where F: Float + FloatConst + FromPrimitive {
   // The mutator lives as long a the proejction it contnains.
@@ -56,10 +57,10 @@ where F: Float + FloatConst + FromPrimitive {
 }
 
 impl<F> ProjectionMutator<F>
-where F: Float + FloatConst + FromPrimitive + 'static {
+where F: Float + FloatConst + FromPrimitive +'static {
   pub fn from_projection_raw(projection: Box<dyn Transform<F>>) -> ProjectionMutator<F>
   where F: Float + FloatConst + FromPrimitive {
-    return ProjectionMutator {
+    let mut pm = ProjectionMutator {
       alpha: None,  // post-rotate angle
       cache: None,
       cache_stream: None,
@@ -76,7 +77,7 @@ where F: Float + FloatConst + FromPrimitive + 'static {
       lambda: F::zero(),
       phi: F::zero(),
       rotate: Box::new(TransformState{}), // pre-rotate
-      preclip:  Box::new(generate_antimeridian::<F>()),
+      preclip:  Box::new(generate_antimeridian()),
       postclip: None,
       sx: F::one(),     // reflectX
       sy: F::one(),     // reflectX
@@ -91,6 +92,8 @@ where F: Float + FloatConst + FromPrimitive + 'static {
       project_transform: Box::new(TransformState{}),
       project_rotate_transform: Box::new(TransformState{}),
     };
+    pm.recenter();
+    return pm;
   }
 
   fn reset(&mut self) {
@@ -126,8 +129,8 @@ where F: Float + FloatConst + FromPrimitive + 'static {
         );
       }
     };
-    self.rotate = rotate_radians(self.delta_lambda, self.delta_phi,self.delta_gamma);
-    // self.project_transform = Box::new(Compose{a:self.projection, b:transform});
+    // self.rotate = rotate_radians(self.delta_lambda, self.delta_phi,self.delta_gamma);
+    // self.project_transform = Box::new(Compose::new(&self.projection, transform));
     // self.project_rotate_transform = Box::new(Compose{a: self.rotate, b:self.project_transform});
     // self.project_rotate_transform = Box::new(Compose{a: self.rotate, b:self.project_transform});
     // self.project_resample = Some(
@@ -173,7 +176,7 @@ where F: Float + FloatConst + FromPrimitive {
 }
 
 impl<F:> Projection<F> for ProjectionMutator<F>
-where F: Float + FloatConst + FromPrimitive + 'static{
+where F: Float + FloatConst + FromPrimitive + 'static {
 
   // projection.stream = function(stream) {
   //   return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
@@ -260,9 +263,9 @@ where F: Float + FloatConst + FromPrimitive + 'static{
   }
 }
 
-fn generate<F: 'static>(raw: Box<dyn Transform<F>>) -> ProjectionMutator<F>
-where F: Float + FloatConst + FromPrimitive {
-  let mut g = ProjectionMutator::<F>::from_projection_raw(raw);
-  g.recenter();
-  return g;
-}
+// fn generate<'a, F: 'static>(raw: Box<dyn Transform<F>>) -> ProjectionMutator<'a, F>
+// where F: Float + FloatConst + FromPrimitive {
+//   let mut g = ProjectionMutator::<'a, F>::from_projection_raw(&raw);
+//   g.recenter();
+//   return g;
+// }

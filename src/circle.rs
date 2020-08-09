@@ -40,9 +40,9 @@ pub struct Circle<F> {
   rotate: Box<dyn Transform<F>>,
 }
 
-impl<F: 'static> Circle<F>
+impl<F> Circle<F>
 where
-  F: Float + FloatConst + FromPrimitive,
+  F: Float + FloatConst + FromPrimitive + 'static,
 {
   pub fn new(center_p: Option<[F; 2]>, radius_p: Option<F>, precision_p: Option<F>) -> Self {
     let center = center_p.unwrap_or([F::zero(), F::zero()]);

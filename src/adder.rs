@@ -13,7 +13,7 @@ static temp64: Adder<f64> = Adder::new();
 static temp32: Adder<f32> = Adder<f32>::new();
 // static tempF: Adder<F> = Adder<F>::new();
 
-
+#[derive(Debug)]
 pub struct Adder<F>{
   s: F,
   t: F,

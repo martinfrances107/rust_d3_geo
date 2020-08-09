@@ -7,8 +7,8 @@ mod intersect;
 mod line;
 
 // use crate::stream::GeoStream;
-use crate::transform_stream::TransformStream;
-use crate::transform_stream::TransformStreamIdentity;
+// use crate::transform_stream::TransformStream;
+// use crate::transform_stream::TransformStreamIdentity;
 
 use super::Clip;
 
@@ -30,7 +30,7 @@ where
 // );
 pub fn generate_antimeridian<F>() -> Clip<F>
 where
-  F: Float + FloatConst + FromPrimitive + 'static,
+  F: Float + FloatConst + FromPrimitive + 'static
 {
   return Clip::<F>::new(
     Box::new(point_visible),
