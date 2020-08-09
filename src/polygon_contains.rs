@@ -5,6 +5,7 @@ use num_traits::FloatConst;
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_normalize_in_place;
+use crate::math::epsilon;
 
 // import adder from "./adder.js";
 // var sum = adder();
@@ -124,7 +125,7 @@ where
     is_winding_odd = false;
   }
 
-  let epsilon = F::from(1e-6).unwrap();
+  let epsilon = epsilon::<F>();
   let is_south_pole_inside = angle < -epsilon || angle < epsilon && sum < -epsilon;
   let ret = is_south_pole_inside ^ is_winding_odd;
 
