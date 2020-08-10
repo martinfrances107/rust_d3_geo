@@ -31,14 +31,14 @@ where
   return (radius_signed + F::TAU() - F::epsilon()) % F::TAU();
 }
 
-// #[derive(Clone)]
+#[derive(Clone)]
 pub struct Circle<F> {
   center: [F; 2],
   radius: F,
   precision: F,
   ring: Vec<[F; 2]>,
   pub coordinates: Vec<Vec<[F; 2]>>,
-  rotate: Box<dyn Transform<F>>,
+  // rotate: Box<dyn Transform<F>>,
 }
 
 impl<F> Circle<F>
@@ -53,9 +53,9 @@ where
     precision = precision.to_radians();
 
     let ring = Vec::new();
-    let mut rotate_r = RotateRadians::new();
-    let rotate =
-      rotate_r.rotate_radians(-center[0].to_radians(), -center[1].to_radians(), F::zero());
+    // let mut rotate_r = RotateRadians::new();
+    // let rotate =
+    //   rotate_r.rotate_radians(-center[0].to_radians(), -center[1].to_radians(), F::zero());
     let coordinates = Vec::new();
     let mut c = Self {
       center,
@@ -63,7 +63,7 @@ where
       precision,
       radius,
       ring,
-      rotate,
+      // rotate,
     };
 
     c.circle_stream(radius, precision, F::one(), None, None);
@@ -149,13 +149,20 @@ where
 
 impl<F> Stream<F> for Circle<F>
 where
-  F: Float,
+  F: Float  + FloatConst + 'static,
 {
   fn point(&mut self, x: F, y: F, z: Option<F>)
   where
-    F: Float,
+    F: Float + FloatConst,
   {
-    let mut x_rotated = self.rotate.invert(&[x, y]);
+
+    // This is inefficient everytime point is called create a new transform object.
+    // This is bad but makes circle clonable.
+    let mut rotate_r = RotateRadians::new();
+    let rotate =
+      rotate_r.rotate_radians(-self.center[0].to_radians(), -self.center[1].to_radians(), F::zero());
+
+    let mut x_rotated = rotate.invert(&[x, y]);
     x_rotated[0] = x_rotated[0].to_degrees();
     x_rotated[1] = x_rotated[1].to_degrees();
     self.ring.push(x_rotated);
