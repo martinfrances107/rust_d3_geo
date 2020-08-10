@@ -23,7 +23,7 @@ mod transform_stream;
 /// Common to Projection, Rotation.
 /// Defaults to the identity transform.
 ///
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 struct TransformIdentity {}
 impl TransformIdentity {
     fn new() -> Self

@@ -15,6 +15,7 @@ where
   return F::from_u8(2u8).unwrap() * z.atan();
 }
 
+#[derive(Clone, Debug)]
 struct StereographicRaw {}
 
 impl StereographicRaw {

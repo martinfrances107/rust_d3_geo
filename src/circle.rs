@@ -2,10 +2,10 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
-use std::fmt::Debug;
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
+use std::fmt::Debug;
 
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_normalize_in_place;
@@ -31,6 +31,7 @@ where
   return (radius_signed + F::TAU() - F::epsilon()) % F::TAU();
 }
 
+// #[derive(Clone)]
 pub struct Circle<F> {
   center: [F; 2],
   radius: F,
@@ -53,10 +54,9 @@ where
 
     let ring = Vec::new();
     let mut rotate_r = RotateRadians::new();
-    let rotate = rotate_r.rotate_radians(-center[0].to_radians(), -center[1].to_radians(), F::zero());
+    let rotate =
+      rotate_r.rotate_radians(-center[0].to_radians(), -center[1].to_radians(), F::zero());
     let coordinates = Vec::new();
-    // c = {type: "Polygon", coordinates: [ring]};
-    // ring = rotate = null;
     let mut c = Self {
       center,
       coordinates,
@@ -72,22 +72,6 @@ where
     return c;
   }
 
-  // function circle() {
-  //   var c = center.apply(this, arguments),
-  //       r = radius.apply(this, arguments) * radians,
-  //       p = precision.apply(this, arguments) * radians;
-  //   ring = [];
-  //   rotate = rotateRadians(-c[0] * radians, -c[1] * radians, 0).invert;
-  //   circleStream(stream, r, p, 1);
-  //   c = {type: "Polygon", coordinates: [ring]};
-  //   ring = rotate = null;
-  //   return c;
-  // }
-
-  // circle.center = function(_) {
-  //   return arguments.length ? (center = typeof _ === "function" ? _ : constant([+_[0], +_[1]]), circle) : center;
-  // };
-
   /// Generates a circle centered at [0°, 0°], with a given radius and precision.
   fn circle_stream(
     &mut self,
@@ -97,7 +81,7 @@ where
     p0: Option<[F; 2]>,
     p1: Option<[F; 2]>,
   ) where
-    F: Float + FloatConst + FromPrimitive
+    F: Float + FloatConst + FromPrimitive,
   {
     if delta.is_zero() {
       return;
@@ -107,7 +91,6 @@ where
     let step = direction * delta;
     let mut t0: F;
     let t1: F;
-    // println!("radius {:?}", radius);
     match (p0, p1) {
       (Some(p0), Some(p1)) => {
         t0 = circle_radius(cos_radius, p0);
@@ -121,30 +104,15 @@ where
         }
       }
       (_, _) => {
-        // println!("NULL");
         t0 = radius + direction * F::TAU();
         t1 = radius - step / F::from(2u8).unwrap();
       }
     }
-    // if (t0 == null) {
-    //   t0 = radius + direction * tau;
-    //   t1 = radius - step / 2;
-    // } else {
-    //   t0 = circleRadius(cosRadius, t0);
-    //   t1 = circleRadius(cosRadius, t1);
-    //   if (direction > 0 ? t0 < t1 : t0 > t1) t0 += direction * tau;
-    // }
-
-    // for (var point, t = t0; direction > 0 ? t > t1 : t < t1; t -= step) {
-    //   point = spherical([cosRadius, -sinRadius * cos(t), -sinRadius * sin(t)]);
-    //   stream.point(point[0], point[1]);
-    // }
 
     let mut point: [F; 2];
     let mut t = t0;
     let mut cond = true;
     while cond {
-      // println!("circle enter for loop t = {:?}", t);
       point = spherical(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
       self.point(point[0], point[1], None);
 
@@ -181,7 +149,7 @@ where
 
 impl<F> Stream<F> for Circle<F>
 where
-  F: Float
+  F: Float,
 {
   fn point(&mut self, x: F, y: F, z: Option<F>)
   where
