@@ -19,19 +19,19 @@ where
 struct StereographicRaw {}
 
 impl StereographicRaw {
-  fn new<F>() -> Box<dyn Transform<F>>
+  fn new<F>() -> Self
   where
     F: Float + FloatConst + FromPrimitive,
   {
-    return Box::new(StereographicRaw {});
+    return StereographicRaw {};
   }
 
   pub fn gen_projection_mutator<'a, F>() -> ProjectionMutator<F>
   where
     F: Float + FloatConst + FromPrimitive + 'static
   {
-    let s = StereographicRaw::new();
-    let mut projection = ProjectionMutator::from_projection_raw(s);
+    let s = StereographicRaw::new::<F>();
+    let mut projection = ProjectionMutator::from_projection_raw(Box::new(s));
     projection.scale(&F::from(250u8).unwrap());
     projection.clip_angle(Some(F::from_u8(142u8).unwrap()));
     return projection;
