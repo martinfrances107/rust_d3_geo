@@ -1,3 +1,5 @@
+use std::cell::RefCell;
+
 // A collection of functions that mutate a Projection struct.
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
@@ -5,12 +7,12 @@ use num_traits::FloatConst;
 
 use crate::compose::Compose;
 // use crate::resample::Resample;
-use crate::rotation::rotate_radians::rotate_radians;
+use crate::rotation::rotate_radians::RotateRadians;
 // use crate::stream::Stream;
 use crate::transform_stream::TransformStream;
 use crate::transform_stream::TransformStreamIdentity;
 use crate::Transform;
-use crate::TransformState;
+use crate::TransformIdentity;
 // use crate::clip::antimeridian::ClipAntimeridianState;
 use crate::clip::antimeridian::generate_antimeridian;
 // use crate::clip::circle::Circle;
@@ -27,7 +29,7 @@ use super::transform_rotate::TransformRotate;
 pub struct ProjectionMutator<F>
 where F: Float + FloatConst + FromPrimitive {
   // The mutator lives as long a the proejction it contnains.
-  pub projection: Box<dyn Transform<F>>,
+  // pub projection: RefCell<Box<dyn Transform<F>>>,
   alpha: Option<F>,                 // post-rotate angle
   cache: Option<Box<dyn TransformStream<F>>>,
   cache_stream: Option<Box<dyn TransformStream<F>>>,
@@ -69,14 +71,14 @@ where F: Float + FloatConst + FromPrimitive +'static {
       delta_lambda: F::zero(),
       delta_phi: F::zero(),
       delta_gamma: F::zero(),
-      projection,
+      // projection: RefCell::new(projection),
       // scale
       k: F::from_u8(150u8).unwrap(),
       // translate
       // center
       lambda: F::zero(),
       phi: F::zero(),
-      rotate: Box::new(TransformState{}), // pre-rotate
+      rotate: Box::new(TransformIdentity{}), // pre-rotate
       preclip:  Box::new(generate_antimeridian()),
       postclip: None,
       sx: F::one(),     // reflectX
@@ -89,9 +91,36 @@ where F: Float + FloatConst + FromPrimitive +'static {
       y1: None,       //postclip = identity, // post-clip extent
       y: F::from_u16(250u16).unwrap(),
       project_resample: Box::new(TransformStreamIdentity{}),
-      project_transform: Box::new(TransformState{}),
-      project_rotate_transform: Box::new(TransformState{}),
+      project_transform: Box::new(TransformIdentity{}),
+      project_rotate_transform: Box::new(TransformIdentity{}),
     };
+
+    let center;
+    let transform: Box<dyn Transform<F>>;
+    // let p = projection.borrow();
+        center = ScaleTranslateRotate::new(pm.k, F::zero(), F::zero(), pm.sx, pm.sy, pm.alpha.unwrap_or(F::zero()))
+          .transform(&projection.transform(&[pm.lambda, pm.phi]));
+        transform = ScaleTranslateRotate::new(
+          pm.k,
+          pm.x - center[0],
+          pm.y - center[1],
+          pm.sx,
+          pm.sy,
+          pm.alpha.unwrap_or(F::zero()),
+        );
+
+
+    pm.rotate = RotateRadians::new().rotate_radians(pm.delta_lambda, pm.delta_phi,pm.delta_gamma);
+    // let p2 = self.projection.take();
+    pm.project_transform = Box::new(Compose::new(projection, transform));
+    // self.project_rotate_transform = Box::new(Compose{a: self.rotate, b:self.project_transform});
+    // self.project_rotate_transform = Box::new(Compose{a: self.rotate, b:self.project_transform});
+    // self.project_resample = Some(
+
+    //   Box::new(
+    //     Resample::new(self.project_transform, self.delta2)
+    //   )
+
     pm.recenter();
     return pm;
   }
@@ -102,35 +131,23 @@ where F: Float + FloatConst + FromPrimitive +'static {
 
   fn recenter(&mut self)
   where F: Float + FloatConst + FromPrimitive {
-    let center;
-    let transform: Box<dyn Transform<F>>;
-    match self.alpha {
-      Some(alpha) => {
-        center = ScaleTranslateRotate::new(self.k, F::zero(), F::zero(), self.sx, self.sy, alpha)
-          .transform(&[self.lambda, self.phi]);
-        transform = ScaleTranslateRotate::new(
-          self.k,
-          self.x - center[0],
-          self.y - center[1],
-          self.sx,
-          self.sy,
-          alpha,
-        );
-      }
-      None => {
-        center = ScaleTranslate::new(self.k, F::zero(), F::zero(), self.sx, self.sy)
-          .transform(&[self.lambda, self.phi]);
-        transform = ScaleTranslate::new(
-          self.k,
-          self.x - center[0],
-          self.y - center[1],
-          self.sx,
-          self.sy,
-        );
-      }
-    };
+    // let center;
+    // let transform: Box<dyn Transform<F>>;
+    // let p = self.projection.borrow();
+    //     center = ScaleTranslateRotate::new(self.k, F::zero(), F::zero(), self.sx, self.sy, self.alpha.unwrap_or(F::zero()))
+    //       .transform(&p.transform(&[self.lambda, self.phi]));
+    //     transform = ScaleTranslateRotate::new(
+    //       self.k,
+    //       self.x - center[0],
+    //       self.y - center[1],
+    //       self.sx,
+    //       self.sy,
+    //       self.alpha.unwrap_or(F::zero()),
+    //     );
+
     // self.rotate = rotate_radians(self.delta_lambda, self.delta_phi,self.delta_gamma);
-    // self.project_transform = Box::new(Compose::new(&self.projection, transform));
+    // // let p2 = self.projection.take();
+    // self.project_transform = Box::new(Compose::new(p2, transform));
     // self.project_rotate_transform = Box::new(Compose{a: self.rotate, b:self.project_transform});
     // self.project_rotate_transform = Box::new(Compose{a: self.rotate, b:self.project_transform});
     // self.project_resample = Some(
@@ -141,7 +158,7 @@ where F: Float + FloatConst + FromPrimitive +'static {
 
     // );
     // return self.reset();
-  }
+    }
 }
 
 impl<F> TransformStream<F> for ProjectionMutator<F>

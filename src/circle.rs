@@ -12,7 +12,7 @@ use crate::cartesian::cartesian_normalize_in_place;
 use crate::cartesian::spherical;
 use crate::Transform;
 
-use crate::rotation::rotate_radians::rotate_radians;
+use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 
 /// Returns the signed angle of a cartesian point relative to [cosRadius, 0, 0].
@@ -52,7 +52,8 @@ where
     precision = precision.to_radians();
 
     let ring = Vec::new();
-    let rotate = rotate_radians(-center[0].to_radians(), -center[1].to_radians(), F::zero());
+    let mut rotate_r = RotateRadians::new();
+    let rotate = rotate_r.rotate_radians(-center[0].to_radians(), -center[1].to_radians(), F::zero());
     let coordinates = Vec::new();
     // c = {type: "Polygon", coordinates: [ring]};
     // ring = rotate = null;

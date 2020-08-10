@@ -11,11 +11,11 @@ pub mod circle;
 pub mod polygon_contains;
 pub mod rotation;
 
-mod compose;
 mod clip;
+mod compose;
+mod math;
 mod point_equal;
 mod projection;
-mod math;
 mod resample;
 mod stream;
 mod transform_stream;
@@ -24,12 +24,24 @@ mod transform_stream;
 /// Defaults to the identity transform.
 ///
 #[derive(Debug)]
-struct TransformState {}
-impl <F>Transform<F> for TransformState
-where F: Float {}
+struct TransformIdentity {}
+impl TransformIdentity {
+    fn new() -> Self
+    {
+        return TransformIdentity {};
+    }
+}
+
+impl<F> Transform<F> for TransformIdentity where F: Float {}
 
 pub trait Transform<F>
-where F: Float {
-    fn transform(&self, p: &[F; 2]) -> [F; 2] { return [p[0], p[1]]; }
-    fn invert(&self, p: &[F; 2]) -> [F; 2] { return *p; }
+where
+    F: Float,
+{
+    fn transform(&self, p: &[F; 2]) -> [F; 2] {
+        return [p[0], p[1]];
+    }
+    fn invert(&self, p: &[F; 2]) -> [F; 2] {
+        return *p;
+    }
 }
