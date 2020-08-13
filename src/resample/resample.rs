@@ -4,6 +4,7 @@ use num_traits::FloatConst;
 
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::result::Result;
 
 use crate::cartesian::cartesian;
 use crate::math::epsilon;
@@ -98,14 +99,14 @@ where
   }
 
   fn ring_point(&mut self, lambda: F, phi: F) {
-        self.lambda00 = lambda;
-        self.line_point(self.lambda00, phi);
-        self.x00 = self.x0;
-        self.y00 = self.y0;
-        self.a00 = self.a0;
-        self.b00 = self.b0;
-        self.c00 = self.c0;
-        self.use_line_point = true;
+    self.lambda00 = lambda;
+    self.line_point(self.lambda00, phi);
+    self.x00 = self.x0;
+    self.y00 = self.y0;
+    self.a00 = self.a0;
+    self.b00 = self.b0;
+    self.c00 = self.c0;
+    self.use_line_point = true;
   }
 
   fn ring_end(&mut self) {
@@ -129,17 +130,40 @@ where
           &mut *stream,
         );
         self.use_line_end = true;
-      },
-      None => {},
+      }
+      None => {}
     }
     self.line_end();
   }
 
-  fn line_point(&self, lambda: F, phi: F) {
+  fn line_point(&mut self, lambda: F, phi: F) {
     let c = cartesian(&[lambda, phi]);
     let project = &*self.project.borrow();
     let p = project.transform(&[lambda, phi]);
-    // self.resample_line_to(self.x0, self.y0, self.lambda0, self.a0, self.b0, self.c0, self.x0 = p[0], self.y0 = p[1], self.lambda0 = self.lambda, self.a0 = c[0], self.b0 = c[1],self. c0 = c[2], MAXDEPTH, self.stream);
+    self.x0 = p[0];
+    self.y0 = p[1];
+    self.lambda0 = lambda;
+    self.a0 = c[0];
+    self.b0 = c[1];
+    self.c0 = c[2];
+    let s_p = self.s.as_ref().unwrap();
+    let mut s = s_p.borrow_mut();
+    self.resample_line_to(
+      self.x0,
+      self.y0,
+      self.lambda0,
+      self.a0,
+      self.b0,
+      self.c0,
+      self.x0,
+      self.y0,
+      self.lambda0,
+      self.a0,
+      self.b0,
+      self.c0,
+      MAXDEPTH,
+      &mut s,
+    );
     // stream.point(x0, y0);
   }
 
@@ -241,11 +265,29 @@ impl<F> TransformStream<F> for Resample<F>
 where
   F: Float + FloatConst + FromPrimitive,
 {
+
+  // function point(x, y) {
+  //   x = project(x, y);
+  //   stream.point(x[0], x[1]);
+  // }
+
   fn point(&mut self, x: F, y: F, z: Option<F>) {
-    let project = &*self.project.borrow();
-    let p = project.transform(&[x, y]);
-    self.use_line_point = false;
-    // self.stream.point(p[0], p[1]);
+    match self.use_line_point {
+      true => {
+        self.line_point(x,y);
+      },
+      false => {
+        match &self.s {
+          Some(s) => {
+            let project = &*self.project.borrow();
+            let p = project.transform(&[x, y]);
+            let mut stream = s.borrow_mut();
+            stream.point(p[0], p[1], None);
+          },
+          None => {},
+        }
+      }
+    }
   }
 
   fn line_start(&mut self) {
@@ -256,7 +298,7 @@ where
         // resampleStream.point = line_point;
         self.use_line_point = true;
         stream.line_start();
-      },
+      }
       None => {},
     }
   }
@@ -268,7 +310,7 @@ where
         self.use_line_point = false;
         // resampleStream.point = point;
         stream.line_end();
-      },
+      }
       None => {},
     }
   }
