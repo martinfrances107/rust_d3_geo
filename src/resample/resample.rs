@@ -4,7 +4,6 @@ use num_traits::FloatConst;
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::result::Result;
 
 use crate::cartesian::cartesian;
 use crate::math::epsilon;
@@ -18,12 +17,12 @@ use crate::Transform;
 
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
-fn cos_min_distance<F>() -> F
-where
-  F: Float + FloatConst + FromPrimitive,
-{
-  return (F::from(30.0f64).unwrap().to_radians()).cos(); // cos(minimum angular distance)
-}
+// fn cos_min_distance<F>() -> F
+// where
+//   F: Float + FloatConst + FromPrimitive,
+// {
+//   return (F::from(30.0f64).unwrap().to_radians()).cos(); // cos(minimum angular distance)
+// }
 
 // #[derive(Clone)]
 pub struct Resample<F>
@@ -271,21 +270,22 @@ where
   //   stream.point(x[0], x[1]);
   // }
 
-  fn point(&mut self, x: F, y: F, z: Option<F>) {
+  fn point(&mut self, x: F, y: F, _z: Option<F>) {
     match self.use_line_point {
       true => {
         self.line_point(x,y);
       },
       false => {
-        match &self.s {
-          Some(s) => {
-            let project = &*self.project.borrow();
-            let p = project.transform(&[x, y]);
-            let mut stream = s.borrow_mut();
-            stream.point(p[0], p[1], None);
-          },
-          None => {},
-        }
+          self.ring_point(x,y);
+      //   match &self.s {
+      //     Some(s) => {
+      //       let project = &*self.project.borrow();
+      //       let p = project.transform(&[x, y]);
+      //       let mut stream = s.borrow_mut();
+      //       stream.point(p[0], p[1], None);
+      //     },
+      //     None => {},
+      //   }
       }
     }
   }
