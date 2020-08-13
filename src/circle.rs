@@ -124,13 +124,13 @@ where
     }
   }
 
-  pub fn get_center(&self) -> [F; 2] {
-    return self.center;
-  }
+  // pub fn get_center(&self) -> [F; 2] {
+  //   return self.center;
+  // }
 
-  pub fn center(&mut self, center: &[F; 2]) {
-    self.center = *center;
-  }
+  // pub fn center(&mut self, center: &[F; 2]) {
+  //   self.center = *center;
+  // }
 
   pub fn get_radius(&self) -> F {
     return self.radius;

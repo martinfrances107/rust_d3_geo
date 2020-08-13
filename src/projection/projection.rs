@@ -15,7 +15,7 @@ pub trait Projection<F> {
   // /**
   //  * Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
   //  */
-  fn get_center(&self) -> [F;2];
+  // fn get_center(&self) -> [F;2];
 
   // /**
   //  * Sets the projection’s center to the specified center,
@@ -24,7 +24,7 @@ pub trait Projection<F> {
   //  *
   //  * @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
   //  */
-  fn center(&mut self, point: [F;2]);
+  // fn center(&mut self, point: [F;2]);
 
   // /**
   //  * Returns the current spherical clipPIng function.
@@ -60,7 +60,7 @@ pub trait Projection<F> {
   //  *
   //  * null switches to antimeridian cutting rather than small-circle clipPIng.
   //  */
-  fn get_clip_angle(&self)-> Option<F>;
+  // fn get_clip_angle(&self)-> Option<F>;
 
   // /**
   //  * Switches to antimeridian cutting rather than small-circle clipPIng.
@@ -295,7 +295,7 @@ pub trait Projection<F> {
   //  *
   //  * The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
   //  */
-  fn get_scale(&self) -> F;
+  // fn get_scale(&self) -> F;
 
   // /**
   //  * Sets the projection’s scale factor to the specified value and returns the projection.
@@ -303,7 +303,7 @@ pub trait Projection<F> {
   //  *
   //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
   //  */
-  fn scale(&mut self, scale: &F);
+  // fn scale(&mut self, scale: &F);
 
   // /**
   //  * Returns the current translation offset which defaults to [480, 250] and places ⟨0°,0°⟩ at the center of a 960×500 area.
@@ -317,7 +317,7 @@ pub trait Projection<F> {
   //  *
   //  * @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
   //  */
-  fn translate(&mut self, t: &[F;2]);
+  // fn translate(&mut self, t: &[F;2]);
 
 }
 

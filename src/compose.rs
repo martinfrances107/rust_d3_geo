@@ -7,9 +7,10 @@ pub struct Compose<F> {
   pub b: Box<dyn Transform<F>>,
 }
 
-impl<'a, F> Compose<F> {
-  pub fn new(a: Box<dyn Transform<F>>, b: Box<dyn Transform<F>>) -> Self {
-    return Self { a, b };
+impl<'a, F> Compose<F>
+where F: Float + 'static {
+  pub fn new(a: Box<dyn Transform<F>>, b: Box<dyn Transform<F>>) -> Box<dyn Transform<F>> {
+    return Box::new(Self { a, b });
   }
 }
 

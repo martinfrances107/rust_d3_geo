@@ -38,10 +38,10 @@ where F: Float {
     let by_gamma = !delta_gamma.is_zero();
     let rl = Box::new(RotationLambda::new(delta_lambda));
     return match (by_lambda, by_gamma, by_phi) {
-      (true, true, true) | (true, true, false) | (true, false, true) => Box::new(Compose::new(
+      (true, true, true) | (true, true, false) | (true, false, true) => Compose::new(
         rl,
         Box::new(RotationPhiGamma::new(delta_phi, delta_gamma)),
-      )),
+      ),
       (true, false, false) => Box::new(RotationLambda::new(delta_lambda)),
       (false, true, true) | (false, true, false) | (false, false, true) => {
         Box::new(RotationPhiGamma::new(delta_phi, delta_gamma))

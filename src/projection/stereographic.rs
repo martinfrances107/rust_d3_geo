@@ -28,11 +28,25 @@ impl StereographicRaw {
 
   pub fn gen_projection_mutator<'a, F>() -> ProjectionMutator<F>
   where
-    F: Float + FloatConst + FromPrimitive + 'static
+    F: Float + FloatConst + FromPrimitive + 'static,
   {
     let s = StereographicRaw::new::<F>();
-    let mut projection = ProjectionMutator::from_projection_raw(Box::new(s));
-    projection.scale(&F::from(250u8).unwrap());
+    // projection.scale(&F::from(250u8).unwrap());
+    let mut projection = ProjectionMutator::<F>::from_projection_raw(
+      Box::new(s),
+      None,
+      Some(F::from(250u8).unwrap()),
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+    );
     projection.clip_angle(Some(F::from_u8(142u8).unwrap()));
     return projection;
   }
@@ -68,11 +82,11 @@ mod tests {
 
   #[test]
   fn test_stereographic_embedded() {
-    let mut stereo = StereographicRaw::gen_projection_mutator();
-    stereo.translate(&[0f64, 0f64]);
-    stereo.scale(&1f64);
+    let stereo = StereographicRaw::gen_projection_mutator::<f64>();
+    // stereo.translate(&[0f64, 0f64]);
+    // stereo.scale(&1f64);
 
-    // assert_eq!(stereo.projection.transform(&[  0f64,   0f64]), [ 0f64,  0f64]);
+    assert_eq!(stereo.transform(&[0f64, 0f64]), [0f64, 0f64]);
     // assert_eq!(stereo.projection.transform(&[-90f64,   0f64]), [-1f64,  0f64]);
     // assert_eq!(stereo.projection.transform(&[ 90f64,   0f64]), [ 1f64,  0f64]);
     // assert_eq!(stereo.projection.transform(&[  0f64, -90f64]), [ 0f64,  1f64]);

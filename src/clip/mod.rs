@@ -59,9 +59,9 @@ where
   sink: Box<dyn TransformStream<F>>,
 }
 
-impl<'a, F: Float> Clip<F>
+impl<'a, F> Clip<F>
 where
-  F: Float,
+  F: Float + FloatConst + 'static,
 {
   fn new(
     point_visible: PointVisibleFn<F>,
@@ -90,7 +90,7 @@ where
       ring: Vec::new(),
       // ring_buffer: ring_buffer,
       segments: Box::new(Vec::new()),
-      sink: Box::new(TransformStreamIdentity::new::<F>()),
+      sink: Box::new(TransformStreamIdentity::new()),
       start,
     };
   }
