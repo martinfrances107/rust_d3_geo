@@ -264,29 +264,11 @@ impl<F> TransformStream<F> for Resample<F>
 where
   F: Float + FloatConst + FromPrimitive,
 {
-
-  // function point(x, y) {
-  //   x = project(x, y);
-  //   stream.point(x[0], x[1]);
-  // }
-
   fn point(&mut self, x: F, y: F, _z: Option<F>) {
-    match self.use_line_point {
-      true => {
-        self.line_point(x,y);
-      },
-      false => {
-          self.ring_point(x,y);
-      //   match &self.s {
-      //     Some(s) => {
-      //       let project = &*self.project.borrow();
-      //       let p = project.transform(&[x, y]);
-      //       let mut stream = s.borrow_mut();
-      //       stream.point(p[0], p[1], None);
-      //     },
-      //     None => {},
-      //   }
-      }
+    if self.use_line_point {
+      self.line_point(x, y);
+    } else {
+      self.ring_point(x, y);
     }
   }
 
@@ -299,19 +281,26 @@ where
         self.use_line_point = true;
         stream.line_start();
       }
-      None => {},
+      None => {}
     }
   }
 
   fn line_end(&mut self) {
-    match &self.s {
-      Some(s) => {
-        let mut stream = s.borrow_mut();
-        self.use_line_point = false;
-        // resampleStream.point = point;
-        stream.line_end();
+    match self.use_line_end {
+      true => {
+        match &self.s {
+          Some(s) => {
+            let mut stream = s.borrow_mut();
+            self.use_line_point = false;
+            // resampleStream.point = point;
+            stream.line_end();
+          }
+          None => {}
+        }
       }
-      None => {},
+      false => {
+        self.ring_end();
+      }
     }
   }
 }
