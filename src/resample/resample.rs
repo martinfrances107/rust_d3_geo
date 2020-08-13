@@ -17,25 +17,12 @@ use crate::Transform;
 
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
-fn cosMinDistance<F>() -> F
+fn cos_min_distance<F>() -> F
 where
   F: Float + FloatConst + FromPrimitive,
 {
   return (F::from(30.0f64).unwrap().to_radians()).cos(); // cos(minimum angular distance)
 }
-
-// export default function(project, delta2) {
-//   return +delta2 ? resample(project, delta2) : resampleNone(project);
-// }
-
-// function resampleNone(project) {
-//   return transformer({
-//     point: function(x, y) {
-//       x = project(x, y);
-//       this.stream.point(x[0], x[1]);
-//     }
-//   });
-// }
 
 // #[derive(Clone)]
 pub struct Resample<F>

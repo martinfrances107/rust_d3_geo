@@ -99,7 +99,7 @@ where
   //     return segment.len() > 1;
   //   }
 
-  fn pointRing(&self, _lambda: F, _phi: F, _m: Option<F>) {}
+  fn point_ring(&self, _lambda: F, _phi: F, _m: Option<F>) {}
 
   //     fn ring_start(&self) {
   //       self.ringSink.lineStart();
