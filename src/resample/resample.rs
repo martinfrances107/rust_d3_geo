@@ -99,11 +99,7 @@ where
 
   fn ring_point(&mut self, lambda: F, phi: F) {
         self.lambda00 = lambda;
-        {
-          // let self_p: RefCell<_> = RefCell::new(self);
-          // let self_p1 = self_p.borrow_mut();
-          self.line_point(self.lambda00, phi);
-        }
+        self.line_point(self.lambda00, phi);
         self.x00 = self.x0;
         self.y00 = self.y0;
         self.a00 = self.a0;

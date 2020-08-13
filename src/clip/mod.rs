@@ -26,7 +26,7 @@ pub trait ClipLine<'a, F> {
 }
 
 // CompareIntersections param type!!!
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Ci<F>
 where
   F: Float,
@@ -34,10 +34,10 @@ where
   x: [F; 2],
 }
 
-type InterpolateFn<F> = Box<dyn Fn(Option<F>, Option<F>, F, dyn Stream<F>)>;
+pub type InterpolateFn<F> = Box<dyn Fn(Option<F>, Option<F>, F, dyn Stream<F>)>;
 type PointVisibleFn<F> = Box<dyn Fn(F, F, Option<F>) -> bool>;
 // type ClipLineFn<F> = dyn Fn(Box<dyn ClipLine<F>>) -> Box<dyn ClipLine<F>>;
-type CompareIntersectionFn<F> = Box<dyn Fn(Ci<F>, Ci<F>) -> F>;
+pub type CompareIntersectionFn<F> = Box<dyn Fn(Ci<F>, Ci<F>) -> F>;
 
 pub struct Clip<F>
 where
@@ -69,7 +69,6 @@ where
     interpolate: Box<dyn TransformStream<F>>,
     start: [F; 2],
   ) -> Self {
-
     // var line = clipLine(sink),
     // ringBuffer = clipBuffer(),
     // ringSink = clipLine(ringBuffer),
@@ -95,9 +94,9 @@ where
     };
   }
 
-  //    fn validSegment(segment: &Vec<[f64;2]>) -> bool {
-  //     return segment.len() > 1;
-  //   }
+  fn valid_segment(segment: &Vec<[f64; 2]>) -> bool {
+    return segment.len() > 1;
+  }
 
   fn point_ring(&self, _lambda: F, _phi: F, _m: Option<F>) {}
 
@@ -218,14 +217,11 @@ where
   }
 
   fn sphere(&mut self) {
-
-        self.sink.polygon_start();
-        self.sink.line_start();
-        // (self.interpolate)(None, None, F::one(), self.sink);
-        self.sink.line_end();
-        self.sink.polygon_end();
-
-
+    self.sink.polygon_start();
+    self.sink.line_start();
+    // (self.interpolate)(None, None, F::one(), self.sink);
+    self.sink.line_end();
+    self.sink.polygon_end();
   }
 }
 
@@ -248,7 +244,7 @@ where
 
   return part1 - part2;
 }
-  // Intersections are sorted along the clip edge. For both antimeridian cutting
+// Intersections are sorted along the clip edge. For both antimeridian cutting
 // and circle clipping, the same comparison is used.
 // function compareIntersection(a, b) {
 //   return ((a = a.x)[0] < 0 ? a[1] - halfPi - epsilon : halfPi - a[1])
