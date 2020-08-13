@@ -273,15 +273,18 @@ where
   }
 
   fn line_start(&mut self) {
-    match &self.s {
-      Some(s) => {
-        let mut stream = s.borrow_mut();
-        self.x0 = F::nan();
-        // resampleStream.point = line_point;
-        self.use_line_point = true;
-        stream.line_start();
+    if self.use_line_start {
+      match &self.s {
+        Some(s) => {
+          let mut stream = s.borrow_mut();
+          self.x0 = F::nan();
+          self.use_line_point = true;
+          stream.line_start();
+        }
+        None => {}
       }
-      None => {}
+    } else {
+      self.polygon_start();
     }
   }
 
