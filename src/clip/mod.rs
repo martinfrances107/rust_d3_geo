@@ -65,17 +65,15 @@ where
 {
   fn new(
     point_visible: PointVisibleFnPtr<F>,
-    clip_line_fn_ptr: Rc<RefCell<Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>>>>,
+    clip_line_fn_ptr: Rc<
+      RefCell<Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>>>,
+    >,
     interpolate: Rc<RefCell<Box<dyn TransformStream<F>>>>,
     start: [F; 2],
   ) -> Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>> {
-
-    return Box::new(move |sink_ptr: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
-
-      let sink1 = sink_ptr.clone();
+    return Box::new(move |sink: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
       let clip_line = clip_line_fn_ptr.borrow_mut();
-      let line = clip_line(sink1);
-      let sink2 = sink_ptr.clone();
+      let line = clip_line(sink.clone());
 
       // let point_visible: Rc<PointVisibleFn<F>> = point_visible_ptr;
       // let ring_buffer = Box::new(ClipBuffer::<F>::new());
@@ -85,7 +83,6 @@ where
       return Box::new(Self {
         use_ring: false,
         interpolate: interpolate.clone(),
-        // ring_sink: ring_sink,
         line,
         point_visible: point_visible.clone(),
         polygon: Box::new(Vec::new()),
@@ -93,7 +90,7 @@ where
         ring: Vec::new(),
         // ring_buffer: ring_buffer,
         segments: Box::new(Vec::new()),
-        sink:sink2,
+        sink: sink.clone(),
         start,
       });
     });
