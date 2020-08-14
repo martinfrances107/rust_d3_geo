@@ -46,8 +46,8 @@ where
   project_transform: Box<dyn Transform<F>>,
   // project_rotate_transform: Box<dyn Transform<F>>,
   phi: F, // center
-  preclip: Box<dyn TransformStream<F>>,
-  postclip: Option<Box<dyn TransformStream<F>>>,
+  preclip: Option<Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>>>,
+  postclip: Option<Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>>>,
   x: F,
   y: F, // translate
   lambda: F,
@@ -132,7 +132,7 @@ where
       lambda,
       phi,
       rotate: Box::new(TransformIdentity {}), // pre-rotate
-      preclip: Box::new(generate_antimeridian()),
+      preclip: Some(Box::new(generate_antimeridian())),
       postclip: None,
       sx,          // reflectX
       sy,          // reflectX
