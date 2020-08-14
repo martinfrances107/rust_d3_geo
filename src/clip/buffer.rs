@@ -23,13 +23,13 @@ where
 
 impl<F> ClipBuffer<F>
 where
-  F: Float,
+  F: Float + 'static,
 {
-  pub fn new() -> Self {
-    return Self {
+  pub fn new() -> Box<dyn TransformStream<F>> {
+    return Box::new(Self {
       lines: Vec::new(),
       line: Vec::new(),
-    };
+    });
   }
 
   fn rejoin(&mut self) {

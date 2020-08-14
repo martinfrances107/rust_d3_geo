@@ -51,7 +51,7 @@ where
   polygon: Box<Vec<Vec<[F; 2]>>>,
   point_visible: PointVisibleFnPtr<F>,
   // ring_buffer: Box<dyn TransformStream<F>>,
-  // ring_sink: Box<dyn TransformStream<F>>,
+  ring_sink: Box<dyn TransformStream<F>>,
   segments: Box<Vec<Vec<[F; 2]>>>,
   start: [F; 2],
   ring: Vec<[F; 2]>,
@@ -75,11 +75,10 @@ where
       let clip_line = clip_line_fn_ptr.borrow_mut();
       let line = clip_line(sink.clone());
 
-      // let point_visible: Rc<PointVisibleFn<F>> = point_visible_ptr;
-      // let ring_buffer = Box::new(ClipBuffer::<F>::new());
-      // let ring_sink = clip_line;
-      // // ring_sink.stream(&ring_buffer);
-      // // clip_line.stream(ring_buffer);
+      let ring_buffer = Rc::new(RefCell::new(ClipBuffer::<F>::new()));
+      let ring_sink= clip_line(ring_buffer);
+
+
       return Box::new(Self {
         use_ring: false,
         interpolate: interpolate.clone(),
@@ -89,6 +88,7 @@ where
         polygon_started: false,
         ring: Vec::new(),
         // ring_buffer: ring_buffer,
+        ring_sink,
         segments: Box::new(Vec::new()),
         sink: sink.clone(),
         start,
@@ -100,7 +100,10 @@ where
     return segment.len() > 1;
   }
 
-  fn point_ring(&self, _lambda: F, _phi: F, _m: Option<F>) {}
+  fn point_ring(&mut self, lambda: F, phi: F, _m: Option<F>) {
+    self.ring.push([lambda, phi]);
+    self.ring_sink.point(lambda, phi,None);
+  }
 
   //     fn ring_start(&self) {
   //       self.ringSink.lineStart();
