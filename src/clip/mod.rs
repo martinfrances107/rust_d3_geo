@@ -78,7 +78,6 @@ where
       let ring_buffer = Rc::new(RefCell::new(ClipBuffer::<F>::new()));
       let ring_sink= clip_line(ring_buffer);
 
-
       return Box::new(Self {
         use_ring: false,
         interpolate: interpolate.clone(),
@@ -93,6 +92,7 @@ where
         sink: sink.clone(),
         start,
       });
+
     });
   }
 
