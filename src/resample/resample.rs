@@ -284,7 +284,7 @@ where
         None => {}
       }
     } else {
-      self.polygon_start();
+      self.ring_start();
     }
   }
 
