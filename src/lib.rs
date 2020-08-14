@@ -3,11 +3,8 @@
 // #![allow(unused_imports)]
 use num_traits::Float;
 
-// mod adder;
 pub mod cartesian;
-/// Circle is used in intgration tests.
 pub mod circle;
-/// polygon_contains has a integration test.
 pub mod polygon_contains;
 pub mod rotation;
 
@@ -20,9 +17,6 @@ mod resample;
 mod stream;
 mod transform_stream;
 
-/// Common to Projection, Rotation.
-/// Defaults to the identity transform.
-///
 #[derive(Copy, Clone, Debug)]
 struct TransformIdentity {}
 impl TransformIdentity {
@@ -34,6 +28,7 @@ impl TransformIdentity {
 
 impl<F> Transform<F> for TransformIdentity where F: Float {}
 
+/// Common to Projection, Rotation.
 pub trait Transform<F>
 where
     F: Float,

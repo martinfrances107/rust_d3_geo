@@ -1,5 +1,3 @@
-#[allow(dead_code)]
-
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 
