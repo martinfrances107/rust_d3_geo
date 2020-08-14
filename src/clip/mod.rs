@@ -71,14 +71,10 @@ where
   ) -> Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>> {
 
     return Box::new(move |sink_ptr: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
-      // let interpolate = interpolate.clone();
+
       let sink1 = sink_ptr.clone();
-      // let mut clip_line_fn: Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>>;
       let clip_line = clip_line_fn_ptr.borrow_mut();
       let line = clip_line(sink1);
-
-
-
       let sink2 = sink_ptr.clone();
 
       // let point_visible: Rc<PointVisibleFn<F>> = point_visible_ptr;
