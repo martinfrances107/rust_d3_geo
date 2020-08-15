@@ -18,14 +18,16 @@ impl<F> RotationPhiGamma<F>
 where
   F: Float + FloatConst,
 {
-  pub fn new(delta_phi: F, delta_gamma: F) -> Self
-  where F: Float {
-    return Self {
+  pub fn new(delta_phi: F, delta_gamma: F) -> Box<dyn Transform<F>>
+  where
+    F: Float + 'static,
+  {
+    return Box::new(Self {
       cos_delta_phi: delta_phi.cos(),
       sin_delta_phi: delta_phi.sin(),
       cos_delta_gamma: delta_gamma.cos(),
       sin_delta_gamma: delta_gamma.sin(),
-    };
+    });
   }
 }
 

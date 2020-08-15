@@ -13,10 +13,8 @@ impl<F> Rotation<F> {
   where
     F: Float + FloatConst + 'static,
   {
-    let mut
-    r = RotateRadians::new();
     return Self {
-      rotate: r.rotate_radians(
+      rotate: RotateRadians::new(
         delta_lambda.to_radians(),
         delta_phi.to_radians(),
         delta_gamma.to_radians(),

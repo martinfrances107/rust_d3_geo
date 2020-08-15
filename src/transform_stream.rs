@@ -24,7 +24,6 @@ impl StreamProcessorIdentity {
 impl<F> TransformStream<F> for StreamProcessorIdentity where F: Float + FloatConst + 'static {}
 
 pub struct TransformStreamIdentity {}
-
 impl<F> TransformStream<F> for TransformStreamIdentity where F: Float + FloatConst + 'static {}
 
 /// Define the default implementation of the trait.

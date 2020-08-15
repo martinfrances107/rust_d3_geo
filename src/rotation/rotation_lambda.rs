@@ -27,10 +27,10 @@ where
 
 impl<F> RotationLambda<F>
 where
-  F: Float + FloatConst,
+  F: Float + FloatConst + 'static,
 {
-  pub fn new(delta_lambda: F) -> Self {
-    return Self { delta_lambda };
+  pub fn new(delta_lambda: F) -> Box<dyn Transform<F>> {
+    return Box::new(Self { delta_lambda });
   }
 }
 

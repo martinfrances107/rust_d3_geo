@@ -1,9 +1,11 @@
+use std::rc::Rc;
+
 use num_traits::Float;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
 use crate::Transform;
-use crate::TransformIdentity;
+// use crate::TransformIdentity;
 
 use super::rotation_identity::RotationIdentity;
 use super::rotation_lambda::RotationLambda;
@@ -15,20 +17,11 @@ pub struct RotateRadians<F> {
 }
 
 impl<F> RotateRadians<F>
-where F: Float {
-  pub fn new() -> RotateRadians<F>
-  where F: Float {
-    return RotateRadians {
-      rl: Box::new(TransformIdentity::new()),
-    };
-  }
-
-  pub fn rotate_radians(
-    &mut self,
-    delta_lambda_p: F,
-    delta_phi: F,
-    delta_gamma: F,
-  ) -> Box<dyn Transform<F>>
+where
+  F: Float,
+{
+  /// Returns a object implmenting the desired combination of rotations.
+  pub fn new(delta_lambda_p: F, delta_phi: F, delta_gamma: F) -> Box<dyn Transform<F>>
   where
     F: Float + FloatConst + 'static,
   {
@@ -37,17 +30,17 @@ where F: Float {
     let by_lambda = !delta_lambda.is_zero();
     let by_phi = !delta_phi.is_zero();
     let by_gamma = !delta_gamma.is_zero();
-    let rl = Box::new(RotationLambda::new(delta_lambda));
+    let rl = Rc::new(RotationLambda::new(delta_lambda));
     return match (by_lambda, by_gamma, by_phi) {
       (true, true, true) | (true, true, false) | (true, false, true) => Compose::new(
         rl,
-        Box::new(RotationPhiGamma::new(delta_phi, delta_gamma)),
+        Rc::new(RotationPhiGamma::new(delta_phi, delta_gamma)),
       ),
-      (true, false, false) => Box::new(RotationLambda::new(delta_lambda)),
+      (true, false, false) => RotationLambda::new(delta_lambda),
       (false, true, true) | (false, true, false) | (false, false, true) => {
-        Box::new(RotationPhiGamma::new(delta_phi, delta_gamma))
+        RotationPhiGamma::new(delta_phi, delta_gamma)
       }
-      (false, false, false) => Box::new(RotationIdentity::new()),
+      (false, false, false) => RotationIdentity::new(),
     };
   }
 }

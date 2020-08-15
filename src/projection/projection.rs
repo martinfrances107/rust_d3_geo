@@ -291,25 +291,13 @@ pub trait Projection<F> {
   // rotate(angles: [number, number] | [number, number, number]): this;
 
   // /**
-  //  * Returns the current scale factor; the default scale is projection-specific.
-  //  *
-  //  * The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
-  //  */
-  // fn get_scale(&self) -> F;
-
-  // /**
   //  * Sets the projection’s scale factor to the specified value and returns the projection.
   //  * The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
   //  *
   //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
   //  */
   // fn scale(&mut self, scale: &F);
-
-  // /**
-  //  * Returns the current translation offset which defaults to [480, 250] and places ⟨0°,0°⟩ at the center of a 960×500 area.
-  //  * The translation offset determines the PIxel coordinates of the projection’s center.
-  //  */
-  fn get_translation(&self) -> [F;2];
+  fn scale(&mut self, scale: Option<&F>);
 
   // /**
   //  * Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
@@ -317,7 +305,7 @@ pub trait Projection<F> {
   //  *
   //  * @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
   //  */
-  // fn translate(&mut self, t: &[F;2]);
+  fn translate(&mut self, t: Option<&[F;2]>) -> Option<[F;2]>;
 
 }
 

@@ -22,11 +22,11 @@ where
 }
 
 impl RotationIdentity {
-  pub fn new() -> Self
-  // where
-  //   F: Float + FloatConst
+  pub fn new<F>() -> Box<dyn Transform<F>>
+  where
+    F: Float + FloatConst + 'static,
   {
-    return RotationIdentity{};
+    return Box::new(RotationIdentity {});
   }
 }
 

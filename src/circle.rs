@@ -158,9 +158,7 @@ where
 
     // This is inefficient everytime point is called create a new transform object.
     // This is bad but makes circle clonable.
-    let mut rotate_r = RotateRadians::new();
-    let rotate =
-      rotate_r.rotate_radians(-self.center[0].to_radians(), -self.center[1].to_radians(), F::zero());
+    let rotate = RotateRadians::new(-self.center[0].to_radians(), -self.center[1].to_radians(), F::zero());
 
     let mut x_rotated = rotate.invert(&[x, y]);
     x_rotated[0] = x_rotated[0].to_degrees();
