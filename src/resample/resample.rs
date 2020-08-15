@@ -7,6 +7,7 @@ use std::rc::Rc;
 
 use crate::cartesian::cartesian;
 use crate::math::epsilon;
+use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
 use crate::Transform;
 
@@ -49,7 +50,7 @@ where
   c0: F,
 
   cos_min_distance: F,
-  s: Option<Rc<RefCell<Box<dyn TransformStream<F>>>>>,
+  stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
   // s: &'a Box<dyn TransformStream<F>>,
   use_line_point: bool,
   use_line_start: bool,
@@ -58,37 +59,38 @@ where
 
 impl<F> Resample<F>
 where
-  F: Float + FloatConst + FromPrimitive,
+  F: Float + FloatConst + FromPrimitive + 'static,
 {
-  pub fn new(project: Rc<RefCell<Box<dyn Transform<F>>>>, delta2: F) -> Self
+  pub fn new(project: Rc<RefCell<Box<dyn Transform<F>>>>, delta2: F) -> StreamProcessor<F>
   where
     F: Float + FloatConst + FromPrimitive,
   {
-    return Self {
-      project: project.clone(),
-      delta2,
+    return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
+      return Rc::new(RefCell::new(Box::new(Self {
+        project: project.clone(),
+        delta2,
 
-      lambda00: F::zero(),
-      x00: F::zero(),
-      y00: F::zero(),
-      a00: F::zero(),
-      b00: F::zero(),
-      c00: F::zero(), // first point
+        lambda00: F::zero(),
+        x00: F::zero(),
+        y00: F::zero(),
+        a00: F::zero(),
+        b00: F::zero(),
+        c00: F::zero(), // first point
 
-      lambda0: F::zero(),
-      x0: F::zero(),
-      y0: F::zero(),
-      a0: F::zero(),
-      b0: F::zero(),
-      c0: F::zero(),                                                 // previous point
-      cos_min_distance: (F::from(30u8).unwrap().to_radians()).cos(), // cos(minimum angular distance)
+        lambda0: F::zero(),
+        x0: F::zero(),
+        y0: F::zero(),
+        a0: F::zero(),
+        b0: F::zero(),
+        c0: F::zero(),                                                 // previous point
+        cos_min_distance: (F::from(30u8).unwrap().to_radians()).cos(), // cos(minimum angular distance)
 
-      // s: &Box::new(TransformStreamIdentity::new()),
-      s: None,
-      use_line_point: true,
-      use_line_end: true,
-      use_line_start: true,
-    };
+        stream: stream,
+        use_line_point: true,
+        use_line_end: true,
+        use_line_start: true,
+      })));
+    });
   }
 
   fn ring_start(&mut self) {
@@ -109,35 +111,32 @@ where
   }
 
   fn ring_end(&mut self) {
-    match &self.s {
-      Some(s) => {
-        let mut stream = s.borrow_mut();
-        self.resample_line_to(
-          self.x0,
-          self.y0,
-          self.lambda0,
-          self.a0,
-          self.b0,
-          self.c0,
-          self.x00,
-          self.y00,
-          self.lambda00,
-          self.a00,
-          self.b00,
-          self.c00,
-          MAXDEPTH,
-          &mut *stream,
-        );
-        self.use_line_end = true;
-      }
-      None => {}
-    }
-    self.line_end();
+    self.resample_line_to(
+      self.x0,
+      self.y0,
+      self.lambda0,
+      self.a0,
+      self.b0,
+      self.c0,
+      self.x00,
+      self.y00,
+      self.lambda00,
+      self.a00,
+      self.b00,
+      self.c00,
+      MAXDEPTH,
+      self.stream.clone(),
+    );
+    self.use_line_end = true;
+
+    let mut stream = self.stream.borrow_mut();
+    stream.line_end();
   }
 
   fn line_point(&mut self, lambda: F, phi: F) {
     let c = cartesian(&[lambda, phi]);
-    let project = &*self.project.borrow();
+    let project_ptr = self.project.clone();
+    let project = &*project_ptr.borrow();
     let p = project.transform(&[lambda, phi]);
     self.x0 = p[0];
     self.y0 = p[1];
@@ -145,8 +144,8 @@ where
     self.a0 = c[0];
     self.b0 = c[1];
     self.c0 = c[2];
-    let s_p = self.s.as_ref().unwrap();
-    let mut s = s_p.borrow_mut();
+    // let s_p = self.stream.as_ref();
+    // let mut s = s_p.borrow_mut();
     self.resample_line_to(
       self.x0,
       self.y0,
@@ -161,13 +160,13 @@ where
       self.b0,
       self.c0,
       MAXDEPTH,
-      &mut s,
+      self.stream.clone(),
     );
     // stream.point(x0, y0);
   }
 
   fn resample_line_to(
-    &self,
+    &mut self,
     x0: F,
     y0: F,
     lambda0: F,
@@ -181,7 +180,7 @@ where
     b1: F,
     c1: F,
     depth_p: u8,
-    stream: &mut Box<dyn TransformStream<F>>,
+    stream: Rc<RefCell< Box<dyn TransformStream<F>>>>,
   ) where
     F: Float + FloatConst + FromPrimitive,
   {
@@ -214,8 +213,11 @@ where
           true => (lambda0 + lambda1) / f_2,
           false => b.atan2(a),
         };
-        let project = &*self.project.borrow();
+
+        let project_ptr = self.project.clone();
+        let project = &*project_ptr.borrow();
         let p = project.transform(&[lambda2, phi2]);
+
         let x2 = p[0];
         let y2 = p[1];
         let dx2 = x2 - x0;
@@ -234,24 +236,26 @@ where
         {
           a = a / m;
           b = b / m;
-          let stream_p: RefCell<_> = RefCell::new(stream);
-          let self_p: RefCell<_> = RefCell::new(self);
+          // let stream_p: RefCell<_> = RefCell::new(stream);
+          // let self_p: RefCell<_> = RefCell::new(self);
           // {
-          let mut s = stream_p.borrow_mut();
-          let self_p1 = self_p.borrow_mut();
-          self_p1.resample_line_to(
-            x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth, &mut s,
+          // let mut s = stream.borrow_mut();
+          // let self_p1 = self_p.borrow_mut();
+          // &*project_ptr.borrow();
+          let s = stream.clone();
+          self.resample_line_to(
+            x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth, s
           );
           // }
           // {
-          let mut s2 = stream_p.borrow_mut();
+          let mut s2 = stream.borrow_mut();
           s2.point(x2, y2, None);
           // }
           // {
-          let mut s3 = stream_p.borrow_mut();
-          let self_p2 = self_p.borrow_mut();
-          self_p2.resample_line_to(
-            x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, &mut s3,
+          // let mut s3 = stream_p.borrow_mut();
+          // let self_p2 = self_p.borrow_mut();
+          self.resample_line_to(
+            x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, stream.clone(),
           );
           // }
         }
@@ -274,15 +278,10 @@ where
 
   fn line_start(&mut self) {
     if self.use_line_start {
-      match &self.s {
-        Some(s) => {
-          let mut stream = s.borrow_mut();
-          self.x0 = F::nan();
-          self.use_line_point = true;
-          stream.line_start();
-        }
-        None => {}
-      }
+      let mut stream = self.stream.borrow_mut();
+      self.x0 = F::nan();
+      self.use_line_point = true;
+      stream.line_start();
     } else {
       self.ring_start();
     }
@@ -291,16 +290,11 @@ where
   fn line_end(&mut self) {
     match self.use_line_end {
       true => {
-        match &self.s {
-          Some(s) => {
-            let mut stream = s.borrow_mut();
-            self.use_line_point = false;
-            // resampleStream.point = point;
-            stream.line_end();
-          }
-          None => {}
-        }
+        let mut stream = self.stream.borrow_mut();
+        self.use_line_point = false;
+        stream.line_end();
       }
+
       false => {
         self.ring_end();
       }

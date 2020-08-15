@@ -11,8 +11,10 @@ use crate::compose::Compose;
 use crate::resample::gen_resample;
 use crate::rotation::rotate_radians::RotateRadians;
 // use crate::stream::Stream;
-use crate::transform_stream::TransformStream;
+use crate::transform_stream::StreamProcessor;
+use crate::transform_stream::StreamProcessorIdentity;
 use crate::transform_stream::TransformStreamIdentity;
+use crate::transform_stream::TransformStream;
 use crate::Transform;
 use crate::TransformIdentity;
 // use crate::clip::antimeridian::ClipAntimeridianState;
@@ -23,8 +25,8 @@ use super::projection::Projection;
 // use super::stream_wrapper::StreamWrapper;
 // use super::scale_translate::ScaleTranslate;
 use super::scale_translate_rotate::ScaleTranslateRotate;
-// use super::transform_radians::TransformRadians;
-// use super::transform_rotate::TransformRotate;
+use super::transform_radians::TransformRadians;
+use super::transform_rotate::TransformRotate;
 // use super::stream_wrapper::StreamWrapper;
 
 pub struct ProjectionMutator<F>
@@ -34,7 +36,7 @@ where
   // The mutator lives as long a the proejction it contnains.
   // pub projection: RefCell<Box<dyn Transform<F>>>,
   alpha: F, // post-rotate angle
-  cache: Option<Box<dyn TransformStream<F>>>,
+  cache: Rc<RefCell<Box<dyn TransformStream<F>>>>,
   cache_stream: Option<Box<dyn TransformStream<F>>>,
   clip_antimeridian: Option<Box<dyn Transform<F>>>,
   delta_lambda: F,
@@ -42,16 +44,16 @@ where
   delta_gamma: F,
   delta2: Option<F>, // precision
   k: F,      // scale
-  project_resample: Box<dyn TransformStream<F>>,
-  project_transform: Box<dyn Transform<F>>,
+  project_resample: Rc<RefCell<StreamProcessor<F>>>,
+  // project_transform: Box<dyn Transform<F>>,
   // project_rotate_transform: Box<dyn Transform<F>>,
   phi: F, // center
-  preclip: Option<Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>>>,
-  postclip: Option<Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>>>,
+  preclip: StreamProcessor<F>,
+  postclip: StreamProcessor<F>,
   x: F,
   y: F, // translate
   lambda: F,
-  rotate: Box<dyn Transform<F>>, //rotate, // pre-rotate
+  rotate: Rc<RefCell<Box<dyn Transform<F>>>>, //rotate, // pre-rotate
   sx: F,                         // reflectX
   sy: F,                         // reflectY
   theta: Option<F>,
@@ -113,11 +115,13 @@ where
     // let project_rotate_transform = Box::new(Compose{a: rotate, b:project_transform});
     // self.project_resample = Some(
 
-    let projection_resample = gen_resample(project_transform, delta2);
+      // projectResample = resample(projectTransform, delta2 = _ * _)
+
+    let project_resample = gen_resample(project_transform, delta2);
 
     let mut pm = ProjectionMutator::<F> {
       alpha, // post-rotate angle
-      cache: None,
+      cache: Rc::new(RefCell::new(Box::new(TransformStreamIdentity{}))),
       cache_stream: None,
       clip_antimeridian: None,
       delta2, // precision
@@ -131,9 +135,9 @@ where
       // center
       lambda,
       phi,
-      rotate: Box::new(TransformIdentity {}), // pre-rotate
-      preclip: Some(Box::new(generate_antimeridian())),
-      postclip: None,
+      rotate: Rc::new(RefCell::new(Box::new(TransformIdentity {}))), // pre-rotate
+      preclip: generate_antimeridian(),
+      postclip: StreamProcessorIdentity::new(),
       sx,          // reflectX
       sy,          // reflectX
       theta: None, // pre-clip angle
@@ -143,8 +147,8 @@ where
       x1: None,
       y1: None, //postclip = identity, // post-clip extent
       y,
-      project_resample: Box::new(TransformStreamIdentity {}),
-      project_transform: Box::new(TransformIdentity {}),
+      project_resample,
+      // project_transform: Box::new(TransformIdentity {}),
       // project_rotate_transform,
     };
 
@@ -188,40 +192,32 @@ where
     // );
     // return self.reset();
   }
+
+  fn stream(&mut self, stream: Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Rc<RefCell<Box<dyn TransformStream<F>>>> {
+
+    let resample  = self.project_resample.borrow_mut();
+
+    // post clip is just the identity stream in stereographic tests.
+    // let post_clip_s = self.postclip.stream(stream);
+    let resample_out = resample(stream);
+    let preclip_out = (self.preclip)(resample_out);
+    let t_rotate = TransformRotate::new(self.rotate.clone());
+    let t_rotate_out = t_rotate(preclip_out);
+    let t_radians = TransformRadians::new();
+    let t_radians_out = t_radians(t_rotate_out);
+
+    self.cache = t_radians_out;
+
+    return self.cache.clone();
+  }
+
 }
 
 impl<F> TransformStream<F> for ProjectionMutator<F>
 where
   F: Float + FloatConst + FromPrimitive,
 {
-  fn stream(&mut self, stream: &Rc<RefCell<Box<dyn TransformStream<F>>>>) {
 
-
-    // projection.stream = function(stream) {
-    //   return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
-    // };
-
-    // match self.cache {
-    //   Some(cache) =>  {
-    //     // return cache;
-    //   },
-    //   None => {
-    //       // if self.cache_stream.unwrap() == stream {
-    //       //   return stream;
-    //       // } else {
-    //       //   let post_clip_s = self.postclip.stream(stream);
-    //       //   let resample_s = self.resample(post_clip_s, None);
-    //       //   let t_rotate = TransformRotate::<F>{rotate: self.rotate, stream: post_clip_s};
-    //       //   let t_radians = TransformRadians{stream: t_rotate};
-    //       //   // self.cache =  transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
-    //       //   // self.cache =  TransformRadians<F>{ stream : TransformRotate{self.rotate(self.preclip(self.projectResample(postclip(cacheStream = stream)))}};
-    //       //   self.cache = t_radians;
-    //       //   return self.cache;
-    //       // }
-    //       // return self.cache.unwrap();
-    //   }
-    // }
-  }
 }
 
 impl<F> Transform<F> for ProjectionMutator<F>
@@ -241,7 +237,7 @@ where
   //   return self.preclip;
   // }
 
-  fn preclip(&mut self, preclip: Option<Box<dyn TransformStream<F>>>) {
+  fn preclip(&mut self, preclip: StreamProcessor<F>) {
     // self.preclip = preclip;
     // self.theta = None;
     return self.reset();
@@ -251,7 +247,7 @@ where
   //   return self.postclip;
   // }
 
-  fn postclip(&mut self, postclip: Option<Box<dyn TransformStream<F>>>) {
+  fn postclip(&mut self, postclip: StreamProcessor<F>) {
     // self.postclip = postclip;
     // self.theta = None;
     return self.reset();

@@ -10,6 +10,7 @@ use super::rotation_lambda::RotationLambda;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
 pub struct RotateRadians<F> {
+  // Rotate Lambda
   rl: Box<dyn Transform<F>>,
 }
 

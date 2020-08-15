@@ -6,6 +6,7 @@ use num_traits::Float;
 use num_traits::FloatConst;
 
 // use crate::stream::GeoStream;
+use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
 // use crate::transform_stream::TransformStreamIdentity;
 
@@ -32,17 +33,16 @@ impl<F> ClipAntimeridianLine<F>
 where
   F: Float + FloatConst + FromPrimitive + 'static,
 {
-  pub fn new(
-  ) -> Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>> {
+  pub fn new() -> StreamProcessor<F> {
     return Box::new(|stream_ptr: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
       let stream = stream_ptr.clone();
-      return Box::new(ClipAntimeridianLine::<F> {
+      return Rc::new(RefCell::new(Box::new(ClipAntimeridianLine::<F> {
         clean: None, // no intersections
         lambda0: F::nan(),
         phi0: F::nan(),
         sign0: F::nan(),
         stream,
-      });
+      })));
     });
   }
 
@@ -58,10 +58,6 @@ impl<F> TransformStream<F> for ClipAntimeridianLine<F>
 where
   F: Float + FloatConst + FromPrimitive,
 {
-  fn stream(&mut self, stream: &Rc<RefCell<Box<dyn TransformStream<F>>>>) {
-    self.stream = stream.clone();
-  }
-
   fn line_start(&mut self) {
     let mut stream = self.stream.borrow_mut();
     stream.line_start();

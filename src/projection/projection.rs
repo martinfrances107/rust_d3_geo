@@ -1,6 +1,6 @@
 // use crate::stream::Stream;
 use crate::transform_stream::TransformStream;
-
+use crate::transform_stream::StreamProcessor;
 pub trait Projection<F> {
 
   // /**
@@ -40,7 +40,7 @@ pub trait Projection<F> {
   //  * @param preclip A spherical clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
   //  * Pre-clipPIng operates on spherical coordinates, in radians.
   //  */
-  fn preclip(&mut self, preclip: Option<Box<dyn TransformStream<F>>>);
+  fn preclip(&mut self, preclip: StreamProcessor<F>);
 
   // /**
   //  * Returns the current cartesian clipPIng function.
@@ -53,7 +53,7 @@ pub trait Projection<F> {
   //  * @param postclip A cartesian clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
   //  * Post-clipPIng operates on planar coordinates, in PIxels.
   //  */
-  fn postclip(&mut self, postclip: Option<Box<dyn TransformStream<F>>>);
+  fn postclip(&mut self, postclip: StreamProcessor<F>);
 
   // /**
   //  * Returns the current clip angle which defaults to null.

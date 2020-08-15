@@ -24,24 +24,13 @@ where
   }
 }
 
-impl<F> TransformStream<F> for Interpolate<F>
-where
-  F: Float + FloatConst,
-{
-  fn stream(&mut self, stream: &Rc<RefCell<Box<dyn TransformStream<F>>>>) {
-    let s = stream.clone();
-    self.stream = Some(s);
-  }
-}
+impl<F> TransformStream<F> for Interpolate<F> where F: Float + FloatConst {}
 
 impl<F> Interpolate<F>
 where
-  F: Float,
+  F: Float + FloatConst,
 {
-  fn interpolate(self, from: Option<[F; 2]>, to: [F; 2], direction: F)
-  where
-    F: Float + FloatConst,
-  {
+  fn interpolate(self, from: Option<[F; 2]>, to: [F; 2], direction: F) {
     let phi: F;
     match from {
       None => match self.stream {

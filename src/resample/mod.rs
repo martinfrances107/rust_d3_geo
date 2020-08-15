@@ -11,13 +11,13 @@ pub mod resample_none;
 use resample::Resample;
 use resample_none::ResampleNone;
 
-use crate::transform_stream::TransformStream;
+use crate::transform_stream::StreamProcessor;
 use crate::Transform;
 
 pub fn gen_resample<F>(
   project: Rc<RefCell<Box<dyn Transform<F>>>>,
   delta2: Option<F>,
-) -> Rc<RefCell<Box<dyn TransformStream<F>>>>
+) -> Rc<RefCell<StreamProcessor<F>>>
 where
   F: Float + FloatConst + FromPrimitive + 'static,
 {

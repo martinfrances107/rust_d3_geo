@@ -11,6 +11,7 @@ mod rejoin;
 
 use super::stream::Stream;
 use crate::polygon_contains::contains;
+use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
 
 use buffer::ClipBuffer;
@@ -43,7 +44,7 @@ pub struct Clip<F>
 where
   F: Float,
 {
-  line: Box<dyn TransformStream<F>>,
+  line: Rc<RefCell<Box<dyn TransformStream<F>>>>,
   interpolate: Rc<RefCell<Box<dyn TransformStream<F>>>>,
   // point: Box<dyn Fn()>,
   // point: [F;2],
@@ -51,7 +52,7 @@ where
   polygon: Box<Vec<Vec<[F; 2]>>>,
   point_visible: PointVisibleFnPtr<F>,
   // ring_buffer: Box<dyn TransformStream<F>>,
-  ring_sink: Box<dyn TransformStream<F>>,
+  ring_sink: Rc<RefCell<Box<dyn TransformStream<F>>>>,
   segments: Box<Vec<Vec<[F; 2]>>>,
   start: [F; 2],
   ring: Vec<[F; 2]>,
@@ -65,20 +66,18 @@ where
 {
   fn new(
     point_visible: PointVisibleFnPtr<F>,
-    clip_line_fn_ptr: Rc<
-      RefCell<Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>>>,
-    >,
+    clip_line_fn_ptr: Rc<RefCell<StreamProcessor<F>>>,
     interpolate: Rc<RefCell<Box<dyn TransformStream<F>>>>,
     start: [F; 2],
-  ) -> Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream<F>>>>) -> Box<dyn TransformStream<F>>> {
+  ) -> StreamProcessor<F> {
     return Box::new(move |sink: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
       let clip_line = clip_line_fn_ptr.borrow_mut();
       let line = clip_line(sink.clone());
 
       let ring_buffer = Rc::new(RefCell::new(ClipBuffer::<F>::new()));
-      let ring_sink= clip_line(ring_buffer);
+      let ring_sink = clip_line(ring_buffer);
 
-      return Box::new(Self {
+      return Rc::new(RefCell::new(Box::new(Self {
         use_ring: false,
         interpolate: interpolate.clone(),
         line,
@@ -91,8 +90,7 @@ where
         segments: Box::new(Vec::new()),
         sink: sink.clone(),
         start,
-      });
-
+      })));
     });
   }
 
@@ -102,7 +100,8 @@ where
 
   fn point_ring(&mut self, lambda: F, phi: F, _m: Option<F>) {
     self.ring.push([lambda, phi]);
-    self.ring_sink.point(lambda, phi,None);
+    let  mut ring_sink = self.ring_sink.borrow_mut();
+    ring_sink.point(lambda, phi, None);
   }
 
   //     fn ring_start(&self) {
