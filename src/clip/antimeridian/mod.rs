@@ -10,7 +10,6 @@ mod intersect;
 mod line;
 
 use crate::transform_stream::StreamProcessor;
-use crate::transform_stream::TransformStream;
 
 use super::Clip;
 
@@ -24,12 +23,6 @@ where
   return true;
 }
 
-// export default clip(
-//   function() { return true; },
-//   clipAntimeridianLine,
-//   clipAntimeridianInterpolate,use num_traits::FloatConst;
-//   [-pi, -halfPi]
-// );
 pub fn generate_antimeridian<F>() -> StreamProcessor<F>
 where
   F: Float + FloatConst + FromPrimitive + 'static,
