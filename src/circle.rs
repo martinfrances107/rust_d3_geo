@@ -153,7 +153,7 @@ where
 {
   fn point(&mut self, x: F, y: F, z: Option<F>)
   where
-    F: Float + FloatConst,
+    F: Float + FloatConst + 'static,
   {
 
     // This is inefficient everytime point is called create a new transform object.
