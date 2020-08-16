@@ -14,7 +14,7 @@ use crate::transform_stream::StreamProcessor;
 use super::Clip;
 
 use interpolate::Interpolate;
-use line::ClipAntimeridianLine;
+use line::Line;
 
 pub fn point_visible<F>(_x: F, _y: F, _z: Option<F>) -> bool
 where
@@ -27,7 +27,7 @@ pub fn generate_antimeridian<F>() -> StreamProcessor<F>
 where
   F: Float + FloatConst + FromPrimitive + 'static,
 {
-  let cal: StreamProcessor<F> = ClipAntimeridianLine::new();
+  let cal: StreamProcessor<F> = Line::new();
 
   let clip_line_fn_ptr: Rc<RefCell<StreamProcessor<F>>>;
   clip_line_fn_ptr = Rc::new(RefCell::new(Box::new(cal)));

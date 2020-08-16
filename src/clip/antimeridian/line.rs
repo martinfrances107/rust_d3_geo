@@ -21,7 +21,7 @@ const INTERSECTION_REJOIN: u8 = 2u8;
 
 // use crate::clip::ClipLine;
 
-pub struct ClipAntimeridianLine<F> {
+pub struct Line<F> {
   clean: Option<u8>,
   lambda0: F,
   phi0: F,
@@ -29,14 +29,14 @@ pub struct ClipAntimeridianLine<F> {
   stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
 }
 
-impl<F> ClipAntimeridianLine<F>
+impl<F> Line<F>
 where
   F: Float + FloatConst + FromPrimitive + 'static,
 {
   pub fn new() -> StreamProcessor<F> {
     return Box::new(|stream_ptr: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
       let stream = stream_ptr.clone();
-      return Rc::new(RefCell::new(Box::new(ClipAntimeridianLine::<F> {
+      return Rc::new(RefCell::new(Box::new(Line::<F> {
         clean: None, // no intersections
         lambda0: F::nan(),
         phi0: F::nan(),
@@ -54,7 +54,7 @@ where
   }
 }
 
-impl<F> TransformStream<F> for ClipAntimeridianLine<F>
+impl<F> TransformStream<F> for Line<F>
 where
   F: Float + FloatConst + FromPrimitive,
 {
