@@ -23,6 +23,7 @@ use crate::clip::antimeridian::generate_antimeridian;
 use crate::clip::circle::generate_circle;
 
 use super::projection::Projection;
+use super::projection::StreamProcessorValueMaybe;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 use super::transform_radians::TransformRadians;
 use super::transform_rotate::TransformRotate;
@@ -226,33 +227,38 @@ where
   //   self.recenter();
   // }
 
-  // fn get_clip_angle(&self) -> Option<F> {
-  // return match self.theta {
-  //   Some(theta) => Some(theta.to_degrees()),
-  //   None => None,
-  // };
-  // }
 
   // projection.clipAngle = function(_) {
   //   return arguments.length ? (preclip = +_ ? clipCircle(theta = _ * radians) : (theta = null, clipAntimeridian), reset()) : theta * degrees;
   // };
 
-  fn clip_angle(&mut self, angle: Option<F>) {
+  fn clip_angle(&mut self, angle: StreamProcessorValueMaybe<F>) -> Option<F>
+  where
+    F: Float + FloatConst,
+  {
     match angle {
-      Some(angle) => {
+      StreamProcessorValueMaybe::Value(angle) => {
         let theta = angle.to_radians();
         self.theta = Some(theta);
+        println!("generating clip circle");
         self.preclip = generate_circle(theta);
+        None
       }
-      None => {
+      StreamProcessorValueMaybe::SP(preclip) => {
+        println!("generatin SP");
         self.theta = None;
-        self.preclip = generate_antimeridian();
+        self.preclip = preclip;
         self.reset();
+        None
       }
+      StreamProcessorValueMaybe::None => match self.theta {
+        Some(theta) => Some(theta.to_degrees()),
+        None => None
+      },
     }
   }
 
-    fn scale(&mut self, scale: Option<&F>) {
+  fn scale(&mut self, scale: Option<&F>) {
     match scale {
       Some(scale) => {
         self.k = self.k + *scale;

@@ -1,6 +1,14 @@
 // use crate::stream::Stream;
 use crate::transform_stream::TransformStream;
 use crate::transform_stream::StreamProcessor;
+
+
+pub enum StreamProcessorValueMaybe<F> {
+  None,
+  Value(F),
+  SP(StreamProcessor<F>),
+}
+
 pub trait Projection<F> {
 
   // /**
@@ -56,19 +64,12 @@ pub trait Projection<F> {
   fn postclip(&mut self, postclip: StreamProcessor<F>);
 
   // /**
-  //  * Returns the current clip angle which defaults to null.
-  //  *
-  //  * null switches to antimeridian cutting rather than small-circle clipPIng.
-  //  */
-  // fn get_clip_angle(&self)-> Option<F>;
-
-  // /**
   //  * Switches to antimeridian cutting rather than small-circle clipPIng.
   //  * See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
   //  *
   //  * @param angle Set to null to switch to antimeridian cutting.
   //  */
-  fn clip_angle(&mut self, angle:Option<F>);
+  fn clip_angle(&mut self, angle:StreamProcessorValueMaybe<F>) -> Option<F>;
 
   // /**
   //  * Sets the projection’s clipPIng circle radius to the specified angle in degrees and returns the projection.

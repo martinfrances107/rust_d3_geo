@@ -44,34 +44,3 @@ where
     [-F::PI(), -F::FRAC_PI_2()],
   );
 }
-
-// import {cartesian, cartesianAddInPlace, cartesianCross, cartesianDot, cartesianScale, spherical} from "../cartesian.js";
-// import {circleStream} from "../circle.js";
-// import {abs, cos, epsilon, PI, radians, sqrt} from "../math.js";
-// import pointEqual from "../pointEqual.js";
-// import clip from "./index.js";
-
-// export default function(radius) {
-//   var cr = cos(radius),
-//       delta = 6 * radians,
-//       smallRadius = cr > 0,
-//       notHemisphere = abs(cr) > epsilon; // TODO optimise for this common case
-
-//   function visible(lambda, phi) {
-//     return cos(lambda) * cos(phi) > cr;
-//   }
-
-//   // Generates a 4-bit vector representing the location of a point relative to
-//   // the small circle's bounding box.
-//   function code(lambda, phi) {
-//     var r = smallRadius ? radius : PI - radius,
-//         code = 0;
-//     if (lambda < -r) code |= 1; // left
-//     else if (lambda > r) code |= 2; // right
-//     if (phi < -r) code |= 4; // below
-//     else if (phi > r) code |= 8; // above
-//     return code;
-//   }
-
-//   return clip(visible, clipLine, interpolate, smallRadius ? [0, -radius] : [-PI, radius - PI]);
-// }

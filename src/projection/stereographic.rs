@@ -8,6 +8,7 @@ use crate::Transform;
 
 use super::projection::Projection;
 use super::projection_mutator::ProjectionMutator;
+use super::projection::StreamProcessorValueMaybe;
 
 // TODO must find a standard way to multiply by 2
 fn angle<F>(z: F) -> F
@@ -35,7 +36,8 @@ impl StereographicRaw {
     let s = Rc::new(StereographicRaw::new::<F>());
     let mut projection = ProjectionMutator::<F>::from_projection_raw(s);
     projection.scale(Some(&F::from(250u8).unwrap()));
-    projection.clip_angle(Some(F::from_u8(142u8).unwrap()));
+    let angle = F::from_u8(142u8).unwrap();
+    projection.clip_angle(StreamProcessorValueMaybe::Value(angle));
     return projection;
   }
 }
