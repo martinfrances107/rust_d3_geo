@@ -1,5 +1,4 @@
 use std::rc::Rc;
-use std::cell::RefCell;
 
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
@@ -34,8 +33,8 @@ impl StereographicRaw {
     F: Float + FloatConst + FromPrimitive + 'static,
   {
     let s = Rc::new(StereographicRaw::new::<F>());
-    // projection.scale(&F::from(250u8).unwrap());
     let mut projection = ProjectionMutator::<F>::from_projection_raw(s);
+    projection.scale(Some(&F::from(250u8).unwrap()));
     projection.clip_angle(Some(F::from_u8(142u8).unwrap()));
     return projection;
   }

@@ -30,11 +30,11 @@ impl<F> TransformStream<F> for TransformRotate<F>
 where
   F: Float,
 {
-  fn point(&mut self, x: F, y: F, z: Option<F>) {
+  fn point(&mut self, x: F, y: F, m: Option<u8>) {
     let mut stream = self.stream.borrow_mut();
     let rotate = self.rotate.borrow();
     let r = rotate.transform(&[x, y]);
     // Warning the javascript version return the value below but I thnk it break the implied spec!!!!
-    stream.point(r[0], r[1], z);
+    stream.point(r[0], r[1], m);
   }
 }

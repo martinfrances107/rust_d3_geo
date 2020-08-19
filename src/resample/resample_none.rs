@@ -43,10 +43,10 @@ impl<F> TransformStream<F> for ResampleNone<F>
 where
   F: Float,
 {
-  fn point(&mut self, x: F, y: F, z: Option<F>) {
+  fn point(&mut self, x: F, y: F, m: Option<u8>) {
     let mut stream = self.stream.borrow_mut();
     let project = &*self.project.borrow();
     let p = project.transform(&[x, y]);
-    stream.point(p[0], p[1], z);
+    stream.point(p[0], p[1], m);
   }
 }

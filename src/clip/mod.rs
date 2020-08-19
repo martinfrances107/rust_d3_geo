@@ -5,11 +5,13 @@ use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
+/// Public: clip generators used by projection.
 pub mod antimeridian;
+pub mod circle;
+
 mod buffer;
 mod rejoin;
 
-use super::stream::Stream;
 use crate::polygon_contains::contains;
 use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
@@ -19,7 +21,7 @@ use buffer::ClipBuffer;
 
 pub trait ClipLine<'a, F> {
   fn line_start(&mut self);
-  fn point(&mut self, lambda1_p: F, phi1: F, m: Option<F>);
+  fn point(&mut self, lambda1_p: F, phi1: F, m: Option<u8>);
   fn line_end(&mut self);
   fn clean(&mut self) -> Option<u8>;
   fn stream(&mut self, stream: Box<dyn TransformStream<F>>);
@@ -34,9 +36,10 @@ where
   x: [F; 2],
 }
 
-pub type InterpolateFn<F> = Box<dyn Fn(Option<F>, Option<F>, F, dyn Stream<F>)>;
-type ClipLineFn<F> = Box<dyn Fn(F, F, Option<F>) -> bool>;
-type PointVisibleFnPtr<F> = Rc<ClipLineFn<F>>;
+pub type InterpolateFn<F> =
+  Box<dyn Fn(Option<[F; 2]>, Option<[F; 2]>, F, Rc<RefCell<Box<dyn TransformStream<F>>>>)>;
+type PointsVisibleFn<F> = Box<dyn Fn(F, F, Option<F>) -> bool>;
+pub type PointVisibleFnPtr<F> = Rc<PointsVisibleFn<F>>;
 // type ClipLineFn<F> = dyn Fn(Box<dyn ClipLine<F>>) -> Box<dyn ClipLine<F>>;
 pub type CompareIntersectionFn<F> = Box<dyn Fn(Ci<F>, Ci<F>) -> F>;
 
@@ -45,7 +48,7 @@ where
   F: Float,
 {
   line: Rc<RefCell<Box<dyn TransformStream<F>>>>,
-  interpolate: Rc<RefCell<Box<dyn TransformStream<F>>>>,
+  interpolate: Rc<RefCell<InterpolateFn<F>>>,
   // point: Box<dyn Fn()>,
   // point: [F;2],
   polygon_started: bool,
@@ -67,7 +70,7 @@ where
   fn new(
     point_visible: PointVisibleFnPtr<F>,
     clip_line_fn_ptr: Rc<RefCell<StreamProcessor<F>>>,
-    interpolate: Rc<RefCell<Box<dyn TransformStream<F>>>>,
+    interpolate: Rc<RefCell<InterpolateFn<F>>>,
     start: [F; 2],
   ) -> StreamProcessor<F> {
     return Box::new(move |sink: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
@@ -98,9 +101,9 @@ where
     return segment.len() > 1;
   }
 
-  fn point_ring(&mut self, lambda: F, phi: F, _m: Option<F>) {
+  fn point_ring(&mut self, lambda: F, phi: F, _m: Option<u8>) {
     self.ring.push([lambda, phi]);
-    let  mut ring_sink = self.ring_sink.borrow_mut();
+    let mut ring_sink = self.ring_sink.borrow_mut();
     ring_sink.point(lambda, phi, None);
   }
 
@@ -153,14 +156,14 @@ impl<'a, F> TransformStream<F> for Clip<F>
 where
   F: Float + FloatConst + FromPrimitive,
 {
-  fn point(&mut self, lambda: F, phi: F, m: Option<F>) {
+  fn point(&mut self, lambda: F, phi: F, m: Option<u8>) {
     match self.use_ring {
       true => {
         self.ring.push([lambda, phi]);
         // self.ring_sink.point(lambda, phi, None);
       }
       false => {
-        if (self.point_visible)(lambda, phi, m) {
+        if (self.point_visible)(lambda, phi, None) {
           let mut sink = self.sink.borrow_mut();
           sink.point(lambda, phi, m);
         }
@@ -246,9 +249,3 @@ where
 
   return part1 - part2;
 }
-// Intersections are sorted along the clip edge. For both antimeridian cutting
-// and circle clipping, the same comparison is used.
-// function compareIntersection(a, b) {
-//   return ((a = a.x)[0] < 0 ? a[1] - halfPi - epsilon : halfPi - a[1])
-//        - ((b = b.x)[0] < 0 ? b[1] - halfPi - epsilon : halfPi - b[1]);
-// }

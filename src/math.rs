@@ -7,7 +7,7 @@ where F: Float + FromPrimitive {
   return  F::from(1e-6).unwrap();
 }
 
-pub const EPSILON2:f64 = 1e-12;
+// pub const EPSILON2:f64 = 1e-12;
 
 // pub coMathnst ceil = Math.ceil;
 

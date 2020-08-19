@@ -2,7 +2,7 @@ use num_traits::Float;
 
 pub fn intersect<F>(lambda0: F, phi0: F, lambda1: F, phi1: F) -> F
 where
-  F: Float,
+  F: Float + 'static,
 {
   let sin_lambda0_lambda1 = (lambda0 - lambda1).sin();
   match (sin_lambda0_lambda1).abs() > F::epsilon() {

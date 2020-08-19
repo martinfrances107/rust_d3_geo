@@ -268,7 +268,7 @@ impl<F> TransformStream<F> for Resample<F>
 where
   F: Float + FloatConst + FromPrimitive,
 {
-  fn point(&mut self, x: F, y: F, _z: Option<F>) {
+  fn point(&mut self, x: F, y: F, _m: Option<u8>) {
     if self.use_line_point {
       self.line_point(x, y);
     } else {

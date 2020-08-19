@@ -21,6 +21,7 @@ const INTERSECTION_REJOIN: u8 = 2u8;
 
 // use crate::clip::ClipLine;
 
+#[derive(Clone)]
 pub struct Line<F> {
   clean: Option<u8>,
   lambda0: F,
@@ -56,7 +57,7 @@ where
 
 impl<F> TransformStream<F> for Line<F>
 where
-  F: Float + FloatConst + FromPrimitive,
+  F: Float + FloatConst + FromPrimitive + 'static,
 {
   fn line_start(&mut self) {
     let mut stream = self.stream.borrow_mut();
@@ -64,7 +65,7 @@ where
     self.clean = Some(NO_INTERSECTIONS);
   }
 
-  fn point(&mut self, mut lambda1: F, phi1: F, _m: Option<F>) {
+  fn point(&mut self, mut lambda1: F, phi1: F, _m: Option<u8>) {
     let mut stream = self.stream.borrow_mut();
     let sign1 = match lambda1 > F::zero() {
       true => F::PI(),

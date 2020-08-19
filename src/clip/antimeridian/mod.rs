@@ -13,7 +13,7 @@ use crate::transform_stream::StreamProcessor;
 
 use super::Clip;
 
-use interpolate::Interpolate;
+use interpolate::interpolate;
 use line::Line;
 
 pub fn point_visible<F>(_x: F, _y: F, _z: Option<F>) -> bool
@@ -30,12 +30,12 @@ where
   let cal: StreamProcessor<F> = Line::new();
 
   let clip_line_fn_ptr: Rc<RefCell<StreamProcessor<F>>>;
-  clip_line_fn_ptr = Rc::new(RefCell::new(Box::new(cal)));
+  clip_line_fn_ptr = Rc::new(RefCell::new(cal));
 
   return Clip::<F>::new(
     Rc::new(Box::new(point_visible)),
     clip_line_fn_ptr,
-    Rc::new(RefCell::new(Box::new(Interpolate::new()))),
+    Rc::new(RefCell::new(Box::new(interpolate::<F>))),
     [-F::PI(), -F::FRAC_PI_2()],
   );
 }

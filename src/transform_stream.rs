@@ -31,7 +31,7 @@ pub trait TransformStream<F>
 where
   F: Float,
 {
-  fn point(&mut self, _x: F, _y: F, _z: Option<F>) {}
+  fn point(&mut self, _x: F, _y: F, _message: Option<u8>) {}
   fn sphere(&mut self) {}
   fn line_start(&mut self) {}
   fn line_end(&mut self) {}

@@ -24,8 +24,8 @@ impl<F> TransformStream<F> for TransformRadians<F>
 where
   F: Float,
 {
-  fn point(&mut self, x: F, y: F, z: Option<F>) {
+  fn point(&mut self, x: F, y: F, m: Option<u8>) {
     let mut stream = self.stream.borrow_mut();
-    stream.point(x.to_radians(), y.to_radians(), z);
+    stream.point(x.to_radians(), y.to_radians(), m);
   }
 }

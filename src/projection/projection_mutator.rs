@@ -10,24 +10,22 @@ use num_traits::FloatConst;
 use crate::compose::Compose;
 use crate::resample::gen_resample;
 use crate::rotation::rotate_radians::RotateRadians;
-// use crate::stream::Stream;
+
 use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::StreamProcessorIdentity;
 use crate::transform_stream::TransformStream;
 use crate::transform_stream::TransformStreamIdentity;
 use crate::Transform;
 use crate::TransformIdentity;
-// use crate::clip::antimeridian::ClipAntimeridianState;
+
+// clip generators.
 use crate::clip::antimeridian::generate_antimeridian;
-// use crate::clip::circle::Circle;
+use crate::clip::circle::generate_circle;
 
 use super::projection::Projection;
-// use super::stream_wrapper::StreamWrapper;
-// use super::scale_translate::ScaleTranslate;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 use super::transform_radians::TransformRadians;
 use super::transform_rotate::TransformRotate;
-// use super::stream_wrapper::StreamWrapper;
 
 pub struct ProjectionMutator<F>
 where
@@ -239,19 +237,16 @@ where
   //   return arguments.length ? (preclip = +_ ? clipCircle(theta = _ * radians) : (theta = null, clipAntimeridian), reset()) : theta * degrees;
   // };
 
-  // projection.clipAngle = function(_) {
-  //   return (preclip = +_ ? clipCircle(theta = _ * radians) : (theta = null, clipAntimeridian), reset()) ;
-  // };
-
   fn clip_angle(&mut self, angle: Option<F>) {
     match angle {
       Some(angle) => {
-        // self.theta = Some(angle.to_radians());
-        // return ClipCircle<F>::new(self.theta);
+        let theta = angle.to_radians();
+        self.theta = Some(theta);
+        self.preclip = generate_circle(theta);
       }
       None => {
-        // self.theta = None;
-        // self.preclip = generate_antimeridian<F>();
+        self.theta = None;
+        self.preclip = generate_antimeridian();
         self.reset();
       }
     }

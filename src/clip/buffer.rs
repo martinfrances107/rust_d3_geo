@@ -10,7 +10,7 @@ where
 {
   x: F,
   y: F,
-  m: Option<F>,
+  m: Option<u8>,
 }
 #[derive(Debug)]
 pub struct ClipBuffer<F>
@@ -55,7 +55,7 @@ impl<'a, F> TransformStream<F> for ClipBuffer<F>
 where
   F: Float,
 {
-  fn point(&mut self, x: F, y: F, m: Option<F>) {
+  fn point(&mut self, x: F, y: F, m: Option<u8>) {
     self.line.push(LineTuple { x, y, m });
   }
 

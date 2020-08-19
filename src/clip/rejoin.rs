@@ -83,7 +83,7 @@ pub fn rejoin<F>(
     let mut p1 = segment[n];
     //  let mut x: Intersection<F>;
 
-    if point_equal(p0, p1) {
+    if point_equal([p0[0], p0[1]], [p1[0], p1[1]]) {
       if !p0[2].is_zero() && !p1[2].is_zero() {
         stream.line_start();
         // let i: usize;
