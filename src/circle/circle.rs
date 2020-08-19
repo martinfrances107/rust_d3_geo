@@ -149,15 +149,17 @@ where
     };
   }
 
-  //   fn precision(&mut self, precision: FnValMaybe<F>) -> Option<F> {
-  //     match precision {
-  //       Some(precision) => {
-  //         self.precision = precision;
-  //         return None;
-  //       }
-  //       None => {
-  //         return Some(self.precision);
-  //       }
-  //     }
-  //   }
+  fn precision(&mut self, precision: FnValMaybe<F>) -> Option<F> {
+    match precision {
+      FnValMaybe::None => None,
+      FnValMaybe::FloatValue(value) => {
+        self.precision_fn_ptr = Rc::new(move |_: CircleInArg| *value);
+        None
+      }
+      FnValMaybe::FloatFn(precision_fn_ptr) => {
+        self.precision_fn_ptr = precision_fn_ptr;
+        None
+      }
+    }
+  }
 }

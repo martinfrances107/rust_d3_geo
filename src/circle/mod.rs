@@ -31,5 +31,5 @@ pub enum CircleInArg {
 pub trait CircleTrait<F> {
   fn center(&mut self, center: FnValMaybe2D<F>) -> Option<[F; 2]>;
   fn radius(&mut self, radius: FnValMaybe<F>) -> Option<F>;
-  // fn precision(&mut self, precision: FnValMaybe<F>) -> Option<F>;
+  fn precision(&mut self, precision: FnValMaybe<F>) -> Option<F>;
 }
