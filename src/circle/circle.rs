@@ -42,10 +42,6 @@ where
   center_fn_ptr: Rc<dyn Fn(CircleInArg) -> [F; 2]>,
   radius_fn_ptr: Rc<dyn Fn(CircleInArg) -> F>,
   precision_fn_ptr: Rc<dyn Fn(CircleInArg) -> F>,
-
-  ring: Rc<RefCell<Vec<[F; 2]>>>,
-  rotate: Rc<Box<dyn Transform<F>>>,
-  stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
 }
 
 fn center<F>(_in: CircleInArg) -> [F; 2]
@@ -79,23 +75,11 @@ where
     let precision_fn_ptr = Rc::new(precision);
 
     let c_val: [F; 2] = (*center_fn_ptr)(CircleInArg::None);
-    let ring = Rc::new(RefCell::new(Vec::new()));
-    let rotate = Rc::new(RotateRadians::new(
-      -c_val[0].to_radians(),
-      -c_val[1].to_radians(),
-      F::zero(),
-    ));
-    let stream_ref = Rc::new(RefCell::new(Stream::new(rotate.clone(), ring.clone())));
-
-    let stream = stream_ref.clone();
 
     return Self {
       center_fn_ptr,
       radius_fn_ptr,
       precision_fn_ptr,
-      ring,
-      rotate,
-      stream,
     };
   }
 
@@ -103,28 +87,23 @@ where
     // TODO must come back and copy the arg so in can be passes into each fn c, r and p.
     let c = (*self.center_fn_ptr)(CircleInArg::None);
     let r = (*self.radius_fn_ptr)(CircleInArg::None).to_radians();
-    let r_64: f64 = cast(r).unwrap();
-    println!("radius {}", r_64);
-    let c0_64: f64 = cast(c[0]).unwrap();
-    let c1_64: f64 = cast(c[1]).unwrap();
-    println!("center {:?}", [c0_64, c1_64]);
     let p = (*self.precision_fn_ptr)(CircleInArg::None).to_radians();
 
-    {
-      let mut ring = self.ring.borrow_mut();
-      ring.clear();
-    }
-    self.rotate = Rc::new(RotateRadians::new(
+    let ring = Rc::new(RefCell::new(Vec::new()));
+
+    let rotate = Rc::new(RotateRadians::new(
       -c[0].to_radians(),
       -c[1].to_radians(),
       F::zero(),
     ));
 
-    circle_stream(self.stream.clone(), r, p, F::one(), None, None);
+    let stream = Rc::new(RefCell::new(Stream::new(rotate.clone(), ring.clone())));
+
+    circle_stream(stream, r, p, F::one(), None, None);
 
     let c;
     {
-      let ring = self.ring.borrow_mut();
+      let ring = ring.borrow_mut();
       let mut coordinates = Vec::new();
       coordinates.push(ring.to_vec());
 
@@ -133,12 +112,6 @@ where
         coordinates,
       };
     }
-
-    {
-      let mut ring = self.ring.borrow_mut();
-      ring.clear();
-    }
-    // self.rotate = None;
 
     return c;
   }
