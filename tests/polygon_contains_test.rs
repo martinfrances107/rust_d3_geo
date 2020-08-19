@@ -2,24 +2,24 @@ mod polygon_contains_test {
   extern crate pretty_assertions;
 
   #[cfg(test)]
-  use std::rc::Rc;
   use pretty_assertions::assert_eq;
+  use std::rc::Rc;
 
   use num_traits::cast::FromPrimitive;
   use num_traits::Float;
   use num_traits::FloatConst;
 
   use rust_d3_geo::circle::circle::Circle;
+  use rust_d3_geo::circle::CircleInArg;
   use rust_d3_geo::circle::CircleTrait;
   use rust_d3_geo::circle::FnValMaybe;
   use rust_d3_geo::circle::FnValMaybe2D;
-  use rust_d3_geo::circle::CircleInArg;
 
   use rust_d3_geo::polygon_contains::contains;
 
   fn polygon_contains<F>(polygon_p: &Vec<Vec<[F; 2]>>, point: &[F; 2]) -> bool
   where
-    F: Float + FloatConst + FromPrimitive
+    F: Float + FloatConst + FromPrimitive,
   {
     let polygon = polygon_p.clone();
     let point_radians = |p: [F; 2]| [p[0].to_radians(), p[1].to_radians()];
@@ -227,12 +227,12 @@ mod polygon_contains_test {
     println!("geoPolygonContains(empty, point) returns false");
     let mut circle = Circle::new();
     circle.center(FnValMaybe2D::FloatValue(Rc::new([0f64, -90f64])));
-    circle.radius(FnValMaybe::FloatValue(Rc::new(90f64-0.1f64)));
+    circle.radius(FnValMaybe::FloatValue(Rc::new(90f64 - 0.1f64)));
     let c1 = circle.circle(CircleInArg::None);
     let ring1 = c1.coordinates[0].clone();
     println!("ring1 {:?}", ring1);
 
-    circle.radius(FnValMaybe::FloatValue(Rc::new(90f64+0.1f64)));
+    circle.radius(FnValMaybe::FloatValue(Rc::new(90f64 + 0.1f64)));
     let c2 = circle.circle(CircleInArg::None);
     let mut ring2 = c2.coordinates[0].clone();
     ring2.reverse();
@@ -251,12 +251,12 @@ mod polygon_contains_test {
 
     let mut circle = Circle::new();
     circle.center(FnValMaybe2D::FloatValue(Rc::new([0f64, -90f64])));
-    circle.radius(FnValMaybe::FloatValue(Rc::new(90f64+0.1f64)));
+    circle.radius(FnValMaybe::FloatValue(Rc::new(90f64 + 0.1f64)));
     let c1 = circle.circle(CircleInArg::None);
     let ring1 = c1.coordinates[0].clone();
 
     circle.center(FnValMaybe2D::FloatValue(Rc::new([0f64, -90f64])));
-    circle.radius(FnValMaybe::FloatValue(Rc::new(90f64-0.1f64)));
+    circle.radius(FnValMaybe::FloatValue(Rc::new(90f64 - 0.1f64)));
     let c2 = circle.circle(CircleInArg::None);
     let mut ring2 = c2.coordinates[0].clone();
     ring2.reverse();
@@ -544,5 +544,4 @@ mod polygon_contains_test {
     assert_eq!(polygon_contains(&polygon, &[0f64, 10f64]), true);
     assert_eq!(polygon_contains(&polygon, &[30f64, 80f64]), true);
   }
-
 }

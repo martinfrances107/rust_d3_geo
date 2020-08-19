@@ -46,7 +46,6 @@ where
     F: Float + FloatConst + 'static,
   {
     let x_rotated = self.rotate.invert(&[x, y]);
-    // println!("x_rotated {:?}", x_rotated);
     let x_rotated_deg = [x_rotated[0].to_degrees(), x_rotated[1].to_degrees()];
     let mut ring = self.ring.borrow_mut();
     ring.push(x_rotated_deg);
