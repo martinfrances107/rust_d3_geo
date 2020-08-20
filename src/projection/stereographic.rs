@@ -76,12 +76,12 @@ mod tests {
     stereo.translate(Some(&[0f64, 0f64]));
     stereo.scale(Some(&1f64));
 
-    assert!(projection_equal(stereo, &[0f64, 0f64], &[0f64, 0f64], None));
-    // assert_eq!(stereo.transform(&[0f64, 0f64]), [0f64, 0f64]);
-    // assert_eq!(stereo.transform(&[-90f64, 0f64]), [-1f64, 0f64]);
-    // assert_eq!(stereo.projection.transform(&[ 90f64,   0f64]), [ 1f64,  0f64]);
-    // assert_eq!(stereo.projection.transform(&[  0f64, -90f64]), [ 0f64,  1f64]);
-    // assert_eq!(stereo.projection.transform(&[0f64, 90f64]), [0f64, -1f64]);
+    assert!(projection_equal(&stereo, &[0f64, 0f64], &[0f64, 0f64], None));
+    // assert!(projection_equal(&stereo, &[-90f64, 0f64], &[-1f64, 0f64], None));
+    // assert!(projection_equal(&stereo, &[-90f64, 0f64]), [-1f64, 0f64]);
+    // assert!(projection_equal(&stereo, &[ 90f64,   0f64]), [ 1f64,  0f64]);
+    // assert!(projection_equal(&stereo, &[  0f64, -90f64]), [ 0f64,  1f64]);
+    // assert!(projection_equal(&stereo, &[0f64, 90f64]), [0f64, -1f64]);
   }
 
 }

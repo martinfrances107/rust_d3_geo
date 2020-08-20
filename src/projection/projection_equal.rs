@@ -6,7 +6,7 @@ use super::projection_mutator::ProjectionMutator;
 use crate::Transform;
 
 pub fn projection_equal<F>(
-  projection: ProjectionMutator<F>,
+  projection: &ProjectionMutator<F>,
   location: &[F; 2],
   point: &[F; 2],
   delta_p: Option<F>,
