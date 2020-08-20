@@ -7,8 +7,8 @@ use num_traits::FloatConst;
 use crate::Transform;
 
 use super::projection::Projection;
-use super::projection_mutator::ProjectionMutator;
 use super::projection::StreamProcessorValueMaybe;
+use super::projection_mutator::ProjectionMutator;
 
 // TODO must find a standard way to multiply by 2
 fn angle<F>(z: F) -> F
@@ -76,12 +76,16 @@ mod tests {
     stereo.translate(Some(&[0f64, 0f64]));
     stereo.scale(Some(&1f64));
 
-    assert!(projection_equal(&stereo, &[0f64, 0f64], &[0f64, 0f64], None));
+    assert!(projection_equal(
+      &stereo,
+      &[0f64, 0f64],
+      &[0f64, 0f64],
+      None
+    ));
     // assert!(projection_equal(&stereo, &[-90f64, 0f64], &[-1f64, 0f64], None));
     // assert!(projection_equal(&stereo, &[-90f64, 0f64]), [-1f64, 0f64]);
     // assert!(projection_equal(&stereo, &[ 90f64,   0f64]), [ 1f64,  0f64]);
     // assert!(projection_equal(&stereo, &[  0f64, -90f64]), [ 0f64,  1f64]);
     // assert!(projection_equal(&stereo, &[0f64, 90f64]), [0f64, -1f64]);
   }
-
 }
