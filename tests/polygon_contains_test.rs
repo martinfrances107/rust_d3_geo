@@ -21,7 +21,6 @@ mod polygon_contains_test {
   where
     F: Float + FloatConst + FromPrimitive,
   {
-    let polygon = polygon_p.clone();
     let point_radians = |p: [F; 2]| [p[0].to_radians(), p[1].to_radians()];
     let ring_radians = |ring: Vec<[F; 2]>| {
       let mut rr = ring.into_iter().map(point_radians).collect::<Vec<[F; 2]>>();
@@ -29,6 +28,7 @@ mod polygon_contains_test {
       return rr;
     };
 
+    let polygon = polygon_p.clone();
     let polygon_radians: Vec<Vec<[F; 2]>> = polygon.into_iter().map(ring_radians).collect();
     return contains(polygon_radians, &point_radians(*point));
   }
