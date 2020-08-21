@@ -55,14 +55,6 @@ where
 {
   let e0 = logitude_equal(actual[0], expected[0], delta);
   let e1 = in_delta(actual[1], expected[1], delta);
-  // println!(
-  //   " actual [{:?},{:?}] expected , [{:?},{:?}]",
-  //   actual[0].as_(),
-  //   actual[1].as_(),
-  //   expected[0].as_(),
-  //   expected[1].as_()
-  // );
-  // println!("longitude equal {:?} {:?}", e0, e1);
   return e0 & e1;
 }
 
