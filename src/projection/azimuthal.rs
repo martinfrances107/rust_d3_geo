@@ -26,12 +26,13 @@ where
     let cc = c.cos();
 
     let ret_x = (x * sc).atan2(z * cc);
-    let ret_y;
+    let y_out;
     if z.is_zero() {
-      ret_y = z;
+      y_out = z;
     } else {
-      ret_y = y * sc / z;
+      y_out = y * sc / z;
     }
+    let ret_y = y_out.asin();
 
     return [ret_x, ret_y];
   });
