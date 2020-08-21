@@ -52,9 +52,9 @@ where
   x: F,
   y: F, // translate
   lambda: F,
-  rotate: Rc<Box<dyn Transform<F>>>, //rotate, // pre-rotate
-  sx: F,                                      // reflectX
-  sy: F,                                      // reflectY
+  rotate: Rc<Box<dyn Transform<F>>>, //rotate, pre-rotate
+  sx: F,                             // reflectX
+  sy: F,                             // reflectY
   theta: Option<F>,
   x0: Option<F>,
   y0: Option<F>,
@@ -136,15 +136,12 @@ where
     ));
 
     {
-    self.project_transform = Rc::new(Compose::new(
-      self.project.clone(),
-      Rc::new(transform),
-    ));
+      self.project_transform = Rc::new(Compose::new(self.project.clone(), Rc::new(transform)));
     }
 
     self.project_rotate_transform = Rc::new(Compose::new(
       self.rotate.clone(),
-      self.project_transform.clone()
+      self.project_transform.clone(),
     ));
 
     // Resample is missing from here.
@@ -195,7 +192,6 @@ impl<F> Projection<F> for ProjectionMutator<F>
 where
   F: Float + FloatConst + FromPrimitive + 'static,
 {
-
   // fn get_preclip(&self) -> Option<Box<dyn GeoStream>> {
   //   return self.preclip;
   // }
@@ -279,5 +275,26 @@ where
         return Some([self.x, self.y]);
       }
     }
+  }
+
+  fn rotate(&mut self, angles: Option<[F; 3]>) -> Option<[F; 3]> {
+    return match angles {
+      Some(angles) => {
+        let [delta_lambda, delta_phi, delta_gamma] = angles;
+        let f360 = F::from(360u16).unwrap();
+        self.delta_lambda = (delta_lambda % f360).to_radians();
+        self.delta_phi = (delta_phi % f360).to_radians();
+        self.delta_gamma = (delta_gamma % f360).to_radians();
+        self.recenter();
+        None
+      }
+      None => {
+        return Some([
+          self.delta_lambda.to_degrees(),
+          self.delta_phi.to_degrees(),
+          self.delta_lambda.to_degrees(),
+        ]);
+      }
+    };
   }
 }

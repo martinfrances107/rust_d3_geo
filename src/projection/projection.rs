@@ -278,18 +278,14 @@ pub trait Projection<F> {
   //  * @param angle The new rotation angle of the projection.
   //  */
   // angle(angle: number): this;
-  // /**
-  //  * Returns the current rotation [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
-  //  * (These correspond to yaw, PItch and roll.) which defaults [0, 0, 0].
-  //  */
-  // rotate(): [number, number, number];
-  // /**
+
+    // /**
   //  * Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
   //  *
   //  * @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
   //  * (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
   //  */
-  // rotate(angles: [number, number] | [number, number, number]): this;
+  fn rotate(&mut self, angles: Option<[F;3]>) -> Option<[F;3]>;
 
   // /**
   //  * Sets the projection’s scale factor to the specified value and returns the projection.
