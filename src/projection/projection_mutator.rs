@@ -72,11 +72,6 @@ where
   {
     let delta2 = F::from(0.5f64).unwrap(); // precision
 
-    // let center;
-    // let transform: Box<dyn Transform<F>>;
-
-    // let project_resample = gen_resample(project_transform.clone(), Some(delta2));
-
     let mut pm = ProjectionMutator::<F> {
       project: Rc::clone(&project),
       alpha: F::zero(), // post-rotate angle
@@ -87,7 +82,6 @@ where
       delta_lambda: F::zero(),
       delta_phi: F::zero(),
       delta_gamma: F::zero(),
-      // projection: RefCell::new(projection),
       // scale
       k: F::from_u8(150u8).unwrap(),
       // translate
@@ -116,7 +110,6 @@ where
 
   fn reset(&mut self) {
     self.cache_stream = None;
-    // return self;
   }
 
   fn recenter(&mut self)
@@ -174,7 +167,6 @@ where
     // let t_radians_out = t_radians(t_rotate_out);
 
     // self.cache = t_radians_out;
-
     return self.cache.clone();
   }
 }
@@ -203,9 +195,6 @@ impl<F> Projection<F> for ProjectionMutator<F>
 where
   F: Float + FloatConst + FromPrimitive + 'static,
 {
-  // projection.stream = function(stream) {
-  //   return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
-  // };
 
   // fn get_preclip(&self) -> Option<Box<dyn GeoStream>> {
   //   return self.preclip;
