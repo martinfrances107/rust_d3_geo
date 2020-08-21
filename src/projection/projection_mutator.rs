@@ -43,16 +43,16 @@ where
   delta_gamma: F,
   delta2: F, // precision
   k: F,      // scale
-  project_resample: Rc<RefCell<StreamProcessor<F>>>,
-  project_transform: Rc<RefCell<Box<dyn Transform<F>>>>,
-  // project_rotate_transform: Box<dyn Transform<F>>,
+  // project_resample: Rc<StreamProcessor<F>>,
+  project_transform: Rc<Box<dyn Transform<F>>>,
+  project_rotate_transform: Rc<Box<dyn Transform<F>>>,
   phi: F, // center
   preclip: StreamProcessor<F>,
   postclip: StreamProcessor<F>,
   x: F,
   y: F, // translate
   lambda: F,
-  rotate: Rc<RefCell<Box<dyn Transform<F>>>>, //rotate, // pre-rotate
+  rotate: Rc<Box<dyn Transform<F>>>, //rotate, // pre-rotate
   sx: F,                                      // reflectX
   sy: F,                                      // reflectY
   theta: Option<F>,
@@ -70,60 +70,44 @@ where
   where
     F: Float + FloatConst + FromPrimitive,
   {
-    let alpha = F::zero();
-    let delta_lambda = F::zero();
-    let delta_phi = F::zero();
-    let delta_gamma = F::zero();
     let delta2 = F::from(0.5f64).unwrap(); // precision
 
-    let k = F::from_u8(150u8).unwrap(); // scale
-                                        // center
-    let lambda = F::zero();
-    let phi = F::zero();
     // let center;
     // let transform: Box<dyn Transform<F>>;
-    let x = F::from_u16(480u16).unwrap();
-    let y = F::from_u16(250u16).unwrap();
-    let sx = F::one();
-    let sy = F::one();
 
-    let transform = Box::new(TransformIdentity {});
-
-    let project1 = Rc::clone(&project);
-    let project_transform = Rc::new(RefCell::new(Compose::new(project1, Rc::new(transform))));
-    let project_resample = gen_resample(project_transform.clone(), Some(delta2));
+    // let project_resample = gen_resample(project_transform.clone(), Some(delta2));
 
     let mut pm = ProjectionMutator::<F> {
       project: Rc::clone(&project),
-      alpha, // post-rotate angle
+      alpha: F::zero(), // post-rotate angle
       cache: Rc::new(RefCell::new(Box::new(TransformStreamIdentity {}))),
       cache_stream: None,
       clip_antimeridian: None,
       delta2, // precision
-      delta_lambda,
-      delta_phi,
-      delta_gamma,
+      delta_lambda: F::zero(),
+      delta_phi: F::zero(),
+      delta_gamma: F::zero(),
       // projection: RefCell::new(projection),
       // scale
-      k,
+      k: F::from_u8(150u8).unwrap(),
       // translate
-      lambda,
-      phi,
-      rotate: Rc::new(RefCell::new(Box::new(TransformIdentity {}))), // pre-rotate
+      lambda: F::zero(),
+      phi: F::zero(),
+      rotate: Rc::new(Box::new(TransformIdentity {})), // pre-rotate
       preclip: generate_antimeridian(),
       postclip: StreamProcessorIdentity::new(),
-      sx,          // reflectX
-      sy,          // reflectX
-      theta: None, // pre-clip angle
-      x,
+      sx: F::one(), // reflectX
+      sy: F::one(), // reflectX
+      theta: None,  // pre-clip angle
+      x: F::from_u16(480u16).unwrap(),
       x0: None,
       y0: None,
       x1: None,
       y1: None, //postclip = identity, // post-clip extent
-      y,
-      project_resample,
-      project_transform,
-      // project_rotate_transform,
+      y: F::from_u16(250u16).unwrap(),
+      // project_resample,
+      project_transform: Rc::new(Box::new(TransformIdentity {})),
+      project_rotate_transform: Rc::new(Box::new(TransformIdentity {})),
     };
 
     pm.recenter();
@@ -132,6 +116,7 @@ where
 
   fn reset(&mut self) {
     self.cache_stream = None;
+    // return self;
   }
 
   fn recenter(&mut self)
@@ -141,6 +126,7 @@ where
     let center =
       ScaleTranslateRotate::new(self.k, F::zero(), F::zero(), self.sx, self.sy, self.alpha)
         .transform(&self.project.transform(&[self.lambda, self.phi]));
+
     let transform = ScaleTranslateRotate::new(
       self.k,
       self.x - center[0],
@@ -150,16 +136,25 @@ where
       self.alpha,
     );
 
-    self.rotate = Rc::new(RefCell::new(RotateRadians::new(
+    self.rotate = Rc::new(RotateRadians::new(
       self.delta_lambda,
       self.delta_phi,
       self.delta_gamma,
-    )));
+    ));
 
-    self.project_transform = Rc::new(RefCell::new(Compose::new(
+    {
+    self.project_transform = Rc::new(Compose::new(
       self.project.clone(),
       Rc::new(transform),
-    )));
+    ));
+    }
+
+    self.project_rotate_transform = Rc::new(Compose::new(
+      self.rotate.clone(),
+      self.project_transform.clone()
+    ));
+
+    // Resample is missing from here.
     self.reset();
   }
 
@@ -167,18 +162,18 @@ where
     &mut self,
     stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
   ) -> Rc<RefCell<Box<dyn TransformStream<F>>>> {
-    let resample = self.project_resample.borrow_mut();
+    // let resample = self.project_resample.borrow_mut();
 
     // post clip is just the identity stream in stereographic tests.
     // let post_clip_s = self.postclip.stream(stream);
-    let resample_out = resample(stream);
-    let preclip_out = (self.preclip)(resample_out);
-    let t_rotate = TransformRotate::new(self.rotate.clone());
-    let t_rotate_out = t_rotate(preclip_out);
-    let t_radians = TransformRadians::new();
-    let t_radians_out = t_radians(t_rotate_out);
+    // let resample_out = resample(stream);
+    // let preclip_out = (self.preclip)(resample_out);
+    // let t_rotate = TransformRotate::new(self.rotate.clone());
+    // let t_rotate_out = t_rotate(preclip_out);
+    // let t_radians = TransformRadians::new();
+    // let t_radians_out = t_radians(t_rotate_out);
 
-    self.cache = t_radians_out;
+    // self.cache = t_radians_out;
 
     return self.cache.clone();
   }
@@ -186,7 +181,23 @@ where
 
 impl<F> TransformStream<F> for ProjectionMutator<F> where F: Float + FloatConst + FromPrimitive {}
 
-impl<F> Transform<F> for ProjectionMutator<F> where F: Float + FloatConst + FromPrimitive {}
+impl<F> Transform<F> for ProjectionMutator<F>
+where
+  F: Float + FloatConst + FromPrimitive,
+{
+  fn transform(&self, p: &[F; 2]) -> [F; 2] {
+    let pt = self.project_rotate_transform.clone();
+    let r = [p[0].to_radians(), p[1].to_radians()];
+    let out = pt.transform(&r);
+    return out;
+  }
+  fn invert(&self, p: &[F; 2]) -> [F; 2] {
+    let pt = self.project_rotate_transform.clone();
+    let d = pt.transform(p);
+    let out = [d[0].to_degrees(), d[1].to_degrees()];
+    return out;
+  }
+}
 
 impl<F> Projection<F> for ProjectionMutator<F>
 where
@@ -203,7 +214,7 @@ where
   fn preclip(&mut self, preclip: StreamProcessor<F>) {
     // self.preclip = preclip;
     // self.theta = None;
-    return self.reset();
+    // return self.reset();
   }
 
   // fn get_postclip(&self) -> Option<Box<dyn GeoStream>> {
@@ -213,7 +224,7 @@ where
   fn postclip(&mut self, postclip: StreamProcessor<F>) {
     // self.postclip = postclip;
     // self.theta = None;
-    return self.reset();
+    // return self.reset();
   }
 
   // fn get_center(&self) -> [F; 2] {
@@ -226,7 +237,6 @@ where
   //   // self.phi = (p[1] % F::from_u16(360u16).unwrap()).to_radians();
   //   self.recenter();
   // }
-
 
   // projection.clipAngle = function(_) {
   //   return arguments.length ? (preclip = +_ ? clipCircle(theta = _ * radians) : (theta = null, clipAntimeridian), reset()) : theta * degrees;
@@ -248,12 +258,12 @@ where
         println!("generatin SP");
         self.theta = None;
         self.preclip = preclip;
-        self.reset();
+        // self.reset();
         None
       }
       StreamProcessorValueMaybe::None => match self.theta {
         Some(theta) => Some(theta.to_degrees()),
-        None => None
+        None => None,
       },
     }
   }
@@ -261,7 +271,7 @@ where
   fn scale(&mut self, scale: Option<&F>) {
     match scale {
       Some(scale) => {
-        self.k = self.k + *scale;
+        self.k = *scale;
         self.recenter();
       }
       None => {}
@@ -271,8 +281,8 @@ where
   fn translate(&mut self, t: Option<&[F; 2]>) -> Option<[F; 2]> {
     match t {
       Some(t) => {
-        self.x = self.x + t[0];
-        self.y = self.y + t[1];
+        self.x = t[0];
+        self.y = t[1];
         self.recenter();
         return None;
       }
@@ -282,10 +292,3 @@ where
     }
   }
 }
-
-// fn generate<'a, F: 'static>(raw: Box<dyn Transform<F>>) -> ProjectionMutator<'a, F>
-// where F: Float + FloatConst + FromPrimitive {
-//   let mut g = ProjectionMutator::<'a, F>::from_projection_raw(&raw);
-//   g.recenter();
-//   return g;
-// }

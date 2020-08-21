@@ -1,3 +1,4 @@
+use num_traits::cast::AsPrimitive;
 use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
@@ -12,7 +13,7 @@ pub fn projection_equal<F>(
   delta_p: Option<F>,
 ) -> bool
 where
-  F: Float + FloatConst + FromPrimitive,
+  F: Float + FloatConst + FromPrimitive + AsPrimitive<f64>,
 {
   let delta = match delta_p {
     Some(d) => d,
@@ -24,21 +25,41 @@ where
 
 fn planar_equal<F>(actual: [F; 2], expected: &[F; 2], delta: F) -> bool
 where
-  F: Float,
+  F: Float + FromPrimitive + AsPrimitive<f64>,
 {
-  return in_delta(actual[0], expected[0], delta) & in_delta(actual[1], expected[1], delta);
+  let e0 = in_delta(actual[0], expected[0], delta);
+  let e1 = in_delta(actual[1], expected[1], delta);
+  println!(
+    " actual [{:?},{:?}] expected , [{:?},{:?}]",
+    actual[0].as_(),
+    actual[1].as_(),
+    expected[0].as_(),
+    expected[1].as_()
+  );
+  println!("planar equal {:?} {:?}", e0, e1);
+  return e0 && e1;
 }
 
 fn spherical_equal<F>(actual: [F; 2], expected: &[F; 2], delta: F) -> bool
 where
-  F: Float,
+  F: Float + FromPrimitive + AsPrimitive<f64>,
 {
-  return logitude_equal(actual[0], expected[0], delta) & in_delta(actual[1], expected[1], delta);
+  let e0 = logitude_equal(actual[0], expected[0], delta);
+  let e1 = in_delta(actual[1], expected[1], delta);
+  println!(
+    " actual [{:?},{:?}] expected , [{:?},{:?}]",
+    actual[0].as_(),
+    actual[1].as_(),
+    expected[0].as_(),
+    expected[1].as_()
+  );
+  println!("longitude equal {:?} {:?}", e0, e1);
+  return e0 & e1;
 }
 
 fn logitude_equal<F>(actual: F, expected: F, delta: F) -> bool
 where
-  F: Float,
+  F: Float + FromPrimitive + AsPrimitive<f64>,
 {
   println!("in le");
   let f360 = F::from(360u16).unwrap();
@@ -48,7 +69,7 @@ where
 
 fn in_delta<F>(actual: F, expected: F, delta: F) -> bool
 where
-  F: Float,
+  F: Float + FromPrimitive + AsPrimitive<f64>,
 {
   return (actual - expected).abs() <= delta;
 }

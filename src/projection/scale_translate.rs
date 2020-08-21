@@ -24,7 +24,11 @@ where
   fn transform(&self, p: &[F; 2]) -> [F; 2] {
     let x = p[0] * self.sx;
     let y = p[1] * self.sy;
-    return [self.dx + self.k * x, self.dy + self.k * y];
+    // TODO the minus sign in the y-output component I think is a inconsistency/bug in the javascript.
+    // it should be :-
+    // self.dy + self.k * y
+    // but that would mean a departure from the copy and would have to be adjusted elsewhere.
+    return [self.dx + self.k * x, self.dy - self.k * y];
   }
 
   fn invert(&self, p: &[F; 2]) -> [F; 2] {

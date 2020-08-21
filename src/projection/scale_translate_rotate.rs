@@ -2,6 +2,8 @@ use num_traits::Float;
 
 use crate::Transform;
 
+use super::scale_translate::ScaleTranslate;
+
 #[derive(Debug)]
 pub struct ScaleTranslateRotate<F>
 where
@@ -21,23 +23,27 @@ where
 
 impl<F> ScaleTranslateRotate<F>
 where
-  F: Float,
+  F: Float + 'static,
 {
-  pub fn new(k: F, dx: F, dy: F, sx: F, sy: F, alpha: F) -> Box<Self> {
-    let cos_alpha = alpha.cos();
-    let sin_alpha = alpha.sin();
-    return Box::new(ScaleTranslateRotate {
-      a: cos_alpha * k,
-      b: sin_alpha * k,
-      ai: cos_alpha / k,
-      bi: sin_alpha / k,
-      ci: (sin_alpha * dy - cos_alpha * dx) / k,
-      fi: (sin_alpha * dx + cos_alpha * dy) / k,
-      dx,
-      dy,
-      sx: sx,
-      sy: sy,
-    });
+  pub fn new(k: F, dx: F, dy: F, sx: F, sy: F, alpha: F) -> Box<dyn Transform<F>> {
+    if alpha.is_zero() {
+      return ScaleTranslate::new(k, dx, dy, sx, sy);
+    } else {
+      let cos_alpha = alpha.cos();
+      let sin_alpha = alpha.sin();
+      return Box::new(ScaleTranslateRotate {
+        a: cos_alpha * k,
+        b: sin_alpha * k,
+        ai: cos_alpha / k,
+        bi: sin_alpha / k,
+        ci: (sin_alpha * dy - cos_alpha * dx) / k,
+        fi: (sin_alpha * dx + cos_alpha * dy) / k,
+        dx,
+        dy,
+        sx: sx,
+        sy: sy,
+      });
+    }
   }
 }
 

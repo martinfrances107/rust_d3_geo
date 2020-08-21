@@ -1,39 +1,38 @@
-// use crate::types::MapTransform;
+use num_traits::Float;
 
-// pub fn azimuthal_raw(scale: fn(scale: f64) -> f64) -> MapTransform {
-//   return Box::new(|p: [f64; 2]| -> [f64; 2] {
-//     let x = p[0];
-//     let y = p[1];
-//     let cx = x.cos();
-//     let cy = y.cos();
-//     let k = scale(cx * cy);
+pub fn azimuthal_raw<F>(scale: Box<dyn Fn(F) -> F>) -> Box<dyn Fn(F, F) -> [F; 2]>
+where
+  F: Float + 'static,
+{
+  return Box::new(move |x: F, y: F| -> [F; 2] {
+    let cx = x.cos();
+    let cy = y.cos();
+    let k = scale(cx * cy);
+    return match k.is_infinite() {
+      true => [F::from(2u8).unwrap(), F::zero()],
+      false => [k * cy * x.sin(), k * y.sin()],
+    };
+  });
+}
 
-//     return match k.is_infinite() {
-//       true => [2f64, 0f64],
-//       false => [k * cy * x.sin(), k * y.sin()],
-//     };
-//   });
-// }
+pub fn azimuthal_invert<F>(angle: Box<dyn Fn(F) -> F>) -> Box<dyn Fn(F, F) -> [F; 2]>
+where
+  F: Float + 'static,
+{
+  return Box::new(move |x: F, y: F| -> [F; 2] {
+    let z = (x * x + y * y).sqrt();
+    let c = angle(z);
+    let sc = c.sin();
+    let cc = c.cos();
 
-// // pub fn azimuthal_invert(angle: Box<dyn Fn(f64) -> f64>) -> MapTransform {
+    let ret_x = (x * sc).atan2(z * cc);
+    let ret_y;
+    if z.is_zero() {
+      ret_y = z;
+    } else {
+      ret_y = y * sc / z;
+    }
 
-// //     let x = p[0];
-// //     let y = p[1];
-// //     let z = (x * x + y * y).sqrt();const
-// //     let c = angle(z);
-// //     let sc = c.sin();
-// //     let cc = c.cos();
-// //     return [(x * sc).atan2(z * cc), (y * sc / z).asin()];
-
-// // }
-
-// static  aximuthal_invert: Box<dyn Fn() -> [f64;2]> = Fn(p[f64:2] )  {
-//   let x = p[0];
-//   let y = p[1];
-//   let z = (x * x + y * y).sqrt();
-//   let c = angle(z);
-//   let sc = c.sin();
-//   let cc = c.cos();
-//   return [(x * sc).atan2(z * cc), (y * sc / z).asin()];
-
-// }
+    return [ret_x, ret_y];
+  });
+}

@@ -4,19 +4,11 @@ use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-use crate::Transform;
-
 use super::projection::Projection;
 use super::projection::StreamProcessorValueMaybe;
 use super::projection_mutator::ProjectionMutator;
-
-// TODO must find a standard way to multiply by 2
-fn angle<F>(z: F) -> F
-where
-  F: Float + FromPrimitive,
-{
-  return F::from_u8(2u8).unwrap() * z.atan();
-}
+use crate::projection::azimuthal::azimuthal_invert;
+use crate::Transform;
 
 #[derive(Clone, Debug)]
 struct StereographicRaw {}
@@ -24,7 +16,7 @@ struct StereographicRaw {}
 impl StereographicRaw {
   fn new<F>() -> Box<dyn Transform<F>>
   where
-    F: Float + FloatConst + FromPrimitive,
+    F: Float + FloatConst + FromPrimitive + 'static,
   {
     return Box::new(StereographicRaw {});
   }
@@ -44,7 +36,7 @@ impl StereographicRaw {
 
 impl<F> Transform<F> for StereographicRaw
 where
-  F: Float + FloatConst + FromPrimitive,
+  F: Float + FloatConst + FromPrimitive + 'static,
 {
   fn transform(&self, &p: &[F; 2]) -> [F; 2] {
     let x = p[0];
@@ -55,13 +47,9 @@ where
   }
 
   fn invert(&self, p: &[F; 2]) -> [F; 2] {
-    let x = p[0];
-    let y = p[1];
-    let z = (x * x + y * y).sqrt();
-    let c = angle(z);
-    let sc = c.sin();
-    let cc = c.cos();
-    return [(x * sc).atan2(z * cc), (y * sc / z).asin()];
+    let f = Box::new(|z: F| F::from(2u8).unwrap() * z.atan());
+    let g = azimuthal_invert(f);
+    return g(p[0], p[1]);
   }
 }
 
@@ -76,16 +64,35 @@ mod tests {
     stereo.translate(Some(&[0f64, 0f64]));
     stereo.scale(Some(&1f64));
 
+    // assert!(projection_equal(
+    //   &stereo,
+    //   &[0f64, 0f64],
+    //   &[0f64, 0f64],
+    //   None
+    // ));
+    // assert!(projection_equal(
+    //   &stereo,
+    //   &[-90f64, 0f64],
+    //   &[-1f64, 0f64],
+    //   None
+    // ));
+    // assert!(projection_equal(
+    //   &stereo,
+    //   &[90f64, 0f64],
+    //   &[1f64, 0f64],
+    //   None
+    // ));
     assert!(projection_equal(
       &stereo,
-      &[0f64, 0f64],
-      &[0f64, 0f64],
+      &[0f64, -90f64],
+      &[0f64, 1f64],
       None
     ));
-    // assert!(projection_equal(&stereo, &[-90f64, 0f64], &[-1f64, 0f64], None));
-    // assert!(projection_equal(&stereo, &[-90f64, 0f64]), [-1f64, 0f64]);
-    // assert!(projection_equal(&stereo, &[ 90f64,   0f64]), [ 1f64,  0f64]);
-    // assert!(projection_equal(&stereo, &[  0f64, -90f64]), [ 0f64,  1f64]);
-    // assert!(projection_equal(&stereo, &[0f64, 90f64]), [0f64, -1f64]);
+    assert!(projection_equal(
+      &stereo,
+      &[0f64, 90f64],
+      &[0f64, -1f64],
+      None
+    ));
   }
 }
