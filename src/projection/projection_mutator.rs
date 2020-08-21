@@ -193,7 +193,7 @@ where
   }
   fn invert(&self, p: &[F; 2]) -> [F; 2] {
     let pt = self.project_rotate_transform.clone();
-    let d = pt.transform(p);
+    let d = pt.invert(p);
     let out = [d[0].to_degrees(), d[1].to_degrees()];
     return out;
   }
