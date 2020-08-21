@@ -8,8 +8,8 @@ use crate::Transform;
 
 pub fn projection_equal<F>(
   projection: &ProjectionMutator<F>,
-  location: &[F; 2],
-  point: &[F; 2],
+  expected_location: &[F; 2],
+  expected_point: &[F; 2],
   delta_p: Option<F>,
 ) -> bool
 where
@@ -19,8 +19,25 @@ where
     Some(d) => d,
     None => F::from(1e-6).unwrap(),
   };
-  return planar_equal(projection.transform(location), point, delta)
-    && spherical_equal(projection.invert(point), location, delta);
+  println!("project_equal");
+  println!(
+    "expected [{:?}, {:?}], [{:?}, {:?}]",
+    expected_location[0].as_(),
+    expected_location[1].as_(),
+    expected_point[0].as_(),
+    expected_point[1].as_(),
+  );
+  let actual_location = projection.invert(expected_point);
+  let actual_point = projection.transform(expected_location);
+  println!(
+    "actual [{:?}, {:?}], [{:?}, {:?}]",
+    actual_location[0].as_(),
+    actual_location[1].as_(),
+    actual_point[0].as_(),
+    actual_point[1].as_(),
+  );
+  return planar_equal(actual_point, expected_point, delta)
+    && spherical_equal(actual_location, expected_location, delta);
 }
 
 fn planar_equal<F>(actual: [F; 2], expected: &[F; 2], delta: F) -> bool
@@ -29,14 +46,6 @@ where
 {
   let e0 = in_delta(actual[0], expected[0], delta);
   let e1 = in_delta(actual[1], expected[1], delta);
-  println!(
-    " actual [{:?},{:?}] expected , [{:?},{:?}]",
-    actual[0].as_(),
-    actual[1].as_(),
-    expected[0].as_(),
-    expected[1].as_()
-  );
-  println!("planar equal {:?} {:?}", e0, e1);
   return e0 && e1;
 }
 
@@ -46,14 +55,14 @@ where
 {
   let e0 = logitude_equal(actual[0], expected[0], delta);
   let e1 = in_delta(actual[1], expected[1], delta);
-  println!(
-    " actual [{:?},{:?}] expected , [{:?},{:?}]",
-    actual[0].as_(),
-    actual[1].as_(),
-    expected[0].as_(),
-    expected[1].as_()
-  );
-  println!("longitude equal {:?} {:?}", e0, e1);
+  // println!(
+  //   " actual [{:?},{:?}] expected , [{:?},{:?}]",
+  //   actual[0].as_(),
+  //   actual[1].as_(),
+  //   expected[0].as_(),
+  //   expected[1].as_()
+  // );
+  // println!("longitude equal {:?} {:?}", e0, e1);
   return e0 & e1;
 }
 
