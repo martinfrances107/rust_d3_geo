@@ -11,7 +11,7 @@ use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
 
 #[derive(Clone, Debug)]
-struct StereographicRaw {}
+pub struct StereographicRaw {}
 
 impl StereographicRaw {
   fn new<F>() -> Box<dyn Transform<F>>

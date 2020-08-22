@@ -5,6 +5,7 @@ use num_traits::Float;
 
 pub mod cartesian;
 pub mod circle;
+pub mod projection;
 pub mod polygon_contains;
 pub mod rotation;
 
@@ -12,7 +13,6 @@ mod clip;
 mod compose;
 mod math;
 mod point_equal;
-mod projection;
 mod resample;
 mod stream;
 mod transform_stream;

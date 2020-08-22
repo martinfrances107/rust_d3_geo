@@ -36,6 +36,13 @@ where
   ];
 }
 
+pub fn cartesian_add<F>(a: [F; 3], b: [F; 3]) -> [F; 3]
+where
+  F: Float,
+{
+  return [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+}
+
 pub fn cartesian_add_in_place<F>(a: &mut [F; 3], b: &[F; 3])
 where
   F: Float,
