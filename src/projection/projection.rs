@@ -1,4 +1,3 @@
-// use crate::stream::Stream;
 use crate::transform_stream::TransformStream;
 use crate::transform_stream::StreamProcessor;
 
@@ -306,66 +305,4 @@ pub trait Projection<F> {
 
 }
 
-// pub struct GeoProjectionMutatorState {
-
-//   // scale
-//   k:f64,
-//   // translate
-//   x:f64,
-//   y: f64,
-//   // center
-//   lambda:f64,
-//   phi:f64,
-
-//   delta_lambda:f64,
-//   delta_phi: Option<f64>,
-//   delta_gamma: Option<f64>, // rotate,
-
-//   // pre-rotate // post-rotate-angle ???
-//   alpha: Option<f64>,
-//   sx: f64, // reflectX
-//   sy: f64, // reflectY
-//   theta: Option<f64>,
-//   // None; let preclip=None;// clipAntimeridian, // pre-clip angle
-//   clip_antimeridian: bool,
-//   x0: Option<f64>,
-//   y0: Option<f64>,
-//   x1: Option<f64>,
-//   y1: Option<f64>, //postclip = identity, // post-clip extent
-//   delta2:f64, // precision
-//   // projectResample:
-//   projectTransform: Box<dyn Transform>,
-//   projectRotateTransform: Box<dyn Transform>,
-//   cache:CACHE,
-//   cache_stream: Option<dyn GeoStream>,
-
-// }
-
-// impl GeoProjectionState {
-//   fn new(projection: Box<dyn Transform>) {
-
-//     let k=150f64; // scale
-//     let x=480f64; let y= 250f64; // translate
-//     let lambda= 0f64; let phi=0f64; // center
-//     let delta_lambda=0f64;
-//     let delta_phi= None;
-//     let delta_gamma= None; // rotate, // pre-rotate
-//     let alpha= None; // post-rotate angle
-//     let sx= 1f64; // reflectX
-//     let sy= 1f64; // reflectX
-//     let theta=None; let preclip=None;// clipAntimeridian, // pre-clip angle
-//     // let clip_antimeridian: false,
-//     let x0=None; let y0=None; let x1=None; let y1=None; //postclip = identity, // post-clip extent
-//     let delta2=0.5f64; // precision
-//     let projectResample= None;
-//     let projectTransform= None;
-//     let projectRotateTransform= None;
-//     let cache=CACHE::NONE;
-//     let cache_stream= Option::None;
-//   }
-
-
-
-
-// }
 

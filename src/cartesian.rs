@@ -1,9 +1,8 @@
-use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 
 pub fn spherical<F>(cartesian: &[F; 3]) -> [F; 2]
 where
-  F: Float + FromPrimitive,
+  F: Float
 {
   return [cartesian[1].atan2(cartesian[0]), cartesian[2].asin()];
 }
@@ -67,4 +66,12 @@ where
   d[0] = d[0] / l;
   d[1] = d[1] / l;
   d[2] = d[2] / l;
+}
+
+pub fn cartesian_normalize<F>(d: &[F; 3])-> [F;3]
+where
+  F: Float,
+{
+  let l = (d[0] * d[0] + d[1] * d[1] + d[2] * d[2]).sqrt();
+  return  [d[0] / l, d[1] / l, d[2] / l];
 }
