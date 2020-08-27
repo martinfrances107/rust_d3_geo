@@ -8,7 +8,6 @@ use num_traits::Float;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-use crate::resample::gen_resample;
 use crate::rotation::rotate_radians::RotateRadians;
 
 use crate::transform_stream::StreamProcessor;
@@ -25,8 +24,6 @@ use crate::clip::circle::generate_circle;
 use super::projection::Projection;
 use super::projection::StreamProcessorValueMaybe;
 use super::scale_translate_rotate::ScaleTranslateRotate;
-use super::transform_radians::TransformRadians;
-use super::transform_rotate::TransformRotate;
 
 pub struct ProjectionMutator<F>
 where
