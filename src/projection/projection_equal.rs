@@ -3,8 +3,10 @@ use num_traits::cast::FromPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-use super::projection_mutator::ProjectionMutator;
+use crate::in_delta::in_delta;
 use crate::Transform;
+
+use super::projection_mutator::ProjectionMutator;
 
 pub fn projection_equal<F>(
   projection: &ProjectionMutator<F>,
@@ -62,15 +64,7 @@ fn logitude_equal<F>(actual: F, expected: F, delta: F) -> bool
 where
   F: Float + FromPrimitive + AsPrimitive<f64>,
 {
-  println!("in le");
   let f360 = F::from(360u16).unwrap();
   let actual = (actual - expected).abs() % f360;
   return actual <= delta || actual >= f360 - delta;
-}
-
-fn in_delta<F>(actual: F, expected: F, delta: F) -> bool
-where
-  F: Float + FromPrimitive + AsPrimitive<f64>,
-{
-  return (actual - expected).abs() <= delta;
 }

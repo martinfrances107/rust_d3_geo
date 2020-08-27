@@ -12,6 +12,7 @@ pub mod rotation;
 mod clip;
 mod compose;
 mod math;
+mod in_delta;
 mod point_equal;
 mod resample;
 mod stream;
