@@ -5,14 +5,17 @@ use num_traits::Float;
 
 pub mod cartesian;
 pub mod circle;
-pub mod projection;
+pub mod data_object;
+pub mod distance;
+pub mod in_delta;
+pub mod length;
 pub mod polygon_contains;
+pub mod projection;
 pub mod rotation;
 
 mod clip;
 mod compose;
 mod math;
-mod in_delta;
 mod point_equal;
 mod resample;
 mod stream;
@@ -21,14 +24,12 @@ mod transform_stream;
 #[derive(Copy, Clone, Debug)]
 struct TransformIdentity {}
 impl TransformIdentity {
-    fn new() -> Self
-    {
+    fn new() -> Self {
         return TransformIdentity {};
     }
 }
 
 impl<F> Transform<F> for TransformIdentity where F: Float {}
-
 
 /// Common to Projection, Rotation.
 pub trait Transform<F>

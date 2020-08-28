@@ -7,6 +7,10 @@ This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into a RUST
 Early draft port -  sub module by submodule. Sub module porting means the test have also been ported.
 No API stability guarentees.
 
+I have partial implementation of src/distance.rs and src/length.rs.
+
+Current the partially ported test show that they work for what I need DataObject::LineString and DataObject::FeatureCollection ( where LineString is involved)
+
 Next sub modules on the roadmap -
 
 * Clip, GeoStream, resample.
