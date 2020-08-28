@@ -57,10 +57,15 @@ where
     coordinates: Vec<[F; 2]>,
   },
   // * Polygon - an array of arrays of positions forming a polygon (possibly with holes).
+  Polygon {
+    coordinates: Vec<Vec<[F; 2]>>,
+  },
   // * MultiPolygon - a multidimensional array of positions forming multiple polygons.
   // * GeometryCollection - an array of geometry objects.
   /// Feature - a feature containing one of the above geometry objects.
-  Feature(FeatureStruct<'a, F>),
+  Feature {
+    feature: FeatureStruct<'a, F>,
+  },
   /// FeatruesCollection - An array of feature objects.
   FeaturesCollection {
     features: FeaturesStruct<'a, F>,

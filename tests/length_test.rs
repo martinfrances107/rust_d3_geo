@@ -11,6 +11,7 @@ mod length_test {
 
   #[test]
   fn line_string_great_arc_segements() {
+    println!("geoLength(LineString) returns the sum of its great-arc segments");
     assert!(in_delta(
       LengthStream::calc(DataObject::LineString {
         coordinates: vec![[-45f64, 0f64], [45f64, 0f64]]
@@ -30,6 +31,7 @@ mod length_test {
 
   #[test]
   fn fc_line_string_the_sum_of_its_features() {
+    println!("geoLength(FeatureCollection) returns the sum of its features’ lengths");
     assert!(in_delta(
       LengthStream::calc(DataObject::FeaturesCollection {
         features: FeaturesStruct {
@@ -46,6 +48,51 @@ mod length_test {
       }),
       PI / 2f64,
       1e-6
+    ));
+  }
+
+  #[test]
+  fn polygon_length_of_perimeter() {
+    println!("geoLength(Polygon) returns the length of its perimeter");
+    assert!(in_delta(
+      LengthStream::calc(DataObject::Polygon {
+        coordinates: vec![vec![
+          [0f64, 0f64],
+          [3f64, 0f64],
+          [3f64, 3f64],
+          [0f64, 3f64],
+          [0f64, 0f64]
+        ]]
+      }),
+      0.157008f64,
+      1e-6f64
+    ));
+  }
+
+  #[test]
+  fn polygon_length_of_perimeter_including_holes() {
+    println!("geoLength(Polygon) returns the length of its perimeter, including holes");
+    assert!(in_delta(
+      LengthStream::calc(DataObject::Polygon {
+        coordinates: vec![
+          vec![
+            [0f64, 0f64],
+            [3f64, 0f64],
+            [3f64, 3f64],
+            [0f64, 3f64],
+            [0f64, 0f64]
+          ],
+          vec![
+            [1f64, 1f64],
+            [2f64, 1f64],
+            [2f64, 2f64],
+            [1f64, 2f64],
+            [1f64, 1f64]
+          ]
+        ]
+      }),
+      0.209354f64,
+      1e-6f64
     ));
   }
 

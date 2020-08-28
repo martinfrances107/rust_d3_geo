@@ -11,7 +11,9 @@ where
   F: Float,
 {
   match object {
-    DataObject::Feature(FeatureStruct { geometry, .. }) => {
+    DataObject::Feature {
+      feature: FeatureStruct { geometry, .. },
+    } => {
       return processor(&geometry, stream);
     }
     DataObject::FeaturesCollection { features } => {
@@ -20,11 +22,14 @@ where
       }
     }
 
+    DataObject::Polygon { coordinates, .. } => {
+      let g = FeatureGeometry::Polygon { coordinates };
+      processor(&g, stream);
+    }
+
     // What remains is a Geometry object.
     DataObject::LineString { coordinates, .. } => {
-      let g = FeatureGeometry::LineString {
-        coordinates: coordinates,
-      };
+      let g = FeatureGeometry::LineString { coordinates };
       processor(&g, stream);
     }
     DataObject::MultiLineString { coordinates: _, .. } => {}
