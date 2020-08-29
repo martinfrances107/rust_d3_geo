@@ -180,7 +180,7 @@ where
     b1: F,
     c1: F,
     depth_p: u8,
-    stream: Rc<RefCell< Box<dyn TransformStream<F>>>>,
+    stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
   ) where
     F: Float + FloatConst + FromPrimitive,
   {
@@ -205,13 +205,6 @@ where
           lambda2 = (lambda0 + lambda1) / float_2;
         } else {
           lambda2 = b.atan2(a);
-        };
-        let f_2 = F::from(2u8).unwrap();
-        let lambda2 = match (c.abs() - F::one()).abs() < F::epsilon()
-          || (lambda0 - lambda1).abs() < F::epsilon()
-        {
-          true => (lambda0 + lambda1) / f_2,
-          false => b.atan2(a),
         };
 
         let project_ptr = self.project.clone();
@@ -244,7 +237,7 @@ where
           // &*project_ptr.borrow();
           let s = stream.clone();
           self.resample_line_to(
-            x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth, s
+            x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth, s,
           );
           // }
           // {
@@ -255,7 +248,20 @@ where
           // let mut s3 = stream_p.borrow_mut();
           // let self_p2 = self_p.borrow_mut();
           self.resample_line_to(
-            x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, stream.clone(),
+            x2,
+            y2,
+            lambda2,
+            a,
+            b,
+            c,
+            x1,
+            y1,
+            lambda1,
+            a1,
+            b1,
+            c1,
+            depth,
+            stream.clone(),
           );
           // }
         }
