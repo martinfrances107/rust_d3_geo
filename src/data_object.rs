@@ -14,9 +14,9 @@ where
 {
   Circumecenter(Vec<[F; 2]>),
   Length(F),
-  Source(usize),
-  Target(usize),
-  Urquhart(F),
+  Source(F),
+  Target(F),
+  Urquhart(bool),
 }
 
 // Signular veriosn of the struct.
@@ -54,7 +54,7 @@ where
   },
   /// MultiLineString - an array of arrays of positions forming several lines.
   MultiLineString {
-    coordinates: Vec<[F; 2]>,
+    coordinates: Vec<Vec<[F; 2]>>,
   },
   // * Polygon - an array of arrays of positions forming a polygon (possibly with holes).
   Polygon {
@@ -68,7 +68,7 @@ where
   },
   /// FeatruesCollection - An array of feature objects.
   FeaturesCollection {
-    features: FeaturesStruct<'a, F>,
+    features: Vec<FeaturesStruct<'a, F>>,
   },
   // A feature containing one of the above geometry objects.
   // Polygon{coordinates: Vec<usize>},
@@ -79,6 +79,7 @@ where
   F: Float,
 {
   Object(DataObject<'a, F>),
-  Vec(Vec<usize>),
+  Vec(Vec<F>),
+  // Float(F),
   Blank,
 }

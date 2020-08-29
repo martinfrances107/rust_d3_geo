@@ -34,7 +34,7 @@ mod length_test {
     println!("geoLength(FeatureCollection) returns the sum of its features’ lengths");
     assert!(in_delta(
       LengthStream::calc(DataObject::FeaturesCollection {
-        features: FeaturesStruct {
+        features: vec![FeaturesStruct {
           properties: Vec::new(),
           geometry: vec![
             FeatureGeometry::LineString {
@@ -44,7 +44,7 @@ mod length_test {
               coordinates: &vec![[0f64, 0f64], [45f64, 0f64]]
             },
           ],
-        }
+        }]
       }),
       PI / 2f64,
       1e-6

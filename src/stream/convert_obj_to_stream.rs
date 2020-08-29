@@ -17,8 +17,10 @@ where
       return processor(&geometry, stream);
     }
     DataObject::FeaturesCollection { features } => {
-      for geometry in &features.geometry {
-        processor(&geometry, stream);
+      for f in features {
+        for geometry in &f.geometry {
+          processor(&geometry, stream);
+        }
       }
     }
 
