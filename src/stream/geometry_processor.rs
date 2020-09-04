@@ -11,7 +11,7 @@ where
 {
   match geometry {
     FeatureGeometry::LineString { coordinates, .. } => {
-      line(*coordinates, stream, 0);
+      line(coordinates, stream, 0);
     }
     FeatureGeometry::Polygon { coordinates, .. } => {
       polygon(coordinates, stream);

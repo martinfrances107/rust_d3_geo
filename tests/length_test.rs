@@ -33,15 +33,15 @@ mod length_test {
   fn fc_line_string_the_sum_of_its_features() {
     println!("geoLength(FeatureCollection) returns the sum of its features’ lengths");
     assert!(in_delta(
-      LengthStream::calc(DataObject::FeaturesCollection {
+      LengthStream::calc(DataObject::FeatureCollection {
         features: vec![FeaturesStruct {
           properties: Vec::new(),
           geometry: vec![
             FeatureGeometry::LineString {
-              coordinates: &vec![[-45f64, 0f64], [0f64, 0f64]]
+              coordinates: vec![[-45f64, 0f64], [0f64, 0f64]]
             },
             FeatureGeometry::LineString {
-              coordinates: &vec![[0f64, 0f64], [45f64, 0f64]]
+              coordinates: vec![[0f64, 0f64], [45f64, 0f64]]
             },
           ],
         }]

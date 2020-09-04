@@ -1,48 +1,55 @@
 use num_traits::Float;
 
-pub enum FeatureGeometry<'a, F>
+#[derive(Debug)]
+pub enum FeatureGeometry<F>
 where
   F: Float,
 {
-  Polygon { coordinates: &'a Vec<Vec<[F; 2]>> },
-  LineString { coordinates: &'a Vec<[F; 2]> },
+  Polygon { coordinates: Vec<Vec<[F; 2]>> },
+  LineString { coordinates: Vec<[F; 2]> },
 }
 
+#[derive(Debug)]
 pub enum FeatureProperty<F>
 where
   F: Float,
 {
-  Circumecenter(Vec<[F; 2]>),
+  Circumecenter([F; 2]),
   Length(F),
   Source(F),
   Target(F),
   Urquhart(bool),
+  Site(F),
+  Sitecoordinates([F;2]),
+  Neighbors(Vec<usize>),
 }
 
 // Signular veriosn of the struct.
-pub struct FeatureStruct<'a, F>
+#[derive(Debug)]
+pub struct FeatureStruct<F>
 where
   F: Float,
 {
   pub properties: Vec<FeatureProperty<F>>,
-  pub geometry: FeatureGeometry<'a, F>,
+  pub geometry: FeatureGeometry<F>,
 }
 
 // Pluralization of the struct,
-pub struct FeaturesStruct<'a, F>
+#[derive(Debug)]
+pub struct FeaturesStruct<F>
 where
   F: Float,
 {
   pub properties: Vec<FeatureProperty<F>>,
-  pub geometry: Vec<FeatureGeometry<'a, F>>,
+  pub geometry: Vec<FeatureGeometry<F>>,
 }
 
 /// The input data type use in D3
 ///  Can be special object ( DataObject )
 ///  or a vector of stuff
 ///  Null - here a blank.
-
-pub enum DataObject<'a, F>
+#[derive(Debug)]
+pub enum DataObject<F>
 where
   F: Float,
 {
@@ -64,21 +71,22 @@ where
   // * GeometryCollection - an array of geometry objects.
   /// Feature - a feature containing one of the above geometry objects.
   Feature {
-    feature: FeatureStruct<'a, F>,
+    feature: FeatureStruct<F>,
   },
   /// FeatruesCollection - An array of feature objects.
-  FeaturesCollection {
-    features: Vec<FeaturesStruct<'a, F>>,
+  FeatureCollection {
+    features: Vec<FeaturesStruct<F>>,
   },
   // A feature containing one of the above geometry objects.
   // Polygon{coordinates: Vec<usize>},
 }
 
-pub enum DataType<'a, F>
+#[derive(Debug)]
+pub enum DataType<F>
 where
   F: Float,
 {
-  Object(DataObject<'a, F>),
+  Object(DataObject<F>),
   Vec(Vec<F>),
   // Float(F),
   Blank,

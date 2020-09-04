@@ -16,7 +16,7 @@ where
     } => {
       return processor(&geometry, stream);
     }
-    DataObject::FeaturesCollection { features } => {
+    DataObject::FeatureCollection { features } => {
       for f in features {
         for geometry in &f.geometry {
           processor(&geometry, stream);
@@ -25,13 +25,17 @@ where
     }
 
     DataObject::Polygon { coordinates, .. } => {
-      let g = FeatureGeometry::Polygon { coordinates };
+      let g = FeatureGeometry::Polygon {
+        coordinates: coordinates.to_vec(),
+      };
       processor(&g, stream);
     }
 
     // What remains is a Geometry object.
     DataObject::LineString { coordinates, .. } => {
-      let g = FeatureGeometry::LineString { coordinates };
+      let g = FeatureGeometry::LineString {
+        coordinates: coordinates.to_vec(),
+      };
       processor(&g, stream);
     }
     DataObject::MultiLineString { coordinates: _, .. } => {}
