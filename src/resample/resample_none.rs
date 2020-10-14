@@ -1,8 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use num_traits::Float;
-use num_traits::FloatConst;
+use delaunator::Point;
 
 use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
@@ -10,27 +9,23 @@ use crate::Transform;
 
 // function resampleNone(project) {
 //   return transformer({
-//     point: function(x, y) {
+//     point: f64unction(x, y) {
 //       x = project(x, y);
 //       this.stream.point(x[0], x[1]);
 //     }
 //   });
 // }
 
-pub struct ResampleNone<F>
-where
-  F: Float + 'static,
+pub struct ResampleNone
 {
-  project: Rc<RefCell<Box<dyn Transform<F>>>>,
-  stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
+  project: Rc<RefCell<Box<dyn Transform>>>,
+  stream: Rc<RefCell<Box<dyn TransformStream>>>,
 }
 
-impl<F> ResampleNone<F>
-where
-  F: Float + FloatConst + 'static,
+impl ResampleNone
 {
-  pub fn new(project: Rc<RefCell<Box<dyn Transform<F>>>>) -> StreamProcessor<F> {
-    return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
+  pub fn new(project: Rc<RefCell<Box<dyn Transform>>>) -> StreamProcessor {
+    return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream>>>| {
       return Rc::new(RefCell::new(Box::new(Self {
         project: project.clone(),
         stream,
@@ -39,14 +34,12 @@ where
   }
 }
 
-impl<F> TransformStream<F> for ResampleNone<F>
-where
-  F: Float,
+impl TransformStream for ResampleNone
 {
-  fn point(&mut self, x: F, y: F, m: Option<u8>) {
+  fn point(&mut self, x: f64, y: f64, m: Option<u8>) {
     let mut stream = self.stream.borrow_mut();
     let project = &*self.project.borrow();
-    let p = project.transform(&[x, y]);
-    stream.point(p[0], p[1], m);
+    let p = project.transform(&Point{x, y});
+    stream.point(p.x, p.y, m);
   }
 }

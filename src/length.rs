@@ -1,4 +1,4 @@
-use num_traits::Float;
+use delaunator::Point;
 
 use super::data_object::DataObject;
 use super::stream::convert_obj_to_stream::convert_obj_to_stream;
@@ -9,45 +9,39 @@ enum PointState {
   First,
   Point,
 }
-pub struct LengthStream<F>
-where
-  F: Float,
+pub struct LengthStream
 {
-  length_sum: F,
-  lambda0: F,
-  sin_phi0: F,
-  cos_phi0: F,
+  length_sum: f64,
+  lambda0: f64,
+  sin_phi0: f64,
+  cos_phi0: f64,
   point_state: PointState,
   use_length_line_end: bool,
 }
 
-impl<F> Default for LengthStream<F>
-where
-  F: Float,
+impl Default for LengthStream
 {
   fn default() -> Self {
     return Self {
-      length_sum: F::zero(),
-      lambda0: F::zero(),
-      sin_phi0: F::zero(),
-      cos_phi0: F::zero(),
+      length_sum: 0f64,
+      lambda0: 0f64,
+      sin_phi0: 0f64,
+      cos_phi0: 0f64,
       point_state: PointState::Noop,
-      use_length_line_end: false,
+      use_length_line_end:false,
     };
   }
 }
 
-impl<F> LengthStream<F>
-where
-  F: Float,
+impl LengthStream
 {
-  pub fn calc(object: DataObject<F>) -> F {
+  pub fn calc(object: DataObject) -> f64 {
     let mut ls = LengthStream::default();
     convert_obj_to_stream(&object, &mut ls);
     return ls.length_sum;
   }
 
-  fn length_point_first(&mut self, lambda_p: F, phi_p: F) {
+  fn length_point_first(&mut self, lambda_p: f64, phi_p: f64) {
     let lambda = lambda_p.to_radians();
     let phi = phi_p.to_radians();
     self.lambda0 = lambda;
@@ -56,7 +50,7 @@ where
     self.point_state = PointState::Point;
   }
 
-  fn length_point(&mut self, lambda_p: F, phi_p: F) {
+  fn length_point(&mut self, lambda_p: f64, phi_p: f64) {
     let lambda = lambda_p.to_radians();
     let phi = phi_p.to_radians();
 
@@ -77,13 +71,11 @@ where
   }
 }
 
-impl<F> Stream<F> for LengthStream<F>
-where
-  F: Float,
+impl Stream for LengthStream
 {
   fn sphere(&mut self) {}
 
-  fn point(&mut self, x: F, y: F, _z: Option<F>) {
+  fn point(&mut self, x: f64, y: f64, _z: Option<f64>) {
     println!("enter point");
     match self.point_state {
       PointState::Noop => {

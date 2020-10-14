@@ -1,5 +1,4 @@
-// use num_traits::cast::FromPrimitive;
-use num_traits::Float;
+use delaunator::Point;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -7,17 +6,15 @@ use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
 use crate::Transform;
 
-pub struct TransformRotate<F> {
-  rotate: Rc<RefCell<Box<dyn Transform<F>>>>,
-  stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
+pub struct TransformRotate {
+  rotate: Rc<RefCell<Box<dyn Transform>>>,
+  stream: Rc<RefCell<Box<dyn TransformStream>>>,
 }
 
-impl<F> TransformRotate<F> {
-  pub fn new(rotate: Rc<RefCell<Box<dyn Transform<F>>>>) -> StreamProcessor<F>
-  where
-    F: Float + 'static,
+impl TransformRotate {
+  pub fn new(rotate: Rc<RefCell<Box<dyn Transform>>>) -> StreamProcessor
   {
-    return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
+    return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream>>>| {
       return Rc::new(RefCell::new(Box::new(Self {
         rotate: rotate.clone(),
         stream,
@@ -26,15 +23,13 @@ impl<F> TransformRotate<F> {
   }
 }
 
-impl<F> TransformStream<F> for TransformRotate<F>
-where
-  F: Float,
+impl TransformStream for TransformRotate
 {
-  fn point(&mut self, x: F, y: F, m: Option<u8>) {
+  fn point(&mut self, x: f64, y: f64, m: Option<u8>) {
     let mut stream = self.stream.borrow_mut();
     let rotate = self.rotate.borrow();
-    let r = rotate.transform(&[x, y]);
+    let r = rotate.transform(&Point{x, y});
     // Warning the javascript version return the value below but I thnk it break the implied spec!!!!
-    stream.point(r[0], r[1], m);
+    stream.point(r.x, r.y, m);
   }
 }

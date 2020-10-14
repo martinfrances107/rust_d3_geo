@@ -1,17 +1,15 @@
-use num_traits::Float;
+use delaunator::Point;
 
 use super::Stream;
 
-pub fn line<F>(coordinates: &Vec<[F; 2]>, stream: &mut impl Stream<F>, closed: usize)
-where
-  F: Float,
+pub fn line(coordinates: &[Point], stream: &mut impl Stream, closed: usize)
 {
   // let i = -1;
   let n = coordinates.len() - closed;
   stream.line_start();
   for i in 0..n {
-    let coordinate = coordinates[i];
-    stream.point(coordinate[0], coordinate[1], None);
+    let coordinate = coordinates[i].clone();
+    stream.point(coordinate.x, coordinate.y, None);
   }
   stream.line_end();
 }

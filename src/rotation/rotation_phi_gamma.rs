@@ -1,26 +1,19 @@
-use num_traits::Float;
-use num_traits::FloatConst;
+use delaunator::Point;
 
 use crate::Transform;
 
 #[derive(Debug)]
-pub struct RotationPhiGamma<F>
-where
-  F: Float + FloatConst,
+pub struct RotationPhiGamma
 {
-  cos_delta_phi: F,
-  sin_delta_phi: F,
-  cos_delta_gamma: F,
-  sin_delta_gamma: F,
+  cos_delta_phi: f64,
+  sin_delta_phi: f64,
+  cos_delta_gamma: f64,
+  sin_delta_gamma: f64,
 }
 
-impl<F> RotationPhiGamma<F>
-where
-  F: Float + FloatConst,
+impl RotationPhiGamma
 {
-  pub fn new(delta_phi: F, delta_gamma: F) -> Box<dyn Transform<F>>
-  where
-    F: Float + 'static,
+  pub fn new(delta_phi: f64, delta_gamma: f64) -> Box<dyn Transform>
   {
     return Box::new(Self {
       cos_delta_phi: delta_phi.cos(),
@@ -31,13 +24,12 @@ where
   }
 }
 
-impl<F> Transform<F> for RotationPhiGamma<F>
-where
-  F: Float + FloatConst,
+impl Transform for RotationPhiGamma
 {
-  fn transform(&self, p: &[F; 2]) -> [F; 2] {
-    let lambda = p[0];
-    let phi = p[1];
+  #[allow(clippy::many_single_char_names)]
+  fn transform(&self, p: &Point) -> Point {
+    let lambda = p.x;
+    let phi = p.y;
 
     let cos_phi = phi.cos();
     let x = lambda.cos() * cos_phi;
@@ -45,16 +37,17 @@ where
     let z = phi.sin();
     let k = z * self.cos_delta_phi + x * self.sin_delta_phi;
 
-    return [
-      (y * self.cos_delta_gamma - k * self.sin_delta_gamma)
+    return Point{
+      x:(y * self.cos_delta_gamma - k * self.sin_delta_gamma)
         .atan2(x * self.cos_delta_phi - z * self.sin_delta_phi),
-      (k * self.cos_delta_gamma + y * self.sin_delta_gamma).asin(),
-    ];
+      y:(k * self.cos_delta_gamma + y * self.sin_delta_gamma).asin(),
+    };
   }
 
-  fn invert(&self, p: &[F; 2]) -> [F; 2] {
-    let lambda = p[0];
-    let phi = p[1];
+  #[allow(clippy::many_single_char_names)]
+  fn invert(&self, p: &Point) -> Point {
+    let lambda = p.x;
+    let phi = p.y;
 
     let cos_phi = phi.cos();
     let x = lambda.cos() * cos_phi;
@@ -62,10 +55,10 @@ where
     let z = phi.sin();
     let k = z * self.cos_delta_gamma - y * self.sin_delta_gamma;
 
-    return [
-      (y * self.cos_delta_gamma + z * self.sin_delta_gamma)
+    return Point{
+      x:(y * self.cos_delta_gamma + z * self.sin_delta_gamma)
         .atan2(x * self.cos_delta_phi + k * self.sin_delta_phi),
-      (k * self.cos_delta_phi - x * self.sin_delta_phi).asin(),
-    ];
+      y:(k * self.cos_delta_phi - x * self.sin_delta_phi).asin(),
+    };
   }
 }

@@ -1,12 +1,10 @@
-use num_traits::cast::FromPrimitive;
-use num_traits::Float;
-use num_traits::FloatConst;
+use delaunator::Point;
 
 use std::cell::RefCell;
 use std::rc::Rc;
 
 use crate::cartesian::cartesian;
-use crate::math::epsilon;
+// use crate::math::epsilon;
 use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
 use crate::Transform;
@@ -18,74 +16,61 @@ use crate::Transform;
 
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
-// fn cos_min_distance<F>() -> F
-// where
-//   F: Float + FloatConst + FromPrimitive,
-// {
-//   return (F::from(30.0f64).unwrap().to_radians()).cos(); // cos(minimum angular distance)
-// }
-
 // #[derive(Clone)]
-pub struct Resample<F>
-where
-  F: Float + FloatConst + FromPrimitive + 'static,
+pub struct Resample
 {
-  project: Rc<RefCell<Box<dyn Transform<F>>>>,
-  delta2: F,
+  project: Rc<RefCell<Box<dyn Transform>>>,
+  delta2: f64,
 
   // first point
-  lambda00: F,
-  x00: F,
-  y00: F,
-  a00: F,
-  b00: F,
-  c00: F,
+  lambda00: f64,
+  x00: f64,
+  y00: f64,
+  a00: f64,
+  b00: f64,
+  c00: f64,
 
   // previous point
-  lambda0: F,
-  x0: F,
-  y0: F,
-  a0: F,
-  b0: F,
-  c0: F,
+  lambda0: f64,
+  x0: f64,
+  y0: f64,
+  a0: f64,
+  b0: f64,
+  c0: f64,
 
-  cos_min_distance: F,
-  stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
-  // s: &'a Box<dyn TransformStream<F>>,
+  cos_min_distance: f64,
+  stream: Rc<RefCell<Box<dyn TransformStream>>>,
+  // s: &'a Box<dyn TransformStream>,
   use_line_point: bool,
   use_line_start: bool,
   use_line_end: bool,
 }
 
-impl<F> Resample<F>
-where
-  F: Float + FloatConst + FromPrimitive + 'static,
+impl Resample
 {
-  pub fn new(project: Rc<RefCell<Box<dyn Transform<F>>>>, delta2: F) -> StreamProcessor<F>
-  where
-    F: Float + FloatConst + FromPrimitive,
+  pub fn new(project: Rc<RefCell<Box<dyn Transform>>>, delta2: f64) -> StreamProcessor
   {
-    return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
+    return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream>>>| {
       return Rc::new(RefCell::new(Box::new(Self {
         project: project.clone(),
         delta2,
 
-        lambda00: F::zero(),
-        x00: F::zero(),
-        y00: F::zero(),
-        a00: F::zero(),
-        b00: F::zero(),
-        c00: F::zero(), // first point
+        lambda00: 0f64,
+        x00: 0f64,
+        y00: 0f64,
+        a00: 0f64,
+        b00: 0f64,
+        c00: 0f64, // first point
 
-        lambda0: F::zero(),
-        x0: F::zero(),
-        y0: F::zero(),
-        a0: F::zero(),
-        b0: F::zero(),
-        c0: F::zero(),                                                 // previous point
-        cos_min_distance: (F::from(30u8).unwrap().to_radians()).cos(), // cos(minimum angular distance)
+        lambda0: 0f64,
+        x0: 0f64,
+        y0: 0f64,
+        a0: 0f64,
+        b0: 0f64,
+        c0: 0f64,                                                 // previous point
+        cos_min_distance: (30f64.to_radians()).cos(), // cos(minimum angular distance)
 
-        stream: stream,
+        stream,
         use_line_point: true,
         use_line_end: true,
         use_line_start: true,
@@ -99,7 +84,7 @@ where
     self.use_line_end = false;
   }
 
-  fn ring_point(&mut self, lambda: F, phi: F) {
+  fn ring_point(&mut self, lambda: f64, phi: f64) {
     self.lambda00 = lambda;
     self.line_point(self.lambda00, phi);
     self.x00 = self.x0;
@@ -133,13 +118,13 @@ where
     stream.line_end();
   }
 
-  fn line_point(&mut self, lambda: F, phi: F) {
-    let c = cartesian(&[lambda, phi]);
+  fn line_point(&mut self, lambda: f64, phi: f64) {
+    let c = cartesian(&Point{x:lambda, y:phi});
     let project_ptr = self.project.clone();
     let project = &*project_ptr.borrow();
-    let p = project.transform(&[lambda, phi]);
-    self.x0 = p[0];
-    self.y0 = p[1];
+    let p = project.transform(&Point{x:lambda, y:phi});
+    self.x0 = p.x;
+    self.y0 = p.y;
     self.lambda0 = lambda;
     self.a0 = c[0];
     self.b0 = c[1];
@@ -165,54 +150,53 @@ where
     // stream.point(x0, y0);
   }
 
+  #[allow(clippy::many_single_char_names)]
   fn resample_line_to(
     &mut self,
-    x0: F,
-    y0: F,
-    lambda0: F,
-    a0: F,
-    b0: F,
-    c0: F,
-    x1: F,
-    y1: F,
-    lambda1: F,
-    a1: F,
-    b1: F,
-    c1: F,
+    x0: f64,
+    y0: f64,
+    lambda0: f64,
+    a0: f64,
+    b0: f64,
+    c0: f64,
+    x1: f64,
+    y1: f64,
+    lambda1: f64,
+    a1: f64,
+    b1: f64,
+    c1: f64,
     depth_p: u8,
-    stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
-  ) where
-    F: Float + FloatConst + FromPrimitive,
+    stream: Rc<RefCell<Box<dyn TransformStream>>>,
+  )
   {
     let mut depth = depth_p;
     let dx = x1 - x0;
     let dy = y1 - y0;
     let d2 = dx * dx + dy * dy;
-    let float_4 = F::from(4u8).unwrap();
-    let float_2 = F::from(2u8).unwrap();
+
     // if (d2 > 4 * delta2 && depth--) {
-    if d2 > float_4 * self.delta2 {
-      depth = depth - 1u8;
+    if d2 > 4f64 * self.delta2 {
+      depth-= 1u8;
       if depth > 0u8 {
         let mut a = a0 + a1;
         let mut b = b0 + b1;
-        let mut c: F = c0 + c1;
-        let m: F = (a * a + b * b + c * c).sqrt();
+        let mut c: f64 = c0 + c1;
+        let m: f64 = (a * a + b * b + c * c).sqrt();
         c = c / m;
         let phi2 = c.asin();
         let lambda2;
-        if (c.abs() - F::one()).abs() < epsilon() || (lambda0 - lambda1).abs() < epsilon() {
-          lambda2 = (lambda0 + lambda1) / float_2;
+        if (c.abs() - 1f64).abs() < f64::EPSILON || (lambda0 - lambda1).abs() < f64::EPSILON {
+          lambda2 = (lambda0 + lambda1) / 2f64;
         } else {
           lambda2 = b.atan2(a);
         };
 
         let project_ptr = self.project.clone();
         let project = &*project_ptr.borrow();
-        let p = project.transform(&[lambda2, phi2]);
+        let p = project.transform(&Point{x:lambda2, y:phi2});
 
-        let x2 = p[0];
-        let y2 = p[1];
+        let x2 = p.x;
+        let y2 = p.y;
         let dx2 = x2 - x0;
         let dy2 = y2 - y0;
         let dz = dy * dx2 - dx * dy2;
@@ -220,11 +204,8 @@ where
         // perpendicular projected distance
         // midpoint close to an end
         // angular distance
-        // TODO must find a way to make this constants static
-        let float_1_2 = F::from(0.5f64).unwrap();
-        let float_1_3 = F::from(0.3f64).unwrap();
         if dz * dz / d2 > self.delta2
-          || ((dx * dx2 + dy * dy2) / d2 - float_1_2).abs() > float_1_3
+          || ((dx * dx2 + dy * dy2) / d2 - 0.5f64).abs() > 0.3f64
           || a0 * a1 + b0 * b1 + c0 * c1 < self.cos_min_distance
         {
           a = a / m;
@@ -270,11 +251,9 @@ where
   }
 }
 
-impl<F> TransformStream<F> for Resample<F>
-where
-  F: Float + FloatConst + FromPrimitive,
+impl TransformStream for Resample
 {
-  fn point(&mut self, x: F, y: F, _m: Option<u8>) {
+  fn point(&mut self, x: f64, y: f64, _m: Option<u8>) {
     if self.use_line_point {
       self.line_point(x, y);
     } else {
@@ -285,7 +264,7 @@ where
   fn line_start(&mut self) {
     if self.use_line_start {
       let mut stream = self.stream.borrow_mut();
-      self.x0 = F::nan();
+      self.x0 = f64::NAN;
       self.use_line_point = true;
       stream.line_start();
     } else {

@@ -1,16 +1,14 @@
-use num_traits::Float;
+use delaunator::Point;
 
 use crate::data_object::DataObject;
 use crate::length::LengthStream;
 
-pub fn distance<F>(a: &[F; 2], b: &[F; 2]) -> F
-where
-  F: Float,
+pub fn distance(a: &Point, b: &Point) -> f64
 {
   // TODO consider making object static outside of distance.
   // It does not need to be created each time.
   let object = DataObject::LineString {
-    coordinates: vec![*a, *b],
+    coordinates: vec![(*a).clone(), (*b).clone()],
   };
 
   return LengthStream::calc(object);

@@ -1,10 +1,9 @@
 use std::rc::Rc;
-
-use num_traits::Float;
-use num_traits::FloatConst;
+use std::f64;
 
 use crate::compose::Compose;
 use crate::Transform;
+use crate::math::TAU;
 // use crate::TransformIdentity;
 
 use super::rotation_identity::RotationIdentity;
@@ -16,15 +15,13 @@ pub struct RotateRadians {}
 impl RotateRadians
 {
   /// Returns a object implmenting the desired combination of rotations.
-  pub fn new<F>(delta_lambda_p: F, delta_phi: F, delta_gamma: F) -> Box<dyn Transform<F>>
-  where
-    F: Float + FloatConst + 'static,
+  pub fn new(delta_lambda_p: f64, delta_phi: f64, delta_gamma: f64) -> Box<dyn Transform>
   {
-    let delta_lambda = delta_lambda_p % F::TAU();
+    let delta_lambda = delta_lambda_p % TAU;
     // Should I rotate by lambda, phi or gamma.
-    let by_lambda = !delta_lambda.is_zero();
-    let by_phi = !delta_phi.is_zero();
-    let by_gamma = !delta_gamma.is_zero();
+    let by_lambda = delta_lambda != 0f64;
+    let by_phi = delta_phi != 0f64;
+    let by_gamma = delta_gamma != 0f64;
     return match (by_lambda, by_gamma, by_phi) {
       (true, true, true) | (true, true, false) | (true, false, true) => Compose::new(
         Rc::new(RotationLambda::new(delta_lambda)),

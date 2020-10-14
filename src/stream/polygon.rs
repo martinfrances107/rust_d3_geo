@@ -1,11 +1,9 @@
-use num_traits::Float;
+use delaunator::Point;
 
 use super::Stream;
 use super::line::line;
 
-pub fn polygon<F>(coordinates: &Vec<Vec<[F;2]>>, stream: &mut impl Stream<F>)
-where
-  F: Float,
+pub fn polygon(coordinates: &[Vec<Point>], stream: &mut impl Stream)
 {
   stream.polygon_start();
 

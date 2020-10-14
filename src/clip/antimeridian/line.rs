@@ -1,9 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::f64;
 
-use num_traits::cast::FromPrimitive;
-use num_traits::Float;
-use num_traits::FloatConst;
+use delaunator::Point;
 
 // use crate::stream::GeoStream;
 use crate::transform_stream::StreamProcessor;
@@ -22,26 +21,24 @@ const INTERSECTION_REJOIN: u8 = 2u8;
 // use crate::clip::ClipLine;
 
 #[derive(Clone)]
-pub struct Line<F> {
+pub struct Line {
   clean: Option<u8>,
-  lambda0: F,
-  phi0: F,
-  sign0: F,
-  stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
+  lambda0: f64,
+  phi0: f64,
+  sign0: f64,
+  stream: Rc<RefCell<Box<dyn TransformStream>>>,
 }
 
-impl<F> Line<F>
-where
-  F: Float + FloatConst + FromPrimitive + 'static,
+impl Line
 {
-  pub fn new() -> StreamProcessor<F> {
-    return Box::new(|stream_ptr: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
+  pub fn new() -> StreamProcessor {
+    return Box::new(|stream_ptr: Rc<RefCell<Box<dyn TransformStream>>>| {
       let stream = stream_ptr.clone();
-      return Rc::new(RefCell::new(Box::new(Line::<F> {
+      return Rc::new(RefCell::new(Box::new(Line {
         clean: None, // no intersections
-        lambda0: F::nan(),
-        phi0: F::nan(),
-        sign0: F::nan(),
+        lambda0: f64::NAN,
+        phi0: f64::NAN,
+        sign0: f64::NAN,
         stream,
       })));
     });
@@ -55,9 +52,7 @@ where
   }
 }
 
-impl<F> TransformStream<F> for Line<F>
-where
-  F: Float + FloatConst + FromPrimitive + 'static,
+impl TransformStream for Line
 {
   fn line_start(&mut self) {
     let mut stream = self.stream.borrow_mut();
@@ -65,24 +60,24 @@ where
     self.clean = Some(NO_INTERSECTIONS);
   }
 
-  fn point(&mut self, mut lambda1: F, phi1: F, _m: Option<u8>) {
+  fn point(&mut self, mut lambda1: f64, phi1: f64, _m: Option<u8>) {
     let mut stream = self.stream.borrow_mut();
-    let sign1 = match lambda1 > F::zero() {
-      true => F::PI(),
-      false => -F::PI(),
+    let sign1 = match lambda1 > 0f64 {
+      true => f64::consts::PI,
+      false => -f64::consts::PI,
     };
     let delta = (lambda1 - self.lambda0).abs();
 
-    if (delta - F::PI()).abs() < F::epsilon() {
+    if (delta - f64::consts::PI).abs() < f64::EPSILON {
       // Line crosses a pole.
-      let f_2 = F::from(2u8).unwrap();
+      let f_2 = 2f64;
       self.phi0 = (self.phi0 + phi1) / f_2;
-      match (self.phi0 + phi1 / f_2) > F::zero() {
+      match (self.phi0 + phi1 / f_2) > 0f64 {
         true => {
-          stream.point(self.lambda0, F::FRAC_PI_2(), None);
+          stream.point(self.lambda0, f64::consts::FRAC_PI_2, None);
         }
         false => {
-          stream.point(self.lambda0, -F::FRAC_PI_2(), None);
+          stream.point(self.lambda0, -f64::consts::FRAC_PI_2, None);
         }
       }
       stream.point(self.sign0, self.phi0, None);
@@ -91,13 +86,13 @@ where
       stream.point(sign1, self.phi0, None);
       stream.point(lambda1, self.phi0, None);
       self.clean = Some(INTERSECTION_OR_LINE_EMPTY);
-    } else if self.sign0 != sign1 && delta >= F::PI() {
+    } else if self.sign0 != sign1 && delta >= f64::consts::PI {
       // Line crosses antimeridian.
-      if (self.lambda0 - self.sign0).abs() < F::epsilon() {
-        self.lambda0 = self.lambda0 - self.sign0 * F::epsilon(); // handle degeneracies
+      if (self.lambda0 - self.sign0).abs() < f64::EPSILON {
+        self.lambda0 = self.lambda0 - self.sign0 * f64::EPSILON; // handle degeneracies
       }
-      if (lambda1 - sign1).abs() < F::epsilon() {
-        lambda1 = lambda1 - sign1 * F::epsilon();
+      if (lambda1 - sign1).abs() < f64::EPSILON {
+        lambda1 = lambda1 - sign1 * f64::EPSILON;
       }
       self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
       stream.point(self.sign0, self.phi0, None);
@@ -115,7 +110,7 @@ where
   fn line_end(&mut self) {
     let mut stream = self.stream.borrow_mut();
     stream.line_end();
-    self.lambda0 = F::nan();
-    self.phi0 = F::nan();
+    self.lambda0 = f64::NAN;
+    self.phi0 = f64::NAN;
   }
 }

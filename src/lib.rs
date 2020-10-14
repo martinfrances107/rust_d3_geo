@@ -1,7 +1,10 @@
+// #![allow(clippy::needless_return)]
+#![allow(clippy::all)]
 // #![allow(unused_variables)]
 // #![allow(dead_code)]
 // #![allow(unused_imports)]
-use num_traits::Float;
+
+use delaunator::Point;
 
 pub mod cartesian;
 pub mod circle;
@@ -29,17 +32,15 @@ impl TransformIdentity {
     }
 }
 
-impl<F> Transform<F> for TransformIdentity where F: Float {}
+impl Transform for TransformIdentity{}
 
 /// Common to Projection, Rotation.
-pub trait Transform<F>
-where
-    F: Float,
+pub trait Transform
 {
-    fn transform(&self, p: &[F; 2]) -> [F; 2] {
-        return [p[0], p[1]];
+    fn transform(&self, p: &Point) -> Point {
+        return p.clone();
     }
-    fn invert(&self, p: &[F; 2]) -> [F; 2] {
-        return *p;
+    fn invert(&self, p: &Point) -> Point {
+        return p.clone();
     }
 }

@@ -8,18 +8,19 @@ pub mod circle_stream;
 mod stream;
 
 use std::rc::Rc;
+use delaunator::Point;
 
 // function accepts a F value or a Function that outputs a F or maybe nothing.
-pub enum FnValMaybe<F> {
+pub enum FnValMaybe {
   None,
-  FloatValue(Rc<F>),
-  FloatFn(Rc<dyn Fn(CircleInArg) -> F>),
+  FloatValue(Rc<f64>),
+  FloatFn(Rc<dyn Fn(CircleInArg) -> f64>),
 }
 
-pub enum FnValMaybe2D<F> {
+pub enum FnValMaybe2D {
   None,
-  FloatValue(Rc<[F; 2]>),
-  FloatFn(Rc<dyn Fn(CircleInArg) -> [F; 2]>),
+  FloatValue(Rc<Point>),
+  FloatFn(Rc<dyn Fn(CircleInArg) -> Point>),
 }
 
 // pub struct CircleInArg
@@ -28,8 +29,8 @@ pub enum CircleInArg {
   Arg(),
 }
 
-pub trait CircleTrait<F> {
-  fn center(&mut self, center: FnValMaybe2D<F>) -> Option<[F; 2]>;
-  fn radius(&mut self, radius: FnValMaybe<F>) -> Option<F>;
-  fn precision(&mut self, precision: FnValMaybe<F>) -> Option<F>;
+pub trait CircleTrait {
+  fn center(&mut self, center: FnValMaybe2D) -> Option<Point>;
+  fn radius(&mut self, radius: FnValMaybe) -> Option<f64>;
+  fn precision(&mut self, precision: FnValMaybe) -> Option<f64>;
 }

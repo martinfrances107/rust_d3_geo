@@ -1,9 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::f64;
 
-use num_traits::cast::FromPrimitive;
-use num_traits::Float;
-use num_traits::FloatConst;
+use delaunator::Point;
 
 mod interpolate;
 mod intersect;
@@ -16,26 +15,22 @@ use super::Clip;
 use interpolate::interpolate;
 use line::Line;
 
-pub fn point_visible<F>(_x: F, _y: F, _z: Option<F>) -> bool
-where
-  F: Float + FromPrimitive,
+pub fn point_visible(_x: f64, _y: f64, _z: Option<f64>) -> bool
 {
   return true;
 }
 
-pub fn generate_antimeridian<F>() -> StreamProcessor<F>
-where
-  F: Float + FloatConst + FromPrimitive + 'static,
+pub fn generate_antimeridian() -> StreamProcessor
 {
-  let cal: StreamProcessor<F> = Line::new();
+  let cal: StreamProcessor = Line::new();
 
-  let clip_line_fn_ptr: Rc<RefCell<StreamProcessor<F>>>;
+  let clip_line_fn_ptr: Rc<RefCell<StreamProcessor>>;
   clip_line_fn_ptr = Rc::new(RefCell::new(cal));
 
-  return Clip::<F>::new(
+  return Clip::new(
     Rc::new(Box::new(point_visible)),
     clip_line_fn_ptr,
-    Rc::new(RefCell::new(Box::new(interpolate::<F>))),
-    [-F::PI(), -F::FRAC_PI_2()],
+    Rc::new(RefCell::new(Box::new(interpolate))),
+    Point{x:-f64::consts::PI, y:-f64::consts::FRAC_PI_2},
   );
 }

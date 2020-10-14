@@ -1,47 +1,41 @@
-use num_traits::Float;
-use num_traits::FloatConst;
+use std::f64;
 
+use delaunator::Point;
+
+use crate::math::TAU;
 use crate::Transform;
 
 #[derive(Debug)]
-pub struct RotationLambda<F>
-where
-  F: Float + FloatConst,
+pub struct RotationLambda
 {
-  pub delta_lambda: F,
+  pub delta_lambda: f64,
 }
 
 // TODO why can't I #[inline] this.
-fn forward_rotation_lambda<F>(delta_lambda: F, p: &[F; 2]) -> [F; 2]
-where
-  F: Float + FloatConst,
+fn forward_rotation_lambda(delta_lambda: f64, p: &Point) -> Point
 {
-  let lambda = p[0] + delta_lambda;
-  let phi = p[1];
-  return match (lambda > F::PI(), lambda < -F::PI()) {
-    (false, false) => [lambda, phi],       // -PI <= lambda <= PI
-    (true, _) => [lambda - F::TAU(), phi], // lambda >  PI
-    (_, true) => [lambda + F::TAU(), phi], // lambda < -PI
+  let lambda = p.x + delta_lambda;
+  let phi = p.y;
+  return match (lambda > f64::consts::PI, lambda < -f64::consts::PI) {
+    (false, false) => Point{x:lambda, y:phi},       // -PI <= lambda <= PI
+    (true, _) => Point{x:lambda - TAU, y:phi}, // lambda >  PI
+    (_, true) => Point{x:lambda + TAU, y:phi}, // lambda < -PI
   };
 }
 
-impl<F> RotationLambda<F>
-where
-  F: Float + FloatConst + 'static,
+impl RotationLambda
 {
-  pub fn new(delta_lambda: F) -> Box<dyn Transform<F>> {
+  pub fn new(delta_lambda: f64) -> Box<dyn Transform> {
     return Box::new(Self { delta_lambda });
   }
 }
 
-impl<F> Transform<F> for RotationLambda<F>
-where
-  F: Float + FloatConst,
+impl Transform for RotationLambda
 {
-  fn transform(&self, coordinates: &[F; 2]) -> [F; 2] {
+  fn transform(&self, coordinates: &Point) -> Point {
     return forward_rotation_lambda(self.delta_lambda, coordinates);
   }
-  fn invert(&self, coordinates: &[F; 2]) -> [F; 2] {
+  fn invert(&self, coordinates: &Point) -> Point {
     return forward_rotation_lambda(-self.delta_lambda, coordinates);
   }
 }

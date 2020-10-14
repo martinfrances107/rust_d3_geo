@@ -1,0 +1,84 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in library 'rust_d3_geo'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--lib",
+          "--package=rust_d3_geo"
+        ],
+        "filter": {
+          "name": "rust_d3_geo",
+          "kind": "lib"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug integration test 'polygon_contains_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=polygon_contains_test",
+          "--package=rust_d3_geo"
+        ],
+        "filter": {
+          "name": "polygon_contains_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug integration test 'distance-test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=distance-test",
+          "--package=rust_d3_geo"
+        ],
+        "filter": {
+          "name": "distance-test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug integration test 'length_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=length_test",
+          "--package=rust_d3_geo"
+        ],
+        "filter": {
+          "name": "length_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

@@ -1,30 +1,26 @@
-use num_traits::Float;
+use delaunator::Point;
 use std::cell::RefCell;
 use std::rc::Rc;
 
 use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
 
-pub struct TransformRadians<F> {
-  stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
+pub struct TransformRadians {
+  stream: Rc<RefCell<Box<dyn TransformStream>>>,
 }
 
-impl<F> TransformRadians<F>
-where
-  F: Float + 'static,
+impl TransformRadians
 {
-  pub fn new() -> StreamProcessor<F> {
-    return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
+  pub fn new() -> StreamProcessor {
+    return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream>>>| {
       return Rc::new(RefCell::new(Box::new(Self { stream })));
     });
   }
 }
 
-impl<F> TransformStream<F> for TransformRadians<F>
-where
-  F: Float,
+impl TransformStream for TransformRadians
 {
-  fn point(&mut self, x: F, y: F, m: Option<u8>) {
+  fn point(&mut self, x: f64, y: f64, m: Option<u8>) {
     let mut stream = self.stream.borrow_mut();
     stream.point(x.to_radians(), y.to_radians(), m);
   }

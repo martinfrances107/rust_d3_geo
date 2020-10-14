@@ -1,13 +1,9 @@
-use num_traits::cast::FromPrimitive;
-use num_traits::Float;
+use delaunator::Point;
+use std::f64;
 
 
-pub fn epsilon<F>() -> F
-where F: Float + FromPrimitive {
-  return  F::from(1e-6).unwrap();
-}
-
-// pub const EPSILON2:f64 = 1e-12;
+pub const TAU: f64 = 2f64 * f64::consts::PI;
+pub const EPSILON:f64 = 1e-6;
 
 // pub coMathnst ceil = Math.ceil;
 

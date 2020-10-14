@@ -1,44 +1,39 @@
-use num_traits::Float;
-use num_traits::FloatConst;
+use std::f64;
+use delaunator::Point;
 
 use crate::Transform;
+use crate::math::TAU;
 
 #[derive(Clone, Debug)]
 pub struct RotationIdentity {}
 
 // By design a stateless function.
 // TODO maybe add attributes to suggest inlining this where possible.
-fn normalise<F>(p: &[F; 2]) -> [F; 2]
-where
-  F: Float + FloatConst,
+fn normalise(p: &Point) -> Point
 {
-  let lambda = p[0];
-  let phi = p[1];
+  let lambda = p.x;
+  let phi = p.y;
 
-  return match lambda.abs() > F::PI() {
-    true => [lambda + (-lambda / F::TAU()).round() * F::TAU(), phi],
-    false => [lambda, phi],
+  return match lambda.abs() > f64::consts::PI {
+    true => Point{x:lambda + (-lambda / TAU).round() * TAU, y:phi},
+    false => Point{x:lambda, y:phi},
   };
 }
 
 impl RotationIdentity {
-  pub fn new<F>() -> Box<dyn Transform<F>>
-  where
-    F: Float + FloatConst + 'static,
+  pub fn new() -> Box<dyn Transform>
   {
     return Box::new(RotationIdentity {});
   }
 }
 
-impl<F> Transform<F> for RotationIdentity
-where
-  F: Float + FloatConst,
+impl Transform for RotationIdentity
 {
-  fn transform(&self, p: &[F; 2]) -> [F; 2] {
+  fn transform(&self, p: &Point) -> Point {
     return normalise(p);
   }
 
-  fn invert(&self, p: &[F; 2]) -> [F; 2] {
+  fn invert(&self, p: &Point) -> Point {
     return normalise(p);
   }
 }

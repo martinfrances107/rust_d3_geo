@@ -1,9 +1,8 @@
 use std::cell::RefCell;
+use std::f64;
 use std::rc::Rc;
 
-use num_traits::cast::FromPrimitive;
-use num_traits::Float;
-use num_traits::FloatConst;
+use delaunator::Point;
 
 /// Public: clip generators used by projection.
 pub mod antimeridian;
@@ -19,65 +18,59 @@ use crate::transform_stream::TransformStream;
 use buffer::ClipBuffer;
 // use rejoin::rejoin;
 
-pub trait ClipLine<'a, F> {
+pub trait ClipLine<'a> {
   fn line_start(&mut self);
-  fn point(&mut self, lambda1_p: F, phi1: F, m: Option<u8>);
+  fn point(&mut self, lambda1_p: f64, phi1: f64, m: Option<u8>);
   fn line_end(&mut self);
   fn clean(&mut self) -> Option<u8>;
-  fn stream(&mut self, stream: Box<dyn TransformStream<F>>);
+  fn stream(&mut self, stream: Box<dyn TransformStream>);
 }
 
 // CompareIntersections param type
-#[derive(Clone, Copy, Debug)]
-pub struct Ci<F>
-where
-  F: Float,
+#[derive(Clone)]
+pub struct Ci
 {
-  x: [F; 2],
+  x: Point,
 }
 
-pub type InterpolateFn<F> =
-  Box<dyn Fn(Option<[F; 2]>, Option<[F; 2]>, F, Rc<RefCell<Box<dyn TransformStream<F>>>>)>;
-type PointsVisibleFn<F> = Box<dyn Fn(F, F, Option<F>) -> bool>;
-pub type PointVisibleFnPtr<F> = Rc<PointsVisibleFn<F>>;
+pub type InterpolateFn =
+  Box<dyn Fn(Option<Point>, Option<Point>, f64, Rc<RefCell<Box<dyn TransformStream>>>)>;
+type PointsVisibleFn = Box<dyn Fn(f64, f64, Option<f64>) -> bool>;
+pub type PointVisibleFnPtr = Rc<PointsVisibleFn>;
 // type ClipLineFn<F> = dyn Fn(Box<dyn ClipLine<F>>) -> Box<dyn ClipLine<F>>;
-pub type CompareIntersectionFn<F> = Box<dyn Fn(Ci<F>, Ci<F>) -> F>;
+pub type CompareIntersectionFn = Box<dyn Fn(Ci, Ci) -> f64>;
 
-pub struct Clip<F>
-where
-  F: Float,
+pub struct Clip
 {
-  line: Rc<RefCell<Box<dyn TransformStream<F>>>>,
-  interpolate: Rc<RefCell<InterpolateFn<F>>>,
+  line: Rc<RefCell<Box<dyn TransformStream>>>,
+  interpolate: Rc<RefCell<InterpolateFn>>,
   // point: Box<dyn Fn()>,
   // point: [F;2],
   polygon_started: bool,
-  polygon: Box<Vec<Vec<[F; 2]>>>,
-  point_visible: PointVisibleFnPtr<F>,
-  // ring_buffer: Box<dyn TransformStream<F>>,
-  ring_sink: Rc<RefCell<Box<dyn TransformStream<F>>>>,
-  segments: Box<Vec<Vec<[F; 2]>>>,
-  start: [F; 2],
-  ring: Vec<[F; 2]>,
+  polygon: Box<Vec<Vec<Point>>>,
+  point_visible: PointVisibleFnPtr,
+  // ring_buffer: Box<dyn TransformStream>,
+  ring_sink: Rc<RefCell<Box<dyn TransformStream>>>,
+  segments: Box<Vec<Vec<Point>>>,
+  start: Point,
+  ring: Vec<Point>,
   use_ring: bool,
-  sink: Rc<RefCell<Box<dyn TransformStream<F>>>>,
+  sink: Rc<RefCell<Box<dyn TransformStream>>>,
 }
 
-impl<'a, F> Clip<F>
-where
-  F: Float + FloatConst + FromPrimitive + 'static,
+impl<'a> Clip
 {
   fn new(
-    point_visible: PointVisibleFnPtr<F>,
-    clip_line_fn_ptr: Rc<RefCell<StreamProcessor<F>>>,
-    interpolate: Rc<RefCell<InterpolateFn<F>>>,
-    start: [F; 2],
-  ) -> StreamProcessor<F> {
-    return Box::new(move |sink: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
+    point_visible: PointVisibleFnPtr,
+    clip_line_fn_ptr: Rc<RefCell<StreamProcessor>>,
+    interpolate: Rc<RefCell<InterpolateFn>>,
+    start: Point,
+  ) -> StreamProcessor {
+    return Box::new(move |sink: Rc<RefCell<Box<dyn TransformStream>>>| {
       let clip_line = clip_line_fn_ptr.borrow_mut();
       let line = clip_line(sink.clone());
 
-      let ring_buffer = Rc::new(RefCell::new(ClipBuffer::<F>::new()));
+      let ring_buffer = Rc::new(RefCell::new(ClipBuffer::new()));
       let ring_sink = clip_line(ring_buffer);
 
       return Rc::new(RefCell::new(Box::new(Self {
@@ -92,17 +85,17 @@ where
         ring_sink,
         segments: Box::new(Vec::new()),
         sink: sink.clone(),
-        start,
+        start: start.clone(),
       })));
     });
   }
 
-  fn valid_segment(segment: &Vec<[f64; 2]>) -> bool {
+  fn valid_segment(segment: &[[f64; 2]]) -> bool {
     return segment.len() > 1;
   }
 
-  fn point_ring(&mut self, lambda: F, phi: F, _m: Option<u8>) {
-    self.ring.push([lambda, phi]);
+  fn point_ring(&mut self, lambda: f64, phi: f64, _m: Option<u8>) {
+    self.ring.push(Point{x:lambda, y:phi});
     let mut ring_sink = self.ring_sink.borrow_mut();
     ring_sink.point(lambda, phi, None);
   }
@@ -152,14 +145,12 @@ where
   //   }
 }
 
-impl<'a, F> TransformStream<F> for Clip<F>
-where
-  F: Float + FloatConst + FromPrimitive,
+impl<'a> TransformStream for Clip
 {
-  fn point(&mut self, lambda: F, phi: F, m: Option<u8>) {
+  fn point(&mut self, lambda: f64, phi: f64, m: Option<u8>) {
     match self.use_ring {
       true => {
-        self.ring.push([lambda, phi]);
+        self.ring.push(Point{x:lambda, y:phi});
         // self.ring_sink.point(lambda, phi, None);
       }
       false => {
@@ -209,7 +200,7 @@ where
         self.polygon_started = true;
       }
       sink.line_start();
-      // (self.interpolate)(None, None, F::one(), self.sink);
+      // (self.interpolate)(None, None, 1f64, self.sink);
       sink.line_end();
     }
     if self.polygon_started {
@@ -224,7 +215,7 @@ where
     let mut sink = self.sink.borrow_mut();
     sink.polygon_start();
     sink.line_start();
-    // (self.interpolate)(None, None, F::one(), self.sink);
+    // (self.interpolate)(None, None, 1f64, self.sink);
     sink.line_end();
     sink.polygon_end();
   }
@@ -232,19 +223,17 @@ where
 
 /// Intersections are sorted along the clip edge. For both antimeridian cutting
 /// and circle clipPIng, the same comparison is used.
-fn compare_intersection<F>(a: Ci<F>, b: Ci<F>) -> F
-where
-  F: Float + FloatConst,
+fn compare_intersection(a: Ci, b: Ci) -> f64
 {
   let a_dashed = a.x;
-  let part1 = match a_dashed[0] < F::zero() {
-    true => a_dashed[1] - F::FRAC_PI_2() - F::epsilon(),
-    false => F::FRAC_PI_2() - a_dashed[1],
+  let part1 = match a_dashed.x < 0f64 {
+    true => a_dashed.y - f64::consts::FRAC_PI_2 - f64::EPSILON,
+    false => f64::consts::FRAC_PI_2 - a_dashed.y,
   };
   let b_dashed = b.x;
-  let part2 = match b_dashed[0] < F::zero() {
-    true => b_dashed[1] - F::FRAC_PI_2() - F::epsilon(),
-    false => F::FRAC_PI_2() - b_dashed[1],
+  let part2 = match b_dashed.x < 0f64 {
+    true => b_dashed.y - f64::consts::FRAC_PI_2 - f64::EPSILON,
+    false => f64::consts::FRAC_PI_2 - b_dashed.y,
   };
 
   return part1 - part2;

@@ -1,17 +1,14 @@
-use num_traits::Float;
-use num_traits::FloatConst;
+use delaunator::Point;
 
 use super::rotate_radians::RotateRadians;
 use crate::Transform;
 
-pub struct Rotation<F> {
-  rotate: Box<dyn Transform<F>>,
+pub struct Rotation{
+  rotate: Box<dyn Transform>,
 }
 
-impl<F> Rotation<F> {
-  pub fn new(delta_lambda: F, delta_phi: F, delta_gamma: F) -> Self
-  where
-    F: Float + FloatConst + 'static,
+impl Rotation {
+  pub fn new(delta_lambda: f64, delta_phi: f64, delta_gamma: f64) -> Self
   {
     return Self {
       rotate: RotateRadians::new(
@@ -23,21 +20,19 @@ impl<F> Rotation<F> {
   }
 }
 
-impl<F> Transform<F> for Rotation<F>
-where
-  F: Float,
+impl Transform for Rotation
 {
-  fn transform(&self, coordinates: &[F; 2]) -> [F; 2] {
+  fn transform(&self, coordinates: &Point) -> Point {
     let temp = self
       .rotate
-      .transform(&[coordinates[0].to_radians(), coordinates[1].to_radians()]);
-    return [temp[0].to_degrees(), temp[1].to_degrees()];
+      .transform(&Point{x:coordinates.x.to_radians(), y:coordinates.y.to_radians()});
+    return Point{x:temp.x.to_degrees(), y:temp.y.to_degrees()};
   }
 
-  fn invert(&self, coordinates: &[F; 2]) -> [F; 2] {
+  fn invert(&self, coordinates: &Point) -> Point {
     let temp = self
       .rotate
-      .invert(&[coordinates[0].to_radians(), coordinates[1].to_radians()]);
-    return [temp[0].to_degrees(), temp[1].to_degrees()];
+      .invert(&Point{x:coordinates.x.to_radians(), y:coordinates.y.to_radians()});
+    return Point{x:temp.x.to_degrees(), y:temp.y.to_degrees()};
   }
 }

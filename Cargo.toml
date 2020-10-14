@@ -4,10 +4,9 @@ version = "0.1.0"
 authors = ["martin frances <martinfrances107@hotmail.com>"]
 edition = "2018"
 
-
 [dependencies]
 geo="0.14.2"
-num-traits="0.2.12"
+delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 
 [dev-dependencies]
 pretty_assertions = "0.6.1"

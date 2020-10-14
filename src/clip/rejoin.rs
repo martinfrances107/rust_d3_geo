@@ -1,5 +1,4 @@
-use num_traits::cast::FromPrimitive;
-use num_traits::Float;
+use delaunator::Point;
 
 // use crate::stream::GeoStream;
 use crate::point_equal::point_equal;
@@ -10,29 +9,25 @@ use super::InterpolateFn;
 
 // import pointEqual from "../pointEqual.js";
 
-type MeshPoint<F> = [F; 3];
+type MeshPoint = [f64; 3];
 
-struct Intersection<F>
-where
-  F: Float,
+struct Intersection
 {
-  x: MeshPoint<F>,
-  z: Option<Vec<MeshPoint<F>>>,
-  o: Option<Box<Intersection<F>>>, // another intersection,
+  x: MeshPoint,
+  z: Option<Vec<MeshPoint>>,
+  o: Option<Box<Intersection>>, // another intersection,
   e: bool,                         // is any entry?
   v: bool,                         // visited
-  n: Option<MeshPoint<F>>,         // next
-  p: Option<MeshPoint<F>>,         // previous
+  n: Option<MeshPoint>,         // next
+  p: Option<MeshPoint>,         // previous
 }
 
-impl<F> Intersection<F>
-where
-  F: Float,
+impl Intersection
 {
   fn new(
-    point: MeshPoint<F>,
-    points: Option<Vec<MeshPoint<F>>>,
-    other: Option<Box<Intersection<F>>>,
+    point: MeshPoint,
+    points: Option<Vec<MeshPoint>>,
+    other: Option<Box<Intersection>>,
     entry: bool,
   ) -> Self {
     return Self {
@@ -60,17 +55,15 @@ where
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
-pub fn rejoin<F>(
-  segments: Vec<Vec<MeshPoint<F>>>,
-  compare_intersection: CompareIntersectionFn<F>,
+pub fn rejoin(
+  segments: Vec<Vec<MeshPoint>>,
+  compare_intersection: CompareIntersectionFn,
   start_inside: bool,
-  interpolate: InterpolateFn<F>,
-  mut stream: Box<dyn TransformStream<F>>,
-) where
-  F: Float + FromPrimitive,
-{
-  let subject = Vec::<Intersection<F>>::new();
-  let clip = Vec::<Intersection<F>>::new();
+  interpolate: InterpolateFn,
+  mut stream: Box<dyn TransformStream>,
+) {
+  let subject = Vec::<Intersection>::new();
+  let clip = Vec::<Intersection>::new();
   // let i,
   // let n: usize;
 
@@ -83,8 +76,8 @@ pub fn rejoin<F>(
     let mut p1 = segment[n];
     //  let mut x: Intersection<F>;
 
-    if point_equal([p0[0], p0[1]], [p1[0], p1[1]]) {
-      if !p0[2].is_zero() && !p1[2].is_zero() {
+    if point_equal(Point{x:p0[0], y:p0[1]}, Point{x:p1[0], y:p1[1]}) {
+      if p0[2] != 0f64 && p1[2] != 0f64 {
         stream.line_start();
         // let i: usize;
         // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
@@ -96,8 +89,8 @@ pub fn rejoin<F>(
         return;
       }
       // handle degenerate cases by moving the point
-      // p1[0] += 2F * F::epsilon();
-      p1[0] = p1[0] + F::from(2u8).unwrap() * F::epsilon();
+      // p1[0] += 2F * f64::EPSILON;
+      p1[0] = p1[0] + 2f64 * f64::EPSILON;
     }
 
     // let mut x = Intersection::new(p0, Some(segment.to_vec()), None, true);
@@ -204,9 +197,7 @@ struct LinkNP<'a, T> {
   p: Option<&'a LinkNP<'a, T>>,
 }
 
-fn link<F>(array: Vec<MeshPoint<F>>)
-where
-  F: Float,
+fn link(array: Vec<MeshPoint>)
 {
   if array.is_empty() {
     return;
@@ -219,7 +210,7 @@ where
     n: None,
     p: None,
   };
-  let mut b: LinkNP<MeshPoint<F>>;
+  let mut b: LinkNP<MeshPoint>;
   for i in 1..n {
     b = LinkNP {
       value: array[i],

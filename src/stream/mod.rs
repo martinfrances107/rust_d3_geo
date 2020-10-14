@@ -3,13 +3,11 @@ mod geometry_processor;
 mod line;
 mod polygon;
 
-use num_traits::Float;
+use delaunator::Point;
 
-pub trait Stream<F>
-where
-  F: Float,
+pub trait Stream
 {
-  fn point(&mut self, _x: F, _y: F, _z: Option<F>) {}
+  fn point(&mut self, _x: f64, _y: f64, _z: Option<f64>) {}
   fn sphere(&mut self) {}
   fn line_start(&mut self) {}
   fn line_end(&mut self) {}

@@ -1,9 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use num_traits::cast::FromPrimitive;
-use num_traits::Float;
-use num_traits::FloatConst;
+use delaunator::Point;
 
 pub mod resample;
 pub mod resample_none;
@@ -14,12 +12,10 @@ use resample_none::ResampleNone;
 use crate::transform_stream::StreamProcessor;
 use crate::Transform;
 
-pub fn gen_resample<F>(
-  project: Rc<RefCell<Box<dyn Transform<F>>>>,
-  delta2: Option<F>,
-) -> Rc<RefCell<StreamProcessor<F>>>
-where
-  F: Float + FloatConst + FromPrimitive + 'static,
+pub fn gen_resample(
+  project: Rc<RefCell<Box<dyn Transform>>>,
+  delta2: Option<f64>,
+) -> Rc<RefCell<StreamProcessor>>
 {
   match delta2 {
     Some(delta2) => {

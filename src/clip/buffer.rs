@@ -1,31 +1,25 @@
-use num_traits::Float;
+use delaunator::Point;
 
 // use crate::stream::GeoStream;
 use crate::transform_stream::TransformStream;
 
 #[derive(Clone, Copy, Debug)]
-struct LineTuple<F>
-where
-  F: Float,
+struct LineTuple
 {
-  x: F,
-  y: F,
+  x: f64,
+  y: f64,
   m: Option<u8>,
 }
 #[derive(Debug)]
-pub struct ClipBuffer<F>
-where
-  F: Float,
+pub struct ClipBuffer
 {
-  lines: Vec<Vec<LineTuple<F>>>,
-  line: Vec<LineTuple<F>>,
+  lines: Vec<Vec<LineTuple>>,
+  line: Vec<LineTuple>,
 }
 
-impl<F> ClipBuffer<F>
-where
-  F: Float + 'static,
+impl ClipBuffer
 {
-  pub fn new() -> Box<dyn TransformStream<F>> {
+  pub fn new() -> Box<dyn TransformStream> {
     return Box::new(Self {
       lines: Vec::new(),
       line: Vec::new(),
@@ -43,7 +37,7 @@ where
     }
   }
 
-  fn result(&mut self) -> Vec<Vec<LineTuple<F>>> {
+  fn result(&mut self) -> Vec<Vec<LineTuple>> {
     self.lines.clear();
     self.line.clear();
     let result = &self.lines;
@@ -51,11 +45,9 @@ where
   }
 }
 
-impl<'a, F> TransformStream<F> for ClipBuffer<F>
-where
-  F: Float,
+impl<'a> TransformStream for ClipBuffer
 {
-  fn point(&mut self, x: F, y: F, m: Option<u8>) {
+  fn point(&mut self, x: f64, y: f64, m: Option<u8>) {
     self.line.push(LineTuple { x, y, m });
   }
 
@@ -74,17 +66,17 @@ where
 //   var lines = [],
 //       line;
 //   return {
-//     point: function(x, y, m) {
+//     point: f64unction(x, y, m) {
 //       line.push([x, y, m]);
 //     },
-//     lineStart: function() {
+//     lineStart: f64unction() {
 //       lines.push(line = []);
 //     },
 //     lineEnd: noop,
-//     rejoin: function() {
+//     rejoin: f64unction() {
 //       if (lines.length > 1) lines.push(lines.pop().concat(lines.shift()));
 //     },
-//     result: function() {
+//     result: f64unction() {
 //       var result = lines;
 //       lines = [];
 //       line = null;

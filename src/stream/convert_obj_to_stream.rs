@@ -1,4 +1,4 @@
-use num_traits::Float;
+use delaunator::Point;
 
 use super::geometry_processor::processor;
 use super::Stream;
@@ -6,9 +6,7 @@ use crate::data_object::DataObject;
 use crate::data_object::FeatureGeometry;
 use crate::data_object::FeatureStruct;
 
-pub fn convert_obj_to_stream<F>(object: &DataObject<F>, stream: &mut impl Stream<F>)
-where
-  F: Float,
+pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream)
 {
   match object {
     DataObject::Feature {
@@ -16,6 +14,7 @@ where
     } => {
       return processor(&geometry, stream);
     }
+
     DataObject::FeatureCollection { features } => {
       for f in features {
         for geometry in &f.geometry {
@@ -38,6 +37,15 @@ where
       };
       processor(&g, stream);
     }
+
     DataObject::MultiLineString { coordinates: _, .. } => {}
+
+    DataObject::Vec(_) => {
+      panic!("Must implemet a method for converting a vec to a stream!");
+    }
+
+    DataObject::Blank => {
+      panic!("No method of converting blank to stream.");
+    }
   }
 }

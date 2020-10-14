@@ -1,47 +1,39 @@
-use num_traits::Float;
+use delaunator::Point;
 
 #[derive(Debug)]
-pub enum FeatureGeometry<F>
-where
-  F: Float,
+pub enum FeatureGeometry
 {
-  Polygon { coordinates: Vec<Vec<[F; 2]>> },
-  LineString { coordinates: Vec<[F; 2]> },
+  Polygon { coordinates: Vec<Vec<Point>> },
+  LineString { coordinates: Vec<Point> },
 }
 
 #[derive(Debug)]
-pub enum FeatureProperty<F>
-where
-  F: Float,
+pub enum FeatureProperty
 {
-  Circumecenter([F; 2]),
-  Length(F),
-  Source(F),
-  Target(F),
+  Circumecenter(Point),
+  Length(f64),
+  Source(Point),
+  Target(Point),
   Urquhart(bool),
-  Site(F),
-  Sitecoordinates([F;2]),
+  Site(f64),
+  Sitecoordinates(Point),
   Neighbors(Vec<usize>),
 }
 
 // Signular veriosn of the struct.
 #[derive(Debug)]
-pub struct FeatureStruct<F>
-where
-  F: Float,
+pub struct FeatureStruct
 {
-  pub properties: Vec<FeatureProperty<F>>,
-  pub geometry: FeatureGeometry<F>,
+  pub properties: Vec<FeatureProperty>,
+  pub geometry: FeatureGeometry,
 }
 
 // Pluralization of the struct,
 #[derive(Debug)]
-pub struct FeaturesStruct<F>
-where
-  F: Float,
+pub struct FeaturesStruct
 {
-  pub properties: Vec<FeatureProperty<F>>,
-  pub geometry: Vec<FeatureGeometry<F>>,
+  pub properties: Vec<FeatureProperty>,
+  pub geometry: Vec<FeatureGeometry>,
 }
 
 /// The input data type use in D3
@@ -49,45 +41,36 @@ where
 ///  or a vector of stuff
 ///  Null - here a blank.
 #[derive(Debug)]
-pub enum DataObject<F>
-where
-  F: Float,
+pub enum DataObject
 {
   //   * Point - a single position.
   // * MultiPoint - an array of positions.
   // * LineString - an array of positions forming a continuous line.
   LineString {
-    coordinates: Vec<[F; 2]>,
+    coordinates: Vec<Point>,
   },
   /// MultiLineString - an array of arrays of positions forming several lines.
   MultiLineString {
-    coordinates: Vec<Vec<[F; 2]>>,
+    coordinates: Vec<Vec<Point>>,
   },
   // * Polygon - an array of arrays of positions forming a polygon (possibly with holes).
   Polygon {
-    coordinates: Vec<Vec<[F; 2]>>,
+    coordinates: Vec<Vec<Point>>,
   },
   // * MultiPolygon - a multidimensional array of positions forming multiple polygons.
   // * GeometryCollection - an array of geometry objects.
   /// Feature - a feature containing one of the above geometry objects.
   Feature {
-    feature: FeatureStruct<F>,
+    feature: FeatureStruct,
   },
   /// FeatruesCollection - An array of feature objects.
   FeatureCollection {
-    features: Vec<FeaturesStruct<F>>,
+    features: Vec<FeaturesStruct>
   },
   // A feature containing one of the above geometry objects.
   // Polygon{coordinates: Vec<usize>},
-}
 
-#[derive(Debug)]
-pub enum DataType<F>
-where
-  F: Float,
-{
-  Object(DataObject<F>),
-  Vec(Vec<F>),
-  // Float(F),
+  Vec(Vec<Point>),
+
   Blank,
 }

@@ -1,76 +1,66 @@
 use std::cell::RefCell;
+use std::f64;
 use std::rc::Rc;
 
-use num_traits::cast::FromPrimitive;
-use num_traits::Float;
-use num_traits::FloatConst;
+use delaunator::Point;
 
 use crate::clip::PointsVisibleFn;
-use crate::math::epsilon;
 use crate::point_equal::point_equal;
 use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
 
 use super::intersect::intersect;
-use super::intersect::Return;
+use super::intersect::IntersectReturn;
 
 // Takes a line and cuts into visible segments. Return values used for polygon
 // clipPIng: 0 - there were intersections or the line was empty; 1 - no
 // intersections 2 - there were intersections, and the first and last segments
 // should be rejoined.
 
-
-pub struct Line<F>
-where
-  F: Float,
-{
+pub struct Line {
   c0: u8,    // code for previous point
   clean: u8, // no intersections
-  radius: F,
-  rc: F,
+  radius: f64,
+  rc: f64,
   not_hemisphere: bool,
-  point0: (Option<[F; 2]>, Option<u8>), // previous point with message.
+  // point0: (Option<Point>, Option<u8>), // previous point with message.
+  point0: Option<Point>, // previous point
   small_radius: bool,
-  stream: Rc<RefCell<Box<dyn TransformStream<F>>>>,
+  stream: Rc<RefCell<Box<dyn TransformStream>>>,
   v0: bool,  // visibility of previous point
   v00: bool, // visibility of first point
-  visible: Rc<PointsVisibleFn<F>>,
+  visible: Rc<PointsVisibleFn>,
 }
 
-impl<F> Line<F>
-where
-  F: Float + FloatConst + FromPrimitive + 'static,
-{
-  pub fn new(visible: Rc<PointsVisibleFn<F>>, radius: F) -> StreamProcessor<F> {
-    return Box::new(
-      move |stream_ptr: Rc<RefCell<Box<dyn TransformStream<F>>>>| {
-        let stream = stream_ptr.clone();
-        // TODO small_radius, rc  is a shadow variables!!!
-        let rc = radius.cos();
-        let small_radius = rc > F::zero();
-        return Rc::new(RefCell::new(Box::new(Line::<F> {
-          c0: 0,
-          clean: 0,
-          not_hemisphere: rc.abs() > epsilon(),
-          point0: (None, None),
-          rc,
-          radius,
-          small_radius,
-          v0: false,
-          v00: false,
-          stream,
-          visible: visible.clone(),
-        })));
-      },
-    );
+impl Line {
+  pub fn new(visible: Rc<PointsVisibleFn>, radius: f64) -> StreamProcessor {
+    return Box::new(move |stream_ptr: Rc<RefCell<Box<dyn TransformStream>>>| {
+      let stream = stream_ptr.clone();
+      // TODO small_radius, rc  is a shadow variables!!!
+      let rc = radius.cos();
+      let small_radius = rc > 0f64;
+      return Rc::new(RefCell::new(Box::new(Line {
+        c0: 0,
+        clean: 0,
+        not_hemisphere: rc.abs() > f64::EPSILON,
+        point0: None,
+        rc,
+        radius,
+        small_radius,
+        v0: false,
+        v00: false,
+        stream,
+        visible: visible.clone(),
+      })));
+    });
   }
 
   /// Generates a 4-bit vector representing the location of a point relative to
   /// the small circle's bounding box.
-  fn code(&self, lambda: F, phi: F) -> u8 {
+  fn code(&self, lambda: f64, phi: f64) -> u8 {
     let r = match self.small_radius {
       true => self.radius,
-      false => F::PI() - self.radius,
+      false => f64::consts::PI - self.radius,
     };
     let mut code = 0;
     if lambda < -r {
@@ -97,21 +87,18 @@ where
   }
 }
 
-impl<F> TransformStream<F> for Line<F>
-where
-  F: Float + FloatConst + FromPrimitive + 'static,
-{
+impl TransformStream for Line {
   fn line_start(&mut self) {
     self.v00 = false;
     self.v0 = false;
     self.clean = 1;
   }
 
-  fn point(&mut self, lambda: F, phi: F, m: Option<u8>) {
-    let mut point1: (Option<[F; 2]>, Option<u8>) = (Some([lambda, phi]), m);
+  fn point(&mut self, lambda: f64, phi: f64, m: Option<u8>) {
+    let mut point1 = Point { x: lambda, y: phi };
 
-    // let point2: (Option::<[F; 2]>, <Option<u8>>);
-    let mut point2: (Option<[F; 2]>, Option<u8>);
+    // let point2: (Option::<Point>, <Option<u8>>);
+    let mut point2: (Option<Point>, Option<u8>);
     let v = (self.visible)(lambda, phi, None);
 
     let c = match self.small_radius {
@@ -121,9 +108,9 @@ where
       },
       false => match v {
         true => {
-          let inc = match lambda < F::zero() {
-            true => F::PI(),
-            false => -F::PI(),
+          let inc = match lambda < 0f64 {
+            true => f64::consts::PI,
+            false => -f64::consts::PI,
           };
           self.code(lambda + inc, phi)
         }
@@ -131,7 +118,7 @@ where
       },
     };
 
-    if self.point0.0.is_none() {
+    if self.point0.is_none() {
       self.v00 = v;
       self.v0 = v;
       if v {
@@ -141,100 +128,106 @@ where
     }
 
     if v != self.v0 {
-      // _r reduced from 3d to 2d.
-      match intersect(
-        self.point0.0.unwrap(),
-        point1.0.unwrap(),
+      let point2 = intersect(
+        self.point0.clone().unwrap(),
+        point1.clone(),
         self.radius.cos(),
         false,
-      ) {
-        Return::None => {
-          point2 = (None, None);
+      );
+      match point2 {
+        IntersectReturn::None => {
+          point1.x = 1f64;
         }
-        Return::One(p) => {
-          point2 = (Some(p), None);
+        IntersectReturn::One(p) => {
+          if point_equal(self.point0.clone().unwrap(), p.clone()) || point_equal(point1.clone(), p) {
+            point1.x = 1f64;
+          }
         }
-        Return::Two(_t) => {
+        IntersectReturn::Two(_t) => {
+          // There is a subtle bug in the javascript here two points is handles
+          // as if the second does not exits.
+          // For now just cause a panic here to see how many times it occurs.
           panic!("requested One or None found Two as !!");
         }
-      }
-      if point2.1.is_none()
-        || point_equal(self.point0.0.unwrap(), point2.0.unwrap())
-        || point_equal(point1.0.unwrap(), point2.0.unwrap())
-      {
-        point1.1 = Some(1u8);
       }
     }
 
     let mut stream = self.stream.borrow_mut();
     if v != self.v0 {
+      let next: Option<Point>;
       self.clean = 0;
       if v {
         // outside going in
         stream.line_start();
-        match intersect(point1.0.unwrap(), self.point0.0.unwrap(), self.rc, false) {
-          Return::None => {
-            point2 = (None, None);
+        match intersect(point1, self.point0.clone().unwrap(), self.rc, false) {
+          IntersectReturn::None => {
+            // TODO Should I do a stream Point here??
+            next = None;
           }
-          Return::One(p) => {
-            point2 = (Some(p), None);
+          IntersectReturn::One(p) => {
+            stream.point(p.x, p.y, None);
+            next = Some(p);
           }
-          Return::Two(_) => {
-            panic!("requested One or None found Two!!");
+          IntersectReturn::Two([p, _]) => {
+            stream.point(p.x, p.y, None);
+            // p0_next = p;
+            panic!("silently dropping second point");
           }
         }
-
-        stream.point(point2.0.unwrap()[0], point2.0.unwrap()[1], None);
       } else {
         // inside going out
-        // point2 = intersect(self.point0.unwrap(), point1.unwrap(), self.rc, false);
-        match intersect(self.point0.0.unwrap(), point1.0.unwrap(), self.rc, false) {
-          Return::None => {
-            point2 = (None, None);
+        let point2 = intersect(self.point0.clone().unwrap(), point1, self.rc, false);
+        match point2 {
+          IntersectReturn::None => {
+            // TODO should I stream a null point here?
+            // stream.line_end(); ???
+            panic!("Must deal with no intersect.");
           }
-          Return::One(p) => {
-            point2 = (Some(p), None);
+          IntersectReturn::One(p) => {
+            stream.point(p.x, p.y, Some(2));
+            stream.line_end();
+            next = Some(p);
           }
-          Return::Two(_) => {
-            panic!("requested One or None found Two!!");
+          IntersectReturn::Two([p, _]) => {
+            stream.point(p.x, p.y, Some(2));
+            stream.line_end();
+            // next = p;
+            panic!("silently dropping second point");
           }
         }
-
-        stream.point(point2.0.unwrap()[0], point2.0.unwrap()[1], Some(2u8));
-        stream.line_end();
-        self.point0 = point2;
       }
-    } else if self.not_hemisphere && self.point0.0.is_none() && self.small_radius ^ v {
+      self.point0 = next;
+    } else if self.not_hemisphere && self.point0.is_none() && self.small_radius ^ v {
       // If the codes for two points are different, or are both zero,
       // and there this segment intersects with the small circle.
       if (c & self.c0) != 0 {
-        let t = intersect(point1.0.unwrap(), self.point0.0.unwrap(), self.rc, true);
-        match t {
-          Return::None => {}
-          Return::One(_) => {
-            panic!("requetsed two received one");
-          }
-          Return::Two(t) => {
-            self.clean = 0;
-            if self.small_radius {
-              stream.line_start();
-              stream.point(t[0][0], t[0][1], None);
-              stream.point(t[1][0], t[1][1], None);
-              stream.line_end();
-            } else {
-              stream.point(t[1][0], t[1][1], None);
-              stream.line_end();
-              stream.line_start();
-              stream.point(t[0][0], t[0][1], Some(3u8));
-            }
-          }
-        }
+        // let t = intersect(point1.0.unwrap(), self.point0.0.unwrap(), self.rc, true);
+        // match t {
+        //   Return::None => {}
+        //   Return::One(_) => {
+        //     panic!("requetsed two received one");
+        //   }
+        //   Return::Two(t) => {
+        //     self.clean = 0;
+        //     if self.small_radius {
+        //       stream.line_start();
+        //       stream.point(t[0].x, t[0].y, None);
+        //       stream.point(t[1].x, t[1].y, None);
+        //       stream.line_end();
+        //     } else {
+        //       stream.point(t[1].x, t[1].y, None);
+        //       stream.line_end();
+        //       stream.line_start();
+        //       stream.point(t[0].x, t[0].y, Some(3u8));
+        //     }
+        //   }
+        // }
       }
     }
-    if v && self.point0.0.is_none() || !point_equal(self.point0.0.unwrap(), point1.0.unwrap()) {
-      stream.point(point1.0.unwrap()[0], point1.0.unwrap()[1], None);
-    }
-    self.point0 = point1;
+    // if v && self.point0.0.is_none() || !point_equal(self.point0.0.unwrap(), point1.0.unwrap()) {
+    //   stream.point(point1.0.unwrap().x, point1.0.unwrap().y, None);
+    // }
+    // self.point0 = point1;
     self.v0 = v;
     self.c0 = c;
   }
@@ -244,7 +237,7 @@ where
       let mut stream = self.stream.borrow_mut();
       stream.line_end();
     }
-    self.point0 = (None, None);
+    self.point0 = None;
   }
 }
 // function clipLine(stream) {
@@ -254,11 +247,11 @@ where
 //       v00, // visibility of first point
 //       clean; // no intersections
 //   return {
-//     lineStart: function() {
+//     lineStart: f64unction() {
 //       v00 = v0 = false;
 //       clean = 1;
 //     },
-//     point: function(lambda, phi) {
+//     point: f64unction(lambda, phi) {
 //       var point1 = [lambda, phi],
 //           point2,
 //           v = visible(lambda, phi),
@@ -309,13 +302,13 @@ where
 //       }
 //       point0 = point1, v0 = v, c0 = c;
 //     },
-//     lineEnd: function() {
+//     lineEnd: f64unction() {
 //       if (v0) stream.lineEnd();
 //       point0 = null;
 //     },
 //     // Rejoin first and last segments if there were intersections and the first
 //     // and last points were visible.
-//     clean: function() {
+//     clean: f64unction() {
 //       return clean | ((v00 && v0) << 1);
 //     }
 //   };

@@ -1,13 +1,11 @@
-use num_traits::Float;
+use delaunator::Point;
 
 use super::line::line;
 use super::polygon::polygon;
 use crate::data_object::FeatureGeometry;
 use crate::stream::Stream;
 
-pub fn processor<F>(geometry: &FeatureGeometry<F>, stream: &mut impl Stream<F>)
-where
-  F: Float,
+pub fn processor(geometry: &FeatureGeometry, stream: &mut impl Stream)
 {
   match geometry {
     FeatureGeometry::LineString { coordinates, .. } => {

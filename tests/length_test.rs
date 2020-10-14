@@ -1,7 +1,7 @@
 mod length_test {
   #[cfg(test)]
   extern crate pretty_assertions;
-
+  use delaunator::Point;
   use rust_d3_geo::data_object::DataObject;
   use rust_d3_geo::data_object::FeatureGeometry;
   use rust_d3_geo::data_object::FeaturesStruct;
@@ -14,7 +14,7 @@ mod length_test {
     println!("geoLength(LineString) returns the sum of its great-arc segments");
     assert!(in_delta(
       LengthStream::calc(DataObject::LineString {
-        coordinates: vec![[-45f64, 0f64], [45f64, 0f64]]
+        coordinates: vec![Point{x:-45f64, y:0f64}, Point{x:45f64, y:0f64}]
       }),
       PI / 2f64,
       1e-6
@@ -22,7 +22,7 @@ mod length_test {
 
     assert!(in_delta(
       LengthStream::calc(DataObject::LineString {
-        coordinates: vec![[-45f64, 0f64], [-30f64, 0f64], [-15f64, 0f64], [0f64, 0f64]]
+        coordinates: vec![Point{x:-45f64, y:0f64}, Point{x:-30f64, y:0f64}, Point{x:-15f64, y:0f64}, Point{x:0f64, y:0f64}]
       }),
       PI / 4f64,
       1e-6
@@ -38,10 +38,10 @@ mod length_test {
           properties: Vec::new(),
           geometry: vec![
             FeatureGeometry::LineString {
-              coordinates: vec![[-45f64, 0f64], [0f64, 0f64]]
+              coordinates: vec![Point{x:-45f64, y:0f64}, Point{x:0f64, y:0f64}]
             },
             FeatureGeometry::LineString {
-              coordinates: vec![[0f64, 0f64], [45f64, 0f64]]
+              coordinates: vec![Point{x:0f64, y:0f64}, Point{x:45f64, y:0f64}]
             },
           ],
         }]
@@ -57,11 +57,11 @@ mod length_test {
     assert!(in_delta(
       LengthStream::calc(DataObject::Polygon {
         coordinates: vec![vec![
-          [0f64, 0f64],
-          [3f64, 0f64],
-          [3f64, 3f64],
-          [0f64, 3f64],
-          [0f64, 0f64]
+          Point{x:0f64, y:0f64},
+          Point{x:3f64, y:0f64},
+          Point{x:3f64, y:3f64},
+          Point{x:0f64, y:3f64},
+          Point{x:0f64, y:0f64}
         ]]
       }),
       0.157008f64,
@@ -76,18 +76,18 @@ mod length_test {
       LengthStream::calc(DataObject::Polygon {
         coordinates: vec![
           vec![
-            [0f64, 0f64],
-            [3f64, 0f64],
-            [3f64, 3f64],
-            [0f64, 3f64],
-            [0f64, 0f64]
+            Point{x:0f64, y:0f64},
+            Point{x:3f64, y:0f64},
+            Point{x:3f64, y:3f64},
+            Point{x:0f64, y:3f64},
+            Point{x:0f64, y:0f64}
           ],
           vec![
-            [1f64, 1f64],
-            [2f64, 1f64],
-            [2f64, 2f64],
-            [1f64, 2f64],
-            [1f64, 1f64]
+            Point{x:1f64, y:1f64},
+            Point{x:2f64, y:1f64},
+            Point{x:2f64, y:2f64},
+            Point{x:1f64, y:2f64},
+            Point{x:1f64, y:1f64}
           ]
         ]
       }),

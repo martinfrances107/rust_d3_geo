@@ -1,11 +1,8 @@
-use num_traits::Float;
 
-pub fn intersect<F>(lambda0: F, phi0: F, lambda1: F, phi1: F) -> F
-where
-  F: Float + 'static,
+pub fn intersect(lambda0: f64, phi0: f64, lambda1: f64, phi1: f64) -> f64
 {
   let sin_lambda0_lambda1 = (lambda0 - lambda1).sin();
-  match (sin_lambda0_lambda1).abs() > F::epsilon() {
+  match (sin_lambda0_lambda1).abs() > f64::EPSILON {
     true => {
       let cos_phi0 = phi0.cos();
       let cos_phi1 = phi1.cos();
@@ -14,8 +11,7 @@ where
         .tan();
     }
     false => {
-      let f_2 = F::from(2u8).unwrap();
-      return (phi0 + phi1) / f_2;
+      return (phi0 + phi1) / 2f64;
     }
   }
 }
