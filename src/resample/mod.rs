@@ -13,16 +13,15 @@ use crate::transform_stream::StreamProcessor;
 use crate::Transform;
 
 pub fn gen_resample(
-  project: Rc<RefCell<Box<dyn Transform>>>,
-  delta2: Option<f64>,
-) -> Rc<RefCell<StreamProcessor>>
-{
-  match delta2 {
-    Some(delta2) => {
-      return Rc::new(RefCell::new(Box::new(Resample::new(project, delta2))));
+    project: Rc<RefCell<Box<dyn Transform>>>,
+    delta2: Option<f64>,
+) -> Rc<RefCell<StreamProcessor>> {
+    match delta2 {
+        Some(delta2) => {
+            return Rc::new(RefCell::new(Box::new(Resample::new(project, delta2))));
+        }
+        None => {
+            return Rc::new(RefCell::new(Box::new(ResampleNone::new(project))));
+        }
     }
-    None => {
-      return Rc::new(RefCell::new(Box::new(ResampleNone::new(project))));
-    }
-  }
 }

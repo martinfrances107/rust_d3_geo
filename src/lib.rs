@@ -32,11 +32,10 @@ impl TransformIdentity {
     }
 }
 
-impl Transform for TransformIdentity{}
+impl Transform for TransformIdentity {}
 
 /// Common to Projection, Rotation.
-pub trait Transform
-{
+pub trait Transform {
     fn transform(&self, p: &Point) -> Point {
         return p.clone();
     }

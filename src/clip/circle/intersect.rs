@@ -1,15 +1,14 @@
-use delaunator::Point;
-use std::f64;
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_add_in_place;
 use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_dot;
 use crate::cartesian::cartesian_scale;
 use crate::cartesian::spherical;
+use delaunator::Point;
+use std::f64;
 
 /// IntersectReturn none, one or two 2d floats.
-pub enum IntersectReturn
-{
+pub enum IntersectReturn {
     One(Point),
     Two([Point; 2]),
     None,
@@ -17,8 +16,7 @@ pub enum IntersectReturn
 
 /// Intersects the great circle between a and b with the clip circle.
 #[allow(clippy::many_single_char_names)]
-pub fn intersect(a: Point, b: Point, cr: f64, two: bool) -> IntersectReturn
-{
+pub fn intersect(a: Point, b: Point, cr: f64, two: bool) -> IntersectReturn {
     let pa = cartesian(&a);
     let pb = cartesian(&b);
 

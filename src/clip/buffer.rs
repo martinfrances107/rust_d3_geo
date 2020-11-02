@@ -4,61 +4,57 @@ use delaunator::Point;
 use crate::transform_stream::TransformStream;
 
 #[derive(Clone, Copy, Debug)]
-struct LineTuple
-{
-  x: f64,
-  y: f64,
-  m: Option<u8>,
+struct LineTuple {
+    x: f64,
+    y: f64,
+    m: Option<u8>,
 }
 #[derive(Debug)]
-pub struct ClipBuffer
-{
-  lines: Vec<Vec<LineTuple>>,
-  line: Vec<LineTuple>,
+pub struct ClipBuffer {
+    lines: Vec<Vec<LineTuple>>,
+    line: Vec<LineTuple>,
 }
 
-impl ClipBuffer
-{
-  pub fn new() -> Box<dyn TransformStream> {
-    return Box::new(Self {
-      lines: Vec::new(),
-      line: Vec::new(),
-    });
-  }
-
-  fn rejoin(&mut self) {
-    if self.lines.len() > 1 {
-      // Shift from the top end.
-      let lines_shift = self.lines.remove(0);
-      // Pop from the bottom end.
-      let lines_pop = self.lines.pop().unwrap_or(Vec::new());
-      let join = [lines_pop, lines_shift].concat();
-      self.lines.push(join);
+impl ClipBuffer {
+    pub fn new() -> Box<dyn TransformStream> {
+        return Box::new(Self {
+            lines: Vec::new(),
+            line: Vec::new(),
+        });
     }
-  }
 
-  fn result(&mut self) -> Vec<Vec<LineTuple>> {
-    self.lines.clear();
-    self.line.clear();
-    let result = &self.lines;
-    return result.to_vec();
-  }
+    fn rejoin(&mut self) {
+        if self.lines.len() > 1 {
+            // Shift from the top end.
+            let lines_shift = self.lines.remove(0);
+            // Pop from the bottom end.
+            let lines_pop = self.lines.pop().unwrap_or(Vec::new());
+            let join = [lines_pop, lines_shift].concat();
+            self.lines.push(join);
+        }
+    }
+
+    fn result(&mut self) -> Vec<Vec<LineTuple>> {
+        self.lines.clear();
+        self.line.clear();
+        let result = &self.lines;
+        return result.to_vec();
+    }
 }
 
-impl<'a> TransformStream for ClipBuffer
-{
-  fn point(&mut self, x: f64, y: f64, m: Option<u8>) {
-    self.line.push(LineTuple { x, y, m });
-  }
+impl<'a> TransformStream for ClipBuffer {
+    fn point(&mut self, x: f64, y: f64, m: Option<u8>) {
+        self.line.push(LineTuple { x, y, m });
+    }
 
-  fn line_start(&mut self) {
-    self.line.clear();
-    // self.lines.push(self.line);
-  }
+    fn line_start(&mut self) {
+        self.line.clear();
+        // self.lines.push(self.line);
+    }
 
-  fn line_end(&mut self) {
-    // no-op.
-  }
+    fn line_end(&mut self) {
+        // no-op.
+    }
 }
 // import noop from "../noop.js";
 

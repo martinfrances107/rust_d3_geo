@@ -6,46 +6,45 @@ use crate::data_object::DataObject;
 use crate::data_object::FeatureGeometry;
 use crate::data_object::FeatureStruct;
 
-pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream)
-{
-  match object {
-    DataObject::Feature {
-      feature: FeatureStruct { geometry, .. },
-    } => {
-      return processor(&geometry, stream);
-    }
-
-    DataObject::FeatureCollection { features } => {
-      for f in features {
-        for geometry in &f.geometry {
-          processor(&geometry, stream);
+pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
+    match object {
+        DataObject::Feature {
+            feature: FeatureStruct { geometry, .. },
+        } => {
+            return processor(&geometry, stream);
         }
-      }
-    }
 
-    DataObject::Polygon { coordinates, .. } => {
-      let g = FeatureGeometry::Polygon {
-        coordinates: coordinates.to_vec(),
-      };
-      processor(&g, stream);
-    }
+        DataObject::FeatureCollection { features } => {
+            for f in features {
+                for geometry in &f.geometry {
+                    processor(&geometry, stream);
+                }
+            }
+        }
 
-    // What remains is a Geometry object.
-    DataObject::LineString { coordinates, .. } => {
-      let g = FeatureGeometry::LineString {
-        coordinates: coordinates.to_vec(),
-      };
-      processor(&g, stream);
-    }
+        DataObject::Polygon { coordinates, .. } => {
+            let g = FeatureGeometry::Polygon {
+                coordinates: coordinates.to_vec(),
+            };
+            processor(&g, stream);
+        }
 
-    DataObject::MultiLineString { coordinates: _, .. } => {}
+        // What remains is a Geometry object.
+        DataObject::LineString { coordinates, .. } => {
+            let g = FeatureGeometry::LineString {
+                coordinates: coordinates.to_vec(),
+            };
+            processor(&g, stream);
+        }
 
-    DataObject::Vec(_) => {
-      panic!("Must implemet a method for converting a vec to a stream!");
-    }
+        DataObject::MultiLineString { coordinates: _, .. } => {}
 
-    DataObject::Blank => {
-      panic!("No method of converting blank to stream.");
+        DataObject::Vec(_) => {
+            panic!("Must implemet a method for converting a vec to a stream!");
+        }
+
+        DataObject::Blank => {
+            panic!("No method of converting blank to stream.");
+        }
     }
-  }
 }

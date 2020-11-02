@@ -16,30 +16,27 @@ use crate::Transform;
 //   });
 // }
 
-pub struct ResampleNone
-{
-  project: Rc<RefCell<Box<dyn Transform>>>,
-  stream: Rc<RefCell<Box<dyn TransformStream>>>,
+pub struct ResampleNone {
+    project: Rc<RefCell<Box<dyn Transform>>>,
+    stream: Rc<RefCell<Box<dyn TransformStream>>>,
 }
 
-impl ResampleNone
-{
-  pub fn new(project: Rc<RefCell<Box<dyn Transform>>>) -> StreamProcessor {
-    return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream>>>| {
-      return Rc::new(RefCell::new(Box::new(Self {
-        project: project.clone(),
-        stream,
-      })));
-    });
-  }
+impl ResampleNone {
+    pub fn new(project: Rc<RefCell<Box<dyn Transform>>>) -> StreamProcessor {
+        return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream>>>| {
+            return Rc::new(RefCell::new(Box::new(Self {
+                project: project.clone(),
+                stream,
+            })));
+        });
+    }
 }
 
-impl TransformStream for ResampleNone
-{
-  fn point(&mut self, x: f64, y: f64, m: Option<u8>) {
-    let mut stream = self.stream.borrow_mut();
-    let project = &*self.project.borrow();
-    let p = project.transform(&Point{x, y});
-    stream.point(p.x, p.y, m);
-  }
+impl TransformStream for ResampleNone {
+    fn point(&mut self, x: f64, y: f64, m: Option<u8>) {
+        let mut stream = self.stream.borrow_mut();
+        let project = &*self.project.borrow();
+        let p = project.transform(&Point { x, y });
+        stream.point(p.x, p.y, m);
+    }
 }

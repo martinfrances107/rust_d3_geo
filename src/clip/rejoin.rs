@@ -11,35 +11,33 @@ use super::InterpolateFn;
 
 type MeshPoint = [f64; 3];
 
-struct Intersection
-{
-  x: MeshPoint,
-  z: Option<Vec<MeshPoint>>,
-  o: Option<Box<Intersection>>, // another intersection,
-  e: bool,                         // is any entry?
-  v: bool,                         // visited
-  n: Option<MeshPoint>,         // next
-  p: Option<MeshPoint>,         // previous
+struct Intersection {
+    x: MeshPoint,
+    z: Option<Vec<MeshPoint>>,
+    o: Option<Box<Intersection>>, // another intersection,
+    e: bool,                      // is any entry?
+    v: bool,                      // visited
+    n: Option<MeshPoint>,         // next
+    p: Option<MeshPoint>,         // previous
 }
 
-impl Intersection
-{
-  fn new(
-    point: MeshPoint,
-    points: Option<Vec<MeshPoint>>,
-    other: Option<Box<Intersection>>,
-    entry: bool,
-  ) -> Self {
-    return Self {
-      x: point,
-      z: points,
-      o: other,
-      e: entry,
-      v: false,
-      n: None,
-      p: None,
-    };
-  }
+impl Intersection {
+    fn new(
+        point: MeshPoint,
+        points: Option<Vec<MeshPoint>>,
+        other: Option<Box<Intersection>>,
+        entry: bool,
+    ) -> Self {
+        return Self {
+            x: point,
+            z: points,
+            o: other,
+            e: entry,
+            v: false,
+            n: None,
+            p: None,
+        };
+    }
 }
 
 //
@@ -56,62 +54,62 @@ impl Intersection
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
 pub fn rejoin(
-  segments: Vec<Vec<MeshPoint>>,
-  compare_intersection: CompareIntersectionFn,
-  start_inside: bool,
-  interpolate: InterpolateFn,
-  mut stream: Box<dyn TransformStream>,
+    segments: Vec<Vec<MeshPoint>>,
+    compare_intersection: CompareIntersectionFn,
+    start_inside: bool,
+    interpolate: InterpolateFn,
+    mut stream: Box<dyn TransformStream>,
 ) {
-  let subject = Vec::<Intersection>::new();
-  let clip = Vec::<Intersection>::new();
-  // let i,
-  // let n: usize;
+    let subject = Vec::<Intersection>::new();
+    let clip = Vec::<Intersection>::new();
+    // let i,
+    // let n: usize;
 
-  for segment in segments.iter() {
-    let n = segment.len() - 1;
-    if n <= 0 {
-      return;
-    };
-    let mut p0 = segment[0];
-    let mut p1 = segment[n];
-    //  let mut x: Intersection<F>;
+    for segment in segments.iter() {
+        let n = segment.len() - 1;
+        if n <= 0 {
+            return;
+        };
+        let mut p0 = segment[0];
+        let mut p1 = segment[n];
+        //  let mut x: Intersection<F>;
 
-    if point_equal(Point{x:p0[0], y:p0[1]}, Point{x:p1[0], y:p1[1]}) {
-      if p0[2] != 0f64 && p1[2] != 0f64 {
-        stream.line_start();
-        // let i: usize;
-        // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
-        for i in 0..n {
-          p0 = segment[i];
-          stream.point(p0[0], p0[1], None);
+        if point_equal(Point { x: p0[0], y: p0[1] }, Point { x: p1[0], y: p1[1] }) {
+            if p0[2] != 0f64 && p1[2] != 0f64 {
+                stream.line_start();
+                // let i: usize;
+                // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
+                for i in 0..n {
+                    p0 = segment[i];
+                    stream.point(p0[0], p0[1], None);
+                }
+                stream.line_end();
+                return;
+            }
+            // handle degenerate cases by moving the point
+            // p1[0] += 2F * f64::EPSILON;
+            p1[0] = p1[0] + 2f64 * f64::EPSILON;
         }
-        stream.line_end();
-        return;
-      }
-      // handle degenerate cases by moving the point
-      // p1[0] += 2F * f64::EPSILON;
-      p1[0] = p1[0] + 2f64 * f64::EPSILON;
-    }
 
-    // let mut x = Intersection::new(p0, Some(segment.to_vec()), None, true);
-    // subject.push(x);
-    // x.o = Some(Box::new(Intersection::new(
-    //   p0,
-    //   None,
-    //   Some(Box::new(x)),
-    //   false,
-    // )));
-    // clip.push(*x.o.unwrap());
-    // x = Intersection::new(p1, Some(segment.to_vec()), None, false);
-    // subject.push(x);
-    // x.o = Some(Box::new(Intersection::new(
-    //   p1,
-    //   None,
-    //   Some(Box::new(x)),
-    //   true,
-    // )));
-    // clip.push(*x.o.unwrap());
-  }
+        // let mut x = Intersection::new(p0, Some(segment.to_vec()), None, true);
+        // subject.push(x);
+        // x.o = Some(Box::new(Intersection::new(
+        //   p0,
+        //   None,
+        //   Some(Box::new(x)),
+        //   false,
+        // )));
+        // clip.push(*x.o.unwrap());
+        // x = Intersection::new(p1, Some(segment.to_vec()), None, false);
+        // subject.push(x);
+        // x.o = Some(Box::new(Intersection::new(
+        //   p1,
+        //   None,
+        //   Some(Box::new(x)),
+        //   true,
+        // )));
+        // clip.push(*x.o.unwrap());
+    }
 }
 
 // // A generalized polygon clipping algorithm: given a polygon that has been cut
@@ -192,42 +190,41 @@ pub fn rejoin(
 // }
 
 struct LinkNP<'a, T> {
-  value: T,
-  n: Option<&'a LinkNP<'a, T>>,
-  p: Option<&'a LinkNP<'a, T>>,
+    value: T,
+    n: Option<&'a LinkNP<'a, T>>,
+    p: Option<&'a LinkNP<'a, T>>,
 }
 
-fn link(array: Vec<MeshPoint>)
-{
-  if array.is_empty() {
-    return;
-  };
-  let n = array.len();
+fn link(array: Vec<MeshPoint>) {
+    if array.is_empty() {
+        return;
+    };
+    let n = array.len();
 
-  let i: usize = 0usize;
-  let mut a = LinkNP {
-    value: array[0],
-    n: None,
-    p: None,
-  };
-  let mut b: LinkNP<MeshPoint>;
-  for i in 1..n {
+    let i: usize = 0usize;
+    let mut a = LinkNP {
+        value: array[0],
+        n: None,
+        p: None,
+    };
+    let mut b: LinkNP<MeshPoint>;
+    for i in 1..n {
+        b = LinkNP {
+            value: array[i],
+            n: None,
+            p: None,
+        };
+        // a.n = Some(&b);
+        // b.p = Some(&a);
+        a = b;
+    }
     b = LinkNP {
-      value: array[i],
-      n: None,
-      p: None,
+        value: array[i],
+        n: None,
+        p: None,
     };
     // a.n = Some(&b);
     // b.p = Some(&a);
-    a = b;
-  }
-  b = LinkNP {
-    value: array[i],
-    n: None,
-    p: None,
-  };
-  // a.n = Some(&b);
-  // b.p = Some(&a);
 }
 
 // function link(array) {

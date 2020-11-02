@@ -8,7 +8,6 @@ use crate::math::EPSILON;
 
 /// An aspect of the javascrtipt
 /// point_equal may be fed 3 floats but only checks values 0 and 1. (so not all) !!!
-pub fn point_equal(a: Point, b : Point) -> bool  {
-  return ((a.x - b.x).abs() < EPSILON) &&
-         ((a.y - b.y).abs() < EPSILON);
+pub fn point_equal(a: Point, b: Point) -> bool {
+    return ((a.x - b.x).abs() < EPSILON) && ((a.y - b.y).abs() < EPSILON);
 }
