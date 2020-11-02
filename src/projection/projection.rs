@@ -21,7 +21,7 @@ pub trait Projection {
   // /**
   //  * Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
   //  */
-  // fn get_center(&self) -> [F;2];
+  // fn get_center(&self) -> Point;
 
   // /**
   //  * Sets the projection’s center to the specified center,
@@ -30,7 +30,7 @@ pub trait Projection {
   //  *
   //  * @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
   //  */
-  // fn center(&mut self, point: [F;2]);
+  // fn center(&mut self, point: Point);
 
   // /**
   //  * Returns the current spherical clipPIng function.

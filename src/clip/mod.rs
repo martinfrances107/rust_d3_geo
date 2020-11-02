@@ -45,7 +45,7 @@ pub struct Clip
   line: Rc<RefCell<Box<dyn TransformStream>>>,
   interpolate: Rc<RefCell<InterpolateFn>>,
   // point: Box<dyn Fn()>,
-  // point: [F;2],
+  // point: Point,
   polygon_started: bool,
   polygon: Box<Vec<Vec<Point>>>,
   point_visible: PointVisibleFnPtr,

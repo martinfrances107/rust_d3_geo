@@ -61,7 +61,7 @@ pub fn intersect(a: Point, b: Point, cr: f64, two: bool) -> IntersectReturn
     let mut q = cartesian_scale(&u, (-w - t) / uu);
     cartesian_add_in_place(&mut q, &A);
 
-    // Javascript has implicit cast q of from [F;3] to a [F;2] here.
+    // Javascript has implicit cast q of from [F;3] to a Point here.
     let q: Point = spherical(&q);
 
     if !two {
