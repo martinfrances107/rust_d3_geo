@@ -175,10 +175,8 @@ impl CentroidStream {
     }
 
     fn centroid_ring_start(&mut self) {
-        self.point_fn = PointFn::CentroidPoint;
+        self.point_fn = PointFn::CentroidRingPointFirst;
     }
-
-    fn polygon() {}
 
     pub fn centroid(&mut self, d_object: DataObject) -> Point {
         convert_obj_to_stream(&d_object, self);
@@ -200,7 +198,7 @@ impl CentroidStream {
                 z = self.Z0;
             }
             m = x * x + y * y + z * z;
-            println!("self {:?}", m);
+
             // If the feature still has an undefined centroid, then return.
             if m < EPSILON2 {
                 return Point {

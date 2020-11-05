@@ -16,9 +16,27 @@ mod centroid_test {
             Point { x: 0f64, y: 0f64 },
             1e-6
         ));
-        // assert!(in_delta_point(CentroidStream::default().centroid(DataObject::Point{coordinate:Point{x:1f64, y: 1f64}}), Point{x:4f64, y:1f64}, 1e-6));
-        // assert!(in_delta_point(CentroidStream::default().centroid(DataObject::Point{coordinate:Point{x:2f64, y: 3f64}}), Point{x:4f64, y:3f64}, 1e-6));
-        // assert!(in_delta_point(CentroidStream::default().centroid(DataObject::Point{coordinate:Point{x:-4f64, y: -5f64}}), Point{x:-5f64, y:-5f64}, 1e-6));
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(DataObject::Point {
+                coordinate: Point { x: 1f64, y: 1f64 }
+            }),
+            Point { x: 1f64, y: 1f64 },
+            1e-6
+        ));
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(DataObject::Point {
+                coordinate: Point { x: 2f64, y: 3f64 }
+            }),
+            Point { x: 2f64, y: 3f64 },
+            1e-6
+        ));
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(DataObject::Point {
+                coordinate: Point { x: -4f64, y: -5f64 }
+            }),
+            Point { x: -4f64, y: -5f64 },
+            1e-6
+        ));
     }
 }
 

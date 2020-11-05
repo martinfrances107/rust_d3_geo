@@ -33,6 +33,7 @@ pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
             let g = FeatureGeometry::Point {
                 coordinate: coordinate.clone(),
             };
+            processor(&g, stream);
         }
 
         // What remains is a Geometry object.

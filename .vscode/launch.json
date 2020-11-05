@@ -46,6 +46,25 @@
     {
       "type": "lldb",
       "request": "launch",
+      "name": "centroid test",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=centroid_test",
+          "--package=rust_d3_geo"
+        ],
+        "filter": {
+          "name": "centroid_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
       "name": "Debug integration test 'distance-test'",
       "cargo": {
         "args": [
