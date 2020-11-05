@@ -1,4 +1,4 @@
-use delaunator::Point;
+// use delaunator::Point;
 
 use super::data_object::DataObject;
 use super::stream::convert_obj_to_stream::convert_obj_to_stream;
@@ -69,7 +69,7 @@ impl LengthStream {
 }
 
 impl Stream for LengthStream {
-    fn sphere(&mut self) {}
+    // fn sphere(&mut self) {}
 
     fn point(&mut self, x: f64, y: f64, _z: Option<f64>) {
         println!("enter point");

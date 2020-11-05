@@ -1,6 +1,3 @@
-// use crate::stream::GeoStream;
-use delaunator::Point;
-
 use crate::transform_stream::TransformStream;
 
 struct StreamWrapperState {

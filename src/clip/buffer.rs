@@ -1,6 +1,3 @@
-use delaunator::Point;
-
-// use crate::stream::GeoStream;
 use crate::transform_stream::TransformStream;
 
 #[derive(Clone, Copy, Debug)]

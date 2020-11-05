@@ -1,4 +1,3 @@
-use delaunator::Point;
 use std::f64;
 
 pub const TAU: f64 = 2f64 * f64::consts::PI;

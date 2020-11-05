@@ -1,8 +1,6 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use delaunator::Point;
-
 pub mod resample;
 pub mod resample_none;
 

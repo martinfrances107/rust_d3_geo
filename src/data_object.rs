@@ -2,6 +2,7 @@ use delaunator::Point;
 
 #[derive(Debug)]
 pub enum FeatureGeometry {
+    Point{ coordinate: Point },
     Polygon { coordinates: Vec<Vec<Point>> },
     LineString { coordinates: Vec<Point> },
 }
@@ -38,7 +39,10 @@ pub struct FeaturesStruct {
 ///  Null - here a blank.
 #[derive(Debug)]
 pub enum DataObject {
-    //   * Point - a single position.
+    /// Point - a single position.
+    Point{
+        coordinate: Point
+    },
     // * MultiPoint - an array of positions.
     // * LineString - an array of positions forming a continuous line.
     LineString {

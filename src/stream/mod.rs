@@ -3,7 +3,7 @@ mod geometry_processor;
 mod line;
 mod polygon;
 
-use delaunator::Point;
+// use delaunator::Point;
 
 pub trait Stream {
     fn point(&mut self, _x: f64, _y: f64, _z: Option<f64>) {}

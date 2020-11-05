@@ -7,6 +7,7 @@
 use delaunator::Point;
 
 pub mod cartesian;
+pub mod centroid;
 pub mod circle;
 pub mod data_object;
 pub mod distance;

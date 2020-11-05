@@ -2,8 +2,6 @@ use std::cell::RefCell;
 use std::f64;
 use std::rc::Rc;
 
-use delaunator::Point;
-
 // use crate::stream::GeoStream;
 use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;

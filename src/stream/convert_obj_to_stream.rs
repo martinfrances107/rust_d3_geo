@@ -1,4 +1,4 @@
-use delaunator::Point;
+// use delaunator::Point;
 
 use super::geometry_processor::processor;
 use super::Stream;
@@ -28,6 +28,13 @@ pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
             };
             processor(&g, stream);
         }
+
+        DataObject::Point{ coordinate}  => {
+            let g = FeatureGeometry::Point {
+                coordinate: coordinate.clone()
+            };
+        }
+
 
         // What remains is a Geometry object.
         DataObject::LineString { coordinates, .. } => {
