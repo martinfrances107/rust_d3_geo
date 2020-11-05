@@ -3,20 +3,24 @@ mod centroid_test {
     extern crate pretty_assertions;
     use delaunator::Point;
 
-    use rust_d3_geo::in_delta::in_delta_point;
     use rust_d3_geo::centroid::centroid_stream::CentroidStream;
     use rust_d3_geo::data_object::DataObject;
+    use rust_d3_geo::in_delta::in_delta_point;
 
     #[test]
-    fn the_centroid_of_a_point_is_itself() {        
-        assert!(in_delta_point(CentroidStream::default().centroid(DataObject::Point{coordinate:Point{x:0f64, y: 0f64}}), Point{x:0f64, y:0f64}, 1e-6));
+    fn the_centroid_of_a_point_is_itself() {
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(DataObject::Point {
+                coordinate: Point { x: 0f64, y: 0f64 }
+            }),
+            Point { x: 0f64, y: 0f64 },
+            1e-6
+        ));
         // assert!(in_delta_point(CentroidStream::default().centroid(DataObject::Point{coordinate:Point{x:1f64, y: 1f64}}), Point{x:4f64, y:1f64}, 1e-6));
         // assert!(in_delta_point(CentroidStream::default().centroid(DataObject::Point{coordinate:Point{x:2f64, y: 3f64}}), Point{x:4f64, y:3f64}, 1e-6));
         // assert!(in_delta_point(CentroidStream::default().centroid(DataObject::Point{coordinate:Point{x:-4f64, y: -5f64}}), Point{x:-5f64, y:-5f64}, 1e-6));
     }
-    
 }
-
 
 // tape("the centroid of a set of points is the (spherical) average of its constituent members", function(test) {
 //   test.inDelta(d3.geoCentroid({type: "GeometryCollection", geometries: [{type: "Point", coordinates: [0, 0]}, {type: "Point", coordinates: [1, 2]}]}), [0.499847, 1.000038], 1e-6);

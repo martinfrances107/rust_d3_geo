@@ -15,7 +15,7 @@ enum PointFn {
     CentroidLinePoint,
     CentroidLinePointFirst,
     CentroidRingPoint,
-    CentroidRingPointFirst
+    CentroidRingPointFirst,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -69,7 +69,6 @@ impl Default for CentroidStream {
 }
 
 impl CentroidStream {
-
     fn centroid_point_cartesian(&mut self, x: f64, y: f64, z: f64) {
         self.W0 += 1f64;
         self.X0 = (x - self.X0) / self.W0;
@@ -89,21 +88,22 @@ impl CentroidStream {
         self.y0 = cos_phi * lambda.sin();
         self.z0 = phi.sin();
         self.point_fn = PointFn::CentroidLinePoint;
-        self.centroid_point_cartesian(self.x0, self.y0, self. z0);
-      }
+        self.centroid_point_cartesian(self.x0, self.y0, self.z0);
+    }
 
-      fn centroid_line_point(&mut self, lambda_in: f64, phi_in: f64) {
-        let lambda = lambda_in.to_radians(); 
+    fn centroid_line_point(&mut self, lambda_in: f64, phi_in: f64) {
+        let lambda = lambda_in.to_radians();
         let phi = phi_in.to_radians();
-        let  cos_phi = phi.cos();
-        let  x = cos_phi * lambda.cos();
-        let  y = cos_phi * lambda.sin();
-        let  z = phi.sin();
+        let cos_phi = phi.cos();
+        let x = cos_phi * lambda.cos();
+        let y = cos_phi * lambda.sin();
+        let z = phi.sin();
         let w0 = self.y0 * z - self.z0 * y;
         let w1 = self.z0 * x - self.x0 * z;
         let w2 = self.x0 * y - self.y0 * x;
         // let  w = atan2(sqrt((w = y0 * z - z0 * y) * w + (w = z0 * x - x0 * z) * w + (w = x0 * y - y0 * x) * w), x0 * x + y0 * y + z0 * z);
-        let w = ((w0 * w0 + w1 * w1 + w2 * w2).sqrt()).atan2(self.x0 * x + self.y0 * y + self.z0 * z);
+        let w =
+            ((w0 * w0 + w1 * w1 + w2 * w2).sqrt()).atan2(self.x0 * x + self.y0 * y + self.z0 * z);
         self.W1 += w;
         self.x0 = x;
         self.X1 += w * (self.x0 + x);
@@ -112,7 +112,7 @@ impl CentroidStream {
         self.z0 = z;
         self.Z1 += w * (self.z0 + z);
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
-      }
+    }
 
     fn centroid_line_start(&mut self) {
         self.point_fn = PointFn::CentroidLinePointFirst;
@@ -138,7 +138,7 @@ impl CentroidStream {
     }
 
     fn centroid_ring_point(&mut self, lambda_in: f64, phi_in: f64) {
-        let lambda= lambda_in.to_radians();
+        let lambda = lambda_in.to_radians();
         let phi = phi_in.to_radians();
         let cos_phi = phi.cos();
         let x = cos_phi * lambda.cos();
@@ -150,8 +150,11 @@ impl CentroidStream {
         let m = (cx * cx + cy * cy + cz * cz).sqrt();
         let w = m.asin(); // line weight = angle
         let v: f64;
-        if m != 0f64 { v = -w/m; } else {
-            v = 0f64;}// area weight multiplier
+        if m != 0f64 {
+            v = -w / m;
+        } else {
+            v = 0f64;
+        } // area weight multiplier
 
         self.X2 += v * cx;
         self.Y2 += v * cy;
@@ -164,7 +167,7 @@ impl CentroidStream {
         self.z0 = z;
         self.Z1 += w * (self.z0 + z);
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
-      }
+    }
 
     fn centroid_ring_end(&mut self) {
         self.centroid_point(self.lambda00, self.phi00);
@@ -178,9 +181,8 @@ impl CentroidStream {
     fn polygon() {}
 
     pub fn centroid(&mut self, d_object: DataObject) -> Point {
- 
         convert_obj_to_stream(&d_object, self);
-println!("self {:?}", self);
+        println!("self {:?}", self);
         let mut x = self.X2;
         let mut y = self.Y2;
         let mut z = self.Z2;
@@ -234,11 +236,21 @@ impl Stream for CentroidStream {
 
     fn point(&mut self, x: f64, y: f64, _z: Option<f64>) {
         match self.point_fn {
-            PointFn::CentroidPoint => {self.centroid_point(x, y);}
-            PointFn::CentroidRingPoint => {self.centroid_ring_point(x,y);}
-            PointFn::CentroidRingPointFirst => {self.centroid_ring_point_first(x,y);}
-            PointFn::CentroidLinePoint => {self.centroid_line_point(x,y);}
-            PointFn::CentroidLinePointFirst => {self.centroid_line_point_first(x,y);}
+            PointFn::CentroidPoint => {
+                self.centroid_point(x, y);
+            }
+            PointFn::CentroidRingPoint => {
+                self.centroid_ring_point(x, y);
+            }
+            PointFn::CentroidRingPointFirst => {
+                self.centroid_ring_point_first(x, y);
+            }
+            PointFn::CentroidLinePoint => {
+                self.centroid_line_point(x, y);
+            }
+            PointFn::CentroidLinePointFirst => {
+                self.centroid_line_point_first(x, y);
+            }
         }
         // if self.use_point_first {
         //     self.centroid_point_first(x, y);
