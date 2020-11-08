@@ -1,13 +1,13 @@
 use delaunator::Point;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum FeatureGeometry {
     Point { coordinate: Point },
     Polygon { coordinates: Vec<Vec<Point>> },
     LineString { coordinates: Vec<Point> },
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum FeatureProperty {
     Circumecenter(Point),
     Length(f64),
@@ -20,14 +20,14 @@ pub enum FeatureProperty {
 }
 
 // Signular veriosn of the struct.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct FeatureStruct {
     pub properties: Vec<FeatureProperty>,
     pub geometry: FeatureGeometry,
 }
 
 // Pluralization of the struct,
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct FeaturesStruct {
     pub properties: Vec<FeatureProperty>,
     pub geometry: Vec<FeatureGeometry>,
@@ -37,7 +37,7 @@ pub struct FeaturesStruct {
 ///  Can be special object ( DataObject )
 ///  or a vector of stuff
 ///  Null - here a blank.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum DataObject {
     /// Point - a single position.
     Point {
