@@ -72,7 +72,6 @@ impl Stream for LengthStream {
     // fn sphere(&mut self) {}
 
     fn point(&mut self, x: f64, y: f64, _z: Option<f64>) {
-        println!("enter point");
         match self.point_state {
             PointState::Noop => {
                 // Do nothing.
