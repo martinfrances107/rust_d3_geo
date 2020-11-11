@@ -17,14 +17,11 @@ impl StereographicRaw {
     }
 
     pub fn gen_projection_mutator<'a>() -> ProjectionMutator {
-        println!("Enter gen_projection_mutator.");
         let s = Rc::new(StereographicRaw::new());
         let mut projection = ProjectionMutator::from_projection_raw(s);
         projection.scale(Some(&250f64));
         let angle = 142f64;
-        println!("about to clip angle");
         projection.clip_angle(StreamProcessorValueMaybe::Value(angle));
-        println!("Exit gen_projection_mutator.");
         return projection;
     }
 }
