@@ -60,6 +60,9 @@ pub enum DataObject {
         coordinates: Vec<Vec<Point>>,
     },
     // * MultiPolygon - a multidimensional array of positions forming multiple polygons.
+    MultiPolygon {
+        coordinates: Vec<Vec<Vec<Point>>>,
+    },
     // * GeometryCollection - an array of geometry objects.
     /// Feature - a feature containing one of the above geometry objects.
     Feature {

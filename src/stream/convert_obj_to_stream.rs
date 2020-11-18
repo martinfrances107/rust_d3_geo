@@ -27,7 +27,7 @@ pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
         DataObject::Feature {
             feature: FeatureStruct { geometry, .. },
         } => {
-            return processor(&geometry, stream);
+            processor(&geometry, stream);
         }
 
         DataObject::FeatureCollection { features } => {
@@ -43,6 +43,15 @@ pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
                 coordinates: coordinates.to_vec(),
             };
             processor(&g, stream);
+        }
+
+        DataObject::MultiPolygon { coordinates, .. } => {
+            for c in coordinates {
+                let g = FeatureGeometry::Polygon {
+                    coordinates: c.to_vec(),
+                };
+                processor(&g, stream);
+            }
         }
 
         // What remains is a Geometry object.
