@@ -53,7 +53,14 @@ pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
             processor(&g, stream);
         }
 
-        DataObject::MultiLineString { coordinates: _, .. } => {}
+        DataObject::MultiLineString { coordinates, .. } => {
+            for coordinate in coordinates {
+                let g = FeatureGeometry::LineString {
+                    coordinates: coordinate.to_vec(),
+                };
+                processor(&g, stream);
+            }
+        }
 
         DataObject::Vec(_) => {
             panic!("Must implement a method for converting a vec to a stream!");
