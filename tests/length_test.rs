@@ -10,6 +10,24 @@ mod length_test {
     use std::f64::consts::PI;
 
     #[test]
+    fn point_returns_zero() {
+        println!("geoLength(Point) returns zero");
+        let length = LengthStream::calc(DataObject::Point {
+            coordinate: Point { x: 0f64, y: 0f64 },
+        });
+        assert_eq!(length, 0f64);
+    }
+
+    #[test]
+    fn multipoint_returns_zero() {
+        println!("geoLength(Point) returns zero");
+        let length = LengthStream::calc(DataObject::MultiPoint {
+            coordinates: vec![Point { x: 0f64, y: 1f64 }, Point { x: 2f64, y: 3f64 }],
+        });
+        assert_eq!(length, 0f64);
+    }
+
+    #[test]
     fn line_string_great_arc_segements() {
         println!("geoLength(LineString) returns the sum of its great-arc segments");
         assert!(in_delta(

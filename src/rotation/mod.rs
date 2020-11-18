@@ -1,4 +1,3 @@
-
 pub mod rotate_radians;
 pub mod rotation;
 
@@ -11,8 +10,8 @@ mod tests {
     use super::*;
     use crate::in_delta::in_delta;
     use crate::Transform;
-    use rotation::Rotation;
     use delaunator::Point;
+    use rotation::Rotation;
 
     #[test]
     fn only_longitude() {

@@ -8,6 +8,22 @@ use crate::data_object::FeatureStruct;
 
 pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
     match object {
+        DataObject::Point { coordinate } => {
+            let g = FeatureGeometry::Point {
+                coordinate: coordinate.clone(),
+            };
+            processor(&g, stream);
+        }
+
+        DataObject::MultiPoint { coordinates } => {
+            for coordinate in coordinates {
+                let g = FeatureGeometry::Point {
+                    coordinate: coordinate.clone(),
+                };
+                processor(&g, stream);
+            }
+        }
+
         DataObject::Feature {
             feature: FeatureStruct { geometry, .. },
         } => {
@@ -29,13 +45,6 @@ pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
             processor(&g, stream);
         }
 
-        DataObject::Point { coordinate } => {
-            let g = FeatureGeometry::Point {
-                coordinate: coordinate.clone(),
-            };
-            processor(&g, stream);
-        }
-
         // What remains is a Geometry object.
         DataObject::LineString { coordinates, .. } => {
             let g = FeatureGeometry::LineString {
@@ -47,7 +56,7 @@ pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
         DataObject::MultiLineString { coordinates: _, .. } => {}
 
         DataObject::Vec(_) => {
-            panic!("Must implemet a method for converting a vec to a stream!");
+            panic!("Must implement a method for converting a vec to a stream!");
         }
 
         DataObject::Blank => {

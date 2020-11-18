@@ -44,6 +44,9 @@ pub enum DataObject {
         coordinate: Point,
     },
     // * MultiPoint - an array of positions.
+    MultiPoint {
+        coordinates: Vec<Point>,
+    },
     // * LineString - an array of positions forming a continuous line.
     LineString {
         coordinates: Vec<Point>,
