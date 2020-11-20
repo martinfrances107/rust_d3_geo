@@ -94,11 +94,11 @@ impl TransformStream for Line {
         self.clean = 1;
     }
 
-    fn point(&mut self, lambda: f64, phi: f64, m: Option<u8>) {
+    fn point(&mut self, lambda: f64, phi: f64, _m: Option<u8>) {
         let mut point1 = Point { x: lambda, y: phi };
 
         // let point2: (Option::<Point>, <Option<u8>>);
-        let mut point2: (Option<Point>, Option<u8>);
+        let mut point2;
         let v = (self.visible)(lambda, phi, None);
 
         let c = match self.small_radius {
@@ -128,7 +128,7 @@ impl TransformStream for Line {
         }
 
         if v != self.v0 {
-            let point2 = intersect(
+            point2 = intersect(
                 self.point0.clone().unwrap(),
                 point1.clone(),
                 self.radius.cos(),
@@ -178,7 +178,7 @@ impl TransformStream for Line {
                 }
             } else {
                 // inside going out
-                let point2 = intersect(self.point0.clone().unwrap(), point1, self.rc, false);
+                point2 = intersect(self.point0.clone().unwrap(), point1, self.rc, false);
                 match point2 {
                     IntersectReturn::None => {
                         // TODO should I stream a null point here?
