@@ -1,5 +1,5 @@
+#[cfg(test)]
 mod stereographic_tests {
-    #[cfg(test)]
     use delaunator::Point;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;

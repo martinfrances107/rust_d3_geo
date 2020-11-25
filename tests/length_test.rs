@@ -1,5 +1,5 @@
+#[cfg(test)]
 mod length_test {
-    #[cfg(test)]
     extern crate pretty_assertions;
     use delaunator::Point;
     use rust_d3_geo::data_object::DataObject;

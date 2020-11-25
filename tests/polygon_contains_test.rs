@@ -1,7 +1,7 @@
+#[cfg(test)]
 mod polygon_contains_test {
     extern crate pretty_assertions;
 
-    #[cfg(test)]
     use pretty_assertions::assert_eq;
     use std::rc::Rc;
 

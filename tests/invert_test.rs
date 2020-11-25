@@ -1,5 +1,5 @@
+#[cfg(test)]
 mod innvert_test {
-    #[cfg(test)]
     extern crate pretty_assertions;
 
     use delaunator::Point;
