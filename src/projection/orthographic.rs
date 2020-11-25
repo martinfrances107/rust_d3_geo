@@ -9,34 +9,33 @@ use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
 
 #[derive(Clone, Debug)]
-pub struct StereographicRaw {}
+pub struct OrthographicRaw {}
 
-impl StereographicRaw {
+impl OrthographicRaw {
     fn new() -> Box<dyn Transform> {
         return Box::new(Self {});
     }
 
     pub fn gen_projection_mutator<'a>() -> ProjectionMutator {
-        let s = Rc::new(StereographicRaw::new());
+        let s = Rc::new(OrthographicRaw::new());
         let mut projection = ProjectionMutator::from_projection_raw(s);
-        projection.scale(Some(&250f64));
-        projection.clip_angle(StreamProcessorValueMaybe::Value(142f64));
+        projection.scale(Some(&249.5f64));
+        let angle = 249.5f64;
+        projection.clip_angle(StreamProcessorValueMaybe::Value(angle));
         return projection;
     }
 }
 
-impl Transform for StereographicRaw {
+impl Transform for OrthographicRaw {
     fn transform(&self, p: &Point) -> Point {
-        let cy = p.y.cos();
-        let k = 1f64 + p.x.cos() * cy;
         return Point {
-            x: cy * p.x.sin() / k,
-            y: p.y.sin() / k,
+            x: p.y.cos() * p.x.sin(),
+            y: p.y.sin(),
         };
     }
 
     fn invert(&self, p: &Point) -> Point {
-        let f = Box::new(|z: f64| 2f64 * z.atan());
+        let f = Box::new(|z: f64| z.asin());
         let g = azimuthal_invert(f);
         return g(p.x, p.y);
     }

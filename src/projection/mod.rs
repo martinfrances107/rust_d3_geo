@@ -5,6 +5,7 @@ mod stream_wrapper;
 mod transform_radians;
 mod transform_rotate;
 
+pub mod orthographic;
 pub mod projection;
 pub mod projection_equal;
 pub mod projection_mutator;
