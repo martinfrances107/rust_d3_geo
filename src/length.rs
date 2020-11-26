@@ -4,29 +4,28 @@ use super::data_object::DataObject;
 use super::stream::convert_obj_to_stream::convert_obj_to_stream;
 use super::stream::Stream;
 
-enum PointState {
-    Noop,
-    First,
-    Point,
-}
 pub struct LengthStream {
+    // sphere_fn: fn(&mut Self, f64, f64),
+    point_fn: fn(&mut Self, f64, f64),
+    line_start_fn: fn(&mut Self),
+    line_end_fn: fn(&mut Self),
     length_sum: f64,
     lambda0: f64,
     sin_phi0: f64,
     cos_phi0: f64,
-    point_state: PointState,
-    use_length_line_end: bool,
 }
 
 impl Default for LengthStream {
     fn default() -> Self {
         return Self {
+            // sphere_fn: Self::noop,
+            point_fn: Self::point_noop,
+            line_start_fn: Self::length_line_start,
+            line_end_fn: Self::line_end_noop,
             length_sum: 0f64,
             lambda0: 0f64,
             sin_phi0: 0f64,
             cos_phi0: 0f64,
-            point_state: PointState::Noop,
-            use_length_line_end: false,
         };
     }
 }
@@ -44,7 +43,7 @@ impl LengthStream {
         self.lambda0 = lambda;
         self.sin_phi0 = phi.sin();
         self.cos_phi0 = phi.cos();
-        self.point_state = PointState::Point;
+        self.point_fn = Self::length_point;
     }
 
     fn length_point(&mut self, lambda_p: f64, phi_p: f64) {
@@ -66,35 +65,31 @@ impl LengthStream {
         self.sin_phi0 = sin_phi;
         self.cos_phi0 = cos_phi;
     }
+
+    fn length_line_end(&mut self) {
+        self.point_fn = Self::point_noop;
+        self.line_end_fn = Self::line_end_noop;
+    }
+
+    fn length_line_start(&mut self) {
+        self.point_fn = Self::length_point_first;
+        self.line_end_fn = Self::length_line_end;
+    }
+    fn point_noop(&mut self, _x: f64, _y: f64) {}
+    fn line_end_noop(&mut self) {}
 }
 
 impl Stream for LengthStream {
-    // fn sphere(&mut self) {}
-
     fn point(&mut self, x: f64, y: f64, _z: Option<f64>) {
-        match self.point_state {
-            PointState::Noop => {
-                // Do nothing.
-            }
-            PointState::First => {
-                self.length_point_first(x, y);
-            }
-            PointState::Point => {
-                self.length_point(x, y);
-            }
-        }
+        (self.point_fn)(self, x, y);
     }
 
     fn line_start(&mut self) {
-        self.point_state = PointState::First;
-        self.use_length_line_end = true;
+        (self.line_start_fn)(self);
     }
 
     fn line_end(&mut self) {
-        if self.use_length_line_end {
-            self.point_state = PointState::Noop;
-            self.use_length_line_end = false;
-        }
+        (self.line_end_fn)(self);
     }
     fn polygon_start(&mut self) {}
 

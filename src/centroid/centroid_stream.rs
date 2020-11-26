@@ -9,16 +9,6 @@ use delaunator::Point;
 pub const EPSILON: f64 = 1e-6;
 pub const EPSILON2: f64 = 1e-12;
 
-#[derive(Clone, Copy, Debug)]
-enum PointFn {
-    CentroidPoint,
-    CentroidLinePoint,
-    CentroidLinePointFirst,
-    CentroidRingPoint,
-    CentroidRingPointFirst,
-}
-
-#[derive(Clone, Copy, Debug)]
 #[allow(non_snake_case)]
 pub struct CentroidStream {
     W0: f64,
@@ -37,9 +27,9 @@ pub struct CentroidStream {
     x0: f64,
     y0: f64,
     z0: f64, // previous point
-    point_fn: PointFn,
-    use_ring_start: bool,
-    use_ring_end: bool,
+    point_fn: fn(&mut Self, f64, f64),
+    line_start_fn: fn(&mut Self),
+    line_end_fn: fn(&mut Self),
 }
 
 impl Default for CentroidStream {
@@ -61,9 +51,9 @@ impl Default for CentroidStream {
             x0: 0f64,
             y0: 0f64,
             z0: 0f64,
-            point_fn: PointFn::CentroidPoint,
-            use_ring_start: false,
-            use_ring_end: false,
+            point_fn: Self::centroid_point,
+            line_start_fn: Self::centroid_line_start,
+            line_end_fn: Self::centroid_line_end,
         };
     }
 }
@@ -77,7 +67,7 @@ impl CentroidStream {
     }
 
     fn centroid_line_end(&mut self) {
-        self.point_fn = PointFn::CentroidPoint;
+        self.point_fn = Self::centroid_point;
     }
 
     fn centroid_line_point_first(&mut self, lambda_in: f64, phi_in: f64) {
@@ -87,7 +77,7 @@ impl CentroidStream {
         self.x0 = cos_phi * lambda.cos();
         self.y0 = cos_phi * lambda.sin();
         self.z0 = phi.sin();
-        self.point_fn = PointFn::CentroidLinePoint;
+        self.point_fn = Self::centroid_line_point;
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
@@ -115,7 +105,7 @@ impl CentroidStream {
     }
 
     fn centroid_line_start(&mut self) {
-        self.point_fn = PointFn::CentroidLinePointFirst;
+        self.point_fn = Self::centroid_line_point_first;
     }
 
     /// Arithmetic mean of Cartesian vectors.
@@ -133,7 +123,7 @@ impl CentroidStream {
         self.x0 = cos_phi * lambda.cos();
         self.y0 = cos_phi * lambda.sin();
         self.z0 = phi.sin();
-        self.point_fn = PointFn::CentroidRingPoint;
+        self.point_fn = Self::centroid_ring_point;
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
@@ -171,16 +161,15 @@ impl CentroidStream {
 
     fn centroid_ring_end(&mut self) {
         self.centroid_point(self.lambda00, self.phi00);
-        self.point_fn = PointFn::CentroidPoint
+        self.point_fn = Self::centroid_point;
     }
 
     fn centroid_ring_start(&mut self) {
-        self.point_fn = PointFn::CentroidRingPointFirst;
+        self.point_fn = Self::centroid_ring_point_first;
     }
 
     pub fn centroid(&mut self, d_object: DataObject) -> Point {
         convert_obj_to_stream(&d_object, self);
-        println!("self {:?}", self);
         let mut x = self.X2;
         let mut y = self.Y2;
         let mut z = self.Z2;
@@ -217,48 +206,24 @@ impl CentroidStream {
 
 impl Stream for CentroidStream {
     fn line_end(&mut self) {
-        if self.use_ring_end {
-            self.centroid_ring_end();
-        } else {
-            self.centroid_line_end();
-        }
+        (self.line_start_fn)(self);
     }
 
     fn line_start(&mut self) {
-        if self.use_ring_start {
-            self.centroid_ring_start();
-        } else {
-            self.centroid_line_start();
-        }
+        (self.line_start_fn)(self);
     }
 
     fn point(&mut self, x: f64, y: f64, _z: Option<f64>) {
-        match self.point_fn {
-            PointFn::CentroidPoint => {
-                self.centroid_point(x, y);
-            }
-            PointFn::CentroidRingPoint => {
-                self.centroid_ring_point(x, y);
-            }
-            PointFn::CentroidRingPointFirst => {
-                self.centroid_ring_point_first(x, y);
-            }
-            PointFn::CentroidLinePoint => {
-                self.centroid_line_point(x, y);
-            }
-            PointFn::CentroidLinePointFirst => {
-                self.centroid_line_point_first(x, y);
-            }
-        }
+        (self.point_fn)(self, x, y);
     }
 
     fn polygon_start(&mut self) {
-        self.use_ring_start = true;
-        self.use_ring_end = true;
+        self.line_start_fn = Self::centroid_ring_start;
+        self.line_end_fn = Self::centroid_ring_end;
     }
 
     fn polygon_end(&mut self) {
-        self.use_ring_start = false;
-        self.use_ring_end = false;
+        self.line_start_fn = Self::centroid_line_start;
+        self.line_end_fn = Self::centroid_line_end;
     }
 }
