@@ -54,7 +54,12 @@ pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
             }
         }
 
-        // What remains is a Geometry object.
+        DataObject::GeometryCollection { geometries } => {
+            for g in geometries {
+                processor(&g, stream);
+            }
+        }
+
         DataObject::LineString { coordinates, .. } => {
             let g = FeatureGeometry::LineString {
                 coordinates: coordinates.to_vec(),
@@ -72,11 +77,11 @@ pub fn convert_obj_to_stream(object: &DataObject, stream: &mut impl Stream) {
         }
 
         DataObject::Vec(_) => {
-            panic!("Must implement a method for converting a vec to a stream!");
+            unimplemented!("Must implement a method for converting a vec to a stream!");
         }
 
         DataObject::Blank => {
-            panic!("No method of converting blank to stream.");
+            unimplemented!("No method of converting blank to stream.");
         }
     }
 }

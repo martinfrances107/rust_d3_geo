@@ -3,6 +3,7 @@ use delaunator::Point;
 #[derive(Clone, Debug)]
 pub enum FeatureGeometry {
     Point { coordinate: Point },
+    MultiPoint { coordinates: Vec<Point> },
     Polygon { coordinates: Vec<Vec<Point>> },
     LineString { coordinates: Vec<Point> },
 }
@@ -43,11 +44,11 @@ pub enum DataObject {
     Point {
         coordinate: Point,
     },
-    // * MultiPoint - an array of positions.
+    ///  MultiPoint - an array of positions.
     MultiPoint {
         coordinates: Vec<Point>,
     },
-    // * LineString - an array of positions forming a continuous line.
+    ///  LineString - an array of positions forming a continuous line.
     LineString {
         coordinates: Vec<Point>,
     },
@@ -55,15 +56,18 @@ pub enum DataObject {
     MultiLineString {
         coordinates: Vec<Vec<Point>>,
     },
-    // * Polygon - an array of arrays of positions forming a polygon (possibly with holes).
+    /// Polygon - an array of arrays of positions forming a polygon (possibly with holes).
     Polygon {
         coordinates: Vec<Vec<Point>>,
     },
-    // * MultiPolygon - a multidimensional array of positions forming multiple polygons.
+    /// MultiPolygon - a multidimensional array of positions forming multiple polygons.
     MultiPolygon {
         coordinates: Vec<Vec<Vec<Point>>>,
     },
-    // * GeometryCollection - an array of geometry objects.
+    /// GeometryCollection - an array of geometry objects.
+    GeometryCollection {
+        geometries: Vec<FeatureGeometry>,
+    },
     /// Feature - a feature containing one of the above geometry objects.
     Feature {
         feature: FeatureStruct,
@@ -72,8 +76,7 @@ pub enum DataObject {
     FeatureCollection {
         features: Vec<FeaturesStruct>,
     },
-    // A feature containing one of the above geometry objects.
-    // Polygon{coordinates: Vec<usize>},
+
     Vec(Vec<Point>),
 
     Blank,

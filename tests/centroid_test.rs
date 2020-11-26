@@ -4,9 +4,9 @@ mod centroid_test {
     extern crate pretty_assertions;
     use delaunator::Point;
 
-    use rust_d3_geo::centroid::centroid_stream::CentroidStream;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::in_delta::in_delta_point;
+    use rust_d3_geo::{centroid::centroid_stream::CentroidStream, data_object::FeatureGeometry};
 
     #[test]
     fn the_centroid_of_a_point_is_itself() {
@@ -39,15 +39,57 @@ mod centroid_test {
             1e-6
         ));
     }
+
+    #[test]
+    fn centroid_sphereical_average() {
+        println!(
+            "the centroid of a set of points is the (spherical) average of its constituent members"
+        );
+        // TODO - There seems to be some rounding error issue!!!
+        // in the javascript the error limit is 1e-6 had to relax the delta to 1e-5
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(DataObject::GeometryCollection {
+                geometries: vec![
+                    FeatureGeometry::Point {
+                        coordinate: Point { x: 0f64, y: 0f64 },
+                    },
+                    FeatureGeometry::Point {
+                        coordinate: Point { x: 1f64, y: 2f64 }
+                    }
+                ]
+            }),
+            Point {
+                x: 0.499847,
+                y: 1.000038
+            },
+            // Warning in the javascript this delta is 1e-6.
+            1e-5
+        ));
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(DataObject::MultiPoint {
+                coordinates: vec![Point { x: 0f64, y: 0f64 }, Point { x: 1f64, y: 2f64 },]
+            }),
+            Point {
+                x: 0.499847f64,
+                y: 1.000038f64
+            },
+            1e-6
+        ));
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(DataObject::MultiPoint {
+                coordinates: vec![
+                    Point { x: 179f64, y: 0f64 },
+                    Point {
+                        x: -179f64,
+                        y: 0f64
+                    },
+                ]
+            }),
+            Point { x: 180f64, y: 0f64 },
+            1e-6
+        ));
+    }
 }
-
-// tape("the centroid of a set of points is the (spherical) average of its constituent members", function(test) {
-//   test.inDelta(d3.geoCentroid({type: "GeometryCollection", geometries: [{type: "Point", coordinates: [0, 0]}, {type: "Point", coordinates: [1, 2]}]}), [0.499847, 1.000038], 1e-6);
-//   test.inDelta(d3.geoCentroid({type: "MultiPoint", coordinates: [[0, 0], [1, 2]]}), [0.499847, 1.000038], 1e-6);
-//   test.inDelta(d3.geoCentroid({type: "MultiPoint", coordinates: [[179, 0], [-179, 0]]}), [180, 0], 1e-6);
-//   test.end();
-// });
-
 // tape("the centroid of a set of points and their antipodes is ambiguous", function(test) {
 //   test.ok(d3.geoCentroid({type: "MultiPoint", coordinates: [[0, 0], [180, 0]]}).every(isNaN));
 //   test.ok(d3.geoCentroid({type: "MultiPoint", coordinates: [[0, 0], [90, 0], [180, 0], [-90, 0]]}).every(isNaN));

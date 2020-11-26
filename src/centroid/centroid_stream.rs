@@ -71,9 +71,9 @@ impl Default for CentroidStream {
 impl CentroidStream {
     fn centroid_point_cartesian(&mut self, x: f64, y: f64, z: f64) {
         self.W0 += 1f64;
-        self.X0 = (x - self.X0) / self.W0;
-        self.Y0 = (y - self.Y0) / self.W0;
-        self.Z0 = (z - self.Z0) / self.W0;
+        self.X0 += (x - self.X0) / self.W0;
+        self.Y0 += (y - self.Y0) / self.W0;
+        self.Z0 += (z - self.Z0) / self.W0;
     }
 
     fn centroid_line_end(&mut self) {
@@ -250,11 +250,6 @@ impl Stream for CentroidStream {
                 self.centroid_line_point_first(x, y);
             }
         }
-        // if self.use_point_first {
-        //     self.centroid_point_first(x, y);
-        // } else {
-        //     self.centroid_point(x, y);
-        // }
     }
 
     fn polygon_start(&mut self) {

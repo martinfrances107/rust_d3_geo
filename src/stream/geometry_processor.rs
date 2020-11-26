@@ -12,7 +12,11 @@ pub fn processor(geometry: &FeatureGeometry, stream: &mut impl Stream) {
         FeatureGeometry::Point { coordinate, .. } => {
             stream.point(coordinate.x, coordinate.y, None);
         }
-
+        FeatureGeometry::MultiPoint { coordinates, .. } => {
+            for c in coordinates {
+                stream.point(c.x, c.y, None);
+            }
+        }
         FeatureGeometry::Polygon { coordinates, .. } => {
             polygon(coordinates, stream);
         }
