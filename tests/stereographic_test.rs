@@ -1,3 +1,4 @@
+#[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod stereographic_tests {
     use delaunator::Point;
