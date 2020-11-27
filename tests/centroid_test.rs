@@ -45,8 +45,6 @@ mod centroid_test {
         println!(
             "the centroid of a set of points is the (spherical) average of its constituent members"
         );
-        // TODO - There seems to be some rounding error issue!!!
-        // in the javascript the error limit is 1e-6 had to relax the delta to 1e-5
         assert!(in_delta_point(
             CentroidStream::default().centroid(DataObject::GeometryCollection {
                 geometries: vec![
@@ -62,8 +60,7 @@ mod centroid_test {
                 x: 0.499847,
                 y: 1.000038
             },
-            // Warning in the javascript this delta is 1e-6.
-            1e-5
+            1e-6
         ));
         assert!(in_delta_point(
             CentroidStream::default().centroid(DataObject::MultiPoint {

@@ -152,7 +152,7 @@ impl CentroidStream {
         self.W1 += w;
         self.x0 = x;
         self.X1 += w * (self.x0 + x);
-        self.y0 = x;
+        self.y0 = y;
         self.Y1 += w * (self.y0 + y);
         self.z0 = z;
         self.Z1 += w * (self.z0 + z);
@@ -173,9 +173,8 @@ impl CentroidStream {
         let mut x = self.X2;
         let mut y = self.Y2;
         let mut z = self.Z2;
-        let mut m = x * x + y * y + z * z;
-
-        // If the area-weighted ccentroid is undefined, fall back to length-weighted centroid.
+        let mut m = (x * x + y * y + z * z).sqrt();
+        // If the area-weighted ccentroid is undefined, fall back to length-weighted ccentroid.
         if m < EPSILON2 {
             x = self.X1;
             y = self.Y1;
@@ -186,7 +185,7 @@ impl CentroidStream {
                 y = self.Y0;
                 z = self.Z0;
             }
-            m = x * x + y * y + z * z;
+            m = (x * x + y * y + z * z).sqrt();
 
             // If the feature still has an undefined centroid, then return.
             if m < EPSILON2 {
@@ -199,14 +198,14 @@ impl CentroidStream {
 
         return Point {
             x: y.atan2(x).to_degrees(),
-            y: (z / m.sqrt()).asin().to_degrees(),
+            y: (z / m).asin().to_degrees(),
         };
     }
 }
 
 impl Stream for CentroidStream {
     fn line_end(&mut self) {
-        (self.line_start_fn)(self);
+        (self.line_end_fn)(self);
     }
 
     fn line_start(&mut self) {

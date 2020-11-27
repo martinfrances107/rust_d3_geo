@@ -5,7 +5,6 @@ mod stereographic_tests {
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::stereographic::StereographicRaw;
-    // use rust_d3_geo::Transform;
 
     #[test]
     fn test_stereographic() {
