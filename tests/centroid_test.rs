@@ -86,7 +86,7 @@ mod centroid_test {
             1e-6
         ));
     }
-}
+
 // tape("the centroid of a set of points and their antipodes is ambiguous", function(test) {
 //   test.ok(d3.geoCentroid({type: "MultiPoint", coordinates: [[0, 0], [180, 0]]}).every(isNaN));
 //   test.ok(d3.geoCentroid({type: "MultiPoint", coordinates: [[0, 0], [90, 0], [180, 0], [-90, 0]]}).every(isNaN));
@@ -110,6 +110,121 @@ mod centroid_test {
 //   test.inDelta(d3.geoCentroid({type: "LineString", coordinates: [[-180, -90], [0, 0], [0, 90]]}), [0, 0], 1e-6);
 //   test.end();
 // });
+#[test]
+fn line_string_great_arc_segments() {
+    println!("the centroid of a line string is the (spherical) average of its constituent great arc segments");
+    assert!(in_delta_point(
+        CentroidStream::default().centroid(DataObject::LineString {
+            coordinates: vec![
+                Point {
+                    x: 0.0f64,
+                    y: 0.0f64
+                },
+                Point {
+                    x: 1.0f64,
+                    y: 0.0f64
+                },
+            ]
+        }),
+        Point { x: 0.5f64, y: 0f64 },
+        1e-6
+    ));
+
+    assert!(in_delta_point(
+        CentroidStream::default().centroid(DataObject::LineString {
+            coordinates: vec![
+                Point {
+                    x: 0.0f64,
+                    y: 0.0f64
+                },
+                Point { x: 0f64, y: 90f64 },
+            ]
+        }),
+        Point { x: 0f64, y: 45f64 },
+        1e-6
+    ));
+
+    assert!(in_delta_point(
+        CentroidStream::default().centroid(DataObject::LineString {
+            coordinates: vec![
+                Point { x: 0f64, y: 0f64 },
+                Point { x: 0f64, y: 45f64 },
+                Point { x: 0f64, y: 90f64 }
+            ]
+        }),
+        Point { x: 0f64, y: 45f64 },
+        1e-6
+    ));
+
+    assert!(in_delta_point(
+        CentroidStream::default().centroid(DataObject::LineString {
+            coordinates: vec![Point { x: -1f64, y: -1f64 }, Point { x: 1f64, y: 1f64 },]
+        }),
+        Point { x: 0f64, y: 0f64 },
+        1e-6
+    ));
+
+    assert!(in_delta_point(
+        CentroidStream::default().centroid(DataObject::LineString {
+            coordinates: vec![
+                Point {
+                    x: -60f64,
+                    y: -1f64
+                },
+                Point { x: 60f64, y: 1f64 },
+            ]
+        }),
+        Point { x: 0f64, y: 0f64 },
+        1e-6
+    ));
+
+    assert!(in_delta_point(
+        CentroidStream::default().centroid(DataObject::LineString {
+            coordinates: vec![
+                Point {
+                    x: 179f64,
+                    y: -1f64
+                },
+                Point {
+                    x: -179f64,
+                    y: 1f64
+                },
+            ]
+        }),
+        Point { x: 180f64, y: 0f64 },
+        1e-6
+    ));
+
+    assert!(in_delta_point(
+        CentroidStream::default().centroid(DataObject::LineString {
+            coordinates: vec![
+                Point {
+                    x: -179f64,
+                    y: 0f64
+                },
+                Point { x: 0f64, y: 0f64 },
+                Point { x: 179f64, y: 0f64 },
+            ]
+        }),
+        Point { x: 0f64, y: 0f64 },
+        1e-6
+    ));
+
+    assert!(in_delta_point(
+        CentroidStream::default().centroid(DataObject::LineString {
+            coordinates: vec![
+                Point {
+                    x: -180f64,
+                    y: -90f64
+                },
+                Point { x: 0f64, y: 0f64 },
+                Point { x: 0f64, y: 90f64 },
+            ]
+        }),
+        Point { x: 0f64, y: 0f64 },
+        1e-6
+    ));
+}
 
 // tape("the centroid of a great arc from a point to its antipode is ambiguous", function(test) {
 //   test.ok(d3.geoCentroid({type: "LineString", coordinates: [[180, 0], [0, 0]]}).every(isNaN));
@@ -284,3 +399,4 @@ mod centroid_test {
 //   test.inDelta(d3.geoCentroid(ny), [-73.93079, 40.69447], 1e-5);
 //   test.end();
 // });
+}

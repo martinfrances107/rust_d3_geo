@@ -95,12 +95,12 @@ impl CentroidStream {
         let w =
             ((w0 * w0 + w1 * w1 + w2 * w2).sqrt()).atan2(self.x0 * x + self.y0 * y + self.z0 * z);
         self.W1 += w;
-        self.x0 = x;
         self.X1 += w * (self.x0 + x);
-        self.y0 = y;
+        self.x0 = x;
         self.Y1 += w * (self.y0 + y);
-        self.z0 = z;
+        self.y0 = y;
         self.Z1 += w * (self.z0 + z);
+        self.z0 = z;
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
