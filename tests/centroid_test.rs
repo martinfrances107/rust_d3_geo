@@ -11,28 +11,28 @@ mod centroid_test {
     #[test]
     fn the_centroid_of_a_point_is_itself() {
         assert!(in_delta_point(
-            CentroidStream::default().centroid(DataObject::Point {
+            CentroidStream::default().centroid(&DataObject::Point {
                 coordinate: Point { x: 0f64, y: 0f64 }
             }),
             Point { x: 0f64, y: 0f64 },
             1e-6
         ));
         assert!(in_delta_point(
-            CentroidStream::default().centroid(DataObject::Point {
+            CentroidStream::default().centroid(&DataObject::Point {
                 coordinate: Point { x: 1f64, y: 1f64 }
             }),
             Point { x: 1f64, y: 1f64 },
             1e-6
         ));
         assert!(in_delta_point(
-            CentroidStream::default().centroid(DataObject::Point {
+            CentroidStream::default().centroid(&DataObject::Point {
                 coordinate: Point { x: 2f64, y: 3f64 }
             }),
             Point { x: 2f64, y: 3f64 },
             1e-6
         ));
         assert!(in_delta_point(
-            CentroidStream::default().centroid(DataObject::Point {
+            CentroidStream::default().centroid(&DataObject::Point {
                 coordinate: Point { x: -4f64, y: -5f64 }
             }),
             Point { x: -4f64, y: -5f64 },
@@ -46,7 +46,7 @@ mod centroid_test {
             "the centroid of a set of points is the (spherical) average of its constituent members"
         );
         assert!(in_delta_point(
-            CentroidStream::default().centroid(DataObject::GeometryCollection {
+            CentroidStream::default().centroid(&DataObject::GeometryCollection {
                 geometries: vec![
                     FeatureGeometry::Point {
                         coordinate: Point { x: 0f64, y: 0f64 },
@@ -63,7 +63,7 @@ mod centroid_test {
             1e-6
         ));
         assert!(in_delta_point(
-            CentroidStream::default().centroid(DataObject::MultiPoint {
+            CentroidStream::default().centroid(&DataObject::MultiPoint {
                 coordinates: vec![Point { x: 0f64, y: 0f64 }, Point { x: 1f64, y: 2f64 },]
             }),
             Point {
@@ -73,7 +73,7 @@ mod centroid_test {
             1e-6
         ));
         assert!(in_delta_point(
-            CentroidStream::default().centroid(DataObject::MultiPoint {
+            CentroidStream::default().centroid(&DataObject::MultiPoint {
                 coordinates: vec![
                     Point { x: 179f64, y: 0f64 },
                     Point {
@@ -114,7 +114,7 @@ mod centroid_test {
 fn line_string_great_arc_segments() {
     println!("the centroid of a line string is the (spherical) average of its constituent great arc segments");
     assert!(in_delta_point(
-        CentroidStream::default().centroid(DataObject::LineString {
+        CentroidStream::default().centroid(&DataObject::LineString {
             coordinates: vec![
                 Point {
                     x: 0.0f64,
@@ -131,7 +131,7 @@ fn line_string_great_arc_segments() {
     ));
 
     assert!(in_delta_point(
-        CentroidStream::default().centroid(DataObject::LineString {
+        CentroidStream::default().centroid(&DataObject::LineString {
             coordinates: vec![
                 Point {
                     x: 0.0f64,
@@ -145,7 +145,7 @@ fn line_string_great_arc_segments() {
     ));
 
     assert!(in_delta_point(
-        CentroidStream::default().centroid(DataObject::LineString {
+        CentroidStream::default().centroid(&DataObject::LineString {
             coordinates: vec![
                 Point { x: 0f64, y: 0f64 },
                 Point { x: 0f64, y: 45f64 },
@@ -157,7 +157,7 @@ fn line_string_great_arc_segments() {
     ));
 
     assert!(in_delta_point(
-        CentroidStream::default().centroid(DataObject::LineString {
+        CentroidStream::default().centroid(&DataObject::LineString {
             coordinates: vec![Point { x: -1f64, y: -1f64 }, Point { x: 1f64, y: 1f64 },]
         }),
         Point { x: 0f64, y: 0f64 },
@@ -165,7 +165,7 @@ fn line_string_great_arc_segments() {
     ));
 
     assert!(in_delta_point(
-        CentroidStream::default().centroid(DataObject::LineString {
+        CentroidStream::default().centroid(&DataObject::LineString {
             coordinates: vec![
                 Point {
                     x: -60f64,
@@ -179,7 +179,7 @@ fn line_string_great_arc_segments() {
     ));
 
     assert!(in_delta_point(
-        CentroidStream::default().centroid(DataObject::LineString {
+        CentroidStream::default().centroid(&DataObject::LineString {
             coordinates: vec![
                 Point {
                     x: 179f64,
@@ -196,7 +196,7 @@ fn line_string_great_arc_segments() {
     ));
 
     assert!(in_delta_point(
-        CentroidStream::default().centroid(DataObject::LineString {
+        CentroidStream::default().centroid(&DataObject::LineString {
             coordinates: vec![
                 Point {
                     x: -179f64,
@@ -211,7 +211,7 @@ fn line_string_great_arc_segments() {
     ));
 
     assert!(in_delta_point(
-        CentroidStream::default().centroid(DataObject::LineString {
+        CentroidStream::default().centroid(&DataObject::LineString {
             coordinates: vec![
                 Point {
                     x: -180f64,
