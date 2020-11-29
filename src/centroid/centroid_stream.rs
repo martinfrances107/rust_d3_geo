@@ -1,5 +1,4 @@
 use crate::data_object::DataObject;
-use crate::stream::convert_obj_to_stream::convert_obj_to_stream;
 use crate::stream::Stream;
 
 #[allow(non_snake_case)]
@@ -168,8 +167,8 @@ impl CentroidStream {
         self.point_fn = Self::centroid_ring_point_first;
     }
 
-    pub fn centroid(&mut self, d_object: &DataObject) -> Point {
-        convert_obj_to_stream(d_object, self);
+    pub fn centroid(&mut self, d_object: &impl DataObject) -> Point {
+        d_object.to_stream(self);
         let mut x = self.X2;
         let mut y = self.Y2;
         let mut z = self.Z2;

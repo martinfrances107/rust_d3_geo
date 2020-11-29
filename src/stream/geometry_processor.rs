@@ -1,7 +1,7 @@
 use super::line::line;
 use super::polygon::polygon;
 
-use crate::data_object::FeatureGeometry;
+use crate::data_object::feature_geometry::FeatureGeometry;
 use crate::stream::Stream;
 
 pub fn processor(geometry: &FeatureGeometry, stream: &mut impl Stream) {

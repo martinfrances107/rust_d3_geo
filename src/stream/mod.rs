@@ -1,5 +1,4 @@
-pub mod convert_obj_to_stream;
-mod geometry_processor;
+pub(crate) mod geometry_processor;
 mod line;
 mod polygon;
 

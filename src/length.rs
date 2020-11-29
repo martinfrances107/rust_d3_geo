@@ -1,7 +1,6 @@
 // use delaunator::Point;
 
 use super::data_object::DataObject;
-use super::stream::convert_obj_to_stream::convert_obj_to_stream;
 use super::stream::Stream;
 
 pub struct LengthStream {
@@ -31,9 +30,9 @@ impl Default for LengthStream {
 }
 
 impl LengthStream {
-    pub fn calc(object: DataObject) -> f64 {
+    pub fn calc(object: &impl DataObject) -> f64 {
         let mut ls = LengthStream::default();
-        convert_obj_to_stream(&object, &mut ls);
+        object.to_stream(&mut ls);
         return ls.length_sum;
     }
 
