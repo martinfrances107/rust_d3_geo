@@ -3,6 +3,7 @@ use crate::stream::Stream;
 pub mod feature_collection;
 pub mod feature_geometry;
 pub mod feature_property;
+pub mod feature_struct;
 pub mod features_struct;
 pub mod geometry_collection;
 pub mod line_string;
