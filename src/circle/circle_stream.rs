@@ -33,7 +33,7 @@ pub fn circle_stream<T: Float + FloatConst>(
         (Some(p0), Some(p1)) => {
             t0 = circle_radius(cos_radius, p0);
             t1 = circle_radius(cos_radius, p1);
-            let check = match direction > T::zero() {
+            let check = match direction.is_sign_positive() {
                 true => t0 < t1,
                 false => t0 > t1,
             };
@@ -56,7 +56,7 @@ pub fn circle_stream<T: Float + FloatConst>(
         stream.point(point.x(), point.y(), None);
 
         t = t - step;
-        cond = match direction > T::zero() {
+        cond = match direction.is_sign_positive() {
             true => t > t1,
             false => t < t1,
         };

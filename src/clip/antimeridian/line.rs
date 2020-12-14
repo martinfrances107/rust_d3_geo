@@ -61,7 +61,7 @@ impl<T: Float + FloatConst> TransformStream<T> for Line<T> {
 
     fn point(&mut self, mut lambda1: T, phi1: T, _m: Option<u8>) {
         let mut stream = self.stream.borrow_mut();
-        let sign1 = match lambda1 > T::zero() {
+        let sign1 = match lambda1.is_sign_positive() {
             true => T::PI(),
             false => -T::PI(),
         };
@@ -71,7 +71,7 @@ impl<T: Float + FloatConst> TransformStream<T> for Line<T> {
             // Line crosses a pole.
             let f_2 = T::from(2f64).unwrap();
             self.phi0 = (self.phi0 + phi1) / f_2;
-            match (self.phi0 + phi1 / f_2) > T::zero() {
+            match (self.phi0 + phi1 / f_2).is_sign_positive() {
                 true => {
                     stream.point(self.lambda0, T::FRAC_PI_2(), None);
                 }

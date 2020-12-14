@@ -39,7 +39,7 @@ impl<T: Float + FloatConst + 'static> Line<T> {
                 let stream = stream_ptr.clone();
                 // TODO small_radius, rc  is a shadow variables!!!
                 let rc = radius.cos();
-                let small_radius = rc > T::zero();
+                let small_radius = rc.is_sign_positive();
                 return Rc::new(RefCell::new(Box::new(Line {
                     c0: 0,
                     clean: 0,
