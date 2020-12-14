@@ -2,15 +2,24 @@
 #[cfg(test)]
 mod length_test {
     extern crate pretty_assertions;
-    use delaunator::Point;
+    use geo::Point;
+    use num_traits::Float;
     use rust_d3_geo::data_object::feature_collection::FeatureCollection;
     use rust_d3_geo::data_object::feature_geometry::FeatureGeometry;
     use rust_d3_geo::data_object::features_struct::FeaturesStruct;
-    use rust_d3_geo::data_object::line_string::LineString;
-    use rust_d3_geo::data_object::multi_line_string::MultiLineString;
-    use rust_d3_geo::data_object::multi_point::MultiPoint;
-    use rust_d3_geo::data_object::multi_polygon::MultiPolygon;
-    use rust_d3_geo::data_object::polygon::Polygon;
+    // use rust_d3_geo::data_object::line_string::LineString;
+    // use rust_d3_geo::data_object::multi_line_string::MultiLineString;
+    // use rust_d3_geo::data_object::multi_point::MultiPoint;
+    // use rust_d3_geo::data_object::multi_polygon::MultiPolygon;
+    // use rust_d3_geo::data_object::polygon::Polygon;
+    use geo::line_string;
+    use geo::polygon;
+    use geo::Geometry;
+    use geo::LineString;
+    use geo::MultiLineString;
+    use geo::MultiPoint;
+    use geo::MultiPolygon;
+    use geo::Polygon;
     use rust_d3_geo::in_delta::in_delta;
     use rust_d3_geo::length::LengthStream;
     use std::f64::consts::PI;
@@ -18,56 +27,39 @@ mod length_test {
     #[test]
     fn point_returns_zero() {
         println!("geoLength(Point) returns zero");
-        let length = LengthStream::calc(&rust_d3_geo::data_object::point::Point {
-            coordinate: Point { x: 0f64, y: 0f64 },
-        });
+        let length = LengthStream::calc(&Point::new(0f64, 0f64));
         assert_eq!(length, 0f64);
     }
 
     #[test]
     fn multipoint_returns_zero() {
         println!("geoLength(Point) returns zero");
-        let length = LengthStream::calc(&MultiPoint {
-            coordinates: vec![Point { x: 0f64, y: 1f64 }, Point { x: 2f64, y: 3f64 }],
-        });
+        let length = LengthStream::calc(&MultiPoint(vec![
+            Point::new(0f64, 1f64),
+            Point::new(2f64, 3f64),
+        ]));
         assert_eq!(length, 0f64);
     }
 
     #[test]
     fn line_string_great_arc_segements() {
         println!("geoLength(LineString) returns the sum of its great-arc segments");
-        assert!(in_delta(
-            LengthStream::calc(&LineString {
-                coordinates: vec![Point { x: -45f64, y: 0f64 }, Point { x: 45f64, y: 0f64 }]
-            }),
-            PI / 2f64,
-            1e-6
-        ));
+        let ls: LineString<f64> = line_string![(x: -45f64,y:  0f64 ), ( x:45f64,y:  0f64 )];
+        assert!(in_delta(LengthStream::calc(&ls), PI / 2f64, 1e-6));
 
-        assert!(in_delta(
-            LengthStream::calc(&LineString {
-                coordinates: vec![
-                    Point { x: -45f64, y: 0f64 },
-                    Point { x: -30f64, y: 0f64 },
-                    Point { x: -15f64, y: 0f64 },
-                    Point { x: 0f64, y: 0f64 }
-                ]
-            }),
-            PI / 4f64,
-            1e-6
-        ));
+        let ls: LineString<f64> =
+            vec![(-45f64, 0f64), (-30f64, 0f64), (-15f64, 0f64), (0f64, 0f64)].into();
+        assert!(in_delta(LengthStream::calc(&ls), PI / 4f64, 1e-6));
     }
 
     #[test]
     fn multiline_string_returns_the_sum_of_great_arc_segments() {
         println!("geoLength(MultiLineString) returns the sum of its great-arc segments");
         assert!(in_delta(
-            LengthStream::calc(&MultiLineString {
-                coordinates: vec![
-                    vec![Point { x: -45f64, y: 0f64 }, Point { x: -30f64, y: 0f64 }],
-                    vec![Point { x: -15f64, y: 0f64 }, Point { x: 0f64, y: 0f64 }]
-                ]
-            }),
+            LengthStream::calc(&MultiLineString(vec![
+                line_string![(x: -45f64, y: 0f64) , (x: -30f64, y: 0f64)],
+                line_string![(x: -15f64, y: 0f64) , (x: 0f64,  y:0f64 )]
+            ])),
             PI / 6f64,
             1e-6
         ));
@@ -77,15 +69,16 @@ mod length_test {
     fn polygon_length_of_perimeter() {
         println!("geoLength(Polygon) returns the length of its perimeter");
         assert!(in_delta(
-            LengthStream::calc(&Polygon {
-                coordinates: vec![vec![
-                    Point { x: 0f64, y: 0f64 },
-                    Point { x: 3f64, y: 0f64 },
-                    Point { x: 3f64, y: 3f64 },
-                    Point { x: 0f64, y: 3f64 },
-                    Point { x: 0f64, y: 0f64 }
-                ]]
-            }),
+            LengthStream::calc(&Polygon::new(
+                line_string![
+                    ( x:0f64,  y:0f64 ),
+                    ( x:3f64,  y:0f64 ),
+                    ( x:3f64,  y:3f64 ),
+                    ( x:0f64,  y:3f64 ),
+                    ( x:0f64,  y:0f64 )
+                ],
+                vec![]
+            )),
             0.157008f64,
             1e-6f64
         ));
@@ -95,24 +88,22 @@ mod length_test {
     fn polygon_length_of_perimeter_including_holes() {
         println!("geoLength(Polygon) returns the length of its perimeter, including holes");
         assert!(in_delta(
-            LengthStream::calc(&Polygon {
-                coordinates: vec![
-                    vec![
-                        Point { x: 0f64, y: 0f64 },
-                        Point { x: 3f64, y: 0f64 },
-                        Point { x: 3f64, y: 3f64 },
-                        Point { x: 0f64, y: 3f64 },
-                        Point { x: 0f64, y: 0f64 }
-                    ],
-                    vec![
-                        Point { x: 1f64, y: 1f64 },
-                        Point { x: 2f64, y: 1f64 },
-                        Point { x: 2f64, y: 2f64 },
-                        Point { x: 1f64, y: 2f64 },
-                        Point { x: 1f64, y: 1f64 }
-                    ]
-                ]
-            }),
+            LengthStream::calc(&Polygon::new(
+                line_string![
+                    (x: 0f64, y:0f64 ),
+                    (x: 3f64, y:0f64 ),
+                    (x: 3f64, y:3f64 ),
+                    (x: 0f64, y:3f64 ),
+                    (x: 0f64, y:0f64 )
+                ],
+                vec![line_string![
+                    (x: 1f64, y:1f64 ),
+                    (x: 2f64, y:1f64 ),
+                    (x: 2f64, y:2f64 ),
+                    (x: 1f64, y:2f64 ),
+                    (x: 1f64, y:1f64 )
+                ]]
+            )),
             0.209354f64,
             1e-6f64
         ));
@@ -122,37 +113,33 @@ mod length_test {
     fn multipolygon_returns_to_summed_length_of_perimeters() {
         println!("geoLength(MultiPolygon) returns the summed length of the perimeters");
         assert!(in_delta(
-            LengthStream::calc(&MultiPolygon {
-                coordinates: vec![vec![vec![
-                    Point { x: 0f64, y: 0f64 },
-                    Point { x: 3f64, y: 0f64 },
-                    Point { x: 3f64, y: 3f64 },
-                    Point { x: 0f64, y: 3f64 },
-                    Point { x: 0f64, y: 0f64 }
-                ]]]
-            }),
+            LengthStream::calc(&MultiPolygon(vec![polygon![
+                ( x: 0f64, y:0f64 ),
+                ( x: 3f64, y:0f64 ),
+                ( x: 3f64, y:3f64 ),
+                ( x: 0f64, y:3f64 ),
+                ( x: 0f64, y:0f64 )
+            ]])),
             0.157008,
             1e-6
         ));
         assert!(in_delta(
-            LengthStream::calc(&MultiPolygon {
-                coordinates: vec![
-                    vec![vec![
-                        Point { x: 0f64, y: 0f64 },
-                        Point { x: 3f64, y: 0f64 },
-                        Point { x: 3f64, y: 3f64 },
-                        Point { x: 0f64, y: 3f64 },
-                        Point { x: 0f64, y: 0f64 }
-                    ]],
-                    vec![vec![
-                        Point { x: 1f64, y: 1f64 },
-                        Point { x: 2f64, y: 1f64 },
-                        Point { x: 2f64, y: 2f64 },
-                        Point { x: 1f64, y: 2f64 },
-                        Point { x: 1f64, y: 1f64 },
-                    ]]
+            LengthStream::calc(&MultiPolygon(vec![
+                polygon![
+                    (x:  0f64, y: 0f64 ),
+                    (x:  3f64, y: 0f64 ),
+                    (x:  3f64, y: 3f64 ),
+                    (x:  0f64, y: 3f64 ),
+                    (x:  0f64, y: 0f64 )
+                ],
+                polygon![
+                    (x: 1f64, y: 1f64 ),
+                    (x: 2f64, y: 1f64 ),
+                    (x: 2f64, y: 2f64 ),
+                    (x: 1f64, y: 2f64 ),
+                    (x: 1f64, y: 1f64 ),
                 ]
-            }),
+            ])),
             0.209354,
             1e-6
         ));
@@ -166,18 +153,14 @@ mod length_test {
                 features: vec![FeaturesStruct {
                     properties: Vec::new(),
                     geometry: vec![
-                        FeatureGeometry::LineString {
-                            coordinates: vec![
-                                Point { x: -45f64, y: 0f64 },
-                                Point { x: 0f64, y: 0f64 }
-                            ]
-                        },
-                        FeatureGeometry::LineString {
-                            coordinates: vec![
-                                Point { x: 0f64, y: 0f64 },
-                                Point { x: 45f64, y: 0f64 }
-                            ]
-                        },
+                        Geometry::LineString(line_string![
+                            (x: -45f64, y: 0f64 ),
+                            (x: 0f64, y: 0f64 )
+                        ]),
+                        Geometry::LineString(line_string![
+                            ( x:0f64, y: 0f64 ),
+                            ( x:45f64, y: 0f64 )
+                        ]),
                     ],
                 }]
             }),

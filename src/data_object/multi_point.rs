@@ -1,20 +1,20 @@
 use crate::stream::geometry_processor::processor;
 use crate::stream::Stream;
 
-use super::feature_geometry::FeatureGeometry;
+// use super::feature_geometry::FeatureGeometry;
 use super::DataObject;
-use delaunator::Point;
+use geo::Geometry;
+use geo::MultiPoint;
+use num_traits::Float;
 
-pub struct MultiPoint {
-    pub coordinates: Vec<Point>,
-}
+// pub struct MultiPoint {
+//     pub coordinates: Vec<Point>,
+// }
 
-impl DataObject for MultiPoint {
-    fn to_stream(&self, stream: &mut impl Stream) {
-        for coordinate in &self.coordinates {
-            let g = FeatureGeometry::Point {
-                coordinate: coordinate.clone(),
-            };
+impl<T: Float> DataObject<T> for MultiPoint<T> {
+    fn to_stream(&self, stream: &mut impl Stream<T>) {
+        for p in self.iter() {
+            let g = Geometry::Point(*p);
             processor(&g, stream);
         }
     }

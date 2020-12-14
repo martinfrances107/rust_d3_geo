@@ -1,49 +1,45 @@
-use delaunator::Point;
+use geo::Point;
+use num_traits::{float::Float, FloatConst};
 use std::cell::RefCell;
-use std::f64;
 use std::rc::Rc;
 
 // use crate::math::epsilon;
 
 use crate::transform_stream::TransformStream;
 
-pub fn interpolate(
-    from: Option<Point>,
-    to: Option<Point>,
-    direction: f64,
-    stream: Rc<RefCell<Box<dyn TransformStream>>>,
+pub fn interpolate<T: Float + FloatConst>(
+    from: Option<Point<T>>,
+    to: Option<Point<T>>,
+    direction: T,
+    stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
 ) {
-    let phi: f64;
+    let phi: T;
     let mut stream = stream.borrow_mut();
     match from {
         None => {
-            phi = direction * f64::consts::FRAC_PI_2;
-            stream.point(-f64::consts::PI, phi, None);
-            stream.point(0f64, phi, None);
-            stream.point(f64::consts::PI, phi, None);
-            stream.point(f64::consts::PI, 0f64, None);
-            stream.point(f64::consts::PI, -phi, None);
-            stream.point(0f64, -phi, None);
-            stream.point(-f64::consts::PI, -phi, None);
-            stream.point(-f64::consts::PI, 0f64, None);
-            stream.point(-f64::consts::PI, phi, None);
+            phi = direction * T::FRAC_PI_2();
+            stream.point(-T::PI(), phi, None);
+            stream.point(T::zero(), phi, None);
+            stream.point(T::PI(), phi, None);
+            stream.point(T::PI(), T::zero(), None);
+            stream.point(T::PI(), -phi, None);
+            stream.point(T::zero(), -phi, None);
+            stream.point(-T::PI(), -phi, None);
+            stream.point(-T::PI(), T::zero(), None);
+            stream.point(-T::PI(), phi, None);
         }
         Some(from) => {
             // TODO investigate is to and Option<f64>
             let to = to.unwrap();
-            if (from.x - to.x).abs() > f64::EPSILON {
-                let lambda = if from.x < to.x {
-                    f64::consts::PI
-                } else {
-                    -f64::consts::PI
-                };
+            if (from.x() - to.x()).abs() > T::epsilon() {
+                let lambda = if from.x() < to.x() { T::PI() } else { -T::PI() };
 
-                phi = direction * lambda / 2f64;
+                phi = direction * lambda / T::from(2).unwrap();
                 stream.point(-lambda, phi, None);
-                stream.point(0f64, phi, None);
+                stream.point(T::zero(), phi, None);
                 stream.point(lambda, phi, None);
             } else {
-                stream.point(to.x, to.y, None);
+                stream.point(to.x(), to.y(), None);
             }
         }
     }

@@ -1,8 +1,11 @@
 use std::cell::RefCell;
-use std::f64;
+
 use std::rc::Rc;
 
 // use crate::stream::GeoStream;
+use num_traits::Float;
+use num_traits::FloatConst;
+
 use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
 // use crate::transform_stream::TransformStreamIdentity;
@@ -19,23 +22,23 @@ const INTERSECTION_REJOIN: u8 = 2u8;
 // use crate::clip::ClipLine;
 
 #[derive(Clone)]
-pub struct Line {
+pub struct Line<T> {
     clean: Option<u8>,
-    lambda0: f64,
-    phi0: f64,
-    sign0: f64,
-    stream: Rc<RefCell<Box<dyn TransformStream>>>,
+    lambda0: T,
+    phi0: T,
+    sign0: T,
+    stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
 }
 
-impl Line {
-    pub fn new() -> StreamProcessor {
-        return Box::new(|stream_ptr: Rc<RefCell<Box<dyn TransformStream>>>| {
+impl<T: Float + FloatConst + 'static> Line<T> {
+    pub fn new() -> StreamProcessor<T> {
+        return Box::new(|stream_ptr: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
             let stream = stream_ptr.clone();
             return Rc::new(RefCell::new(Box::new(Line {
                 clean: None, // no intersections
-                lambda0: f64::NAN,
-                phi0: f64::NAN,
-                sign0: f64::NAN,
+                lambda0: T::nan(),
+                phi0: T::nan(),
+                sign0: T::nan(),
                 stream,
             })));
         });
@@ -49,31 +52,31 @@ impl Line {
     }
 }
 
-impl TransformStream for Line {
+impl<T: Float + FloatConst> TransformStream<T> for Line<T> {
     fn line_start(&mut self) {
         let mut stream = self.stream.borrow_mut();
         stream.line_start();
         self.clean = Some(NO_INTERSECTIONS);
     }
 
-    fn point(&mut self, mut lambda1: f64, phi1: f64, _m: Option<u8>) {
+    fn point(&mut self, mut lambda1: T, phi1: T, _m: Option<u8>) {
         let mut stream = self.stream.borrow_mut();
-        let sign1 = match lambda1 > 0f64 {
-            true => f64::consts::PI,
-            false => -f64::consts::PI,
+        let sign1 = match lambda1 > T::zero() {
+            true => T::PI(),
+            false => -T::PI(),
         };
         let delta = (lambda1 - self.lambda0).abs();
 
-        if (delta - f64::consts::PI).abs() < f64::EPSILON {
+        if (delta - T::PI()).abs() < T::epsilon() {
             // Line crosses a pole.
-            let f_2 = 2f64;
+            let f_2 = T::from(2f64).unwrap();
             self.phi0 = (self.phi0 + phi1) / f_2;
-            match (self.phi0 + phi1 / f_2) > 0f64 {
+            match (self.phi0 + phi1 / f_2) > T::zero() {
                 true => {
-                    stream.point(self.lambda0, f64::consts::FRAC_PI_2, None);
+                    stream.point(self.lambda0, T::FRAC_PI_2(), None);
                 }
                 false => {
-                    stream.point(self.lambda0, -f64::consts::FRAC_PI_2, None);
+                    stream.point(self.lambda0, -T::FRAC_PI_2(), None);
                 }
             }
             stream.point(self.sign0, self.phi0, None);
@@ -82,13 +85,13 @@ impl TransformStream for Line {
             stream.point(sign1, self.phi0, None);
             stream.point(lambda1, self.phi0, None);
             self.clean = Some(INTERSECTION_OR_LINE_EMPTY);
-        } else if self.sign0 != sign1 && delta >= f64::consts::PI {
+        } else if self.sign0 != sign1 && delta >= T::PI() {
             // Line crosses antimeridian.
-            if (self.lambda0 - self.sign0).abs() < f64::EPSILON {
-                self.lambda0 = self.lambda0 - self.sign0 * f64::EPSILON; // handle degeneracies
+            if (self.lambda0 - self.sign0).abs() < T::epsilon() {
+                self.lambda0 = self.lambda0 - self.sign0 * T::epsilon(); // handle degeneracies
             }
-            if (lambda1 - sign1).abs() < f64::EPSILON {
-                lambda1 = lambda1 - sign1 * f64::EPSILON;
+            if (lambda1 - sign1).abs() < T::epsilon() {
+                lambda1 = lambda1 - sign1 * T::epsilon();
             }
             self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
             stream.point(self.sign0, self.phi0, None);
@@ -106,7 +109,7 @@ impl TransformStream for Line {
     fn line_end(&mut self) {
         let mut stream = self.stream.borrow_mut();
         stream.line_end();
-        self.lambda0 = f64::NAN;
-        self.phi0 = f64::NAN;
+        self.lambda0 = T::nan();
+        self.phi0 = T::nan();
     }
 }

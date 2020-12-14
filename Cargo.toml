@@ -5,7 +5,8 @@ authors = ["martin frances <martinfrances107@hotmail.com>"]
 edition = "2018"
 
 [dependencies]
-geo="0.15.0"
+num-traits="0.2.14"
+geo="0.16.0"
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 
 [dev-dependencies]

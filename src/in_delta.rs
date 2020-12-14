@@ -1,6 +1,9 @@
-use delaunator::Point;
+use geo::Point;
+use num_traits::Float;
+use std::fmt::Debug;
+use std::fmt::Display;
 
-pub fn in_delta(actual: f64, expected: f64, delta: f64) -> bool {
+pub fn in_delta<T: Float + Debug + Display>(actual: T, expected: T, delta: T) -> bool {
     println!(
         "expected {:?} actual {:?} delta {:?}",
         expected, actual, delta
@@ -16,10 +19,14 @@ pub fn in_delta(actual: f64, expected: f64, delta: f64) -> bool {
     return is_ok;
 }
 
-pub fn in_delta_point(actual: Point, expected: Point, delta: f64) -> bool {
+pub fn in_delta_point<T: Float + Debug + Display>(
+    actual: Point<T>,
+    expected: Point<T>,
+    delta: T,
+) -> bool {
     println!(
         "expected(Point) {:?} actual {:?} delta {:?}",
         expected, actual, delta
     );
-    return in_delta(actual.x, expected.x, delta) && in_delta(actual.y, expected.y, delta);
+    return in_delta(actual.x(), expected.x(), delta) && in_delta(actual.y(), expected.y(), delta);
 }

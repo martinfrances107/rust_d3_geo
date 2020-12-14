@@ -4,7 +4,9 @@
 // #![allow(dead_code)]
 // #![allow(unused_imports)]
 
-use delaunator::Point;
+// use delaunator::Point;
+use geo::Point;
+use num_traits::Float;
 
 pub mod cartesian;
 pub mod centroid;
@@ -33,14 +35,17 @@ impl TransformIdentity {
     }
 }
 
-impl Transform for TransformIdentity {}
+impl<T: Float> Transform<T> for TransformIdentity {}
 
 /// Common to Projection, Rotation.
-pub trait Transform {
-    fn transform(&self, p: &Point) -> Point {
+pub trait Transform<T>
+where
+    T: Float,
+{
+    fn transform(&self, p: &Point<T>) -> Point<T> {
         return p.clone();
     }
-    fn invert(&self, p: &Point) -> Point {
+    fn invert(&self, p: &Point<T>) -> Point<T> {
         return p.clone();
     }
 }

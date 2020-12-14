@@ -1,13 +1,14 @@
 use crate::transform_stream::StreamProcessor;
-use delaunator::Point;
+use geo::Point;
+use num_traits::Float;
 
-pub enum StreamProcessorValueMaybe {
+pub enum StreamProcessorValueMaybe<T: Float> {
     None,
-    Value(f64),
-    SP(StreamProcessor),
+    Value(T),
+    SP(StreamProcessor<T>),
 }
 
-pub trait Projection {
+pub trait Projection<T: Float> {
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.
@@ -45,7 +46,7 @@ pub trait Projection {
     //  * @param preclip A spherical clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
     //  * Pre-clipPIng operates on spherical coordinates, in radians.
     //  */
-    fn preclip(&mut self, preclip: StreamProcessor);
+    fn preclip(&mut self, preclip: StreamProcessor<T>);
 
     // /**
     //  * Returns the current cartesian clipPIng function.
@@ -58,7 +59,7 @@ pub trait Projection {
     //  * @param postclip A cartesian clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
     //  * Post-clipPIng operates on planar coordinates, in PIxels.
     //  */
-    fn postclip(&mut self, postclip: StreamProcessor);
+    fn postclip(&mut self, postclip: StreamProcessor<T>);
 
     // /**
     //  * Switches to antimeridian cutting rather than small-circle clipPIng.
@@ -66,7 +67,7 @@ pub trait Projection {
     //  *
     //  * @param angle Set to null to switch to antimeridian cutting.
     //  */
-    fn clip_angle(&mut self, angle: StreamProcessorValueMaybe) -> Option<f64>;
+    fn clip_angle(&mut self, angle: StreamProcessorValueMaybe<T>) -> Option<T>;
 
     // /**
     //  * Sets the projection’s clipPIng circle radius to the specified angle in degrees and returns the projection.
@@ -281,7 +282,7 @@ pub trait Projection {
     //  * @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
     //  * (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
     //  */
-    fn rotate(&mut self, angles: Option<[f64; 3]>) -> Option<[f64; 3]>;
+    fn rotate(&mut self, angles: Option<[T; 3]>) -> Option<[T; 3]>;
 
     // /**
     //  * Sets the projection’s scale factor to the specified value and returns the projection.
@@ -290,7 +291,7 @@ pub trait Projection {
     //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
     //  */
     // fn scale(&mut self, scale: &F);
-    fn scale(&mut self, scale: Option<&f64>);
+    fn scale(&mut self, scale: Option<&T>);
 
     // /**
     //  * Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
@@ -298,5 +299,5 @@ pub trait Projection {
     //  *
     //  * @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
     //  */
-    fn translate(&mut self, t: Option<&Point>) -> Option<Point>;
+    fn translate(&mut self, t: Option<&Point<T>>) -> Option<Point<T>>;
 }

@@ -1,22 +1,24 @@
-use delaunator::Point;
+use geo::Point;
+use num_traits::Float;
 
-pub fn azimuthal_raw(scale: Box<dyn Fn(f64) -> f64>) -> Box<dyn Fn(f64, f64) -> Point> {
-    return Box::new(move |x: f64, y: f64| -> Point {
+pub fn azimuthal_raw<T: Float + 'static>(
+    scale: Box<dyn Fn(T) -> T>,
+) -> Box<dyn Fn(T, T) -> Point<T>> {
+    return Box::new(move |x: T, y: T| -> Point<T> {
         let cx = x.cos();
         let cy = y.cos();
         let k = scale(cx * cy);
         return match k.is_infinite() {
-            true => Point { x: 2f64, y: 0f64 },
-            false => Point {
-                x: k * cy * x.sin(),
-                y: k * y.sin(),
-            },
+            true => Point::new(T::from(2).unwrap(), T::zero()),
+            false => Point::new(k * cy * x.sin(), k * y.sin()),
         };
     });
 }
 
-pub fn azimuthal_invert(angle: Box<dyn Fn(f64) -> f64>) -> Box<dyn Fn(f64, f64) -> Point> {
-    return Box::new(move |x: f64, y: f64| -> Point {
+pub fn azimuthal_invert<T: Float + 'static>(
+    angle: Box<dyn Fn(T) -> T>,
+) -> Box<dyn Fn(T, T) -> Point<T>> {
+    return Box::new(move |x: T, y: T| -> Point<T> {
         let z = (x * x + y * y).sqrt();
         let c = angle(z);
         let sc = c.sin();
@@ -24,13 +26,13 @@ pub fn azimuthal_invert(angle: Box<dyn Fn(f64) -> f64>) -> Box<dyn Fn(f64, f64) 
 
         let ret_x = (x * sc).atan2(z * cc);
         let y_out;
-        if z == 0f64 {
+        if z == T::zero() {
             y_out = z;
         } else {
             y_out = y * sc / z;
         }
         let ret_y = y_out.asin();
 
-        return Point { x: ret_x, y: ret_y };
+        return Point::new(ret_x, ret_y);
     });
 }

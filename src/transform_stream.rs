@@ -1,29 +1,31 @@
+use num_traits::Float;
 use std::cell::RefCell;
 use std::rc::Rc;
 
 // Define the default implementation of the trait.
 // use crate::stream::GeoStream;
 
-pub type StreamProcessor =
-    Box<dyn Fn(Rc<RefCell<Box<dyn TransformStream>>>) -> Rc<RefCell<Box<dyn TransformStream>>>>;
+pub type StreamProcessor<T> = Box<
+    dyn Fn(Rc<RefCell<Box<dyn TransformStream<T>>>>) -> Rc<RefCell<Box<dyn TransformStream<T>>>>,
+>;
 pub struct StreamProcessorIdentity {}
 
 impl StreamProcessorIdentity {
-    pub fn new() -> StreamProcessor {
-        return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream>>>| {
+    pub fn new<T: Float>() -> StreamProcessor<T> {
+        return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
             return stream;
         });
     }
 }
 
-impl TransformStream for StreamProcessorIdentity {}
+impl<T> TransformStream<T> for StreamProcessorIdentity {}
 
 pub struct TransformStreamIdentity {}
-impl TransformStream for TransformStreamIdentity {}
+impl<T> TransformStream<T> for TransformStreamIdentity {}
 
 /// Define the default implementation of the trait.
-pub trait TransformStream {
-    fn point(&mut self, _x: f64, _y: f64, _message: Option<u8>) {}
+pub trait TransformStream<T> {
+    fn point(&mut self, _x: T, _y: T, _message: Option<u8>) {}
     fn sphere(&mut self) {}
     fn line_start(&mut self) {}
     fn line_end(&mut self) {}

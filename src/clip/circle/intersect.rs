@@ -4,32 +4,37 @@ use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_dot;
 use crate::cartesian::cartesian_scale;
 use crate::cartesian::spherical;
-use delaunator::Point;
-use std::f64;
+use geo::Point;
+use num_traits::{float::Float, FloatConst};
 
 /// IntersectReturn none, one or two 2d floats.
-pub enum IntersectReturn {
-    One(Point),
-    Two([Point; 2]),
+pub enum IntersectReturn<T: Float> {
+    One(Point<T>),
+    Two([Point<T>; 2]),
     None,
 }
 
 /// Intersects the great circle between a and b with the clip circle.
 #[allow(clippy::many_single_char_names)]
-pub fn intersect(a: Point, b: Point, cr: f64, two: bool) -> IntersectReturn {
+pub fn intersect<T: Float + FloatConst>(
+    a: Point<T>,
+    b: Point<T>,
+    cr: T,
+    two: bool,
+) -> IntersectReturn<T> {
     let pa = cartesian(&a);
     let pb = cartesian(&b);
 
     // We have two planes, n1.p = d1 and n2.p = d2.
     // Find intersection line p(t) = c1 n1 + c2 n2 + t (n1 ⨯ n2).
-    let n1 = [1f64, 0f64, 0f64]; // normal
+    let n1 = [T::one(), T::zero(), T::zero()]; // normal
     let n2 = cartesian_cross(&pa, &pb);
     let n2n2 = cartesian_dot(&n2, &n2);
     let n1n2 = n2[0]; // cartesianDot(n1, n2),
     let determinant = n2n2 - n1n2 * n1n2;
 
     // Two polar points.
-    if determinant != 0f64 {
+    if !determinant.is_zero() {
         // return !two && a;
         if !two {
             return IntersectReturn::One(a);
@@ -51,7 +56,7 @@ pub fn intersect(a: Point, b: Point, cr: f64, two: bool) -> IntersectReturn {
     let u = n1xn2;
     let w = cartesian_dot(&A, &u);
     let uu = cartesian_dot(&u, &u);
-    let t2 = w * w - uu * (cartesian_dot(&A, &A) - 1f64);
+    let t2 = w * w - uu * (cartesian_dot(&A, &A) - T::one());
 
     // if t2 < 0 return;
 
@@ -60,17 +65,17 @@ pub fn intersect(a: Point, b: Point, cr: f64, two: bool) -> IntersectReturn {
     cartesian_add_in_place(&mut q, &A);
 
     // Javascript has implicit cast q of from [F;3] to a Point here.
-    let q: Point = spherical(&q);
+    let q: Point<T> = spherical(&q);
 
     if !two {
         return IntersectReturn::One(q);
     };
 
     // Two intersection points.
-    let mut lambda0 = a.x;
-    let mut lambda1 = b.x;
-    let mut phi0 = a.y;
-    let mut phi1 = b.y;
+    let mut lambda0 = a.x();
+    let mut lambda1 = b.x();
+    let mut phi0 = a.y();
+    let mut phi1 = b.y();
     let mut z;
 
     if lambda1 < lambda0 {
@@ -80,8 +85,8 @@ pub fn intersect(a: Point, b: Point, cr: f64, two: bool) -> IntersectReturn {
     }
 
     let delta = lambda1 - lambda0;
-    let polar = (delta - f64::consts::PI).abs() < f64::EPSILON;
-    let meridian = polar || delta < f64::EPSILON;
+    let polar = (delta - T::PI()).abs() < T::epsilon();
+    let meridian = polar || delta < T::epsilon();
 
     if !polar && phi1 < phi0 {
         z = phi0;
@@ -103,17 +108,17 @@ pub fn intersect(a: Point, b: Point, cr: f64, two: bool) -> IntersectReturn {
     let condition: bool;
     if meridian {
         if polar {
-            let phi_threshold = if (q.x - lambda0).abs() < f64::EPSILON {
+            let phi_threshold = if (q.x() - lambda0).abs() < T::epsilon() {
                 phi0
             } else {
                 phi1
             };
-            condition = ((phi0 + phi1) > 0f64) ^ (q.y < phi_threshold);
+            condition = ((phi0 + phi1) > T::zero()) ^ (q.y() < phi_threshold);
         } else {
-            condition = phi0 <= q.y && q.y <= phi1;
+            condition = phi0 <= q.y() && q.y() <= phi1;
         }
     } else {
-        condition = (delta > f64::consts::PI) ^ (lambda0 <= q.x && q.x <= lambda1);
+        condition = (delta > T::PI()) ^ (lambda0 <= q.x() && q.x() <= lambda1);
     }
 
     // Not javascript test exits to test this code block!!!!

@@ -7,20 +7,21 @@ pub mod circle_radius;
 pub mod circle_stream;
 mod stream;
 
-use delaunator::Point;
+use geo::Point;
+use num_traits::Float;
 use std::rc::Rc;
 
 // function accepts a F value or a Function that outputs a F or maybe nothing.
-pub enum FnValMaybe {
+pub enum FnValMaybe<T> {
     None,
-    FloatValue(Rc<f64>),
-    FloatFn(Rc<dyn Fn(CircleInArg) -> f64>),
+    FloatValue(Rc<T>),
+    FloatFn(Rc<dyn Fn(CircleInArg) -> T>),
 }
 
-pub enum FnValMaybe2D {
+pub enum FnValMaybe2D<T: Float> {
     None,
-    FloatValue(Rc<Point>),
-    FloatFn(Rc<dyn Fn(CircleInArg) -> Point>),
+    FloatValue(Rc<Point<T>>),
+    FloatFn(Rc<dyn Fn(CircleInArg) -> Point<T>>),
 }
 
 // pub struct CircleInArg
@@ -29,8 +30,8 @@ pub enum CircleInArg {
     Arg(),
 }
 
-pub trait CircleTrait {
-    fn center(&mut self, center: FnValMaybe2D) -> Option<Point>;
-    fn radius(&mut self, radius: FnValMaybe) -> Option<f64>;
-    fn precision(&mut self, precision: FnValMaybe) -> Option<f64>;
+pub trait CircleTrait<T: Float> {
+    fn center(&mut self, center: FnValMaybe2D<T>) -> Option<Point<T>>;
+    fn radius(&mut self, radius: FnValMaybe<T>) -> Option<T>;
+    fn precision(&mut self, precision: FnValMaybe<T>) -> Option<T>;
 }

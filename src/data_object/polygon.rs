@@ -2,18 +2,18 @@ use super::feature_geometry::FeatureGeometry;
 use super::DataObject;
 use crate::stream::geometry_processor::processor;
 use crate::stream::Stream;
-use delaunator::Point;
+use geo::Geometry;
+use geo::Polygon;
+use num_traits::Float;
 
 /// Polygon - an array of arrays of positions forming a polygon (possibly with holes).
-pub struct Polygon {
-    pub coordinates: Vec<Vec<Point>>,
-}
+// pub struct Polygon {
+//     pub coordinates: Vec<Vec<Point>>,
+// }
 
-impl DataObject for Polygon {
-    fn to_stream(&self, stream: &mut impl Stream) {
-        let g = FeatureGeometry::Polygon {
-            coordinates: self.coordinates.to_vec(),
-        };
+impl<T: Float> DataObject<T> for Polygon<T> {
+    fn to_stream(&self, stream: &mut impl Stream<T>) {
+        let g = Geometry::Polygon(self.clone());
         processor(&g, stream);
     }
 }

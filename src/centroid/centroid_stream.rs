@@ -1,55 +1,56 @@
 use crate::data_object::DataObject;
 use crate::stream::Stream;
+use std::ops::AddAssign;
 
-#[allow(non_snake_case)]
-use delaunator::Point;
+use geo::Point;
+use num_traits::{float::Float, FloatConst};
 
 // TO MUST use a math library
 pub const EPSILON: f64 = 1e-6;
 pub const EPSILON2: f64 = 1e-12;
 
 #[allow(non_snake_case)]
-pub struct CentroidStream {
-    W0: f64,
-    W1: f64,
-    X0: f64,
-    Y0: f64,
-    Z0: f64,
-    X1: f64,
-    Y1: f64,
-    Z1: f64,
-    X2: f64,
-    Y2: f64,
-    Z2: f64,
-    lambda00: f64,
-    phi00: f64, // first point
-    x0: f64,
-    y0: f64,
-    z0: f64, // previous point
-    point_fn: fn(&mut Self, f64, f64),
+pub struct CentroidStream<T: Float> {
+    W0: T,
+    W1: T,
+    X0: T,
+    Y0: T,
+    Z0: T,
+    X1: T,
+    Y1: T,
+    Z1: T,
+    X2: T,
+    Y2: T,
+    Z2: T,
+    lambda00: T,
+    phi00: T, // first point
+    x0: T,
+    y0: T,
+    z0: T, // previous point
+    point_fn: fn(&mut Self, T, T),
     line_start_fn: fn(&mut Self),
     line_end_fn: fn(&mut Self),
 }
 
-impl Default for CentroidStream {
+impl<T: Float + FloatConst + AddAssign> Default for CentroidStream<T> {
     fn default() -> Self {
         return Self {
-            W0: 0f64,
-            W1: 0f64,
-            X0: 0f64,
-            Y0: 0f64,
-            Z0: 0f64,
-            X1: 0f64,
-            Y1: 0f64,
-            Z1: 0f64,
-            X2: 0f64,
-            Y2: 0f64,
-            Z2: 0f64,
-            lambda00: 0f64,
-            phi00: 0f64,
-            x0: 0f64,
-            y0: 0f64,
-            z0: 0f64,
+            W0: T::zero(),
+            W1: T::zero(),
+            X0: T::zero(),
+            Y0: T::zero(),
+            Z0: T::zero(),
+            X1: T::zero(),
+            Y1: T::zero(),
+            Z1: T::zero(),
+            X2: T::zero(),
+            Y2: T::zero(),
+            Z2: T::zero(),
+            lambda00: T::zero(),
+            phi00: T::zero(),
+            x0: T::zero(),
+            y0: T::zero(),
+            z0: T::zero(),
             point_fn: Self::centroid_point,
             line_start_fn: Self::centroid_line_start,
             line_end_fn: Self::centroid_line_end,
@@ -57,9 +58,9 @@ impl Default for CentroidStream {
     }
 }
 
-impl CentroidStream {
-    fn centroid_point_cartesian(&mut self, x: f64, y: f64, z: f64) {
-        self.W0 += 1f64;
+impl<T: Float + FloatConst + AddAssign> CentroidStream<T> {
+    fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
+        self.W0 += T::one();
         self.X0 += (x - self.X0) / self.W0;
         self.Y0 += (y - self.Y0) / self.W0;
         self.Z0 += (z - self.Z0) / self.W0;
@@ -69,7 +70,7 @@ impl CentroidStream {
         self.point_fn = Self::centroid_point;
     }
 
-    fn centroid_line_point_first(&mut self, lambda_in: f64, phi_in: f64) {
+    fn centroid_line_point_first(&mut self, lambda_in: T, phi_in: T) {
         let lambda = lambda_in.to_radians();
         let phi = phi_in.to_radians();
         let cos_phi = phi.cos();
@@ -80,7 +81,7 @@ impl CentroidStream {
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
-    fn centroid_line_point(&mut self, lambda_in: f64, phi_in: f64) {
+    fn centroid_line_point(&mut self, lambda_in: T, phi_in: T) {
         let lambda = lambda_in.to_radians();
         let phi = phi_in.to_radians();
         let cos_phi = phi.cos();
@@ -108,14 +109,14 @@ impl CentroidStream {
     }
 
     /// Arithmetic mean of Cartesian vectors.
-    fn centroid_point(&mut self, lambda_in: f64, phi_in: f64) {
+    fn centroid_point(&mut self, lambda_in: T, phi_in: T) {
         let lambda = lambda_in.to_radians();
         let phi = phi_in.to_radians();
         let cos_phi = phi.cos();
         self.centroid_point_cartesian(cos_phi * lambda.cos(), cos_phi * lambda.sin(), phi.sin());
     }
 
-    fn centroid_ring_point_first(&mut self, lambda_in: f64, phi_in: f64) {
+    fn centroid_ring_point_first(&mut self, lambda_in: T, phi_in: T) {
         let lambda = lambda_in.to_radians();
         let phi = phi_in.to_radians();
         let cos_phi = phi.cos();
@@ -126,7 +127,7 @@ impl CentroidStream {
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
-    fn centroid_ring_point(&mut self, lambda_in: f64, phi_in: f64) {
+    fn centroid_ring_point(&mut self, lambda_in: T, phi_in: T) {
         let lambda = lambda_in.to_radians();
         let phi = phi_in.to_radians();
         let cos_phi = phi.cos();
@@ -138,11 +139,11 @@ impl CentroidStream {
         let cz = self.x0 * y - self.y0 * x;
         let m = (cx * cx + cy * cy + cz * cz).sqrt();
         let w = m.asin(); // line weight = angle
-        let v: f64;
-        if m != 0f64 {
+        let v;
+        if m != T::zero() {
             v = -w / m;
         } else {
-            v = 0f64;
+            v = T::zero();
         } // area weight multiplier
 
         self.X2 += v * cx;
@@ -158,7 +159,7 @@ impl CentroidStream {
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
-    fn centroid_ring_end(&mut self) {
+    pub fn centroid_ring_end(&mut self) {
         self.centroid_point(self.lambda00, self.phi00);
         self.point_fn = Self::centroid_point;
     }
@@ -167,19 +168,19 @@ impl CentroidStream {
         self.point_fn = Self::centroid_ring_point_first;
     }
 
-    pub fn centroid(&mut self, d_object: &impl DataObject) -> Point {
+    pub fn centroid(&mut self, d_object: &impl DataObject<T>) -> Point<T> {
         d_object.to_stream(self);
         let mut x = self.X2;
         let mut y = self.Y2;
         let mut z = self.Z2;
         let mut m = (x * x + y * y + z * z).sqrt();
         // If the area-weighted ccentroid is undefined, fall back to length-weighted ccentroid.
-        if m < EPSILON2 {
+        if m < T::from(EPSILON2).unwrap() {
             x = self.X1;
             y = self.Y1;
             z = self.Z1;
             // If the feature has zero length, fall back to arithmetic mean of point vectors.
-            if self.W1 < EPSILON {
+            if self.W1 < T::from(EPSILON).unwrap() {
                 x = self.X0;
                 y = self.Y0;
                 z = self.Z0;
@@ -187,22 +188,16 @@ impl CentroidStream {
             m = (x * x + y * y + z * z).sqrt();
 
             // If the feature still has an undefined centroid, then return.
-            if m < EPSILON2 {
-                return Point {
-                    x: f64::NAN,
-                    y: f64::NAN,
-                };
+            if m < T::from(EPSILON2).unwrap() {
+                return Point::new(T::nan(), T::nan());
             }
         }
 
-        return Point {
-            x: y.atan2(x).to_degrees(),
-            y: (z / m).asin().to_degrees(),
-        };
+        return Point::new(y.atan2(x).to_degrees(), (z / m).asin().to_degrees());
     }
 }
 
-impl Stream for CentroidStream {
+impl<T: Float + FloatConst + AddAssign> Stream<T> for CentroidStream<T> {
     fn line_end(&mut self) {
         (self.line_end_fn)(self);
     }
@@ -211,7 +206,7 @@ impl Stream for CentroidStream {
         (self.line_start_fn)(self);
     }
 
-    fn point(&mut self, x: f64, y: f64, _z: Option<f64>) {
+    fn point(&mut self, x: T, y: T, _z: Option<T>) {
         (self.point_fn)(self, x, y);
     }
 

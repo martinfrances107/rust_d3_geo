@@ -1,17 +1,19 @@
-use delaunator::Point;
+// use delaunator::Point;
+use geo::Point;
+use num_traits::Float;
 
 use crate::Transform;
 
 #[derive(Debug)]
-pub struct RotationPhiGamma {
-    cos_delta_phi: f64,
-    sin_delta_phi: f64,
-    cos_delta_gamma: f64,
-    sin_delta_gamma: f64,
+pub struct RotationPhiGamma<T> {
+    cos_delta_phi: T,
+    sin_delta_phi: T,
+    cos_delta_gamma: T,
+    sin_delta_gamma: T,
 }
 
-impl RotationPhiGamma {
-    pub fn new(delta_phi: f64, delta_gamma: f64) -> Box<dyn Transform> {
+impl<T: Float + 'static> RotationPhiGamma<T> {
+    pub fn new(delta_phi: T, delta_gamma: T) -> Box<dyn Transform<T>> {
         return Box::new(Self {
             cos_delta_phi: delta_phi.cos(),
             sin_delta_phi: delta_phi.sin(),
@@ -21,11 +23,11 @@ impl RotationPhiGamma {
     }
 }
 
-impl Transform for RotationPhiGamma {
+impl<T: Float> Transform<T> for RotationPhiGamma<T> {
     #[allow(clippy::many_single_char_names)]
-    fn transform(&self, p: &Point) -> Point {
-        let lambda = p.x;
-        let phi = p.y;
+    fn transform(&self, p: &Point<T>) -> Point<T> {
+        let lambda = p.x();
+        let phi = p.y();
 
         let cos_phi = phi.cos();
         let x = lambda.cos() * cos_phi;
@@ -33,17 +35,17 @@ impl Transform for RotationPhiGamma {
         let z = phi.sin();
         let k = z * self.cos_delta_phi + x * self.sin_delta_phi;
 
-        return Point {
-            x: (y * self.cos_delta_gamma - k * self.sin_delta_gamma)
+        return Point::new(
+            (y * self.cos_delta_gamma - k * self.sin_delta_gamma)
                 .atan2(x * self.cos_delta_phi - z * self.sin_delta_phi),
-            y: (k * self.cos_delta_gamma + y * self.sin_delta_gamma).asin(),
-        };
+            (k * self.cos_delta_gamma + y * self.sin_delta_gamma).asin(),
+        );
     }
 
     #[allow(clippy::many_single_char_names)]
-    fn invert(&self, p: &Point) -> Point {
-        let lambda = p.x;
-        let phi = p.y;
+    fn invert(&self, p: &Point<T>) -> Point<T> {
+        let lambda = p.x();
+        let phi = p.y();
 
         let cos_phi = phi.cos();
         let x = lambda.cos() * cos_phi;
@@ -51,10 +53,10 @@ impl Transform for RotationPhiGamma {
         let z = phi.sin();
         let k = z * self.cos_delta_gamma - y * self.sin_delta_gamma;
 
-        return Point {
-            x: (y * self.cos_delta_gamma + z * self.sin_delta_gamma)
+        return Point::new(
+            (y * self.cos_delta_gamma + z * self.sin_delta_gamma)
                 .atan2(x * self.cos_delta_phi + k * self.sin_delta_phi),
-            y: (k * self.cos_delta_phi - x * self.sin_delta_phi).asin(),
-        };
+            (k * self.cos_delta_phi - x * self.sin_delta_phi).asin(),
+        );
     }
 }

@@ -1,42 +1,41 @@
-// use delaunator::Point;
-
 use super::data_object::DataObject;
 use super::stream::Stream;
+use num_traits::Float;
 
-pub struct LengthStream {
+pub struct LengthStream<T: Float> {
     // sphere_fn: fn(&mut Self, f64, f64),
-    point_fn: fn(&mut Self, f64, f64),
+    point_fn: fn(&mut Self, T, T),
     line_start_fn: fn(&mut Self),
     line_end_fn: fn(&mut Self),
-    length_sum: f64,
-    lambda0: f64,
-    sin_phi0: f64,
-    cos_phi0: f64,
+    length_sum: T,
+    lambda0: T,
+    sin_phi0: T,
+    cos_phi0: T,
 }
 
-impl Default for LengthStream {
+impl<T: Float> Default for LengthStream<T> {
     fn default() -> Self {
         return Self {
             // sphere_fn: Self::noop,
             point_fn: Self::point_noop,
             line_start_fn: Self::length_line_start,
             line_end_fn: Self::line_end_noop,
-            length_sum: 0f64,
-            lambda0: 0f64,
-            sin_phi0: 0f64,
-            cos_phi0: 0f64,
+            length_sum: T::zero(),
+            lambda0: T::zero(),
+            sin_phi0: T::zero(),
+            cos_phi0: T::zero(),
         };
     }
 }
 
-impl LengthStream {
-    pub fn calc(object: &impl DataObject) -> f64 {
+impl<T: Float> LengthStream<T> {
+    pub fn calc(object: &impl DataObject<T>) -> T {
         let mut ls = LengthStream::default();
         object.to_stream(&mut ls);
         return ls.length_sum;
     }
 
-    fn length_point_first(&mut self, lambda_p: f64, phi_p: f64) {
+    fn length_point_first(&mut self, lambda_p: T, phi_p: T) {
         let lambda = lambda_p.to_radians();
         let phi = phi_p.to_radians();
         self.lambda0 = lambda;
@@ -45,7 +44,7 @@ impl LengthStream {
         self.point_fn = Self::length_point;
     }
 
-    fn length_point(&mut self, lambda_p: f64, phi_p: f64) {
+    fn length_point(&mut self, lambda_p: T, phi_p: T) {
         let lambda = lambda_p.to_radians();
         let phi = phi_p.to_radians();
 
@@ -74,12 +73,12 @@ impl LengthStream {
         self.point_fn = Self::length_point_first;
         self.line_end_fn = Self::length_line_end;
     }
-    fn point_noop(&mut self, _x: f64, _y: f64) {}
+    fn point_noop(&mut self, _x: T, _y: T) {}
     fn line_end_noop(&mut self) {}
 }
 
-impl Stream for LengthStream {
-    fn point(&mut self, x: f64, y: f64, _z: Option<f64>) {
+impl<T: Float> Stream<T> for LengthStream<T> {
+    fn point(&mut self, x: T, y: T, _z: Option<T>) {
         (self.point_fn)(self, x, y);
     }
 

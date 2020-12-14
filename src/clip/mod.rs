@@ -1,8 +1,8 @@
 use std::cell::RefCell;
-use std::f64;
 use std::rc::Rc;
 
-use delaunator::Point;
+use geo::Point;
+use num_traits::{float::Float, FloatConst};
 
 /// Public: clip generators used by projection.
 pub mod antimeridian;
@@ -18,52 +18,52 @@ use crate::transform_stream::TransformStream;
 use buffer::ClipBuffer;
 // use rejoin::rejoin;
 
-pub trait ClipLine<'a> {
+pub trait ClipLine<'a, T> {
     fn line_start(&mut self);
-    fn point(&mut self, lambda1_p: f64, phi1: f64, m: Option<u8>);
+    fn point(&mut self, lambda1_p: T, phi1: T, m: Option<u8>);
     fn line_end(&mut self);
     fn clean(&mut self) -> Option<u8>;
-    fn stream(&mut self, stream: Box<dyn TransformStream>);
+    fn stream(&mut self, stream: Box<dyn TransformStream<T>>);
 }
 
 // CompareIntersections param type
 #[derive(Clone)]
-pub struct Ci {
-    x: Point,
+pub struct Ci<T: Float> {
+    x: Point<T>,
 }
 
-pub type InterpolateFn =
-    Box<dyn Fn(Option<Point>, Option<Point>, f64, Rc<RefCell<Box<dyn TransformStream>>>)>;
-type PointsVisibleFn = Box<dyn Fn(f64, f64, Option<f64>) -> bool>;
-pub type PointVisibleFnPtr = Rc<PointsVisibleFn>;
+pub type InterpolateFn<T> =
+    Box<dyn Fn(Option<Point<T>>, Option<Point<T>>, T, Rc<RefCell<Box<dyn TransformStream<T>>>>)>;
+type PointsVisibleFn<T> = Box<dyn Fn(T, T, Option<T>) -> bool>;
+pub type PointVisibleFnPtr<T> = Rc<PointsVisibleFn<T>>;
 // type ClipLineFn<F> = dyn Fn(Box<dyn ClipLine<F>>) -> Box<dyn ClipLine<F>>;
-pub type CompareIntersectionFn = Box<dyn Fn(Ci, Ci) -> f64>;
+pub type CompareIntersectionFn<T> = Box<dyn Fn(Ci<T>, Ci<T>) -> T>;
 
-pub struct Clip {
-    line: Rc<RefCell<Box<dyn TransformStream>>>,
-    interpolate: Rc<RefCell<InterpolateFn>>,
+pub struct Clip<T: Float> {
+    line: Rc<RefCell<Box<dyn TransformStream<T>>>>,
+    interpolate: Rc<RefCell<InterpolateFn<T>>>,
     // point: Box<dyn Fn()>,
     // point: Point,
     polygon_started: bool,
-    polygon: Box<Vec<Vec<Point>>>,
-    point_visible: PointVisibleFnPtr,
+    polygon: Box<Vec<Vec<Point<T>>>>,
+    point_visible: PointVisibleFnPtr<T>,
     // ring_buffer: Box<dyn TransformStream>,
-    ring_sink: Rc<RefCell<Box<dyn TransformStream>>>,
-    segments: Box<Vec<Vec<Point>>>,
-    start: Point,
-    ring: Vec<Point>,
+    ring_sink: Rc<RefCell<Box<dyn TransformStream<T>>>>,
+    segments: Box<Vec<Vec<Point<T>>>>,
+    start: Point<T>,
+    ring: Vec<Point<T>>,
     use_ring: bool,
-    sink: Rc<RefCell<Box<dyn TransformStream>>>,
+    sink: Rc<RefCell<Box<dyn TransformStream<T>>>>,
 }
 
-impl<'a> Clip {
+impl<'a, T: Float + FloatConst + 'static> Clip<T> {
     fn new(
-        point_visible: PointVisibleFnPtr,
-        clip_line_fn_ptr: Rc<RefCell<StreamProcessor>>,
-        interpolate: Rc<RefCell<InterpolateFn>>,
-        start: Point,
-    ) -> StreamProcessor {
-        return Box::new(move |sink: Rc<RefCell<Box<dyn TransformStream>>>| {
+        point_visible: PointVisibleFnPtr<T>,
+        clip_line_fn_ptr: Rc<RefCell<StreamProcessor<T>>>,
+        interpolate: Rc<RefCell<InterpolateFn<T>>>,
+        start: Point<T>,
+    ) -> StreamProcessor<T> {
+        return Box::new(move |sink: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
             let clip_line = clip_line_fn_ptr.borrow_mut();
             let line = clip_line(sink.clone());
 
@@ -91,8 +91,8 @@ impl<'a> Clip {
         return segment.len() > 1;
     }
 
-    fn point_ring(&mut self, lambda: f64, phi: f64, _m: Option<u8>) {
-        self.ring.push(Point { x: lambda, y: phi });
+    fn point_ring(&mut self, lambda: T, phi: T, _m: Option<u8>) {
+        self.ring.push(Point::new(lambda, phi));
         let mut ring_sink = self.ring_sink.borrow_mut();
         ring_sink.point(lambda, phi, None);
     }
@@ -142,11 +142,11 @@ impl<'a> Clip {
     //   }
 }
 
-impl<'a> TransformStream for Clip {
-    fn point(&mut self, lambda: f64, phi: f64, m: Option<u8>) {
+impl<'a, T: Float + FloatConst> TransformStream<T> for Clip<T> {
+    fn point(&mut self, lambda: T, phi: T, m: Option<u8>) {
         match self.use_ring {
             true => {
-                self.ring.push(Point { x: lambda, y: phi });
+                self.ring.push(Point::new(lambda, phi));
                 // self.ring_sink.point(lambda, phi, None);
             }
             false => {
@@ -219,16 +219,16 @@ impl<'a> TransformStream for Clip {
 
 /// Intersections are sorted along the clip edge. For both antimeridian cutting
 /// and circle clipPIng, the same comparison is used.
-fn compare_intersection(a: Ci, b: Ci) -> f64 {
+fn compare_intersection<T: Float + FloatConst>(a: Ci<T>, b: Ci<T>) -> T {
     let a_dashed = a.x;
-    let part1 = match a_dashed.x < 0f64 {
-        true => a_dashed.y - f64::consts::FRAC_PI_2 - f64::EPSILON,
-        false => f64::consts::FRAC_PI_2 - a_dashed.y,
+    let part1 = match a_dashed.x() < T::zero() {
+        true => a_dashed.y() - T::FRAC_PI_2() - T::epsilon(),
+        false => T::FRAC_PI_2() - a_dashed.y(),
     };
     let b_dashed = b.x;
-    let part2 = match b_dashed.x < 0f64 {
-        true => b_dashed.y - f64::consts::FRAC_PI_2 - f64::EPSILON,
-        false => f64::consts::FRAC_PI_2 - b_dashed.y,
+    let part2 = match b_dashed.x() < T::zero() {
+        true => b_dashed.y() - T::FRAC_PI_2() - T::epsilon(),
+        false => T::FRAC_PI_2() - b_dashed.y(),
     };
 
     return part1 - part2;

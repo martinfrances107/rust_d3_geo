@@ -1,8 +1,8 @@
 use std::cell::RefCell;
-use std::f64;
 use std::rc::Rc;
 
-use delaunator::Point;
+use geo::Point;
+use num_traits::{float::Float, FloatConst};
 
 use crate::clip::PointsVisibleFn;
 use crate::point_equal::point_equal;
@@ -17,50 +17,52 @@ use super::intersect::IntersectReturn;
 // intersections 2 - there were intersections, and the first and last segments
 // should be rejoined.
 
-pub struct Line {
+pub struct Line<T: Float> {
     c0: u8,    // code for previous point
     clean: u8, // no intersections
-    radius: f64,
-    rc: f64,
+    radius: T,
+    rc: T,
     not_hemisphere: bool,
     // point0: (Option<Point>, Option<u8>), // previous point with message.
-    point0: Option<Point>, // previous point
+    point0: Option<Point<T>>, // previous point
     small_radius: bool,
-    stream: Rc<RefCell<Box<dyn TransformStream>>>,
+    stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
     v0: bool,  // visibility of previous point
     v00: bool, // visibility of first point
-    visible: Rc<PointsVisibleFn>,
+    visible: Rc<PointsVisibleFn<T>>,
 }
 
-impl Line {
-    pub fn new(visible: Rc<PointsVisibleFn>, radius: f64) -> StreamProcessor {
-        return Box::new(move |stream_ptr: Rc<RefCell<Box<dyn TransformStream>>>| {
-            let stream = stream_ptr.clone();
-            // TODO small_radius, rc  is a shadow variables!!!
-            let rc = radius.cos();
-            let small_radius = rc > 0f64;
-            return Rc::new(RefCell::new(Box::new(Line {
-                c0: 0,
-                clean: 0,
-                not_hemisphere: rc.abs() > f64::EPSILON,
-                point0: None,
-                rc,
-                radius,
-                small_radius,
-                v0: false,
-                v00: false,
-                stream,
-                visible: visible.clone(),
-            })));
-        });
+impl<T: Float + FloatConst + 'static> Line<T> {
+    pub fn new(visible: Rc<PointsVisibleFn<T>>, radius: T) -> StreamProcessor<T> {
+        return Box::new(
+            move |stream_ptr: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
+                let stream = stream_ptr.clone();
+                // TODO small_radius, rc  is a shadow variables!!!
+                let rc = radius.cos();
+                let small_radius = rc > T::zero();
+                return Rc::new(RefCell::new(Box::new(Line {
+                    c0: 0,
+                    clean: 0,
+                    not_hemisphere: rc.abs() > T::epsilon(),
+                    point0: None,
+                    rc,
+                    radius,
+                    small_radius,
+                    v0: false,
+                    v00: false,
+                    stream,
+                    visible: visible.clone(),
+                })));
+            },
+        );
     }
 
     /// Generates a 4-bit vector representing the location of a point relative to
     /// the small circle's bounding box.
-    fn code(&self, lambda: f64, phi: f64) -> u8 {
+    fn code(&self, lambda: T, phi: T) -> u8 {
         let r = match self.small_radius {
             true => self.radius,
-            false => f64::consts::PI - self.radius,
+            false => T::PI() - self.radius,
         };
         let mut code = 0;
         if lambda < -r {
@@ -87,15 +89,15 @@ impl Line {
     }
 }
 
-impl TransformStream for Line {
+impl<T: Float + FloatConst + 'static> TransformStream<T> for Line<T> {
     fn line_start(&mut self) {
         self.v00 = false;
         self.v0 = false;
         self.clean = 1;
     }
 
-    fn point(&mut self, lambda: f64, phi: f64, _m: Option<u8>) {
-        let mut point1 = Point { x: lambda, y: phi };
+    fn point(&mut self, lambda: T, phi: T, _m: Option<u8>) {
+        let mut point1 = Point::new(lambda, phi);
 
         // let point2: (Option::<Point>, <Option<u8>>);
         let mut point2;
@@ -108,9 +110,9 @@ impl TransformStream for Line {
             },
             false => match v {
                 true => {
-                    let inc = match lambda < 0f64 {
-                        true => f64::consts::PI,
-                        false => -f64::consts::PI,
+                    let inc = match lambda < T::zero() {
+                        true => T::PI(),
+                        false => -T::PI(),
                     };
                     self.code(lambda + inc, phi)
                 }
@@ -136,13 +138,13 @@ impl TransformStream for Line {
             );
             match point2 {
                 IntersectReturn::None => {
-                    point1.x = 1f64;
+                    point1.set_x(T::one());
                 }
                 IntersectReturn::One(p) => {
                     if point_equal(self.point0.clone().unwrap(), p.clone())
                         || point_equal(point1.clone(), p)
                     {
-                        point1.x = 1f64;
+                        point1.set_x(T::one());
                     }
                 }
                 IntersectReturn::Two(_t) => {
@@ -156,7 +158,7 @@ impl TransformStream for Line {
 
         let mut stream = self.stream.borrow_mut();
         if v != self.v0 {
-            let next: Option<Point>;
+            let next: Option<Point<T>>;
             self.clean = 0;
             if v {
                 // outside going in
@@ -167,11 +169,11 @@ impl TransformStream for Line {
                         next = None;
                     }
                     IntersectReturn::One(p) => {
-                        stream.point(p.x, p.y, None);
+                        stream.point(p.x(), p.y(), None);
                         next = Some(p);
                     }
                     IntersectReturn::Two([p, _]) => {
-                        stream.point(p.x, p.y, None);
+                        stream.point(p.x(), p.y(), None);
                         // p0_next = p;
                         panic!("silently dropping second point");
                     }
@@ -186,12 +188,12 @@ impl TransformStream for Line {
                         panic!("Must deal with no intersect.");
                     }
                     IntersectReturn::One(p) => {
-                        stream.point(p.x, p.y, Some(2));
+                        stream.point(p.x(), p.y(), Some(2));
                         stream.line_end();
                         next = Some(p);
                     }
                     IntersectReturn::Two([p, _]) => {
-                        stream.point(p.x, p.y, Some(2));
+                        stream.point(p.x(), p.y(), Some(2));
                         stream.line_end();
                         // next = p;
                         panic!("silently dropping second point");

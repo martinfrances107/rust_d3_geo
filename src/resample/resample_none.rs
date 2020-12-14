@@ -1,7 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use delaunator::Point;
+use geo::Point;
+use num_traits::Float;
 
 use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
@@ -16,14 +17,14 @@ use crate::Transform;
 //   });
 // }
 
-pub struct ResampleNone {
-    project: Rc<RefCell<Box<dyn Transform>>>,
-    stream: Rc<RefCell<Box<dyn TransformStream>>>,
+pub struct ResampleNone<T> {
+    project: Rc<RefCell<Box<dyn Transform<T>>>>,
+    stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
 }
 
-impl ResampleNone {
-    pub fn new(project: Rc<RefCell<Box<dyn Transform>>>) -> StreamProcessor {
-        return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream>>>| {
+impl<T: Float + 'static> ResampleNone<T> {
+    pub fn new(project: Rc<RefCell<Box<dyn Transform<T>>>>) -> StreamProcessor<T> {
+        return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
             return Rc::new(RefCell::new(Box::new(Self {
                 project: project.clone(),
                 stream,
@@ -32,11 +33,11 @@ impl ResampleNone {
     }
 }
 
-impl TransformStream for ResampleNone {
-    fn point(&mut self, x: f64, y: f64, m: Option<u8>) {
+impl<T: Float> TransformStream<T> for ResampleNone<T> {
+    fn point(&mut self, x: T, y: T, m: Option<u8>) {
         let mut stream = self.stream.borrow_mut();
         let project = &*self.project.borrow();
-        let p = project.transform(&Point { x, y });
-        stream.point(p.x, p.y, m);
+        let p = project.transform(&Point::new(x, y));
+        stream.point(p.x(), p.y(), m);
     }
 }

@@ -1,6 +1,8 @@
 use std::rc::Rc;
 
-use delaunator::Point;
+use geo::Point;
+use num_traits::Float;
+use num_traits::float::FloatConst;
 
 use super::projection::Projection;
 use super::projection::StreamProcessorValueMaybe;
@@ -12,32 +14,29 @@ use crate::Transform;
 pub struct StereographicRaw {}
 
 impl StereographicRaw {
-    fn new() -> Box<dyn Transform> {
+    fn new<T: Float + 'static>() -> Box<dyn Transform<T>> {
         return Box::new(Self {});
     }
 
-    pub fn gen_projection_mutator<'a>() -> ProjectionMutator {
+    pub fn gen_projection_mutator<'a, T: Float + FloatConst + 'static>() -> ProjectionMutator<T> {
         let s = Rc::new(StereographicRaw::new());
         let mut projection = ProjectionMutator::from_projection_raw(s);
-        projection.scale(Some(&250f64));
-        projection.clip_angle(StreamProcessorValueMaybe::Value(142f64));
+        projection.scale(Some(&T::from(250f64).unwrap()));
+        projection.clip_angle(StreamProcessorValueMaybe::Value(T::from(142f64).unwrap()));
         return projection;
     }
 }
 
-impl Transform for StereographicRaw {
-    fn transform(&self, p: &Point) -> Point {
-        let cy = p.y.cos();
-        let k = 1f64 + p.x.cos() * cy;
-        return Point {
-            x: cy * p.x.sin() / k,
-            y: p.y.sin() / k,
-        };
+impl<T: Float + 'static> Transform<T> for StereographicRaw {
+    fn transform(&self, p: &Point<T>) -> Point<T> {
+        let cy = p.y().cos();
+        let k = T::one() + p.x().cos() * cy;
+        return Point::new(cy * p.x().sin() / k, p.y().sin() / k);
     }
 
-    fn invert(&self, p: &Point) -> Point {
-        let f = Box::new(|z: f64| 2f64 * z.atan());
+    fn invert(&self, p: &Point<T>) -> Point<T> {
+        let f = Box::new(|z: T| T::from(2).unwrap() * z.atan());
         let g = azimuthal_invert(f);
-        return g(p.x, p.y);
+        return g(p.x(), p.y());
     }
 }

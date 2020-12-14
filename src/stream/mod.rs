@@ -2,10 +2,8 @@ pub(crate) mod geometry_processor;
 mod line;
 mod polygon;
 
-// use delaunator::Point;
-
-pub trait Stream {
-    fn point(&mut self, _x: f64, _y: f64, _z: Option<f64>) {}
+pub trait Stream<T> {
+    fn point(&mut self, _x: T, _y: T, _z: Option<T>) {}
     fn sphere(&mut self) {}
     fn line_start(&mut self) {}
     fn line_end(&mut self) {}

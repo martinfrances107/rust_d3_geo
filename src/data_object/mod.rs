@@ -12,7 +12,7 @@ pub mod multi_point;
 pub mod multi_polygon;
 pub mod point;
 pub mod polygon;
-
-pub trait DataObject {
-    fn to_stream(&self, stream: &mut impl Stream);
+use num_traits::Float;
+pub trait DataObject<T: Float> {
+    fn to_stream(&self, stream: &mut impl Stream<T>);
 }

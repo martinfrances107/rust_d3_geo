@@ -1,24 +1,37 @@
+use std::unimplemented;
+
 use super::line::line;
-use super::polygon::polygon;
+// use super::polygon::polygon;
+use geo::Polygon;
 
 use crate::data_object::feature_geometry::FeatureGeometry;
 use crate::stream::Stream;
+use geo::Geometry;
+use geo::LineString;
+use geo::MultiPoint;
+use geo::Point;
 
-pub fn processor(geometry: &FeatureGeometry, stream: &mut impl Stream) {
+use num_traits::Float;
+
+pub fn processor<T: Float>(geometry: &Geometry<T>, stream: &mut impl Stream<T>) {
     match geometry {
-        FeatureGeometry::LineString { coordinates, .. } => {
-            line(coordinates, stream, 0);
+        Geometry::LineString(ls) => {
+            let points: Vec<Point<T>> = ls.points_iter().collect();
+            line(&points, stream, 0);
         }
-        FeatureGeometry::Point { coordinate, .. } => {
-            stream.point(coordinate.x, coordinate.y, None);
+        Geometry::Point(p) => {
+            stream.point(p.x(), p.y(), None);
         }
-        FeatureGeometry::MultiPoint { coordinates, .. } => {
+        Geometry::MultiPoint(coordinates) => {
             for c in coordinates {
-                stream.point(c.x, c.y, None);
+                stream.point(c.x(), c.y(), None);
             }
         }
-        FeatureGeometry::Polygon { coordinates, .. } => {
-            polygon(coordinates, stream);
+        Geometry::Polygon(polygon) => {
+            unimplemented!("Must implement Polygon");
+        }
+        _ => {
+            unimplemented!("must implement extra Geometry type.");
         }
     }
 }

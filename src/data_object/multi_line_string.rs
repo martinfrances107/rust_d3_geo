@@ -2,19 +2,13 @@ use super::feature_geometry::FeatureGeometry;
 use super::DataObject;
 use crate::stream::geometry_processor::processor;
 use crate::stream::Stream;
-use delaunator::Point;
+use geo::Geometry;
+use geo::MultiLineString;
+use num_traits::Float;
 /// MultiLineString - an array of arrays of positions forming several lines.
-pub struct MultiLineString {
-    pub coordinates: Vec<Vec<Point>>,
-}
 
-impl DataObject for MultiLineString {
-    fn to_stream(&self, stream: &mut impl Stream) {
-        for coordinate in &self.coordinates {
-            let g = FeatureGeometry::LineString {
-                coordinates: coordinate.to_vec(),
-            };
-            processor(&g, stream);
-        }
+impl<T: Float> DataObject<T> for MultiLineString<T> {
+    fn to_stream(&self, stream: &mut impl Stream<T>) {
+        processor(&Geometry::MultiLineString(self.clone()), stream);
     }
 }

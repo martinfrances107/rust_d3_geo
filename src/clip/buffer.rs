@@ -1,19 +1,20 @@
 use crate::transform_stream::TransformStream;
+use num_traits::Float;
 
 #[derive(Clone, Copy, Debug)]
-struct LineTuple {
-    x: f64,
-    y: f64,
+struct LineTuple<T: Float> {
+    x: T,
+    y: T,
     m: Option<u8>,
 }
 #[derive(Debug)]
-pub struct ClipBuffer {
-    lines: Vec<Vec<LineTuple>>,
-    line: Vec<LineTuple>,
+pub struct ClipBuffer<T: Float> {
+    lines: Vec<Vec<LineTuple<T>>>,
+    line: Vec<LineTuple<T>>,
 }
 
-impl ClipBuffer {
-    pub fn new() -> Box<dyn TransformStream> {
+impl<T: Float + 'static> ClipBuffer<T> {
+    pub fn new() -> Box<dyn TransformStream<T>> {
         return Box::new(Self {
             lines: Vec::new(),
             line: Vec::new(),
@@ -31,7 +32,7 @@ impl ClipBuffer {
         }
     }
 
-    fn result(&mut self) -> Vec<Vec<LineTuple>> {
+    fn result(&mut self) -> Vec<Vec<LineTuple<T>>> {
         self.lines.clear();
         self.line.clear();
         let result = &self.lines;
@@ -39,8 +40,8 @@ impl ClipBuffer {
     }
 }
 
-impl<'a> TransformStream for ClipBuffer {
-    fn point(&mut self, x: f64, y: f64, m: Option<u8>) {
+impl<'a, T: Float> TransformStream<T> for ClipBuffer<T> {
+    fn point(&mut self, x: T, y: T, m: Option<u8>) {
         self.line.push(LineTuple { x, y, m });
     }
 

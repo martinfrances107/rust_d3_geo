@@ -1,43 +1,37 @@
-use std::f64;
+use geo::Point;
+use num_traits::Float;
+use num_traits::FloatConst;
 
-use delaunator::Point;
-
-use crate::math::TAU;
+// use crate::math::TAU;
 use crate::Transform;
 
 #[derive(Debug)]
-pub struct RotationLambda {
-    pub delta_lambda: f64,
+pub struct RotationLambda<T> {
+    pub delta_lambda: T,
 }
 
 // TODO why can't I #[inline] this.
-fn forward_rotation_lambda(delta_lambda: f64, p: &Point) -> Point {
-    let lambda = p.x + delta_lambda;
-    let phi = p.y;
-    return match (lambda > f64::consts::PI, lambda < -f64::consts::PI) {
-        (false, false) => Point { x: lambda, y: phi }, // -PI <= lambda <= PI
-        (true, _) => Point {
-            x: lambda - TAU,
-            y: phi,
-        }, // lambda >  PI
-        (_, true) => Point {
-            x: lambda + TAU,
-            y: phi,
-        }, // lambda < -PI
+fn forward_rotation_lambda<T: Float + FloatConst>(delta_lambda: T, p: &Point<T>) -> Point<T> {
+    let lambda = p.x() + delta_lambda;
+    let phi = p.y();
+    return match (lambda > T::PI(), lambda < -T::PI()) {
+        (false, false) => Point::new(lambda, phi), // -PI <= lambda <= PI
+        (true, _) => Point::new(lambda - T::TAU(), phi), // lambda >  PI
+        (_, true) => Point::new(lambda + T::TAU(), phi), // lambda < -PI
     };
 }
 
-impl RotationLambda {
-    pub fn new(delta_lambda: f64) -> Box<dyn Transform> {
+impl<T: Float + FloatConst + 'static> RotationLambda<T> {
+    pub fn new(delta_lambda: T) -> Box<dyn Transform<T>> {
         return Box::new(Self { delta_lambda });
     }
 }
 
-impl Transform for RotationLambda {
-    fn transform(&self, coordinates: &Point) -> Point {
+impl<T: Float + FloatConst> Transform<T> for RotationLambda<T> {
+    fn transform(&self, coordinates: &Point<T>) -> Point<T> {
         return forward_rotation_lambda(self.delta_lambda, coordinates);
     }
-    fn invert(&self, coordinates: &Point) -> Point {
+    fn invert(&self, coordinates: &Point<T>) -> Point<T> {
         return forward_rotation_lambda(-self.delta_lambda, coordinates);
     }
 }
