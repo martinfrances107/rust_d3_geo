@@ -1,8 +1,8 @@
 use std::rc::Rc;
 
 use geo::Point;
-use num_traits::Float;
 use num_traits::float::FloatConst;
+use num_traits::Float;
 
 use super::projection::Projection;
 use super::projection::StreamProcessorValueMaybe;

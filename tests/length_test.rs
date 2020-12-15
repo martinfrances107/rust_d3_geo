@@ -2,16 +2,6 @@
 #[cfg(test)]
 mod length_test {
     extern crate pretty_assertions;
-    use geo::Point;
-    use num_traits::Float;
-    use rust_d3_geo::data_object::feature_collection::FeatureCollection;
-    use rust_d3_geo::data_object::feature_geometry::FeatureGeometry;
-    use rust_d3_geo::data_object::features_struct::FeaturesStruct;
-    // use rust_d3_geo::data_object::line_string::LineString;
-    // use rust_d3_geo::data_object::multi_line_string::MultiLineString;
-    // use rust_d3_geo::data_object::multi_point::MultiPoint;
-    // use rust_d3_geo::data_object::multi_polygon::MultiPolygon;
-    // use rust_d3_geo::data_object::polygon::Polygon;
     use geo::line_string;
     use geo::polygon;
     use geo::Geometry;
@@ -19,7 +9,10 @@ mod length_test {
     use geo::MultiLineString;
     use geo::MultiPoint;
     use geo::MultiPolygon;
+    use geo::Point;
     use geo::Polygon;
+    use rust_d3_geo::data_object::feature_collection::FeatureCollection;
+    use rust_d3_geo::data_object::features_struct::FeaturesStruct;
     use rust_d3_geo::in_delta::in_delta;
     use rust_d3_geo::length::LengthStream;
     use std::f64::consts::PI;
