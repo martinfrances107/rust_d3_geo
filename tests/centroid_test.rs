@@ -41,8 +41,7 @@ mod centroid_test {
         println!(
             "the centroid of a set of points is the (spherical) average of its constituent members"
         );
-
-        // GeoCollection.centroid() is not implemented !
+        
         assert!(in_delta_point(
             CentroidStream::default().centroid(&GeometryCollection(vec![
                 Geometry::Point(Point::new(0f64, 0f64)),
