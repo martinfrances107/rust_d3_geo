@@ -24,7 +24,7 @@ pub fn cartesian_cross<T: Float>(a: &[T; 3], b: &[T; 3]) -> [T; 3] {
     ];
 }
 
-pub fn cartesian_add(a: [f64; 3], b: [f64; 3]) -> [f64; 3] {
+pub fn cartesian_add<T: Float>(a: [T; 3], b: [T; 3]) -> [T; 3] {
     return [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
 }
 
@@ -45,7 +45,7 @@ pub fn cartesian_normalize_in_place<T: Float>(d: &mut [T; 3]) {
     d[2] = d[2] / l;
 }
 
-pub fn cartesian_normalize(d: &[f64; 3]) -> [f64; 3] {
+pub fn cartesian_normalize<T: Float>(d: &[T; 3]) -> [T; 3] {
     let l = (d[0] * d[0] + d[1] * d[1] + d[2] * d[2]).sqrt();
     return [d[0] / l, d[1] / l, d[2] / l];
 }
