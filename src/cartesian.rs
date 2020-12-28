@@ -1,13 +1,16 @@
-use geo::Point;
+use geo::Coordinate;
 use num_traits::Float;
 
-pub fn spherical<T: Float>(cartesian: &[T; 3]) -> Point<T> {
-    return Point::new(cartesian[1].atan2(cartesian[0]), cartesian[2].asin());
+pub fn spherical<T: Float>(cartesian: &[T; 3]) -> Coordinate<T> {
+    return Coordinate {
+        x: cartesian[1].atan2(cartesian[0]),
+        y: cartesian[2].asin(),
+    };
 }
 
-pub fn cartesian<T: Float>(spherical: &Point<T>) -> [T; 3] {
-    let lambda = spherical.x();
-    let phi = spherical.y();
+pub fn cartesian<T: Float>(spherical: &Coordinate<T>) -> [T; 3] {
+    let lambda = spherical.x;
+    let phi = spherical.y;
     let cos_phi = phi.cos();
     return [cos_phi * lambda.cos(), cos_phi * lambda.sin(), phi.sin()];
 }

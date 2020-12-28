@@ -1,4 +1,4 @@
-use geo::Point;
+use geo::Coordinate;
 use num_traits::Float;
 
 use crate::Transform;
@@ -43,19 +43,20 @@ impl<T: Float + 'static> ScaleTranslateRotate<T> {
 }
 
 impl<T: Float> Transform<T> for ScaleTranslateRotate<T> {
-    fn transform(&self, p: &Point<T>) -> Point<T> {
-        let x = p.x() * self.sx;
-        let y = p.y() * self.sy;
-        return Point::new(
-            self.a * x - self.b * y + self.dx,
-            self.dy - self.b * x - self.a * y,
-        );
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        let x = p.x * self.sx;
+        let y = p.y * self.sy;
+        Coordinate {
+            x: self.a * x - self.b * y + self.dx,
+            y: self.dy - self.b * x - self.a * y,
+        }
     }
 
-    fn invert(&self, p: &Point<T>) -> Point<T> {
-        return Point::new(
-            self.sx * (self.ai * p.x() - self.bi * p.y() + self.ci),
-            self.sy * (self.fi - self.bi * p.x() - self.ai * p.y()),
-        );
+    #[inline]
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        Coordinate {
+            x: self.sx * (self.ai * p.x - self.bi * p.y + self.ci),
+            y: self.sy * (self.fi - self.bi * p.x - self.ai * p.y),
+        }
     }
 }

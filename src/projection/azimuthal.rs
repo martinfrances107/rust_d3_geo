@@ -1,4 +1,4 @@
-use geo::Point;
+use geo::{Coordinate, Point};
 use num_traits::Float;
 
 pub fn azimuthal_raw<T: Float + 'static>(
@@ -17,8 +17,8 @@ pub fn azimuthal_raw<T: Float + 'static>(
 
 pub fn azimuthal_invert<T: Float + 'static>(
     angle: Box<dyn Fn(T) -> T>,
-) -> Box<dyn Fn(T, T) -> Point<T>> {
-    return Box::new(move |x: T, y: T| -> Point<T> {
+) -> Box<dyn Fn(T, T) -> Coordinate<T>> {
+    return Box::new(move |x: T, y: T| -> Coordinate<T> {
         let z = (x * x + y * y).sqrt();
         let c = angle(z);
         let sc = c.sin();
@@ -33,6 +33,6 @@ pub fn azimuthal_invert<T: Float + 'static>(
         }
         let ret_y = y_out.asin();
 
-        return Point::new(ret_x, ret_y);
+        return Coordinate { x: ret_x, y: ret_y };
     });
 }

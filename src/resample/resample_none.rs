@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use geo::Point;
+use geo::Coordinate;
 use num_traits::Float;
 
 use crate::transform_stream::StreamProcessor;
@@ -37,7 +37,7 @@ impl<T: Float> TransformStream<T> for ResampleNone<T> {
     fn point(&mut self, x: T, y: T, m: Option<u8>) {
         let mut stream = self.stream.borrow_mut();
         let project = &*self.project.borrow();
-        let p = project.transform(&Point::new(x, y));
-        stream.point(p.x(), p.y(), m);
+        let p = project.transform(&Coordinate { x, y });
+        stream.point(p.x, p.y, m);
     }
 }

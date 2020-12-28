@@ -1,4 +1,4 @@
-use geo::Point;
+use geo::Coordinate;
 use num_traits::Float;
 
 use std::rc::Rc;
@@ -21,13 +21,13 @@ impl<'a, T: Float + 'static> Compose<T> {
 
 impl<T: Float> Transform<T> for Compose<T> {
     // Apply A then B.
-    fn transform(&self, coordinates: &Point<T>) -> Point<T> {
+    fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.a.transform(coordinates);
         return self.b.transform(&temp);
     }
 
     // Apply B them A.
-    fn invert(&self, coordinates: &Point<T>) -> Point<T> {
+    fn invert(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.b.invert(coordinates);
         return self.a.invert(&temp);
     }

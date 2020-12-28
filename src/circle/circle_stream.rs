@@ -4,7 +4,7 @@ use std::rc::Rc;
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_normalize_in_place;
 use crate::cartesian::spherical;
-use geo::Point;
+use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 
 use crate::transform_stream::TransformStream;
@@ -18,8 +18,8 @@ pub fn circle_stream<T: Float + FloatConst>(
     radius: T,
     delta: T,
     direction: T,
-    p0: Option<Point<T>>,
-    p1: Option<Point<T>>,
+    p0: Option<Coordinate<T>>,
+    p1: Option<Coordinate<T>>,
 ) {
     if delta.is_zero() {
         return;
@@ -47,13 +47,13 @@ pub fn circle_stream<T: Float + FloatConst>(
         }
     }
 
-    let mut point: Point<T>;
+    let mut point: Coordinate<T>;
     let mut t = t0;
     let mut cond = true;
     let mut stream = stream.borrow_mut();
     while cond {
         point = spherical(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
-        stream.point(point.x(), point.y(), None);
+        stream.point(point.x, point.y, None);
 
         t = t - step;
         cond = match direction.is_sign_positive() {

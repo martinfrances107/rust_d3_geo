@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use geo::Point;
+use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 
 use crate::clip::PointsVisibleFn;
@@ -24,7 +24,7 @@ pub struct Line<T: Float> {
     rc: T,
     not_hemisphere: bool,
     // point0: (Option<Point>, Option<u8>), // previous point with message.
-    point0: Option<Point<T>>, // previous point
+    point0: Option<Coordinate<T>>, // previous point
     small_radius: bool,
     stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
     v0: bool,  // visibility of previous point
@@ -97,7 +97,7 @@ impl<T: Float + FloatConst + 'static> TransformStream<T> for Line<T> {
     }
 
     fn point(&mut self, lambda: T, phi: T, _m: Option<u8>) {
-        let mut point1 = Point::new(lambda, phi);
+        let mut point1 = Coordinate { x: lambda, y: phi };
 
         // let point2: (Option::<Point>, <Option<u8>>);
         let mut point2;
@@ -138,13 +138,13 @@ impl<T: Float + FloatConst + 'static> TransformStream<T> for Line<T> {
             );
             match point2 {
                 IntersectReturn::None => {
-                    point1.set_x(T::one());
+                    point1.x = T::one();
                 }
                 IntersectReturn::One(p) => {
                     if point_equal(self.point0.clone().unwrap(), p.clone())
                         || point_equal(point1.clone(), p)
                     {
-                        point1.set_x(T::one());
+                        point1.x = T::one();
                     }
                 }
                 IntersectReturn::Two(_t) => {
@@ -158,7 +158,7 @@ impl<T: Float + FloatConst + 'static> TransformStream<T> for Line<T> {
 
         let mut stream = self.stream.borrow_mut();
         if v != self.v0 {
-            let next: Option<Point<T>>;
+            let next: Option<Coordinate<T>>;
             self.clean = 0;
             if v {
                 // outside going in
@@ -169,11 +169,11 @@ impl<T: Float + FloatConst + 'static> TransformStream<T> for Line<T> {
                         next = None;
                     }
                     IntersectReturn::One(p) => {
-                        stream.point(p.x(), p.y(), None);
+                        stream.point(p.x, p.y, None);
                         next = Some(p);
                     }
                     IntersectReturn::Two([p, _]) => {
-                        stream.point(p.x(), p.y(), None);
+                        stream.point(p.x, p.y, None);
                         // p0_next = p;
                         panic!("silently dropping second point");
                     }
@@ -188,12 +188,12 @@ impl<T: Float + FloatConst + 'static> TransformStream<T> for Line<T> {
                         panic!("Must deal with no intersect.");
                     }
                     IntersectReturn::One(p) => {
-                        stream.point(p.x(), p.y(), Some(2));
+                        stream.point(p.x, p.y, Some(2));
                         stream.line_end();
                         next = Some(p);
                     }
                     IntersectReturn::Two([p, _]) => {
-                        stream.point(p.x(), p.y(), Some(2));
+                        stream.point(p.x, p.y, Some(2));
                         stream.line_end();
                         // next = p;
                         panic!("silently dropping second point");

@@ -1,13 +1,16 @@
-use delaunator::Point;
+use geo::{Coordinate, CoordinateType, Point};
 
 #[derive(Clone, Debug)]
-pub enum FeatureProperty {
-    Circumecenter(Point),
-    Length(f64),
-    Source(Point),
-    Target(Point),
+pub enum FeatureProperty<T>
+where
+    T: CoordinateType,
+{
+    Circumecenter(Coordinate<T>),
+    Length(T),
+    Source(Point<T>),
+    Target(Point<T>),
     Urquhart(bool),
-    Site(f64),
-    Sitecoordinates(Point),
+    Site(T),
+    Sitecoordinates(Point<T>),
     Neighbors(Vec<usize>),
 }

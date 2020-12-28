@@ -3,7 +3,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use geo::Point;
+use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 
 use crate::compose::Compose;
@@ -102,12 +102,15 @@ impl<T: Float + FloatConst + 'static> ProjectionMutator<T> {
     fn recenter(&mut self) {
         let center =
             ScaleTranslateRotate::new(self.k, T::zero(), T::zero(), self.sx, self.sy, self.alpha)
-                .transform(&self.project.transform(&Point::new(self.lambda, self.phi)));
+                .transform(&self.project.transform(&Coordinate {
+                    x: self.lambda,
+                    y: self.phi,
+                }));
 
         let transform = ScaleTranslateRotate::new(
             self.k,
-            self.x - center.x(),
-            self.y - center.y(),
+            self.x - center.x,
+            self.y - center.y,
             self.sx,
             self.sy,
             self.alpha,
@@ -156,16 +159,22 @@ impl<T: Float + FloatConst + 'static> ProjectionMutator<T> {
 impl<T: Float> TransformStream<T> for ProjectionMutator<T> {}
 
 impl<T: Float> Transform<T> for ProjectionMutator<T> {
-    fn transform(&self, p: &Point<T>) -> Point<T> {
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let pt = self.project_rotate_transform.clone();
-        let r = Point::new(p.x().to_radians(), p.y().to_radians());
+        let r = Coordinate {
+            x: p.x.to_radians(),
+            y: p.y.to_radians(),
+        };
         let out = pt.transform(&r);
         return out;
     }
-    fn invert(&self, p: &Point<T>) -> Point<T> {
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let pt = self.project_rotate_transform.clone();
         let d = pt.invert(p);
-        let out = Point::new(d.x().to_degrees(), d.y().to_degrees());
+        let out = Coordinate {
+            x: d.x.to_degrees(),
+            y: d.y.to_degrees(),
+        };
         return out;
     }
 }
@@ -239,16 +248,19 @@ impl<T: Float + FloatConst + 'static> Projection<T> for ProjectionMutator<T> {
         }
     }
 
-    fn translate(&mut self, t: Option<&Point<T>>) -> Option<Point<T>> {
+    fn translate(&mut self, t: Option<&Coordinate<T>>) -> Option<Coordinate<T>> {
         match t {
             Some(t) => {
-                self.x = t.x();
-                self.y = t.y();
+                self.x = t.x;
+                self.y = t.y;
                 self.recenter();
                 return None;
             }
             None => {
-                return Some(Point::new(self.x, self.y));
+                return Some(Coordinate {
+                    x: self.x,
+                    y: self.y,
+                });
             }
         }
     }

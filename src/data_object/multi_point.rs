@@ -7,10 +7,6 @@ use geo::Geometry;
 use geo::MultiPoint;
 use num_traits::Float;
 
-// pub struct MultiPoint {
-//     pub coordinates: Vec<Point>,
-// }
-
 impl<T: Float> DataObject<T> for MultiPoint<T> {
     fn to_stream(&self, stream: &mut impl Stream<T>) {
         for p in self.iter() {

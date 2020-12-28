@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use geo::Point;
+use geo::Coordinate;
 use num_traits::float::FloatConst;
 use num_traits::Float;
 
@@ -29,13 +29,16 @@ impl OrthographicRaw {
 }
 
 impl<T: Float + 'static> Transform<T> for OrthographicRaw {
-    fn transform(&self, p: &Point<T>) -> Point<T> {
-        return Point::new(p.y().cos() * p.x().sin(), p.y().sin());
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        return Coordinate {
+            x: p.y.cos() * p.x.sin(),
+            y: p.y.sin(),
+        };
     }
 
-    fn invert(&self, p: &Point<T>) -> Point<T> {
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let f = Box::new(|z: T| z.asin());
         let g = azimuthal_invert(f);
-        return g(p.x(), p.y());
+        return g(p.x, p.y);
     }
 }

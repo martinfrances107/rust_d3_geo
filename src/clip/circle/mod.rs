@@ -9,7 +9,7 @@ use crate::circle::circle_stream::circle_stream;
 use crate::clip::PointsVisibleFn;
 use crate::transform_stream::StreamProcessor;
 use crate::transform_stream::TransformStream;
-use geo::Point;
+use geo::Coordinate;
 use line::Line;
 use num_traits::{float::Float, FloatConst};
 
@@ -23,8 +23,8 @@ pub fn generate_circle<T: Float + FloatConst + 'static>(radius: T) -> StreamProc
         }));
 
     let interpolate =
-        move |from: Option<Point<T>>,
-              to: Option<Point<T>>,
+        move |from: Option<Coordinate<T>>,
+              to: Option<Coordinate<T>>,
               direction: T,
               stream: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
             circle_stream(stream, radius, delta, direction, from, to)
@@ -38,6 +38,9 @@ pub fn generate_circle<T: Float + FloatConst + 'static>(radius: T) -> StreamProc
         visible,
         clip_line_fn_ptr,
         Rc::new(RefCell::new(Box::new(interpolate))),
-        Point::new(-T::PI(), -T::FRAC_PI_2()),
+        Coordinate {
+            x: -T::PI(),
+            y: -T::FRAC_PI_2(),
+        },
     );
 }

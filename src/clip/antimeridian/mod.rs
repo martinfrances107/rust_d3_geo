@@ -1,7 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use geo::Point;
+use geo::Coordinate;
+
 use num_traits::{float::Float, FloatConst};
 
 mod interpolate;
@@ -29,6 +30,9 @@ pub fn generate_antimeridian<T: Float + FloatConst + 'static>() -> StreamProcess
         Rc::new(Box::new(point_visible)),
         clip_line_fn_ptr,
         Rc::new(RefCell::new(Box::new(interpolate))),
-        Point::new(-T::PI(), -T::FRAC_PI_2()),
+        Coordinate {
+            x: -T::PI(),
+            y: -T::FRAC_PI_2(),
+        },
     );
 }

@@ -1,4 +1,4 @@
-use geo::Point;
+use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 
 // use super::adder::Adder;
@@ -11,17 +11,20 @@ use crate::cartesian::cartesian_normalize_in_place;
 // import adder from "./adder.js";
 // var sum = adder();
 
-fn longitude<T: Float + FloatConst>(point: &Point<T>) -> T {
-    if point.x().abs() <= T::PI() {
-        return point.x();
+fn longitude<T: Float + FloatConst>(point: &Coordinate<T>) -> T {
+    if point.x.abs() <= T::PI() {
+        return point.x;
     } else {
-        return point.x().signum() * ((point.x().abs() + T::PI()) % T::TAU() - T::PI());
+        return point.x.signum() * ((point.x.abs() + T::PI()) % T::TAU() - T::PI());
     }
 }
 
-pub fn contains<T: Float + FloatConst>(polygon: Vec<Vec<Point<T>>>, point: &Point<T>) -> bool {
+pub fn contains<T: Float + FloatConst>(
+    polygon: Vec<Vec<Coordinate<T>>>,
+    point: &Coordinate<T>,
+) -> bool {
     let lambda = longitude(point);
-    let mut phi = point.y();
+    let mut phi = point.y;
     let sin_phi = phi.sin();
     let normal = [lambda.sin(), -lambda.cos(), T::zero()];
     let mut angle = T::zero();
@@ -47,14 +50,14 @@ pub fn contains<T: Float + FloatConst>(polygon: Vec<Vec<Point<T>>>, point: &Poin
 
         let mut point0 = (*ring.last().unwrap()).clone();
         let mut lambda0 = longitude(&point0);
-        let phi0 = point0.y() / T::from(2).unwrap() + T::FRAC_PI_4();
+        let phi0 = point0.y / T::from(2).unwrap() + T::FRAC_PI_4();
         let mut sin_phi0 = phi0.sin();
         let mut cos_phi0 = phi0.cos();
 
         for j in 0..m {
             let point1 = ring[j].clone();
             let lambda1 = longitude(&point1);
-            let phi1 = point1.y() / T::from(2).unwrap() + T::FRAC_PI_4();
+            let phi1 = point1.y / T::from(2).unwrap() + T::FRAC_PI_4();
             let sin_phi1 = phi1.sin();
             let cos_phi1 = phi1.cos();
             let delta = lambda1 - lambda0;

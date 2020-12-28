@@ -4,21 +4,21 @@ use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_dot;
 use crate::cartesian::cartesian_scale;
 use crate::cartesian::spherical;
-use geo::Point;
+use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 
 /// IntersectReturn none, one or two 2d floats.
 pub enum IntersectReturn<T: Float> {
-    One(Point<T>),
-    Two([Point<T>; 2]),
+    One(Coordinate<T>),
+    Two([Coordinate<T>; 2]),
     None,
 }
 
 /// Intersects the great circle between a and b with the clip circle.
 #[allow(clippy::many_single_char_names)]
 pub fn intersect<T: Float + FloatConst>(
-    a: Point<T>,
-    b: Point<T>,
+    a: Coordinate<T>,
+    b: Coordinate<T>,
     cr: T,
     two: bool,
 ) -> IntersectReturn<T> {
@@ -65,17 +65,17 @@ pub fn intersect<T: Float + FloatConst>(
     cartesian_add_in_place(&mut q, &A);
 
     // Javascript has implicit cast q of from [F;3] to a Point here.
-    let q: Point<T> = spherical(&q);
+    let q: Coordinate<T> = spherical(&q);
 
     if !two {
         return IntersectReturn::One(q);
     };
 
     // Two intersection points.
-    let mut lambda0 = a.x();
-    let mut lambda1 = b.x();
-    let mut phi0 = a.y();
-    let mut phi1 = b.y();
+    let mut lambda0 = a.x;
+    let mut lambda1 = b.x;
+    let mut phi0 = a.y;
+    let mut phi1 = b.y;
     let mut z;
 
     if lambda1 < lambda0 {
@@ -108,17 +108,17 @@ pub fn intersect<T: Float + FloatConst>(
     let condition: bool;
     if meridian {
         if polar {
-            let phi_threshold = if (q.x() - lambda0).abs() < T::epsilon() {
+            let phi_threshold = if (q.x - lambda0).abs() < T::epsilon() {
                 phi0
             } else {
                 phi1
             };
-            condition = ((phi0 + phi1).is_sign_positive()) ^ (q.y() < phi_threshold);
+            condition = ((phi0 + phi1).is_sign_positive()) ^ (q.y < phi_threshold);
         } else {
-            condition = phi0 <= q.y() && q.y() <= phi1;
+            condition = phi0 <= q.y && q.y <= phi1;
         }
     } else {
-        condition = (delta > T::PI()) ^ (lambda0 <= q.x() && q.x() <= lambda1);
+        condition = (delta > T::PI()) ^ (lambda0 <= q.x && q.x <= lambda1);
     }
 
     // Not javascript test exits to test this code block!!!!

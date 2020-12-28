@@ -1,5 +1,5 @@
 // use delaunator::Point;
-use geo::Point;
+use geo::Coordinate;
 use num_traits::Float;
 
 use crate::Transform;
@@ -25,9 +25,9 @@ impl<T: Float + 'static> RotationPhiGamma<T> {
 
 impl<T: Float> Transform<T> for RotationPhiGamma<T> {
     #[allow(clippy::many_single_char_names)]
-    fn transform(&self, p: &Point<T>) -> Point<T> {
-        let lambda = p.x();
-        let phi = p.y();
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        let lambda = p.x;
+        let phi = p.y;
 
         let cos_phi = phi.cos();
         let x = lambda.cos() * cos_phi;
@@ -35,17 +35,17 @@ impl<T: Float> Transform<T> for RotationPhiGamma<T> {
         let z = phi.sin();
         let k = z * self.cos_delta_phi + x * self.sin_delta_phi;
 
-        return Point::new(
-            (y * self.cos_delta_gamma - k * self.sin_delta_gamma)
+        return Coordinate {
+            x: (y * self.cos_delta_gamma - k * self.sin_delta_gamma)
                 .atan2(x * self.cos_delta_phi - z * self.sin_delta_phi),
-            (k * self.cos_delta_gamma + y * self.sin_delta_gamma).asin(),
-        );
+            y: (k * self.cos_delta_gamma + y * self.sin_delta_gamma).asin(),
+        };
     }
 
     #[allow(clippy::many_single_char_names)]
-    fn invert(&self, p: &Point<T>) -> Point<T> {
-        let lambda = p.x();
-        let phi = p.y();
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        let lambda = p.x;
+        let phi = p.y;
 
         let cos_phi = phi.cos();
         let x = lambda.cos() * cos_phi;
@@ -53,10 +53,10 @@ impl<T: Float> Transform<T> for RotationPhiGamma<T> {
         let z = phi.sin();
         let k = z * self.cos_delta_gamma - y * self.sin_delta_gamma;
 
-        return Point::new(
-            (y * self.cos_delta_gamma + z * self.sin_delta_gamma)
+        return Coordinate {
+            x: (y * self.cos_delta_gamma + z * self.sin_delta_gamma)
                 .atan2(x * self.cos_delta_phi + k * self.sin_delta_phi),
-            (k * self.cos_delta_phi - x * self.sin_delta_phi).asin(),
-        );
+            y: (k * self.cos_delta_phi - x * self.sin_delta_phi).asin(),
+        };
     }
 }

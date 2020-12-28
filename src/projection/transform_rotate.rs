@@ -1,4 +1,4 @@
-use geo::Point;
+use geo::Coordinate;
 use num_traits::Float;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -27,8 +27,8 @@ impl<T: Float> TransformStream<T> for TransformRotate<T> {
     fn point(&mut self, x: T, y: T, m: Option<u8>) {
         let mut stream = self.stream.borrow_mut();
         let rotate = self.rotate.borrow();
-        let r = rotate.transform(&Point::new(x, y));
+        let r = rotate.transform(&Coordinate { x, y });
         // Warning the javascript version return the value below but I thnk it break the implied spec!!!!
-        stream.point(r.x(), r.y(), m);
+        stream.point(r.x, r.y, m);
     }
 }

@@ -4,6 +4,6 @@ use num_traits::Float;
 // Signular veriosn of the struct.
 #[derive(Clone, Debug)]
 pub struct FeatureStruct<T: Float> {
-    pub properties: Vec<FeatureProperty>,
+    pub properties: Vec<FeatureProperty<T>>,
     pub geometry: FeatureGeometry<T>,
 }

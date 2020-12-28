@@ -1,4 +1,4 @@
-use geo::Point;
+use geo::Coordinate;
 use num_traits::Float;
 use num_traits::FloatConst;
 
@@ -11,13 +11,22 @@ pub struct RotationLambda<T> {
 }
 
 // TODO why can't I #[inline] this.
-fn forward_rotation_lambda<T: Float + FloatConst>(delta_lambda: T, p: &Point<T>) -> Point<T> {
-    let lambda = p.x() + delta_lambda;
-    let phi = p.y();
+fn forward_rotation_lambda<T: Float + FloatConst>(
+    delta_lambda: T,
+    p: &Coordinate<T>,
+) -> Coordinate<T> {
+    let lambda = p.x + delta_lambda;
+    let phi = p.y;
     return match (lambda > T::PI(), lambda < -T::PI()) {
-        (false, false) => Point::new(lambda, phi), // -PI <= lambda <= PI
-        (true, _) => Point::new(lambda - T::TAU(), phi), // lambda >  PI
-        (_, true) => Point::new(lambda + T::TAU(), phi), // lambda < -PI
+        (false, false) => Coordinate { x: lambda, y: phi }, // -PI <= lambda <= PI
+        (true, _) => Coordinate {
+            x: lambda - T::TAU(),
+            y: phi,
+        }, // lambda >  PI
+        (_, true) => Coordinate {
+            x: lambda + T::TAU(),
+            y: phi,
+        }, // lambda < -PI
     };
 }
 
@@ -28,10 +37,10 @@ impl<T: Float + FloatConst + 'static> RotationLambda<T> {
 }
 
 impl<T: Float + FloatConst> Transform<T> for RotationLambda<T> {
-    fn transform(&self, coordinates: &Point<T>) -> Point<T> {
+    fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         return forward_rotation_lambda(self.delta_lambda, coordinates);
     }
-    fn invert(&self, coordinates: &Point<T>) -> Point<T> {
+    fn invert(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         return forward_rotation_lambda(-self.delta_lambda, coordinates);
     }
 }

@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use geo::Point;
+use geo::Coordinate;
 use num_traits::float::FloatConst;
 use num_traits::Float;
 
@@ -28,15 +28,18 @@ impl StereographicRaw {
 }
 
 impl<T: Float + 'static> Transform<T> for StereographicRaw {
-    fn transform(&self, p: &Point<T>) -> Point<T> {
-        let cy = p.y().cos();
-        let k = T::one() + p.x().cos() * cy;
-        return Point::new(cy * p.x().sin() / k, p.y().sin() / k);
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        let cy = p.y.cos();
+        let k = T::one() + p.x.cos() * cy;
+        Coordinate {
+            x: cy * p.x.sin() / k,
+            y: p.y.sin() / k,
+        }
     }
 
-    fn invert(&self, p: &Point<T>) -> Point<T> {
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let f = Box::new(|z: T| T::from(2).unwrap() * z.atan());
         let g = azimuthal_invert(f);
-        return g(p.x(), p.y());
+        return g(p.x, p.y);
     }
 }

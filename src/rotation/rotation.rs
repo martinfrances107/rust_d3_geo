@@ -1,5 +1,4 @@
-// use delaunator::Point;
-use geo::Point;
+use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 
 use super::rotate_radians::RotateRadians;
@@ -22,19 +21,25 @@ impl<T: Float + FloatConst + 'static> Rotation<T> {
 }
 
 impl<T: Float> Transform<T> for Rotation<T> {
-    fn transform(&self, coordinates: &Point<T>) -> Point<T> {
-        let temp = self.rotate.transform(&Point::new(
-            coordinates.x().to_radians(),
-            coordinates.y().to_radians(),
-        ));
-        return Point::new(temp.x().to_degrees(), temp.y().to_degrees());
+    fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
+        let temp = self.rotate.transform(&Coordinate {
+            x: coordinates.x.to_radians(),
+            y: coordinates.y.to_radians(),
+        });
+        return Coordinate {
+            x: temp.x.to_degrees(),
+            y: temp.y.to_degrees(),
+        };
     }
 
-    fn invert(&self, coordinates: &Point<T>) -> Point<T> {
-        let temp = self.rotate.invert(&Point::new(
-            coordinates.x().to_radians(),
-            coordinates.y().to_radians(),
-        ));
-        return Point::new(temp.x().to_degrees(), temp.y().to_degrees());
+    fn invert(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
+        let temp = self.rotate.invert(&Coordinate {
+            x: coordinates.x.to_radians(),
+            y: coordinates.y.to_radians(),
+        });
+        return Coordinate {
+            x: temp.x.to_degrees(),
+            y: temp.y.to_degrees(),
+        };
     }
 }

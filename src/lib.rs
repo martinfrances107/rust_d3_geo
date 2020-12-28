@@ -4,8 +4,7 @@
 // #![allow(dead_code)]
 // #![allow(unused_imports)]
 
-// use delaunator::Point;
-use geo::Point;
+use geo::Coordinate;
 use num_traits::Float;
 
 pub mod cartesian;
@@ -42,10 +41,10 @@ pub trait Transform<T>
 where
     T: Float,
 {
-    fn transform(&self, p: &Point<T>) -> Point<T> {
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         return p.clone();
     }
-    fn invert(&self, p: &Point<T>) -> Point<T> {
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         return p.clone();
     }
 }

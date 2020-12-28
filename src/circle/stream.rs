@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use geo::Point;
+use geo::{Coordinate, Point};
 use num_traits::Float;
 
 use crate::cartesian::cartesian;
@@ -28,8 +28,8 @@ impl<T: Float + 'static> Stream<T> {
 
 impl<T: Float> TransformStream<T> for Stream<T> {
     fn point(&mut self, x: T, y: T, m: Option<u8>) {
-        let x_rotated = self.rotate.invert(&Point::new(x, y));
-        let x_rotated_deg = Point::new(x_rotated.x().to_degrees(), x_rotated.y().to_degrees());
+        let x_rotated = self.rotate.invert(&Coordinate { x, y });
+        let x_rotated_deg = Point::new(x_rotated.x.to_degrees(), x_rotated.y.to_degrees());
         let mut ring = self.ring.borrow_mut();
         ring.push(x_rotated_deg);
     }

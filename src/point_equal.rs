@@ -1,4 +1,4 @@
-use geo::Point;
+use geo::Coordinate;
 use num_traits::Float;
 
 // use crate::math::EPSILON;
@@ -9,6 +9,6 @@ use num_traits::Float;
 
 /// An aspect of the javascrtipt
 /// point_equal may be fed 3 floats but only checks values 0 and 1. (so not all) !!!
-pub fn point_equal<T: Float>(a: Point<T>, b: Point<T>) -> bool {
-    return ((a.x() - b.x()).abs() < T::epsilon()) && ((a.y() - b.y()).abs() < T::epsilon());
+pub fn point_equal<T: Float>(a: Coordinate<T>, b: Coordinate<T>) -> bool {
+    (a.x - b.x.abs() < T::epsilon()) && ((a.y - b.y).abs() < T::epsilon())
 }

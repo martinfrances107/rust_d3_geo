@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use geo::Point;
+use geo::{Coordinate, Point};
 use num_traits::{float::Float, FloatConst};
 
 /// Public: clip generators used by projection.
@@ -32,8 +32,14 @@ pub struct Ci<T: Float> {
     x: Point<T>,
 }
 
-pub type InterpolateFn<T> =
-    Box<dyn Fn(Option<Point<T>>, Option<Point<T>>, T, Rc<RefCell<Box<dyn TransformStream<T>>>>)>;
+pub type InterpolateFn<T> = Box<
+    dyn Fn(
+        Option<Coordinate<T>>,
+        Option<Coordinate<T>>,
+        T,
+        Rc<RefCell<Box<dyn TransformStream<T>>>>,
+    ),
+>;
 type PointsVisibleFn<T> = Box<dyn Fn(T, T, Option<T>) -> bool>;
 pub type PointVisibleFnPtr<T> = Rc<PointsVisibleFn<T>>;
 // type ClipLineFn<F> = dyn Fn(Box<dyn ClipLine<F>>) -> Box<dyn ClipLine<F>>;
@@ -45,13 +51,13 @@ pub struct Clip<T: Float> {
     // point: Box<dyn Fn()>,
     // point: Point,
     polygon_started: bool,
-    polygon: Box<Vec<Vec<Point<T>>>>,
+    polygon: Box<Vec<Vec<Coordinate<T>>>>,
     point_visible: PointVisibleFnPtr<T>,
     // ring_buffer: Box<dyn TransformStream>,
     ring_sink: Rc<RefCell<Box<dyn TransformStream<T>>>>,
-    segments: Box<Vec<Vec<Point<T>>>>,
-    start: Point<T>,
-    ring: Vec<Point<T>>,
+    segments: Box<Vec<Vec<Coordinate<T>>>>,
+    start: Coordinate<T>,
+    ring: Vec<Coordinate<T>>,
     use_ring: bool,
     sink: Rc<RefCell<Box<dyn TransformStream<T>>>>,
 }
@@ -61,7 +67,7 @@ impl<'a, T: Float + FloatConst + 'static> Clip<T> {
         point_visible: PointVisibleFnPtr<T>,
         clip_line_fn_ptr: Rc<RefCell<StreamProcessor<T>>>,
         interpolate: Rc<RefCell<InterpolateFn<T>>>,
-        start: Point<T>,
+        start: Coordinate<T>,
     ) -> StreamProcessor<T> {
         return Box::new(move |sink: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
             let clip_line = clip_line_fn_ptr.borrow_mut();
@@ -92,7 +98,7 @@ impl<'a, T: Float + FloatConst + 'static> Clip<T> {
     }
 
     fn point_ring(&mut self, lambda: T, phi: T, _m: Option<u8>) {
-        self.ring.push(Point::new(lambda, phi));
+        self.ring.push(Coordinate { x: lambda, y: phi });
         let mut ring_sink = self.ring_sink.borrow_mut();
         ring_sink.point(lambda, phi, None);
     }
@@ -146,7 +152,7 @@ impl<'a, T: Float + FloatConst> TransformStream<T> for Clip<T> {
     fn point(&mut self, lambda: T, phi: T, m: Option<u8>) {
         match self.use_ring {
             true => {
-                self.ring.push(Point::new(lambda, phi));
+                self.ring.push(Coordinate { x: lambda, y: phi });
                 // self.ring_sink.point(lambda, phi, None);
             }
             false => {

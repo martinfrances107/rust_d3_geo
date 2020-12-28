@@ -1,5 +1,5 @@
 use crate::transform_stream::StreamProcessor;
-use geo::Point;
+use geo::Coordinate;
 use num_traits::Float;
 
 pub enum StreamProcessorValueMaybe<T: Float> {
@@ -299,5 +299,5 @@ pub trait Projection<T: Float> {
     //  *
     //  * @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
     //  */
-    fn translate(&mut self, t: Option<&Point<T>>) -> Option<Point<T>>;
+    fn translate(&mut self, t: Option<&Coordinate<T>>) -> Option<Coordinate<T>>;
 }

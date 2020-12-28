@@ -1,4 +1,4 @@
-use geo::Point;
+use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -8,8 +8,8 @@ use std::rc::Rc;
 use crate::transform_stream::TransformStream;
 
 pub fn interpolate<T: Float + FloatConst>(
-    from: Option<Point<T>>,
-    to: Option<Point<T>>,
+    from: Option<Coordinate<T>>,
+    to: Option<Coordinate<T>>,
     direction: T,
     stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
 ) {
@@ -31,15 +31,15 @@ pub fn interpolate<T: Float + FloatConst>(
         Some(from) => {
             // TODO investigate is to and Option<f64>
             let to = to.unwrap();
-            if (from.x() - to.x()).abs() > T::epsilon() {
-                let lambda = if from.x() < to.x() { T::PI() } else { -T::PI() };
+            if (from.x - to.x).abs() > T::epsilon() {
+                let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
 
                 phi = direction * lambda / T::from(2).unwrap();
                 stream.point(-lambda, phi, None);
                 stream.point(T::zero(), phi, None);
                 stream.point(lambda, phi, None);
             } else {
-                stream.point(to.x(), to.y(), None);
+                stream.point(to.x, to.y, None);
             }
         }
     }

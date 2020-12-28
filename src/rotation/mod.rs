@@ -10,55 +10,81 @@ mod tests {
     use super::*;
     use crate::in_delta::in_delta;
     use crate::Transform;
-    use geo::Point;
+    use geo::Coordinate;
     use rotation::Rotation;
 
     #[test]
     fn only_longitude() {
         println!("a rotation of [+90°, 0°] only rotates longitude");
-        let rotation = Rotation::new(90f64, 0f64, 0f64).transform(&Point::new(0f64, 0f64));
-        assert!(in_delta(rotation.x(), 90f64, 1e-6));
-        assert!(in_delta(rotation.y(), 0f64, 1e-6));
+        let rotation = Rotation::new(90f64, 0f64, 0f64).transform(&Coordinate { x: 0f64, y: 0f64 });
+        assert!(in_delta(rotation.x, 90f64, 1e-6));
+        assert!(in_delta(rotation.y, 0f64, 1e-6));
     }
 
     #[test]
     fn wraps_antimeridan() {
         println!("a rotation of [+90°, 0°] wraps around when crossing the antimeridian");
-        let rotation = Rotation::new(90f64, 0f64, 0f64).transform(&Point::new(150f64, 0f64));
-        assert!(in_delta(rotation.x(), -120f64, 1e-6));
-        assert!(in_delta(rotation.y(), 0f64, 1e-6));
+        let rotation =
+            Rotation::new(90f64, 0f64, 0f64).transform(&Coordinate { x: 150f64, y: 0f64 });
+        assert!(in_delta(rotation.x, -120f64, 1e-6));
+        assert!(in_delta(rotation.y, 0f64, 1e-6));
     }
 
     #[test]
     fn rotation_long_and_lat() {
         println!("a rotation of [-45°, 45°] rotates longitude and latitude");
-        let rotation = Rotation::new(-45f64, 45f64, 0f64).transform(&Point::new(0f64, 0f64));
-        assert!(in_delta(rotation.x(), -54.73561f64, 1e-6));
-        assert!(in_delta(rotation.y(), 30f64, 1e-6));
+        let rotation =
+            Rotation::new(-45f64, 45f64, 0f64).transform(&Coordinate { x: 0f64, y: 0f64 });
+        assert!(in_delta(rotation.x, -54.73561f64, 1e-6));
+        assert!(in_delta(rotation.y, 30f64, 1e-6));
     }
 
     #[test]
     fn rotation_inverse_long_lat() {
         println!("a rotation of [-45°, 45°] rotates longitude and latitude");
-        let rotation = Rotation::new(-45f64, 45f64, 0f64).invert(&Point::new(-54.73561f64, 30f64));
-        assert!(in_delta(rotation.x(), 0f64, 1e-6));
-        assert!(in_delta(rotation.y(), 0f64, 1e-6));
+        let rotation = Rotation::new(-45f64, 45f64, 0f64).invert(&Coordinate {
+            x: -54.73561f64,
+            y: 30f64,
+        });
+        assert!(in_delta(rotation.x, 0f64, 1e-6));
+        assert!(in_delta(rotation.y, 0f64, 1e-6));
     }
 
     #[test]
     fn identity_rotation() {
         println!("the identity rotation constrains longitudes to [-180°, 180°]");
         let rotate = Rotation::new(0f64, 0f64, 0f64);
-        assert_eq!(rotate.transform(&Point::new(180f64, 0f64)).x(), 180f64);
-        assert_eq!(rotate.transform(&Point::new(-180f64, 0f64)).x(), -180f64);
-        assert_eq!(rotate.transform(&Point::new(360f64, 0f64)).x(), 0f64);
+        assert_eq!(
+            rotate.transform(&Coordinate { x: 180f64, y: 0f64 }).x,
+            180f64
+        );
+        assert_eq!(
+            rotate
+                .transform(&Coordinate {
+                    x: -180f64,
+                    y: 0f64
+                })
+                .x,
+            -180f64
+        );
+        assert_eq!(rotate.transform(&Coordinate { x: 360f64, y: 0f64 }).x, 0f64);
         assert!(in_delta(
-            rotate.transform(&Point::new(2562f64, 0f64)).x(),
+            rotate
+                .transform(&Coordinate {
+                    x: 2562f64,
+                    y: 0f64
+                })
+                .x,
             42f64,
             1e-10
         ));
         assert!(in_delta(
-            rotate.transform(&Point::new(-2562f64, 0f64)).x(),
+            rotate
+                .transform(&Coordinate {
+                    x: -2562f64,
+                    y: 0f64
+                })
+                .x,
             -42f64,
             1e-10
         ));
