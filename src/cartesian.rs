@@ -3,8 +3,8 @@ use num_traits::Float;
 
 pub fn spherical<T: Float>(cartesian: &[T; 3]) -> Coordinate<T> {
     return Coordinate {
-        x: cartesian[1].atan2(cartesian[0]),
-        y: cartesian[2].asin(),
+        x: cartesian[1].atan2(cartesian[0]).to_degrees(),
+        y: cartesian[2].asin().to_degrees(),
     };
 }
 
