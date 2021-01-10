@@ -7,10 +7,10 @@ where
 {
     Circumecenter(Coordinate<T>),
     Length(T),
-    Source(Point<T>),
-    Target(Point<T>),
+    Source(Coordinate<T>),
+    Target(Coordinate<T>),
     Urquhart(bool),
-    Site(T),
-    Sitecoordinates(Point<T>),
+    Site(Coordinate<T>),
+    Sitecoordinates(Coordinate<T>),
     Neighbors(Vec<usize>),
 }
