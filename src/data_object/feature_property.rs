@@ -1,5 +1,4 @@
-use geo::{Coordinate, CoordinateType, Point};
-
+use geo::{Coordinate, CoordinateType};
 #[derive(Clone, Debug)]
 pub enum FeatureProperty<T>
 where
