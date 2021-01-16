@@ -3,7 +3,7 @@ use std::rc::Rc;
 
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_normalize_in_place;
-use crate::cartesian::spherical;
+use crate::cartesian::spherical_r;
 use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 
@@ -52,7 +52,7 @@ pub fn circle_stream<T: Float + FloatConst>(
     let mut cond = true;
     let mut stream = stream.borrow_mut();
     while cond {
-        point = spherical(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
+        point = spherical_r(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
         stream.point(point.x, point.y, None);
 
         t = t - step;

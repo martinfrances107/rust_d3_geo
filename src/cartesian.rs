@@ -8,6 +8,13 @@ pub fn spherical<T: Float>(cartesian: &[T; 3]) -> Coordinate<T> {
     };
 }
 
+pub fn spherical_r<T: Float>(cartesian: &[T; 3]) -> Coordinate<T> {
+    return Coordinate {
+        x: cartesian[1].atan2(cartesian[0]),
+        y: cartesian[2].asin(),
+    };
+}
+
 pub fn cartesian<T: Float>(spherical: &Coordinate<T>) -> [T; 3] {
     let lambda = spherical.x;
     let phi = spherical.y;
