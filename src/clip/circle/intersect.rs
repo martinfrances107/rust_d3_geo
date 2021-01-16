@@ -3,7 +3,7 @@ use crate::cartesian::cartesian_add_in_place;
 use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_dot;
 use crate::cartesian::cartesian_scale;
-use crate::cartesian::spherical;
+use crate::cartesian::spherical_r;
 use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 
@@ -65,7 +65,7 @@ pub fn intersect<T: Float + FloatConst>(
     cartesian_add_in_place(&mut q, &A);
 
     // Javascript has implicit cast q of from [F;3] to a Point here.
-    let q: Coordinate<T> = spherical(&q);
+    let q: Coordinate<T> = spherical_r(&q);
 
     if !two {
         return IntersectReturn::One(q);
@@ -126,7 +126,7 @@ pub fn intersect<T: Float + FloatConst>(
     if condition {
         let mut q1 = cartesian_scale(&u, (-w + t) / uu);
         cartesian_add_in_place(&mut q1, &A);
-        return IntersectReturn::Two([q, spherical(&q1)]);
+        return IntersectReturn::Two([q, spherical_r(&q1)]);
     }
 
     return IntersectReturn::None;

@@ -1,6 +1,5 @@
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_normalize_in_place;
-use crate::cartesian::spherical;
 
 use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};

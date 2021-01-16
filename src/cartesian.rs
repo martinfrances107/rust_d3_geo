@@ -1,6 +1,7 @@
 use geo::Coordinate;
 use num_traits::Float;
 
+/// Converts 3D Cartesian to spherical coordinates (degrees).
 pub fn spherical<T: Float>(cartesian: &[T; 3]) -> Coordinate<T> {
     return Coordinate {
         x: cartesian[1].atan2(cartesian[0]).to_degrees(),
@@ -8,6 +9,7 @@ pub fn spherical<T: Float>(cartesian: &[T; 3]) -> Coordinate<T> {
     };
 }
 
+/// Converts 3D Cartesian to spherical coordinates (radians).
 pub fn spherical_r<T: Float>(cartesian: &[T; 3]) -> Coordinate<T> {
     return Coordinate {
         x: cartesian[1].atan2(cartesian[0]),
