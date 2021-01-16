@@ -1,7 +1,6 @@
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod innvert_test {
-    extern crate pretty_assertions;
 
     use geo::Coordinate;
     use rust_d3_geo::projection::orthographic::OrthographicRaw;

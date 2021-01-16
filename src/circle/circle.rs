@@ -3,12 +3,12 @@ use std::cell::RefCell;
 use std::fmt::Debug;
 use std::rc::Rc;
 
-use geo::Point;
+// use geo::Point;
+use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_normalize_in_place;
-use crate::cartesian::spherical;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::transform_stream::TransformStream;
 use crate::Transform;
@@ -29,18 +29,21 @@ enum StreamType {
 #[derive(Debug)]
 pub struct CircleStream<T: Float> {
     stream_type: StreamType,
-    pub coordinates: Vec<Vec<Point<T>>>,
+    pub coordinates: Vec<Vec<Coordinate<T>>>,
 }
 
 #[derive(Clone)]
 pub struct Circle<T: Float> {
-    center_fn_ptr: Rc<dyn Fn(CircleInArg) -> Point<T>>,
+    center_fn_ptr: Rc<dyn Fn(CircleInArg) -> Coordinate<T>>,
     radius_fn_ptr: Rc<dyn Fn(CircleInArg) -> T>,
     precision_fn_ptr: Rc<dyn Fn(CircleInArg) -> T>,
 }
 
-fn center<T: Float>(_in: CircleInArg) -> Point<T> {
-    return Point::new(T::zero(), T::zero());
+fn center<T: Float>(_in: CircleInArg) -> Coordinate<T> {
+    return Coordinate {
+        x: T::zero(),
+        y: T::zero(),
+    };
 }
 
 fn radius<T: Float>(_in: CircleInArg) -> T {
@@ -57,7 +60,7 @@ impl<T: Float + FloatConst + 'static> Circle<T> {
         let radius_fn_ptr = Rc::new(radius);
         let precision_fn_ptr = Rc::new(precision);
 
-        let c_val: Point<T> = (*center_fn_ptr)(CircleInArg::None);
+        let c_val: Coordinate<T> = (*center_fn_ptr)(CircleInArg::None);
 
         return Self {
             center_fn_ptr,
@@ -75,8 +78,8 @@ impl<T: Float + FloatConst + 'static> Circle<T> {
         let ring = Rc::new(RefCell::new(Vec::new()));
 
         let rotate = Rc::new(RotateRadians::new(
-            -c.x().to_radians(),
-            -c.y().to_radians(),
+            -c.x.to_radians(),
+            -c.y.to_radians(),
             T::zero(),
         ));
 
@@ -101,7 +104,7 @@ impl<T: Float + FloatConst + 'static> Circle<T> {
 }
 
 impl<T: Float + 'static> CircleTrait<T> for Circle<T> {
-    fn center(&mut self, center: FnValMaybe2D<T>) -> Option<Point<T>> {
+    fn center(&mut self, center: FnValMaybe2D<T>) -> Option<Coordinate<T>> {
         return match center {
             FnValMaybe2D::None => None,
             FnValMaybe2D::FloatValue(value) => {

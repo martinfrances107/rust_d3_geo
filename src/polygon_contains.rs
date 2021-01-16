@@ -1,12 +1,9 @@
 use geo::Coordinate;
 use num_traits::{float::Float, FloatConst};
 
-// use super::adder::Adder;
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_normalize_in_place;
-// use crate::math::EPSILON;
-// use crate::math::TAU;
 
 // import adder from "./adder.js";
 // var sum = adder();
@@ -28,7 +25,7 @@ pub fn contains<T: Float + FloatConst>(
     let sin_phi = phi.sin();
     let normal = [lambda.sin(), -lambda.cos(), T::zero()];
     let mut angle = T::zero();
-    // let sum = Adder::<F>::new();
+
     let mut sum = T::zero();
     let mut winding = 0i32;
 
@@ -66,7 +63,6 @@ pub fn contains<T: Float + FloatConst>(
             let antimeridian = abs_delta > T::PI();
             let k = sin_phi0 * sin_phi1;
 
-            // sum.add(atan2(k * sign * sin(absDelta), cosPhi0 * cosPhi1 + k * cos(absDelta)));
             sum =
                 sum + (k * sign * abs_delta.sin()).atan2(cos_phi0 * cos_phi1 + k * abs_delta.cos());
             angle = angle
@@ -124,7 +120,9 @@ pub fn contains<T: Float + FloatConst>(
         is_winding_odd = false;
     }
 
-    let is_south_pole_inside = angle < -T::epsilon() || angle < T::epsilon() && sum < -T::epsilon();
+    let epsilon = T::from(1e-6).unwrap();
+    let epsilon2 = T::from(1e-12).unwrap();
+    let is_south_pole_inside = angle < -epsilon || angle < epsilon && sum < -epsilon2;
     let ret = is_south_pole_inside ^ is_winding_odd;
 
     return ret;

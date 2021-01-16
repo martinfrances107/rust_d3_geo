@@ -14,7 +14,6 @@ pub mod data_object;
 pub mod distance;
 pub mod in_delta;
 pub mod length;
-pub mod math;
 pub mod polygon_contains;
 pub mod projection;
 pub mod rotation;
