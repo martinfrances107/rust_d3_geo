@@ -14,8 +14,9 @@ use crate::Transform;
 pub struct OrthographicRaw {}
 
 impl OrthographicRaw {
+    #[inline]
     fn new<T: Float + FloatConst + 'static>() -> Box<dyn Transform<T>> {
-        return Box::new(Self {});
+        Box::new(Self {})
     }
 
     pub fn gen_projection_mutator<'a, T: Float + FloatConst + 'static>() -> ProjectionMutator<T> {
@@ -29,11 +30,12 @@ impl OrthographicRaw {
 }
 
 impl<T: Float + 'static> Transform<T> for OrthographicRaw {
+    #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        return Coordinate {
+        Coordinate {
             x: p.y.cos() * p.x.sin(),
             y: p.y.sin(),
-        };
+        }
     }
 
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {

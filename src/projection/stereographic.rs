@@ -14,8 +14,9 @@ use crate::Transform;
 pub struct StereographicRaw {}
 
 impl StereographicRaw {
+    #[inline]
     fn new<T: Float + 'static>() -> Box<dyn Transform<T>> {
-        return Box::new(Self {});
+        Box::new(Self {})
     }
 
     pub fn gen_projection_mutator<'a, T: Float + FloatConst + 'static>() -> ProjectionMutator<T> {
