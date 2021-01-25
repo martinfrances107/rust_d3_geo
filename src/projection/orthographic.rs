@@ -1,25 +1,23 @@
-use std::rc::Rc;
-
-use geo::Coordinate;
+use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
-use num_traits::Float;
 
 use super::projection::Projection;
 use super::projection::StreamProcessorValueMaybe;
 use super::projection_mutator::ProjectionMutator;
 use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
-
+use std::rc::Rc;
 #[derive(Clone, Debug)]
 pub struct OrthographicRaw {}
 
 impl OrthographicRaw {
     #[inline]
-    fn new<T: Float + FloatConst + 'static>() -> Box<dyn Transform<T>> {
+    fn new<T: CoordFloat + FloatConst + 'static>() -> Box<dyn Transform<T>> {
         Box::new(Self {})
     }
 
-    pub fn gen_projection_mutator<'a, T: Float + FloatConst + 'static>() -> ProjectionMutator<T> {
+    pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>() -> ProjectionMutator<T>
+    {
         let s = Rc::new(OrthographicRaw::new());
         let mut projection = ProjectionMutator::from_projection_raw(s);
         projection.scale(Some(&T::from(249.5f64).unwrap()));
@@ -29,7 +27,7 @@ impl OrthographicRaw {
     }
 }
 
-impl<T: Float + 'static> Transform<T> for OrthographicRaw {
+impl<T: CoordFloat + 'static> Transform<T> for OrthographicRaw {
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         Coordinate {

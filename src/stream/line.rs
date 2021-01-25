@@ -1,9 +1,13 @@
-use geo::Point;
-use num_traits::Float;
+use geo::{CoordFloat, Point};
+use num_traits::FloatConst;
 
 use super::Stream;
 
-pub fn line<T: Float>(coordinates: &[Point<T>], stream: &mut impl Stream<T>, closed: usize) {
+pub fn line<T: CoordFloat + FloatConst>(
+    coordinates: &[Point<T>],
+    stream: &mut impl Stream<T>,
+    closed: usize,
+) {
     let n = coordinates.len() - closed;
     let mut coordinate;
     stream.line_start();

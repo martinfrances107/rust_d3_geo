@@ -1,20 +1,15 @@
-use std::borrow::Borrow;
-use std::cell::RefCell;
 use std::fmt::Debug;
-use std::rc::Rc;
-
 // use geo::Point;
-use geo::Coordinate;
-use num_traits::{float::Float, FloatConst};
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
-use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_normalize_in_place;
 use crate::rotation::rotate_radians::RotateRadians;
-use crate::transform_stream::TransformStream;
+use crate::stream::Stream;
 use crate::Transform;
+use crate::{cartesian::cartesian, TransformIdentity};
 
 use super::circle_stream::circle_stream;
-use super::stream::Stream;
 use super::CircleInArg;
 use super::CircleTrait;
 use super::FnValMaybe;
@@ -27,71 +22,55 @@ enum StreamType {
 
 /// Output of Circle::circle()
 #[derive(Debug)]
-pub struct CircleStream<T: Float> {
+pub struct CircleStream<T: CoordFloat> {
     stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
 }
 
-#[derive(Clone)]
-pub struct Circle<T: Float> {
-    center_fn_ptr: Rc<dyn Fn(CircleInArg) -> Coordinate<T>>,
-    radius_fn_ptr: Rc<dyn Fn(CircleInArg) -> T>,
-    precision_fn_ptr: Rc<dyn Fn(CircleInArg) -> T>,
+// #[derive(Clone)]
+pub struct Circle<T: CoordFloat> {
+    center_fn: Box<dyn Fn(&CircleInArg) -> Coordinate<T>>,
+    precision_fn: Box<dyn Fn(&CircleInArg) -> T>,
+    radius_fn: Box<dyn Fn(&CircleInArg) -> T>,
+    rotate: Box<dyn Transform<T>>,
+    ring: Vec<Coordinate<T>>,
 }
 
-fn center<T: Float>(_in: CircleInArg) -> Coordinate<T> {
-    return Coordinate {
-        x: T::zero(),
-        y: T::zero(),
-    };
-}
-
-fn radius<T: Float>(_in: CircleInArg) -> T {
-    return T::from(90f64).unwrap();
-}
-
-fn precision<T: Float>(_in: CircleInArg) -> T {
-    return T::from(6f64).unwrap();
-}
-
-impl<T: Float + FloatConst + 'static> Circle<T> {
+impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
     pub fn new() -> Self {
-        let center_fn_ptr = Rc::new(center);
-        let radius_fn_ptr = Rc::new(radius);
-        let precision_fn_ptr = Rc::new(precision);
+        let center_fn = Box::new(|_in: &CircleInArg| Coordinate {
+            x: T::zero(),
+            y: T::zero(),
+        });
+        let radius_fn = Box::new(|_in: &CircleInArg| T::from(90f64).unwrap());
+        let precision_fn = Box::new(|_in: &CircleInArg| T::from(6f64).unwrap());
 
-        let c_val: Coordinate<T> = (*center_fn_ptr)(CircleInArg::None);
+        let c_val: Coordinate<T> = (*center_fn)(&CircleInArg::None);
 
         return Self {
-            center_fn_ptr,
-            radius_fn_ptr,
-            precision_fn_ptr,
+            center_fn,
+            radius_fn,
+            precision_fn,
+            rotate: Box::new(TransformIdentity {}),
+            ring: Vec::new(),
         };
     }
 
-    pub fn circle(&mut self, _arg: CircleInArg) -> CircleStream<T> {
-        // TODO must come back and copy the arg so in can be passes into each fn c, r and p.
-        let c = (*self.center_fn_ptr)(CircleInArg::None);
-        let r = (*self.radius_fn_ptr)(CircleInArg::None).to_radians();
-        let p = (*self.precision_fn_ptr)(CircleInArg::None).to_radians();
+    pub fn circle(&mut self, arg: CircleInArg) -> CircleStream<T> {
+        let c = (*self.center_fn)(&arg);
+        let r = (*self.radius_fn)(&arg).to_radians();
+        let p = (*self.precision_fn)(&arg).to_radians();
+        println!("c {:?} {:?}", c.x, c.y);
+        println!("r {:?}", r);
+        println!("p {:?}", p);
+        self.rotate = RotateRadians::new(-c.x.to_radians(), -c.y.to_radians(), T::zero());
 
-        let ring = Rc::new(RefCell::new(Vec::new()));
-
-        let rotate = Rc::new(RotateRadians::new(
-            -c.x.to_radians(),
-            -c.y.to_radians(),
-            T::zero(),
-        ));
-
-        let stream = Rc::new(RefCell::new(Stream::new(rotate.clone(), ring.clone())));
-
-        circle_stream(stream, r, p, T::one(), None, None);
+        circle_stream(self, r, p, T::one(), None, None);
 
         let c;
         {
-            let ring = ring.borrow_mut();
             let mut coordinates = Vec::new();
-            coordinates.push(ring.to_vec());
+            coordinates.push(self.ring.to_vec());
 
             c = CircleStream {
                 stream_type: StreamType::Polygon,
@@ -103,16 +82,27 @@ impl<T: Float + FloatConst + 'static> Circle<T> {
     }
 }
 
-impl<T: Float + 'static> CircleTrait<T> for Circle<T> {
+impl<T: CoordFloat + FloatConst> Stream<T> for Circle<T> {
+    fn point(&mut self, x: T, y: T, m: Option<u8>) {
+        let x_rotated = self.rotate.invert(&Coordinate { x, y });
+        let x_rotated_deg = Coordinate {
+            x: x_rotated.x.to_degrees(),
+            y: x_rotated.y.to_degrees(),
+        };
+        self.ring.push(x_rotated_deg);
+    }
+}
+
+impl<T: CoordFloat + 'static> CircleTrait<T> for Circle<T> {
     fn center(&mut self, center: FnValMaybe2D<T>) -> Option<Coordinate<T>> {
         return match center {
             FnValMaybe2D::None => None,
             FnValMaybe2D::FloatValue(value) => {
-                self.center_fn_ptr = Rc::new(move |_: CircleInArg| (*value).clone());
+                self.center_fn = Box::new(move |_: &CircleInArg| value);
                 None
             }
             FnValMaybe2D::FloatFn(center_fn_ptr) => {
-                self.center_fn_ptr = center_fn_ptr;
+                self.center_fn = center_fn_ptr;
                 None
             }
         };
@@ -122,11 +112,11 @@ impl<T: Float + 'static> CircleTrait<T> for Circle<T> {
         return match radius {
             FnValMaybe::None => None,
             FnValMaybe::FloatValue(value) => {
-                self.radius_fn_ptr = Rc::new(move |_: CircleInArg| *value);
+                self.radius_fn = Box::new(move |_: &CircleInArg| value);
                 None
             }
             FnValMaybe::FloatFn(radius_fn_ptr) => {
-                self.radius_fn_ptr = radius_fn_ptr;
+                self.radius_fn = radius_fn_ptr;
                 None
             }
         };
@@ -136,11 +126,11 @@ impl<T: Float + 'static> CircleTrait<T> for Circle<T> {
         match precision {
             FnValMaybe::None => None,
             FnValMaybe::FloatValue(value) => {
-                self.precision_fn_ptr = Rc::new(move |_: CircleInArg| *value);
+                self.precision_fn = Box::new(move |_: &CircleInArg| value);
                 None
             }
             FnValMaybe::FloatFn(precision_fn_ptr) => {
-                self.precision_fn_ptr = precision_fn_ptr;
+                self.precision_fn = precision_fn_ptr;
                 None
             }
         }

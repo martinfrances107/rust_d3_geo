@@ -1,12 +1,10 @@
-use std::rc::Rc;
-
+use geo::CoordFloat;
 use num_traits::float::FloatConst;
-use num_traits::Float;
 
 use super::projection::Projection;
 use super::projection_mutator::ProjectionMutator;
 use crate::Transform;
-
+use std::rc::Rc;
 #[derive(Clone, Debug)]
 pub struct EquirectangularRaw<T> {
     lambda: T,
@@ -15,7 +13,7 @@ pub struct EquirectangularRaw<T> {
 
 impl<T> EquirectangularRaw<T>
 where
-    T: Float + FloatConst + 'static,
+    T: CoordFloat + FloatConst + 'static,
 {
     #[inline]
     fn new() -> Box<dyn Transform<T>> {
@@ -33,4 +31,4 @@ where
     }
 }
 
-impl<T: Float + FloatConst + 'static> Transform<T> for EquirectangularRaw<T> {}
+impl<T: CoordFloat + FloatConst + 'static> Transform<T> for EquirectangularRaw<T> {}

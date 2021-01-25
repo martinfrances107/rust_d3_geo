@@ -1,16 +1,14 @@
-use geo::Coordinate;
-use num_traits::Float;
-
-use std::rc::Rc;
-
 use crate::Transform;
+use geo::{CoordFloat, Coordinate};
+use std::rc::Rc;
 
 pub struct Compose<T> {
     pub a: Rc<Box<dyn Transform<T>>>,
     pub b: Rc<Box<dyn Transform<T>>>,
 }
 
-impl<'a, T: Float + 'static> Compose<T> {
+impl<'a, T: CoordFloat + 'static> Compose<T> {
+    #[inline]
     pub fn new(
         a: Rc<Box<dyn Transform<T>>>,
         b: Rc<Box<dyn Transform<T>>>,
@@ -19,7 +17,7 @@ impl<'a, T: Float + 'static> Compose<T> {
     }
 }
 
-impl<T: Float> Transform<T> for Compose<T> {
+impl<T: CoordFloat> Transform<T> for Compose<T> {
     // Apply A then B.
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.a.transform(coordinates);

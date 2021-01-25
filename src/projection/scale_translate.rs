@@ -1,6 +1,5 @@
 use crate::Transform;
-use geo::Coordinate;
-use num_traits::Float;
+use geo::{CoordFloat, Coordinate};
 
 #[derive(Debug)]
 pub struct ScaleTranslate<T> {
@@ -17,7 +16,7 @@ impl<T> ScaleTranslate<T> {
     }
 }
 
-impl<T: Float> Transform<T> for ScaleTranslate<T> {
+impl<T: CoordFloat> Transform<T> for ScaleTranslate<T> {
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;

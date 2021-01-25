@@ -1,34 +1,32 @@
-use num_traits::Float;
-use std::cell::RefCell;
-use std::rc::Rc;
+use crate::stream::Stream;
+use geo::CoordFloat;
+use num_traits::FloatConst;
 
 // Define the default implementation of the trait.
 // use crate::stream::GeoStream;
 
-pub type StreamProcessor<T> = Box<
-    dyn Fn(Rc<RefCell<Box<dyn TransformStream<T>>>>) -> Rc<RefCell<Box<dyn TransformStream<T>>>>,
->;
+pub type StreamProcessor<T> = Box<dyn Fn(Box<dyn Stream<T>>) -> Box<dyn Stream<T>>>;
 pub struct StreamProcessorIdentity {}
 
 impl StreamProcessorIdentity {
-    pub fn new<T: Float>() -> StreamProcessor<T> {
-        return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
+    pub fn new<T: CoordFloat>() -> StreamProcessor<T> {
+        return Box::new(move |stream: Box<dyn Stream<T>>| {
             return stream;
         });
     }
 }
 
-impl<T> TransformStream<T> for StreamProcessorIdentity {}
+impl<T> Stream<T> for StreamProcessorIdentity where T: CoordFloat + FloatConst {}
 
-pub struct TransformStreamIdentity {}
-impl<T> TransformStream<T> for TransformStreamIdentity {}
+pub struct StreamIdentity {}
+impl<T> Stream<T> for StreamIdentity where T: CoordFloat + FloatConst + 'static {}
 
-/// Define the default implementation of the trait.
-pub trait TransformStream<T> {
-    fn point(&mut self, _x: T, _y: T, _message: Option<u8>) {}
-    fn sphere(&mut self) {}
-    fn line_start(&mut self) {}
-    fn line_end(&mut self) {}
-    fn polygon_start(&mut self) {}
-    fn polygon_end(&mut self) {}
-}
+// /// Define the default implementation of the trait.
+// pub trait Stream<T> {
+//     fn point(&mut self, _x: T, _y: T, _message: Option<u8>) {}
+//     fn sphere(&mut self) {}
+//     fn line_start(&mut self) {}
+//     fn line_end(&mut self) {}
+//     fn polygon_start(&mut self) {}
+//     fn polygon_end(&mut self) {}
+// }

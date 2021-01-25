@@ -6,7 +6,7 @@
 // use crate::cartesian::cartesian;
 // // use crate::math::epsilon;
 // use crate::transform_stream::StreamProcessor;
-// use crate::transform_stream::TransformStream;
+// use crate::transform_stream::Stream;
 // use crate::Transform;
 
 // // use crate::stream::Stream;
@@ -38,8 +38,8 @@
 //     c0: f64,
 
 //     cos_min_distance: f64,
-//     stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
-//     // s: &'a Box<dyn TransformStream>,
+//     stream: Rc<RefCell<Box<dyn Stream<T>>>>,
+//     // s: &'a Box<dyn Stream>,
 //     use_line_point: bool,
 //     use_line_start: bool,
 //     use_line_end: bool,
@@ -47,7 +47,7 @@
 
 // impl Resample {
 //     pub fn new(project: Rc<RefCell<Box<dyn Transform>>>, delta2: T) -> StreamProcessor {
-//         return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream>>>| {
+//         return Box::new(move |stream: Rc<RefCell<Box<dyn Stream>>>| {
 //             return Rc::new(RefCell::new(Box::new(Self {
 //                 project: project.clone(),
 //                 delta2,
@@ -163,7 +163,7 @@
 //         b1: f64,
 //         c1: f64,
 //         depth_p: u8,
-//         stream: Rc<RefCell<Box<dyn TransformStream>>>,
+//         stream: Rc<RefCell<Box<dyn Stream>>>,
 //     ) {
 //         let mut depth = depth_p;
 //         let dx = x1 - x0;
@@ -251,7 +251,7 @@
 //     }
 // }
 
-// impl TransformStream for Resample {
+// impl Stream for Resample {
 //     fn point(&mut self, x: f64, y: f64, _m: Option<u8>) {
 //         if self.use_line_point {
 //             self.line_point(x, y);

@@ -3,12 +3,12 @@ use std::unimplemented;
 use super::line::line;
 use super::polygon::polygon;
 use crate::stream::Stream;
-use geo::Geometry;
 use geo::Point;
+use geo::{CoordFloat, Geometry};
 
-use num_traits::Float;
+use num_traits::FloatConst;
 
-pub fn processor<T: Float>(geometry: &Geometry<T>, stream: &mut impl Stream<T>) {
+pub fn processor<T: CoordFloat + FloatConst>(geometry: &Geometry<T>, stream: &mut impl Stream<T>) {
     match geometry {
         Geometry::LineString(ls) => {
             let points: Vec<Point<T>> = ls.points_iter().collect();

@@ -4,11 +4,11 @@ use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_dot;
 use crate::cartesian::cartesian_scale;
 use crate::cartesian::spherical_r;
-use geo::Coordinate;
-use num_traits::{float::Float, FloatConst};
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 /// IntersectReturn none, one or two 2d floats.
-pub enum IntersectReturn<T: Float> {
+pub enum IntersectReturn<T: CoordFloat> {
     One(Coordinate<T>),
     Two([Coordinate<T>; 2]),
     None,
@@ -16,7 +16,7 @@ pub enum IntersectReturn<T: Float> {
 
 /// Intersects the great circle between a and b with the clip circle.
 #[allow(clippy::many_single_char_names)]
-pub fn intersect<T: Float + FloatConst>(
+pub fn intersect<T: CoordFloat + FloatConst>(
     a: Coordinate<T>,
     b: Coordinate<T>,
     cr: T,

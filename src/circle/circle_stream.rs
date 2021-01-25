@@ -1,20 +1,17 @@
-use std::cell::RefCell;
-use std::rc::Rc;
-
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_normalize_in_place;
 use crate::cartesian::spherical_r;
-use geo::Coordinate;
-use num_traits::{float::Float, FloatConst};
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
-use crate::transform_stream::TransformStream;
+use crate::stream::Stream;
 use crate::Transform;
 
-use super::circle_radius::circle_radius;
+use super::{circle::Circle, circle_radius::circle_radius};
 
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
-pub fn circle_stream<T: Float + FloatConst>(
-    stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
+pub fn circle_stream<T: CoordFloat + FloatConst>(
+    circle: &mut Circle<T>,
     radius: T,
     delta: T,
     direction: T,
@@ -50,10 +47,10 @@ pub fn circle_stream<T: Float + FloatConst>(
     let mut point: Coordinate<T>;
     let mut t = t0;
     let mut cond = true;
-    let mut stream = stream.borrow_mut();
+    // let mut stream = stream.borrow_mut();
     while cond {
         point = spherical_r(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
-        stream.point(point.x, point.y, None);
+        circle.point(point.x, point.y, None);
 
         t = t - step;
         cond = match direction.is_sign_positive() {

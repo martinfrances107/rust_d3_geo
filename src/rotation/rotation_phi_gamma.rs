@@ -1,6 +1,5 @@
 // use delaunator::Point;
-use geo::Coordinate;
-use num_traits::Float;
+use geo::{CoordFloat, Coordinate};
 
 use crate::Transform;
 
@@ -12,7 +11,7 @@ pub struct RotationPhiGamma<T> {
     sin_delta_gamma: T,
 }
 
-impl<T: Float + 'static> RotationPhiGamma<T> {
+impl<T: CoordFloat + 'static> RotationPhiGamma<T> {
     pub fn new(delta_phi: T, delta_gamma: T) -> Box<dyn Transform<T>> {
         return Box::new(Self {
             cos_delta_phi: delta_phi.cos(),
@@ -23,7 +22,7 @@ impl<T: Float + 'static> RotationPhiGamma<T> {
     }
 }
 
-impl<T: Float> Transform<T> for RotationPhiGamma<T> {
+impl<T: CoordFloat> Transform<T> for RotationPhiGamma<T> {
     #[allow(clippy::many_single_char_names)]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let lambda = p.x;

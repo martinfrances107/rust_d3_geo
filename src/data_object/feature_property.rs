@@ -1,8 +1,10 @@
-use geo::{Coordinate, CoordinateType};
+use geo::CoordFloat;
+use geo::Coordinate;
+
 #[derive(Clone, Debug)]
 pub enum FeatureProperty<T>
 where
-    T: CoordinateType,
+    T: CoordFloat,
 {
     Circumecenter(Coordinate<T>),
     Length(T),

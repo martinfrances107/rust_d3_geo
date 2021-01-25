@@ -1,26 +1,24 @@
+use geo::CoordFloat;
 // use delaunator::Point;
-use num_traits::Float;
-use std::cell::RefCell;
-use std::rc::Rc;
+use num_traits::FloatConst;
 
-use crate::transform_stream::StreamProcessor;
-use crate::transform_stream::TransformStream;
+use crate::{stream::Stream, transform_stream::StreamProcessor};
+// use crate::transform_stream::StreamProcessor;
 
 pub struct TransformRadians<T> {
-    stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
+    stream: Box<dyn Stream<T>>,
 }
 
-impl<T: Float + 'static> TransformRadians<T> {
+impl<T: CoordFloat + FloatConst + 'static> TransformRadians<T> {
+    #[inline]
     pub fn new() -> StreamProcessor<T> {
-        return Box::new(move |stream: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
-            return Rc::new(RefCell::new(Box::new(Self { stream })));
-        });
+        return Box::new(move |stream: Box<dyn Stream<T>>| Box::new(Self { stream }));
     }
 }
 
-impl<T: Float> TransformStream<T> for TransformRadians<T> {
+impl<T: CoordFloat + FloatConst> Stream<T> for TransformRadians<T> {
+    #[inline]
     fn point(&mut self, x: T, y: T, m: Option<u8>) {
-        let mut stream = self.stream.borrow_mut();
-        stream.point(x.to_radians(), y.to_radians(), m);
+        self.stream.point(x.to_radians(), y.to_radians(), m);
     }
 }

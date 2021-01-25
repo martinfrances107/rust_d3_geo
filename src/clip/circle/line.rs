@@ -1,13 +1,10 @@
-use std::cell::RefCell;
-use std::rc::Rc;
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
-use geo::Coordinate;
-use num_traits::{float::Float, FloatConst};
-
-use crate::clip::PointsVisibleFn;
 use crate::point_equal::point_equal;
-use crate::transform_stream::StreamProcessor;
-use crate::transform_stream::TransformStream;
+use crate::stream::Stream;
+use crate::{clip::PointsVisibleFn, transform_stream::StreamProcessor};
+// use crate::transform_stream::StreamProcessor;
 
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
@@ -17,7 +14,7 @@ use super::intersect::IntersectReturn;
 // intersections 2 - there were intersections, and the first and last segments
 // should be rejoined.
 
-pub struct Line<T: Float> {
+pub struct Line<T: CoordFloat> {
     c0: u8,    // code for previous point
     clean: u8, // no intersections
     radius: T,
@@ -26,35 +23,33 @@ pub struct Line<T: Float> {
     // point0: (Option<Point>, Option<u8>), // previous point with message.
     point0: Option<Coordinate<T>>, // previous point
     small_radius: bool,
-    stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
+    stream: Box<dyn Stream<T>>,
     v0: bool,  // visibility of previous point
     v00: bool, // visibility of first point
-    visible: Rc<PointsVisibleFn<T>>,
+    visible: Box<PointsVisibleFn<T>>,
 }
 
-impl<T: Float + FloatConst + 'static> Line<T> {
-    pub fn new(visible: Rc<PointsVisibleFn<T>>, radius: T) -> StreamProcessor<T> {
-        return Box::new(
-            move |stream_ptr: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
-                let stream = stream_ptr.clone();
-                // TODO small_radius, rc  is a shadow variables!!!
-                let rc = radius.cos();
-                let small_radius = rc.is_sign_positive();
-                return Rc::new(RefCell::new(Box::new(Line {
-                    c0: 0,
-                    clean: 0,
-                    not_hemisphere: rc.abs() > T::epsilon(),
-                    point0: None,
-                    rc,
-                    radius,
-                    small_radius,
-                    v0: false,
-                    v00: false,
-                    stream,
-                    visible: visible.clone(),
-                })));
-            },
-        );
+impl<T: CoordFloat + FloatConst + 'static> Line<T> {
+    pub fn new(visible: Box<PointsVisibleFn<T>>, radius: T) -> StreamProcessor<T> {
+        return Box::new(move |stream_ptr| {
+            let stream = stream_ptr;
+            // TODO small_radius, rc  is a shadow variables!!!
+            let rc = radius.cos();
+            let small_radius = rc.is_sign_positive();
+            return Box::new(Line {
+                c0: 0,
+                clean: 0,
+                not_hemisphere: rc.abs() > T::epsilon(),
+                point0: None,
+                rc,
+                radius,
+                small_radius,
+                v0: false,
+                v00: false,
+                stream,
+                visible,
+            });
+        });
     }
 
     /// Generates a 4-bit vector representing the location of a point relative to
@@ -89,7 +84,7 @@ impl<T: Float + FloatConst + 'static> Line<T> {
     }
 }
 
-impl<T: Float + FloatConst + 'static> TransformStream<T> for Line<T> {
+impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
     fn line_start(&mut self) {
         self.v00 = false;
         self.v0 = false;
@@ -124,7 +119,7 @@ impl<T: Float + FloatConst + 'static> TransformStream<T> for Line<T> {
             self.v00 = v;
             self.v0 = v;
             if v {
-                let mut stream = self.stream.borrow_mut();
+                let mut stream = self.stream;
                 stream.line_start();
             }
         }
@@ -156,7 +151,7 @@ impl<T: Float + FloatConst + 'static> TransformStream<T> for Line<T> {
             }
         }
 
-        let mut stream = self.stream.borrow_mut();
+        let mut stream = self.stream;
         if v != self.v0 {
             let next: Option<Coordinate<T>>;
             self.clean = 0;
@@ -238,7 +233,7 @@ impl<T: Float + FloatConst + 'static> TransformStream<T> for Line<T> {
 
     fn line_end(&mut self) {
         if self.v0 {
-            let mut stream = self.stream.borrow_mut();
+            let mut stream = self.stream;
             stream.line_end();
         }
         self.point0 = None;

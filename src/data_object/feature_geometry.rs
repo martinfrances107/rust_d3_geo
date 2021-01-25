@@ -1,10 +1,11 @@
-use geo::LineString;
 use geo::MultiPoint;
 use geo::Point;
 use geo::Polygon;
-use num_traits::Float;
+use geo::{CoordFloat, LineString};
+// use num_traits::Float;
+
 #[derive(Clone, Debug)]
-pub enum FeatureGeometry<T: Float> {
+pub enum FeatureGeometry<T: CoordFloat> {
     Point(Point<T>),
     MultiPoint(MultiPoint<T>),
     Polygon(Polygon<T>),

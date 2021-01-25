@@ -1,14 +1,13 @@
 use crate::transform_stream::StreamProcessor;
-use geo::Coordinate;
-use num_traits::Float;
+use geo::{CoordFloat, Coordinate};
 
-pub enum StreamProcessorValueMaybe<T: Float> {
+pub enum StreamProcessorValueMaybe<T: CoordFloat> {
     None,
     Value(T),
     SP(StreamProcessor<T>),
 }
 
-pub trait Projection<T: Float> {
+pub trait Projection<T: CoordFloat> {
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.
@@ -46,7 +45,7 @@ pub trait Projection<T: Float> {
     //  * @param preclip A spherical clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
     //  * Pre-clipPIng operates on spherical coordinates, in radians.
     //  */
-    fn preclip(&mut self, preclip: StreamProcessor<T>);
+    // fn preclip(&mut self, preclip: StreamProcessor<T>);
 
     // /**
     //  * Returns the current cartesian clipPIng function.
@@ -59,7 +58,7 @@ pub trait Projection<T: Float> {
     //  * @param postclip A cartesian clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
     //  * Post-clipPIng operates on planar coordinates, in PIxels.
     //  */
-    fn postclip(&mut self, postclip: StreamProcessor<T>);
+    // fn postclip(&mut self, postclip: StreamProcessor<T>);
 
     // /**
     //  * Switches to antimeridian cutting rather than small-circle clipPIng.

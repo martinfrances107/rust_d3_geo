@@ -1,20 +1,18 @@
-use geo::Coordinate;
-use num_traits::{float::Float, FloatConst};
-use std::cell::RefCell;
-use std::rc::Rc;
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 // use crate::math::epsilon;
 
-use crate::transform_stream::TransformStream;
+use crate::stream::Stream;
 
-pub fn interpolate<T: Float + FloatConst>(
+pub fn interpolate<T: CoordFloat + FloatConst>(
     from: Option<Coordinate<T>>,
     to: Option<Coordinate<T>>,
     direction: T,
-    stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
+    stream: Box<dyn Stream<T>>,
 ) {
     let phi: T;
-    let mut stream = stream.borrow_mut();
+    let mut stream = stream;
     match from {
         None => {
             phi = direction * T::FRAC_PI_2();

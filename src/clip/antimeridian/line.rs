@@ -1,14 +1,7 @@
-use std::cell::RefCell;
-
-use std::rc::Rc;
-
-// use crate::stream::GeoStream;
-use num_traits::Float;
+use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::transform_stream::StreamProcessor;
-use crate::transform_stream::TransformStream;
-// use crate::transform_stream::TransformStreamIdentity;
+use crate::stream::Stream;
 
 use super::intersect::intersect;
 
@@ -21,26 +14,26 @@ const INTERSECTION_REJOIN: u8 = 2u8;
 
 // use crate::clip::ClipLine;
 
-#[derive(Clone)]
+// #[derive(Clone)]
 pub struct Line<T> {
     clean: Option<u8>,
     lambda0: T,
     phi0: T,
     sign0: T,
-    stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
+    stream: Box<dyn Stream<T>>,
 }
 
-impl<T: Float + FloatConst + 'static> Line<T> {
-    pub fn new() -> StreamProcessor<T> {
-        return Box::new(|stream_ptr: Rc<RefCell<Box<dyn TransformStream<T>>>>| {
-            let stream = stream_ptr.clone();
-            return Rc::new(RefCell::new(Box::new(Line {
+impl<T: CoordFloat + FloatConst + 'static> Line<T> {
+    pub fn new() -> Box<dyn Fn(Box<dyn Stream<T>>) -> Box<Line<T>>> {
+        return Box::new(|stream_ptr: Box<dyn Stream<T>>| {
+            let stream = stream_ptr;
+            return Box::new(Line {
                 clean: None, // no intersections
                 lambda0: T::nan(),
                 phi0: T::nan(),
                 sign0: T::nan(),
                 stream,
-            })));
+            });
         });
     }
 
@@ -52,15 +45,15 @@ impl<T: Float + FloatConst + 'static> Line<T> {
     }
 }
 
-impl<T: Float + FloatConst> TransformStream<T> for Line<T> {
+impl<T: CoordFloat + FloatConst> Stream<T> for Line<T> {
     fn line_start(&mut self) {
-        let mut stream = self.stream.borrow_mut();
+        let mut stream = self.stream;
         stream.line_start();
         self.clean = Some(NO_INTERSECTIONS);
     }
 
     fn point(&mut self, mut lambda1: T, phi1: T, _m: Option<u8>) {
-        let mut stream = self.stream.borrow_mut();
+        let mut stream = self.stream;
         let sign1 = match lambda1.is_sign_positive() {
             true => T::PI(),
             false => -T::PI(),
@@ -107,8 +100,8 @@ impl<T: Float + FloatConst> TransformStream<T> for Line<T> {
     }
 
     fn line_end(&mut self) {
-        let mut stream = self.stream.borrow_mut();
-        stream.line_end();
+        // let mut stream = self.stream;
+        self.stream.line_end();
         self.lambda0 = T::nan();
         self.phi0 = T::nan();
     }

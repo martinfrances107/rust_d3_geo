@@ -1,11 +1,11 @@
-use geo::Point;
 use geo::Polygon;
-use num_traits::Float;
+use geo::{CoordFloat, Point};
+use num_traits::FloatConst;
 
 use super::line::line;
 use super::Stream;
 
-pub fn polygon<T: Float>(polygon: &Polygon<T>, stream: &mut impl Stream<T>) {
+pub fn polygon<T: CoordFloat + FloatConst>(polygon: &Polygon<T>, stream: &mut impl Stream<T>) {
     stream.polygon_start();
 
     let e_points: Vec<Point<T>> = polygon.exterior().points_iter().collect();

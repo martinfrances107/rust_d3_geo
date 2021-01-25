@@ -1,7 +1,7 @@
-use crate::transform_stream::TransformStream;
+use crate::stream::Stream;
 
 struct StreamWrapperState<T> {
-    stream: Box<dyn TransformStream<T>>,
+    stream: Box<dyn Stream<T>>,
 }
 
 /// An object implementing a stream method
@@ -11,11 +11,11 @@ pub trait StreamWrapper<T> {
     /// clipped to the small circle or cut along the antimeridian, and lastly projected to the plane with adaptive resampling, scale and translation.
     ///
     /// @param stream An input stream
-    fn stream(&mut self, stream: Box<dyn TransformStream<T>>);
+    fn stream(&mut self, stream: Box<dyn Stream<T>>);
 }
 
 impl<T> StreamWrapper<T> for StreamWrapperState<T> {
-    fn stream(&mut self, stream: Box<dyn TransformStream<T>>) {
+    fn stream(&mut self, stream: Box<dyn Stream<T>>) {
         self.stream = stream;
         // return self.stream;
     }

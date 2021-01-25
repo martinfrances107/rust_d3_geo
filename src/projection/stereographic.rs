@@ -1,25 +1,23 @@
-use std::rc::Rc;
-
-use geo::Coordinate;
-use num_traits::float::FloatConst;
-use num_traits::Float;
-
 use super::projection::Projection;
 use super::projection::StreamProcessorValueMaybe;
 use super::projection_mutator::ProjectionMutator;
 use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
+use geo::{CoordFloat, Coordinate};
+use num_traits::float::FloatConst;
+use std::rc::Rc;
 
 #[derive(Clone, Debug)]
 pub struct StereographicRaw {}
 
 impl StereographicRaw {
     #[inline]
-    fn new<T: Float + 'static>() -> Box<dyn Transform<T>> {
+    fn new<T: CoordFloat + 'static>() -> Box<dyn Transform<T>> {
         Box::new(Self {})
     }
 
-    pub fn gen_projection_mutator<'a, T: Float + FloatConst + 'static>() -> ProjectionMutator<T> {
+    pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>() -> ProjectionMutator<T>
+    {
         let s = Rc::new(StereographicRaw::new());
         let mut projection = ProjectionMutator::from_projection_raw(s);
         projection.scale(Some(&T::from(250f64).unwrap()));
@@ -28,7 +26,7 @@ impl StereographicRaw {
     }
 }
 
-impl<T: Float + 'static> Transform<T> for StereographicRaw {
+impl<T: CoordFloat + 'static> Transform<T> for StereographicRaw {
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();
         let k = T::one() + p.x.cos() * cy;

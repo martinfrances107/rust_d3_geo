@@ -3,11 +3,11 @@ use crate::stream::Stream;
 
 // use super::feature_geometry::FeatureGeometry;
 use super::DataObject;
-use geo::Geometry;
 use geo::MultiPoint;
-use num_traits::Float;
+use geo::{CoordFloat, Geometry};
+use num_traits::FloatConst;
 
-impl<T: Float> DataObject<T> for MultiPoint<T> {
+impl<T: CoordFloat + FloatConst> DataObject<T> for MultiPoint<T> {
     fn to_stream(&self, stream: &mut impl Stream<T>) {
         for p in self.iter() {
             let g = Geometry::Point(*p);

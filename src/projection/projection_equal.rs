@@ -1,5 +1,5 @@
-use geo::Coordinate;
-use num_traits::Float;
+use geo::{CoordFloat, Coordinate};
+use num_traits::{Float, FloatConst};
 use std::fmt::Debug;
 use std::fmt::Display;
 
@@ -8,7 +8,7 @@ use crate::Transform;
 
 use super::projection_mutator::ProjectionMutator;
 
-pub fn projection_equal<T: Float + Debug + Display>(
+pub fn projection_equal<T: CoordFloat + FloatConst + Debug + Display>(
     projection: &ProjectionMutator<T>,
     expected_location: &Coordinate<T>,
     expected_point: &Coordinate<T>,
@@ -33,7 +33,7 @@ pub fn projection_equal<T: Float + Debug + Display>(
         && spherical_equal(actual_location, expected_location, delta);
 }
 
-fn planar_equal<T: Float + Debug + Display>(
+fn planar_equal<T: CoordFloat + Debug + Display>(
     actual: Coordinate<T>,
     expected: &Coordinate<T>,
     delta: T,
@@ -43,7 +43,7 @@ fn planar_equal<T: Float + Debug + Display>(
     return e0 && e1;
 }
 
-fn spherical_equal<T: Float + Debug + Display>(
+fn spherical_equal<T: CoordFloat + Debug + Display>(
     actual: Coordinate<T>,
     expected: &Coordinate<T>,
     delta: T,

@@ -1,11 +1,10 @@
 // use super::feature_geometry::FeatureGeometry;
 use super::feature_property::FeatureProperty;
-use geo::Geometry;
+use geo::{CoordFloat, Geometry};
 
-use num_traits::Float;
 // Pluralization of the struct,
 #[derive(Clone, Debug)]
-pub struct FeaturesStruct<T: Float> {
+pub struct FeaturesStruct<T: CoordFloat> {
     pub properties: Vec<FeatureProperty<T>>,
     pub geometry: Vec<Geometry<T>>,
 }

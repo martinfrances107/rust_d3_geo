@@ -1,5 +1,4 @@
-use geo::Coordinate;
-use num_traits::Float;
+use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 // use crate::math::TAU;
@@ -11,7 +10,7 @@ pub struct RotationLambda<T> {
 }
 
 // TODO why can't I #[inline] this.
-fn forward_rotation_lambda<T: Float + FloatConst>(
+fn forward_rotation_lambda<T: CoordFloat + FloatConst>(
     delta_lambda: T,
     p: &Coordinate<T>,
 ) -> Coordinate<T> {
@@ -30,13 +29,13 @@ fn forward_rotation_lambda<T: Float + FloatConst>(
     };
 }
 
-impl<T: Float + FloatConst + 'static> RotationLambda<T> {
+impl<T: CoordFloat + FloatConst + 'static> RotationLambda<T> {
     pub fn new(delta_lambda: T) -> Box<dyn Transform<T>> {
         return Box::new(Self { delta_lambda });
     }
 }
 
-impl<T: Float + FloatConst> Transform<T> for RotationLambda<T> {
+impl<T: CoordFloat + FloatConst> Transform<T> for RotationLambda<T> {
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         return forward_rotation_lambda(self.delta_lambda, coordinates);
     }

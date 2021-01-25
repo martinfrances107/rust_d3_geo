@@ -1,6 +1,6 @@
-use num_traits::Float;
+use geo::CoordFloat;
 
-pub fn intersect<T: Float>(lambda0: T, phi0: T, lambda1: T, phi1: T) -> T {
+pub fn intersect<T: CoordFloat>(lambda0: T, phi0: T, lambda1: T, phi1: T) -> T {
     let sin_lambda0_lambda1 = (lambda0 - lambda1).sin();
     match (sin_lambda0_lambda1).abs() > T::epsilon() {
         true => {

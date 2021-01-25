@@ -4,9 +4,9 @@
 // #![allow(dead_code)]
 // #![allow(unused_imports)]
 
-use geo::Coordinate;
-use num_traits::Float;
+use geo::{CoordFloat, Coordinate};
 
+extern crate web_sys;
 pub mod cartesian;
 pub mod centroid;
 pub mod circle;
@@ -14,11 +14,12 @@ pub mod data_object;
 pub mod distance;
 pub mod in_delta;
 pub mod length;
+// pub mod path;
 pub mod polygon_contains;
 pub mod projection;
 pub mod rotation;
 
-mod clip;
+// mod clip;
 mod compose;
 mod point_equal;
 mod resample;
@@ -27,23 +28,26 @@ mod transform_stream;
 
 #[derive(Copy, Clone, Debug)]
 pub struct TransformIdentity {}
-impl TransformIdentity {
-    fn new() -> Self {
-        return TransformIdentity {};
-    }
-}
+// impl TransformIdentity {
+//     fn new() -> Self {
+//         return TransformIdentity {};
+//     }
+// }
 
-impl<T: Float> Transform<T> for TransformIdentity {}
+impl<T: CoordFloat> Transform<T> for TransformIdentity {}
 
 /// Common to Projection, Rotation.
 pub trait Transform<T>
 where
-    T: Float,
+    T: CoordFloat,
 {
+    #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        return p.clone();
+        p.clone()
     }
+
+    #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        return p.clone();
+        p.clone()
     }
 }

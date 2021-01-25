@@ -12,7 +12,9 @@ pub mod multi_point;
 pub mod multi_polygon;
 pub mod point;
 pub mod polygon;
-use num_traits::Float;
-pub trait DataObject<T: Float> {
+use geo::CoordFloat;
+use num_traits::FloatConst;
+
+pub trait DataObject<T: CoordFloat + FloatConst> {
     fn to_stream(&self, stream: &mut impl Stream<T>);
 }

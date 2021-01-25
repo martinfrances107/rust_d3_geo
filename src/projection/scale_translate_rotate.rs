@@ -1,12 +1,11 @@
-use geo::Coordinate;
-use num_traits::Float;
+use geo::{CoordFloat, Coordinate};
 
 use crate::Transform;
 
 use super::scale_translate::ScaleTranslate;
 
 #[derive(Debug)]
-pub struct ScaleTranslateRotate<T: Float> {
+pub struct ScaleTranslateRotate<T: CoordFloat> {
     a: T,
     b: T,
     ai: T,
@@ -19,7 +18,7 @@ pub struct ScaleTranslateRotate<T: Float> {
     sy: T,
 }
 
-impl<T: Float + 'static> ScaleTranslateRotate<T> {
+impl<T: CoordFloat + 'static> ScaleTranslateRotate<T> {
     pub fn new(k: T, dx: T, dy: T, sx: T, sy: T, alpha: T) -> Box<dyn Transform<T>> {
         if alpha.is_zero() {
             return ScaleTranslate::new(k, dx, dy, sx, sy);
@@ -42,7 +41,7 @@ impl<T: Float + 'static> ScaleTranslateRotate<T> {
     }
 }
 
-impl<T: Float> Transform<T> for ScaleTranslateRotate<T> {
+impl<T: CoordFloat> Transform<T> for ScaleTranslateRotate<T> {
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;

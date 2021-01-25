@@ -2,11 +2,11 @@
 use super::DataObject;
 use crate::stream::geometry_processor::processor;
 use crate::stream::Stream;
-use geo::Geometry;
 use geo::LineString;
-use num_traits::Float;
+use geo::{CoordFloat, Geometry};
+use num_traits::FloatConst;
 
-impl<T: Float> DataObject<T> for LineString<T> {
+impl<T: CoordFloat + FloatConst> DataObject<T> for LineString<T> {
     fn to_stream(&self, stream: &mut impl Stream<T>) {
         // let g = FeatureGeometry::LineString(
         //     *self

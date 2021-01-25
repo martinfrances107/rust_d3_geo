@@ -1,8 +1,8 @@
-use num_traits::{float::Float, FloatConst};
-use std::rc::Rc;
-
 use crate::compose::Compose;
 use crate::Transform;
+use geo::CoordFloat;
+use num_traits::FloatConst;
+use std::rc::Rc;
 // use crate::TransformIdentity;
 
 use super::rotation_identity::RotationIdentity;
@@ -13,7 +13,7 @@ pub struct RotateRadians {}
 
 impl RotateRadians {
     /// Returns a object implmenting the desired combination of rotations.
-    pub fn new<T: Float + FloatConst + 'static>(
+    pub fn new<T: CoordFloat + FloatConst + 'static>(
         delta_lambda_p: T,
         delta_phi: T,
         delta_gamma: T,

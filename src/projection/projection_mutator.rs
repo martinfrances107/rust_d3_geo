@@ -1,36 +1,35 @@
 // A collection of functions that mutate a Projection struct.
 
 use std::cell::RefCell;
+
+// A collection of functions that mutate a Projection struct.
+use crate::rotation::rotate_radians::RotateRadians;
+use crate::{compose::Compose, transform_stream::StreamProcessor};
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 use std::rc::Rc;
 
-use geo::Coordinate;
-use num_traits::{float::Float, FloatConst};
+use crate::stream::Stream;
+use crate::transform_stream::StreamIdentity;
 
-use crate::compose::Compose;
-use crate::rotation::rotate_radians::RotateRadians;
-
-use crate::transform_stream::StreamProcessor;
-use crate::transform_stream::StreamProcessorIdentity;
-use crate::transform_stream::TransformStream;
-use crate::transform_stream::TransformStreamIdentity;
 use crate::Transform;
 use crate::TransformIdentity;
 
 // clip generators.
-use crate::clip::antimeridian::generate_antimeridian;
-use crate::clip::circle::generate_circle;
+// use crate::clip::antimeridian::generate_antimeridian;
+// use crate::clip::circle::generate_circle;
 
 use super::projection::Projection;
 use super::projection::StreamProcessorValueMaybe;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 
-pub struct ProjectionMutator<T: Float> {
+pub struct ProjectionMutator<T: CoordFloat + FloatConst> {
     // The mutator lives as long a the proejction it contnains.
     project: Rc<Box<dyn Transform<T>>>,
     alpha: T, // post-rotate angle
-    cache: Rc<RefCell<Box<dyn TransformStream<T>>>>,
-    cache_stream: Option<Box<dyn TransformStream<T>>>,
-    clip_antimeridian: Option<Box<dyn Transform<T>>>,
+    cache: Rc<RefCell<Box<dyn Stream<T>>>>,
+    cache_stream: Option<Box<dyn Stream<T>>>,
+    // clip_antimeridian: Option<Box<dyn Transform<T>>>,
     delta_lambda: T,
     delta_phi: T,
     delta_gamma: T,
@@ -40,8 +39,8 @@ pub struct ProjectionMutator<T: Float> {
     project_transform: Rc<Box<dyn Transform<T>>>,
     project_rotate_transform: Rc<Box<dyn Transform<T>>>,
     phi: T, // center
-    preclip: StreamProcessor<T>,
-    postclip: StreamProcessor<T>,
+    // preclip: StreamProcessor<T>,
+    // postclip: StreamProcessor<T>,
     x: T,
     y: T, // translate
     lambda: T,
@@ -55,16 +54,16 @@ pub struct ProjectionMutator<T: Float> {
     y1: Option<T>, // post-clip extent
 }
 
-impl<T: Float + FloatConst + 'static> ProjectionMutator<T> {
+impl<T: CoordFloat + FloatConst + 'static> ProjectionMutator<T> {
     pub fn from_projection_raw(project: Rc<Box<dyn Transform<T>>>) -> ProjectionMutator<T> {
         let delta2 = T::from(0.5).unwrap(); // precision
 
         let mut pm = ProjectionMutator {
             project: Rc::clone(&project),
             alpha: T::zero(), // post-rotate angle
-            cache: Rc::new(RefCell::new(Box::new(TransformStreamIdentity {}))),
+            cache: Rc::new(RefCell::new(Box::new(StreamIdentity {}))),
             cache_stream: None,
-            clip_antimeridian: None,
+            // clip_antimeridian: None,
             delta2, // precision
             delta_lambda: T::zero(),
             delta_phi: T::zero(),
@@ -75,8 +74,8 @@ impl<T: Float + FloatConst + 'static> ProjectionMutator<T> {
             lambda: T::zero(),
             phi: T::zero(),
             rotate: Rc::new(Box::new(TransformIdentity {})), // pre-rotate
-            preclip: generate_antimeridian(),
-            postclip: StreamProcessorIdentity::new(),
+            // preclip: generate_antimeridian(),
+            // postclip: StreamProcessorIdentity::new(),
             sx: T::one(), // reflectX
             sy: T::one(), // reflectX
             theta: None,  // pre-clip angle
@@ -95,6 +94,7 @@ impl<T: Float + FloatConst + 'static> ProjectionMutator<T> {
         return pm;
     }
 
+    #[inline]
     fn reset(&mut self) {
         self.cache_stream = None;
     }
@@ -107,14 +107,14 @@ impl<T: Float + FloatConst + 'static> ProjectionMutator<T> {
                     y: self.phi,
                 }));
 
-        let transform = ScaleTranslateRotate::new(
+        let transform = Rc::new(ScaleTranslateRotate::new(
             self.k,
             self.x - center.x,
             self.y - center.y,
             self.sx,
             self.sy,
             self.alpha,
-        );
+        ));
 
         self.rotate = Rc::new(RotateRadians::new(
             self.delta_lambda,
@@ -123,8 +123,7 @@ impl<T: Float + FloatConst + 'static> ProjectionMutator<T> {
         ));
 
         {
-            self.project_transform =
-                Rc::new(Compose::new(self.project.clone(), Rc::new(transform)));
+            self.project_transform = Rc::new(Compose::new(self.project.clone(), transform));
         }
 
         self.project_rotate_transform = Rc::new(Compose::new(
@@ -136,10 +135,10 @@ impl<T: Float + FloatConst + 'static> ProjectionMutator<T> {
         self.reset();
     }
 
-    fn stream(
+    pub fn stream(
         &mut self,
-        stream: Rc<RefCell<Box<dyn TransformStream<T>>>>,
-    ) -> Rc<RefCell<Box<dyn TransformStream<T>>>> {
+        stream: Rc<RefCell<Box<dyn Stream<T>>>>,
+    ) -> Rc<RefCell<Box<dyn Stream<T>>>> {
         // let resample = self.project_resample.borrow_mut();
 
         // post clip is just the identity stream in stereographic tests.
@@ -156,21 +155,22 @@ impl<T: Float + FloatConst + 'static> ProjectionMutator<T> {
     }
 }
 
-impl<T: Float> TransformStream<T> for ProjectionMutator<T> {}
+impl<T> Stream<T> for ProjectionMutator<T> where T: CoordFloat + FloatConst {}
 
-impl<T: Float> Transform<T> for ProjectionMutator<T> {
+impl<T> Transform<T> for ProjectionMutator<T>
+where
+    T: CoordFloat + FloatConst,
+{
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let pt = self.project_rotate_transform.clone();
         let r = Coordinate {
             x: p.x.to_radians(),
             y: p.y.to_radians(),
         };
-        let out = pt.transform(&r);
+        let out = self.project_rotate_transform.transform(&r);
         return out;
     }
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let pt = self.project_rotate_transform.clone();
-        let d = pt.invert(p);
+        let d = self.project_rotate_transform.invert(p);
         let out = Coordinate {
             x: d.x.to_degrees(),
             y: d.y.to_degrees(),
@@ -179,26 +179,26 @@ impl<T: Float> Transform<T> for ProjectionMutator<T> {
     }
 }
 
-impl<T: Float + FloatConst + 'static> Projection<T> for ProjectionMutator<T> {
+impl<T: CoordFloat + FloatConst + 'static> Projection<T> for ProjectionMutator<T> {
     // fn get_preclip(&self) -> Option<Box<dyn GeoStream>> {
     //   return self.preclip;
     // }
 
-    fn preclip(&mut self, preclip: StreamProcessor<T>) {
-        // self.preclip = preclip;
-        // self.theta = None;
-        // return self.reset();
-    }
+    // fn preclip(&mut self, preclip: StreamProcessor<T>) {
+    //     // self.preclip = preclip;
+    //     // self.theta = None;
+    //     // return self.reset();
+    // }
 
     // fn get_postclip(&self) -> Option<Box<dyn GeoStream>> {
     //   return self.postclip;
     // }
 
-    fn postclip(&mut self, postclip: StreamProcessor<T>) {
-        // self.postclip = postclip;
-        // self.theta = None;
-        // return self.reset();
-    }
+    // fn postclip(&mut self, postclip: StreamProcessor<T>) {
+    //     // self.postclip = postclip;
+    //     // self.theta = None;
+    //     // return self.reset();
+    // }
 
     // fn get_center(&self) -> Point {
     //   return [self.lambda.to_degrees(), self.phi.to_degrees()];
@@ -221,13 +221,13 @@ impl<T: Float + FloatConst + 'static> Projection<T> for ProjectionMutator<T> {
                 let theta = angle.to_radians();
                 self.theta = Some(theta);
                 println!("generating clip circle");
-                self.preclip = generate_circle(theta);
+                // self.preclip = generate_circle(theta);
                 None
             }
             StreamProcessorValueMaybe::SP(preclip) => {
                 println!("generatin SP");
                 self.theta = None;
-                self.preclip = preclip;
+                // self.preclip = preclip;
                 // self.reset();
                 None
             }
@@ -249,20 +249,18 @@ impl<T: Float + FloatConst + 'static> Projection<T> for ProjectionMutator<T> {
     }
 
     fn translate(&mut self, t: Option<&Coordinate<T>>) -> Option<Coordinate<T>> {
-        match t {
+        return match t {
             Some(t) => {
                 self.x = t.x;
                 self.y = t.y;
                 self.recenter();
-                return None;
+                None
             }
-            None => {
-                return Some(Coordinate {
-                    x: self.x,
-                    y: self.y,
-                });
-            }
-        }
+            None => Some(Coordinate {
+                x: self.x,
+                y: self.y,
+            }),
+        };
     }
 
     fn rotate(&mut self, angles: Option<[T; 3]>) -> Option<[T; 3]> {
@@ -276,13 +274,11 @@ impl<T: Float + FloatConst + 'static> Projection<T> for ProjectionMutator<T> {
                 self.recenter();
                 None
             }
-            None => {
-                return Some([
-                    self.delta_lambda.to_degrees(),
-                    self.delta_phi.to_degrees(),
-                    self.delta_lambda.to_degrees(),
-                ]);
-            }
+            None => Some([
+                self.delta_lambda.to_degrees(),
+                self.delta_phi.to_degrees(),
+                self.delta_lambda.to_degrees(),
+            ]),
         };
     }
 }

@@ -2,15 +2,15 @@ use crate::data_object::DataObject;
 use crate::stream::Stream;
 use std::ops::AddAssign;
 
-use geo::Point;
-use num_traits::{float::Float, FloatConst};
+use geo::{CoordFloat, Point};
+use num_traits::FloatConst;
 
 // TO MUST use a math library
 pub const EPSILON: f64 = 1e-6;
 pub const EPSILON2: f64 = 1e-12;
 
 #[allow(non_snake_case)]
-pub struct CentroidStream<T: Float> {
+pub struct CentroidStream<T: CoordFloat> {
     W0: T,
     W1: T,
     X0: T,
@@ -32,7 +32,7 @@ pub struct CentroidStream<T: Float> {
     line_end_fn: fn(&mut Self),
 }
 
-impl<T: Float + FloatConst + AddAssign> Default for CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign> Default for CentroidStream<T> {
     fn default() -> Self {
         return Self {
             W0: T::zero(),
@@ -58,7 +58,7 @@ impl<T: Float + FloatConst + AddAssign> Default for CentroidStream<T> {
     }
 }
 
-impl<T: Float + FloatConst + AddAssign> CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
         self.X0 += (x - self.X0) / self.W0;
@@ -197,16 +197,19 @@ impl<T: Float + FloatConst + AddAssign> CentroidStream<T> {
     }
 }
 
-impl<T: Float + FloatConst + AddAssign> Stream<T> for CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign> Stream<T> for CentroidStream<T> {
+    #[inline]
     fn line_end(&mut self) {
         (self.line_end_fn)(self);
     }
 
+    #[inline]
     fn line_start(&mut self) {
         (self.line_start_fn)(self);
     }
 
-    fn point(&mut self, x: T, y: T, _z: Option<T>) {
+    #[inline]
+    fn point(&mut self, x: T, y: T, _z: Option<u8>) {
         (self.point_fn)(self, x, y);
     }
 

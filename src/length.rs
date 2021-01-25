@@ -1,8 +1,9 @@
 use super::data_object::DataObject;
 use super::stream::Stream;
-use num_traits::Float;
+use geo::CoordFloat;
+use num_traits::FloatConst;
 
-pub struct LengthStream<T: Float> {
+pub struct LengthStream<T: CoordFloat + FloatConst> {
     // sphere_fn: fn(&mut Self, f64, f64),
     point_fn: fn(&mut Self, T, T),
     line_start_fn: fn(&mut Self),
@@ -13,7 +14,7 @@ pub struct LengthStream<T: Float> {
     cos_phi0: T,
 }
 
-impl<T: Float> Default for LengthStream<T> {
+impl<T: CoordFloat + FloatConst> Default for LengthStream<T> {
     fn default() -> Self {
         return Self {
             // sphere_fn: Self::noop,
@@ -28,7 +29,7 @@ impl<T: Float> Default for LengthStream<T> {
     }
 }
 
-impl<T: Float> LengthStream<T> {
+impl<T: CoordFloat + FloatConst> LengthStream<T> {
     pub fn calc(object: &impl DataObject<T>) -> T {
         let mut ls = LengthStream::default();
         object.to_stream(&mut ls);
@@ -77,8 +78,8 @@ impl<T: Float> LengthStream<T> {
     fn line_end_noop(&mut self) {}
 }
 
-impl<T: Float> Stream<T> for LengthStream<T> {
-    fn point(&mut self, x: T, y: T, _z: Option<T>) {
+impl<T: CoordFloat + FloatConst> Stream<T> for LengthStream<T> {
+    fn point(&mut self, x: T, y: T, _z: Option<u8>) {
         (self.point_fn)(self, x, y);
     }
 

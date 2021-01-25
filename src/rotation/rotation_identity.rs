@@ -1,5 +1,5 @@
-use geo::Coordinate;
-use num_traits::{float::Float, FloatConst};
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 use crate::Transform;
 
@@ -8,7 +8,7 @@ pub struct RotationIdentity {}
 
 // By design a stateless function.
 // TODO maybe add attributes to suggest inlining this where possible.
-fn normalise<T: Float + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
+fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
     let lambda = p.x;
     let phi = p.y;
 
@@ -22,12 +22,12 @@ fn normalise<T: Float + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
 }
 
 impl RotationIdentity {
-    pub fn new<T: Float + FloatConst>() -> Box<dyn Transform<T>> {
+    pub fn new<T: CoordFloat + FloatConst>() -> Box<dyn Transform<T>> {
         return Box::new(RotationIdentity {});
     }
 }
 
-impl<T: Float + FloatConst> Transform<T> for RotationIdentity {
+impl<T: CoordFloat + FloatConst> Transform<T> for RotationIdentity {
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         return normalise(p);
     }

@@ -1,20 +1,21 @@
-use crate::transform_stream::TransformStream;
-use num_traits::Float;
+use crate::stream::Stream;
+use geo::CoordFloat;
+use num_traits::FloatConst;
 
 #[derive(Clone, Copy, Debug)]
-struct LineTuple<T: Float> {
+struct LineTuple<T: CoordFloat> {
     x: T,
     y: T,
     m: Option<u8>,
 }
 #[derive(Debug)]
-pub struct ClipBuffer<T: Float> {
+pub struct ClipBuffer<T: CoordFloat> {
     lines: Vec<Vec<LineTuple<T>>>,
     line: Vec<LineTuple<T>>,
 }
 
-impl<T: Float + 'static> ClipBuffer<T> {
-    pub fn new() -> Box<dyn TransformStream<T>> {
+impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
+    pub fn new() -> Box<dyn Stream<T>> {
         return Box::new(Self {
             lines: Vec::new(),
             line: Vec::new(),
@@ -40,7 +41,7 @@ impl<T: Float + 'static> ClipBuffer<T> {
     }
 }
 
-impl<'a, T: Float> TransformStream<T> for ClipBuffer<T> {
+impl<'a, T: CoordFloat + FloatConst> Stream<T> for ClipBuffer<T> {
     fn point(&mut self, x: T, y: T, m: Option<u8>) {
         self.line.push(LineTuple { x, y, m });
     }

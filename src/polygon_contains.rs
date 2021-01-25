@@ -1,22 +1,20 @@
-use geo::Coordinate;
-use num_traits::{float::Float, FloatConst};
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_normalize_in_place;
 
-// import adder from "./adder.js";
-// var sum = adder();
-
-fn longitude<T: Float + FloatConst>(point: &Coordinate<T>) -> T {
+#[inline]
+fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
     if point.x.abs() <= T::PI() {
-        return point.x;
+        point.x
     } else {
-        return point.x.signum() * ((point.x.abs() + T::PI()) % T::TAU() - T::PI());
+        point.x.signum() * ((point.x.abs() + T::PI()) % T::TAU() - T::PI())
     }
 }
 
-pub fn contains<T: Float + FloatConst>(
+pub fn contains<T: CoordFloat + FloatConst>(
     polygon: Vec<Vec<Coordinate<T>>>,
     point: &Coordinate<T>,
 ) -> bool {
@@ -28,9 +26,6 @@ pub fn contains<T: Float + FloatConst>(
 
     let mut sum = T::zero();
     let mut winding = 0i32;
-
-    // New then reset is this needed.
-    // sum.reset();
 
     if sin_phi == T::one() {
         phi = T::FRAC_PI_2() + T::epsilon();
