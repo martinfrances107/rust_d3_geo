@@ -1,13 +1,13 @@
 use super::Stream;
 use geo::CoordFloat;
 use geo::Point;
+use num_traits::FloatConst;
 
 pub fn point_processor<T: CoordFloat + FloatConst>(
     coordinates: &[Point<T>],
     stream: &mut impl Stream<T>,
     closed: usize,
 ) {
-    // let i = -1;
     let n = coordinates.len() - closed;
     stream.line_start();
     for i in 0..n {
@@ -31,5 +31,3 @@ pub fn line_processor<T: CoordFloat + FloatConst>(
     }
     stream.line_end();
 }
-
-use num_traits::FloatConst;

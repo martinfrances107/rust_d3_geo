@@ -1,6 +1,3 @@
-pub mod feature_property;
-pub mod feature_struct;
-pub mod features_struct;
 use num_traits::FloatConst;
 
 use geo::CoordFloat;
