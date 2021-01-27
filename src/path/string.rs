@@ -17,7 +17,7 @@ where
         p2r = two * radius
     )
 }
-
+#[derive(Debug, Clone)]
 pub struct PathString<T> {
     circle: Option<String>,
     line: Option<f64>,

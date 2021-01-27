@@ -104,6 +104,7 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
+    #[inline]
     fn centroid_line_start(&mut self) {
         self.point_fn = Self::centroid_line_point_first;
     }
@@ -164,12 +165,14 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
         self.point_fn = Self::centroid_point;
     }
 
+    #[inline]
     fn centroid_ring_start(&mut self) {
         self.point_fn = Self::centroid_ring_point_first;
     }
 
     pub fn centroid(&mut self, d_object: &impl Streamable<T>) -> Point<T> {
-        d_object.to_stream(self);
+        d_object.to_stream(self);        
+
         let mut x = self.X2;
         let mut y = self.Y2;
         let mut z = self.Z2;

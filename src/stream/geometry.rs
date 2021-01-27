@@ -15,6 +15,9 @@ where
                     g.to_stream(stream);
                 }
             }
+            Geometry::Point(p) => {
+                p.to_stream(stream);
+            }
             g => {
                 g.to_stream(stream);
             }

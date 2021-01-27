@@ -79,25 +79,25 @@ where
 
     fn point(&mut self, x: T, y: T, _z: Option<u8>) {
         match self.point {
-            Some(point) => match point {
-                0f64 => {
+            Some(point) => {
+                if point == 0f64 {
                     self.context.move_to(x.as_(), y.as_());
                     self.point = Some(1f64);
-                }
-                1f64 => {
+                } else if point == 1f64 {
                     self.context.line_to(x.as_(), y.as_());
-                }
-                _ => {
+                } else {
                     self.context.move_to(x.as_(), y.as_());
-                    self.context.arc(
-                        x.as_(),
-                        y.as_(),
-                        self.radius.as_(),
-                        0f64,
-                        std::f64::consts::TAU,
-                    );
+                    self.context
+                        .arc(
+                            x.as_(),
+                            y.as_(),
+                            self.radius.as_(),
+                            0f64,
+                            std::f64::consts::TAU,
+                        )
+                        .expect("error writing arc to context");
                 }
-            },
+            }
             None => {}
         }
     }
