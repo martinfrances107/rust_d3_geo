@@ -11,8 +11,9 @@ mod length_test {
     use geo::MultiPolygon;
     use geo::Point;
     use geo::Polygon;
-    use rust_d3_geo::data_object::feature_collection::FeatureCollection;
-    use rust_d3_geo::data_object::features_struct::FeaturesStruct;
+    use rust_d3_geo::data_object::FeatureCollection;
+
+    use rust_d3_geo::data_object::FeaturesStruct;
     use rust_d3_geo::in_delta::in_delta;
     use rust_d3_geo::length::LengthStream;
     use std::f64::consts::PI;

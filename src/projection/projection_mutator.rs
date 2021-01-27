@@ -22,6 +22,7 @@ use crate::TransformIdentity;
 use super::projection::Projection;
 use super::projection::StreamProcessorValueMaybe;
 use super::scale_translate_rotate::ScaleTranslateRotate;
+// use super::path::PathTrait;
 
 pub struct ProjectionMutator<T: CoordFloat + FloatConst> {
     // The mutator lives as long a the proejction it contnains.

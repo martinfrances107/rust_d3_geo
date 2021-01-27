@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
-use geo::CoordFloat;
 use crate::stream::Stream;
+use geo::CoordFloat;
 use num_traits::{Float, FloatConst};
 
 #[inline]
@@ -63,7 +63,7 @@ where
         }
     }
     #[inline]
-    fn result(self) -> Option<String> {
+    fn result(&mut self) -> Option<String> {
         if self.string.is_empty() {
             let result = self.string.join(",");
             self.string = Vec::new();
@@ -121,9 +121,9 @@ where
                     self.circle = Some(circle(self.radius));
                 }
                 self.string.push(format!("M{},{}", x, y));
-                match self.circle {
+                match &self.circle {
                     Some(circle) => {
-                        self.string.push(circle);
+                        self.string.push(circle.clone());
                     }
                     None => {}
                 }

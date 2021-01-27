@@ -1,8 +1,21 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
-pub(crate) mod geometry_processor;
-mod line;
-mod polygon;
+pub mod feature_collection;
+pub mod geometry;
+pub mod geometry_collection;
+mod geometry_processor;
+pub mod line;
+pub mod line_string;
+pub mod multi_line_string;
+pub mod multi_point;
+pub mod multi_polygon;
+pub mod point;
+pub mod polygon;
+
+/// Applies to DataObject's
+pub trait Streamable<T: CoordFloat + FloatConst> {
+    fn to_stream(&self, stream: &mut impl Stream<T>);
+}
 
 pub trait Stream<T>
 where

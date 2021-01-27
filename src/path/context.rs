@@ -30,17 +30,18 @@ where
         }
     }
 
-    fn point_radians(self, r: T) -> PathContext<T> {
-        self.radius = r;
-        self
-    }
-
+    // fn point_radians(&mut self, r: T) -> PathContext<T> {
+    //     self.radius = r;
+    //     self
+    // }
 }
 
-impl<T> PathResult<T> for PathContext<T> 
-where T: CoordFloat {
+impl<T> PathResult<T> for PathContext<T>
+where
+    T: CoordFloat,
+{
     #[inline]
-    fn result(&self) -> PathResultEnum<T>{
+    fn result(&mut self) -> PathResultEnum<T> {
         PathResultEnum::Blank
     }
 }

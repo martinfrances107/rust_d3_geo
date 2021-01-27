@@ -18,8 +18,10 @@ impl StreamProcessorIdentity {
 
 impl<T> Stream<T> for StreamProcessorIdentity where T: CoordFloat + FloatConst {}
 
+#[derive(Default)]
 pub struct StreamIdentity {}
-impl<T> Stream<T> for StreamIdentity where T: CoordFloat + FloatConst + 'static {}
+
+impl<T> Stream<T> for StreamIdentity where T: CoordFloat + FloatConst {}
 
 // /// Define the default implementation of the trait.
 // pub trait Stream<T> {

@@ -63,7 +63,7 @@ where
     }
     fn area_ring_end(&mut self) {}
 
-    fn point_noop(&mut self, x_: T, y_: T) {}
+    fn point_noop(&mut self, _x: T, _y: T) {}
 
     fn line_noop(&mut self) {}
 }
@@ -72,7 +72,7 @@ impl<T> PathResult<T> for PathAreaStream<T>
 where
     T: CoordFloat + std::ops::AddAssign,
 {
-    fn result(&self) -> PathResultEnum<T> {
+    fn result(&mut self) -> PathResultEnum<T> {
         let area = self.area_sum / T::from(2).unwrap();
         self.area_sum = T::zero();
         return PathResultEnum::Area(area);

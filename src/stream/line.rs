@@ -1,19 +1,14 @@
-use geo::{CoordFloat, Point};
+use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use super::Stream;
 
-pub fn line<T: CoordFloat + FloatConst>(
-    coordinates: &[Point<T>],
-    stream: &mut impl Stream<T>,
-    closed: usize,
-) {
-    let n = coordinates.len() - closed;
-    let mut coordinate;
-    stream.line_start();
-    for i in 0..n {
-        coordinate = coordinates[i].clone();
-        stream.point(coordinate.x(), coordinate.y(), None);
+use super::Streamable;
+use geo::Line;
+
+impl<T: CoordFloat + FloatConst> Streamable<T> for Line<T> {
+    fn to_stream(&self, stream: &mut impl Stream<T>) {
+        stream.point(self.start_point().x(), self.start_point().y(), None);
+        stream.point(self.end_point().x(), self.end_point().y(), None);
     }
-    stream.line_end();
 }

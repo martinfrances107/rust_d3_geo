@@ -1,14 +1,16 @@
-use delaunator::Point;
+use geo::Point;
 
 use super::Stream;
 
-pub fn point(coordinates: &[Point], stream: &mut impl Stream, closed: usize) {
-    // let i = -1;
-    let n = coordinates.len() - closed;
-    stream.line_start();
-    for i in 0..n {
-        let coordinate = coordinates[i].clone();
-        stream.point(coordinate.x, coordinate.y, None);
+use super::Streamable;
+
+use geo::CoordFloat;
+use num_traits::FloatConst;
+
+// Move this to another file.
+impl<T: CoordFloat + FloatConst> Streamable<T> for Point<T> {
+    #[inline]
+    fn to_stream(&self, stream: &mut impl Stream<T>) {
+        stream.point(self.x(), self.y(), None);
     }
-    stream.line_end();
 }

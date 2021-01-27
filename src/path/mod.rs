@@ -2,24 +2,25 @@ mod area_stream;
 mod context;
 mod string;
 
-use super::data_object::DataObject;
+use std::default::Default;
+
+use web_sys::CanvasRenderingContext2d;
+
 use crate::path::area_stream::PathAreaStream;
+use crate::path::context::PathContext;
 use crate::path::string::PathString;
 use crate::transform_stream::StreamIdentity;
 use crate::Transform;
-
-use crate::path::context::PathContext;
 
 use crate::projection::projection_mutator::ProjectionMutator;
 use crate::stream::Stream;
 
 use geo::CoordFloat;
 use num_traits::{AsPrimitive, FloatConst};
-use std::default::Default;
 
-use web_sys::CanvasRenderingContext2d;
+use crate::stream::Streamable;
 
-enum PathResultEnum<T>
+pub enum PathResultEnum<T>
 where
     T: CoordFloat,
 {
@@ -34,7 +35,7 @@ pub trait PathResult<T>
 where
     T: CoordFloat,
 {
-    fn result(&self) -> PathResultEnum<T>;
+    fn result(&mut self) -> PathResultEnum<T>;
 }
 
 trait PathTrait<T>
@@ -91,7 +92,7 @@ where
     context_in: Option<CanvasRenderingContext2d>,
     context_stream: Option<Box<dyn PathStreamTrait<T>>>,
     point_radius: T,
-    projection_stream_fn: Box<dyn Fn(&dyn PathTrait<T>) -> dyn Stream<T>>,
+    // projection_stream_fn: Box<dyn Fn(&dyn PathTrait<T>) -> dyn Stream<T>>,
     projection_in: Option<Box<dyn Transform<T>>>,
 }
 
@@ -107,17 +108,17 @@ where
             context_stream: None,
             point_radius: T::from(4.5f64).unwrap(),
             projection_in: None,
-            projection_stream_fn: Box::new(|&_| StreamIdentity {}),
+            // projection_stream_fn: Box::new(|&_| StreamIdentity::default()),
         }
     }
 }
 
 impl<T> Path<T>
 where
-    T: CoordFloat + std::fmt::Display + AsPrimitive<T> + FloatConst,
+    T: CoordFloat + std::fmt::Display + FloatConst,
 {
     #[inline]
-    fn gnerate(
+    fn generate(
         projection_in: Option<Box<dyn Transform<T>>>,
         context_in: Option<CanvasRenderingContext2d>,
     ) -> Path<T> {
@@ -126,18 +127,20 @@ where
             context_in,
             ..Default::default()
         }
-        // self.projection(projection).context(context);
     }
 
-    #[inline]
-    fn path(&self) -> Box<dyn PathResult<T>> {
-        Box::new(self.context_stream.result())
-    }
+    // #[inline]
+    // fn path(&self) -> PathResultEnum<T> {
+    //     self.context_stream.unwrap().result()
+    // }
 
     #[inline]
-    fn area(&self, d: &impl DataObject<T>) {
-        let pa = PathAreaStream::default();
-        d.to_stream(&mut (self.projection_stream_fn)(pa));
+    fn area(&self, d: &impl Streamable<T>)
+    where
+        T: CoordFloat + FloatConst,
+    {
+        // let pa = PathAreaStream::default();
+        // d.to_stream(&mut (self.projection_stream_fn)(pa));
     }
 
     // fn set_projection(&mut self, ps: Option<Box<dyn Transform<T>>>) {
@@ -158,31 +161,31 @@ where
             }
             Some(projection) => {
                 projection_in = Some(projection);
-                projection_stream_fn = projection.stream;
+                projection_stream_fn = None;
             }
         }
 
         return Path {
-            projection_in,
-            projection_stream_fn,
+            // projection_in,
+            // projection_stream_fn,
             ..Default::default()
         };
     }
 
-    #[inline]
-    fn get_context(&self) -> Option<Box<dyn Stream<T>>> {
-        self.context_stream
-    }
+    // #[inline]
+    // fn get_context(&self) -> Option<Box<dyn Stream<T>>> {
+    //     self.context_stream
+    // }
 
     fn context(self, c_in: Option<CanvasRenderingContext2d>) -> Self {
         match c_in {
             None => {
-                self.context_in = None;
-                self.context_stream = Some(Box::new(PathString::new()));
+                // self.context_in = None;
+                // self.context_stream = Some(Box::new(PathString::new()));
             }
             Some(c) => {
-                self.context_in = c_in;
-                self.context_stream = Some(Box::new(PathContext::new(c)));
+                // self.context_in = c_in;
+                // self.context_stream = Some(Box::new(PathContext::new(c)));
             }
         }
         self
@@ -190,7 +193,7 @@ where
 
     #[inline]
     fn set_point_radius(&mut self, pr: Box<dyn Stream<T>>) {
-        self.point_radius = pr;
+        // self.point_radius = pr;
     }
 
     #[inline]
@@ -200,7 +203,7 @@ where
 
     #[inline]
     fn point_radius(self, d: T) -> Self {
-        (self.context_stream.point_radius(d), d);
+        // (self.context_stream.point_radius(d), d);
         self
     }
 

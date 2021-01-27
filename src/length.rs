@@ -1,5 +1,5 @@
-use super::data_object::DataObject;
 use super::stream::Stream;
+use crate::stream::Streamable;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -30,7 +30,7 @@ impl<T: CoordFloat + FloatConst> Default for LengthStream<T> {
 }
 
 impl<T: CoordFloat + FloatConst> LengthStream<T> {
-    pub fn calc(object: &impl DataObject<T>) -> T {
+    pub fn calc(object: &impl Streamable<T>) -> T {
         let mut ls = LengthStream::default();
         object.to_stream(&mut ls);
         return ls.length_sum;
