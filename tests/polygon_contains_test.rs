@@ -475,17 +475,14 @@ mod polygon_contains_test {
         circle.center(FnValMaybe2D::FloatValue(Coordinate { x: 0f64, y: -90f64 }));
 
         circle.radius(FnValMaybe::FloatValue(90f64 - 0.1f64));
-        let c1 = circle.circle(CircleInArg::None);
-        let ring1 = c1.coordinates[0].clone();
+        let ring0 = circle.circle(CircleInArg::None).coordinates[0].clone();
 
         circle.radius(FnValMaybe::FloatValue(90f64 + 0.1f64));
-        let c2 = circle.circle(CircleInArg::None);
-        let mut ring2 = c2.coordinates[0].clone();
-        ring2.reverse();
+        let mut ring1 = circle.circle(CircleInArg::None).coordinates[0].clone();
+        ring1.reverse();
 
-        let mut polygon: Vec<Vec<Coordinate<f64>>> = Vec::new();
-        polygon.push(ring1);
-        polygon.push(ring2);
+        let polygon: Vec<Vec<Coordinate<f64>>> = vec![ring0, ring1];
+
         assert_eq!(
             polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             false

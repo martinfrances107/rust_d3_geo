@@ -22,8 +22,8 @@ mod equirectangular_test {
     }
     #[test]
     fn test_polygon_with_no_holes() {
-        // let mut equirectangular = EquirectangularRaw::gen_projection_mutator();
-        // equirectangular.scale(Some(&(900f64 / 3.14)));
+        let mut equirectangular = EquirectangularRaw::gen_projection_mutator();
+        equirectangular.scale(Some(&(900f64 / 3.14)));
         // equirectangular.precision(&0);
     }
 }

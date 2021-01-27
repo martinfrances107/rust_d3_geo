@@ -60,9 +60,8 @@ impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
         let c = (*self.center_fn)(&arg);
         let r = (*self.radius_fn)(&arg).to_radians();
         let p = (*self.precision_fn)(&arg).to_radians();
-        println!("c {:?} {:?}", c.x, c.y);
-        println!("r {:?}", r);
-        println!("p {:?}", p);
+
+        self.ring = Vec::new();
         self.rotate = RotateRadians::new(-c.x.to_radians(), -c.y.to_radians(), T::zero());
 
         circle_stream(self, r, p, T::one(), None, None);

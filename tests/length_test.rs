@@ -139,25 +139,25 @@ mod length_test {
         ));
     }
 
-    #[test]
-    fn fc_line_string_the_sum_of_its_features() {
-        println!("geoLength(FeatureCollection) returns the sum of its features’ lengths");
-        assert!(in_delta(
-            LengthStream::calc(&FeatureCollection(vec![FeaturesStruct {
-                properties: Vec::new(),
-                geometry: vec![
-                    Geometry::LineString(line_string![
-                        (x: -45f64, y: 0f64 ),
-                        (x: 0f64, y: 0f64 )
-                    ]),
-                    Geometry::LineString(line_string![
-                        ( x:0f64, y: 0f64 ),
-                        ( x:45f64, y: 0f64 )
-                    ]),
-                ],
-            }])),
-            PI / 2f64,
-            1e-6
-        ));
-    }
+    // #[test]
+    // fn fc_line_string_the_sum_of_its_features() {
+    //     println!("geoLength(FeatureCollection) returns the sum of its features’ lengths");
+    //     assert!(in_delta(
+    //         LengthStream::calc(&FeatureCollection(vec![FeaturesStruct {
+    //             properties: Vec::new(),
+    //             geometry: vec![
+    //                 Geometry::LineString(line_string![
+    //                     (x: -45f64, y: 0f64 ),
+    //                     (x: 0f64, y: 0f64 )
+    //                 ]),
+    //                 Geometry::LineString(line_string![
+    //                     ( x:0f64, y: 0f64 ),
+    //                     ( x:45f64, y: 0f64 )
+    //                 ]),
+    //             ],
+    //         }])),
+    //         PI / 2f64,
+    //         1e-6
+    //     ));
+    // }
 }

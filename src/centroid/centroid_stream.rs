@@ -171,7 +171,7 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
     }
 
     pub fn centroid(&mut self, d_object: &impl Streamable<T>) -> Point<T> {
-        d_object.to_stream(self);        
+        d_object.to_stream(self);
 
         let mut x = self.X2;
         let mut y = self.Y2;
