@@ -11,8 +11,9 @@ pub struct ScaleTranslate<T> {
 }
 
 impl<T> ScaleTranslate<T> {
+    #[inline]
     pub fn new(k: T, dx: T, dy: T, sx: T, sy: T) -> Box<Self> {
-        return Box::new(ScaleTranslate { k, dx, dy, sx, sy });
+        Box::new(ScaleTranslate { k, dx, dy, sx, sy })
     }
 }
 

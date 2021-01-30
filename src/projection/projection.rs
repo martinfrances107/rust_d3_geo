@@ -257,14 +257,16 @@ pub trait Projection<T: CoordFloat> {
     //  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
     //  * This value corresponds to the Douglas–Peucker distance.
     //  */
-    // precision(): number;
+    fn get_precision(self) -> T;
+
     // /**
     //  * Sets the threshold for the projection’s adaptive resampling to the specified value in PIxels and returns the projection.
     //  * This value corresponds to the Douglas–Peucker distance.
     //  *
     //  * @param precision A numeric value in PIxels to use as the threshold for the projection’s adaptive resampling.
     //  */
-    // precision(precision: number): this;
+    fn precision(&mut self, delta: T);
+
     // /**
     //  * Returns the projection’s current angle, which defaults to 0°.
     //  */
@@ -283,6 +285,7 @@ pub trait Projection<T: CoordFloat> {
     //  */
     fn rotate(&mut self, angles: Option<[T; 3]>) -> Option<[T; 3]>;
 
+    fn get_scale(&self) -> T;
     // /**
     //  * Sets the projection’s scale factor to the specified value and returns the projection.
     //  * The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
@@ -290,7 +293,7 @@ pub trait Projection<T: CoordFloat> {
     //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
     //  */
     // fn scale(&mut self, scale: &F);
-    fn scale(&mut self, scale: Option<&T>);
+    fn scale(&mut self, scale: T);
 
     // /**
     //  * Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.

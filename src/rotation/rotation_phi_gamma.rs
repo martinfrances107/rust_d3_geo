@@ -12,13 +12,14 @@ pub struct RotationPhiGamma<T> {
 }
 
 impl<T: CoordFloat + 'static> RotationPhiGamma<T> {
+    #[inline]
     pub fn new(delta_phi: T, delta_gamma: T) -> Box<dyn Transform<T>> {
-        return Box::new(Self {
+        Box::new(Self {
             cos_delta_phi: delta_phi.cos(),
             sin_delta_phi: delta_phi.sin(),
             cos_delta_gamma: delta_gamma.cos(),
             sin_delta_gamma: delta_gamma.sin(),
-        });
+        })
     }
 }
 

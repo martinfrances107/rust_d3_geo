@@ -10,7 +10,7 @@ mod stereographic_tests {
     fn test_stereographic() {
         let mut stereo = StereographicRaw::gen_projection_mutator();
         stereo.translate(Some(&Coordinate { x: 0f64, y: 0f64 }));
-        stereo.scale(Some(&1f64));
+        stereo.scale(1f64);
 
         assert!(projection_equal(
             &stereo,

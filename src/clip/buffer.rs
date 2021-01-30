@@ -1,25 +1,32 @@
+use crate::path::PathResult;
+use crate::path::PathResultEnum;
 use crate::stream::Stream;
+use crate::stream::StreamNode;
 use geo::CoordFloat;
 use num_traits::FloatConst;
+use std::cell::RefCell;
+use std::rc::Rc;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Default)]
 struct LineTuple<T: CoordFloat> {
     x: T,
     y: T,
     m: Option<u8>,
 }
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct ClipBuffer<T: CoordFloat> {
     lines: Vec<Vec<LineTuple<T>>>,
     line: Vec<LineTuple<T>>,
 }
 
 impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
-    pub fn new() -> Box<dyn Stream<T>> {
-        return Box::new(Self {
+    /// Generate a new stream node.
+    #[inline]
+    pub fn new() -> StreamNode<T> {
+        Rc::new(RefCell::new(Box::new(Self {
             lines: Vec::new(),
             line: Vec::new(),
-        });
+        })))
     }
 
     fn rejoin(&mut self) {
@@ -32,16 +39,21 @@ impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
             self.lines.push(join);
         }
     }
+}
 
-    fn result(&mut self) -> Vec<Vec<LineTuple<T>>> {
+impl<T: CoordFloat> PathResult<T> for ClipBuffer<T> {
+    fn result(&mut self) -> PathResultEnum<T> {
         self.lines.clear();
         self.line.clear();
         let result = &self.lines;
-        return result.to_vec();
+        // return result.to_vec();
+        // TODO must fix this!!
+        return PathResultEnum::Path();
     }
 }
 
 impl<'a, T: CoordFloat + FloatConst> Stream<T> for ClipBuffer<T> {
+    #[inline]
     fn point(&mut self, x: T, y: T, m: Option<u8>) {
         self.line.push(LineTuple { x, y, m });
     }
@@ -50,32 +62,4 @@ impl<'a, T: CoordFloat + FloatConst> Stream<T> for ClipBuffer<T> {
         self.line.clear();
         // self.lines.push(self.line);
     }
-
-    fn line_end(&mut self) {
-        // no-op.
-    }
 }
-// import noop from "../noop.js";
-
-// export default function() {
-//   var lines = [],
-//       line;
-//   return {
-//     point: f64unction(x, y, m) {
-//       line.push([x, y, m]);
-//     },
-//     lineStart: f64unction() {
-//       lines.push(line = []);
-//     },
-//     lineEnd: noop,
-//     rejoin: f64unction() {
-//       if (lines.length > 1) lines.push(lines.pop().concat(lines.shift()));
-//     },
-//     result: f64unction() {
-//       var result = lines;
-//       lines = [];
-//       line = null;
-//       return result;
-//     }
-//   };
-// }

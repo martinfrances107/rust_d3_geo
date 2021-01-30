@@ -7,6 +7,7 @@ use super::projection_mutator::ProjectionMutator;
 use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
 use std::rc::Rc;
+
 #[derive(Clone, Debug)]
 pub struct OrthographicRaw {}
 
@@ -19,8 +20,8 @@ impl OrthographicRaw {
     pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>() -> ProjectionMutator<T>
     {
         let s = Rc::new(OrthographicRaw::new());
-        let mut projection = ProjectionMutator::from_projection_raw(s);
-        projection.scale(Some(&T::from(249.5f64).unwrap()));
+        let mut projection = ProjectionMutator::from_projection_raw(s, None);
+        projection.scale(T::from(249.5f64).unwrap());
         let angle = T::from(249.5f64).unwrap();
         projection.clip_angle(StreamProcessorValueMaybe::Value(angle));
         return projection;

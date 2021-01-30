@@ -5,13 +5,16 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
+use crate::stream::StreamNode;
 use crate::Transform;
 
 use super::{circle::Circle, circle_radius::circle_radius};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
 pub fn circle_stream<T: CoordFloat + FloatConst>(
-    circle: &mut Circle<T>,
+    circle: StreamNode<T>,
     radius: T,
     delta: T,
     direction: T,
@@ -47,10 +50,10 @@ pub fn circle_stream<T: CoordFloat + FloatConst>(
     let mut point: Coordinate<T>;
     let mut t = t0;
     let mut cond = true;
-    // let mut stream = stream.borrow_mut();
+    let mut c = circle.borrow_mut();
     while cond {
         point = spherical_r(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
-        circle.point(point.x, point.y, None);
+        c.point(point.x, point.y, None);
 
         t = t - step;
         cond = match direction.is_sign_positive() {

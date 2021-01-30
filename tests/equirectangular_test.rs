@@ -14,7 +14,7 @@ mod equirectangular_test {
         let mut equirectangular = EquirectangularRaw::gen_projection_mutator();
         equirectangular.translate(Some(&Coordinate { x: 0f64, y: 0f64 }));
 
-        equirectangular.scale(Some(&1f64));
+        equirectangular.scale(1f64);
 
         let pi = std::f64::consts::PI;
 
@@ -111,7 +111,7 @@ mod equirectangular_test {
         let mut equirectangular = EquirectangularRaw::gen_projection_mutator();
         equirectangular.rotate(Some([30f64, 0f64, 0f64]));
         equirectangular.translate(Some(&Coordinate { x: 0f64, y: 0f64 }));
-        equirectangular.scale(Some(&1f64));
+        equirectangular.scale(1f64);
 
         let pi = std::f64::consts::PI;
 
@@ -215,7 +215,7 @@ mod equirectangular_test {
         let mut equirectangular = EquirectangularRaw::gen_projection_mutator();
         equirectangular.rotate(Some([30f64, 30f64, 0f64]));
         equirectangular.translate(Some(&Coordinate { x: 0f64, y: 0f64 }));
-        equirectangular.scale(Some(&1f64));
+        equirectangular.scale(1f64);
 
         assert!(projection_equal(
             &equirectangular,
@@ -319,7 +319,7 @@ mod equirectangular_test {
         let mut equirectangular = EquirectangularRaw::gen_projection_mutator();
         equirectangular.rotate(Some([0f64, 0f64, 30f64]));
         equirectangular.translate(Some(&Coordinate { x: 0f64, y: 0f64 }));
-        equirectangular.scale(Some(&1f64));
+        equirectangular.scale(1f64);
 
         let pi = std::f64::consts::PI;
 
@@ -416,7 +416,7 @@ mod equirectangular_test {
         let mut equirectangular = EquirectangularRaw::gen_projection_mutator();
         equirectangular.rotate(Some([30f64, 30f64, 30f64]));
         equirectangular.translate(Some(&Coordinate { x: 0f64, y: 0f64 }));
-        equirectangular.scale(Some(&1f64));
+        equirectangular.scale(1f64);
 
         assert!(projection_equal(
             &equirectangular,

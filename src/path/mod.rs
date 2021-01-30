@@ -6,19 +6,17 @@ use std::default::Default;
 
 use web_sys::CanvasRenderingContext2d;
 
-use crate::path::area_stream::PathAreaStream;
 use crate::path::context::PathContext;
 use crate::path::string::PathString;
 use crate::transform_stream::StreamIdentity;
 use crate::Transform;
+use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 
 use crate::projection::projection_mutator::ProjectionMutator;
 use crate::stream::Stream;
 
 use geo::CoordFloat;
 use num_traits::{AsPrimitive, FloatConst};
-
-use crate::stream::Streamable;
 
 pub enum PathResultEnum<T>
 where
@@ -85,7 +83,7 @@ where
 {
 }
 
-struct Path<T>
+pub struct Path<T>
 where
     T: CoordFloat,
 {
@@ -115,7 +113,7 @@ where
 
 impl<T> Path<T>
 where
-    T: CoordFloat + std::fmt::Display + FloatConst,
+    T: CoordFloat + std::fmt::Display + FloatConst + std::ops::AddAssign,
 {
     #[inline]
     fn generate(
@@ -135,12 +133,13 @@ where
     // }
 
     #[inline]
-    fn area(&self, d: &impl Streamable<T>)
+    pub fn area(&self, d: &DataObject<T>) -> T
     where
         T: CoordFloat + FloatConst,
     {
-        // let pa = PathAreaStream::default();
-        // d.to_stream(&mut (self.projection_stream_fn)(pa));
+        let pa: PathAreaStream<T> = PathAreaStream::default();
+        // d.to_stream(&mut (self.projection_stream_fn)(pa))
+        T::zero()
     }
 
     // fn set_projection(&mut self, ps: Option<Box<dyn Transform<T>>>) {
@@ -148,7 +147,7 @@ where
     //     self.projection_stream_fn = None;
     // }
 
-    fn projection(p_maybe: Option<ProjectionMutator<T>>) -> Path<T> {
+    pub fn projection(p_maybe: Option<ProjectionMutator<T>>) -> Path<T> {
         let projection_in: Option<ProjectionMutator<T>>;
         let projection_stream_fn: Option<Box<dyn Stream<T>>>;
 

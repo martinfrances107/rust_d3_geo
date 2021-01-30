@@ -19,10 +19,9 @@ pub mod polygon_contains;
 pub mod projection;
 pub mod rotation;
 
-// mod clip;
+mod clip;
 mod compose;
 mod point_equal;
-mod resample;
 mod stream;
 mod transform_stream;
 

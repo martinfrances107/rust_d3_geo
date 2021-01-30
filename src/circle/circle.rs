@@ -3,17 +3,19 @@ use std::fmt::Debug;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::cartesian::cartesian_normalize_in_place;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 use crate::{cartesian::cartesian, TransformIdentity};
+use crate::{cartesian::cartesian_normalize_in_place, transform_stream::StreamIdentity};
 
 use super::circle_stream::circle_stream;
 use super::CircleInArg;
 use super::CircleTrait;
 use super::FnValMaybe;
 use super::FnValMaybe2D;
+use std::cell::RefCell;
+use std::rc::Rc;
 
 #[derive(Debug)]
 enum StreamType {
@@ -34,6 +36,7 @@ pub struct Circle<T: CoordFloat> {
     radius_fn: Box<dyn Fn(&CircleInArg) -> T>,
     rotate: Box<dyn Transform<T>>,
     ring: Vec<Coordinate<T>>,
+    stream: Rc<RefCell<Box<dyn Stream<T>>>>,
 }
 
 impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
@@ -53,6 +56,7 @@ impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
             precision_fn,
             rotate: Box::new(TransformIdentity {}),
             ring: Vec::new(),
+            stream: Rc::new(RefCell::new(Box::new(StreamIdentity {}))),
         };
     }
 
@@ -64,7 +68,7 @@ impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
         self.ring = Vec::new();
         self.rotate = RotateRadians::new(-c.x.to_radians(), -c.y.to_radians(), T::zero());
 
-        circle_stream(self, r, p, T::one(), None, None);
+        circle_stream(self.stream.clone(), r, p, T::one(), None, None);
 
         let c;
         {

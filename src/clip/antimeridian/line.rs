@@ -1,9 +1,12 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::stream::Stream;
-
 use super::intersect::intersect;
+use crate::stream::StreamNode;
+use crate::{stream::Stream, transform_stream::StreamProcessor};
+
+use std::cell::RefCell;
+use std::rc::Rc;
 
 // Return indicator :-
 // There were intersections or the line was empty.
@@ -13,28 +16,33 @@ const NO_INTERSECTIONS: u8 = 1u8;
 const INTERSECTION_REJOIN: u8 = 2u8;
 
 // use crate::clip::ClipLine;
-
-// #[derive(Clone)]
-pub struct Line<T> {
+pub struct Line<T>
+where
+    T: CoordFloat + FloatConst,
+{
     clean: Option<u8>,
     lambda0: T,
     phi0: T,
     sign0: T,
-    stream: Box<dyn Stream<T>>,
+    stream: StreamNode<T>,
 }
 
-impl<T: CoordFloat + FloatConst + 'static> Line<T> {
-    pub fn new() -> Box<dyn Fn(Box<dyn Stream<T>>) -> Box<Line<T>>> {
-        return Box::new(|stream_ptr: Box<dyn Stream<T>>| {
+impl<T> Line<T>
+where
+    T: CoordFloat + FloatConst + 'static,
+{
+    #[inline]
+    pub fn new() -> StreamProcessor<T> {
+        Box::new(|stream_ptr: StreamNode<T>| {
             let stream = stream_ptr;
-            return Box::new(Line {
+            Rc::new(RefCell::new(Box::new(Line {
                 clean: None, // no intersections
                 lambda0: T::nan(),
                 phi0: T::nan(),
                 sign0: T::nan(),
                 stream,
-            });
-        });
+            })))
+        })
     }
 
     fn clean(&mut self) -> Option<u8> {
@@ -47,13 +55,13 @@ impl<T: CoordFloat + FloatConst + 'static> Line<T> {
 
 impl<T: CoordFloat + FloatConst> Stream<T> for Line<T> {
     fn line_start(&mut self) {
-        let mut stream = self.stream;
-        stream.line_start();
+        let mut s = self.stream.borrow_mut();
+        s.line_start();
         self.clean = Some(NO_INTERSECTIONS);
     }
 
     fn point(&mut self, mut lambda1: T, phi1: T, _m: Option<u8>) {
-        let mut stream = self.stream;
+        let mut s = self.stream.borrow_mut();
         let sign1 = match lambda1.is_sign_positive() {
             true => T::PI(),
             false => -T::PI(),
@@ -66,17 +74,17 @@ impl<T: CoordFloat + FloatConst> Stream<T> for Line<T> {
             self.phi0 = (self.phi0 + phi1) / f_2;
             match (self.phi0 + phi1 / f_2).is_sign_positive() {
                 true => {
-                    stream.point(self.lambda0, T::FRAC_PI_2(), None);
+                    s.point(self.lambda0, T::FRAC_PI_2(), None);
                 }
                 false => {
-                    stream.point(self.lambda0, -T::FRAC_PI_2(), None);
+                    s.point(self.lambda0, -T::FRAC_PI_2(), None);
                 }
             }
-            stream.point(self.sign0, self.phi0, None);
-            stream.line_end();
-            stream.line_start();
-            stream.point(sign1, self.phi0, None);
-            stream.point(lambda1, self.phi0, None);
+            s.point(self.sign0, self.phi0, None);
+            s.line_end();
+            s.line_start();
+            s.point(sign1, self.phi0, None);
+            s.point(lambda1, self.phi0, None);
             self.clean = Some(INTERSECTION_OR_LINE_EMPTY);
         } else if self.sign0 != sign1 && delta >= T::PI() {
             // Line crosses antimeridian.
@@ -87,21 +95,21 @@ impl<T: CoordFloat + FloatConst> Stream<T> for Line<T> {
                 lambda1 = lambda1 - sign1 * T::epsilon();
             }
             self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
-            stream.point(self.sign0, self.phi0, None);
-            stream.line_end();
+            s.point(self.sign0, self.phi0, None);
+            s.line_end();
             //  self.stream.line_start();
-            stream.point(sign1, self.phi0, None);
+            s.point(sign1, self.phi0, None);
             self.clean = Some(INTERSECTION_OR_LINE_EMPTY);
         }
         self.lambda0 = lambda1;
         self.phi0 = phi1;
-        stream.point(self.lambda0, self.phi0, None);
+        s.point(self.lambda0, self.phi0, None);
         self.sign0 = sign1;
     }
 
     fn line_end(&mut self) {
-        // let mut stream = self.stream;
-        self.stream.line_end();
+        let mut s = self.stream.borrow_mut();
+        s.line_end();
         self.lambda0 = T::nan();
         self.phi0 = T::nan();
     }

@@ -22,17 +22,20 @@ fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
 }
 
 impl RotationIdentity {
+    #[inline]
     pub fn new<T: CoordFloat + FloatConst>() -> Box<dyn Transform<T>> {
-        return Box::new(RotationIdentity {});
+        Box::new(RotationIdentity {})
     }
 }
 
 impl<T: CoordFloat + FloatConst> Transform<T> for RotationIdentity {
+    #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        return normalise(p);
+        normalise(p)
     }
 
+    #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        return normalise(p);
+        normalise(p)
     }
 }

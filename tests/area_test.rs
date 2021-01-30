@@ -3,28 +3,46 @@
 
 mod equirectangular_test {
 
-    use geo::Coordinate;
-    // use rust_d3_geo::path::Path;
+    use geo::Geometry;
+    use geo::{CoordFloat, Coordinate, LineString, Polygon};
+    use num_traits::FloatConst;
+    use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::{
         equirectangular::EquirectangularRaw, projection_mutator::ProjectionMutator,
     };
+    use rust_d3_geo::{path::Path, projection::equirectangular};
 
-    // function testArea(projection, object) {
-    //   return d3_geo.geoPath()
-    //        .projection(projection)
-    //       .area(object);
-    // }
+    use std::{f64::consts::PI, fmt::Display, ops::AddAssign};
 
-    fn test_area(projection: ProjectionMutator<f64>) {
-        // return Path()
+    fn equirectangular() -> ProjectionMutator<f64> {
+        let mut pm = EquirectangularRaw::<f64>::gen_projection_mutator();
+        pm.scale(900f64 / PI);
+        pm.precision(0f64);
+        pm
     }
+
+    #[inline]
+    fn test_area<T>(projection: Option<ProjectionMutator<T>>, object: &DataObject<T>) -> T
+    where
+        T: CoordFloat + FloatConst + Display + AddAssign,
+    {
+        Path::projection(projection).area(object)
+    }
+
     #[test]
     fn test_polygon_with_no_holes() {
-        let mut equirectangular = EquirectangularRaw::gen_projection_mutator();
-        equirectangular.scale(Some(&(900f64 / 3.14)));
-        // equirectangular.precision(&0);
+        println!("geoPath.area(…) of a polygon with no holes");
+        let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+            LineString::from(vec![
+                Coordinate { x: 100., y: 0. },
+                Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
+            ]),
+            vec![],
+        )));
+        let ep = equirectangular();
+        assert_eq!(test_area(Some(ep), &object), 4.0);
     }
 }
 

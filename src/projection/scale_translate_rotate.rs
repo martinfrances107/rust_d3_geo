@@ -19,13 +19,14 @@ pub struct ScaleTranslateRotate<T: CoordFloat> {
 }
 
 impl<T: CoordFloat + 'static> ScaleTranslateRotate<T> {
+    #[inline]
     pub fn new(k: T, dx: T, dy: T, sx: T, sy: T, alpha: T) -> Box<dyn Transform<T>> {
         if alpha.is_zero() {
-            return ScaleTranslate::new(k, dx, dy, sx, sy);
+            ScaleTranslate::new(k, dx, dy, sx, sy)
         } else {
             let cos_alpha = alpha.cos();
             let sin_alpha = alpha.sin();
-            return Box::new(ScaleTranslateRotate {
+            Box::new(ScaleTranslateRotate {
                 a: cos_alpha * k,
                 b: sin_alpha * k,
                 ai: cos_alpha / k,
@@ -36,7 +37,7 @@ impl<T: CoordFloat + 'static> ScaleTranslateRotate<T> {
                 dy,
                 sx,
                 sy,
-            });
+            })
         }
     }
 }

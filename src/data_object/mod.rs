@@ -4,6 +4,8 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Geometry;
 
+use crate::stream::{Stream, Streamable};
+
 #[derive(Clone, Debug)]
 pub enum FeatureProperty<T>
 where
@@ -49,6 +51,13 @@ pub enum DataObject<T>
 where
     T: CoordFloat + FloatConst,
 {
-    Geometry { g: Geometry<T> },
-    Collection { collection: Collection<T> },
+    Geometry(Geometry<T>),
+    Collection(Collection<T>),
+}
+
+impl<T> Streamable<T> for DataObject<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn to_stream(&self, stream: &mut impl Stream<T>) {}
 }

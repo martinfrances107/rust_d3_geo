@@ -3,11 +3,15 @@ use num_traits::FloatConst;
 
 use crate::point_equal::point_equal;
 use crate::stream::Stream;
-use crate::{clip::PointsVisibleFn, transform_stream::StreamProcessor};
+use crate::stream::StreamNode;
+use crate::{clip::PointVisibleFn, transform_stream::StreamProcessor};
 // use crate::transform_stream::StreamProcessor;
 
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
+
+use std::cell::RefCell;
+use std::rc::Rc;
 
 // Takes a line and cuts into visible segments. Return values used for polygon
 // clipPIng: 0 - there were intersections or the line was empty; 1 - no
@@ -23,20 +27,19 @@ pub struct Line<T: CoordFloat> {
     // point0: (Option<Point>, Option<u8>), // previous point with message.
     point0: Option<Coordinate<T>>, // previous point
     small_radius: bool,
-    stream: Box<dyn Stream<T>>,
+    stream: StreamNode<T>,
     v0: bool,  // visibility of previous point
     v00: bool, // visibility of first point
-    visible: Box<PointsVisibleFn<T>>,
+    visible: PointVisibleFn<T>,
 }
 
 impl<T: CoordFloat + FloatConst + 'static> Line<T> {
-    pub fn new(visible: Box<PointsVisibleFn<T>>, radius: T) -> StreamProcessor<T> {
-        return Box::new(move |stream_ptr| {
-            let stream = stream_ptr;
+    pub fn new(visible: PointVisibleFn<T>, radius: T) -> StreamProcessor<T> {
+        Box::new(move |stream: StreamNode<T>| {
             // TODO small_radius, rc  is a shadow variables!!!
             let rc = radius.cos();
             let small_radius = rc.is_sign_positive();
-            return Box::new(Line {
+            Rc::new(RefCell::new(Box::new(Line {
                 c0: 0,
                 clean: 0,
                 not_hemisphere: rc.abs() > T::epsilon(),
@@ -47,9 +50,9 @@ impl<T: CoordFloat + FloatConst + 'static> Line<T> {
                 v0: false,
                 v00: false,
                 stream,
-                visible,
-            });
-        });
+                visible: visible.clone(),
+            })))
+        })
     }
 
     /// Generates a 4-bit vector representing the location of a point relative to
@@ -79,8 +82,9 @@ impl<T: CoordFloat + FloatConst + 'static> Line<T> {
 
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
+    #[inline]
     fn clean(&self) -> u8 {
-        return self.clean | (((self.v00 && self.v0) as u8) << 1);
+        self.clean | (((self.v00 && self.v0) as u8) << 1)
     }
 }
 
@@ -119,8 +123,8 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
             self.v00 = v;
             self.v0 = v;
             if v {
-                let mut stream = self.stream;
-                stream.line_start();
+                let mut s = self.stream.borrow_mut();
+                s.line_start();
             }
         }
 
@@ -151,24 +155,24 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
             }
         }
 
-        let mut stream = self.stream;
+        let mut s = self.stream.borrow_mut();
         if v != self.v0 {
             let next: Option<Coordinate<T>>;
             self.clean = 0;
             if v {
                 // outside going in
-                stream.line_start();
+                s.line_start();
                 match intersect(point1, self.point0.clone().unwrap(), self.rc, false) {
                     IntersectReturn::None => {
                         // TODO Should I do a stream Point here??
                         next = None;
                     }
                     IntersectReturn::One(p) => {
-                        stream.point(p.x, p.y, None);
+                        s.point(p.x, p.y, None);
                         next = Some(p);
                     }
                     IntersectReturn::Two([p, _]) => {
-                        stream.point(p.x, p.y, None);
+                        s.point(p.x, p.y, None);
                         // p0_next = p;
                         panic!("silently dropping second point");
                     }
@@ -183,13 +187,13 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
                         panic!("Must deal with no intersect.");
                     }
                     IntersectReturn::One(p) => {
-                        stream.point(p.x, p.y, Some(2));
-                        stream.line_end();
+                        s.point(p.x, p.y, Some(2));
+                        s.line_end();
                         next = Some(p);
                     }
                     IntersectReturn::Two([p, _]) => {
-                        stream.point(p.x, p.y, Some(2));
-                        stream.line_end();
+                        s.point(p.x, p.y, Some(2));
+                        s.line_end();
                         // next = p;
                         panic!("silently dropping second point");
                     }
@@ -233,8 +237,8 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
 
     fn line_end(&mut self) {
         if self.v0 {
-            let mut stream = self.stream;
-            stream.line_end();
+            let mut s = self.stream.borrow_mut();
+            s.line_end();
         }
         self.point0 = None;
     }

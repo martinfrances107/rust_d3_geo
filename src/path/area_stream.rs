@@ -25,6 +25,7 @@ impl<T> Default for PathAreaStream<T>
 where
     T: CoordFloat + std::ops::AddAssign,
 {
+    #[inline]
     fn default() -> Self {
         Self {
             area_sum: T::zero(),
@@ -44,6 +45,7 @@ impl<T> PathAreaStream<T>
 where
     T: CoordFloat + std::ops::AddAssign,
 {
+    #[inline]
     fn area_ring_start(&mut self) {
         self.point_fn = Self::area_point_first;
     }
@@ -75,7 +77,7 @@ where
     fn result(&mut self) -> PathResultEnum<T> {
         let area = self.area_sum / T::from(2).unwrap();
         self.area_sum = T::zero();
-        return PathResultEnum::Area(area);
+        PathResultEnum::Area(area)
     }
 }
 

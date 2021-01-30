@@ -19,8 +19,8 @@ impl StereographicRaw {
     pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>() -> ProjectionMutator<T>
     {
         let s = Rc::new(StereographicRaw::new());
-        let mut projection = ProjectionMutator::from_projection_raw(s);
-        projection.scale(Some(&T::from(250f64).unwrap()));
+        let mut projection = ProjectionMutator::from_projection_raw(s, None);
+        projection.scale(T::from(250f64).unwrap());
         projection.clip_angle(StreamProcessorValueMaybe::Value(T::from(142f64).unwrap()));
         return projection;
     }

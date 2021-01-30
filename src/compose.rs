@@ -2,6 +2,7 @@ use crate::Transform;
 use geo::{CoordFloat, Coordinate};
 use std::rc::Rc;
 
+#[derive(Clone)]
 pub struct Compose<T> {
     pub a: Rc<Box<dyn Transform<T>>>,
     pub b: Rc<Box<dyn Transform<T>>>,
@@ -13,7 +14,7 @@ impl<'a, T: CoordFloat + 'static> Compose<T> {
         a: Rc<Box<dyn Transform<T>>>,
         b: Rc<Box<dyn Transform<T>>>,
     ) -> Box<dyn Transform<T>> {
-        return Box::new(Self { a, b });
+        Box::new(Self { a, b })
     }
 }
 

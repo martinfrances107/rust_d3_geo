@@ -2,39 +2,38 @@ mod intersect;
 mod line;
 
 use super::Clip;
-use crate::circle::circle_stream::circle_stream;
-use crate::clip::PointsVisibleFn;
-use crate::stream::Stream;
-
-// use crate::transform_stream::TransformStream;
+use crate::clip::InterpolateFn;
+use crate::clip::PointVisibleFn;
+use crate::stream::StreamNode;
+use crate::{circle::circle_stream::circle_stream, transform_stream::StreamProcessor};
 use geo::{CoordFloat, Coordinate};
 use line::Line;
 use num_traits::FloatConst;
+use std::rc::Rc;
 
-pub fn generate_circle<T: CoordFloat + FloatConst + 'static>(
-    radius: T,
-) -> Box<dyn Fn(Box<dyn Stream<T>>) -> Box<dyn Stream<T>>> {
+/// Returns a clip object
+pub fn generate_circle<T: CoordFloat + FloatConst + 'static>(radius: T) -> StreamProcessor<T> {
     let cr = radius.cos();
     let delta = T::from(6u8).unwrap().to_radians();
 
-    let visible: PointsVisibleFn<T> = Box::new(move |lambda: T, phi: T, _m: Option<u8>| {
-        return lambda.cos() * phi.cos() > cr;
-    });
-
-    let interpolate = Box::new(
+    let interpolate: InterpolateFn<T> = Rc::new(Box::new(
         move |from: Option<Coordinate<T>>,
               to: Option<Coordinate<T>>,
               direction: T,
-              stream: Box<dyn Stream<T>>| {
+              stream: StreamNode<T>| {
             circle_stream(stream, radius, delta, direction, from, to)
         },
-    );
+    ));
 
-    let ccl = Line::new(visible, radius);
+    let visible: PointVisibleFn<T> = Rc::new(Box::new(move |lambda: T, phi: T, _m: Option<u8>| {
+        return lambda.cos() * phi.cos() > cr;
+    }));
+
+    let ccl = Line::new(visible.clone(), radius);
     let clip_line_fn_ptr;
     clip_line_fn_ptr = Box::new(ccl);
 
-    return Clip::new(
+    return Clip::gen_stream_processor(
         visible,
         clip_line_fn_ptr,
         interpolate,
