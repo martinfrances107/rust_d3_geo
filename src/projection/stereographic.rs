@@ -7,18 +7,13 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 use std::rc::Rc;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct StereographicRaw {}
 
 impl StereographicRaw {
-    #[inline]
-    fn new<T: CoordFloat + 'static>() -> Box<dyn Transform<T>> {
-        Box::new(Self {})
-    }
-
     pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>() -> ProjectionMutator<T>
     {
-        let s = Rc::new(StereographicRaw::new());
+        let s: Rc<Box<dyn Transform<T>>> = Rc::new(Box::new(StereographicRaw {}));
         let mut projection = ProjectionMutator::from_projection_raw(s, None);
         projection.scale(T::from(250f64).unwrap());
         projection.clip_angle(StreamProcessorValueMaybe::Value(T::from(142f64).unwrap()));
@@ -39,6 +34,6 @@ impl<T: CoordFloat + 'static> Transform<T> for StereographicRaw {
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let f = Box::new(|z: T| T::from(2).unwrap() * z.atan());
         let g = azimuthal_invert(f);
-        return g(p.x, p.y);
+        g(p.x, p.y)
     }
 }

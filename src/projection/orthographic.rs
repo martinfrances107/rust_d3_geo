@@ -12,14 +12,14 @@ use std::rc::Rc;
 pub struct OrthographicRaw {}
 
 impl OrthographicRaw {
-    #[inline]
-    fn new<T: CoordFloat + FloatConst + 'static>() -> Box<dyn Transform<T>> {
-        Box::new(Self {})
-    }
+    // #[inline]
+    // fn new<T: CoordFloat + FloatConst + 'static>() -> Box<dyn Transform<T>> {
+    //     Box::new(Self {})
+    // }
 
     pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>() -> ProjectionMutator<T>
     {
-        let s = Rc::new(OrthographicRaw::new());
+        let s: Rc<Box<dyn Transform<T>>> = Rc::new(Box::new(OrthographicRaw {}));
         let mut projection = ProjectionMutator::from_projection_raw(s, None);
         projection.scale(T::from(249.5f64).unwrap());
         let angle = T::from(249.5f64).unwrap();
