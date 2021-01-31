@@ -27,11 +27,11 @@ pub struct Clip<T: CoordFloat + 'static> {
     line: StreamNode<T>,
     interpolate: InterpolateFn<T>,
     polygon_started: bool,
-    polygon: Box<Vec<Vec<Coordinate<T>>>>,
+    polygon: Vec<Vec<Coordinate<T>>>,
     point_visible: PointVisibleFn<T>,
     ring_buffer: StreamNode<T>,
     ring_sink: StreamNode<T>,
-    segments: Box<Vec<Vec<Coordinate<T>>>>,
+    segments: Vec<Vec<Coordinate<T>>>,
     start: Coordinate<T>,
     ring: Vec<Coordinate<T>>,
     use_ring: bool,
@@ -56,12 +56,12 @@ impl<T: CoordFloat + FloatConst + 'static> Clip<T> {
                 interpolate: interpolate.clone(),
                 line,
                 point_visible: point_visible.clone(),
-                polygon: Box::new(Vec::new()),
+                polygon: Vec::new(),
                 polygon_started: false,
                 ring: Vec::new(),
                 ring_buffer: ring_buffer.clone(),
                 ring_sink,
-                segments: Box::new(Vec::new()),
+                segments: Vec::new(),
                 sink: sink.clone(),
                 start: start.clone(),
             })))
@@ -165,7 +165,7 @@ impl<T: CoordFloat + FloatConst> Stream<T> for Clip<T> {
         // clip.lineStart = lineStart;
         // clip.lineEnd = lineEnd;
         // segments = merge(segments);
-        let start_inside = contains(self.polygon.to_vec(), &self.start);
+        let start_inside = contains(&self.polygon, &self.start);
         let mut sink = self.sink.borrow_mut();
         if !self.polygon_started {
             sink.polygon_start();

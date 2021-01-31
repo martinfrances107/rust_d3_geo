@@ -6,8 +6,6 @@ use std::default::Default;
 
 use web_sys::CanvasRenderingContext2d;
 
-use crate::path::context::PathContext;
-use crate::path::string::PathString;
 use crate::transform_stream::StreamIdentity;
 use crate::Transform;
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};

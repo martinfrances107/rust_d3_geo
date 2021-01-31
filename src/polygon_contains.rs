@@ -15,7 +15,7 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
 }
 
 pub fn contains<T: CoordFloat + FloatConst>(
-    polygon: Vec<Vec<Coordinate<T>>>,
+    polygon: &Vec<Vec<Coordinate<T>>>,
     point: &Coordinate<T>,
 ) -> bool {
     let lambda = longitude(point);

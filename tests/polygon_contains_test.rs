@@ -31,7 +31,7 @@ mod polygon_contains_test {
         let polygon = polygon_p.clone();
         let polygon_radians: Vec<Vec<Coordinate<f64>>> =
             polygon.into_iter().map(ring_radians).collect();
-        return contains(polygon_radians, &point_radians((*point).clone()));
+        return contains(&polygon_radians, &point_radians((*point).clone()));
     }
 
     #[test]

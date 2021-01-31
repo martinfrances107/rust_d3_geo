@@ -1,10 +1,13 @@
 // A collection of functions that mutate a Projection struct.
 
 // A collection of functions that mutate a Projection struct.
-use crate::projection::transform_radians::TransformRadians;
+
 use crate::projection::transform_rotate::TransformRotate;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::transform_stream::StreamProcessorIdentity;
+use crate::{
+    clip::antimeridian::generate_antimeridian, projection::transform_radians::TransformRadians,
+};
 use crate::{compose::Compose, transform_stream::StreamProcessor};
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -15,7 +18,7 @@ use crate::stream::StreamNode;
 use crate::Transform;
 use crate::TransformIdentity;
 // clip generators.
-use crate::clip::antimeridian::generate_antimeridian;
+// use crate::clip::antimeridian::generate_antimeridian;
 // use crate::clip::circle::generate_circle;
 
 use super::projection::Projection;
