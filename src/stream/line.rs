@@ -1,4 +1,4 @@
-use geo::CoordFloat;
+use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use super::Stream;
@@ -8,7 +8,20 @@ use geo::Line;
 
 impl<T: CoordFloat + FloatConst> Streamable<T> for Line<T> {
     fn to_stream(&self, stream: &mut impl Stream<T>) {
-        stream.point(self.start_point().x(), self.start_point().y(), None);
-        stream.point(self.end_point().x(), self.end_point().y(), None);
+        // TODO there must be a better conversion.
+        stream.point(
+            Coordinate {
+                x: self.start_point().x(),
+                y: self.start_point().x(),
+            },
+            None,
+        );
+        stream.point(
+            Coordinate {
+                x: self.end_point().x(),
+                y: self.end_point().x(),
+            },
+            None,
+        );
     }
 }

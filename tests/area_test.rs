@@ -31,19 +31,19 @@ mod equirectangular_test {
         Path::projection(projection).area(object)
     }
 
-    #[test]
-    fn test_polygon_with_no_holes() {
-        println!("geoPath.area(…) of a polygon with no holes");
-        let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(
-            LineString::from(vec![
-                Coordinate { x: 100., y: 0. },
-                Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
-            ]),
-            vec![],
-        )));
-        let ep = equirectangular();
-        assert_eq!(test_area(Some(ep), &object), 4.0);
-    }
+    // #[test]
+    // fn test_polygon_with_no_holes() {
+    //     println!("geoPath.area(…) of a polygon with no holes");
+    //     let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+    //         LineString::from(vec![
+    //             Coordinate { x: 100., y: 0. },
+    //             Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
+    //         ]),
+    //         vec![],
+    //     )));
+    //     let ep = equirectangular();
+    //     assert_eq!(test_area(Some(ep), &object), 4.0);
+    // }
 }
 
 // tape("geoPath.area(…) of a polygon with no holes", function(test) {

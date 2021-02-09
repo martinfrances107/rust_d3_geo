@@ -2,19 +2,24 @@
 
 // A collection of functions that mutate a Projection struct.
 
-use crate::projection::transform_rotate::TransformRotate;
+use crate::clip::ClipNodeStub;
+use crate::projection::transform_rotate::TransformNode;
 use crate::rotation::rotate_radians::RotateRadians;
-use crate::transform_stream::StreamProcessorIdentity;
+use crate::stream::StreamClipNode;
 use crate::{
-    clip::antimeridian::generate_antimeridian, projection::transform_radians::TransformRadians,
+    clip::antimeridian::ClipAntimeridian, projection::transform_radians::TransformRadians,
 };
-use crate::{compose::Compose, transform_stream::StreamProcessor};
+use crate::{clip::ClipNode, stream::StreamSimple};
+use std::cell::RefCell;
+use std::cell::RefMut;
+
+use crate::compose::Compose;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::rc::Rc;
+use std::{borrow::BorrowMut, rc::Rc};
 
 use crate::stream::Stream;
-use crate::stream::StreamNode;
+use crate::stream::StreamSimpleNode;
 use crate::Transform;
 use crate::TransformIdentity;
 // clip generators.
@@ -22,8 +27,11 @@ use crate::TransformIdentity;
 // use crate::clip::circle::generate_circle;
 
 use super::projection::Projection;
-use super::projection::StreamProcessorValueMaybe;
-use super::resample::gen_resample;
+use super::projection::StreamOrValueMaybe;
+use crate::stream::StreamClipTrait;
+use crate::stream::StreamInTrait;
+
+use super::resample::resample::Resample;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 // use super::path::PathTrait;
 
@@ -31,20 +39,20 @@ pub struct ProjectionMutator<T: CoordFloat + FloatConst> {
     // The mutator lives as long a the proejction it contnains.
     project: Rc<Box<dyn Transform<T>>>,
     alpha: T, // post-rotate angle
-    cache: Option<StreamNode<T>>,
-    cache_stream: Option<StreamNode<T>>,
+    cache: Option<StreamSimpleNode<T>>,
+    cache_stream: Option<StreamSimpleNode<T>>,
     // clip_antimeridian: Option<Box<dyn Transform<T>>>,
     delta_lambda: T,
     delta_phi: T,
     delta_gamma: T,
     delta2: T, // precision
     k: T,      // scale
-    project_resample: Rc<StreamProcessor<T>>,
+    project_resample: StreamSimpleNode<T>,
     project_transform: Rc<Box<dyn Transform<T>>>,
     project_rotate_transform: Rc<Box<dyn Transform<T>>>,
     phi: T, // center
-    preclip: StreamProcessor<T>,
-    postclip: StreamProcessor<T>,
+    preclip: StreamClipNode<T>,
+    postclip: StreamClipNode<T>,
     x: T,
     y: T, // translate
     lambda: T,
@@ -86,8 +94,8 @@ impl<T: CoordFloat + FloatConst + 'static> ProjectionMutator<T> {
             lambda: T::zero(),
             phi: T::zero(),
             rotate: Rc::new(Box::new(TransformIdentity {})), // pre-rotate
-            preclip: generate_antimeridian(),
-            postclip: StreamProcessorIdentity::new(),
+            preclip: ClipNodeStub::gen_node(),
+            postclip: ClipNodeStub::gen_node(),
             sx: T::one(), // reflectX
             sy: T::one(), // reflectX
             theta: None,  // pre-clip angle
@@ -97,10 +105,10 @@ impl<T: CoordFloat + FloatConst + 'static> ProjectionMutator<T> {
             x1: None,
             y1: None, //postclip = identity, // post-clip extent
             y: T::from(250).unwrap(),
-            project_resample: Rc::new(gen_resample(
+            project_resample: Resample::gen_node(
                 Rc::new(Box::new(TransformIdentity {})),
                 Some(delta2),
-            )),
+            ),
             project_transform: Rc::new(Box::new(TransformIdentity {})),
             project_rotate_transform: Rc::new(Box::new(TransformIdentity {})),
         };
@@ -151,7 +159,7 @@ impl<T: CoordFloat + FloatConst + 'static> ProjectionMutator<T> {
         self.reset();
     }
 
-    pub fn stream(&mut self, stream: Option<StreamNode<T>>) -> Option<StreamNode<T>> {
+    pub fn stream(&mut self, stream: Option<StreamSimpleNode<T>>) -> Option<StreamSimpleNode<T>> {
         return match &self.cache {
             None => None,
             Some(c) => {
@@ -161,16 +169,26 @@ impl<T: CoordFloat + FloatConst + 'static> ProjectionMutator<T> {
                 } else {
                     match stream {
                         None => None,
-                        Some(s) => {
-                            self.cache_stream = Some(s.clone());
-                            let post_clip_out = (self.postclip)(s);
-                            let resample_out = (self.project_resample)(post_clip_out);
-                            let preclip_out = (self.preclip)(resample_out);
-                            let t_rotate = TransformRotate::new(self.rotate.clone());
-                            let t_rotate_out = t_rotate(preclip_out);
-                            let t_radians = TransformRadians::new();
-                            let t_radians_out = t_radians(t_rotate_out);
-                            Some(t_radians_out)
+                        Some(stream) => {
+                            self.cache_stream = Some(stream.clone());
+
+                            let postclip_node = self.postclip;
+                            self.postclip.stream_in(stream);
+
+                            let resample_in = self.postclip as StreamSimpleNode<T>;
+                            self.project_resample.stream_in(self.postclip);
+
+                            let preclip_node = self.preclip;
+                            preclip_node.stream_in(self.project_resample);
+
+                            let t_rotate_node = TransformNode::gen_node(self.rotate);
+                            t_rotate_node.stream_in(self.preclip);
+
+                            let t_radians = TransformRadians::gen_node();
+                            let t_radians_node = t_radians.borrow_mut();
+                            t_radians_node.stream_in(t_radians);
+
+                            Some(t_radians)
                         }
                     }
                 }
@@ -205,15 +223,16 @@ impl<T> Projection<T> for ProjectionMutator<T>
 where
     T: CoordFloat + FloatConst + 'static,
 {
-    // fn get_preclip(&self) -> Option<Box<dyn GeoStream>> {
-    //   return self.preclip;
-    // }
+    #[inline]
+    fn get_preclip(&self) -> ClipNode<T> {
+        self.preclip
+    }
 
-    // fn preclip(&mut self, preclip: StreamProcessor<T>) {
-    //     // self.preclip = preclip;
-    //     // self.theta = None;
-    //     // return self.reset();
-    // }
+    fn preclip(&mut self, preclip: ClipNode<T>) {
+        self.preclip = preclip;
+        self.theta = None;
+        return self.reset();
+    }
 
     // fn get_postclip(&self) -> Option<Box<dyn GeoStream>> {
     //   return self.postclip;
@@ -247,30 +266,28 @@ where
 
     fn precision(&mut self, delta: T) {
         self.delta2 = delta * delta;
-        self.project_resample = Rc::new(gen_resample(
-            self.project_transform.clone(),
-            Some(self.delta2),
-        ));
+        self.project_resample =
+            Resample::gen_node(self.project_transform.clone(), Some(self.delta2));
         self.reset();
     }
 
-    fn clip_angle(&mut self, angle: StreamProcessorValueMaybe<T>) -> Option<T> {
+    fn clip_angle(&mut self, angle: StreamOrValueMaybe<T>) -> Option<T> {
         match angle {
-            StreamProcessorValueMaybe::Value(angle) => {
+            StreamOrValueMaybe::Value(angle) => {
                 let theta = angle.to_radians();
                 self.theta = Some(theta);
                 println!("generating clip circle");
                 // self.preclip = generate_circle(theta);
                 None
             }
-            StreamProcessorValueMaybe::SP(preclip) => {
+            StreamOrValueMaybe::SP(preclip) => {
                 println!("generatin SP");
                 self.theta = None;
                 // self.preclip = preclip;
                 // self.reset();
                 None
             }
-            StreamProcessorValueMaybe::None => match self.theta {
+            StreamOrValueMaybe::None => match self.theta {
                 Some(theta) => Some(theta.to_degrees()),
                 None => None,
             },

@@ -1,119 +1,156 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::point_equal::point_equal;
-use crate::stream::Stream;
-use crate::stream::StreamNode;
-use crate::{clip::PointVisibleFn, transform_stream::StreamProcessor};
-// use crate::transform_stream::StreamProcessor;
-
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
+use super::BufferInTrait;
+use crate::stream::StreamInTrait;
+use crate::stream::StreamSimpleNode;
 
+use crate::stream::StreamClean;
+use crate::stream::{Clean, CleanEnum, Stream};
+use crate::{clip::ClipNodeStub, point_equal::point_equal};
+use crate::{stream::StreamCleanNode, stream::StreamPathResultNode};
+
+use crate::clip::ClipNode;
 use std::cell::RefCell;
 use std::rc::Rc;
-
-// Takes a line and cuts into visible segments. Return values used for polygon
-// clipPIng: 0 - there were intersections or the line was empty; 1 - no
-// intersections 2 - there were intersections, and the first and last segments
-// should be rejoined.
-
 pub struct Line<T: CoordFloat> {
-    c0: u8,    // code for previous point
-    clean: u8, // no intersections
+    c0: u8,           // code for previous point
+    clean: CleanEnum, // no intersections
     radius: T,
-    rc: T,
+    cr: T,
     not_hemisphere: bool,
     // point0: (Option<Point>, Option<u8>), // previous point with message.
     point0: Option<Coordinate<T>>, // previous point
     small_radius: bool,
-    stream: StreamNode<T>,
+    stream: ClipNode<T>,
     v0: bool,  // visibility of previous point
     v00: bool, // visibility of first point
-    visible: PointVisibleFn<T>,
+}
+impl<T> BufferInTrait<T> for Line<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    #[inline]
+    fn buffer_in(&mut self, sink: StreamPathResultNode<T>) {
+        // self.sink.swap(&sink);
+    }
 }
 
 impl<T: CoordFloat + FloatConst + 'static> Line<T> {
-    pub fn new(visible: PointVisibleFn<T>, radius: T) -> StreamProcessor<T> {
-        Box::new(move |stream: StreamNode<T>| {
-            // TODO small_radius, rc  is a shadow variables!!!
-            let rc = radius.cos();
-            let small_radius = rc.is_sign_positive();
-            Rc::new(RefCell::new(Box::new(Line {
-                c0: 0,
-                clean: 0,
-                not_hemisphere: rc.abs() > T::epsilon(),
-                point0: None,
-                rc,
-                radius,
-                small_radius,
-                v0: false,
-                v00: false,
-                stream,
-                visible: visible.clone(),
-            })))
-        })
+    #[inline]
+    pub fn new(radius: T) -> Self {
+        // TODO small_radius, rc  is a shadow variables!!!
+        let rc = radius.cos();
+        let small_radius = rc.is_sign_positive();
+        Self {
+            c0: 0,
+            clean: CleanEnum::IntersectionsOrEmpty,
+            not_hemisphere: rc.abs() > T::epsilon(),
+            point0: None,
+            cr: T::zero(),
+            radius,
+            small_radius,
+            v0: false,
+            v00: false,
+            stream: ClipNodeStub::gen_node(),
+        }
+    }
+
+    #[inline]
+    pub fn gen_node(radius: T) -> StreamCleanNode<T> {
+        Rc::new(RefCell::new(Box::new(Self::new(radius))))
+    }
+
+    #[inline]
+    fn point_visible(&self, p: Coordinate<T>, _m: Option<u8>) -> bool {
+        p.x.cos() * p.y.cos() > self.cr
     }
 
     /// Generates a 4-bit vector representing the location of a point relative to
     /// the small circle's bounding box.
-    fn code(&self, lambda: T, phi: T) -> u8 {
+    const CODE_LEFT: u8 = 1;
+    const CODE_RIGHT: u8 = 2;
+    const CODE_BELOW: u8 = 4;
+    const CODE_ABOVE: u8 = 8;
+    fn code(&self, p: Coordinate<T>) -> u8 {
+        let lambda = p.x;
+        let phi = p.y;
         let r = match self.small_radius {
             true => self.radius,
             false => T::PI() - self.radius,
         };
         let mut code = 0;
         if lambda < -r {
-            code |= 1;
+            code |= Self::CODE_LEFT;
+        } else if lambda > r {
+            code |= Self::CODE_RIGHT;
         }
-        // left
-        else if lambda > r {
-            code |= 2;
-        } // right
         if phi < -r {
-            code |= 4;
+            code |= Self::CODE_BELOW;
+        } else if phi > r {
+            code |= Self::CODE_ABOVE;
         }
-        // below
-        else if phi > r {
-            code |= 8;
-        } // above
         return code;
     }
-
+}
+impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + 'static {}
+impl<T> StreamInTrait<T> for Line<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn stream_in(&mut self, stream: StreamSimpleNode<T>) {}
+}
+impl<T> Clean for Line<T>
+where
+    T: CoordFloat + FloatConst,
+{
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
     #[inline]
-    fn clean(&self) -> u8 {
-        self.clean | (((self.v00 && self.v0) as u8) << 1)
+    fn clean(&self) -> CleanEnum {
+        match self.clean {
+            CleanEnum::IntersectionsOrEmpty => CleanEnum::IntersectionsOrEmpty,
+            CleanEnum::NoIntersections | CleanEnum::IntersectionsRejoin => {
+                if self.v00 && self.v0 {
+                    CleanEnum::IntersectionsRejoin
+                } else {
+                    CleanEnum::IntersectionsOrEmpty
+                }
+            }
+        }
     }
 }
-
 impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
     fn line_start(&mut self) {
         self.v00 = false;
         self.v0 = false;
-        self.clean = 1;
+        self.clean = CleanEnum::NoIntersections;
     }
 
-    fn point(&mut self, lambda: T, phi: T, _m: Option<u8>) {
-        let mut point1 = Coordinate { x: lambda, y: phi };
+    fn point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
+        let mut point1 = p;
 
         // let point2: (Option::<Point>, <Option<u8>>);
         let mut point2;
-        let v = (self.visible)(lambda, phi, None);
+        let v = self.point_visible(p, None);
 
         let c = match self.small_radius {
             true => match v {
                 true => 0u8,
-                false => self.code(lambda, phi),
+                false => self.code(p),
             },
             false => match v {
                 true => {
-                    let inc = match lambda < T::zero() {
+                    let inc = match p.x < T::zero() {
                         true => T::PI(),
                         false => -T::PI(),
                     };
-                    self.code(lambda + inc, phi)
+                    self.code(Coordinate {
+                        x: p.x + inc,
+                        y: p.y,
+                    })
                 }
                 false => 0u8,
             },
@@ -158,28 +195,28 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
         let mut s = self.stream.borrow_mut();
         if v != self.v0 {
             let next: Option<Coordinate<T>>;
-            self.clean = 0;
+            self.clean = CleanEnum::IntersectionsOrEmpty;
             if v {
                 // outside going in
                 s.line_start();
-                match intersect(point1, self.point0.clone().unwrap(), self.rc, false) {
+                match intersect(point1, self.point0.clone().unwrap(), self.cr, false) {
                     IntersectReturn::None => {
                         // TODO Should I do a stream Point here??
                         next = None;
                     }
                     IntersectReturn::One(p) => {
-                        s.point(p.x, p.y, None);
+                        s.point(p, None);
                         next = Some(p);
                     }
                     IntersectReturn::Two([p, _]) => {
-                        s.point(p.x, p.y, None);
+                        s.point(p, None);
                         // p0_next = p;
                         panic!("silently dropping second point");
                     }
                 }
             } else {
                 // inside going out
-                point2 = intersect(self.point0.clone().unwrap(), point1, self.rc, false);
+                point2 = intersect(self.point0.clone().unwrap(), point1, self.cr, false);
                 match point2 {
                     IntersectReturn::None => {
                         // TODO should I stream a null point here?
@@ -187,12 +224,12 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
                         panic!("Must deal with no intersect.");
                     }
                     IntersectReturn::One(p) => {
-                        s.point(p.x, p.y, Some(2));
+                        s.point(p, Some(2));
                         s.line_end();
                         next = Some(p);
                     }
                     IntersectReturn::Two([p, _]) => {
-                        s.point(p.x, p.y, Some(2));
+                        s.point(p, Some(2));
                         s.line_end();
                         // next = p;
                         panic!("silently dropping second point");
@@ -204,27 +241,27 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
             // If the codes for two points are different, or are both zero,
             // and there this segment intersects with the small circle.
             if (c & self.c0) != 0 {
-                // let t = intersect(point1.0.unwrap(), self.point0.0.unwrap(), self.rc, true);
-                // match t {
-                //   Return::None => {}
-                //   Return::One(_) => {
-                //     panic!("requetsed two received one");
-                //   }
-                //   Return::Two(t) => {
-                //     self.clean = 0;
-                //     if self.small_radius {
-                //       stream.line_start();
-                //       stream.point(t[0].x, t[0].y, None);
-                //       stream.point(t[1].x, t[1].y, None);
-                //       stream.line_end();
-                //     } else {
-                //       stream.point(t[1].x, t[1].y, None);
-                //       stream.line_end();
-                //       stream.line_start();
-                //       stream.point(t[0].x, t[0].y, Some(3u8));
-                //     }
-                //   }
-                // }
+                let t = intersect(point1, self.point0.unwrap(), self.cr, true);
+                match t {
+                    IntersectReturn::None => {}
+                    IntersectReturn::One(_) => {
+                        panic!("requetsed two received one");
+                    }
+                    IntersectReturn::Two(t) => {
+                        self.clean = CleanEnum::IntersectionsOrEmpty;
+                        if self.small_radius {
+                            s.line_start();
+                            s.point(t[0], None);
+                            s.point(t[1], None);
+                            s.line_end();
+                        } else {
+                            s.point(t[1], None);
+                            s.line_end();
+                            s.line_start();
+                            s.point(t[0], Some(3u8));
+                        }
+                    }
+                }
             }
         }
         // if v && self.point0.0.is_none() || !point_equal(self.point0.0.unwrap(), point1.0.unwrap()) {

@@ -1,32 +1,39 @@
-use crate::path::PathResult;
 use crate::path::PathResultEnum;
-use crate::stream::Stream;
-use crate::stream::StreamNode;
-use geo::CoordFloat;
+use crate::stream::StreamSimpleNode;
+use crate::stream::{Stream, StreamPathResultNode};
+use crate::{path::PathResult, stream::StreamInTrait};
+
+use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 use std::cell::RefCell;
 use std::rc::Rc;
-
-#[derive(Clone, Copy, Debug, Default)]
-struct LineTuple<T: CoordFloat> {
-    x: T,
-    y: T,
-    m: Option<u8>,
+#[derive(Clone, Copy, Debug)]
+pub struct LineElem<T: CoordFloat> {
+    pub p: Coordinate<T>,
+    pub m: Option<u8>,
 }
 #[derive(Debug, Default)]
 pub struct ClipBuffer<T: CoordFloat> {
-    lines: Vec<Vec<LineTuple<T>>>,
-    line: Vec<LineTuple<T>>,
+    lines: Vec<Vec<LineElem<T>>>,
+    line: Option<Vec<LineElem<T>>>,
 }
 
 impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
     /// Generate a new stream node.
     #[inline]
-    pub fn new() -> StreamNode<T> {
-        Rc::new(RefCell::new(Box::new(Self {
+    pub fn new() -> Self {
+        Self {
             lines: Vec::new(),
-            line: Vec::new(),
-        })))
+            line: None,
+        }
+    }
+
+    #[inline]
+    pub fn gen_node() -> StreamPathResultNode<T>
+    where
+        T: CoordFloat + FloatConst,
+    {
+        Rc::new(RefCell::new(Box::new(Self::new())))
     }
 
     fn rejoin(&mut self) {
@@ -43,23 +50,42 @@ impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
 
 impl<T: CoordFloat> PathResult<T> for ClipBuffer<T> {
     fn result(&mut self) -> PathResultEnum<T> {
+        let result = self.lines;
         self.lines.clear();
-        self.line.clear();
+        self.line = None;
         let result = &self.lines;
         // return result.to_vec();
         // TODO must fix this!!
-        return PathResultEnum::Path();
+        return PathResultEnum::ClipBufferOutput(result.to_vec());
+    }
+}
+impl<T> StreamInTrait<T> for ClipBuffer<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn stream_in(&mut self, stream: StreamSimpleNode<T>) {
+        panic!("Should I call stream_in on a buffer!");
     }
 }
 
+use crate::stream::StreamPathResult;
+impl<T> StreamPathResult<T> for ClipBuffer<T> where T: CoordFloat + FloatConst {}
 impl<'a, T: CoordFloat + FloatConst> Stream<T> for ClipBuffer<T> {
     #[inline]
-    fn point(&mut self, x: T, y: T, m: Option<u8>) {
-        self.line.push(LineTuple { x, y, m });
+    fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
+        match self.line {
+            Some(line) => {
+                line.push(LineElem { p, m });
+            }
+            None => {
+                panic!("cannot push to undefined line");
+            }
+        }
     }
 
     fn line_start(&mut self) {
-        self.line.clear();
-        // self.lines.push(self.line);
+        let line = Vec::new();
+        self.line = Some(line);
+        self.lines.push(line);
     }
 }

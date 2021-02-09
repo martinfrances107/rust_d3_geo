@@ -14,7 +14,10 @@ impl<'a, T: CoordFloat + 'static> Compose<T> {
         a: Rc<Box<dyn Transform<T>>>,
         b: Rc<Box<dyn Transform<T>>>,
     ) -> Box<dyn Transform<T>> {
-        Box::new(Self { a, b })
+        Box::new(Self {
+            a: a.clone(),
+            b: b.clone(),
+        })
     }
 }
 

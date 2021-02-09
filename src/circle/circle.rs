@@ -5,9 +5,12 @@ use num_traits::FloatConst;
 
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
+use crate::stream::StreamSimple;
+use crate::stream::StreamSimpleNode;
+use crate::stream::StreamSimpleNodeStub;
 use crate::Transform;
 use crate::{cartesian::cartesian, TransformIdentity};
-use crate::{cartesian::cartesian_normalize_in_place, transform_stream::StreamIdentity};
+use crate::{cartesian::cartesian_normalize_in_place, stream::StreamIdentity};
 
 use super::circle_stream::circle_stream;
 use super::CircleInArg;
@@ -36,7 +39,7 @@ pub struct Circle<T: CoordFloat> {
     radius_fn: Box<dyn Fn(&CircleInArg) -> T>,
     rotate: Box<dyn Transform<T>>,
     ring: Vec<Coordinate<T>>,
-    stream: Rc<RefCell<Box<dyn Stream<T>>>>,
+    stream: StreamSimpleNode<T>,
 }
 
 impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
@@ -56,7 +59,7 @@ impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
             precision_fn,
             rotate: Box::new(TransformIdentity {}),
             ring: Vec::new(),
-            stream: Rc::new(RefCell::new(Box::new(StreamIdentity {}))),
+            stream: StreamSimpleNodeStub::new(),
         };
     }
 
@@ -86,8 +89,8 @@ impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
 }
 
 impl<T: CoordFloat + FloatConst> Stream<T> for Circle<T> {
-    fn point(&mut self, x: T, y: T, m: Option<u8>) {
-        let x_rotated = self.rotate.invert(&Coordinate { x, y });
+    fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
+        let x_rotated = self.rotate.invert(&p);
         let x_rotated_deg = Coordinate {
             x: x_rotated.x.to_degrees(),
             y: x_rotated.y.to_degrees(),

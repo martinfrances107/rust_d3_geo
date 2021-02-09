@@ -1,5 +1,5 @@
 use super::projection::Projection;
-use super::projection::StreamProcessorValueMaybe;
+use super::projection::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;
 use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
@@ -16,7 +16,7 @@ impl StereographicRaw {
         let s: Rc<Box<dyn Transform<T>>> = Rc::new(Box::new(StereographicRaw {}));
         let mut projection = ProjectionMutator::from_projection_raw(s, None);
         projection.scale(T::from(250f64).unwrap());
-        projection.clip_angle(StreamProcessorValueMaybe::Value(T::from(142f64).unwrap()));
+        projection.clip_angle(StreamOrValueMaybe::Value(T::from(142f64).unwrap()));
         return projection;
     }
 }

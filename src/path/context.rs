@@ -1,6 +1,6 @@
 extern crate web_sys;
 
-use geo::CoordFloat;
+use geo::{CoordFloat, Coordinate};
 use web_sys::CanvasRenderingContext2d;
 
 use crate::stream::Stream;
@@ -42,7 +42,7 @@ where
 {
     #[inline]
     fn result(&mut self) -> PathResultEnum<T> {
-        PathResultEnum::Blank
+        PathResultEnum::None
     }
 }
 
@@ -77,20 +77,20 @@ where
         self.point = Some(std::f64::NAN);
     }
 
-    fn point(&mut self, x: T, y: T, _z: Option<u8>) {
+    fn point(&mut self, p: Coordinate<T>, _z: Option<u8>) {
         match self.point {
             Some(point) => {
                 if point == 0f64 {
-                    self.context.move_to(x.as_(), y.as_());
+                    self.context.move_to(p.x.as_(), p.y.as_());
                     self.point = Some(1f64);
                 } else if point == 1f64 {
-                    self.context.line_to(x.as_(), y.as_());
+                    self.context.line_to(p.x.as_(), p.y.as_());
                 } else {
-                    self.context.move_to(x.as_(), y.as_());
+                    self.context.move_to(p.x.as_(), p.y.as_());
                     self.context
                         .arc(
-                            x.as_(),
-                            y.as_(),
+                            p.x.as_(),
+                            p.y.as_(),
                             self.radius.as_(),
                             0f64,
                             std::f64::consts::TAU,

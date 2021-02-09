@@ -1,4 +1,4 @@
-use geo::Point;
+use geo::{Coordinate, Point};
 
 use super::Stream;
 
@@ -11,6 +11,13 @@ use num_traits::FloatConst;
 impl<T: CoordFloat + FloatConst> Streamable<T> for Point<T> {
     #[inline]
     fn to_stream(&self, stream: &mut impl Stream<T>) {
-        stream.point(self.x(), self.y(), None);
+        // TODO there must be a better way to cast a Point to Coordinate.
+        stream.point(
+            Coordinate {
+                x: self.x(),
+                y: self.y(),
+            },
+            None,
+        );
     }
 }

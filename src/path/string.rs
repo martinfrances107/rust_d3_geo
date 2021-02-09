@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
 use crate::stream::Stream;
-use geo::CoordFloat;
+use geo::{CoordFloat, Coordinate};
 use num_traits::{Float, FloatConst};
+
+use super::{PathResult, PathResultEnum};
 
 #[inline]
 fn circle<T>(radius: T) -> String
@@ -62,14 +64,20 @@ where
             None => {}
         }
     }
+}
+
+impl<T> PathResult<T> for PathString<T>
+where
+    T: CoordFloat + FloatConst,
+{
     #[inline]
-    fn result(&mut self) -> Option<String> {
+    fn result(&mut self) -> PathResultEnum<T> {
         if self.string.is_empty() {
             let result = self.string.join(",");
             self.string = Vec::new();
-            return Some(result);
+            return PathResultEnum::Sring(result);
         } else {
-            return None;
+            return PathResultEnum::None;
         }
     }
 }
@@ -107,20 +115,20 @@ where
     }
 
     #[inline]
-    fn point(&mut self, x: T, y: T, _z: Option<u8>) {
+    fn point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
         match self.point {
             Some(0f64) => {
-                self.string.push(format!("M{},{},", x, y));
+                self.string.push(format!("M{},{},", p.x, p.y));
                 self.point = Some(1f64);
             }
             Some(1f64) => {
-                self.string.push(format!("L{},{},", x, y));
+                self.string.push(format!("L{},{},", p.x, p.y));
             }
             _ => {
                 if self.circle.is_none() {
                     self.circle = Some(circle(self.radius));
                 }
-                self.string.push(format!("M{},{}", x, y));
+                self.string.push(format!("M{},{}", p.x, p.y));
                 match &self.circle {
                     Some(circle) => {
                         self.string.push(circle.clone());

@@ -1,31 +1,32 @@
-use geo::Point;
-use num_traits::Float;
+use geo::CoordFloat;
+use num_traits::{Float, FloatConst};
 
-// use crate::stream::GeoStream;
-use crate::point_equal::point_equal;
-use crate::transform_stream::Stream;
+use crate::{point_equal::point_equal, stream::StreamSimpleNode};
 
-use super::CompareIntersectionFn;
 use super::InterpolateFn;
+use super::{buffer::LineElem, CompareIntersectionFn};
+use num_traits::Zero;
 
-// import pointEqual from "../pointEqual.js";
-
-type MeshPoint<T> = [T; 3];
-
-struct Intersection<T>{
-    x: MeshPoint<T>,
-    z: Option<Vec<MeshPoint<T>>>,
+struct Intersection<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    x: LineElem<T>,
+    z: Option<Vec<LineElem<T>>>,
     o: Option<Box<Intersection<T>>>, // another intersection,
-    e: bool,                      // is any entry?
-    v: bool,                      // visited
-    n: Option<MeshPoint<T>>,         // next
-    p: Option<MeshPoint<T>>,         // previous
+    e: bool,                         // is any entry?
+    v: bool,                         // visited
+    n: Option<LineElem<T>>,          // next
+    p: Option<LineElem<T>>,          // previous
 }
 
-impl<T: Float> Intersection<T> {
+impl<T: Float> Intersection<T>
+where
+    T: CoordFloat + FloatConst,
+{
     fn new(
-        point: MeshPoint<T>,
-        points: Option<Vec<MeshPoint<T>>>,
+        point: LineElem<T>,
+        points: Option<Vec<LineElem<T>>>,
         other: Option<Box<Intersection<T>>>,
         entry: bool,
     ) -> Self {
@@ -45,12 +46,14 @@ impl<T: Float> Intersection<T> {
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
 pub fn rejoin<T: Float>(
-    segments: Vec<Vec<MeshPoint<T>>>,
+    segments: &Vec<Vec<LineElem<T>>>,
     compare_intersection: CompareIntersectionFn<T>,
     start_inside: bool,
     interpolate: InterpolateFn<T>,
-    mut stream: Box<dyn Stream<T>>,
-) {
+    mut stream: StreamSimpleNode<T>,
+) where
+    T: CoordFloat + FloatConst,
+{
     let subject = Vec::<Intersection<T>>::new();
     let clip = Vec::<Intersection<T>>::new();
     // let i,
@@ -65,120 +68,44 @@ pub fn rejoin<T: Float>(
         let mut p1 = segment[n];
         //  let mut x: Intersection<F>;
 
-        if point_equal(Point::new( p0[0], p0[1] ), Point::new(  p1[0],  p1[1] )) {
-            if !p0[2].is_zero() && !p1[2].is_zero() {
-                stream.line_start();
+        if point_equal(p0.p, p1.p) {
+            if !p0.m.unwrap().is_zero() && !p1.m.unwrap().is_zero() {
+                let mut s = stream.borrow_mut();
+                s.line_start();
                 // let i: usize;
                 // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
                 for i in 0..n {
                     p0 = segment[i];
-                    stream.point(p0[0], p0[1], None);
+                    s.point(p0.p, None);
                 }
-                stream.line_end();
+                s.line_end();
                 return;
             }
             // handle degenerate cases by moving the point
             // p1[0] += 2F * f64::EPSILON;
-            p1[0] = p1[0] + T::from(2).unwrap() * T::epsilon();
+            p1.p.x = p1.p.x + T::from(2).unwrap() * T::epsilon();
         }
 
-        // let mut x = Intersection::new(p0, Some(segment.to_vec()), None, true);
-        // subject.push(x);
-        // x.o = Some(Box::new(Intersection::new(
-        //   p0,
-        //   None,
-        //   Some(Box::new(x)),
-        //   false,
-        // )));
-        // clip.push(*x.o.unwrap());
-        // x = Intersection::new(p1, Some(segment.to_vec()), None, false);
-        // subject.push(x);
+        let mut x = Intersection::new(p0, Some(segment.to_vec()), None, true);
+        subject.push(x);
+        x.o = Some(Box::new(Intersection::new(
+            p0,
+            None,
+            Some(Box::new(x)),
+            false,
+        )));
+        clip.push(*x.o.unwrap());
+        x = Intersection::new(p1, Some(segment.to_vec()), None, false);
+        subject.push(x);
         // x.o = Some(Box::new(Intersection::new(
         //   p1,
         //   None,
-        //   Some(Box::new(x)),
+        // //   Some(Box::rejoin::new(x)),
         //   true,
         // )));
-        // clip.push(*x.o.unwrap());
+        clip.push(*x.o.unwrap());
     }
 }
-
-// // A generalized polygon clipping algorithm: given a polygon that has been cut
-// // into its visible line segments, and rejoins the segments by interpolating
-// // along the clip edge.
-// export default function(segments, compareIntersection, startInside, interpolate, stream) {
-//   var subject = [],
-//       clip = [],
-//       i,
-//       n;
-
-//   segments.forEach(function(segment) {
-//     if ((n = segment.length - 1) <= 0) return;
-//     var n, p0 = segment[0], p1 = segment[n], x;
-
-//     if (pointEqual(p0, p1)) {
-//       if (!p0[2] && !p1[2]) {
-//         stream.lineStart();
-//         for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
-//         stream.lineEnd();
-//         return;
-//       }
-//       // handle degenerate cases by moving the point
-//       p1[0] += 2 * epsilon;
-//     }
-
-//     subject.push(x = new Intersection(p0, segment, null, true));
-//     clip.push(x.o = new Intersection(p0, null, x, false));
-//     subject.push(x = new Intersection(p1, segment, null, false));
-//     clip.push(x.o = new Intersection(p1, null, x, true));
-//   });
-
-//   if (!subject.length) return;
-
-//   clip.sort(compareIntersection);
-//   link(subject);
-//   link(clip);
-
-//   for (i = 0, n = clip.length; i < n; ++i) {
-//     clip[i].e = startInside = !startInside;
-//   }
-
-//   var start = subject[0],
-//       points,
-//       point;
-
-//   while (1) {
-//     // Find first unvisited intersection.
-//     var current = start,
-//         isSubject = true;
-//     while (current.v) if ((current = current.n) === start) return;
-//     points = current.z;
-//     stream.lineStart();
-//     do {
-//       current.v = current.o.v = true;
-//       if (current.e) {
-//         if (isSubject) {
-//           for (i = 0, n = points.length; i < n; ++i) stream.point((point = points[i])[0], point[1]);
-//         } else {
-//           interpolate(current.x, current.n.x, 1, stream);
-//         }
-//         current = current.n;
-//       } else {
-//         if (isSubject) {
-//           points = current.p.z;
-//           for (i = points.length - 1; i >= 0; --i) stream.point((point = points[i])[0], point[1]);
-//         } else {
-//           interpolate(current.x, current.p.x, -1, stream);
-//         }
-//         current = current.p;
-//       }
-//       current = current.o;
-//       points = current.z;
-//       isSubject = !isSubject;
-//     } while (!current.v);
-//     stream.lineEnd();
-//   }
-// }
 
 struct LinkNP<'a, T> {
     value: T,
@@ -186,7 +113,10 @@ struct LinkNP<'a, T> {
     p: Option<&'a LinkNP<'a, T>>,
 }
 
-fn link<T>(array: Vec<MeshPoint<T>>) {
+fn link<T>(array: Vec<LineElem<T>>)
+where
+    T: CoordFloat + FloatConst,
+{
     if array.is_empty() {
         return;
     };
@@ -198,7 +128,7 @@ fn link<T>(array: Vec<MeshPoint<T>>) {
         n: None,
         p: None,
     };
-    let mut b: LinkNP<MeshPoint<T>>;
+    let mut b: LinkNP<LineElem<T>>;
     for i in 1..n {
         b = LinkNP {
             value: array[i],

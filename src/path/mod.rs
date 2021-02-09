@@ -4,11 +4,12 @@ mod string;
 
 use std::default::Default;
 
-use web_sys::CanvasRenderingContext2d;
-
-use crate::transform_stream::StreamIdentity;
+use crate::clip::buffer::LineElem;
+use crate::stream::StreamIdentity;
 use crate::Transform;
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
+use geo::Coordinate;
+use web_sys::CanvasRenderingContext2d;
 
 use crate::projection::projection_mutator::ProjectionMutator;
 use crate::stream::Stream;
@@ -20,8 +21,10 @@ pub enum PathResultEnum<T>
 where
     T: CoordFloat,
 {
-    Blank,
-    Path(),
+    None,
+    Path(Vec<Vec<Coordinate<T>>>),
+    ClipBufferOutput(Vec<Vec<LineElem<T>>>),
+    Sring(String),
     Area(T),
     Measure(),
     Bound(),
@@ -31,7 +34,10 @@ pub trait PathResult<T>
 where
     T: CoordFloat,
 {
-    fn result(&mut self) -> PathResultEnum<T>;
+    #[inline]
+    fn result(&mut self) -> PathResultEnum<T> {
+        PathResultEnum::None
+    }
 }
 
 trait PathTrait<T>
@@ -198,11 +204,11 @@ where
         self.point_radius
     }
 
-    #[inline]
-    fn point_radius(self, d: T) -> Self {
-        // (self.context_stream.point_radius(d), d);
-        self
-    }
+    // #[inline]
+    // fn point_radius(self, d: T) -> Self {
+    //     // (self.context_stream.point_radius(d), d);
+    //     self
+    // }
 
     #[inline]
     fn generate_path(

@@ -1,217 +1,346 @@
 pub mod antimeridian;
-mod buffer;
+pub mod buffer;
 pub mod circle;
-// use std::fmt::Debug;
-use crate::stream::StreamNode;
-// use crate::Transform;
-use crate::{stream::Stream, transform_stream::StreamProcessor};
+mod rejoin;
+use crate::path::PathResult;
+use crate::stream::Ci;
+use crate::stream::Stream;
+use crate::stream::StreamClipTrait;
+use crate::stream::StreamPathResult;
+use crate::stream::StreamPathResultNode;
+use crate::stream::{StreamCleanNode, StreamCleanNodeStub, StreamInTrait};
+use crate::stream::{StreamPathResultNodeStub, StreamSimpleNode};
+use buffer::{ClipBuffer, LineElem};
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 use std::{cell::RefCell, rc::Rc};
 
-use crate::polygon_contains::contains;
+pub type InterpolateFn<T> =
+    Rc<Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, StreamSimpleNode<T>)>>;
+pub type PointVisibleFn<T> = Rc<Box<dyn Fn(Coordinate<T>, Option<u8>) -> bool>>;
 
-use buffer::ClipBuffer;
+pub type CompareIntersectionFn<T> = Rc<Box<dyn Fn(Ci<T>, Ci<T>) -> T>>;
+pub type ClipNode<T> = Rc<RefCell<Box<dyn StreamClipTrait<T>>>>;
 
-// // CompareIntersections param type
 #[derive(Clone, Debug)]
-pub struct Ci<T: CoordFloat> {
-    x: Coordinate<T>,
+pub struct ClipNodeStub {}
+
+impl ClipNodeStub {
+    #[inline]
+    pub fn gen_node<T: CoordFloat>() -> ClipNode<T>
+    where
+        T: CoordFloat + FloatConst,
+    {
+        Rc::new(RefCell::new(Box::new(ClipTraitIdentity {})))
+    }
 }
 
-pub type InterpolateFn<T> =
-    Rc<Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, StreamNode<T>)>>;
-type PointVisibleFn<T> = Rc<Box<dyn Fn(T, T, Option<u8>) -> bool>>;
+pub trait BufferInTrait<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn buffer_in(&mut self, sink: StreamPathResultNode<T>);
+}
 
-pub struct Clip<T: CoordFloat + 'static> {
-    line: StreamNode<T>,
-    interpolate: InterpolateFn<T>,
+pub struct ClipBase<T: CoordFloat + FloatConst> {
+    line_node: StreamCleanNode<T>,
     polygon_started: bool,
     polygon: Vec<Vec<Coordinate<T>>>,
-    point_visible: PointVisibleFn<T>,
-    ring_buffer: StreamNode<T>,
-    ring_sink: StreamNode<T>,
-    segments: Vec<Vec<Coordinate<T>>>,
-    start: Coordinate<T>,
     ring: Vec<Coordinate<T>>,
+    ring_buffer_node: StreamPathResultNode<T>,
+    ring_sink_node: StreamCleanNode<T>,
+    segments: Vec<Vec<LineElem<T>>>,
+    start: Coordinate<T>,
     use_ring: bool,
-    sink: StreamNode<T>,
+    use_ring_end: bool,
+    use_ring_start: bool,
+    sink: StreamPathResultNode<T>,
 }
 
-impl<T: CoordFloat + FloatConst + 'static> Clip<T> {
-    fn gen_stream_processor(
-        point_visible: PointVisibleFn<T>,
-        clip_line: StreamProcessor<T>,
-        interpolate: InterpolateFn<T>,
-        start: Coordinate<T>,
-    ) -> StreamProcessor<T> {
-        Box::new(move |sink: StreamNode<T>| {
-            let line = clip_line(sink.clone());
-
-            let ring_buffer = ClipBuffer::<T>::new();
-            let ring_sink = clip_line(ring_buffer.clone());
-
-            Rc::new(RefCell::new(Box::new(Self {
-                use_ring: false,
-                interpolate: interpolate.clone(),
-                line,
-                point_visible: point_visible.clone(),
-                polygon: Vec::new(),
-                polygon_started: false,
-                ring: Vec::new(),
-                ring_buffer: ring_buffer.clone(),
-                ring_sink,
-                segments: Vec::new(),
-                sink: sink.clone(),
-                start: start.clone(),
-            })))
-        })
+impl<T> Default for ClipBase<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn default() -> Self {
+        Self {
+            line_node: StreamCleanNodeStub::new(),
+            polygon_started: false,
+            polygon: vec![vec![]],
+            ring: vec![],
+            ring_buffer_node: StreamPathResultNodeStub::new(),
+            ring_sink_node: StreamCleanNodeStub::new(),
+            segments: vec![vec![]],
+            use_ring: false,
+            use_ring_end: false,
+            use_ring_start: false,
+            sink: StreamPathResultNodeStub::new(),
+            start: Coordinate {
+                x: -T::PI(),
+                y: -T::FRAC_PI_2(),
+            },
+        }
     }
+}
 
-    #[inline]
-    fn valid_segment(segment: &[[f64; 2]]) -> bool {
-        segment.len() > 1
-    }
-
-    fn point_ring(&mut self, lambda: T, phi: T, _m: Option<u8>) {
-        self.ring.push(Coordinate { x: lambda, y: phi });
-        let mut rs = self.ring_sink.borrow_mut();
-        rs.point(lambda, phi, None);
+impl<T> ClipBase<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn point_ring(&mut self, p: Coordinate<T>, _m: Option<u8>) {
+        self.ring.push(p);
+        let rs = self.ring_sink_node.borrow_mut();
+        rs.point(p, None);
     }
 
     fn ring_start(&mut self) {
-        let mut sink = self.ring_sink.borrow_mut();
+        let mut sink = self.ring_sink_node.borrow_mut();
         sink.line_start();
         self.ring = Vec::new();
     }
 
-    //     fn ring_end(&self) {
-    //       pointRing(self.ring[0][0], self.ring[0][1]);
-    //       self.ringSink.lineEnd();
+    fn ring_end(&self) {
+        // self.point_ring(self.ring[0], None);
+        // let mut ring_sink = self.ring_sink.borrow_mut();
+        // ring_sink.line_end();
 
-    //       let clean = self.ringSink.clean();
-    //       let ringSegments = ringBuffer.result(),
-    //       let i;
-    //       let n = ringSegments.length;
-    //       let m,
-    //       let segment,
-    //       let point;
+        // let clean = ring_sink.clean();
+        // let mut ring_buffer = self.ring_buffer_node.borrow_mut();
+        // let ring_segments = match ring_buffer.result() {
+        //     PathResultEnum::ClipBufferOutput(result) => {
+        //         // Can I find a way of doing this with the expense of dynamic conversion.
+        //         result
+        //     }
+        //     _ => {
+        //         panic!("was expectcing a path result");
+        //     }
+        // };
 
-    //       self.ring.pop();
-    //       self.polygon.push(ring);
-    //       self.ring = None;
+        // let n = ring_segments.len();
+        // let m;
+        // // let segment: Vec<Vec<Coordinate<T>>;
+        // // let point;
 
-    //       if (!n) return;
+        // self.ring.pop();
+        // self.polygon.push(self.ring);
+        // // in this javascript version this value is set to NULL
+        // // is my assumption that this is valid true?
+        // // self.ring = None;
+        // self.ring = Vec::new();
 
-    //       // No intersections.
-    //       if (self.clean & 1) {
-    //         self.segment = ringSegments[0];
-    //         if ((m = segment.length - 1) > 0) {
-    //           if (!polygonStarted) sink.polygonStart(), polygonStarted = true;
-    //           sink.lineStart();
-    //           for (i = 0; i < m; ++i) sink.point((point = segment[i])[0], point[1]);
-    //           sink.lineEnd();
-    //         }
-    //         return;
-    //       }
+        // if n != 0 {
+        //     return;
+        // }
 
-    //       // Rejoin connected segments.
-    //       // TODO reuse ringBuffer.rejoin()?
-    //       if (n > 1 && clean & 2) self.ringSegments.push(self.ringSegments.pop().concat(self.ringSegments.shift()));
+        // // No intersections.
+        // match clean {
+        //     CleanEnum::NoIntersections => {
+        //         // let test = ring_segments.first();
+        //         // let test1 = test.unwrap();
+        //         // let test2 = test1.clone();
+        //         let segment = ring_segments.first().unwrap().clone();
+        //         m = segment.len() - 1;
+        //         if m > 0 {
+        //             let mut sink = self.sink.borrow_mut();
+        //             if !self.polygon_started {
+        //                 sink.polygon_start();
+        //                 self.polygon_started = true;
+        //             }
+        //             sink.line_start();
+        //             for i in 0..m {
+        //                 let le = segment[i];
+        //                 sink.point(le.p, le.m);
+        //             }
+        //             sink.line_end();
+        //         }
+        //         return;
+        //     }
+        //     CleanEnum::IntersectionsRejoin => {
+        //         // Rejoin connected segments.
+        //         // TODO reuse ringBuffer.rejoin()?
+        //         if n > 1 {
+        //             // ringSegments.push(ringSegments.pop().concat(ringSegments.shift()));
 
-    //       segments.push(ringSegments.filter(validSegment));
+        //             let mut combined = ring_segments.first().unwrap().clone();
+        //             let mut last = ring_segments.last().unwrap().clone();
+        //             combined.append(&mut last);
+        //             ring_segments.push(combined);
+        //         }
+        //     }
+        //     _ => {}
+        // }
 
-    //     return clip;
-    //   }
+        // let mut filtered: Vec<Vec<LineElem<T>>> = ring_segments
+        //     .iter()
+        //     .filter(|segment| segment.len() > 1)
+        //     .map(|s| *s)
+        //     .collect();
+        // self.segments.append(&mut filtered);
+    }
 }
 
-impl<T: CoordFloat + FloatConst> Stream<T> for Clip<T> {
-    fn point(&mut self, lambda: T, phi: T, m: Option<u8>) {
-        match self.use_ring {
-            true => {
-                self.ring.push(Coordinate { x: lambda, y: phi });
-                // self.ring_sink.point(lambda, phi, None);
-            }
-            false => {
-                if (self.point_visible)(lambda, phi, None) {
-                    let mut sink = self.sink.borrow_mut();
-                    sink.point(lambda, phi, m);
-                }
-            }
-        }
+impl<T> Stream<T> for ClipBase<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
+        // match self.use_ring {
+        //     true => {
+        //         self.ring.push(p);
+        //         self.ring_sink.point(p, None);
+        //     }
+        //     false => {
+        //         if self.point_visible(p, None) {
+        //             let mut sink = self.sink.borrow_mut();
+        //             sink.point(p, m);
+        //         }
+        //     }
+        // }
     }
-
     fn line_start(&mut self) {
-        // self.clip.point = self.point_line;
-        // self.line.line_start();
+        // if self.use_ring_start {
+        //     self.ring_start();
+        // } else {
+        //     // What ghoes here.
+        // }
+        // // self.clip.point = self.point_line;
+        // // self.line.line_start();
     }
 
     fn line_end(&mut self) {
-        // self.line_end();
+        // if self.use_ring_end {
+        //     self.ring_end();
+        // } else {
+        //     // put somethignhere.
+        // }
     }
 
     fn polygon_start(&mut self) {
-        // self.point = self.pointRing;
-        // self.line_start = self.ringStart;
-        // self.line_end = self.ringEnd;
-        self.use_ring = true;
-        self.segments.clear();
-        self.polygon.clear();
+        // self.use_ring = true;
+        // self.use_ring_start = true;
+        // self.use_ring_end = true;
+        // self.segments.clear();
+        // self.polygon.clear();
     }
 
     fn polygon_end(&mut self) {
-        self.use_ring = false;
-        // point = point;
-        // clip.lineStart = lineStart;
-        // clip.lineEnd = lineEnd;
-        // segments = merge(segments);
-        let start_inside = contains(&self.polygon, &self.start);
-        let mut sink = self.sink.borrow_mut();
-        if !self.polygon_started {
-            sink.polygon_start();
-            self.polygon_started = true;
+        // self.use_ring = false;
+        // self.use_ring_start = false;
+        // self.use_ring_end = false;
+        // // segments = merge(segments);
+        // let start_inside = contains(&self.polygon, &self.start);
+        // let mut sink = self.sink.borrow_mut();
+        // if !self.polygon_started {
+        //     sink.polygon_start();
+        //     self.polygon_started = true;
 
-        // rejoin(self.segments.to_vec(), Box::new(compare_intersection), start_inside, self.interpolate, self.sink);
-        } else if start_inside {
-            if !self.polygon_started {
-                sink.polygon_start();
-                self.polygon_started = true;
-            }
-            sink.line_start();
-            // (self.interpolate)(None, None, 1f64, self.sink);
-            sink.line_end();
-        }
-        if self.polygon_started {
-            sink.polygon_end();
-            self.polygon_started = false;
-        }
-        self.segments.clear();
-        self.polygon.clear();
+        //     rejoin(
+        //         &self.segments,
+        //         self.compare_intersection,
+        //         start_inside,
+        //         self.interpolate,
+        //         self.sink,
+        //     );
+        // } else if start_inside {
+        //     if !self.polygon_started {
+        //         sink.polygon_start();
+        //         self.polygon_started = true;
+        //     }
+        //     sink.line_start();
+        //     // (self.interpolate)(None, None, 1f64, self.sink);
+        //     sink.line_end();
+        // }
+        // if self.polygon_started {
+        //     sink.polygon_end();
+        //     self.polygon_started = false;
+        // }
+        // self.segments.clear();
+        // self.polygon.clear();
     }
 
     fn sphere(&mut self) {
-        let mut sink = self.sink.borrow_mut();
-        sink.polygon_start();
-        sink.line_start();
-        // (self.interpolate)(None, None, 1f64, self.sink);
-        sink.line_end();
-        sink.polygon_end();
+        // let mut sink = self.sink.borrow_mut();
+        // sink.polygon_start();
+        // sink.line_start();
+        // self.interpolate(None, None, T::one(), self.sink);
+        // sink.line_end();
+        // sink.polygon_end();
     }
 }
+// impl<T: CoordFloat + FloatConst + 'static> Clip<T> {
+//     pub fn gen_stream_processor(
+//         point_visible: PointVisibleFn<T>,
+//         clip_line: StreamPathResultToCleanProcessor<T>,
+//         interpolate: InterpolateFn<T>,
+//         start: Coordinate<T>,
+//     ) -> StreamPathResultToStreamProcessor<T> {
+//         Box::new(move |sink: StreamPathResultNode<T>| {
+//             let line = clip_line(sink.clone());
 
-/// Intersections are sorted along the clip edge. For both antimeridian cutting
-/// and circle clipPIng, the same comparison is used.
-fn compare_intersection<T: CoordFloat + FloatConst>(a: Ci<T>, b: Ci<T>) -> T {
-    let a_dashed = a.x;
-    let part1 = match a_dashed.x < T::zero() {
-        true => a_dashed.y - T::FRAC_PI_2() - T::epsilon(),
-        false => T::FRAC_PI_2() - a_dashed.y,
-    };
-    let b_dashed = b.x;
-    let part2 = match b_dashed.x < T::zero() {
-        true => b_dashed.y - T::FRAC_PI_2() - T::epsilon(),
-        false => T::FRAC_PI_2() - b_dashed.y,
-    };
+//             let ring_buffer_node = ClipBuffer::gen_stream_result_node();
+//             // let ring_buffer_node: StreamSimpleNode<T> = Rc::new(RefCell::new(Box::new(ring_buffer)));
 
-    return part1 - part2;
+//             let ring_sink = clip_line(ring_buffer_node);
+
+//             // Intersections are sorted along the clip edge. For both antimeridian cutting
+//             // and circle clipPIng, the same comparison is used.
+//             let compare_intersection: CompareIntersectionFn<T> =
+//                 Rc::new(Box::new(|a: Ci<T>, b: Ci<T>| -> T {
+//                     let a_dashed = a.x;
+//                     let part1 = match a_dashed.x < T::zero() {
+//                         true => a_dashed.y - T::FRAC_PI_2() - T::epsilon(),
+//                         false => T::FRAC_PI_2() - a_dashed.y,
+//                     };
+//                     let b_dashed = b.x;
+//                     let part2 = match b_dashed.x < T::zero() {
+//                         true => b_dashed.y - T::FRAC_PI_2() - T::epsilon(),
+//                         false => T::FRAC_PI_2() - b_dashed.y,
+//                     };
+
+//                     return part1 - part2;
+//                 }));
+
+//             Rc::new(RefCell::new(Box::new(Self {
+//                 use_ring: false,
+//                 use_ring_start: false,
+//                 use_ring_end: false,
+//                 interpolate: interpolate.clone(),
+//                 compare_intersection,
+//                 line,
+//                 point_visible: point_visible.clone(),
+//                 polygon: Vec::new(),
+//                 polygon_started: false,
+//                 ring: Vec::new(), // Javascript leaves this undefined here.
+//                 ring_buffer_node: ring_buffer_node.clone(),
+//                 ring_sink,
+//                 segments: Vec::new(),
+//                 sink: sink.clone(),
+//                 start: start.clone(),
+//             })))
+//         })
+//     }
+// }
+
+use crate::stream::StreamSimple;
+struct ClipTraitIdentity {}
+impl<T> StreamSimple<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
+impl<T> StreamClipTrait<T> for ClipTraitIdentity
+where
+    T: CoordFloat + FloatConst,
+{
+    fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
+        false
+    }
+    fn interpolate(
+        &self,
+        from: Option<Coordinate<T>>,
+        to: Option<Coordinate<T>>,
+        direction: T,
+        stream: StreamSimpleNode<T>,
+    ) {
+        // Dummy function.
+    }
 }
+impl<T> StreamInTrait<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
+impl<T> StreamPathResult<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
+impl<T> Stream<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
+impl<T> PathResult<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}

@@ -2,7 +2,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use super::projection::Projection;
-use super::projection::StreamProcessorValueMaybe;
+use super::projection::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;
 use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
@@ -23,7 +23,7 @@ impl OrthographicRaw {
         let mut projection = ProjectionMutator::from_projection_raw(s, None);
         projection.scale(T::from(249.5f64).unwrap());
         let angle = T::from(249.5f64).unwrap();
-        projection.clip_angle(StreamProcessorValueMaybe::Value(angle));
+        projection.clip_angle(StreamOrValueMaybe::Value(angle));
         return projection;
     }
 }

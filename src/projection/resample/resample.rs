@@ -4,11 +4,17 @@ use num_traits::FloatConst;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use crate::{cartesian::cartesian, stream::Stream};
+use crate::{
+    cartesian::cartesian,
+    stream::StreamSimpleNodeStub,
+    stream::{Stream, StreamInTrait, StreamNodeStub, StreamSimple},
+};
 // use crate::math::epsilon;
-use crate::stream::StreamNode;
-use crate::transform_stream::StreamProcessor;
+use crate::stream::StreamSimpleNode;
+
 use crate::Transform;
+
+use super::resample_none::ResampleNone;
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
 // #[derive(Clone)]
@@ -36,7 +42,7 @@ where
     c0: T,
 
     cos_min_distance: T,
-    stream: StreamNode<T>,
+    stream: StreamSimpleNode<T>,
 
     use_line_point: bool,
     use_line_start: bool,
@@ -48,44 +54,49 @@ where
     T: CoordFloat + FloatConst + 'static,
 {
     #[inline]
-    pub fn new(project: Rc<Box<dyn Transform<T>>>, delta2: T) -> StreamProcessor<T> {
-        Box::new(move |stream: StreamNode<T>| {
-            Rc::new(RefCell::new(Box::new(Self {
-                project: project.clone(),
-                delta2,
+    pub fn gen_node(project: Rc<Box<dyn Transform<T>>>, delta2: Option<T>) -> StreamSimpleNode<T> {
+        match delta2 {
+            None => ResampleNone::gen_node(project),
+            Some(delta2) => {
+                Rc::new(RefCell::new(Box::new(Self {
+                    project: project.clone(),
+                    delta2,
 
-                lambda00: T::zero(),
-                x00: T::zero(),
-                y00: T::zero(),
-                a00: T::zero(),
-                b00: T::zero(),
-                c00: T::zero(), // first point
+                    lambda00: T::zero(),
+                    x00: T::zero(),
+                    y00: T::zero(),
+                    a00: T::zero(),
+                    b00: T::zero(),
+                    c00: T::zero(), // first point
 
-                lambda0: T::zero(),
-                x0: T::zero(),
-                y0: T::zero(),
-                a0: T::zero(),
-                b0: T::zero(),
-                c0: T::zero(), // previous point
-                cos_min_distance: (T::from(30f64).unwrap().to_radians()).cos(), // cos(minimum angular distance)
+                    lambda0: T::zero(),
+                    x0: T::zero(),
+                    y0: T::zero(),
+                    a0: T::zero(),
+                    b0: T::zero(),
+                    c0: T::zero(), // previous point
+                    cos_min_distance: (T::from(30f64).unwrap().to_radians()).cos(), // cos(minimum angular distance)
 
-                stream,
-                use_line_point: true,
-                use_line_end: true,
-                use_line_start: true,
-            })))
-        })
+                    stream: StreamSimpleNodeStub::new(),
+                    use_line_point: true,
+                    use_line_end: true,
+                    use_line_start: true,
+                })))
+            }
+        }
     }
-
     fn ring_start(&mut self) {
         self.line_start();
         self.use_line_point = false;
         self.use_line_end = false;
     }
 
-    fn ring_point(&mut self, lambda: T, phi: T) {
-        self.lambda00 = lambda;
-        self.line_point(self.lambda00, phi);
+    fn ring_point(&mut self, p: Coordinate<T>) {
+        self.lambda00 = p.x;
+        self.line_point(Coordinate {
+            x: self.lambda00,
+            y: p.y,
+        });
         self.x00 = self.x0;
         self.y00 = self.y0;
         self.a00 = self.a0;
@@ -117,14 +128,14 @@ where
         stream.line_end();
     }
 
-    fn line_point(&mut self, lambda: T, phi: T) {
-        let c = cartesian(&Coordinate { x: lambda, y: phi });
+    fn line_point(&mut self, p: Coordinate<T>) {
+        let c = cartesian(&p);
         let project_ptr = self.project.clone();
         let project = &*project_ptr;
-        let p = project.transform(&Coordinate { x: lambda, y: phi });
+        let p = project.transform(&p);
         self.x0 = p.x;
         self.y0 = p.y;
-        self.lambda0 = lambda;
+        self.lambda0 = p.x;
         self.a0 = c[0];
         self.b0 = c[1];
         self.c0 = c[2];
@@ -165,7 +176,7 @@ where
         b1: T,
         c1: T,
         depth_p: u8,
-        stream: StreamNode<T>,
+        stream: StreamSimpleNode<T>,
     ) {
         let mut depth = depth_p;
         let dx = x1 - x0;
@@ -242,17 +253,18 @@ where
         }
     }
 }
-
+impl<T> StreamInTrait<T> for Resample<T> where T: CoordFloat + FloatConst {}
+impl<T> StreamSimple<T> for Resample<T> where T: CoordFloat + FloatConst + 'static {}
 impl<T> Stream<T> for Resample<T>
 where
     T: CoordFloat + FloatConst + 'static,
 {
     #[inline]
-    fn point(&mut self, x: T, y: T, _m: Option<u8>) {
+    fn point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
         if self.use_line_point {
-            self.line_point(x, y);
+            self.line_point(p);
         } else {
-            self.ring_point(x, y);
+            self.ring_point(p);
         }
     }
 

@@ -2,7 +2,7 @@ use crate::stream::Stream;
 use crate::stream::Streamable;
 use std::ops::AddAssign;
 
-use geo::{CoordFloat, Point};
+use geo::{CoordFloat, Coordinate, Point};
 use num_traits::FloatConst;
 
 // TO MUST use a math library
@@ -27,7 +27,7 @@ pub struct CentroidStream<T: CoordFloat> {
     x0: T,
     y0: T,
     z0: T, // previous point
-    point_fn: fn(&mut Self, T, T),
+    point_fn: fn(&mut Self, Coordinate<T>),
     line_start_fn: fn(&mut Self),
     line_end_fn: fn(&mut Self),
 }
@@ -70,9 +70,9 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
         self.point_fn = Self::centroid_point;
     }
 
-    fn centroid_line_point_first(&mut self, lambda_in: T, phi_in: T) {
-        let lambda = lambda_in.to_radians();
-        let phi = phi_in.to_radians();
+    fn centroid_line_point_first(&mut self, p: Coordinate<T>) {
+        let lambda = p.x.to_radians();
+        let phi = p.y.to_radians();
         let cos_phi = phi.cos();
         self.x0 = cos_phi * lambda.cos();
         self.y0 = cos_phi * lambda.sin();
@@ -81,9 +81,9 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
-    fn centroid_line_point(&mut self, lambda_in: T, phi_in: T) {
-        let lambda = lambda_in.to_radians();
-        let phi = phi_in.to_radians();
+    fn centroid_line_point(&mut self, p: Coordinate<T>) {
+        let lambda = p.x.to_radians();
+        let phi = p.y.to_radians();
         let cos_phi = phi.cos();
         let x = cos_phi * lambda.cos();
         let y = cos_phi * lambda.sin();
@@ -110,16 +110,16 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
     }
 
     /// Arithmetic mean of Cartesian vectors.
-    fn centroid_point(&mut self, lambda_in: T, phi_in: T) {
-        let lambda = lambda_in.to_radians();
-        let phi = phi_in.to_radians();
+    fn centroid_point(&mut self, p: Coordinate<T>) {
+        let lambda = p.x.to_radians();
+        let phi = p.y.to_radians();
         let cos_phi = phi.cos();
         self.centroid_point_cartesian(cos_phi * lambda.cos(), cos_phi * lambda.sin(), phi.sin());
     }
 
-    fn centroid_ring_point_first(&mut self, lambda_in: T, phi_in: T) {
-        let lambda = lambda_in.to_radians();
-        let phi = phi_in.to_radians();
+    fn centroid_ring_point_first(&mut self, p: Coordinate<T>) {
+        let lambda = p.x.to_radians();
+        let phi = p.y.to_radians();
         let cos_phi = phi.cos();
         self.x0 = cos_phi * lambda.cos();
         self.y0 = cos_phi * lambda.sin();
@@ -128,9 +128,9 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
-    fn centroid_ring_point(&mut self, lambda_in: T, phi_in: T) {
-        let lambda = lambda_in.to_radians();
-        let phi = phi_in.to_radians();
+    fn centroid_ring_point(&mut self, p: Coordinate<T>) {
+        let lambda = p.x.to_radians();
+        let phi = p.y.to_radians();
         let cos_phi = phi.cos();
         let x = cos_phi * lambda.cos();
         let y = cos_phi * lambda.sin();
@@ -161,7 +161,10 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
     }
 
     pub fn centroid_ring_end(&mut self) {
-        self.centroid_point(self.lambda00, self.phi00);
+        self.centroid_point(Coordinate {
+            x: self.lambda00,
+            y: self.phi00,
+        });
         self.point_fn = Self::centroid_point;
     }
 
@@ -212,8 +215,8 @@ impl<T: CoordFloat + FloatConst + AddAssign> Stream<T> for CentroidStream<T> {
     }
 
     #[inline]
-    fn point(&mut self, x: T, y: T, _z: Option<u8>) {
-        (self.point_fn)(self, x, y);
+    fn point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
+        (self.point_fn)(self, p);
     }
 
     fn polygon_start(&mut self) {

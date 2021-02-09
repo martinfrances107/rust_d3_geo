@@ -4,33 +4,45 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use crate::stream::Stream;
-use crate::stream::StreamNode;
-use crate::transform_stream::StreamProcessor;
+use crate::stream::StreamInTrait;
+use crate::stream::StreamNodeStub;
+use crate::stream::StreamSimple;
+use crate::stream::StreamSimpleNode;
+
 use crate::Transform;
 
-pub struct TransformRotate<T> {
-    rotate: Rc<Box<dyn Transform<T>>>,
-    stream: StreamNode<T>,
+pub struct TransformNode<T> {
+    transform: Rc<Box<dyn Transform<T>>>,
+    stream: StreamSimpleNode<T>,
 }
 
-impl<T: CoordFloat + FloatConst + 'static> TransformRotate<T> {
+impl<T: CoordFloat + FloatConst + 'static> StreamInTrait<T> for TransformNode<T> {
     #[inline]
-    pub fn new(rotate: Rc<Box<dyn Transform<T>>>) -> StreamProcessor<T> {
-        Box::new(move |stream: StreamNode<T>| {
-            Rc::new(RefCell::new(Box::new(Self {
-                rotate: rotate.clone(),
-                stream,
-            })))
-        })
+    fn stream_in(&mut self, stream: StreamSimpleNode<T>) {
+        self.stream = stream;
     }
 }
 
-impl<T: CoordFloat + FloatConst> Stream<T> for TransformRotate<T> {
-    fn point(&mut self, x: T, y: T, m: Option<u8>) {
+impl<T: CoordFloat + FloatConst + 'static> TransformNode<T> {
+    #[inline]
+    pub fn gen_node(rotate: Rc<Box<dyn Transform<T>>>) -> StreamSimpleNode<T> {
+        {
+            Rc::new(RefCell::new(Box::new(Self {
+                transform: rotate.clone(),
+                stream: StreamNodeStub::new(),
+            })))
+        }
+    }
+}
+
+impl<T> StreamSimple<T> for TransformNode<T> where T: CoordFloat + FloatConst + 'static {}
+
+impl<T: CoordFloat + FloatConst> Stream<T> for TransformNode<T> {
+    fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         let mut stream = self.stream.borrow_mut();
-        let rotate = self.rotate.clone();
-        let r = rotate.transform(&Coordinate { x, y });
-        // Warning the javascript version return the value below but I thnk it break the implied spec!!!!
-        stream.point(r.x, r.y, m);
+        let rotate = self.transform.clone();
+        let r = rotate.transform(&p);
+        // Warning the javascript version return the value below but I think it break the implied spec!!!!
+        stream.point(r, m);
     }
 }

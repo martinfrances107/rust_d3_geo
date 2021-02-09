@@ -23,7 +23,7 @@ mod clip;
 mod compose;
 mod point_equal;
 mod stream;
-mod transform_stream;
+// mod transform_stream;
 
 #[derive(Copy, Clone, Debug)]
 pub struct TransformIdentity {}
@@ -35,7 +35,7 @@ pub struct TransformIdentity {}
 
 impl<T: CoordFloat> Transform<T> for TransformIdentity {}
 
-/// Common to Projection, Rotation.
+// Common to Projection, Rotation.
 pub trait Transform<T>
 where
     T: CoordFloat,
@@ -49,4 +49,14 @@ where
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         p.clone()
     }
+}
+
+trait Person {
+    fn name(&self) -> String;
+}
+
+// Person is a supertrait of Student.
+// Implementing Student requires you to also impl Person.
+trait Student: Person {
+    fn university(&self) -> String;
 }

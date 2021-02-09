@@ -1,11 +1,11 @@
 use super::stream::Stream;
 use crate::stream::Streamable;
-use geo::CoordFloat;
+use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 pub struct LengthStream<T: CoordFloat + FloatConst> {
     // sphere_fn: fn(&mut Self, f64, f64),
-    point_fn: fn(&mut Self, T, T),
+    point_fn: fn(&mut Self, Coordinate<T>),
     line_start_fn: fn(&mut Self),
     line_end_fn: fn(&mut Self),
     length_sum: T,
@@ -36,18 +36,18 @@ impl<T: CoordFloat + FloatConst> LengthStream<T> {
         return ls.length_sum;
     }
 
-    fn length_point_first(&mut self, lambda_p: T, phi_p: T) {
-        let lambda = lambda_p.to_radians();
-        let phi = phi_p.to_radians();
+    fn length_point_first(&mut self, p: Coordinate<T>) {
+        let lambda = p.x.to_radians();
+        let phi = p.y.to_radians();
         self.lambda0 = lambda;
         self.sin_phi0 = phi.sin();
         self.cos_phi0 = phi.cos();
         self.point_fn = Self::length_point;
     }
 
-    fn length_point(&mut self, lambda_p: T, phi_p: T) {
-        let lambda = lambda_p.to_radians();
-        let phi = phi_p.to_radians();
+    fn length_point(&mut self, p: Coordinate<T>) {
+        let lambda = p.x.to_radians();
+        let phi = p.y.to_radians();
 
         let sin_phi = phi.sin();
         let cos_phi = phi.cos();
@@ -74,13 +74,13 @@ impl<T: CoordFloat + FloatConst> LengthStream<T> {
         self.point_fn = Self::length_point_first;
         self.line_end_fn = Self::length_line_end;
     }
-    fn point_noop(&mut self, _x: T, _y: T) {}
+    fn point_noop(&mut self, _p: Coordinate<T>) {}
     fn line_end_noop(&mut self) {}
 }
 
 impl<T: CoordFloat + FloatConst> Stream<T> for LengthStream<T> {
-    fn point(&mut self, x: T, y: T, _z: Option<u8>) {
-        (self.point_fn)(self, x, y);
+    fn point(&mut self, p: Coordinate<T>, _z: Option<u8>) {
+        (self.point_fn)(self, p);
     }
 
     fn line_start(&mut self) {
