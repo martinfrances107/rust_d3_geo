@@ -14,7 +14,7 @@ use std::rc::Rc;
 
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
 pub fn circle_stream<T: CoordFloat + FloatConst>(
-    circle: StreamSimpleNode<T>,
+    circle: &mut impl Stream<T>,
     radius: T,
     delta: T,
     direction: T,
@@ -50,10 +50,10 @@ pub fn circle_stream<T: CoordFloat + FloatConst>(
     let mut point: Coordinate<T>;
     let mut t = t0;
     let mut cond = true;
-    let mut c = circle.borrow_mut();
+    // let mut c = circle.borrow_mut();
     while cond {
         point = spherical_r(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
-        c.point(point, None);
+        circle.point(point, None);
 
         t = t - step;
         cond = match direction.is_sign_positive() {

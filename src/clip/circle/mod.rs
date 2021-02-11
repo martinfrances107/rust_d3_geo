@@ -70,7 +70,8 @@ where
         direction: T,
         stream: StreamSimpleNode<T>,
     ) {
-        circle_stream(stream, self.radius, self.delta, direction, from, to);
+        let mut s = stream.borrow_mut();
+        // circle_stream(&mut s, self.radius, self.delta, direction, from, to);
     }
 
     #[inline]

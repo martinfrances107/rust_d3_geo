@@ -38,7 +38,7 @@ pub struct Circle<T: CoordFloat> {
     radius_fn: Box<dyn Fn(&CircleInArg) -> T>,
     rotate: Box<dyn Transform<T>>,
     ring: Vec<Coordinate<T>>,
-    stream: StreamSimpleNode<T>,
+    // stream: StreamSimpleNode<T>,
 }
 
 impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
@@ -58,7 +58,7 @@ impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
             precision_fn,
             rotate: Box::new(TransformIdentity {}),
             ring: Vec::new(),
-            stream: StreamSimpleNodeStub::new(),
+            // stream: StreamSimpleNodeStub::new(),
         };
     }
 
@@ -70,7 +70,7 @@ impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
         self.ring = Vec::new();
         self.rotate = RotateRadians::new(-c.x.to_radians(), -c.y.to_radians(), T::zero());
 
-        circle_stream(self.stream.clone(), r, p, T::one(), None, None);
+        circle_stream(self, r, p, T::one(), None, None);
 
         let mut coordinates = Vec::new();
         coordinates.push(self.ring.to_vec());
