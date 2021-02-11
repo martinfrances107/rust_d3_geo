@@ -86,7 +86,7 @@ pub trait StreamInTrait<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_in(&mut self, stream: StreamSimpleNode<T>) {}
+    fn stream_in(&mut self, _stream: StreamSimpleNode<T>) {}
 }
 
 /// Bare bones definition - no extra methods attached.
@@ -121,14 +121,7 @@ pub type StreamClipLineNode<T> = Rc<RefCell<Box<dyn StreamClipLine<T>>>>;
 impl<T> Stream<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamSimple<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
-impl<T> BufferInTrait<T> for StreamClipLineNode<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn buffer_in(&mut self, sink: StreamPathResultNode<T>) {
-        // no-op
-    }
-}
+impl<T> BufferInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 pub struct StreamClipLineNodeStub {}
 impl StreamClipLineNodeStub {
     #[inline]
@@ -150,7 +143,7 @@ impl<T> BufferInTrait<T> for StreamClipLineNodeStub
 where
     T: CoordFloat + FloatConst,
 {
-    fn buffer_in(&mut self, sink: StreamPathResultNode<T>) {
+    fn buffer_in(&mut self, _sink: StreamPathResultNode<T>) {
         // No-op
     }
 }
@@ -158,7 +151,7 @@ impl<T> StreamPreClipTrait<T> for StreamClipLineNodeStub
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_resample_in(&mut self, stream: StreamResampleNode<T>) {
+    fn stream_resample_in(&mut self, _stream: StreamResampleNode<T>) {
         // No-op
     }
 }
@@ -558,12 +551,12 @@ where
     }
     fn interpolate(
         &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
-        direction: T,
-        stream: StreamSimpleNode<T>,
+        _from: Option<Coordinate<T>>,
+        _to: Option<Coordinate<T>>,
+        _direction: T,
+        _stream: StreamSimpleNode<T>,
     ) {
-        // Do nothing.
+        // No-op.
     }
 }
 impl<T> StreamSimple<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
@@ -585,14 +578,7 @@ impl<T> StreamSimple<T> for StreamClipIdentity where T: CoordFloat + FloatConst 
 //     }
 // }
 impl<T> StreamInTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
-impl<T> BufferInTrait<T> for StreamClipIdentity
-where
-    T: CoordFloat + FloatConst,
-{
-    fn buffer_in(&mut self, sink: StreamPathResultNode<T>) {
-        // Drop the injection of the buffer.
-    }
-}
+impl<T> BufferInTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
 
 // pub struct StreamClipNodeStub {}
 // impl StreamClipNodeStub {

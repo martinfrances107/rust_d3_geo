@@ -50,7 +50,9 @@ pub trait BufferInTrait<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn buffer_in(&mut self, sink: StreamPathResultNode<T>);
+    fn buffer_in(&mut self, sink: StreamPathResultNode<T>) {
+        // No-op.
+    }
 }
 
 pub struct ClipBase<T: CoordFloat + FloatConst> {
