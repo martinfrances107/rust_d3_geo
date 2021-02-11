@@ -50,7 +50,7 @@ pub trait BufferInTrait<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn buffer_in(&mut self, sink: StreamPathResultNode<T>) {
+    fn buffer_in(&mut self, _sink: StreamPathResultNode<T>) {
         // No-op.
     }
 }
@@ -340,15 +340,15 @@ impl<T> StreamClipTrait<T> for ClipTraitIdentity
 where
     T: CoordFloat + FloatConst,
 {
-    fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
+    fn point_visible(&self, _p: Coordinate<T>, _z: Option<u8>) -> bool {
         false
     }
     fn interpolate(
         &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
-        direction: T,
-        stream: StreamSimpleNode<T>,
+        _from: Option<Coordinate<T>>,
+        _to: Option<Coordinate<T>>,
+        _direction: T,
+        _stream: StreamSimpleNode<T>,
     ) {
         // Dummy function.
     }

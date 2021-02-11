@@ -139,39 +139,25 @@ impl Clean for StreamClipLineNodeStub {
         CleanEnum::NoIntersections
     }
 }
-impl<T> BufferInTrait<T> for StreamClipLineNodeStub
-where
-    T: CoordFloat + FloatConst,
-{
-    fn buffer_in(&mut self, _sink: StreamPathResultNode<T>) {
-        // No-op
-    }
-}
-impl<T> StreamPreClipTrait<T> for StreamClipLineNodeStub
-where
-    T: CoordFloat + FloatConst,
-{
-    fn stream_resample_in(&mut self, _stream: StreamResampleNode<T>) {
-        // No-op
-    }
-}
+impl<T> BufferInTrait<T> for StreamClipLineNodeStub where T: CoordFloat + FloatConst {}
+impl<T> StreamPreClipTrait<T> for StreamClipLineNodeStub where T: CoordFloat + FloatConst {}
 
 impl<T> StreamClipTrait<T> for StreamClipLineNodeStub
 where
     T: CoordFloat + FloatConst,
 {
-    fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
-        false
-    }
-    fn interpolate(
-        &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
-        direction: T,
-        stream: StreamSimpleNode<T>,
-    ) {
-        // No-op
-    }
+    // fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
+    //     false
+    // }
+    // fn interpolate(
+    //     &self,
+    //     from: Option<Coordinate<T>>,
+    //     to: Option<Coordinate<T>>,
+    //     direction: T,
+    //     stream: StreamSimpleNode<T>,
+    // ) {
+    //     // No-op
+    // }
 }
 
 pub trait StreamResampleTrait<T>
@@ -224,13 +210,18 @@ where
 {
     fn interpolate(
         &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
-        direction: T,
-        stream: StreamSimpleNode<T>,
-    );
+        _from: Option<Coordinate<T>>,
+        _to: Option<Coordinate<T>>,
+        _direction: T,
+        _stream: StreamSimpleNode<T>,
+    ) {
+        panic!("This must be overriden");
+    }
 
-    fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool;
+    #[inline]
+    fn point_visible(&self, _p: Coordinate<T>, _z: Option<u8>) -> bool {
+        panic!("This must be overriden");
+    }
 
     // fn clip_line(&self, stream: StreamPathResultNode<T>) -> StreamCleanNode<T>;
     // Intersections are sorted along the clip edge. For both antimeridian cutting
@@ -304,23 +295,7 @@ where
     }
 }
 impl<T> Stream<T> for StreamPreClipNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamClipTrait<T> for StreamPreClipNodeStub
-where
-    T: CoordFloat + FloatConst,
-{
-    fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
-        false
-    }
-    fn interpolate(
-        &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
-        direction: T,
-        stream: StreamSimpleNode<T>,
-    ) {
-        // No-op
-    }
-}
+impl<T> StreamClipTrait<T> for StreamPreClipNodeStub where T: CoordFloat + FloatConst {}
 
 pub trait StreamPostClipTrait<T>: StreamClipTrait<T>
 where
@@ -341,52 +316,29 @@ impl StreamPostClipNodeStub {
     }
 }
 
-impl<T> StreamPostClipTrait<T> for StreamPostClipNodeStub
-where
-    T: CoordFloat + FloatConst,
-{
-    fn stream_in(&mut self, stream: StreamSimpleNode<T>) {
-        // No-op
-    }
-}
+impl<T> StreamPostClipTrait<T> for StreamPostClipNodeStub where T: CoordFloat + FloatConst {}
 
 impl<T> Stream<T> for StreamPostClipNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamClipTrait<T> for StreamPostClipNodeStub
 where
     T: CoordFloat + FloatConst,
 {
-    fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
+    fn point_visible(&self, _p: Coordinate<T>, _z: Option<u8>) -> bool {
         false
     }
     fn interpolate(
         &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
-        direction: T,
-        stream: StreamSimpleNode<T>,
+        _from: Option<Coordinate<T>>,
+        _to: Option<Coordinate<T>>,
+        _direction: T,
+        _stream: StreamSimpleNode<T>,
     ) {
         // No-op
     }
 }
 
 pub type StreamPreClipNode<T> = Rc<RefCell<Box<dyn StreamPreClipTrait<T>>>>;
-impl<T> StreamClipTrait<T> for StreamPreClipNode<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
-        false
-    }
-    fn interpolate(
-        &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
-        direction: T,
-        stream: StreamSimpleNode<T>,
-    ) {
-        // No-op
-    }
-}
+impl<T> StreamClipTrait<T> for StreamPreClipNode<T> where T: CoordFloat + FloatConst {}
 impl<T> Stream<T> for StreamPreClipNode<T> where T: CoordFloat + FloatConst {}
 
 impl<T> StreamPreClipTrait<T> for StreamPreClipNode<T>
@@ -400,23 +352,7 @@ where
 
 pub type StreamPostClipNode<T> = Rc<RefCell<Box<dyn StreamPostClipTrait<T>>>>;
 impl<T> StreamPostClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
-impl<T> StreamClipTrait<T> for StreamPostClipNode<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
-        false
-    }
-    fn interpolate(
-        &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
-        direction: T,
-        stream: StreamSimpleNode<T>,
-    ) {
-        // No-op
-    }
-}
+impl<T> StreamClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
 impl<T> Stream<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
 // impl<T> StreamPostClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
 // impl<T> Stream<T> for StreamClipNode<T> where T: CoordFloat + FloatConst {}
@@ -512,80 +448,10 @@ impl<T> Stream<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst 
 impl<T> StreamSimple<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst {}
 
-// pub struct StreamCleanNodeStub {}
-// impl StreamCleanNodeStub {
-//     pub fn new<T>() -> StreamCleanNode<T>
-//     where
-//         T: CoordFloat + FloatConst,
-//     {
-//         Rc::new(RefCell::new(Box::new(StreamCleanIdentity {})))
-//     }
-// }
-
-// pub struct StreamCleanIdentity {}
-// impl<T> Stream<T> for StreamCleanIdentity where T: CoordFloat + FloatConst {}
-// impl<T> StreamClean<T> for StreamCleanIdentity where T: CoordFloat + FloatConst {}
-// impl Clean for StreamCleanIdentity {
-//     fn clean(&self) -> CleanEnum {
-//         CleanEnum::IntersectionsOrEmpty
-//     }
-// }
-// impl<T> StreamInTrait<T> for StreamCleanIdentity where T: CoordFloat + FloatConst {}
-// impl<T> BufferInTrait<T> for StreamCleanIdentity
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn buffer_in(&mut self, sink: StreamPathResultNode<T>) {
-//         // no-op.
-//     }
-// }
-
 pub struct StreamClipIdentity {}
 impl<T> Stream<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
-impl<T> StreamClipTrait<T> for StreamClipIdentity
-where
-    T: CoordFloat + FloatConst,
-{
-    fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
-        false
-    }
-    fn interpolate(
-        &self,
-        _from: Option<Coordinate<T>>,
-        _to: Option<Coordinate<T>>,
-        _direction: T,
-        _stream: StreamSimpleNode<T>,
-    ) {
-        // No-op.
-    }
-}
+impl<T> StreamClipTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
 impl<T> StreamSimple<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
-// impl<T> StreamClipTrait<T> for StreamClipIdentity
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
-//         false
-//     }
-//     fn interpolate(
-//         &self,
-//         from: Option<Coordinate<T>>,
-//         to: Option<Coordinate<T>>,
-//         direction: T,
-//         stream: StreamSimpleNode<T>,
-//     ) {
-//         // Dummy function.
-//     }
-// }
+
 impl<T> StreamInTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
 impl<T> BufferInTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
-
-// pub struct StreamClipNodeStub {}
-// impl StreamClipNodeStub {
-//     pub fn new<T>() -> StreamClipNode<T>
-//     where
-//         T: CoordFloat + FloatConst,
-//     {
-//         Rc::new(RefCell::new(Box::new(StreamClipIdentity {})))
-//     }
-// }

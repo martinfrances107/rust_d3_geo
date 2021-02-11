@@ -264,8 +264,8 @@ impl<T> StreamResampleTrait<T> for Resample<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_postclip_in(&mut self, stream_clip_in: StreamPostClipNode<T>) {
-        // No-op
+    fn stream_postclip_in(&mut self, _stream_clip_in: StreamPostClipNode<T>) {
+        panic!("Must override.")
     }
 }
 
