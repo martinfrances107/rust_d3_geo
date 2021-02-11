@@ -1,10 +1,13 @@
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
+use std::rc::Rc;
+
 // A collection of functions that mutate a Projection struct.
 
 // A collection of functions that mutate a Projection struct.
-// use crate::clip::ClipNodeStub;
-use crate::stream::StreamPostClipNodeStub;
-use crate::stream::StreamPreClipNodeStub;
 
+use super::projection::Projection;
+use super::projection::StreamOrValueMaybe;
 use crate::compose::Compose;
 use crate::projection::stream_transform::StreamPreclipIn;
 use crate::projection::stream_transform::StreamTransform;
@@ -13,26 +16,22 @@ use crate::projection::transform_radians::StreamTransformRadians;
 use crate::projection::transform_radians::StreamTransformRadiansNode;
 use crate::projection::transform_radians::StreamTransformRadiansNodeStub;
 use crate::rotation::rotate_radians::RotateRadians;
+use crate::stream::Stream;
 use crate::stream::StreamPostClipNode;
+use crate::stream::StreamPostClipNodeStub;
 use crate::stream::StreamPostClipTrait;
 use crate::stream::StreamPreClipNode;
+use crate::stream::StreamPreClipNodeStub;
 use crate::stream::StreamPreClipTrait;
 use crate::stream::StreamResampleNode;
 use crate::stream::StreamResampleTrait;
-use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
-use std::rc::Rc;
-
-use crate::stream::Stream;
 use crate::stream::StreamSimpleNode;
+
 use crate::Transform;
 use crate::TransformIdentity;
 // clip generators.
 // use crate::clip::antimeridian::generate_antimeridian;
 // use crate::clip::circle::generate_circle;
-
-use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
 
 use super::resample::resample::Resample;
 use super::scale_translate_rotate::ScaleTranslateRotate;

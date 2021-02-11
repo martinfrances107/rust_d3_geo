@@ -59,5 +59,5 @@ impl<T> Streamable<T> for DataObject<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn to_stream(&self, stream: &mut impl Stream<T>) {}
+    fn to_stream(&self, _stream: &mut impl Stream<T>) {}
 }

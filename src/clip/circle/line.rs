@@ -9,10 +9,9 @@ use crate::stream::StreamClean;
 use crate::stream::StreamClipLineNode;
 use crate::stream::StreamSimpleNodeStub;
 
+use crate::stream::StreamPathResultNode;
 use crate::stream::StreamSimpleNode;
 use crate::stream::{Clean, CleanEnum, Stream};
-// use crate::stream::StreamCleanNode;
-use crate::stream::StreamPathResultNode;
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -100,12 +99,6 @@ impl<T: CoordFloat + FloatConst + 'static> Line<T> {
     }
 }
 impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + 'static {}
-// impl<T> StreamInTrait<T> for Line<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn stream_in(&mut self, stream: StreamSimpleNode<T>) {}
-// }
 impl<T> Clean for Line<T>
 where
     T: CoordFloat + FloatConst,

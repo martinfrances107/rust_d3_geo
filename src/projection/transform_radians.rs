@@ -1,14 +1,16 @@
-// use super::StreamTransformTrait;
-use crate::stream::Stream;
-use crate::stream::StreamTransformNode;
-use crate::stream::StreamTransformNodeStub;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use crate::stream::Stream;
+use crate::stream::StreamTransformNode;
+use crate::stream::StreamTransformNodeStub;
+
 pub trait StreamTransformIn<T> {
-    fn stream_transform_in(&mut self, stream: StreamTransformNode<T>) {}
+    fn stream_transform_in(&mut self, _stream: StreamTransformNode<T>) {
+        panic!("Must be overriden.");
+    }
 }
 
 pub struct StreamTransformRadiansNodeStub {}
@@ -24,8 +26,6 @@ impl StreamTransformRadiansNodeStub {
     }
 }
 impl<T> Stream<T> for StreamTransformRadiansNodeStub where T: CoordFloat + FloatConst {}
-// impl<T> StreamInTrait<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}
-
 pub type StreamTransformRadiansNode<T> = Rc<RefCell<Box<StreamTransformRadians<T>>>>;
 impl<T> StreamTransformIn<T> for StreamTransformRadiansNode<T> {}
 
