@@ -180,12 +180,12 @@ where
         _direction: T,
         _stream: StreamSimpleNode<T>,
     ) {
-        panic!("This must be overriden");
+        panic!("Must override.");
     }
 
     #[inline]
     fn point_visible(&self, _p: Coordinate<T>, _z: Option<u8>) -> bool {
-        panic!("This must be overriden");
+        panic!("Must override.");
     }
 
     // fn clip_line(&self, stream: StreamPathResultNode<T>) -> StreamCleanNode<T>;
@@ -357,10 +357,3 @@ impl StreamPathResultNodeStub {
 }
 impl<T> Stream<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst {}
-
-pub struct StreamClipIdentity {}
-impl<T> Stream<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
-impl<T> StreamClipTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
-
-impl<T> StreamInTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
-impl<T> BufferInTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}

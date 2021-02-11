@@ -78,7 +78,7 @@ impl<'a, T: CoordFloat + FloatConst> Stream<T> for ClipBuffer<T> {
                 line.push(LineElem { p, m });
             }
             None => {
-                panic!("cannot push to undefined line");
+                panic!("Cannot push to undefined line.");
             }
         }
     }

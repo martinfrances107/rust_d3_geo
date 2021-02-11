@@ -263,7 +263,7 @@ where
     T: CoordFloat + FloatConst,
 {
     fn stream_postclip_in(&mut self, _stream_clip_in: StreamPostClipNode<T>) {
-        panic!("Must override.")
+        panic!("Must override.");
     }
 }
 

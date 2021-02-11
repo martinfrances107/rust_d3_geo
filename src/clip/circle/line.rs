@@ -119,6 +119,7 @@ where
         }
     }
 }
+
 impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
     fn line_start(&mut self) {
         self.v00 = false;
@@ -184,7 +185,7 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
                     // There is a subtle bug in the javascript here two points is handles
                     // as if the second does not exits.
                     // For now just cause a panic here to see how many times it occurs.
-                    panic!("requested One or None found Two as !!");
+                    panic!("Requested One or None found Two as !!");
                 }
             }
         }
@@ -208,7 +209,7 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
                     IntersectReturn::Two([p, _]) => {
                         s.point(p, None);
                         // p0_next = p;
-                        panic!("silently dropping second point");
+                        panic!("Silently dropping second point.");
                     }
                 }
             } else {
@@ -229,7 +230,7 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
                         s.point(p, Some(2));
                         s.line_end();
                         // next = p;
-                        panic!("silently dropping second point");
+                        panic!("Silently dropping second point.");
                     }
                 }
             }
@@ -242,7 +243,7 @@ impl<T: CoordFloat + FloatConst + 'static> Stream<T> for Line<T> {
                 match t {
                     IntersectReturn::None => {}
                     IntersectReturn::One(_) => {
-                        panic!("requetsed two received one");
+                        panic!("Requeted two received one.");
                     }
                     IntersectReturn::Two(t) => {
                         self.clean = CleanEnum::IntersectionsOrEmpty;

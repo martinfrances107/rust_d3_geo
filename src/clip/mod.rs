@@ -21,7 +21,7 @@ use std::{cell::RefCell, rc::Rc};
 // pub type PointVisibleFn<T> = Rc<Box<dyn Fn(Coordinate<T>, Option<u8>) -> bool>>;
 
 // pub type CompareIntersectionFn<T> = Rc<Box<dyn Fn(Ci<T>, Ci<T>) -> T>>;
-pub type ClipNode<T> = Rc<RefCell<Box<dyn StreamClipTrait<T>>>>;
+// pub type ClipNode<T> = Rc<RefCell<Box<dyn StreamClipTrait<T>>>>;
 
 // #[derive(Clone, Debug)]
 // pub struct PreClipNodeStub {}
