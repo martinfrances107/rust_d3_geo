@@ -1,22 +1,27 @@
 // A collection of functions that mutate a Projection struct.
 
 // A collection of functions that mutate a Projection struct.
+// use crate::clip::ClipNodeStub;
+use crate::stream::StreamPostClipNodeStub;
+use crate::stream::StreamPreClipNodeStub;
 
-use crate::clip::ClipNodeStub;
-use crate::projection::transform_rotate::TransformNode;
-use crate::rotation::rotate_radians::RotateRadians;
-use crate::stream::StreamClipNode;
-use crate::{
-    clip::antimeridian::ClipAntimeridian, projection::transform_radians::TransformRadians,
-};
-use crate::{clip::ClipNode, stream::StreamSimple};
-use std::cell::RefCell;
-use std::cell::RefMut;
-
+use crate::clip::ClipNode;
 use crate::compose::Compose;
+use crate::projection::stream_transform::StreamPreclipIn;
+use crate::projection::stream_transform::StreamTransform;
+use crate::projection::transform_radians::TransformRadians;
+use crate::rotation::rotate_radians::RotateRadians;
+use crate::stream::StreamPostClipNode;
+use crate::stream::StreamPostClipTrait;
+use crate::stream::StreamPreClipNode;
+use crate::stream::StreamPreClipTrait;
+use crate::stream::StreamResampleNode;
+use crate::stream::StreamResampleTrait;
+use crate::stream::StreamTransformNode;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::{borrow::BorrowMut, rc::Rc};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 use crate::stream::Stream;
 use crate::stream::StreamSimpleNode;
@@ -28,8 +33,6 @@ use crate::TransformIdentity;
 
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
-use crate::stream::StreamClipTrait;
-use crate::stream::StreamInTrait;
 
 use super::resample::resample::Resample;
 use super::scale_translate_rotate::ScaleTranslateRotate;
@@ -47,12 +50,12 @@ pub struct ProjectionMutator<T: CoordFloat + FloatConst> {
     delta_gamma: T,
     delta2: T, // precision
     k: T,      // scale
-    project_resample: StreamSimpleNode<T>,
+    project_resample: StreamResampleNode<T>,
     project_transform: Rc<Box<dyn Transform<T>>>,
     project_rotate_transform: Rc<Box<dyn Transform<T>>>,
     phi: T, // center
-    preclip: StreamClipNode<T>,
-    postclip: StreamClipNode<T>,
+    preclip: StreamPreClipNode<T>,
+    postclip: StreamPostClipNode<T>,
     x: T,
     y: T, // translate
     lambda: T,
@@ -94,8 +97,8 @@ impl<T: CoordFloat + FloatConst + 'static> ProjectionMutator<T> {
             lambda: T::zero(),
             phi: T::zero(),
             rotate: Rc::new(Box::new(TransformIdentity {})), // pre-rotate
-            preclip: ClipNodeStub::gen_node(),
-            postclip: ClipNodeStub::gen_node(),
+            preclip: StreamPreClipNodeStub::new(),
+            postclip: StreamPostClipNodeStub::new(),
             sx: T::one(), // reflectX
             sy: T::one(), // reflectX
             theta: None,  // pre-clip angle
@@ -175,20 +178,21 @@ impl<T: CoordFloat + FloatConst + 'static> ProjectionMutator<T> {
                             let postclip_node = self.postclip;
                             self.postclip.stream_in(stream);
 
-                            let resample_in = self.postclip as StreamSimpleNode<T>;
-                            self.project_resample.stream_in(self.postclip);
+                            // let resample_in = self.postclip;
+                            self.project_resample.stream_postclip_in(self.postclip);
 
                             let preclip_node = self.preclip;
-                            preclip_node.stream_in(self.project_resample);
+                            preclip_node.stream_resample_in(self.project_resample);
 
-                            let t_rotate_node = TransformNode::gen_node(self.rotate);
-                            t_rotate_node.stream_in(self.preclip);
+                            let t_rotate_node =
+                                StreamTransform::gen_node(Some(self.rotate.clone()));
+                            t_rotate_node.stream_preclip_in(self.preclip);
 
-                            let t_radians = TransformRadians::gen_node();
-                            let t_radians_node = t_radians.borrow_mut();
-                            t_radians_node.stream_in(t_radians);
+                            let t_radians_node = TransformRadians::gen_node();
+                            // let t_radians_node = t_radians.borrow_mut();
+                            t_radians_node.stream_rotate_in(t_radians_node);
 
-                            Some(t_radians)
+                            Some(t_radians_node)
                         }
                     }
                 }

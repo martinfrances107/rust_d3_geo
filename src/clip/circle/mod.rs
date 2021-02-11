@@ -1,41 +1,26 @@
 mod intersect;
 mod line;
 
-use super::{BufferInTrait, ClipBase};
 use crate::stream::Stream;
-use crate::stream::StreamCleanNode;
-
 use crate::stream::StreamClipTrait;
 use crate::stream::StreamInTrait;
 use crate::stream::StreamSimple;
 use crate::stream::StreamSimpleNode;
+use geo::{CoordFloat, Coordinate};
 
-use super::buffer::LineElem;
 use crate::circle::circle_stream::circle_stream;
 use crate::clip::ClipBuffer;
-use geo::{CoordFloat, Coordinate};
+
+use super::{BufferInTrait, ClipBase};
 use line::Line;
 use num_traits::FloatConst;
 pub struct ClipCircle<T: CoordFloat + FloatConst> {
     radius: T,
     delta: T,
     cr: T,
-    // line: StreamCleanNode<T>,
     base: ClipBase<T>,
-    // polygon_started: bool,
-    // polygon: Vec<Vec<Coordinate<T>>>,
-    // ring: Vec<Coordinate<T>>,
-    // ring_buffer_node: StreamPathResultNode<T>,
-    // ring_sink_node: StreamCleanNode<T>,
-    // segments: Vec<Vec<LineElem<T>>>,
-    // use_ring: bool,
-    // use_ring_end: bool,
-    // use_ring_start: bool,
-    // sink: StreamPathResultNode<T>,
-    // start: Coordinate<T>,
 }
-use std::cell::RefCell;
-use std::rc::Rc;
+
 impl<T> StreamInTrait<T> for ClipCircle<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamSimple<T> for ClipCircle<T> where T: CoordFloat + FloatConst {}
 

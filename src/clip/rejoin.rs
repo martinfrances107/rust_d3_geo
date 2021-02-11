@@ -3,8 +3,7 @@ use num_traits::{Float, FloatConst};
 
 use crate::{point_equal::point_equal, stream::StreamSimpleNode};
 
-use super::InterpolateFn;
-use super::{buffer::LineElem, CompareIntersectionFn};
+use super::buffer::LineElem;
 use num_traits::Zero;
 
 struct Intersection<T>
@@ -47,9 +46,9 @@ where
 /// along the clip edge.
 pub fn rejoin<T: Float>(
     segments: &Vec<Vec<LineElem<T>>>,
-    compare_intersection: CompareIntersectionFn<T>,
+    // compare_intersection: CompareIntersectionFn<T>,
     start_inside: bool,
-    interpolate: InterpolateFn<T>,
+    // interpolate: InterpolateFn<T>,
     mut stream: StreamSimpleNode<T>,
 ) where
     T: CoordFloat + FloatConst,

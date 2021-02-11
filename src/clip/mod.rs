@@ -5,35 +5,47 @@ mod rejoin;
 use crate::path::PathResult;
 use crate::stream::Ci;
 use crate::stream::Stream;
+use crate::stream::StreamClipLineNode;
+use crate::stream::StreamClipLineNodeStub;
 use crate::stream::StreamClipTrait;
+use crate::stream::StreamInTrait;
 use crate::stream::StreamPathResult;
 use crate::stream::StreamPathResultNode;
-use crate::stream::{StreamCleanNode, StreamCleanNodeStub, StreamInTrait};
+use crate::stream::StreamPreClipNode;
 use crate::stream::{StreamPathResultNodeStub, StreamSimpleNode};
 use buffer::{ClipBuffer, LineElem};
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 use std::{cell::RefCell, rc::Rc};
+// pub type InterpolateFn<T> =
+// Rc<Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, StreamSimpleNode<T>)>>;
+// pub type PointVisibleFn<T> = Rc<Box<dyn Fn(Coordinate<T>, Option<u8>) -> bool>>;
 
-pub type InterpolateFn<T> =
-    Rc<Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, StreamSimpleNode<T>)>>;
-pub type PointVisibleFn<T> = Rc<Box<dyn Fn(Coordinate<T>, Option<u8>) -> bool>>;
-
-pub type CompareIntersectionFn<T> = Rc<Box<dyn Fn(Ci<T>, Ci<T>) -> T>>;
+// pub type CompareIntersectionFn<T> = Rc<Box<dyn Fn(Ci<T>, Ci<T>) -> T>>;
 pub type ClipNode<T> = Rc<RefCell<Box<dyn StreamClipTrait<T>>>>;
 
-#[derive(Clone, Debug)]
-pub struct ClipNodeStub {}
+// #[derive(Clone, Debug)]
+// pub struct PreClipNodeStub {}
+// pub struct PostClipNodeStub {}
 
-impl ClipNodeStub {
-    #[inline]
-    pub fn gen_node<T: CoordFloat>() -> ClipNode<T>
-    where
-        T: CoordFloat + FloatConst,
-    {
-        Rc::new(RefCell::new(Box::new(ClipTraitIdentity {})))
-    }
-}
+// impl PreClipNodeStub {
+//     #[inline]
+//     pub fn gen_node<T>() -> PreClipNode<T>
+//     where
+//         T: CoordFloat + FloatConst,
+//     {
+//         Rc::new(RefCell::new(Box::new(ClipTraitIdentity {})))
+//     }
+// }
+// impl PostClipNodeStub {
+//     #[inline]
+//     pub fn gen_node<T>() -> PostClipNode<T>
+//     where
+//         T: CoordFloat + FloatConst,
+//     {
+//         Rc::new(RefCell::new(Box::new(ClipTraitIdentity {})))
+//     }
+// }
 
 pub trait BufferInTrait<T>
 where
@@ -43,12 +55,12 @@ where
 }
 
 pub struct ClipBase<T: CoordFloat + FloatConst> {
-    line_node: StreamCleanNode<T>,
+    line_node: StreamClipLineNode<T>,
     polygon_started: bool,
     polygon: Vec<Vec<Coordinate<T>>>,
     ring: Vec<Coordinate<T>>,
     ring_buffer_node: StreamPathResultNode<T>,
-    ring_sink_node: StreamCleanNode<T>,
+    ring_sink_node: StreamClipLineNode<T>,
     segments: Vec<Vec<LineElem<T>>>,
     start: Coordinate<T>,
     use_ring: bool,
@@ -63,12 +75,12 @@ where
 {
     fn default() -> Self {
         Self {
-            line_node: StreamCleanNodeStub::new(),
+            line_node: StreamClipLineNodeStub::new(),
             polygon_started: false,
             polygon: vec![vec![]],
             ring: vec![],
             ring_buffer_node: StreamPathResultNodeStub::new(),
-            ring_sink_node: StreamCleanNodeStub::new(),
+            ring_sink_node: StreamClipLineNodeStub::new(),
             segments: vec![vec![]],
             use_ring: false,
             use_ring_end: false,
@@ -99,9 +111,9 @@ where
     }
 
     fn ring_end(&self) {
-        // self.point_ring(self.ring[0], None);
-        // let mut ring_sink = self.ring_sink.borrow_mut();
-        // ring_sink.line_end();
+        self.point_ring(self.ring[0], None);
+        let mut ring_sink = self.ring_sink_node.borrow_mut();
+        ring_sink.line_end();
 
         // let clean = ring_sink.clean();
         // let mut ring_buffer = self.ring_buffer_node.borrow_mut();

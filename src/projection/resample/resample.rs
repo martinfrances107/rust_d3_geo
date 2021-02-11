@@ -4,10 +4,11 @@ use num_traits::FloatConst;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use crate::stream::StreamResampleNode;
 use crate::{
     cartesian::cartesian,
     stream::StreamSimpleNodeStub,
-    stream::{Stream, StreamInTrait, StreamNodeStub, StreamSimple},
+    stream::{Stream, StreamInTrait, StreamSimple},
 };
 // use crate::math::epsilon;
 use crate::stream::StreamSimpleNode;
@@ -54,7 +55,10 @@ where
     T: CoordFloat + FloatConst + 'static,
 {
     #[inline]
-    pub fn gen_node(project: Rc<Box<dyn Transform<T>>>, delta2: Option<T>) -> StreamSimpleNode<T> {
+    pub fn gen_node(
+        project: Rc<Box<dyn Transform<T>>>,
+        delta2: Option<T>,
+    ) -> StreamResampleNode<T> {
         match delta2 {
             None => ResampleNone::gen_node(project),
             Some(delta2) => {

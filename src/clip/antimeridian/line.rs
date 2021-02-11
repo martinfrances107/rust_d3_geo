@@ -1,9 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
-
+use crate::stream::StreamClipLine;
+use crate::stream::StreamClipLineNode;
 use crate::stream::StreamPathResultNodeStub;
 use crate::stream::StreamSimpleNode;
 use crate::stream::{Stream, StreamPathResultNode};
@@ -11,6 +10,8 @@ use crate::{
     clip::BufferInTrait,
     stream::{Clean, CleanEnum, StreamClean, StreamInTrait},
 };
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 use super::intersect::intersect;
 
@@ -48,10 +49,11 @@ where
     }
 
     #[inline]
-    pub fn gen_node() -> Rc<RefCell<Box<Self>>> {
+    pub fn gen_node() -> StreamClipLineNode<T> {
         Rc::new(RefCell::new(Box::new(Line::new())))
     }
 }
+impl<T> StreamClipLine<T> for Line<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for Line<T>
 where
     T: CoordFloat + FloatConst,

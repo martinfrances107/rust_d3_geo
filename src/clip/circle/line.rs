@@ -4,15 +4,18 @@ use num_traits::FloatConst;
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
 use super::BufferInTrait;
-use crate::stream::StreamInTrait;
-use crate::stream::StreamSimpleNode;
-
+use crate::point_equal::point_equal;
 use crate::stream::StreamClean;
-use crate::stream::{Clean, CleanEnum, Stream};
-use crate::{clip::ClipNodeStub, point_equal::point_equal};
-use crate::{stream::StreamCleanNode, stream::StreamPathResultNode};
+use crate::stream::StreamClipLineNode;
+use crate::stream::StreamInTrait;
+use crate::stream::StreamResampleNodeStub;
+use crate::stream::StreamSimpleNodeStub;
 
-use crate::clip::ClipNode;
+use crate::stream::StreamSimpleNode;
+use crate::stream::{Clean, CleanEnum, Stream};
+// use crate::stream::StreamCleanNode;
+use crate::stream::StreamPathResultNode;
+
 use std::cell::RefCell;
 use std::rc::Rc;
 pub struct Line<T: CoordFloat> {
@@ -24,7 +27,7 @@ pub struct Line<T: CoordFloat> {
     // point0: (Option<Point>, Option<u8>), // previous point with message.
     point0: Option<Coordinate<T>>, // previous point
     small_radius: bool,
-    stream: ClipNode<T>,
+    stream: StreamSimpleNode<T>,
     v0: bool,  // visibility of previous point
     v00: bool, // visibility of first point
 }
@@ -37,6 +40,8 @@ where
         // self.sink.swap(&sink);
     }
 }
+use crate::stream::StreamClipLine;
+impl<T> StreamClipLine<T> for Line<T> where T: CoordFloat + FloatConst + 'static {}
 
 impl<T: CoordFloat + FloatConst + 'static> Line<T> {
     #[inline]
@@ -54,12 +59,13 @@ impl<T: CoordFloat + FloatConst + 'static> Line<T> {
             small_radius,
             v0: false,
             v00: false,
-            stream: ClipNodeStub::gen_node(),
+            // TOD pre or post clip.
+            stream: StreamSimpleNodeStub::new(),
         }
     }
 
     #[inline]
-    pub fn gen_node(radius: T) -> StreamCleanNode<T> {
+    pub fn gen_node(radius: T) -> StreamClipLineNode<T> {
         Rc::new(RefCell::new(Box::new(Self::new(radius))))
     }
 
@@ -96,12 +102,12 @@ impl<T: CoordFloat + FloatConst + 'static> Line<T> {
     }
 }
 impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + 'static {}
-impl<T> StreamInTrait<T> for Line<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn stream_in(&mut self, stream: StreamSimpleNode<T>) {}
-}
+// impl<T> StreamInTrait<T> for Line<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     fn stream_in(&mut self, stream: StreamSimpleNode<T>) {}
+// }
 impl<T> Clean for Line<T>
 where
     T: CoordFloat + FloatConst,
