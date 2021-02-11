@@ -51,7 +51,7 @@ where
     T: CoordFloat + FloatConst,
 {
     fn buffer_in(&mut self, _sink: StreamPathResultNode<T>) {
-        // No-op.
+        panic!("Must override this");
     }
 }
 
