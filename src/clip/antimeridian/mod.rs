@@ -8,13 +8,10 @@ use super::buffer::ClipBuffer;
 use super::BufferInTrait;
 use crate::stream::Stream;
 use num_traits::FloatConst;
-use std::cell::RefMut;
 
 use std::borrow::BorrowMut;
 
 use super::ClipBase;
-use std::cell::RefCell;
-use std::rc::Rc;
 
 // using ClipBase as a starting point.
 pub struct ClipAntimeridian<T: CoordFloat + FloatConst> {

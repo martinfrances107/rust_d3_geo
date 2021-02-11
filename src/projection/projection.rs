@@ -1,4 +1,4 @@
-use crate::{clip::ClipNode, stream::StreamSimpleNode};
+use crate::stream::StreamSimpleNode;
 // use crate::stream::StreamProcessor;
 use geo::{CoordFloat, Coordinate};
 
@@ -37,7 +37,7 @@ pub trait Projection<T: CoordFloat> {
     //  * Pre-clipPIng occurs in geographic coordinates. Cutting along the antimeridian line,
     //  * or clipPIng along a small circle are the most common strategies.
     //  */
-    fn get_preclip(&self) -> ClipNode<T>;
+    // fn get_preclip(&self) -> ClipNode<T>;
 
     // /**
     //  * Sets the projection’s spherical clipPIng to the specified function and returns the projection.
@@ -46,7 +46,7 @@ pub trait Projection<T: CoordFloat> {
     //  * @param preclip A spherical clipPIng function. ClipPIng functions are implemented as transformations of a projection stream.
     //  * Pre-clipPIng operates on spherical coordinates, in radians.
     //  */
-    fn preclip(&mut self, preclip: ClipNode<T>);
+    // fn preclip(&mut self, preclip: ClipNode<T>);
 
     // /**
     //  * Returns the current cartesian clipPIng function.

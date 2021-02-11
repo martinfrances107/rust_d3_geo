@@ -9,7 +9,7 @@ pub mod multi_point;
 pub mod multi_polygon;
 pub mod point;
 pub mod polygon;
-use crate::projection::stream_transform::StreamTransform;
+use crate::{projection::stream_transform::StreamTransform, TransformIdentity};
 use std::cell::RefCell;
 use std::rc::Rc;
 // use crate::path::PathResult;
@@ -139,15 +139,30 @@ impl StreamClipLineNodeStub {
         Rc::new(RefCell::new(Box::new(Self {})))
     }
 }
-// impl<T> StreamPreClipTrait<T> for StreamClipLineNodeStub
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn stream_resample_in(&mut self, stream: StreamResampleNode<T>) {
-//         // No-op
-//     }
-// }
+impl<T> StreamClipLine<T> for StreamClipLineNodeStub where T: CoordFloat + FloatConst {}
 impl<T> Stream<T> for StreamClipLineNodeStub where T: CoordFloat + FloatConst {}
+impl Clean for StreamClipLineNodeStub {
+    fn clean(&self) -> CleanEnum {
+        CleanEnum::NoIntersections
+    }
+}
+impl<T> BufferInTrait<T> for StreamClipLineNodeStub
+where
+    T: CoordFloat + FloatConst,
+{
+    fn buffer_in(&mut self, sink: StreamPathResultNode<T>) {
+        // No-op
+    }
+}
+impl<T> StreamPreClipTrait<T> for StreamClipLineNodeStub
+where
+    T: CoordFloat + FloatConst,
+{
+    fn stream_resample_in(&mut self, stream: StreamResampleNode<T>) {
+        // No-op
+    }
+}
+
 impl<T> StreamClipTrait<T> for StreamClipLineNodeStub
 where
     T: CoordFloat + FloatConst,
@@ -460,16 +475,20 @@ impl<T> Stream<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamSimple<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
 
-struct StreamTransformNodeStub {}
+pub struct StreamTransformNodeStub {}
 impl StreamTransformNodeStub {
     #[inline]
-    fn new<T>() -> StreamTransformNode<T>
+    pub fn new<T>() -> StreamTransformNode<T>
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(Box::new(Self {})))
+        Rc::new(RefCell::new(Box::new(StreamTransform {
+            transform: Rc::new(Box::new(TransformIdentity {})),
+            stream: StreamPreClipNodeStub::new(),
+        })))
     }
 }
+
 impl<T> Stream<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamSimple<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}

@@ -4,7 +4,9 @@ use num_traits::FloatConst;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use crate::stream::StreamPostClipNode;
 use crate::stream::StreamResampleNode;
+use crate::stream::StreamResampleTrait;
 use crate::{
     cartesian::cartesian,
     stream::StreamSimpleNodeStub,
@@ -257,6 +259,16 @@ where
         }
     }
 }
+
+impl<T> StreamResampleTrait<T> for Resample<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn stream_postclip_in(&mut self, stream_clip_in: StreamPostClipNode<T>) {
+        // No-op
+    }
+}
+
 impl<T> StreamInTrait<T> for Resample<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamSimple<T> for Resample<T> where T: CoordFloat + FloatConst + 'static {}
 impl<T> Stream<T> for Resample<T>

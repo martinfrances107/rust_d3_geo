@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 pub mod resample;
 pub mod resample_none;
 

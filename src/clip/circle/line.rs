@@ -7,8 +7,6 @@ use super::BufferInTrait;
 use crate::point_equal::point_equal;
 use crate::stream::StreamClean;
 use crate::stream::StreamClipLineNode;
-use crate::stream::StreamInTrait;
-use crate::stream::StreamResampleNodeStub;
 use crate::stream::StreamSimpleNodeStub;
 
 use crate::stream::StreamSimpleNode;

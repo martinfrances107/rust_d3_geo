@@ -11,7 +11,6 @@ use crate::stream::StreamClipTrait;
 use crate::stream::StreamInTrait;
 use crate::stream::StreamPathResult;
 use crate::stream::StreamPathResultNode;
-use crate::stream::StreamPreClipNode;
 use crate::stream::{StreamPathResultNodeStub, StreamSimpleNode};
 use buffer::{ClipBuffer, LineElem};
 use geo::{CoordFloat, Coordinate};
