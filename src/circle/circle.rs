@@ -72,18 +72,13 @@ impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
 
         circle_stream(self.stream.clone(), r, p, T::one(), None, None);
 
-        let c;
-        {
-            let mut coordinates = Vec::new();
-            coordinates.push(self.ring.to_vec());
+        let mut coordinates = Vec::new();
+        coordinates.push(self.ring.to_vec());
 
-            c = CircleStream {
-                stream_type: StreamType::Polygon,
-                coordinates,
-            };
+        CircleStream {
+            stream_type: StreamType::Polygon,
+            coordinates,
         }
-
-        return c;
     }
 }
 

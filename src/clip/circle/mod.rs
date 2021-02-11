@@ -77,5 +77,4 @@ where
     fn point_visible(&self, p: Coordinate<T>, _m: Option<u8>) -> bool {
         p.x.cos() * p.y.cos() > self.cr
     }
-    
 }
