@@ -58,7 +58,6 @@ impl<T> Stream<T> for ClipAntimeridian<T> where T: CoordFloat + FloatConst {}
 //         line.stream_in(stream);
 //     }
 // }
-// impl<T> StreamSimple<T> for ClipAntimeridian<T> where T: CoordFloat + FloatConst {}
 // impl<T> BufferInTrait<T> for ClipAntimeridian<T>
 // where
 //     T: CoordFloat + FloatConst,

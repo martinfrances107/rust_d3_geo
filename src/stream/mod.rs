@@ -9,21 +9,16 @@ pub mod multi_point;
 pub mod multi_polygon;
 pub mod point;
 pub mod polygon;
+use crate::projection::stream_transform::StreamPreclipIn;
 use crate::{projection::stream_transform::StreamTransform, TransformIdentity};
 use std::cell::RefCell;
 use std::rc::Rc;
-// use crate::path::PathResult;
-// use crate::transform_stream::StreamPathResultIdentity;
+
 use geo::{CoordFloat, Coordinate};
-// use num_traits::FloatConst;
 
-// use crate::stream::StreamCleanNode;
-
-// use crate::stream::{Stream, StreamPathResultNode};
 use crate::clip::BufferInTrait;
 use crate::path::PathResult;
 
-// use geo::CoordFloat;
 use num_traits::FloatConst;
 
 // pub type StreamProcessor<T> = Box<dyn Fn(StreamNode<T>) -> StreamNode<T>>;
@@ -32,15 +27,11 @@ use num_traits::FloatConst;
 // pub type StreamPathResultToCleanProcessor<T> =
 //     Box<dyn Fn(StreamPathResultNode<T>) -> StreamCleanNode<T>>;
 
-// impl<T> Stream<T> for ClipNode<T> where T: CoordFloat + FloatConst {}
-// impl<T> StreamSimple<T> for ClipNode<T> where T: CoordFloat + FloatConst {}
 #[derive(Clone, Default, Debug)]
 pub struct StreamIdentity {}
 impl<T> Stream<T> for StreamIdentity where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for StreamIdentity where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamIdentity where T: CoordFloat + FloatConst {}
 
-// impl<T> StreamSimpleNode<T> for StreamIdentity where T: CoordFloat + FloatConst {}
 #[derive(Clone, Default, Debug)]
 pub struct StreamPathResultIdentity {}
 impl<T> StreamPathResult<T> for StreamPathResultIdentity where T: CoordFloat + FloatConst {}
@@ -89,13 +80,6 @@ where
     fn stream_in(&mut self, _stream: StreamSimpleNode<T>) {}
 }
 
-/// Bare bones definition - no extra methods attached.
-pub trait StreamSimple<T>: Stream<T>
-where
-    T: CoordFloat + FloatConst,
-{
-}
-
 pub trait StreamClipLine<T>: Stream<T> + Clean + BufferInTrait<T>
 where
     T: CoordFloat + FloatConst,
@@ -119,7 +103,6 @@ where
 //end
 pub type StreamClipLineNode<T> = Rc<RefCell<Box<dyn StreamClipLine<T>>>>;
 impl<T> Stream<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> BufferInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 pub struct StreamClipLineNodeStub {}
@@ -229,14 +212,12 @@ where
 
 /// Node - holds state associated with the input/output of a StreamProcessor.
 /// Something that can be cloned and mutated.
-pub type StreamSimpleNode<T> = Rc<RefCell<Box<dyn StreamSimple<T>>>>;
+pub type StreamSimpleNode<T> = Rc<RefCell<Box<dyn Stream<T>>>>;
 impl<T> Stream<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
 
 pub type StreamPathResultNode<T> = Rc<RefCell<Box<dyn StreamPathResult<T>>>>;
 impl<T> Stream<T> for StreamPathResultNode<T> where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for StreamPathResultNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamPathResultNode<T> where T: CoordFloat + FloatConst {}
 
 pub trait StreamPreClipTrait<T>: StreamClipTrait<T>
@@ -262,7 +243,7 @@ impl<T> StreamPreClipTrait<T> for StreamPreClipNodeStub
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_resample_in(&mut self, stream: StreamResampleNode<T>) {
+    fn stream_resample_in(&mut self, _stream: StreamResampleNode<T>) {
         // No-op
     }
 }
@@ -273,7 +254,7 @@ pub trait StreamPostClipTrait<T>: StreamClipTrait<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_in(&mut self, stream: StreamSimpleNode<T>) {
+    fn stream_in(&mut self, _stream: StreamSimpleNode<T>) {
         // self.stream = stream;
     }
 }
@@ -312,10 +293,8 @@ impl<T> StreamPostClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + F
 impl<T> StreamClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
 impl<T> Stream<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
 
-use crate::projection::stream_transform::StreamPreclipIn;
 pub type StreamTransformNode<T> = Rc<RefCell<Box<StreamTransform<T>>>>;
 impl<T> Stream<T> for StreamTransformNode<T> where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for StreamTransformNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamPreclipIn<T> for StreamTransformNode<T>
 where
     T: CoordFloat + FloatConst,
@@ -337,7 +316,6 @@ impl StreamSimpleNodeStub {
     }
 }
 impl<T> Stream<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
 
 pub struct StreamTransformNodeStub {}
@@ -355,7 +333,6 @@ impl StreamTransformNodeStub {
 }
 
 impl<T> Stream<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}
 
 pub struct StreamNodeStub {}
@@ -369,7 +346,6 @@ impl StreamNodeStub {
     }
 }
 impl<T> Stream<T> for StreamNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for StreamNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamNodeStub where T: CoordFloat + FloatConst {}
 
 pub struct StreamPathResultNodeStub {}
@@ -383,13 +359,11 @@ impl StreamPathResultNodeStub {
     }
 }
 impl<T> Stream<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst {}
 
 pub struct StreamClipIdentity {}
 impl<T> Stream<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
 impl<T> StreamClipTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
 
 impl<T> StreamInTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}
 impl<T> BufferInTrait<T> for StreamClipIdentity where T: CoordFloat + FloatConst {}

@@ -5,7 +5,6 @@ use num_traits::FloatConst;
 
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
-use crate::stream::StreamSimple;
 use crate::stream::StreamSimpleNode;
 use crate::stream::StreamSimpleNodeStub;
 use crate::Transform;

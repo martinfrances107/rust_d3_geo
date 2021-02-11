@@ -5,7 +5,6 @@ use std::rc::Rc;
 
 use crate::stream::StreamPreClipNode;
 use crate::stream::StreamPreClipNodeStub;
-use crate::stream::StreamSimple;
 use crate::stream::StreamTransformNode;
 
 use crate::{stream::Stream, TransformIdentity};
@@ -49,8 +48,6 @@ impl<T: CoordFloat + FloatConst + 'static> StreamTransform<T> {
         }
     }
 }
-
-impl<T> StreamSimple<T> for StreamTransform<T> where T: CoordFloat + FloatConst + 'static {}
 
 impl<T: CoordFloat + FloatConst> Stream<T> for StreamTransform<T> {
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {

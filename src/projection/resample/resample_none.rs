@@ -23,7 +23,6 @@ impl<T: CoordFloat + FloatConst + 'static> ResampleNone<T> {
     }
 }
 
-// impl<T> StreamSimple<T> for ResampleNone<T> where T: CoordFloat + FloatConst {}
 // impl<T> StreamInTrait<T> for ResampleNone<T> where T: CoordFloat + FloatConst {}
 impl<T: CoordFloat + FloatConst> StreamResampleTrait<T> for ResampleNone<T> {
     fn stream_postclip_in(&mut self, stream_in: StreamPostClipNode<T>) {}

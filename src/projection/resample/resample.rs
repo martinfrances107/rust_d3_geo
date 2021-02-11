@@ -8,9 +8,7 @@ use crate::stream::StreamPostClipNode;
 use crate::stream::StreamResampleNode;
 use crate::stream::StreamResampleTrait;
 use crate::{
-    cartesian::cartesian,
-    stream::StreamSimpleNodeStub,
-    stream::{Stream, StreamInTrait, StreamSimple},
+    cartesian::cartesian, stream::Stream, stream::StreamInTrait, stream::StreamSimpleNodeStub,
 };
 // use crate::math::epsilon;
 use crate::stream::StreamSimpleNode;
@@ -270,7 +268,6 @@ where
 }
 
 impl<T> StreamInTrait<T> for Resample<T> where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for Resample<T> where T: CoordFloat + FloatConst + 'static {}
 impl<T> Stream<T> for Resample<T>
 where
     T: CoordFloat + FloatConst + 'static,

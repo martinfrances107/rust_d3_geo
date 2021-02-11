@@ -333,9 +333,7 @@ where
 //     }
 // }
 
-use crate::stream::StreamSimple;
 struct ClipTraitIdentity {}
-impl<T> StreamSimple<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
 impl<T> StreamClipTrait<T> for ClipTraitIdentity
 where
     T: CoordFloat + FloatConst,

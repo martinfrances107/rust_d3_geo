@@ -4,7 +4,6 @@ mod line;
 use crate::stream::Stream;
 use crate::stream::StreamClipTrait;
 use crate::stream::StreamInTrait;
-use crate::stream::StreamSimple;
 use crate::stream::StreamSimpleNode;
 use geo::{CoordFloat, Coordinate};
 
@@ -22,7 +21,6 @@ pub struct ClipCircle<T: CoordFloat + FloatConst> {
 }
 
 impl<T> StreamInTrait<T> for ClipCircle<T> where T: CoordFloat + FloatConst {}
-impl<T> StreamSimple<T> for ClipCircle<T> where T: CoordFloat + FloatConst {}
 
 /// Returns a clip object
 impl<T> ClipCircle<T>
