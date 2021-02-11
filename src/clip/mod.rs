@@ -99,7 +99,7 @@ where
 {
     fn point_ring(&mut self, p: Coordinate<T>, _m: Option<u8>) {
         self.ring.push(p);
-        let rs = self.ring_sink_node.borrow_mut();
+        let mut rs = self.ring_sink_node.borrow_mut();
         rs.point(p, None);
     }
 
@@ -109,7 +109,7 @@ where
         self.ring = Vec::new();
     }
 
-    fn ring_end(&self) {
+    fn ring_end(&mut self) {
         self.point_ring(self.ring[0], None);
         let mut ring_sink = self.ring_sink_node.borrow_mut();
         ring_sink.line_end();

@@ -5,7 +5,7 @@ use crate::{point_equal::point_equal, stream::StreamSimpleNode};
 
 use super::buffer::LineElem;
 use num_traits::Zero;
-
+#[derive(Clone)]
 struct Intersection<T>
 where
     T: CoordFloat + FloatConst,
@@ -49,12 +49,12 @@ pub fn rejoin<T: Float>(
     // compare_intersection: CompareIntersectionFn<T>,
     start_inside: bool,
     // interpolate: InterpolateFn<T>,
-    mut stream: StreamSimpleNode<T>,
+    stream: StreamSimpleNode<T>,
 ) where
     T: CoordFloat + FloatConst,
 {
-    let subject = Vec::<Intersection<T>>::new();
-    let clip = Vec::<Intersection<T>>::new();
+    let mut subject = Vec::<Intersection<T>>::new();
+    let mut clip = Vec::<Intersection<T>>::new();
     // let i,
     // let n: usize;
 
@@ -86,23 +86,23 @@ pub fn rejoin<T: Float>(
         }
 
         let mut x = Intersection::new(p0, Some(segment.to_vec()), None, true);
-        subject.push(x);
+        subject.push(x.clone());
         x.o = Some(Box::new(Intersection::new(
             p0,
             None,
-            Some(Box::new(x)),
+            Some(Box::new(x.clone())),
             false,
         )));
         clip.push(*x.o.unwrap());
         x = Intersection::new(p1, Some(segment.to_vec()), None, false);
-        subject.push(x);
+        subject.push(x.clone());
         // x.o = Some(Box::new(Intersection::new(
         //   p1,
         //   None,
         // //   Some(Box::rejoin::new(x)),
         //   true,
         // )));
-        clip.push(*x.o.unwrap());
+        clip.push(*x.clone().o.unwrap());
     }
 }
 

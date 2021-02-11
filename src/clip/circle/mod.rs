@@ -37,7 +37,7 @@ where
         let ring_buffer_node = ClipBuffer::gen_node();
         let ring_sink_node = Line::gen_node(radius);
         let mut rc = ring_sink_node.borrow_mut();
-        rc.buffer_in(ring_buffer_node);
+        rc.buffer_in(ring_buffer_node.clone());
 
         let base = ClipBase {
             line_node,

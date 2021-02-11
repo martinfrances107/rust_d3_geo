@@ -179,19 +179,19 @@ impl<T: CoordFloat + FloatConst + 'static> ProjectionMutator<T> {
                         Some(stream) => {
                             self.cache_stream = Some(stream.clone());
 
-                            let postclip_node = self.postclip;
                             self.postclip.stream_in(stream);
 
-                            self.project_resample.stream_postclip_in(self.postclip);
+                            self.project_resample
+                                .stream_postclip_in(self.postclip.clone());
 
-                            let preclip_node = self.preclip;
-                            preclip_node.stream_resample_in(self.project_resample);
+                            self.preclip
+                                .stream_resample_in(self.project_resample.clone());
 
-                            let t_rotate_node =
+                            let mut t_rotate_node =
                                 StreamTransform::gen_node(Some(self.rotate.clone()));
-                            t_rotate_node.stream_preclip_in(self.preclip);
+                            t_rotate_node.stream_preclip_in(self.preclip.clone());
 
-                            let t_radians_node: StreamTransformRadiansNode<T> =
+                            let mut t_radians_node: StreamTransformRadiansNode<T> =
                                 StreamTransformRadians::gen_node();
                             t_radians_node.stream_transform_in(t_rotate_node);
 

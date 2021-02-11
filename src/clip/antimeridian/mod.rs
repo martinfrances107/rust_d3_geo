@@ -26,17 +26,17 @@ where
         let line_node = Line::gen_node();
 
         let ring_buffer_node = ClipBuffer::gen_node();
-        let ring_sink_node = Line::gen_node();
+        let mut ring_sink_node = Line::gen_node();
 
-        let mut rs = ring_sink_node.borrow_mut();
-        rs.buffer_in(ring_buffer_node);
+        let rs = ring_sink_node.borrow_mut();
+        rs.buffer_in(ring_buffer_node.clone());
 
         // ring_sink.stream(ring_buffer_node);
 
         let base = ClipBase {
             line_node,
             ring_sink_node,
-            ring_buffer_node,
+            ring_buffer_node: ring_buffer_node.clone(),
             start: Coordinate {
                 x: -T::PI(),
                 y: -T::FRAC_PI_2(),

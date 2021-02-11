@@ -13,8 +13,8 @@ use crate::{stream::Stream, TransformIdentity};
 use crate::Transform;
 
 pub struct StreamTransform<T> {
-    transform: Rc<Box<dyn Transform<T>>>,
-    stream: StreamPreClipNode<T>,
+    pub transform: Rc<Box<dyn Transform<T>>>,
+    pub stream: StreamPreClipNode<T>,
 }
 
 pub trait StreamPreclipIn<T>

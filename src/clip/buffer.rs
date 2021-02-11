@@ -50,10 +50,10 @@ impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
 
 impl<T: CoordFloat> PathResult<T> for ClipBuffer<T> {
     fn result(&mut self) -> PathResultEnum<T> {
-        let result = self.lines;
+        let result = self.lines.clone();
         self.lines.clear();
         self.line = None;
-        let result = &self.lines;
+        // let result = &self.lines;
         // return result.to_vec();
         // TODO must fix this!!
         return PathResultEnum::ClipBufferOutput(result.to_vec());
@@ -63,7 +63,7 @@ impl<T> StreamInTrait<T> for ClipBuffer<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_in(&mut self, stream: StreamSimpleNode<T>) {
+    fn stream_in(&mut self, _stream: StreamSimpleNode<T>) {
         panic!("Should I call stream_in on a buffer!");
     }
 }
@@ -73,8 +73,8 @@ impl<T> StreamPathResult<T> for ClipBuffer<T> where T: CoordFloat + FloatConst {
 impl<'a, T: CoordFloat + FloatConst> Stream<T> for ClipBuffer<T> {
     #[inline]
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
-        match self.line {
-            Some(line) => {
+        match self.line.clone() {
+            Some(mut line) => {
                 line.push(LineElem { p, m });
             }
             None => {
@@ -85,7 +85,7 @@ impl<'a, T: CoordFloat + FloatConst> Stream<T> for ClipBuffer<T> {
 
     fn line_start(&mut self) {
         let line = Vec::new();
-        self.line = Some(line);
+        self.line = Some(line.clone());
         self.lines.push(line);
     }
 }
