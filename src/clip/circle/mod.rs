@@ -1,14 +1,12 @@
 mod intersect;
 mod line;
-
-use crate::stream::Stream;
-use crate::stream::StreamClipTrait;
-use crate::stream::StreamInTrait;
-use crate::stream::StreamSimpleNode;
 use geo::{CoordFloat, Coordinate};
 
 use crate::circle::circle_stream::circle_stream;
 use crate::clip::ClipBuffer;
+use crate::stream::Stream;
+use crate::stream::StreamClipTrait;
+use crate::stream::StreamInTrait;
 
 use super::{BufferInTrait, ClipBase};
 use line::Line;
@@ -37,12 +35,22 @@ where
         let mut rc = ring_sink_node.borrow_mut();
         rc.buffer_in(ring_buffer_node.clone());
 
+        let interpolate = Box::new(
+            move |from: Option<Coordinate<T>>,
+                  to: Option<Coordinate<T>>,
+                  direction: T,
+                  stream: &mut dyn Stream<T>| {
+                circle_stream(stream, radius, delta, direction, from, to);
+            },
+        );
+
         let base = ClipBase {
             line_node,
             start: Coordinate {
                 x: -T::PI(),
                 y: -T::FRAC_PI_2(),
             },
+            interpolate,
             ring_buffer_node,
             // ring_sink_node,
             ..ClipBase::default()
@@ -60,20 +68,8 @@ impl<T> Stream<T> for ClipCircle<T> where T: CoordFloat + FloatConst {}
 
 impl<T> StreamClipTrait<T> for ClipCircle<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst + 'static,
 {
-    #[inline]
-    fn interpolate(
-        &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
-        direction: T,
-        stream: StreamSimpleNode<T>,
-    ) {
-        let mut s = stream.borrow_mut();
-        // circle_stream(&mut s, self.radius, self.delta, direction, from, to);
-    }
-
     #[inline]
     fn point_visible(&self, p: Coordinate<T>, _m: Option<u8>) -> bool {
         p.x.cos() * p.y.cos() > self.cr

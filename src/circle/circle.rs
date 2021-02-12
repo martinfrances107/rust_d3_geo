@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-// use geo::Point;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -24,24 +23,20 @@ enum StreamType {
     Polygon,
 }
 
-/// Output of Circle::circle()
-#[derive(Debug)]
+/// Output of CircleGenertor::circle()
 pub struct CircleStream<T: CoordFloat> {
     stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
+    rotate: Box<dyn Transform<T>>,
+    ring: Vec<Coordinate<T>>,
 }
-
-// #[derive(Clone)]
-pub struct Circle<T: CoordFloat> {
+pub struct CircleGenerator<T: CoordFloat> {
     center_fn: Box<dyn Fn(&CircleInArg) -> Coordinate<T>>,
     precision_fn: Box<dyn Fn(&CircleInArg) -> T>,
     radius_fn: Box<dyn Fn(&CircleInArg) -> T>,
-    rotate: Box<dyn Transform<T>>,
-    ring: Vec<Coordinate<T>>,
-    // stream: StreamSimpleNode<T>,
 }
 
-impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
+impl<T: CoordFloat + FloatConst + 'static> CircleGenerator<T> {
     pub fn new() -> Self {
         let center_fn = Box::new(|_in: &CircleInArg| Coordinate {
             x: T::zero(),
@@ -56,33 +51,34 @@ impl<T: CoordFloat + FloatConst + 'static> Circle<T> {
             center_fn,
             radius_fn,
             precision_fn,
-            rotate: Box::new(TransformIdentity {}),
-            ring: Vec::new(),
-            // stream: StreamSimpleNodeStub::new(),
         };
     }
 
-    pub fn circle(&mut self, arg: CircleInArg) -> CircleStream<T> {
+    pub fn circle(&self, arg: CircleInArg) -> CircleStream<T> {
         let c = (*self.center_fn)(&arg);
         let r = (*self.radius_fn)(&arg).to_radians();
         let p = (*self.precision_fn)(&arg).to_radians();
 
-        self.ring = Vec::new();
-        self.rotate = RotateRadians::new(-c.x.to_radians(), -c.y.to_radians(), T::zero());
+        let rotate = RotateRadians::new(-c.x.to_radians(), -c.y.to_radians(), T::zero());
 
-        circle_stream(self, r, p, T::one(), None, None);
-
-        let mut coordinates = Vec::new();
-        coordinates.push(self.ring.to_vec());
-
-        CircleStream {
+        let mut cs = CircleStream {
+            ring: Vec::new(),
+            rotate,
             stream_type: StreamType::Polygon,
-            coordinates,
-        }
+            coordinates: vec![vec![]],
+        };
+
+        circle_stream(&mut cs, r, p, T::one(), None, None);
+
+        // Finialise.
+        // - TODO can I remove this clone.
+        cs.coordinates = vec![cs.ring.clone()];
+
+        cs
     }
 }
 
-impl<T: CoordFloat + FloatConst> Stream<T> for Circle<T> {
+impl<T: CoordFloat + FloatConst> Stream<T> for CircleStream<T> {
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         let x_rotated = self.rotate.invert(&p);
         let x_rotated_deg = Coordinate {
@@ -93,7 +89,7 @@ impl<T: CoordFloat + FloatConst> Stream<T> for Circle<T> {
     }
 }
 
-impl<T: CoordFloat + 'static> CircleTrait<T> for Circle<T> {
+impl<T: CoordFloat + 'static> CircleTrait<T> for CircleGenerator<T> {
     fn center(&mut self, center: FnValMaybe2D<T>) -> Option<Coordinate<T>> {
         return match center {
             FnValMaybe2D::None => None,

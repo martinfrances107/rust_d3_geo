@@ -2,7 +2,6 @@ pub mod antimeridian;
 pub mod buffer;
 pub mod circle;
 mod rejoin;
-use crate::path::PathResult;
 use crate::stream::Ci;
 use crate::stream::Stream;
 use crate::stream::StreamClipLineNode;
@@ -12,6 +11,7 @@ use crate::stream::StreamInTrait;
 use crate::stream::StreamPathResult;
 use crate::stream::StreamPathResultNode;
 use crate::stream::{StreamPathResultNodeStub, StreamSimpleNode};
+use crate::{path::PathResult, stream::StreamIdentity};
 use buffer::{ClipBuffer, LineElem};
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -63,6 +63,7 @@ pub struct ClipBase<T: CoordFloat + FloatConst> {
     ring_buffer_node: StreamPathResultNode<T>,
     ring_sink_node: StreamClipLineNode<T>,
     segments: Vec<Vec<LineElem<T>>>,
+    interpolate: Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut dyn Stream<T>)>,
     start: Coordinate<T>,
     use_ring: bool,
     use_ring_end: bool,
@@ -75,6 +76,15 @@ where
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
+        let mut stream = StreamIdentity {};
+        let interpolate = Box::new(
+            |from: Option<Coordinate<T>>,
+             to: Option<Coordinate<T>>,
+             direction: T,
+             stream: &mut dyn Stream<T>| {
+                panic!("Must be overriden.");
+            },
+        );
         Self {
             line_node: StreamClipLineNodeStub::new(),
             polygon_started: false,
@@ -86,6 +96,7 @@ where
             use_ring: false,
             use_ring_end: false,
             use_ring_start: false,
+            interpolate,
             sink: StreamPathResultNodeStub::new(),
             start: Coordinate {
                 x: -T::PI(),
