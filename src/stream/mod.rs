@@ -103,7 +103,7 @@ pub type StreamClipLineNode<T> = Rc<RefCell<Box<dyn StreamClipLine<T>>>>;
 impl<T> Stream<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> BufferInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
-pub struct StreamClipLineNodeStub {}
+pub struct StreamClipLineNodeStub;
 impl StreamClipLineNodeStub {
     #[inline]
     pub fn new<T>() -> StreamClipLineNode<T>
@@ -141,7 +141,7 @@ where
     }
 }
 
-pub struct StreamResampleNodeStub {}
+pub struct StreamResampleNodeStub;
 impl StreamResampleNodeStub {
     #[inline]
     fn new<T>() -> StreamResampleNode<T>
@@ -226,7 +226,7 @@ where
         // No-op.
     }
 }
-pub struct StreamPreClipNodeStub {}
+pub struct StreamPreClipNodeStub;
 impl StreamPreClipNodeStub {
     #[inline]
     pub fn new<T>() -> StreamPreClipNode<T>
@@ -256,7 +256,7 @@ where
         // No-op.
     }
 }
-pub struct StreamPostClipNodeStub {}
+pub struct StreamPostClipNodeStub;
 impl StreamPostClipNodeStub {
     #[inline]
     pub fn new<T>() -> StreamPostClipNode<T>
@@ -303,7 +303,7 @@ where
     }
 }
 
-pub struct StreamSimpleNodeStub {}
+pub struct StreamSimpleNodeStub;
 impl StreamSimpleNodeStub {
     #[inline]
     pub fn new<T>() -> StreamSimpleNode<T>
@@ -316,7 +316,7 @@ impl StreamSimpleNodeStub {
 impl<T> Stream<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
 
-pub struct StreamTransformNodeStub {}
+pub struct StreamTransformNodeStub;
 impl StreamTransformNodeStub {
     #[inline]
     pub fn new<T>() -> StreamTransformNode<T>
@@ -333,7 +333,7 @@ impl StreamTransformNodeStub {
 impl<T> Stream<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}
 
-pub struct StreamNodeStub {}
+pub struct StreamNodeStub;
 impl StreamNodeStub {
     #[inline]
     pub fn new<T>() -> StreamSimpleNode<T>
@@ -346,7 +346,7 @@ impl StreamNodeStub {
 impl<T> Stream<T> for StreamNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamNodeStub where T: CoordFloat + FloatConst {}
 
-pub struct StreamPathResultNodeStub {}
+pub struct StreamPathResultNodeStub;
 impl StreamPathResultNodeStub {
     #[inline]
     pub fn new<T>() -> StreamPathResultNode<T>

@@ -13,7 +13,7 @@ pub trait StreamTransformIn<T> {
     }
 }
 
-pub struct StreamTransformRadiansNodeStub {}
+pub struct StreamTransformRadiansNodeStub;
 impl StreamTransformRadiansNodeStub {
     #[inline]
     pub fn new<T>() -> StreamTransformRadiansNode<T>
