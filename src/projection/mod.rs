@@ -3,7 +3,7 @@ mod scale_translate;
 mod scale_translate_rotate;
 // mod stream_wrapper;
 pub mod stream_transform;
-mod transform_radians;
+mod stream_transform_radians;
 
 pub mod equirectangular;
 pub mod orthographic;
