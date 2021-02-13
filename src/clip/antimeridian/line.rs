@@ -1,26 +1,19 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use crate::stream::StreamClipLine;
-use crate::stream::StreamClipLineNode;
-use crate::stream::StreamPathResultNodeStub;
-use crate::stream::StreamSimpleNode;
-use crate::stream::{Stream, StreamPathResultNode};
-use crate::{
-    clip::BufferInTrait,
-    stream::{Clean, CleanEnum, StreamClean, StreamInTrait},
-};
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use super::intersect::intersect;
+use crate::stream::StreamClipLine;
+use crate::stream::StreamClipLineNode;
+use crate::stream::StreamPathResultNodeStub;
+use crate::stream::{Stream, StreamPathResultNode};
+use crate::{
+    clip::BufferInTrait,
+    stream::{Clean, CleanEnum, StreamClean},
+};
 
-// Return indicator :-
-// There were intersections or the line was empty.
-const INTERSECTION_OR_LINE_EMPTY: u8 = 0u8;
-const NO_INTERSECTIONS: u8 = 1u8;
-// There were intersectoins and the first and last sections should be rejoined.
-const INTERSECTION_REJOIN: u8 = 2u8;
+use super::intersect::intersect;
 
 pub struct Line<T>
 where
@@ -54,18 +47,14 @@ where
     }
 }
 impl<T> StreamClipLine<T> for Line<T> where T: CoordFloat + FloatConst {}
-impl<T> StreamInTrait<T> for Line<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn stream_in(&mut self, sink: StreamSimpleNode<T>) {}
-}
-
 impl<T> BufferInTrait<T> for Line<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn buffer_in(&mut self, sink: StreamPathResultNode<T>) {}
+    #[inline]
+    fn buffer_in(&mut self, stream: StreamPathResultNode<T>) {
+        self.stream = stream;
+    }
 }
 
 impl<T> Clean for Line<T>

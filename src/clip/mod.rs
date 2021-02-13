@@ -2,49 +2,16 @@ pub mod antimeridian;
 pub mod buffer;
 pub mod circle;
 mod rejoin;
-use crate::stream::Ci;
+
 use crate::stream::Stream;
 use crate::stream::StreamClipLineNode;
 use crate::stream::StreamClipLineNodeStub;
-use crate::stream::StreamClipTrait;
-use crate::stream::StreamInTrait;
-use crate::stream::StreamPathResult;
 use crate::stream::StreamPathResultNode;
-use crate::stream::{StreamPathResultNodeStub, StreamSimpleNode};
-use crate::{path::PathResult, stream::StreamIdentity};
+use crate::stream::StreamPathResultNodeStub;
+
 use buffer::{ClipBuffer, LineElem};
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::{cell::RefCell, rc::Rc};
-// pub type InterpolateFn<T> =
-// Rc<Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, StreamSimpleNode<T>)>>;
-// pub type PointVisibleFn<T> = Rc<Box<dyn Fn(Coordinate<T>, Option<u8>) -> bool>>;
-
-// pub type CompareIntersectionFn<T> = Rc<Box<dyn Fn(Ci<T>, Ci<T>) -> T>>;
-// pub type ClipNode<T> = Rc<RefCell<Box<dyn StreamClipTrait<T>>>>;
-
-// #[derive(Clone, Debug)]
-// pub struct PreClipNodeStub {}
-// pub struct PostClipNodeStub {}
-
-// impl PreClipNodeStub {
-//     #[inline]
-//     pub fn gen_node<T>() -> PreClipNode<T>
-//     where
-//         T: CoordFloat + FloatConst,
-//     {
-//         Rc::new(RefCell::new(Box::new(ClipTraitIdentity {})))
-//     }
-// }
-// impl PostClipNodeStub {
-//     #[inline]
-//     pub fn gen_node<T>() -> PostClipNode<T>
-//     where
-//         T: CoordFloat + FloatConst,
-//     {
-//         Rc::new(RefCell::new(Box::new(ClipTraitIdentity {})))
-//     }
-// }
 
 pub trait BufferInTrait<T>
 where
@@ -349,25 +316,3 @@ where
 //     }
 // }
 
-// struct ClipTraitIdentity {}
-// impl<T> StreamClipTrait<T> for ClipTraitIdentity
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn point_visible(&self, _p: Coordinate<T>, _z: Option<u8>) -> bool {
-//         false
-//     }
-//     fn interpolate(
-//         &self,
-//         _from: Option<Coordinate<T>>,
-//         _to: Option<Coordinate<T>>,
-//         _direction: T,
-//         _stream: StreamSimpleNode<T>,
-//     ) {
-//         // Dummy function.
-//     }
-// }
-// impl<T> StreamInTrait<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
-// impl<T> StreamPathResult<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
-// impl<T> Stream<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
-// impl<T> PathResult<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
