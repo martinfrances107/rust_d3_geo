@@ -11,7 +11,7 @@ use num_traits::FloatConst;
 
 use std::borrow::BorrowMut;
 
-use super::ClipBase;
+use super::clip_base::ClipBase;
 
 // using ClipBase as a starting point.
 pub struct ClipAntimeridian<T: CoordFloat + FloatConst> {

@@ -2,15 +2,18 @@ mod intersect;
 mod line;
 use geo::{CoordFloat, Coordinate};
 
+use num_traits::FloatConst;
+
 use crate::circle::circle_stream::circle_stream;
 use crate::clip::ClipBuffer;
 use crate::stream::Stream;
 use crate::stream::StreamClipTrait;
 use crate::stream::StreamInTrait;
 
-use super::{BufferInTrait, ClipBase};
+use super::clip_base::ClipBase;
+use super::BufferInTrait;
+
 use line::Line;
-use num_traits::FloatConst;
 pub struct ClipCircle<T: CoordFloat + FloatConst> {
     radius: T,
     delta: T,
