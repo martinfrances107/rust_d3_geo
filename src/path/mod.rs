@@ -6,6 +6,7 @@ use std::default::Default;
 
 use crate::clip::buffer::LineElem;
 use crate::stream::StreamIdentity;
+use crate::stream::Streamable;
 use crate::Transform;
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 use geo::Coordinate;

@@ -64,6 +64,7 @@ pub struct ClipBase<T: CoordFloat + FloatConst> {
     ring_sink_node: StreamClipLineNode<T>,
     segments: Vec<Vec<LineElem<T>>>,
     interpolate: Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut dyn Stream<T>)>,
+    point_visible: Box<dyn Fn(Option<Coordinate<T>>, Option<u8>) -> bool>,
     start: Coordinate<T>,
     use_ring: bool,
     use_ring_end: bool,
@@ -76,15 +77,17 @@ where
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
-        let mut stream = StreamIdentity {};
         let interpolate = Box::new(
-            |from: Option<Coordinate<T>>,
-             to: Option<Coordinate<T>>,
-             direction: T,
-             stream: &mut dyn Stream<T>| {
+            |_from: Option<Coordinate<T>>,
+             _to: Option<Coordinate<T>>,
+             _direction: T,
+             _stream: &mut dyn Stream<T>| {
                 panic!("Must be overriden.");
             },
         );
+        let point_visible =
+            Box::new(|_p: Option<Coordinate<T>>, _m: Option<u8>| panic!("Must be overriden."));
+
         Self {
             line_node: StreamClipLineNodeStub::new(),
             polygon_started: false,
@@ -97,6 +100,7 @@ where
             use_ring_end: false,
             use_ring_start: false,
             interpolate,
+            point_visible,
             sink: StreamPathResultNodeStub::new(),
             start: Coordinate {
                 x: -T::PI(),
@@ -213,7 +217,7 @@ where
         //         self.ring_sink.point(p, None);
         //     }
         //     false => {
-        //         if self.point_visible(p, None) {
+        //         if (self.point_visible)(p, None) {
         //             let mut sink = self.sink.borrow_mut();
         //             sink.point(p, m);
         //         }
@@ -239,55 +243,56 @@ where
     }
 
     fn polygon_start(&mut self) {
-        // self.use_ring = true;
-        // self.use_ring_start = true;
-        // self.use_ring_end = true;
-        // self.segments.clear();
-        // self.polygon.clear();
+        self.use_ring = true;
+        self.use_ring_start = true;
+        self.use_ring_end = true;
+        self.segments.clear();
+        self.polygon.clear();
     }
 
     fn polygon_end(&mut self) {
-        // self.use_ring = false;
-        // self.use_ring_start = false;
-        // self.use_ring_end = false;
-        // // segments = merge(segments);
+        self.use_ring = false;
+        self.use_ring_start = false;
+        self.use_ring_end = false;
+        // segments = merge(segments);
         // let start_inside = contains(&self.polygon, &self.start);
-        // let mut sink = self.sink.borrow_mut();
-        // if !self.polygon_started {
-        //     sink.polygon_start();
-        //     self.polygon_started = true;
+        let start_inside = false;
+        let mut sink = self.sink.borrow_mut();
+        if !self.polygon_started {
+            sink.polygon_start();
+            self.polygon_started = true;
 
-        //     rejoin(
-        //         &self.segments,
-        //         self.compare_intersection,
-        //         start_inside,
-        //         self.interpolate,
-        //         self.sink,
-        //     );
-        // } else if start_inside {
-        //     if !self.polygon_started {
-        //         sink.polygon_start();
-        //         self.polygon_started = true;
-        //     }
-        //     sink.line_start();
-        //     // (self.interpolate)(None, None, 1f64, self.sink);
-        //     sink.line_end();
-        // }
-        // if self.polygon_started {
-        //     sink.polygon_end();
-        //     self.polygon_started = false;
-        // }
-        // self.segments.clear();
-        // self.polygon.clear();
+        // rejoin(
+        //     &self.segments,
+        //     self.compare_intersection,
+        //     start_inside,
+        //     self.interpolate,
+        //     self.sink,
+        // );
+        } else if start_inside {
+            if !self.polygon_started {
+                sink.polygon_start();
+                self.polygon_started = true;
+            }
+            sink.line_start();
+            // (self.interpolate)(None, None, 1f64, self.sink);
+            sink.line_end();
+        }
+        if self.polygon_started {
+            sink.polygon_end();
+            self.polygon_started = false;
+        }
+        self.segments.clear();
+        self.polygon.clear();
     }
 
     fn sphere(&mut self) {
-        // let mut sink = self.sink.borrow_mut();
-        // sink.polygon_start();
-        // sink.line_start();
-        // self.interpolate(None, None, T::one(), self.sink);
-        // sink.line_end();
-        // sink.polygon_end();
+        let mut sink = self.sink.borrow_mut();
+        sink.polygon_start();
+        sink.line_start();
+        // (self.interpolate)(None, None, T::one(), &mut sink as &mut dyn Stream<T>);
+        sink.line_end();
+        sink.polygon_end();
     }
 }
 // impl<T: CoordFloat + FloatConst + 'static> Clip<T> {
@@ -344,25 +349,25 @@ where
 //     }
 // }
 
-struct ClipTraitIdentity {}
-impl<T> StreamClipTrait<T> for ClipTraitIdentity
-where
-    T: CoordFloat + FloatConst,
-{
-    fn point_visible(&self, _p: Coordinate<T>, _z: Option<u8>) -> bool {
-        false
-    }
-    fn interpolate(
-        &self,
-        _from: Option<Coordinate<T>>,
-        _to: Option<Coordinate<T>>,
-        _direction: T,
-        _stream: StreamSimpleNode<T>,
-    ) {
-        // Dummy function.
-    }
-}
-impl<T> StreamInTrait<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
-impl<T> StreamPathResult<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
-impl<T> Stream<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
-impl<T> PathResult<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
+// struct ClipTraitIdentity {}
+// impl<T> StreamClipTrait<T> for ClipTraitIdentity
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     fn point_visible(&self, _p: Coordinate<T>, _z: Option<u8>) -> bool {
+//         false
+//     }
+//     fn interpolate(
+//         &self,
+//         _from: Option<Coordinate<T>>,
+//         _to: Option<Coordinate<T>>,
+//         _direction: T,
+//         _stream: StreamSimpleNode<T>,
+//     ) {
+//         // Dummy function.
+//     }
+// }
+// impl<T> StreamInTrait<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
+// impl<T> StreamPathResult<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
+// impl<T> Stream<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
+// impl<T> PathResult<T> for ClipTraitIdentity where T: CoordFloat + FloatConst {}
