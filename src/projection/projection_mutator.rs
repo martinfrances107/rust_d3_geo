@@ -4,8 +4,6 @@ use std::rc::Rc;
 
 // A collection of functions that mutate a Projection struct.
 
-// A collection of functions that mutate a Projection struct.
-
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use crate::compose::Compose;

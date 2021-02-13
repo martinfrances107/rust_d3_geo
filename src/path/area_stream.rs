@@ -1,8 +1,8 @@
 // use super::PathStream;
-use geo::CoordFloat;
-use num_traits::FloatConst;
-use geo::Coordinate;
 use crate::stream::Stream;
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::FloatConst;
 
 use super::PathResult;
 use super::PathResultEnum;
@@ -66,7 +66,7 @@ where
     }
     fn area_ring_end(&mut self) {}
 
-    fn point_noop(&mut self, _p: Coordinate<T>, _m:Option<u8>) {}
+    fn point_noop(&mut self, _p: Coordinate<T>, _m: Option<u8>) {}
 
     fn line_noop(&mut self) {}
 }

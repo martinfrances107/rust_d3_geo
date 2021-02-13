@@ -5,7 +5,6 @@ use crate::stream::StreamPathResultNode;
 use crate::stream::StreamPathResultNodeStub;
 
 use super::buffer::LineElem;
-use super::buffer::ClipBuffer;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -17,7 +16,8 @@ pub struct ClipBase<T: CoordFloat + FloatConst> {
     pub ring_buffer_node: StreamPathResultNode<T>,
     pub ring_sink_node: StreamClipLineNode<T>,
     pub segments: Vec<Vec<LineElem<T>>>,
-    pub interpolate: Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut dyn Stream<T>)>,
+    pub interpolate:
+        Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut dyn Stream<T>)>,
     pub point_visible: Box<dyn Fn(Option<Coordinate<T>>, Option<u8>) -> bool>,
     pub start: Coordinate<T>,
     pub use_ring: bool,
