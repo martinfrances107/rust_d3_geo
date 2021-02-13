@@ -4,7 +4,7 @@ use crate::Transform;
 
 use super::scale_translate::ScaleTranslate;
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct ScaleTranslateRotate<T: CoordFloat> {
     a: T,
     b: T,

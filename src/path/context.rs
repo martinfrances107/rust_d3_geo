@@ -9,6 +9,7 @@ use num_traits::{AsPrimitive, FloatConst};
 use super::{PathResult, PathResultEnum};
 
 // use super::RenderingContext2d;
+#[derive(Clone, Debug)]
 pub struct PathContext<T> {
     line: Option<T>,
     point: Option<f64>,

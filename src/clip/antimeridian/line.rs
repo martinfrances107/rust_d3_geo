@@ -14,7 +14,7 @@ use crate::{
 };
 
 use super::intersect::intersect;
-
+#[derive(Clone)]
 pub struct Line<T>
 where
     T: CoordFloat + FloatConst,

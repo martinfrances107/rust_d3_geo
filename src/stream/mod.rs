@@ -48,6 +48,7 @@ pub trait Streamable<T: CoordFloat + FloatConst> {
 // clipPing: 0 - there were intersections or the line was empty; 1 - no
 // intersections 2 - there were intersections, and the first and last segments
 // should be rejoined.
+#[derive(Debug, Clone, Copy)]
 pub enum CleanEnum {
     IntersectionsOrEmpty,
     NoIntersections,
@@ -162,7 +163,7 @@ impl<T> Stream<T> for StreamResampleNodeStub where T: CoordFloat + FloatConst {}
 
 /// Ci CompareIntersections param type
 /// See StreamClipTrait.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Ci<T: CoordFloat>
 where
     T: CoordFloat + FloatConst,

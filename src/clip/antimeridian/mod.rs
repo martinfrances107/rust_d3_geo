@@ -1,18 +1,18 @@
 mod intersect;
 mod line;
 
-use geo::{CoordFloat, Coordinate};
-use line::Line;
-
-use super::buffer::ClipBuffer;
-use super::BufferInTrait;
-use crate::stream::Stream;
 use num_traits::FloatConst;
-
 use std::borrow::BorrowMut;
 
-use super::clip_base::ClipBase;
+use geo::{CoordFloat, Coordinate};
 
+use crate::stream::Stream;
+
+use super::buffer::ClipBuffer;
+use super::clip_base::ClipBase;
+use super::BufferInTrait;
+
+use line::Line;
 // using ClipBase as a starting point.
 pub struct ClipAntimeridian<T: CoordFloat + FloatConst> {
     // line: Line<T>,

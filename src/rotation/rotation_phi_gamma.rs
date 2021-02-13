@@ -3,7 +3,7 @@ use geo::{CoordFloat, Coordinate};
 
 use crate::Transform;
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct RotationPhiGamma<T> {
     cos_delta_phi: T,
     sin_delta_phi: T,

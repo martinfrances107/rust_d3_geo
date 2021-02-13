@@ -4,7 +4,7 @@ use num_traits::FloatConst;
 // use crate::math::TAU;
 use crate::Transform;
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct RotationLambda<T> {
     pub delta_lambda: T,
 }
