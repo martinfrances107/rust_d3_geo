@@ -1,7 +1,8 @@
 // use super::PathStream;
-use crate::stream::Stream;
 use geo::CoordFloat;
 use num_traits::FloatConst;
+use geo::Coordinate;
+use crate::stream::Stream;
 
 use super::PathResult;
 use super::PathResultEnum;
@@ -16,7 +17,7 @@ where
     y00: T,
     x0: T,
     y0: T,
-    point_fn: fn(&mut Self, T, T),
+    point_fn: fn(&mut Self, Coordinate<T>, Option<u8>),
     line_start_fn: fn(&mut Self),
     line_end_fn: fn(&mut Self),
 }
@@ -50,22 +51,22 @@ where
         self.point_fn = Self::area_point_first;
     }
 
-    fn area_point_first(&mut self, x: T, y: T) {
+    fn area_point_first(&mut self, p: Coordinate<T>, _m: Option<u8>) {
         self.point_fn = Self::area_point;
-        self.x00 = x;
-        self.x0 = x;
-        self.y00 = y;
-        self.y0 = y;
+        self.x00 = p.x;
+        self.x0 = p.x;
+        self.y00 = p.y;
+        self.y0 = p.y;
     }
 
-    fn area_point(&mut self, x: T, y: T) {
-        self.area_ring_sum += self.y0 * x - self.x0 * y;
-        self.x0 = x;
-        self.y0 = y;
+    fn area_point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
+        self.area_ring_sum += self.y0 * p.x - self.x0 * p.y;
+        self.x0 = p.x;
+        self.y0 = p.y;
     }
     fn area_ring_end(&mut self) {}
 
-    fn point_noop(&mut self, _x: T, _y: T) {}
+    fn point_noop(&mut self, _p: Coordinate<T>, _m:Option<u8>) {}
 
     fn line_noop(&mut self) {}
 }
@@ -85,6 +86,9 @@ impl<T> Stream<T> for PathAreaStream<T>
 where
     T: CoordFloat + FloatConst + std::ops::AddAssign,
 {
+    fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
+        (self.point_fn)(self, p, m);
+    }
     fn polygon_start(&mut self) {
         self.line_start_fn = Self::area_ring_start;
         self.line_end_fn = Self::area_ring_end;
