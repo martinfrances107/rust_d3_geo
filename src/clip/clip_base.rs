@@ -1,3 +1,6 @@
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
+
 use crate::stream::Stream;
 use crate::stream::StreamClipLineNode;
 use crate::stream::StreamClipLineNodeStub;
@@ -5,8 +8,6 @@ use crate::stream::StreamPathResultNode;
 use crate::stream::StreamPathResultNodeStub;
 
 use super::buffer::LineElem;
-use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
 
 pub struct ClipBase<T: CoordFloat + FloatConst> {
     pub line_node: StreamClipLineNode<T>,
@@ -18,7 +19,7 @@ pub struct ClipBase<T: CoordFloat + FloatConst> {
     pub segments: Vec<Vec<LineElem<T>>>,
     pub interpolate:
         Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut dyn Stream<T>)>,
-    pub point_visible: Box<dyn Fn(Option<Coordinate<T>>, Option<u8>) -> bool>,
+    pub point_visible: Box<dyn Fn(Coordinate<T>, Option<u8>) -> bool>,
     pub start: Coordinate<T>,
     pub use_ring: bool,
     pub use_ring_end: bool,
@@ -40,7 +41,7 @@ where
             },
         );
         let point_visible =
-            Box::new(|_p: Option<Coordinate<T>>, _m: Option<u8>| panic!("Must be overriden."));
+            Box::new(|_p: Coordinate<T>, _m: Option<u8>| panic!("Must be overriden."));
 
         Self {
             line_node: StreamClipLineNodeStub::new(),
@@ -165,18 +166,18 @@ where
     T: CoordFloat + FloatConst,
 {
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
-        // match self.use_ring {
-        //     true => {
-        //         self.ring.push(p);
-        //         self.ring_sink.point(p, None);
-        //     }
-        //     false => {
-        //         if (self.point_visible)(p, None) {
-        //             let mut sink = self.sink.borrow_mut();
-        //             sink.point(p, m);
-        //         }
-        //     }
-        // }
+        match self.use_ring {
+            true => {
+                self.ring.push(p);
+                self.ring_sink_node.point(p, None);
+            }
+            false => {
+                if (self.point_visible)(p, None) {
+                    let mut sink = self.sink.borrow_mut();
+                    sink.point(p, m);
+                }
+            }
+        }
     }
     fn line_start(&mut self) {
         // if self.use_ring_start {
