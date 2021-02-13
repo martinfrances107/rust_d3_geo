@@ -66,7 +66,7 @@ pub trait Stream<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn point(&mut self, p: Coordinate<T>, _m: Option<u8>) {}
+    fn point(&mut self, _p: Coordinate<T>, _m: Option<u8>) {}
     fn sphere(&mut self) {}
     fn line_start(&mut self) {}
     fn line_end(&mut self) {}
@@ -137,7 +137,7 @@ where
     T: CoordFloat + FloatConst,
 {
     fn stream_postclip_in(&mut self, _stream_clip_in: StreamPostClipNode<T>) {
-        // No-op
+        // No-op.
     }
 }
 
@@ -156,7 +156,7 @@ where
     T: CoordFloat + FloatConst,
 {
     fn stream_postclip_in(&mut self, _stream: StreamPostClipNode<T>) {
-        // No-op
+        // No-op.
     }
 }
 impl<T> Stream<T> for StreamResampleNodeStub where T: CoordFloat + FloatConst {}
@@ -223,7 +223,7 @@ where
     T: CoordFloat + FloatConst,
 {
     fn stream_resample_in(&mut self, _stream: StreamResampleNode<T>) {
-        // self.stream = stream;
+        // No-op.
     }
 }
 pub struct StreamPreClipNodeStub {}
@@ -242,7 +242,7 @@ where
     T: CoordFloat + FloatConst,
 {
     fn stream_resample_in(&mut self, _stream: StreamResampleNode<T>) {
-        // No-op
+        // No-op.
     }
 }
 impl<T> Stream<T> for StreamPreClipNodeStub where T: CoordFloat + FloatConst {}
@@ -253,7 +253,7 @@ where
     T: CoordFloat + FloatConst,
 {
     fn stream_in(&mut self, _stream: StreamSimpleNode<T>) {
-        // self.stream = stream;
+        // No-op.
     }
 }
 pub struct StreamPostClipNodeStub {}
@@ -299,7 +299,7 @@ where
 {
     #[inline]
     fn stream_preclip_in(&mut self, _stream: StreamPreClipNode<T>) {
-        // No-op
+        // No-op.
     }
 }
 

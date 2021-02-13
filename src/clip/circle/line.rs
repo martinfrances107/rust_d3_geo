@@ -1,20 +1,21 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use super::intersect::intersect;
-use super::intersect::IntersectReturn;
-use super::BufferInTrait;
 use crate::point_equal::point_equal;
 use crate::stream::StreamClean;
 use crate::stream::StreamClipLineNode;
 use crate::stream::StreamSimpleNodeStub;
-
 use crate::stream::StreamPathResultNode;
 use crate::stream::StreamSimpleNode;
 use crate::stream::{Clean, CleanEnum, Stream};
 
-use std::cell::RefCell;
-use std::rc::Rc;
+use super::BufferInTrait;
+use super::intersect::intersect;
+use super::intersect::IntersectReturn;
+
 pub struct Line<T: CoordFloat> {
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
@@ -33,8 +34,8 @@ where
     T: CoordFloat + FloatConst,
 {
     #[inline]
-    fn buffer_in(&mut self, sink: StreamPathResultNode<T>) {
-        // self.sink.swap(&sink);
+    fn buffer_in(&mut self, _sink: StreamPathResultNode<T>) {
+        // No-op.
     }
 }
 use crate::stream::StreamClipLine;
