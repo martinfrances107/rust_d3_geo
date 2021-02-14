@@ -93,7 +93,7 @@ where
     context_stream: Option<Box<dyn PathStreamTrait<T>>>,
     point_radius: T,
     // projection_stream_fn: Box<dyn Fn(&dyn PathTrait<T>) -> dyn Stream<T>>,
-    projection_in: Option<Box<dyn Transform<T>>>,
+    projection: Option<Box<dyn Transform<T>>>,
 }
 
 fn projection_stream_noop() {}
@@ -107,7 +107,7 @@ where
             context_in: None,
             context_stream: None,
             point_radius: T::from(4.5f64).unwrap(),
-            projection_in: None,
+            projection: None,
             // projection_stream_fn: Box::new(|&_| StreamIdentity::default()),
         }
     }
@@ -119,11 +119,11 @@ where
 {
     #[inline]
     fn generate(
-        projection_in: Option<Box<dyn Transform<T>>>,
+        projection: Option<Box<dyn Transform<T>>>,
         context_in: Option<CanvasRenderingContext2d>,
     ) -> Path<T> {
         Path {
-            projection_in,
+            projection,
             context_in,
             ..Default::default()
         }
@@ -149,25 +149,25 @@ where
     //     self.projection_stream_fn = None;
     // }
 
-    pub fn projection(p_maybe: Option<ProjectionMutator<T>>) -> Path<T> {
-        let projection_in: Option<ProjectionMutator<T>>;
-        let projection_stream_fn: Option<Box<dyn Stream<T>>>;
+    pub fn projection(p_in: Option<ProjectionMutator<T>>) -> Path<T> {
+        let projection: Option<ProjectionMutator<T>>;
+        let projection_stream: Option<Box<dyn Stream<T>>>;
 
-        //  (projectionStream = _ == null ? (projection = null, identity) : (projection = _).stream, path)
+        //  let ret =  arguments.length ? (projectionStream = _ == null ? (projection = null, identity) : (projection = _).stream, path) : projection;
 
-        match p_maybe {
+        match p_in {
             None => {
-                projection_in = None;
-                projection_stream_fn = Some(Box::new(StreamIdentity {}));
+                projection = None;
+                // projection_stream_fn = Some(Box::new(StreamIdentity {}));
             }
             Some(projection) => {
-                projection_in = Some(projection);
-                projection_stream_fn = None;
+                projection = Some(projection);
+                // projection_stream_fn = None;
             }
         }
 
         return Path {
-            // projection_in,
+            projection,
             // projection_stream_fn,
             ..Default::default()
         };

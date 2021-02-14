@@ -9,7 +9,7 @@ use super::rotation_identity::RotationIdentity;
 use super::rotation_lambda::RotationLambda;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
-pub struct RotateRadians {}
+pub struct RotateRadians;
 
 impl RotateRadians {
     /// Returns a object implmenting the desired combination of rotations.

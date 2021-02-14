@@ -4,7 +4,7 @@ use num_traits::FloatConst;
 use crate::Transform;
 
 #[derive(Clone, Debug)]
-pub struct RotationIdentity {}
+pub struct RotationIdentity;
 
 // By design a stateless function.
 // TODO maybe add attributes to suggest inlining this where possible.

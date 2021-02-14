@@ -26,7 +26,7 @@ mod stream;
 // mod transform_stream;
 
 #[derive(Copy, Clone, Debug)]
-pub struct TransformIdentity {}
+pub struct TransformIdentity;
 // impl TransformIdentity {
 //     fn new() -> Self {
 //         return TransformIdentity {};

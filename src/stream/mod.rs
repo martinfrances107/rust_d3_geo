@@ -28,12 +28,12 @@ use num_traits::FloatConst;
 //     Box<dyn Fn(StreamPathResultNode<T>) -> StreamCleanNode<T>>;
 
 #[derive(Clone, Default, Debug)]
-pub struct StreamIdentity {}
+pub struct StreamIdentity;
 impl<T> Stream<T> for StreamIdentity where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamIdentity where T: CoordFloat + FloatConst {}
 
 #[derive(Clone, Default, Debug)]
-pub struct StreamPathResultIdentity {}
+pub struct StreamPathResultIdentity;
 impl<T> StreamPathResult<T> for StreamPathResultIdentity where T: CoordFloat + FloatConst {}
 impl<T> Stream<T> for StreamPathResultIdentity where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamPathResultIdentity where T: CoordFloat + FloatConst {}

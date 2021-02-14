@@ -8,7 +8,7 @@ use num_traits::float::FloatConst;
 use std::rc::Rc;
 
 #[derive(Clone, Debug, Default)]
-pub struct StereographicRaw {}
+pub struct StereographicRaw;
 
 impl StereographicRaw {
     pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>() -> ProjectionMutator<T>
