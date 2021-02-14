@@ -36,14 +36,14 @@ impl<T: CoordFloat + FloatConst + 'static> StreamTransform<T> {
     pub fn gen_node(transform: Option<Rc<Box<dyn Transform<T>>>>) -> StreamTransformNode<T> {
         {
             match transform {
-                Some(transform) => Rc::new(RefCell::new(Box::new(Self {
+                Some(transform) => Rc::new(RefCell::new(Self {
                     transform: transform.clone(),
                     stream: StreamPreClipNodeStub::new(),
-                }))),
-                None => Rc::new(RefCell::new(Box::new(Self {
+                })),
+                None => Rc::new(RefCell::new(Self {
                     transform: Rc::new(Box::new(TransformIdentity {})),
                     stream: StreamPreClipNodeStub::new(),
-                }))),
+                })),
             }
         }
     }

@@ -64,7 +64,7 @@ impl<T: CoordFloat + FloatConst + 'static> Line<T> {
 
     #[inline]
     pub fn gen_node(radius: T) -> StreamClipLineNode<T> {
-        Rc::new(RefCell::new(Box::new(Self::new(radius))))
+        Rc::new(RefCell::new(Self::new(radius)))
     }
 
     #[inline]

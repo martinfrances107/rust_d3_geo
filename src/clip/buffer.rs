@@ -33,7 +33,7 @@ impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(Box::new(Self::new())))
+        Rc::new(RefCell::new(Self::new()))
     }
 
     fn rejoin(&mut self) {

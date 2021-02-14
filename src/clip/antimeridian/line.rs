@@ -43,7 +43,7 @@ where
 
     #[inline]
     pub fn gen_node() -> StreamClipLineNode<T> {
-        Rc::new(RefCell::new(Box::new(Line::new())))
+        Rc::new(RefCell::new(Line::new()))
     }
 }
 impl<T> StreamClipLine<T> for Line<T> where T: CoordFloat + FloatConst {}

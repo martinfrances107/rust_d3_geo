@@ -99,7 +99,7 @@ where
 {
 }
 
-pub type StreamClipLineNode<T> = Rc<RefCell<Box<dyn StreamClipLine<T>>>>;
+pub type StreamClipLineNode<T> = Rc<RefCell<dyn StreamClipLine<T>>>;
 impl<T> Stream<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> BufferInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
@@ -110,7 +110,7 @@ impl StreamClipLineNodeStub {
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(Box::new(Self {})))
+        Rc::new(RefCell::new(Self {}))
     }
 }
 impl<T> StreamClipLine<T> for StreamClipLineNodeStub where T: CoordFloat + FloatConst {}
@@ -131,7 +131,7 @@ where
 {
     fn stream_postclip_in(&mut self, stream_clip_in: StreamPostClipNode<T>);
 }
-pub type StreamResampleNode<T> = Rc<RefCell<Box<dyn StreamResampleTrait<T>>>>;
+pub type StreamResampleNode<T> = Rc<RefCell<dyn StreamResampleTrait<T>>>;
 impl<T> StreamResampleTrait<T> for StreamResampleNode<T>
 where
     T: CoordFloat + FloatConst,
@@ -148,7 +148,7 @@ impl StreamResampleNodeStub {
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(Box::new(Self {})))
+        Rc::new(RefCell::new(Self {}))
     }
 }
 impl<T> StreamResampleTrait<T> for StreamResampleNodeStub
@@ -210,11 +210,11 @@ where
 
 /// Node - holds state associated with the input/output of a StreamProcessor.
 /// Something that can be cloned and mutated.
-pub type StreamSimpleNode<T> = Rc<RefCell<Box<dyn Stream<T>>>>;
+pub type StreamSimpleNode<T> = Rc<RefCell<dyn Stream<T>>>;
 impl<T> Stream<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
 
-pub type StreamPathResultNode<T> = Rc<RefCell<Box<dyn StreamPathResult<T>>>>;
+pub type StreamPathResultNode<T> = Rc<RefCell<dyn StreamPathResult<T>>>;
 impl<T> Stream<T> for StreamPathResultNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamPathResultNode<T> where T: CoordFloat + FloatConst {}
 
@@ -233,7 +233,7 @@ impl StreamPreClipNodeStub {
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(Box::new(Self {})))
+        Rc::new(RefCell::new(Self {}))
     }
 }
 
@@ -263,7 +263,7 @@ impl StreamPostClipNodeStub {
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(Box::new(Self {})))
+        Rc::new(RefCell::new(Self {}))
     }
 }
 
@@ -272,7 +272,7 @@ impl<T> StreamPostClipTrait<T> for StreamPostClipNodeStub where T: CoordFloat + 
 impl<T> Stream<T> for StreamPostClipNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamClipTrait<T> for StreamPostClipNodeStub where T: CoordFloat + FloatConst {}
 
-pub type StreamPreClipNode<T> = Rc<RefCell<Box<dyn StreamPreClipTrait<T>>>>;
+pub type StreamPreClipNode<T> = Rc<RefCell<dyn StreamPreClipTrait<T>>>;
 impl<T> StreamClipTrait<T> for StreamPreClipNode<T> where T: CoordFloat + FloatConst {}
 impl<T> Stream<T> for StreamPreClipNode<T> where T: CoordFloat + FloatConst {}
 
@@ -286,12 +286,12 @@ where
     }
 }
 
-pub type StreamPostClipNode<T> = Rc<RefCell<Box<dyn StreamPostClipTrait<T>>>>;
+pub type StreamPostClipNode<T> = Rc<RefCell<dyn StreamPostClipTrait<T>>>;
 impl<T> StreamPostClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
 impl<T> Stream<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
 
-pub type StreamTransformNode<T> = Rc<RefCell<Box<StreamTransform<T>>>>;
+pub type StreamTransformNode<T> = Rc<RefCell<StreamTransform<T>>>;
 impl<T> Stream<T> for StreamTransformNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamPreclipIn<T> for StreamTransformNode<T>
 where
@@ -310,7 +310,7 @@ impl StreamSimpleNodeStub {
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(Box::new(Self {})))
+        Rc::new(RefCell::new(Self {}))
     }
 }
 impl<T> Stream<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
@@ -323,10 +323,10 @@ impl StreamTransformNodeStub {
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(Box::new(StreamTransform {
+        Rc::new(RefCell::new(StreamTransform {
             transform: Rc::new(Box::new(TransformIdentity {})),
             stream: StreamPreClipNodeStub::new(),
-        })))
+        }))
     }
 }
 
@@ -340,7 +340,7 @@ impl StreamNodeStub {
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(Box::new(StreamIdentity {})))
+        Rc::new(RefCell::new(StreamIdentity {}))
     }
 }
 impl<T> Stream<T> for StreamNodeStub where T: CoordFloat + FloatConst {}
@@ -353,7 +353,7 @@ impl StreamPathResultNodeStub {
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(Box::new(StreamPathResultIdentity {})))
+        Rc::new(RefCell::new(StreamPathResultIdentity {}))
     }
 }
 impl<T> Stream<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst {}

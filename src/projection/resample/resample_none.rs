@@ -16,10 +16,10 @@ pub struct ResampleNone<T> {
 impl<T: CoordFloat + FloatConst + 'static> ResampleNone<T> {
     #[inline]
     pub fn gen_node(project: Rc<Box<dyn Transform<T>>>) -> StreamResampleNode<T> {
-        Rc::new(RefCell::new(Box::new(Self {
+        Rc::new(RefCell::new(Self {
             project: project.clone(),
             stream: StreamNodeStub::new(),
-        })))
+        }))
     }
 }
 

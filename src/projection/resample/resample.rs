@@ -62,7 +62,7 @@ where
         match delta2 {
             None => ResampleNone::gen_node(project),
             Some(delta2) => {
-                Rc::new(RefCell::new(Box::new(Self {
+                Rc::new(RefCell::new(Self {
                     project: project.clone(),
                     delta2,
 
@@ -85,7 +85,7 @@ where
                     use_line_point: true,
                     use_line_end: true,
                     use_line_start: true,
-                })))
+                }))
             }
         }
     }
