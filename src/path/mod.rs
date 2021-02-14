@@ -43,24 +43,21 @@ where
 
 trait PathTrait<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
-    // fn area(&self, d: impl DataObject<T>) -> Option<String> {
-    //     // Stream(d, self.projection_stream);
-    //     // PathArea::result();
-    // };
-    // fn measure(&self, d: impl DataObject<T>) -> PathResultEnum<T>
-    // where
-    //     T: Float;
-    // fn bound(&self, d: impl DataObject<T>) -> PathResultEnum<T>
-    // where
-    //     T: Float;
-    // fn centroid(&self, d: impl DataObject<T>) -> PathResultEnum<T>
-    // where
-    //     T: Float;
-    // fn projection(&self, d: impl DataObject<T>) -> PathResultEnum<T>
-    // where
-    //     T: Float;
+    fn area(&self, d: DataObject<T>) -> Option<String> {
+        // Stream(d, self.projection_stream);
+        // PathArea::result();
+        None
+    }
+    fn measure(&self, d: DataObject<T>) -> PathResultEnum<T>;
+
+    fn bound(&self, d: DataObject<T>) -> PathResultEnum<T>;
+
+    fn centroid(&self, d: DataObject<T>) -> PathResultEnum<T>;
+
+    fn projection(&self, d: DataObject<T>) -> PathResultEnum<T>;
+
     fn context_get(&self) -> CanvasRenderingContext2d;
     fn context(&self);
     fn point_radius_get(&self);

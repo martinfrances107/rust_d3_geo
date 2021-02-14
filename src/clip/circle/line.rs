@@ -7,14 +7,14 @@ use num_traits::FloatConst;
 use crate::point_equal::point_equal;
 use crate::stream::StreamClean;
 use crate::stream::StreamClipLineNode;
-use crate::stream::StreamSimpleNodeStub;
 use crate::stream::StreamPathResultNode;
 use crate::stream::StreamSimpleNode;
+use crate::stream::StreamSimpleNodeStub;
 use crate::stream::{Clean, CleanEnum, Stream};
 
-use super::BufferInTrait;
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
+use super::BufferInTrait;
 
 pub struct Line<T: CoordFloat> {
     c0: u8,           // code for previous point

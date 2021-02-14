@@ -13,8 +13,9 @@ mod equirectangular_test {
         equirectangular::EquirectangularRaw, projection_mutator::ProjectionMutator,
     };
     use rust_d3_geo::{path::Path, projection::equirectangular};
-
-    use std::{f64::consts::PI, fmt::Display, ops::AddAssign};
+    use std::f64::consts::PI;
+    use std::fmt::Display;
+    use std::ops::AddAssign;
 
     fn equirectangular() -> ProjectionMutator<f64> {
         let mut pm = EquirectangularRaw::<f64>::gen_projection_mutator();
