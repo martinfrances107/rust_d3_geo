@@ -27,10 +27,63 @@ use num_traits::FloatConst;
 // pub type StreamPathResultToCleanProcessor<T> =
 //     Box<dyn Fn(StreamPathResultNode<T>) -> StreamCleanNode<T>>;
 
-#[derive(Clone, Default, Debug)]
-pub struct StreamIdentity;
-impl<T> Stream<T> for StreamIdentity where T: CoordFloat + FloatConst {}
-impl<T> StreamInTrait<T> for StreamIdentity where T: CoordFloat + FloatConst {}
+/// A Stub acts as a black hole.
+/// A StreamIdentity acts as a 'pass through' node.
+pub struct StreamIdentity<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    stream: StreamSimpleNode<T>,
+}
+
+impl<T> Default for StreamIdentity<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    #[inline]
+    fn default() -> Self {
+        Self {
+            stream: StreamSimpleNodeStub::new(),
+        }
+    }
+}
+impl<T> Stream<T> for StreamIdentity<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    #[inline]
+    fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
+        self.stream.point(p, m);
+    }
+    #[inline]
+    fn sphere(&mut self) {
+        self.stream.sphere();
+    }
+    #[inline]
+    fn line_start(&mut self) {
+        self.stream.line_start();
+    }
+    #[inline]
+    fn line_end(&mut self) {
+        self.stream.line_end();
+    }
+    #[inline]
+    fn polygon_start(&mut self) {
+        self.stream.polygon_start();
+    }
+    #[inline]
+    fn polygon_end(&mut self) {
+        self.stream.polygon_end();
+    }
+}
+impl<T> StreamInTrait<T> for StreamIdentity<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn stream_in(&mut self, stream: StreamSimpleNode<T>) {
+        self.stream = stream;
+    }
+}
 
 #[derive(Clone, Default, Debug)]
 pub struct StreamPathResultIdentity;
@@ -340,7 +393,7 @@ impl StreamNodeStub {
     where
         T: CoordFloat + FloatConst,
     {
-        Rc::new(RefCell::new(StreamIdentity {}))
+        Rc::new(RefCell::new(StreamNodeStub))
     }
 }
 impl<T> Stream<T> for StreamNodeStub where T: CoordFloat + FloatConst {}
