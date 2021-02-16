@@ -17,7 +17,7 @@ mod equirectangular_test {
     use std::fmt::Display;
     use std::ops::AddAssign;
 
-    fn equirectangular() -> ProjectionMutator<f64> {
+    fn equirectangular() -> ProjectionMutator<'static, f64> {
         let mut pm = EquirectangularRaw::<f64>::gen_projection_mutator();
         pm.scale(900f64 / PI);
         pm.precision(0f64);
@@ -25,7 +25,10 @@ mod equirectangular_test {
     }
 
     #[inline]
-    fn test_area<T>(projection: Option<ProjectionMutator<T>>, object: &DataObject<T>) -> T
+    fn test_area<'a, T: 'static>(
+        projection: Option<ProjectionMutator<'a, T>>,
+        object: &DataObject<T>,
+    ) -> T
     where
         T: CoordFloat + FloatConst + Display + AddAssign,
     {

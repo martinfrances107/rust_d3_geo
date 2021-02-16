@@ -11,8 +11,8 @@ use std::rc::Rc;
 pub struct StereographicRaw;
 
 impl StereographicRaw {
-    pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>() -> ProjectionMutator<T>
-    {
+    pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>(
+    ) -> ProjectionMutator<'a, T> {
         let s: Rc<Box<dyn Transform<T>>> = Rc::new(Box::new(StereographicRaw {}));
         let mut projection = ProjectionMutator::from_projection_raw(s, None);
         projection.scale(T::from(250f64).unwrap());

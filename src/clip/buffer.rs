@@ -49,14 +49,14 @@ impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
 }
 
 impl<T: CoordFloat> PathResult<T> for ClipBuffer<T> {
-    fn result(&mut self) -> PathResultEnum<T> {
+    fn result(&mut self) -> Option<PathResultEnum<T>> {
         let result = self.lines.clone();
         self.lines.clear();
         self.line = None;
         // let result = &self.lines;
         // return result.to_vec();
         // TODO must fix this!!
-        return PathResultEnum::ClipBufferOutput(result.to_vec());
+        return Some(PathResultEnum::ClipBufferOutput(result.to_vec()));
     }
 }
 impl<T> StreamInTrait<T> for ClipBuffer<T>

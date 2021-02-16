@@ -75,10 +75,10 @@ impl<T> PathResult<T> for PathAreaStream<T>
 where
     T: CoordFloat + std::ops::AddAssign,
 {
-    fn result(&mut self) -> PathResultEnum<T> {
+    fn result(&mut self) -> Option<PathResultEnum<T>> {
         let area = self.area_sum / T::from(2).unwrap();
         self.area_sum = T::zero();
-        PathResultEnum::Area(area)
+        Some(PathResultEnum::Area(area))
     }
 }
 

@@ -42,8 +42,8 @@ where
     T: CoordFloat,
 {
     #[inline]
-    fn result(&mut self) -> PathResultEnum<T> {
-        PathResultEnum::None
+    fn result(&mut self) -> Option<PathResultEnum<T>> {
+        None
     }
 }
 

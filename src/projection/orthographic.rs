@@ -12,8 +12,8 @@ use std::rc::Rc;
 pub struct OrthographicRaw {}
 
 impl OrthographicRaw {
-    pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>() -> ProjectionMutator<T>
-    {
+    pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>(
+    ) -> ProjectionMutator<'a, T> {
         let s: Rc<Box<dyn Transform<T>>> = Rc::new(Box::new(OrthographicRaw {}));
         let mut projection = ProjectionMutator::from_projection_raw(s, None);
         projection.scale(T::from(249.5f64).unwrap());

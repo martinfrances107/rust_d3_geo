@@ -7,9 +7,9 @@ use num_traits::FloatConst;
 use crate::point_equal::point_equal;
 use crate::stream::StreamClean;
 use crate::stream::StreamClipLineNode;
+use crate::stream::StreamDummy;
 use crate::stream::StreamPathResultNode;
 use crate::stream::StreamSimpleNode;
-use crate::stream::StreamSimpleNodeStub;
 use crate::stream::{Clean, CleanEnum, Stream};
 
 use super::intersect::intersect;
@@ -58,7 +58,7 @@ impl<T: CoordFloat + FloatConst + 'static> Line<T> {
             v0: false,
             v00: false,
             // TOD pre or post clip.
-            stream: StreamSimpleNodeStub::new(),
+            stream: Rc::new(RefCell::new(StreamDummy::default())),
         }
     }
 

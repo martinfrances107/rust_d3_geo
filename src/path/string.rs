@@ -71,13 +71,13 @@ where
     T: CoordFloat + FloatConst,
 {
     #[inline]
-    fn result(&mut self) -> PathResultEnum<T> {
+    fn result(&mut self) -> Option<PathResultEnum<T>> {
         if self.string.is_empty() {
             let result = self.string.join(",");
             self.string = Vec::new();
-            return PathResultEnum::Sring(result);
+            return Some(PathResultEnum::Sring(result));
         } else {
-            return PathResultEnum::None;
+            return None;
         }
     }
 }

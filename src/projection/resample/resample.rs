@@ -7,9 +7,7 @@ use std::rc::Rc;
 use crate::stream::StreamPostClipNode;
 use crate::stream::StreamResampleNode;
 use crate::stream::StreamResampleTrait;
-use crate::{
-    cartesian::cartesian, stream::Stream, stream::StreamInTrait, stream::StreamSimpleNodeStub,
-};
+use crate::{cartesian::cartesian, stream::Stream, stream::StreamDummy, stream::StreamInTrait};
 // use crate::math::epsilon;
 use crate::stream::StreamSimpleNode;
 
@@ -81,7 +79,7 @@ where
                     c0: T::zero(), // previous point
                     cos_min_distance: (T::from(30f64).unwrap().to_radians()).cos(), // cos(minimum angular distance)
 
-                    stream: StreamSimpleNodeStub::new(),
+                    stream: Rc::new(RefCell::new(StreamDummy::default())),
                     use_line_point: true,
                     use_line_end: true,
                     use_line_start: true,

@@ -24,7 +24,7 @@ where
         })
     }
 
-    pub fn gen_projection_mutator<'a>() -> ProjectionMutator<T> {
+    pub fn gen_projection_mutator<'a>() -> ProjectionMutator<'a, T> {
         let s = Rc::new(EquirectangularRaw::new());
         let mut projection = ProjectionMutator::from_projection_raw(s, None);
         projection.scale(T::from(152.63f64).unwrap());

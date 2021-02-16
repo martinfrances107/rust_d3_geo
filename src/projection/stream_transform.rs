@@ -10,7 +10,6 @@ use crate::stream::StreamTransformNode;
 use crate::{stream::Stream, TransformIdentity};
 
 use crate::Transform;
-
 pub struct StreamTransform<T> {
     pub transform: Rc<Box<dyn Transform<T>>>,
     pub stream: StreamPreClipNode<T>,

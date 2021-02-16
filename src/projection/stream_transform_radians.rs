@@ -25,8 +25,8 @@ impl StreamTransformRadiansNodeStub {
         })))
     }
 }
-impl<T> Stream<T> for StreamTransformRadiansNodeStub where T: CoordFloat + FloatConst {}
 pub type StreamTransformRadiansNode<T> = Rc<RefCell<Box<StreamTransformRadians<T>>>>;
+impl<T> Stream<T> for StreamTransformRadiansNodeStub where T: CoordFloat + FloatConst {}
 impl<T> StreamTransformIn<T> for StreamTransformRadiansNode<T> {}
 
 pub struct StreamTransformRadians<T> {

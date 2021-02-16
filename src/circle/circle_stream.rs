@@ -5,7 +5,6 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
-use crate::stream::StreamSimpleNode;
 use crate::Transform;
 
 use super::{circle::CircleGenerator, circle_radius::circle_radius};

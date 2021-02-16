@@ -43,7 +43,7 @@ where
     #[inline]
     fn default() -> Self {
         Self {
-            stream: StreamSimpleNodeStub::new(),
+            stream: Rc::new(RefCell::new(StreamDummy::default())),
         }
     }
 }
@@ -53,27 +53,33 @@ where
 {
     #[inline]
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
-        self.stream.point(p, m);
+        let mut s = self.stream.borrow_mut();
+        s.point(p, m);
     }
     #[inline]
     fn sphere(&mut self) {
-        self.stream.sphere();
+        let mut s = self.stream.borrow_mut();
+        s.sphere();
     }
     #[inline]
     fn line_start(&mut self) {
-        self.stream.line_start();
+        let mut s = self.stream.borrow_mut();
+        s.line_start();
     }
     #[inline]
     fn line_end(&mut self) {
-        self.stream.line_end();
+        let mut s = self.stream.borrow_mut();
+        s.line_end();
     }
     #[inline]
     fn polygon_start(&mut self) {
-        self.stream.polygon_start();
+        let mut s = self.stream.borrow_mut();
+        s.polygon_start();
     }
     #[inline]
     fn polygon_end(&mut self) {
-        self.stream.polygon_end();
+        let mut s = self.stream.borrow_mut();
+        s.polygon_end();
     }
 }
 impl<T> StreamInTrait<T> for StreamIdentity<T>
@@ -263,9 +269,18 @@ where
 
 /// Node - holds state associated with the input/output of a StreamProcessor.
 /// Something that can be cloned and mutated.
+
 pub type StreamSimpleNode<T> = Rc<RefCell<dyn Stream<T>>>;
-impl<T> Stream<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
-impl<T> StreamInTrait<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
+// impl<T> Stream<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
+// impl<T> StreamInTrait<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
+// impl<T> StreamSimpleNode<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     fn new() -> StreamSimpleNode<T> {
+//         Rc::new(RefCell::new(StreamDummy::default()))
+//     }
+// }
 
 pub type StreamPathResultNode<T> = Rc<RefCell<dyn StreamPathResult<T>>>;
 impl<T> Stream<T> for StreamPathResultNode<T> where T: CoordFloat + FloatConst {}
@@ -356,18 +371,13 @@ where
     }
 }
 
-pub struct StreamSimpleNodeStub;
-impl StreamSimpleNodeStub {
-    #[inline]
-    pub fn new<T>() -> StreamSimpleNode<T>
-    where
-        T: CoordFloat + FloatConst,
-    {
-        Rc::new(RefCell::new(Self {}))
-    }
+#[derive(Debug, Default)]
+pub struct StreamDummy {
+    val: f64,
 }
-impl<T> Stream<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamInTrait<T> for StreamSimpleNodeStub where T: CoordFloat + FloatConst {}
+
+impl<T> Stream<T> for StreamDummy where T: CoordFloat + FloatConst {}
+impl<T> StreamInTrait<T> for StreamDummy where T: CoordFloat + FloatConst {}
 
 pub struct StreamTransformNodeStub;
 impl StreamTransformNodeStub {

@@ -4,8 +4,8 @@ use std::fmt::Debug;
 
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
-use crate::stream::StreamSimpleNode;
-use crate::stream::StreamSimpleNodeStub;
+use crate::stream::StreamDummy;
+// use crate::stream::StreamSimpleNode;
 use crate::Transform;
 use crate::{cartesian::cartesian, TransformIdentity};
 use crate::{cartesian::cartesian_normalize_in_place, stream::StreamIdentity};
