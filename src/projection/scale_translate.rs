@@ -1,7 +1,7 @@
 use crate::Transform;
 use geo::{CoordFloat, Coordinate};
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct ScaleTranslate<T> {
     k: T,
     dx: T,

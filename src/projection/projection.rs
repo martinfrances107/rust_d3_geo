@@ -258,7 +258,7 @@ pub trait Projection<T: CoordFloat> {
     //  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
     //  * This value corresponds to the Douglas–Peucker distance.
     //  */
-    fn get_precision(self) -> T;
+    fn get_precision(&self) -> T;
 
     // /**
     //  * Sets the threshold for the projection’s adaptive resampling to the specified value in PIxels and returns the projection.

@@ -260,7 +260,7 @@ where
     // };
 
     #[inline]
-    fn get_precision(self) -> T {
+    fn get_precision(&self) -> T {
         self.delta2.sqrt()
     }
 
