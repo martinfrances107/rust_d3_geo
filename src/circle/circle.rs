@@ -10,16 +10,14 @@ use crate::Transform;
 use crate::{cartesian::cartesian, TransformIdentity};
 use crate::{cartesian::cartesian_normalize_in_place, stream::StreamIdentity};
 
-use super::StreamType;
 use super::circle_stream::circle_stream;
 use super::CircleInArg;
 use super::CircleTrait;
 use super::FnValMaybe;
 use super::FnValMaybe2D;
+use super::StreamType;
 use std::cell::RefCell;
 use std::rc::Rc;
-
-
 
 /// Output of CircleGenertor::circle()
 pub struct CircleStream<T: CoordFloat> {
@@ -39,4 +37,3 @@ impl<T: CoordFloat + FloatConst> Stream<T> for CircleStream<T> {
         self.ring.push(x_rotated_deg);
     }
 }
-

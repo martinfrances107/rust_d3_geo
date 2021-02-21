@@ -10,13 +10,13 @@ use crate::Transform;
 use crate::{cartesian::cartesian, TransformIdentity};
 use crate::{cartesian::cartesian_normalize_in_place, stream::StreamIdentity};
 
-use super::StreamType;
-use super::circle_stream::circle_stream;
 use super::circle::CircleStream;
+use super::circle_stream::circle_stream;
 use super::CircleInArg;
 use super::CircleTrait;
 use super::FnValMaybe;
 use super::FnValMaybe2D;
+use super::StreamType;
 use std::cell::RefCell;
 use std::rc::Rc;
 
