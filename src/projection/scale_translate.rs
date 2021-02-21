@@ -17,7 +17,8 @@ impl<T> ScaleTranslate<T> {
     }
 }
 
-impl<T: CoordFloat> Transform<T> for ScaleTranslate<T> {
+impl<T: CoordFloat> Transform for ScaleTranslate<T> {
+    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;

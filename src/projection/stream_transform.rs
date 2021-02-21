@@ -10,19 +10,19 @@ use crate::stream::StreamTransformNode;
 use crate::{stream::Stream, TransformIdentity};
 
 use crate::Transform;
-pub struct StreamTransform<T> {
-    pub transform: Rc<Box<dyn Transform<T>>>,
+pub struct StreamTransform<T: CoordFloat> {
+    pub transform: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
     pub stream: StreamPreClipNode<T>,
 }
 
 pub trait StreamPreclipIn<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     fn stream_preclip_in(&mut self, stream: StreamPreClipNode<T>);
 }
 
-impl<T: CoordFloat + FloatConst + 'static> StreamPreclipIn<T> for StreamTransform<T> {
+impl<T: CoordFloat> StreamPreclipIn<T> for StreamTransform<T> {
     #[inline]
     fn stream_preclip_in(&mut self, stream: StreamPreClipNode<T>) {
         self.stream = stream;
@@ -30,9 +30,11 @@ impl<T: CoordFloat + FloatConst + 'static> StreamPreclipIn<T> for StreamTransfor
 }
 
 // pub type StreamTransformNode<T> = Rc<RefCell<Box<StreamTransform<T>>>>;
-impl<T: CoordFloat + FloatConst + 'static> StreamTransform<T> {
+impl<T: CoordFloat + FloatConst + std::default::Default + 'static> StreamTransform<T> {
     #[inline]
-    pub fn gen_node(transform: Option<Rc<Box<dyn Transform<T>>>>) -> StreamTransformNode<T> {
+    pub fn gen_node(
+        transform: Option<Rc<Box<dyn Transform<C = Coordinate<T>>>>>,
+    ) -> StreamTransformNode<T> {
         {
             match transform {
                 Some(transform) => Rc::new(RefCell::new(Self {
@@ -40,7 +42,7 @@ impl<T: CoordFloat + FloatConst + 'static> StreamTransform<T> {
                     stream: StreamPreClipNodeStub::new(),
                 })),
                 None => Rc::new(RefCell::new(Self {
-                    transform: Rc::new(Box::new(TransformIdentity {})),
+                    transform: Rc::new(Box::new(TransformIdentity::<T>::default())),
                     stream: StreamPreClipNodeStub::new(),
                 })),
             }

@@ -117,7 +117,7 @@ where
 fn projection_stream_noop() {}
 impl<T> Default for Path<'_, T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
     #[inline]
     fn default() -> Self {
@@ -133,7 +133,12 @@ where
 
 impl<T> Path<'_, T>
 where
-    T: CoordFloat + std::fmt::Display + FloatConst + std::ops::AddAssign + 'static,
+    T: CoordFloat
+        + std::fmt::Display
+        + FloatConst
+        + std::ops::AddAssign
+        + std::default::Default
+        + 'static,
 {
     #[inline]
     fn generate(
@@ -178,7 +183,7 @@ where
         T::zero()
     }
 
-    // fn set_projection(&mut self, ps: Option<Box<dyn Transform<T>>>) {
+    // fn set_projection(&mut self, ps: Option<Box<dyn Transform<C=Coordinate<T>>>>) {
     //     self.projection_in = ps;
     //     self.projection_stream_fn = None;
     // }

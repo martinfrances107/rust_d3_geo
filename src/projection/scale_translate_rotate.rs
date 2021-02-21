@@ -20,7 +20,14 @@ pub struct ScaleTranslateRotate<T: CoordFloat> {
 
 impl<T: CoordFloat + 'static> ScaleTranslateRotate<T> {
     #[inline]
-    pub fn new(k: T, dx: T, dy: T, sx: T, sy: T, alpha: T) -> Box<dyn Transform<T>> {
+    pub fn new(
+        k: T,
+        dx: T,
+        dy: T,
+        sx: T,
+        sy: T,
+        alpha: T,
+    ) -> Box<dyn Transform<C = Coordinate<T>>> {
         if alpha.is_zero() {
             ScaleTranslate::new(k, dx, dy, sx, sy)
         } else {
@@ -42,7 +49,8 @@ impl<T: CoordFloat + 'static> ScaleTranslateRotate<T> {
     }
 }
 
-impl<T: CoordFloat> Transform<T> for ScaleTranslateRotate<T> {
+impl<T: CoordFloat> Transform for ScaleTranslateRotate<T> {
+    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;

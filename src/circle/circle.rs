@@ -23,7 +23,7 @@ use std::rc::Rc;
 pub struct CircleStream<T: CoordFloat> {
     pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
-    pub rotate: Box<dyn Transform<T>>,
+    pub rotate: Box<dyn Transform<C = Coordinate<T>>>,
     pub ring: Vec<Coordinate<T>>,
 }
 

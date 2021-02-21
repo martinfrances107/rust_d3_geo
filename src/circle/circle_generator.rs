@@ -26,7 +26,7 @@ pub struct CircleGenerator<T: CoordFloat> {
     radius_fn: Box<dyn Fn(&CircleInArg) -> T>,
 }
 
-impl<T: CoordFloat + FloatConst + 'static> CircleGenerator<T> {
+impl<T: CoordFloat + FloatConst + std::default::Default + 'static> CircleGenerator<T> {
     pub fn new() -> Self {
         let center_fn = Box::new(|_in: &CircleInArg| Coordinate {
             x: T::zero(),

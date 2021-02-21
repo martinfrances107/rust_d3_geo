@@ -5,15 +5,28 @@ use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
+use std::marker::PhantomData;
 use std::rc::Rc;
 
-#[derive(Clone, Debug, Default)]
-pub struct StereographicRaw;
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+#[derive(Debug, Default)]
+pub struct StereographicRaw<T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
+}
 
-impl StereographicRaw {
-    pub fn gen_projection_mutator<'a, T: CoordFloat + FloatConst + 'static>(
-    ) -> ProjectionMutator<'a, T> {
-        let s: Rc<Box<dyn Transform<T>>> = Rc::new(Box::new(StereographicRaw {}));
+impl<T> StereographicRaw<T>
+where
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
+{
+    pub fn gen_projection_mutator<'a>() -> ProjectionMutator<'a, T> {
+        let s: Rc<Box<dyn Transform<C = Coordinate<T>>>> =
+            Rc::new(Box::new(StereographicRaw::default()));
         let mut projection = ProjectionMutator::from_projection_raw(s, None);
         projection.scale(T::from(250f64).unwrap());
         projection.clip_angle(StreamOrValueMaybe::Value(T::from(142f64).unwrap()));
@@ -21,7 +34,8 @@ impl StereographicRaw {
     }
 }
 
-impl<T: CoordFloat + 'static> Transform<T> for StereographicRaw {
+impl<T: CoordFloat + FloatConst + 'static> Transform for StereographicRaw<T> {
+    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();
         let k = T::one() + p.x.cos() * cy;

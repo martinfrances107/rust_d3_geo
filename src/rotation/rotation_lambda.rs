@@ -31,12 +31,13 @@ fn forward_rotation_lambda<T: CoordFloat + FloatConst>(
 
 impl<T: CoordFloat + FloatConst + 'static> RotationLambda<T> {
     #[inline]
-    pub fn new(delta_lambda: T) -> Box<dyn Transform<T>> {
+    pub fn new(delta_lambda: T) -> Box<dyn Transform<C = Coordinate<T>>> {
         Box::new(Self { delta_lambda })
     }
 }
 
-impl<T: CoordFloat + FloatConst> Transform<T> for RotationLambda<T> {
+impl<T: CoordFloat + FloatConst> Transform for RotationLambda<T> {
+    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         forward_rotation_lambda(self.delta_lambda, coordinates)

@@ -9,7 +9,7 @@ pub mod resample_none;
 // use crate::stream::StreamProcessor;
 // use crate::Transform;
 
-// pub fn gen_resample<T>(project: Rc<Box<dyn Transform<T>>>, delta2: Option<T>) -> StreamProcessor<T>
+// pub fn gen_resample<T>(project: Rc<Box<dyn Transform<C=Coordinate<T>>>>, delta2: Option<T>) -> StreamProcessor<T>
 // where
 //     T: CoordFloat + FloatConst + 'static,
 // {

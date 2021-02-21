@@ -4,11 +4,14 @@ use num_traits::FloatConst;
 use super::rotate_radians::RotateRadians;
 use crate::Transform;
 
-pub struct Rotation<T> {
-    rotate: Box<dyn Transform<T>>,
+pub struct Rotation<T>
+where
+    T: CoordFloat,
+{
+    rotate: Box<dyn Transform<C = Coordinate<T>>>,
 }
 
-impl<T: CoordFloat + FloatConst + 'static> Rotation<T> {
+impl<T: CoordFloat + FloatConst + std::default::Default + 'static> Rotation<T> {
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
         return Self {
             rotate: RotateRadians::new(
@@ -20,7 +23,8 @@ impl<T: CoordFloat + FloatConst + 'static> Rotation<T> {
     }
 }
 
-impl<T: CoordFloat> Transform<T> for Rotation<T> {
+impl<T: CoordFloat> Transform for Rotation<T> {
+    type C = Coordinate<T>;
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.transform(&Coordinate {
             x: coordinates.x.to_radians(),

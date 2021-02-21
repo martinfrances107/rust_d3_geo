@@ -1,6 +1,7 @@
 use crate::compose::Compose;
 use crate::Transform;
 use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::FloatConst;
 use std::rc::Rc;
 // use crate::TransformIdentity;
@@ -13,11 +14,11 @@ pub struct RotateRadians;
 
 impl RotateRadians {
     /// Returns a object implmenting the desired combination of rotations.
-    pub fn new<T: CoordFloat + FloatConst + 'static>(
+    pub fn new<T: CoordFloat + FloatConst + std::default::Default + 'static>(
         delta_lambda_p: T,
         delta_phi: T,
         delta_gamma: T,
-    ) -> Box<dyn Transform<T>> {
+    ) -> Box<dyn Transform<C = Coordinate<T>>> {
         let delta_lambda = delta_lambda_p % T::TAU();
         // Should I rotate by lambda, phi or gamma.
         let by_lambda = !delta_lambda.is_zero();
@@ -32,7 +33,7 @@ impl RotateRadians {
             (false, true, true) | (false, true, false) | (false, false, true) => {
                 RotationPhiGamma::new(delta_phi, delta_gamma)
             }
-            (false, false, false) => RotationIdentity::new(),
+            (false, false, false) => Box::new(RotationIdentity::default()),
         };
     }
 }

@@ -386,10 +386,10 @@ impl StreamTransformNodeStub {
     #[inline]
     pub fn new<T>() -> StreamTransformNode<T>
     where
-        T: CoordFloat + FloatConst,
+        T: CoordFloat + FloatConst + std::default::Default + 'static,
     {
         Rc::new(RefCell::new(StreamTransform {
-            transform: Rc::new(Box::new(TransformIdentity {})),
+            transform: Rc::new(Box::new(TransformIdentity::default())),
             stream: StreamPreClipNodeStub::new(),
         }))
     }

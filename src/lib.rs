@@ -5,6 +5,7 @@
 // #![allow(unused_imports)]
 
 use geo::{CoordFloat, Coordinate};
+use std::marker::PhantomData;
 
 extern crate web_sys;
 pub mod cartesian;
@@ -25,38 +26,34 @@ mod point_equal;
 mod stream;
 // mod transform_stream;
 
-#[derive(Copy, Clone, Debug)]
-pub struct TransformIdentity;
-// impl TransformIdentity {
-//     fn new() -> Self {
-//         return TransformIdentity {};
-//     }
-// }
-
-impl<T: CoordFloat> Transform<T> for TransformIdentity {}
-
-// Common to Projection, Rotation.
-pub trait Transform<T>
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+#[derive(Debug, Default)]
+pub struct TransformIdentity<T>
 where
     T: CoordFloat,
+    T: std::default::Default,
 {
+    phantom: PhantomData<T>,
+}
+
+impl<T: CoordFloat + std::default::Default> Transform for TransformIdentity<T> {
+    type C = Coordinate<T>;
+}
+
+// Common to Projection, Rotation.
+pub trait Transform {
+    type C: Clone;
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Self::C) -> Self::C {
         p.clone()
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Self::C) -> Self::C {
         p.clone()
     }
 }
 
-trait Person {
-    fn name(&self) -> String;
-}
-
-// Person is a supertrait of Student.
-// Implementing Student requires you to also impl Person.
-trait Student: Person {
-    fn university(&self) -> String;
-}

@@ -13,7 +13,7 @@ pub struct RotationPhiGamma<T> {
 
 impl<T: CoordFloat + 'static> RotationPhiGamma<T> {
     #[inline]
-    pub fn new(delta_phi: T, delta_gamma: T) -> Box<dyn Transform<T>> {
+    pub fn new(delta_phi: T, delta_gamma: T) -> Box<dyn Transform<C = Coordinate<T>>> {
         Box::new(Self {
             cos_delta_phi: delta_phi.cos(),
             sin_delta_phi: delta_phi.sin(),
@@ -23,7 +23,8 @@ impl<T: CoordFloat + 'static> RotationPhiGamma<T> {
     }
 }
 
-impl<T: CoordFloat> Transform<T> for RotationPhiGamma<T> {
+impl<T: CoordFloat> Transform for RotationPhiGamma<T> {
+    type C = Coordinate<T>;
     #[allow(clippy::many_single_char_names)]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let lambda = p.x;

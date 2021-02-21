@@ -8,14 +8,17 @@ use crate::stream::{Stream, StreamResampleNode};
 use crate::stream::{StreamNodeStub, StreamSimpleNode};
 use crate::Transform;
 
-pub struct ResampleNone<T> {
-    project: Rc<Box<dyn Transform<T>>>,
+pub struct ResampleNone<T>
+where
+    T: CoordFloat,
+{
+    project: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
     stream: StreamSimpleNode<T>,
 }
 
 impl<T: CoordFloat + FloatConst + 'static> ResampleNone<T> {
     #[inline]
-    pub fn gen_node(project: Rc<Box<dyn Transform<T>>>) -> StreamResampleNode<T> {
+    pub fn gen_node(project: Rc<Box<dyn Transform<C = Coordinate<T>>>>) -> StreamResampleNode<T> {
         Rc::new(RefCell::new(Self {
             project: project.clone(),
             stream: StreamNodeStub::new(),

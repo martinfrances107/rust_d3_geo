@@ -30,7 +30,7 @@ mod equirectangular_test {
         object: &DataObject<T>,
     ) -> T
     where
-        T: CoordFloat + FloatConst + Display + AddAssign,
+        T: CoordFloat + FloatConst + Display + AddAssign + std::default::Default,
     {
         Path::projection(projection).area(object)
     }

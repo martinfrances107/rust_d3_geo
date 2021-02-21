@@ -41,28 +41,28 @@ use super::scale_translate_rotate::ScaleTranslateRotate;
 #[derive(Clone)]
 pub struct ProjectionMutator<'a, T: CoordFloat + FloatConst> {
     // The mutator lives as long a the proejction it contnains.
-    project: Rc<Box<dyn Transform<T>>>,
+    project: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
     alpha: T, // post-rotate angle
     cache: Option<&'a Box<dyn Fn(Rc<RefCell<dyn Stream<T>>>) -> StreamTransformRadiansNode<T>>>,
     cache_stream: Option<StreamSimpleNode<T>>,
-    // clip_antimeridian: Option<Box<dyn Transform<T>>>,
+    // clip_antimeridian: Option<Box<dyn Transform<C=Coordinate<T>>>>,
     delta_lambda: T,
     delta_phi: T,
     delta_gamma: T,
     delta2: T, // precision
     k: T,      // scale
     project_resample: StreamResampleNode<T>,
-    project_transform: Rc<Box<dyn Transform<T>>>,
-    project_rotate_transform: Rc<Box<dyn Transform<T>>>,
+    project_transform: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
+    project_rotate_transform: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
     phi: T, // center
     preclip: StreamPreClipNode<T>,
     postclip: StreamPostClipNode<T>,
     x: T,
     y: T, // translate
     lambda: T,
-    rotate: Rc<Box<dyn Transform<T>>>, //rotate, pre-rotate
-    sx: T,                             // reflectX
-    sy: T,                             // reflectY
+    rotate: Rc<Box<dyn Transform<C = Coordinate<T>>>>, //rotate, pre-rotate
+    sx: T,                                             // reflectX
+    sy: T,                                             // reflectY
     theta: Option<T>,
     x0: Option<T>,
     y0: Option<T>,
@@ -70,9 +70,9 @@ pub struct ProjectionMutator<'a, T: CoordFloat + FloatConst> {
     y1: Option<T>, // post-clip extent
 }
 
-impl<'a, T: CoordFloat + FloatConst + 'static> ProjectionMutator<'_, T> {
+impl<'a, T: CoordFloat + FloatConst + std::default::Default + 'static> ProjectionMutator<'_, T> {
     pub fn from_projection_raw(
-        project: Rc<Box<dyn Transform<T>>>,
+        project: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
         delta2_p: Option<T>,
     ) -> ProjectionMutator<'a, T> {
         let delta2 = match delta2_p {
@@ -97,7 +97,7 @@ impl<'a, T: CoordFloat + FloatConst + 'static> ProjectionMutator<'_, T> {
             // translate
             lambda: T::zero(),
             phi: T::zero(),
-            rotate: Rc::new(Box::new(TransformIdentity {})), // pre-rotate
+            rotate: Rc::new(Box::new(TransformIdentity::default())), // pre-rotate
             preclip: StreamPreClipNodeStub::new(),
             postclip: StreamPostClipNodeStub::new(),
             sx: T::one(), // reflectX
@@ -110,11 +110,11 @@ impl<'a, T: CoordFloat + FloatConst + 'static> ProjectionMutator<'_, T> {
             y1: None, //postclip = identity, // post-clip extent
             y: T::from(250).unwrap(),
             project_resample: Resample::gen_node(
-                Rc::new(Box::new(TransformIdentity {})),
+                Rc::new(Box::new(TransformIdentity::default())),
                 Some(delta2),
             ),
-            project_transform: Rc::new(Box::new(TransformIdentity {})),
-            project_rotate_transform: Rc::new(Box::new(TransformIdentity {})),
+            project_transform: Rc::new(Box::new(TransformIdentity::default())),
+            project_rotate_transform: Rc::new(Box::new(TransformIdentity::default())),
         };
 
         pm.recenter();
@@ -200,10 +200,11 @@ impl<'a, T: CoordFloat + FloatConst + 'static> ProjectionMutator<'_, T> {
 
 impl<T> Stream<T> for ProjectionMutator<'_, T> where T: CoordFloat + FloatConst {}
 
-impl<T> Transform<T> for ProjectionMutator<'_, T>
+impl<T> Transform for ProjectionMutator<'_, T>
 where
     T: CoordFloat + FloatConst,
 {
+    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let r = Coordinate {
             x: p.x.to_radians(),
@@ -222,7 +223,7 @@ where
 
 impl<T> Projection<T> for ProjectionMutator<'_, T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
     // #[inline]
     // fn get_preclip(&self) -> StreamPreClipNode<T> {
