@@ -3,6 +3,7 @@
 #![allow(unused_imports)]
 
 pub mod circle;
+pub mod circle_generator;
 pub mod circle_radius;
 pub mod circle_stream;
 // mod stream;
@@ -27,6 +28,11 @@ pub enum FnValMaybe2D<T: CoordFloat> {
 pub enum CircleInArg {
     None,
     Arg(),
+}
+
+#[derive(Clone, Debug)]
+pub enum StreamType {
+    Polygon,
 }
 
 pub trait CircleTrait<T: CoordFloat> {

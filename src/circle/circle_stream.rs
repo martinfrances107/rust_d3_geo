@@ -7,7 +7,8 @@ use num_traits::FloatConst;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::{circle::CircleGenerator, circle_radius::circle_radius};
+use super::circle_generator::CircleGenerator;
+use super::circle_radius::circle_radius;
 use std::cell::RefCell;
 use std::rc::Rc;
 

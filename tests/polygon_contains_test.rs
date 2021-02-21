@@ -6,7 +6,7 @@ mod polygon_contains_test {
     use geo::Coordinate;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::circle::circle::CircleGenerator;
+    use rust_d3_geo::circle::circle_generator::CircleGenerator;
     use rust_d3_geo::circle::CircleInArg;
     use rust_d3_geo::circle::CircleTrait;
     use rust_d3_geo::circle::FnValMaybe;
