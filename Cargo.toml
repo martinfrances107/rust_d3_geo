@@ -13,7 +13,7 @@ delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 pretty_assertions = "0.6.1"
 
 [dependencies.web-sys]
-version = "0.3.46"
+version = "0.3.47"
 features = [
     "CanvasRenderingContext2d",
 ]

@@ -18,7 +18,7 @@ use super::FnValMaybe2D;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 enum StreamType {
     Polygon,
 }

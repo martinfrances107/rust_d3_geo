@@ -6,7 +6,7 @@ use super::projection_mutator::ProjectionMutator;
 use crate::Transform;
 use std::rc::Rc;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct EquirectangularRaw<T> {
     lambda: T,
     phi: T,

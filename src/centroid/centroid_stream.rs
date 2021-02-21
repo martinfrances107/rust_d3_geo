@@ -10,6 +10,7 @@ pub const EPSILON: f64 = 1e-6;
 pub const EPSILON2: f64 = 1e-12;
 
 #[allow(non_snake_case)]
+#[derive(Clone)]
 pub struct CentroidStream<T: CoordFloat> {
     W0: T,
     W1: T,

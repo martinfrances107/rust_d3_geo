@@ -13,6 +13,7 @@ pub trait StreamTransformIn<T> {
     }
 }
 
+#[derive(Clone, Default)]
 pub struct StreamTransformRadiansNodeStub;
 impl StreamTransformRadiansNodeStub {
     #[inline]

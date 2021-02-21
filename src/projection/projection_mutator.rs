@@ -38,6 +38,7 @@ use super::resample::resample::Resample;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 // use super::path::PathTrait;
 
+#[derive(Clone)]
 pub struct ProjectionMutator<'a, T: CoordFloat + FloatConst> {
     // The mutator lives as long a the proejction it contnains.
     project: Rc<Box<dyn Transform<T>>>,

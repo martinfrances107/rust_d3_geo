@@ -16,7 +16,7 @@ use crate::Transform;
 use super::resample_none::ResampleNone;
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
-// #[derive(Clone)]
+#[derive(Clone)]
 pub struct Resample<T>
 where
     T: CoordFloat,

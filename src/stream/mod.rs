@@ -162,6 +162,7 @@ pub type StreamClipLineNode<T> = Rc<RefCell<dyn StreamClipLine<T>>>;
 impl<T> Stream<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> BufferInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
+#[derive(Clone, Default)]
 pub struct StreamClipLineNodeStub;
 impl StreamClipLineNodeStub {
     #[inline]
@@ -223,7 +224,7 @@ impl<T> Stream<T> for StreamResampleNodeStub where T: CoordFloat + FloatConst {}
 /// Ci CompareIntersections param type
 /// See StreamClipTrait.
 #[derive(Clone, Debug, Default)]
-pub struct Ci<T: CoordFloat>
+pub struct CompareIntersection<T: CoordFloat>
 where
     T: CoordFloat + FloatConst,
 {
@@ -251,7 +252,7 @@ where
     // fn clip_line(&self, stream: StreamPathResultNode<T>) -> StreamCleanNode<T>;
     // Intersections are sorted along the clip edge. For both antimeridian cutting
     // and circle clipPIng, the same comparison is used.
-    fn compare_intersection(&self, a: Ci<T>, b: Ci<T>) -> T {
+    fn compare_intersection(&self, a: CompareIntersection<T>, b: CompareIntersection<T>) -> T {
         let a_dashed = a.x;
         let part1 = match a_dashed.x < T::zero() {
             true => a_dashed.y - T::FRAC_PI_2() - T::epsilon(),
@@ -294,6 +295,7 @@ where
         // No-op.
     }
 }
+#[derive(Clone, Default)]
 pub struct StreamPreClipNodeStub;
 impl StreamPreClipNodeStub {
     #[inline]

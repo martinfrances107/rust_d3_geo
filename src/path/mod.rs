@@ -24,6 +24,7 @@ use num_traits::{AsPrimitive, FloatConst};
 use std::cell::RefCell;
 use std::rc::Rc;
 
+#[derive(Clone)]
 pub enum PathResultEnum<T>
 where
     T: CoordFloat,
