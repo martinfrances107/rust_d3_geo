@@ -1,7 +1,7 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use super::rotate_radians::RotateRadians;
+use super::rotate_radians::rotate_radians_transform;
 use crate::Transform;
 
 pub struct Rotation<T>
@@ -14,7 +14,7 @@ where
 impl<T: CoordFloat + FloatConst + std::default::Default + 'static> Rotation<T> {
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
         return Self {
-            rotate: RotateRadians::new(
+            rotate: rotate_radians_transform(
                 delta_lambda.to_radians(),
                 delta_phi.to_radians(),
                 delta_gamma.to_radians(),

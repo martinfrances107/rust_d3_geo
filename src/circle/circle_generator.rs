@@ -2,7 +2,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 use std::fmt::Debug;
 
-use crate::rotation::rotate_radians::RotateRadians;
+use crate::rotation::rotate_radians::rotate_radians_transform;
 use crate::stream::Stream;
 use crate::stream::StreamDummy;
 // use crate::stream::StreamSimpleNode;
@@ -49,7 +49,7 @@ impl<T: CoordFloat + FloatConst + std::default::Default + 'static> CircleGenerat
         let r = (*self.radius_fn)(&arg).to_radians();
         let p = (*self.precision_fn)(&arg).to_radians();
 
-        let rotate = RotateRadians::new(-c.x.to_radians(), -c.y.to_radians(), T::zero());
+        let rotate = rotate_radians_transform(-c.x.to_radians(), -c.y.to_radians(), T::zero());
 
         let mut cs = CircleStream {
             ring: Vec::new(),

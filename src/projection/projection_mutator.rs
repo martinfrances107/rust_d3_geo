@@ -15,7 +15,7 @@ use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::stream_transform_radians::StreamTransformRadiansNode;
 use crate::projection::stream_transform_radians::StreamTransformRadiansNodeStub;
 
-use crate::rotation::rotate_radians::RotateRadians;
+use crate::rotation::rotate_radians::rotate_radians_transform;
 
 use crate::stream::Stream;
 use crate::stream::StreamPostClipNode;
@@ -148,7 +148,7 @@ impl<'a, T: CoordFloat + FloatConst + std::default::Default + 'static> Projectio
             self.alpha,
         ));
 
-        self.rotate = Rc::new(RotateRadians::new(
+        self.rotate = Rc::new(rotate_radians_transform(
             self.delta_lambda,
             self.delta_phi,
             self.delta_gamma,
