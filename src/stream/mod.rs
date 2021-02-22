@@ -9,17 +9,18 @@ pub mod multi_point;
 pub mod multi_polygon;
 pub mod point;
 pub mod polygon;
-use crate::projection::stream_transform::StreamPreclipIn;
-use crate::{projection::stream_transform::StreamTransform, TransformIdentity};
+
 use std::cell::RefCell;
+use std::marker::PhantomData;
 use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 use crate::clip::BufferInTrait;
 use crate::path::PathResult;
-
-use num_traits::FloatConst;
+use crate::projection::stream_transform::StreamPreclipIn;
+use crate::{projection::stream_transform::StreamTransform, TransformIdentity};
 
 // pub type StreamProcessor<T> = Box<dyn Fn(StreamNode<T>) -> StreamNode<T>>;
 // pub type StreamPathResultToStreamProcessor<T> =
@@ -38,7 +39,7 @@ where
 
 impl<T> Default for StreamIdentity<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
     #[inline]
     fn default() -> Self {
@@ -47,10 +48,11 @@ where
         }
     }
 }
-impl<T> Stream<T> for StreamIdentity<T>
+impl<T> Stream for StreamIdentity<T>
 where
     T: CoordFloat + FloatConst,
 {
+    type C = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         let mut s = self.stream.borrow_mut();
@@ -91,16 +93,31 @@ where
     }
 }
 
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Default, Debug)]
-pub struct StreamPathResultIdentity;
-impl<T> StreamPathResult<T> for StreamPathResultIdentity where T: CoordFloat + FloatConst {}
-impl<T> Stream<T> for StreamPathResultIdentity where T: CoordFloat + FloatConst {}
-impl<T> StreamInTrait<T> for StreamPathResultIdentity where T: CoordFloat + FloatConst {}
-impl<T> PathResult<T> for StreamPathResultIdentity where T: CoordFloat + FloatConst {}
+pub struct StreamPathResultIdentity<T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
+}
+impl<T> StreamPathResult<T> for StreamPathResultIdentity<T> where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamPathResultIdentity<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
+impl<T> StreamInTrait<T> for StreamPathResultIdentity<T> where T: CoordFloat + FloatConst {}
+impl<T> PathResult<T> for StreamPathResultIdentity<T> where T: CoordFloat + FloatConst {}
 
 /// Applies to DataObject's
-pub trait Streamable<T: CoordFloat + FloatConst> {
-    fn to_stream(&self, stream: &mut impl Stream<T>);
+pub trait Streamable {
+    type SC;
+    fn to_stream(&self, stream: &mut impl Stream<C = Self::SC>);
 }
 
 // Takes a line and cuts into visible segments. Return values used for polygon
@@ -121,11 +138,9 @@ pub trait Clean {
     fn clean(&self) -> CleanEnum;
 }
 
-pub trait Stream<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn point(&mut self, _p: Coordinate<T>, _m: Option<u8>) {}
+pub trait Stream {
+    type C;
+    fn point(&mut self, _p: Self::C, _m: Option<u8>) {}
     fn sphere(&mut self) {}
     fn line_start(&mut self) {}
     fn line_end(&mut self) {}
@@ -140,50 +155,74 @@ where
     fn stream_in(&mut self, _stream: StreamSimpleNode<T>) {}
 }
 
-pub trait StreamClipLine<T>: Stream<T> + Clean + BufferInTrait<T>
+pub trait StreamClipLine<T>: Stream + Clean + BufferInTrait<T>
 where
     T: CoordFloat + FloatConst,
 {
 }
 
-pub trait StreamClean<T>: Stream<T> + Clean
+pub trait StreamClean<T>: Stream + Clean
 where
     T: CoordFloat + FloatConst,
 {
 }
 
-pub trait StreamPathResult<T>: Stream<T> + PathResult<T>
+pub trait StreamPathResult<T>: Stream + PathResult<T>
 where
     T: CoordFloat + FloatConst,
 {
 }
 
-pub type StreamClipLineNode<T> = Rc<RefCell<dyn StreamClipLine<T>>>;
-impl<T> Stream<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
+pub type StreamClipLineNode<T> = Rc<RefCell<dyn StreamClipLine<T, C = Coordinate<T>>>>;
+impl<T> Stream for StreamClipLineNode<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
 impl<T> StreamInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
 impl<T> BufferInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
-#[derive(Clone, Default)]
-pub struct StreamClipLineNodeStub;
-impl StreamClipLineNodeStub {
+
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+#[derive(Debug, Default)]
+pub struct StreamClipLineNodeStub<T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
+}
+
+impl<T> StreamClipLineNodeStub<T>
+where
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
+{
     #[inline]
-    pub fn new<T>() -> StreamClipLineNode<T>
-    where
-        T: CoordFloat + FloatConst,
-    {
-        Rc::new(RefCell::new(Self {}))
+    pub fn new() -> StreamClipLineNode<T> {
+        Rc::new(RefCell::new(Self::default()))
     }
 }
-impl<T> StreamClipLine<T> for StreamClipLineNodeStub where T: CoordFloat + FloatConst {}
-impl<T> Stream<T> for StreamClipLineNodeStub where T: CoordFloat + FloatConst {}
-impl Clean for StreamClipLineNodeStub {
+impl<T> StreamClipLine<T> for StreamClipLineNodeStub<T> where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamClipLineNodeStub<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
+impl<T> Clean for StreamClipLineNodeStub<T>
+where
+    T: CoordFloat + FloatConst,
+{
     fn clean(&self) -> CleanEnum {
         CleanEnum::NoIntersections
     }
 }
-impl<T> BufferInTrait<T> for StreamClipLineNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamPreClipTrait<T> for StreamClipLineNodeStub where T: CoordFloat + FloatConst {}
+impl<T> BufferInTrait<T> for StreamClipLineNodeStub<T> where T: CoordFloat + FloatConst {}
+impl<T> StreamPreClipTrait<T> for StreamClipLineNodeStub<T> where T: CoordFloat + FloatConst {}
 
-impl<T> StreamClipTrait<T> for StreamClipLineNodeStub where T: CoordFloat + FloatConst {}
+impl<T> StreamClipTrait<T> for StreamClipLineNodeStub<T> where T: CoordFloat + FloatConst {}
 
 pub trait StreamResampleTrait<T>
 where
@@ -201,17 +240,28 @@ where
     }
 }
 
-pub struct StreamResampleNodeStub;
-impl StreamResampleNodeStub {
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+#[derive(Debug, Default)]
+pub struct StreamResampleNodeStub<T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
+}
+
+impl<T> StreamResampleNodeStub<T>
+where
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
+{
     #[inline]
-    fn new<T>() -> StreamResampleNode<T>
-    where
-        T: CoordFloat + FloatConst,
-    {
-        Rc::new(RefCell::new(Self {}))
+    fn new() -> StreamResampleNode<T> {
+        Rc::new(RefCell::new(Self::default()))
     }
 }
-impl<T> StreamResampleTrait<T> for StreamResampleNodeStub
+impl<T> StreamResampleTrait<T> for StreamResampleNodeStub<T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -219,7 +269,12 @@ where
         // No-op.
     }
 }
-impl<T> Stream<T> for StreamResampleNodeStub where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamResampleNodeStub<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
 
 /// Ci CompareIntersections param type
 /// See StreamClipTrait.
@@ -230,7 +285,7 @@ where
 {
     x: Coordinate<T>,
 }
-pub trait StreamClipTrait<T>: Stream<T>
+pub trait StreamClipTrait<T>: Stream
 where
     T: CoordFloat + FloatConst,
 {
@@ -271,8 +326,8 @@ where
 /// Node - holds state associated with the input/output of a StreamProcessor.
 /// Something that can be cloned and mutated.
 
-pub type StreamSimpleNode<T> = Rc<RefCell<dyn Stream<T>>>;
-// impl<T> Stream<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
+pub type StreamSimpleNode<T> = Rc<RefCell<dyn Stream<C = Coordinate<T>>>>;
+// impl<T> Stream for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
 // impl<T> StreamInTrait<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
 // impl<T> StreamSimpleNode<T>
 // where
@@ -283,8 +338,13 @@ pub type StreamSimpleNode<T> = Rc<RefCell<dyn Stream<T>>>;
 //     }
 // }
 
-pub type StreamPathResultNode<T> = Rc<RefCell<dyn StreamPathResult<T>>>;
-impl<T> Stream<T> for StreamPathResultNode<T> where T: CoordFloat + FloatConst {}
+pub type StreamPathResultNode<T> = Rc<RefCell<dyn StreamPathResult<T, C = Coordinate<T>>>>;
+impl<T> Stream for StreamPathResultNode<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
 impl<T> StreamInTrait<T> for StreamPathResultNode<T> where T: CoordFloat + FloatConst {}
 
 pub trait StreamPreClipTrait<T>: StreamClipTrait<T>
@@ -295,19 +355,29 @@ where
         // No-op.
     }
 }
-#[derive(Clone, Default)]
-pub struct StreamPreClipNodeStub;
-impl StreamPreClipNodeStub {
+
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+#[derive(Debug, Default)]
+pub struct StreamPreClipNodeStub<T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
+}
+impl<T> StreamPreClipNodeStub<T>
+where
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
+{
     #[inline]
-    pub fn new<T>() -> StreamPreClipNode<T>
-    where
-        T: CoordFloat + FloatConst,
-    {
-        Rc::new(RefCell::new(Self {}))
+    pub fn new() -> StreamPreClipNode<T> {
+        Rc::new(RefCell::new(Self::default()))
     }
 }
 
-impl<T> StreamPreClipTrait<T> for StreamPreClipNodeStub
+impl<T> StreamPreClipTrait<T> for StreamPreClipNodeStub<T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -315,8 +385,13 @@ where
         // No-op.
     }
 }
-impl<T> Stream<T> for StreamPreClipNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamClipTrait<T> for StreamPreClipNodeStub where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamPreClipNodeStub<T>
+where
+    T: CoordFloat,
+{
+    type C = Coordinate<T>;
+}
+impl<T> StreamClipTrait<T> for StreamPreClipNodeStub<T> where T: CoordFloat + FloatConst {}
 
 pub trait StreamPostClipTrait<T>: StreamClipTrait<T>
 where
@@ -326,25 +401,46 @@ where
         // No-op.
     }
 }
-pub struct StreamPostClipNodeStub;
-impl StreamPostClipNodeStub {
+
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+#[derive(Debug, Default)]
+pub struct StreamPostClipNodeStub<T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
+}
+impl<T> StreamPostClipNodeStub<T>
+where
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
+{
     #[inline]
-    pub fn new<T>() -> StreamPostClipNode<T>
-    where
-        T: CoordFloat + FloatConst,
-    {
-        Rc::new(RefCell::new(Self {}))
+    pub fn new() -> StreamPostClipNode<T> {
+        Rc::new(RefCell::new(Self::default()))
     }
 }
 
-impl<T> StreamPostClipTrait<T> for StreamPostClipNodeStub where T: CoordFloat + FloatConst {}
+impl<T> StreamPostClipTrait<T> for StreamPostClipNodeStub<T> where T: CoordFloat + FloatConst {}
 
-impl<T> Stream<T> for StreamPostClipNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamClipTrait<T> for StreamPostClipNodeStub where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamPostClipNodeStub<T>
+where
+    T: CoordFloat,
+{
+    type C = Coordinate<T>;
+}
+impl<T> StreamClipTrait<T> for StreamPostClipNodeStub<T> where T: CoordFloat + FloatConst {}
 
-pub type StreamPreClipNode<T> = Rc<RefCell<dyn StreamPreClipTrait<T>>>;
+pub type StreamPreClipNode<T> = Rc<RefCell<dyn StreamPreClipTrait<T, C = Coordinate<T>>>>;
 impl<T> StreamClipTrait<T> for StreamPreClipNode<T> where T: CoordFloat + FloatConst {}
-impl<T> Stream<T> for StreamPreClipNode<T> where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamPreClipNode<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
 
 impl<T> StreamPreClipTrait<T> for StreamPreClipNode<T>
 where
@@ -356,13 +452,23 @@ where
     }
 }
 
-pub type StreamPostClipNode<T> = Rc<RefCell<dyn StreamPostClipTrait<T>>>;
+pub type StreamPostClipNode<T> = Rc<RefCell<dyn StreamPostClipTrait<T, C = Coordinate<T>>>>;
 impl<T> StreamPostClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
 impl<T> StreamClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
-impl<T> Stream<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamPostClipNode<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
 
 pub type StreamTransformNode<T> = Rc<RefCell<StreamTransform<T>>>;
-impl<T> Stream<T> for StreamTransformNode<T> where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamTransformNode<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
 impl<T> StreamPreclipIn<T> for StreamTransformNode<T>
 where
     T: CoordFloat + FloatConst,
@@ -373,21 +479,44 @@ where
     }
 }
 
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Debug, Default)]
-pub struct StreamDummy {
-    val: f64,
+pub struct StreamDummy<T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
 }
 
-impl<T> Stream<T> for StreamDummy where T: CoordFloat + FloatConst {}
-impl<T> StreamInTrait<T> for StreamDummy where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamDummy<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
+impl<T> StreamInTrait<T> for StreamDummy<T> where T: CoordFloat + FloatConst {}
 
-pub struct StreamTransformNodeStub;
-impl StreamTransformNodeStub {
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+#[derive(Debug, Default)]
+pub struct StreamTransformNodeStub<T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
+}
+
+impl<T> StreamTransformNodeStub<T>
+where
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
+{
     #[inline]
-    pub fn new<T>() -> StreamTransformNode<T>
-    where
-        T: CoordFloat + FloatConst + std::default::Default + 'static,
-    {
+    pub fn new() -> StreamTransformNode<T> {
         Rc::new(RefCell::new(StreamTransform {
             transform: Rc::new(Box::new(TransformIdentity::default())),
             stream: StreamPreClipNodeStub::new(),
@@ -395,31 +524,71 @@ impl StreamTransformNodeStub {
     }
 }
 
-impl<T> Stream<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamInTrait<T> for StreamTransformNodeStub where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamTransformNodeStub<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
+impl<T> StreamInTrait<T> for StreamTransformNodeStub<T> where T: CoordFloat + FloatConst {}
 
-pub struct StreamNodeStub;
-impl StreamNodeStub {
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+#[derive(Debug, Default)]
+pub struct StreamNodeStub<T>
+where
+    T: CoordFloat + std::default::Default,
+{
+    phantom: PhantomData<T>,
+}
+
+impl<T> StreamNodeStub<T>
+where
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
+{
     #[inline]
-    pub fn new<T>() -> StreamSimpleNode<T>
-    where
-        T: CoordFloat + FloatConst,
-    {
-        Rc::new(RefCell::new(StreamNodeStub))
+    pub fn new() -> StreamSimpleNode<T> {
+        Rc::new(RefCell::new(StreamNodeStub::<T>::default()))
     }
 }
-impl<T> Stream<T> for StreamNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamInTrait<T> for StreamNodeStub where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamNodeStub<T>
+where
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
+{
+    type C = Coordinate<T>;
+}
+impl<T> StreamInTrait<T> for StreamNodeStub<T> where
+    T: CoordFloat + FloatConst + std::default::Default
+{
+}
 
-pub struct StreamPathResultNodeStub;
-impl StreamPathResultNodeStub {
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+#[derive(Debug, Default)]
+pub struct StreamPathResultNodeStub<T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
+}
+
+impl<T> StreamPathResultNodeStub<T>
+where
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
+{
     #[inline]
-    pub fn new<T>() -> StreamPathResultNode<T>
-    where
-        T: CoordFloat + FloatConst,
-    {
-        Rc::new(RefCell::new(StreamPathResultIdentity {}))
+    pub fn new() -> StreamPathResultNode<T> {
+        Rc::new(RefCell::new(StreamPathResultIdentity::default()))
     }
 }
-impl<T> Stream<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst {}
-impl<T> StreamInTrait<T> for StreamPathResultNodeStub where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamPathResultNodeStub<T>
+where
+    T: CoordFloat,
+{
+    type C = Coordinate<T>;
+}
+impl<T> StreamInTrait<T> for StreamPathResultNodeStub<T> where T: CoordFloat + FloatConst {}

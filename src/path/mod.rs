@@ -97,7 +97,7 @@ where
 
 // }
 
-trait PathStreamTrait<T>: Stream<T> + PathTrait<T> + PathResult<T>
+trait PathStreamTrait<T>: Stream + PathTrait<T> + PathResult<T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -110,7 +110,8 @@ where
     context: Option<CanvasRenderingContext2d>,
     context_stream: Option<Box<dyn PointRadiusTrait<T>>>,
     point_radius: PointRadiusEnum<T>,
-    projection_stream: Box<dyn Fn(Rc<RefCell<dyn Stream<T>>>) -> StreamTransformRadiansNode<T>>,
+    projection_stream:
+        Box<dyn Fn(Rc<RefCell<dyn Stream<C = Coordinate<T>>>>) -> StreamTransformRadiansNode<T>>,
     projection: Option<ProjectionMutator<'a, T>>,
 }
 
@@ -194,7 +195,7 @@ where
     {
         let projection: Option<ProjectionMutator<T>>;
         let projection_stream: Box<
-            dyn Fn(Rc<RefCell<dyn Stream<T>>>) -> StreamTransformRadiansNode<T>,
+            dyn Fn(Rc<RefCell<dyn Stream<C = Coordinate<T>>>>) -> StreamTransformRadiansNode<T>,
         >;
 
         //  let ret =  arguments.length ? (projectionStream = _ == null ? (projection = null, identity) : (projection = _).stream, path) : projection;

@@ -3,6 +3,7 @@ use crate::stream::Streamable;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
+#[derive(Clone)]
 pub struct LengthStream<T: CoordFloat + FloatConst> {
     // sphere_fn: fn(&mut Self, f64, f64),
     point_fn: fn(&mut Self, Coordinate<T>),
@@ -30,7 +31,7 @@ impl<T: CoordFloat + FloatConst> Default for LengthStream<T> {
 }
 
 impl<T: CoordFloat + FloatConst> LengthStream<T> {
-    pub fn calc(object: &impl Streamable<T>) -> T {
+    pub fn calc(object: &impl Streamable<SC = Coordinate<T>>) -> T {
         let mut ls = LengthStream::default();
         object.to_stream(&mut ls);
         return ls.length_sum;
@@ -78,7 +79,8 @@ impl<T: CoordFloat + FloatConst> LengthStream<T> {
     fn line_end_noop(&mut self) {}
 }
 
-impl<T: CoordFloat + FloatConst> Stream<T> for LengthStream<T> {
+impl<T: CoordFloat + FloatConst> Stream for LengthStream<T> {
+    type C = Coordinate<T>;
     fn point(&mut self, p: Coordinate<T>, _z: Option<u8>) {
         (self.point_fn)(self, p);
     }

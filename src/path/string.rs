@@ -82,10 +82,11 @@ where
     }
 }
 
-impl<T> Stream<T> for PathString<T>
+impl<T> Stream for PathString<T>
 where
     T: CoordFloat + FloatConst + std::fmt::Display,
 {
+    type C = Coordinate<T>;
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(0f64);

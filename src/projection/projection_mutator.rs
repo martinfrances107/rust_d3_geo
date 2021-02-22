@@ -43,7 +43,11 @@ pub struct ProjectionMutator<'a, T: CoordFloat + FloatConst> {
     // The mutator lives as long a the proejction it contnains.
     project: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
     alpha: T, // post-rotate angle
-    cache: Option<&'a Box<dyn Fn(Rc<RefCell<dyn Stream<T>>>) -> StreamTransformRadiansNode<T>>>,
+    cache: Option<
+        &'a Box<
+            dyn Fn(Rc<RefCell<dyn Stream<C = Coordinate<T>>>>) -> StreamTransformRadiansNode<T>,
+        >,
+    >,
     cache_stream: Option<StreamSimpleNode<T>>,
     // clip_antimeridian: Option<Box<dyn Transform<C=Coordinate<T>>>>,
     delta_lambda: T,
@@ -168,13 +172,14 @@ impl<'a, T: CoordFloat + FloatConst + std::default::Default + 'static> Projectio
     pub fn stream(
         &mut self,
         // stream: Option<StreamSimpleNode<T>>,
-    ) -> Box<dyn Fn(Rc<RefCell<dyn Stream<T>>>) -> StreamTransformRadiansNode<T> + '_> {
+    ) -> Box<dyn Fn(Rc<RefCell<dyn Stream<C = Coordinate<T>>>>) -> StreamTransformRadiansNode<T> + '_>
+    {
         // return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
         return match &self.cache {
             Some(c) => Box::new(*c),
             None => {
                 // self.cache_stream = Some(stream.clone());
-                Box::new(move |stream: Rc<RefCell<dyn Stream<T>>>| {
+                Box::new(move |stream: Rc<RefCell<dyn Stream<C = Coordinate<T>>>>| {
                     let mut postclip = self.postclip.clone();
                     postclip.stream_in(stream);
 
@@ -198,7 +203,12 @@ impl<'a, T: CoordFloat + FloatConst + std::default::Default + 'static> Projectio
     }
 }
 
-impl<T> Stream<T> for ProjectionMutator<'_, T> where T: CoordFloat + FloatConst {}
+impl<T> Stream for ProjectionMutator<'_, T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
 
 impl<T> Transform for ProjectionMutator<'_, T>
 where

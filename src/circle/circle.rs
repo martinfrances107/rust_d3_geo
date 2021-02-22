@@ -27,7 +27,8 @@ pub struct CircleStream<T: CoordFloat> {
     pub ring: Vec<Coordinate<T>>,
 }
 
-impl<T: CoordFloat + FloatConst> Stream<T> for CircleStream<T> {
+impl<T: CoordFloat + FloatConst> Stream for CircleStream<T> {
+    type C = Coordinate<T>;
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         let x_rotated = self.rotate.invert(&p);
         let x_rotated_deg = Coordinate {

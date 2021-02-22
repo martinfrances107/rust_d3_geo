@@ -7,7 +7,7 @@
 // use geo::Line;
 
 // impl<T: CoordFloat + FloatConst> Streamable<T> for Line<T> {
-//     fn to_stream(&self, stream: &mut impl Stream<T>) {
+//     fn to_stream(&self, stream: &mut impl Stream) {
 //         // TODO there must be a better conversion.
 //         stream.point(
 //             Coordinate {

@@ -174,7 +174,7 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
         self.point_fn = Self::centroid_ring_point_first;
     }
 
-    pub fn centroid(&mut self, d_object: &impl Streamable<T>) -> Point<T> {
+    pub fn centroid(&mut self, d_object: &impl Streamable<SC = Coordinate<T>>) -> Point<T> {
         d_object.to_stream(self);
 
         let mut x = self.X2;
@@ -204,7 +204,8 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign> Stream<T> for CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign> Stream for CentroidStream<T> {
+    type C = Coordinate<T>;
     #[inline]
     fn line_end(&mut self) {
         (self.line_end_fn)(self);

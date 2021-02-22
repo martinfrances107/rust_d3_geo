@@ -5,8 +5,9 @@ use geo::LineString;
 use geo::{coords_iter::CoordsIter, CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-impl<T: CoordFloat + FloatConst> Streamable<T> for LineString<T> {
-    fn to_stream(&self, stream: &mut impl Stream<T>) {
+impl<T: CoordFloat + FloatConst> Streamable for LineString<T> {
+    type SC = Coordinate<T>;
+    fn to_stream(&self, stream: &mut impl Stream<C = Coordinate<T>>) {
         // processor(&Geometry::LineString(self.clone()), stream);
         let points: Vec<Coordinate<T>> = self.coords_iter().collect();
         line_processor(&points, stream, 0);

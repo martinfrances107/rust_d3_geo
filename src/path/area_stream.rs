@@ -82,10 +82,11 @@ where
     }
 }
 
-impl<T> Stream<T> for PathAreaStream<T>
+impl<T> Stream for PathAreaStream<T>
 where
     T: CoordFloat + FloatConst + std::ops::AddAssign,
 {
+    type C = Coordinate<T>;
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         (self.point_fn)(self, p, m);
     }

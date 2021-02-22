@@ -17,8 +17,9 @@ pub struct ClipBase<T: CoordFloat + FloatConst> {
     pub ring_buffer_node: StreamPathResultNode<T>,
     pub ring_sink_node: StreamClipLineNode<T>,
     pub segments: Vec<Vec<LineElem<T>>>,
-    pub interpolate:
-        Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut dyn Stream<T>)>,
+    pub interpolate: Box<
+        dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut dyn Stream<C = Coordinate<T>>),
+    >,
     pub point_visible: Box<dyn Fn(Coordinate<T>, Option<u8>) -> bool>,
     pub start: Coordinate<T>,
     pub use_ring: bool,
@@ -29,14 +30,14 @@ pub struct ClipBase<T: CoordFloat + FloatConst> {
 
 impl<T> Default for ClipBase<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
     fn default() -> Self {
         let interpolate = Box::new(
             |_from: Option<Coordinate<T>>,
              _to: Option<Coordinate<T>>,
              _direction: T,
-             _stream: &mut dyn Stream<T>| {
+             _stream: &mut dyn Stream<C = Coordinate<T>>| {
                 panic!("Must be overriden.");
             },
         );
@@ -161,10 +162,11 @@ where
     }
 }
 
-impl<T> Stream<T> for ClipBase<T>
+impl<T> Stream for ClipBase<T>
 where
     T: CoordFloat + FloatConst,
 {
+    type C = Coordinate<T>;
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         match self.use_ring {
             true => {

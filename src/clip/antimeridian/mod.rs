@@ -20,7 +20,7 @@ pub struct ClipAntimeridian<T: CoordFloat + FloatConst> {
 }
 impl<T> ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
     pub fn new() -> Self {
         let line_node = Line::gen_node();
@@ -47,7 +47,12 @@ where
     }
 }
 
-impl<T> Stream<T> for ClipAntimeridian<T> where T: CoordFloat + FloatConst {}
+impl<T> Stream for ClipAntimeridian<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
 // impl<T> StreamInTrait<T> for ClipAntimeridian<T>
 // where
 //     T: CoordFloat + FloatConst,

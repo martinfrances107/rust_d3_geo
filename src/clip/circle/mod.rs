@@ -26,7 +26,7 @@ impl<T> StreamInTrait<T> for ClipCircle<T> where T: CoordFloat + FloatConst {}
 /// Returns a clip object
 impl<T> ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
     fn new(radius: T) -> Self {
         let cr = radius.cos();
@@ -42,7 +42,7 @@ where
             move |from: Option<Coordinate<T>>,
                   to: Option<Coordinate<T>>,
                   direction: T,
-                  stream: &mut dyn Stream<T>| {
+                  stream: &mut dyn Stream<C = Coordinate<T>>| {
                 circle_stream(stream, radius, delta, direction, from, to);
             },
         );
@@ -67,7 +67,12 @@ where
         }
     }
 }
-impl<T> Stream<T> for ClipCircle<T> where T: CoordFloat + FloatConst {}
+impl<T> Stream for ClipCircle<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
 
 impl<T> StreamClipTrait<T> for ClipCircle<T>
 where

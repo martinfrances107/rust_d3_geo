@@ -1,6 +1,7 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 use std::cell::RefCell;
+use std::marker::PhantomData;
 use std::rc::Rc;
 
 use crate::stream::Stream;
@@ -16,21 +17,37 @@ where
     }
 }
 
-#[derive(Clone, Default)]
-pub struct StreamTransformRadiansNodeStub;
-impl StreamTransformRadiansNodeStub {
+/// Why the Phantom Data is required here...
+///
+/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+#[derive(Debug, Default)]
+pub struct StreamTransformRadiansNodeStub<T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
+}
+// #[derive(Clone, Default)]
+// pub struct StreamTransformRadiansNodeStub;
+impl<T> StreamTransformRadiansNodeStub<T>
+where
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
+{
     #[inline]
-    pub fn new<T>() -> StreamTransformRadiansNode<T>
-    where
-        T: CoordFloat + FloatConst + std::default::Default + 'static,
-    {
+    pub fn new() -> StreamTransformRadiansNode<T> {
         Rc::new(RefCell::new(Box::new(StreamTransformRadians {
             stream: StreamTransformNodeStub::new(),
         })))
     }
 }
 pub type StreamTransformRadiansNode<T> = Rc<RefCell<Box<StreamTransformRadians<T>>>>;
-impl<T> Stream<T> for StreamTransformRadiansNodeStub where T: CoordFloat + FloatConst {}
+impl<T> Stream for StreamTransformRadiansNodeStub<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    type C = Coordinate<T>;
+}
 impl<T> StreamTransformIn<T> for StreamTransformRadiansNode<T> where T: CoordFloat {}
 
 pub struct StreamTransformRadians<T: CoordFloat> {
@@ -56,7 +73,8 @@ where
     }
 }
 
-impl<T: CoordFloat + FloatConst> Stream<T> for StreamTransformRadians<T> {
+impl<T: CoordFloat + FloatConst> Stream for StreamTransformRadians<T> {
+    type C = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         let mut s = self.stream.borrow_mut();

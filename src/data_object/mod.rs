@@ -55,11 +55,12 @@ where
     Collection(Collection<T>),
 }
 
-impl<T> Streamable<T> for DataObject<T>
+impl<T> Streamable for DataObject<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn to_stream(&self, _stream: &mut impl Stream<T>) {
+    type SC = Coordinate<T>;
+    fn to_stream(&self, _stream: &mut impl Stream) {
         panic!("To be overriden.");
     }
 }

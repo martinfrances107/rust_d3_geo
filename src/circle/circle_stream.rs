@@ -14,7 +14,7 @@ use std::rc::Rc;
 
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
 pub fn circle_stream<T: CoordFloat + FloatConst>(
-    circle: &mut dyn Stream<T>,
+    circle: &mut dyn Stream<C = Coordinate<T>>,
     radius: T,
     delta: T,
     direction: T,

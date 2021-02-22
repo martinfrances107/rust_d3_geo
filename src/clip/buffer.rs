@@ -70,7 +70,8 @@ where
 
 use crate::stream::StreamPathResult;
 impl<T> StreamPathResult<T> for ClipBuffer<T> where T: CoordFloat + FloatConst {}
-impl<'a, T: CoordFloat + FloatConst> Stream<T> for ClipBuffer<T> {
+impl<'a, T: CoordFloat + FloatConst> Stream for ClipBuffer<T> {
+    type C = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         match self.line.clone() {

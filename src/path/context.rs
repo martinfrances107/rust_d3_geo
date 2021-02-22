@@ -47,10 +47,11 @@ where
     }
 }
 
-impl<T> Stream<T> for PathContext<T>
+impl<T> Stream for PathContext<T>
 where
     T: CoordFloat + FloatConst + AsPrimitive<f64>,
 {
+    type C = Coordinate<T>;
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(T::zero());

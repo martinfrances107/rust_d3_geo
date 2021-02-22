@@ -50,7 +50,8 @@ impl<T: CoordFloat + FloatConst + std::default::Default + 'static> StreamTransfo
     }
 }
 
-impl<T: CoordFloat + FloatConst> Stream<T> for StreamTransform<T> {
+impl<T: CoordFloat + FloatConst> Stream for StreamTransform<T> {
+    type C = Coordinate<T>;
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         let mut stream = self.stream.borrow_mut();
         let rotate = self.transform.clone();

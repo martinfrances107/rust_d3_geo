@@ -8,9 +8,10 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 // Move this to another file.
-impl<T: CoordFloat + FloatConst> Streamable<T> for Point<T> {
+impl<T: CoordFloat + FloatConst> Streamable for Point<T> {
+    type SC = Coordinate<T>;
     #[inline]
-    fn to_stream(&self, stream: &mut impl Stream<T>) {
+    fn to_stream(&self, stream: &mut impl Stream<C = Coordinate<T>>) {
         // TODO there must be a better way to cast a Point to Coordinate.
         stream.point(
             Coordinate {

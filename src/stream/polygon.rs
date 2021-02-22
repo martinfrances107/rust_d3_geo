@@ -6,8 +6,9 @@ use super::geometry_processor::line_processor;
 use super::Stream;
 use super::Streamable;
 
-impl<T: CoordFloat + FloatConst> Streamable<T> for Polygon<T> {
-    fn to_stream(&self, stream: &mut impl Stream<T>) {
+impl<T: CoordFloat + FloatConst> Streamable for Polygon<T> {
+    type SC = Coordinate<T>;
+    fn to_stream(&self, stream: &mut impl Stream<C = Coordinate<T>>) {
         stream.polygon_start();
 
         let e_points: Vec<Coordinate<T>> = self.exterior().coords_iter().collect();

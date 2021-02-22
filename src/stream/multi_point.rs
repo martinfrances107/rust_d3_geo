@@ -6,8 +6,9 @@ use geo::MultiPoint;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-impl<T: CoordFloat + FloatConst> Streamable<T> for MultiPoint<T> {
-    fn to_stream(&self, stream: &mut impl Stream<T>) {
+impl<T: CoordFloat + FloatConst> Streamable for MultiPoint<T> {
+    type SC = Coordinate<T>;
+    fn to_stream(&self, stream: &mut impl Stream<C = Coordinate<T>>) {
         for p in self.iter() {
             // TODO there must be a better conversion.
             stream.point(Coordinate { x: p.x(), y: p.y() }, None);

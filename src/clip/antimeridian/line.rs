@@ -28,7 +28,7 @@ where
 
 impl<T> Line<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
     #[inline]
     pub fn new() -> Self {
@@ -73,7 +73,8 @@ where
 }
 
 impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst {}
-impl<T: CoordFloat + FloatConst> Stream<T> for Line<T> {
+impl<T: CoordFloat + FloatConst> Stream for Line<T> {
+    type C = Coordinate<T>;
     fn line_start(&mut self) {
         let mut s = self.stream.borrow_mut();
         s.line_start();

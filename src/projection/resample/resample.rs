@@ -50,7 +50,7 @@ where
 
 impl<T> Resample<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
     #[inline]
     pub fn gen_node(
@@ -266,10 +266,11 @@ where
 }
 
 impl<T> StreamInTrait<T> for Resample<T> where T: CoordFloat + FloatConst {}
-impl<T> Stream<T> for Resample<T>
+impl<T> Stream for Resample<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
+    type C = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
         if self.use_line_point {
