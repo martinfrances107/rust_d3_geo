@@ -103,20 +103,20 @@ where
 {
 }
 
-pub struct Path<'a, T>
+pub struct Path<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst + 'static,
 {
     context: Option<CanvasRenderingContext2d>,
     context_stream: Option<Box<dyn PointRadiusTrait<T>>>,
     point_radius: PointRadiusEnum<T>,
     projection_stream:
         Box<dyn Fn(Rc<RefCell<dyn Stream<C = Coordinate<T>>>>) -> StreamTransformRadiansNode<T>>,
-    projection: Option<ProjectionMutator<'a, T>>,
+    projection: Option<ProjectionMutator<T>>,
 }
 
 fn projection_stream_noop() {}
-impl<T> Default for Path<'_, T>
+impl<T> Default for Path<T>
 where
     T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
@@ -132,7 +132,7 @@ where
     }
 }
 
-impl<T> Path<'_, T>
+impl<T> Path<T>
 where
     T: CoordFloat
         + std::fmt::Display
@@ -189,7 +189,7 @@ where
     //     self.projection_stream_fn = None;
     // }
 
-    pub fn projection<'a>(p_in: Option<ProjectionMutator<'a, T>>) -> Path<'a, T>
+    pub fn projection<'a>(p_in: Option<ProjectionMutator<T>>) -> Path<T>
     where
         T: CoordFloat + FloatConst,
     {

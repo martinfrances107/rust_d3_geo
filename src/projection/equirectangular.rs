@@ -5,6 +5,7 @@ use num_traits::float::FloatConst;
 use super::projection::Projection;
 use super::projection_mutator::ProjectionMutator;
 use crate::Transform;
+use crate::TransformClone;
 use std::rc::Rc;
 
 #[derive(Clone, Debug, Default)]
@@ -18,18 +19,25 @@ where
     T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
     #[inline]
-    fn new() -> Box<dyn Transform<C = Coordinate<T>>> {
+    fn new() -> Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>> {
         Box::new(Self {
             lambda: T::zero(),
             phi: T::zero(),
         })
     }
 
-    pub fn gen_projection_mutator<'a>() -> ProjectionMutator<'a, T> {
+    pub fn gen_projection_mutator<'a>() -> ProjectionMutator<T> {
         let s = Rc::new(EquirectangularRaw::new());
         let mut projection = ProjectionMutator::from_projection_raw(s, None);
         projection.scale(T::from(152.63f64).unwrap());
         return projection;
+    }
+}
+
+impl<T: CoordFloat + FloatConst + 'static> TransformClone for EquirectangularRaw<T> {
+    type TcC = Coordinate<T>;
+    fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
+        Box::new(self.clone())
     }
 }
 

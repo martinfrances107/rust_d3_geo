@@ -12,13 +12,15 @@ pub struct ResampleNone<T>
 where
     T: CoordFloat,
 {
-    project: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
+    project: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>,
     stream: StreamSimpleNode<T>,
 }
 
 impl<T: CoordFloat + FloatConst + std::default::Default + 'static> ResampleNone<T> {
     #[inline]
-    pub fn gen_node(project: Rc<Box<dyn Transform<C = Coordinate<T>>>>) -> StreamResampleNode<T> {
+    pub fn gen_node(
+        project: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>,
+    ) -> StreamResampleNode<T> {
         Rc::new(RefCell::new(Self {
             project: project.clone(),
             stream: StreamNodeStub::new(),

@@ -11,7 +11,7 @@ use crate::{stream::Stream, TransformIdentity};
 
 use crate::Transform;
 pub struct StreamTransform<T: CoordFloat> {
-    pub transform: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
+    pub transform: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>,
     pub stream: StreamPreClipNode<T>,
 }
 
@@ -33,7 +33,7 @@ impl<T: CoordFloat> StreamPreclipIn<T> for StreamTransform<T> {
 impl<T: CoordFloat + FloatConst + std::default::Default + 'static> StreamTransform<T> {
     #[inline]
     pub fn gen_node(
-        transform: Option<Rc<Box<dyn Transform<C = Coordinate<T>>>>>,
+        transform: Option<Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>>,
     ) -> StreamTransformNode<T> {
         {
             match transform {

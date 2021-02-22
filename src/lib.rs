@@ -30,7 +30,7 @@ mod stream;
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct TransformIdentity<T>
 where
     T: CoordFloat,
@@ -39,12 +39,24 @@ where
     phantom: PhantomData<T>,
 }
 
-impl<T: CoordFloat + std::default::Default> Transform for TransformIdentity<T> {
+impl<T: CoordFloat + std::default::Default + 'static> TransformClone for TransformIdentity<T> {
+    type TcC = Coordinate<T>;
+    fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
+        Box::new(self.clone())
+    }
+}
+
+impl<T: CoordFloat + std::default::Default + 'static> Transform for TransformIdentity<T> {
     type C = Coordinate<T>;
 }
 
+pub trait TransformClone {
+    type TcC;
+    fn clone_box(&self) -> Box<dyn Transform<C = Self::TcC, TcC = Self::TcC>>;
+}
+
 // Common to Projection, Rotation.
-pub trait Transform {
+pub trait Transform: TransformClone {
     type C: Clone;
     #[inline]
     fn transform(&self, p: &Self::C) -> Self::C {

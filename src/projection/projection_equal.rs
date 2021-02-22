@@ -8,7 +8,7 @@ use crate::Transform;
 
 use super::projection_mutator::ProjectionMutator;
 
-pub fn projection_equal<T: CoordFloat + FloatConst + Debug + Display>(
+pub fn projection_equal<T: CoordFloat + FloatConst + Debug + Display + 'static>(
     projection: &ProjectionMutator<T>,
     expected_location: &Coordinate<T>,
     expected_point: &Coordinate<T>,

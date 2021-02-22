@@ -1,7 +1,8 @@
 use crate::Transform;
+use crate::TransformClone;
 use geo::{CoordFloat, Coordinate};
 
-#[derive(Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct ScaleTranslate<T> {
     k: T,
     dx: T,
@@ -17,7 +18,14 @@ impl<T> ScaleTranslate<T> {
     }
 }
 
-impl<T: CoordFloat> Transform for ScaleTranslate<T> {
+impl<T: CoordFloat + 'static> TransformClone for ScaleTranslate<T> {
+    type TcC = Coordinate<T>;
+    fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
+        Box::new(self.clone())
+    }
+}
+
+impl<T: CoordFloat + 'static> Transform for ScaleTranslate<T> {
     type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;

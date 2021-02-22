@@ -3,15 +3,16 @@ use num_traits::FloatConst;
 use std::marker::PhantomData;
 
 use crate::Transform;
+use crate::TransformClone;
 
 /// Why the Phantom Data is required here...
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct RotationIdentity<T>
 where
-    T: CoordFloat + std::default::Default,
+    T: CoordFloat + FloatConst + std::default::Default,
 {
     phantom: PhantomData<T>,
 }
@@ -36,12 +37,23 @@ where
     T: CoordFloat + FloatConst + std::default::Default + 'static,
 {
     #[inline]
-    pub fn new() -> Box<dyn Transform<C = Coordinate<T>>> {
+    pub fn new() -> Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>> {
         Box::new(RotationIdentity::<T>::default())
     }
 }
 
-impl<T: CoordFloat + FloatConst + std::default::Default> Transform for RotationIdentity<T> {
+impl<T: CoordFloat + FloatConst + std::default::Default + 'static> TransformClone
+    for RotationIdentity<T>
+{
+    type TcC = Coordinate<T>;
+    fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
+        Box::new(*self)
+    }
+}
+
+impl<T: CoordFloat + FloatConst + std::default::Default + 'static> Transform
+    for RotationIdentity<T>
+{
     type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

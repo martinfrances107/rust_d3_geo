@@ -21,7 +21,7 @@ where
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct StreamTransformRadiansNodeStub<T>
 where
     T: CoordFloat,

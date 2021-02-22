@@ -97,7 +97,7 @@ where
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Clone, Default, Debug)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct StreamPathResultIdentity<T>
 where
     T: CoordFloat,
@@ -187,7 +187,7 @@ impl<T> BufferInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatCo
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct StreamClipLineNodeStub<T>
 where
     T: CoordFloat,
@@ -244,7 +244,7 @@ where
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct StreamResampleNodeStub<T>
 where
     T: CoordFloat,
@@ -360,7 +360,7 @@ where
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct StreamPreClipNodeStub<T>
 where
     T: CoordFloat,
@@ -406,7 +406,7 @@ where
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct StreamPostClipNodeStub<T>
 where
     T: CoordFloat,
@@ -483,7 +483,7 @@ where
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct StreamDummy<T>
 where
     T: CoordFloat,
@@ -503,7 +503,7 @@ impl<T> StreamInTrait<T> for StreamDummy<T> where T: CoordFloat + FloatConst {}
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct StreamTransformNodeStub<T>
 where
     T: CoordFloat,
@@ -536,7 +536,7 @@ impl<T> StreamInTrait<T> for StreamTransformNodeStub<T> where T: CoordFloat + Fl
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct StreamNodeStub<T>
 where
     T: CoordFloat + std::default::Default,
@@ -568,7 +568,7 @@ impl<T> StreamInTrait<T> for StreamNodeStub<T> where
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct StreamPathResultNodeStub<T>
 where
     T: CoordFloat,

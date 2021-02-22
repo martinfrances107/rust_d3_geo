@@ -21,7 +21,7 @@ pub struct Resample<T>
 where
     T: CoordFloat,
 {
-    project: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
+    project: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>,
     delta2: T,
 
     // first point
@@ -54,7 +54,7 @@ where
 {
     #[inline]
     pub fn gen_node(
-        project: Rc<Box<dyn Transform<C = Coordinate<T>>>>,
+        project: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>,
         delta2: Option<T>,
     ) -> StreamResampleNode<T> {
         match delta2 {
