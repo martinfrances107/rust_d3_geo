@@ -15,7 +15,7 @@ use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::stream_transform_radians::StreamTransformRadiansNode;
 use crate::projection::stream_transform_radians::StreamTransformRadiansNodeStub;
 
-use crate::rotation::rotate_radians::rotate_radians_transform;
+use crate::rotation::rotate_radians_transform::rotate_radians_transform;
 
 use crate::stream::Stream;
 use crate::stream::StreamPostClipNode;

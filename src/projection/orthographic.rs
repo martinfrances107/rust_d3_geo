@@ -1,13 +1,15 @@
+use std::marker::PhantomData;
+use std::rc::Rc;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
-use std::marker::PhantomData;
+
+use crate::projection::azimuthal::azimuthal_invert;
+use crate::Transform;
 
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;
-use crate::projection::azimuthal::azimuthal_invert;
-use crate::Transform;
-use std::rc::Rc;
 
 /// Why the Phantom Data is required here...
 ///

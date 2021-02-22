@@ -2,22 +2,9 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 use std::fmt::Debug;
 
-use crate::rotation::rotate_radians::rotate_radians_transform;
-use crate::stream::Stream;
-use crate::stream::StreamDummy;
-// use crate::stream::StreamSimpleNode;
-use crate::Transform;
-use crate::{cartesian::cartesian, TransformIdentity};
-use crate::{cartesian::cartesian_normalize_in_place, stream::StreamIdentity};
-
-use super::circle_stream::circle_stream;
-use super::CircleInArg;
-use super::CircleTrait;
-use super::FnValMaybe;
-use super::FnValMaybe2D;
 use super::StreamType;
-use std::cell::RefCell;
-use std::rc::Rc;
+use crate::stream::Stream;
+use crate::Transform;
 
 /// Output of CircleGenertor::circle()
 pub struct CircleStream<T: CoordFloat> {

@@ -1,10 +1,11 @@
-use crate::compose::Compose;
-use crate::Transform;
+use std::rc::Rc;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
-use std::rc::Rc;
-// use crate::TransformIdentity;
+
+use crate::compose::Compose;
+use crate::Transform;
 
 use super::rotation_identity::RotationIdentity;
 use super::rotation_lambda::RotationLambda;
