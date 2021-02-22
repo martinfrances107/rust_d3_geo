@@ -39,12 +39,9 @@ where
     }
 }
 use crate::stream::StreamClipLine;
-impl<T> StreamClipLine<T> for Line<T> where
-    T: CoordFloat + FloatConst + std::default::Default + 'static
-{
-}
+impl<T> StreamClipLine<T> for Line<T> where T: CoordFloat + FloatConst + Default + 'static {}
 
-impl<T: CoordFloat + FloatConst + std::default::Default + 'static> Line<T> {
+impl<T: CoordFloat + FloatConst + Default + 'static> Line<T> {
     #[inline]
     pub fn new(radius: T) -> Self {
         // TODO small_radius, rc  is a shadow variables!!!
@@ -102,8 +99,7 @@ impl<T: CoordFloat + FloatConst + std::default::Default + 'static> Line<T> {
         return code;
     }
 }
-impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + std::default::Default + 'static
-{}
+impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + Default + 'static {}
 impl<T> Clean for Line<T>
 where
     T: CoordFloat + FloatConst,
@@ -125,7 +121,7 @@ where
     }
 }
 
-impl<T: CoordFloat + FloatConst + std::default::Default + 'static> Stream for Line<T> {
+impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
     type C = Coordinate<T>;
     fn line_start(&mut self) {
         self.v00 = false;

@@ -28,7 +28,7 @@ where
 
 impl<T> Line<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     pub fn new() -> Self {

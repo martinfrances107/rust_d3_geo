@@ -39,14 +39,14 @@ where
     phantom: PhantomData<T>,
 }
 
-impl<T: CoordFloat + std::default::Default + 'static> TransformClone for TransformIdentity<T> {
+impl<T: CoordFloat + Default + 'static> TransformClone for TransformIdentity<T> {
     type TcC = Coordinate<T>;
     fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
         Box::new(self.clone())
     }
 }
 
-impl<T: CoordFloat + std::default::Default + 'static> Transform for TransformIdentity<T> {
+impl<T: CoordFloat + Default + 'static> Transform for TransformIdentity<T> {
     type C = Coordinate<T>;
 }
 

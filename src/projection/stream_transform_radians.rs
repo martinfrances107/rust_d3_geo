@@ -32,7 +32,7 @@ where
 // pub struct StreamTransformRadiansNodeStub;
 impl<T> StreamTransformRadiansNodeStub<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     pub fn new() -> StreamTransformRadiansNode<T> {
@@ -54,7 +54,7 @@ pub struct StreamTransformRadians<T: CoordFloat> {
     stream: StreamTransformNode<T>,
 }
 
-impl<T: CoordFloat + FloatConst + std::default::Default + 'static> StreamTransformRadians<T> {
+impl<T: CoordFloat + FloatConst + Default + 'static> StreamTransformRadians<T> {
     #[inline]
     pub fn gen_node() -> StreamTransformRadiansNode<T> {
         Rc::new(RefCell::new(Box::new(Self {

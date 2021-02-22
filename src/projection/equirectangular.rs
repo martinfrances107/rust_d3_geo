@@ -16,7 +16,7 @@ pub struct EquirectangularRaw<T> {
 
 impl<T> EquirectangularRaw<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     fn new() -> Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>> {

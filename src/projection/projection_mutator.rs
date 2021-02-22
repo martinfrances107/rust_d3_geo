@@ -73,7 +73,7 @@ pub struct ProjectionMutator<T: CoordFloat + FloatConst + 'static> {
     y1: Option<T>, // post-clip extent
 }
 
-impl<'a, T: CoordFloat + FloatConst + std::default::Default + 'static> ProjectionMutator<T> {
+impl<'a, T: CoordFloat + FloatConst + Default + 'static> ProjectionMutator<T> {
     pub fn from_projection_raw(
         project: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>,
         delta2_p: Option<T>,
@@ -239,7 +239,7 @@ where
 
 impl<T> Projection<T> for ProjectionMutator<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     // #[inline]
     // fn get_preclip(&self) -> StreamPreClipNode<T> {

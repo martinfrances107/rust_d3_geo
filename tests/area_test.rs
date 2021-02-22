@@ -17,8 +17,7 @@ mod equirectangular_test {
     use std::fmt::Display;
     use std::ops::AddAssign;
 
-    fn equirectangular<T: CoordFloat + FloatConst + std::default::Default + 'static>(
-    ) -> ProjectionMutator<T> {
+    fn equirectangular<T: CoordFloat + FloatConst + Default + 'static>() -> ProjectionMutator<T> {
         let mut pm = EquirectangularRaw::gen_projection_mutator();
         pm.scale(T::from(900f64 / PI).unwrap());
         pm.precision(T::zero());
@@ -31,7 +30,7 @@ mod equirectangular_test {
         object: &DataObject<T>,
     ) -> T
     where
-        T: CoordFloat + FloatConst + Display + AddAssign + std::default::Default,
+        T: CoordFloat + FloatConst + Display + AddAssign + Default,
     {
         Path::projection(projection).area(object)
     }

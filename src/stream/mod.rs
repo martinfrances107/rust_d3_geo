@@ -1,7 +1,6 @@
 pub mod feature_collection;
 pub mod geometry;
 pub mod geometry_collection;
-mod geometry_processor;
 pub mod line;
 pub mod line_string;
 pub mod multi_line_string;
@@ -9,6 +8,8 @@ pub mod multi_point;
 pub mod multi_polygon;
 pub mod point;
 pub mod polygon;
+
+mod geometry_processor;
 
 use std::cell::RefCell;
 use std::marker::PhantomData;
@@ -39,7 +40,7 @@ where
 
 impl<T> Default for StreamIdentity<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     fn default() -> Self {
@@ -197,7 +198,7 @@ where
 
 impl<T> StreamClipLineNodeStub<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     pub fn new() -> StreamClipLineNode<T> {
@@ -254,7 +255,7 @@ where
 
 impl<T> StreamResampleNodeStub<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     fn new() -> StreamResampleNode<T> {
@@ -369,7 +370,7 @@ where
 }
 impl<T> StreamPreClipNodeStub<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     pub fn new() -> StreamPreClipNode<T> {
@@ -415,7 +416,7 @@ where
 }
 impl<T> StreamPostClipNodeStub<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     pub fn new() -> StreamPostClipNode<T> {
@@ -513,7 +514,7 @@ where
 
 impl<T> StreamTransformNodeStub<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     pub fn new() -> StreamTransformNode<T> {
@@ -539,14 +540,14 @@ impl<T> StreamInTrait<T> for StreamTransformNodeStub<T> where T: CoordFloat + Fl
 #[derive(Clone, Copy, Debug, Default)]
 pub struct StreamNodeStub<T>
 where
-    T: CoordFloat + std::default::Default,
+    T: CoordFloat + Default,
 {
     phantom: PhantomData<T>,
 }
 
 impl<T> StreamNodeStub<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     pub fn new() -> StreamSimpleNode<T> {
@@ -555,14 +556,11 @@ where
 }
 impl<T> Stream for StreamNodeStub<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     type C = Coordinate<T>;
 }
-impl<T> StreamInTrait<T> for StreamNodeStub<T> where
-    T: CoordFloat + FloatConst + std::default::Default
-{
-}
+impl<T> StreamInTrait<T> for StreamNodeStub<T> where T: CoordFloat + FloatConst + Default {}
 
 /// Why the Phantom Data is required here...
 ///
@@ -578,7 +576,7 @@ where
 
 impl<T> StreamPathResultNodeStub<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     pub fn new() -> StreamPathResultNode<T> {

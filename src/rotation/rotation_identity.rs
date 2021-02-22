@@ -12,7 +12,7 @@ use crate::TransformClone;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct RotationIdentity<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default,
+    T: CoordFloat + FloatConst + Default,
 {
     phantom: PhantomData<T>,
 }
@@ -34,7 +34,7 @@ fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
 
 impl<T> RotationIdentity<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     pub fn new() -> Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>> {
@@ -42,18 +42,14 @@ where
     }
 }
 
-impl<T: CoordFloat + FloatConst + std::default::Default + 'static> TransformClone
-    for RotationIdentity<T>
-{
+impl<T: CoordFloat + FloatConst + Default + 'static> TransformClone for RotationIdentity<T> {
     type TcC = Coordinate<T>;
     fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
         Box::new(*self)
     }
 }
 
-impl<T: CoordFloat + FloatConst + std::default::Default + 'static> Transform
-    for RotationIdentity<T>
-{
+impl<T: CoordFloat + FloatConst + Default + 'static> Transform for RotationIdentity<T> {
     type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

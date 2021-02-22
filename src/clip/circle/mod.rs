@@ -26,7 +26,7 @@ impl<T> StreamInTrait<T> for ClipCircle<T> where T: CoordFloat + FloatConst {}
 /// Returns a clip object
 impl<T> ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     fn new(radius: T) -> Self {
         let cr = radius.cos();

@@ -25,7 +25,7 @@ where
 
 impl<T> StereographicRaw<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     pub fn gen_projection_mutator<'a>() -> ProjectionMutator<T> {
         let s: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>> =

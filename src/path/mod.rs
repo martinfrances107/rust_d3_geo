@@ -118,7 +118,7 @@ where
 fn projection_stream_noop() {}
 impl<T> Default for Path<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     fn default() -> Self {
@@ -134,12 +134,7 @@ where
 
 impl<T> Path<T>
 where
-    T: CoordFloat
-        + std::fmt::Display
-        + FloatConst
-        + std::ops::AddAssign
-        + std::default::Default
-        + 'static,
+    T: CoordFloat + std::fmt::Display + FloatConst + std::ops::AddAssign + Default + 'static,
 {
     #[inline]
     fn generate(

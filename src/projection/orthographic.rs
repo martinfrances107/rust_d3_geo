@@ -19,14 +19,14 @@ use super::projection_mutator::ProjectionMutator;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct OrthographicRaw<T>
 where
-    T: CoordFloat + std::default::Default + 'static,
+    T: CoordFloat + Default + 'static,
 {
     phantom: PhantomData<T>,
 }
 
 impl<T> OrthographicRaw<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     pub fn gen_projection_mutator<'a>() -> ProjectionMutator<T> {
         let s: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>> =
@@ -39,18 +39,14 @@ where
     }
 }
 
-impl<T: CoordFloat + FloatConst + std::default::Default + 'static> TransformClone
-    for OrthographicRaw<T>
-{
+impl<T: CoordFloat + FloatConst + Default + 'static> TransformClone for OrthographicRaw<T> {
     type TcC = Coordinate<T>;
     fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
         Box::new(self.clone())
     }
 }
 
-impl<T: CoordFloat + FloatConst + std::default::Default + 'static> Transform
-    for OrthographicRaw<T>
-{
+impl<T: CoordFloat + FloatConst + Default + 'static> Transform for OrthographicRaw<T> {
     type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

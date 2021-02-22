@@ -30,7 +30,7 @@ pub struct ClipBase<T: CoordFloat + FloatConst> {
 
 impl<T> Default for ClipBase<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     fn default() -> Self {
         let interpolate = Box::new(

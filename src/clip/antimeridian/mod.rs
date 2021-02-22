@@ -20,7 +20,7 @@ pub struct ClipAntimeridian<T: CoordFloat + FloatConst> {
 }
 impl<T> ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     pub fn new() -> Self {
         let line_node = Line::gen_node();

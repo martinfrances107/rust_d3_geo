@@ -30,7 +30,7 @@ impl<T: CoordFloat> StreamPreclipIn<T> for StreamTransform<T> {
 }
 
 // pub type StreamTransformNode<T> = Rc<RefCell<Box<StreamTransform<T>>>>;
-impl<T: CoordFloat + FloatConst + std::default::Default + 'static> StreamTransform<T> {
+impl<T: CoordFloat + FloatConst + Default + 'static> StreamTransform<T> {
     #[inline]
     pub fn gen_node(
         transform: Option<Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>>,

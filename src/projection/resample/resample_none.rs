@@ -16,7 +16,7 @@ where
     stream: StreamSimpleNode<T>,
 }
 
-impl<T: CoordFloat + FloatConst + std::default::Default + 'static> ResampleNone<T> {
+impl<T: CoordFloat + FloatConst + Default + 'static> ResampleNone<T> {
     #[inline]
     pub fn gen_node(
         project: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>,

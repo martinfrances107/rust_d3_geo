@@ -20,7 +20,7 @@ where
     rotate: Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>,
 }
 
-impl<T: CoordFloat + FloatConst + std::default::Default + 'static> Rotation<T> {
+impl<T: CoordFloat + FloatConst + Default + 'static> Rotation<T> {
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
         return Self {
             rotate: rotate_radians_transform(

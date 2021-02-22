@@ -11,7 +11,7 @@ use super::rotation_identity::RotationIdentity;
 use super::rotation_lambda::RotationLambda;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
-pub fn rotate_radians_transform<T: CoordFloat + FloatConst + std::default::Default + 'static>(
+pub fn rotate_radians_transform<T: CoordFloat + FloatConst + Default + 'static>(
     delta_lambda_p: T,
     delta_phi: T,
     delta_gamma: T,

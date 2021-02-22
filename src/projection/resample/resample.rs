@@ -50,7 +50,7 @@ where
 
 impl<T> Resample<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
     pub fn gen_node(
@@ -268,7 +268,7 @@ where
 impl<T> StreamInTrait<T> for Resample<T> where T: CoordFloat + FloatConst {}
 impl<T> Stream for Resample<T>
 where
-    T: CoordFloat + FloatConst + std::default::Default + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     type C = Coordinate<T>;
     #[inline]
