@@ -15,7 +15,7 @@ pub fn rotate_radians_transform<T: CoordFloat + FloatConst + std::default::Defau
     delta_lambda_p: T,
     delta_phi: T,
     delta_gamma: T,
-) -> Box<dyn Transform<C = Coordinate<T>>> {
+) -> Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>> {
     let delta_lambda = delta_lambda_p % T::TAU();
     // Should I rotate by lambda, phi or gamma.
     let by_lambda = !delta_lambda.is_zero();

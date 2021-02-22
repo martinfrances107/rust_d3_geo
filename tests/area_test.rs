@@ -17,10 +17,11 @@ mod equirectangular_test {
     use std::fmt::Display;
     use std::ops::AddAssign;
 
-    fn equirectangular<T: CoordFloat + FloatConst + 'static>() -> ProjectionMutator<T> {
-        let mut pm = EquirectangularRaw::<f64>::gen_projection_mutator();
+    fn equirectangular<T: CoordFloat + FloatConst + std::default::Default + 'static>(
+    ) -> ProjectionMutator<T> {
+        let mut pm = EquirectangularRaw::gen_projection_mutator();
         pm.scale(T::from(900f64 / PI).unwrap());
-        pm.precision(0f64);
+        pm.precision(T::zero());
         pm
     }
 

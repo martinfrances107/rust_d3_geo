@@ -6,17 +6,11 @@ use num_traits::float::FloatConst;
 
 use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
+use crate::TransformClone;
 
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;
-<<<<<<< HEAD
-=======
-use crate::projection::azimuthal::azimuthal_invert;
-use crate::Transform;
-use crate::TransformClone;
-use std::rc::Rc;
->>>>>>> Does not compile about to simplify rotate_radians
 
 /// Why the Phantom Data is required here...
 ///
