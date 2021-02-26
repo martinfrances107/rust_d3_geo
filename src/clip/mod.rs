@@ -13,9 +13,7 @@ use crate::stream::StreamPathResult;
 
 use buffer::ClipBuffer;
 
-pub trait BufferInTrait // where
-//     T: CoordFloat + FloatConst,
-{
+pub trait BufferInTrait {
     // Box<
     //         dyn StreamPathResult<
     //             Out = Option<PathResultEnum<T>>,
@@ -23,6 +21,6 @@ pub trait BufferInTrait // where
     //
     //         >,
     //     >,
-    type BitSink;
-    fn buffer_in(&mut self, _sink: Self::BitSink);
+    type BitCB;
+    fn buffer_in(&mut self, buffer: Self::BitCB);
 }

@@ -35,11 +35,10 @@ where
         let cr = radius.cos();
         let delta = T::from(6u8).unwrap().to_radians();
 
-        let line_node = Line::new(radius);
-        let ring_buffer_node = ClipBuffer::default();
+        let line_node = Box::new(Line::new(radius));
+        let ring_buffer = ClipBuffer::default();
         let ring_sink_node = Line::new(radius);
-        // let mut rc = ring_sink_node.borrow_mut();
-        ring_sink_node.buffer_in(ring_buffer_node.clone());
+        ring_sink_node.buffer_in(ring_buffer.clone());
 
         let interpolate = Box::new(
             move |from: Option<Coordinate<T>>,
@@ -57,7 +56,7 @@ where
                 y: -T::FRAC_PI_2(),
             },
             interpolate,
-            ring_buffer_node,
+            ring_buffer,
             // ring_sink_node,
             ..ClipBase::default()
         };

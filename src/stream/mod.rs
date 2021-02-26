@@ -24,8 +24,8 @@ use crate::path::PathResultEnum;
 use crate::projection::resample::ResampleNode;
 use crate::projection::stream_transform::StreamPreclipIn;
 // use crate::stream::StreamPathResult;
+use crate::clip::buffer::ClipBuffer;
 use crate::{projection::stream_transform::StreamTransform, TransformIdentity};
-
 // pub type StreamProcessor<T> = Box<dyn Fn(StreamNode<T>) -> StreamNode<T>>;
 // pub type StreamPathResultToStreamProcessor<T> =
 //     Box<dyn Fn(StreamPathResultNode<T>) -> StreamNode<T>>;
@@ -243,8 +243,9 @@ impl<T> BufferInTrait for StreamClipLineNodeStub<T>
 where
     T: CoordFloat + FloatConst + 'static,
 {
-    type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, ScC = Coordinate<T>>>;
-    fn buffer_in(&mut self, _sink: Self::BitSink) {
+    // type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, ScC = Coordinate<T>>>;
+    type BitCB = ClipBuffer<T>;
+    fn buffer_in(&mut self, _sink: Self::BitCB) {
         // No-op.
     }
 }

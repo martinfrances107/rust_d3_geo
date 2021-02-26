@@ -5,9 +5,9 @@ use crate::path::PathResultEnum;
 use crate::stream::Stream;
 use crate::stream::StreamClipLine;
 // use crate::stream::StreamClipLineNode;
+use crate::clip::ClipBuffer;
 use crate::stream::StreamClone;
 use crate::stream::StreamPathResult;
-
 // use crate::stream::StreamPathResultTrait;
 use crate::stream::StreamPathResultNodeStub;
 
@@ -59,10 +59,11 @@ impl<T> BufferInTrait for Line<T>
 where
     T: CoordFloat + FloatConst,
 {
-    type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, ScC = Coordinate<T>>>;
+    // type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, ScC = Coordinate<T>>>;
+    type BitCB = ClipBuffer<T>;
     #[inline]
-    fn buffer_in(&mut self, stream: Self::BitSink) {
-        self.stream = stream;
+    fn buffer_in(&mut self, stream: Self::BitCB) {
+        // self.stream = stream;
     }
 }
 
