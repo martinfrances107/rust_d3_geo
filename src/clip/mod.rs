@@ -5,18 +5,24 @@ pub mod clip_base;
 
 mod rejoin;
 use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::stream::StreamPathResultNode;
+use crate::path::PathResultEnum;
+use crate::stream::StreamPathResult;
 
 use buffer::ClipBuffer;
 
-pub trait BufferInTrait<T>
-where
-    T: CoordFloat + FloatConst,
+pub trait BufferInTrait // where
+//     T: CoordFloat + FloatConst,
 {
-    #[inline]
-    fn buffer_in(&mut self, _sink: StreamPathResultNode<T>) {
-        panic!("Must override this");
-    }
+    // Box<
+    //         dyn StreamPathResult<
+    //             Out = Option<PathResultEnum<T>>,
+    //             ScC = Coordinate<T>,
+    //
+    //         >,
+    //     >,
+    type BitSink;
+    fn buffer_in(&mut self, _sink: Self::BitSink);
 }

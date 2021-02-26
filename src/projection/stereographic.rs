@@ -1,5 +1,4 @@
 use std::marker::PhantomData;
-use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
@@ -7,6 +6,7 @@ use num_traits::float::FloatConst;
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;
+
 use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
 use crate::TransformClone;
@@ -28,8 +28,9 @@ where
     T: CoordFloat + FloatConst + Default + 'static,
 {
     pub fn gen_projection_mutator<'a>() -> ProjectionMutator<T> {
-        let s: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>> =
-            Rc::new(Box::new(StereographicRaw::default()));
+        // let s: Rc<Box<dyn Transform<TcC = Coordinate<T>>>> =
+        //     Rc::new(Box::new(StereographicRaw::default()));
+        let s = Box::new(StereographicRaw::default());
         let mut projection = ProjectionMutator::from_projection_raw(s, None);
         projection.scale(T::from(250f64).unwrap());
         projection.clip_angle(StreamOrValueMaybe::Value(T::from(142f64).unwrap()));
@@ -39,13 +40,12 @@ where
 
 impl<T: CoordFloat + FloatConst + 'static> TransformClone for StereographicRaw<T> {
     type TcC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
+    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
         Box::new(self.clone())
     }
 }
 
 impl<T: CoordFloat + FloatConst + 'static> Transform for StereographicRaw<T> {
-    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();
         let k = T::one() + p.x.cos() * cy;

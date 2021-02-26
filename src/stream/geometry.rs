@@ -10,7 +10,7 @@ where
     T: CoordFloat + FloatConst,
 {
     type SC = Coordinate<T>;
-    fn to_stream(&self, stream: &mut impl Stream<C = Self::SC>) {
+    fn to_stream(&self, stream: impl Stream<ScC = Self::SC>) {
         match self {
             Geometry::GeometryCollection(gc) => {
                 for g in gc {

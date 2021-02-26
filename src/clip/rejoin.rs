@@ -1,7 +1,8 @@
-use geo::CoordFloat;
-use num_traits::{Float, FloatConst};
-
+use crate::stream::Stream;
 use crate::{point_equal::point_equal, stream::StreamSimpleNode};
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::{Float, FloatConst};
 
 use super::buffer::LineElem;
 use num_traits::Zero;
@@ -49,7 +50,7 @@ pub fn rejoin<T: Float>(
     // compare_intersection: CompareIntersectionFn<T>,
     start_inside: bool,
     // interpolate: InterpolateFn<T>,
-    stream: StreamSimpleNode<T>,
+    stream: Box<dyn Stream<ScC = Coordinate<T>>>,
 ) where
     T: CoordFloat + FloatConst,
 {
@@ -69,15 +70,15 @@ pub fn rejoin<T: Float>(
 
         if point_equal(p0.p, p1.p) {
             if !p0.m.unwrap().is_zero() && !p1.m.unwrap().is_zero() {
-                let mut s = stream.borrow_mut();
-                s.line_start();
+                // let mut s = stream.borrow_mut();
+                stream.line_start();
                 // let i: usize;
                 // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
                 for i in 0..n {
                     p0 = segment[i];
-                    s.point(p0.p, None);
+                    stream.point(p0.p, None);
                 }
-                s.line_end();
+                stream.line_end();
                 return;
             }
             // handle degenerate cases by moving the point

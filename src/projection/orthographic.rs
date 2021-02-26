@@ -1,5 +1,4 @@
 use std::marker::PhantomData;
-use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
@@ -29,9 +28,10 @@ where
     T: CoordFloat + FloatConst + Default + 'static,
 {
     pub fn gen_projection_mutator<'a>() -> ProjectionMutator<T> {
-        let s: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>> =
-            Rc::new(Box::new(OrthographicRaw::default()));
-        let mut projection = ProjectionMutator::from_projection_raw(s, None);
+        // let s: Rc<Box<dyn Transform<TcC = Coordinate<T>>>> =
+        //     Rc::new(Box::new(OrthographicRaw::default()));
+        let o = Box::new(OrthographicRaw::default());
+        let mut projection = ProjectionMutator::from_projection_raw(o, None);
         projection.scale(T::from(249.5f64).unwrap());
         let angle = T::from(249.5f64).unwrap();
         projection.clip_angle(StreamOrValueMaybe::Value(angle));
@@ -41,13 +41,12 @@ where
 
 impl<T: CoordFloat + FloatConst + Default + 'static> TransformClone for OrthographicRaw<T> {
     type TcC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
+    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
         Box::new(self.clone())
     }
 }
 
 impl<T: CoordFloat + FloatConst + Default + 'static> Transform for OrthographicRaw<T> {
-    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         Coordinate {

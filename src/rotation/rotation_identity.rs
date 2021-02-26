@@ -37,20 +37,19 @@ where
     T: CoordFloat + FloatConst + Default + 'static,
 {
     #[inline]
-    pub fn new() -> Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>> {
+    pub fn new() -> Box<dyn Transform<TcC = Coordinate<T>>> {
         Box::new(RotationIdentity::<T>::default())
     }
 }
 
 impl<T: CoordFloat + FloatConst + Default + 'static> TransformClone for RotationIdentity<T> {
     type TcC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
+    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
         Box::new(*self)
     }
 }
 
 impl<T: CoordFloat + FloatConst + Default + 'static> Transform for RotationIdentity<T> {
-    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         normalise(p)

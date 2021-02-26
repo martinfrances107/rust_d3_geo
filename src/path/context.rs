@@ -4,6 +4,7 @@ use geo::{CoordFloat, Coordinate};
 use web_sys::CanvasRenderingContext2d;
 
 use crate::stream::Stream;
+use crate::stream::StreamClone;
 use num_traits::{AsPrimitive, FloatConst};
 
 use super::{PathResult, PathResultEnum};
@@ -37,21 +38,29 @@ where
     // }
 }
 
-impl<T> PathResult<T> for PathContext<T>
+impl<T> PathResult for PathContext<T>
 where
     T: CoordFloat,
 {
+    type Out = Option<PathResultEnum<T>>;
     #[inline]
     fn result(&mut self) -> Option<PathResultEnum<T>> {
         None
     }
 }
-
+impl<T> StreamClone for PathContext<T>
+where
+    T: CoordFloat + FloatConst + AsPrimitive<f64> + 'static,
+{
+    type ScC = Coordinate<T>;
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(self.clone())
+    }
+}
 impl<T> Stream for PathContext<T>
 where
     T: CoordFloat + FloatConst + AsPrimitive<f64>,
 {
-    type C = Coordinate<T>;
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(T::zero());

@@ -1,14 +1,13 @@
-use std::cell::RefCell;
-use std::rc::Rc;
-
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
+use crate::path::PathResultEnum;
 use crate::point_equal::point_equal;
 use crate::stream::StreamClean;
-use crate::stream::StreamClipLineNode;
+// use crate::stream::StreamClipLineNode;
+use crate::stream::StreamClone;
 use crate::stream::StreamDummy;
-use crate::stream::StreamPathResultNode;
+use crate::stream::StreamPathResult;
 use crate::stream::StreamSimpleNode;
 use crate::stream::{Clean, CleanEnum, Stream};
 
@@ -25,21 +24,43 @@ pub struct Line<T: CoordFloat> {
     // point0: (Option<Point>, Option<u8>), // previous point with message.
     point0: Option<Coordinate<T>>, // previous point
     small_radius: bool,
-    stream: StreamSimpleNode<T>,
+    stream: Box<dyn Stream<ScC = Coordinate<T>>>,
     v0: bool,  // visibility of previous point
     v00: bool, // visibility of first point
 }
-impl<T> BufferInTrait<T> for Line<T>
+
+impl<T> Default for Line<T>
+where
+    T: CoordFloat + FloatConst + Default + 'static,
+{
+    fn default() -> Self {
+        Self {
+            c0: 0u8,
+            clean: CleanEnum::IntersectionsOrEmpty,
+            radius: T::zero(),
+            cr: T::zero(),
+            not_hemisphere: false,
+            point0: None,
+            small_radius: false,
+            stream: Box::new(StreamDummy::default()),
+            v0: false,
+            v00: false,
+        }
+    }
+}
+
+impl<T> BufferInTrait for Line<T>
 where
     T: CoordFloat + FloatConst,
 {
+    type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, ScC = Coordinate<T>>>;
     #[inline]
-    fn buffer_in(&mut self, _sink: StreamPathResultNode<T>) {
+    fn buffer_in(&mut self, _sink: Self::BitSink) {
         // No-op.
     }
 }
 use crate::stream::StreamClipLine;
-impl<T> StreamClipLine<T> for Line<T> where T: CoordFloat + FloatConst + Default + 'static {}
+impl<T> StreamClipLine for Line<T> where T: CoordFloat + FloatConst + Default + 'static {}
 
 impl<T: CoordFloat + FloatConst + Default + 'static> Line<T> {
     #[inline]
@@ -58,14 +79,17 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Line<T> {
             v0: false,
             v00: false,
             // TOD pre or post clip.
-            stream: Rc::new(RefCell::new(StreamDummy::default())),
+            stream: Box::new(StreamDummy::default()),
         }
     }
 
-    #[inline]
-    pub fn gen_node(radius: T) -> StreamClipLineNode<T> {
-        Rc::new(RefCell::new(Self::new(radius)))
-    }
+    // #[inline]
+    // pub fn gen_node(
+    //     radius: T,
+    // ) -> Box<dyn StreamClipLine<ScC = Coordinate<T>, BitSink = Box<dyn Stream<ScC = Coordinate<T>>>>>
+    // {
+    //     Box::new(Self::new(radius))
+    // }
 
     #[inline]
     fn point_visible(&self, p: Coordinate<T>, _m: Option<u8>) -> bool {
@@ -120,9 +144,15 @@ where
         }
     }
 }
+impl<T: CoordFloat + FloatConst + Default + 'static> StreamClone for Line<T> {
+    type ScC = Coordinate<T>;
+    #[inline]
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(*self.clone())
+    }
+}
 
 impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
-    type C = Coordinate<T>;
     fn line_start(&mut self) {
         self.v00 = false;
         self.v0 = false;
@@ -160,8 +190,8 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
             self.v00 = v;
             self.v0 = v;
             if v {
-                let mut s = self.stream.borrow_mut();
-                s.line_start();
+                // let mut s = self.stream.borrow_mut();
+                self.stream.line_start();
             }
         }
 
@@ -192,24 +222,24 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
             }
         }
 
-        let mut s = self.stream.borrow_mut();
+        // let mut s = self.stream.borrow_mut();
         if v != self.v0 {
             let next: Option<Coordinate<T>>;
             self.clean = CleanEnum::IntersectionsOrEmpty;
             if v {
                 // outside going in
-                s.line_start();
+                self.stream.line_start();
                 match intersect(point1, self.point0.clone().unwrap(), self.cr, false) {
                     IntersectReturn::None => {
                         // TODO Should I do a stream Point here??
                         next = None;
                     }
                     IntersectReturn::One(p) => {
-                        s.point(p, None);
+                        self.stream.point(p, None);
                         next = Some(p);
                     }
                     IntersectReturn::Two([p, _]) => {
-                        s.point(p, None);
+                        self.stream.point(p, None);
                         // p0_next = p;
                         panic!("Silently dropping second point.");
                     }
@@ -224,13 +254,13 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         panic!("Must deal with no intersect.");
                     }
                     IntersectReturn::One(p) => {
-                        s.point(p, Some(2));
-                        s.line_end();
+                        self.stream.point(p, Some(2));
+                        self.stream.line_end();
                         next = Some(p);
                     }
                     IntersectReturn::Two([p, _]) => {
-                        s.point(p, Some(2));
-                        s.line_end();
+                        self.stream.point(p, Some(2));
+                        self.stream.line_end();
                         // next = p;
                         panic!("Silently dropping second point.");
                     }
@@ -250,15 +280,15 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     IntersectReturn::Two(t) => {
                         self.clean = CleanEnum::IntersectionsOrEmpty;
                         if self.small_radius {
-                            s.line_start();
-                            s.point(t[0], None);
-                            s.point(t[1], None);
-                            s.line_end();
+                            self.stream.line_start();
+                            self.stream.point(t[0], None);
+                            self.stream.point(t[1], None);
+                            self.stream.line_end();
                         } else {
-                            s.point(t[1], None);
-                            s.line_end();
-                            s.line_start();
-                            s.point(t[0], Some(3u8));
+                            self.stream.point(t[1], None);
+                            self.stream.line_end();
+                            self.stream.line_start();
+                            self.stream.point(t[0], Some(3u8));
                         }
                     }
                 }
@@ -274,8 +304,8 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
 
     fn line_end(&mut self) {
         if self.v0 {
-            let mut s = self.stream.borrow_mut();
-            s.line_end();
+            // let mut s = self.strewam.borrow_mut();
+            self.stream.line_end();
         }
         self.point0 = None;
     }

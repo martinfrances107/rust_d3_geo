@@ -1,4 +1,5 @@
 use crate::stream::Stream;
+use crate::stream::StreamClone;
 use crate::stream::Streamable;
 use std::ops::AddAssign;
 
@@ -33,7 +34,7 @@ pub struct CentroidStream<T: CoordFloat> {
     line_end_fn: fn(&mut Self),
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign> Default for CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign + 'static> Default for CentroidStream<T> {
     fn default() -> Self {
         return Self {
             W0: T::zero(),
@@ -59,7 +60,7 @@ impl<T: CoordFloat + FloatConst + AddAssign> Default for CentroidStream<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign + 'static> CentroidStream<T> {
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
         self.X0 += (x - self.X0) / self.W0;
@@ -174,8 +175,8 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
         self.point_fn = Self::centroid_ring_point_first;
     }
 
-    pub fn centroid(&mut self, d_object: &impl Streamable<SC = Coordinate<T>>) -> Point<T> {
-        d_object.to_stream(self);
+    pub fn centroid(&self, d_object: &impl Streamable<SC = Coordinate<T>>) -> Point<T> {
+        // d_object.to_stream(self as &dyn Stream<ScC = Coordinate<T>>);
 
         let mut x = self.X2;
         let mut y = self.Y2;
@@ -203,9 +204,14 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
         return Point::new(y.atan2(x).to_degrees(), (z / m).asin().to_degrees());
     }
 }
-
-impl<T: CoordFloat + FloatConst + AddAssign> Stream for CentroidStream<T> {
-    type C = Coordinate<T>;
+impl<T: CoordFloat + FloatConst + AddAssign + 'static> StreamClone for CentroidStream<T> {
+    type ScC = Coordinate<T>;
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(self.clone())
+    }
+}
+impl<T: CoordFloat + FloatConst + AddAssign + 'static> Stream for CentroidStream<T> {
+    //
     #[inline]
     fn line_end(&mut self) {
         (self.line_end_fn)(self);

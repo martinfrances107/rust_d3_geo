@@ -28,7 +28,7 @@ impl<T: CoordFloat + 'static> ScaleTranslateRotate<T> {
         sx: T,
         sy: T,
         alpha: T,
-    ) -> Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>> {
+    ) -> Box<dyn Transform<TcC = Coordinate<T>>> {
         if alpha.is_zero() {
             ScaleTranslate::new(k, dx, dy, sx, sy)
         } else {
@@ -52,13 +52,12 @@ impl<T: CoordFloat + 'static> ScaleTranslateRotate<T> {
 
 impl<T: CoordFloat + 'static> TransformClone for ScaleTranslateRotate<T> {
     type TcC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
+    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
         Box::new(self.clone())
     }
 }
 
 impl<T: CoordFloat + 'static> Transform for ScaleTranslateRotate<T> {
-    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;

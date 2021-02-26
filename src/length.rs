@@ -1,4 +1,5 @@
 use super::stream::Stream;
+use super::stream::StreamClone;
 use crate::stream::Streamable;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -15,7 +16,7 @@ pub struct LengthStream<T: CoordFloat + FloatConst> {
     cos_phi0: T,
 }
 
-impl<T: CoordFloat + FloatConst> Default for LengthStream<T> {
+impl<T: CoordFloat + FloatConst + 'static> Default for LengthStream<T> {
     fn default() -> Self {
         return Self {
             // sphere_fn: Self::noop,
@@ -30,10 +31,10 @@ impl<T: CoordFloat + FloatConst> Default for LengthStream<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst> LengthStream<T> {
+impl<T: CoordFloat + FloatConst + 'static> LengthStream<T> {
     pub fn calc(object: &impl Streamable<SC = Coordinate<T>>) -> T {
         let mut ls = LengthStream::default();
-        object.to_stream(&mut ls);
+        object.to_stream(ls);
         return ls.length_sum;
     }
 
@@ -79,8 +80,14 @@ impl<T: CoordFloat + FloatConst> LengthStream<T> {
     fn line_end_noop(&mut self) {}
 }
 
-impl<T: CoordFloat + FloatConst> Stream for LengthStream<T> {
-    type C = Coordinate<T>;
+impl<T: CoordFloat + FloatConst + 'static> StreamClone for LengthStream<T> {
+    type ScC = Coordinate<T>;
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(self.clone())
+    }
+}
+
+impl<T: CoordFloat + FloatConst + 'static> Stream for LengthStream<T> {
     fn point(&mut self, p: Coordinate<T>, _z: Option<u8>) {
         (self.point_fn)(self, p);
     }

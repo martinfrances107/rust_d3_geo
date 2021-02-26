@@ -8,7 +8,7 @@ use num_traits::FloatConst;
 
 impl<T: CoordFloat + FloatConst> Streamable for MultiLineString<T> {
     type SC = Coordinate<T>;
-    fn to_stream(&self, stream: &mut impl Stream<C = Coordinate<T>>) {
+    fn to_stream(&self, stream: impl Stream<ScC = Self::SC>) {
         for ls in self {
             let points: Vec<Coordinate<T>> = ls.coords_iter().collect();
             line_processor(&points, stream, 0);

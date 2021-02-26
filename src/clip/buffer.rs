@@ -1,12 +1,13 @@
 use crate::path::PathResultEnum;
+use crate::stream::Stream;
+use crate::stream::StreamClone;
 use crate::stream::StreamSimpleNode;
-use crate::stream::{Stream, StreamPathResultNode};
+// use crate::stream::StreamPathResultNode;
 use crate::{path::PathResult, stream::StreamInTrait};
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::cell::RefCell;
-use std::rc::Rc;
+
 #[derive(Clone, Copy, Debug)]
 pub struct LineElem<T: CoordFloat> {
     pub p: Coordinate<T>,
@@ -20,21 +21,21 @@ pub struct ClipBuffer<T: CoordFloat> {
 
 impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
     /// Generate a new stream node.
-    #[inline]
-    pub fn new() -> Self {
-        Self {
-            lines: Vec::new(),
-            line: None,
-        }
-    }
+    // #[inline]
+    // pub fn new() -> Self {
+    //     Self {
+    //         lines: Vec::new(),
+    //         line: None,
+    //     }
+    // }
 
-    #[inline]
-    pub fn gen_node() -> StreamPathResultNode<T>
-    where
-        T: CoordFloat + FloatConst,
-    {
-        Rc::new(RefCell::new(Self::new()))
-    }
+    // #[inline]
+    // pub fn gen_node() -> StreamPathResultNode<T>
+    // where
+    //     T: CoordFloat + FloatConst,
+    // {
+    //     Rc::new(RefCell::new(Self::new()))
+    // }
 
     fn rejoin(&mut self) {
         if self.lines.len() > 1 {
@@ -48,7 +49,8 @@ impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
     }
 }
 
-impl<T: CoordFloat> PathResult<T> for ClipBuffer<T> {
+impl<T: CoordFloat> PathResult for ClipBuffer<T> {
+    type Out = Option<PathResultEnum<T>>;
     fn result(&mut self) -> Option<PathResultEnum<T>> {
         let result = self.lines.clone();
         self.lines.clear();
@@ -63,15 +65,32 @@ impl<T> StreamInTrait<T> for ClipBuffer<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_in(&mut self, _stream: StreamSimpleNode<T>) {
+    fn stream_in(&mut self, _stream: Box<dyn Stream<ScC = Coordinate<T>>>) {
         panic!("Should I call stream_in on a buffer!");
     }
 }
 
 use crate::stream::StreamPathResult;
-impl<T> StreamPathResult<T> for ClipBuffer<T> where T: CoordFloat + FloatConst {}
-impl<'a, T: CoordFloat + FloatConst> Stream for ClipBuffer<T> {
-    type C = Coordinate<T>;
+impl<T> StreamPathResult for ClipBuffer<T>
+where
+    T: CoordFloat + FloatConst + 'static,
+{
+    // type Out = Option<PathResultEnum<T>>;
+    // type ScC = Coordinate<T>;
+    //
+}
+impl<T> StreamClone for ClipBuffer<T>
+where
+    T: CoordFloat + FloatConst + 'static,
+{
+    type ScC = Coordinate<T>;
+    #[inline]
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(self.clone())
+    }
+}
+
+impl<'a, T: CoordFloat + FloatConst + 'static> Stream for ClipBuffer<T> {
     #[inline]
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         match self.line.clone() {
