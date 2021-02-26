@@ -60,7 +60,7 @@ where
     T: CoordFloat + FloatConst,
 {
     type SC = Coordinate<T>;
-    fn to_stream(&self, _stream: &mut impl Stream) {
+    fn to_stream(&self, _stream: impl Stream<ScC = Self::SC>) {
         panic!("To be overriden.");
     }
 }

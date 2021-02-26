@@ -1,31 +1,44 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
+use crate::path::PathResultEnum;
 use crate::stream::Stream;
-use crate::stream::StreamClipLineNode;
+// use crate::stream::StreamClipLineNode;
+use crate::stream::StreamClipLine;
 use crate::stream::StreamClipLineNodeStub;
-use crate::stream::StreamPathResultNode;
+use crate::stream::StreamClone;
+use crate::stream::StreamPathResult;
 use crate::stream::StreamPathResultNodeStub;
 
 use super::buffer::LineElem;
 
 pub struct ClipBase<T: CoordFloat + FloatConst> {
-    pub line_node: StreamClipLineNode<T>,
+    pub line_node: Box<
+        dyn StreamClipLine<ScC = Coordinate<T>, BitSink = Box<dyn Stream<ScC = Coordinate<T>>>>,
+    >,
     pub polygon_started: bool,
     pub polygon: Vec<Vec<Coordinate<T>>>,
     pub ring: Vec<Coordinate<T>>,
-    pub ring_buffer_node: StreamPathResultNode<T>,
-    pub ring_sink_node: StreamClipLineNode<T>,
+    pub ring_buffer_node:
+        Box<dyn StreamPathResult<ScC = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
+    pub ring_sink_node: Box<
+        dyn StreamClipLine<ScC = Coordinate<T>, BitSink = Box<dyn Stream<ScC = Coordinate<T>>>>,
+    >,
     pub segments: Vec<Vec<LineElem<T>>>,
     pub interpolate: Box<
-        dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut dyn Stream<C = Coordinate<T>>),
+        dyn Fn(
+            Option<Coordinate<T>>,
+            Option<Coordinate<T>>,
+            T,
+            &mut Box<dyn Stream<ScC = Coordinate<T>>>,
+        ),
     >,
     pub point_visible: Box<dyn Fn(Coordinate<T>, Option<u8>) -> bool>,
     pub start: Coordinate<T>,
     pub use_ring: bool,
     pub use_ring_end: bool,
     pub use_ring_start: bool,
-    pub sink: StreamPathResultNode<T>,
+    pub sink: Box<dyn StreamPathResult<ScC = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
 }
 
 impl<T> Default for ClipBase<T>
@@ -37,7 +50,7 @@ where
             |_from: Option<Coordinate<T>>,
              _to: Option<Coordinate<T>>,
              _direction: T,
-             _stream: &mut dyn Stream<C = Coordinate<T>>| {
+             _stream: &mut dyn Stream<ScC = Coordinate<T>>| {
                 panic!("Must be overriden.");
             },
         );
@@ -45,19 +58,19 @@ where
             Box::new(|_p: Coordinate<T>, _m: Option<u8>| panic!("Must be overriden."));
 
         Self {
-            line_node: StreamClipLineNodeStub::new(),
+            line_node: Box::new(StreamClipLineNodeStub::default()),
             polygon_started: false,
             polygon: vec![vec![]],
             ring: vec![],
-            ring_buffer_node: StreamPathResultNodeStub::new(),
-            ring_sink_node: StreamClipLineNodeStub::new(),
+            ring_buffer_node: Box::new(StreamPathResultNodeStub::default()),
+            ring_sink_node: Box::new(StreamClipLineNodeStub::default()),
             segments: vec![vec![]],
             use_ring: false,
             use_ring_end: false,
             use_ring_start: false,
             interpolate,
             point_visible,
-            sink: StreamPathResultNodeStub::new(),
+            sink: Box::new(StreamPathResultNodeStub::default()),
             start: Coordinate {
                 x: -T::PI(),
                 y: -T::FRAC_PI_2(),
@@ -72,20 +85,19 @@ where
 {
     fn point_ring(&mut self, p: Coordinate<T>, _m: Option<u8>) {
         self.ring.push(p);
-        let mut rs = self.ring_sink_node.borrow_mut();
-        rs.point(p, None);
+        self.ring_sink_node.point(p, None);
     }
 
     fn ring_start(&mut self) {
-        let mut sink = self.ring_sink_node.borrow_mut();
-        sink.line_start();
+        // let mut sink = self.ring_sink_node.borrow_mut();
+        self.ring_sink_node.line_start();
         self.ring = Vec::new();
     }
 
     fn ring_end(&mut self) {
         self.point_ring(self.ring[0], None);
-        let mut ring_sink = self.ring_sink_node.borrow_mut();
-        ring_sink.line_end();
+        // let mut ring_sink = self.ring_sink_node.borrow_mut();
+        self.ring_sink_node.line_end();
 
         // let clean = ring_sink.clean();
         // let mut ring_buffer = self.ring_buffer_node.borrow_mut();
@@ -162,11 +174,20 @@ where
     }
 }
 
+impl<T> StreamClone for ClipBase<T>
+where
+    T: CoordFloat + FloatConst + 'static,
+{
+    type ScC = Coordinate<T>;
+    #[inline]
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(*self.clone())
+    }
+}
 impl<T> Stream for ClipBase<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst + 'static,
 {
-    type C = Coordinate<T>;
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         match self.use_ring {
             true => {
@@ -175,8 +196,8 @@ where
             }
             false => {
                 if (self.point_visible)(p, None) {
-                    let mut sink = self.sink.borrow_mut();
-                    sink.point(p, m);
+                    // let mut sink = self.sink.borrow_mut();
+                    self.sink.point(p, m);
                 }
             }
         }
@@ -214,9 +235,9 @@ where
         // segments = merge(segments);
         // let start_inside = contains(&self.polygon, &self.start);
         let start_inside = false;
-        let mut sink = self.sink.borrow_mut();
+
         if !self.polygon_started {
-            sink.polygon_start();
+            self.sink.polygon_start();
             self.polygon_started = true;
 
         // rejoin(
@@ -228,15 +249,15 @@ where
         // );
         } else if start_inside {
             if !self.polygon_started {
-                sink.polygon_start();
+                self.sink.polygon_start();
                 self.polygon_started = true;
             }
-            sink.line_start();
+            self.sink.line_start();
             // (self.interpolate)(None, None, 1f64, self.sink);
-            sink.line_end();
+            self.sink.line_end();
         }
         if self.polygon_started {
-            sink.polygon_end();
+            self.sink.polygon_end();
             self.polygon_started = false;
         }
         self.segments.clear();
@@ -244,12 +265,12 @@ where
     }
 
     fn sphere(&mut self) {
-        let mut sink = self.sink.borrow_mut();
-        sink.polygon_start();
-        sink.line_start();
+        // let mut sink = self.sink.borrow_mut();
+        self.sink.polygon_start();
+        self.sink.line_start();
         // (self.interpolate)(None, None, T::one(), &mut sink as &mut dyn Stream<T>);
-        sink.line_end();
-        sink.polygon_end();
+        self.sink.line_end();
+        self.sink.polygon_end();
     }
 }
 // impl<T: CoordFloat + FloatConst + 'static> Clip<T> {

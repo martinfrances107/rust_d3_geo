@@ -36,35 +36,35 @@ where
     T: CoordFloat,
     T: std::default::Default,
 {
-    phantom: PhantomData<T>,
+    pub phantom: PhantomData<T>,
 }
 
 impl<T: CoordFloat + Default + 'static> TransformClone for TransformIdentity<T> {
     type TcC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Transform<C = Coordinate<T>, TcC = Self::TcC>> {
+    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
         Box::new(self.clone())
     }
 }
 
 impl<T: CoordFloat + Default + 'static> Transform for TransformIdentity<T> {
-    type C = Coordinate<T>;
+    //
 }
 
 pub trait TransformClone {
     type TcC;
-    fn clone_box(&self) -> Box<dyn Transform<C = Self::TcC, TcC = Self::TcC>>;
+    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>>;
 }
 
 // Common to Projection, Rotation.
 pub trait Transform: TransformClone {
-    type C: Clone;
+    // type C: Clone;
     #[inline]
-    fn transform(&self, p: &Self::C) -> Self::C {
-        p.clone()
+    fn transform(&self, p: &Self::TcC) -> Self::TcC {
+        *p.clone()
     }
 
     #[inline]
-    fn invert(&self, p: &Self::C) -> Self::C {
-        p.clone()
+    fn invert(&self, p: &Self::TcC) -> Self::TcC {
+        *p.clone()
     }
 }

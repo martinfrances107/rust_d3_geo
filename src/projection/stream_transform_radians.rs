@@ -1,18 +1,20 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::cell::RefCell;
 use std::marker::PhantomData;
-use std::rc::Rc;
 
+use crate::projection::stream_transform::StreamTransform;
 use crate::stream::Stream;
-use crate::stream::StreamTransformNode;
+use crate::stream::StreamClone;
+use crate::stream::StreamDummy;
+// use crate::stream::StreamTransformNode;
 use crate::stream::StreamTransformNodeStub;
 
 pub trait StreamTransformIn<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
-    fn stream_transform_in(&mut self, _stream: StreamTransformNode<T>) {
+    // fn stream_transform_in(&mut self, _stream: StreamTransformNode<T>) {
+    fn stream_transform_in(&mut self, _stream: StreamTransform<T>) {
         panic!("Must be overriden.");
     }
 }
@@ -30,36 +32,44 @@ where
 }
 // #[derive(Clone, Default)]
 // pub struct StreamTransformRadiansNodeStub;
-impl<T> StreamTransformRadiansNodeStub<T>
+// impl<T> StreamTransformRadiansNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default + 'static,
+// {
+//     #[inline]
+//     pub fn new() -> StreamTransformRadiansNode<T> {
+//         Rc::new(RefCell::new(Box::new(StreamTransformRadians {
+//             stream: StreamTransformNodeStub::new(),
+//         })))
+//     }
+// }
+// pub type StreamTransformRadiansNode<T> = Box<StreamTransformRadians<T>>;
+impl<T> StreamClone for StreamTransformRadiansNodeStub<T>
+where
+    T: CoordFloat + FloatConst + 'static,
+{
+    type ScC = Coordinate<T>;
+    #[inline]
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(self.clone())
+    }
+}
+
+impl<T> Stream for StreamTransformRadiansNodeStub<T> where T: CoordFloat + FloatConst + 'static {}
+impl<T> StreamTransformIn<T> for Box<StreamTransformRadians<T>> where T: CoordFloat + FloatConst {}
+
+pub struct StreamTransformRadians<T: CoordFloat + FloatConst + 'static> {
+    stream: StreamTransform<T>,
+}
+
+impl<T> Default for StreamTransformRadians<T>
 where
     T: CoordFloat + FloatConst + Default + 'static,
 {
-    #[inline]
-    pub fn new() -> StreamTransformRadiansNode<T> {
-        Rc::new(RefCell::new(Box::new(StreamTransformRadians {
-            stream: StreamTransformNodeStub::new(),
-        })))
-    }
-}
-pub type StreamTransformRadiansNode<T> = Rc<RefCell<Box<StreamTransformRadians<T>>>>;
-impl<T> Stream for StreamTransformRadiansNodeStub<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    type C = Coordinate<T>;
-}
-impl<T> StreamTransformIn<T> for StreamTransformRadiansNode<T> where T: CoordFloat {}
-
-pub struct StreamTransformRadians<T: CoordFloat> {
-    stream: StreamTransformNode<T>,
-}
-
-impl<T: CoordFloat + FloatConst + Default + 'static> StreamTransformRadians<T> {
-    #[inline]
-    pub fn gen_node() -> StreamTransformRadiansNode<T> {
-        Rc::new(RefCell::new(Box::new(Self {
-            stream: StreamTransformNodeStub::new(),
-        })))
+    fn default() -> Self {
+        Self {
+            stream: StreamTransform::default(),
+        }
     }
 }
 
@@ -68,17 +78,23 @@ where
     T: CoordFloat + FloatConst,
 {
     #[inline]
-    fn stream_transform_in(&mut self, stream: StreamTransformNode<T>) {
+    fn stream_transform_in(&mut self, stream: StreamTransform<T>) {
         self.stream = stream;
     }
 }
 
-impl<T: CoordFloat + FloatConst> Stream for StreamTransformRadians<T> {
-    type C = Coordinate<T>;
+impl<T: CoordFloat + FloatConst + 'static> StreamClone for StreamTransformRadians<T> {
+    type ScC = Coordinate<T>;
+    #[inline]
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(*self.clone())
+    }
+}
+impl<T: CoordFloat + FloatConst + 'static> Stream for StreamTransformRadians<T> {
     #[inline]
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
-        let mut s = self.stream.borrow_mut();
-        s.point(
+        // let mut s = self.stream.borrow_mut();
+        self.stream.point(
             Coordinate {
                 x: p.x.to_radians(),
                 y: p.y.to_radians(),

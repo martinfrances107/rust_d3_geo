@@ -1,30 +1,80 @@
+use crate::stream::CompareIntersection;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::cell::RefCell;
-use std::rc::Rc;
 
-use crate::stream::StreamPreClipNode;
+use crate::stream::StreamPreClipTrait;
+// use crate::stream::StreamPreClipNode;
+use crate::stream::StreamDummy;
 use crate::stream::StreamPreClipNodeStub;
-use crate::stream::StreamTransformNode;
+// use crate::stream::StreamTransformNode;
+use crate::projection::resample::ResampleNode;
 
-use crate::{stream::Stream, TransformIdentity};
+use crate::stream::Stream;
+use crate::stream::StreamClone;
+use crate::TransformIdentity;
 
 use crate::Transform;
-pub struct StreamTransform<T: CoordFloat> {
-    pub transform: Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>,
-    pub stream: StreamPreClipNode<T>,
+
+pub struct StreamTransform<T: CoordFloat + FloatConst + 'static> {
+    pub transform: Box<dyn Transform<TcC = Coordinate<T>>>,
+    pub stream: Box<
+        dyn StreamPreClipTrait<
+            ScC = Coordinate<T>,
+            SctT = T,
+            SctOC = Option<Coordinate<T>>,
+            SctStream = Box<dyn Stream<ScC = Coordinate<T>>>,
+            SctCi = CompareIntersection<T>,
+            SpctResample = ResampleNode<T>,
+        >,
+    >,
+}
+
+impl<T> Default for StreamTransform<T>
+where
+    T: CoordFloat + FloatConst + Default + 'static,
+{
+    fn default() -> Self {
+        Self {
+            transform: Box::new(TransformIdentity::<T>::default()),
+            stream: Box::new(StreamPreClipNodeStub::default()),
+        }
+    }
 }
 
 pub trait StreamPreclipIn<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
-    fn stream_preclip_in(&mut self, stream: StreamPreClipNode<T>);
+    fn stream_preclip_in(
+        &mut self,
+        stream: Box<
+            dyn StreamPreClipTrait<
+                ScC = Coordinate<T>,
+                SctT = T,
+                SctOC = Option<Coordinate<T>>,
+                SctStream = Box<dyn Stream<ScC = Coordinate<T>>>,
+                SctCi = CompareIntersection<T>,
+                SpctResample = ResampleNode<T>,
+            >,
+        >,
+    );
 }
 
-impl<T: CoordFloat> StreamPreclipIn<T> for StreamTransform<T> {
+impl<T: CoordFloat + FloatConst> StreamPreclipIn<T> for StreamTransform<T> {
     #[inline]
-    fn stream_preclip_in(&mut self, stream: StreamPreClipNode<T>) {
+    fn stream_preclip_in(
+        &mut self,
+        stream: Box<
+            dyn StreamPreClipTrait<
+                ScC = Coordinate<T>,
+                SctT = T,
+                SctOC = Option<Coordinate<T>>,
+                SctStream = Box<dyn Stream<ScC = Coordinate<T>>>,
+                SctCi = CompareIntersection<T>,
+                SpctResample = ResampleNode<T>,
+            >,
+        >,
+    ) {
         self.stream = stream;
     }
 }
@@ -32,31 +82,50 @@ impl<T: CoordFloat> StreamPreclipIn<T> for StreamTransform<T> {
 // pub type StreamTransformNode<T> = Rc<RefCell<Box<StreamTransform<T>>>>;
 impl<T: CoordFloat + FloatConst + Default + 'static> StreamTransform<T> {
     #[inline]
-    pub fn gen_node(
-        transform: Option<Rc<Box<dyn Transform<C = Coordinate<T>, TcC = Coordinate<T>>>>>,
-    ) -> StreamTransformNode<T> {
+    pub fn new(
+        transform_in: Option<Box<dyn Transform<TcC = Coordinate<T>>>>,
+    ) -> StreamTransform<T> {
         {
-            match transform {
-                Some(transform) => Rc::new(RefCell::new(Self {
-                    transform: transform.clone(),
-                    stream: StreamPreClipNodeStub::new(),
-                })),
-                None => Rc::new(RefCell::new(Self {
-                    transform: Rc::new(Box::new(TransformIdentity::<T>::default())),
-                    stream: StreamPreClipNodeStub::new(),
-                })),
+            let transform: Box<dyn Transform<TcC = Coordinate<T>>>;
+            let stream: Box<
+                dyn StreamPreClipTrait<
+                    ScC = Coordinate<T>,
+                    SctT = T,
+                    SctOC = Option<Coordinate<T>>,
+                    SctStream = Box<dyn Stream<ScC = Coordinate<T>>>,
+                    SctCi = CompareIntersection<T>,
+                    SpctResample = ResampleNode<T>,
+                >,
+            >;
+            match transform_in {
+                Some(t) => {
+                    transform = t.clone_box();
+                    stream = Box::new(StreamPreClipNodeStub::default());
+                }
+                None => {
+                    transform = Box::new(TransformIdentity::<T>::default());
+                    stream = Box::new(StreamPreClipNodeStub::default());
+                }
             }
+            Self { transform, stream }
         }
     }
 }
 
-impl<T: CoordFloat + FloatConst> Stream for StreamTransform<T> {
-    type C = Coordinate<T>;
+impl<T: CoordFloat + FloatConst + 'static> StreamClone for StreamTransform<T> {
+    type ScC = Coordinate<T>;
+    #[inline]
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(*self.clone())
+    }
+}
+
+impl<T: CoordFloat + FloatConst + 'static> Stream for StreamTransform<T> {
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
-        let mut stream = self.stream.borrow_mut();
-        let rotate = self.transform.clone();
+        // let mut stream = self.stream.borrow_mut();
+        let rotate = self.transform.clone_box();
         let r = rotate.transform(&p);
         // Warning the javascript version return the value below but I think it break the implied spec!!!!
-        stream.point(r, m);
+        self.stream.point(r, m);
     }
 }

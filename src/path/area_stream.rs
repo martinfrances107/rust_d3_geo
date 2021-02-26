@@ -1,5 +1,6 @@
 // use super::PathStream;
 use crate::stream::Stream;
+use crate::stream::StreamClone;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -71,10 +72,11 @@ where
     fn line_noop(&mut self) {}
 }
 
-impl<T> PathResult<T> for PathAreaStream<T>
+impl<T> PathResult for PathAreaStream<T>
 where
     T: CoordFloat + std::ops::AddAssign,
 {
+    type Out = Option<PathResultEnum<T>>;
     fn result(&mut self) -> Option<PathResultEnum<T>> {
         let area = self.area_sum / T::from(2).unwrap();
         self.area_sum = T::zero();
@@ -82,11 +84,20 @@ where
     }
 }
 
+impl<T> StreamClone for PathAreaStream<T>
+where
+    T: CoordFloat + FloatConst + std::ops::AddAssign + 'static,
+{
+    type ScC = Coordinate<T>;
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(*self.clone())
+    }
+}
+
 impl<T> Stream for PathAreaStream<T>
 where
-    T: CoordFloat + FloatConst + std::ops::AddAssign,
+    T: CoordFloat + FloatConst + std::ops::AddAssign + 'static,
 {
-    type C = Coordinate<T>;
     fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
         (self.point_fn)(self, p, m);
     }

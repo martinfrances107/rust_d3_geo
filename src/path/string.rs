@@ -1,6 +1,7 @@
 use std::fmt::Display;
 
 use crate::stream::Stream;
+use crate::stream::StreamClone;
 use geo::{CoordFloat, Coordinate};
 use num_traits::{Float, FloatConst};
 
@@ -66,10 +67,11 @@ where
     }
 }
 
-impl<T> PathResult<T> for PathString<T>
+impl<T> PathResult for PathString<T>
 where
     T: CoordFloat + FloatConst,
 {
+    type Out = Option<PathResultEnum<T>>;
     #[inline]
     fn result(&mut self) -> Option<PathResultEnum<T>> {
         if self.string.is_empty() {
@@ -82,11 +84,20 @@ where
     }
 }
 
+impl<T> StreamClone for PathString<T>
+where
+    T: CoordFloat + FloatConst + std::fmt::Display + 'static,
+{
+    type ScC = Coordinate<T>;
+    #[inline]
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(self.clone())
+    }
+}
 impl<T> Stream for PathString<T>
 where
-    T: CoordFloat + FloatConst + std::fmt::Display,
+    T: CoordFloat + FloatConst + std::fmt::Display + 'static,
 {
-    type C = Coordinate<T>;
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(0f64);

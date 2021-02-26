@@ -1,12 +1,11 @@
 mod intersect;
 mod line;
 
-use num_traits::FloatConst;
-use std::borrow::BorrowMut;
-
 use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 use crate::stream::Stream;
+use crate::stream::StreamClone;
 
 use super::buffer::ClipBuffer;
 use super::clip_base::ClipBase;
@@ -23,13 +22,13 @@ where
     T: CoordFloat + FloatConst + Default + 'static,
 {
     pub fn new() -> Self {
-        let line_node = Line::gen_node();
+        let line_node = Line::default();
 
-        let ring_buffer_node = ClipBuffer::gen_node();
-        let mut ring_sink_node = Line::gen_node();
+        let ring_buffer_node = ClipBuffer::default();
+        let mut ring_sink_node = Line::default();
 
-        let rs = ring_sink_node.borrow_mut();
-        rs.buffer_in(ring_buffer_node.clone());
+        // let rs = ring_sink_node.borrow_mut();
+        ring_sink_node.buffer_in(ring_buffer_node);
 
         // ring_sink.stream(ring_buffer_node);
 
@@ -47,12 +46,17 @@ where
     }
 }
 
-impl<T> Stream for ClipAntimeridian<T>
+impl<T> StreamClone for ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst + 'static,
 {
-    type C = Coordinate<T>;
+    type ScC = Coordinate<T>;
+    #[inline]
+    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+        Box::new(*self.clone())
+    }
 }
+impl<T> Stream for ClipAntimeridian<T> where T: CoordFloat + FloatConst + 'static {}
 // impl<T> StreamInTrait<T> for ClipAntimeridian<T>
 // where
 //     T: CoordFloat + FloatConst,
