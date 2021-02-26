@@ -10,20 +10,18 @@ use crate::stream::StreamClone;
 use crate::stream::StreamPathResult;
 use crate::stream::StreamPathResultNodeStub;
 
+use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
 
 pub struct ClipBase<T: CoordFloat + FloatConst> {
-    pub line_node: Box<
-        dyn StreamClipLine<ScC = Coordinate<T>, BitSink = Box<dyn Stream<ScC = Coordinate<T>>>>,
-    >,
+    pub line_node: Box<dyn StreamClipLine<ScC = Coordinate<T>, BitCB = ClipBuffer<T>>>,
     pub polygon_started: bool,
     pub polygon: Vec<Vec<Coordinate<T>>>,
     pub ring: Vec<Coordinate<T>>,
-    pub ring_buffer_node:
-        Box<dyn StreamPathResult<ScC = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
-    pub ring_sink_node: Box<
-        dyn StreamClipLine<ScC = Coordinate<T>, BitSink = Box<dyn Stream<ScC = Coordinate<T>>>>,
-    >,
+    // pub ring_buffer_node:
+    //     Box<dyn StreamPathResult<ScC = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
+    pub ring_buffer: ClipBuffer<T>,
+    pub ring_sink_node: Box<dyn StreamClipLine<ScC = Coordinate<T>, BitCB = ClipBuffer<T>>>,
     pub segments: Vec<Vec<LineElem<T>>>,
     pub interpolate: Box<
         dyn Fn(
@@ -58,12 +56,16 @@ where
             Box::new(|_p: Coordinate<T>, _m: Option<u8>| panic!("Must be overriden."));
 
         Self {
+            // Must be overrided.
             line_node: Box::new(StreamClipLineNodeStub::default()),
+            ring_sink_node: Box::new(StreamClipLineNodeStub::default()),
+
             polygon_started: false,
             polygon: vec![vec![]],
             ring: vec![],
-            ring_buffer_node: Box::new(StreamPathResultNodeStub::default()),
-            ring_sink_node: Box::new(StreamClipLineNodeStub::default()),
+            // ring_buffer_node: Box::new(StreamPathResultNodeStub::default()),
+            ring_buffer: ClipBuffer::default(),
+            // ring_sink_node: Box::new(StreamClipLineNodeStub::default()),
             segments: vec![vec![]],
             use_ring: false,
             use_ring_end: false,

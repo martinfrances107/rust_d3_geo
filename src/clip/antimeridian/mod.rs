@@ -22,20 +22,20 @@ where
     T: CoordFloat + FloatConst + Default + 'static,
 {
     pub fn new() -> Self {
-        let line_node = Line::default();
+        // Use the antimeridian Line version.
+        let line_node = Box::new(Line::default());
 
         let ring_buffer_node = ClipBuffer::default();
         let mut ring_sink_node = Line::default();
-
-        // let rs = ring_sink_node.borrow_mut();
         ring_sink_node.buffer_in(ring_buffer_node);
 
         // ring_sink.stream(ring_buffer_node);
 
         let base = ClipBase {
             line_node,
-            ring_sink_node,
-            ring_buffer_node: ring_buffer_node.clone(),
+            ring_sink_node: Box::new(ring_sink_node),
+            ring_buffer: ring_buffer_node,
+
             start: Coordinate {
                 x: -T::PI(),
                 y: -T::FRAC_PI_2(),
