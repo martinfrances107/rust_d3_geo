@@ -88,9 +88,9 @@ impl<T> StreamClone for PathString<T>
 where
     T: CoordFloat + FloatConst + std::fmt::Display + 'static,
 {
-    type ScC = Coordinate<T>;
+    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
     #[inline]
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+    fn box_clone(&self) -> Self::RetType {
         Box::new(self.clone())
     }
 }
@@ -98,6 +98,7 @@ impl<T> Stream for PathString<T>
 where
     T: CoordFloat + FloatConst + std::fmt::Display + 'static,
 {
+    type C = Coordinate<T>;
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(0f64);

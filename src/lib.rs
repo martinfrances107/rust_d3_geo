@@ -22,6 +22,7 @@ pub mod rotation;
 
 mod clip;
 mod compose;
+mod constant;
 mod point_equal;
 mod stream;
 // mod transform_stream;
@@ -41,30 +42,27 @@ where
 
 impl<T: CoordFloat + Default + 'static> TransformClone for TransformIdentity<T> {
     type TcC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
+    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
         Box::new(self.clone())
     }
 }
 
 impl<T: CoordFloat + Default + 'static> Transform for TransformIdentity<T> {
-    //
+    fn transform(&self, p: &Self::TcC) -> Self::TcC {
+        *p
+    }
+    fn invert(&self, p: &Self::TcC) -> Self::TcC {
+        *p
+    }
 }
 
 pub trait TransformClone {
     type TcC;
-    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>>;
+    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>>;
 }
 
 // Common to Projection, Rotation.
 pub trait Transform: TransformClone {
-    // type C: Clone;
-    #[inline]
-    fn transform(&self, p: &Self::TcC) -> Self::TcC {
-        *p.clone()
-    }
-
-    #[inline]
-    fn invert(&self, p: &Self::TcC) -> Self::TcC {
-        *p.clone()
-    }
+    fn transform(&self, p: &Self::TcC) -> Self::TcC;
+    fn invert(&self, p: &Self::TcC) -> Self::TcC;
 }

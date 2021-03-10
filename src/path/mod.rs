@@ -6,11 +6,11 @@ use std::default::Default;
 
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 // use crate::projection::stream_transform_radians::StreamTransformRadiansNode;
-use crate::stream::StreamIdentity;
+use crate::stream::stream_identity::StreamIdentity;
 
+use crate::clip::buffer::LineElem;
+use crate::stream::stream_dummy::StreamDummy;
 use crate::stream::Streamable;
-use crate::Transform;
-use crate::{clip::buffer::LineElem, stream::StreamDummy};
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 use geo::Coordinate;
 use web_sys::CanvasRenderingContext2d;
@@ -34,12 +34,10 @@ where
     Bound(T),
     Centroid(T),
 }
-pub trait PathResult // where
-//     T: CoordFloat,
-{
-    // type Out = Option<PathResultEnum<T>>;
-    type Out;
 
+pub trait PathResult // where
+{
+    type Out;
     fn result(&mut self) -> Self::Out;
 }
 
@@ -48,6 +46,7 @@ trait PointRadiusTrait {
     fn point_radius(&self, val: Self::PrtT);
 }
 
+// #[derive(Clone)]
 enum PointRadiusEnum<T> {
     Val(T),
     F(Box<dyn Fn() -> T>),
@@ -96,16 +95,11 @@ trait PathStreamTrait: Stream + PathTrait + PathResult {}
 
 pub struct Path<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     context: Option<CanvasRenderingContext2d>,
     context_stream: Option<Box<dyn PointRadiusTrait<PrtT = T>>>,
     point_radius: PointRadiusEnum<T>,
-    // projection_stream: Box<
-    //     dyn Fn(
-    //         Rc<RefCell<dyn Stream<ScC = Coordinate<T>>>>,
-    //     ) -> StreamTransformRadiansNode<T>,
-    // >,
     projection: Option<ProjectionMutator<T>>,
 }
 
@@ -184,7 +178,7 @@ where
     {
         let projection: Option<ProjectionMutator<T>>;
         let projection_stream: Box<
-            dyn Fn(Box<dyn Stream<ScC = Coordinate<T>>>) -> StreamTransformRadians<T>,
+            dyn Fn(Box<dyn Stream<C = Coordinate<T>>>) -> StreamTransformRadians<T>,
         >;
 
         //  let ret =  arguments.length ? (projectionStream = _ == null ? (projection = null, identity) : (projection = _).stream, path) : projection;

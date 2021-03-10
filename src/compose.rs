@@ -13,18 +13,18 @@ where
 impl<T: CoordFloat + 'static> Clone for Compose<T> {
     fn clone(&self) -> Self {
         Self {
-            a: self.a.clone_box(),
-            b: self.b.clone_box(),
+            a: self.a.box_clone(),
+            b: self.b.box_clone(),
         }
     }
 }
 
 impl<T: CoordFloat + 'static> TransformClone for Compose<T> {
     type TcC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
+    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
         Box::new(Self {
-            a: self.a.clone_box(),
-            b: self.b.clone_box(),
+            a: self.a.box_clone(),
+            b: self.b.box_clone(),
         })
     }
 }
@@ -35,8 +35,8 @@ impl<'a, T: CoordFloat + 'static> Compose<T> {
         b: Box<dyn Transform<TcC = Coordinate<T>>>,
     ) -> Box<dyn Transform<TcC = Coordinate<T>>> {
         Box::new(Self {
-            a: a.clone_box(),
-            b: b.clone_box(),
+            a: a.box_clone(),
+            b: b.box_clone(),
         })
     }
 }

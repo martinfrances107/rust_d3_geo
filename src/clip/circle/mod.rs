@@ -1,90 +1,121 @@
 mod intersect;
-mod line;
-use geo::{CoordFloat, Coordinate};
+pub mod line;
 
+use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::circle::circle_stream::circle_stream;
-use crate::clip::ClipBuffer;
+use crate::projection::resample::ResampleEnum;
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
-use crate::stream::StreamClipTrait;
 use crate::stream::StreamClone;
-use crate::stream::StreamInTrait;
+use crate::stream::StreamPreClipTrait;
 use crate::stream::StreamSimpleNode;
 
 use super::clip_base::ClipBase;
-use super::BufferInTrait;
+// use super::BufferInTrait;
+// use super::ClipBuffer;
+use super::ClipTraitRaw;
+// use super::LineEnum;
 
-use line::Line;
-pub struct ClipCircle<T: CoordFloat + FloatConst> {
-    radius: T,
-    delta: T,
-    cr: T,
-    base: ClipBase<T>,
-}
+use super::clip::Clip;
+use super::ClipRaw;
 
-impl<T> StreamInTrait<T> for ClipCircle<T> where T: CoordFloat + FloatConst {}
+// use line::Line;
 
-/// Returns a clip object
-impl<T> ClipCircle<T>
+#[derive(Clone)]
+pub struct ClipCircle<T>
 where
     T: CoordFloat + FloatConst + Default + 'static,
 {
-    fn new(radius: T) -> Self {
+    radius: T,
+    small_radius: bool,
+    delta: T,
+    cr: T,
+    pub base: ClipBase<T>,
+}
+
+/// Returns a clip object
+use std::fmt::Debug;
+impl<T> ClipCircle<T>
+where
+    T: CoordFloat + FloatConst + Default + Debug + 'static,
+{
+    pub fn gen_clip(radius: T) -> Clip<T> {
         let cr = radius.cos();
-        let delta = T::from(6u8).unwrap().to_radians();
-
-        let line_node = Box::new(Line::new(radius));
-        let ring_buffer = ClipBuffer::default();
-        let ring_sink_node = Line::new(radius);
-        ring_sink_node.buffer_in(ring_buffer.clone());
-
-        let interpolate = Box::new(
-            move |from: Option<Coordinate<T>>,
-                  to: Option<Coordinate<T>>,
-                  direction: T,
-                  stream: &mut dyn Stream<ScC = Coordinate<T>>| {
-                circle_stream(stream, radius, delta, direction, from, to);
-            },
-        );
-
-        let base = ClipBase {
-            line_node,
-            start: Coordinate {
+        let small_radius = cr > T::zero();
+        let start;
+        if small_radius {
+            start = Coordinate {
+                x: T::zero(),
+                y: T::zero() - radius,
+            };
+        } else {
+            start = Coordinate {
                 x: -T::PI(),
-                y: -T::FRAC_PI_2(),
-            },
-            interpolate,
-            ring_buffer,
-            // ring_sink_node,
-            ..ClipBase::default()
-        };
-
-        Self {
-            radius,
-            delta,
-            cr,
-            base,
+                y: radius - T::PI(),
+            }
         }
+
+        let cr = ClipRaw::Circle(ClipCircle {
+            radius,
+            delta: T::from(6u8).unwrap() * radius,
+            small_radius,
+            cr,
+            base: ClipBase::default(),
+        });
+
+        Clip::new(cr, start)
     }
 }
 impl<T> StreamClone for ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
-    type ScC = Coordinate<T>;
+    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
     #[inline]
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
-        Box::new(*self.clone())
+    fn box_clone(&self) -> Self::RetType {
+        Box::new(self.clone())
     }
 }
-impl<T> Stream for ClipCircle<T> where T: CoordFloat + FloatConst + 'static {}
 
-impl<T> StreamClipTrait for ClipCircle<T>
+impl<T> Stream for ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
+    type C = Coordinate<T>;
+}
+
+impl<T> StreamPreClipTrait for ClipCircle<T>
+where
+    T: CoordFloat + FloatConst + Default + 'static,
+{
+    type SpctResample = ResampleEnum<T>;
+    // type SPCTstream = StreamSimpleNode<T>;
+    fn stream_resample_in(&mut self, _resample: Self::SpctResample) {
+        todo!("must connect");
+    }
+
+    fn box_clone(
+        &self,
+    ) -> Box<
+        dyn StreamPreClipTrait<
+            SctC = Self::SctC,
+            SctOC = Self::SctOC,
+            SctT = Self::SctT,
+            SctCi = Self::SctCi,
+            SctStream = Self::SctStream,
+            SpctResample = Self::SpctResample,
+        >,
+    > {
+        todo!("must clone");
+    }
+}
+impl<T> ClipTraitRaw for ClipCircle<T>
+where
+    T: CoordFloat + FloatConst + Default + 'static,
+{
+    type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;
     type SctStream = StreamSimpleNode<T>;
     type SctT = T;
@@ -97,11 +128,35 @@ where
 
     fn interpolate(
         &self,
-        _from: Self::SctOC,
-        _to: Self::SctOC,
-        _direction: Self::SctT,
-        _stream: Self::SctStream,
+        from: Self::SctOC,
+        to: Self::SctOC,
+        direction: Self::SctT,
+        mut stream: Self::SctStream,
     ) {
-        panic!("dummmy function");
+        circle_stream(&mut stream, self.radius, self.delta, direction, from, to);
     }
 }
+
+// fn gen_clip_circle<T>(radius: T) -> Clip<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     let cr = radius.cos();
+//     let smallRadius = cr > T::zero();
+//     let start;
+//     if smallRadius {
+//         start = Coordinate {
+//             x: T::zero,
+//             y: std::ops::Neg(radius),
+//         };
+//     } else {
+//         start = Coordinate {
+//             x: -T::PI(),
+//             y: radius - T::PI(),
+//         }
+//     }
+
+//     let cr = ClipRaw::Circle(ClipCircle::new(radius));
+
+//     Clip::new(cr, start)
+// }

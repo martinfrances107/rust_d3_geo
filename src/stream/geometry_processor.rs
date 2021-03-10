@@ -5,7 +5,7 @@ use num_traits::FloatConst;
 
 pub fn line_processor<T: CoordFloat + FloatConst>(
     coordinates: &[Coordinate<T>],
-    stream: impl Stream<ScC = Coordinate<T>>,
+    stream: &mut Box<dyn Stream<C = Coordinate<T>>>,
     closed: usize,
 ) {
     let n = coordinates.len() - closed;

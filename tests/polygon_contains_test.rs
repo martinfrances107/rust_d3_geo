@@ -74,10 +74,10 @@ mod polygon_contains_test {
     fn small_circle() {
         println!("geoPolygonContains(smallCircle, point) returns the expected value");
 
-        let mut circle = CircleGenerator::new();
-        circle.radius(FnValMaybe::FloatValue(60.0));
+        let mut circle = CircleGenerator::default();
+        circle.set_radius(FnValMaybe::FloatValue(60.0));
 
-        let polygon = circle.circle(CircleInArg::None).coordinates;
+        let polygon = circle.circle(&CircleInArg::None).coordinates;
         assert_eq!(
             polygon_contains::<f64>(
                 &polygon,
@@ -98,9 +98,9 @@ mod polygon_contains_test {
     fn wraps_longitudes() {
         println!("geoPolygonContains wraps longitudes");
 
-        let mut circle = CircleGenerator::new();
-        circle.center(FnValMaybe2D::FloatValue(Coordinate { x: 300f64, y: 0f64 }));
-        let c = circle.circle(CircleInArg::None);
+        let mut circle = CircleGenerator::default();
+        circle.set_center(FnValMaybe2D::FloatValue(Coordinate { x: 300f64, y: 0f64 }));
+        let c = circle.circle(&CircleInArg::None);
         let polygon = c.coordinates;
         assert_eq!(
             polygon_contains::<f64>(&polygon, &Coordinate { x: 300f64, y: 0f64 }),
@@ -412,9 +412,9 @@ mod polygon_contains_test {
     #[test]
     fn large_circle() {
         println!("geoPolygonContains(largeCircle, point) returns the expected value");
-        let mut circle = CircleGenerator::new();
-        circle.radius(FnValMaybe::FloatValue(120.0));
-        let c = circle.circle(CircleInArg::None);
+        let mut circle = CircleGenerator::default();
+        circle.set_radius(FnValMaybe::FloatValue(120.0));
+        let c = circle.circle(&CircleInArg::None);
         let polygon = c.coordinates;
         assert_eq!(
             polygon_contains::<f64>(
@@ -471,14 +471,14 @@ mod polygon_contains_test {
     #[test]
     fn large_narrow_equatorial_hole() {
         println!("geoPolygonContains(largeNarrowEquatorialHole, point) returns the expected value");
-        let mut circle_gen = CircleGenerator::new();
-        circle_gen.center(FnValMaybe2D::FloatValue(Coordinate { x: 0f64, y: -90f64 }));
+        let mut circle_gen = CircleGenerator::default();
+        circle_gen.set_center(FnValMaybe2D::FloatValue(Coordinate { x: 0f64, y: -90f64 }));
 
-        circle_gen.radius(FnValMaybe::FloatValue(90f64 - 0.1f64));
-        let ring0 = circle_gen.circle(CircleInArg::None).coordinates[0].clone();
+        circle_gen.set_radius(FnValMaybe::FloatValue(90f64 - 0.1f64));
+        let ring0 = circle_gen.circle(&CircleInArg::None).coordinates[0].clone();
 
-        circle_gen.radius(FnValMaybe::FloatValue(90f64 + 0.1f64));
-        let mut ring1 = circle_gen.circle(CircleInArg::None).coordinates[0].clone();
+        circle_gen.set_radius(FnValMaybe::FloatValue(90f64 + 0.1f64));
+        let mut ring1 = circle_gen.circle(&CircleInArg::None).coordinates[0].clone();
         ring1.reverse();
 
         let polygon: Vec<Vec<Coordinate<f64>>> = vec![ring0, ring1];
@@ -497,15 +497,15 @@ mod polygon_contains_test {
     fn large_narrow_equatorial_strip() {
         println!("geoPolygonContains(empty, point) returns false");
 
-        let mut circle = CircleGenerator::new();
-        circle.center(FnValMaybe2D::FloatValue(Coordinate { x: 0f64, y: -90f64 }));
-        circle.radius(FnValMaybe::FloatValue(90f64 + 0.1f64));
-        let c1 = circle.circle(CircleInArg::None);
+        let mut circle = CircleGenerator::default();
+        circle.set_center(FnValMaybe2D::FloatValue(Coordinate { x: 0f64, y: -90f64 }));
+        circle.set_radius(FnValMaybe::FloatValue(90f64 + 0.1f64));
+        let c1 = circle.circle(&CircleInArg::None);
         let ring1 = c1.coordinates[0].clone();
 
-        circle.center(FnValMaybe2D::FloatValue(Coordinate { x: 0f64, y: -90f64 }));
-        circle.radius(FnValMaybe::FloatValue(90f64 - 0.1f64));
-        let c2 = circle.circle(CircleInArg::None);
+        circle.set_center(FnValMaybe2D::FloatValue(Coordinate { x: 0f64, y: -90f64 }));
+        circle.set_radius(FnValMaybe::FloatValue(90f64 - 0.1f64));
+        let c2 = circle.circle(&CircleInArg::None);
         let mut ring2 = c2.coordinates[0].clone();
         ring2.reverse();
 
@@ -955,10 +955,10 @@ mod polygon_contains_test {
             "geoPolygonContains(hemisphereTouchingTheSouthPole, point) returns the expected value"
         );
 
-        let mut circle = CircleGenerator::new();
-        circle.radius(FnValMaybe::FloatValue(90f64));
+        let mut circle = CircleGenerator::default();
+        circle.set_radius(FnValMaybe::FloatValue(90f64));
 
-        let c = circle.circle(CircleInArg::None);
+        let c = circle.circle(&CircleInArg::None);
         let polygon = &c.coordinates;
         assert_eq!(
             polygon_contains::<f64>(polygon, &Coordinate { x: 0f64, y: 0f64 }),

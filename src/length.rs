@@ -32,10 +32,11 @@ impl<T: CoordFloat + FloatConst + 'static> Default for LengthStream<T> {
 }
 
 impl<T: CoordFloat + FloatConst + 'static> LengthStream<T> {
-    pub fn calc(object: &impl Streamable<SC = Coordinate<T>>) -> T {
-        let mut ls = LengthStream::default();
-        object.to_stream(ls);
-        return ls.length_sum;
+    pub fn calc(_object: &impl Streamable<SC = Coordinate<T>>) -> T {
+        // let mut ls = Box::new(LengthStream::default());
+        // object.to_stream(&mut ls);
+        panic!("must resole")
+        // return ls.length_sum;
     }
 
     fn length_point_first(&mut self, p: Coordinate<T>) {
@@ -81,13 +82,15 @@ impl<T: CoordFloat + FloatConst + 'static> LengthStream<T> {
 }
 
 impl<T: CoordFloat + FloatConst + 'static> StreamClone for LengthStream<T> {
-    type ScC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+    #[inline]
+    fn box_clone(&self) -> Self::RetType {
         Box::new(self.clone())
     }
 }
 
 impl<T: CoordFloat + FloatConst + 'static> Stream for LengthStream<T> {
+    type C = Coordinate<T>;
     fn point(&mut self, p: Coordinate<T>, _z: Option<u8>) {
         (self.point_fn)(self, p);
     }

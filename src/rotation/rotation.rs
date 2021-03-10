@@ -40,9 +40,9 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Rotation<T> {
 // }
 impl<T: CoordFloat + 'static> TransformClone for Rotation<T> {
     type TcC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
+    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
         Box::new(Self {
-            rotate: (*self.rotate).clone_box(),
+            rotate: (*self.rotate).box_clone(),
         })
     }
 }

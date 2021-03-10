@@ -175,8 +175,8 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> CentroidStream<T> {
         self.point_fn = Self::centroid_ring_point_first;
     }
 
-    pub fn centroid(&self, d_object: &impl Streamable<SC = Coordinate<T>>) -> Point<T> {
-        // d_object.to_stream(self as &dyn Stream<ScC = Coordinate<T>>);
+    pub fn centroid(&self, _d_object: &impl Streamable<SC = Coordinate<T>>) -> Point<T> {
+        // d_object.to_stream(self as &dyn Stream<C = Coordinate<T>>);
 
         let mut x = self.X2;
         let mut y = self.Y2;
@@ -205,12 +205,14 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> CentroidStream<T> {
     }
 }
 impl<T: CoordFloat + FloatConst + AddAssign + 'static> StreamClone for CentroidStream<T> {
-    type ScC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+    // type C = Coordinate<T>;
+    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+    fn box_clone(&self) -> Self::RetType {
         Box::new(self.clone())
     }
 }
 impl<T: CoordFloat + FloatConst + AddAssign + 'static> Stream for CentroidStream<T> {
+    type C = Coordinate<T>;
     //
     #[inline]
     fn line_end(&mut self) {
@@ -223,7 +225,7 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> Stream for CentroidStream
     }
 
     #[inline]
-    fn point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
+    fn point(&mut self, p: Self::C, _m: Option<u8>) {
         (self.point_fn)(self, p);
     }
 
