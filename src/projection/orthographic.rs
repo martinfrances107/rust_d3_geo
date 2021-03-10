@@ -41,7 +41,7 @@ where
 
 impl<T: CoordFloat + FloatConst + Default + 'static> TransformClone for OrthographicRaw<T> {
     type TcC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
+    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
         Box::new(self.clone())
     }
 }

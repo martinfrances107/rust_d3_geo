@@ -1,5 +1,6 @@
+use crate::point_equal::point_equal;
 use crate::stream::Stream;
-use crate::{point_equal::point_equal, stream::StreamSimpleNode};
+// use  crate::stream::StreamSimpleNode;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::{Float, FloatConst};
@@ -49,8 +50,7 @@ pub fn rejoin<T: Float>(
     segments: &Vec<Vec<LineElem<T>>>,
     // compare_intersection: CompareIntersectionFn<T>,
     start_inside: bool,
-    // interpolate: InterpolateFn<T>,
-    stream: Box<dyn Stream<ScC = Coordinate<T>>>,
+    stream: &mut Box<dyn Stream<C = Coordinate<T>>>,
 ) where
     T: CoordFloat + FloatConst,
 {

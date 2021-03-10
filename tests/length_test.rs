@@ -4,7 +4,7 @@ mod length_test {
     // extern crate pretty_assertions;
     use geo::line_string;
     use geo::polygon;
-    use geo::Geometry;
+    // use geo::Geometry;
     use geo::LineString;
     use geo::MultiLineString;
     use geo::MultiPoint;

@@ -1,22 +1,26 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::path::PathResultEnum;
 use crate::point_equal::point_equal;
 use crate::stream::StreamClean;
 // use crate::stream::StreamClipLineNode;
 use crate::clip::buffer::ClipBuffer;
-use crate::stream::StreamClone;
-use crate::stream::StreamDummy;
-use crate::stream::StreamPathResult;
-use crate::stream::StreamSimpleNode;
-use crate::stream::{Clean, CleanEnum, Stream};
+use crate::projection::resample::resample::Resample;
+// use crate::projection::resample::ResampleEnum;
+// use crate::stream::stream_dummy::StreamDummy;
+use crate::stream::Stream;
+use crate::stream::StreamClipLine;
+// use crate::stream::StreamClone;
+use crate::stream::{Clean, CleanEnum};
 
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
-use super::BufferInTrait;
+// use super::BufferInTrait;
 
-pub struct Line<T: CoordFloat> {
+// use crate::clip::clip::ClipSinkEnum;
+
+#[derive(Clone)]
+pub struct Line<T: CoordFloat + FloatConst + 'static> {
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
     radius: T,
@@ -25,7 +29,7 @@ pub struct Line<T: CoordFloat> {
     // point0: (Option<Point>, Option<u8>), // previous point with message.
     point0: Option<Coordinate<T>>, // previous point
     small_radius: bool,
-    stream: Box<dyn Stream<ScC = Coordinate<T>>>,
+    stream: Resample<T>,
     v0: bool,  // visibility of previous point
     v00: bool, // visibility of first point
 }
@@ -43,26 +47,56 @@ where
             not_hemisphere: false,
             point0: None,
             small_radius: false,
-            stream: Box::new(StreamDummy::default()),
+            stream: Resample::default(), // initial stub
             v0: false,
             v00: false,
         }
     }
 }
 
-impl<T> BufferInTrait for Line<T>
+// impl<T> BufferInTrait for Line<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     type BitCB = ClipBuffer<T>;
+//     #[inline]
+//     fn buffer_in(&mut self, _sink: Self::BitCB) {
+//         // No-op.
+//     }
+// }
+
+// impl<T: CoordFloat + FloatConst + Default + 'static> StreamClone for Line<T> {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(*self.clone())
+//     }
+// }
+
+// impl<T> Clone for Line<T>
+// where
+//     T: CoordFloat + FloatConst + Default + 'static,
+// {
+//     fn clone(&self) -> Self {
+//         Self {
+//             stream: self.stream.clone(),
+//             ..*self
+//         }
+//     }
+// }
+
+impl<T> StreamClipLine for Line<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
-    // type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, ScC = Coordinate<T>>>;
-    type BitCB = ClipBuffer<T>;
-    #[inline]
-    fn buffer_in(&mut self, _sink: Self::BitCB) {
-        // No-op.
-    }
+    // #[inline]
+    // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
+    //     Box::new(Self {
+    //         stream: self.stream.box_clone(),
+    //         ..*self
+    //     })
+    // }
 }
-use crate::stream::StreamClipLine;
-impl<T> StreamClipLine for Line<T> where T: CoordFloat + FloatConst + Default + 'static {}
 
 impl<T: CoordFloat + FloatConst + Default + 'static> Line<T> {
     #[inline]
@@ -81,17 +115,15 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Line<T> {
             v0: false,
             v00: false,
             // TOD pre or post clip.
-            stream: Box::new(StreamDummy::default()),
+            stream: Resample::default(), // initial stub
         }
     }
 
-    // #[inline]
-    // pub fn gen_node(
-    //     radius: T,
-    // ) -> Box<dyn StreamClipLine<ScC = Coordinate<T>, BitSink = Box<dyn Stream<ScC = Coordinate<T>>>>>
-    // {
-    //     Box::new(Self::new(radius))
-    // }
+    #[inline]
+    pub fn buffer_in(&mut self, _buffer: &ClipBuffer<T>) {
+        // self.stream = stream;
+        todo!("how to deal with connecting stream or buffer to this struct.")
+    }
 
     #[inline]
     fn point_visible(&self, p: Coordinate<T>, _m: Option<u8>) -> bool {
@@ -146,22 +178,16 @@ where
         }
     }
 }
-impl<T: CoordFloat + FloatConst + Default + 'static> StreamClone for Line<T> {
-    type ScC = Coordinate<T>;
-    #[inline]
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
-        Box::new(*self.clone())
-    }
-}
 
 impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
+    type C = Coordinate<T>;
     fn line_start(&mut self) {
         self.v00 = false;
         self.v0 = false;
         self.clean = CleanEnum::NoIntersections;
     }
 
-    fn point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
+    fn point(&mut self, p: Self::C, _m: Option<u8>) {
         let mut point1 = p;
 
         // let point2: (Option::<Point>, <Option<u8>>);
@@ -192,7 +218,6 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
             self.v00 = v;
             self.v0 = v;
             if v {
-                // let mut s = self.stream.borrow_mut();
                 self.stream.line_start();
             }
         }

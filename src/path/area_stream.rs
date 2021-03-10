@@ -88,9 +88,11 @@ impl<T> StreamClone for PathAreaStream<T>
 where
     T: CoordFloat + FloatConst + std::ops::AddAssign + 'static,
 {
-    type ScC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
-        Box::new(*self.clone())
+    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+    #[inline]
+    fn box_clone(&self) -> Self::RetType {
+        panic!("Must clone")
+        // Box::new(*self.clone())
     }
 }
 
@@ -98,7 +100,8 @@ impl<T> Stream for PathAreaStream<T>
 where
     T: CoordFloat + FloatConst + std::ops::AddAssign + 'static,
 {
-    fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
+    type C = Coordinate<T>;
+    fn point(&mut self, p: Self::C, m: Option<u8>) {
         (self.point_fn)(self, p, m);
     }
     fn polygon_start(&mut self) {

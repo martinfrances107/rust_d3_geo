@@ -52,7 +52,7 @@ impl<T: CoordFloat + 'static> ScaleTranslateRotate<T> {
 
 impl<T: CoordFloat + 'static> TransformClone for ScaleTranslateRotate<T> {
     type TcC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
+    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
         Box::new(self.clone())
     }
 }

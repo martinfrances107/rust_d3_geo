@@ -3,16 +3,18 @@
 
 mod equirectangular_test {
 
-    use geo::Geometry;
-    use geo::{CoordFloat, Coordinate, LineString, Polygon};
+    // use geo::Geometry;
+    use geo::CoordFloat;
+        // use Coordinate, LineString, Polygon;
     use num_traits::FloatConst;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::projection::projection::Projection;
-    use rust_d3_geo::projection::projection_equal::projection_equal;
+    // use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::{
         equirectangular::EquirectangularRaw, projection_mutator::ProjectionMutator,
     };
-    use rust_d3_geo::{path::Path, projection::equirectangular};
+    use rust_d3_geo::path::Path;
+    // use  projection::equirectangular;
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;

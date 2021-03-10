@@ -1,78 +1,83 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::path::PathResultEnum;
+// use crate::path::PathResultEnum;
+// use crate::stream::stream_clip_line_node_stub::StreamClipLineNodeStub;
+// use crate::stream::stream_path_result_node_stub::StreamPathResultNodeStub;
 use crate::stream::Stream;
-// use crate::stream::StreamClipLineNode;
-use crate::stream::StreamClipLine;
-use crate::stream::StreamClipLineNodeStub;
+// use crate::stream::StreamClipLine;
+// use super::antimeridian::ClipAntimeridian;
+// use super::circle::ClipCircle;
+// use super::ClipRaw;
+use super::LineEnum;
 use crate::stream::StreamClone;
-use crate::stream::StreamPathResult;
-use crate::stream::StreamPathResultNodeStub;
+// use crate::stream::StreamPathResult;
 
+// use super::antimeridian::ClipAntimeridian;
 use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
+// use super::circle::ClipCircle;
+// use super::ClipTraitRaw;
+use super::clip::ClipSinkEnum;
 
-pub struct ClipBase<T: CoordFloat + FloatConst> {
-    pub line_node: Box<dyn StreamClipLine<ScC = Coordinate<T>, BitCB = ClipBuffer<T>>>,
+#[derive(Clone)]
+pub struct ClipBase<T: CoordFloat + FloatConst + Default + 'static> {
+    pub line: LineEnum<T>,
     pub polygon_started: bool,
     pub polygon: Vec<Vec<Coordinate<T>>>,
     pub ring: Vec<Coordinate<T>>,
-    // pub ring_buffer_node:
-    //     Box<dyn StreamPathResult<ScC = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
+    pub ring_sink: LineEnum<T>,
     pub ring_buffer: ClipBuffer<T>,
-    pub ring_sink_node: Box<dyn StreamClipLine<ScC = Coordinate<T>, BitCB = ClipBuffer<T>>>,
+    // pub ring_sink_node: Box<dyn StreamClipLine<C = Coordinate<T>, BitCB = ClipBuffer<T>>>,
+    // pub ring_sink_node: ClipRaw<T>,
     pub segments: Vec<Vec<LineElem<T>>>,
-    pub interpolate: Box<
-        dyn Fn(
-            Option<Coordinate<T>>,
-            Option<Coordinate<T>>,
-            T,
-            &mut Box<dyn Stream<ScC = Coordinate<T>>>,
-        ),
-    >,
-    pub point_visible: Box<dyn Fn(Coordinate<T>, Option<u8>) -> bool>,
     pub start: Coordinate<T>,
     pub use_ring: bool,
     pub use_ring_end: bool,
     pub use_ring_start: bool,
-    pub sink: Box<dyn StreamPathResult<ScC = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
+    // pub sink: Box<dyn StreamPathResult<C = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
+    pub sink: ClipSinkEnum<T>,
 }
+
+// impl<T> Clone for ClipBase<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     fn clone(&self) -> Self {
+//         Self {
+//             // sink: self.sink.box_clone(),
+//             ..*self
+//         }
+//     }
+// }
+
+use crate::projection::resample::resample::Resample;
+use crate::projection::resample::ResampleEnum;
 
 impl<T> Default for ClipBase<T>
 where
     T: CoordFloat + FloatConst + Default + 'static,
 {
     fn default() -> Self {
-        let interpolate = Box::new(
-            |_from: Option<Coordinate<T>>,
-             _to: Option<Coordinate<T>>,
-             _direction: T,
-             _stream: &mut dyn Stream<ScC = Coordinate<T>>| {
-                panic!("Must be overriden.");
-            },
-        );
-        let point_visible =
-            Box::new(|_p: Coordinate<T>, _m: Option<u8>| panic!("Must be overriden."));
-
         Self {
             // Must be overrided.
-            line_node: Box::new(StreamClipLineNodeStub::default()),
-            ring_sink_node: Box::new(StreamClipLineNodeStub::default()),
-
+            // line_node: Box::new(StreamClipLineNodeStub::default()),
+            // clip_buffer: Box::new(StreamClipLineNodeStub::default()),
+            line: LineEnum::Stub,
             polygon_started: false,
             polygon: vec![vec![]],
             ring: vec![],
             // ring_buffer_node: Box::new(StreamPathResultNodeStub::default()),
             ring_buffer: ClipBuffer::default(),
+            // clip_buffer: ClipBuffer::default(),
             // ring_sink_node: Box::new(StreamClipLineNodeStub::default()),
+            ring_sink: LineEnum::Stub,
             segments: vec![vec![]],
             use_ring: false,
             use_ring_end: false,
             use_ring_start: false,
-            interpolate,
-            point_visible,
-            sink: Box::new(StreamPathResultNodeStub::default()),
+            // sink: Box::new(StreamPathResultNodeStub::default()),
+            sink: ClipSinkEnum::Resample(ResampleEnum::R(Resample::default())), // stub value
             start: Coordinate {
                 x: -T::PI(),
                 y: -T::FRAC_PI_2(),
@@ -83,27 +88,25 @@ where
 
 impl<T> ClipBase<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     fn point_ring(&mut self, p: Coordinate<T>, _m: Option<u8>) {
         self.ring.push(p);
-        self.ring_sink_node.point(p, None);
+        self.ring_sink.point(p, None);
     }
 
     fn ring_start(&mut self) {
-        // let mut sink = self.ring_sink_node.borrow_mut();
-        self.ring_sink_node.line_start();
+        self.ring_sink.line_start();
         self.ring = Vec::new();
     }
 
     fn ring_end(&mut self) {
         self.point_ring(self.ring[0], None);
-        // let mut ring_sink = self.ring_sink_node.borrow_mut();
-        self.ring_sink_node.line_end();
+        self.ring_sink.line_end();
 
-        // let clean = ring_sink.clean();
+        // let clean = self.ring_sink.clean();
         // let mut ring_buffer = self.ring_buffer_node.borrow_mut();
-        // let ring_segments = match ring_buffer.result() {
+        // let ring_segments = match self.ring_buffer.result() {
         //     PathResultEnum::ClipBufferOutput(result) => {
         //         // Can I find a way of doing this with the expense of dynamic conversion.
         //         result
@@ -178,103 +181,26 @@ where
 
 impl<T> StreamClone for ClipBase<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
-    type ScC = Coordinate<T>;
+    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
     #[inline]
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
-        Box::new(*self.clone())
+    fn box_clone(&self) -> Self::RetType {
+        // Box::new(*self.clone())
+        panic!("Make clip base clonable")
     }
 }
-impl<T> Stream for ClipBase<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
-        match self.use_ring {
-            true => {
-                self.ring.push(p);
-                self.ring_sink_node.point(p, None);
-            }
-            false => {
-                if (self.point_visible)(p, None) {
-                    // let mut sink = self.sink.borrow_mut();
-                    self.sink.point(p, m);
-                }
-            }
-        }
-    }
-    fn line_start(&mut self) {
-        // if self.use_ring_start {
-        //     self.ring_start();
-        // } else {
-        //     // What ghoes here.
-        // }
-        // // self.clip.point = self.point_line;
-        // // self.line.line_start();
-    }
 
-    fn line_end(&mut self) {
-        // if self.use_ring_end {
-        //     self.ring_end();
-        // } else {
-        //     // put somethignhere.
-        // }
-    }
+// impl<T> StreamClipTrait for ClipBase<T>
+// where
+//     T: CoordFloat + FloatConst + 'static,
+// {
+//     type SctOC = Option<Coordinate<T>>;
+//     type SctStream = StreamSimpleNode<T>;
+//     type SctT = T;
+//     type SctCi = CompareIntersection<T>;
+// }
 
-    fn polygon_start(&mut self) {
-        self.use_ring = true;
-        self.use_ring_start = true;
-        self.use_ring_end = true;
-        self.segments.clear();
-        self.polygon.clear();
-    }
-
-    fn polygon_end(&mut self) {
-        self.use_ring = false;
-        self.use_ring_start = false;
-        self.use_ring_end = false;
-        // segments = merge(segments);
-        // let start_inside = contains(&self.polygon, &self.start);
-        let start_inside = false;
-
-        if !self.polygon_started {
-            self.sink.polygon_start();
-            self.polygon_started = true;
-
-        // rejoin(
-        //     &self.segments,
-        //     self.compare_intersection,
-        //     start_inside,
-        //     self.interpolate,
-        //     self.sink,
-        // );
-        } else if start_inside {
-            if !self.polygon_started {
-                self.sink.polygon_start();
-                self.polygon_started = true;
-            }
-            self.sink.line_start();
-            // (self.interpolate)(None, None, 1f64, self.sink);
-            self.sink.line_end();
-        }
-        if self.polygon_started {
-            self.sink.polygon_end();
-            self.polygon_started = false;
-        }
-        self.segments.clear();
-        self.polygon.clear();
-    }
-
-    fn sphere(&mut self) {
-        // let mut sink = self.sink.borrow_mut();
-        self.sink.polygon_start();
-        self.sink.line_start();
-        // (self.interpolate)(None, None, T::one(), &mut sink as &mut dyn Stream<T>);
-        self.sink.line_end();
-        self.sink.polygon_end();
-    }
-}
 // impl<T: CoordFloat + FloatConst + 'static> Clip<T> {
 //     pub fn gen_stream_processor(
 //         point_visible: PointVisibleFn<T>,

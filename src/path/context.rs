@@ -48,19 +48,22 @@ where
         None
     }
 }
+
 impl<T> StreamClone for PathContext<T>
 where
     T: CoordFloat + FloatConst + AsPrimitive<f64> + 'static,
 {
-    type ScC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+    fn box_clone(&self) -> Self::RetType {
         Box::new(self.clone())
     }
 }
+
 impl<T> Stream for PathContext<T>
 where
     T: CoordFloat + FloatConst + AsPrimitive<f64>,
 {
+    type C = Coordinate<T>;
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(T::zero());

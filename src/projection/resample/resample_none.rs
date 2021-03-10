@@ -4,28 +4,39 @@ use num_traits::FloatConst;
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 use crate::stream::StreamClone;
+use crate::stream::StreamSrc;
 // use crate::stream::StreamClone;
 use super::StreamResampleTrait;
+use crate::stream::stream_postclip_node_stub::StreamPostClipNodeStub;
 use crate::stream::StreamPostClipTrait;
-use crate::stream::{StreamNodeStub, StreamSimpleNode};
 use crate::Transform;
 
 pub struct ResampleNone<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     project: Box<dyn Transform<TcC = Coordinate<T>>>,
-    stream: Box<dyn Stream<ScC = Coordinate<T>>>,
+    stream: Box<
+        dyn StreamPostClipTrait<
+            SpostctStream = StreamSrc<T>,
+            C = Coordinate<T>,
+            SctC = Coordinate<T>,
+            SctT = T,
+            SctOC = Option<Coordinate<T>>,
+            SctCi = CompareIntersection<T>,
+            SctStream = Box<dyn Stream<C = Coordinate<T>>>,
+        >,
+    >,
 }
 
 impl<T> Clone for ResampleNone<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst + 'static,
 {
     fn clone(&self) -> Self {
         Self {
-            project: self.project.clone_box(),
-            stream: self.stream.clone_box(),
+            project: self.project.box_clone(),
+            stream: self.stream.box_clone(),
         }
     }
 }
@@ -34,8 +45,8 @@ impl<T: CoordFloat + FloatConst + Default + 'static> ResampleNone<T> {
     #[inline]
     pub fn new(project: Box<dyn Transform<TcC = Coordinate<T>>>) -> Self {
         Self {
-            project: project.clone_box(),
-            stream: StreamNodeStub::new(),
+            project: project.box_clone(),
+            stream: Box::new(StreamPostClipNodeStub::default()),
         }
     }
 }
@@ -43,37 +54,43 @@ impl<T: CoordFloat + FloatConst + Default + 'static> ResampleNone<T> {
 impl<T: CoordFloat + FloatConst + Default + 'static> StreamResampleTrait for ResampleNone<T> {
     type SRTsci = Box<
         dyn StreamPostClipTrait<
-            ScC = Coordinate<T>,
+            SpostctStream = StreamSrc<T>,
+            C = Coordinate<T>,
+            SctC = Coordinate<T>,
             SctT = T,
             SctOC = Option<Coordinate<T>>,
             SctCi = CompareIntersection<T>,
-            SctStream = Box<dyn Stream<ScC = Coordinate<T>>>,
+            SctStream = Box<dyn Stream<C = Coordinate<T>>>,
         >,
     >;
     fn stream_postclip_in(
         &mut self,
-        _stream_in: Box<
+        stream: Box<
             dyn StreamPostClipTrait<
-                ScC = Coordinate<T>,
+                SpostctStream = StreamSrc<T>,
+                C = Coordinate<T>,
+                SctC = Coordinate<T>,
                 SctT = T,
                 SctOC = Option<Coordinate<T>>,
                 SctCi = CompareIntersection<T>,
-                SctStream = Box<dyn Stream<ScC = Coordinate<T>>>,
+                SctStream = Box<dyn Stream<C = Coordinate<T>>>,
             >,
         >,
     ) {
+        self.stream = stream;
     }
 }
 
 impl<T: CoordFloat + FloatConst + 'static> StreamClone for ResampleNone<T> {
-    type ScC = Coordinate<T>;
+    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
     #[inline]
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+    fn box_clone(&self) -> Self::RetType {
         Box::new(self.clone())
     }
 }
 impl<T: CoordFloat + FloatConst + 'static> Stream for ResampleNone<T> {
-    fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
+    type C = Coordinate<T>;
+    fn point(&mut self, p: Self::C, m: Option<u8>) {
         // let mut s = self.stream.borrow_mut();
         let project = &*self.project;
         let t = project.transform(&p);

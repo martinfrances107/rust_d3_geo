@@ -6,15 +6,12 @@ use crate::stream::Stream;
 use crate::stream::StreamClipLine;
 // use crate::stream::StreamClipLineNode;
 use crate::clip::ClipBuffer;
-use crate::stream::StreamClone;
+// use crate::stream::StreamClone;
 use crate::stream::StreamPathResult;
 // use crate::stream::StreamPathResultTrait;
-use crate::stream::StreamPathResultNodeStub;
+use crate::stream::stream_path_result_node_stub::StreamPathResultNodeStub;
 
-use crate::{
-    clip::BufferInTrait,
-    stream::{Clean, CleanEnum, StreamClean},
-};
+use crate::stream::{Clean, CleanEnum, StreamClean};
 
 use super::intersect::intersect;
 pub struct Line<T>
@@ -25,8 +22,16 @@ where
     lambda0: T,
     phi0: T,
     sign0: T,
-    stream: Box<dyn StreamPathResult<ScC = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
+    stream: Box<dyn StreamPathResult<C = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
 }
+
+// impl<T: CoordFloat + FloatConst + Default + 'static> StreamClone for Line<T> {
+//     type RetType = Box<dyn StreamPathResult<C = Coordinate<T>, Out = PathResultEnum<T>>>;
+//     // fn box_clone(&self) -> Box<dyn StreamPathResult<C = Coordinate<T>, Out = PathResultEnum<T>>> {
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self)
+//     }
+// }
 
 impl<T> Clone for Line<T>
 where
@@ -34,7 +39,7 @@ where
 {
     fn clone(&self) -> Self {
         Self {
-            stream: self.stream.clone_box(),
+            stream: self.stream.box_clone(),
             ..*self
         }
     }
@@ -54,18 +59,48 @@ where
         }
     }
 }
-impl<T> StreamClipLine for Line<T> where T: CoordFloat + FloatConst + 'static {}
-impl<T> BufferInTrait for Line<T>
+impl<T> StreamClipLine for Line<T>
+where
+    T: CoordFloat + FloatConst + Default + 'static,
+{
+    // #[inline]
+    // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
+    //     Box::new(self.clone())
+    // }
+}
+
+impl<T> Line<T>
 where
     T: CoordFloat + FloatConst,
 {
-    // type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, ScC = Coordinate<T>>>;
-    type BitCB = ClipBuffer<T>;
+    // type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, C = Coordinate<T>>>;
+
     #[inline]
-    fn buffer_in(&mut self, stream: Self::BitCB) {
+    pub fn buffer_in(&mut self, _buffer: &ClipBuffer<T>) {
         // self.stream = stream;
+        todo!("how to deal with connecting stream or buffer to this struct.")
+    }
+
+    #[inline]
+    pub fn stream_in(
+        &mut self,
+        stream: Box<(dyn StreamPathResult<C = Coordinate<T>, Out = Option<PathResultEnum<T>>>)>,
+    ) {
+        self.stream = stream;
     }
 }
+
+// impl<T> BufferInTrait for Line<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     // type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, C = Coordinate<T>>>;
+//     type BitCB = ClipBuffer<T>;
+//     #[inline]
+//     fn buffer_in(&mut self, &buffer: Self::BitCB) {
+//         // self.stream = stream;
+//     }
+// }
 
 impl<T> Clean for Line<T>
 where
@@ -82,23 +117,17 @@ where
     }
 }
 
-impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + 'static {}
+impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + Default + 'static {}
 
-impl<T: CoordFloat + FloatConst + 'static> StreamClone for Line<T> {
-    type ScC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
-        Box::new(self.clone())
-    }
-}
-
-impl<T: CoordFloat + FloatConst + 'static> Stream for Line<T> {
+impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
+    type C = Coordinate<T>;
     fn line_start(&mut self) {
         // let mut s = self.stream.borrow_mut();
         self.stream.line_start();
         self.clean = CleanEnum::NoIntersections;
     }
 
-    fn point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
+    fn point(&mut self, p: Self::C, _m: Option<u8>) {
         let mut lambda1 = p.x;
         let phi1 = p.y;
         // let mut s = self.stream.borrow_mut();

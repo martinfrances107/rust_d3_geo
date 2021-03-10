@@ -30,21 +30,23 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Default for CircleStream<T>
 impl<T: CoordFloat + FloatConst + Default + 'static> Clone for CircleStream<T> {
     fn clone(&self) -> Self {
         Self {
-            stream_type: self.stream_type,
+            stream_type: self.stream_type.clone(),
             coordinates: self.coordinates.clone(),
-            rotate: self.rotate.clone_box(),
+            rotate: self.rotate.box_clone(),
             ring: self.ring.clone(),
         }
     }
 }
 impl<T: CoordFloat + FloatConst + Default + 'static> StreamClone for CircleStream<T> {
-    type ScC = Coordinate<T>;
-    fn clone_box(&self) -> Box<dyn Stream<ScC = Coordinate<T>>> {
+    // type C = Coordinate<T>;
+    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+    fn box_clone(&self) -> Self::RetType {
         Box::new(self.clone())
     }
 }
 impl<T: CoordFloat + FloatConst + Default + 'static> Stream for CircleStream<T> {
-    fn point(&mut self, p: Coordinate<T>, m: Option<u8>) {
+    type C = Coordinate<T>;
+    fn point(&mut self, p: Self::C, m: Option<u8>) {
         let x_rotated = self.rotate.invert(&p);
         let x_rotated_deg = Coordinate {
             x: x_rotated.x.to_degrees(),
