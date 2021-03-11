@@ -66,10 +66,7 @@ where
         match raw {
             ClipRaw::Antimeridian(ref r) => {
                 let line;
-
-                // raw.base.line.clone()
                 match &r.base.line {
-                    // line = LineEnum::Antimeridian(line) => line.clone();
                     LineEnum::Antimeridian(l) => {
                         line = l.clone();
                         let mut ring_sink = line.clone();
@@ -87,10 +84,9 @@ where
                     }
                     LineEnum::Circle(_) => {
                         panic!("mismatch ");
-                    }
-                    LineEnum::Stub => {
-                        panic!("Calling new with a stub");
-                    }
+                    } // LineEnum::Stub => {
+                      //     panic!("Calling new with a stub");
+                      // }
                 }
             }
 
@@ -125,21 +121,10 @@ where
                                 ..ClipBase::default()
                             },
                         }
-                    }
-                    LineEnum::Stub => {
-                        panic!("Calling new with a srub.");
-                    }
+                    } // LineEnum::Stub => {
+                      //     panic!("Calling new with a srub.");
+                      // }
                 }
-                // Self {
-                //     raw,
-                //     base: ClipBase {
-                //         line: LineEnum::Circle(line),
-                //         ring_sink,
-                //         ring_buffer,
-                //         start,
-                //         ..ClipBase::default()
-                //     },
-                // }
             }
         }
     }
@@ -196,10 +181,9 @@ where
             }
             LineEnum::Circle(line) => {
                 line.line_start();
-            }
-            LineEnum::Stub => {
-                panic!("line start with stub");
-            }
+            } // LineEnum::Stub => {
+              //     panic!("line start with stub");
+              // }
         }
     }
 

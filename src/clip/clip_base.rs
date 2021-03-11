@@ -14,6 +14,7 @@ use crate::stream::StreamClone;
 // use crate::stream::StreamPathResult;
 
 // use super::antimeridian::ClipAntimeridian;
+use super::antimeridian::line::Line as AntimeridianLine;
 use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
 // use super::circle::ClipCircle;
@@ -63,7 +64,7 @@ where
             // Must be overrided.
             // line_node: Box::new(StreamClipLineNodeStub::default()),
             // clip_buffer: Box::new(StreamClipLineNodeStub::default()),
-            line: LineEnum::Stub,
+            line: LineEnum::Antimeridian(AntimeridianLine::default()),
             polygon_started: false,
             polygon: vec![vec![]],
             ring: vec![],
@@ -71,7 +72,7 @@ where
             ring_buffer: ClipBuffer::default(),
             // clip_buffer: ClipBuffer::default(),
             // ring_sink_node: Box::new(StreamClipLineNodeStub::default()),
-            ring_sink: LineEnum::Stub,
+            ring_sink: LineEnum::Antimeridian(AntimeridianLine::default()),
             segments: vec![vec![]],
             use_ring: false,
             use_ring_end: false,
