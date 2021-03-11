@@ -25,7 +25,7 @@ where
 {
     Antimeridian(AntimeridianLine<T>),
     Circle(CircleLine<T>),
-    Stub, // initial, default undefined state
+    // Stub, // initial, default undefined state
 }
 
 impl<T> Stream for LineEnum<T>
@@ -37,7 +37,7 @@ where
         match self {
             LineEnum::Antimeridian(antimeridian) => antimeridian.point(p, m),
             LineEnum::Circle(circle) => circle.point(p, m),
-            LineEnum::Stub => panic!("calling point on a stub!"),
+            // LineEnum::Stub => panic!("calling point on a stub!"),
         }
     }
     //// Todo must connect up other stream functions. or find a better way.
