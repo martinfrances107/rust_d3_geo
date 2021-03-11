@@ -3,6 +3,8 @@
 // #![allow(unused_variables)]
 // #![allow(dead_code)]
 // #![allow(unused_imports)]
+#![feature(plugin)]
+#![plugin(herbie_lint)]
 
 use geo::{CoordFloat, Coordinate};
 use std::marker::PhantomData;

@@ -10,13 +10,27 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::projection::resample::ResampleEnum;
 use crate::stream::Stream;
+
+use crate::stream::StreamSrc;
 
 use antimeridian::line::Line as AntimeridianLine;
 use antimeridian::ClipAntimeridian;
 use buffer::ClipBuffer;
 use circle::line::Line as CircleLine;
 use circle::ClipCircle;
+// use crate::clip::clip::ClipSinkEnum;
+
+/// Wrapper for stream inputs to Clip.
+#[derive(Clone)]
+pub enum ClipSinkEnum<T>
+where
+    T: CoordFloat + FloatConst + Default + 'static,
+{
+    Resample(ResampleEnum<T>),
+    Src(StreamSrc<T>),
+}
 
 #[derive(Clone)]
 pub enum LineEnum<T>
@@ -26,6 +40,15 @@ where
     Antimeridian(AntimeridianLine<T>),
     Circle(CircleLine<T>),
     // Stub, // initial, default undefined state
+}
+
+#[derive(Clone)]
+pub enum LineSinkEnum<T>
+where
+    T: CoordFloat + FloatConst + Default + 'static,
+{
+    CSE(ClipSinkEnum<T>),
+    CB(ClipBuffer<T>),
 }
 
 impl<T> Stream for LineEnum<T>

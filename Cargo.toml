@@ -10,7 +10,7 @@ geo="0.17.0"
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 
 [dev-dependencies]
-pretty_assertions = "0.6.1"
+pretty_assertions = "0.7.1"
 
 [dependencies.web-sys]
 version = "0.3.47"

@@ -3,16 +3,15 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::ClipTraitRaw;
-use crate::projection::resample::ResampleEnum;
-use crate::stream::Stream;
-use crate::stream::StreamSrc;
 
 use super::antimeridian::line::Line as AntimeridianLine;
 use super::buffer::ClipBuffer;
 use super::circle::line::Line as CircleLine;
 use super::clip_base::ClipBase;
 use super::ClipRaw;
+use super::ClipSinkEnum;
 use super::LineEnum;
+use crate::stream::Stream;
 
 #[derive(Clone)]
 pub struct Clip<T>
@@ -21,16 +20,6 @@ where
 {
     raw: ClipRaw<T>,
     base: ClipBase<T>,
-}
-
-// use crate::projection::resample::ResampleEnum;
-#[derive(Clone)]
-pub enum ClipSinkEnum<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    Resample(ResampleEnum<T>),
-    Src(StreamSrc<T>),
 }
 
 impl<T> Clip<T>
@@ -46,11 +35,6 @@ where
     where
         T: CoordFloat + FloatConst,
     {
-        // this only applies to post clip ... cause panic if called otherwise.
-        //     match self.base.line {
-        //         LineEnum::Antimeridian(line) => line.stream_in(stream),
-        //         LineEnum::Circle(line) => line.stream_in(stream),
-        //     }
         self.base.sink = stream;
     }
 }
