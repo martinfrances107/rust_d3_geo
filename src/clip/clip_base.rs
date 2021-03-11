@@ -19,7 +19,7 @@ use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
 // use super::circle::ClipCircle;
 // use super::ClipTraitRaw;
-use super::clip::ClipSinkEnum;
+use super::ClipSinkEnum;
 
 #[derive(Clone)]
 pub struct ClipBase<T: CoordFloat + FloatConst + Default + 'static> {
