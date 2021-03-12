@@ -6,11 +6,11 @@ use std::default::Default;
 
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 // use crate::projection::stream_transform_radians::StreamTransformRadiansNode;
-use crate::stream::stream_identity::StreamIdentity;
+// use crate::stream::stream_identity::StreamIdentity;
 
 use crate::clip::buffer::LineElem;
-use crate::stream::stream_dummy::StreamDummy;
-use crate::stream::Streamable;
+// use crate::stream::stream_dummy::StreamDummy;
+// use crate::stream::Streamable;
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 use geo::Coordinate;
 use web_sys::CanvasRenderingContext2d;
