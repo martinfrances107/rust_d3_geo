@@ -124,7 +124,7 @@ where
     type SctStream = StreamSimpleNode<T>;
     type SctCi = CompareIntersection<T>;
 
-    fn point_visible(&self, p: Self::SctC, _z: Option<u8>) -> bool {
+    fn point_visible(&self, _p: Self::SctC, _z: Option<u8>) -> bool {
         panic!("Calling point_visible on a stub");
     }
 

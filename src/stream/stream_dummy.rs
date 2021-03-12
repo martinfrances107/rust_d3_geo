@@ -36,7 +36,7 @@ where
     type SctStream = StreamSimpleNode<T>;
     type SctCi = CompareIntersection<T>;
 
-    fn point_visible(&self, p: Self::SctC, _z: Option<u8>) -> bool {
+    fn point_visible(&self, _p: Self::SctC, _z: Option<u8>) -> bool {
         panic!("Calling point_visible on a stub");
     }
 
@@ -55,8 +55,8 @@ where
     T: CoordFloat + FloatConst + 'static,
 {
     type SpctResample = ResampleEnum<T>;
-    fn stream_resample_in(&mut self, stream: Self::SpctResample) {
-        // Drop input.
+    fn stream_resample_in(&mut self, _stream: Self::SpctResample) {
+        panic!("calling methods on a Dummy");
     }
     fn box_clone(
         &self,
@@ -79,8 +79,8 @@ where
     T: CoordFloat + FloatConst + 'static,
 {
     type SpostctStream = StreamSrc<T>;
-    fn stream_in(&mut self, stream: Self::SpostctStream) {
-        // No-op.
+    fn stream_in(&mut self, _stream: Self::SpostctStream) {
+        panic!("call method on StreamDummy");
     }
     fn box_clone(
         &self,
