@@ -1,16 +1,16 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::path::PathResultEnum;
+// use crate::path::PathResultEnum;
 use crate::stream::Stream;
 use crate::stream::StreamClipLine;
 // use crate::stream::StreamClipLineNode;
 use crate::clip::ClipBuffer;
 // use crate::stream::StreamClone;
-use crate::stream::StreamPathResult;
+// use crate::stream::StreamPathResult;
 // use crate::stream::StreamPathResultTrait;
 use crate::clip::ClipSinkEnum;
-use crate::stream::stream_path_result_node_stub::StreamPathResultNodeStub;
+// use crate::stream::stream_path_result_node_stub::StreamPathResultNodeStub;
 use crate::stream::{Clean, CleanEnum, StreamClean};
 
 use super::intersect::intersect;
