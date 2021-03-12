@@ -82,12 +82,6 @@ where
     // type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, C = Coordinate<T>>>;
 
     #[inline]
-    pub fn buffer_in(&mut self, _buffer: &ClipBuffer<T>) {
-        // self.stream = stream;
-        todo!("how to deal with connecting stream or buffer to this struct.")
-    }
-
-    #[inline]
     pub fn stream_in(
         &mut self,
         // stream: Box<(dyn StreamPathResult<C = Coordinate<T>, Out = Option<PathResultEnum<T>>>)>,
@@ -247,7 +241,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         None,
                     );
                 }
-                LineSinkEnum::CSE(mut stream) => match stream {
+                LineSinkEnum::CSE(stream) => match stream {
                     ClipSinkEnum::Src(mut stream) => {
                         match (self.phi0 + phi1 / f_2).is_sign_positive() {
                             true => {
@@ -521,7 +515,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
         // self.stream.line_end();
         match self.stream.clone() {
             LineSinkEnum::CB(mut stream) => stream.line_end(),
-            LineSinkEnum::CSE(mut stream) => match stream {
+            LineSinkEnum::CSE(stream) => match stream {
                 ClipSinkEnum::Src(mut stream) => stream.line_end(),
                 ClipSinkEnum::Resample(mut stream) => stream.line_end(),
             },

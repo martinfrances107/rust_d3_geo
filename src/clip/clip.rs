@@ -39,6 +39,7 @@ where
     }
 }
 
+use crate::clip::LineSinkEnum;
 impl<T> Clip<T>
 where
     T: CoordFloat + FloatConst + Default,
@@ -54,7 +55,8 @@ where
                     LineEnum::Antimeridian(l) => {
                         line = l.clone();
                         let mut ring_sink = line.clone();
-                        ring_sink.buffer_in(&ring_buffer);
+                        // ring_sink.buffer_in(&ring_buffer);
+                        ring_sink.stream_in(LineSinkEnum::CB(ring_buffer.clone()));
                         Self {
                             raw,
                             base: ClipBase {
@@ -68,48 +70,42 @@ where
                     }
                     LineEnum::Circle(_) => {
                         panic!("mismatch ");
-                    } // LineEnum::Stub => {
-                      //     panic!("Calling new with a stub");
-                      // }
+                    }
                 }
             }
 
-            ClipRaw::Circle(r) => {
-                match r.base.line {
-                    LineEnum::Antimeridian(ref l) => {
-                        let line = l.clone();
-                        let mut ring_sink = line.clone();
-                        ring_sink.buffer_in(&ring_buffer);
-                        Self {
-                            raw: ClipRaw::Circle(r.clone()),
-                            base: ClipBase {
-                                line: LineEnum::Antimeridian(line),
-                                ring_sink: LineEnum::Antimeridian(ring_sink),
-                                ring_buffer,
-                                start,
-                                ..ClipBase::default()
-                            },
-                        }
+            ClipRaw::Circle(r) => match r.base.line {
+                LineEnum::Antimeridian(ref l) => {
+                    let line = l.clone();
+                    let mut ring_sink = line.clone();
+                    ring_sink.stream_in(LineSinkEnum::CB(ring_buffer.clone()));
+                    Self {
+                        raw: ClipRaw::Circle(r.clone()),
+                        base: ClipBase {
+                            line: LineEnum::Antimeridian(line),
+                            ring_sink: LineEnum::Antimeridian(ring_sink),
+                            ring_buffer,
+                            start,
+                            ..ClipBase::default()
+                        },
                     }
-                    LineEnum::Circle(ref l) => {
-                        let line = l.clone();
-                        let mut ring_sink = line.clone();
-                        ring_sink.buffer_in(&ring_buffer);
-                        Self {
-                            raw: ClipRaw::Circle(r),
-                            base: ClipBase {
-                                line: LineEnum::Circle(line),
-                                ring_sink: LineEnum::Circle(ring_sink),
-                                ring_buffer,
-                                start,
-                                ..ClipBase::default()
-                            },
-                        }
-                    } // LineEnum::Stub => {
-                      //     panic!("Calling new with a srub.");
-                      // }
                 }
-            }
+                LineEnum::Circle(ref l) => {
+                    let line = l.clone();
+                    let mut ring_sink = line.clone();
+                    ring_sink.stream_in(LineSinkEnum::CB(ring_buffer.clone()));
+                    Self {
+                        raw: ClipRaw::Circle(r),
+                        base: ClipBase {
+                            line: LineEnum::Circle(line),
+                            ring_sink: LineEnum::Circle(ring_sink),
+                            ring_buffer,
+                            start,
+                            ..ClipBase::default()
+                        },
+                    }
+                }
+            },
         }
     }
 }
@@ -132,7 +128,6 @@ where
                     ClipRaw::Circle(r) => r.point_visible(p, None),
                 };
                 if pv {
-                    // let mut sink = self.sink.borrow_mut();
                     match &mut self.base.sink {
                         ClipSinkEnum::Src(sink) => {
                             sink.point(p, m);
@@ -141,7 +136,6 @@ where
                             sink.point(p, m);
                         }
                     }
-                    // self.base.sink.point(p, m);
                 }
             }
         }
@@ -165,9 +159,7 @@ where
             }
             LineEnum::Circle(line) => {
                 line.line_start();
-            } // LineEnum::Stub => {
-              //     panic!("line start with stub");
-              // }
+            }
         }
     }
 
@@ -238,7 +230,6 @@ where
                 ClipSinkEnum::Src(s) => s.polygon_end(),
                 ClipSinkEnum::Resample(s) => s.polygon_end(),
             };
-            // self.base.sink.polygon_end();
             self.base.polygon_started = false;
         }
         self.base.segments.clear();
@@ -256,8 +247,6 @@ where
                 s.line_start();
             }
         };
-        // self.base.sink.polygon_start();
-        // self.base.sink.line_start();
         // (self.interpolate)(None, None, T::one(), &mut sink as &mut dyn Stream<T>);
         match &mut self.base.sink {
             ClipSinkEnum::Src(s) => {
