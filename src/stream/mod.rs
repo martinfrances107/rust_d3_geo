@@ -61,7 +61,7 @@ pub trait StreamClone {
 }
 
 use std::marker::PhantomData;
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct StreamSourceDummy<T>
 where
     T: CoordFloat,
