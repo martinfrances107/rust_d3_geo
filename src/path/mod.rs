@@ -242,7 +242,7 @@ where
     #[inline]
     fn point_radius(mut self, input: PointRadiusEnum<T>) {
         match input {
-            PointRadiusEnum::F(ref input_fn) => {
+            PointRadiusEnum::F(ref _input_fn) => {
                 self.point_radius = input;
             }
             PointRadiusEnum::Val(input_val) => {

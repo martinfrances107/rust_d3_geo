@@ -1,14 +1,14 @@
-use crate::stream::CompareIntersection;
+// use crate::stream::CompareIntersection;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::stream::StreamPreClipTrait;
+// use crate::stream::StreamPreClipTrait;
 // use crate::stream::StreamPreClipNode;
 // use crate::stream::stream_dummy::StreamDummy;
-use crate::stream::stream_preclip_node_stub::StreamPreClipNodeStub;
+// use crate::stream::stream_preclip_node_stub::StreamPreClipNodeStub;
 // use crate::stream::StreamTransformNode;
-use crate::projection::resample::ResampleEnum;
+// use crate::projection::resample::ResampleEnum;
 
 use crate::clip::clip::Clip;
 use crate::stream::Stream;

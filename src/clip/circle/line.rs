@@ -5,7 +5,7 @@ use crate::point_equal::point_equal;
 use crate::stream::StreamClean;
 // use crate::stream::StreamClipLineNode;
 use crate::clip::buffer::ClipBuffer;
-use crate::projection::resample::resample::Resample;
+// use crate::projection::resample::resample::Resample;
 // use crate::projection::resample::ResampleEnum;
 
 use crate::stream::StreamSourceDummy;
@@ -355,7 +355,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             }
                             next = Some(p);
                         }
-                        IntersectReturn::Two([p, _]) => {
+                        IntersectReturn::Two([_p, _]) => {
                             // self.stream.point(p, Some(2));
                             // self.stream.line_end();
                             // next = p;
