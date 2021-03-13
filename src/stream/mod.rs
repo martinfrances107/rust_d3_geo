@@ -21,6 +21,8 @@ pub mod stream_preclip_node_stub;
 pub mod stream_resample_node_stub;
 pub mod stream_transform_node_stub;
 
+use std::marker::PhantomData;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -60,7 +62,6 @@ pub trait StreamClone {
     fn box_clone(&self) -> Self::RetType;
 }
 
-use std::marker::PhantomData;
 #[derive(Clone, Default)]
 pub struct StreamSourceDummy<T>
 where
