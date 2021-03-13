@@ -32,11 +32,10 @@ impl<T: CoordFloat + FloatConst + 'static> Default for LengthStream<T> {
 }
 
 impl<T: CoordFloat + FloatConst + 'static> LengthStream<T> {
-    pub fn calc(_object: &impl Streamable<SC = Coordinate<T>>) -> T {
-        // let mut ls = Box::new(LengthStream::default());
-        // object.to_stream(&mut ls);
-        panic!("must resole")
-        // return ls.length_sum;
+    pub fn calc(object: &impl Streamable<SC = Coordinate<T>>) -> T {
+        let mut ls = LengthStream::default();
+        object.to_stream(&mut ls);
+        return ls.length_sum;
     }
 
     fn length_point_first(&mut self, p: Coordinate<T>) {
