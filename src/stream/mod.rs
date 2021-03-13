@@ -32,7 +32,7 @@ use crate::path::PathResultEnum;
 /// Applies to DataObject's
 pub trait Streamable {
     type SC;
-    fn to_stream(&self, stream: &mut Box<dyn Stream<C = Self::SC>>);
+    fn to_stream(&self, stream: &mut impl Stream<C = Self::SC>);
 }
 
 // Takes a line and cuts into visible segments. Return values used for polygon
