@@ -6,9 +6,9 @@ use num_traits::FloatConst;
 use super::CompareIntersection;
 use super::Stream;
 use super::StreamClone;
-use super::StreamPostClipTrait;
+// use super::StreamPostClipTrait;
 use super::StreamSimpleNode;
-use super::StreamSrc;
+// use super::StreamSrc;
 use crate::clip::ClipTraitRaw;
 
 #[derive(Clone, Copy, Debug, Default)]
@@ -42,30 +42,30 @@ where
 }
 
 // TODO:mf must figure out what to stream type to connect in.
-impl<T> StreamPostClipTrait for StreamPostClipNodeStub<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type SpostctStream = StreamSrc<T>;
-    fn stream_in(&mut self, _stream: Self::SpostctStream) {
-        // No-op.
-    }
-    fn box_clone(
-        &self,
-    ) -> Box<
-        dyn StreamPostClipTrait<
-            C = Self::C,
-            SctC = Self::SctC,
-            SctOC = Self::SctOC,
-            SctT = Self::SctT,
-            SctCi = Self::SctCi,
-            SctStream = Self::SctStream,
-            SpostctStream = Self::SpostctStream,
-        >,
-    > {
-        panic!("calling box_clone on a stub");
-    }
-}
+// impl<T> StreamPostClipTrait for StreamPostClipNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default + 'static,
+// {
+//     type SpostctStream = StreamSrc<T>;
+//     fn stream_in(&mut self, _stream: Self::SpostctStream) {
+//         // No-op.
+//     }
+//     fn box_clone(
+//         &self,
+//     ) -> Box<
+//         dyn StreamPostClipTrait<
+//             C = Self::C,
+//             SctC = Self::SctC,
+//             SctOC = Self::SctOC,
+//             SctT = Self::SctT,
+//             SctCi = Self::SctCi,
+//             SctStream = Self::SctStream,
+//             SpostctStream = Self::SpostctStream,
+//         >,
+//     > {
+//         panic!("calling box_clone on a stub");
+//     }
+// }
 
 impl<T> ClipTraitRaw for StreamPostClipNodeStub<T>
 where

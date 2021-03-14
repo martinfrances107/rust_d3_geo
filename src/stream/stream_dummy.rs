@@ -6,8 +6,8 @@ use num_traits::FloatConst;
 use super::CompareIntersection;
 use super::Stream;
 use super::StreamClone;
-use super::StreamPostClipTrait;
-use super::StreamPreClipTrait;
+// use super::StreamPostClipTrait;
+// use super::StreamPreClipTrait;
 use super::StreamSimpleNode;
 use super::StreamSrc;
 use crate::clip::ClipTraitRaw;
@@ -50,54 +50,54 @@ where
         panic!("Calling interpolate on a stub");
     }
 }
-impl<T> StreamPreClipTrait for StreamDummy<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type SpctResample = ResampleEnum<T>;
-    fn stream_resample_in(&mut self, _stream: Self::SpctResample) {
-        panic!("calling methods on a Dummy");
-    }
-    fn box_clone(
-        &self,
-    ) -> Box<
-        dyn StreamPreClipTrait<
-            SctC = Self::SctC,
-            SctCi = Self::SctCi,
-            SctOC = Self::SctOC,
-            SctT = Self::SctT,
-            SctStream = Self::SctStream,
-            SpctResample = Self::SpctResample,
-        >,
-    > {
-        panic!("call box_clone on a stub!");
-    }
-}
+// impl<T> StreamPreClipTrait for StreamDummy<T>
+// where
+//     T: CoordFloat + FloatConst + Default + 'static,
+// {
+//     type SpctResample = ResampleEnum<T>;
+//     fn stream_resample_in(&mut self, _stream: Self::SpctResample) {
+//         panic!("calling methods on a Dummy");
+//     }
+//     fn box_clone(
+//         &self,
+//     ) -> Box<
+//         dyn StreamPreClipTrait<
+//             SctC = Self::SctC,
+//             SctCi = Self::SctCi,
+//             SctOC = Self::SctOC,
+//             SctT = Self::SctT,
+//             SctStream = Self::SctStream,
+//             SpctResample = Self::SpctResample,
+//         >,
+//     > {
+//         panic!("call box_clone on a stub!");
+//     }
+// }
 
-impl<T> StreamPostClipTrait for StreamDummy<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    type SpostctStream = StreamSrc<T>;
-    fn stream_in(&mut self, _stream: Self::SpostctStream) {
-        panic!("call method on StreamDummy");
-    }
-    fn box_clone(
-        &self,
-    ) -> Box<
-        dyn StreamPostClipTrait<
-            SpostctStream = Self::SpostctStream,
-            C = Self::C,
-            SctC = Self::SctC,
-            SctOC = Self::SctOC,
-            SctT = Self::SctT,
-            SctCi = Self::SctCi,
-            SctStream = Self::SctStream,
-        >,
-    > {
-        panic!("calling box_clone on a dummy");
-    }
-}
+// impl<T> StreamPostClipTrait for StreamDummy<T>
+// where
+//     T: CoordFloat + FloatConst + 'static,
+// {
+//     type SpostctStream = StreamSrc<T>;
+//     fn stream_in(&mut self, _stream: Self::SpostctStream) {
+//         panic!("call method on StreamDummy");
+//     }
+//     fn box_clone(
+//         &self,
+//     ) -> Box<
+//         dyn StreamPostClipTrait<
+//             SpostctStream = Self::SpostctStream,
+//             C = Self::C,
+//             SctC = Self::SctC,
+//             SctOC = Self::SctOC,
+//             SctT = Self::SctT,
+//             SctCi = Self::SctCi,
+//             SctStream = Self::SctStream,
+//         >,
+//     > {
+//         panic!("calling box_clone on a dummy");
+//     }
+// }
 
 impl<T> StreamClone for StreamDummy<T>
 where

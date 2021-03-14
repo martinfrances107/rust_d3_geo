@@ -46,30 +46,30 @@ where
     }
 }
 
-pub trait StreamPreclipIn<T>
-where
-    T: CoordFloat + FloatConst + Default,
-{
-    fn stream_preclip_in(
-        &mut self,
-        stream: Clip<T>,
-        // stream: Box<
-        //     dyn StreamPreClipTrait<
-        //         // C = Coordinate<T>,
-        //         SctC = Coordinate<T>,
-        //         SctT = T,
-        //         SctOC = Option<Coordinate<T>>,
-        //         SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-        //         SctCi = CompareIntersection<T>,
-        //         SpctResample = ResampleEnum<T>,
-        //     >,
-        // >,
-    );
-}
+// pub trait StreamPreclipIn<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     fn stream_preclip_in(
+//         &mut self,
+//         stream: Clip<T>,
+//         // stream: Box<
+//         //     dyn StreamPreClipTrait<
+//         //         // C = Coordinate<T>,
+//         //         SctC = Coordinate<T>,
+//         //         SctT = T,
+//         //         SctOC = Option<Coordinate<T>>,
+//         //         SctStream = Box<dyn Stream<C = Coordinate<T>>>,
+//         //         SctCi = CompareIntersection<T>,
+//         //         SpctResample = ResampleEnum<T>,
+//         //     >,
+//         // >,
+//     );
+// }
 
-impl<T: CoordFloat + FloatConst + Default> StreamPreclipIn<T> for StreamTransform<T> {
+impl<T: CoordFloat + FloatConst + Default> StreamTransform<T> {
     #[inline]
-    fn stream_preclip_in(
+    pub fn stream_preclip_in(
         &mut self,
         // stream: Box<
         //     dyn StreamPreClipTrait<

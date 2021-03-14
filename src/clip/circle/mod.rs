@@ -5,11 +5,11 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::circle::circle_stream::circle_stream;
-use crate::projection::resample::ResampleEnum;
+// use crate::projection::resample::ResampleEnum;
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 use crate::stream::StreamClone;
-use crate::stream::StreamPreClipTrait;
+// use crate::stream::StreamPreClipTrait;
 use crate::stream::StreamSimpleNode;
 
 use super::clip_base::ClipBase;
@@ -86,31 +86,31 @@ where
     type C = Coordinate<T>;
 }
 
-impl<T> StreamPreClipTrait for ClipCircle<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type SpctResample = ResampleEnum<T>;
-    // type SPCTstream = StreamSimpleNode<T>;
-    fn stream_resample_in(&mut self, _resample: Self::SpctResample) {
-        todo!("must connect");
-    }
+// impl<T> StreamPreClipTrait for ClipCircle<T>
+// where
+//     T: CoordFloat + FloatConst + Default + 'static,
+// {
+//     type SpctResample = ResampleEnum<T>;
+//     // type SPCTstream = StreamSimpleNode<T>;
+//     fn stream_resample_in(&mut self, _resample: Self::SpctResample) {
+//         todo!("must connect");
+//     }
 
-    fn box_clone(
-        &self,
-    ) -> Box<
-        dyn StreamPreClipTrait<
-            SctC = Self::SctC,
-            SctOC = Self::SctOC,
-            SctT = Self::SctT,
-            SctCi = Self::SctCi,
-            SctStream = Self::SctStream,
-            SpctResample = Self::SpctResample,
-        >,
-    > {
-        todo!("must clone");
-    }
-}
+//     fn box_clone(
+//         &self,
+//     ) -> Box<
+//         dyn StreamPreClipTrait<
+//             SctC = Self::SctC,
+//             SctOC = Self::SctOC,
+//             SctT = Self::SctT,
+//             SctCi = Self::SctCi,
+//             SctStream = Self::SctStream,
+//             SpctResample = Self::SpctResample,
+//         >,
+//     > {
+//         todo!("must clone");
+//     }
+// }
 impl<T> ClipTraitRaw for ClipCircle<T>
 where
     T: CoordFloat + FloatConst + Default + 'static,

@@ -3,7 +3,7 @@ use num_traits::FloatConst;
 
 // use crate::stream::StreamClone;
 use crate::clip::clip::Clip;
-use crate::stream::StreamPostClipTrait;
+// use crate::stream::StreamPostClipTrait;
 // use crate::stream::StreamResampleNode;
 // use crate::stream::StreamResampleTrait;
 use super::StreamResampleTrait;
@@ -69,11 +69,10 @@ impl<T> Clone for Resample<T>
 where
     T: CoordFloat + FloatConst + Default + 'static,
 {
-    fn clone(&self) -> Self {
-        let stream = *self.stream.clone();
+    fn clone(&self) -> Self {        
         Self {
             project: self.project.box_clone(),
-            stream: Box::new(stream),
+            stream: self.stream.clone(),
             ..*self
         }
     }
@@ -141,38 +140,38 @@ where
 //     }
 // }
 
-impl<T> StreamResampleTrait for Resample<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type SRTsci = Box<
-        dyn StreamPostClipTrait<
-            SpostctStream = StreamSrc<T>,
-            C = Coordinate<T>,
-            SctC = Coordinate<T>,
-            SctT = T,
-            SctOC = Option<Coordinate<T>>,
-            SctCi = CompareIntersection<T>,
-            SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-        >,
-    >;
-    fn stream_postclip_in(
-        &mut self,
-        _stream_clip_in: Box<
-            dyn StreamPostClipTrait<
-                SpostctStream = StreamSrc<T>,
-                C = Coordinate<T>,
-                SctC = Coordinate<T>,
-                SctT = T,
-                SctOC = Option<Coordinate<T>>,
-                SctCi = CompareIntersection<T>,
-                SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-            >,
-        >,
-    ) {
-        panic!("Must override.");
-    }
-}
+// impl<T> StreamResampleTrait for Resample<T>
+// where
+//     T: CoordFloat + FloatConst + Default + 'static,
+// {
+//     type SRTsci = Box<
+//         dyn StreamPostClipTrait<
+//             SpostctStream = StreamSrc<T>,
+//             C = Coordinate<T>,
+//             SctC = Coordinate<T>,
+//             SctT = T,
+//             SctOC = Option<Coordinate<T>>,
+//             SctCi = CompareIntersection<T>,
+//             SctStream = Box<dyn Stream<C = Coordinate<T>>>,
+//         >,
+//     >;
+//     fn stream_postclip_in(
+//         &mut self,
+//         _stream_clip_in: Box<
+//             dyn StreamPostClipTrait<
+//                 SpostctStream = StreamSrc<T>,
+//                 C = Coordinate<T>,
+//                 SctC = Coordinate<T>,
+//                 SctT = T,
+//                 SctOC = Option<Coordinate<T>>,
+//                 SctCi = CompareIntersection<T>,
+//                 SctStream = Box<dyn Stream<C = Coordinate<T>>>,
+//             >,
+//         >,
+//     ) {
+//         panic!("Must override.");
+//     }
+// }
 
 // impl<T> StreamResampleTrait for Box<dyn StreamResampleTrait<SRTsci = StreamPostClipNode<T>>>
 // where
@@ -281,17 +280,18 @@ where
         b1: T,
         c1: T,
         depth_p: u8,
-        stream: Box<
-            dyn StreamPostClipTrait<
-                C = Coordinate<T>,
-                SctC = Coordinate<T>,
-                SctT = T,
-                SctStream = Box<(dyn Stream<C = Coordinate<T>> + 'static)>,
-                SctOC = Option<Coordinate<T>>,
-                SpostctStream = StreamSrc<T>,
-                SctCi = CompareIntersection<T>,
-            >,
-        >,
+        // stream: Box<
+        //     dyn StreamPostClipTrait<
+        //         C = Coordinate<T>,
+        //         SctC = Coordinate<T>,
+        //         SctT = T,
+        //         SctStream = Box<(dyn Stream<C = Coordinate<T>> + 'static)>,
+        //         SctOC = Option<Coordinate<T>>,
+        //         SpostctStream = StreamSrc<T>,
+        //         SctCi = CompareIntersection<T>,
+        //     >,
+        // >,
+        stream: Box<Clip<T>>,
     ) {
         let mut depth = depth_p;
         let dx = x1 - x0;

@@ -13,7 +13,7 @@ use super::CompareIntersection;
 use super::Stream;
 use super::StreamClipLine;
 use super::StreamClone;
-use super::StreamPreClipTrait;
+// use super::StreamPreClipTrait;
 use super::StreamSimpleNode;
 use crate::clip::ClipTraitRaw;
 // use crate::projection::resample::resample::Resample;
@@ -78,31 +78,31 @@ where
     }
 }
 
-impl<T> StreamPreClipTrait for StreamClipLineNodeStub<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type SpctResample = ResampleEnum<T>;
-    // type SPCTstream = StreamSimpleNode<T>;
-    fn stream_resample_in(&mut self, _resample: Self::SpctResample) {
-        panic!("connecting to a stub!")
-    }
+// impl<T> StreamPreClipTrait for StreamClipLineNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default + 'static,
+// {
+//     type SpctResample = ResampleEnum<T>;
+//     // type SPCTstream = StreamSimpleNode<T>;
+//     fn stream_resample_in(&mut self, _resample: Self::SpctResample) {
+//         panic!("connecting to a stub!")
+//     }
 
-    fn box_clone(
-        &self,
-    ) -> Box<
-        dyn StreamPreClipTrait<
-            SctC = Self::SctC,
-            SctOC = Self::SctOC,
-            SctT = Self::SctT,
-            SctCi = Self::SctCi,
-            SctStream = Self::SctStream,
-            SpctResample = Self::SpctResample,
-        >,
-    > {
-        panic!("call box_clone on a stub");
-    }
-}
+//     fn box_clone(
+//         &self,
+//     ) -> Box<
+//         dyn StreamPreClipTrait<
+//             SctC = Self::SctC,
+//             SctOC = Self::SctOC,
+//             SctT = Self::SctT,
+//             SctCi = Self::SctCi,
+//             SctStream = Self::SctStream,
+//             SpctResample = Self::SpctResample,
+//         >,
+//     > {
+//         panic!("call box_clone on a stub");
+//     }
+// }
 
 impl<T> StreamClone for StreamClipLineNodeStub<T>
 where
