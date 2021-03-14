@@ -245,23 +245,23 @@ where
         self.c0 = c[2];
         // let s_p = self.stream.as_ref();
         // let mut s = s_p.borrow_mut();
-        // self.resample_line_to(
-        //     self.x0,
-        //     self.y0,
-        //     self.lambda0,
-        //     self.a0,
-        //     self.b0,
-        //     self.c0,
-        //     self.x0,
-        //     self.y0,
-        //     self.lambda0,
-        //     self.a0,
-        //     self.b0,
-        //     self.c0,
-        //     MAXDEPTH,
-        //     self.stream,
-        // );
-        // stream.point(x0, y0);
+        self.resample_line_to(
+            self.x0,
+            self.y0,
+            self.lambda0,
+            self.a0,
+            self.b0,
+            self.c0,
+            self.x0,
+            self.y0,
+            self.lambda0,
+            self.a0,
+            self.b0,
+            self.c0,
+            MAXDEPTH,
+            self.stream.clone(),
+        );
+        self.stream.point(Coordinate{x: self.x0, y: self.y0}, None);
     }
 
     #[allow(clippy::many_single_char_names)]
