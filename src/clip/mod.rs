@@ -80,11 +80,14 @@ where
 //     fn buffer_in(&mut self, &buffer: Self::BitCB);
 // }
 
-pub trait ClipTraitRaw {
+pub trait ClipTraitRaw<T>
+where
+    T: CoordFloat + FloatConst,
+{
     type SctC;
     type SctOC;
     type SctT: CoordFloat + FloatConst;
-    type SctStream;
+    // type SctStream;
     type SctCi;
 
     fn point_visible(&self, _p: Self::SctC, _z: Option<u8>) -> bool;
@@ -113,6 +116,6 @@ pub trait ClipTraitRaw {
         _from: Self::SctOC,
         _to: Self::SctOC,
         _direction: Self::SctT,
-        _stream: Self::SctStream,
+        _stream: impl Stream<C = Coordinate<T>>,
     );
 }

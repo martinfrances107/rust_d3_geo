@@ -94,14 +94,14 @@ where
     }
 }
 
-impl<T> ClipTraitRaw for ClipAntimeridian<T>
+impl<T> ClipTraitRaw<T> for ClipAntimeridian<T>
 where
     T: CoordFloat + FloatConst + Default + 'static,
 {
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;
     type SctT = T;
-    type SctStream = Box<dyn Stream<C = Coordinate<T>>>;
+    // type SctStream = Box<dyn Stream<C = Coordinate<T>>>;
     type SctCi = CompareIntersection<T>;
 
     #[inline]
@@ -114,7 +114,7 @@ where
         from: Option<Coordinate<T>>,
         to: Option<Coordinate<T>>,
         direction: T,
-        stream: Self::SctStream,
+        stream: impl Stream<C = Coordinate<T>>,
     ) {
         let phi: T;
         let mut s = stream;

@@ -190,8 +190,8 @@ where
     x: Coordinate<T>,
 }
 
-/// Node - holds state associated with the input/output of a StreamProcessor.
-/// Something that can be cloned and mutated.
+// Node - holds state associated with the input/output of a StreamProcessor.
+// Something that can be cloned and mutated.
 
 pub type StreamSimpleNode<T> = Box<dyn Stream<C = Coordinate<T>>>;
 // impl<T> Stream for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}

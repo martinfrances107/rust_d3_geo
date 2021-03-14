@@ -69,7 +69,7 @@ impl<T> Clone for Resample<T>
 where
     T: CoordFloat + FloatConst + Default + 'static,
 {
-    fn clone(&self) -> Self {        
+    fn clone(&self) -> Self {
         Self {
             project: self.project.box_clone(),
             stream: self.stream.clone(),
@@ -261,7 +261,13 @@ where
             MAXDEPTH,
             self.stream.clone(),
         );
-        self.stream.point(Coordinate{x: self.x0, y: self.y0}, None);
+        self.stream.point(
+            Coordinate {
+                x: self.x0,
+                y: self.y0,
+            },
+            None,
+        );
     }
 
     #[allow(clippy::many_single_char_names)]

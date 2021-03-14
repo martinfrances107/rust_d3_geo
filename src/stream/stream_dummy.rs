@@ -26,30 +26,30 @@ where
     /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
     phantom: PhantomData<T>,
 }
-impl<T> ClipTraitRaw for StreamDummy<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    type SctC = Coordinate<T>;
-    type SctOC = Option<Coordinate<T>>;
-    type SctT = T;
-    type SctStream = StreamSimpleNode<T>;
-    type SctCi = CompareIntersection<T>;
+// impl<T> ClipTraitRaw for StreamDummy<T>
+// where
+//     T: CoordFloat + FloatConst + 'static,
+// {
+//     type SctC = Coordinate<T>;
+//     type SctOC = Option<Coordinate<T>>;
+//     type SctT = T;
+//     // type SctStream = StreamSimpleNode<T>;
+//     type SctCi = CompareIntersection<T>;
 
-    fn point_visible(&self, _p: Self::SctC, _z: Option<u8>) -> bool {
-        panic!("Calling point_visible on a stub");
-    }
+//     fn point_visible(&self, _p: Self::SctC, _z: Option<u8>) -> bool {
+//         panic!("Calling point_visible on a stub");
+//     }
 
-    fn interpolate(
-        &self,
-        _from: Self::SctOC,
-        _to: Self::SctOC,
-        _direction: Self::SctT,
-        _stream: Self::SctStream,
-    ) {
-        panic!("Calling interpolate on a stub");
-    }
-}
+//     fn interpolate(
+//         &self,
+//         _from: Self::SctOC,
+//         _to: Self::SctOC,
+//         _direction: Self::SctT,
+//         // _stream: Self::SctStream,
+//     ) {
+//         panic!("Calling interpolate on a stub");
+//     }
+// }
 // impl<T> StreamPreClipTrait for StreamDummy<T>
 // where
 //     T: CoordFloat + FloatConst + Default + 'static,

@@ -111,13 +111,14 @@ where
 //         todo!("must clone");
 //     }
 // }
-impl<T> ClipTraitRaw for ClipCircle<T>
+impl<T> ClipTraitRaw<T> for ClipCircle<T>
 where
     T: CoordFloat + FloatConst + Default + 'static,
 {
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;
-    type SctStream = StreamSimpleNode<T>;
+    // type SctStream = StreamSimpleNode<T>;
+    // type SctStream = Stream<C = Coordinate<T>>;
     type SctT = T;
     type SctCi = CompareIntersection<T>;
 
@@ -131,7 +132,7 @@ where
         from: Self::SctOC,
         to: Self::SctOC,
         direction: Self::SctT,
-        mut stream: Self::SctStream,
+        mut stream: impl Stream<C = Coordinate<T>>,
     ) {
         circle_stream(&mut stream, self.radius, self.delta, direction, from, to);
     }

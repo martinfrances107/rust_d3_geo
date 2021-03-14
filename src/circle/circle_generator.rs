@@ -15,7 +15,7 @@ use super::FnValMaybe2D;
 use super::StreamType;
 
 use crate::cartesian::cartesian_normalize_in_place;
-use crate::stream::stream_identity::StreamIdentity;
+// use crate::stream::stream_identity::StreamIdentity;
 use crate::Transform;
 use crate::{cartesian::cartesian, TransformIdentity};
 use std::cell::RefCell;
@@ -46,23 +46,23 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Default for CircleGenerator
 }
 
 impl<T: CoordFloat + FloatConst + Default + 'static> CircleGenerator<T> {
-    pub fn circle(&self, arg: &CircleInArg) -> Box<CircleStream<T>> {
+    pub fn circle(&self, arg: &CircleInArg) -> CircleStream<T> {
         let c = (self.center)(arg);
         let r = (self.radius)(arg).to_radians();
         let p = (self.precision)(arg).to_radians();
 
         let rotate = rotate_radians_transform(-c.x.to_radians(), -c.y.to_radians(), T::zero());
 
-        let cs = Box::new(CircleStream {
+        let mut cs = CircleStream {
             ring: Vec::new(),
             rotate,
             stream_type: StreamType::Polygon,
             coordinates: vec![vec![]],
-        });
+        };
 
         // {
         //     let mut ot: Box<dyn Stream<C = Coordinate<T>>> = cs;
-        //     circle_stream(&mut ot, r, p, T::one(), None, None);
+        circle_stream(&mut cs, r, p, T::one(), None, None);
         // }
 
         // Finialise.

@@ -114,27 +114,27 @@ where
         Box::new(self.clone())
     }
 }
-impl<T> ClipTraitRaw for StreamClipLineNodeStub<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    type SctC = Coordinate<T>;
-    type SctOC = Option<Coordinate<T>>;
-    type SctT = T;
-    type SctStream = StreamSimpleNode<T>;
-    type SctCi = CompareIntersection<T>;
+// impl<T> ClipTraitRaw for StreamClipLineNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + 'static,
+// {
+//     type SctC = Coordinate<T>;
+//     type SctOC = Option<Coordinate<T>>;
+//     type SctT = T;
+//     // type SctStream = StreamSimpleNode<T>;
+//     type SctCi = CompareIntersection<T>;
 
-    fn point_visible(&self, _p: Self::SctC, _z: Option<u8>) -> bool {
-        panic!("Calling point_visible on a stub");
-    }
+//     fn point_visible(&self, _p: Self::SctC, _z: Option<u8>) -> bool {
+//         panic!("Calling point_visible on a stub");
+//     }
 
-    fn interpolate(
-        &self,
-        _from: Self::SctOC,
-        _to: Self::SctOC,
-        _direction: Self::SctT,
-        _stream: Self::SctStream,
-    ) {
-        panic!("Calling interpolate on a stub");
-    }
-}
+//     fn interpolate(
+//         &self,
+//         _from: Self::SctOC,
+//         _to: Self::SctOC,
+//         _direction: Self::SctT,
+//         // _stream: Self::SctStream,
+//     ) {
+//         panic!("Calling interpolate on a stub");
+//     }
+// }

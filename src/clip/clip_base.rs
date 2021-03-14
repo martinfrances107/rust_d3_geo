@@ -10,7 +10,7 @@ use crate::stream::Stream;
 // use super::circle::ClipCircle;
 // use super::ClipRaw;
 use super::LineEnum;
-use crate::stream::StreamClone;
+// use crate::stream::StreamClone;
 // use crate::stream::StreamPathResult;
 
 // use super::antimeridian::ClipAntimeridian;
@@ -180,17 +180,17 @@ where
     }
 }
 
-impl<T> StreamClone for ClipBase<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        // Box::new(*self.clone())
-        panic!("Make clip base clonable")
-    }
-}
+// impl<T> StreamClone for ClipBase<T>
+// where
+//     T: CoordFloat + FloatConst + Default + 'static,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         // Box::new(*self.clone())
+//         panic!("Make clip base clonable")
+//     }
+// }
 
 // impl<T> StreamClipTrait for ClipBase<T>
 // where

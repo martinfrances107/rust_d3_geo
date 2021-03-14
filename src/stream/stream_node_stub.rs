@@ -7,7 +7,7 @@ use num_traits::FloatConst;
 use super::Stream;
 use super::StreamClone;
 use super::StreamInTrait;
-use super::StreamSimpleNode;
+// use super::StreamSimpleNode;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct StreamNodeStub<T>
 where
@@ -20,15 +20,16 @@ where
     phantom: PhantomData<T>,
 }
 
-impl<T> StreamNodeStub<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    #[inline]
-    pub fn new() -> StreamSimpleNode<T> {
-        Box::new(StreamNodeStub::<T>::default())
-    }
-}
+// impl<T> StreamNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default + 'static,
+// {
+//     #[inline]
+//     pub fn new() -> StreamSimpleNode<T> {
+//         Box::new(StreamNodeStub::<T>::default())
+//     }
+// }
+
 impl<T> StreamClone for StreamNodeStub<T>
 where
     T: CoordFloat + FloatConst + Default + 'static,

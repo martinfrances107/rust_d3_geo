@@ -1,13 +1,13 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::ClipAntimeridian;
+use crate::clip::clip::Clip;
+use crate::clip::ClipRaw;
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 use crate::stream::StreamClone;
 use crate::stream::StreamSrc;
-use crate::clip::clip::Clip;
-use crate::clip::antimeridian::ClipAntimeridian;
-use crate::clip::ClipRaw;
 // use crate::stream::StreamClone;
 // use super::StreamResampleTrait;
 // use crate::stream::stream_postclip_node_stub::StreamPostClipNodeStub;
