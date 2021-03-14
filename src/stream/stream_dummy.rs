@@ -52,7 +52,7 @@ where
 }
 impl<T> StreamPreClipTrait for StreamDummy<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     type SpctResample = ResampleEnum<T>;
     fn stream_resample_in(&mut self, _stream: Self::SpctResample) {

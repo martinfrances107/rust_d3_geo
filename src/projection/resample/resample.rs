@@ -2,12 +2,16 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 // use crate::stream::StreamClone;
+use crate::clip::clip::Clip;
 use crate::stream::StreamPostClipTrait;
 // use crate::stream::StreamResampleNode;
 // use crate::stream::StreamResampleTrait;
 use super::StreamResampleTrait;
+use crate::clip::antimeridian::ClipAntimeridian;
+use crate::clip::ClipRaw;
 use crate::stream::StreamClone;
 use crate::{cartesian::cartesian, stream::stream_dummy::StreamDummy, stream::Stream};
+
 // use crate::math::epsilon;
 // use super::resample_none::ResampleNone;
 // use super::ResampleEnum;
@@ -20,7 +24,7 @@ const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
 pub struct Resample<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Default + FloatConst + 'static,
 {
     pub project: Box<dyn Transform<TcC = Coordinate<T>>>,
     pub delta2: T,
@@ -42,18 +46,20 @@ where
     pub c0: T,
 
     pub cos_min_distance: T,
-    pub stream: Box<
-        dyn StreamPostClipTrait<
-            SpostctStream = StreamSrc<T>,
-            C = Coordinate<T>,
-            SctC = Coordinate<T>,
-            SctT = T,
-            SctOC = Option<Coordinate<T>>,
-            SctCi = CompareIntersection<T>,
-            SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-        >,
-    >,
+    // pub stream: Box<
+    //     dyn StreamPostClipTrait<
+    //         SpostctStream = StreamSrc<T>,
+    //         C = Coordinate<T>,
+    //         SctC = Coordinate<T>,
+    //         SctT = T,
+    //         SctOC = Option<Coordinate<T>>,
+    //         SctCi = CompareIntersection<T>,
+    //         SctStream = Box<dyn Stream<C = Coordinate<T>>>,
+    //     >,
+    // >,
 
+    // Box here prevents recurson.
+    pub stream: Box<Clip<T>>,
     pub use_line_point: bool,
     pub use_line_start: bool,
     pub use_line_end: bool,
@@ -61,12 +67,13 @@ where
 
 impl<T> Clone for Resample<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     fn clone(&self) -> Self {
+        let stream = *self.stream.clone();
         Self {
             project: self.project.box_clone(),
-            stream: self.stream.box_clone(),
+            stream: Box::new(stream),
             ..*self
         }
     }
@@ -98,7 +105,10 @@ where
             c0: T::zero(),
 
             cos_min_distance: T::zero(),
-            stream: Box::new(StreamDummy::default()),
+            stream: Box::new(Clip::new(
+                ClipRaw::Antimeridian(ClipAntimeridian::default()),
+                Coordinate::default(),
+            )), // stub value
 
             use_line_point: false,
             use_line_start: false,
@@ -133,7 +143,7 @@ where
 
 impl<T> StreamResampleTrait for Resample<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     type SRTsci = Box<
         dyn StreamPostClipTrait<

@@ -80,7 +80,7 @@ where
 
 impl<T> StreamPreClipTrait for StreamClipLineNodeStub<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     type SpctResample = ResampleEnum<T>;
     // type SPCTstream = StreamSimpleNode<T>;

@@ -16,7 +16,9 @@ use num_traits::FloatConst;
 // use resample_none::ResampleNone;
 
 // use crate::stream::StreamProcessor;
+use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::clip::Clip;
+use crate::clip::ClipRaw;
 use crate::stream::Stream;
 // use crate::stream::StreamSrc;
 use crate::Transform;
@@ -37,7 +39,7 @@ use super::resample::resample_none::ResampleNone;
 #[derive(Clone)]
 pub enum ResampleEnum<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst + Default + 'static,
 {
     RN(ResampleNone<T>),
     R(Resample<T>),
@@ -132,7 +134,10 @@ where
                 c0: T::zero(), // previous point
                 cos_min_distance: (T::from(30f64).unwrap().to_radians()).cos(), // cos(minimum angular distance)
 
-                stream: Box::new(StreamPostClipNodeStub::default()),
+                stream: Box::new(Clip::new(
+                    ClipRaw::Antimeridian(ClipAntimeridian::default()),
+                    Coordinate::default(),
+                )),
                 use_line_point: true,
                 use_line_end: true,
                 use_line_start: true,
