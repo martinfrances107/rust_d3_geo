@@ -30,6 +30,7 @@ where
 {
     Resample(ResampleEnum<T>),
     Src(StreamSrc<T>),
+    Blank,
 }
 
 #[derive(Clone)]

@@ -129,6 +129,9 @@ where
                 };
                 if pv {
                     match &mut self.base.sink {
+                        ClipSinkEnum::Blank => {
+                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                        }
                         ClipSinkEnum::Src(sink) => {
                             sink.point(p, m);
                         }
@@ -193,6 +196,9 @@ where
         if !self.base.polygon_started {
             // self.base.sink.polygon_start();
             match &mut self.base.sink {
+                ClipSinkEnum::Blank => {
+                    panic!("ClickSinkEnum - actively using an unconnected blank")
+                }
                 ClipSinkEnum::Src(s) => s.polygon_start(),
                 ClipSinkEnum::Resample(s) => s.polygon_start(),
             };
@@ -208,12 +214,18 @@ where
         } else if start_inside {
             if !self.base.polygon_started {
                 match &mut self.base.sink {
+                    ClipSinkEnum::Blank => {
+                        panic!("ClickSinkEnum - actively using an unconnected blank")
+                    }
                     ClipSinkEnum::Src(s) => s.polygon_start(),
                     ClipSinkEnum::Resample(s) => s.polygon_start(),
                 };
                 self.base.polygon_started = true;
             }
             match &mut self.base.sink {
+                ClipSinkEnum::Blank => {
+                    panic!("ClickSinkEnum - actively using an unconnected blank")
+                }
                 ClipSinkEnum::Src(s) => s.line_start(),
                 ClipSinkEnum::Resample(s) => s.line_start(),
             };
@@ -227,6 +239,9 @@ where
         }
         if self.base.polygon_started {
             match &mut self.base.sink {
+                ClipSinkEnum::Blank => {
+                    panic!("ClickSinkEnum - actively using an unconnected blank")
+                }
                 ClipSinkEnum::Src(s) => s.polygon_end(),
                 ClipSinkEnum::Resample(s) => s.polygon_end(),
             };
@@ -238,6 +253,9 @@ where
 
     fn sphere(&mut self) {
         match &mut self.base.sink {
+            ClipSinkEnum::Blank => {
+                panic!("ClickSinkEnum - actively using an unconnected blank")
+            }
             ClipSinkEnum::Src(s) => {
                 s.polygon_start();
                 s.line_start();
@@ -249,6 +267,9 @@ where
         };
         // (self.interpolate)(None, None, T::one(), &mut sink as &mut dyn Stream<T>);
         match &mut self.base.sink {
+            ClipSinkEnum::Blank => {
+                panic!("ClickSinkEnum - actively using an unconnected blank")
+            }
             ClipSinkEnum::Src(s) => {
                 s.line_end();
                 s.polygon_end();

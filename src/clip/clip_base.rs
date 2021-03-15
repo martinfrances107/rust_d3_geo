@@ -78,7 +78,8 @@ where
             use_ring_end: false,
             use_ring_start: false,
             // sink: Box::new(StreamPathResultNodeStub::default()),
-            sink: ClipSinkEnum::Resample(ResampleEnum::R(Resample::default())), // stub value
+            // sink: ClipSinkEnum::Resample(ResampleEnum::R(Resample::default())), // stub value
+            sink: ClipSinkEnum::Blank,
             start: Coordinate {
                 x: -T::PI(),
                 y: -T::FRAC_PI_2(),

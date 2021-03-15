@@ -232,6 +232,9 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         stream.line_start();
                     }
                     LineSinkEnum::CSE(stream) => match stream {
+                        ClipSinkEnum::Blank => {
+                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                        }
                         ClipSinkEnum::Resample(stream) => stream.line_start(),
                         ClipSinkEnum::Src(stream) => stream.line_start(),
                     },
@@ -276,6 +279,9 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             stream.line_start();
                         }
                         LineSinkEnum::CSE(stream) => match stream {
+                            ClipSinkEnum::Blank => {
+                                panic!("ClickSinkEnum - actively using an unconnected blank")
+                            }
                             ClipSinkEnum::Resample(mut stream) => {
                                 stream.line_start();
                             }
@@ -295,14 +301,19 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                 LineSinkEnum::CB(mut stream) => {
                                     stream.point(p, None);
                                 }
-                                LineSinkEnum::CSE(stream) => match stream {
-                                    ClipSinkEnum::Resample(mut stream) => {
-                                        stream.point(p, None);
+                                LineSinkEnum::CSE(stream) => {
+                                    match stream {
+                                        ClipSinkEnum::Blank => {
+                                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                                        }
+                                        ClipSinkEnum::Resample(mut stream) => {
+                                            stream.point(p, None);
+                                        }
+                                        ClipSinkEnum::Src(mut stream) => {
+                                            stream.point(p, None);
+                                        }
                                     }
-                                    ClipSinkEnum::Src(mut stream) => {
-                                        stream.point(p, None);
-                                    }
-                                },
+                                }
                             }
                             next = Some(p);
                         }
@@ -312,14 +323,19 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                 LineSinkEnum::CB(mut stream) => {
                                     stream.point(p, None);
                                 }
-                                LineSinkEnum::CSE(stream) => match stream {
-                                    ClipSinkEnum::Resample(mut stream) => {
-                                        stream.point(p, None);
+                                LineSinkEnum::CSE(stream) => {
+                                    match stream {
+                                        ClipSinkEnum::Blank => {
+                                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                                        }
+                                        ClipSinkEnum::Resample(mut stream) => {
+                                            stream.point(p, None);
+                                        }
+                                        ClipSinkEnum::Src(mut stream) => {
+                                            stream.point(p, None);
+                                        }
                                     }
-                                    ClipSinkEnum::Src(mut stream) => {
-                                        stream.point(p, None);
-                                    }
-                                },
+                                }
                             }
                             // p0_next = p;
                             panic!("Silently dropping second point.");
@@ -342,16 +358,21 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                     stream.point(p, Some(2));
                                     stream.line_end();
                                 }
-                                LineSinkEnum::CSE(stream) => match stream {
-                                    ClipSinkEnum::Resample(mut stream) => {
-                                        stream.point(p, Some(2));
-                                        stream.line_end();
+                                LineSinkEnum::CSE(stream) => {
+                                    match stream {
+                                        ClipSinkEnum::Blank => {
+                                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                                        }
+                                        ClipSinkEnum::Resample(mut stream) => {
+                                            stream.point(p, Some(2));
+                                            stream.line_end();
+                                        }
+                                        ClipSinkEnum::Src(mut stream) => {
+                                            stream.point(p, Some(2));
+                                            stream.line_end();
+                                        }
                                     }
-                                    ClipSinkEnum::Src(mut stream) => {
-                                        stream.point(p, Some(2));
-                                        stream.line_end();
-                                    }
-                                },
+                                }
                             }
                             next = Some(p);
                         }
@@ -390,6 +411,9 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                         stream.line_end();
                                     }
                                     LineSinkEnum::CSE(stream) => match stream {
+                                        ClipSinkEnum::Blank => {
+                                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                                        }
                                         ClipSinkEnum::Resample(mut stream) => {
                                             stream.line_start();
                                             stream.point(t[0], None);
@@ -413,6 +437,9 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                         stream.point(t[0], Some(3u8));
                                     }
                                     LineSinkEnum::CSE(stream) => match stream {
+                                        ClipSinkEnum::Blank => {
+                                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                                        }
                                         ClipSinkEnum::Resample(mut stream) => {
                                             stream.point(t[1], None);
                                             stream.line_end();
@@ -451,6 +478,9 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     stream.line_end();
                 }
                 LineSinkEnum::CSE(stream) => match stream {
+                    ClipSinkEnum::Blank => {
+                        panic!("ClickSinkEnum - actively using an unconnected blank")
+                    }
                     ClipSinkEnum::Resample(mut stream) => {
                         stream.line_end();
                     }

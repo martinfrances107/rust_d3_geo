@@ -129,6 +129,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                 match stream {
                     ClipSinkEnum::Resample(mut stream) => stream.line_start(),
                     ClipSinkEnum::Src(mut stream) => stream.line_start(),
+                    ClipSinkEnum::Blank => {}
                 }
                 // stream.line_start()
             }
@@ -242,6 +243,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     );
                 }
                 LineSinkEnum::CSE(stream) => match stream {
+                    ClipSinkEnum::Blank => {}
                     ClipSinkEnum::Src(mut stream) => {
                         match (self.phi0 + phi1 / f_2).is_sign_positive() {
                             true => {
@@ -381,6 +383,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     );
                 }
                 LineSinkEnum::CSE(stream) => match stream {
+                    ClipSinkEnum::Blank => {}
                     ClipSinkEnum::Src(mut stream) => {
                         stream.point(
                             Coordinate {
@@ -440,6 +443,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     );
                 }
                 LineSinkEnum::CSE(stream) => match stream {
+                    ClipSinkEnum::Blank => {}
                     ClipSinkEnum::Src(mut stream) => {
                         stream.point(
                             Coordinate {
@@ -492,6 +496,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                 None,
             ),
             LineSinkEnum::CSE(stream) => match stream {
+                ClipSinkEnum::Blank => {}
                 ClipSinkEnum::Src(mut stream) => stream.point(
                     Coordinate {
                         x: self.lambda0,
@@ -516,6 +521,9 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
         match self.stream.clone() {
             LineSinkEnum::CB(mut stream) => stream.line_end(),
             LineSinkEnum::CSE(stream) => match stream {
+                ClipSinkEnum::Blank => {
+                    panic!("ClickSinkEnum - actively using an unconnected blank")
+                }
                 ClipSinkEnum::Src(mut stream) => stream.line_end(),
                 ClipSinkEnum::Resample(mut stream) => stream.line_end(),
             },
