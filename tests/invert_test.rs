@@ -1,6 +1,6 @@
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
-mod innvert_test {
+mod invert_test {
 
     use geo::Coordinate;
     use rust_d3_geo::projection::orthographic::OrthographicRaw;
