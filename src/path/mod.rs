@@ -158,7 +158,7 @@ where
     // }
 
     #[inline]
-    pub fn area(&self, d: &DataObject<T>) -> T
+    pub fn area(&self, _d: &DataObject<T>) -> T
     where
         T: CoordFloat + FloatConst,
     {

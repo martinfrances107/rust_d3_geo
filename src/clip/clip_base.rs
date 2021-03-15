@@ -52,8 +52,8 @@ pub struct ClipBase<T: CoordFloat + FloatConst + Default + 'static> {
 //     }
 // }
 
-use crate::projection::resample::resample::Resample;
-use crate::projection::resample::ResampleEnum;
+// use crate::projection::resample::resample::Resample;
+// use crate::projection::resample::ResampleEnum;
 
 impl<T> Default for ClipBase<T>
 where

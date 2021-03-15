@@ -1,14 +1,14 @@
 // use std::marker::PhantomData;
 
-use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
+// use geo::{CoordFloat, Coordinate};
+// use num_traits::FloatConst;
 
 // use crate::clip::ClipTraitRaw;
 // use crate::projection::resample::resample::Resample;
 // use crate::projection::resample::resample_none::ResampleNone;
 // use crate::projection::resample::ResampleEnum;
 
-use super::CompareIntersection;
+// use super::CompareIntersection;
 // use super::Stream;
 // use super::StreamClone;
 // use super::StreamPreClipTrait;

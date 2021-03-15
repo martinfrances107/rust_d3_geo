@@ -3,13 +3,13 @@ use std::marker::PhantomData;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use super::CompareIntersection;
+// use super::CompareIntersection;
 use super::Stream;
 use super::StreamClone;
 // use super::StreamPostClipTrait;
-use super::StreamSimpleNode;
+// use super::StreamSimpleNode;
 // use super::StreamSrc;
-use crate::clip::ClipTraitRaw;
+// use crate::clip::ClipTraitRaw;
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct StreamPostClipNodeStub<T>

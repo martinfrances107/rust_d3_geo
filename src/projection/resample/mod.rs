@@ -2,7 +2,7 @@ pub mod resample;
 pub mod resample_none;
 
 // use crate::stream::stream_dummy::StreamDummy;
-use crate::stream::stream_postclip_node_stub::StreamPostClipNodeStub;
+// use crate::stream::stream_postclip_node_stub::StreamPostClipNodeStub;
 // use crate::stream::CompareIntersection;
 // use crate::stream::StreamPostClipTrait;
 use geo::CoordFloat;
@@ -93,7 +93,7 @@ where
     //     >,
     // >;
     type SRTsci = Clip<T>;
-    fn stream_postclip_in(&mut self, stream_clip_in: Self::SRTsci) {
+    fn stream_postclip_in(&mut self, _stream_clip_in: Self::SRTsci) {
         // match &mut self {
         //     ResampleNode::Simple(s) => {
         //         s.stream_post_clip_in(stream_clip_in);

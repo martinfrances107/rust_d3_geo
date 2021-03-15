@@ -352,7 +352,7 @@ where
                 self.preclip = ClipCircle::gen_clip(theta);
                 None
             }
-            StreamOrValueMaybe::SP(preclip) => {
+            StreamOrValueMaybe::SP(_preclip) => {
                 println!("generatin SP");
                 self.theta = None;
                 // self.preclip = preclip;

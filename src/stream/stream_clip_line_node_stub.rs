@@ -8,17 +8,17 @@ use num_traits::FloatConst;
 // use super::BufferInTrait;
 use super::Clean;
 use super::CleanEnum;
-use super::CompareIntersection;
+// use super::CompareIntersection;
 
 use super::Stream;
 use super::StreamClipLine;
 use super::StreamClone;
 // use super::StreamPreClipTrait;
-use super::StreamSimpleNode;
-use crate::clip::ClipTraitRaw;
+// use super::StreamSimpleNode;
+// use crate::clip::ClipTraitRaw;
 // use crate::projection::resample::resample::Resample;
 // use crate::projection::resample::resample_none::ResampleNone;
-use crate::projection::resample::ResampleEnum;
+// use crate::projection::resample::ResampleEnum;
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct StreamClipLineNodeStub<T>

@@ -96,7 +96,7 @@ where
     // fn clip_line(&self, stream: StreamPathResultNode<T>) -> StreamCleanNode<T>;
     // Intersections are sorted along the clip edge. For both antimeridian cutting
     // and circle clipPIng, the same comparison is used.
-    fn compare_intersection(&self, a: Self::SctCi, b: Self::SctCi) -> Self::SctT {
+    fn compare_intersection(&self, _a: Self::SctCi, _b: Self::SctCi) -> Self::SctT {
         // let a_dashed = a.x;
         // let part1 = match a_dashed.x < Self::SctT::zero() {
         //     true => a_dashed.y - Self::SctT::FRAC_PI_2() - Self::SctT::epsilon(),

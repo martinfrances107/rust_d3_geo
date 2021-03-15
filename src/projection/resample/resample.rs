@@ -6,18 +6,20 @@ use crate::clip::clip::Clip;
 // use crate::stream::StreamPostClipTrait;
 // use crate::stream::StreamResampleNode;
 // use crate::stream::StreamResampleTrait;
-use super::StreamResampleTrait;
+// use super::StreamResampleTrait;
 use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::ClipRaw;
 use crate::stream::StreamClone;
-use crate::{cartesian::cartesian, stream::stream_dummy::StreamDummy, stream::Stream};
+use crate::cartesian::cartesian;
+// use crate::stream::stream_dummy::StreamDummy;
+use crate::stream::Stream;
 
 // use crate::math::epsilon;
 // use super::resample_none::ResampleNone;
 // use super::ResampleEnum;
-use crate::stream::CompareIntersection;
+// use crate::stream::CompareIntersection;
 // use crate::stream::StreamSimpleNode;
-use crate::stream::StreamSrc;
+// use crate::stream::StreamSrc;
 use crate::Transform;
 use crate::TransformIdentity;
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision

@@ -4,9 +4,9 @@ use num_traits::FloatConst;
 
 use crate::clip::ClipTraitRaw;
 
-use super::antimeridian::line::Line as AntimeridianLine;
+// use super::antimeridian::line::Line as AntimeridianLine;
 use super::buffer::ClipBuffer;
-use super::circle::line::Line as CircleLine;
+// use super::circle::line::Line as CircleLine;
 use super::clip_base::ClipBase;
 use super::ClipRaw;
 use super::ClipSinkEnum;

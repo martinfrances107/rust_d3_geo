@@ -27,7 +27,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 // use crate::clip::BufferInTrait;
-use crate::clip::ClipTraitRaw;
+// use crate::clip::ClipTraitRaw;
 use crate::path::PathResult;
 use crate::path::PathResultEnum;
 
