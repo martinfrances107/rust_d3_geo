@@ -67,7 +67,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> CircleGenerator<T> {
 
         // Finialise.
         // - TODO can I remove this clone.
-        // cs.coordinates = vec![cs.ring.clone()];
+        cs.coordinates = vec![cs.ring.clone()];
 
         cs
     }
