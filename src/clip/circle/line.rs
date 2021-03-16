@@ -233,7 +233,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     }
                     LineSinkEnum::CSE(stream) => match stream {
                         ClipSinkEnum::Blank => {
-                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                            panic!("ClickSinkEnum - actively using an unconnected blank");
                         }
                         ClipSinkEnum::Resample(stream) => stream.line_start(),
                         ClipSinkEnum::Src(stream) => stream.line_start(),
@@ -280,7 +280,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         }
                         LineSinkEnum::CSE(stream) => match stream {
                             ClipSinkEnum::Blank => {
-                                panic!("ClickSinkEnum - actively using an unconnected blank")
+                                panic!("ClickSinkEnum - actively using an unconnected blank");
                             }
                             ClipSinkEnum::Resample(mut stream) => {
                                 stream.line_start();
@@ -304,7 +304,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                 LineSinkEnum::CSE(stream) => {
                                     match stream {
                                         ClipSinkEnum::Blank => {
-                                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                                            panic!("ClickSinkEnum - actively using an unconnected blank");
                                         }
                                         ClipSinkEnum::Resample(mut stream) => {
                                             stream.point(p, None);
@@ -326,7 +326,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                 LineSinkEnum::CSE(stream) => {
                                     match stream {
                                         ClipSinkEnum::Blank => {
-                                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                                            panic!("ClickSinkEnum - actively using an unconnected blank");
                                         }
                                         ClipSinkEnum::Resample(mut stream) => {
                                             stream.point(p, None);
@@ -361,7 +361,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                 LineSinkEnum::CSE(stream) => {
                                     match stream {
                                         ClipSinkEnum::Blank => {
-                                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                                            panic!("ClickSinkEnum - actively using an unconnected blank");
                                         }
                                         ClipSinkEnum::Resample(mut stream) => {
                                             stream.point(p, Some(2));
@@ -412,7 +412,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                     }
                                     LineSinkEnum::CSE(stream) => match stream {
                                         ClipSinkEnum::Blank => {
-                                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                                            panic!("ClickSinkEnum - actively using an unconnected blank");
                                         }
                                         ClipSinkEnum::Resample(mut stream) => {
                                             stream.line_start();
@@ -438,7 +438,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                     }
                                     LineSinkEnum::CSE(stream) => match stream {
                                         ClipSinkEnum::Blank => {
-                                            panic!("ClickSinkEnum - actively using an unconnected blank")
+                                            panic!("ClickSinkEnum - actively using an unconnected blank");
                                         }
                                         ClipSinkEnum::Resample(mut stream) => {
                                             stream.point(t[1], None);
@@ -479,7 +479,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                 }
                 LineSinkEnum::CSE(stream) => match stream {
                     ClipSinkEnum::Blank => {
-                        panic!("ClickSinkEnum - actively using an unconnected blank")
+                        panic!("ClickSinkEnum - actively using an unconnected blank");
                     }
                     ClipSinkEnum::Resample(mut stream) => {
                         stream.line_end();
