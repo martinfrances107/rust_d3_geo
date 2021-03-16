@@ -7,10 +7,10 @@ use crate::clip::clip::Clip;
 // use crate::stream::StreamResampleNode;
 // use crate::stream::StreamResampleTrait;
 // use super::StreamResampleTrait;
+use crate::cartesian::cartesian;
 use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::ClipRaw;
 use crate::stream::StreamClone;
-use crate::cartesian::cartesian;
 // use crate::stream::stream_dummy::StreamDummy;
 use crate::stream::Stream;
 

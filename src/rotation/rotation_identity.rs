@@ -32,16 +32,6 @@ fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
     };
 }
 
-impl<T> RotationIdentity<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    #[inline]
-    pub fn new() -> Box<dyn Transform<TcC = Coordinate<T>>> {
-        Box::new(RotationIdentity::<T>::default())
-    }
-}
-
 impl<T: CoordFloat + FloatConst + Default + 'static> TransformClone for RotationIdentity<T> {
     type TcC = Coordinate<T>;
     fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
