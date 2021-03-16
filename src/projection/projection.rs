@@ -286,6 +286,10 @@ pub trait Projection<T: CoordFloat> {
     //  */
     fn rotate(&mut self, angles: Option<[T; 3]>) -> Option<[T; 3]>;
 
+    fn get_extent(&self) -> Option<[Coordinate<T>; 2]>;
+
+    fn extent(&self);
+
     fn get_scale(&self) -> T;
     // /**
     //  * Sets the projection’s scale factor to the specified value and returns the projection.

@@ -216,7 +216,7 @@ impl<'a, T: CoordFloat + FloatConst + Default + 'static> ProjectionMutator<T> {
     // In javascript stream is used as a property to be removed from the object.
     // In rust that is a closure.
     pub fn stream(
-        &mut self,
+        &self,
         // stream: Option<StreamSimpleNode<T>>,
     ) -> Box<dyn Fn(StreamSrc<T>) -> StreamTransformRadians<T> + '_> {
         // return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
@@ -365,6 +365,17 @@ where
             },
         }
     }
+
+    fn get_extent(&self) -> Option<[Coordinate<T>; 2]> {
+        match (self.x0, self.y0, self.x1, self.y1) {
+            (Some(x0), Some(y0), Some(x1), Some(y1)) => {
+                Some([Coordinate { x: x0, y: y0 }, Coordinate { x: x1, y: y1 }])
+            }
+            _ => None,
+        }
+    }
+
+    fn extent(&self) {}
 
     #[inline]
     fn get_scale(&self) -> T {
