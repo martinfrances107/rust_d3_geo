@@ -73,7 +73,7 @@ mod polygon_contains_test {
 
         let circle = CircleGenerator::default().radius(60.0);
         let polygon = circle.circle().coordinates;
-        
+
         assert_eq!(
             polygon_contains::<f64>(
                 &polygon,
@@ -94,7 +94,7 @@ mod polygon_contains_test {
     fn wraps_longitudes() {
         println!("geoPolygonContains wraps longitudes");
 
-        let circle = CircleGenerator::default().center(Coordinate { x: 300f64, y: 0f64 });        
+        let circle = CircleGenerator::default().center(Coordinate { x: 300f64, y: 0f64 });
         let c = circle.circle();
         let polygon = c.coordinates;
 

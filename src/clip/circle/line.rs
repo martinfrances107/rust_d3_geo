@@ -4,16 +4,15 @@ use num_traits::FloatConst;
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
 
-use crate::point_equal::point_equal;
-use crate::stream::StreamClean;
 use crate::clip::buffer::ClipBuffer;
-use crate::stream::StreamSourceDummy;
-use crate::stream::StreamSrc;
-use crate::stream::Stream;
 use crate::clip::ClipSinkEnum;
 use crate::clip::LineSinkEnum;
+use crate::point_equal::point_equal;
+use crate::stream::Stream;
+use crate::stream::StreamClean;
+use crate::stream::StreamSourceDummy;
+use crate::stream::StreamSrc;
 use crate::stream::{Clean, CleanEnum};
-
 
 #[derive(Clone, Debug)]
 pub struct Line<T: CoordFloat + FloatConst + Default> {

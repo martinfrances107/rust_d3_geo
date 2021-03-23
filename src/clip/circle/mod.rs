@@ -8,10 +8,10 @@ use crate::circle::circle_stream::circle_stream;
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 
-use super::clip_base::ClipBase;
-use super::ClipTraitRaw;
 use super::clip::Clip;
+use super::clip_base::ClipBase;
 use super::ClipRaw;
+use super::ClipTraitRaw;
 
 // use line::Line;
 
