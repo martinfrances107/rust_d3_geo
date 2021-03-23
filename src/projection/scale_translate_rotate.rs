@@ -1,4 +1,5 @@
 use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 use crate::Transform;
 use crate::TransformClone;
@@ -19,45 +20,81 @@ pub struct ScaleTranslateRotate<T: CoordFloat> {
     sy: T,
 }
 
-impl<T: CoordFloat + 'static> ScaleTranslateRotate<T> {
+#[derive(Clone, Debug)]
+pub enum ScaleTranslateRotateEnum<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    ST(ScaleTranslate<T>),
+    STR(ScaleTranslateRotate<T>),
+}
+
+// impl<'a, T: CoordFloat + FloatConst> TransformClone<'a> for ScaleTranslateRotateEnum<T> {
+//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
+//         Box::new(*self.clone())
+//     }
+// }
+
+impl<T: CoordFloat> Transform for ScaleTranslateRotateEnum<T>
+where
+    T: FloatConst,
+{
+    type TcC = Coordinate<T>;
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        match self {
+            ScaleTranslateRotateEnum::ST(st) => st.transform(p),
+            ScaleTranslateRotateEnum::STR(str) => str.transform(p),
+        }
+    }
+
     #[inline]
-    pub fn new(
-        k: T,
-        dx: T,
-        dy: T,
-        sx: T,
-        sy: T,
-        alpha: T,
-    ) -> Box<dyn Transform<TcC = Coordinate<T>>> {
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        match self {
+            ScaleTranslateRotateEnum::ST(st) => st.invert(p),
+            ScaleTranslateRotateEnum::STR(str) => str.invert(p),
+        }
+    }
+}
+
+impl<T: CoordFloat + FloatConst> ScaleTranslateRotate<T> {
+    #[inline]
+    pub fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: T) -> ScaleTranslateRotateEnum<T> {
         if alpha.is_zero() {
-            ScaleTranslate::new(k, dx, dy, sx, sy)
+            ScaleTranslateRotateEnum::ST(ScaleTranslate {
+                k: *k,
+                dx: *dx,
+                dy: *dy,
+                sx: *sx,
+                sy: *sy,
+            })
         } else {
             let cos_alpha = alpha.cos();
             let sin_alpha = alpha.sin();
-            Box::new(ScaleTranslateRotate {
-                a: cos_alpha * k,
-                b: sin_alpha * k,
-                ai: cos_alpha / k,
-                bi: sin_alpha / k,
-                ci: (sin_alpha * dy - cos_alpha * dx) / k,
-                fi: (sin_alpha * dx + cos_alpha * dy) / k,
-                dx,
-                dy,
-                sx,
-                sy,
+            ScaleTranslateRotateEnum::STR(ScaleTranslateRotate {
+                a: cos_alpha * *k,
+                b: sin_alpha * *k,
+                ai: cos_alpha / *k,
+                bi: sin_alpha / *k,
+                ci: (sin_alpha * *dy - cos_alpha * *dx) / *k,
+                fi: (sin_alpha * *dx + cos_alpha * *dy) / *k,
+                dx: *dx,
+                dy: *dy,
+                sx: *sx,
+                sy: *sy,
             })
         }
     }
 }
 
-impl<T: CoordFloat + 'static> TransformClone for ScaleTranslateRotate<T> {
-    type TcC = Coordinate<T>;
-    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
-        Box::new(self.clone())
-    }
-}
+// impl<'a, T: CoordFloat> TransformClone<'a> for ScaleTranslateRotate<T> {
+//     type TcC = Coordinate<T>;
+//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
+//         Box::new(self.clone())
+//     }
+// }
 
-impl<T: CoordFloat + 'static> Transform for ScaleTranslateRotate<T> {
+impl<T: CoordFloat> Transform for ScaleTranslateRotate<T> {
+    type TcC = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;

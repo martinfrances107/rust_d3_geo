@@ -2,6 +2,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use super::rotate_radians_transform::rotate_radians_transform;
+use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::Transform;
 use crate::TransformClone;
 
@@ -12,15 +13,14 @@ use crate::TransformClone;
 //     }
 
 // }
-
 pub struct Rotation<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst + Default,
 {
-    rotate: Box<dyn Transform<TcC = Coordinate<T>>>,
+    rotate: RotateRadiansEnum<T>,
 }
 
-impl<T: CoordFloat + FloatConst + Default + 'static> Rotation<T> {
+impl<'a, T: 'a + CoordFloat + FloatConst + Default> Rotation<T> {
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
         return Self {
             rotate: rotate_radians_transform(
@@ -32,31 +32,17 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Rotation<T> {
     }
 }
 
-// impl<T: CoordFloat + 'static> Clone for Rotation<T> {
-//     fn clone(&self) -> Self {
-//         let s: RotateRadians = *self;
-//         s
-//     }
-// }
-impl<T: CoordFloat + 'static> TransformClone for Rotation<T> {
+impl<'a, T: 'a + CoordFloat + FloatConst + Default> Transform for Rotation<T> {
     type TcC = Coordinate<T>;
-    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
-        Box::new(Self {
-            rotate: (*self.rotate).box_clone(),
-        })
-    }
-}
-
-impl<T: CoordFloat + 'static> Transform for Rotation<T> {
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.transform(&Coordinate {
             x: coordinates.x.to_radians(),
             y: coordinates.y.to_radians(),
         });
-        return Coordinate {
+        Coordinate {
             x: temp.x.to_degrees(),
             y: temp.y.to_degrees(),
-        };
+        }
     }
 
     fn invert(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
@@ -64,9 +50,9 @@ impl<T: CoordFloat + 'static> Transform for Rotation<T> {
             x: coordinates.x.to_radians(),
             y: coordinates.y.to_radians(),
         });
-        return Coordinate {
+        Coordinate {
             x: temp.x.to_degrees(),
             y: temp.y.to_degrees(),
-        };
+        }
     }
 }

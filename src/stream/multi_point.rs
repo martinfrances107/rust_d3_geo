@@ -11,7 +11,7 @@ impl<T: CoordFloat + FloatConst> Streamable for MultiPoint<T> {
     fn to_stream(&self, stream: &mut impl Stream<C = Self::SC>) {
         for p in self.iter() {
             // TODO there must be a better conversion.
-            stream.point(Coordinate { x: p.x(), y: p.y() }, None);
+            stream.point(&Coordinate { x: p.x(), y: p.y() }, None);
         }
     }
 }

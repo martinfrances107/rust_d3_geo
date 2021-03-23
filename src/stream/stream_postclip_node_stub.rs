@@ -5,41 +5,41 @@ use num_traits::FloatConst;
 
 // use super::CompareIntersection;
 use super::Stream;
-use super::StreamClone;
+// use super::StreamClone;
 // use super::StreamPostClipTrait;
 // use super::StreamSimpleNode;
 // use super::StreamSrc;
 // use crate::clip::ClipTraitRaw;
 
-#[derive(Clone, Copy, Debug, Default)]
-pub struct StreamPostClipNodeStub<T>
-where
-    T: CoordFloat,
-{
-    /// Why the Phantom Data is required here...
-    ///
-    /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
-    /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-    phantom: PhantomData<T>,
-}
+// #[derive(Clone, Copy, Debug, Default)]
+// pub struct StreamPostClipNodeStub<T>
+// where
+//     T: CoordFloat,
+// {
+//     /// Why the Phantom Data is required here...
+//     ///
+//     /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+//     /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+//     phantom: PhantomData<T>,
+// }
 
-impl<T> Stream for StreamPostClipNodeStub<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type C = Coordinate<T>;
-}
+// impl<T> Stream for StreamPostClipNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type C = Coordinate<T>;
+// }
 
-impl<T> StreamClone for StreamPostClipNodeStub<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(StreamPostClipNodeStub::default())
-    }
-}
+// impl<T> StreamClone for StreamPostClipNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(StreamPostClipNodeStub::default())
+//     }
+// }
 
 // TODO:mf must figure out what to stream type to connect in.
 // impl<T> StreamPostClipTrait for StreamPostClipNodeStub<T>

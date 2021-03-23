@@ -30,19 +30,19 @@ where
 //     }
 // }
 
-impl<T> StreamClone for StreamNodeStub<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(StreamNodeStub::<T>::default())
-    }
-}
+// impl<T> StreamClone for StreamNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(StreamNodeStub::<T>::default())
+//     }
+// }
 impl<T> Stream for StreamNodeStub<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
 }

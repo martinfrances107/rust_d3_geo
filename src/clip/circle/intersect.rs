@@ -17,13 +17,13 @@ pub enum IntersectReturn<T: CoordFloat> {
 /// Intersects the great circle between a and b with the clip circle.
 #[allow(clippy::many_single_char_names)]
 pub fn intersect<T: CoordFloat + FloatConst>(
-    a: Coordinate<T>,
-    b: Coordinate<T>,
+    a: &Coordinate<T>,
+    b: &Coordinate<T>,
     cr: T,
     two: bool,
 ) -> IntersectReturn<T> {
-    let pa = cartesian(&a);
-    let pb = cartesian(&b);
+    let pa = cartesian(a);
+    let pb = cartesian(b);
 
     // We have two planes, n1.p = d1 and n2.p = d2.
     // Find intersection line p(t) = c1 n1 + c2 n2 + t (n1 ⨯ n2).
@@ -37,7 +37,7 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     if !determinant.is_zero() {
         // return !two && a;
         if !two {
-            return IntersectReturn::One(a);
+            return IntersectReturn::One(*a);
         } else {
             return IntersectReturn::None;
         }

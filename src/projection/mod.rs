@@ -1,13 +1,69 @@
-pub mod projection_mutator;
-pub mod resample;
-pub mod stream_transform;
-pub mod stream_transform_radians;
-
-mod azimuthal;
 pub mod equirectangular;
 pub mod orthographic;
 pub mod projection;
 pub mod projection_equal;
-mod scale_translate;
-mod scale_translate_rotate;
+pub mod projection_mutator;
+pub mod resample;
+pub mod scale_translate_rotate;
 pub mod stereographic;
+pub mod stream_transform;
+pub mod stream_transform_radians;
+
+mod azimuthal;
+mod scale_translate;
+
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::FloatConst;
+
+use crate::Transform;
+// use crate::TransformClone;
+
+use equirectangular::EquirectangularRaw;
+use orthographic::OrthographicRaw;
+use stereographic::StereographicRaw;
+
+#[derive(Clone, Debug)]
+pub enum ProjectionRawEnum<T>
+where
+    T: CoordFloat + Default,
+{
+    E(EquirectangularRaw<T>),
+    O(OrthographicRaw<T>),
+    S(StereographicRaw<T>),
+}
+
+// impl<'a, T> TransformClone<'a> for ProjectionRawEnum<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     fn box_clone(&self, p: &'a Self::TcC) -> Self::TcC {
+//         match self {
+//             ProjectionRawEnum::E(e) => e.box_clone(),
+//             ProjectionRawEnum::O(o) => o.box_clone(),
+//             ProjectionRawEnum::S(s) => s.box_clone(),
+//         }
+//     }
+
+// }
+
+impl<T> Transform for ProjectionRawEnum<T>
+where
+    T: CoordFloat + FloatConst + Default,
+{
+    type TcC = Coordinate<T>;
+    fn transform(&self, p: &Self::TcC) -> Self::TcC {
+        match self {
+            ProjectionRawEnum::E(e) => e.transform(p),
+            ProjectionRawEnum::O(o) => o.transform(p),
+            ProjectionRawEnum::S(s) => s.transform(p),
+        }
+    }
+    fn invert(&self, p: &Self::TcC) -> Self::TcC {
+        match self {
+            ProjectionRawEnum::E(e) => e.invert(p),
+            ProjectionRawEnum::O(o) => o.invert(p),
+            ProjectionRawEnum::S(s) => s.invert(p),
+        }
+    }
+}

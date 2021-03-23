@@ -99,20 +99,20 @@ where
 //     }
 // }
 
-impl<T> StreamClone for StreamDummy<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(self.clone())
-    }
-}
+// impl<T> StreamClone for StreamDummy<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self.clone())
+//     }
+// }
 
 impl<T> Stream for StreamDummy<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst,
 {
     type C = Coordinate<T>;
 }

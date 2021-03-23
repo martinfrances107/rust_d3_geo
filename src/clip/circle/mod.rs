@@ -5,28 +5,20 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::circle::circle_stream::circle_stream;
-// use crate::projection::resample::ResampleEnum;
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
-use crate::stream::StreamClone;
-// use crate::stream::StreamPreClipTrait;
-// use crate::stream::StreamSimpleNode;
 
 use super::clip_base::ClipBase;
-// use super::BufferInTrait;
-// use super::ClipBuffer;
 use super::ClipTraitRaw;
-// use super::LineEnum;
-
 use super::clip::Clip;
 use super::ClipRaw;
 
 // use line::Line;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     radius: T,
     small_radius: bool,
@@ -39,7 +31,7 @@ where
 use std::fmt::Debug;
 impl<T> ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + Default + Debug + 'static,
+    T: CoordFloat + FloatConst + Default + Debug,
 {
     pub fn gen_clip(radius: T) -> Clip<T> {
         let cr = radius.cos();
@@ -68,20 +60,21 @@ where
         Clip::new(cr, start)
     }
 }
-impl<T> StreamClone for ClipCircle<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(self.clone())
-    }
-}
+
+// impl<T> StreamClone for ClipCircle<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self.clone())
+//     }
+// }
 
 impl<T> Stream for ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
 }
@@ -113,7 +106,7 @@ where
 // }
 impl<T> ClipTraitRaw<T> for ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;
@@ -123,7 +116,7 @@ where
     type SctCi = CompareIntersection<T>;
 
     #[inline]
-    fn point_visible(&self, p: Coordinate<T>, _m: Option<u8>) -> bool {
+    fn point_visible(&self, p: &Coordinate<T>, _m: Option<u8>) -> bool {
         p.x.cos() * p.y.cos() > self.cr
     }
 

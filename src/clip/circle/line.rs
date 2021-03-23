@@ -1,31 +1,22 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
+use super::intersect::intersect;
+use super::intersect::IntersectReturn;
+
 use crate::point_equal::point_equal;
 use crate::stream::StreamClean;
-// use crate::stream::StreamClipLineNode;
 use crate::clip::buffer::ClipBuffer;
-// use crate::projection::resample::resample::Resample;
-// use crate::projection::resample::ResampleEnum;
-
 use crate::stream::StreamSourceDummy;
 use crate::stream::StreamSrc;
-
 use crate::stream::Stream;
-use crate::stream::StreamClipLine;
-// use crate::stream::StreamClone;
 use crate::clip::ClipSinkEnum;
 use crate::clip::LineSinkEnum;
 use crate::stream::{Clean, CleanEnum};
 
-use super::intersect::intersect;
-use super::intersect::IntersectReturn;
-// use super::BufferInTrait;
 
-// use crate::clip::clip::ClipSinkEnum;
-
-#[derive(Clone)]
-pub struct Line<T: CoordFloat + FloatConst + Default + 'static> {
+#[derive(Clone, Debug)]
+pub struct Line<T: CoordFloat + FloatConst + Default> {
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
     radius: T,
@@ -41,7 +32,7 @@ pub struct Line<T: CoordFloat + FloatConst + Default + 'static> {
 
 impl<T> Default for Line<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     fn default() -> Self {
         Self {
@@ -93,20 +84,20 @@ where
 //     }
 // }
 
-impl<T> StreamClipLine for Line<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    // #[inline]
-    // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
-    //     Box::new(Self {
-    //         stream: self.stream.box_clone(),
-    //         ..*self
-    //     })
-    // }
-}
+// impl<'a, T> StreamClipLine for Line<'a, T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     // #[inline]
+//     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
+//     //     Box::new(Self {
+//     //         stream: self.stream.box_clone(),
+//     //         ..*self
+//     //     })
+//     // }
+// }
 
-impl<T: CoordFloat + FloatConst + Default + 'static> Line<T> {
+impl<T: CoordFloat + FloatConst + Default> Line<T> {
     #[inline]
     pub fn new(radius: T) -> Self {
         // TODO small_radius, rc  is a shadow variables!!!
@@ -134,7 +125,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Line<T> {
     }
 
     #[inline]
-    fn point_visible(&self, p: Coordinate<T>, _m: Option<u8>) -> bool {
+    fn point_visible(&self, p: &Coordinate<T>, _m: Option<u8>) -> bool {
         p.x.cos() * p.y.cos() > self.cr
     }
 
@@ -144,7 +135,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Line<T> {
     const CODE_RIGHT: u8 = 2;
     const CODE_BELOW: u8 = 4;
     const CODE_ABOVE: u8 = 8;
-    fn code(&self, p: Coordinate<T>) -> u8 {
+    fn code(&self, p: &Coordinate<T>) -> u8 {
         let lambda = p.x;
         let phi = p.y;
         let r = match self.small_radius {
@@ -165,7 +156,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Line<T> {
         return code;
     }
 }
-impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + Default + 'static {}
+impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + Default {}
 impl<T> Clean for Line<T>
 where
     T: CoordFloat + FloatConst + Default,
@@ -187,7 +178,7 @@ where
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
+impl<T: CoordFloat + FloatConst + Default> Stream for Line<T> {
     type C = Coordinate<T>;
     fn line_start(&mut self) {
         self.v00 = false;
@@ -195,8 +186,8 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
         self.clean = CleanEnum::NoIntersections;
     }
 
-    fn point(&mut self, p: Self::C, _m: Option<u8>) {
-        let mut point1 = p;
+    fn point(&mut self, p: &Self::C, _m: Option<u8>) {
+        let mut point1 = p.clone();
 
         // let point2: (Option::<Point>, <Option<u8>>);
         let mut point2;
@@ -213,7 +204,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         true => T::PI(),
                         false => -T::PI(),
                     };
-                    self.code(Coordinate {
+                    self.code(&Coordinate {
                         x: p.x + inc,
                         y: p.y,
                     })
@@ -243,8 +234,8 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
         }
         if v != self.v0 {
             point2 = intersect(
-                self.point0.clone().unwrap(),
-                point1.clone(),
+                &self.point0.clone().unwrap(),
+                &point1,
                 self.radius.cos(),
                 false,
             );
@@ -290,7 +281,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             }
                         },
                     }
-                    match intersect(point1, self.point0.clone().unwrap(), self.cr, false) {
+                    match intersect(&point1, &self.point0.clone().unwrap(), self.cr, false) {
                         IntersectReturn::None => {
                             // TODO Should I do a stream Point here??
                             next = None;
@@ -299,7 +290,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             // self.stream.point(p, None);
                             match self.stream.clone() {
                                 LineSinkEnum::CB(mut stream) => {
-                                    stream.point(p, None);
+                                    stream.point(&p, None);
                                 }
                                 LineSinkEnum::CSE(stream) => {
                                     match stream {
@@ -307,10 +298,10 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                             panic!("ClickSinkEnum - actively using an unconnected blank");
                                         }
                                         ClipSinkEnum::Resample(mut stream) => {
-                                            stream.point(p, None);
+                                            stream.point(&p, None);
                                         }
                                         ClipSinkEnum::Src(mut stream) => {
-                                            stream.point(p, None);
+                                            stream.point(&p, None);
                                         }
                                     }
                                 }
@@ -321,7 +312,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             // self.stream.point(p, None);
                             match self.stream.clone() {
                                 LineSinkEnum::CB(mut stream) => {
-                                    stream.point(p, None);
+                                    stream.point(&p, None);
                                 }
                                 LineSinkEnum::CSE(stream) => {
                                     match stream {
@@ -329,10 +320,10 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                             panic!("ClickSinkEnum - actively using an unconnected blank");
                                         }
                                         ClipSinkEnum::Resample(mut stream) => {
-                                            stream.point(p, None);
+                                            stream.point(&p, None);
                                         }
                                         ClipSinkEnum::Src(mut stream) => {
-                                            stream.point(p, None);
+                                            stream.point(&p, None);
                                         }
                                     }
                                 }
@@ -343,7 +334,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     }
                 } else {
                     // inside going out
-                    point2 = intersect(self.point0.clone().unwrap(), point1, self.cr, false);
+                    point2 = intersect(&self.point0.clone().unwrap(), &point1, self.cr, false);
                     match point2 {
                         IntersectReturn::None => {
                             // TODO should I stream a null point here?
@@ -355,7 +346,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             // self.stream.line_end();
                             match self.stream.clone() {
                                 LineSinkEnum::CB(mut stream) => {
-                                    stream.point(p, Some(2));
+                                    stream.point(&p, Some(2));
                                     stream.line_end();
                                 }
                                 LineSinkEnum::CSE(stream) => {
@@ -364,11 +355,11 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                             panic!("ClickSinkEnum - actively using an unconnected blank");
                                         }
                                         ClipSinkEnum::Resample(mut stream) => {
-                                            stream.point(p, Some(2));
+                                            stream.point(&p, Some(2));
                                             stream.line_end();
                                         }
                                         ClipSinkEnum::Src(mut stream) => {
-                                            stream.point(p, Some(2));
+                                            stream.point(&p, Some(2));
                                             stream.line_end();
                                         }
                                     }
@@ -389,7 +380,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                 // If the codes for two points are different, or are both zero,
                 // and there this segment intersects with the small circle.
                 if (c & self.c0) != 0 {
-                    let t = intersect(point1, self.point0.unwrap(), self.cr, true);
+                    let t = intersect(&point1, &self.point0.unwrap(), self.cr, true);
                     match t {
                         IntersectReturn::None => {}
                         IntersectReturn::One(_) => {
@@ -406,8 +397,8 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                 match self.stream.clone() {
                                     LineSinkEnum::CB(mut stream) => {
                                         stream.line_start();
-                                        stream.point(t[0], None);
-                                        stream.point(t[1], None);
+                                        stream.point(&t[0], None);
+                                        stream.point(&t[1], None);
                                         stream.line_end();
                                     }
                                     LineSinkEnum::CSE(stream) => match stream {
@@ -416,14 +407,14 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                                         }
                                         ClipSinkEnum::Resample(mut stream) => {
                                             stream.line_start();
-                                            stream.point(t[0], None);
-                                            stream.point(t[1], None);
+                                            stream.point(&t[0], None);
+                                            stream.point(&t[1], None);
                                             stream.line_end();
                                         }
                                         ClipSinkEnum::Src(mut stream) => {
                                             stream.line_start();
-                                            stream.point(t[0], None);
-                                            stream.point(t[1], None);
+                                            stream.point(&t[0], None);
+                                            stream.point(&t[1], None);
                                             stream.line_end();
                                         }
                                     },
@@ -431,26 +422,26 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             } else {
                                 match self.stream.clone() {
                                     LineSinkEnum::CB(mut stream) => {
-                                        stream.point(t[1], None);
+                                        stream.point(&t[1], None);
                                         stream.line_end();
                                         stream.line_start();
-                                        stream.point(t[0], Some(3u8));
+                                        stream.point(&t[0], Some(3u8));
                                     }
                                     LineSinkEnum::CSE(stream) => match stream {
                                         ClipSinkEnum::Blank => {
                                             panic!("ClickSinkEnum - actively using an unconnected blank");
                                         }
                                         ClipSinkEnum::Resample(mut stream) => {
-                                            stream.point(t[1], None);
+                                            stream.point(&t[1], None);
                                             stream.line_end();
                                             stream.line_start();
-                                            stream.point(t[0], Some(3u8));
+                                            stream.point(&t[0], Some(3u8));
                                         }
                                         ClipSinkEnum::Src(mut stream) => {
-                                            stream.point(t[1], None);
+                                            stream.point(&t[1], None);
                                             stream.line_end();
                                             stream.line_start();
-                                            stream.point(t[0], Some(3u8));
+                                            stream.point(&t[0], Some(3u8));
                                         }
                                     },
                                 }

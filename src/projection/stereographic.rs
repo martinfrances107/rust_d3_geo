@@ -7,9 +7,10 @@ use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;
 
-use crate::projection::azimuthal::azimuthal_invert;
+use super::ProjectionRawEnum;
+// use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
-use crate::TransformClone;
+// use crate::TransformClone;
 
 /// Why the Phantom Data is required here...
 ///
@@ -25,27 +26,55 @@ where
 
 impl<T> StereographicRaw<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
-    pub fn gen_projection_mutator<'a>() -> ProjectionMutator<T> {
+    pub fn gen_projection_mutator() -> ProjectionMutator<T> {
         // let s: Rc<Box<dyn Transform<TcC = Coordinate<T>>>> =
         //     Rc::new(Box::new(StereographicRaw::default()));
-        let s = Box::new(StereographicRaw::default());
-        let mut projection = ProjectionMutator::from_projection_raw(s, None);
-        projection.scale(T::from(250f64).unwrap());
-        projection.clip_angle(StreamOrValueMaybe::Value(T::from(142f64).unwrap()));
-        return projection;
+        let s = ProjectionRawEnum::S(StereographicRaw::default());
+        let projection = ProjectionMutator::from_projection_raw(s, None);
+        projection
+            .scale(T::from(250f64).unwrap())
+            .clip_angle(StreamOrValueMaybe::Value(T::from(142f64).unwrap()))
+    }
+
+    #[inline]
+    fn angle(z: T) -> T
+    where
+        T: CoordFloat + FloatConst + Default,
+    {
+        // Find a way to optimize this ... need a static of type T with value 2.
+        T::from(2).unwrap() * z.atan()
+    }
+
+    pub fn azimuthal_invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        let z = (p.x * p.x + p.y * p.y).sqrt();
+        let c = StereographicRaw::angle(z);
+        let sc = c.sin();
+        let cc = c.cos();
+
+        let ret_x = (p.x * sc).atan2(z * cc);
+        let y_out;
+        if z == T::zero() {
+            y_out = z;
+        } else {
+            y_out = p.y * sc / z;
+        }
+        let ret_y = y_out.asin();
+
+        Coordinate { x: ret_x, y: ret_y }
+        // })
     }
 }
 
-impl<T: CoordFloat + FloatConst + 'static> TransformClone for StereographicRaw<T> {
+// impl<'a, T: CoordFloat + FloatConst> TransformClone<'a> for StereographicRaw<T> {
+//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
+//         Box::new(self.clone())
+//     }
+// }
+
+impl<T: CoordFloat + FloatConst + Default> Transform for StereographicRaw<T> {
     type TcC = Coordinate<T>;
-    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
-        Box::new(self.clone())
-    }
-}
-
-impl<T: CoordFloat + FloatConst + 'static> Transform for StereographicRaw<T> {
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();
         let k = T::one() + p.x.cos() * cy;
@@ -55,9 +84,8 @@ impl<T: CoordFloat + FloatConst + 'static> Transform for StereographicRaw<T> {
         }
     }
 
+    #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let f = Box::new(|z: T| T::from(2).unwrap() * z.atan());
-        let g = azimuthal_invert(f);
-        g(p.x, p.y)
+        self.azimuthal_invert(p)
     }
 }

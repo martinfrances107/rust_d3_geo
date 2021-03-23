@@ -17,24 +17,24 @@ mod invert_test {
 
         for pm in projectors {
             for p in vec![
-                Coordinate {
+                &Coordinate {
                     x: 0.0f64,
                     y: 0.0f64,
                 },
-                Coordinate {
+                &Coordinate {
                     x: 30.3f64,
                     y: 24.1f64,
                 },
-                Coordinate {
+                &Coordinate {
                     x: -10f64,
                     y: 42f64,
                 },
-                Coordinate {
+                &Coordinate {
                     x: -2.0f64,
                     y: -5.0f64,
                 },
             ] {
-                assert!(projection_equal(&pm, &p, &pm.transform(&p), None));
+                assert!(projection_equal(pm.clone(), &p, &pm.transform(&p), None));
             }
         }
     }

@@ -10,7 +10,7 @@ use super::StreamInTrait;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct StreamTransformNodeStub<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     /// Why the Phantom Data is required here...
     ///
@@ -32,25 +32,22 @@ where
 //     }
 // }
 
-impl<T> StreamClone for StreamTransformNodeStub<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(StreamTransformNodeStub::<T>::default())
-    }
-}
+// impl<T> StreamClone for StreamTransformNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(StreamTransformNodeStub::<T>::default())
+//     }
+// }
 
 impl<T> Stream for StreamTransformNodeStub<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
 }
 
-impl<T> StreamInTrait<T> for StreamTransformNodeStub<T> where
-    T: CoordFloat + FloatConst + Default + 'static
-{
-}
+impl<T> StreamInTrait<T> for StreamTransformNodeStub<T> where T: CoordFloat + FloatConst + Default {}

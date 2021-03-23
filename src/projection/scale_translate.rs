@@ -1,31 +1,32 @@
 use crate::Transform;
-use crate::TransformClone;
+// use crate::TransformClone;
 use geo::{CoordFloat, Coordinate};
 
 #[derive(Clone, Debug, Default)]
 pub struct ScaleTranslate<T> {
-    k: T,
-    dx: T,
-    dy: T,
-    sx: T,
-    sy: T,
+    pub k: T,
+    pub dx: T,
+    pub dy: T,
+    pub sx: T,
+    pub sy: T,
 }
 
-impl<T> ScaleTranslate<T> {
-    #[inline]
-    pub fn new(k: T, dx: T, dy: T, sx: T, sy: T) -> Box<Self> {
-        Box::new(ScaleTranslate { k, dx, dy, sx, sy })
-    }
-}
+// impl<T> ScaleTranslate<T> {
+//     #[inline]
+//     pub fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T) -> Self {
+//         ScaleTranslate { k, dx, dy, sx, sy }
+//     }
+// }
 
-impl<T: CoordFloat + 'static> TransformClone for ScaleTranslate<T> {
+// impl<'a, T: CoordFloat> TransformClone<'a> for ScaleTranslate<T> {
+//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
+//         Box::new(self.clone())
+//     }
+// }
+
+impl<T: CoordFloat> Transform for ScaleTranslate<T> {
     type TcC = Coordinate<T>;
-    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
-        Box::new(self.clone())
-    }
-}
-
-impl<T: CoordFloat + 'static> Transform for ScaleTranslate<T> {
+    #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;
@@ -33,16 +34,17 @@ impl<T: CoordFloat + 'static> Transform for ScaleTranslate<T> {
         // it should be :-
         // self.dy + self.k * y
         // but that would mean a departure from the copy and would have to be adjusted elsewhere.
-        return Coordinate {
+        Coordinate {
             x: self.dx + self.k * x,
             y: self.dy - self.k * y,
-        };
+        }
     }
 
+    #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        return Coordinate {
+        Coordinate {
             x: (p.x - self.dx) / self.k * self.sx,
             y: (self.dy - p.y) / self.k * self.sy,
-        };
+        }
     }
 }

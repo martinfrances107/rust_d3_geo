@@ -7,9 +7,9 @@ use crate::path::PathResult;
 use crate::path::PathResultEnum;
 
 use super::Stream;
-use super::StreamClone;
+// use super::StreamClone;
 use super::StreamInTrait;
-use super::StreamPathResult;
+// use super::StreamPathResult;
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct StreamPathResultIdentity<T>
@@ -23,28 +23,29 @@ where
     phantom: PhantomData<T>,
 }
 
-impl<T> StreamPathResult for StreamPathResultIdentity<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    fn box_clone(&self) -> Box<dyn StreamPathResult<C = Self::C, Out = Self::Out>> {
-        Box::new(self.clone())
-    }
-}
+// impl<T> StreamPathResult for StreamPathResultIdentity<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     fn box_clone(&self) -> Box<dyn StreamPathResult<C = Self::C, Out = Self::Out>> {
+//         Box::new(self.clone())
+//     }
+// }
 
-impl<T> StreamClone for StreamPathResultIdentity<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(self.clone())
-    }
-}
+// impl<T> StreamClone for StreamPathResultIdentity<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self.clone())
+//     }
+// }
+
 impl<T> Stream for StreamPathResultIdentity<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst,
 {
     type C = Coordinate<T>;
 }

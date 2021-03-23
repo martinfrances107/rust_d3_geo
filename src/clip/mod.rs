@@ -23,30 +23,30 @@ use circle::ClipCircle;
 // use crate::clip::clip::ClipSinkEnum;
 
 /// Wrapper for stream inputs to Clip.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum ClipSinkEnum<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     Resample(ResampleEnum<T>),
     Src(StreamSrc<T>),
     Blank,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum LineEnum<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     Antimeridian(AntimeridianLine<T>),
     Circle(CircleLine<T>),
     // Stub, // initial, default undefined state
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum LineSinkEnum<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     CSE(ClipSinkEnum<T>),
     CB(ClipBuffer<T>),
@@ -54,10 +54,10 @@ where
 
 impl<T> Stream for LineEnum<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
-    fn point(&mut self, p: Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Self::C, m: Option<u8>) {
         match self {
             LineEnum::Antimeridian(antimeridian) => antimeridian.point(p, m),
             LineEnum::Circle(circle) => circle.point(p, m),
@@ -67,10 +67,10 @@ where
     //// Todo must connect up other stream functions. or find a better way.
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum ClipRaw<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     Antimeridian(ClipAntimeridian<T>),
     Circle(ClipCircle<T>),
@@ -91,7 +91,7 @@ where
     // type SctStream;
     type SctCi;
 
-    fn point_visible(&self, _p: Self::SctC, _z: Option<u8>) -> bool;
+    fn point_visible(&self, _p: &Self::SctC, _z: Option<u8>) -> bool;
 
     // fn clip_line(&self, stream: StreamPathResultNode<T>) -> StreamCleanNode<T>;
     // Intersections are sorted along the clip edge. For both antimeridian cutting

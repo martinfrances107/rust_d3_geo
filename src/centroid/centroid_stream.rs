@@ -1,5 +1,4 @@
 use crate::stream::Stream;
-use crate::stream::StreamClone;
 use crate::stream::Streamable;
 use std::ops::AddAssign;
 
@@ -29,12 +28,12 @@ pub struct CentroidStream<T: CoordFloat> {
     x0: T,
     y0: T,
     z0: T, // previous point
-    point_fn: fn(&mut Self, Coordinate<T>),
+    point_fn: fn(&mut Self, &Coordinate<T>),
     line_start_fn: fn(&mut Self),
     line_end_fn: fn(&mut Self),
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign + 'static> Default for CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign> Default for CentroidStream<T> {
     fn default() -> Self {
         return Self {
             W0: T::zero(),
@@ -60,7 +59,7 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> Default for CentroidStrea
     }
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign + 'static> CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
         self.X0 += (x - self.X0) / self.W0;
@@ -72,7 +71,7 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> CentroidStream<T> {
         self.point_fn = Self::centroid_point;
     }
 
-    fn centroid_line_point_first(&mut self, p: Coordinate<T>) {
+    fn centroid_line_point_first(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let cos_phi = phi.cos();
@@ -83,7 +82,7 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> CentroidStream<T> {
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
-    fn centroid_line_point(&mut self, p: Coordinate<T>) {
+    fn centroid_line_point(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let cos_phi = phi.cos();
@@ -112,14 +111,14 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> CentroidStream<T> {
     }
 
     /// Arithmetic mean of Cartesian vectors.
-    fn centroid_point(&mut self, p: Coordinate<T>) {
+    fn centroid_point(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let cos_phi = phi.cos();
         self.centroid_point_cartesian(cos_phi * lambda.cos(), cos_phi * lambda.sin(), phi.sin());
     }
 
-    fn centroid_ring_point_first(&mut self, p: Coordinate<T>) {
+    fn centroid_ring_point_first(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let cos_phi = phi.cos();
@@ -130,7 +129,7 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> CentroidStream<T> {
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
-    fn centroid_ring_point(&mut self, p: Coordinate<T>) {
+    fn centroid_ring_point(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let cos_phi = phi.cos();
@@ -163,7 +162,7 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> CentroidStream<T> {
     }
 
     pub fn centroid_ring_end(&mut self) {
-        self.centroid_point(Coordinate {
+        self.centroid_point(&Coordinate {
             x: self.lambda00,
             y: self.phi00,
         });
@@ -204,16 +203,18 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> CentroidStream<T> {
         return Point::new(y.atan2(x).to_degrees(), (z / m).asin().to_degrees());
     }
 }
-impl<T: CoordFloat + FloatConst + AddAssign + 'static> StreamClone for CentroidStream<T> {
-    // type C = Coordinate<T>;
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(self.clone())
-    }
-}
-impl<T: CoordFloat + FloatConst + AddAssign + 'static> Stream for CentroidStream<T> {
+// impl<T: CoordFloat + FloatConst + AddAssign> StreamClone for CentroidStream<T> {
+//     // type C = Coordinate<T>;
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self.clone())
+//     }
+// }
+impl<T: CoordFloat + FloatConst + AddAssign> Stream for CentroidStream<T> {
     type C = Coordinate<T>;
-    //
+
+    fn sphere(&mut self) {}
+
     #[inline]
     fn line_end(&mut self) {
         (self.line_end_fn)(self);
@@ -225,7 +226,7 @@ impl<T: CoordFloat + FloatConst + AddAssign + 'static> Stream for CentroidStream
     }
 
     #[inline]
-    fn point(&mut self, p: Self::C, _m: Option<u8>) {
+    fn point(&mut self, p: &Self::C, _m: Option<u8>) {
         (self.point_fn)(self, p);
     }
 

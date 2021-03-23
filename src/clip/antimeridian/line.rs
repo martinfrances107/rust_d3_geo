@@ -15,10 +15,10 @@ use crate::stream::{Clean, CleanEnum, StreamClean};
 
 use super::intersect::intersect;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Line<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     clean: CleanEnum,
     lambda0: T,
@@ -50,7 +50,7 @@ where
 
 impl<T> Default for Line<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     #[inline]
     fn default() -> Self {
@@ -66,7 +66,7 @@ where
 }
 impl<T> StreamClipLine for Line<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     // #[inline]
     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
@@ -118,9 +118,9 @@ where
     }
 }
 
-impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + Default + 'static {}
+impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + Default {}
 
-impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
+impl<T: CoordFloat + FloatConst + Default> Stream for Line<T> {
     type C = Coordinate<T>;
     fn line_start(&mut self) {
         // self.stream.line_start();
@@ -140,7 +140,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
         self.clean = CleanEnum::NoIntersections;
     }
 
-    fn point(&mut self, p: Self::C, _m: Option<u8>) {
+    fn point(&mut self, p: &Self::C, _m: Option<u8>) {
         let mut lambda1 = p.x;
         let phi1 = p.y;
         // let mut s = self.stream.borrow_mut();
@@ -203,7 +203,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     match (self.phi0 + phi1 / f_2).is_sign_positive() {
                         true => {
                             stream.point(
-                                Coordinate {
+                                &Coordinate {
                                     x: self.lambda0,
                                     y: T::FRAC_PI_2(),
                                 },
@@ -212,7 +212,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         }
                         false => {
                             stream.point(
-                                Coordinate {
+                                &Coordinate {
                                     x: self.lambda0,
                                     y: -T::FRAC_PI_2(),
                                 },
@@ -221,7 +221,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         }
                     }
                     stream.point(
-                        Coordinate {
+                        &Coordinate {
                             x: self.sign0,
                             y: self.phi0,
                         },
@@ -230,14 +230,14 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     stream.line_end();
                     stream.line_start();
                     stream.point(
-                        Coordinate {
+                        &Coordinate {
                             x: sign1,
                             y: self.phi0,
                         },
                         None,
                     );
                     stream.point(
-                        Coordinate {
+                        &Coordinate {
                             x: lambda1,
                             y: self.phi0,
                         },
@@ -252,7 +252,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         match (self.phi0 + phi1 / f_2).is_sign_positive() {
                             true => {
                                 stream.point(
-                                    Coordinate {
+                                    &Coordinate {
                                         x: self.lambda0,
                                         y: T::FRAC_PI_2(),
                                     },
@@ -261,7 +261,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             }
                             false => {
                                 stream.point(
-                                    Coordinate {
+                                    &Coordinate {
                                         x: self.lambda0,
                                         y: -T::FRAC_PI_2(),
                                     },
@@ -270,7 +270,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             }
                         }
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: self.sign0,
                                 y: self.phi0,
                             },
@@ -279,14 +279,14 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         stream.line_end();
                         stream.line_start();
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: sign1,
                                 y: self.phi0,
                             },
                             None,
                         );
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: lambda1,
                                 y: self.phi0,
                             },
@@ -297,7 +297,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         match (self.phi0 + phi1 / f_2).is_sign_positive() {
                             true => {
                                 stream.point(
-                                    Coordinate {
+                                    &Coordinate {
                                         x: self.lambda0,
                                         y: T::FRAC_PI_2(),
                                     },
@@ -306,7 +306,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             }
                             false => {
                                 stream.point(
-                                    Coordinate {
+                                    &Coordinate {
                                         x: self.lambda0,
                                         y: -T::FRAC_PI_2(),
                                     },
@@ -315,7 +315,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                             }
                         }
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: self.sign0,
                                 y: self.phi0,
                             },
@@ -324,14 +324,14 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         stream.line_end();
                         stream.line_start();
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: sign1,
                                 y: self.phi0,
                             },
                             None,
                         );
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: lambda1,
                                 y: self.phi0,
                             },
@@ -370,7 +370,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
             match self.stream.clone() {
                 LineSinkEnum::CB(mut stream) => {
                     stream.point(
-                        Coordinate {
+                        &Coordinate {
                             x: self.sign0,
                             y: self.phi0,
                         },
@@ -379,7 +379,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     stream.line_end();
                     //  self.stream.line_start();
                     stream.point(
-                        Coordinate {
+                        &Coordinate {
                             x: sign1,
                             y: self.phi0,
                         },
@@ -392,7 +392,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     }
                     ClipSinkEnum::Src(mut stream) => {
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: self.sign0,
                                 y: self.phi0,
                             },
@@ -401,7 +401,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         stream.line_end();
                         //  self.stream.line_start();
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: sign1,
                                 y: self.phi0,
                             },
@@ -410,7 +410,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     }
                     ClipSinkEnum::Resample(mut stream) => {
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: self.sign0,
                                 y: self.phi0,
                             },
@@ -419,7 +419,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         stream.line_end();
                         //  self.stream.line_start();
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: sign1,
                                 y: self.phi0,
                             },
@@ -432,7 +432,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
             match self.stream.clone() {
                 LineSinkEnum::CB(mut stream) => {
                     stream.point(
-                        Coordinate {
+                        &Coordinate {
                             x: self.sign0,
                             y: self.phi0,
                         },
@@ -441,7 +441,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     stream.line_end();
                     //  self.stream.line_start();
                     stream.point(
-                        Coordinate {
+                        &Coordinate {
                             x: sign1,
                             y: self.phi0,
                         },
@@ -454,7 +454,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     }
                     ClipSinkEnum::Src(mut stream) => {
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: self.sign0,
                                 y: self.phi0,
                             },
@@ -463,7 +463,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         stream.line_end();
                         //  self.stream.line_start();
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: sign1,
                                 y: self.phi0,
                             },
@@ -472,7 +472,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     }
                     ClipSinkEnum::Resample(mut stream) => {
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: self.sign0,
                                 y: self.phi0,
                             },
@@ -481,7 +481,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                         stream.line_end();
                         //  self.stream.line_start();
                         stream.point(
-                            Coordinate {
+                            &Coordinate {
                                 x: sign1,
                                 y: self.phi0,
                             },
@@ -497,7 +497,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
         self.phi0 = phi1;
         match self.stream.clone() {
             LineSinkEnum::CB(mut stream) => stream.point(
-                Coordinate {
+                &Coordinate {
                     x: self.lambda0,
                     y: self.phi0,
                 },
@@ -508,14 +508,14 @@ impl<T: CoordFloat + FloatConst + Default + 'static> Stream for Line<T> {
                     panic!("ClickSinkEnum - actively using an unconnected blank");
                 }
                 ClipSinkEnum::Src(mut stream) => stream.point(
-                    Coordinate {
+                    &Coordinate {
                         x: self.lambda0,
                         y: self.phi0,
                     },
                     None,
                 ),
                 ClipSinkEnum::Resample(mut stream) => stream.point(
-                    Coordinate {
+                    &Coordinate {
                         x: self.lambda0,
                         y: self.phi0,
                     },

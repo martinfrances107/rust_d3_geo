@@ -44,20 +44,21 @@ where
 //     }
 // }
 // pub type StreamTransformRadiansNode<T> = Box<StreamTransformRadians<T>>;
-impl<T> StreamClone for StreamTransformRadiansNodeStub<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(self.clone())
-    }
-}
+
+// impl<T> StreamClone for StreamTransformRadiansNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self.clone())
+//     }
+// }
 
 impl<T> Stream for StreamTransformRadiansNodeStub<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst,
 {
     type C = Coordinate<T>;
 }
@@ -66,13 +67,13 @@ impl<T> StreamTransformIn<T> for Box<StreamTransformRadians<T>> where
 {
 }
 
-pub struct StreamTransformRadians<T: CoordFloat + FloatConst + Default + 'static> {
+pub struct StreamTransformRadians<T: CoordFloat + FloatConst + Default> {
     stream: StreamTransform<T>,
 }
 
 impl<T> Default for StreamTransformRadians<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     fn default() -> Self {
         Self {
@@ -101,13 +102,13 @@ where
 //     }
 // }
 
-impl<T: CoordFloat + FloatConst + Default + 'static> Stream for StreamTransformRadians<T> {
+impl<T: CoordFloat + FloatConst + Default> Stream for StreamTransformRadians<T> {
     type C = Coordinate<T>;
     #[inline]
-    fn point(&mut self, p: Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Self::C, m: Option<u8>) {
         // let mut s = self.stream.borrow_mut();
         self.stream.point(
-            Coordinate {
+            &Coordinate {
                 x: p.x.to_radians(),
                 y: p.y.to_radians(),
             },

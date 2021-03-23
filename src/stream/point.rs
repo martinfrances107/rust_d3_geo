@@ -14,7 +14,7 @@ impl<T: CoordFloat + FloatConst> Streamable for Point<T> {
     fn to_stream(&self, stream: &mut impl Stream<C = Self::SC>) {
         // TODO there must be a better way to cast a Point to Coordinate.
         stream.point(
-            Coordinate {
+            &Coordinate {
                 x: self.x(),
                 y: self.y(),
             },

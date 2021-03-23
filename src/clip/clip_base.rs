@@ -21,8 +21,8 @@ use super::buffer::LineElem;
 // use super::ClipTraitRaw;
 use super::ClipSinkEnum;
 
-#[derive(Clone)]
-pub struct ClipBase<T: CoordFloat + FloatConst + Default + 'static> {
+#[derive(Clone, Debug)]
+pub struct ClipBase<T: CoordFloat + FloatConst + Default> {
     pub line: LineEnum<T>,
     pub polygon_started: bool,
     pub polygon: Vec<Vec<Coordinate<T>>>,
@@ -57,7 +57,7 @@ pub struct ClipBase<T: CoordFloat + FloatConst + Default + 'static> {
 
 impl<T> Default for ClipBase<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     fn default() -> Self {
         Self {
@@ -90,10 +90,10 @@ where
 
 impl<T> ClipBase<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
-    fn point_ring(&mut self, p: Coordinate<T>, _m: Option<u8>) {
-        self.ring.push(p);
+    fn point_ring(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+        self.ring.push(*p);
         self.ring_sink.point(p, None);
     }
 
@@ -103,7 +103,7 @@ where
     }
 
     fn ring_end(&mut self) {
-        self.point_ring(self.ring[0], None);
+        // self.point_ring(&mut self.ring[0], None);
         self.ring_sink.line_end();
 
         // let clean = self.ring_sink.clean();

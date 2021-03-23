@@ -8,10 +8,10 @@ use crate::Transform;
 
 use super::projection_mutator::ProjectionMutator;
 
-pub fn projection_equal<T: CoordFloat + FloatConst + Debug + Display + Default + 'static>(
-    projection: &ProjectionMutator<T>,
-    expected_location: &Coordinate<T>,
-    expected_point: &Coordinate<T>,
+pub fn projection_equal<'a, T: CoordFloat + FloatConst + Debug + Display + Default>(
+    projection: ProjectionMutator<T>,
+    expected_location: &'a Coordinate<T>,
+    expected_point: &'a Coordinate<T>,
     delta_p: Option<T>,
 ) -> bool {
     let delta = match delta_p {
@@ -23,18 +23,18 @@ pub fn projection_equal<T: CoordFloat + FloatConst + Debug + Display + Default +
         "expected [{:?}, {:?}], [{:?}, {:?}]",
         expected_location.x, expected_location.y, expected_point.x, expected_point.y,
     );
-    let actual_location = projection.invert(expected_point);
+    let actual_location = projection.invert(&expected_point);
     let actual_point = projection.transform(expected_location);
     println!(
         "actual [{:?}, {:?}], [{:?}, {:?}]",
         actual_location.x, actual_location.y, actual_point.x, actual_point.y,
     );
-    return planar_equal(actual_point, expected_point, delta)
-        && spherical_equal(actual_location, expected_location, delta);
+    return planar_equal(&actual_point, expected_point, delta)
+        && spherical_equal(&actual_location, expected_location, delta);
 }
 
 fn planar_equal<T: CoordFloat + Debug + Display>(
-    actual: Coordinate<T>,
+    actual: &Coordinate<T>,
     expected: &Coordinate<T>,
     delta: T,
 ) -> bool {
@@ -44,7 +44,7 @@ fn planar_equal<T: CoordFloat + Debug + Display>(
 }
 
 fn spherical_equal<T: CoordFloat + Debug + Display>(
-    actual: Coordinate<T>,
+    actual: &Coordinate<T>,
     expected: &Coordinate<T>,
     delta: T,
 ) -> bool {

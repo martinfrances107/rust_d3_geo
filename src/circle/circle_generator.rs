@@ -21,36 +21,47 @@ use crate::{cartesian::cartesian, TransformIdentity};
 use std::cell::RefCell;
 use std::rc::Rc;
 
-pub fn constant<T: Copy + 'static>(x: T) -> Box<dyn Fn(&CircleInArg) -> T> {
-    Box::new(move |_| x)
+// pub fn constant<T: 'static + Copy>(x: T) -> Box<dyn Fn(&CircleInArg) -> T> {
+//     Box::new(move |_| x)
+// }
+
+pub struct CircleGenerator<T>
+where
+    T: CoordFloat + FloatConst + Default,
+{
+    // pub center: Box<dyn Fn(&CircleInArg) -> Coordinate<T> + 'a>,
+    // pub precision: Box<dyn Fn(&CircleInArg) -> T + 'a>,
+    // pub radius: Box<dyn Fn(&CircleInArg) -> T + 'a>,
+    center: Coordinate<T>,
+    radius: T,
+    precision: T,
 }
 
-pub struct CircleGenerator<T: CoordFloat> {
-    pub center: Box<dyn Fn(&CircleInArg) -> Coordinate<T>>,
-    pub precision: Box<dyn Fn(&CircleInArg) -> T>,
-    pub radius: Box<dyn Fn(&CircleInArg) -> T>,
-}
-
-impl<T: CoordFloat + FloatConst + Default + 'static> Default for CircleGenerator<T> {
+impl<T> Default for CircleGenerator<T>
+where
+    T: CoordFloat + FloatConst + Default,
+{
     #[inline]
     fn default() -> Self {
         return Self {
-            center: constant(Coordinate {
+            center: Coordinate {
                 x: T::zero(),
                 y: T::zero(),
-            }),
-            radius: constant(T::from(90f64).unwrap()),
-            precision: constant(T::from(6f64).unwrap()),
+            },
+            radius: T::from(90f64).unwrap(),
+            precision: T::from(6).unwrap(),
         };
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default + 'static> CircleGenerator<T> {
-    pub fn circle(&self, arg: &CircleInArg) -> CircleStream<T> {
-        let c = (self.center)(arg);
-        let r = (self.radius)(arg).to_radians();
-        let p = (self.precision)(arg).to_radians();
-
+impl<T> CircleGenerator<T>
+where
+    T: CoordFloat + FloatConst + Default,
+{
+    pub fn circle(&self) -> CircleStream<T> {
+        let c = self.center;
+        let r = self.radius.to_radians();
+        let p = self.precision.to_radians();
         let rotate = rotate_radians_transform(-c.x.to_radians(), -c.y.to_radians(), T::zero());
 
         let mut cs = CircleStream {
@@ -60,10 +71,7 @@ impl<T: CoordFloat + FloatConst + Default + 'static> CircleGenerator<T> {
             coordinates: vec![vec![]],
         };
 
-        // {
-        //     let mut ot: Box<dyn Stream<C = Coordinate<T>>> = cs;
         circle_stream(&mut cs, r, p, T::one(), None, None);
-        // }
 
         // Finialise.
         // - TODO can I remove this clone.
@@ -73,55 +81,37 @@ impl<T: CoordFloat + FloatConst + Default + 'static> CircleGenerator<T> {
     }
 }
 
-impl<T: CoordFloat + 'static> CircleTrait<T> for CircleGenerator<T> {
-    fn set_center(&mut self, center: FnValMaybe2D<T>) {
-        return match center {
-            FnValMaybe2D::FloatValue(value) => {
-                self.center = constant(value);
-            }
-            FnValMaybe2D::FloatFn(center) => {
-                self.center = center;
-            }
-        };
+impl<T> CircleTrait<T> for CircleGenerator<T>
+where
+    T: CoordFloat + FloatConst + Default,
+{
+    fn center(mut self, center: Coordinate<T>) -> CircleGenerator<T> {
+        self.center = center;
+        self
     }
 
     #[inline]
-    fn get_center(&self, center: FnValMaybe2D<T>) -> Box<dyn Fn(&CircleInArg) -> Coordinate<T>> {
-        // self.center
-        panic!("must clone")
+    fn get_center(&self) -> Coordinate<T> {
+        self.center
     }
 
-    fn set_radius(&mut self, radius: FnValMaybe<T>) {
-        match radius {
-            FnValMaybe::FloatValue(value) => {
-                self.radius = constant(value);
-            }
-            FnValMaybe::FloatFn(radius) => {
-                self.radius = radius;
-            }
-        };
+    fn radius(mut self, radius: T) -> Self {
+        self.radius = radius;
+        self
     }
 
     #[inline]
-    fn get_radius(&self) -> Box<dyn Fn(&CircleInArg) -> T> {
-        panic!("must clone")
-        // self.radius
+    fn get_radius(&self) -> T {
+        self.radius
     }
 
-    fn set_precision(&mut self, precision: FnValMaybe<T>) {
-        match precision {
-            FnValMaybe::FloatValue(value) => {
-                self.precision = constant(value);
-            }
-            FnValMaybe::FloatFn(precision) => {
-                self.precision = precision;
-            }
-        }
+    fn precision(mut self, precision: T) -> Self {
+        self.precision = precision;
+        self
     }
 
     #[inline]
-    fn get_precision(&self) -> Box<dyn Fn(&CircleInArg) -> T> {
-        panic!("must clone")
-        // self.precision
+    fn get_precision(&self) -> T {
+        self.precision
     }
 }

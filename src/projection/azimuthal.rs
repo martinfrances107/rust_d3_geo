@@ -1,39 +1,47 @@
-use geo::{CoordFloat, Coordinate, Point};
+// use geo::CoordFloat;
+// use geo::Coordinate;
+// use num_traits::FloatConst;
 
-#[inline]
-pub fn azimuthal_raw<T: CoordFloat + 'static>(
-    scale: Box<dyn Fn(T) -> T>,
-) -> Box<dyn Fn(T, T) -> Point<T>> {
-    Box::new(move |x: T, y: T| -> Point<T> {
-        let cx = x.cos();
-        let cy = y.cos();
-        let k = scale(cx * cy);
-        match k.is_infinite() {
-            true => Point::new(T::from(2).unwrap(), T::zero()),
-            false => Point::new(k * cy * x.sin(), k * y.sin()),
-        }
-    })
-}
+// #[inline]
+// pub fn azimuthal_raw<'a, T: CoordFloat + FloatConst>(
+//     scale: Box<dyn Fn(T) -> T>,
+// ) -> Box<dyn Fn(&Coordinate<T>) -> Coordinate<T>> {
+//     Box::new(move |p: &Coordinate<T>| -> Coordinate<T> {
+//         let cx = p.x.cos();
+//         let cy = p.y.cos();
+//         let k = scale(cx * cy);
+//         match k.is_infinite() {
+//             true => Coordinate {
+//                 x: T::from(2).unwrap(),
+//                 y: T::zero(),
+//             },
+//             false => Coordinate {
+//                 x: k * cy * p.x.sin(),
+//                 y: k * p.y.sin(),
+//             },
+//         }
+//     })
+// }
 
-#[inline]
-pub fn azimuthal_invert<T: CoordFloat + 'static>(
-    angle: Box<dyn Fn(T) -> T>,
-) -> Box<dyn Fn(T, T) -> Coordinate<T>> {
-    Box::new(move |x: T, y: T| -> Coordinate<T> {
-        let z = (x * x + y * y).sqrt();
-        let c = angle(z);
-        let sc = c.sin();
-        let cc = c.cos();
+// #[inline]
+// pub fn azimuthal_invert<'a, T: CoordFloat + Default>(
+//     angle: fn(T) -> T,
+// ) -> Box<dyn Fn(&Coordinate<T>) -> Coordinate<T>> {
+//     Box::new(move |p: &Coordinate<T>| -> Coordinate<T> {
+//         let z = (p.x * p.x + p.y * p.y).sqrt();
+//         let c = angle(z);
+//         let sc = c.sin();
+//         let cc = c.cos();
 
-        let ret_x = (x * sc).atan2(z * cc);
-        let y_out;
-        if z == T::zero() {
-            y_out = z;
-        } else {
-            y_out = y * sc / z;
-        }
-        let ret_y = y_out.asin();
+//         let ret_x = (p.x * sc).atan2(z * cc);
+//         let y_out;
+//         if z == T::zero() {
+//             y_out = z;
+//         } else {
+//             y_out = p.y * sc / z;
+//         }
+//         let ret_y = y_out.asin();
 
-        Coordinate { x: ret_x, y: ret_y }
-    })
-}
+//         Coordinate { x: ret_x, y: ret_y }
+//     })
+// }

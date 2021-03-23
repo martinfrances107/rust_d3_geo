@@ -13,7 +13,7 @@ pub fn line_processor<T: CoordFloat + FloatConst>(
     stream.line_start();
     for i in 0..n {
         coordinate = coordinates[i].clone();
-        stream.point(coordinate, None);
+        stream.point(&coordinate, None);
     }
     stream.line_end();
 }

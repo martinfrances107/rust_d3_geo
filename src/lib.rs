@@ -34,20 +34,19 @@ mod stream;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct TransformIdentity<T>
 where
-    T: CoordFloat,
-    T: std::default::Default,
+    T: CoordFloat + Default,
 {
     pub phantom: PhantomData<T>,
 }
 
-impl<T: CoordFloat + Default + 'static> TransformClone for TransformIdentity<T> {
-    type TcC = Coordinate<T>;
-    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
-        Box::new(self.clone())
-    }
-}
+// impl<'a, T: CoordFloat + Default> TransformClone<'a> for TransformIdentity<T> {
+//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
+//         Box::new(self.clone())
+//     }
+// }
 
-impl<T: CoordFloat + Default + 'static> Transform for TransformIdentity<T> {
+impl<T: CoordFloat + Default> Transform for TransformIdentity<T> {
+    type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
         *p
     }
@@ -56,13 +55,13 @@ impl<T: CoordFloat + Default + 'static> Transform for TransformIdentity<T> {
     }
 }
 
-pub trait TransformClone {
-    type TcC;
-    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>>;
+pub trait TransformClone<'a>: Transform {
+    fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>>;
 }
 
 // Common to Projection, Rotation.
-pub trait Transform: TransformClone {
+pub trait Transform {
+    type TcC;
     fn transform(&self, p: &Self::TcC) -> Self::TcC;
     fn invert(&self, p: &Self::TcC) -> Self::TcC;
 }

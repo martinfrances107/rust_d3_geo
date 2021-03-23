@@ -76,7 +76,7 @@ pub fn rejoin<T: Float>(
                 // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
                 for i in 0..n {
                     p0 = segment[i];
-                    stream.point(p0.p, None);
+                    stream.point(&p0.p, None);
                 }
                 stream.line_end();
                 return;

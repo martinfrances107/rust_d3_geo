@@ -5,32 +5,35 @@ use crate::Transform;
 use crate::TransformClone;
 
 #[derive(Clone, Copy, Debug, Default)]
-pub struct RotationPhiGamma<T> {
+pub struct RotationPhiGamma<T>
+where
+    T: CoordFloat,
+{
     cos_delta_phi: T,
     sin_delta_phi: T,
     cos_delta_gamma: T,
     sin_delta_gamma: T,
 }
 
-impl<T: CoordFloat + 'static> RotationPhiGamma<T> {
+impl<'a, T: CoordFloat> RotationPhiGamma<T> {
     #[inline]
-    pub fn new(delta_phi: T, delta_gamma: T) -> Box<dyn Transform<TcC = Coordinate<T>>> {
-        Box::new(Self {
+    pub fn new(delta_phi: &'a T, delta_gamma: &'a T) -> Self {
+        Self {
             cos_delta_phi: delta_phi.cos(),
             sin_delta_phi: delta_phi.sin(),
             cos_delta_gamma: delta_gamma.cos(),
             sin_delta_gamma: delta_gamma.sin(),
-        })
+        }
     }
 }
-impl<T: CoordFloat + 'static> TransformClone for RotationPhiGamma<T> {
-    type TcC = Coordinate<T>;
-    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
-        Box::new(self.clone())
-    }
-}
+// impl<'a, T: CoordFloat> TransformClone<'a> for RotationPhiGamma<T> {
+//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
+//         Box::new(self.clone())
+//     }
+// }
 
-impl<T: CoordFloat + 'static> Transform for RotationPhiGamma<T> {
+impl<T: CoordFloat> Transform for RotationPhiGamma<T> {
+    type TcC = Coordinate<T>;
     #[allow(clippy::many_single_char_names)]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let lambda = p.x;
@@ -42,11 +45,11 @@ impl<T: CoordFloat + 'static> Transform for RotationPhiGamma<T> {
         let z = phi.sin();
         let k = z * self.cos_delta_phi + x * self.sin_delta_phi;
 
-        return Coordinate {
+        Coordinate {
             x: (y * self.cos_delta_gamma - k * self.sin_delta_gamma)
                 .atan2(x * self.cos_delta_phi - z * self.sin_delta_phi),
             y: (k * self.cos_delta_gamma + y * self.sin_delta_gamma).asin(),
-        };
+        }
     }
 
     #[allow(clippy::many_single_char_names)]
@@ -60,10 +63,10 @@ impl<T: CoordFloat + 'static> Transform for RotationPhiGamma<T> {
         let z = phi.sin();
         let k = z * self.cos_delta_gamma - y * self.sin_delta_gamma;
 
-        return Coordinate {
+        Coordinate {
             x: (y * self.cos_delta_gamma + z * self.sin_delta_gamma)
                 .atan2(x * self.cos_delta_phi + k * self.sin_delta_phi),
             y: (k * self.cos_delta_phi - x * self.sin_delta_phi).asin(),
-        };
+        }
     }
 }

@@ -1,9 +1,10 @@
-// use super::PathStream;
-use crate::stream::Stream;
-use crate::stream::StreamClone;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
+
+// use super::PathStream;
+use crate::stream::Stream;
+use crate::stream::StreamClone;
 
 use super::PathResult;
 use super::PathResultEnum;
@@ -18,7 +19,7 @@ where
     y00: T,
     x0: T,
     y0: T,
-    point_fn: fn(&mut Self, Coordinate<T>, Option<u8>),
+    point_fn: fn(&mut Self, &Coordinate<T>, Option<u8>),
     line_start_fn: fn(&mut Self),
     line_end_fn: fn(&mut Self),
 }
@@ -52,7 +53,7 @@ where
         self.point_fn = Self::area_point_first;
     }
 
-    fn area_point_first(&mut self, p: Coordinate<T>, _m: Option<u8>) {
+    fn area_point_first(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         self.point_fn = Self::area_point;
         self.x00 = p.x;
         self.x0 = p.x;
@@ -60,14 +61,14 @@ where
         self.y0 = p.y;
     }
 
-    fn area_point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
+    fn area_point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         self.area_ring_sum += self.y0 * p.x - self.x0 * p.y;
         self.x0 = p.x;
         self.y0 = p.y;
     }
     fn area_ring_end(&mut self) {}
 
-    fn point_noop(&mut self, _p: Coordinate<T>, _m: Option<u8>) {}
+    fn point_noop(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {}
 
     fn line_noop(&mut self) {}
 }
@@ -86,7 +87,7 @@ where
 
 impl<T> StreamClone for PathAreaStream<T>
 where
-    T: CoordFloat + FloatConst + std::ops::AddAssign + 'static,
+    T: CoordFloat + FloatConst + std::ops::AddAssign,
 {
     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
     #[inline]
@@ -98,10 +99,10 @@ where
 
 impl<T> Stream for PathAreaStream<T>
 where
-    T: CoordFloat + FloatConst + std::ops::AddAssign + 'static,
+    T: CoordFloat + FloatConst + std::ops::AddAssign,
 {
     type C = Coordinate<T>;
-    fn point(&mut self, p: Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Self::C, m: Option<u8>) {
         (self.point_fn)(self, p, m);
     }
     fn polygon_start(&mut self) {

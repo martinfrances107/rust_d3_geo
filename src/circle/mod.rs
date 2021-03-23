@@ -10,6 +10,7 @@ pub mod circle_stream;
 
 // use geo::Point;
 use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 // function accepts a F value or a Function that outputs a F or maybe nothing.
 pub enum FnValMaybe<T> {
@@ -18,9 +19,12 @@ pub enum FnValMaybe<T> {
     FloatFn(Box<dyn Fn(&CircleInArg) -> T>),
 }
 
-pub enum FnValMaybe2D<T: CoordFloat> {
+pub enum FnValMaybe2D<T>
+where
+    T: CoordFloat + FloatConst + Default,
+{
     // None,
-    FloatValue(Coordinate<T>),
+    // FloatValue(Coordinate<T>),
     FloatFn(Box<dyn Fn(&CircleInArg) -> Coordinate<T>>),
 }
 
@@ -35,11 +39,11 @@ pub enum StreamType {
     Polygon,
 }
 
-pub trait CircleTrait<T: CoordFloat> {
-    fn set_center(&mut self, center: FnValMaybe2D<T>);
-    fn get_center(&self, center: FnValMaybe2D<T>) -> Box<dyn Fn(&CircleInArg) -> Coordinate<T>>;
-    fn set_radius(&mut self, radius: FnValMaybe<T>);
-    fn get_radius(&self) -> Box<dyn Fn(&CircleInArg) -> T>;
-    fn set_precision(&mut self, precision: FnValMaybe<T>);
-    fn get_precision(&self) -> Box<dyn Fn(&CircleInArg) -> T>;
+pub trait CircleTrait<T: CoordFloat + FloatConst + Default> {
+    fn center<'a>(self, center: Coordinate<T>) -> Self;
+    fn get_center(&self) -> Coordinate<T>;
+    fn radius(self, radius: T) -> Self;
+    fn get_radius(&self) -> T;
+    fn precision(self, precision: T) -> Self;
+    fn get_precision(&self) -> T;
 }

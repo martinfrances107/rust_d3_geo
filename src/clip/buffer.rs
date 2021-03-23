@@ -2,8 +2,6 @@ use crate::path::PathResultEnum;
 use crate::stream::Stream;
 use crate::stream::StreamClone;
 use crate::stream::StreamPathResult;
-// use crate::stream::StreamSimpleNode;
-// use crate::stream::StreamPathResultNode;
 use crate::{path::PathResult, stream::StreamInTrait};
 
 use geo::{CoordFloat, Coordinate};
@@ -20,7 +18,7 @@ pub struct ClipBuffer<T: CoordFloat> {
     line: Option<Vec<LineElem<T>>>,
 }
 
-impl<T: CoordFloat + FloatConst + 'static> ClipBuffer<T> {
+impl<T: CoordFloat + FloatConst> ClipBuffer<T> {
     /// Generate a new stream node.
     // #[inline]
     // pub fn new() -> Self {
@@ -71,33 +69,34 @@ where
     }
 }
 
-impl<T> StreamPathResult for ClipBuffer<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    #[inline]
-    fn box_clone(&self) -> Box<dyn StreamPathResult<C = Self::C, Out = Self::Out>> {
-        Box::new(self.clone())
-    }
-}
-impl<T> StreamClone for ClipBuffer<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(self.clone())
-    }
-}
+// impl<T> StreamPathResult for ClipBuffer<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     #[inline]
+//     fn box_clone(&self) -> Box<dyn StreamPathResult<C = Self::C, Out = Self::Out>> {
+//         Box::new(self.clone())
+//     }
+// }
 
-impl<'a, T: CoordFloat + FloatConst + 'static> Stream for ClipBuffer<T> {
+// impl<T> StreamClone for ClipBuffer<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self.clone())
+//     }
+// }
+
+impl<T: CoordFloat + FloatConst> Stream for ClipBuffer<T> {
     type C = Coordinate<T>;
     #[inline]
-    fn point(&mut self, p: Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Self::C, m: Option<u8>) {
         match self.line.clone() {
             Some(mut line) => {
-                line.push(LineElem { p, m });
+                line.push(LineElem { p: *p, m });
             }
             None => {
                 panic!("Cannot push to undefined line.");

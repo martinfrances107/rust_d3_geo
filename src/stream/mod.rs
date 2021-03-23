@@ -62,7 +62,7 @@ pub trait StreamClone {
     fn box_clone(&self) -> Self::RetType;
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct StreamSourceDummy<T>
 where
     T: CoordFloat,
@@ -70,7 +70,7 @@ where
     phantom: PhantomData<T>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum StreamSrc<T>
 where
     T: CoordFloat,
@@ -80,7 +80,7 @@ where
 
 pub trait Stream {
     type C;
-    fn point(&mut self, _p: Self::C, _m: Option<u8>) {}
+    fn point(&mut self, _p: &Self::C, _m: Option<u8>) {}
     fn sphere(&mut self) {}
     fn line_start(&mut self) {}
     fn line_end(&mut self) {}

@@ -9,7 +9,7 @@ use super::StreamClone;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct StreamResampleNodeStub<T>
 where
-    T: CoordFloat + Default + 'static,
+    T: CoordFloat + Default,
 {
     /// Why the Phantom Data is required here...
     ///

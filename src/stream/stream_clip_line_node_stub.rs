@@ -44,7 +44,7 @@ where
 
 impl<T> StreamClipLine for StreamClipLineNodeStub<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst,
 {
     // #[inline]
     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
@@ -65,7 +65,7 @@ where
 
 impl<T> Stream for StreamClipLineNodeStub<T>
 where
-    T: CoordFloat + FloatConst + 'static,
+    T: CoordFloat + FloatConst,
 {
     type C = Coordinate<T>;
 }
@@ -104,16 +104,17 @@ where
 //     }
 // }
 
-impl<T> StreamClone for StreamClipLineNodeStub<T>
-where
-    T: CoordFloat + FloatConst + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(self.clone())
-    }
-}
+// impl<T> StreamClone for StreamClipLineNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst ,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self.clone())
+//     }
+// }
+
 // impl<T> ClipTraitRaw for StreamClipLineNodeStub<T>
 // where
 //     T: CoordFloat + FloatConst + 'static,

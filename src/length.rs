@@ -7,7 +7,7 @@ use num_traits::FloatConst;
 #[derive(Clone)]
 pub struct LengthStream<T: CoordFloat + FloatConst> {
     // sphere_fn: fn(&mut Self, f64, f64),
-    point_fn: fn(&mut Self, Coordinate<T>),
+    point_fn: fn(&mut Self, &Coordinate<T>),
     line_start_fn: fn(&mut Self),
     line_end_fn: fn(&mut Self),
     length_sum: T,
@@ -16,7 +16,7 @@ pub struct LengthStream<T: CoordFloat + FloatConst> {
     cos_phi0: T,
 }
 
-impl<T: CoordFloat + FloatConst + 'static> Default for LengthStream<T> {
+impl<T: CoordFloat + FloatConst> Default for LengthStream<T> {
     fn default() -> Self {
         return Self {
             // sphere_fn: Self::noop,
@@ -31,14 +31,14 @@ impl<T: CoordFloat + FloatConst + 'static> Default for LengthStream<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst + 'static> LengthStream<T> {
+impl<T: CoordFloat + FloatConst> LengthStream<T> {
     pub fn calc(object: &impl Streamable<SC = Coordinate<T>>) -> T {
         let mut ls = LengthStream::default();
         object.to_stream(&mut ls);
         return ls.length_sum;
     }
 
-    fn length_point_first(&mut self, p: Coordinate<T>) {
+    fn length_point_first(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         self.lambda0 = lambda;
@@ -47,7 +47,7 @@ impl<T: CoordFloat + FloatConst + 'static> LengthStream<T> {
         self.point_fn = Self::length_point;
     }
 
-    fn length_point(&mut self, p: Coordinate<T>) {
+    fn length_point(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
 
@@ -76,21 +76,21 @@ impl<T: CoordFloat + FloatConst + 'static> LengthStream<T> {
         self.point_fn = Self::length_point_first;
         self.line_end_fn = Self::length_line_end;
     }
-    fn point_noop(&mut self, _p: Coordinate<T>) {}
+    fn point_noop(&mut self, _p: &Coordinate<T>) {}
     fn line_end_noop(&mut self) {}
 }
 
-impl<T: CoordFloat + FloatConst + 'static> StreamClone for LengthStream<T> {
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(self.clone())
-    }
-}
+// impl<T: CoordFloat + FloatConst> StreamClone for LengthStream<T> {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self.clone())
+//     }
+// }
 
-impl<T: CoordFloat + FloatConst + 'static> Stream for LengthStream<T> {
+impl<T: CoordFloat + FloatConst> Stream for LengthStream<T> {
     type C = Coordinate<T>;
-    fn point(&mut self, p: Coordinate<T>, _z: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
         (self.point_fn)(self, p);
     }
 

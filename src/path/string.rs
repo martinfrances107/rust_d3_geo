@@ -84,19 +84,20 @@ where
     }
 }
 
-impl<T> StreamClone for PathString<T>
-where
-    T: CoordFloat + FloatConst + std::fmt::Display + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(self.clone())
-    }
-}
+// impl<T> StreamClone for PathString<T>
+// where
+//     T: CoordFloat + FloatConst + std::fmt::Display,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self.clone())
+//     }
+// }
+
 impl<T> Stream for PathString<T>
 where
-    T: CoordFloat + FloatConst + std::fmt::Display + 'static,
+    T: CoordFloat + FloatConst + std::fmt::Display,
 {
     type C = Coordinate<T>;
     #[inline]
@@ -128,7 +129,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: Coordinate<T>, _m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         match self.point {
             Some(0f64) => {
                 self.string.push(format!("M{},{},", p.x, p.y));

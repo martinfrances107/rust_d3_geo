@@ -3,7 +3,6 @@ use num_traits::FloatConst;
 use std::marker::PhantomData;
 
 use crate::Transform;
-use crate::TransformClone;
 
 /// Why the Phantom Data is required here...
 ///
@@ -19,30 +18,30 @@ where
 
 // By design a stateless function.
 // TODO maybe add attributes to suggest inlining this where possible.
-fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
+fn normalise<'a, T: CoordFloat + FloatConst>(p: &'a Coordinate<T>) -> Coordinate<T> {
     let lambda = p.x;
     let phi = p.y;
 
-    return match lambda.abs() > T::PI() {
-        true => Coordinate {
-            x: lambda + (-lambda / T::TAU()).round() * T::TAU(),
-            y: T::TAU(),
-        },
-        false => Coordinate { x: lambda, y: phi },
+    let x = match lambda.abs() > T::PI() {
+        // true => Coordinate {
+        //     x: lambda + (-lambda / T::TAU()).round() * T::TAU(),
+        //     y: T::TAU(),
+        // },
+        // false => Coordinate { x: lambda, y: phi },
+        true => lambda + (-lambda / T::TAU()).round() * T::TAU(),
+        false => lambda,
     };
+    Coordinate { x, y: phi }
 }
 
-impl<T: CoordFloat + FloatConst + Default + 'static> TransformClone for RotationIdentity<T> {
+impl<T: CoordFloat + FloatConst + Default> Transform for RotationIdentity<T> {
     type TcC = Coordinate<T>;
-    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
-        Box::new(*self)
-    }
-}
-
-impl<T: CoordFloat + FloatConst + Default + 'static> Transform for RotationIdentity<T> {
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        normalise(p)
+        println!("t in {:?}", p);
+        let out = normalise(p);
+        println!("t in {:?}", out);
+        out
     }
 
     #[inline]

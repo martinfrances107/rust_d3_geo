@@ -19,9 +19,11 @@ use num_traits::FloatConst;
 use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::clip::Clip;
 use crate::clip::ClipRaw;
+use crate::compose::Compose;
 use crate::stream::Stream;
 // use crate::stream::StreamSrc;
 use crate::Transform;
+use crate::TransformClone;
 
 use super::resample::resample::Resample;
 use super::resample::resample_none::ResampleNone;
@@ -36,10 +38,10 @@ use super::resample::resample_none::ResampleNone;
 //     };
 // }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum ResampleEnum<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     RN(ResampleNone<T>),
     R(Resample<T>),
@@ -51,9 +53,9 @@ where
     T: CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
-    fn point(&mut self, p: Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Self::C, m: Option<u8>) {
         match self {
-            ResampleEnum::R(resample) => resample.point(p, m),
+            ResampleEnum::R(resample) => resample.point(&*p, m),
             ResampleEnum::RN(rn) => rn.point(p, m),
         }
     }
@@ -79,7 +81,7 @@ pub trait StreamResampleTrait {
 
 impl<T> StreamResampleTrait for ResampleEnum<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     // type SRTsci = Box<
     //     dyn StreamPostClipTrait<
@@ -106,17 +108,18 @@ where
 }
 
 pub fn gen_resample_node<T>(
-    project: Box<dyn Transform<TcC = Coordinate<T>>>,
+    // project: Box<dyn TransformClone<TcC = Coordinate<T>>>,
+    project: Compose<T>,
     delta2: Option<T>,
 ) -> ResampleEnum<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     match delta2 {
-        None => ResampleEnum::RN(ResampleNone::new(project.box_clone())),
+        None => ResampleEnum::RN(ResampleNone::new(project)),
         Some(delta2) => {
             ResampleEnum::R(Resample {
-                project: project.box_clone(),
+                project: project,
                 delta2,
 
                 lambda00: T::zero(),

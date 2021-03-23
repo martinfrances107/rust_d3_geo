@@ -1,19 +1,19 @@
 pub mod rotate_radians_transform;
 pub mod rotation;
+pub mod rotation_identity;
 
-mod rotation_identity;
-mod rotation_lambda;
-mod rotation_phi_gamma;
+pub mod rotation_lambda;
+pub mod rotation_phi_gamma;
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    use crate::in_delta::in_delta;
+    use crate::rotation::rotate_radians_transform::rotate_radians_transform;
+    use crate::Transform;
     use geo::Coordinate;
     use rotation::Rotation;
-
-    use crate::in_delta::in_delta;
-    use crate::Transform;
 
     #[test]
     fn only_longitude() {

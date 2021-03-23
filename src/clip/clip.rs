@@ -5,18 +5,20 @@ use num_traits::FloatConst;
 use crate::clip::ClipTraitRaw;
 
 // use super::antimeridian::line::Line as AntimeridianLine;
-use super::buffer::ClipBuffer;
 // use super::circle::line::Line as CircleLine;
+use super::buffer::ClipBuffer;
 use super::clip_base::ClipBase;
 use super::ClipRaw;
 use super::ClipSinkEnum;
 use super::LineEnum;
+
+use crate::clip::LineSinkEnum;
 use crate::stream::Stream;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Clip<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     raw: ClipRaw<T>,
     base: ClipBase<T>,
@@ -39,7 +41,6 @@ where
     }
 }
 
-use crate::clip::LineSinkEnum;
 impl<T> Clip<T>
 where
     T: CoordFloat + FloatConst + Default,
@@ -112,14 +113,14 @@ where
 
 impl<T> Stream for Clip<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
-    fn point(&mut self, p: Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Self::C, m: Option<u8>) {
         // todo!("I think I have an extra match here.");
         match self.base.use_ring {
             true => {
-                self.base.ring.push(p);
+                self.base.ring.push(*p);
                 self.base.ring_sink.point(p, None);
             }
             false => {

@@ -18,10 +18,10 @@ use super::ClipTraitRaw;
 use crate::clip::ClipRaw;
 // use line::Line;
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     pub base: ClipBase<T>,
 }
@@ -72,7 +72,7 @@ where
 
 impl<T> StreamClone for ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
     #[inline]
@@ -84,7 +84,7 @@ where
 
 impl<T> Clean for ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     /// A clip trait.
     /// Rejoin first and last segments if there were intersections and the first
@@ -96,7 +96,7 @@ where
 
 impl<T> ClipTraitRaw<T> for ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;
@@ -105,7 +105,7 @@ where
     type SctCi = CompareIntersection<T>;
 
     #[inline]
-    fn point_visible(&self, _p: Coordinate<T>, _z: Option<u8>) -> bool {
+    fn point_visible(&self, _p: &Coordinate<T>, _z: Option<u8>) -> bool {
         true
     }
 
@@ -122,57 +122,57 @@ where
             None => {
                 phi = direction * T::FRAC_PI_2();
                 s.point(
-                    Coordinate {
+                    &Coordinate {
                         x: -T::PI(),
                         y: phi,
                     },
                     None,
                 );
                 s.point(
-                    Coordinate {
+                    &Coordinate {
                         x: T::zero(),
                         y: phi,
                     },
                     None,
                 );
-                s.point(Coordinate { x: T::PI(), y: phi }, None);
+                s.point(&Coordinate { x: T::PI(), y: phi }, None);
                 s.point(
-                    Coordinate {
+                    &Coordinate {
                         x: T::PI(),
                         y: T::zero(),
                     },
                     None,
                 );
                 s.point(
-                    Coordinate {
+                    &Coordinate {
                         x: T::PI(),
                         y: -phi,
                     },
                     None,
                 );
                 s.point(
-                    Coordinate {
+                    &Coordinate {
                         x: T::zero(),
                         y: -phi,
                     },
                     None,
                 );
                 s.point(
-                    Coordinate {
+                    &Coordinate {
                         x: -T::PI(),
                         y: -phi,
                     },
                     None,
                 );
                 s.point(
-                    Coordinate {
+                    &Coordinate {
                         x: -T::PI(),
                         y: T::zero(),
                     },
                     None,
                 );
                 s.point(
-                    Coordinate {
+                    &Coordinate {
                         x: -T::PI(),
                         y: phi,
                     },
@@ -187,17 +187,17 @@ where
                     let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
 
                     phi = direction * lambda / T::from(2).unwrap();
-                    s.point(Coordinate { x: -lambda, y: phi }, None);
+                    s.point(&Coordinate { x: -lambda, y: phi }, None);
                     s.point(
-                        Coordinate {
+                        &Coordinate {
                             x: T::zero(),
                             y: phi,
                         },
                         None,
                     );
-                    s.point(Coordinate { x: lambda, y: phi }, None);
+                    s.point(&Coordinate { x: lambda, y: phi }, None);
                 } else {
-                    s.point(Coordinate { x: to.x, y: to.y }, None);
+                    s.point(&Coordinate { x: to.x, y: to.y }, None);
                 }
             }
         }

@@ -1,14 +1,18 @@
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
+
 use crate::stream::StreamSimpleNode;
 // use crate::stream::StreamProcessor;
-use geo::{CoordFloat, Coordinate};
 
 pub enum StreamOrValueMaybe<T: CoordFloat> {
-    None,
+    // None,
     Value(T),
     SP(StreamSimpleNode<T>),
 }
 
-pub trait Projection<T: CoordFloat> {
+use crate::projection::projection_mutator::ProjectionMutator;
+
+pub trait Projection<T: CoordFloat + FloatConst + Default> {
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.
@@ -67,7 +71,7 @@ pub trait Projection<T: CoordFloat> {
     //  *
     //  * @param angle Set to null to switch to antimeridian cutting.
     //  */
-    fn clip_angle(&mut self, angle: StreamOrValueMaybe<T>) -> Option<T>;
+    fn clip_angle(self, angle: StreamOrValueMaybe<T>) -> ProjectionMutator<T>;
 
     // /**
     //  * Sets the projection’s clipPIng circle radius to the specified angle in degrees and returns the projection.
@@ -266,7 +270,7 @@ pub trait Projection<T: CoordFloat> {
     //  *
     //  * @param precision A numeric value in PIxels to use as the threshold for the projection’s adaptive resampling.
     //  */
-    fn precision(&mut self, delta: T);
+    fn precision(self, delta: T) -> ProjectionMutator<T>;
 
     // /**
     //  * Returns the projection’s current angle, which defaults to 0°.
@@ -284,11 +288,13 @@ pub trait Projection<T: CoordFloat> {
     //  * @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
     //  * (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
     //  */
-    fn rotate(&mut self, angles: Option<[T; 3]>) -> Option<[T; 3]>;
+    fn get_rotate(&self) -> [T; 3];
+
+    fn rotate(self, angles: [T; 3]) -> ProjectionMutator<T>;
 
     fn get_extent(&self) -> Option<[Coordinate<T>; 2]>;
 
-    fn extent(&self);
+    fn extent(self) -> ProjectionMutator<T>;
 
     fn get_scale(&self) -> T;
     // /**
@@ -298,7 +304,9 @@ pub trait Projection<T: CoordFloat> {
     //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
     //  */
     // fn scale(&mut self, scale: &F);
-    fn scale(&mut self, scale: T);
+    fn scale(self, scale: T) -> ProjectionMutator<T>;
+
+    fn get_translate(&self) -> Coordinate<T>;
 
     // /**
     //  * Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
@@ -306,5 +314,5 @@ pub trait Projection<T: CoordFloat> {
     //  *
     //  * @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
     //  */
-    fn translate(&mut self, t: Option<&Coordinate<T>>) -> Option<Coordinate<T>>;
+    fn translate(self, t: &Coordinate<T>) -> ProjectionMutator<T>;
 }

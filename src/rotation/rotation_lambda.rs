@@ -3,7 +3,7 @@ use num_traits::FloatConst;
 
 // use crate::math::TAU;
 use crate::Transform;
-use crate::TransformClone;
+// use crate::TransformClone;
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct RotationLambda<T> {
@@ -30,21 +30,21 @@ fn forward_rotation_lambda<T: CoordFloat + FloatConst>(
     };
 }
 
-impl<T: CoordFloat + FloatConst + 'static> RotationLambda<T> {
+impl<'a, T: CoordFloat + FloatConst> RotationLambda<T> {
     #[inline]
-    pub fn new(delta_lambda: T) -> Box<dyn Transform<TcC = Coordinate<T>>> {
-        Box::new(Self { delta_lambda })
+    pub fn new(delta_lambda: T) -> RotationLambda<T> {
+        Self { delta_lambda }
     }
 }
 
-impl<T: CoordFloat + FloatConst + 'static> TransformClone for RotationLambda<T> {
+// impl<'a, T: CoordFloat + FloatConst> TransformClone<'a> for RotationLambda<T> {
+//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
+//         Box::new(self.clone())
+//     }
+// }
+
+impl<T: CoordFloat + FloatConst> Transform for RotationLambda<T> {
     type TcC = Coordinate<T>;
-    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
-        Box::new(self.clone())
-    }
-}
-
-impl<T: CoordFloat + FloatConst + 'static> Transform for RotationLambda<T> {
     #[inline]
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         forward_rotation_lambda(self.delta_lambda, coordinates)

@@ -20,15 +20,19 @@ use crate::stream::Stream;
 // use crate::stream::CompareIntersection;
 // use crate::stream::StreamSimpleNode;
 // use crate::stream::StreamSrc;
+use crate::compose::Compose;
 use crate::Transform;
+use crate::TransformClone;
 use crate::TransformIdentity;
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
+#[derive(Debug)]
 pub struct Resample<T>
 where
-    T: CoordFloat + Default + FloatConst + 'static,
+    T: CoordFloat + Default + FloatConst,
 {
-    pub project: Box<dyn Transform<TcC = Coordinate<T>>>,
+    // pub project: Box<dyn TransformClone<'a, TcC = Coordinate<T>>>,
+    pub project: Compose<T>,
     pub delta2: T,
 
     // first point
@@ -69,11 +73,11 @@ where
 
 impl<T> Clone for Resample<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     fn clone(&self) -> Self {
         Self {
-            project: self.project.box_clone(),
+            project: self.project.clone(),
             stream: self.stream.clone(),
             ..*self
         }
@@ -82,11 +86,12 @@ where
 
 impl<T> Default for Resample<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     fn default() -> Resample<T> {
         Self {
-            project: Box::new(TransformIdentity::<T>::default()),
+            // project: Box::new(TransformIdentity::<T>::default()),
+            project: Compose::default(),
             delta2: T::zero(),
 
             // first point
@@ -120,9 +125,9 @@ where
 
 impl<T> Resample<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
-    pub fn new(project: Box<dyn Transform<TcC = Coordinate<T>>>) -> Self {
+    pub fn new(project: Compose<T>) -> Self {
         Self {
             project,
             ..Self::default()
@@ -187,7 +192,7 @@ where
 
 impl<T> Resample<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     #[inline]
 
@@ -197,9 +202,9 @@ where
         self.use_line_end = false;
     }
 
-    fn ring_point(&mut self, p: Coordinate<T>) {
+    fn ring_point(&mut self, p: &Coordinate<T>) {
         self.lambda00 = p.x;
-        self.line_point(Coordinate {
+        self.line_point(&Coordinate {
             x: self.lambda00,
             y: p.y,
         });
@@ -234,10 +239,11 @@ where
         // self.stream.line_end();
     }
 
-    fn line_point(&mut self, p: Coordinate<T>) {
+    fn line_point(&mut self, p: &Coordinate<T>) {
+        let p = p.clone();
         let c = cartesian(&p);
-        let project_ptr = self.project.box_clone();
-        let project = &*project_ptr;
+        let project_ptr = &self.project;
+        let project = project_ptr;
         let p = project.transform(&p);
         self.x0 = p.x;
         self.y0 = p.y;
@@ -264,7 +270,7 @@ where
             self.stream.clone(),
         );
         self.stream.point(
-            Coordinate {
+            &Coordinate {
                 x: self.x0,
                 y: self.y0,
             },
@@ -325,8 +331,8 @@ where
                     lambda2 = b.atan2(a);
                 };
 
-                let project_ptr = self.project.box_clone();
-                let project = &*project_ptr;
+                let project_ptr = &self.project;
+                let project = project_ptr;
                 let p = project.transform(&Coordinate {
                     x: lambda2,
                     y: phi2,
@@ -376,24 +382,24 @@ where
         }
     }
 }
-impl<T> StreamClone for Resample<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(self.clone())
-    }
-}
+// impl<'a, T> StreamClone for Resample<'a, T>
+// where
+//     T: 'a + CoordFloat + FloatConst + Default,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(self.clone())
+//     }
+// }
 
 impl<T> Stream for Resample<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
     #[inline]
-    fn point(&mut self, p: Self::C, _m: Option<u8>) {
+    fn point(&mut self, p: &Self::C, _m: Option<u8>) {
         if self.use_line_point {
             self.line_point(p);
         } else {

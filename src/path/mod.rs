@@ -11,6 +11,7 @@ use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::clip::buffer::LineElem;
 // use crate::stream::stream_dummy::StreamDummy;
 // use crate::stream::Streamable;
+use crate::stream::StreamSrc;
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 use geo::Coordinate;
 use web_sys::CanvasRenderingContext2d;
@@ -95,18 +96,19 @@ trait PathStreamTrait: Stream + PathTrait + PathResult {}
 
 pub struct Path<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     context: Option<CanvasRenderingContext2d>,
     context_stream: Option<Box<dyn PointRadiusTrait<PrtT = T>>>,
     point_radius: PointRadiusEnum<T>,
+    projection_stream: Box<dyn Fn(StreamSrc<T>) -> StreamTransformRadians<T>>,
     projection: Option<ProjectionMutator<T>>,
 }
 
 fn projection_stream_noop() {}
 impl<T> Default for Path<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     #[inline]
     fn default() -> Self {
@@ -115,14 +117,14 @@ where
             context_stream: None,
             point_radius: PointRadiusEnum::Val(T::from(4.5f64).unwrap()),
             projection: None,
-            // projection_stream: Box::new(|_| StreamTransformRadians::gen_node()),
+            projection_stream: Box::new(|_| StreamTransformRadians::default()),
         }
     }
 }
 
 impl<T> Path<T>
 where
-    T: CoordFloat + std::fmt::Display + FloatConst + std::ops::AddAssign + Default + 'static,
+    T: CoordFloat + std::fmt::Display + FloatConst + std::ops::AddAssign + Default,
 {
     #[inline]
     fn generate(
@@ -158,21 +160,29 @@ where
     // }
 
     #[inline]
-    pub fn area(&self, _d: &DataObject<T>) -> T
+    pub fn area(&self, object: &DataObject<T>) -> Option<PathResultEnum<T>>
     where
         T: CoordFloat + FloatConst,
     {
-        let pa: PathAreaStream<T> = PathAreaStream::default();
-        // d.to_stream(&mut (self.projection_stream_fn)(pa))
-        T::zero()
+        let mut pa: PathAreaStream<T> = PathAreaStream::default();
+
+        pa.result()
     }
 
-    // fn set_projection(&mut self, ps: Option<Box<dyn Transform<>>>) {
-    //     self.projection_in = ps;
-    //     self.projection_stream_fn = None;
-    // }
+    fn set_projection(&mut self, projection: Option<ProjectionMutator<T>>) {
+        match projection {
+            None => {
+                self.projection = None;
+                self.projection_stream = Box::new(|_| StreamTransformRadians::default());
+            }
+            Some(projection) => {
+                self.projection = Some(projection);
+                // self.projection_stream = projection.stream();
+            }
+        }
+    }
 
-    pub fn projection<'a>(p_in: Option<ProjectionMutator<T>>) -> Path<T>
+    pub fn projection(p_in: Option<ProjectionMutator<T>>) -> Path<T>
     where
         T: CoordFloat + FloatConst,
     {
@@ -181,28 +191,9 @@ where
             dyn Fn(Box<dyn Stream<C = Coordinate<T>>>) -> StreamTransformRadians<T>,
         >;
 
-        //  let ret =  arguments.length ? (projectionStream = _ == null ? (projection = null, identity) : (projection = _).stream, path) : projection;
-
-        // match p_in {
-        //     None => {
-        //         projection = None;
-        //         projection_stream = Box::new(|_| StreamTransformRadians::gen_node());
-        //     }
-        //     Some(mut p_in) => {
-        //         {
-        //             projection_stream = p_in.stream();
-        //         }
-        //         {
-        //             projection = Some(p_in);
-        //         }
-        //     }
-        // }
-
-        return Path {
-            // projection,
-            // projection_stream,
+        Path {
             ..Default::default()
-        };
+        }
     }
 
     // #[inline]

@@ -15,36 +15,36 @@ where
     stream: Box<dyn Stream<C = Coordinate<T>>>,
 }
 
-impl<T> Default for StreamIdentity<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    #[inline]
-    fn default() -> Self {
-        Self {
-            stream: Box::new(StreamDummy::default()),
-        }
-    }
-}
+// impl<T> Default for StreamIdentity<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     #[inline]
+//     fn default() -> Self {
+//         Self {
+//             stream: Box::new(StreamDummy::default()),
+//         }
+//     }
+// }
 
-impl<T> StreamClone for StreamIdentity<T>
-where
-    T: CoordFloat + FloatConst + Default + 'static,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        Box::new(StreamIdentity::<T>::default())
-    }
-}
+// impl<T> StreamClone for StreamIdentity<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         Box::new(StreamIdentity::<T>::default())
+//     }
+// }
 
 impl<T> Stream for StreamIdentity<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
     #[inline]
-    fn point(&mut self, p: Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Self::C, m: Option<u8>) {
         self.stream.point(p, m);
     }
     #[inline]

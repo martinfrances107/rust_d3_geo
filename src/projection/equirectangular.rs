@@ -4,6 +4,7 @@ use num_traits::float::FloatConst;
 
 use super::projection::Projection;
 use super::projection_mutator::ProjectionMutator;
+use super::ProjectionRawEnum;
 use crate::Transform;
 use crate::TransformClone;
 
@@ -15,24 +16,23 @@ pub struct EquirectangularRaw<T> {
 
 impl<T> EquirectangularRaw<T>
 where
-    T: CoordFloat + FloatConst + Default + 'static,
+    T: CoordFloat + FloatConst + Default,
 {
-    pub fn gen_projection_mutator<'a>() -> ProjectionMutator<T> {
-        let e = Box::new(EquirectangularRaw::default());
-        let mut projection = ProjectionMutator::from_projection_raw(e, None);
-        projection.scale(T::from(152.63f64).unwrap());
-        return projection;
+    pub fn gen_projection_mutator() -> ProjectionMutator<T> {
+        let e = ProjectionRawEnum::E(EquirectangularRaw::default());
+        let projection = ProjectionMutator::from_projection_raw(e, None);
+        projection.scale(T::from(152.63f64).unwrap())
     }
 }
 
-impl<T: CoordFloat + FloatConst + 'static> TransformClone for EquirectangularRaw<T> {
+// impl<'a, T: CoordFloat + FloatConst> TransformClone<'a> for EquirectangularRaw<T> {
+//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
+//         Box::new(self.clone())
+//     }
+// }
+
+impl<T: CoordFloat + FloatConst> Transform for EquirectangularRaw<T> {
     type TcC = Coordinate<T>;
-    fn box_clone(&self) -> Box<dyn Transform<TcC = Self::TcC>> {
-        Box::new(self.clone())
-    }
-}
-
-impl<T: CoordFloat + FloatConst + 'static> Transform for EquirectangularRaw<T> {
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
         *p
     }
