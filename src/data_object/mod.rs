@@ -60,8 +60,12 @@ where
     T: CoordFloat + FloatConst,
 {
     type SC = Coordinate<T>;
-    // fn to_stream(&self, _stream: &mut impl Stream<C = Self::SC>);
-    fn to_stream(&self, _stream: &mut impl Stream<C = Self::SC>) {
-        panic!("To be overriden.");
+    fn to_stream(&self, stream: &mut impl Stream<C = Self::SC>) {
+        match self {
+            DataObject::Geometry(g) => g.to_stream(stream),
+            DataObject::Collection(_c) => {
+                todo!("Must fix")
+            }
+        }
     }
 }
