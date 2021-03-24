@@ -12,17 +12,21 @@ where
     type SC = Coordinate<T>;
     fn to_stream(&self, stream: &mut impl Stream<C = Self::SC>) {
         match self {
-            Geometry::GeometryCollection(gc) => {
-                for g in gc {
-                    g.to_stream(stream);
-                }
-            }
-            Geometry::Point(p) => {
-                p.to_stream(stream);
-            }
-            g => {
-                g.to_stream(stream);
-            }
+            // Geometry::GeometryCollection(gc) => {
+            //     for g in gc {
+            //         g.to_stream(stream);
+            //     }
+            // }
+            Geometry::Point(p) => p.to_stream(stream),
+            Geometry::Line(l) => l.to_stream(stream),
+            Geometry::LineString(ls) => ls.to_stream(stream),
+            Geometry::Polygon(p) => p.to_stream(stream),
+            Geometry::MultiPoint(mp) => mp.to_stream(stream),
+            Geometry::MultiLineString(mls) => mls.to_stream(stream),
+            Geometry::MultiPolygon(mp) => mp.to_stream(stream),
+            // GeometryCollection(GeometryCollection<T>),
+            Geometry::Rect(r) => r.to_stream(stream),
+            Geometry::Triangle(t) => t.to_stream(stream),
         }
     }
 }

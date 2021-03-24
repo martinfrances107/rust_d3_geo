@@ -1,27 +1,15 @@
-// use geo::{CoordFloat, Coordinate};
-// use num_traits::FloatConst;
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
-// use super::Stream;
+use super::Stream;
 
-// use super::Streamable;
-// use geo::Line;
+use super::Streamable;
+use geo::Line;
 
-// impl<T: CoordFloat + FloatConst> Streamable<T> for Line<T> {
-//     fn to_stream(&self, stream: &mut impl Stream) {
-//         // TODO there must be a better conversion.
-//         stream.point(
-//             Coordinate {
-//                 x: self.start_point().x(),
-//                 y: self.start_point().x(),
-//             },
-//             None,
-//         );
-//         stream.point(
-//             Coordinate {
-//                 x: self.end_point().x(),
-//                 y: self.end_point().x(),
-//             },
-//             None,
-//         );
-//     }
-// }
+impl<T: CoordFloat + FloatConst> Streamable for Line<T> {
+    type SC = Coordinate<T>;
+    #[inline]
+    fn to_stream(&self, _stream: &mut impl Stream) {
+        todo!("line start line end?");
+    }
+}
