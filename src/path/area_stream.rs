@@ -2,9 +2,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-// use super::PathStream;
 use crate::stream::Stream;
-use crate::stream::StreamClone;
 
 use super::PathResult;
 use super::PathResultEnum;
@@ -15,10 +13,8 @@ where
 {
     area_sum: T,
     area_ring_sum: T,
-    x00: T,
-    y00: T,
-    x0: T,
-    y0: T,
+    p00: Coordinate<T>,
+    p0: Coordinate<T>,
     point_fn: fn(&mut Self, &Coordinate<T>, Option<u8>),
     line_start_fn: fn(&mut Self),
     line_end_fn: fn(&mut Self),
@@ -26,17 +22,15 @@ where
 
 impl<T> Default for PathAreaStream<T>
 where
-    T: CoordFloat + std::ops::AddAssign,
+    T: CoordFloat + Default + std::ops::AddAssign,
 {
     #[inline]
     fn default() -> Self {
         Self {
             area_sum: T::zero(),
             area_ring_sum: T::zero(),
-            x00: T::zero(),
-            y00: T::zero(),
-            x0: T::zero(),
-            y0: T::zero(),
+            p0: Coordinate::default(),
+            p00: Coordinate::default(),
             point_fn: Self::point_noop,
             line_start_fn: Self::line_noop,
             line_end_fn: Self::line_noop,
@@ -55,21 +49,25 @@ where
 
     fn area_point_first(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         self.point_fn = Self::area_point;
-        self.x00 = p.x;
-        self.x0 = p.x;
-        self.y00 = p.y;
-        self.y0 = p.y;
+        self.p0 = *p;
+        self.p00 = *p;
     }
 
     fn area_point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        self.area_ring_sum += self.y0 * p.x - self.x0 * p.y;
-        self.x0 = p.x;
-        self.y0 = p.y;
+        self.area_ring_sum += self.p0.y * p.x - self.p0.x * p.y;
+        self.p0 = *p;
     }
-    fn area_ring_end(&mut self) {}
 
+    #[inline]
+    fn area_ring_end(&mut self) {
+        let p00 = self.p00.clone();
+        self.area_point(&p00, None);
+    }
+
+    #[inline]
     fn point_noop(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {}
 
+    #[inline]
     fn line_noop(&mut self) {}
 }
 
@@ -85,26 +83,27 @@ where
     }
 }
 
-impl<T> StreamClone for PathAreaStream<T>
-where
-    T: CoordFloat + FloatConst + std::ops::AddAssign,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        panic!("Must clone")
-        // Box::new(*self.clone())
-    }
-}
-
 impl<T> Stream for PathAreaStream<T>
 where
     T: CoordFloat + FloatConst + std::ops::AddAssign,
 {
     type C = Coordinate<T>;
+
+    #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         (self.point_fn)(self, p, m);
     }
+
+    #[inline]
+    fn line_start(&mut self) {
+        (self.line_start_fn)(self);
+    }
+
+    #[inline]
+    fn line_end(&mut self) {
+        (self.line_end_fn)(self);
+    }
+
     fn polygon_start(&mut self) {
         self.line_start_fn = Self::area_ring_start;
         self.line_end_fn = Self::area_ring_end;
@@ -113,7 +112,6 @@ where
         self.line_start_fn = Self::line_noop;
         self.line_end_fn = Self::line_noop;
         self.point_fn = Self::point_noop;
-
         self.area_sum += self.area_ring_sum.abs();
         self.area_ring_sum = T::zero();
     }
