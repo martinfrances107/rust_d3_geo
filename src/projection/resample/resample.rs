@@ -19,7 +19,7 @@ use crate::stream::Stream;
 // use super::ResampleEnum;
 // use crate::stream::CompareIntersection;
 // use crate::stream::StreamSimpleNode;
-// use crate::stream::StreamSrc;
+// use crate::stream::StreamDst;
 use crate::compose::Compose;
 use crate::Transform;
 use crate::TransformClone;
@@ -54,7 +54,7 @@ where
     pub cos_min_distance: T,
     // pub stream: Box<
     //     dyn StreamPostClipTrait<
-    //         SpostctStream = StreamSrc<T>,
+    //         SpostctStream = StreamDst<T>,
     //         C = Coordinate<T>,
     //         SctC = Coordinate<T>,
     //         SctT = T,
@@ -153,7 +153,7 @@ where
 // {
 //     type SRTsci = Box<
 //         dyn StreamPostClipTrait<
-//             SpostctStream = StreamSrc<T>,
+//             SpostctStream = StreamDst<T>,
 //             C = Coordinate<T>,
 //             SctC = Coordinate<T>,
 //             SctT = T,
@@ -166,7 +166,7 @@ where
 //         &mut self,
 //         _stream_clip_in: Box<
 //             dyn StreamPostClipTrait<
-//                 SpostctStream = StreamSrc<T>,
+//                 SpostctStream = StreamDst<T>,
 //                 C = Coordinate<T>,
 //                 SctC = Coordinate<T>,
 //                 SctT = T,
@@ -301,7 +301,7 @@ where
         //         SctT = T,
         //         SctStream = Box<(dyn Stream<C = Coordinate<T>> + 'static)>,
         //         SctOC = Option<Coordinate<T>>,
-        //         SpostctStream = StreamSrc<T>,
+        //         SpostctStream = StreamDst<T>,
         //         SctCi = CompareIntersection<T>,
         //     >,
         // >,

@@ -13,7 +13,7 @@ use num_traits::FloatConst;
 use crate::projection::resample::ResampleEnum;
 use crate::stream::Stream;
 
-use crate::stream::StreamSrc;
+use crate::stream::StreamDst;
 
 use antimeridian::line::Line as AntimeridianLine;
 use antimeridian::ClipAntimeridian;
@@ -29,8 +29,8 @@ where
     T: CoordFloat + FloatConst + Default,
 {
     Resample(ResampleEnum<T>),
-    Src(StreamSrc<T>),
-    Blank,
+    Src(StreamDst<T>),
+    Blank
 }
 
 #[derive(Clone, Debug)]

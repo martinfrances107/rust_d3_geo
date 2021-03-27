@@ -25,7 +25,7 @@ use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 // use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 use crate::stream::StreamClone;
-use crate::stream::StreamSrc;
+use crate::stream::StreamDst;
 // use crate::stream::StreamPostClipNode;
 // use crate::stream::stream_postclip_node_stub::StreamPostClipNodeStub;
 // use crate::stream::StreamPostClipTrait;
@@ -236,13 +236,13 @@ impl<T: CoordFloat + FloatConst + Default> ProjectionMutator<T> {
     pub fn stream(
         &self,
         // stream: Option<StreamSimpleNode<T>>,
-    ) -> Box<dyn Fn(StreamSrc<T>) -> StreamTransformRadians<T> + '_> {
+    ) -> Box<dyn Fn(StreamDst<T>) -> StreamTransformRadians<T> + '_> {
         // return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
         // return match &self.cache {
         //     Some(c) => Box::new(*c),
         //     None => {
         // self.cache_stream = Some(stream.clone());
-        Box::new(move |stream: StreamSrc<T>| {
+        Box::new(move |stream: StreamDst<T>| {
             let mut postclip = self.postclip.clone();
             postclip.stream_in(ClipSinkEnum::Src(stream));
 

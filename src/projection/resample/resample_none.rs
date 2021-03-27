@@ -8,7 +8,7 @@ use crate::compose::Compose;
 // use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 // use crate::stream::StreamClone;
-// use crate::stream::StreamSrc;
+// use crate::stream::StreamDst;
 // use crate::stream::StreamClone;
 // use super::StreamResampleTrait;
 // use crate::stream::stream_postclip_node_stub::StreamPostClipNodeStub;
@@ -25,7 +25,7 @@ where
     project: Compose<T>,
     // stream: Box<
     //     dyn StreamPostClipTrait<
-    //         SpostctStream = StreamSrc<T>,
+    //         SpostctStream = StreamDst<T>,
     //         C = Coordinate<T>,
     //         SctC = Coordinate<T>,
     //         SctT = T,
@@ -65,7 +65,7 @@ impl<T: CoordFloat + FloatConst + Default> ResampleNone<T> {
 // impl<T: CoordFloat + FloatConst + Default + 'static> StreamResampleTrait for ResampleNone<T> {
 //     type SRTsci = Box<
 //         dyn StreamPostClipTrait<
-//             SpostctStream = StreamSrc<T>,tatic + CoordFloat> Clone for Compose<'a, T> {
+//             SpostctStream = StreamDst<T>,tatic + CoordFloat> Clone for Compose<'a, T> {
 //     fn clone(&self) -> Compose<'a, T> {
 //         Compose::<'a, T> {
 //             a: self.a.box_clone(),
@@ -85,7 +85,7 @@ impl<T: CoordFloat + FloatConst + Default> ResampleNone<T> {
 //         &mut self,
 //         stream: Box<
 //             dyn StreamPostClipTrait<
-//                 SpostctStream = StreamSrc<T>,
+//                 SpostctStream = StreamDst<T>,
 //                 C = Coordinate<T>,
 //                 SctC = Coordinate<T>,
 //                 SctT = T,

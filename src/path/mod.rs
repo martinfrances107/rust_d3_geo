@@ -11,7 +11,7 @@ use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::clip::buffer::LineElem;
 // use crate::stream::stream_dummy::StreamDummy;
 // use crate::stream::Streamable;
-use crate::stream::StreamSrc;
+use crate::stream::StreamDst;
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 use geo::Coordinate;
 use web_sys::CanvasRenderingContext2d;
@@ -101,7 +101,7 @@ where
     context: Option<CanvasRenderingContext2d>,
     context_stream: Option<Box<dyn PointRadiusTrait<PrtT = T>>>,
     point_radius: PointRadiusEnum<T>,
-    projection_stream: Box<dyn Fn(StreamSrc<T>) -> StreamTransformRadians<T>>,
+    projection_stream: Box<dyn Fn(StreamDst<T>) -> StreamTransformRadians<T>>,
     projection: Option<ProjectionMutator<T>>,
 }
 

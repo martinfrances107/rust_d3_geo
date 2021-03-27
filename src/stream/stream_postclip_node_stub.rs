@@ -8,7 +8,7 @@ use super::Stream;
 // use super::StreamClone;
 // use super::StreamPostClipTrait;
 // use super::StreamSimpleNode;
-// use super::StreamSrc;
+// use super::StreamDst;
 // use crate::clip::ClipTraitRaw;
 
 // #[derive(Clone, Copy, Debug, Default)]
@@ -46,7 +46,7 @@ use super::Stream;
 // where
 //     T: CoordFloat + FloatConst + Default + 'static,
 // {
-//     type SpostctStream = StreamSrc<T>;
+//     type SpostctStream = StreamDst<T>;
 //     fn stream_in(&mut self, _stream: Self::SpostctStream) {
 //         // No-op.
 //     }

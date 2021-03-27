@@ -73,7 +73,7 @@ where
 }
 
 #[derive(Clone, Debug)]
-pub enum StreamSrc<T>
+pub enum StreamDst<T>
 where
     T: CoordFloat,
 {
@@ -90,7 +90,7 @@ pub trait Stream {
     fn polygon_end(&mut self) {}
 }
 
-impl<T> Stream for StreamSrc<T>
+impl<T> Stream for StreamDst<T>
 where
     T: CoordFloat + std::fmt::Debug,
 {

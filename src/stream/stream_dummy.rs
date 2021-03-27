@@ -9,7 +9,7 @@ use super::StreamClone;
 // use super::StreamPostClipTrait;
 // use super::StreamPreClipTrait;
 // use super::StreamSimpleNode;
-// use super::StreamSrc;
+// use super::StreamDst;
 // use crate::clip::ClipTraitRaw;
 // use crate::projection::resample::resample::Resample;
 // use crate::projection::resample::resample_none::ResampleNone;
@@ -78,7 +78,7 @@ where
 // where
 //     T: CoordFloat + FloatConst + 'static,
 // {
-//     type SpostctStream = StreamSrc<T>;
+//     type SpostctStream = StreamDst<T>;
 //     fn stream_in(&mut self, _stream: Self::SpostctStream) {
 //         panic!("call method on StreamDummy");
 //     }

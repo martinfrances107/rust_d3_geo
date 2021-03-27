@@ -11,7 +11,7 @@ use crate::point_equal::point_equal;
 use crate::stream::Stream;
 use crate::stream::StreamClean;
 use crate::stream::StreamSourceDummy;
-use crate::stream::StreamSrc;
+use crate::stream::StreamDst;
 use crate::stream::{Clean, CleanEnum};
 
 #[derive(Clone, Debug)]
@@ -43,7 +43,7 @@ where
             point0: None,
             small_radius: false,
             // stream: Resample::default(), // initial stub
-            stream: LineSinkEnum::CSE(ClipSinkEnum::Src(StreamSrc::SRC(
+            stream: LineSinkEnum::CSE(ClipSinkEnum::Src(StreamDst::SRC(
                 StreamSourceDummy::default(),
             ))),
             v0: false,

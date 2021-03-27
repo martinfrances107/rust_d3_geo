@@ -21,7 +21,7 @@ use crate::clip::clip::Clip;
 use crate::clip::ClipRaw;
 use crate::compose::Compose;
 use crate::stream::Stream;
-// use crate::stream::StreamSrc;
+// use crate::stream::StreamDst;
 use crate::Transform;
 use crate::TransformClone;
 
@@ -85,7 +85,7 @@ where
 {
     // type SRTsci = Box<
     //     dyn StreamPostClipTrait<
-    //         SpostctStream = StreamSrc,
+    //         SpostctStream = StreamDst,
     //         C = Coordinate<T>,
     //         SctC = Coordinate<T>,
     //         SctT = T,
