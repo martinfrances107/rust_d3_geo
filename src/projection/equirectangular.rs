@@ -16,7 +16,7 @@ pub struct EquirectangularRaw<T> {
 
 impl<T> EquirectangularRaw<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     pub fn gen_projection_mutator() -> ProjectionMutator<T> {
         let e = ProjectionRawEnum::E(EquirectangularRaw::default());

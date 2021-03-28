@@ -16,7 +16,7 @@ where
 
 // impl<T> Default for StreamIdentity<T>
 // where
-//     T: CoordFloat + FloatConst + Default,
+//     T: CoordFloat + Default + FloatConst,
 // {
 //     #[inline]
 //     fn default() -> Self {
@@ -28,7 +28,7 @@ where
 
 impl<T> Stream<T> for StreamIdentity<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     type C = Coordinate<T>;
 

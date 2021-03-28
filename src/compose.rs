@@ -13,7 +13,7 @@ use crate::Transform;
 #[derive(Clone, Debug)]
 pub enum ComposeElemEnum<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     PRE(ProjectionRawEnum<T>),
     STR(ScaleTranslateRotateEnum<T>),
@@ -23,7 +23,7 @@ where
     RPG(RotationPhiGamma<T>),
 }
 
-impl<T: AddAssign + CoordFloat + FloatConst + Default> Transform for ComposeElemEnum<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for ComposeElemEnum<T> {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
         match self {
@@ -50,7 +50,7 @@ impl<T: AddAssign + CoordFloat + FloatConst + Default> Transform for ComposeElem
 #[derive(Clone, Debug)]
 pub struct Compose<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     pub a: ComposeElemEnum<T>,
     pub b: ComposeElemEnum<T>,
@@ -58,7 +58,7 @@ where
 
 impl<T> Default for Compose<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -68,14 +68,14 @@ where
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default> Compose<T> {
+impl<T: CoordFloat + Default + FloatConst> Compose<T> {
     #[inline]
     pub fn new(a: ComposeElemEnum<T>, b: ComposeElemEnum<T>) -> Compose<T> {
         Compose::<T> { a: a, b: b }
     }
 }
 
-impl<T: AddAssign + CoordFloat + FloatConst + Default> Transform for Compose<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for Compose<T> {
     type TcC = Coordinate<T>;
     // Apply A then B.
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {

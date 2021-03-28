@@ -20,7 +20,7 @@ use crate::stream::StreamDst;
 #[derive(Clone, Debug)]
 pub struct Clip<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     raw: ClipRaw<T>,
     base: ClipBase<T>,
@@ -28,7 +28,7 @@ where
 
 impl<T> Clip<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     // #[inline]
     // fn new(raw: ClipRaw<T>, start: Coordinate<T>) -> Self {
@@ -45,7 +45,7 @@ where
 
 impl<T> Clip<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     pub fn new(raw: ClipRaw<T>, start: Coordinate<T>) -> Self {
         // let mut line = raw.line.clone();
@@ -115,7 +115,7 @@ where
 
 impl<T> Stream<T> for Clip<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type C = Coordinate<T>;
     fn get_dst(&self) -> StreamDst<T> {

@@ -26,7 +26,7 @@ where
 
 impl<T> OrthographicRaw<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     pub fn gen_projection_mutator() -> ProjectionMutator<T> {
         let o = ProjectionRawEnum::O(OrthographicRaw::default());
@@ -59,7 +59,7 @@ where
     }
 }
 
-impl<T: AddAssign + CoordFloat + FloatConst + Default> Transform for OrthographicRaw<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for OrthographicRaw<T> {
     type TcC = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

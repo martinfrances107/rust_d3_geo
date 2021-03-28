@@ -36,7 +36,7 @@ where
 
 // impl<'a, T> TransformClone<'a> for ProjectionRawEnum<T>
 // where
-//     T: CoordFloat + FloatConst + Default,
+//     T: CoordFloat + Default + FloatConst,
 // {
 //     fn box_clone(&self, p: &'a Self::TcC) -> Self::TcC {
 //         match self {
@@ -50,7 +50,7 @@ where
 
 impl<T> Transform for ProjectionRawEnum<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {

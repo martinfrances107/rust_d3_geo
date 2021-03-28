@@ -12,14 +12,14 @@ use crate::stream::StreamDst;
 use crate::Transform;
 
 #[derive(Clone, Debug)]
-pub struct StreamTransform<T: CoordFloat + FloatConst + Default> {
+pub struct StreamTransform<T: CoordFloat + Default + FloatConst> {
     pub transform: RotateRadiansEnum<T>,
     pub stream: Clip<T>,
 }
 
 impl<'a, T> Default for StreamTransform<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -29,14 +29,14 @@ where
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default> StreamTransform<T> {
+impl<T: CoordFloat + Default + FloatConst> StreamTransform<T> {
     #[inline]
     pub fn stream_in(&mut self, stream: Clip<T>) {
         self.stream = stream;
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default> StreamTransform<T> {
+impl<T: CoordFloat + Default + FloatConst> StreamTransform<T> {
     #[inline]
     pub fn new(transform_in: Option<RotateRadiansEnum<T>>) -> StreamTransform<T> {
         {
@@ -59,7 +59,7 @@ impl<T: CoordFloat + FloatConst + Default> StreamTransform<T> {
     }
 }
 
-impl<'a, T: AddAssign + CoordFloat + FloatConst + Default> Transform for StreamTransform<T> {
+impl<'a, T: AddAssign + CoordFloat + Default + FloatConst> Transform for StreamTransform<T> {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
         self.transform.transform(p)
@@ -69,7 +69,7 @@ impl<'a, T: AddAssign + CoordFloat + FloatConst + Default> Transform for StreamT
     }
 }
 
-impl<'a, T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for StreamTransform<T> {
+impl<'a, T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for StreamTransform<T> {
     type C = Coordinate<T>;
 
     #[inline]

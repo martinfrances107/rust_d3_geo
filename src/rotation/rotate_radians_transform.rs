@@ -18,7 +18,7 @@ use super::rotation_phi_gamma::RotationPhiGamma;
 #[derive(Clone)]
 pub enum RotateRadiansEnum<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     C(Box<Compose<T>>),
     RL(RotationLambda<T>),
@@ -28,7 +28,7 @@ where
 
 impl<T> Debug for RotateRadiansEnum<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
@@ -56,7 +56,7 @@ where
 
 impl<T> Transform for RotateRadiansEnum<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
@@ -83,14 +83,14 @@ where
 
 // impl<'a, T> TransformClone<'a> for RotateRadiansEnum<'a, T>
 // where
-//     T: CoordFloat + FloatConst + Default,
+//     T: CoordFloat + Default + FloatConst,
 // {
 //     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
 //         self.box_clone()
 //     }
 // }
 
-pub fn rotate_radians_transform<T: CoordFloat + FloatConst + Default>(
+pub fn rotate_radians_transform<T: CoordFloat + Default + FloatConst>(
     delta_lambda_p: T,
     delta_phi: T,
     delta_gamma: T,

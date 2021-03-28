@@ -23,7 +23,7 @@ mod area_test {
     use std::ops::AddAssign;
 
     #[inline]
-    fn equirectangular<'a, T: AddAssign + CoordFloat + FloatConst + Default>(
+    fn equirectangular<'a, T: AddAssign + CoordFloat + Default + FloatConst>(
     ) -> ProjectionMutator<T> {
         EquirectangularRaw::gen_projection_mutator()
             .scale(T::from(900f64 / PI).unwrap())

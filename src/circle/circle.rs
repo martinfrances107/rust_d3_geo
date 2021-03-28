@@ -14,14 +14,14 @@ use crate::TransformIdentity;
 
 /// Output of CircleGenertor::circle()
 #[derive(Debug)]
-pub struct CircleStream<T: CoordFloat + FloatConst + Default> {
+pub struct CircleStream<T: CoordFloat + Default + FloatConst> {
     pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
     pub rotate: RotateRadiansEnum<T>,
     pub ring: Vec<Coordinate<T>>,
 }
 
-impl<T: CoordFloat + FloatConst + Default> Default for CircleStream<T> {
+impl<T: CoordFloat + Default + FloatConst> Default for CircleStream<T> {
     fn default() -> Self {
         Self {
             stream_type: StreamType::Polygon,
@@ -33,7 +33,7 @@ impl<T: CoordFloat + FloatConst + Default> Default for CircleStream<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default> Clone for CircleStream<T> {
+impl<T: CoordFloat + Default + FloatConst> Clone for CircleStream<T> {
     fn clone(&self) -> CircleStream<T> {
         CircleStream::<T> {
             stream_type: self.stream_type.clone(),
@@ -44,7 +44,7 @@ impl<T: CoordFloat + FloatConst + Default> Clone for CircleStream<T> {
     }
 }
 
-impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for CircleStream<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for CircleStream<T> {
     type C = Coordinate<T>;
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         let p = p.clone();

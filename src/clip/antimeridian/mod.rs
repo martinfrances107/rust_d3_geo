@@ -20,14 +20,14 @@ use crate::clip::ClipRaw;
 #[derive(Clone, Default, Debug)]
 pub struct ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     pub base: ClipBase<T>,
 }
 
 impl<T> ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     #[inline]
     pub fn gen_clip() -> Clip<T> {
@@ -41,7 +41,7 @@ where
 
 // impl<T> ClipAntimeridian<T>
 // where
-//     T: CoordFloat + FloatConst + Default + 'static,
+//     T: CoordFloat + Default + FloatConst + 'static,
 // {
 //     pub fn new() -> Self {
 //         // Use the antimeridian Line version.
@@ -71,7 +71,7 @@ where
 
 impl<T> Clean for ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     /// A clip trait.
     /// Rejoin first and last segments if there were intersections and the first
@@ -83,7 +83,7 @@ where
 
 impl<T> ClipTraitRaw<T> for ClipAntimeridian<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;

@@ -18,7 +18,7 @@ use super::ClipTraitRaw;
 #[derive(Clone, Debug)]
 pub struct ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     radius: T,
     small_radius: bool,
@@ -31,7 +31,7 @@ where
 use std::fmt::Debug;
 impl<T> ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + Default + Debug,
+    T: CoordFloat + Default + FloatConst + Debug,
 {
     pub fn gen_clip(radius: T) -> Clip<T> {
         let cr = radius.cos();
@@ -63,14 +63,14 @@ where
 
 // impl<T> Stream<T> for ClipCircle<T>
 // where
-//     T: CoordFloat + FloatConst + Default,
+//     T: CoordFloat + Default + FloatConst,
 // {
 //     type C = Coordinate<T>;
 // }
 
 // impl<T> StreamPreClipTrait for ClipCircle<T>
 // where
-//     T: CoordFloat + FloatConst + Default + 'static,
+//     T: CoordFloat + Default + FloatConst + 'static,
 // {
 //     type SpctResample = ResampleEnum<T>;
 //     // type SPCTstream = StreamSimpleNode<T>;
@@ -95,7 +95,7 @@ where
 // }
 impl<T> ClipTraitRaw<T> for ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;
@@ -122,7 +122,7 @@ where
 
 // fn gen_clip_circle<T>(radius: T) -> Clip<T>
 // where
-//     T: CoordFloat + FloatConst + Default,
+//     T: CoordFloat + Default + FloatConst,
 // {
 //     let cr = radius.cos();
 //     let smallRadius = cr > T::zero();

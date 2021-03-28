@@ -24,7 +24,7 @@ where
 
 impl<T> StereographicRaw<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     pub fn gen_projection_mutator() -> ProjectionMutator<T> {
         // let s: Rc<Box<dyn Transform<TcC = Coordinate<T>>>> =
@@ -39,7 +39,7 @@ where
     #[inline]
     fn angle(z: T) -> T
     where
-        T: CoordFloat + FloatConst + Default,
+        T: CoordFloat + Default + FloatConst,
     {
         // Find a way to optimize this ... need a static of type T with value 2.
         T::from(2).unwrap() * z.atan()
@@ -71,7 +71,7 @@ where
 //     }
 // }
 
-impl<T: AddAssign + CoordFloat + FloatConst + Default> Transform for StereographicRaw<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for StereographicRaw<T> {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();

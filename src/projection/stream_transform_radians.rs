@@ -11,7 +11,7 @@ use super::stream_transform::StreamTransform;
 
 pub trait StreamTransformIn<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     fn stream_transform_in(&mut self, stream: StreamTransform<T>);
 }
@@ -36,13 +36,13 @@ where
 // }
 
 #[derive(Clone, Debug)]
-pub struct StreamTransformRadians<T: CoordFloat + FloatConst + Default> {
+pub struct StreamTransformRadians<T: CoordFloat + Default + FloatConst> {
     stream: StreamTransform<T>,
 }
 
 impl<T> Default for StreamTransformRadians<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -53,7 +53,7 @@ where
 
 impl<T> StreamTransformRadians<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     #[inline]
     pub fn stream_in(&mut self, stream: StreamTransform<T>) {
@@ -61,7 +61,7 @@ where
     }
 }
 
-impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for StreamTransformRadians<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for StreamTransformRadians<T> {
     type C = Coordinate<T>;
 
     #[inline]

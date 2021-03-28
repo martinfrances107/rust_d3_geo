@@ -78,7 +78,7 @@ where
 
 pub trait Stream<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     type C;
     fn point(&mut self, _p: &Self::C, _m: Option<u8>) {}

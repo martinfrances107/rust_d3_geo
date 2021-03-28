@@ -28,7 +28,7 @@ use std::rc::Rc;
 
 pub struct CircleGenerator<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     // pub center: Box<dyn Fn(&CircleInArg) -> Coordinate<T> + 'a>,
     // pub precision: Box<dyn Fn(&CircleInArg) -> T + 'a>,
@@ -40,7 +40,7 @@ where
 
 impl<T> Default for CircleGenerator<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -57,7 +57,7 @@ where
 
 impl<T> CircleGenerator<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     pub fn circle(&self) -> CircleStream<T> {
         let c = self.center;
@@ -84,7 +84,7 @@ where
 
 impl<T> CircleTrait<T> for CircleGenerator<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     fn center(mut self, center: Coordinate<T>) -> CircleGenerator<T> {
         self.center = center;

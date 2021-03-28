@@ -41,7 +41,7 @@ pub struct CentroidStream<T: CoordFloat + Default> {
     line_end_fn: fn(&mut Self),
 }
 
-impl<T: CoordFloat + FloatConst + Default + AddAssign> Default for CentroidStream<T> {
+impl<T: CoordFloat + Default + FloatConst + AddAssign> Default for CentroidStream<T> {
     fn default() -> Self {
         return Self {
             W0: T::zero(),

@@ -22,7 +22,7 @@ pub struct LengthStream<T: CoordFloat + FloatConst> {
     cos_phi0: T,
 }
 
-impl<T: CoordFloat + FloatConst + Default> Default for LengthStream<T> {
+impl<T: CoordFloat + Default + FloatConst> Default for LengthStream<T> {
     fn default() -> Self {
         return Self {
             // sphere_fn: Self::noop,

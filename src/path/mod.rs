@@ -101,7 +101,7 @@ where
 
 pub struct Path<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     context: Option<CanvasRenderingContext2d>,
     context_stream: Option<Box<dyn PointRadiusTrait<PrtT = T>>>,
@@ -113,7 +113,7 @@ where
 fn projection_stream_noop() {}
 impl<T> Default for Path<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     #[inline]
     fn default() -> Self {

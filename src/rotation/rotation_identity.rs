@@ -11,7 +11,7 @@ use crate::Transform;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct RotationIdentity<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     phantom: PhantomData<T>,
 }
@@ -34,7 +34,7 @@ fn normalise<'a, T: CoordFloat + FloatConst>(p: &'a Coordinate<T>) -> Coordinate
     Coordinate { x, y: phi }
 }
 
-impl<T: CoordFloat + FloatConst + Default> Transform for RotationIdentity<T> {
+impl<T: CoordFloat + Default + FloatConst> Transform for RotationIdentity<T> {
     type TcC = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

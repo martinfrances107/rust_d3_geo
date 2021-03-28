@@ -48,7 +48,7 @@ where
 
 impl<T> Clone for Resample<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     fn clone(&self) -> Self {
         Self {
@@ -61,7 +61,7 @@ where
 
 impl<T> Default for Resample<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     fn default() -> Resample<T> {
         Self {
@@ -99,7 +99,7 @@ where
 
 impl<T> Resample<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     pub fn new(project: Compose<T>) -> Self {
         Self {
@@ -125,7 +125,7 @@ where
 
 impl<T> Resample<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     #[inline]
 
@@ -292,7 +292,7 @@ where
 
 impl<T> Stream<T> for Resample<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type C = Coordinate<T>;
 

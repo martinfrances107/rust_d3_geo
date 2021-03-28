@@ -30,7 +30,7 @@ use super::scale_translate_rotate::ScaleTranslateRotate;
 use super::ProjectionRawEnum;
 
 #[derive(Clone, Debug)]
-pub struct ProjectionMutator<T: CoordFloat + FloatConst + Default> {
+pub struct ProjectionMutator<T: CoordFloat + Default + FloatConst> {
     project: ProjectionRawEnum<T>,
     alpha: T, // post-rotate angle
     // cache: Option<
@@ -65,7 +65,7 @@ pub struct ProjectionMutator<T: CoordFloat + FloatConst + Default> {
 
 impl<T> Default for ProjectionMutator<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
         ProjectionMutator::from_projection_raw(
@@ -74,7 +74,7 @@ where
         )
     }
 }
-impl<T: AddAssign + CoordFloat + FloatConst + Default> ProjectionMutator<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> ProjectionMutator<T> {
     pub fn from_projection_raw(
         project: ProjectionRawEnum<T>,
         delta2_p: Option<T>,
@@ -202,7 +202,7 @@ impl<T: AddAssign + CoordFloat + FloatConst + Default> ProjectionMutator<T> {
 
 impl<T> Transform for ProjectionMutator<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
@@ -223,7 +223,7 @@ where
 
 impl<T> Projection<T> for ProjectionMutator<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     // #[inline]
     // fn get_preclip(&self) -> StreamPreClipNode<T> {

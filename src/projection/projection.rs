@@ -12,7 +12,7 @@ pub enum StreamOrValueMaybe<T: CoordFloat> {
 
 use crate::projection::projection_mutator::ProjectionMutator;
 
-pub trait Projection<T: CoordFloat + FloatConst + Default> {
+pub trait Projection<T: CoordFloat + Default + FloatConst> {
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.

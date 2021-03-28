@@ -3,7 +3,7 @@ use num_traits::FloatConst;
 
 use super::Stream;
 
-pub fn line_processor<T: CoordFloat + FloatConst + Default>(
+pub fn line_processor<T: CoordFloat + Default + FloatConst>(
     coordinates: &[Coordinate<T>],
     stream: &mut impl Stream<T, C = Coordinate<T>>,
     closed: usize,

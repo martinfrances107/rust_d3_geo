@@ -19,7 +19,7 @@ use super::intersect::intersect;
 #[derive(Clone, Debug)]
 pub struct Line<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     clean: CleanEnum,
     lambda0: T,
@@ -31,7 +31,7 @@ where
 
 // impl<T> Clone for Line<T>
 // where
-//     T: CoordFloat + FloatConst + Default + 'static,
+//     T: CoordFloat + Default + FloatConst + 'static,
 // {
 //     fn clone(&self) -> Self {
 //         Self {
@@ -43,7 +43,7 @@ where
 
 impl<T> Default for Line<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -59,7 +59,7 @@ where
 }
 // impl<T> StreamClipLine for Line<T>
 // where
-//     T: CoordFloat + FloatConst + Default,
+//     T: CoordFloat + Default + FloatConst,
 // {
 //     // #[inline]
 //     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
@@ -98,7 +98,7 @@ where
 
 impl<T> Clean for Line<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     #[inline]
     fn clean(&self) -> CleanEnum {
@@ -111,8 +111,8 @@ where
     }
 }
 
-impl<T> StreamClean<T> for Line<T> where T: AddAssign + CoordFloat + FloatConst + Default {}
-impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for Line<T> {
+impl<T> StreamClean<T> for Line<T> where T: AddAssign + CoordFloat + Default + FloatConst {}
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
     type C = Coordinate<T>;
     fn sphere(&mut self) {
         todo!("is this called")

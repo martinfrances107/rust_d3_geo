@@ -13,7 +13,7 @@ use crate::Transform;
 #[derive(Debug)]
 pub struct ResampleNone<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     project: Compose<T>,
     /// Box to prevent infinite recusion.
@@ -22,7 +22,7 @@ where
 
 impl<T> Clone for ResampleNone<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     #[inline]
     fn clone(&self) -> Self {
@@ -33,7 +33,7 @@ where
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default> ResampleNone<T> {
+impl<T: CoordFloat + Default + FloatConst> ResampleNone<T> {
     #[inline]
     pub fn new(project: Compose<T>) -> Self {
         Self {
@@ -46,14 +46,14 @@ impl<T: CoordFloat + FloatConst + Default> ResampleNone<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default> ResampleNone<T> {
+impl<T: CoordFloat + Default + FloatConst> ResampleNone<T> {
     #[inline]
     pub fn stream_in(&mut self, stream: Clip<T>) {
         self.stream = Box::new(stream);
     }
 }
 
-impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for ResampleNone<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for ResampleNone<T> {
     type C = Coordinate<T>;
     #[inline]
     fn get_dst(&self) -> StreamDst<T> {

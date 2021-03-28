@@ -16,12 +16,12 @@ use crate::Transform;
 // }
 pub struct Rotation<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     rotate: RotateRadiansEnum<T>,
 }
 
-impl<'a, T: 'a + CoordFloat + FloatConst + Default> Rotation<T> {
+impl<'a, T: 'a + CoordFloat + Default + FloatConst> Rotation<T> {
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
         return Self {
             rotate: rotate_radians_transform(
@@ -33,7 +33,7 @@ impl<'a, T: 'a + CoordFloat + FloatConst + Default> Rotation<T> {
     }
 }
 
-impl<T: AddAssign + CoordFloat + FloatConst + Default> Transform for Rotation<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for Rotation<T> {
     type TcC = Coordinate<T>;
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.transform(&Coordinate {

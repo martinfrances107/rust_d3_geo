@@ -16,7 +16,7 @@ use crate::stream::StreamSourceDummy;
 use crate::stream::{Clean, CleanEnum};
 
 #[derive(Clone, Debug)]
-pub struct Line<T: CoordFloat + FloatConst + Default> {
+pub struct Line<T: CoordFloat + Default + FloatConst> {
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
     radius: T,
@@ -32,7 +32,7 @@ pub struct Line<T: CoordFloat + FloatConst + Default> {
 
 impl<T> Default for Line<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -66,7 +66,7 @@ where
 
 // impl<T> Clone for Line<T>
 // where
-//     T: CoordFloat + FloatConst + Default + 'static,
+//     T: CoordFloat + Default + FloatConst + 'static,
 // {
 //     fn clone(&self) -> Self {
 //         Self {
@@ -78,7 +78,7 @@ where
 
 // impl<'a, T> StreamClipLine for Line<'a, T>
 // where
-//     T: CoordFloat + FloatConst + Default,
+//     T: CoordFloat + Default + FloatConst,
 // {
 //     // #[inline]
 //     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
@@ -89,7 +89,7 @@ where
 //     // }
 // }
 
-impl<T: CoordFloat + FloatConst + Default> Line<T> {
+impl<T: CoordFloat + Default + FloatConst> Line<T> {
     #[inline]
     pub fn new(radius: T) -> Self {
         // TODO small_radius, rc  is a shadow variables!!!
@@ -148,10 +148,10 @@ impl<T: CoordFloat + FloatConst + Default> Line<T> {
         return code;
     }
 }
-impl<T> StreamClean<T> for Line<T> where T: AddAssign + CoordFloat + FloatConst + Default {}
+impl<T> StreamClean<T> for Line<T> where T: AddAssign + CoordFloat + Default + FloatConst {}
 impl<T> Clean for Line<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
@@ -170,7 +170,7 @@ where
     }
 }
 
-impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for Line<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
     type C = Coordinate<T>;
     fn sphere(&mut self) {}
     fn polygon_start(&mut self) {}
