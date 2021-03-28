@@ -4,7 +4,6 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 // use crate::path::PathResultEnum;
-// use crate::stream::stream_clip_line_node_stub::StreamClipLineNodeStub;
 // use crate::stream::stream_path_result_node_stub::StreamPathResultNodeStub;
 use crate::stream::Stream;
 // use crate::stream::StreamClipLine;

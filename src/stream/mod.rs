@@ -12,7 +12,6 @@ mod polygon;
 mod rect;
 mod triangle;
 
-pub mod stream_clip_line_node_stub;
 pub mod stream_dummy;
 pub mod stream_identity;
 pub mod stream_node_stub;
