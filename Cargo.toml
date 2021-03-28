@@ -8,6 +8,7 @@ edition = "2018"
 num-traits="0.2.14"
 geo="0.17.0"
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
+derivative = "2.2.0"
 
 [dev-dependencies]
 pretty_assertions = "0.7.1"
