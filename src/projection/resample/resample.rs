@@ -3,29 +3,14 @@ use std::ops::AddAssign;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-// use crate::stream::StreamClone;
 use crate::clip::clip::Clip;
-// use crate::stream::StreamPostClipTrait;
-// use crate::stream::StreamResampleNode;
-// use crate::stream::StreamResampleTrait;
-// use super::StreamResampleTrait;
 use crate::cartesian::cartesian;
 use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::ClipRaw;
 use crate::stream::StreamDst;
-// use crate::stream::stream_dummy::StreamDummy;
 use crate::stream::Stream;
-
-// use crate::math::epsilon;
-// use super::resample_none::ResampleNone;
-// use super::ResampleEnum;
-// use crate::stream::CompareIntersection;
-// use crate::stream::StreamSimpleNode;
-// use crate::stream::StreamDst;
 use crate::compose::Compose;
 use crate::Transform;
-use crate::TransformClone;
-use crate::TransformIdentity;
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
 #[derive(Debug)]
@@ -33,7 +18,6 @@ pub struct Resample<T>
 where
     T: CoordFloat + Default + FloatConst,
 {
-    // pub project: Box<dyn TransformClone<'a, TcC = Coordinate<T>>>,
     pub project: Compose<T>,
     pub delta2: T,
 
@@ -54,17 +38,6 @@ where
     pub c0: T,
 
     pub cos_min_distance: T,
-    // pub stream: Box<
-    //     dyn StreamPostClipTrait<
-    //         SpostctStream = StreamDst<T>,
-    //         C = Coordinate<T>,
-    //         SctC = Coordinate<T>,
-    //         SctT = T,
-    //         SctOC = Option<Coordinate<T>>,
-    //         SctCi = CompareIntersection<T>,
-    //         SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-    //     >,
-    // >,
 
     // Box here prevents recurson.
     pub stream: Box<Clip<T>>,
@@ -92,7 +65,6 @@ where
 {
     fn default() -> Resample<T> {
         Self {
-            // project: Box::new(TransformIdentity::<T>::default()),
             project: Compose::default(),
             delta2: T::zero(),
 
@@ -136,51 +108,6 @@ where
         }
     }
 }
-
-// impl<T> StreamClone for Resample<T>
-// where
-//     T: CoordFloat + FloatConst + 'static,
-// {
-//     type C = Coordinate<T>;
-//     fn box_clone(
-//         &self,
-//     ) -> Box<dyn StreamResampleTrait<C = Coordinate<T>, SRTsci = StreamPostClipNode<T>>> {
-//         Box::new(*self.clone())
-//     }
-// }
-
-// impl<T> StreamResampleTrait for Resample<T>
-// where
-//     T: CoordFloat + FloatConst + Default + 'static,
-// {
-//     type SRTsci = Box<
-//         dyn StreamPostClipTrait<
-//             SpostctStream = StreamDst<T>,
-//             C = Coordinate<T>,
-//             SctC = Coordinate<T>,
-//             SctT = T,
-//             SctOC = Option<Coordinate<T>>,
-//             SctCi = CompareIntersection<T>,
-//             SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-//         >,
-//     >;
-//     fn stream_postclip_in(
-//         &mut self,
-//         _stream_clip_in: Box<
-//             dyn StreamPostClipTrait<
-//                 SpostctStream = StreamDst<T>,
-//                 C = Coordinate<T>,
-//                 SctC = Coordinate<T>,
-//                 SctT = T,
-//                 SctOC = Option<Coordinate<T>>,
-//                 SctCi = CompareIntersection<T>,
-//                 SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-//             >,
-//         >,
-//     ) {
-//         panic!("Must override.");
-//     }
-// }
 
 impl<T> Resample<T>
 where
@@ -259,8 +186,6 @@ where
         self.a0 = c[0];
         self.b0 = c[1];
         self.c0 = c[2];
-        // let s_p = self.stream.as_ref();
-        // let mut s = s_p.borrow_mut();
         self.resample_line_to(
             self.x0,
             self.y0,
@@ -351,44 +276,19 @@ where
                 {
                     a = a / m;
                     b = b / m;
-                    // let stream_p: RefCell<_> = RefCell::new(stream);
-                    // let self_p: RefCell<_> = RefCell::new(self);
-                    // {
-                    // let mut s = stream.borrow_mut();
-                    // let self_p1 = self_p.borrow_mut();
-                    // &*project_ptr.borrow();
                     let s = stream;
                     self.resample_line_to(
                         x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth, s,
                     );
-                    // }
-                    // {
-                    // let mut s2 = stream.borrow_mut();
-                    // s2.borrow_mut().point(x2, y2, None);
-                    // }
-                    // {
-                    // let mut s3 = stream_p.borrow_mut();
-                    // let self_p2 = self_p.borrow_mut();
 
-                    // self.resample_line_to(
-                    //     x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, stream,
-                    // );
-                    // }
+                    self.resample_line_to(
+                        x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, s );
+                    
                 }
             }
         }
     }
 }
-// impl<'a, T> StreamClone for Resample<'a, T>
-// where
-//     T: 'a + CoordFloat + FloatConst + Default,
-// {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(self.clone())
-//     }
-// }
 
 impl<T> Stream<T> for Resample<T>
 where
@@ -420,7 +320,6 @@ where
 
     fn line_start(&mut self) {
         if self.use_line_start {
-            // let mut stream = self.stream.borrow_mut();
             self.x0 = T::nan();
             self.use_line_point = true;
             self.stream.line_start();
@@ -432,7 +331,6 @@ where
     fn line_end(&mut self) {
         match self.use_line_end {
             true => {
-                // let mut stream = self.stream.borrow_mut();
                 self.use_line_point = false;
                 self.stream.line_end();
             }
