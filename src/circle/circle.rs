@@ -7,7 +7,6 @@ use num_traits::FloatConst;
 use super::StreamType;
 use crate::stream::Stream;
 use crate::stream::StreamDst;
-// use crate::stream::StreamClone;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
 use crate::Transform;
@@ -44,14 +43,6 @@ impl<T: CoordFloat + FloatConst + Default> Clone for CircleStream<T> {
         }
     }
 }
-
-// impl<T: CoordFloat + FloatConst + Default + 'static> StreamClone for CircleStream<T> {
-//     // type C = Coordinate<T>;
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(self.clone())
-//     }
-// }
 
 impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for CircleStream<T> {
     type C = Coordinate<T>;

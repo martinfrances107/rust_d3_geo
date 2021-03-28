@@ -6,7 +6,6 @@ use num_traits::FloatConst;
 
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
-use crate::stream::StreamClone;
 use crate::stream::{Clean, CleanEnum};
 
 // use super::buffer::ClipBuffer;
@@ -67,18 +66,6 @@ where
 //                 ..ClipBase::default()
 //             },
 //         }
-//     }
-// }
-
-// impl<T> StreamClone for ClipAntimeridian<T>
-// where
-//     T: CoordFloat + FloatConst + Default,
-// {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
-//         // Box::new(*self.clone())
-//         panic!("must fix.")
 //     }
 // }
 

@@ -1,5 +1,4 @@
 use super::stream::Stream;
-use super::stream::StreamClone;
 use crate::stream::StreamDst;
 use crate::stream::Streamable;
 use derivative::Derivative;
@@ -86,14 +85,6 @@ impl<T: CoordFloat + Default + FloatConst> LengthStream<T> {
     fn point_noop(&mut self, _p: &Coordinate<T>) {}
     fn line_end_noop(&mut self) {}
 }
-
-// impl<T: CoordFloat + FloatConst> StreamClone for LengthStream<T> {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(self.clone())
-//     }
-// }
 
 impl<T: CoordFloat + Default + FloatConst> Stream<T> for LengthStream<T> {
     type C = Coordinate<T>;

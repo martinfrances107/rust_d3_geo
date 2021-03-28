@@ -27,17 +27,6 @@ where
 //     }
 // }
 
-// impl<T> StreamClone for StreamIdentity<T>
-// where
-//     T: CoordFloat + FloatConst + Default,
-// {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(StreamIdentity::<T>::default())
-//     }
-// }
-
 impl<T> Stream<T> for StreamIdentity<T>
 where
     T: CoordFloat + FloatConst + Default,

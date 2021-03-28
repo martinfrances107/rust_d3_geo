@@ -211,13 +211,7 @@ impl<T: CoordFloat + FloatConst + AddAssign + Default> CentroidStream<T> {
         return Point::new(y.atan2(x).to_degrees(), (z / m).asin().to_degrees());
     }
 }
-// impl<T: CoordFloat + FloatConst + AddAssign> StreamClone for CentroidStream<T> {
-//     // type C = Coordinate<T>;
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(self.clone())
-//     }
-// }
+
 impl<T: CoordFloat + FloatConst + AddAssign + Default> Stream<T> for CentroidStream<T> {
     type C = Coordinate<T>;
 

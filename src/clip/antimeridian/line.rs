@@ -8,7 +8,6 @@ use crate::stream::StreamDst;
 // use crate::stream::StreamClipLine;
 // use crate::stream::StreamClipLineNode;
 use crate::clip::ClipBuffer;
-// use crate::stream::StreamClone;
 // use crate::stream::StreamPathResult;
 // use crate::stream::StreamPathResultTrait;
 use crate::clip::ClipSinkEnum;
@@ -29,14 +28,6 @@ where
     // stream: Box<dyn StreamPathResult<C = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
     stream: LineSinkEnum<T>,
 }
-
-// impl<T: CoordFloat + FloatConst + Default + 'static> StreamClone for Line<T> {
-//     type RetType = Box<dyn StreamPathResult<C = Coordinate<T>, Out = PathResultEnum<T>>>;
-//     // fn box_clone(&self) -> Box<dyn StreamPathResult<C = Coordinate<T>, Out = PathResultEnum<T>>> {
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(self)
-//     }
-// }
 
 // impl<T> Clone for Line<T>
 // where

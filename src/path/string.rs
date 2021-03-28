@@ -84,17 +84,6 @@ where
     }
 }
 
-// impl<T> StreamClone for PathString<T>
-// where
-//     T: CoordFloat + FloatConst + std::fmt::Display,
-// {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(self.clone())
-//     }
-// }
-
 impl<T> Stream<T> for PathString<T>
 where
     T: CoordFloat + Default + FloatConst + std::fmt::Display,

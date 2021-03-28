@@ -57,11 +57,6 @@ pub trait Clean {
     }
 }
 
-pub trait StreamClone {
-    type RetType;
-    fn box_clone(&self) -> Self::RetType;
-}
-
 #[derive(Clone, Default, Debug)]
 pub struct StreamSourceDummy<T>
 where

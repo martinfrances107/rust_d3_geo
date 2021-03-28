@@ -1,6 +1,5 @@
 use crate::path::PathResultEnum;
 use crate::stream::Stream;
-use crate::stream::StreamClone;
 use crate::stream::StreamDst;
 // use crate::stream::StreamPathResult;
 use crate::path::PathResult;
@@ -77,17 +76,6 @@ where
 // {
 //     #[inline]
 //     fn box_clone(&self) -> Box<dyn StreamPathResult<C = Self::C, Out = Self::Out>> {
-//         Box::new(self.clone())
-//     }
-// }
-
-// impl<T> StreamClone for ClipBuffer<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
 //         Box::new(self.clone())
 //     }
 // }

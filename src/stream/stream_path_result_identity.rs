@@ -7,7 +7,6 @@ use crate::path::PathResult;
 use crate::path::PathResultEnum;
 
 use super::Stream;
-// use super::StreamClone;
 // use super::StreamInTrait;
 // use super::StreamPathResult;
 
@@ -28,17 +27,6 @@ where
 //     T: CoordFloat + FloatConst,
 // {
 //     fn box_clone(&self) -> Box<dyn StreamPathResult<C = Self::C, Out = Self::Out>> {
-//         Box::new(self.clone())
-//     }
-// }
-
-// impl<T> StreamClone for StreamPathResultIdentity<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
 //         Box::new(self.clone())
 //     }
 // }

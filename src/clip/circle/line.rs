@@ -64,14 +64,6 @@ where
 //     }
 // }
 
-// impl<T: CoordFloat + FloatConst + Default + 'static> StreamClone for Line<T> {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(*self.clone())
-//     }
-// }
-
 // impl<T> Clone for Line<T>
 // where
 //     T: CoordFloat + FloatConst + Default + 'static,

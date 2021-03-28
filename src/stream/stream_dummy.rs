@@ -5,7 +5,6 @@ use num_traits::FloatConst;
 
 // use super::CompareIntersection;
 use super::Stream;
-use super::StreamClone;
 // use super::StreamPostClipTrait;
 // use super::StreamPreClipTrait;
 // use super::StreamSimpleNode;
@@ -96,17 +95,6 @@ where
 //         >,
 //     > {
 //         panic!("calling box_clone on a dummy");
-//     }
-// }
-
-// impl<T> StreamClone for StreamDummy<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(self.clone())
 //     }
 // }
 

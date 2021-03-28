@@ -49,16 +49,6 @@ where
     }
 }
 
-// impl<T> StreamClone for PathContext<T>
-// where
-//     T: CoordFloat + FloatConst + AsPrimitive<f64>,
-// {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(self.clone())
-//     }
-// }
-
 impl<T> Stream<T> for PathContext<T>
 where
     T: CoordFloat + Default + FloatConst + AsPrimitive<f64>,

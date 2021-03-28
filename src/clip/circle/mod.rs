@@ -61,17 +61,6 @@ where
     }
 }
 
-// impl<T> StreamClone for ClipCircle<T>
-// where
-//     T: CoordFloat + FloatConst + Default,
-// {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(self.clone())
-//     }
-// }
-
 // impl<T> Stream<T> for ClipCircle<T>
 // where
 //     T: CoordFloat + FloatConst + Default,
