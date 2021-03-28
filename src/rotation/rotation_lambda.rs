@@ -3,7 +3,6 @@ use num_traits::FloatConst;
 
 // use crate::math::TAU;
 use crate::Transform;
-// use crate::TransformClone;
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct RotationLambda<T> {

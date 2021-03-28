@@ -7,7 +7,6 @@ use super::projection::Projection;
 use super::projection_mutator::ProjectionMutator;
 use super::ProjectionRawEnum;
 use crate::Transform;
-use crate::TransformClone;
 
 #[derive(Clone, Debug, Default)]
 pub struct EquirectangularRaw<T> {

@@ -2,7 +2,6 @@
 use geo::{CoordFloat, Coordinate};
 
 use crate::Transform;
-use crate::TransformClone;
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct RotationPhiGamma<T>

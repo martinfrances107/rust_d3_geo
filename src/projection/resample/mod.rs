@@ -25,7 +25,6 @@ use crate::compose::Compose;
 use crate::stream::Stream;
 use crate::stream::StreamDst;
 use crate::Transform;
-use crate::TransformClone;
 
 use super::resample::resample::Resample;
 use super::resample::resample_none::ResampleNone;

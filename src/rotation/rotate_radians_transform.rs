@@ -10,7 +10,6 @@ use num_traits::FloatConst;
 use crate::compose::Compose;
 use crate::compose::ComposeElemEnum;
 use crate::Transform;
-// use crate::TransformClone;
 
 use super::rotation_identity::RotationIdentity;
 use super::rotation_lambda::RotationLambda;

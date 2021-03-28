@@ -6,7 +6,6 @@ use num_traits::float::FloatConst;
 
 // use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
-// use crate::TransformClone;
 
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;

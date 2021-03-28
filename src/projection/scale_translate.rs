@@ -1,5 +1,4 @@
 use crate::Transform;
-// use crate::TransformClone;
 use geo::{CoordFloat, Coordinate};
 
 #[derive(Clone, Debug, Default)]

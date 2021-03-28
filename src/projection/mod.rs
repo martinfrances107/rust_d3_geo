@@ -19,7 +19,6 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::Transform;
-// use crate::TransformClone;
 
 use equirectangular::EquirectangularRaw;
 use orthographic::OrthographicRaw;

@@ -6,7 +6,6 @@ use num_traits::FloatConst;
 use super::rotate_radians_transform::rotate_radians_transform;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::Transform;
-use crate::TransformClone;
 
 // impl <T: CoordFloat> Clone for <dyn Transform<TcC=Coordinate<T>>>
 // {

@@ -2,7 +2,6 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::Transform;
-use crate::TransformClone;
 
 use super::scale_translate::ScaleTranslate;
 
