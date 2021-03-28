@@ -16,7 +16,6 @@ pub mod stream_dummy;
 pub mod stream_identity;
 pub mod stream_path_result_identity;
 
-
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 use std::fmt::Debug;
@@ -183,90 +182,11 @@ where
     }
 }
 
-// pub trait StreamInTrait<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {}
-// }
-
-// pub trait StreamClipLine: Stream<T> + Clean {
-//     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>>;
-// }
-
 pub trait StreamClean<T>: Stream<T> + Clean
 where
     T: CoordFloat + Default + FloatConst,
 {
 }
-
-// pub trait StreamPathResult<T>: Stream<T> + PathResult {
-//     fn box_clone(&self) -> Box<dyn StreamPathResult<T, C = Self::C, Out = Self::Out>>;
-// }
-
-// pub trait StreamPostClipTrait: ClipTraitRaw + Stream {
-//     type SpostctStream;
-//     fn stream_in(&mut self, _stream: Self::SpostctStream) {
-//         // No-op.
-//     }
-//     fn box_clone(
-//         &self,
-//     ) -> Box<
-//         dyn StreamPostClipTrait<
-//             SpostctStream = Self::SpostctStream,
-//             C = Self::C,
-//             SctC = Self::SctC,
-//             SctOC = Self::SctOC,
-//             SctT = Self::SctT,
-//             SctCi = Self::SctCi,
-//             SctStream = Self::SctStream,
-//         >,
-//     >;
-// }
-
-// pub type StreamClipLineNode<T> =
-//     Rc<RefCell<dyn StreamClipLine<T, C = Coordinate<T>>>>;
-// impl<T> StreamClone for StreamClipLineNode<T> where T: CoordFloat + FloatConst {
-
-//     type C = Coordinate<T>;
-//     #[inline]
-//     fn box_clone(&self) -> Box<dyn Stream<C = Coordinate<T>>> {
-//         Box::new(*self.clone())
-//     }
-// }
-
-// impl<T> Stream<T> for StreamClipLineNode<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//
-// }
-// impl<T> StreamInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
-// impl<T> BufferInTrait<T> for StreamClipLineNode<T> where T: CoordFloat + FloatConst {}
-
-// impl<T> BufferInTrait<T> for StreamClipLineNodeStub<T> where T: CoordFloat + FloatConst {}
-
-// pub trait StreamClone {
-//     type ScC;
-//     fn box_clone(&self) -> Box<dyn Self>;
-// }
-
-// use crate::projection::resample::resample;
-
-// pub type StreamResampleNode<T> = Box<dyn StreamResampleTrait<SRTsci = StreamPostClipNode<T>>>;
-
-// impl<T: 'static> StreamClone
-//     for Box<dyn StreamResampleTrait<C = Coordinate<T>, SRTsci = StreamPostClipNode<T>>>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     type C = Coordinate<T>;
-//     fn box_clone(
-//         &self,
-//     ) -> Box<dyn StreamResampleTrait<C = Coordinate<T>, SRTsci = StreamPostClipNode<T>>> {
-//         Box::new(*self.clone())
-//     }
-// }
 
 /// Ci CompareIntersections param type
 /// See StreamClipTrait.
@@ -282,95 +202,3 @@ where
 // Something that can be cloned and mutated.
 
 pub type StreamSimpleNode<T> = Box<dyn Stream<T, C = Coordinate<T>>>;
-// impl<T> Stream<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
-// impl<T> StreamInTrait<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
-// impl<T> StreamSimpleNode<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn new() -> StreamSimpleNode<T> {
-//         Rc::new(RefCell::new(StreamDummy::default()))
-//     }
-// }
-
-// pub type StreamPathResultNode<T> =
-// //     Rc<RefCell<dyn StreamPathResult<T, C = Coordinate<T>>>>;
-// impl<T> StreamClone for StreamPathResultNode<T> where T: CoordFloat + FloatConst {
-//     type C = Coordinate<T>;
-// }
-// impl<T> Stream<T> for StreamPathResultNode<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//
-// }
-// impl<T> StreamInTrait<T> for StreamPathResultNode<T> where T: CoordFloat + FloatConst {}
-
-// pub trait StreamPreClipTrait: ClipTraitRaw {
-//     type SpctResample;
-//     fn stream_resample_in(&mut self, stream: Self::SpctResample);
-
-//     fn box_clone(
-//         &self,
-//     ) -> Box<
-//         dyn StreamPreClipTrait<
-//             SctC = Self::SctC,
-//             SctCi = Self::SctCi,
-//             SctOC = Self::SctOC,
-//             SctT = Self::SctT,
-//             SctStream = Self::SctStream,
-//             SpctResample = Self::SpctResample,
-//         >,
-//     >;
-// }
-
-// pub type StreamPostClipNode<T> = Box<dyn StreamPostClipTrait<>>;
-// impl<T> StreamPostClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
-// impl<T> StreamClipTrait for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
-// impl<T> Stream<T> for StreamPostClipNode<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//
-// }
-
-// pub type StreamTransformNode<T> = Box<StreamTransform<T>>;
-// impl<T> StreamClone for StreamTransformNode<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     type C = Coordinate<T>;
-//     #[inline]
-//     fn box_clone(&self) -> Box<dyn Stream<C = Coordinate<T>>> {
-//         Box::new(self.clone())
-//     }
-// }
-// impl<T> Stream<T> for StreamTransformNode<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//
-// }
-// impl<T> StreamPreclipIn<T> for StreamTransformNode<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     #[inline]
-//     fn stream_preclip_in(
-//         &mut self,
-//         _stream: Box<
-//             dyn StreamPreClipTrait<
-//                 C = Coordinate<T>,
-//
-//                 SctC = Coordinate<T>,
-//                 SctT = T,
-//                 SctOC = Option<Coordinate<T>>,
-//                 SctCi = CompareIntersection<T>,
-//                 SctStream = dyn Stream<C = Coordinate<T>>,
-//                 SPCTstream = dyn Stream<C = Coordinate<T>>,
-//             >,
-//         >,
-//     ) {
-//         // No-op.
-//     }
-// }

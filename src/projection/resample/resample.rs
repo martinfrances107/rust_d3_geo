@@ -3,13 +3,13 @@ use std::ops::AddAssign;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::clip::clip::Clip;
 use crate::cartesian::cartesian;
 use crate::clip::antimeridian::ClipAntimeridian;
+use crate::clip::clip::Clip;
 use crate::clip::ClipRaw;
-use crate::stream::StreamDst;
-use crate::stream::Stream;
 use crate::compose::Compose;
+use crate::stream::Stream;
+use crate::stream::StreamDst;
 use crate::Transform;
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
@@ -282,8 +282,8 @@ where
                     );
 
                     self.resample_line_to(
-                        x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, s );
-                    
+                        x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, s,
+                    );
                 }
             }
         }
