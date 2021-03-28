@@ -18,7 +18,6 @@ pub mod stream_identity;
 pub mod stream_node_stub;
 pub mod stream_path_result_identity;
 pub mod stream_path_result_node_stub;
-pub mod stream_pipe;
 pub mod stream_postclip_node_stub;
 pub mod stream_preclip_node_stub;
 pub mod stream_resample_node_stub;

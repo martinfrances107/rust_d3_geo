@@ -1,6 +1,5 @@
 use super::stream::Stream;
 use super::stream::StreamClone;
-// use crate::stream::stream_pipe::StreamPipe;
 use crate::stream::StreamDst;
 use crate::stream::Streamable;
 use derivative::Derivative;

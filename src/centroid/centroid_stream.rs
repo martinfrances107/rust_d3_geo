@@ -1,4 +1,3 @@
-// use crate::stream::stream_pipe::StreamPipe;
 use crate::stream::Stream;
 use crate::stream::StreamDst;
 use crate::stream::Streamable;

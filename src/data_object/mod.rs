@@ -4,7 +4,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Geometry;
 
-// use crate::stream::stream_pipe::StreamPipe;
 use crate::stream::{Stream, Streamable};
 
 #[derive(Clone, Debug)]
