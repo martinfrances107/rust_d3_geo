@@ -70,17 +70,17 @@ where
 //     }
 // }
 
-impl<T> StreamClone for ClipAntimeridian<T>
-where
-    T: CoordFloat + FloatConst + Default,
-{
-    type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-    #[inline]
-    fn box_clone(&self) -> Self::RetType {
-        // Box::new(*self.clone())
-        panic!("must fix.")
-    }
-}
+// impl<T> StreamClone for ClipAntimeridian<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
+//     #[inline]
+//     fn box_clone(&self) -> Self::RetType {
+//         // Box::new(*self.clone())
+//         panic!("must fix.")
+//     }
+// }
 
 impl<T> Clean for ClipAntimeridian<T>
 where
@@ -114,7 +114,7 @@ where
         from: Option<Coordinate<T>>,
         to: Option<Coordinate<T>>,
         direction: T,
-        stream: impl Stream<C = Coordinate<T>>,
+        stream: impl Stream<T, C = Coordinate<T>>,
     ) {
         let phi: T;
         let mut s = stream;

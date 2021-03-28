@@ -13,8 +13,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
-pub fn circle_stream<T: CoordFloat + FloatConst>(
-    circle: &mut impl Stream<C = Coordinate<T>>,
+pub fn circle_stream<T: CoordFloat + Default + FloatConst>(
+    circle: &mut impl Stream<T, C = Coordinate<T>>,
     radius: T,
     delta: T,
     direction: T,

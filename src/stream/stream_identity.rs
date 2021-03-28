@@ -3,7 +3,7 @@ use num_traits::FloatConst;
 
 use super::stream_dummy::StreamDummy;
 use super::Stream;
-use super::StreamClone;
+use super::StreamDst;
 use super::StreamInTrait;
 
 /// A Stub acts as a black hole.
@@ -12,7 +12,7 @@ pub struct StreamIdentity<T>
 where
     T: CoordFloat + FloatConst,
 {
-    stream: Box<dyn Stream<C = Coordinate<T>>>,
+    stream: Box<dyn Stream<T, C = Coordinate<T>>>,
 }
 
 // impl<T> Default for StreamIdentity<T>
@@ -38,11 +38,16 @@ where
 //     }
 // }
 
-impl<T> Stream for StreamIdentity<T>
+impl<T> Stream<T> for StreamIdentity<T>
 where
     T: CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
+
+    #[inline]
+    fn get_dst(&self) -> StreamDst<T> {
+        self.stream.get_dst()
+    }
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         self.stream.point(p, m);
@@ -73,7 +78,7 @@ impl<T> StreamInTrait<T> for StreamIdentity<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_in(&mut self, stream: Box<dyn Stream<C = Coordinate<T>>>) {
+    fn stream_in(&mut self, stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
         self.stream = stream;
     }
 }

@@ -1,6 +1,7 @@
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
+use std::ops::AddAssign;
 
 use crate::clip::ClipTraitRaw;
 
@@ -14,6 +15,7 @@ use super::LineEnum;
 
 use crate::clip::LineSinkEnum;
 use crate::stream::Stream;
+use crate::stream::StreamDst;
 
 #[derive(Clone, Debug)]
 pub struct Clip<T>
@@ -111,11 +113,20 @@ where
     }
 }
 
-impl<T> Stream for Clip<T>
+impl<T> Stream<T> for Clip<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
+    fn get_dst(&self) -> StreamDst<T> {
+        match &self.base.sink {
+            ClipSinkEnum::Blank => {
+                panic!("calling get_dst on a blank");
+            }
+            ClipSinkEnum::Resample(r) => r.get_dst(),
+            ClipSinkEnum::Src(s) => s.get_dst(),
+        }
+    }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         // todo!("I think I have an extra match here.");
         match self.base.use_ring {

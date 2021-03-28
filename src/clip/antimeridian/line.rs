@@ -1,9 +1,11 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
+use std::ops::AddAssign;
 
 // use crate::path::PathResultEnum;
 use crate::stream::Stream;
-use crate::stream::StreamClipLine;
+use crate::stream::StreamDst;
+// use crate::stream::StreamClipLine;
 // use crate::stream::StreamClipLineNode;
 use crate::clip::ClipBuffer;
 // use crate::stream::StreamClone;
@@ -64,15 +66,15 @@ where
         }
     }
 }
-impl<T> StreamClipLine for Line<T>
-where
-    T: CoordFloat + FloatConst + Default,
-{
-    // #[inline]
-    // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
-    //     Box::new(self.clone())
-    // }
-}
+// impl<T> StreamClipLine for Line<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     // #[inline]
+//     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
+//     //     Box::new(self.clone())
+//     // }
+// }
 
 use crate::clip::LineSinkEnum;
 impl<T> Line<T>
@@ -118,17 +120,41 @@ where
     }
 }
 
-impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + Default {}
-
-impl<T: CoordFloat + FloatConst + Default> Stream for Line<T> {
+impl<T> StreamClean<T> for Line<T> where T: AddAssign + CoordFloat + FloatConst + Default {}
+impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for Line<T> {
     type C = Coordinate<T>;
+    fn sphere(&mut self) {
+        todo!("is this called")
+    }
+    fn polygon_start(&mut self) {
+        todo!("is this called")
+    }
+
+    fn polygon_end(&mut self) {
+        todo!("is this called")
+    }
+
+    fn get_dst(&self) -> StreamDst<T> {
+        match &self.stream {
+            LineSinkEnum::CB(stream) => stream.get_dst(),
+            LineSinkEnum::CSE(_stream) => {
+                todo!("not sure what todo here.")
+            }
+        }
+    }
     fn line_start(&mut self) {
         // self.stream.line_start();
         match self.stream.clone() {
             LineSinkEnum::CSE(stream) => {
                 match stream {
                     ClipSinkEnum::Resample(mut stream) => stream.line_start(),
-                    ClipSinkEnum::Src(mut stream) => stream.line_start(),
+                    ClipSinkEnum::Src(stream) => match stream {
+                        StreamDst::Circle(mut c) => c.line_start(),
+                        StreamDst::SRC(_src) => {}
+                        StreamDst::PAS(mut pas) => pas.line_start(),
+                        StreamDst::CS(mut cs) => cs.line_start(),
+                        StreamDst::LS(mut ls) => ls.line_start(),
+                    },
                     ClipSinkEnum::Blank => {
                         panic!("ClickSinkEnum - actively using an unconnected blank");
                     }

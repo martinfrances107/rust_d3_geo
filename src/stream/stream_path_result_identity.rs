@@ -43,12 +43,12 @@ where
 //     }
 // }
 
-impl<T> Stream for StreamPathResultIdentity<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    type C = Coordinate<T>;
-}
+// impl<T> Stream<T> for StreamPathResultIdentity<T>
+// where
+//     T: CoordFloat + Default + FloatConst,
+// {
+//     type C = Coordinate<T>;
+// }
 impl<T> StreamInTrait<T> for StreamPathResultIdentity<T> where T: CoordFloat + FloatConst {}
 impl<T> PathResult for StreamPathResultIdentity<T>
 where

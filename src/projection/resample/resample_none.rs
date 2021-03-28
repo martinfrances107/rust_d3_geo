@@ -1,5 +1,6 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
+use std::ops::AddAssign;
 
 use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::clip::Clip;
@@ -8,7 +9,7 @@ use crate::compose::Compose;
 // use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 // use crate::stream::StreamClone;
-// use crate::stream::StreamDst;
+use crate::stream::StreamDst;
 // use crate::stream::StreamClone;
 // use super::StreamResampleTrait;
 // use crate::stream::stream_postclip_node_stub::StreamPostClipNodeStub;
@@ -106,8 +107,27 @@ impl<T: CoordFloat + FloatConst + Default> ResampleNone<T> {
 //         Box::new(self.clone())
 //     }
 // }
-impl<T: CoordFloat + FloatConst + Default> Stream for ResampleNone<T> {
+impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for ResampleNone<T> {
     type C = Coordinate<T>;
+    fn get_dst(&self) -> StreamDst<T> {
+        self.stream.get_dst()
+    }
+
+    fn sphere(&mut self) {
+        self.stream.sphere()
+    }
+    fn line_start(&mut self) {
+        self.stream.line_start()
+    }
+    fn line_end(&mut self) {
+        self.stream.line_end()
+    }
+    fn polygon_start(&mut self) {
+        self.stream.polygon_start()
+    }
+    fn polygon_end(&mut self) {
+        self.stream.polygon_end()
+    }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         let p = p.clone();
         let project = &self.project;

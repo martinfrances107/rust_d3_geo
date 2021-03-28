@@ -110,11 +110,11 @@ where
 //     }
 // }
 
-impl<T> Stream for StreamDummy<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    type C = Coordinate<T>;
-}
+// impl<T> Stream<T> for StreamDummy<T>
+// where
+//     T: CoordFloat + Default + FloatConst,
+// {
+//     type C = Coordinate<T>;
+// }
 
 // impl<T> StreamInTrait<T> for StreamDummy<T> where T: CoordFloat + FloatConst {}

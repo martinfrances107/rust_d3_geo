@@ -4,7 +4,7 @@ use geo::{CoordFloat, Coordinate};
 use web_sys::CanvasRenderingContext2d;
 
 use crate::stream::Stream;
-use crate::stream::StreamClone;
+use crate::stream::StreamDst;
 use num_traits::{AsPrimitive, FloatConst};
 
 use super::{PathResult, PathResultEnum};
@@ -59,11 +59,16 @@ where
 //     }
 // }
 
-impl<T> Stream for PathContext<T>
+impl<T> Stream<T> for PathContext<T>
 where
-    T: CoordFloat + FloatConst + AsPrimitive<f64>,
+    T: CoordFloat + Default + FloatConst + AsPrimitive<f64>,
 {
     type C = Coordinate<T>;
+
+    fn sphere(&mut self) {}
+    fn get_dst(&self) -> StreamDst<T> {
+        todo!("What to do here");
+    }
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(T::zero());

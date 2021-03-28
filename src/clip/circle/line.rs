@@ -1,5 +1,6 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
+use std::ops::AddAssign;
 
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
@@ -10,8 +11,8 @@ use crate::clip::LineSinkEnum;
 use crate::point_equal::point_equal;
 use crate::stream::Stream;
 use crate::stream::StreamClean;
-use crate::stream::StreamSourceDummy;
 use crate::stream::StreamDst;
+use crate::stream::StreamSourceDummy;
 use crate::stream::{Clean, CleanEnum};
 
 #[derive(Clone, Debug)]
@@ -155,7 +156,7 @@ impl<T: CoordFloat + FloatConst + Default> Line<T> {
         return code;
     }
 }
-impl<T> StreamClean<T> for Line<T> where T: CoordFloat + FloatConst + Default {}
+impl<T> StreamClean<T> for Line<T> where T: AddAssign + CoordFloat + FloatConst + Default {}
 impl<T> Clean for Line<T>
 where
     T: CoordFloat + FloatConst + Default,
@@ -177,8 +178,24 @@ where
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default> Stream for Line<T> {
+impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for Line<T> {
     type C = Coordinate<T>;
+    fn sphere(&mut self) {}
+    fn polygon_start(&mut self) {}
+    fn polygon_end(&mut self) {}
+
+    fn get_dst(&self) -> StreamDst<T> {
+        match &self.stream {
+            LineSinkEnum::CB(cb) => cb.get_dst(),
+            LineSinkEnum::CSE(cse) => match cse {
+                ClipSinkEnum::Blank => {
+                    panic!("calling get_dst on a blank");
+                }
+                ClipSinkEnum::Resample(r) => r.get_dst(),
+                ClipSinkEnum::Src(s) => s.get_dst(),
+            },
+        }
+    }
     fn line_start(&mut self) {
         self.v00 = false;
         self.v0 = false;

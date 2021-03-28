@@ -1,11 +1,11 @@
-use super::Stream;
 use geo::{CoordFloat, Coordinate};
-
 use num_traits::FloatConst;
 
-pub fn line_processor<T: CoordFloat + FloatConst>(
+use super::Stream;
+
+pub fn line_processor<T: CoordFloat + FloatConst + Default>(
     coordinates: &[Coordinate<T>],
-    stream: &mut impl Stream<C = Coordinate<T>>,
+    stream: &mut impl Stream<T, C = Coordinate<T>>,
     closed: usize,
 ) {
     let n = coordinates.len() - closed;

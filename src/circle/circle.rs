@@ -4,6 +4,7 @@ use std::fmt::Debug;
 
 use super::StreamType;
 use crate::stream::Stream;
+use crate::stream::StreamDst;
 // use crate::stream::StreamClone;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
@@ -11,6 +12,7 @@ use crate::Transform;
 use crate::TransformIdentity;
 
 /// Output of CircleGenertor::circle()
+#[derive(Debug)]
 pub struct CircleStream<T: CoordFloat + FloatConst + Default> {
     pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
@@ -49,7 +51,7 @@ impl<T: CoordFloat + FloatConst + Default> Clone for CircleStream<T> {
 //     }
 // }
 
-impl<T: CoordFloat + FloatConst + Default> Stream for CircleStream<T> {
+impl<T: CoordFloat + FloatConst + Default> Stream<T> for CircleStream<T> {
     type C = Coordinate<T>;
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         let p = p.clone();
@@ -60,5 +62,15 @@ impl<T: CoordFloat + FloatConst + Default> Stream for CircleStream<T> {
             y: x_rotated.y.to_degrees(),
         };
         self.ring.push(x_rotated_deg);
+    }
+    fn sphere(&mut self) {}
+
+    fn line_start(&mut self) {}
+    fn line_end(&mut self) {}
+    fn polygon_start(&mut self) {}
+    fn polygon_end(&mut self) {}
+
+    fn get_dst(&self) -> StreamDst<T> {
+        StreamDst::Circle(self.clone())
     }
 }

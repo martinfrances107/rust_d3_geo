@@ -1,8 +1,11 @@
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 use std::marker::PhantomData;
 
 use crate::stream::Stream;
+use crate::stream::StreamDst;
 
 use super::stream_transform::StreamTransform;
 
@@ -25,13 +28,14 @@ where
     phantom: PhantomData<T>,
 }
 
-impl<T> Stream for StreamTransformRadiansNodeStub<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    type C = Coordinate<T>;
-}
+// impl<T> Stream<T> for StreamTransformRadiansNodeStub<T>
+// where
+//     T: CoordFloat + Default + FloatConst,
+// {
+//     type C = Coordinate<T>;
+// }
 
+#[derive(Clone, Debug)]
 pub struct StreamTransformRadians<T: CoordFloat + FloatConst + Default> {
     stream: StreamTransform<T>,
 }
@@ -57,8 +61,13 @@ where
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default> Stream for StreamTransformRadians<T> {
+impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for StreamTransformRadians<T> {
     type C = Coordinate<T>;
+
+    #[inline]
+    fn get_dst(&self) -> StreamDst<T> {
+        self.stream.get_dst()
+    }
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         self.stream.point(
@@ -87,6 +96,6 @@ impl<T: CoordFloat + FloatConst + Default> Stream for StreamTransformRadians<T> 
     }
     #[inline]
     fn polygon_end(&mut self) {
-        self.polygon_end();
+        self.stream.polygon_end();
     }
 }

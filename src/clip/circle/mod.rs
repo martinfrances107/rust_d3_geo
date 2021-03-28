@@ -72,12 +72,12 @@ where
 //     }
 // }
 
-impl<T> Stream for ClipCircle<T>
-where
-    T: CoordFloat + FloatConst + Default,
-{
-    type C = Coordinate<T>;
-}
+// impl<T> Stream<T> for ClipCircle<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type C = Coordinate<T>;
+// }
 
 // impl<T> StreamPreClipTrait for ClipCircle<T>
 // where
@@ -125,7 +125,7 @@ where
         from: Self::SctOC,
         to: Self::SctOC,
         direction: Self::SctT,
-        mut stream: impl Stream<C = Coordinate<T>>,
+        mut stream: impl Stream<T, C = Coordinate<T>>,
     ) {
         circle_stream(&mut stream, self.radius, self.delta, direction, from, to);
     }

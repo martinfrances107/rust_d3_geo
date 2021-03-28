@@ -51,7 +51,7 @@
 //     }
 // }
 
-// impl<T> Stream for StreamPathResultNodeStub<T>
+// impl<T> Stream<T> for StreamPathResultNodeStub<T>
 // where
 //     T: CoordFloat + FloatConst,
 // {

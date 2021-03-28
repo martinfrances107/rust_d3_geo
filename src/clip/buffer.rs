@@ -1,7 +1,8 @@
 use crate::path::PathResultEnum;
 use crate::stream::Stream;
 use crate::stream::StreamClone;
-use crate::stream::StreamPathResult;
+use crate::stream::StreamDst;
+// use crate::stream::StreamPathResult;
 use crate::{path::PathResult, stream::StreamInTrait};
 
 use geo::{CoordFloat, Coordinate};
@@ -64,7 +65,7 @@ impl<T> StreamInTrait<T> for ClipBuffer<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_in(&mut self, _stream: Box<dyn Stream<C = Coordinate<T>>>) {
+    fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
         panic!("Should I call stream_in on a buffer!");
     }
 }
@@ -90,7 +91,7 @@ where
 //     }
 // }
 
-impl<T: CoordFloat + FloatConst> Stream for ClipBuffer<T> {
+impl<T: CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<T> {
     type C = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
@@ -104,9 +105,16 @@ impl<T: CoordFloat + FloatConst> Stream for ClipBuffer<T> {
         }
     }
 
+    fn sphere(&mut self) {}
+    fn line_end(&mut self) {}
     fn line_start(&mut self) {
         let line = Vec::new();
         self.line = Some(line.clone());
         self.lines.push(line);
+    }
+    fn polygon_start(&mut self) {}
+    fn polygon_end(&mut self) {}
+    fn get_dst(&self) -> StreamDst<T> {
+        todo!("is this ever called.");
     }
 }

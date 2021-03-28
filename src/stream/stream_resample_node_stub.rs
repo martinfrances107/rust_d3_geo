@@ -59,9 +59,9 @@ where
         Box::new(StreamResampleNodeStub::default())
     }
 }
-impl<T> Stream for StreamResampleNodeStub<T>
-where
-    T: CoordFloat + FloatConst + Default,
-{
-    type C = Coordinate<T>;
-}
+// impl<T> Stream<T> for StreamResampleNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type C = Coordinate<T>;
+// }

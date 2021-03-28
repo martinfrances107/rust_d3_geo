@@ -18,25 +18,31 @@ pub mod stream_identity;
 pub mod stream_node_stub;
 pub mod stream_path_result_identity;
 pub mod stream_path_result_node_stub;
+pub mod stream_pipe;
 pub mod stream_postclip_node_stub;
 pub mod stream_preclip_node_stub;
 pub mod stream_resample_node_stub;
 pub mod stream_transform_node_stub;
 
-use std::marker::PhantomData;
-
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-
+use std::fmt::Debug;
+use std::marker::PhantomData;
+use std::ops::AddAssign;
 // use crate::clip::BufferInTrait;
 // use crate::clip::ClipTraitRaw;
+use crate::centroid::centroid_stream::CentroidStream;
+use crate::circle::circle::CircleStream;
+use crate::length::LengthStream;
+use crate::path::area_stream::PathAreaStream;
 use crate::path::PathResult;
-use crate::path::PathResultEnum;
-
 /// Applies to DataObject's
-pub trait Streamable {
+pub trait Streamable<T>
+where
+    T: CoordFloat + Default + FloatConst,
+{
     type SC;
-    fn to_stream(&self, stream: &mut impl Stream<C = Self::SC>);
+    fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>);
 }
 
 // Takes a line and cuts into visible segments. Return values used for polygon
@@ -75,48 +81,135 @@ where
 #[derive(Clone, Debug)]
 pub enum StreamDst<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + Default + FloatConst,
 {
     SRC(StreamSourceDummy<T>),
+    PAS(PathAreaStream<T>),
+    CS(CentroidStream<T>),
+    LS(LengthStream<T>),
+    Circle(CircleStream<T>),
 }
 
-pub trait Stream {
+pub trait Stream<T>
+where
+    T: CoordFloat + FloatConst + Default,
+{
     type C;
     fn point(&mut self, _p: &Self::C, _m: Option<u8>) {}
-    fn sphere(&mut self) {}
-    fn line_start(&mut self) {}
-    fn line_end(&mut self) {}
-    fn polygon_start(&mut self) {}
-    fn polygon_end(&mut self) {}
+    fn sphere(&mut self);
+    fn line_start(&mut self);
+    fn line_end(&mut self);
+    fn polygon_start(&mut self);
+    fn polygon_end(&mut self);
+    fn get_dst(&self) -> StreamDst<T>;
 }
 
-impl<T> Stream for StreamDst<T>
+impl<T> Stream<T> for StreamDst<T>
 where
-    T: CoordFloat + std::fmt::Debug,
+    T: CoordFloat + Debug + Default + FloatConst + AddAssign,
 {
     type C = Coordinate<T>;
+
+    fn get_dst(&self) -> StreamDst<T> {
+        match self {
+            // StreamDst::SRC(src) => src.get_dst(),
+            StreamDst::PAS(pas) => pas.get_dst(),
+            StreamDst::CS(cs) => cs.get_dst(),
+            StreamDst::LS(ls) => ls.get_dst(),
+            StreamDst::Circle(c) => c.get_dst(),
+            StreamDst::SRC(_src) => {
+                todo!("handle dummy")
+            }
+        }
+    }
+    fn sphere(&mut self) {
+        match self {
+            StreamDst::PAS(pas) => pas.sphere(),
+            StreamDst::CS(cs) => cs.sphere(),
+            StreamDst::LS(ls) => ls.sphere(),
+            StreamDst::Circle(c) => c.sphere(),
+            StreamDst::SRC(_src) => {
+                todo!("handle dummy")
+            }
+        }
+    }
+    fn polygon_start(&mut self) {
+        match self {
+            StreamDst::PAS(pas) => pas.polygon_start(),
+            StreamDst::CS(cs) => cs.polygon_start(),
+            StreamDst::LS(ls) => ls.polygon_start(),
+            StreamDst::Circle(c) => c.polygon_start(),
+            StreamDst::SRC(_src) => {
+                todo!("handle dummy")
+            }
+        }
+    }
+    fn polygon_end(&mut self) {
+        match self {
+            StreamDst::PAS(pas) => pas.polygon_end(),
+            StreamDst::CS(cs) => cs.polygon_end(),
+            StreamDst::LS(ls) => ls.polygon_end(),
+            StreamDst::Circle(c) => c.polygon_end(),
+            StreamDst::SRC(_src) => {
+                todo!("handle dummy")
+            }
+        }
+    }
+    fn point(&mut self, p: &Self::C, m: Option<u8>) {
+        match self {
+            StreamDst::PAS(pas) => pas.point(p, m),
+            StreamDst::CS(cs) => cs.point(p, m),
+            StreamDst::LS(ls) => ls.point(p, m),
+            StreamDst::Circle(c) => c.point(p, m),
+            StreamDst::SRC(_src) => {
+                todo!("handle dummy")
+            }
+        }
+    }
+    fn line_start(&mut self) {
+        match self {
+            StreamDst::PAS(pas) => pas.line_start(),
+            StreamDst::CS(cs) => cs.line_start(),
+            StreamDst::LS(ls) => ls.line_start(),
+            StreamDst::Circle(c) => c.line_start(),
+            StreamDst::SRC(_src) => {
+                todo!("handle dummy")
+            }
+        }
+    }
+    fn line_end(&mut self) {
+        match self {
+            StreamDst::PAS(pas) => pas.line_end(),
+            StreamDst::CS(cs) => cs.line_end(),
+            StreamDst::LS(ls) => ls.line_end(),
+            StreamDst::Circle(c) => c.line_end(),
+            StreamDst::SRC(_src) => {
+                todo!("handle dummy")
+            }
+        }
+    }
 }
 
 pub trait StreamInTrait<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_in(&mut self, _stream: Box<dyn Stream<C = Coordinate<T>>>) {}
+    fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {}
 }
 
-pub trait StreamClipLine: Stream + Clean {
-    // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>>;
-}
+// pub trait StreamClipLine: Stream<T> + Clean {
+//     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>>;
+// }
 
-pub trait StreamClean<T>: Stream + Clean
+pub trait StreamClean<T>: Stream<T> + Clean
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
 }
 
-pub trait StreamPathResult: Stream + PathResult {
-    fn box_clone(&self) -> Box<dyn StreamPathResult<C = Self::C, Out = Self::Out>>;
-}
+// pub trait StreamPathResult<T>: Stream<T> + PathResult {
+//     fn box_clone(&self) -> Box<dyn StreamPathResult<T, C = Self::C, Out = Self::Out>>;
+// }
 
 // pub trait StreamPostClipTrait: ClipTraitRaw + Stream {
 //     type SpostctStream;
@@ -149,7 +242,7 @@ pub trait StreamPathResult: Stream + PathResult {
 //     }
 // }
 
-// impl<T> Stream for StreamClipLineNode<T>
+// impl<T> Stream<T> for StreamClipLineNode<T>
 // where
 //     T: CoordFloat + FloatConst,
 // {
@@ -195,8 +288,8 @@ where
 // Node - holds state associated with the input/output of a StreamProcessor.
 // Something that can be cloned and mutated.
 
-pub type StreamSimpleNode<T> = Box<dyn Stream<C = Coordinate<T>>>;
-// impl<T> Stream for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
+pub type StreamSimpleNode<T> = Box<dyn Stream<T, C = Coordinate<T>>>;
+// impl<T> Stream<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
 // impl<T> StreamInTrait<T> for StreamSimpleNode<T> where T: CoordFloat + FloatConst {}
 // impl<T> StreamSimpleNode<T>
 // where
@@ -212,7 +305,7 @@ pub type StreamSimpleNode<T> = Box<dyn Stream<C = Coordinate<T>>>;
 // impl<T> StreamClone for StreamPathResultNode<T> where T: CoordFloat + FloatConst {
 //     type C = Coordinate<T>;
 // }
-// impl<T> Stream for StreamPathResultNode<T>
+// impl<T> Stream<T> for StreamPathResultNode<T>
 // where
 //     T: CoordFloat + FloatConst,
 // {
@@ -241,7 +334,7 @@ pub type StreamSimpleNode<T> = Box<dyn Stream<C = Coordinate<T>>>;
 // pub type StreamPostClipNode<T> = Box<dyn StreamPostClipTrait<>>;
 // impl<T> StreamPostClipTrait<T> for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
 // impl<T> StreamClipTrait for StreamPostClipNode<T> where T: CoordFloat + FloatConst {}
-// impl<T> Stream for StreamPostClipNode<T>
+// impl<T> Stream<T> for StreamPostClipNode<T>
 // where
 //     T: CoordFloat + FloatConst,
 // {
@@ -259,7 +352,7 @@ pub type StreamSimpleNode<T> = Box<dyn Stream<C = Coordinate<T>>>;
 //         Box::new(self.clone())
 //     }
 // }
-// impl<T> Stream for StreamTransformNode<T>
+// impl<T> Stream<T> for StreamTransformNode<T>
 // where
 //     T: CoordFloat + FloatConst,
 // {

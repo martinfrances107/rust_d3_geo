@@ -11,8 +11,8 @@ use super::CleanEnum;
 // use super::CompareIntersection;
 
 use super::Stream;
-use super::StreamClipLine;
-use super::StreamClone;
+// use super::StreamClipLine;
+// use super::StreamClone;
 // use super::StreamPreClipTrait;
 // use super::StreamSimpleNode;
 // use crate::clip::ClipTraitRaw;
@@ -42,15 +42,15 @@ where
 //     }
 // }
 
-impl<T> StreamClipLine for StreamClipLineNodeStub<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    // #[inline]
-    // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
-    //     panic!("calling box_clone on a stub");
-    // }
-}
+// impl<T> StreamClipLine for StreamClipLineNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     // #[inline]
+//     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
+//     //     panic!("calling box_clone on a stub");
+//     // }
+// }
 
 // impl<T> BufferInTrait for StreamClipLineNodeStub<T>
 // where
@@ -63,12 +63,12 @@ where
 //     }
 // }
 
-impl<T> Stream for StreamClipLineNodeStub<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    type C = Coordinate<T>;
-}
+// impl<T> Stream<T> for StreamClipLineNodeStub<T>
+// where
+//     T: CoordFloat + Default +  FloatConst,
+// {
+//     type C = Coordinate<T>;
+// }
 impl<T> Clean for StreamClipLineNodeStub<T>
 where
     T: CoordFloat + FloatConst,

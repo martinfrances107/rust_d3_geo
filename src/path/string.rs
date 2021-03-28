@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 use crate::stream::Stream;
-use crate::stream::StreamClone;
+use crate::stream::StreamDst;
 use geo::{CoordFloat, Coordinate};
 use num_traits::{Float, FloatConst};
 
@@ -95,11 +95,16 @@ where
 //     }
 // }
 
-impl<T> Stream for PathString<T>
+impl<T> Stream<T> for PathString<T>
 where
-    T: CoordFloat + FloatConst + std::fmt::Display,
+    T: CoordFloat + Default + FloatConst + std::fmt::Display,
 {
     type C = Coordinate<T>;
+
+    fn sphere(&mut self) {}
+    fn get_dst(&self) -> StreamDst<T> {
+        todo!("is this a terminal");
+    }
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(0f64);

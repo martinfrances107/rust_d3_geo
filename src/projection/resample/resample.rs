@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -10,7 +12,7 @@ use crate::clip::clip::Clip;
 use crate::cartesian::cartesian;
 use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::ClipRaw;
-use crate::stream::StreamClone;
+use crate::stream::StreamDst;
 // use crate::stream::stream_dummy::StreamDummy;
 use crate::stream::Stream;
 
@@ -192,7 +194,7 @@ where
 
 impl<T> Resample<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     #[inline]
 
@@ -393,11 +395,24 @@ where
 //     }
 // }
 
-impl<T> Stream for Resample<T>
+impl<T> Stream<T> for Resample<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
+
+    fn get_dst(&self) -> StreamDst<T> {
+        self.stream.get_dst()
+    }
+    fn sphere(&mut self) {
+        self.stream.sphere();
+    }
+    fn polygon_start(&mut self) {
+        self.stream.polygon_start();
+    }
+    fn polygon_end(&mut self) {
+        self.stream.polygon_end();
+    }
     #[inline]
     fn point(&mut self, p: &Self::C, _m: Option<u8>) {
         if self.use_line_point {

@@ -43,11 +43,11 @@ where
 //     }
 // }
 
-impl<T> Stream for StreamTransformNodeStub<T>
-where
-    T: CoordFloat + FloatConst + Default,
-{
-    type C = Coordinate<T>;
-}
+// impl<T> Stream<T> for StreamTransformNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type C = Coordinate<T>;
+// }
 
 impl<T> StreamInTrait<T> for StreamTransformNodeStub<T> where T: CoordFloat + FloatConst + Default {}

@@ -23,7 +23,7 @@ use super::Stream;
 //     phantom: PhantomData<T>,
 // }
 
-// impl<T> Stream for StreamPostClipNodeStub<T>
+// impl<T> Stream<T> for StreamPostClipNodeStub<T>
 // where
 //     T: CoordFloat + FloatConst + Default,
 // {

@@ -6,7 +6,7 @@
 
 // /// An object implementing a stream method
 // pub trait StreamWrapper<T> {
-//     /// Returns a projection stream for the specified output stream. Any input geometry is projected before being streamed to the output stream.
+//     /// Returns a projection Stream<T> for the specified output stream. Any input geometry is projected before being streamed to the output stream.
 //     /// A typical projection involves several geometry transformations: the input geometry is first converted to radians, rotated on three axes,
 //     /// clipped to the small circle or cut along the antimeridian, and lastly projected to the plane with adaptive resampling, scale and translation.
 //     ///

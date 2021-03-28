@@ -9,6 +9,7 @@ mod rejoin;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
+use std::ops::AddAssign;
 
 use crate::projection::resample::ResampleEnum;
 use crate::stream::Stream;
@@ -30,7 +31,7 @@ where
 {
     Resample(ResampleEnum<T>),
     Src(StreamDst<T>),
-    Blank
+    Blank,
 }
 
 #[derive(Clone, Debug)]
@@ -52,11 +53,48 @@ where
     CB(ClipBuffer<T>),
 }
 
-impl<T> Stream for LineEnum<T>
+impl<T> Stream<T> for LineEnum<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
+
+    fn get_dst(&self) -> StreamDst<T> {
+        match self {
+            LineEnum::Antimeridian(antimeridian) => antimeridian.get_dst(),
+            LineEnum::Circle(circle) => circle.get_dst(),
+        }
+    }
+    fn sphere(&mut self) {
+        match self {
+            LineEnum::Antimeridian(antimeridian) => antimeridian.sphere(),
+            LineEnum::Circle(circle) => circle.sphere(),
+        }
+    }
+    fn polygon_start(&mut self) {
+        match self {
+            LineEnum::Antimeridian(antimeridian) => antimeridian.polygon_start(),
+            LineEnum::Circle(circle) => circle.polygon_start(),
+        }
+    }
+    fn polygon_end(&mut self) {
+        match self {
+            LineEnum::Antimeridian(antimeridian) => antimeridian.polygon_end(),
+            LineEnum::Circle(circle) => circle.polygon_end(),
+        }
+    }
+    fn line_start(&mut self) {
+        match self {
+            LineEnum::Antimeridian(antimeridian) => antimeridian.line_start(),
+            LineEnum::Circle(circle) => circle.line_start(),
+        }
+    }
+    fn line_end(&mut self) {
+        match self {
+            LineEnum::Antimeridian(antimeridian) => antimeridian.line_end(),
+            LineEnum::Circle(circle) => circle.line_end(),
+        }
+    }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         match self {
             LineEnum::Antimeridian(antimeridian) => antimeridian.point(p, m),
@@ -83,7 +121,7 @@ where
 
 pub trait ClipTraitRaw<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type SctC;
     type SctOC;
@@ -117,6 +155,6 @@ where
         _from: Self::SctOC,
         _to: Self::SctOC,
         _direction: Self::SctT,
-        _stream: impl Stream<C = Coordinate<T>>,
+        _stream: impl Stream<T, C = Coordinate<T>>,
     );
 }

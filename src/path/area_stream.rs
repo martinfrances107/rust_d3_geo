@@ -3,10 +3,16 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
+use crate::stream::StreamDst;
 
 use super::PathResult;
 use super::PathResultEnum;
 
+use derivative::Derivative;
+
+#[derive(Derivative)]
+#[derivative(Debug)]
+#[derive(Clone)]
 pub struct PathAreaStream<T>
 where
     T: CoordFloat,
@@ -15,8 +21,11 @@ where
     area_ring_sum: T,
     p00: Coordinate<T>,
     p0: Coordinate<T>,
+    #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, &Coordinate<T>, Option<u8>),
+    #[derivative(Debug = "ignore")]
     line_start_fn: fn(&mut Self),
+    #[derivative(Debug = "ignore")]
     line_end_fn: fn(&mut Self),
 }
 
@@ -83,11 +92,17 @@ where
     }
 }
 
-impl<T> Stream for PathAreaStream<T>
+impl<T> Stream<T> for PathAreaStream<T>
 where
-    T: CoordFloat + FloatConst + std::ops::AddAssign,
+    T: CoordFloat + Default + FloatConst + std::ops::AddAssign,
 {
     type C = Coordinate<T>;
+
+    fn sphere(&mut self) {}
+
+    fn get_dst(&self) -> StreamDst<T> {
+        StreamDst::PAS(self.clone())
+    }
 
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {

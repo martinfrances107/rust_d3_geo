@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -6,8 +8,10 @@ use crate::clip::clip::Clip;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
 use crate::stream::Stream;
+use crate::stream::StreamDst;
 use crate::Transform;
 
+#[derive(Clone, Debug)]
 pub struct StreamTransform<T: CoordFloat + FloatConst + Default> {
     pub transform: RotateRadiansEnum<T>,
     pub stream: Clip<T>,
@@ -65,8 +69,13 @@ impl<'a, T: CoordFloat + FloatConst + Default> Transform for StreamTransform<T> 
     }
 }
 
-impl<'a, T: CoordFloat + FloatConst + Default> Stream for StreamTransform<T> {
+impl<'a, T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for StreamTransform<T> {
     type C = Coordinate<T>;
+
+    #[inline]
+    fn get_dst(&self) -> StreamDst<T> {
+        self.stream.get_dst()
+    }
 
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {

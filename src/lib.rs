@@ -7,7 +7,9 @@
 use geo::{CoordFloat, Coordinate};
 use std::marker::PhantomData;
 
+extern crate derivative;
 extern crate web_sys;
+
 pub mod cartesian;
 pub mod centroid;
 pub mod circle;

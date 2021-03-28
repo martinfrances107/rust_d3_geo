@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -90,7 +92,7 @@ where
 
 impl<T> ClipBase<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     fn point_ring(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         self.ring.push(*p);

@@ -40,10 +40,10 @@ where
 //         Box::new(StreamNodeStub::<T>::default())
 //     }
 // }
-impl<T> Stream for StreamNodeStub<T>
-where
-    T: CoordFloat + FloatConst + Default,
-{
-    type C = Coordinate<T>;
-}
+// impl<T> Stream<T> for StreamNodeStub<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type C = Coordinate<T>;
+// }
 impl<T> StreamInTrait<T> for StreamNodeStub<T> where T: CoordFloat + FloatConst + Default {}

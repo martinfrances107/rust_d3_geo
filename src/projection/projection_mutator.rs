@@ -18,11 +18,12 @@ use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::rotation::rotation_identity::RotationIdentity;
 // use crate::projection::stream_transform_radians::StreamTransformRadiansNode;
 // use crate::projection::stream_transform_radians::StreamTransformRadiansNodeStub;
-
+use super::orthographic::OrthographicRaw;
 use crate::clip::ClipSinkEnum;
 use crate::rotation::rotate_radians_transform::rotate_radians_transform;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 // use crate::stream::CompareIntersection;
+// use crate::stream::stream_pipe::StreamPipe;
 use crate::stream::Stream;
 use crate::stream::StreamClone;
 use crate::stream::StreamDst;
@@ -128,6 +129,17 @@ pub struct ProjectionMutator<T: CoordFloat + FloatConst + Default> {
 //     }
 // }
 
+impl<T> Default for ProjectionMutator<T>
+where
+    T: CoordFloat + FloatConst + Default,
+{
+    fn default() -> Self {
+        ProjectionMutator::from_projection_raw(
+            ProjectionRawEnum::O(OrthographicRaw::default()),
+            None,
+        )
+    }
+}
 impl<T: CoordFloat + FloatConst + Default> ProjectionMutator<T> {
     pub fn from_projection_raw(
         project: ProjectionRawEnum<T>,
@@ -235,31 +247,31 @@ impl<T: CoordFloat + FloatConst + Default> ProjectionMutator<T> {
     // In rust that is a closure.
     pub fn stream(
         &self,
-        // stream: Option<StreamSimpleNode<T>>,
-    ) -> Box<dyn Fn(StreamDst<T>) -> StreamTransformRadians<T> + '_> {
+        streamDst: StreamDst<T>, // stream: Option<StreamSimpleNode<T>>,
+    ) -> StreamTransformRadians<T> {
         // return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
         // return match &self.cache {
         //     Some(c) => Box::new(*c),
         //     None => {
         // self.cache_stream = Some(stream.clone());
-        Box::new(move |stream: StreamDst<T>| {
-            let mut postclip = self.postclip.clone();
-            postclip.stream_in(ClipSinkEnum::Src(stream));
 
-            let mut resample = self.project_resample.clone();
-            resample.stream_postclip_in(postclip);
+        let mut postclip = self.postclip.clone();
+        postclip.stream_in(ClipSinkEnum::Src(streamDst));
 
-            let mut preclip = self.preclip.clone();
-            preclip.stream_in(ClipSinkEnum::Resample(resample));
+        let mut resample = self.project_resample.clone();
+        resample.stream_postclip_in(postclip);
 
-            let mut t_rotate_node = StreamTransform::new(Some(self.rotate.clone()));
-            t_rotate_node.stream_preclip_in(preclip);
+        let mut preclip = self.preclip.clone();
+        preclip.stream_in(ClipSinkEnum::Resample(resample));
 
-            let mut t_radians_node: StreamTransformRadians<T> = StreamTransformRadians::default();
-            t_radians_node.stream_transform_in(t_rotate_node);
+        let mut t_rotate_node = StreamTransform::new(Some(self.rotate.clone()));
+        t_rotate_node.stream_preclip_in(preclip);
 
-            t_radians_node
-        })
+        let mut t_radians_node: StreamTransformRadians<T> = StreamTransformRadians::default();
+        t_radians_node.stream_transform_in(t_rotate_node);
+
+        t_radians_node
+
         //     }
         // };
     }
@@ -276,12 +288,12 @@ impl<T: CoordFloat + FloatConst + Default> ProjectionMutator<T> {
 //     }
 // }
 
-impl<'a, T> Stream for ProjectionMutator<T>
-where
-    T: CoordFloat + FloatConst + Default,
-{
-    type C = Coordinate<T>;
-}
+// impl<'a, T> Stream<T> for ProjectionMutator<T>
+// where
+//     T: CoordFloat + FloatConst + Default,
+// {
+//     type C = Coordinate<T>;
+// }
 
 // impl<'a, T: CoordFloat + FloatConst + Default> TransformClone<'a> for ProjectionMutator<'a, T> {
 //     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {

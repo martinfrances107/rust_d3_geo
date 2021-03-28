@@ -5,6 +5,8 @@ pub mod resample_none;
 // use crate::stream::stream_postclip_node_stub::StreamPostClipNodeStub;
 // use crate::stream::CompareIntersection;
 // use crate::stream::StreamPostClipTrait;
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -21,7 +23,7 @@ use crate::clip::clip::Clip;
 use crate::clip::ClipRaw;
 use crate::compose::Compose;
 use crate::stream::Stream;
-// use crate::stream::StreamDst;
+use crate::stream::StreamDst;
 use crate::Transform;
 use crate::TransformClone;
 
@@ -48,11 +50,36 @@ where
 }
 
 /// todo! find a better way.
-impl<T> Stream for ResampleEnum<T>
+impl<T> Stream<T> for ResampleEnum<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     type C = Coordinate<T>;
+
+    fn get_dst(&self) -> StreamDst<T> {
+        match self {
+            ResampleEnum::R(resample) => resample.get_dst(),
+            ResampleEnum::RN(rn) => rn.get_dst(),
+        }
+    }
+    fn sphere(&mut self) {
+        match self {
+            ResampleEnum::R(resample) => resample.sphere(),
+            ResampleEnum::RN(rn) => rn.sphere(),
+        }
+    }
+    fn polygon_start(&mut self) {
+        match self {
+            ResampleEnum::R(resample) => resample.polygon_start(),
+            ResampleEnum::RN(rn) => rn.polygon_start(),
+        }
+    }
+    fn polygon_end(&mut self) {
+        match self {
+            ResampleEnum::R(resample) => resample.polygon_end(),
+            ResampleEnum::RN(rn) => rn.polygon_end(),
+        }
+    }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         match self {
             ResampleEnum::R(resample) => resample.point(&*p, m),

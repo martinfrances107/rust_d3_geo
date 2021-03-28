@@ -1,16 +1,17 @@
-use super::Streamable;
-use crate::stream::Stream;
 use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Geometry;
 use num_traits::FloatConst;
 
-impl<T> Streamable for Geometry<T>
+use super::Stream;
+use super::Streamable;
+
+impl<T> Streamable<T> for Geometry<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type SC = Coordinate<T>;
-    fn to_stream(&self, stream: &mut impl Stream<C = Self::SC>) {
+    fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
         match self {
             Geometry::Point(p) => p.to_stream(stream),
             Geometry::Line(l) => l.to_stream(stream),

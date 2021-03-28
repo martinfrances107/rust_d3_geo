@@ -59,7 +59,7 @@
 //     }
 // }
 
-// impl<T> Stream for StreamPreClipNodeStub<T>
+// impl<T> Stream<T> for StreamPreClipNodeStub<T>
 // where
 //     T: CoordFloat + FloatConst + Default + 'static,
 // {
@@ -102,7 +102,7 @@
 
 // pub type StreamPreClipNode = Box<dyn StreamPreClipTrait>;
 // impl<T> StreamClipTrait for StreamPreClipNode {}
-// impl<T> Stream for StreamPreClipNode
+// impl<T> Stream<T> for StreamPreClipNode
 // where
 //     T: CoordFloat + FloatConst,
 // {

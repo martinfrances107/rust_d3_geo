@@ -1,7 +1,11 @@
+// use crate::stream::stream_pipe::StreamPipe;
 use crate::stream::Stream;
+use crate::stream::StreamDst;
 use crate::stream::Streamable;
+
 use std::ops::AddAssign;
 
+use derivative::Derivative;
 use geo::{CoordFloat, Coordinate, Point};
 use num_traits::FloatConst;
 
@@ -10,8 +14,10 @@ pub const EPSILON: f64 = 1e-6;
 pub const EPSILON2: f64 = 1e-12;
 
 #[allow(non_snake_case)]
+#[derive(Derivative)]
+#[derivative(Debug)]
 #[derive(Clone)]
-pub struct CentroidStream<T: CoordFloat> {
+pub struct CentroidStream<T: CoordFloat + Default> {
     W0: T,
     W1: T,
     X0: T,
@@ -28,12 +34,15 @@ pub struct CentroidStream<T: CoordFloat> {
     x0: T,
     y0: T,
     z0: T, // previous point
+    #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, &Coordinate<T>),
+    #[derivative(Debug = "ignore")]
     line_start_fn: fn(&mut Self),
+    #[derivative(Debug = "ignore")]
     line_end_fn: fn(&mut Self),
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign> Default for CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + Default + AddAssign> Default for CentroidStream<T> {
     fn default() -> Self {
         return Self {
             W0: T::zero(),
@@ -59,7 +68,7 @@ impl<T: CoordFloat + FloatConst + AddAssign> Default for CentroidStream<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign + Default> CentroidStream<T> {
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
         self.X0 += (x - self.X0) / self.W0;
@@ -174,7 +183,7 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
         self.point_fn = Self::centroid_ring_point_first;
     }
 
-    pub fn centroid(&mut self, d_object: &impl Streamable<SC = Coordinate<T>>) -> Point<T> {
+    pub fn centroid(&mut self, d_object: &impl Streamable<T, SC = Coordinate<T>>) -> Point<T> {
         d_object.to_stream(self);
 
         let mut x = self.X2;
@@ -210,7 +219,7 @@ impl<T: CoordFloat + FloatConst + AddAssign> CentroidStream<T> {
 //         Box::new(self.clone())
 //     }
 // }
-impl<T: CoordFloat + FloatConst + AddAssign> Stream for CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign + Default> Stream<T> for CentroidStream<T> {
     type C = Coordinate<T>;
 
     fn sphere(&mut self) {}
@@ -238,5 +247,9 @@ impl<T: CoordFloat + FloatConst + AddAssign> Stream for CentroidStream<T> {
     fn polygon_end(&mut self) {
         self.line_start_fn = Self::centroid_line_start;
         self.line_end_fn = Self::centroid_line_end;
+    }
+
+    fn get_dst(&self) -> StreamDst<T> {
+        StreamDst::CS(self.clone())
     }
 }

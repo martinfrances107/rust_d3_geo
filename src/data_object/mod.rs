@@ -4,6 +4,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Geometry;
 
+// use crate::stream::stream_pipe::StreamPipe;
 use crate::stream::{Stream, Streamable};
 
 #[derive(Clone, Debug)]
@@ -55,16 +56,16 @@ where
     Collection(Collection<T>),
 }
 
-impl<T> Streamable for DataObject<T>
+impl<T> Streamable<T> for DataObject<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type SC = Coordinate<T>;
-    fn to_stream(&self, stream: &mut impl Stream<C = Self::SC>) {
+    fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
         match self {
             DataObject::Geometry(g) => g.to_stream(stream),
-            DataObject::Collection(_c) => {
-                todo!("Must fix")
+            DataObject::Collection(Collection::Feature { feature }) => {
+                todo!("fixme");
             }
         }
     }
