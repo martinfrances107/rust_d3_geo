@@ -16,7 +16,6 @@ use super::FnValMaybe2D;
 use super::StreamType;
 
 use crate::cartesian::cartesian_normalize_in_place;
-// use crate::stream::stream_identity::StreamIdentity;
 use crate::Transform;
 use crate::{cartesian::cartesian, TransformIdentity};
 use std::cell::RefCell;

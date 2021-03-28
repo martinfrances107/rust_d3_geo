@@ -14,18 +14,6 @@ where
     stream: Box<dyn Stream<T, C = Coordinate<T>>>,
 }
 
-// impl<T> Default for StreamIdentity<T>
-// where
-//     T: CoordFloat + Default + FloatConst,
-// {
-//     #[inline]
-//     fn default() -> Self {
-//         Self {
-//             stream: Box::new(StreamDummy::default()),
-//         }
-//     }
-// }
-
 impl<T> Stream<T> for StreamIdentity<T>
 where
     T: CoordFloat + Default + FloatConst,
@@ -59,14 +47,5 @@ where
     #[inline]
     fn polygon_end(&mut self) {
         self.stream.polygon_end();
-    }
-}
-
-impl<T> StreamIdentity<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    pub fn stream_in(&mut self, stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
-        self.stream = stream;
     }
 }

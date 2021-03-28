@@ -13,7 +13,6 @@ use geo::Coordinate;
 use num_traits::{AsPrimitive, FloatConst};
 use web_sys::CanvasRenderingContext2d;
 // use crate::projection::stream_transform_radians::StreamTransformRadiansNode;
-// use crate::stream::stream_identity::StreamIdentity;
 
 use crate::clip::buffer::LineElem;
 // use crate::stream::Streamable;
@@ -79,12 +78,6 @@ trait PathTrait: PointRadiusTrait // where
     // fn point_radius(&self);
     // fn result(&self);
 }
-
-// #[inline]
-// fn projection_stream_identity<T>(_path: dyn  PathStreamTrait<T>  + 'static) -> Box<dyn Stream<T>>
-// where T: Float {
-//     Box::new(StreamIdentity{})
-// }
 
 // pub struct PathIdentity{}
 
