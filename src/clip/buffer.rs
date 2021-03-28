@@ -3,9 +3,10 @@ use crate::stream::Stream;
 use crate::stream::StreamClone;
 use crate::stream::StreamDst;
 // use crate::stream::StreamPathResult;
-use crate::{path::PathResult, stream::StreamInTrait};
+use crate::path::PathResult;
 
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::FloatConst;
 
 #[derive(Clone, Copy, Debug)]
@@ -61,11 +62,11 @@ impl<T: CoordFloat> PathResult for ClipBuffer<T> {
         return Some(PathResultEnum::ClipBufferOutput(result.to_vec()));
     }
 }
-impl<T> StreamInTrait<T> for ClipBuffer<T>
+impl<T> ClipBuffer<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
+    pub fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
         panic!("Should I call stream_in on a buffer!");
     }
 }

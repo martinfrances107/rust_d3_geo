@@ -22,19 +22,8 @@ pub struct ResampleNone<T>
 where
     T: CoordFloat + FloatConst + Default,
 {
-    // project: Box<dyn TransformClone<'a, TcC = Coordinate<T>>>,
     project: Compose<T>,
-    // stream: Box<
-    //     dyn StreamPostClipTrait<
-    //         SpostctStream = StreamDst<T>,
-    //         C = Coordinate<T>,
-    //         SctC = Coordinate<T>,
-    //         SctT = T,
-    //         SctOC = Option<Coordinate<T>>,
-    //         SctCi = CompareIntersection<T>,
-    //         SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-    //     >,
-    // >,
+    /// Box to prevent infinite recusion.
     pub stream: Box<Clip<T>>,
 }
 
@@ -63,50 +52,47 @@ impl<T: CoordFloat + FloatConst + Default> ResampleNone<T> {
     }
 }
 
-// impl<T: CoordFloat + FloatConst + Default + 'static> StreamResampleTrait for ResampleNone<T> {
-//     type SRTsci = Box<
-//         dyn StreamPostClipTrait<
-//             SpostctStream = StreamDst<T>,tatic + CoordFloat> Clone for Compose<'a, T> {
-//     fn clone(&self) -> Compose<'a, T> {
-//         Compose::<'a, T> {
-//             a: self.a.box_clone(),
-//             b: self.b.box_clone(),
-//         }
-//     }
-// }
-//             C = Coordinate<T>,
-//             SctC = Coordinate<T>,
-//             SctT = T,
-//             SctOC = Option<Coordinate<T>>,
-//             SctCi = CompareIntersection<T>,
-//             SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-//         >,
-//     >;
-//     fn stream_postclip_in(
-//         &mut self,
-//         stream: Box<
-//             dyn StreamPostClipTrait<
-//                 SpostctStream = StreamDst<T>,
-//                 C = Coordinate<T>,
-//                 SctC = Coordinate<T>,
-//                 SctT = T,
-//                 SctOC = Option<Coordinate<T>>,
-//                 SctCi = CompareIntersection<T>,
-//                 SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-//             >,
-//         >,
-//     ) {
-//         self.stream = stream;
-//     }
-// }
+impl<T: CoordFloat + FloatConst + Default> ResampleNone<T> {
+    //     type SRTsci = Box<
+    //         dyn StreamPostClipTrait<
+    //             SpostctStream = StreamDst<T>,tatic + CoordFloat> Clone for Compose<'a, T> {
+    //     fn clone(&self) -> Compose<'a, T> {
+    //         Compose::<'a, T> {
+    //             a: self.a.box_clone(),
+    //             b: self.b.box_clone(),
+    //         }
+    //     }
+    // }
+    //             C = Coordinate<T>,
+    //             SctC = Coordinate<T>,
+    //             SctT = T,
+    //             SctOC = Option<Coordinate<T>>,
+    //             SctCi = CompareIntersection<T>,
+    //             SctStream = Box<dyn Stream<C = Coordinate<T>>>,
+    //         >,
+    //     >;
+    #[inline]
+    pub fn stream_in(&mut self, stream: Clip<T>) {
+        self.stream = Box::new(stream);
+    }
+    //     fn stream_postclip_in(
+    //         &mut self,
+    //         stream: Box<
+    //             dyn StreamPostClipTrait<
+    //                 SpostctStream = StreamDst<T>,
+    //                 C = Coordinate<T>,
+    //                 SctC = Coordinate<T>,
+    //                 SctT = T,
+    //                 SctOC = Option<Coordinate<T>>,
+    //                 SctCi = CompareIntersection<T>,
+    //                 SctStream = Box<dyn Stream<C = Coordinate<T>>>,
+    //             >,
+    //         >,
+    //     ) {
+    //         self.stream = stream;
+    //     }
+}
 
-// impl<T: CoordFloat + FloatConst + 'static> StreamClone for ResampleNone<T> {
-//     type RetType = Box<dyn Stream<C = Coordinate<T>>>;
-//     #[inline]
-//     fn box_clone(&self) -> Self::RetType {
-//         Box::new(self.clone())
-//     }
-// }
 impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for ResampleNone<T> {
     type C = Coordinate<T>;
     fn get_dst(&self) -> StreamDst<T> {

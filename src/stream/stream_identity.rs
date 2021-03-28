@@ -4,7 +4,7 @@ use num_traits::FloatConst;
 use super::stream_dummy::StreamDummy;
 use super::Stream;
 use super::StreamDst;
-use super::StreamInTrait;
+// use super::StreamInTrait;
 
 /// A Stub acts as a black hole.
 /// A StreamIdentity acts as a 'pass through' node.
@@ -74,11 +74,11 @@ where
     }
 }
 
-impl<T> StreamInTrait<T> for StreamIdentity<T>
+impl<T> StreamIdentity<T>
 where
     T: CoordFloat + FloatConst,
 {
-    fn stream_in(&mut self, stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
+    pub fn stream_in(&mut self, stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
         self.stream = stream;
     }
 }

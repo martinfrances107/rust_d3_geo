@@ -8,7 +8,7 @@ use crate::path::PathResultEnum;
 
 use super::Stream;
 // use super::StreamClone;
-use super::StreamInTrait;
+// use super::StreamInTrait;
 // use super::StreamPathResult;
 
 #[derive(Clone, Copy, Default, Debug)]
@@ -49,7 +49,7 @@ where
 // {
 //     type C = Coordinate<T>;
 // }
-impl<T> StreamInTrait<T> for StreamPathResultIdentity<T> where T: CoordFloat + FloatConst {}
+// impl<T> StreamInTrait<T> for StreamPathResultIdentity<T> where T: CoordFloat + FloatConst {}
 impl<T> PathResult for StreamPathResultIdentity<T>
 where
     T: CoordFloat + FloatConst,

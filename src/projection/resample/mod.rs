@@ -100,13 +100,13 @@ where
     }
 }
 
-pub trait StreamResampleTrait {
-    type SRTsci; // Stream. Resample. Trait. stream clip in
-    fn stream_postclip_in(&mut self, stream_clip_in: Self::SRTsci);
-    // fn box_clone(&self) -> ResampleNode;
-}
+// pub trait StreamResampleTrait {
+//     type SRTsci; // Stream. Resample. Trait. stream clip in
+//     fn stream_in(&mut self, stream_clip_in: Self::SRTsci);
+//     // fn box_clone(&self) -> ResampleNode;
+// }
 
-impl<T> StreamResampleTrait for ResampleEnum<T>
+impl<T> ResampleEnum<T>
 where
     T: CoordFloat + FloatConst + Default,
 {
@@ -121,16 +121,16 @@ where
     //         SctStream = Box<dyn Stream<C = Coordinate<T>>>,
     //     >,
     // >;
-    type SRTsci = Clip<T>;
-    fn stream_postclip_in(&mut self, _stream_clip_in: Self::SRTsci) {
-        // match &mut self {
-        //     ResampleNode::Simple(s) => {
-        //         s.stream_post_clip_in(stream_clip_in);
-        //     }
-        //     ResampleNode::Complex(s) => {StreamResampleTrait
-        //         s.stream_post_clip_in(stream_clip_in);
-        //     }
-        // }
+    // type SRTsci = Clip<T>;
+    pub fn stream_in(&mut self, stream: Clip<T>) {
+        match self {
+            ResampleEnum::RN(s) => {
+                s.stream_in(stream);
+            }
+            ResampleEnum::R(s) => {
+                s.stream_in(stream);
+            }
+        }
     }
 }
 

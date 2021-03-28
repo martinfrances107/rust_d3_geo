@@ -182,15 +182,14 @@ where
 //     }
 // }
 
-// impl<T> StreamResampleTrait for Box<dyn StreamResampleTrait<SRTsci = StreamPostClipNode<T>>>
-// where
-//     T: CoordFloat + FloatConst + 'static,
-// {
-//     type SRTsci = StreamPostClipNode<T>;
-//     fn stream_postclip_in(&mut self, _stream_clip_in: StreamPostClipNode<T>) {
-//         // No-op.
-//     }
-// }
+impl<T> Resample<T>
+where
+    T: CoordFloat + Default + FloatConst,
+{
+    pub fn stream_in(&mut self, stream: Clip<T>) {
+        self.stream = Box::new(stream);
+    }
+}
 
 impl<T> Resample<T>
 where
@@ -413,6 +412,7 @@ where
     fn polygon_end(&mut self) {
         self.stream.polygon_end();
     }
+
     #[inline]
     fn point(&mut self, p: &Self::C, _m: Option<u8>) {
         if self.use_line_point {

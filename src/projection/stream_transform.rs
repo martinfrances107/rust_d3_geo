@@ -31,7 +31,7 @@ where
 
 impl<T: CoordFloat + FloatConst + Default> StreamTransform<T> {
     #[inline]
-    pub fn stream_preclip_in(&mut self, stream: Clip<T>) {
+    pub fn stream_in(&mut self, stream: Clip<T>) {
         self.stream = stream;
     }
 }

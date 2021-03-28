@@ -188,12 +188,12 @@ where
     }
 }
 
-pub trait StreamInTrait<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {}
-}
+// pub trait StreamInTrait<T>
+// where
+//     T: CoordFloat + FloatConst,
+// {
+//     fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {}
+// }
 
 // pub trait StreamClipLine: Stream<T> + Clean {
 //     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>>;

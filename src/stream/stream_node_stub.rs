@@ -4,9 +4,9 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 // use super::stream_simple_node_stub::StreamSimpleNode;
-use super::Stream;
-use super::StreamClone;
-use super::StreamInTrait;
+// use super::Stream;
+// use super::StreamClone;
+// use super::StreamInTrait;
 // use super::StreamSimpleNode;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct StreamNodeStub<T>
@@ -46,4 +46,4 @@ where
 // {
 //     type C = Coordinate<T>;
 // }
-impl<T> StreamInTrait<T> for StreamNodeStub<T> where T: CoordFloat + FloatConst + Default {}
+// impl<T> StreamInTrait<T> for StreamNodeStub<T> where T: CoordFloat + FloatConst + Default {}

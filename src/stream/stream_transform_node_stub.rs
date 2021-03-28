@@ -5,7 +5,7 @@ use num_traits::FloatConst;
 
 use super::Stream;
 use super::StreamClone;
-use super::StreamInTrait;
+// use super::StreamInTrait;
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct StreamTransformNodeStub<T>
@@ -50,4 +50,4 @@ where
 //     type C = Coordinate<T>;
 // }
 
-impl<T> StreamInTrait<T> for StreamTransformNodeStub<T> where T: CoordFloat + FloatConst + Default {}
+// impl<T> StreamInTrait<T> for StreamTransformNodeStub<T> where T: CoordFloat + FloatConst + Default {}

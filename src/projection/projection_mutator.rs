@@ -24,7 +24,7 @@ use super::orthographic::OrthographicRaw;
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::resample::resample::Resample;
-use super::resample::StreamResampleTrait;
+// use super::resample::StreamResampleTrait;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 use super::ProjectionRawEnum;
 
@@ -181,16 +181,16 @@ impl<T: CoordFloat + FloatConst + Default> ProjectionMutator<T> {
         postclip.stream_in(ClipSinkEnum::Src(stream_dst));
 
         let mut resample = self.project_resample.clone();
-        resample.stream_postclip_in(postclip);
+        resample.stream_in(postclip);
 
         let mut preclip = self.preclip.clone();
         preclip.stream_in(ClipSinkEnum::Resample(resample));
 
         let mut t_rotate_node = StreamTransform::new(Some(self.rotate.clone()));
-        t_rotate_node.stream_preclip_in(preclip);
+        t_rotate_node.stream_in(preclip);
 
         let mut t_radians_node: StreamTransformRadians<T> = StreamTransformRadians::default();
-        t_radians_node.stream_transform_in(t_rotate_node);
+        t_radians_node.stream_in(t_rotate_node);
 
         t_radians_node
 

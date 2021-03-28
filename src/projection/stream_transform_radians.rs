@@ -51,12 +51,12 @@ where
     }
 }
 
-impl<T> StreamTransformIn<T> for StreamTransformRadians<T>
+impl<T> StreamTransformRadians<T>
 where
     T: CoordFloat + FloatConst + Default,
 {
     #[inline]
-    fn stream_transform_in(&mut self, stream: StreamTransform<T>) {
+    pub fn stream_in(&mut self, stream: StreamTransform<T>) {
         self.stream = stream;
     }
 }
