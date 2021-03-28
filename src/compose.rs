@@ -6,12 +6,9 @@ use num_traits::FloatConst;
 use crate::projection::scale_translate_rotate::ScaleTranslateRotateEnum;
 use crate::projection::ProjectionRawEnum;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
-use crate::rotation::rotation_identity::RotationIdentity;
 use crate::rotation::rotation_lambda::RotationLambda;
 use crate::rotation::rotation_phi_gamma::RotationPhiGamma;
 use crate::Transform;
-
-// use crate::TransformIdentity;
 
 #[derive(Clone, Debug)]
 pub enum ComposeElemEnum<T>
@@ -70,36 +67,6 @@ where
         }
     }
 }
-
-// impl<T> Clone for Compose<T>
-// where
-//     T: CoordFloat + FloatConst + Default,
-// {
-//     fn clone(&self) -> Self {
-//         Self {
-//             a: self.a.box_clone(),
-//             b: self.b.box_clone(),
-//         }
-//     }
-// }
-
-// impl< 'a, T: CoordFloat> Clone for Compose<'a, T> {
-//     fn clone(&self) -> Compose<'a, T> {
-//         Compose::<'a, T> {
-//             a: self.a.box_clone(),
-//             b: self.b.box_clone(),
-//         }
-//     }
-// }
-
-// impl<'a, T: CoordFloat> TransformClone<'a> for Compose<'a, T> {
-//     fn box_clone(&self) -> Box<dyn TransformClone<'a,  TcC = Self::TcC>> {
-//         Box::new(Compose::<'a, T> {
-//             a: self.a.box_clone(),
-//             b: self.b.box_clone(),
-//         })
-//     }
-// }
 
 impl<T: CoordFloat + FloatConst + Default> Compose<T> {
     #[inline]
