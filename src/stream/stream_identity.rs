@@ -1,7 +1,6 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use super::stream_dummy::StreamDummy;
 use super::Stream;
 use super::StreamDst;
 // use super::StreamInTrait;

@@ -16,7 +16,6 @@ use web_sys::CanvasRenderingContext2d;
 // use crate::stream::stream_identity::StreamIdentity;
 
 use crate::clip::buffer::LineElem;
-// use crate::stream::stream_dummy::StreamDummy;
 // use crate::stream::Streamable;
 use crate::stream::StreamDst;
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};

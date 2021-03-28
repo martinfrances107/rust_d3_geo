@@ -12,7 +12,6 @@ mod polygon;
 mod rect;
 mod triangle;
 
-pub mod stream_dummy;
 pub mod stream_identity;
 pub mod stream_path_result_identity;
 
