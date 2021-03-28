@@ -1,5 +1,6 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
+use std::ops::AddAssign;
 
 // A collection of functions that mutate a Projection struct.
 
@@ -64,7 +65,7 @@ pub struct ProjectionMutator<T: CoordFloat + FloatConst + Default> {
 
 impl<T> Default for ProjectionMutator<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     fn default() -> Self {
         ProjectionMutator::from_projection_raw(
@@ -73,7 +74,7 @@ where
         )
     }
 }
-impl<T: CoordFloat + FloatConst + Default> ProjectionMutator<T> {
+impl<T: AddAssign + CoordFloat + FloatConst + Default> ProjectionMutator<T> {
     pub fn from_projection_raw(
         project: ProjectionRawEnum<T>,
         delta2_p: Option<T>,
@@ -201,7 +202,7 @@ impl<T: CoordFloat + FloatConst + Default> ProjectionMutator<T> {
 
 impl<T> Transform for ProjectionMutator<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
@@ -222,7 +223,7 @@ where
 
 impl<T> Projection<T> for ProjectionMutator<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     // #[inline]
     // fn get_preclip(&self) -> StreamPreClipNode<T> {

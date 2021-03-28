@@ -108,7 +108,7 @@ where
 
 impl<T> ResampleEnum<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     // type SRTsci = Box<
     //     dyn StreamPostClipTrait<

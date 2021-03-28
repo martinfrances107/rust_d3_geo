@@ -12,6 +12,8 @@ pub mod stream_transform_radians;
 mod azimuthal;
 mod scale_translate;
 
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -49,7 +51,7 @@ where
 
 impl<T> Transform for ProjectionRawEnum<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {

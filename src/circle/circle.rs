@@ -1,6 +1,8 @@
+use std::fmt::Debug;
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::fmt::Debug;
 
 use super::StreamType;
 use crate::stream::Stream;
@@ -51,7 +53,7 @@ impl<T: CoordFloat + FloatConst + Default> Clone for CircleStream<T> {
 //     }
 // }
 
-impl<T: CoordFloat + FloatConst + Default> Stream<T> for CircleStream<T> {
+impl<T: AddAssign + CoordFloat + FloatConst + Default> Stream<T> for CircleStream<T> {
     type C = Coordinate<T>;
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         let p = p.clone();

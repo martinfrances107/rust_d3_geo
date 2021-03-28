@@ -59,7 +59,7 @@ impl<T: CoordFloat + FloatConst + Default> StreamTransform<T> {
     }
 }
 
-impl<'a, T: CoordFloat + FloatConst + Default> Transform for StreamTransform<T> {
+impl<'a, T: AddAssign + CoordFloat + FloatConst + Default> Transform for StreamTransform<T> {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
         self.transform.transform(p)

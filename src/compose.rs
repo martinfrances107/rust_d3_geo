@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -24,7 +26,7 @@ where
     RPG(RotationPhiGamma<T>),
 }
 
-impl<T: CoordFloat + FloatConst + Default> Transform for ComposeElemEnum<T> {
+impl<T: AddAssign + CoordFloat + FloatConst + Default> Transform for ComposeElemEnum<T> {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
         match self {
@@ -106,7 +108,7 @@ impl<T: CoordFloat + FloatConst + Default> Compose<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst + Default> Transform for Compose<T> {
+impl<T: AddAssign + CoordFloat + FloatConst + Default> Transform for Compose<T> {
     type TcC = Coordinate<T>;
     // Apply A then B.
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {

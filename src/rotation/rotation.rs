@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -32,7 +34,7 @@ impl<'a, T: 'a + CoordFloat + FloatConst + Default> Rotation<T> {
     }
 }
 
-impl<'a, T: 'a + CoordFloat + FloatConst + Default> Transform for Rotation<T> {
+impl<T: AddAssign + CoordFloat + FloatConst + Default> Transform for Rotation<T> {
     type TcC = Coordinate<T>;
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.transform(&Coordinate {

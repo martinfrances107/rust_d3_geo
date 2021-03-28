@@ -1,6 +1,8 @@
+use std::fmt::Debug;
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::fmt::Debug;
 
 use crate::rotation::rotate_radians_transform::rotate_radians_transform;
 use crate::stream::stream_dummy::StreamDummy;
@@ -56,7 +58,7 @@ where
 
 impl<T> CircleGenerator<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     pub fn circle(&self) -> CircleStream<T> {
         let c = self.center;

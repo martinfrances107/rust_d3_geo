@@ -4,6 +4,7 @@ mod context;
 mod string;
 
 use std::default::Default;
+use std::ops::AddAssign;
 
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::stream::Streamable;
@@ -113,7 +114,7 @@ where
 fn projection_stream_noop() {}
 impl<T> Default for Path<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     #[inline]
     fn default() -> Self {

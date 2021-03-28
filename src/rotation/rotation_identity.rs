@@ -38,9 +38,7 @@ impl<T: CoordFloat + FloatConst + Default> Transform for RotationIdentity<T> {
     type TcC = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        println!("t in {:?}", p);
         let out = normalise(p);
-        println!("t in {:?}", out);
         out
     }
 

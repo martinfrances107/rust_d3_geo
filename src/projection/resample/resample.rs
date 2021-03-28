@@ -184,10 +184,15 @@ where
 
 impl<T> Resample<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     pub fn stream_in(&mut self, stream: Clip<T>) {
         self.stream = Box::new(stream);
+    }
+
+    #[inline]
+    pub fn get_dst(&self) -> StreamDst<T> {
+        self.stream.get_dst()
     }
 }
 
@@ -218,26 +223,28 @@ where
     }
 
     fn ring_end(&mut self) {
-        // self.resample_line_to(
-        //     self.x0,
-        //     self.y0,
-        //     self.lambda0,
-        //     self.a0,
-        //     self.b0,
-        //     self.c0,
-        //     self.x00,
-        //     self.y00,
-        //     self.lambda00,
-        //     self.a00,
-        //     self.b00,
-        //     self.c00,
-        //     MAXDEPTH,
-        //     self.stream,
-        // );
-        // self.use_line_end = true;
+        {
+            let mut s = self.stream.clone();
+            self.resample_line_to(
+                self.x0,
+                self.y0,
+                self.lambda0,
+                self.a0,
+                self.b0,
+                self.c0,
+                self.x00,
+                self.y00,
+                self.lambda00,
+                self.a00,
+                self.b00,
+                self.c00,
+                MAXDEPTH,
+                &mut s,
+            );
+        }
+        self.use_line_end = true;
 
-        // // let mut stream = self.stream.borrow_mut();
-        // self.stream.line_end();
+        self.stream.line_end();
     }
 
     fn line_point(&mut self, p: &Coordinate<T>) {
@@ -268,7 +275,7 @@ where
             self.b0,
             self.c0,
             MAXDEPTH,
-            self.stream.clone(),
+            &mut self.stream.clone(),
         );
         self.stream.point(
             &Coordinate {
@@ -295,18 +302,7 @@ where
         b1: T,
         c1: T,
         depth_p: u8,
-        // stream: Box<
-        //     dyn StreamPostClipTrait<
-        //         C = Coordinate<T>,
-        //         SctC = Coordinate<T>,
-        //         SctT = T,
-        //         SctStream = Box<(dyn Stream<C = Coordinate<T>> + 'static)>,
-        //         SctOC = Option<Coordinate<T>>,
-        //         SpostctStream = StreamDst<T>,
-        //         SctCi = CompareIntersection<T>,
-        //     >,
-        // >,
-        stream: Box<Clip<T>>,
+        stream: &mut Box<Clip<T>>,
     ) {
         let mut depth = depth_p;
         let dx = x1 - x0;

@@ -1,6 +1,7 @@
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
+use std::ops::AddAssign;
 
 use super::projection::Projection;
 use super::projection_mutator::ProjectionMutator;
@@ -16,7 +17,7 @@ pub struct EquirectangularRaw<T> {
 
 impl<T> EquirectangularRaw<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     pub fn gen_projection_mutator() -> ProjectionMutator<T> {
         let e = ProjectionRawEnum::E(EquirectangularRaw::default());

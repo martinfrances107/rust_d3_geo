@@ -2,13 +2,14 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::{Float, FloatConst};
 use std::fmt::Debug;
 use std::fmt::Display;
+use std::ops::AddAssign;
 
 use crate::in_delta::in_delta;
 use crate::Transform;
 
 use super::projection_mutator::ProjectionMutator;
 
-pub fn projection_equal<'a, T: CoordFloat + FloatConst + Debug + Display + Default>(
+pub fn projection_equal<'a, T: AddAssign + CoordFloat + FloatConst + Debug + Display + Default>(
     projection: ProjectionMutator<T>,
     expected_location: &'a Coordinate<T>,
     expected_point: &'a Coordinate<T>,
