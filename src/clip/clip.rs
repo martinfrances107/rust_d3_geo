@@ -35,8 +35,15 @@ where
     where
         T: CoordFloat + FloatConst,
     {
-        // self.base.sink = stream;
-        self.base.line = stream;
+        self.base.sink = stream;
+        match &mut self.base.line {
+            LineEnum::Antimeridian(line) => {
+                line.stream_in(LineSinkEnum::CSE(self.base.sink.clone()));
+            }
+            LineEnum::Circle(line) => {
+                line.stream_in(LineSinkEnum::CSE(self.base.sink.clone()));
+            }
+        }
     }
 }
 
@@ -202,7 +209,6 @@ where
         let start_inside = false;
 
         if !self.base.polygon_started {
-            // self.base.sink.polygon_start();
             match &mut self.base.sink {
                 ClipSinkEnum::Blank => {
                     panic!("ClickSinkEnum - actively using an unconnected blank");
