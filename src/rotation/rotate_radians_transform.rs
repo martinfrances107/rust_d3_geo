@@ -64,10 +64,7 @@ where
             RotateRadiansEnum::C(c) => c.transform(p),
             RotateRadiansEnum::RL(rl) => rl.transform(p),
             RotateRadiansEnum::RPG(rpg) => rpg.transform(p),
-            RotateRadiansEnum::I(i) => {
-                println!("{:?}", i);
-                i.transform(p)
-            }
+            RotateRadiansEnum::I(i) => i.transform(p),
         }
     }
 

@@ -193,6 +193,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> ProjectionMutator<T> {
         let mut t_radians_node: StreamTransformRadians<T> = StreamTransformRadians::default();
         t_radians_node.stream_in(t_rotate_node);
 
+        // Output.
         t_radians_node
 
         //     }

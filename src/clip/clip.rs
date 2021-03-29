@@ -35,7 +35,8 @@ where
     where
         T: CoordFloat + FloatConst,
     {
-        self.base.sink = stream;
+        // self.base.sink = stream;
+        self.base.line = stream;
     }
 }
 
@@ -124,7 +125,6 @@ where
         }
     }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        // todo!("I think I have an extra match here.");
         match self.base.use_ring {
             true => {
                 self.base.ring.push(*p);

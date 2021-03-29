@@ -79,7 +79,6 @@ where
         }
     }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        println!("ResampleEnum point");
         match self {
             ResampleEnum::R(resample) => resample.point(&*p, m),
             ResampleEnum::RN(rn) => rn.point(p, m),

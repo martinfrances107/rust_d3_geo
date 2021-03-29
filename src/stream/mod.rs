@@ -81,7 +81,7 @@ where
     T: CoordFloat + Default + FloatConst,
 {
     type C;
-    fn point(&mut self, _p: &Self::C, _m: Option<u8>) {}
+    fn point(&mut self, _p: &Self::C, _m: Option<u8>);
     fn sphere(&mut self);
     fn line_start(&mut self);
     fn line_end(&mut self);
