@@ -113,7 +113,6 @@ impl<T: CoordFloat + Default + FloatConst> Line<T> {
     #[inline]
     pub fn stream_in(&mut self, stream: LineSinkEnum<T>) {
         self.stream = stream;
-        // todo!("how to deal with connecting stream or buffer to this struct.")
     }
 
     #[inline]

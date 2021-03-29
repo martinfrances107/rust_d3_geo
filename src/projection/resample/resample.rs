@@ -113,6 +113,7 @@ impl<T> Resample<T>
 where
     T: AddAssign + CoordFloat + Default + FloatConst,
 {
+    #[inline]
     pub fn stream_in(&mut self, stream: Clip<T>) {
         self.stream = Box::new(stream);
     }

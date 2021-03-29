@@ -30,11 +30,7 @@ impl<T> Clip<T>
 where
     T: CoordFloat + Default + FloatConst,
 {
-    // #[inline]
-    // fn new(raw: ClipRaw<T>, start: Coordinate<T>) -> Self {
-    //     Self { raw, start }
-    // }
-
+    #[inline]
     pub fn stream_in(&mut self, stream: ClipSinkEnum<T>)
     where
         T: CoordFloat + FloatConst,

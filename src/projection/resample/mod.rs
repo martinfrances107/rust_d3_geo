@@ -79,6 +79,7 @@ where
         }
     }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
+        println!("ResampleEnum point");
         match self {
             ResampleEnum::R(resample) => resample.point(&*p, m),
             ResampleEnum::RN(rn) => rn.point(p, m),
@@ -98,28 +99,11 @@ where
     }
 }
 
-// pub trait StreamResampleTrait {
-//     type SRTsci; // Stream. Resample. Trait. stream clip in
-//     fn stream_in(&mut self, stream_clip_in: Self::SRTsci);
-//     // fn box_clone(&self) -> ResampleNode;
-// }
-
 impl<T> ResampleEnum<T>
 where
     T: AddAssign + CoordFloat + Default + FloatConst,
 {
-    // type SRTsci = Box<
-    //     dyn StreamPostClipTrait<
-    //         SpostctStream = StreamDst,
-    //         C = Coordinate<T>,
-    //         SctC = Coordinate<T>,
-    //         SctT = T,
-    //         SctOC = Option<Coordinate<T>>,
-    //         SctCi = CompareIntersection<T>,
-    //         SctStream = Box<dyn Stream<C = Coordinate<T>>>,
-    //     >,
-    // >;
-    // type SRTsci = Clip<T>;
+    #[inline]
     pub fn stream_in(&mut self, stream: Clip<T>) {
         match self {
             ResampleEnum::RN(s) => {

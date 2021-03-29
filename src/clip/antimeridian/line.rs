@@ -72,14 +72,8 @@ impl<T> Line<T>
 where
     T: CoordFloat + Default + FloatConst,
 {
-    // type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, C = Coordinate<T>>>;
-
     #[inline]
-    pub fn stream_in(
-        &mut self,
-        // stream: Box<(dyn StreamPathResult<C = Coordinate<T>, Out = Option<PathResultEnum<T>>>)>,
-        stream: LineSinkEnum<T>,
-    ) {
+    pub fn stream_in(&mut self, stream: LineSinkEnum<T>) {
         self.stream = stream;
     }
 }
