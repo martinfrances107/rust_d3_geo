@@ -10,7 +10,6 @@ use crate::clip::ClipSinkEnum;
 use crate::clip::LineSinkEnum;
 use crate::point_equal::point_equal;
 use crate::stream::Stream;
-use crate::stream::StreamClean;
 use crate::stream::StreamDst;
 use crate::stream::StreamSourceDummy;
 use crate::stream::{Clean, CleanEnum};
@@ -147,7 +146,7 @@ impl<T: CoordFloat + Default + FloatConst> Line<T> {
         return code;
     }
 }
-impl<T> StreamClean<T> for Line<T> where T: AddAssign + CoordFloat + Default + FloatConst {}
+
 impl<T> Clean for Line<T>
 where
     T: CoordFloat + Default + FloatConst,

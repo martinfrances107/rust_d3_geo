@@ -176,12 +176,6 @@ where
     }
 }
 
-pub trait StreamClean<T>: Stream<T> + Clean
-where
-    T: CoordFloat + Default + FloatConst,
-{
-}
-
 /// Ci CompareIntersections param type
 /// See StreamClipTrait.
 #[derive(Clone, Debug, Default)]

@@ -131,7 +131,6 @@ where
 
     fn point_visible(&self, _p: &Self::SctC, _z: Option<u8>) -> bool;
 
-    // fn clip_line(&self, stream: StreamPathResultNode<T>) -> StreamCleanNode<T>;
     // Intersections are sorted along the clip edge. For both antimeridian cutting
     // and circle clipPIng, the same comparison is used.
     fn compare_intersection(&self, _a: Self::SctCi, _b: Self::SctCi) -> Self::SctT {

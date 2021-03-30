@@ -12,7 +12,7 @@ use crate::clip::ClipBuffer;
 // use crate::stream::StreamPathResultTrait;
 use crate::clip::ClipSinkEnum;
 // use crate::stream::stream_path_result_node_stub::StreamPathResultNodeStub;
-use crate::stream::{Clean, CleanEnum, StreamClean};
+use crate::stream::{Clean, CleanEnum};
 
 use super::intersect::intersect;
 
@@ -105,7 +105,6 @@ where
     }
 }
 
-impl<T> StreamClean<T> for Line<T> where T: AddAssign + CoordFloat + Default + FloatConst {}
 impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
     type C = Coordinate<T>;
     fn sphere(&mut self) {
