@@ -64,19 +64,6 @@ where
 //     }
 // }
 
-// impl<'a, T> StreamClipLine for Line<'a, T>
-// where
-//     T: CoordFloat + Default + FloatConst,
-// {
-//     // #[inline]
-//     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
-//     //     Box::new(Self {
-//     //         stream: self.stream.box_clone(),
-//     //         ..*self
-//     //     })
-//     // }
-// }
-
 impl<T: CoordFloat + Default + FloatConst> Line<T> {
     #[inline]
     pub fn new(radius: T) -> Self {

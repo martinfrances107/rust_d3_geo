@@ -3,11 +3,9 @@ use num_traits::FloatConst;
 use std::ops::AddAssign;
 
 // use crate::path::PathResultEnum;
+use crate::clip::ClipBuffer;
 use crate::stream::Stream;
 use crate::stream::StreamDst;
-// use crate::stream::StreamClipLine;
-// use crate::stream::StreamClipLineNode;
-use crate::clip::ClipBuffer;
 // use crate::stream::StreamPathResult;
 // use crate::stream::StreamPathResultTrait;
 use crate::clip::ClipSinkEnum;
@@ -57,15 +55,6 @@ where
         }
     }
 }
-// impl<T> StreamClipLine for Line<T>
-// where
-//     T: CoordFloat + Default + FloatConst,
-// {
-//     // #[inline]
-//     // fn box_clone(&self) -> Box<dyn StreamClipLine<C = Self::C, BitCB = Self::BitCB>> {
-//     //     Box::new(self.clone())
-//     // }
-// }
 
 use crate::clip::LineSinkEnum;
 impl<T> Line<T>

@@ -6,7 +6,6 @@ use num_traits::FloatConst;
 // use crate::path::PathResultEnum;
 // use crate::stream::stream_path_result_node_stub::StreamPathResultNodeStub;
 use crate::stream::Stream;
-// use crate::stream::StreamClipLine;
 // use super::antimeridian::ClipAntimeridian;
 // use super::circle::ClipCircle;
 // use super::ClipRaw;
@@ -29,7 +28,6 @@ pub struct ClipBase<T: CoordFloat + Default + FloatConst> {
     pub ring: Vec<Coordinate<T>>,
     pub ring_sink: LineEnum<T>,
     // pub ring_buffer: ClipBuffer<T>,
-    // pub ring_sink_node: Box<dyn StreamClipLine<C = Coordinate<T>, BitCB = ClipBuffer<T>>>,
     // pub ring_sink_node: ClipRaw<T>,
     pub segments: Vec<Vec<LineElem<T>>>,
     pub start: Coordinate<T>,
@@ -62,14 +60,11 @@ where
     fn default() -> Self {
         Self {
             // Must be overrided.
-            // line_node: Box::new(StreamClipLineNodeStub::default()),
-            // clip_buffer: Box::new(StreamClipLineNodeStub::default()),
             line: LineEnum::Antimeridian(AntimeridianLine::default()),
             polygon_started: false,
             polygon: vec![vec![]],
             ring: vec![],
             // clip_buffer: ClipBuffer::default(),
-            // ring_sink_node: Box::new(StreamClipLineNodeStub::default()),
             ring_sink: LineEnum::Antimeridian(AntimeridianLine::default()),
             segments: vec![vec![]],
             use_ring: false,
