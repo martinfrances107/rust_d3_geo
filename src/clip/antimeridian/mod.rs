@@ -9,8 +9,8 @@ use crate::stream::Stream;
 use crate::stream::{Clean, CleanEnum};
 
 // use super::buffer::ClipBuffer;
-use super::clip_base::ClipBase;
 use super::clip::Clip;
+use super::clip_base::ClipBase;
 use super::ClipTraitRaw;
 // use super::LineEnum;
 use crate::clip::ClipRaw;

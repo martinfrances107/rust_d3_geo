@@ -116,23 +116,21 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
     }
     fn line_start(&mut self) {
         match &mut self.stream {
-            LineSinkEnum::CSE(stream) => {
-                match stream {
-                    ClipSinkEnum::Resample(stream) => stream.line_start(),
-                    ClipSinkEnum::Src(stream) => match stream {
-                        StreamDst::Circle(c) => c.line_start(),
-                        StreamDst::SRC(_src) => { 
-                            todo!("must resolve this");
-                        }
-                        StreamDst::PAS(pas) => pas.line_start(),
-                        StreamDst::CS(cs) => cs.line_start(),
-                        StreamDst::LS(ls) => ls.line_start(),
-                    },
-                    ClipSinkEnum::Blank => {
-                        panic!("ClickSinkEnum - actively using an unconnected blank");
+            LineSinkEnum::CSE(stream) => match stream {
+                ClipSinkEnum::Resample(stream) => stream.line_start(),
+                ClipSinkEnum::Src(stream) => match stream {
+                    StreamDst::Circle(c) => c.line_start(),
+                    StreamDst::SRC(_src) => {
+                        todo!("must resolve this");
                     }
+                    StreamDst::PAS(pas) => pas.line_start(),
+                    StreamDst::CS(cs) => cs.line_start(),
+                    StreamDst::LS(ls) => ls.line_start(),
+                },
+                ClipSinkEnum::Blank => {
+                    panic!("ClickSinkEnum - actively using an unconnected blank");
                 }
-            }
+            },
             LineSinkEnum::CB(stream) => stream.line_start(),
         }
         self.clean = CleanEnum::NoIntersections;
