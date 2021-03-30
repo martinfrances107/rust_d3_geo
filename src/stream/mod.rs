@@ -20,7 +20,6 @@ use num_traits::FloatConst;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
-// use crate::clip::BufferInTrait;
 // use crate::clip::ClipTraitRaw;
 use crate::centroid::centroid_stream::CentroidStream;
 use crate::circle::circle::CircleStream;

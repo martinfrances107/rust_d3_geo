@@ -114,11 +114,6 @@ where
     Circle(ClipCircle<T>),
 }
 
-// pub trait BufferInTrait {
-//     type BitCB;
-//     fn buffer_in(&mut self, &buffer: Self::BitCB);
-// }
-
 pub trait ClipTraitRaw<T>
 where
     T: CoordFloat + Default + FloatConst,

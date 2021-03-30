@@ -78,18 +78,6 @@ where
     }
 }
 
-// impl<T> BufferInTrait for Line<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     // type BitSink = Box<dyn StreamPathResult<Out = Option<PathResultEnum<T>>, C = Coordinate<T>>>;
-//     type BitCB = ClipBuffer<T>;
-//     #[inline]
-//     fn buffer_in(&mut self, &buffer: Self::BitCB) {
-//         // self.stream = stream;
-//     }
-// }
-
 impl<T> Clean for Line<T>
 where
     T: CoordFloat + Default + FloatConst,

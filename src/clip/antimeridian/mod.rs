@@ -10,7 +10,6 @@ use crate::stream::{Clean, CleanEnum};
 
 // use super::buffer::ClipBuffer;
 use super::clip_base::ClipBase;
-// use super::BufferInTrait;
 use super::clip::Clip;
 use super::ClipTraitRaw;
 // use super::LineEnum;
@@ -196,16 +195,6 @@ where
 //     T: CoordFloat + FloatConst,
 // {
 //     fn stream_in(&mut self, stream: StreamSimpleNode<T>) {
-//         self.base.sink = stream;
-//         let mut line = self.line_node.borrow_mut();
-//         line.stream_in(stream);
-//     }
-// }
-// impl<T> BufferInTrait<T> for ClipAntimeridian<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn buffer_in(&mut self, stream: StreamNode<T>) {
 //         self.base.sink = stream;
 //         let mut line = self.line_node.borrow_mut();
 //         line.stream_in(stream);

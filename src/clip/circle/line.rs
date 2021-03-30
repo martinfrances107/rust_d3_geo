@@ -52,17 +52,6 @@ where
     }
 }
 
-// impl<T> BufferInTrait for Line<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     type BitCB = ClipBuffer<T>;
-//     #[inline]
-//     fn buffer_in(&mut self, _sink: Self::BitCB) {
-//         // No-op.
-//     }
-// }
-
 // impl<T> Clone for Line<T>
 // where
 //     T: CoordFloat + Default + FloatConst + 'static,
