@@ -27,18 +27,6 @@ where
     stream: LineSinkEnum<T>,
 }
 
-// impl<T> Clone for Line<T>
-// where
-//     T: CoordFloat + Default + FloatConst + 'static,
-// {
-//     fn clone(&self) -> Self {
-//         Self {
-//             stream: self.stream.box_clone(),
-//             ..*self
-//         }
-//     }
-// }
-
 impl<T> Default for Line<T>
 where
     T: CoordFloat + Default + FloatConst,

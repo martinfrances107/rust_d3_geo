@@ -7,13 +7,6 @@ use super::rotate_radians_transform::rotate_radians_transform;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::Transform;
 
-// impl <T: CoordFloat> Clone for <dyn Transform<TcC=Coordinate<T>>>
-// {
-//     fn clone(&self) -> Self{
-
-//     }
-
-// }
 pub struct Rotation<T>
 where
     T: CoordFloat + Default + FloatConst,

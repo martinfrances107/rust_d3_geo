@@ -38,21 +38,6 @@ pub struct ClipBase<T: CoordFloat + Default + FloatConst> {
     pub sink: ClipSinkEnum<T>,
 }
 
-// impl<T> Clone for ClipBase<T>
-// where
-//     T: CoordFloat + Default + FloatConst,
-// {
-//     fn clone(&self) -> Self {
-//         Self {
-//             // sink: self.sink.box_clone(),
-//             ..*self
-//         }
-//     }
-// }
-
-// use crate::projection::resample::resample::Resample;
-// use crate::projection::resample::ResampleEnum;
-
 impl<T> Default for ClipBase<T>
 where
     T: CoordFloat + Default + FloatConst,

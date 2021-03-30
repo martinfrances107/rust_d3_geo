@@ -52,18 +52,6 @@ where
     }
 }
 
-// impl<T> Clone for Line<T>
-// where
-//     T: CoordFloat + Default + FloatConst + 'static,
-// {
-//     fn clone(&self) -> Self {
-//         Self {
-//             stream: self.stream.clone(),
-//             ..*self
-//         }
-//     }
-// }
-
 impl<T: CoordFloat + Default + FloatConst> Line<T> {
     #[inline]
     pub fn new(radius: T) -> Self {
