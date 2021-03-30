@@ -4,12 +4,9 @@ use std::ops::AddAssign;
 
 // use crate::path::PathResultEnum;
 use crate::clip::ClipBuffer;
+use crate::clip::ClipSinkEnum;
 use crate::stream::Stream;
 use crate::stream::StreamDst;
-// use crate::stream::StreamPathResult;
-// use crate::stream::StreamPathResultTrait;
-use crate::clip::ClipSinkEnum;
-// use crate::stream::stream_path_result_node_stub::StreamPathResultNodeStub;
 use crate::stream::{Clean, CleanEnum};
 
 use super::intersect::intersect;
@@ -23,7 +20,6 @@ where
     lambda0: T,
     phi0: T,
     sign0: T,
-    // stream: Box<dyn StreamPathResult<C = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
     stream: LineSinkEnum<T>,
 }
 
@@ -38,7 +34,6 @@ where
             lambda0: T::nan(),
             phi0: T::nan(),
             sign0: T::nan(),
-            // stream: Box::new(StreamPathResultNodeStub::default()),
             stream: LineSinkEnum::CB(ClipBuffer::default()),
         }
     }

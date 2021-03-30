@@ -4,13 +4,11 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 // use crate::path::PathResultEnum;
-// use crate::stream::stream_path_result_node_stub::StreamPathResultNodeStub;
 use crate::stream::Stream;
 // use super::antimeridian::ClipAntimeridian;
 // use super::circle::ClipCircle;
 // use super::ClipRaw;
 use super::LineEnum;
-// use crate::stream::StreamPathResult;
 
 // use super::antimeridian::ClipAntimeridian;
 use super::antimeridian::line::Line as AntimeridianLine;
@@ -34,7 +32,6 @@ pub struct ClipBase<T: CoordFloat + Default + FloatConst> {
     pub use_ring: bool,
     pub use_ring_end: bool,
     pub use_ring_start: bool,
-    // pub sink: Box<dyn StreamPathResult<C = Coordinate<T>, Out = Option<PathResultEnum<T>>>>,
     pub sink: ClipSinkEnum<T>,
 }
 
@@ -55,7 +52,6 @@ where
             use_ring: false,
             use_ring_end: false,
             use_ring_start: false,
-            // sink: Box::new(StreamPathResultNodeStub::default()),
             // sink: ClipSinkEnum::Resample(ResampleEnum::R(Resample::default())), // stub value
             sink: ClipSinkEnum::Blank,
             start: Coordinate {

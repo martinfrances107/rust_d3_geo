@@ -1,8 +1,7 @@
+use crate::path::PathResult;
 use crate::path::PathResultEnum;
 use crate::stream::Stream;
 use crate::stream::StreamDst;
-// use crate::stream::StreamPathResult;
-use crate::path::PathResult;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -27,14 +26,6 @@ impl<T: CoordFloat + FloatConst> ClipBuffer<T> {
     //         lines: Vec::new(),
     //         line: None,
     //     }
-    // }
-
-    // #[inline]
-    // pub fn gen_node() -> StreamPathResultNode<T>
-    // where
-    //     T: CoordFloat + FloatConst,
-    // {
-    //     Rc::new(RefCell::new(Self::new()))
     // }
 
     fn rejoin(&mut self) {
@@ -69,16 +60,6 @@ where
         panic!("Should I call stream_in on a buffer!");
     }
 }
-
-// impl<T> StreamPathResult for ClipBuffer<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     #[inline]
-//     fn box_clone(&self) -> Box<dyn StreamPathResult<C = Self::C, Out = Self::Out>> {
-//         Box::new(self.clone())
-//     }
-// }
 
 impl<T: CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<T> {
     type C = Coordinate<T>;
