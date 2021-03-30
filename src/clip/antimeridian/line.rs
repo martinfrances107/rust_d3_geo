@@ -150,50 +150,6 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
             // Line crosses a pole.
             let f_2 = T::from(2f64).unwrap();
             self.phi0 = (self.phi0 + phi1) / f_2;
-            // match (self.phi0 + phi1 / f_2).is_sign_positive() {
-            //     true => {
-            //         self.stream.point(
-            //             Coordinate {
-            //                 x: self.lambda0,
-            //                 y: T::FRAC_PI_2(),
-            //             },
-            //             None,
-            //         );
-            //     }
-            //     false => {
-            //         self.stream.point(
-            //             Coordinate {
-            //                 x: self.lambda0,
-            //                 y: -T::FRAC_PI_2(),
-            //             },
-            //             None,
-            //         );
-            //     }
-            // }
-            // self.stream.point(
-            //     Coordinate {
-            //         x: self.sign0,
-            //         y: self.phi0,
-            //     },
-            //     None,
-            // );
-            // self.stream.line_end();
-            // self.stream.line_start();
-            // self.stream.point(
-            //     Coordinate {
-            //         x: sign1,
-            //         y: self.phi0,
-            //     },
-            //     None,
-            // );
-            // self.stream.point(
-            //     Coordinate {
-            //         x: lambda1,
-            //         y: self.phi0,
-            //     },
-            //     None,
-            // );
-
             match self.stream.clone() {
                 LineSinkEnum::CB(mut stream) => {
                     match (self.phi0 + phi1 / f_2).is_sign_positive() {
@@ -347,22 +303,6 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                 lambda1 = lambda1 - sign1 * T::epsilon();
             }
             self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
-            // self.stream.point(
-            //     Coordinate {
-            //         x: self.sign0,
-            //         y: self.phi0,
-            //     },
-            //     None,
-            // );
-            // self.stream.line_end();
-            // //  self.stream.line_start();
-            // self.stream.point(
-            //     Coordinate {
-            //         x: sign1,
-            //         y: self.phi0,
-            //     },
-            //     None,
-            // );
             match self.stream.clone() {
                 LineSinkEnum::CB(mut stream) => {
                     stream.point(
