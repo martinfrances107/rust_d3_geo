@@ -13,7 +13,6 @@ mod rect;
 mod triangle;
 
 pub mod stream_identity;
-pub mod stream_path_result_identity;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
