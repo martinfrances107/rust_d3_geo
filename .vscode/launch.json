@@ -27,7 +27,7 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Debug integration test 'polygon_contains_test'",
+      "name": "'polygon_contains_test'",
       "cargo": {
         "args": [
           "test",
@@ -65,7 +65,7 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Debug integration test 'distance-test'",
+      "name": "'distance-test'",
       "cargo": {
         "args": [
           "test",
@@ -84,7 +84,7 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Debug integration test 'length_test'",
+      "name": "'length_test'",
       "cargo": {
         "args": [
           "test",
@@ -99,6 +99,26 @@
       },
       "args": [],
       "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "'area_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=area_test",
+          "--package=rust_d3_geo"
+        ],
+        "filter": {
+          "name": "area_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
     }
+
   ]
 }
