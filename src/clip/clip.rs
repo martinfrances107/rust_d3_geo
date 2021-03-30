@@ -62,14 +62,12 @@ where
                     LineEnum::Antimeridian(l) => {
                         line = l.clone();
                         let mut ring_sink = line.clone();
-                        // ring_sink.buffer_in(&ring_buffer);
-                        ring_sink.stream_in(LineSinkEnum::CB(ring_buffer.clone()));
+                        ring_sink.stream_in(LineSinkEnum::CB(ring_buffer));
                         Self {
                             raw,
                             base: ClipBase {
-                                line: LineEnum::Antimeridian(line),
+                                line: LineEnum::Antimeridian(line.clone()),
                                 ring_sink: LineEnum::Antimeridian(ring_sink),
-                                ring_buffer,
                                 start,
                                 ..ClipBase::default()
                             },
@@ -85,13 +83,12 @@ where
                 LineEnum::Antimeridian(ref l) => {
                     let line = l.clone();
                     let mut ring_sink = line.clone();
-                    ring_sink.stream_in(LineSinkEnum::CB(ring_buffer.clone()));
+                    ring_sink.stream_in(LineSinkEnum::CB(ring_buffer));
                     Self {
                         raw: ClipRaw::Circle(r.clone()),
                         base: ClipBase {
                             line: LineEnum::Antimeridian(line),
                             ring_sink: LineEnum::Antimeridian(ring_sink),
-                            ring_buffer,
                             start,
                             ..ClipBase::default()
                         },
@@ -106,7 +103,6 @@ where
                         base: ClipBase {
                             line: LineEnum::Circle(line),
                             ring_sink: LineEnum::Circle(ring_sink),
-                            ring_buffer,
                             start,
                             ..ClipBase::default()
                         },
@@ -161,24 +157,7 @@ where
 
     fn line_start(&mut self) {
         self.base.use_ring = false;
-        // self.raw.line.line_start();
-        let mut line;
-        match &mut self.raw {
-            ClipRaw::Antimeridian(raw) => {
-                line = raw.base.line.clone();
-            }
-            ClipRaw::Circle(raw) => {
-                line = raw.base.line.clone();
-            }
-        }
-        match &mut line {
-            LineEnum::Antimeridian(line) => {
-                line.line_start();
-            }
-            LineEnum::Circle(line) => {
-                line.line_start();
-            }
-        }
+        self.base.line.line_start();
     }
 
     fn line_end(&mut self) {
