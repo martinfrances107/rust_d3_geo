@@ -302,7 +302,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                         None,
                     );
                     stream.line_end();
-                    //  self.stream.line_start();
+                    stream.line_start();
                     stream.point(
                         &Coordinate {
                             x: sign1,
@@ -324,7 +324,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                             None,
                         );
                         stream.line_end();
-                        //  self.stream.line_start();
+                        stream.line_start();
                         stream.point(
                             &Coordinate {
                                 x: sign1,
@@ -342,7 +342,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                             None,
                         );
                         stream.line_end();
-                        //  self.stream.line_start();
+                        stream.line_start();
                         stream.point(
                             &Coordinate {
                                 x: sign1,
@@ -364,7 +364,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                         None,
                     );
                     stream.line_end();
-                    //  self.stream.line_start();
+                    stream.line_start();
                     stream.point(
                         &Coordinate {
                             x: sign1,
@@ -386,7 +386,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                             None,
                         );
                         stream.line_end();
-                        //  self.stream.line_start();
+                        stream.line_start();
                         stream.point(
                             &Coordinate {
                                 x: sign1,
@@ -404,7 +404,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                             None,
                         );
                         stream.line_end();
-                        //  self.stream.line_start();
+                        stream.line_start();
                         stream.point(
                             &Coordinate {
                                 x: sign1,
