@@ -29,6 +29,8 @@ where
     base: ClipBase<T>,
     #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
+    #[derivative(Debug = "ignore")]
+    line_start_fn: fn(&mut Self),
 }
 
 impl<T> Clip<T>
@@ -81,6 +83,18 @@ where
         self.base.ring.push(*p);
         self.base.ring_sink.point(p, None);
     }
+
+    #[inline]
+    fn line_start_default(&mut self) {
+        self.point_fn = Self::point_line;
+        self.base.line.line_start();
+    }
+
+    #[inline]
+    fn ring_start(&mut self) {
+        self.base.ring_sink.line_start();
+        self.base.ring.clear();
+    }
 }
 
 impl<T> Clip<T>
@@ -108,6 +122,7 @@ where
                                 ..ClipBase::default()
                             },
                             point_fn: Self::point_default,
+                            line_start_fn: Self::line_start_default,
                         }
                     }
                     LineEnum::Circle(_) => {
@@ -130,6 +145,7 @@ where
                             ..ClipBase::default()
                         },
                         point_fn: Self::point_default,
+                        line_start_fn: Self::line_start_default,
                     }
                 }
                 LineEnum::Circle(ref l) => {
@@ -145,6 +161,7 @@ where
                             ..ClipBase::default()
                         },
                         point_fn: Self::point_default,
+                        line_start_fn: Self::line_start_default,
                     }
                 }
             },
@@ -173,9 +190,7 @@ where
     }
 
     fn line_start(&mut self) {
-        self.point_fn = Self::point_line;
-        self.base.use_ring = false;
-        self.base.line.line_start();
+        (self.line_start_fn)(self);
     }
 
     fn line_end(&mut self) {
@@ -202,8 +217,7 @@ where
 
     fn polygon_end(&mut self) {
         self.point_fn = Self::point_default;
-        self.base.use_ring = false;
-        self.base.use_ring_start = false;
+        self.line_start_fn = Self::line_start_default;
         self.base.use_ring_end = false;
         // segments = merge(segments);
         // let start_inside = contains(&self.polygon, &self.start);
