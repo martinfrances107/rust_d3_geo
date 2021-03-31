@@ -12,14 +12,14 @@ use crate::stream::StreamDst;
 use crate::Transform;
 
 #[derive(Clone, Debug)]
-pub struct StreamTransform<T: CoordFloat + Default + FloatConst> {
+pub struct StreamTransform<T: AddAssign + CoordFloat + Default + FloatConst> {
     pub transform: RotateRadiansEnum<T>,
     pub stream: Clip<T>,
 }
 
 impl<'a, T> Default for StreamTransform<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -29,14 +29,14 @@ where
     }
 }
 
-impl<T: CoordFloat + Default + FloatConst> StreamTransform<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> StreamTransform<T> {
     #[inline]
     pub fn stream_in(&mut self, stream: Clip<T>) {
         self.stream = stream;
     }
 }
 
-impl<T: CoordFloat + Default + FloatConst> StreamTransform<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> StreamTransform<T> {
     #[inline]
     pub fn new(transform_in: Option<RotateRadiansEnum<T>>) -> StreamTransform<T> {
         {

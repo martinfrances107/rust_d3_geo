@@ -41,7 +41,7 @@ use super::resample::resample_none::ResampleNone;
 #[derive(Clone, Debug)]
 pub enum ResampleEnum<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     RN(ResampleNone<T>),
     R(Resample<T>),
@@ -121,7 +121,7 @@ pub fn gen_resample_node<T>(
     delta2: Option<T>,
 ) -> ResampleEnum<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     match delta2 {
         None => ResampleEnum::RN(ResampleNone::new(project)),

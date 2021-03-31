@@ -3,6 +3,7 @@ pub mod line;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
+use std::ops::AddAssign;
 
 use crate::circle::circle_stream::circle_stream;
 use crate::stream::CompareIntersection;
@@ -18,7 +19,7 @@ use super::ClipTraitRaw;
 #[derive(Clone, Debug)]
 pub struct ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     radius: T,
     small_radius: bool,
@@ -31,7 +32,7 @@ where
 use std::fmt::Debug;
 impl<T> ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + Default + Debug,
+    T: AddAssign + CoordFloat + FloatConst + Default + Debug,
 {
     pub fn gen_clip(radius: T) -> Clip<T> {
         let cr = radius.cos();
@@ -95,7 +96,7 @@ where
 // }
 impl<T> ClipTraitRaw<T> for ClipCircle<T>
 where
-    T: CoordFloat + FloatConst + Default,
+    T: AddAssign + CoordFloat + FloatConst + Default,
 {
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;

@@ -27,7 +27,7 @@ use circle::ClipCircle;
 #[derive(Clone, Debug)]
 pub enum ClipSinkEnum<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     Resample(ResampleEnum<T>),
     Src(StreamDst<T>),
@@ -37,7 +37,7 @@ where
 #[derive(Clone, Debug)]
 pub enum LineEnum<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     Antimeridian(AntimeridianLine<T>),
     Circle(CircleLine<T>),
@@ -47,7 +47,7 @@ where
 #[derive(Clone, Debug)]
 pub enum LineSinkEnum<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     CSE(ClipSinkEnum<T>),
     CB(ClipBuffer<T>),
@@ -108,7 +108,7 @@ where
 #[derive(Clone, Debug)]
 pub enum ClipRaw<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     Antimeridian(ClipAntimeridian<T>),
     Circle(ClipCircle<T>),

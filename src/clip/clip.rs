@@ -1,3 +1,4 @@
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -17,18 +18,22 @@ use crate::clip::LineSinkEnum;
 use crate::stream::Stream;
 use crate::stream::StreamDst;
 
-#[derive(Clone, Debug)]
+#[derive(Derivative)]
+#[derivative(Debug)]
+#[derive(Clone)]
 pub struct Clip<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     raw: ClipRaw<T>,
     base: ClipBase<T>,
+    #[derivative(Debug = "ignore")]
+    point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
 }
 
 impl<T> Clip<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     #[inline]
     pub fn stream_in(&mut self, stream: ClipSinkEnum<T>)
@@ -45,11 +50,42 @@ where
             }
         }
     }
+
+    fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        let pv = match &self.raw {
+            ClipRaw::Antimeridian(r) => r.point_visible(p, None),
+            ClipRaw::Circle(r) => r.point_visible(p, None),
+        };
+        if pv {
+            match &mut self.base.sink {
+                ClipSinkEnum::Blank => {
+                    panic!("ClickSinkEnum - actively using an unconnected blank");
+                }
+                ClipSinkEnum::Src(sink) => {
+                    sink.point(p, m);
+                }
+                ClipSinkEnum::Resample(sink) => {
+                    sink.point(p, m);
+                }
+            }
+        }
+    }
+
+    #[inline]
+    fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        self.base.line.point(p, m);
+    }
+
+    #[inline]
+    fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        self.base.ring.push(*p);
+        self.base.ring_sink.point(p, None);
+    }
 }
 
 impl<T> Clip<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     pub fn new(raw: ClipRaw<T>, start: Coordinate<T>) -> Self {
         // let mut line = raw.line.clone();
@@ -71,6 +107,7 @@ where
                                 start,
                                 ..ClipBase::default()
                             },
+                            point_fn: Self::point_default,
                         }
                     }
                     LineEnum::Circle(_) => {
@@ -92,6 +129,7 @@ where
                             start,
                             ..ClipBase::default()
                         },
+                        point_fn: Self::point_default,
                     }
                 }
                 LineEnum::Circle(ref l) => {
@@ -106,6 +144,7 @@ where
                             start,
                             ..ClipBase::default()
                         },
+                        point_fn: Self::point_default,
                     }
                 }
             },
@@ -127,40 +166,20 @@ where
             ClipSinkEnum::Src(s) => s.get_dst(),
         }
     }
+
+    #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        match self.base.use_ring {
-            true => {
-                self.base.ring.push(*p);
-                self.base.ring_sink.point(p, None);
-            }
-            false => {
-                let pv = match &self.raw {
-                    ClipRaw::Antimeridian(r) => r.point_visible(p, None),
-                    ClipRaw::Circle(r) => r.point_visible(p, None),
-                };
-                if pv {
-                    match &mut self.base.sink {
-                        ClipSinkEnum::Blank => {
-                            panic!("ClickSinkEnum - actively using an unconnected blank");
-                        }
-                        ClipSinkEnum::Src(sink) => {
-                            sink.point(p, m);
-                        }
-                        ClipSinkEnum::Resample(sink) => {
-                            sink.point(p, m);
-                        }
-                    }
-                }
-            }
-        }
+        (self.point_fn)(self, p, m);
     }
 
     fn line_start(&mut self) {
+        self.point_fn = Self::point_line;
         self.base.use_ring = false;
         self.base.line.line_start();
     }
 
     fn line_end(&mut self) {
+        self.point_fn = Self::point_default;
         // if self.use_ring_end {
         //     self.ring_end();
         // } else {
@@ -172,6 +191,8 @@ where
     }
 
     fn polygon_start(&mut self) {
+        println!("Clip polygon start()");
+        self.point_fn = Self::point_ring;
         self.base.use_ring = true;
         self.base.use_ring_start = true;
         self.base.use_ring_end = true;
@@ -180,6 +201,7 @@ where
     }
 
     fn polygon_end(&mut self) {
+        self.point_fn = Self::point_default;
         self.base.use_ring = false;
         self.base.use_ring_start = false;
         self.base.use_ring_end = false;

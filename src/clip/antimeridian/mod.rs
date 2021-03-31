@@ -3,6 +3,7 @@ pub mod line;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
+use std::ops::AddAssign;
 
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
@@ -19,14 +20,14 @@ use crate::clip::ClipRaw;
 #[derive(Clone, Default, Debug)]
 pub struct ClipAntimeridian<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     pub base: ClipBase<T>,
 }
 
 impl<T> ClipAntimeridian<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     #[inline]
     pub fn gen_clip() -> Clip<T> {
@@ -70,7 +71,7 @@ where
 
 impl<T> Clean for ClipAntimeridian<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     /// A clip trait.
     /// Rejoin first and last segments if there were intersections and the first
@@ -82,7 +83,7 @@ where
 
 impl<T> ClipTraitRaw<T> for ClipAntimeridian<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;

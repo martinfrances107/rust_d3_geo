@@ -19,7 +19,7 @@ use super::buffer::LineElem;
 use super::ClipSinkEnum;
 
 #[derive(Clone, Debug)]
-pub struct ClipBase<T: CoordFloat + Default + FloatConst> {
+pub struct ClipBase<T: AddAssign + CoordFloat + Default + FloatConst> {
     pub line: LineEnum<T>,
     pub polygon_started: bool,
     pub polygon: Vec<Vec<Coordinate<T>>>,
@@ -37,7 +37,7 @@ pub struct ClipBase<T: CoordFloat + Default + FloatConst> {
 
 impl<T> Default for ClipBase<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
         Self {

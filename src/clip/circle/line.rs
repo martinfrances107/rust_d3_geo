@@ -15,7 +15,7 @@ use crate::stream::StreamSourceDummy;
 use crate::stream::{Clean, CleanEnum};
 
 #[derive(Clone, Debug)]
-pub struct Line<T: CoordFloat + Default + FloatConst> {
+pub struct Line<T: AddAssign + CoordFloat + Default + FloatConst> {
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
     radius: T,
@@ -31,7 +31,7 @@ pub struct Line<T: CoordFloat + Default + FloatConst> {
 
 impl<T> Default for Line<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -52,7 +52,7 @@ where
     }
 }
 
-impl<T: CoordFloat + Default + FloatConst> Line<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Line<T> {
     #[inline]
     pub fn new(radius: T) -> Self {
         // TODO small_radius, rc  is a shadow variables!!!
@@ -113,7 +113,7 @@ impl<T: CoordFloat + Default + FloatConst> Line<T> {
 
 impl<T> Clean for Line<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.

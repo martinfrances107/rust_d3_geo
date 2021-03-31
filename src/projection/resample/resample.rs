@@ -16,7 +16,7 @@ const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 #[derive(Debug)]
 pub struct Resample<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     pub project: Compose<T>,
     pub delta2: T,
@@ -48,7 +48,7 @@ where
 
 impl<T> Clone for Resample<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     fn clone(&self) -> Self {
         Self {
@@ -61,7 +61,7 @@ where
 
 impl<T> Default for Resample<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     fn default() -> Resample<T> {
         Self {
@@ -99,7 +99,7 @@ where
 
 impl<T> Resample<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     pub fn new(project: Compose<T>) -> Self {
         Self {

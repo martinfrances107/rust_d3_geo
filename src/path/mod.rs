@@ -94,7 +94,7 @@ where
 
 pub struct Path<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     context: Option<CanvasRenderingContext2d>,
     context_stream: Option<Box<dyn PointRadiusTrait<PrtT = T>>>,

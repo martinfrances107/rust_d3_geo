@@ -14,7 +14,7 @@ use super::intersect::intersect;
 #[derive(Clone, Debug)]
 pub struct Line<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     clean: CleanEnum,
     lambda0: T,
@@ -25,7 +25,7 @@ where
 
 impl<T> Default for Line<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -42,7 +42,7 @@ where
 use crate::clip::LineSinkEnum;
 impl<T> Line<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     #[inline]
     pub fn stream_in(&mut self, stream: LineSinkEnum<T>) {
@@ -52,7 +52,7 @@ where
 
 impl<T> Clean for Line<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     #[inline]
     fn clean(&self) -> CleanEnum {

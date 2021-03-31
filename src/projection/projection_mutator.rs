@@ -30,7 +30,7 @@ use super::scale_translate_rotate::ScaleTranslateRotate;
 use super::ProjectionRawEnum;
 
 #[derive(Clone, Debug)]
-pub struct ProjectionMutator<T: CoordFloat + Default + FloatConst> {
+pub struct ProjectionMutator<T: AddAssign + CoordFloat + Default + FloatConst> {
     project: ProjectionRawEnum<T>,
     alpha: T, // post-rotate angle
     // cache: Option<
