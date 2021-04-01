@@ -13,7 +13,6 @@ use crate::compose::ComposeElemEnum;
 use crate::projection::resample::gen_resample_node;
 use crate::projection::resample::ResampleEnum;
 use crate::projection::stream_transform::StreamTransform;
-use crate::projection::stream_transform_radians::StreamTransformIn;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::rotation::rotate_radians_transform::rotate_radians_transform;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;

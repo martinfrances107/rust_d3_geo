@@ -9,13 +9,6 @@ use crate::stream::StreamDst;
 
 use super::stream_transform::StreamTransform;
 
-pub trait StreamTransformIn<T>
-where
-    T: AddAssign + CoordFloat + Default + FloatConst,
-{
-    fn stream_transform_in(&mut self, stream: StreamTransform<T>);
-}
-
 /// Why the Phantom Data is required here...
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
