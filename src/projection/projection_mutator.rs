@@ -7,7 +7,7 @@ use std::ops::AddAssign;
 use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::circle::ClipCircle;
 use crate::clip::clip::Clip;
-use crate::clip::ClipSinkEnum;
+use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
 use crate::compose::ComposeElemEnum;
 use crate::projection::resample::gen_resample_node;

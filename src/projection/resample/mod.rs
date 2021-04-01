@@ -19,7 +19,7 @@ use num_traits::FloatConst;
 // use crate::stream::StreamProcessor;
 use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::clip::Clip;
-use crate::clip::ClipRaw;
+use crate::clip::clip_raw::ClipRaw;
 use crate::compose::Compose;
 use crate::stream::Stream;
 use crate::stream::StreamDst;

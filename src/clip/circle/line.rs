@@ -6,8 +6,8 @@ use super::intersect::intersect;
 use super::intersect::IntersectReturn;
 
 use crate::clip::buffer::ClipBuffer;
-use crate::clip::ClipSinkEnum;
-use crate::clip::LineSinkEnum;
+use crate::clip::clip_sink_enum::ClipSinkEnum;
+use crate::clip::line_sink_enum::LineSinkEnum;
 use crate::point_equal::point_equal;
 use crate::stream::Stream;
 use crate::stream::StreamDst;

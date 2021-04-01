@@ -14,7 +14,7 @@ use super::clip::Clip;
 use super::clip_base::ClipBase;
 use super::ClipTraitRaw;
 // use super::LineEnum;
-use crate::clip::ClipRaw;
+use crate::clip::clip_raw::ClipRaw;
 // use line::Line;
 
 #[derive(Clone, Default, Debug)]

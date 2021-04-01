@@ -3,8 +3,9 @@ use num_traits::FloatConst;
 use std::ops::AddAssign;
 
 // use crate::path::PathResultEnum;
+use crate::clip::clip_sink_enum::ClipSinkEnum;
+use crate::clip::line_sink_enum::LineSinkEnum;
 use crate::clip::ClipBuffer;
-use crate::clip::ClipSinkEnum;
 use crate::stream::Stream;
 use crate::stream::StreamDst;
 use crate::stream::{Clean, CleanEnum};
@@ -39,7 +40,6 @@ where
     }
 }
 
-use crate::clip::LineSinkEnum;
 impl<T> Line<T>
 where
     T: AddAssign + CoordFloat + Default + FloatConst,

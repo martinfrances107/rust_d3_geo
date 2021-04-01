@@ -10,7 +10,7 @@ use crate::stream::Stream;
 // use super::antimeridian::ClipAntimeridian;
 // use super::circle::ClipCircle;
 // use super::ClipRaw;
-use super::LineEnum;
+use super::line_enum::LineEnum;
 
 // use super::antimeridian::ClipAntimeridian;
 use super::antimeridian::line::Line as AntimeridianLine;
@@ -18,8 +18,8 @@ use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
 // use super::circle::ClipCircle;
 // use super::ClipTraitRaw;
-use super::ClipSinkEnum;
-use super::LineSinkEnum;
+use super::clip_sink_enum::ClipSinkEnum;
+use super::line_sink_enum::LineSinkEnum;
 
 #[derive(Clone, Debug)]
 pub struct ClipBase<T: AddAssign + CoordFloat + Default + FloatConst> {

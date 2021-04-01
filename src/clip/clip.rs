@@ -15,11 +15,11 @@ use crate::stream::StreamDst;
 use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
 use super::clip_base::ClipBase;
-use super::ClipRaw;
-use super::ClipSinkEnum;
+use super::clip_raw::ClipRaw;
+use super::clip_sink_enum::ClipSinkEnum;
+use super::line_enum::LineEnum;
+use super::line_sink_enum::LineSinkEnum;
 use super::ClipTraitRaw;
-use super::LineEnum;
-use super::LineSinkEnum;
 
 #[derive(Derivative)]
 #[derivative(Debug)]

@@ -11,7 +11,7 @@ use crate::stream::Stream;
 
 use super::clip::Clip;
 use super::clip_base::ClipBase;
-use super::ClipRaw;
+use super::clip_raw::ClipRaw;
 use super::ClipTraitRaw;
 
 // use line::Line;
