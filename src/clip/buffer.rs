@@ -19,13 +19,9 @@ pub struct ClipBuffer<T: CoordFloat> {
 }
 
 impl<T: CoordFloat + FloatConst> ClipBuffer<T> {
-    /// Generate a new stream node.
     // #[inline]
-    // pub fn new() -> Self {
-    //     Self {
-    //         lines: Vec::new(),
-    //         line: None,
-    //     }
+    // pub fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
+    //     panic!("Should I call stream_in on a buffer!");
     // }
 
     fn rejoin(&mut self) {
@@ -52,14 +48,6 @@ impl<T: CoordFloat> PathResult for ClipBuffer<T> {
         return Some(PathResultEnum::ClipBufferOutput(result.to_vec()));
     }
 }
-impl<T> ClipBuffer<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    pub fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
-        panic!("Should I call stream_in on a buffer!");
-    }
-}
 
 impl<T: CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<T> {
     type C = Coordinate<T>;
@@ -70,7 +58,7 @@ impl<T: CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<T> {
                 line.push(LineElem { p: *p, m });
             }
             None => {
-                panic!("Cannot push to undefined line.");
+                panic!("ClipBuffer: Cannot push to undefined line.");
             }
         }
     }
@@ -78,13 +66,12 @@ impl<T: CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<T> {
     fn sphere(&mut self) {}
     fn line_end(&mut self) {}
     fn line_start(&mut self) {
-        let line = Vec::new();
-        self.line = Some(line.clone());
-        self.lines.push(line);
+        self.line = Some(Vec::new());
+        self.lines.push(Vec::new());
     }
     fn polygon_start(&mut self) {}
     fn polygon_end(&mut self) {}
     fn get_dst(&self) -> StreamDst<T> {
-        todo!("is this ever called.");
+        todo!("ClipBuffer get_dst() should never be called.");
     }
 }

@@ -48,6 +48,11 @@ where
     pub fn stream_in(&mut self, stream: LineSinkEnum<T>) {
         self.stream = stream;
     }
+
+    #[inline]
+    pub fn get_stream(&self) -> LineSinkEnum<T> {
+        self.stream.clone()
+    }
 }
 
 impl<T> Clean for Line<T>

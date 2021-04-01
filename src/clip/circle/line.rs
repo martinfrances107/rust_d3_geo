@@ -79,6 +79,11 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Line<T> {
     }
 
     #[inline]
+    pub fn get_stream(&self) -> LineSinkEnum<T> {
+        self.stream.clone()
+    }
+
+    #[inline]
     fn point_visible(&self, p: &Coordinate<T>, _m: Option<u8>) -> bool {
         p.x.cos() * p.y.cos() > self.cr
     }

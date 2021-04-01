@@ -4,6 +4,8 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 // use crate::path::PathResultEnum;
+use crate::projection::resample::resample::Resample;
+use crate::projection::resample::ResampleEnum;
 use crate::stream::Stream;
 // use super::antimeridian::ClipAntimeridian;
 // use super::circle::ClipCircle;
@@ -17,6 +19,7 @@ use super::buffer::LineElem;
 // use super::circle::ClipCircle;
 // use super::ClipTraitRaw;
 use super::ClipSinkEnum;
+use super::LineSinkEnum;
 
 #[derive(Clone, Debug)]
 pub struct ClipBase<T: AddAssign + CoordFloat + Default + FloatConst> {
@@ -24,14 +27,12 @@ pub struct ClipBase<T: AddAssign + CoordFloat + Default + FloatConst> {
     pub polygon_started: bool,
     pub polygon: Vec<Vec<Coordinate<T>>>,
     pub ring: Vec<Coordinate<T>>,
+    // pub ring_buffer: LineSinkEnum<T>,
     pub ring_sink: LineEnum<T>,
     // pub ring_buffer: ClipBuffer<T>,
     // pub ring_sink_node: ClipRaw<T>,
     pub segments: Vec<Vec<LineElem<T>>>,
     pub start: Coordinate<T>,
-    pub use_ring: bool,
-    pub use_ring_end: bool,
-    pub use_ring_start: bool,
     pub sink: ClipSinkEnum<T>,
 }
 
@@ -47,11 +48,9 @@ where
             polygon: vec![vec![]],
             ring: vec![],
             // clip_buffer: ClipBuffer::default(),
+            // ring_buffer: LineSinkEnum::CB(ClipBuffer::default()),
             ring_sink: LineEnum::Antimeridian(AntimeridianLine::default()),
             segments: vec![vec![]],
-            use_ring: false,
-            use_ring_end: false,
-            use_ring_start: false,
             // sink: ClipSinkEnum::Resample(ResampleEnum::R(Resample::default())), // stub value
             sink: ClipSinkEnum::Blank,
             start: Coordinate {
@@ -62,98 +61,21 @@ where
     }
 }
 
-impl<T> ClipBase<T>
-where
-    T: AddAssign + CoordFloat + Default + FloatConst,
-{
-    fn point_ring(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        self.ring.push(*p);
-        self.ring_sink.point(p, None);
-    }
+// impl<T> ClipBase<T>
+// where
+//     T: AddAssign + CoordFloat + Default + FloatConst,
+// {
+//     fn point_ring(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+//         self.ring.push(*p);
+//         self.ring_sink.point(p, None);
+//     }
 
-    fn ring_start(&mut self) {
-        self.ring_sink.line_start();
-        self.ring = Vec::new();
-    }
+//     fn ring_start(&mut self) {
+//         self.ring_sink.line_start();
+//         self.ring = Vec::new();
+//     }
 
-    fn ring_end(&mut self) {
-        // self.point_ring(&mut self.ring[0], None);
-        self.ring_sink.line_end();
-
-        // let clean = self.ring_sink.clean();
-        // let mut ring_buffer = self.ring_buffer_node.borrow_mut();
-        // let ring_segments = match self.ring_buffer.result() {
-        //     PathResultEnum::ClipBufferOutput(result) => {
-        //         // Can I find a way of doing this with the expense of dynamic conversion.
-        //         result
-        //     }
-        //     _ => {
-        //         panic!("was expectcing a path result");
-        //     }
-        // };
-
-        // let n = ring_segments.len();
-        // let m;
-        // // let segment: Vec<Vec<Coordinate<T>>;
-        // // let point;
-
-        // self.ring.pop();
-        // self.polygon.push(self.ring);
-        // // in this javascript version this value is set to NULL
-        // // is my assumption that this is valid true?
-        // // self.ring = None;
-        // self.ring = Vec::new();
-
-        // if n != 0 {
-        //     return;
-        // }
-
-        // // No intersections.
-        // match clean {
-        //     CleanEnum::NoIntersections => {
-        //         // let test = ring_segments.first();
-        //         // let test1 = test.unwrap();
-        //         // let test2 = test1.clone();
-        //         let segment = ring_segments.first().unwrap().clone();
-        //         m = segment.len() - 1;
-        //         if m > 0 {
-        //             let mut sink = self.sink.borrow_mut();
-        //             if !self.polygon_started {
-        //                 sink.polygon_start();
-        //                 self.polygon_started = true;
-        //             }
-        //             sink.line_start();
-        //             for i in 0..m {
-        //                 let le = segment[i];
-        //                 sink.point(le.p, le.m);
-        //             }
-        //             sink.line_end();
-        //         }
-        //         return;
-        //     }
-        //     CleanEnum::IntersectionsRejoin => {
-        //         // Rejoin connected segments.
-        //         // TODO reuse ringBuffer.rejoin()?
-        //         if n > 1 {
-        //             // ringSegments.push(ringSegments.pop().concat(ringSegments.shift()));
-
-        //             let mut combined = ring_segments.first().unwrap().clone();
-        //             let mut last = ring_segments.last().unwrap().clone();
-        //             combined.append(&mut last);
-        //             ring_segments.push(combined);
-        //         }
-        //     }
-        //     _ => {}
-        // }
-
-        // let mut filtered: Vec<Vec<LineElem<T>>> = ring_segments
-        //     .iter()
-        //     .filter(|segment| segment.len() > 1)
-        //     .map(|s| *s)
-        //     .collect();
-        // self.segments.append(&mut filtered);
-    }
-}
+// }
 
 // impl<T> StreamClipTrait for ClipBase<T>
 // where

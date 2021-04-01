@@ -4,19 +4,22 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 use std::ops::AddAssign;
 
-use crate::clip::ClipTraitRaw;
+use crate::path::PathResultEnum;
+use crate::stream::Clean;
+use crate::stream::CleanEnum;
+use crate::stream::Stream;
+use crate::stream::StreamDst;
 
 // use super::antimeridian::line::Line as AntimeridianLine;
 // use super::circle::line::Line as CircleLine;
 use super::buffer::ClipBuffer;
+use super::buffer::LineElem;
 use super::clip_base::ClipBase;
 use super::ClipRaw;
 use super::ClipSinkEnum;
+use super::ClipTraitRaw;
 use super::LineEnum;
-
-use crate::clip::LineSinkEnum;
-use crate::stream::Stream;
-use crate::stream::StreamDst;
+use super::LineSinkEnum;
 
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -31,6 +34,78 @@ where
     point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
     #[derivative(Debug = "ignore")]
     line_start_fn: fn(&mut Self),
+    #[derivative(Debug = "ignore")]
+    line_end_fn: fn(&mut Self),
+}
+
+impl<T> Clip<T>
+where
+    T: AddAssign + CoordFloat + Default + FloatConst,
+{
+    pub fn new(raw: ClipRaw<T>, start: Coordinate<T>) -> Self {
+        let ring_buffer = LineSinkEnum::CB(ClipBuffer::default());
+        match raw {
+            ClipRaw::Antimeridian(r) => match &r.base.line {
+                LineEnum::Antimeridian(l) => {
+                    let mut ring_sink = LineEnum::Antimeridian(l.clone());
+                    ring_sink.stream_in(ring_buffer);
+                    Self {
+                        raw: ClipRaw::Antimeridian(r.clone()),
+                        base: ClipBase {
+                            line: LineEnum::Antimeridian(l.clone()),
+                            // ring_buffer,
+                            ring_sink,
+                            start,
+                            ..ClipBase::default()
+                        },
+                        point_fn: Self::point_default,
+                        line_start_fn: Self::line_start_default,
+                        line_end_fn: Self::line_end_default,
+                    }
+                }
+                LineEnum::Circle(_) => {
+                    panic!("mismatch ");
+                }
+            },
+
+            ClipRaw::Circle(r) => match r.base.line {
+                LineEnum::Antimeridian(ref l) => {
+                    let line = l.clone();
+                    let mut ring_sink = line.clone();
+                    ring_sink.stream_in(ring_buffer);
+                    Self {
+                        raw: ClipRaw::Circle(r.clone()),
+                        base: ClipBase {
+                            line: LineEnum::Antimeridian(line),
+                            ring_sink: LineEnum::Antimeridian(ring_sink),
+                            start,
+                            ..ClipBase::default()
+                        },
+                        point_fn: Self::point_default,
+                        line_start_fn: Self::line_start_default,
+                        line_end_fn: Self::line_end_default,
+                    }
+                }
+                LineEnum::Circle(ref l) => {
+                    let line = l.clone();
+                    let mut ring_sink = line.clone();
+                    ring_sink.stream_in(ring_buffer);
+                    Self {
+                        raw: ClipRaw::Circle(r),
+                        base: ClipBase {
+                            line: LineEnum::Circle(line),
+                            ring_sink: LineEnum::Circle(ring_sink),
+                            start,
+                            ..ClipBase::default()
+                        },
+                        point_fn: Self::point_default,
+                        line_start_fn: Self::line_start_default,
+                        line_end_fn: Self::line_end_default,
+                    }
+                }
+            },
+        }
+    }
 }
 
 impl<T> Clip<T>
@@ -81,7 +156,7 @@ where
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         self.base.ring.push(*p);
-        self.base.ring_sink.point(p, None);
+        self.base.ring_sink.point(p, m);
     }
 
     #[inline]
@@ -95,77 +170,91 @@ where
         self.base.ring_sink.line_start();
         self.base.ring.clear();
     }
-}
 
-impl<T> Clip<T>
-where
-    T: AddAssign + CoordFloat + Default + FloatConst,
-{
-    pub fn new(raw: ClipRaw<T>, start: Coordinate<T>) -> Self {
-        // let mut line = raw.line.clone();
+    #[inline]
+    fn line_end_default(&mut self) {
+        self.point_fn = Self::point_default;
+        self.base.line.line_end();
+    }
 
-        let ring_buffer = ClipBuffer::default();
-        match raw {
-            ClipRaw::Antimeridian(ref r) => {
-                let line;
-                match &r.base.line {
-                    LineEnum::Antimeridian(l) => {
-                        line = l.clone();
-                        let mut ring_sink = line.clone();
-                        ring_sink.stream_in(LineSinkEnum::CB(ring_buffer));
-                        Self {
-                            raw,
-                            base: ClipBase {
-                                line: LineEnum::Antimeridian(line.clone()),
-                                ring_sink: LineEnum::Antimeridian(ring_sink),
-                                start,
-                                ..ClipBase::default()
-                            },
-                            point_fn: Self::point_default,
-                            line_start_fn: Self::line_start_default,
-                        }
+    fn ring_end(&mut self) {
+        // self.point_ring(&mut self.base.ring[0], None);
+        self.base.ring_sink.line_end();
+
+        let clean = self.base.ring_sink.clean();
+        // deviation from javascript.
+        // access to the javascript varible 'ring_buffer' is
+        // through the ring_sink varible.
+        let mut ring_segments = match self.base.ring_sink.get_stream().result() {
+            Some(PathResultEnum::ClipBufferOutput(result)) => {
+                // Can I find a way of doing this with the expense of dynamic conversion.
+                result
+            }
+            Some(_) => {
+                panic!("None buffer ");
+            }
+            // _ => {
+            //     panic!("was expectcing a path result");
+            // },
+            None => panic!("was expecting something."),
+        };
+
+        let n = ring_segments.len();
+        let m;
+        let segment: Vec<Vec<Coordinate<T>>>;
+        let point: Coordinate<T>;
+
+        self.base.ring.pop();
+        // self.base.polygon.push(self.base.ring);
+        // in this javascript version this value is set to NULL
+        // is my assumption that this is valid true?
+        // self.ring = None;
+        self.base.ring = Vec::new();
+
+        if n != 0 {
+            return;
+        }
+
+        // No intersections.
+        match clean {
+            CleanEnum::NoIntersections => {
+                let segment = ring_segments.first().unwrap().clone();
+                m = segment.len() - 1;
+                if m > 0 {
+                    if !self.base.polygon_started {
+                        self.base.sink.polygon_start();
+                        self.base.polygon_started = true;
                     }
-                    LineEnum::Circle(_) => {
-                        panic!("mismatch ");
+                    self.base.sink.line_start();
+                    for i in 0..m {
+                        let le = segment[i];
+                        // self.base.sink.point(&le.p, le.m);
                     }
+                    self.base.sink.line_end();
+                }
+                return;
+            }
+            CleanEnum::IntersectionsRejoin => {
+                // Rejoin connected segments.
+                // TODO reuse ringBuffer.rejoin()?
+                if n > 1 {
+                    // ringSegments.push(ringSegments.pop().concat(ringSegments.shift()));
+
+                    // let mut combined = ring_segments.first().unwrap().clone();
+                    // let mut last = ring_segments.last().unwrap().clone();
+                    // combined.append(&mut last);
+                    // ring_segments.push(combined);
                 }
             }
-
-            ClipRaw::Circle(r) => match r.base.line {
-                LineEnum::Antimeridian(ref l) => {
-                    let line = l.clone();
-                    let mut ring_sink = line.clone();
-                    ring_sink.stream_in(LineSinkEnum::CB(ring_buffer));
-                    Self {
-                        raw: ClipRaw::Circle(r.clone()),
-                        base: ClipBase {
-                            line: LineEnum::Antimeridian(line),
-                            ring_sink: LineEnum::Antimeridian(ring_sink),
-                            start,
-                            ..ClipBase::default()
-                        },
-                        point_fn: Self::point_default,
-                        line_start_fn: Self::line_start_default,
-                    }
-                }
-                LineEnum::Circle(ref l) => {
-                    let line = l.clone();
-                    let mut ring_sink = line.clone();
-                    ring_sink.stream_in(LineSinkEnum::CB(ring_buffer.clone()));
-                    Self {
-                        raw: ClipRaw::Circle(r),
-                        base: ClipBase {
-                            line: LineEnum::Circle(line),
-                            ring_sink: LineEnum::Circle(ring_sink),
-                            start,
-                            ..ClipBase::default()
-                        },
-                        point_fn: Self::point_default,
-                        line_start_fn: Self::line_start_default,
-                    }
-                }
-            },
+            _ => {}
         }
+
+        let mut filtered: Vec<Vec<LineElem<T>>> = ring_segments
+            .iter()
+            .filter(|segment| segment.len() > 1)
+            .map(|s| s.clone())
+            .collect();
+        self.base.segments.append(&mut filtered);
     }
 }
 
@@ -193,24 +282,25 @@ where
         (self.line_start_fn)(self);
     }
 
+    #[inline]
     fn line_end(&mut self) {
-        self.point_fn = Self::point_default;
+        (self.line_end_fn)(self);
+        // self.point_fn = Self::point_default;
         // if self.use_ring_end {
         //     self.ring_end();
         // } else {
         //     // put somethignhere.
         // }
-        self.base.use_ring = true;
+        // self.base.use_ring = true;
         // is this correct!!!
-        self.base.line.line_end();
+        // self.base.line.line_end();
     }
 
     fn polygon_start(&mut self) {
         println!("Clip polygon start()");
         self.point_fn = Self::point_ring;
-        self.base.use_ring = true;
-        self.base.use_ring_start = true;
-        self.base.use_ring_end = true;
+        self.line_start_fn = Self::ring_start;
+        self.line_end_fn = Self::ring_end;
         self.base.segments.clear();
         self.base.polygon.clear();
     }
@@ -218,7 +308,7 @@ where
     fn polygon_end(&mut self) {
         self.point_fn = Self::point_default;
         self.line_start_fn = Self::line_start_default;
-        self.base.use_ring_end = false;
+        self.line_end_fn = Self::line_end_default;
         // segments = merge(segments);
         // let start_inside = contains(&self.polygon, &self.start);
         let start_inside = false;
