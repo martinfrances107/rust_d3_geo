@@ -13,21 +13,10 @@ mod rejoin;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
-use std::ops::AddAssign;
 
-use crate::path::PathResult;
-use crate::path::PathResultEnum;
-use crate::projection::resample::ResampleEnum;
 use crate::stream::Stream;
-use crate::stream::StreamDst;
-use crate::stream::{Clean, CleanEnum};
 
-use antimeridian::line::Line as AntimeridianLine;
-use antimeridian::ClipAntimeridian;
 use buffer::ClipBuffer;
-use circle::line::Line as CircleLine;
-use circle::ClipCircle;
-// use crate::clip::clip::ClipSinkEnum;
 
 pub trait ClipTraitRaw<T>
 where
@@ -36,7 +25,6 @@ where
     type SctC;
     type SctOC;
     type SctT: CoordFloat + FloatConst;
-    // type SctStream;
     type SctCi;
 
     fn point_visible(&self, _p: &Self::SctC, _z: Option<u8>) -> bool;
