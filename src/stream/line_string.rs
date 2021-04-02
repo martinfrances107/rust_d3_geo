@@ -8,7 +8,6 @@ use num_traits::FloatConst;
 impl<T: CoordFloat + Default + FloatConst> Streamable<T> for LineString<T> {
     type SC = Coordinate<T>;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Coordinate<T>>) {
-        // processor(&Geometry::LineString(self.clone()), stream);
         let points: Vec<Coordinate<T>> = self.coords_iter().collect();
         line_processor(&points, stream, 0);
     }

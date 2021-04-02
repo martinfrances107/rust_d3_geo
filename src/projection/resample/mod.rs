@@ -1,42 +1,21 @@
 pub mod resample;
 pub mod resample_none;
 
-// use crate::stream::stream_postclip_node_stub::StreamPostClipNodeStub;
-// use crate::stream::CompareIntersection;
-// use crate::stream::StreamPostClipTrait;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-// use resample_none::ResampleNone;
-// use geo::CoordFloat;
-// use num_traits::FloatConst;
-// use resample::Resample;
-// use resample_none::ResampleNone;
-
-// use crate::stream::StreamProcessor;
 use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::clip::Clip;
 use crate::clip::clip_raw::ClipRaw;
 use crate::compose::Compose;
 use crate::stream::Stream;
 use crate::stream::StreamDst;
-use crate::Transform;
 
 use super::resample::resample::Resample;
 use super::resample::resample_none::ResampleNone;
-
-// pub fn gen_resample<T>(project: Rc<Box<dyn Transform<>>>, delta2: Option<T>) -> StreamProcessor<T>
-// where
-//     T: CoordFloat + FloatConst + 'static,
-// {
-//     return match delta2 {
-//         Some(delta2) => Resample::new(project, delta2),
-//         None => ResampleNone::new(project),
-//     };
-// }
 
 #[derive(Clone, Debug)]
 pub enum ResampleEnum<T>
