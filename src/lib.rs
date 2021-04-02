@@ -8,6 +8,7 @@ use geo::{CoordFloat, Coordinate};
 use std::marker::PhantomData;
 
 extern crate derivative;
+extern crate rust_d3_array;
 extern crate web_sys;
 
 pub mod cartesian;

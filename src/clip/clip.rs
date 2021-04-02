@@ -2,16 +2,16 @@ use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
+use rust_d3_array::merge::merge;
 use std::ops::AddAssign;
 
 use crate::path::PathResultEnum;
+use crate::polygon_contains::contains;
 use crate::stream::Clean;
 use crate::stream::CleanEnum;
 use crate::stream::Stream;
 use crate::stream::StreamDst;
 
-// use super::antimeridian::line::Line as AntimeridianLine;
-// use super::circle::line::Line as CircleLine;
 use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
 use super::clip_base::ClipBase;
@@ -53,7 +53,6 @@ where
                         raw: ClipRaw::Antimeridian(r.clone()),
                         base: ClipBase {
                             line: LineEnum::Antimeridian(l.clone()),
-                            // ring_buffer,
                             ring_sink,
                             start,
                             ..ClipBase::default()
@@ -129,6 +128,7 @@ where
     }
 
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        println!("Clip point_default()");
         let pv = match &self.raw {
             ClipRaw::Antimeridian(r) => r.point_visible(p, None),
             ClipRaw::Circle(r) => r.point_visible(p, None),
@@ -150,35 +150,41 @@ where
 
     #[inline]
     fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        println!("Clip point_line()");
         self.base.line.point(p, m);
     }
 
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        println!("Clip point_ring()");
         self.base.ring.push(*p);
         self.base.ring_sink.point(p, m);
     }
 
     #[inline]
     fn line_start_default(&mut self) {
+        println!("Clip line_start_default()");
         self.point_fn = Self::point_line;
         self.base.line.line_start();
     }
 
     #[inline]
     fn ring_start(&mut self) {
+        println!("Clip ring_start()");
         self.base.ring_sink.line_start();
         self.base.ring.clear();
     }
 
     #[inline]
     fn line_end_default(&mut self) {
+        println!("Clip line_end_default()");
         self.point_fn = Self::point_default;
         self.base.line.line_end();
     }
 
     fn ring_end(&mut self) {
-        // self.point_ring(&mut self.base.ring[0], None);
+        println!("Clip ring_end()");
+        self.point_ring(&self.base.ring[0].clone(), None);
         self.base.ring_sink.line_end();
 
         let clean = self.base.ring_sink.clean();
@@ -227,8 +233,9 @@ where
                     }
                     self.base.sink.line_start();
                     for i in 0..m {
+                        println!("layer below point()");
                         let le = segment[i];
-                        // self.base.sink.point(&le.p, le.m);
+                        self.base.sink.point(&le.p, le.m);
                     }
                     self.base.sink.line_end();
                 }
@@ -240,10 +247,10 @@ where
                 if n > 1 {
                     // ringSegments.push(ringSegments.pop().concat(ringSegments.shift()));
 
-                    // let mut combined = ring_segments.first().unwrap().clone();
-                    // let mut last = ring_segments.last().unwrap().clone();
-                    // combined.append(&mut last);
-                    // ring_segments.push(combined);
+                    let mut combined = ring_segments.first().unwrap().clone();
+                    let mut last = ring_segments.last().unwrap().clone();
+                    combined.append(&mut last);
+                    ring_segments.push(combined);
                 }
             }
             _ => {}
@@ -266,7 +273,7 @@ where
     fn get_dst(&self) -> StreamDst<T> {
         match &self.base.sink {
             ClipSinkEnum::Blank => {
-                panic!("calling get_dst on a blank");
+                panic!("calling get_dst() on a blank");
             }
             ClipSinkEnum::Resample(r) => r.get_dst(),
             ClipSinkEnum::Src(s) => s.get_dst(),
@@ -278,22 +285,15 @@ where
         (self.point_fn)(self, p, m);
     }
 
+    #[inline]
     fn line_start(&mut self) {
+        println!("line_start()");
         (self.line_start_fn)(self);
     }
 
     #[inline]
     fn line_end(&mut self) {
         (self.line_end_fn)(self);
-        // self.point_fn = Self::point_default;
-        // if self.use_ring_end {
-        //     self.ring_end();
-        // } else {
-        //     // put somethignhere.
-        // }
-        // self.base.use_ring = true;
-        // is this correct!!!
-        // self.base.line.line_end();
     }
 
     fn polygon_start(&mut self) {
@@ -306,30 +306,31 @@ where
     }
 
     fn polygon_end(&mut self) {
+        println!("Clip polygon_end()");
         self.point_fn = Self::point_default;
         self.line_start_fn = Self::line_start_default;
         self.line_end_fn = Self::line_end_default;
-        // segments = merge(segments);
-        // let start_inside = contains(&self.polygon, &self.start);
-        let start_inside = false;
+        let segments_merged = merge(self.base.segments.clone());
+        let start_inside = contains(&self.base.polygon, &self.base.start);
 
-        if !self.base.polygon_started {
-            match &mut self.base.sink {
-                ClipSinkEnum::Blank => {
-                    panic!("ClickSinkEnum - actively using an unconnected blank");
-                }
-                ClipSinkEnum::Src(s) => s.polygon_start(),
-                ClipSinkEnum::Resample(s) => s.polygon_start(),
-            };
-            self.base.polygon_started = true;
-
-        // rejoin(
-        //     &self.segments,
-        //     self.compare_intersection,
-        //     start_inside,
-        //     self.interpolate,
-        //     self.sink,
-        // );
+        if !segments_merged.is_empty() {
+            if !self.base.polygon_started {
+                match &mut self.base.sink {
+                    ClipSinkEnum::Blank => {
+                        panic!("ClickSinkEnum - actively using an unconnected blank");
+                    }
+                    ClipSinkEnum::Src(s) => s.polygon_start(),
+                    ClipSinkEnum::Resample(s) => s.polygon_start(),
+                };
+                self.base.polygon_started = true;
+            }
+            // rejoin(
+            //     &merged_segments,
+            //     self.raw.compare_intersection,
+            //     start_inside,
+            //     self.interpolate,
+            //     self.base.sink,
+            // );
         } else if start_inside {
             if !self.base.polygon_started {
                 match &mut self.base.sink {
