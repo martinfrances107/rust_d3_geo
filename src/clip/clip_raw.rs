@@ -1,9 +1,6 @@
 use geo::CoordFloat;
-use geo::Coordinate;
 use num_traits::FloatConst;
 use std::ops::AddAssign;
-
-use crate::stream::Stream;
 
 use super::antimeridian::ClipAntimeridian;
 use super::circle::ClipCircle;
