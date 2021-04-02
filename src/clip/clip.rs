@@ -325,7 +325,7 @@ where
                 self.base.polygon_started = true;
             }
             // rejoin(
-            //     &merged_segments,
+            //     &segments_merged,
             //     self.raw.compare_intersection,
             //     start_inside,
             //     self.interpolate,
@@ -346,16 +346,17 @@ where
                 ClipSinkEnum::Blank => {
                     panic!("ClickSinkEnum - actively using an unconnected blank");
                 }
-                ClipSinkEnum::Src(s) => s.line_start(),
-                ClipSinkEnum::Resample(s) => s.line_start(),
+                ClipSinkEnum::Src(s) => {
+                    s.line_start();
+                    // (self.raw.interpolate)(None, None, 1f64, self.base.sink);
+                    s.line_end();
+                }
+                ClipSinkEnum::Resample(s) => {
+                    s.line_start();
+                    // (self.raw.interpolate)(None, None, 1f64, self.base.sink);
+                    s.line_end();
+                }
             };
-            // (self.interpolate)(None, None, 1f64, self.sink);
-            {
-                // match &mut self.base.sink {
-                //     ClipSinkEnum::Src(mut s) => s.line_end(),
-                //     ClipSinkEnum::Resample(mut s) => s.line_end(),
-                // };
-            }
         }
         if self.base.polygon_started {
             match &mut self.base.sink {
