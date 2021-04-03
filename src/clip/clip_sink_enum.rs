@@ -5,7 +5,7 @@ use std::ops::AddAssign;
 
 use crate::projection::resample::ResampleEnum;
 use crate::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 
 /// Wrapper for stream inputs to Clip.
 #[derive(Clone, Debug)]

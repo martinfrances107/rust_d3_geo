@@ -4,7 +4,7 @@ use geo::{CoordFloat, Coordinate};
 use web_sys::CanvasRenderingContext2d;
 
 use crate::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 use num_traits::{AsPrimitive, FloatConst};
 
 use super::{PathResult, PathResultEnum};

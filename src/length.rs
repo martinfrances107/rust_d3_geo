@@ -1,5 +1,5 @@
 use super::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 use crate::stream::Streamable;
 use derivative::Derivative;
 use geo::{CoordFloat, Coordinate};

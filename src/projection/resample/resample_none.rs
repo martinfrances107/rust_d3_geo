@@ -7,7 +7,7 @@ use crate::clip::clip::Clip;
 use crate::clip::clip_raw::ClipRaw;
 use crate::compose::Compose;
 use crate::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 use crate::Transform;
 
 #[derive(Debug)]

@@ -5,7 +5,7 @@ use num_traits::FloatConst;
 use std::marker::PhantomData;
 
 use crate::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 
 use super::stream_transform::StreamTransform;
 

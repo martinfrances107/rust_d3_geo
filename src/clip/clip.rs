@@ -10,7 +10,7 @@ use crate::polygon_contains::contains;
 use crate::stream::Clean;
 use crate::stream::CleanEnum;
 use crate::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 
 use super::buffer::ClipBuffer;
 use super::buffer::LineElem;

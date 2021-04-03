@@ -9,7 +9,7 @@ use crate::clip::clip::Clip;
 use crate::clip::clip_raw::ClipRaw;
 use crate::compose::Compose;
 use crate::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 use crate::Transform;
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 

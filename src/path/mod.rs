@@ -15,8 +15,7 @@ use web_sys::CanvasRenderingContext2d;
 // use crate::projection::stream_transform_radians::StreamTransformRadiansNode;
 
 use crate::clip::buffer::LineElem;
-// use crate::stream::Streamable;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 
 use crate::projection::projection_mutator::ProjectionMutator;

@@ -17,7 +17,7 @@ use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::rotation::rotate_radians_transform::rotate_radians_transform;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 use crate::Transform;
 
 use super::orthographic::OrthographicRaw;

@@ -10,7 +10,7 @@ use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::clip::line_sink_enum::LineSinkEnum;
 use crate::point_equal::point_equal;
 use crate::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 use crate::stream::StreamSourceDummy;
 use crate::stream::{Clean, CleanEnum};
 

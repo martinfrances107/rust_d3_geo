@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 use crate::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 use geo::{CoordFloat, Coordinate};
 use num_traits::{Float, FloatConst};
 

@@ -2,7 +2,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use super::Stream;
-use super::StreamDst;
+use super::stream_dst::StreamDst;
 // use super::StreamInTrait;
 
 /// A Stub acts as a black hole.

@@ -7,7 +7,7 @@ use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::clip::line_sink_enum::LineSinkEnum;
 use crate::clip::ClipBuffer;
 use crate::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 use crate::stream::{Clean, CleanEnum};
 
 use super::intersect::intersect;

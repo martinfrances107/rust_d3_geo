@@ -3,7 +3,7 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
-use crate::stream::StreamDst;
+use crate::stream::stream_dst::StreamDst;
 
 use super::PathResult;
 use super::PathResultEnum;
