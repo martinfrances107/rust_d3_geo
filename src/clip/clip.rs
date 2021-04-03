@@ -374,30 +374,22 @@ where
 
     fn sphere(&mut self) {
         match &mut self.base.sink {
-            ClipSinkEnum::Blank => {
-                panic!("ClickSinkEnum - actively using an unconnected blank");
-            }
             ClipSinkEnum::Src(s) => {
                 s.polygon_start();
                 s.line_start();
-            }
-            ClipSinkEnum::Resample(s) => {
-                s.polygon_start();
-                s.line_start();
-            }
-        };
-        // (self.interpolate)(None, None, T::one(), &mut sink as &mut dyn Stream<T>);
-        match &mut self.base.sink {
-            ClipSinkEnum::Blank => {
-                panic!("ClickSinkEnum - actively using an unconnected blank");
-            }
-            ClipSinkEnum::Src(s) => {
+                self.raw.interpolate(None, None, T::one(), s);
                 s.line_end();
                 s.polygon_end();
             }
             ClipSinkEnum::Resample(s) => {
+                s.polygon_start();
+                s.line_start();
+                self.raw.interpolate(None, None, T::one(), s);
                 s.line_end();
                 s.polygon_end();
+            }
+            ClipSinkEnum::Blank => {
+                panic!("ClickSinkEnum - actively using an unconnected blank");
             }
         };
     }
