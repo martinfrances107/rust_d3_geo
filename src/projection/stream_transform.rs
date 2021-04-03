@@ -7,8 +7,8 @@ use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::clip::Clip;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
-use crate::stream::Stream;
 use crate::stream::stream_dst::StreamDst;
+use crate::stream::Stream;
 use crate::Transform;
 
 #[derive(Clone, Debug)]

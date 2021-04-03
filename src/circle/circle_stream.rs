@@ -1,3 +1,7 @@
+use std::cell::RefCell;
+use std::ops::AddAssign;
+use std::rc::Rc;
+
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_normalize_in_place;
 use crate::cartesian::spherical_r;
@@ -9,11 +13,9 @@ use crate::Transform;
 
 use super::circle_generator::CircleGenerator;
 use super::circle_radius::circle_radius;
-use std::cell::RefCell;
-use std::rc::Rc;
 
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
-pub fn circle_stream<T: CoordFloat + Default + FloatConst>(
+pub fn circle_stream<T: AddAssign + CoordFloat + Default + FloatConst>(
     circle: &mut impl Stream<T, C = Coordinate<T>>,
     radius: T,
     delta: T,

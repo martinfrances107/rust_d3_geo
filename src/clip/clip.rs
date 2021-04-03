@@ -7,10 +7,10 @@ use std::ops::AddAssign;
 
 use crate::path::PathResultEnum;
 use crate::polygon_contains::contains;
+use crate::stream::stream_dst::StreamDst;
 use crate::stream::Clean;
 use crate::stream::CleanEnum;
 use crate::stream::Stream;
-use crate::stream::stream_dst::StreamDst;
 
 use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
@@ -348,12 +348,12 @@ where
                 }
                 ClipSinkEnum::Src(s) => {
                     s.line_start();
-                    // (self.raw.interpolate)(None, None, 1f64, self.base.sink);
+                    self.raw.interpolate(None, None, T::one(), s);
                     s.line_end();
                 }
                 ClipSinkEnum::Resample(s) => {
                     s.line_start();
-                    // (self.raw.interpolate)(None, None, 1f64, self.base.sink);
+                    self.raw.interpolate(None, None, T::one(), s);
                     s.line_end();
                 }
             };

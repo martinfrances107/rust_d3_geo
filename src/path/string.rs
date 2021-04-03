@@ -1,7 +1,8 @@
 use std::fmt::Display;
+use std::ops::AddAssign;
 
-use crate::stream::Stream;
 use crate::stream::stream_dst::StreamDst;
+use crate::stream::Stream;
 use geo::{CoordFloat, Coordinate};
 use num_traits::{Float, FloatConst};
 
@@ -86,7 +87,7 @@ where
 
 impl<T> Stream<T> for PathString<T>
 where
-    T: CoordFloat + Default + FloatConst + std::fmt::Display,
+    T: AddAssign + CoordFloat + Default + FloatConst + std::fmt::Display,
 {
     type C = Coordinate<T>;
 

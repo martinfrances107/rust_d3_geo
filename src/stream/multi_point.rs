@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use crate::stream::Stream;
 
 // use super::feature_geometry::FeatureGeometry;
@@ -6,7 +8,7 @@ use geo::MultiPoint;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-impl<T: CoordFloat + Default + FloatConst> Streamable<T> for MultiPoint<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Streamable<T> for MultiPoint<T> {
     type SC = Coordinate<T>;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
         for p in self.iter() {

@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
@@ -16,7 +15,7 @@ use super::StreamSourceDummy;
 #[derive(Clone, Debug)]
 pub enum StreamDst<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     SRC(StreamSourceDummy<T>),
     PAS(PathAreaStream<T>),

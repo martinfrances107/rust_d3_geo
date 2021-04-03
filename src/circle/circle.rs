@@ -7,8 +7,8 @@ use num_traits::FloatConst;
 use super::StreamType;
 use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
-use crate::stream::Stream;
 use crate::stream::stream_dst::StreamDst;
+use crate::stream::Stream;
 use crate::Transform;
 use crate::TransformIdentity;
 

@@ -10,6 +10,8 @@ pub mod line_sink_enum;
 
 mod rejoin;
 
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -20,7 +22,7 @@ use buffer::ClipBuffer;
 
 pub trait ClipTraitRaw<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type SctC;
     type SctOC;
@@ -49,9 +51,9 @@ where
 
     fn interpolate(
         &self,
-        _from: Self::SctOC,
-        _to: Self::SctOC,
-        _direction: Self::SctT,
-        _stream: impl Stream<T, C = Coordinate<T>>,
+        from: Self::SctOC,
+        to: Self::SctOC,
+        direction: Self::SctT,
+        stream: &mut impl Stream<T, C = Coordinate<T>>,
     );
 }

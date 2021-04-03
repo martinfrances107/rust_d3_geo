@@ -101,64 +101,63 @@ where
         from: Option<Coordinate<T>>,
         to: Option<Coordinate<T>>,
         direction: T,
-        stream: impl Stream<T, C = Coordinate<T>>,
+        stream: &mut impl Stream<T, C = Coordinate<T>>,
     ) {
         let phi: T;
-        let mut s = stream;
         match from {
             None => {
                 phi = direction * T::FRAC_PI_2();
-                s.point(
+                stream.point(
                     &Coordinate {
                         x: -T::PI(),
                         y: phi,
                     },
                     None,
                 );
-                s.point(
+                stream.point(
                     &Coordinate {
                         x: T::zero(),
                         y: phi,
                     },
                     None,
                 );
-                s.point(&Coordinate { x: T::PI(), y: phi }, None);
-                s.point(
+                stream.point(&Coordinate { x: T::PI(), y: phi }, None);
+                stream.point(
                     &Coordinate {
                         x: T::PI(),
                         y: T::zero(),
                     },
                     None,
                 );
-                s.point(
+                stream.point(
                     &Coordinate {
                         x: T::PI(),
                         y: -phi,
                     },
                     None,
                 );
-                s.point(
+                stream.point(
                     &Coordinate {
                         x: T::zero(),
                         y: -phi,
                     },
                     None,
                 );
-                s.point(
+                stream.point(
                     &Coordinate {
                         x: -T::PI(),
                         y: -phi,
                     },
                     None,
                 );
-                s.point(
+                stream.point(
                     &Coordinate {
                         x: -T::PI(),
                         y: T::zero(),
                     },
                     None,
                 );
-                s.point(
+                stream.point(
                     &Coordinate {
                         x: -T::PI(),
                         y: phi,
@@ -174,17 +173,17 @@ where
                     let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
 
                     phi = direction * lambda / T::from(2).unwrap();
-                    s.point(&Coordinate { x: -lambda, y: phi }, None);
-                    s.point(
+                    stream.point(&Coordinate { x: -lambda, y: phi }, None);
+                    stream.point(
                         &Coordinate {
                             x: T::zero(),
                             y: phi,
                         },
                         None,
                     );
-                    s.point(&Coordinate { x: lambda, y: phi }, None);
+                    stream.point(&Coordinate { x: lambda, y: phi }, None);
                 } else {
-                    s.point(&Coordinate { x: to.x, y: to.y }, None);
+                    stream.point(&Coordinate { x: to.x, y: to.y }, None);
                 }
             }
         }

@@ -1,7 +1,9 @@
 use crate::path::PathResult;
 use crate::path::PathResultEnum;
-use crate::stream::Stream;
 use crate::stream::stream_dst::StreamDst;
+use crate::stream::Stream;
+
+use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -49,7 +51,7 @@ impl<T: CoordFloat> PathResult for ClipBuffer<T> {
     }
 }
 
-impl<T: CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<T> {
     type C = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {

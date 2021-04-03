@@ -115,9 +115,9 @@ where
         from: Self::SctOC,
         to: Self::SctOC,
         direction: Self::SctT,
-        mut stream: impl Stream<T, C = Coordinate<T>>,
+        stream: &mut impl Stream<T, C = Coordinate<T>>,
     ) {
-        circle_stream(&mut stream, self.radius, self.delta, direction, from, to);
+        circle_stream(stream, self.radius, self.delta, direction, from, to);
     }
 }
 

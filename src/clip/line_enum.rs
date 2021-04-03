@@ -6,8 +6,8 @@ use std::ops::AddAssign;
 use super::antimeridian::line::Line as AntimeridianLine;
 use super::circle::line::Line as CircleLine;
 use super::line_sink_enum::LineSinkEnum;
-use crate::stream::Stream;
 use crate::stream::stream_dst::StreamDst;
+use crate::stream::Stream;
 use crate::stream::{Clean, CleanEnum};
 
 #[derive(Clone, Debug)]

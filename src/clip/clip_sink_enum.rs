@@ -4,8 +4,8 @@ use num_traits::FloatConst;
 use std::ops::AddAssign;
 
 use crate::projection::resample::ResampleEnum;
-use crate::stream::Stream;
 use crate::stream::stream_dst::StreamDst;
+use crate::stream::Stream;
 
 /// Wrapper for stream inputs to Clip.
 #[derive(Clone, Debug)]

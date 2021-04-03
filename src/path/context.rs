@@ -1,10 +1,12 @@
 extern crate web_sys;
 
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use web_sys::CanvasRenderingContext2d;
 
-use crate::stream::Stream;
 use crate::stream::stream_dst::StreamDst;
+use crate::stream::Stream;
 use num_traits::{AsPrimitive, FloatConst};
 
 use super::{PathResult, PathResultEnum};
@@ -51,7 +53,7 @@ where
 
 impl<T> Stream<T> for PathContext<T>
 where
-    T: CoordFloat + Default + FloatConst + AsPrimitive<f64>,
+    T: AddAssign + CoordFloat + Default + FloatConst + AsPrimitive<f64>,
 {
     type C = Coordinate<T>;
 

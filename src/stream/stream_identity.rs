@@ -1,8 +1,10 @@
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use super::Stream;
 use super::stream_dst::StreamDst;
+use super::Stream;
 // use super::StreamInTrait;
 
 /// A Stub acts as a black hole.
@@ -16,7 +18,7 @@ where
 
 impl<T> Stream<T> for StreamIdentity<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type C = Coordinate<T>;
 

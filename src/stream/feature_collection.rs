@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use super::Streamable;
 // use crate::data_object::FeaturesStruct;
 use crate::data_object::FeatureCollection;
@@ -7,7 +9,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-impl<T: CoordFloat + Default + FloatConst> Streamable<T> for FeatureCollection<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Streamable<T> for FeatureCollection<T> {
     type SC = Coordinate<T>;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
         for f in &self.0 {

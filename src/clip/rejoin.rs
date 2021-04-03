@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use crate::point_equal::point_equal;
 use crate::stream::Stream;
 // use  crate::stream::StreamSimpleNode;
@@ -52,7 +54,7 @@ pub fn rejoin<T: Float>(
     start_inside: bool,
     stream: &mut Box<dyn Stream<T, C = Coordinate<T>>>,
 ) where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     let mut subject = Vec::<Intersection<T>>::new();
     let mut clip = Vec::<Intersection<T>>::new();

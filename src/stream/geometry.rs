@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Geometry;
@@ -8,7 +10,7 @@ use super::Streamable;
 
 impl<T> Streamable<T> for Geometry<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type SC = Coordinate<T>;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {

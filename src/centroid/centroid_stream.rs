@@ -1,5 +1,5 @@
-use crate::stream::Stream;
 use crate::stream::stream_dst::StreamDst;
+use crate::stream::Stream;
 use crate::stream::Streamable;
 
 use std::ops::AddAssign;

@@ -17,15 +17,17 @@ pub mod stream_identity;
 
 use std::fmt::Debug;
 use std::marker::PhantomData;
+use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use stream_dst::StreamDst;
+
 /// Applies to DataObject's
 pub trait Streamable<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type SC;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>);
@@ -61,7 +63,7 @@ where
 
 pub trait Stream<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type C;
     fn point(&mut self, _p: &Self::C, _m: Option<u8>);

@@ -4,8 +4,8 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 use std::marker::PhantomData;
 
-use crate::stream::Stream;
 use crate::stream::stream_dst::StreamDst;
+use crate::stream::Stream;
 
 use super::stream_transform::StreamTransform;
 

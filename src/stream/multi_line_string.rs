@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use geo::MultiLineString;
 use geo::{coords_iter::CoordsIter, CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -8,7 +10,7 @@ use super::{Stream, Streamable};
 
 /// MultiLineString - an array of arrays of positions forming several lines.
 
-impl<T: CoordFloat + Default + FloatConst> Streamable<T> for MultiLineString<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Streamable<T> for MultiLineString<T> {
     type SC = Coordinate<T>;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
         for ls in self {

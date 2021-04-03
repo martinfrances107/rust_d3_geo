@@ -87,7 +87,7 @@ trait PathTrait: PointRadiusTrait // where
 
 trait PathStreamTrait<T>: Stream<T> + PathTrait + PathResult
 where
-    T: CoordFloat + Default + FloatConst,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
 }
 

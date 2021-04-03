@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::{coords_iter::CoordsIter, Coordinate, Polygon};
 use num_traits::FloatConst;
@@ -6,7 +8,7 @@ use super::geometry_processor::line_processor;
 use super::Stream;
 use super::Streamable;
 
-impl<T: CoordFloat + Default + FloatConst> Streamable<T> for Polygon<T> {
+impl<T: AddAssign + CoordFloat + Default + FloatConst> Streamable<T> for Polygon<T> {
     type SC = Coordinate<T>;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
         stream.polygon_start();
