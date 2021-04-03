@@ -4,22 +4,21 @@ mod context;
 mod string;
 
 use std::default::Default;
+use std::fmt::Display;
 use std::ops::AddAssign;
 
-use crate::projection::stream_transform_radians::StreamTransformRadians;
-use crate::stream::Streamable;
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::{AsPrimitive, FloatConst};
+use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
-// use crate::projection::stream_transform_radians::StreamTransformRadiansNode;
 
 use crate::clip::buffer::LineElem;
-use crate::stream::stream_dst::StreamDst;
-use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
-
 use crate::projection::projection_mutator::ProjectionMutator;
+use crate::projection::stream_transform_radians::StreamTransformRadians;
+use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
+use crate::stream::Streamable;
+use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 
 #[derive(Clone)]
 pub enum PathResultEnum<T>
@@ -121,7 +120,7 @@ where
 
 impl<T> Path<T>
 where
-    T: CoordFloat + std::fmt::Display + FloatConst + std::ops::AddAssign + Default,
+    T: AddAssign + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     pub fn generate(

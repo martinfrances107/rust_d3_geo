@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -31,7 +33,7 @@ where
 
 impl<T> Default for PathAreaStream<T>
 where
-    T: CoordFloat + Default + std::ops::AddAssign,
+    T: AddAssign + CoordFloat + Default,
 {
     #[inline]
     fn default() -> Self {
@@ -49,7 +51,7 @@ where
 
 impl<T> PathAreaStream<T>
 where
-    T: CoordFloat + std::ops::AddAssign,
+    T: AddAssign + CoordFloat,
 {
     #[inline]
     fn area_ring_start(&mut self) {
@@ -82,7 +84,7 @@ where
 
 impl<T> PathResult for PathAreaStream<T>
 where
-    T: CoordFloat + std::ops::AddAssign,
+    T: AddAssign + CoordFloat,
 {
     type Out = Option<PathResultEnum<T>>;
     fn result(&mut self) -> Option<PathResultEnum<T>> {
@@ -94,7 +96,7 @@ where
 
 impl<T> Stream<T> for PathAreaStream<T>
 where
-    T: CoordFloat + Default + FloatConst + std::ops::AddAssign,
+    T: AddAssign + CoordFloat + Default + FloatConst,
 {
     type C = Coordinate<T>;
 
