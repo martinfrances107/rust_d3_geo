@@ -9,7 +9,7 @@ num-traits="0.2.14"
 geo="0.17.0"
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 derivative = "2.2.0"
-rust_d3_array = { path = "../rust_d3_array" }
+rust_d3_array = { git = "https://github.com/martinfrances107/rust_d3_array.git" }
 
 [dev-dependencies]
 pretty_assertions = "0.7.1"
