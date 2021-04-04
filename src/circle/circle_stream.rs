@@ -52,7 +52,6 @@ pub fn circle_stream<T: AddAssign + CoordFloat + Default + FloatConst>(
     let mut point: Coordinate<T>;
     let mut t = t0;
     let mut cond = true;
-    // let mut c = circle.borrow_mut();
     while cond {
         point = spherical_r(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
         circle.point(&point, None);

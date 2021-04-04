@@ -8,7 +8,8 @@ pub mod clip_sink_enum;
 pub mod line_enum;
 pub mod line_sink_enum;
 
-mod rejoin;
+mod compare_intersection;
+pub mod rejoin;
 
 use std::ops::AddAssign;
 

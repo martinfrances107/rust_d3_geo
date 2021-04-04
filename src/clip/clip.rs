@@ -12,13 +12,17 @@ use crate::stream::Clean;
 use crate::stream::CleanEnum;
 use crate::stream::Stream;
 
+use super::antimeridian::ClipAntimeridian;
 use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
+use super::circle::ClipCircle;
 use super::clip_base::ClipBase;
 use super::clip_raw::ClipRaw;
 use super::clip_sink_enum::ClipSinkEnum;
+use super::compare_intersection::compare_intersection;
 use super::line_enum::LineEnum;
 use super::line_sink_enum::LineSinkEnum;
+use super::rejoin::rejoin;
 use super::ClipTraitRaw;
 
 #[derive(Derivative)]
@@ -326,10 +330,9 @@ where
             }
             // rejoin(
             //     &segments_merged,
-            //     self.raw.compare_intersection,
+            //     self.raw,
             //     start_inside,
-            //     self.interpolate,
-            //     self.base.sink,
+            //     &mut self.base.sink,
             // );
         } else if start_inside {
             if !self.base.polygon_started {
@@ -356,8 +359,8 @@ where
                     self.raw.interpolate(None, None, T::one(), s);
                     s.line_end();
                 }
-            };
-        }
+            }
+        };
         if self.base.polygon_started {
             match &mut self.base.sink {
                 ClipSinkEnum::Blank => {

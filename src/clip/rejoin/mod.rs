@@ -1,78 +1,44 @@
+pub mod intersection;
+
 use std::ops::AddAssign;
+
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::Zero;
+use num_traits::{Float, FloatConst};
 
 use crate::point_equal::point_equal;
 use crate::stream::Stream;
-// use  crate::stream::StreamSimpleNode;
-use geo::CoordFloat;
-use geo::Coordinate;
-use num_traits::{Float, FloatConst};
 
 use super::buffer::LineElem;
-use num_traits::Zero;
-#[derive(Clone)]
-struct Intersection<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    x: LineElem<T>,
-    z: Option<Vec<LineElem<T>>>,
-    o: Option<Box<Intersection<T>>>, // another intersection,
-    e: bool,                         // is any entry?
-    v: bool,                         // visited
-    n: Option<LineElem<T>>,          // next
-    p: Option<LineElem<T>>,          // previous
-}
+use super::ClipTraitRaw;
 
-impl<T: Float> Intersection<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn new(
-        point: LineElem<T>,
-        points: Option<Vec<LineElem<T>>>,
-        other: Option<Box<Intersection<T>>>,
-        entry: bool,
-    ) -> Self {
-        return Self {
-            x: point,
-            z: points,
-            o: other,
-            e: entry,
-            v: false,
-            n: None,
-            p: None,
-        };
-    }
-}
+use intersection::Intersection;
 
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
 pub fn rejoin<T: Float>(
     segments: &Vec<Vec<LineElem<T>>>,
-    // compare_intersection: CompareIntersectionFn<T>,
-    start_inside: bool,
-    stream: &mut Box<dyn Stream<T, C = Coordinate<T>>>,
+    raw: impl ClipTraitRaw<T>,
+    start_inside: bool,    
+    stream: &mut impl Stream<T, C = Coordinate<T>>,
 ) where
     T: AddAssign + CoordFloat + Default + FloatConst,
 {
     let mut subject = Vec::<Intersection<T>>::new();
     let mut clip = Vec::<Intersection<T>>::new();
-    // let i,
-    // let n: usize;
 
     for segment in segments.iter() {
-        let n = segment.len() - 1;
+        let n = segment.len() - 1usize;
         if n <= 0 {
             return;
         };
         let mut p0 = segment[0];
         let mut p1 = segment[n];
-        //  let mut x: Intersection<F>;
 
         if point_equal(p0.p, p1.p) {
             if !p0.m.unwrap().is_zero() && !p1.m.unwrap().is_zero() {
-                // let mut s = stream.borrow_mut();
                 stream.line_start();
                 // let i: usize;
                 // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
@@ -85,11 +51,12 @@ pub fn rejoin<T: Float>(
             }
             // handle degenerate cases by moving the point
             // p1[0] += 2F * f64::EPSILON;
-            p1.p.x = p1.p.x + T::from(2).unwrap() * T::epsilon();
+            p1.p.x += T::from(2).unwrap() * T::epsilon();
         }
 
         let mut x = Intersection::new(p0, Some(segment.to_vec()), None, true);
         subject.push(x.clone());
+
         x.o = Some(Box::new(Intersection::new(
             p0,
             None,
@@ -97,16 +64,21 @@ pub fn rejoin<T: Float>(
             false,
         )));
         clip.push(*x.o.unwrap());
+
         x = Intersection::new(p1, Some(segment.to_vec()), None, false);
         subject.push(x.clone());
-        // x.o = Some(Box::new(Intersection::new(
-        //   p1,
-        //   None,
-        // //   Some(Box::rejoin::new(x)),
-        //   true,
-        // )));
+
+        x.o = Some(Box::new(Intersection::new(
+            p1,
+            None,
+            Some(Box::new(x.clone())),
+            true,
+        )));
         clip.push(*x.clone().o.unwrap());
     }
+
+    // need access to raw.compare_intersection and raw.interpolate
+    todo!("Major: complete this function.");
 }
 
 struct LinkNP<'a, T> {

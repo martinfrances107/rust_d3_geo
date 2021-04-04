@@ -1,9 +1,11 @@
 mod intersect;
 pub mod line;
 
+use std::fmt::Debug;
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::ops::AddAssign;
 
 use crate::circle::circle_stream::circle_stream;
 use crate::stream::CompareIntersection;
@@ -13,8 +15,6 @@ use super::clip::Clip;
 use super::clip_base::ClipBase;
 use super::clip_raw::ClipRaw;
 use super::ClipTraitRaw;
-
-// use line::Line;
 
 #[derive(Clone, Debug)]
 pub struct ClipCircle<T>
@@ -29,7 +29,6 @@ where
 }
 
 /// Returns a clip object
-use std::fmt::Debug;
 impl<T> ClipCircle<T>
 where
     T: AddAssign + CoordFloat + FloatConst + Default + Debug,
