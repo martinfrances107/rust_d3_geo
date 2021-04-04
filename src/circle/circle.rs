@@ -22,11 +22,11 @@ pub struct CircleStream<T: CoordFloat + Default + FloatConst> {
 }
 
 impl<T: CoordFloat + Default + FloatConst> Default for CircleStream<T> {
+    #[inline]
     fn default() -> Self {
         Self {
             stream_type: StreamType::Polygon,
             coordinates: vec![vec![]],
-            // rotate: Box::new(TransformIdentity::default()),
             rotate: RotateRadiansEnum::I(RotationIdentity::default()),
             ring: vec![],
         }
@@ -34,6 +34,7 @@ impl<T: CoordFloat + Default + FloatConst> Default for CircleStream<T> {
 }
 
 impl<T: CoordFloat + Default + FloatConst> Clone for CircleStream<T> {
+    #[inline]
     fn clone(&self) -> CircleStream<T> {
         CircleStream::<T> {
             stream_type: self.stream_type.clone(),
@@ -47,22 +48,19 @@ impl<T: CoordFloat + Default + FloatConst> Clone for CircleStream<T> {
 impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for CircleStream<T> {
     type C = Coordinate<T>;
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        let p = p.clone();
-        let rotate = &self.rotate;
-        let x_rotated = rotate.invert(&p);
-        let x_rotated_deg = Coordinate {
+        let x_rotated = &self.rotate.invert(&p);
+        self.ring.push(Coordinate {
             x: x_rotated.x.to_degrees(),
             y: x_rotated.y.to_degrees(),
-        };
-        self.ring.push(x_rotated_deg);
+        });
     }
     fn sphere(&mut self) {}
-
     fn line_start(&mut self) {}
     fn line_end(&mut self) {}
     fn polygon_start(&mut self) {}
     fn polygon_end(&mut self) {}
 
+    #[inline]
     fn get_dst(&self) -> StreamDst<T> {
         StreamDst::Circle(self.clone())
     }
