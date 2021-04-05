@@ -183,7 +183,7 @@ where
                     );
                     stream.point(&Coordinate { x: lambda, y: phi }, None);
                 } else {
-                    stream.point(&Coordinate { x: to.x, y: to.y }, None);
+                    stream.point(&to, None);
                 }
             }
         }
