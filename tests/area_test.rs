@@ -3,6 +3,10 @@
 
 mod area_test {
 
+    use std::f64::consts::PI;
+    use std::fmt::Display;
+    use std::ops::AddAssign;
+
     use geo::CoordFloat;
     use geo::Coordinate;
     use geo::Geometry;
@@ -10,17 +14,12 @@ mod area_test {
     use geo::Polygon;
     use num_traits::FloatConst;
     use rust_d3_geo::data_object::DataObject;
-    use rust_d3_geo::projection::projection::Projection;
-    // use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::path::Path;
     use rust_d3_geo::path::PathResultEnum;
+    use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::{
         equirectangular::EquirectangularRaw, projection_mutator::ProjectionMutator,
     };
-    // use  projection::equirectangular;
-    use std::f64::consts::PI;
-    use std::fmt::Display;
-    use std::ops::AddAssign;
 
     #[inline]
     fn equirectangular<'a, T: AddAssign + CoordFloat + Default + FloatConst>(
@@ -60,7 +59,7 @@ mod area_test {
             vec![],
         )));
         let ep = equirectangular::<f64>();
-        // assert_eq!(test_area(ep, &object), 4.0);
+        assert_eq!(test_area(ep, &object), 4.0);
     }
 }
 
