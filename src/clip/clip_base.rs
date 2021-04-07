@@ -1,3 +1,4 @@
+use std::collections::VecDeque;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
@@ -15,7 +16,7 @@ pub struct ClipBase<T: AddAssign + CoordFloat + Default + FloatConst> {
     pub polygon: Vec<Vec<Coordinate<T>>>,
     pub ring: Vec<Coordinate<T>>,
     pub ring_sink: LineEnum<T>,
-    pub segments: Vec<Vec<LineElem<T>>>,
+    pub segments: VecDeque<Vec<Vec<LineElem<T>>>>,
     pub start: Coordinate<T>,
     pub sink: ClipSinkEnum<T>,
 }
@@ -25,13 +26,15 @@ where
     T: AddAssign + CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
+        let mut segments = VecDeque::new();
+        segments.push_front(vec![vec![]]);
         Self {
             line: LineEnum::Antimeridian(AntimeridianLine::default()),
             polygon_started: false,
             polygon: vec![vec![]],
             ring: vec![],
             ring_sink: LineEnum::Antimeridian(AntimeridianLine::default()),
-            segments: vec![vec![]],
+            segments,
             sink: ClipSinkEnum::Blank,
             start: Coordinate {
                 x: -T::PI(),

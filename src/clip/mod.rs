@@ -11,6 +11,7 @@ pub mod line_sink_enum;
 mod compare_intersection;
 pub mod rejoin;
 
+use std::cmp::Ordering;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
@@ -18,6 +19,8 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
+
+use rejoin::intersection::Intersection;
 
 use buffer::ClipBuffer;
 
@@ -34,20 +37,27 @@ where
 
     // Intersections are sorted along the clip edge. For both antimeridian cutting
     // and circle clipPIng, the same comparison is used.
-    fn compare_intersection(&self, _a: Self::SctCi, _b: Self::SctCi) -> Self::SctT {
-        // let a_dashed = a.x;
-        // let part1 = match a_dashed.x < Self::SctT::zero() {
-        //     true => a_dashed.y - Self::SctT::FRAC_PI_2() - Self::SctT::epsilon(),
-        //     false => Self::SctT::FRAC_PI_2() - a_dashed.y,
-        // };
-        // let b_dashed = b.x;
-        // let part2 = match b_dashed.x < Self::SctT::zero() {
-        //     true => b_dashed.y - Self::SctT::FRAC_PI_2() - Self::SctT::epsilon(),
-        //     false => Self::SctT::FRAC_PI_2() - b_dashed.y,
-        // };
+    // fn compare_intersection(&self, _a: Self::SctCi, _b: Self::SctCi) -> Self::SctT;
+    fn compare_intersection(a: &Intersection<T>, b: &Intersection<T>) -> Ordering {
+        let ax = a.x;
+        let part1 = match ax.p.x < T::zero() {
+            true => ax.p.y - T::FRAC_PI_2() - T::epsilon(),
+            false => T::FRAC_PI_2() - ax.p.y,
+        };
+        let bx = b.x;
+        let part2 = match bx.p.x < T::zero() {
+            true => bx.p.y - T::FRAC_PI_2() - T::epsilon(),
+            false => T::FRAC_PI_2() - bx.p.y,
+        };
 
-        // return part1 - part2;
-        panic!("why is this called.");
+        let diff = part1 - part2;
+        if diff > T::zero() {
+            return Ordering::Greater;
+        }
+        if diff < T::zero() {
+            return Ordering::Less;
+        }
+        Ordering::Equal
     }
 
     fn interpolate(

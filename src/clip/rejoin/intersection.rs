@@ -9,12 +9,12 @@ where
     T: CoordFloat + FloatConst,
 {
     pub x: LineElem<T>,
-    z: Option<Vec<LineElem<T>>>,
+    pub z: Option<Vec<LineElem<T>>>,
     pub o: Option<Box<Intersection<T>>>, // another intersection,
-    e: bool,                             // is any entry?
-    v: bool,                             // visited
-    n: Option<LineElem<T>>,              // next
-    p: Option<LineElem<T>>,              // previous
+    pub e: bool,                         // is any entry?
+    pub v: bool,                         // visited
+    pub n: Option<Box<Intersection<T>>>, // next
+    pub p: Option<Box<Intersection<T>>>, // previous
 }
 
 impl<T: Float> Intersection<T>

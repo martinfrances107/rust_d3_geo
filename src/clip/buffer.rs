@@ -1,13 +1,14 @@
-use crate::path::PathResult;
-use crate::path::PathResultEnum;
-use crate::stream::stream_dst::StreamDst;
-use crate::stream::Stream;
-
+use std::collections::VecDeque;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
+
+use crate::path::PathResult;
+use crate::path::PathResultEnum;
+use crate::stream::stream_dst::StreamDst;
+use crate::stream::Stream;
 
 #[derive(Clone, Copy, Debug)]
 pub struct LineElem<T: CoordFloat> {
@@ -16,7 +17,7 @@ pub struct LineElem<T: CoordFloat> {
 }
 #[derive(Clone, Debug, Default)]
 pub struct ClipBuffer<T: CoordFloat> {
-    lines: Vec<Vec<LineElem<T>>>,
+    lines: VecDeque<Vec<LineElem<T>>>,
     line: Option<Vec<LineElem<T>>>,
 }
 
@@ -31,9 +32,9 @@ impl<T: CoordFloat + FloatConst> ClipBuffer<T> {
             // Shift from the top end.
             let lines_shift = self.lines.remove(0);
             // Pop from the bottom end.
-            let lines_pop = self.lines.pop().unwrap_or(Vec::new());
-            let join = [lines_pop, lines_shift].concat();
-            self.lines.push(join);
+            let lines_pop = self.lines.pop_back().unwrap_or(Vec::new());
+            let join = [lines_pop, lines_shift.unwrap()].concat();
+            self.lines.push_back(join);
         }
     }
 }
@@ -47,7 +48,7 @@ impl<T: CoordFloat> PathResult for ClipBuffer<T> {
         // let result = &self.lines;
         // return result.to_vec();
         // TODO must fix this!!
-        return Some(PathResultEnum::ClipBufferOutput(result.to_vec()));
+        return Some(PathResultEnum::ClipBufferOutput(result));
     }
 }
 
@@ -69,7 +70,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<
     fn line_end(&mut self) {}
     fn line_start(&mut self) {
         self.line = Some(Vec::new());
-        self.lines.push(Vec::new());
+        self.lines.push_back(Vec::new());
     }
     fn polygon_start(&mut self) {}
     fn polygon_end(&mut self) {}

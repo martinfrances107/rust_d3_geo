@@ -1,9 +1,11 @@
+use std::collections::VecDeque;
+use std::ops::AddAssign;
+
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 use rust_d3_array::merge::merge;
-use std::ops::AddAssign;
 
 use crate::path::PathResultEnum;
 use crate::polygon_contains::contains;
@@ -19,7 +21,7 @@ use super::circle::ClipCircle;
 use super::clip_base::ClipBase;
 use super::clip_raw::ClipRaw;
 use super::clip_sink_enum::ClipSinkEnum;
-use super::compare_intersection::compare_intersection;
+// use super::compare_intersection::compare_intersection;
 use super::line_enum::LineEnum;
 use super::line_sink_enum::LineSinkEnum;
 use super::rejoin::rejoin;
@@ -228,7 +230,7 @@ where
         // No intersections.
         match clean {
             CleanEnum::NoIntersections => {
-                let segment = ring_segments.first().unwrap().clone();
+                let segment = ring_segments.pop_front().unwrap().clone();
                 m = segment.len() - 1;
                 if m > 0 {
                     if !self.base.polygon_started {
@@ -251,21 +253,22 @@ where
                 if n > 1 {
                     // ringSegments.push(ringSegments.pop().concat(ringSegments.shift()));
 
-                    let mut combined = ring_segments.first().unwrap().clone();
-                    let mut last = ring_segments.last().unwrap().clone();
-                    combined.append(&mut last);
-                    ring_segments.push(combined);
+                    let pb = [
+                        ring_segments.pop_back().unwrap().clone(),
+                        ring_segments.pop_front().unwrap().clone(),
+                    ]
+                    .concat();
+                    ring_segments.push_back(pb);
                 }
             }
             _ => {}
         }
 
-        let mut filtered: Vec<Vec<LineElem<T>>> = ring_segments
-            .iter()
+        let filtered: Vec<Vec<LineElem<T>>> = ring_segments
+            .into_iter()
             .filter(|segment| segment.len() > 1)
-            .map(|s| s.clone())
             .collect();
-        self.base.segments.append(&mut filtered);
+        self.base.segments.push_back(filtered);
     }
 }
 
@@ -314,7 +317,8 @@ where
         self.point_fn = Self::point_default;
         self.line_start_fn = Self::line_start_default;
         self.line_end_fn = Self::line_end_default;
-        let segments_merged = merge(self.base.segments.clone());
+        let segments_merged: Vec<Vec<LineElem<T>>> =
+            self.base.segments.clone().into_iter().flatten().collect();
         let start_inside = contains(&self.base.polygon, &self.base.start);
 
         if !segments_merged.is_empty() {
@@ -328,12 +332,12 @@ where
                 };
                 self.base.polygon_started = true;
             }
-            // rejoin(
-            //     &segments_merged,
-            //     self.raw,
-            //     start_inside,
-            //     &mut self.base.sink,
-            // );
+            rejoin(
+                &segments_merged,
+                self.raw.clone(),
+                start_inside,
+                &mut self.base.sink,
+            );
         } else if start_inside {
             if !self.base.polygon_started {
                 match &mut self.base.sink {

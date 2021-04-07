@@ -3,6 +3,7 @@ pub mod area_stream;
 mod context;
 mod string;
 
+use std::collections::VecDeque;
 use std::default::Default;
 use std::fmt::Display;
 use std::ops::AddAssign;
@@ -26,7 +27,7 @@ where
     T: CoordFloat,
 {
     Path(Vec<Vec<Coordinate<T>>>),
-    ClipBufferOutput(Vec<Vec<LineElem<T>>>),
+    ClipBufferOutput(VecDeque<Vec<LineElem<T>>>),
     Sring(String),
     Area(T),
     Measure(T),

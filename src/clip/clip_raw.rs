@@ -1,13 +1,16 @@
+use std::cmp::Ordering;
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
-use std::ops::AddAssign;
 
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 
 use super::antimeridian::ClipAntimeridian;
 use super::circle::ClipCircle;
+use super::rejoin::intersection::Intersection;
 use super::ClipTraitRaw;
 
 #[derive(Clone, Debug)]
@@ -46,11 +49,27 @@ where
 
     // Intersections are sorted along the clip edge. For both antimeridian cutting
     // and circle clipPIng, the same comparison is used.
-    fn compare_intersection(&self, a: Self::SctCi, b: Self::SctCi) -> Self::SctT {
-        match self {
-            ClipRaw::Antimeridian(c) => c.compare_intersection(a, b),
-            ClipRaw::Circle(c) => c.compare_intersection(a, b),
+    // fn compare_intersection(&self, _a: Self::SctCi, _b: Self::SctCi) -> Self::SctT;
+    fn compare_intersection(a: &Intersection<T>, b: &Intersection<T>) -> Ordering {
+        let ax = a.x;
+        let part1 = match ax.p.x < T::zero() {
+            true => ax.p.y - T::FRAC_PI_2() - T::epsilon(),
+            false => T::FRAC_PI_2() - ax.p.y,
+        };
+        let bx = b.x;
+        let part2 = match bx.p.x < T::zero() {
+            true => bx.p.y - T::FRAC_PI_2() - T::epsilon(),
+            false => T::FRAC_PI_2() - bx.p.y,
+        };
+
+        let diff = part1 - part2;
+        if diff > T::zero() {
+            return Ordering::Greater;
         }
+        if diff < T::zero() {
+            return Ordering::Less;
+        }
+        Ordering::Equal
     }
 
     fn interpolate(
