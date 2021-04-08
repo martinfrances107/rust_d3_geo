@@ -280,7 +280,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                 lambda1 = lambda1 - sign1 * T::epsilon();
             }
             self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
-            match &mut self.stream{
+            match &mut self.stream {
                 LineSinkEnum::CB(stream) => {
                     stream.point(
                         &Coordinate {

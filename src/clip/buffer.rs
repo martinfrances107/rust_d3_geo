@@ -21,23 +21,23 @@ pub struct ClipBuffer<T: CoordFloat> {
     line: Option<Vec<LineElem<T>>>,
 }
 
-// impl<T: CoordFloat + FloatConst> ClipBuffer<T> {
-//     // #[inline]
-//     // pub fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
-//     //     panic!("Should I call stream_in on a buffer!");
-//     // }
+impl<T: CoordFloat + FloatConst> ClipBuffer<T> {
+    // #[inline]
+    // pub fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
+    //     panic!("Should I call stream_in on a buffer!");
+    // }
 
-//     fn rejoin(&mut self) {
-//         if self.lines.len() > 1 {
-//             // Shift from the top end.
-//             let lines_shift = self.lines.remove(0);
-//             // Pop from the bottom end.
-//             let lines_pop = self.lines.pop_back().unwrap_or(Vec::new());
-//             let join = [lines_pop, lines_shift.unwrap()].concat();
-//             self.lines.push_back(join);
-//         }
-//     }
-// }
+    fn rejoin(&mut self) {
+        if self.lines.len() > 1 {
+            let pb = [
+                self.lines.pop_back().unwrap(),
+                self.lines.pop_front().unwrap(),
+            ]
+            .concat();
+            self.lines.push_front(pb);
+        }
+    }
+}
 
 impl<T: CoordFloat> PathResult for ClipBuffer<T> {
     type Out = Option<PathResultEnum<T>>;
