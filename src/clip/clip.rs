@@ -188,7 +188,8 @@ where
     fn ring_end(&mut self) {
         println!("Clip ring_end()");
         let le = self.base.ring[0];
-        self.point_ring(&le.p, le.m);
+        // javascript drops m here.
+        self.point_ring(&le.p, None);
         self.base.ring_sink.line_end();
 
         let clean = self.base.ring_sink.clean();

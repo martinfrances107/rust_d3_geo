@@ -127,8 +127,8 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
             // Line crosses a pole.
             let f_2 = T::from(2f64).unwrap();
             self.phi0 = (self.phi0 + phi1) / f_2;
-            match self.stream.clone() {
-                LineSinkEnum::CB(mut stream) => {
+            match &mut self.stream {
+                LineSinkEnum::CB(stream) => {
                     match (self.phi0 + phi1 / f_2).is_sign_positive() {
                         true => {
                             stream.point(
@@ -177,7 +177,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                     ClipSinkEnum::Blank => {
                         panic!("ClickSinkEnum - actively using an unconnected blank");
                     }
-                    ClipSinkEnum::Src(mut stream) => {
+                    ClipSinkEnum::Src(stream) => {
                         match (self.phi0 + phi1 / f_2).is_sign_positive() {
                             true => {
                                 stream.point(
@@ -222,7 +222,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                             None,
                         );
                     }
-                    ClipSinkEnum::Resample(mut stream) => {
+                    ClipSinkEnum::Resample(stream) => {
                         match (self.phi0 + phi1 / f_2).is_sign_positive() {
                             true => {
                                 stream.point(
@@ -280,8 +280,8 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                 lambda1 = lambda1 - sign1 * T::epsilon();
             }
             self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
-            match self.stream.clone() {
-                LineSinkEnum::CB(mut stream) => {
+            match &mut self.stream{
+                LineSinkEnum::CB(stream) => {
                     stream.point(
                         &Coordinate {
                             x: self.sign0,
@@ -303,7 +303,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                     ClipSinkEnum::Blank => {
                         panic!("ClickSinkEnum - actively using an unconnected blank");
                     }
-                    ClipSinkEnum::Src(mut stream) => {
+                    ClipSinkEnum::Src(stream) => {
                         stream.point(
                             &Coordinate {
                                 x: self.sign0,
@@ -321,7 +321,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                             None,
                         );
                     }
-                    ClipSinkEnum::Resample(mut stream) => {
+                    ClipSinkEnum::Resample(stream) => {
                         stream.point(
                             &Coordinate {
                                 x: self.sign0,
@@ -342,8 +342,8 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                 },
             }
 
-            match self.stream.clone() {
-                LineSinkEnum::CB(mut stream) => {
+            match &mut self.stream {
+                LineSinkEnum::CB(stream) => {
                     stream.point(
                         &Coordinate {
                             x: self.sign0,
@@ -365,7 +365,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                     ClipSinkEnum::Blank => {
                         panic!("ClickSinkEnum - actively using an unconnected blank");
                     }
-                    ClipSinkEnum::Src(mut stream) => {
+                    ClipSinkEnum::Src(stream) => {
                         stream.point(
                             &Coordinate {
                                 x: self.sign0,
@@ -383,7 +383,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                             None,
                         );
                     }
-                    ClipSinkEnum::Resample(mut stream) => {
+                    ClipSinkEnum::Resample(stream) => {
                         stream.point(
                             &Coordinate {
                                 x: self.sign0,
@@ -408,8 +408,8 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
         }
         self.lambda0 = lambda1;
         self.phi0 = phi1;
-        match self.stream.clone() {
-            LineSinkEnum::CB(mut stream) => stream.point(
+        match &mut self.stream {
+            LineSinkEnum::CB(stream) => stream.point(
                 &Coordinate {
                     x: self.lambda0,
                     y: self.phi0,
@@ -420,14 +420,14 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                 ClipSinkEnum::Blank => {
                     panic!("ClickSinkEnum - actively using an unconnected blank");
                 }
-                ClipSinkEnum::Src(mut stream) => stream.point(
+                ClipSinkEnum::Src(stream) => stream.point(
                     &Coordinate {
                         x: self.lambda0,
                         y: self.phi0,
                     },
                     None,
                 ),
-                ClipSinkEnum::Resample(mut stream) => stream.point(
+                ClipSinkEnum::Resample(stream) => stream.point(
                     &Coordinate {
                         x: self.lambda0,
                         y: self.phi0,
