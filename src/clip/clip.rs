@@ -228,7 +228,7 @@ where
         // No intersections.
         match clean {
             CleanEnum::NoIntersections => {
-                let segment = ring_segments.pop_front().unwrap().clone();
+                let segment = ring_segments.pop_front().unwrap();
                 m = segment.len() - 1;
                 if m > 0 {
                     if !self.base.polygon_started {
@@ -252,8 +252,8 @@ where
                     // ringSegments.push(ringSegments.pop().concat(ringSegments.shift()));
 
                     let pb = [
-                        ring_segments.pop_back().unwrap().clone(),
-                        ring_segments.pop_front().unwrap().clone(),
+                        ring_segments.pop_back().unwrap(),
+                        ring_segments.pop_front().unwrap(),
                     ]
                     .concat();
                     ring_segments.push_back(pb);
