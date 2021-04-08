@@ -45,9 +45,6 @@ impl<T: CoordFloat> PathResult for ClipBuffer<T> {
         let result = self.lines.clone();
         self.lines.clear();
         self.line = None;
-        // let result = &self.lines;
-        // return result.to_vec();
-        // TODO must fix this!!
         return Some(PathResultEnum::ClipBufferOutput(result));
     }
 }
@@ -56,8 +53,8 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<
     type C = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        match self.line.clone() {
-            Some(mut line) => {
+        match &mut self.line {
+            Some(line) => {
                 line.push(LineElem { p: *p, m });
             }
             None => {
