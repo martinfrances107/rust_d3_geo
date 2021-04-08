@@ -4,16 +4,16 @@ use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::FloatConst;
 use num_traits::Zero;
-use num_traits::{Float, FloatConst};
 
 use crate::point_equal::point_equal;
 use crate::stream::Stream;
 
-use super::antimeridian::ClipAntimeridian;
 use super::buffer::LineElem;
 use super::clip_raw::ClipRaw;
 use super::ClipTraitRaw;
+
 use intersection::Intersection;
 
 /// A generalized polygon clipping algorithm: given a polygon that has been cut

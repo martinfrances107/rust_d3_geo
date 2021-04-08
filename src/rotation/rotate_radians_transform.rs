@@ -32,7 +32,7 @@ where
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            RotateRadiansEnum::C(c) => {
+            RotateRadiansEnum::C(_c) => {
                 todo!("must find a way to do Box");
                 // f.debug_struct("RotateRadiansEnum::C")
                 // .field("0", "TODO")

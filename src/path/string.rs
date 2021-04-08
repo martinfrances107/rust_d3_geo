@@ -51,11 +51,6 @@ impl<T> PathString<T>
 where
     T: Float,
 {
-    #[inline]
-    pub fn new() -> Self {
-        Default::default()
-    }
-
     fn point_radians(&mut self, d: Option<T>) {
         match d {
             Some(d) => {

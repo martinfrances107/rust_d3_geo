@@ -1,7 +1,7 @@
-use geo::CoordFloat;
-use geo::Coordinate;
-use num_traits::FloatConst;
 use std::ops::AddAssign;
+
+use geo::CoordFloat;
+use num_traits::FloatConst;
 
 use super::buffer::ClipBuffer;
 use super::clip_sink_enum::ClipSinkEnum;

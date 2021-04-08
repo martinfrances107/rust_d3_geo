@@ -209,7 +209,7 @@ where
                 self.context = None;
                 // self.context_stream = Some(Box::new(PathString::new()));
             }
-            Some(ref c) => {
+            Some(ref _c) => {
                 self.context = c_in;
                 // self.context_stream = Some(Box::new(PathContext::new(c)));
             }

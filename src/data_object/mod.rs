@@ -65,7 +65,7 @@ where
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
         match self {
             DataObject::Geometry(g) => g.to_stream(stream),
-            DataObject::Collection(Collection::Feature { feature }) => {
+            DataObject::Collection(Collection::Feature { feature: _ }) => {
                 todo!("fixme");
             }
         }

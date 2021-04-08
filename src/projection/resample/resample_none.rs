@@ -86,6 +86,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for ResampleNon
     }
 
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
+        println!("resample point");
         let p = p.clone();
         let project = &self.project;
         let t = project.transform(&p);

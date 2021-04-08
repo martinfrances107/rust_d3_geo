@@ -10,7 +10,6 @@ mod tests {
     use super::*;
 
     use crate::in_delta::in_delta;
-    use crate::rotation::rotate_radians_transform::rotate_radians_transform;
     use crate::Transform;
     use geo::Coordinate;
     use rotation::Rotation;

@@ -1,11 +1,9 @@
-use std::collections::VecDeque;
 use std::ops::AddAssign;
 
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
-use rust_d3_array::merge::merge;
 
 use crate::path::PathResultEnum;
 use crate::polygon_contains::contains;
@@ -14,14 +12,12 @@ use crate::stream::Clean;
 use crate::stream::CleanEnum;
 use crate::stream::Stream;
 
-use super::antimeridian::ClipAntimeridian;
 use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
-use super::circle::ClipCircle;
+
 use super::clip_base::ClipBase;
 use super::clip_raw::ClipRaw;
 use super::clip_sink_enum::ClipSinkEnum;
-// use super::compare_intersection::compare_intersection;
 use super::line_enum::LineEnum;
 use super::line_sink_enum::LineSinkEnum;
 use super::rejoin::rejoin;
@@ -210,11 +206,10 @@ where
             // },
             None => panic!("was expecting something."),
         };
-
+        println!("ring segments {:?}", ring_segments);
         let n = ring_segments.len();
         let m;
-        let segment: Vec<Vec<Coordinate<T>>>;
-        let point: Coordinate<T>;
+        let mut point: Coordinate<T>;
 
         self.base.ring.pop();
         // self.base.polygon.push(self.base.ring);
@@ -240,8 +235,8 @@ where
                     self.base.sink.line_start();
                     for i in 0..m {
                         println!("layer below point()");
-                        let le = segment[i];
-                        self.base.sink.point(&le.p, le.m);
+                        point = segment[i].p;
+                        self.base.sink.point(&point, None);
                     }
                     self.base.sink.line_end();
                 }
