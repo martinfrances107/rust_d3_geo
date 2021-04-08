@@ -18,7 +18,6 @@ pub struct LineElem<T: CoordFloat> {
 #[derive(Clone, Debug, Default)]
 pub struct ClipBuffer<T: CoordFloat> {
     lines: VecDeque<Vec<LineElem<T>>>,
-    line: Option<Vec<LineElem<T>>>,
 }
 
 impl<T: CoordFloat + FloatConst> ClipBuffer<T> {
@@ -44,7 +43,6 @@ impl<T: CoordFloat> PathResult for ClipBuffer<T> {
     fn result(&mut self) -> Option<PathResultEnum<T>> {
         let result = self.lines.clone();
         self.lines.clear();
-        self.line = None;
         return Some(PathResultEnum::ClipBufferOutput(result));
     }
 }
@@ -53,20 +51,18 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<
     type C = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        match &mut self.line {
+        match self.lines.back_mut() {
             Some(line) => {
                 line.push(LineElem { p: *p, m });
             }
-            None => {
-                panic!("ClipBuffer: Cannot push to undefined line.");
-            }
+            None => panic!("buffers: lines was not properly initialised."),
         }
     }
 
     fn sphere(&mut self) {}
     fn line_end(&mut self) {}
+    #[inline]
     fn line_start(&mut self) {
-        self.line = Some(Vec::new());
         self.lines.push_back(Vec::new());
     }
     fn polygon_start(&mut self) {}
