@@ -159,7 +159,8 @@ where
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         println!("Clip point_ring()");
-        self.base.ring.push(*p);
+        self.base.ring.push(LineElem{p: *p, m});
+        println!("ring {:?}", self.base.ring);
         self.base.ring_sink.point(p, m);
     }
 
@@ -186,7 +187,8 @@ where
 
     fn ring_end(&mut self) {
         println!("Clip ring_end()");
-        self.point_ring(&self.base.ring[0].clone(), None);
+        let le = self.base.ring[0];
+        self.point_ring(&le.p, le.m);
         self.base.ring_sink.line_end();
 
         let clean = self.base.ring_sink.clean();
