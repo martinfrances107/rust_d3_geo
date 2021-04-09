@@ -203,9 +203,6 @@ where
             Some(_) => {
                 panic!("None buffer ");
             }
-            // _ => {
-            //     panic!("was expectcing a path result");
-            // },
             None => panic!("was expecting something."),
         };
         println!("ring segments {:#?}", ring_segments);
