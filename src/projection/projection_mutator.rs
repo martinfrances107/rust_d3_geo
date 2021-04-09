@@ -269,8 +269,7 @@ where
 
     fn precision(mut self, delta: T) -> ProjectionMutator<T> {
         self.delta2 = delta * delta;
-        self.project_resample =
-            gen_resample_node(self.project_transform.clone(), self.delta2);
+        self.project_resample = gen_resample_node(self.project_transform.clone(), self.delta2);
         self.reset()
     }
 
