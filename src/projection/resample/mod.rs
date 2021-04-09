@@ -96,47 +96,43 @@ where
     }
 }
 
-pub fn gen_resample_node<T>(
-    // project: Box<dyn TransformClone<TcC = Coordinate<T>>>,
-    project: Compose<T>,
-    delta2: Option<T>,
-) -> ResampleEnum<T>
+pub fn gen_resample_node<T>(project: Compose<T>, delta2: T) -> ResampleEnum<T>
 where
     T: AddAssign + CoordFloat + Default + FloatConst,
 {
-    match delta2 {
-        None => ResampleEnum::RN(ResampleNone::new(project)),
-        Some(delta2) => {
-            ResampleEnum::R(Resample {
-                project: project,
-                delta2,
+    println!("gen_resample_node {:#?}", delta2);
+    if delta2.is_zero() {
+        ResampleEnum::RN(ResampleNone::new(project))
+    } else {
+        ResampleEnum::R(Resample {
+            project: project,
+            delta2,
 
-                lambda00: T::zero(),
-                x00: T::zero(),
-                y00: T::zero(),
-                a00: T::zero(),
-                b00: T::zero(),
-                c00: T::zero(), // first point
+            lambda00: T::zero(),
+            x00: T::zero(),
+            y00: T::zero(),
+            a00: T::zero(),
+            b00: T::zero(),
+            c00: T::zero(), // first point
 
-                lambda0: T::zero(),
-                x0: T::zero(),
-                y0: T::zero(),
-                a0: T::zero(),
-                b0: T::zero(),
-                c0: T::zero(), // previous point
-                cos_min_distance: (T::from(30f64).unwrap().to_radians()).cos(), // cos(minimum angular distance)
+            lambda0: T::zero(),
+            x0: T::zero(),
+            y0: T::zero(),
+            a0: T::zero(),
+            b0: T::zero(),
+            c0: T::zero(), // previous point
+            cos_min_distance: (T::from(30f64).unwrap().to_radians()).cos(), // cos(minimum angular distance)
 
-                stream: Box::new(Clip::new(
-                    ClipRaw::Antimeridian(ClipAntimeridian::default()),
-                    LineElem {
-                        p: Coordinate::default(),
-                        m: None,
-                    },
-                )),
-                use_line_point: true,
-                use_line_end: true,
-                use_line_start: true,
-            })
-        }
+            stream: Box::new(Clip::new(
+                ClipRaw::Antimeridian(ClipAntimeridian::default()),
+                LineElem {
+                    p: Coordinate::default(),
+                    m: None,
+                },
+            )),
+            use_line_point: true,
+            use_line_end: true,
+            use_line_start: true,
+        })
     }
 }

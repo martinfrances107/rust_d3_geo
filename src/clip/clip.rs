@@ -224,7 +224,9 @@ where
         // No intersections.
         match clean {
             CleanEnum::NoIntersections => {
-                let segment = ring_segments.pop_front().expect("We have previously checked that the .len() is >0 ( n ) ");
+                let segment = ring_segments
+                    .pop_front()
+                    .expect("We have previously checked that the .len() is >0 ( n ) ");
                 m = segment.len() - 1;
                 if m > 0 {
                     if !self.base.polygon_started {

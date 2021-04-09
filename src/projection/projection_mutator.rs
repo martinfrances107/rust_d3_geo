@@ -161,7 +161,8 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> ProjectionMutator<T> {
             ComposeElemEnum::C(Box::new(self.project_transform.clone())),
         );
 
-        // Resample is missing from here.
+        self.project_resample = gen_resample_node(self.project_transform.clone(), self.delta2);
+
         self.reset()
     }
 
@@ -269,7 +270,7 @@ where
     fn precision(mut self, delta: T) -> ProjectionMutator<T> {
         self.delta2 = delta * delta;
         self.project_resample =
-            gen_resample_node(self.project_transform.clone(), Some(self.delta2));
+            gen_resample_node(self.project_transform.clone(), self.delta2);
         self.reset()
     }
 
