@@ -8,6 +8,7 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::ClipAntimeridian;
+use crate::clip::buffer::LineElem;
 use crate::clip::clip::Clip;
 use crate::clip::clip_raw::ClipRaw;
 use crate::compose::Compose;
@@ -58,7 +59,7 @@ where
         }
     }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        println!("resample {:?}", p);
+        println!("mode.rs resample {:?}", p);
         match self {
             ResampleEnum::R(resample) => resample.point(&*p, m),
             ResampleEnum::RN(rn) => rn.point(p, m),
@@ -127,7 +128,10 @@ where
 
                 stream: Box::new(Clip::new(
                     ClipRaw::Antimeridian(ClipAntimeridian::default()),
-                    Coordinate::default(),
+                    LineElem {
+                        p: Coordinate::default(),
+                        m: None,
+                    },
                 )),
                 use_line_point: true,
                 use_line_end: true,

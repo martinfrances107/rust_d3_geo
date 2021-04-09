@@ -3,6 +3,7 @@ use num_traits::FloatConst;
 use std::ops::AddAssign;
 
 use crate::clip::antimeridian::ClipAntimeridian;
+use crate::clip::buffer::LineElem;
 use crate::clip::clip::Clip;
 use crate::clip::clip_raw::ClipRaw;
 use crate::compose::Compose;
@@ -40,7 +41,10 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> ResampleNone<T> {
             project: project,
             stream: Box::new(Clip::new(
                 ClipRaw::Antimeridian(ClipAntimeridian::default()),
-                Coordinate::default(),
+                LineElem {
+                    p: Coordinate::default(),
+                    m: None,
+                },
             )), // stub value
         }
     }

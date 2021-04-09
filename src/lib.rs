@@ -14,6 +14,7 @@ extern crate web_sys;
 pub mod cartesian;
 pub mod centroid;
 pub mod circle;
+pub mod clip;
 pub mod data_object;
 pub mod distance;
 pub mod in_delta;
@@ -23,7 +24,6 @@ pub mod polygon_contains;
 pub mod projection;
 pub mod rotation;
 
-mod clip;
 mod compose;
 mod constant;
 mod point_equal;

@@ -13,11 +13,11 @@ use super::line_enum::LineEnum;
 pub struct ClipBase<T: AddAssign + CoordFloat + Default + FloatConst> {
     pub line: LineEnum<T>,
     pub polygon_started: bool,
-    pub polygon: Vec<Vec<Coordinate<T>>>,
+    pub polygon: Vec<Vec<LineElem<T>>>,
     pub ring: Vec<LineElem<T>>,
     pub ring_sink: LineEnum<T>,
     pub segments: VecDeque<Vec<Vec<LineElem<T>>>>,
-    pub start: Coordinate<T>,
+    pub start: LineElem<T>,
     pub sink: ClipSinkEnum<T>,
 }
 
@@ -36,9 +36,12 @@ where
             ring_sink: LineEnum::Antimeridian(AntimeridianLine::default()),
             segments,
             sink: ClipSinkEnum::Blank,
-            start: Coordinate {
-                x: -T::PI(),
-                y: -T::FRAC_PI_2(),
+            start: LineElem {
+                p: Coordinate {
+                    x: -T::PI(),
+                    y: -T::FRAC_PI_2(),
+                },
+                m: None,
             },
         }
     }

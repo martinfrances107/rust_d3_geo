@@ -4,6 +4,7 @@ use num_traits::FloatConst;
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_normalize_in_place;
+use crate::clip::buffer::LineElem;
 
 #[inline]
 fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
@@ -15,11 +16,11 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
 }
 
 pub fn contains<T: CoordFloat + FloatConst>(
-    polygon: &Vec<Vec<Coordinate<T>>>,
-    point: &Coordinate<T>,
+    polygon: &Vec<Vec<LineElem<T>>>,
+    point: &LineElem<T>,
 ) -> bool {
-    let lambda = longitude(point);
-    let mut phi = point.y;
+    let lambda = longitude(&point.p);
+    let mut phi = point.p.y;
     let sin_phi = phi.sin();
     let normal = [lambda.sin(), -lambda.cos(), T::zero()];
     let mut angle = T::zero();
@@ -41,15 +42,15 @@ pub fn contains<T: CoordFloat + FloatConst>(
         };
 
         let mut point0 = (*ring.last().unwrap()).clone();
-        let mut lambda0 = longitude(&point0);
-        let phi0 = point0.y / T::from(2).unwrap() + T::FRAC_PI_4();
+        let mut lambda0 = longitude(&point0.p);
+        let phi0 = point0.p.y / T::from(2).unwrap() + T::FRAC_PI_4();
         let mut sin_phi0 = phi0.sin();
         let mut cos_phi0 = phi0.cos();
 
         for j in 0..m {
             let point1 = ring[j].clone();
-            let lambda1 = longitude(&point1);
-            let phi1 = point1.y / T::from(2).unwrap() + T::FRAC_PI_4();
+            let lambda1 = longitude(&point1.p);
+            let phi1 = point1.p.y / T::from(2).unwrap() + T::FRAC_PI_4();
             let sin_phi1 = phi1.sin();
             let cos_phi1 = phi1.cos();
             let delta = lambda1 - lambda0;
@@ -71,7 +72,7 @@ pub fn contains<T: CoordFloat + FloatConst>(
             // if antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda {
             // if (antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda) {
             if antimeridian ^ (lambda0 >= lambda) ^ (lambda1 >= lambda) {
-                let mut arc = cartesian_cross(&cartesian(&point0), &cartesian(&point1));
+                let mut arc = cartesian_cross(&cartesian(&point0.p), &cartesian(&point1.p));
                 cartesian_normalize_in_place(&mut arc);
                 let mut intersection = cartesian_cross(&normal, &arc);
                 cartesian_normalize_in_place(&mut intersection);

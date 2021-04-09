@@ -11,6 +11,7 @@ use crate::circle::circle_stream::circle_stream;
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 
+use super::buffer::LineElem;
 use super::clip::Clip;
 use super::clip_base::ClipBase;
 use super::clip_raw::ClipRaw;
@@ -38,14 +39,20 @@ where
         let small_radius = cr > T::zero();
         let start;
         if small_radius {
-            start = Coordinate {
-                x: T::zero(),
-                y: T::zero() - radius,
-            };
+            start = LineElem {
+                p: Coordinate {
+                    x: T::zero(),
+                    y: T::zero() - radius,
+                },
+                m: None,
+            }
         } else {
-            start = Coordinate {
-                x: -T::PI(),
-                y: radius - T::PI(),
+            start = LineElem {
+                p: Coordinate {
+                    x: -T::PI(),
+                    y: radius - T::PI(),
+                },
+                m: None,
             }
         }
 

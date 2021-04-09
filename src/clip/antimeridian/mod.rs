@@ -9,13 +9,11 @@ use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 use crate::stream::{Clean, CleanEnum};
 
-// use super::buffer::ClipBuffer;
+use super::buffer::LineElem;
 use super::clip::Clip;
 use super::clip_base::ClipBase;
 use super::ClipTraitRaw;
-// use super::LineEnum;
 use crate::clip::clip_raw::ClipRaw;
-// use line::Line;
 
 #[derive(Clone, Default, Debug)]
 pub struct ClipAntimeridian<T>
@@ -31,9 +29,12 @@ where
 {
     #[inline]
     pub fn gen_clip() -> Clip<T> {
-        let start = Coordinate {
-            x: -T::PI(),
-            y: -T::PI() / T::from(2u8).unwrap(),
+        let start = LineElem {
+            p: Coordinate {
+                x: -T::PI(),
+                y: -T::PI() / T::from(2u8).unwrap(),
+            },
+            m: None,
         };
         Clip::new(ClipRaw::Antimeridian(ClipAntimeridian::default()), start)
     }

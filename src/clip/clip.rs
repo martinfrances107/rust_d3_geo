@@ -44,7 +44,7 @@ impl<T> Clip<T>
 where
     T: AddAssign + CoordFloat + Default + FloatConst,
 {
-    pub fn new(raw: ClipRaw<T>, start: Coordinate<T>) -> Self {
+    pub fn new(raw: ClipRaw<T>, start: LineElem<T>) -> Self {
         let ring_buffer = LineSinkEnum::CB(ClipBuffer::default());
         match raw {
             ClipRaw::Antimeridian(r) => match &r.base.line {
@@ -160,7 +160,6 @@ where
     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         println!("Clip point_ring()");
         self.base.ring.push(LineElem { p: *p, m });
-        println!("ring {:?}", self.base.ring);
         self.base.ring_sink.point(p, m);
     }
 
@@ -209,13 +208,13 @@ where
             // },
             None => panic!("was expecting something."),
         };
-        println!("ring segments {:?}", ring_segments);
+        println!("ring segments {:#?}", ring_segments);
         let n = ring_segments.len();
         let m;
         let mut point: Coordinate<T>;
 
         self.base.ring.pop();
-        // self.base.polygon.push(self.base.ring);
+        self.base.polygon.push(self.base.ring.clone());
         // in this javascript version this value is set to NULL
         // is my assumption that this is valid true?
         // self.ring = None;

@@ -5,6 +5,7 @@ use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
 use crate::clip::antimeridian::ClipAntimeridian;
+use crate::clip::buffer::LineElem;
 use crate::clip::clip::Clip;
 use crate::clip::clip_raw::ClipRaw;
 use crate::compose::Compose;
@@ -87,7 +88,10 @@ where
             cos_min_distance: T::zero(),
             stream: Box::new(Clip::new(
                 ClipRaw::Antimeridian(ClipAntimeridian::default()),
-                Coordinate::default(),
+                LineElem {
+                    p: Coordinate::default(),
+                    m: None,
+                },
             )), // stub value
 
             use_line_point: false,
@@ -312,6 +316,7 @@ where
 
     #[inline]
     fn point(&mut self, p: &Self::C, _m: Option<u8>) {
+        println!("resample point()");
         if self.use_line_point {
             self.line_point(p);
         } else {
