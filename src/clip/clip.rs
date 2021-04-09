@@ -220,14 +220,14 @@ where
         // self.ring = None;
         self.base.ring = Vec::new();
 
-        if n != 0 {
+        if n == 0 {
             return;
         }
 
         // No intersections.
         match clean {
             CleanEnum::NoIntersections => {
-                let segment = ring_segments.pop_front().unwrap();
+                let segment = ring_segments.pop_front().expect("We have previously checked that the .len() is >0 ( n ) ");
                 m = segment.len() - 1;
                 if m > 0 {
                     if !self.base.polygon_started {
@@ -236,7 +236,6 @@ where
                     }
                     self.base.sink.line_start();
                     for i in 0..m {
-                        println!("layer below point()");
                         point = segment[i].p;
                         self.base.sink.point(&point, None);
                     }
