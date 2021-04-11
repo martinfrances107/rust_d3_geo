@@ -11,7 +11,7 @@ use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::Transform;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ResampleNone<T>
 where
     T: AddAssign + CoordFloat + Default + FloatConst,
@@ -19,19 +19,6 @@ where
     project: Compose<T>,
     /// Box to prevent infinite recusion.
     pub stream: Box<Clip<T>>,
-}
-
-impl<T> Clone for ResampleNone<T>
-where
-    T: AddAssign + CoordFloat + Default + FloatConst,
-{
-    #[inline]
-    fn clone(&self) -> Self {
-        Self {
-            project: self.project.clone(),
-            stream: self.stream.clone(),
-        }
-    }
 }
 
 impl<T: AddAssign + CoordFloat + Default + FloatConst> ResampleNone<T> {
