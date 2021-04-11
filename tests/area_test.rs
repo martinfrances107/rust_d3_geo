@@ -14,7 +14,7 @@ mod area_test {
     use geo::Polygon;
     use num_traits::FloatConst;
     use rust_d3_geo::data_object::DataObject;
-    use rust_d3_geo::path::Path;
+    use rust_d3_geo::path::path::Path;
     use rust_d3_geo::path::PathResultEnum;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::{

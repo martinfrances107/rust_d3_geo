@@ -59,7 +59,7 @@ where
         }
     }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        println!("mode.rs resample {:?}", p);
+        println!("ResampleEnum resample {:?}", p);
         match self {
             ResampleEnum::R(resample) => resample.point(&*p, m),
             ResampleEnum::RN(rn) => rn.point(p, m),
@@ -102,8 +102,10 @@ where
 {
     println!("gen_resample_node {:#?}", delta2);
     if delta2.is_zero() {
+        println!("resampleNone");
         ResampleEnum::RN(ResampleNone::new(project))
     } else {
+        println!("resample");
         ResampleEnum::R(Resample {
             project: project,
             delta2,
