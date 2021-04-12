@@ -7,8 +7,6 @@ pub mod clip_raw;
 pub mod clip_sink_enum;
 pub mod line_enum;
 pub mod line_sink_enum;
-
-mod compare_intersection;
 pub mod rejoin;
 
 use std::cmp::Ordering;
@@ -20,9 +18,8 @@ use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
-use rejoin::intersection::Intersection;
-
 use buffer::ClipBuffer;
+use rejoin::intersection::Intersection;
 
 pub trait ClipTraitRaw<T>
 where
@@ -35,9 +32,8 @@ where
 
     fn point_visible(&self, _p: &Self::SctC, _z: Option<u8>) -> bool;
 
-    // Intersections are sorted along the clip edge. For both antimeridian cutting
-    // and circle clipPIng, the same comparison is used.
-    // fn compare_intersection(&self, _a: Self::SctCi, _b: Self::SctCi) -> Self::SctT;
+    /// Intersections are sorted along the clip edge. For both antimeridian cutting
+    /// and circle clipPing, the same comparison is used.    
     fn compare_intersection(a: &Intersection<T>, b: &Intersection<T>) -> Ordering {
         let ax = a.x;
         let part1 = match ax.p.x < T::zero() {

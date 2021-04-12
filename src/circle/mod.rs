@@ -6,9 +6,7 @@ pub mod circle;
 pub mod circle_generator;
 pub mod circle_radius;
 pub mod circle_stream;
-// mod stream;
 
-// use geo::Point;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
