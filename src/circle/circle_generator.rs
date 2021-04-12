@@ -1,5 +1,7 @@
+use std::cell::RefCell;
 use std::fmt::Debug;
 use std::ops::AddAssign;
+use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -18,20 +20,11 @@ use super::StreamType;
 use crate::cartesian::cartesian_normalize_in_place;
 use crate::Transform;
 use crate::{cartesian::cartesian, TransformIdentity};
-use std::cell::RefCell;
-use std::rc::Rc;
-
-// pub fn constant<T: 'static + Copy>(x: T) -> Box<dyn Fn(&CircleInArg) -> T> {
-//     Box::new(move |_| x)
-// }
 
 pub struct CircleGenerator<T>
 where
     T: CoordFloat + Default + FloatConst,
 {
-    // pub center: Box<dyn Fn(&CircleInArg) -> Coordinate<T> + 'a>,
-    // pub precision: Box<dyn Fn(&CircleInArg) -> T + 'a>,
-    // pub radius: Box<dyn Fn(&CircleInArg) -> T + 'a>,
     center: Coordinate<T>,
     radius: T,
     precision: T,
@@ -73,8 +66,6 @@ where
 
         circle_stream(&mut cs, r, p, T::one(), None, None);
 
-        // Finialise.
-        // - TODO can I remove this clone.
         cs.coordinates = vec![cs.ring.clone()];
 
         cs
