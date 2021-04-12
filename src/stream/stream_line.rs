@@ -5,7 +5,7 @@ use num_traits::FloatConst;
 
 use super::Stream;
 
-pub fn line_processor<T: AddAssign + CoordFloat + Default + FloatConst>(
+pub fn stream_line<T: AddAssign + CoordFloat + Default + FloatConst>(
     coordinates: &[Coordinate<T>],
     stream: &mut impl Stream<T, C = Coordinate<T>>,
     closed: usize,

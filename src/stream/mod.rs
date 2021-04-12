@@ -1,7 +1,6 @@
 mod feature_collection;
 mod geometry;
 mod geometry_collection;
-mod geometry_processor;
 mod line;
 mod line_string;
 mod multi_line_string;
@@ -10,6 +9,7 @@ mod multi_polygon;
 mod point;
 mod polygon;
 mod rect;
+mod stream_line;
 mod triangle;
 
 pub mod stream_dst;
