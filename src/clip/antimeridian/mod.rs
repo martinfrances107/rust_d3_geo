@@ -40,36 +40,6 @@ where
     }
 }
 
-// impl<T> ClipAntimeridian<T>
-// where
-//     T: CoordFloat + Default + FloatConst + 'static,
-// {
-//     pub fn new() -> Self {
-//         // Use the antimeridian Line version.
-//         // let line_node = Box::new(Line::default());
-
-//         let ring_buffer = ClipBuffer::default();
-
-//         let mut line = Line::default();
-//         line.buffer_in(&clip_buffer);
-
-//         // ring_sink.stream(ring_buffer_node);
-
-//         Self {
-//             base: ClipBase {
-//                 line: LineEnum::Antimeridian(line),
-//                 // ring_sink_node: Box::new(ring_sink_node),
-//                 ring_buffer,
-//                 start: Coordinate {
-//                     x: -T::PI(),
-//                     y: -T::FRAC_PI_2(),
-//                 },
-//                 ..ClipBase::default()
-//             },
-//         }
-//     }
-// }
-
 impl<T> Clean for ClipAntimeridian<T>
 where
     T: AddAssign + CoordFloat + Default + FloatConst,
@@ -89,7 +59,6 @@ where
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;
     type SctT = T;
-    // type SctStream = Box<dyn Stream<C = Coordinate<T>>>;
     type SctCi = CompareIntersection<T>;
 
     #[inline]
@@ -167,8 +136,6 @@ where
                 );
             }
             Some(from) => {
-                // TODO investigate is to and Option<f64>
-                // let mut s = stream.borrow_mut();
                 let to = to.unwrap();
                 if (from.x - to.x).abs() > T::epsilon() {
                     let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
@@ -190,117 +157,3 @@ where
         }
     }
 }
-
-// impl<T> StreamInTrait<T> for ClipAntimeridian<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn stream_in(&mut self, stream: StreamSimpleNode<T>) {
-//         self.base.sink = stream;
-//         let mut line = self.line_node.borrow_mut();
-//         line.stream_in(stream);
-//     }
-// }
-
-// impl<T> StreamClipTrait<T> for ClipAntimeridian<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn interpolate(
-//         &self,
-//         from: Option<Coordinate<T>>,
-//         to: Option<Coordinate<T>>,
-//         direction: T,
-//         stream: StreamSimpleNode<T>,
-//     ) {
-//         let phi: T;
-//         let mut s = stream.borrow_mut();
-//         match from {
-//             None => {
-//                 phi = direction * T::FRAC_PI_2();
-//                 s.point(
-//                     Coordinate {
-//                         x: -T::PI(),
-//                         y: phi,
-//                     },
-//                     None,
-//                 );
-//                 s.point(
-//                     Coordinate {
-//                         x: T::zero(),
-//                         y: phi,
-//                     },
-//                     None,
-//                 );
-//                 s.point(Coordinate { x: T::PI(), y: phi }, None);
-//                 s.point(
-//                     Coordinate {
-//                         x: T::PI(),
-//                         y: T::zero(),
-//                     },
-//                     None,
-//                 );
-//                 s.point(
-//                     Coordinate {
-//                         x: T::PI(),
-//                         y: -phi,
-//                     },
-//                     None,
-//                 );
-//                 s.point(
-//                     Coordinate {
-//                         x: T::zero(),
-//                         y: -phi,
-//                     },
-//                     None,
-//                 );
-//                 s.point(
-//                     Coordinate {
-//                         x: -T::PI(),
-//                         y: -phi,
-//                     },
-//                     None,
-//                 );
-//                 s.point(
-//                     Coordinate {
-//                         x: -T::PI(),
-//                         y: T::zero(),
-//                     },
-//                     None,
-//                 );
-//                 s.point(
-//                     Coordinate {
-//                         x: -T::PI(),
-//                         y: phi,
-//                     },
-//                     None,
-//                 );
-//             }
-//             Some(from) => {
-//                 // TODO investigate is to and Option<f64>
-//                 let mut s = stream.borrow_mut();
-//                 let to = to.unwrap();
-//                 if (from.x - to.x).abs() > T::epsilon() {
-//                     let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
-
-//                     phi = direction * lambda / T::from(2).unwrap();
-//                     s.point(Coordinate { x: -lambda, y: phi }, None);
-//                     s.point(
-//                         Coordinate {
-//                             x: T::zero(),
-//                             y: phi,
-//                         },
-//                         None,
-//                     );
-//                     s.point(Coordinate { x: lambda, y: phi }, None);
-//                 } else {
-//                     s.point(Coordinate { x: to.x, y: to.y }, None);
-//                 }
-//             }
-//         }
-//     }
-
-//     fn point_visible(&self, p: Coordinate<T>, _z: Option<u8>) -> bool {
-//         true
-//     }
-// }
