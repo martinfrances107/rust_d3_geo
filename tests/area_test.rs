@@ -1,5 +1,5 @@
-// #[cfg(not(tarpaulin_include))]
-// #[cfg(test)]
+#[cfg(not(tarpaulin_include))]
+#[cfg(test)]
 
 mod area_test {
 
