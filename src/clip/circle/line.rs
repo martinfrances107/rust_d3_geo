@@ -21,7 +21,7 @@ pub struct Line<T: AddAssign + CoordFloat + Default + FloatConst> {
     clean: CleanEnum, // no intersections
     radius: T,
     cr: T,
-    not_hemisphere: bool,    
+    not_hemisphere: bool,
     point0: Option<Coordinate<T>>, // previous point
     small_radius: bool,
     stream: LineSinkEnum<T>,
@@ -41,7 +41,7 @@ where
             cr: T::zero(),
             not_hemisphere: false,
             point0: None,
-            small_radius: false,            
+            small_radius: false,
             stream: LineSinkEnum::CSE(ClipSinkEnum::Src(StreamDst::SRC(
                 StreamSourceDummy::default(),
             ))),
@@ -66,7 +66,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Line<T> {
             radius,
             small_radius,
             v0: false,
-            v00: false,            
+            v00: false,
             stream: LineSinkEnum::CB(ClipBuffer::default()),
         }
     }
@@ -160,7 +160,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
     }
 
     fn point(&mut self, p: &Self::C, _m: Option<u8>) {
-        let mut point1 = p.clone();        
+        let mut point1 = p.clone();
         let mut point2;
         let v = self.point_visible(p, None);
 
@@ -276,7 +276,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                             }
                             next = Some(p);
                         }
-                        IntersectReturn::Two([p, _]) => {                            
+                        IntersectReturn::Two([p, _]) => {
                             match self.stream.clone() {
                                 LineSinkEnum::CB(mut stream) => {
                                     stream.point(&p, None);

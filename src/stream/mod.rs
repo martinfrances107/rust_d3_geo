@@ -13,7 +13,6 @@ mod stream_line;
 mod triangle;
 
 pub mod stream_dst;
-pub mod stream_identity;
 
 use std::fmt::Debug;
 use std::marker::PhantomData;
