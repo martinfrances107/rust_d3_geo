@@ -41,14 +41,14 @@ pub fn contains<T: CoordFloat + FloatConst>(
             continue;
         };
 
-        let mut point0 = (*ring.last().unwrap()).clone();
+        let mut point0 = *ring.last().unwrap();
         let mut lambda0 = longitude(&point0.p);
         let phi0 = point0.p.y / T::from(2).unwrap() + T::FRAC_PI_4();
         let mut sin_phi0 = phi0.sin();
         let mut cos_phi0 = phi0.cos();
 
         for j in 0..m {
-            let point1 = ring[j].clone();
+            let point1 = ring[j];
             let lambda1 = longitude(&point1.p);
             let phi1 = point1.p.y / T::from(2).unwrap() + T::FRAC_PI_4();
             let sin_phi1 = phi1.sin();
