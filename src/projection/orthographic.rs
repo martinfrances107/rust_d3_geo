@@ -4,7 +4,6 @@ use std::ops::AddAssign;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-// use crate::projection::azimuthal::azimuthal_invert;
 use crate::Transform;
 
 use super::projection::Projection;

@@ -9,7 +9,6 @@ pub mod stereographic;
 pub mod stream_transform;
 pub mod stream_transform_radians;
 
-mod azimuthal;
 mod scale_translate;
 
 use std::ops::AddAssign;
