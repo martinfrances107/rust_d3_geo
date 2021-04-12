@@ -11,11 +11,9 @@ pub fn stream_line<T: AddAssign + CoordFloat + Default + FloatConst>(
     closed: usize,
 ) {
     let n = coordinates.len() - closed;
-    let mut coordinate;
     stream.line_start();
     for i in 0..n {
-        coordinate = coordinates[i].clone();
-        stream.point(&coordinate, None);
+        stream.point(&coordinates[i], None);
     }
     stream.line_end();
 }
