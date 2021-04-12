@@ -28,12 +28,6 @@ where
     STR(ScaleTranslateRotate<T>),
 }
 
-// impl<'a, T: CoordFloat + FloatConst> TransformClone<'a> for ScaleTranslateRotateEnum<T> {
-//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
-//         Box::new(*self.clone())
-//     }
-// }
-
 impl<T: CoordFloat> Transform for ScaleTranslateRotateEnum<T>
 where
     T: FloatConst,
@@ -84,13 +78,6 @@ impl<T: CoordFloat + FloatConst> ScaleTranslateRotate<T> {
         }
     }
 }
-
-// impl<'a, T: CoordFloat> TransformClone<'a> for ScaleTranslateRotate<T> {
-//     type TcC = Coordinate<T>;
-//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
-//         Box::new(self.clone())
-//     }
-// }
 
 impl<T: CoordFloat> Transform for ScaleTranslateRotate<T> {
     type TcC = Coordinate<T>;

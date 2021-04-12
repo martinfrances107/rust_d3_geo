@@ -43,12 +43,6 @@ where
     pub phantom: PhantomData<T>,
 }
 
-// impl<'a, T: CoordFloat + Default> TransformClone<'a> for TransformIdentity<T> {
-//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
-//         Box::new(self.clone())
-//     }
-// }
-
 impl<T: CoordFloat + Default> Transform for TransformIdentity<T> {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {

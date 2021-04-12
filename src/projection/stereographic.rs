@@ -65,12 +65,6 @@ where
     }
 }
 
-// impl<'a, T: CoordFloat + FloatConst> TransformClone<'a> for StereographicRaw<T> {
-//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
-//         Box::new(self.clone())
-//     }
-// }
-
 impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for StereographicRaw<T> {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

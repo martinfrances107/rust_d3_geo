@@ -25,12 +25,6 @@ where
     }
 }
 
-// impl<'a, T: CoordFloat + FloatConst> TransformClone<'a> for EquirectangularRaw<T> {
-//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
-//         Box::new(self.clone())
-//     }
-// }
-
 impl<T: CoordFloat + FloatConst> Transform for EquirectangularRaw<T> {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {

@@ -34,20 +34,6 @@ where
     S(StereographicRaw<T>),
 }
 
-// impl<'a, T> TransformClone<'a> for ProjectionRawEnum<T>
-// where
-//     T: CoordFloat + Default + FloatConst,
-// {
-//     fn box_clone(&self, p: &'a Self::TcC) -> Self::TcC {
-//         match self {
-//             ProjectionRawEnum::E(e) => e.box_clone(),
-//             ProjectionRawEnum::O(o) => o.box_clone(),
-//             ProjectionRawEnum::S(s) => s.box_clone(),
-//         }
-//     }
-
-// }
-
 impl<T> Transform for ProjectionRawEnum<T>
 where
     T: AddAssign + CoordFloat + Default + FloatConst,

@@ -36,12 +36,6 @@ impl<'a, T: CoordFloat + FloatConst> RotationLambda<T> {
     }
 }
 
-// impl<'a, T: CoordFloat + FloatConst> TransformClone<'a> for RotationLambda<T> {
-//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
-//         Box::new(self.clone())
-//     }
-// }
-
 impl<T: CoordFloat + FloatConst> Transform for RotationLambda<T> {
     type TcC = Coordinate<T>;
     #[inline]
