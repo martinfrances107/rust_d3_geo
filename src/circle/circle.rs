@@ -13,7 +13,7 @@ use crate::Transform;
 use crate::TransformIdentity;
 
 /// Output of CircleGenertor::circle()
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct CircleStream<T: CoordFloat + Default + FloatConst> {
     pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
@@ -29,18 +29,6 @@ impl<T: CoordFloat + Default + FloatConst> Default for CircleStream<T> {
             coordinates: vec![vec![]],
             rotate: RotateRadiansEnum::I(RotationIdentity::default()),
             ring: vec![],
-        }
-    }
-}
-
-impl<T: CoordFloat + Default + FloatConst> Clone for CircleStream<T> {
-    #[inline]
-    fn clone(&self) -> CircleStream<T> {
-        CircleStream::<T> {
-            stream_type: self.stream_type.clone(),
-            coordinates: self.coordinates.clone(),
-            rotate: self.rotate.clone(),
-            ring: self.ring.clone(),
         }
     }
 }
