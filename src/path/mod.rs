@@ -6,7 +6,6 @@ mod string;
 
 use std::collections::VecDeque;
 use std::default::Default;
-use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
@@ -15,14 +14,9 @@ use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
 
 use crate::clip::buffer::LineElem;
-use crate::projection::projection_mutator::ProjectionMutator;
-use crate::projection::stream_transform_radians::StreamTransformRadians;
-use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
-use crate::stream::Streamable;
-use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum PathResultEnum<T>
 where
     T: CoordFloat,
@@ -58,7 +52,7 @@ trait PathTrait: PointRadiusTrait // where
 {
     type PtDo;
     type PtPRE;
-    fn area(&self, d: Self::PtDo) -> Option<String> {
+    fn area(&self, _d: Self::PtDo) -> Option<String> {
         // Stream(d, self.projection_stream);
         // PathArea::result();
         None
@@ -78,13 +72,6 @@ trait PathTrait: PointRadiusTrait // where
     // fn point_radius(&self);
     // fn result(&self);
 }
-
-// pub struct PathIdentity{}
-
-// impl<T> PathTrait<T> for PathIdentity
-// where T: Float {
-
-// }
 
 trait PathStreamTrait<T>: Stream<T> + PathTrait + PathResult
 where

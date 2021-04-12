@@ -7,10 +7,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::ClipAntimeridian;
-use crate::clip::buffer::LineElem;
-use crate::clip::clip::Clip;
-use crate::clip::clip_raw::ClipRaw;
 use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
 use crate::stream::stream_dst::StreamDst;

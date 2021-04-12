@@ -1,20 +1,20 @@
-use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
 use std::ops::AddAssign;
 
-// A collection of functions that mutate a Projection struct.
+use derivative::Derivative;
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 use super::orthographic::OrthographicRaw;
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::resample::resample::Resample;
-use crate::clip::antimeridian::ClipAntimeridian;
+use super::scale_translate_rotate::ScaleTranslateRotate;
+use super::ProjectionRawEnum;
 use crate::clip::circle::ClipCircle;
 use crate::clip::clip::Clip;
 use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
 use crate::compose::ComposeElemEnum;
-use crate::identity::gen_identity;
 use crate::projection::resample::gen_resample_node;
 use crate::projection::resample::ResampleEnum;
 use crate::projection::stream_transform::StreamTransform;
@@ -24,14 +24,11 @@ use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
 use crate::stream::stream_dst::StreamDst;
 use crate::Transform;
-// use super::resample::StreamResampleTrait;
-use super::scale_translate_rotate::ScaleTranslateRotate;
-use super::ProjectionRawEnum;
-use derivative::Derivative;
 
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
+/// A collection of functions that mutate a Projection struct.
 pub struct ProjectionMutator<T: AddAssign + CoordFloat + Default + FloatConst> {
     project: ProjectionRawEnum<T>,
     alpha: T, // post-rotate angle
@@ -184,7 +181,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> ProjectionMutator<T> {
 
         // let mut postclip = self.postclip.clone();
         // postclip.stream_in(ClipSinkEnum::Src(stream_dst));
-        let mut postclip = (self.postclip)(ClipSinkEnum::Src(stream_dst));
+        let postclip = (self.postclip)(ClipSinkEnum::Src(stream_dst));
 
         let mut resample = self.project_resample.clone();
         resample.stream_in(postclip);

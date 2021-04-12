@@ -4,15 +4,12 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
-use crate::clip::antimeridian::ClipAntimeridian;
-use crate::clip::buffer::LineElem;
-use crate::clip::clip::Clip;
-use crate::clip::clip_raw::ClipRaw;
 use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::Transform;
+
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
 #[derive(Debug)]
