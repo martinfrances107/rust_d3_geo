@@ -10,19 +10,6 @@ pub struct ScaleTranslate<T> {
     pub sy: T,
 }
 
-// impl<T> ScaleTranslate<T> {
-//     #[inline]
-//     pub fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T) -> Self {
-//         ScaleTranslate { k, dx, dy, sx, sy }
-//     }
-// }
-
-// impl<'a, T: CoordFloat> TransformClone<'a> for ScaleTranslate<T> {
-//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
-//         Box::new(self.clone())
-//     }
-// }
-
 impl<T: CoordFloat> Transform for ScaleTranslate<T> {
     type TcC = Coordinate<T>;
     #[inline]

@@ -25,11 +25,6 @@ impl<'a, T: CoordFloat> RotationPhiGamma<T> {
         }
     }
 }
-// impl<'a, T: CoordFloat> TransformClone<'a> for RotationPhiGamma<T> {
-//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>> {
-//         Box::new(self.clone())
-//     }
-// }
 
 impl<T: CoordFloat> Transform for RotationPhiGamma<T> {
     type TcC = Coordinate<T>;
