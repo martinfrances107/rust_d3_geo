@@ -17,6 +17,7 @@ pub mod circle;
 pub mod clip;
 pub mod data_object;
 pub mod distance;
+pub mod identity;
 pub mod in_delta;
 pub mod length;
 pub mod path;

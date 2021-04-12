@@ -130,7 +130,6 @@ where
     }
 
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("Clip point_default()");
         let pv = match &self.raw {
             ClipRaw::Antimeridian(r) => r.point_visible(p, None),
             ClipRaw::Circle(r) => r.point_visible(p, None),
@@ -152,40 +151,34 @@ where
 
     #[inline]
     fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("Clip point_line()");
         self.base.line.point(p, m);
     }
 
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("Clip point_ring()");
         self.base.ring.push(LineElem { p: *p, m });
         self.base.ring_sink.point(p, m);
     }
 
     #[inline]
     fn line_start_default(&mut self) {
-        println!("Clip line_start_default()");
         self.point_fn = Self::point_line;
         self.base.line.line_start();
     }
 
     #[inline]
     fn ring_start(&mut self) {
-        println!("Clip ring_start()");
         self.base.ring_sink.line_start();
         self.base.ring.clear();
     }
 
     #[inline]
     fn line_end_default(&mut self) {
-        println!("Clip line_end_default()");
         self.point_fn = Self::point_default;
         self.base.line.line_end();
     }
 
     fn ring_end(&mut self) {
-        println!("Clip ring_end()");
         let le = self.base.ring[0];
         // javascript drops m here.
         self.point_ring(&le.p, None);
@@ -205,7 +198,6 @@ where
             }
             None => panic!("was expecting something."),
         };
-        println!("ring segments {:#?}", ring_segments);
         let n = ring_segments.len();
         let m;
         let mut point: Coordinate<T>;
@@ -289,7 +281,6 @@ where
 
     #[inline]
     fn line_start(&mut self) {
-        println!("line_start()");
         (self.line_start_fn)(self);
     }
 
@@ -299,7 +290,6 @@ where
     }
 
     fn polygon_start(&mut self) {
-        println!("Clip polygon start()");
         self.point_fn = Self::point_ring;
         self.line_start_fn = Self::ring_start;
         self.line_end_fn = Self::ring_end;
@@ -308,7 +298,6 @@ where
     }
 
     fn polygon_end(&mut self) {
-        println!("Clip polygon_end()");
         self.point_fn = Self::point_default;
         self.line_start_fn = Self::line_start_default;
         self.line_end_fn = Self::line_end_default;

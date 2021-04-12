@@ -11,6 +11,7 @@ use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::buffer::LineElem;
 use crate::clip::clip::Clip;
 use crate::clip::clip_raw::ClipRaw;
+use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
@@ -59,7 +60,6 @@ where
         }
     }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        println!("ResampleEnum resample {:?}", p);
         match self {
             ResampleEnum::R(resample) => resample.point(&*p, m),
             ResampleEnum::RN(rn) => rn.point(p, m),
@@ -78,13 +78,12 @@ where
         }
     }
 }
-
 impl<T> ResampleEnum<T>
 where
     T: AddAssign + CoordFloat + Default + FloatConst,
 {
     #[inline]
-    pub fn stream_in(&mut self, stream: Clip<T>) {
+    pub fn stream_in(&mut self, stream: ClipSinkEnum<T>) {
         match self {
             ResampleEnum::RN(s) => {
                 s.stream_in(stream);
@@ -100,12 +99,9 @@ pub fn gen_resample_node<T>(project: Compose<T>, delta2: T) -> ResampleEnum<T>
 where
     T: AddAssign + CoordFloat + Default + FloatConst,
 {
-    println!("gen_resample_node {:#?}", delta2);
     if delta2.is_zero() {
-        println!("resampleNone");
         ResampleEnum::RN(ResampleNone::new(project))
     } else {
-        println!("resample");
         ResampleEnum::R(Resample {
             project: project,
             delta2,
@@ -125,13 +121,7 @@ where
             c0: T::zero(), // previous point
             cos_min_distance: (T::from(30f64).unwrap().to_radians()).cos(), // cos(minimum angular distance)
 
-            stream: Box::new(Clip::new(
-                ClipRaw::Antimeridian(ClipAntimeridian::default()),
-                LineElem {
-                    p: Coordinate::default(),
-                    m: None,
-                },
-            )),
+            stream: Box::new(ClipSinkEnum::Blank),
             use_line_point: true,
             use_line_end: true,
             use_line_start: true,

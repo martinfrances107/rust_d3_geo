@@ -8,6 +8,7 @@ use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::buffer::LineElem;
 use crate::clip::clip::Clip;
 use crate::clip::clip_raw::ClipRaw;
+use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
@@ -41,7 +42,7 @@ where
     pub cos_min_distance: T,
 
     // Box here prevents recurson.
-    pub stream: Box<Clip<T>>,
+    pub stream: Box<ClipSinkEnum<T>>,
     pub use_line_point: bool,
     pub use_line_start: bool,
     pub use_line_end: bool,
@@ -86,13 +87,7 @@ where
             c0: T::zero(),
 
             cos_min_distance: T::zero(),
-            stream: Box::new(Clip::new(
-                ClipRaw::Antimeridian(ClipAntimeridian::default()),
-                LineElem {
-                    p: Coordinate::default(),
-                    m: None,
-                },
-            )), // stub value
+            stream: Box::new(ClipSinkEnum::Blank), // stub value
 
             use_line_point: false,
             use_line_start: false,
@@ -118,7 +113,7 @@ where
     T: AddAssign + CoordFloat + Default + FloatConst,
 {
     #[inline]
-    pub fn stream_in(&mut self, stream: Clip<T>) {
+    pub fn stream_in(&mut self, stream: ClipSinkEnum<T>) {
         self.stream = Box::new(stream);
     }
 
@@ -232,7 +227,7 @@ where
         b1: T,
         c1: T,
         depth_p: u8,
-        stream: &mut Box<Clip<T>>,
+        stream: &mut Box<ClipSinkEnum<T>>,
     ) {
         let mut depth = depth_p;
         let dx = x1 - x0;
@@ -316,7 +311,6 @@ where
 
     #[inline]
     fn point(&mut self, p: &Self::C, _m: Option<u8>) {
-        println!("resample point()");
         if self.use_line_point {
             self.line_point(p);
         } else {

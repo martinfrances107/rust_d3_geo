@@ -4,12 +4,17 @@ use std::ops::AddAssign;
 
 // A collection of functions that mutate a Projection struct.
 
+use super::orthographic::OrthographicRaw;
+use super::projection::Projection;
+use super::projection::StreamOrValueMaybe;
+use super::resample::resample::Resample;
 use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::circle::ClipCircle;
 use crate::clip::clip::Clip;
 use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
 use crate::compose::ComposeElemEnum;
+use crate::identity::gen_identity;
 use crate::projection::resample::gen_resample_node;
 use crate::projection::resample::ResampleEnum;
 use crate::projection::stream_transform::StreamTransform;
@@ -19,16 +24,14 @@ use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
 use crate::stream::stream_dst::StreamDst;
 use crate::Transform;
-
-use super::orthographic::OrthographicRaw;
-use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
-use super::resample::resample::Resample;
 // use super::resample::StreamResampleTrait;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 use super::ProjectionRawEnum;
+use derivative::Derivative;
 
-#[derive(Clone, Debug)]
+#[derive(Derivative)]
+#[derivative(Debug)]
+#[derive(Clone)]
 pub struct ProjectionMutator<T: AddAssign + CoordFloat + Default + FloatConst> {
     project: ProjectionRawEnum<T>,
     alpha: T, // post-rotate angle
@@ -48,7 +51,8 @@ pub struct ProjectionMutator<T: AddAssign + CoordFloat + Default + FloatConst> {
     project_rotate_transform: Compose<T>,
     phi: T, // center
     preclip: Clip<T>,
-    postclip: Clip<T>,
+    #[derivative(Debug = "ignore")]
+    postclip: fn(ClipSinkEnum<T>) -> ClipSinkEnum<T>,
     x: T,
     y: T, // translate
     lambda: T,
@@ -101,7 +105,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> ProjectionMutator<T> {
             phi: T::zero(),
             rotate: RotateRadiansEnum::I(RotationIdentity::default()), // pre-rotate
             preclip: ClipCircle::gen_clip(T::one()),                   // stub value
-            postclip: ClipAntimeridian::gen_clip(),
+            postclip: |x: ClipSinkEnum<T>| x,
             sx: T::one(), // reflectX
             sy: T::one(), // reflectX
             theta: None,  // pre-clip angle
@@ -178,8 +182,9 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> ProjectionMutator<T> {
         //     None => {
         // self.cache_stream = Some(stream.clone());
 
-        let mut postclip = self.postclip.clone();
-        postclip.stream_in(ClipSinkEnum::Src(stream_dst));
+        // let mut postclip = self.postclip.clone();
+        // postclip.stream_in(ClipSinkEnum::Src(stream_dst));
+        let mut postclip = (self.postclip)(ClipSinkEnum::Src(stream_dst));
 
         let mut resample = self.project_resample.clone();
         resample.stream_in(postclip);
@@ -280,12 +285,10 @@ where
             StreamOrValueMaybe::Value(angle) => {
                 let theta = angle.to_radians();
                 self.theta = Some(theta);
-                println!("generating clip circle");
                 self.preclip = ClipCircle::gen_clip(theta);
                 self
             }
             StreamOrValueMaybe::SP(_preclip) => {
-                println!("generatin SP");
                 self.theta = None;
                 // self.preclip = preclip;
                 // self.reset();

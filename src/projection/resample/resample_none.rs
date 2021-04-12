@@ -6,6 +6,7 @@ use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::buffer::LineElem;
 use crate::clip::clip::Clip;
 use crate::clip::clip_raw::ClipRaw;
+use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
@@ -18,7 +19,7 @@ where
 {
     project: Compose<T>,
     /// Box to prevent infinite recusion.
-    pub stream: Box<Clip<T>>,
+    pub stream: Box<ClipSinkEnum<T>>,
 }
 
 impl<T: AddAssign + CoordFloat + Default + FloatConst> ResampleNone<T> {
@@ -26,20 +27,14 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> ResampleNone<T> {
     pub fn new(project: Compose<T>) -> Self {
         Self {
             project: project,
-            stream: Box::new(Clip::new(
-                ClipRaw::Antimeridian(ClipAntimeridian::default()),
-                LineElem {
-                    p: Coordinate::default(),
-                    m: None,
-                },
-            )), // stub value
+            stream: Box::new(ClipSinkEnum::Blank), // stub value
         }
     }
 }
 
 impl<T: AddAssign + CoordFloat + Default + FloatConst> ResampleNone<T> {
     #[inline]
-    pub fn stream_in(&mut self, stream: Clip<T>) {
+    pub fn stream_in(&mut self, stream: ClipSinkEnum<T>) {
         self.stream = Box::new(stream);
     }
 }
@@ -77,7 +72,6 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for ResampleNon
     }
 
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        println!("resample_none point()");
         let t = &self.project.transform(&p);
         self.stream.point(&t, m);
     }
