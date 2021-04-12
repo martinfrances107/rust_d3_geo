@@ -1,6 +1,7 @@
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::ops::AddAssign;
 
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
@@ -20,8 +21,7 @@ pub struct Line<T: AddAssign + CoordFloat + Default + FloatConst> {
     clean: CleanEnum, // no intersections
     radius: T,
     cr: T,
-    not_hemisphere: bool,
-    // point0: (Option<Point>, Option<u8>), // previous point with message.
+    not_hemisphere: bool,    
     point0: Option<Coordinate<T>>, // previous point
     small_radius: bool,
     stream: LineSinkEnum<T>,
@@ -41,8 +41,7 @@ where
             cr: T::zero(),
             not_hemisphere: false,
             point0: None,
-            small_radius: false,
-            // stream: Resample::default(), // initial stub
+            small_radius: false,            
             stream: LineSinkEnum::CSE(ClipSinkEnum::Src(StreamDst::SRC(
                 StreamSourceDummy::default(),
             ))),
@@ -67,8 +66,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Line<T> {
             radius,
             small_radius,
             v0: false,
-            v00: false,
-            // TOD pre or post clip.
+            v00: false,            
             stream: LineSinkEnum::CB(ClipBuffer::default()),
         }
     }
@@ -162,9 +160,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
     }
 
     fn point(&mut self, p: &Self::C, _m: Option<u8>) {
-        let mut point1 = p.clone();
-
-        // let point2: (Option::<Point>, <Option<u8>>);
+        let mut point1 = p.clone();        
         let mut point2;
         let v = self.point_visible(p, None);
 
@@ -192,7 +188,6 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
             self.v00 = v;
             self.v0 = v;
             if v {
-                // self.stream.line_start();
                 match &mut self.stream {
                     LineSinkEnum::CB(stream) => {
                         stream.line_start();
@@ -233,13 +228,11 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                 }
             }
 
-            // let mut s = self.stream.borrow_mut();
             if v != self.v0 {
                 let next: Option<Coordinate<T>>;
                 self.clean = CleanEnum::IntersectionsOrEmpty;
                 if v {
                     // outside going in
-                    // self.stream.line_start();
                     match self.stream.clone() {
                         LineSinkEnum::CB(mut stream) => {
                             stream.line_start();
@@ -283,8 +276,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                             }
                             next = Some(p);
                         }
-                        IntersectReturn::Two([p, _]) => {
-                            // self.stream.point(p, None);
+                        IntersectReturn::Two([p, _]) => {                            
                             match self.stream.clone() {
                                 LineSinkEnum::CB(mut stream) => {
                                     stream.point(&p, None);
@@ -317,8 +309,6 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                             panic!("Must deal with no intersect.");
                         }
                         IntersectReturn::One(p) => {
-                            // self.stream.point(p, Some(2));
-                            // self.stream.line_end();
                             match self.stream.clone() {
                                 LineSinkEnum::CB(mut stream) => {
                                     stream.point(&p, Some(2));
@@ -364,11 +354,6 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                         IntersectReturn::Two(t) => {
                             self.clean = CleanEnum::IntersectionsOrEmpty;
                             if self.small_radius {
-                                // self.stream.line_start();
-                                // self.stream.point(t[0], None);
-                                // self.stream.point(t[1], None);
-                                // self.stream.line_end();
-
                                 match self.stream.clone() {
                                     LineSinkEnum::CB(mut stream) => {
                                         stream.line_start();
@@ -420,10 +405,6 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
                                         }
                                     },
                                 }
-                                // self.stream.point(t[1], None);
-                                // self.stream.line_end();
-                                // self.stream.line_start();
-                                // self.stream.point(t[0], Some(3u8));
                             }
                         }
                     }

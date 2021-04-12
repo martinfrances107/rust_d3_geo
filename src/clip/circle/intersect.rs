@@ -1,11 +1,12 @@
+use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
+
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_add_in_place;
 use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_dot;
 use crate::cartesian::cartesian_scale;
 use crate::cartesian::spherical_r;
-use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
 
 /// IntersectReturn none, one or two 2d floats.
 pub enum IntersectReturn<T: CoordFloat> {

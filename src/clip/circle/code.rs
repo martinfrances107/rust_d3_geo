@@ -1,5 +1,5 @@
-  // Generates a 4-bit vector representing the location of a point relative to
-  // the small circle's bounding box.
+  /// Generates a 4-bit vector representing the location of a point relative to
+  /// the small circle's bounding box.
   fn code(lambda: f64, phi: f64) -> u8{
     let  r = smallRadius ? radius : pi - radius,
         code = 0;

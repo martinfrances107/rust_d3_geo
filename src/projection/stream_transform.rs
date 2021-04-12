@@ -79,7 +79,6 @@ impl<'a, T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for StreamT
 
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
-        // let r = self.transform(&p);
         // Warning the javascript version return the value below but I think it break the implied spec!!!!
         self.stream.point(&self.transform(&p), m);
     }
