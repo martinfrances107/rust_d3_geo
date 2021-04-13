@@ -10,7 +10,6 @@ use crate::rotation::rotation_identity::RotationIdentity;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::Transform;
-use crate::TransformIdentity;
 
 /// Output of CircleGenertor::circle()
 #[derive(Clone, Debug)]

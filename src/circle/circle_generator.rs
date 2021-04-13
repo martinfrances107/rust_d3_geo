@@ -17,9 +17,9 @@ use super::FnValMaybe;
 use super::FnValMaybe2D;
 use super::StreamType;
 
+use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_normalize_in_place;
 use crate::Transform;
-use crate::{cartesian::cartesian, TransformIdentity};
 
 pub struct CircleGenerator<T>
 where

@@ -29,29 +29,6 @@ mod compose;
 mod constant;
 mod point_equal;
 mod stream;
-// mod transform_stream;
-
-/// Why the Phantom Data is required here...
-///
-/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
-/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Clone, Copy, Debug, Default)]
-pub struct TransformIdentity<T>
-where
-    T: CoordFloat + Default,
-{
-    pub phantom: PhantomData<T>,
-}
-
-impl<T: CoordFloat + Default> Transform for TransformIdentity<T> {
-    type TcC = Coordinate<T>;
-    fn transform(&self, p: &Self::TcC) -> Self::TcC {
-        *p
-    }
-    fn invert(&self, p: &Self::TcC) -> Self::TcC {
-        *p
-    }
-}
 
 pub trait TransformClone<'a>: Transform {
     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>>;
