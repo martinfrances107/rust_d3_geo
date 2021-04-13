@@ -63,17 +63,6 @@ pub struct ProjectionMutator<T: AddAssign + CoordFloat + Default + FloatConst> {
     y1: Option<T>, // post-clip extent
 }
 
-impl<T> Default for ProjectionMutator<T>
-where
-    T: AddAssign + CoordFloat + Default + FloatConst,
-{
-    fn default() -> Self {
-        ProjectionMutator::from_projection_raw(
-            ProjectionRawEnum::O(OrthographicRaw::default()),
-            None,
-        )
-    }
-}
 impl<T: AddAssign + CoordFloat + Default + FloatConst> ProjectionMutator<T> {
     pub fn from_projection_raw(
         project: ProjectionRawEnum<T>,
