@@ -1,3 +1,4 @@
+pub mod azimuthalEqualArea;
 pub mod equirectangular;
 pub mod orthographic;
 pub mod projection;
@@ -9,6 +10,7 @@ pub mod stereographic;
 pub mod stream_transform;
 pub mod stream_transform_radians;
 
+mod azimuthal;
 mod scale_translate;
 
 use std::ops::AddAssign;
@@ -19,6 +21,7 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
+use azimuthalEqualArea::AzimuthalEqualAreaRaw;
 use equirectangular::EquirectangularRaw;
 use orthographic::OrthographicRaw;
 use stereographic::StereographicRaw;
@@ -28,6 +31,7 @@ pub enum ProjectionRawEnum<T>
 where
     T: CoordFloat + Default,
 {
+    A(AzimuthalEqualAreaRaw<T>),
     E(EquirectangularRaw<T>),
     O(OrthographicRaw<T>),
     S(StereographicRaw<T>),
@@ -40,6 +44,7 @@ where
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
         match self {
+            ProjectionRawEnum::A(e) => e.transform(p),
             ProjectionRawEnum::E(e) => e.transform(p),
             ProjectionRawEnum::O(o) => o.transform(p),
             ProjectionRawEnum::S(s) => s.transform(p),
@@ -47,6 +52,7 @@ where
     }
     fn invert(&self, p: &Self::TcC) -> Self::TcC {
         match self {
+            ProjectionRawEnum::A(e) => e.transform(p),
             ProjectionRawEnum::E(e) => e.invert(p),
             ProjectionRawEnum::O(o) => o.invert(p),
             ProjectionRawEnum::S(s) => s.invert(p),
