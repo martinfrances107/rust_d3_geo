@@ -27,8 +27,6 @@ where
     T: AddAssign + CoordFloat + Default + FloatConst,
 {
     pub fn gen_projection_mutator() -> ProjectionMutator<T> {
-        // let s: Rc<Box<dyn Transform<TcC = Coordinate<T>>>> =
-        //     Rc::new(Box::new(StereographicRaw::default()));
         let s = ProjectionRawEnum::S(StereographicRaw::default());
         let projection = ProjectionMutator::from_projection_raw(s, None);
         projection
@@ -61,7 +59,6 @@ where
         let ret_y = y_out.asin();
 
         Coordinate { x: ret_x, y: ret_y }
-        // })
     }
 }
 
