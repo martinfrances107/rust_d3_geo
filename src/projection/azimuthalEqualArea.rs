@@ -1,9 +1,11 @@
+use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use derivative::Derivative;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
+use num_traits::AsPrimitive;
 
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
@@ -28,15 +30,10 @@ where
 
 impl<T> AzimuthalEqualAreaRaw<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn new() -> Self {
-        AzimuthalEqualAreaRaw {
-            phantom: PhantomData::<T>::default(),
-        }
-    }
     pub fn gen_projection_mutator() -> ProjectionMutator<T> {
-        let s = ProjectionRawEnum::A(AzimuthalEqualAreaRaw::new());
+        let s = ProjectionRawEnum::A(AzimuthalEqualAreaRaw::default());
         let projection = ProjectionMutator::from_projection_raw(s, None);
         projection
             .scale(T::from(124.74f64).unwrap())
@@ -55,7 +52,9 @@ where
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for AzimuthalEqualAreaRaw<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+    for AzimuthalEqualAreaRaw<T>
+{
     type TcC = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

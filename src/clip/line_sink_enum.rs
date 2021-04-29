@@ -1,17 +1,20 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
+
+use crate::path::PathResult;
+use crate::path::PathResultEnum;
 
 use super::buffer::ClipBuffer;
 use super::clip_sink_enum::ClipSinkEnum;
-use crate::path::PathResult;
-use crate::path::PathResultEnum;
 
 #[derive(Clone, Debug)]
 pub enum LineSinkEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     CSE(ClipSinkEnum<T>),
     CB(ClipBuffer<T>),
@@ -19,7 +22,7 @@ where
 
 impl<T> LineSinkEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     pub fn result(&mut self) -> Option<PathResultEnum<T>> {
         match self {

@@ -1,6 +1,9 @@
-use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
+use std::fmt::Display;
 use std::ops::AddAssign;
+
+use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
 
 use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
@@ -11,14 +14,14 @@ use crate::Transform;
 #[derive(Clone, Debug)]
 pub struct ResampleNone<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     project: Compose<T>,
     /// Box to prevent infinite recusion.
     pub stream: Box<ClipSinkEnum<T>>,
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> ResampleNone<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> ResampleNone<T> {
     #[inline]
     pub fn new(project: Compose<T>) -> Self {
         Self {
@@ -28,14 +31,16 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> ResampleNone<T> {
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> ResampleNone<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> ResampleNone<T> {
     #[inline]
     pub fn stream_in(&mut self, stream: ClipSinkEnum<T>) {
         self.stream = Box::new(stream);
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for ResampleNone<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
+    for ResampleNone<T>
+{
     type C = Coordinate<T>;
     #[inline]
     fn get_dst(&self) -> StreamDst<T> {

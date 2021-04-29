@@ -1,6 +1,8 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::projection::scale_translate_rotate::ScaleTranslateRotateEnum;
@@ -23,7 +25,9 @@ where
     RPG(RotationPhiGamma<T>),
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for ComposeElemEnum<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+    for ComposeElemEnum<T>
+{
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
         match self {
@@ -75,7 +79,9 @@ impl<T: CoordFloat + Default + FloatConst> Compose<T> {
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for Compose<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+    for Compose<T>
+{
     type TcC = Coordinate<T>;
     // Apply A then B.
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {

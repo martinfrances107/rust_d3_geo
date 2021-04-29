@@ -2,11 +2,14 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
-use num_traits::{Float, FloatConst};
+use num_traits::AsPrimitive;
+use num_traits::Float;
+use num_traits::FloatConst;
 
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
+use super::PointRadiusTrait;
 use super::{PathResult, PathResultEnum};
 
 #[inline]
@@ -23,7 +26,10 @@ where
     )
 }
 #[derive(Debug, Clone)]
-pub struct PathString<T> {
+pub struct PathString<T>
+where
+    T: Display,
+{
     circle: Option<String>,
     line: Option<f64>,
     point: Option<f64>,
@@ -33,7 +39,7 @@ pub struct PathString<T> {
 
 impl<T> Default for PathString<T>
 where
-    T: Float,
+    T: Display + Float,
 {
     #[inline]
     fn default() -> Self {
@@ -47,11 +53,12 @@ where
     }
 }
 
-impl<T> PathString<T>
+impl<T> PointRadiusTrait for PathString<T>
 where
-    T: Float,
+    T: Display + Float,
 {
-    fn point_radians(&mut self, d: Option<T>) {
+    type PrtT = Option<T>;
+    fn point_radius(&mut self, d: Self::PrtT) {
         match d {
             Some(d) => {
                 if self.radius != d {
@@ -66,7 +73,7 @@ where
 
 impl<T> PathResult for PathString<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Display + FloatConst,
 {
     type Out = Option<PathResultEnum<T>>;
     #[inline]
@@ -83,7 +90,7 @@ where
 
 impl<T> Stream<T> for PathString<T>
 where
-    T: AddAssign + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
 

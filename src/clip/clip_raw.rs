@@ -1,8 +1,10 @@
 use std::cmp::Ordering;
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::stream::CompareIntersection;
@@ -16,7 +18,7 @@ use super::ClipTraitRaw;
 #[derive(Clone, Debug)]
 pub enum ClipRaw<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     Antimeridian(ClipAntimeridian<T>),
     Circle(ClipCircle<T>),
@@ -24,7 +26,7 @@ where
 
 impl<T> Default for ClipRaw<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn default() -> Self {
         ClipRaw::Antimeridian(ClipAntimeridian::default())
@@ -33,7 +35,7 @@ where
 
 impl<T> ClipTraitRaw<T> for ClipRaw<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;

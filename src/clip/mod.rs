@@ -10,10 +10,12 @@ pub mod line_sink_enum;
 pub mod rejoin;
 
 use std::cmp::Ordering;
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
@@ -23,7 +25,7 @@ use rejoin::intersection::Intersection;
 
 pub trait ClipTraitRaw<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type SctC;
     type SctOC;

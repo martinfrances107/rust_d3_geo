@@ -5,10 +5,10 @@ authors = ["martin frances <martinfrances107@hotmail.com>"]
 edition = "2018"
 
 [dependencies]
+derivative = "2.2.0"
 num-traits="0.2.14"
 geo={git = "https://github.com/martinfrances107/geo.git", branch="cyclic_match" }
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
-derivative = "2.2.0"
 rust_d3_array = { git = "https://github.com/martinfrances107/rust_d3_array.git" }
 
 [dev-dependencies]

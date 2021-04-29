@@ -1,9 +1,11 @@
 pub mod intersection;
 
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use num_traits::Zero;
 
@@ -25,7 +27,7 @@ pub fn rejoin<T>(
     start_inside: bool,
     stream: &mut impl Stream<T, C = Coordinate<T>>,
 ) where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     let mut start_inside = start_inside;
     let mut subject = Vec::<Intersection<T>>::new();

@@ -12,7 +12,9 @@ mod area_test {
     use geo::Geometry;
     use geo::LineString;
     use geo::Polygon;
+    use num_traits::AsPrimitive;
     use num_traits::FloatConst;
+
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::path::Path;
     use rust_d3_geo::path::PathResultEnum;
@@ -22,8 +24,10 @@ mod area_test {
     };
 
     #[inline]
-    fn equirectangular<'a, T: AddAssign + CoordFloat + Default + FloatConst>(
-    ) -> ProjectionMutator<T> {
+    fn equirectangular<
+        'a,
+        T: AsPrimitive<T> + AddAssign + CoordFloat + Default + Display + FloatConst,
+    >() -> ProjectionMutator<T> {
         EquirectangularRaw::gen_projection_mutator()
             .scale(T::from(900f64 / PI).unwrap())
             .precision(T::zero())
@@ -32,9 +36,9 @@ mod area_test {
     #[inline]
     fn test_area<'a, T>(projection: ProjectionMutator<T>, object: &DataObject<T>) -> T
     where
-        T: CoordFloat + FloatConst + Display + AddAssign + Default,
+        T: AsPrimitive<T> + CoordFloat + FloatConst + Display + AddAssign + Default,
     {
-        match Path::generate(projection, None).area(object) {
+        match Path::generate(Some(projection), None).area(object) {
             Some(p) => match p {
                 PathResultEnum::Area(a) => return a,
                 _ => panic!("expecting an area"),

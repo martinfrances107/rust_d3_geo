@@ -1,7 +1,9 @@
 use std::fmt::Debug;
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::StreamType;
@@ -32,7 +34,9 @@ impl<T: CoordFloat + Default + FloatConst> Default for CircleStream<T> {
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for CircleStream<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
+    for CircleStream<T>
+{
     type C = Coordinate<T>;
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         let x_rotated = &self.rotate.invert(&p);

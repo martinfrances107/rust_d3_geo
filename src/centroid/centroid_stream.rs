@@ -2,10 +2,12 @@ use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use derivative::Derivative;
 use geo::{CoordFloat, Coordinate, Point};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 // TO MUST use a math library
@@ -41,7 +43,9 @@ pub struct CentroidStream<T: CoordFloat + Default> {
     line_end_fn: fn(&mut Self),
 }
 
-impl<T: CoordFloat + Default + FloatConst + AddAssign> Default for CentroidStream<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Default
+    for CentroidStream<T>
+{
     fn default() -> Self {
         return Self {
             W0: T::zero(),
@@ -67,7 +71,9 @@ impl<T: CoordFloat + Default + FloatConst + AddAssign> Default for CentroidStrea
     }
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign + Default> CentroidStream<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display>
+    CentroidStream<T>
+{
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
         self.X0 += (x - self.X0) / self.W0;
@@ -212,7 +218,9 @@ impl<T: CoordFloat + FloatConst + AddAssign + Default> CentroidStream<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign + Default> Stream<T> for CentroidStream<T> {
+impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Default + Display> Stream<T>
+    for CentroidStream<T>
+{
     type C = Coordinate<T>;
 
     fn sphere(&mut self) {}

@@ -1,15 +1,18 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
+use geo::CoordFloat;
 use geo::{Coordinate, Point};
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
 
 use super::Stream;
 use super::Streamable;
 
-use geo::CoordFloat;
-use num_traits::FloatConst;
-
 // Move this to another file.
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Streamable<T> for Point<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable<T>
+    for Point<T>
+{
     type SC = Coordinate<T>;
     #[inline]
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {

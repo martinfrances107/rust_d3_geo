@@ -1,6 +1,8 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::ClipAntimeridian;
@@ -12,14 +14,16 @@ use crate::stream::Stream;
 use crate::Transform;
 
 #[derive(Clone, Debug)]
-pub struct StreamTransform<T: AddAssign + CoordFloat + Default + FloatConst> {
+pub struct StreamTransform<
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+> {
     pub transform: RotateRadiansEnum<T>,
     pub stream: Clip<T>,
 }
 
 impl<'a, T> Default for StreamTransform<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -29,14 +33,18 @@ where
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> StreamTransform<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst>
+    StreamTransform<T>
+{
     #[inline]
     pub fn stream_in(&mut self, stream: Clip<T>) {
         self.stream = stream;
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> StreamTransform<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst>
+    StreamTransform<T>
+{
     #[inline]
     pub fn new(transform_in: Option<RotateRadiansEnum<T>>) -> StreamTransform<T> {
         {
@@ -59,7 +67,9 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> StreamTransform<T> {
     }
 }
 
-impl<'a, T: AddAssign + CoordFloat + Default + FloatConst> Transform for StreamTransform<T> {
+impl<'a, T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+    for StreamTransform<T>
+{
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
         self.transform.transform(p)
@@ -69,7 +79,9 @@ impl<'a, T: AddAssign + CoordFloat + Default + FloatConst> Transform for StreamT
     }
 }
 
-impl<'a, T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for StreamTransform<T> {
+impl<'a, T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
+    for StreamTransform<T>
+{
     type C = Coordinate<T>;
 
     #[inline]

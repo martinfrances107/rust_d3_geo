@@ -1,11 +1,15 @@
-use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
+use std::fmt::Display;
 use std::ops::AddAssign;
+
+use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
 
 // use crate::path::PathResultEnum;
 use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::clip::line_sink_enum::LineSinkEnum;
 use crate::clip::ClipBuffer;
+use crate::path::path_context_stream::PathContextStream;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::stream::{Clean, CleanEnum};
@@ -15,7 +19,7 @@ use super::intersect::intersect;
 #[derive(Clone, Debug)]
 pub struct Line<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     clean: CleanEnum,
     lambda0: T,
@@ -26,7 +30,7 @@ where
 
 impl<T> Default for Line<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -42,7 +46,7 @@ where
 
 impl<T> Line<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     pub fn stream_in(&mut self, stream: LineSinkEnum<T>) {
@@ -57,7 +61,7 @@ where
 
 impl<T> Clean for Line<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     fn clean(&self) -> CleanEnum {
@@ -70,7 +74,9 @@ where
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
+    for Line<T>
+{
     type C = Coordinate<T>;
     fn sphere(&mut self) {
         todo!("is this called")
@@ -95,15 +101,26 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
         match &mut self.stream {
             LineSinkEnum::CSE(stream) => match stream {
                 ClipSinkEnum::Resample(stream) => stream.line_start(),
-                ClipSinkEnum::Src(stream) => match stream {
-                    StreamDst::Circle(c) => c.line_start(),
-                    StreamDst::SRC(_src) => {
-                        todo!("must resolve this");
-                    }
-                    StreamDst::PAS(pas) => pas.line_start(),
-                    StreamDst::CS(cs) => cs.line_start(),
-                    StreamDst::LS(ls) => ls.line_start(),
-                },
+                ClipSinkEnum::Src(stream) => {
+                    // match stream {
+                    //     StreamDst::Context2D(_CanvasRenderingContext2d) => {
+                    //         // TODo must implement.
+                    //     }
+                    //     StreamDst::PathContextStream(pcs) => match pcs {
+                    //         PathContextStream::PC(_pc) => {
+                    //             // implement!("work ..");
+                    //             // pc.line_start()
+                    //         }
+                    //         PathContextStream::PS(ps) => {
+                    //             ps.line_start();
+                    //         }
+                    //     },
+                    //     StreamDst::Circle(c) => c.line_start(),
+                    //     StreamDst::PAS(pas) => pas.line_start(),
+                    //     StreamDst::CS(cs) => cs.line_start(),
+                    //     StreamDst::LS(ls) => ls.line_start(),
+                    // }
+                }
                 ClipSinkEnum::Blank => {
                     panic!("ClickSinkEnum - actively using an unconnected blank");
                 }

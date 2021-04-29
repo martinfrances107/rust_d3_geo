@@ -1,8 +1,10 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::path::PathResultEnum;
@@ -28,7 +30,7 @@ use super::ClipTraitRaw;
 #[derive(Clone)]
 pub struct Clip<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     raw: ClipRaw<T>,
     base: ClipBase<T>,
@@ -42,7 +44,7 @@ where
 
 impl<T> Clip<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     pub fn new(raw: ClipRaw<T>, start: LineElem<T>) -> Self {
         let ring_buffer = LineSinkEnum::CB(ClipBuffer::default());
@@ -111,7 +113,7 @@ where
 
 impl<T> Clip<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     pub fn stream_in(&mut self, stream: ClipSinkEnum<T>)
@@ -261,7 +263,7 @@ where
 
 impl<T> Stream<T> for Clip<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
     fn get_dst(&self) -> StreamDst<T> {

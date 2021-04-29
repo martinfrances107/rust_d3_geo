@@ -1,8 +1,10 @@
+use std::fmt::Display;
+use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use std::marker::PhantomData;
 
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
@@ -29,13 +31,15 @@ where
 // }
 
 #[derive(Clone, Debug)]
-pub struct StreamTransformRadians<T: AddAssign + CoordFloat + Default + FloatConst> {
+pub struct StreamTransformRadians<
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+> {
     stream: StreamTransform<T>,
 }
 
 impl<T> Default for StreamTransformRadians<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -46,7 +50,7 @@ where
 
 impl<T> StreamTransformRadians<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     pub fn stream_in(&mut self, stream: StreamTransform<T>) {
@@ -54,7 +58,9 @@ where
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for StreamTransformRadians<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
+    for StreamTransformRadians<T>
+{
     type C = Coordinate<T>;
 
     #[inline]

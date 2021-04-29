@@ -1,6 +1,8 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::intersect::intersect;
@@ -16,7 +18,7 @@ use crate::stream::StreamSourceDummy;
 use crate::stream::{Clean, CleanEnum};
 
 #[derive(Clone, Debug)]
-pub struct Line<T: AddAssign + CoordFloat + Default + FloatConst> {
+pub struct Line<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> {
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
     radius: T,
@@ -31,7 +33,7 @@ pub struct Line<T: AddAssign + CoordFloat + Default + FloatConst> {
 
 impl<T> Default for Line<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -51,7 +53,7 @@ where
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Line<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Line<T> {
     #[inline]
     pub fn new(radius: T) -> Self {
         // TODO small_radius, rc  is a shadow variables!!!
@@ -116,7 +118,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> Line<T> {
 
 impl<T> Clean for Line<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
@@ -135,7 +137,9 @@ where
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for Line<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
+    for Line<T>
+{
     type C = Coordinate<T>;
     fn sphere(&mut self) {}
     fn polygon_start(&mut self) {}

@@ -3,9 +3,11 @@ pub mod line;
 mod intersect;
 
 use std::fmt::Debug;
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::circle::circle_stream::circle_stream;
@@ -21,7 +23,7 @@ use super::ClipTraitRaw;
 #[derive(Clone, Debug)]
 pub struct ClipCircle<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display,
 {
     radius: T,
     small_radius: bool,
@@ -33,7 +35,7 @@ where
 /// Returns a clip object
 impl<T> ClipCircle<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default + Debug,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display + Debug,
 {
     pub fn gen_clip(radius: T) -> Clip<T> {
         let cr = radius.cos();
@@ -71,7 +73,7 @@ where
 
 impl<T> ClipTraitRaw<T> for ClipCircle<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display,
 {
     type SctC = Coordinate<T>;
     type SctOC = Option<Coordinate<T>>;

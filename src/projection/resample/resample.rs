@@ -1,6 +1,8 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
@@ -15,7 +17,7 @@ const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 #[derive(Debug)]
 pub struct Resample<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     pub project: Compose<T>,
     pub delta2: T,
@@ -47,7 +49,7 @@ where
 
 impl<T> Clone for Resample<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn clone(&self) -> Self {
         Self {
@@ -60,7 +62,7 @@ where
 
 impl<T> Default for Resample<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn default() -> Resample<T> {
         Self {
@@ -95,7 +97,7 @@ where
 
 impl<T> Resample<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     pub fn new(project: Compose<T>) -> Self {
         Self {
@@ -107,7 +109,7 @@ where
 
 impl<T> Resample<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     pub fn stream_in(&mut self, stream: ClipSinkEnum<T>) {
@@ -122,7 +124,7 @@ where
 
 impl<T> Resample<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
 
@@ -289,7 +291,7 @@ where
 
 impl<T> Stream<T> for Resample<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
 

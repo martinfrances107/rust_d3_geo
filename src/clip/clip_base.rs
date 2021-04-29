@@ -1,7 +1,9 @@
 use std::collections::VecDeque;
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::antimeridian::line::Line as AntimeridianLine;
@@ -10,7 +12,7 @@ use super::clip_sink_enum::ClipSinkEnum;
 use super::line_enum::LineEnum;
 
 #[derive(Clone, Debug)]
-pub struct ClipBase<T: AddAssign + CoordFloat + Default + FloatConst> {
+pub struct ClipBase<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> {
     pub line: LineEnum<T>,
     pub polygon_started: bool,
     pub polygon: Vec<Vec<LineElem<T>>>,
@@ -23,7 +25,7 @@ pub struct ClipBase<T: AddAssign + CoordFloat + Default + FloatConst> {
 
 impl<T> Default for ClipBase<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn default() -> Self {
         let mut segments = VecDeque::new();

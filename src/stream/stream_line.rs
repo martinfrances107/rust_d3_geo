@@ -1,11 +1,13 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::Stream;
 
-pub fn stream_line<T: AddAssign + CoordFloat + Default + FloatConst>(
+pub fn stream_line<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst>(
     coordinates: &[Coordinate<T>],
     stream: &mut impl Stream<T, C = Coordinate<T>>,
     closed: usize,

@@ -1,7 +1,9 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use derivative::Derivative;
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::orthographic::OrthographicRaw;
@@ -29,7 +31,9 @@ use crate::Transform;
 #[derivative(Debug)]
 #[derive(Clone)]
 /// A collection of functions that mutate a Projection struct.
-pub struct ProjectionMutator<T: AddAssign + CoordFloat + Default + FloatConst> {
+pub struct ProjectionMutator<
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+> {
     project: ProjectionRawEnum<T>,
     alpha: T, // post-rotate angle
     // cache: Option<
@@ -63,7 +67,9 @@ pub struct ProjectionMutator<T: AddAssign + CoordFloat + Default + FloatConst> {
     y1: Option<T>, // post-clip extent
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> ProjectionMutator<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst>
+    ProjectionMutator<T>
+{
     pub fn from_projection_raw(
         project: ProjectionRawEnum<T>,
         delta2_p: Option<T>,
@@ -194,7 +200,7 @@ impl<T: AddAssign + CoordFloat + Default + FloatConst> ProjectionMutator<T> {
 
 impl<T> Transform for ProjectionMutator<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
@@ -215,7 +221,7 @@ where
 
 impl<T> Projection<T> for ProjectionMutator<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     // #[inline]
     // fn get_preclip(&self) -> StreamPreClipNode<T> {

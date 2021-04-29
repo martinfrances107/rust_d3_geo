@@ -1,7 +1,10 @@
+use std::fmt::Display;
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use std::ops::AddAssign;
 
 use crate::projection::resample::ResampleEnum;
 use crate::stream::stream_dst::StreamDst;
@@ -11,7 +14,7 @@ use crate::stream::Stream;
 #[derive(Clone, Debug)]
 pub enum ClipSinkEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     Resample(ResampleEnum<T>),
     Src(StreamDst<T>),
@@ -20,7 +23,7 @@ where
 
 impl<T> Stream<T> for ClipSinkEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
 

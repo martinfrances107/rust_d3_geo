@@ -1,6 +1,9 @@
-use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
+use std::fmt::Display;
 use std::ops::AddAssign;
+
+use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
 
 use crate::stream::StreamSimpleNode;
 // use crate::stream::StreamProcessor;
@@ -13,7 +16,7 @@ pub enum StreamOrValueMaybe<T: CoordFloat> {
 
 use crate::projection::projection_mutator::ProjectionMutator;
 
-pub trait Projection<T: AddAssign + CoordFloat + Default + FloatConst> {
+pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> {
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.

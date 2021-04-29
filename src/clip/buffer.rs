@@ -1,8 +1,10 @@
 use std::collections::VecDeque;
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::path::PathResult;
@@ -47,7 +49,9 @@ impl<T: CoordFloat> PathResult for ClipBuffer<T> {
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Stream<T> for ClipBuffer<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
+    for ClipBuffer<T>
+{
     type C = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {

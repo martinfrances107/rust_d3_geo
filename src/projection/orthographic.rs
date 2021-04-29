@@ -1,8 +1,10 @@
+use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
+use num_traits::AsPrimitive;
 
 use crate::Transform;
 
@@ -25,7 +27,7 @@ where
 
 impl<T> OrthographicRaw<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     pub fn gen_projection_mutator() -> ProjectionMutator<T> {
         let o = ProjectionRawEnum::O(OrthographicRaw::default());
@@ -58,7 +60,9 @@ where
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for OrthographicRaw<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+    for OrthographicRaw<T>
+{
     type TcC = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

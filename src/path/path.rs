@@ -5,99 +5,130 @@ use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
 
 use crate::clip::buffer::LineElem;
+use crate::path::path_context_stream::PathContextStream;
+use crate::path::string::PathString;
 use crate::path::PathResult;
 use crate::projection::projection_mutator::ProjectionMutator;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
+use crate::stream::StreamSourceDummy;
 use crate::stream::Streamable;
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 
+use super::context::PathContext;
 use super::PathResultEnum;
 use super::PointRadiusEnum;
 use super::PointRadiusTrait;
 
 pub struct Path<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     context: Option<CanvasRenderingContext2d>,
-    context_stream: Option<Box<dyn PointRadiusTrait<PrtT = T>>>,
+    context_stream: PathContextStream<T>,
     point_radius: PointRadiusEnum<T>,
-    projection_stream: Option<Box<dyn Fn(StreamDst<T>) -> StreamTransformRadians<T>>>,
-    pm: ProjectionMutator<T>,
+    projection_stream: Option<PathContextStream<T>>,
+    projection: Option<ProjectionMutator<T>>,
+}
+
+impl<T> Default for Path<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
+    fn default() -> Self {
+        Self {
+            context: None,
+            context_stream: PathContextStream::PS(PathString::<T>::default()),
+            point_radius: PointRadiusEnum::Val(T::zero()),
+            projection_stream: None,
+            projection: None,
+        }
+    }
 }
 
 impl<T> Path<T>
 where
-    T: AddAssign + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     pub fn generate(
-        pm: ProjectionMutator<T>,
+        projection: Option<ProjectionMutator<T>>,
         context: Option<CanvasRenderingContext2d>,
-    ) -> Path<T> {
-        Path {
-            point_radius: PointRadiusEnum::Val(T::from(4.5).unwrap()),
-            pm,
-            context,
-            context_stream: None,
-            projection_stream: None,
-        }
+    ) -> Self {
+        Self::default().projection(projection).context(context)
     }
 
-    // #[inline]
-    // fn path(&self, object: Option<DataObject<T>>) -> PathResultEnum<T> {
-    //     match object{
-    //         Some(object) => {
-    //             match self.point_radius{
-    //                 Some(point_radius) => {
-    //                     let radius = (self.point_radius)(self,object);
-    //                     context_stream.point_radius(radius)
-    //                 }
-    //                 None => {
+    #[inline]
+    fn from_object(&mut self, object: Option<DataObject<T>>) -> Option<PathResultEnum<T>> {
+        match object {
+            Some(object) => {
+                // match self.point_radius{
+                //     Some(point_radius) => {
+                //         let radius = (self.point_radius)(self,object);
+                //         context_stream.point_radius(radius)
+                //     }
+                //     None => {
 
-    //                 }
-    //             }
-    //         }
-    //         None => {
-    //         }
-    //     }
+                //     }
+                // }
+                match &self.projection {
+                    Some(ps) => {
+                        object.to_stream(
+                            &mut ps
+                                .stream(StreamDst::PathContextStream(self.context_stream.clone())),
+                        );
+                    }
+                    None => {
+                        panic!("How to handle no projection dropping projection.");
+                    }
+                }
+            }
+            None => {}
+        }
 
-    //     self.context_stream.unwrap().result()
-    // }
+        self.context_stream.result()
+    }
 
     #[inline]
     pub fn area(&self, object: &DataObject<T>) -> Option<PathResultEnum<T>>
     where
         T: CoordFloat + FloatConst,
     {
-        let mut stream_in = self.pm.stream(StreamDst::PAS(PathAreaStream::default()));
-        object.to_stream(&mut stream_in);
-        let end_point = stream_in.get_dst();
+        match &self.projection {
+            Some(projection) => {
+                let mut stream_in = projection.stream(StreamDst::PAS(PathAreaStream::default()));
+                object.to_stream(&mut stream_in);
+                let end_point = stream_in.get_dst();
 
-        match end_point {
-            StreamDst::PAS(mut pas) => pas.result(),
-            _ => panic!("unexpected end_point"),
+                match end_point {
+                    StreamDst::PAS(mut pas) => pas.result(),
+                    _ => panic!("unexpected end_point"),
+                }
+            }
+            None => None,
         }
     }
 
-    // fn set_projection(&mut self, projection: Option<ProjectionMutator<T>>) {
-    //     match projection {
-    //         None => {
-    //             self.pm = ProjectionMutator::default();
-    //             self.projection_stream = Box::new(|_| StreamTransformRadians::default());
-    //         }
-    //         Some(projection) => {
-    //             self.pm = projection;
-    //             // self.projection_stream = projection.stream();
-    //         }
-    //     }
-    // }
+    fn projection(mut self, projection: Option<ProjectionMutator<T>>) -> Self {
+        match projection {
+            None => {
+                self.projection = None;
+                self.projection_stream = Some(PathContextStream::PS(PathString::default()));
+                Self::default()
+            }
+            Some(projection) => {
+                self.projection = Some(projection);
+                // self.projection_stream = projection.stream();
+                self
+            }
+        }
+    }
 
     // pub fn projection(p_in: Option<ProjectionMutator<T>>) -> Path<T>
     // where
@@ -114,19 +145,19 @@ where
     // }
 
     // #[inline]
-    // fn get_context(&self) -> Option<Box<dyn PointRadiusTrait<T>>> {
-    //     self.context_stream
+    // fn get_context(&self) -> Option<Box<dyn PointRadiusTrait<PrtT=T>>> {
+    //     self.context_stream.as_ref().unwrap()
     // }
 
-    fn context(&mut self, c_in: Option<CanvasRenderingContext2d>) {
+    fn context(mut self, c_in: Option<CanvasRenderingContext2d>) -> Self {
         match c_in {
             None => {
                 self.context = None;
-                // self.context_stream = Some(Box::new(PathString::new()));
+                self.context_stream = PathContextStream::PS(PathString::default());
             }
-            Some(ref _c) => {
-                self.context = c_in;
-                // self.context_stream = Some(Box::new(PathContext::new(c)));
+            Some(c) => {
+                self.context = Some(c.clone());
+                self.context_stream = PathContextStream::PC(PathContext::new(c));
             }
         }
         match &self.point_radius {
@@ -134,12 +165,10 @@ where
                 // do nothing.
             }
             PointRadiusEnum::Val(pr) => {
-                if self.context_stream.is_some() {
-                    self.context_stream.as_ref().unwrap().point_radius(*pr);
-                }
+                self.context_stream.point_radius(Some(*pr));
             }
         }
-        // self
+        self
     }
 
     // #[inline]
@@ -148,18 +177,21 @@ where
     // }
 
     #[inline]
-    fn point_radius(mut self, input: PointRadiusEnum<T>) {
-        match input {
-            PointRadiusEnum::F(ref _input_fn) => {
-                self.point_radius = input;
-            }
-            PointRadiusEnum::Val(input_val) => {
-                if self.context_stream.is_some() {
-                    self.context_stream.unwrap().point_radius(input_val);
+    fn point_radius(mut self, input: PointRadiusEnum<T>) -> Self {
+        self.point_radius = match input {
+            PointRadiusEnum::F(ref _input_fn) => input,
+            PointRadiusEnum::Val(input_value) => {
+                match &mut self.context_stream {
+                    PathContextStream::PS(ps) => {
+                        ps.point_radius(Some(input_value));
+                    }
+                    PathContextStream::PC(pc) => {
+                        pc.point_radius(Some(input_value));
+                    }
                 }
-                self.point_radius = input;
+                input
             }
-        }
-        // self
+        };
+        self
     }
 }

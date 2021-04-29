@@ -2,14 +2,17 @@ pub mod area_stream;
 pub mod path;
 
 mod context;
+pub mod path_context_stream;
 mod string;
 
 use std::collections::VecDeque;
 use std::default::Default;
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
 
@@ -38,7 +41,11 @@ pub trait PathResult // where
 
 trait PointRadiusTrait {
     type PrtT;
-    fn point_radius(&self, val: Self::PrtT);
+    // TODO must add getter here.
+    // There are complication about the mix return type here.
+    // PathContext or PathString .. wrapped in a PathContextStream!
+    // fn get_point_radius...
+    fn point_radius(&mut self, val: Self::PrtT);
 }
 
 // #[derive(Clone)]
@@ -75,6 +82,6 @@ trait PathTrait: PointRadiusTrait // where
 
 trait PathStreamTrait<T>: Stream<T> + PathTrait + PathResult
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
 }

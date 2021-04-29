@@ -1,14 +1,18 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::{coords_iter::CoordsIter, Coordinate, Polygon};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::stream_line::stream_line;
 use super::Stream;
 use super::Streamable;
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Streamable<T> for Polygon<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable<T>
+    for Polygon<T>
+{
     type SC = Coordinate<T>;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
         stream.polygon_start();

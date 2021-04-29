@@ -15,10 +15,12 @@ mod triangle;
 pub mod stream_dst;
 
 use std::fmt::Debug;
+use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use stream_dst::StreamDst;
@@ -26,7 +28,7 @@ use stream_dst::StreamDst;
 /// Applies to DataObject's
 pub trait Streamable<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type SC;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>);
@@ -62,7 +64,7 @@ where
 
 pub trait Stream<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C;
     fn point(&mut self, _p: &Self::C, _m: Option<u8>);

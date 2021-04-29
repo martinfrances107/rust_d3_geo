@@ -1,9 +1,11 @@
 use std::cell::RefCell;
 use std::fmt::Debug;
+use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::rotation::rotate_radians_transform::rotate_radians_transform;
@@ -49,7 +51,7 @@ where
 
 impl<T> CircleGenerator<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     pub fn circle(&self) -> CircleStream<T> {
         let c = self.center;

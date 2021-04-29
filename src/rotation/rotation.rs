@@ -1,6 +1,8 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::rotate_radians_transform::rotate_radians_transform;
@@ -26,7 +28,9 @@ impl<'a, T: 'a + CoordFloat + Default + FloatConst> Rotation<T> {
     }
 }
 
-impl<T: AddAssign + CoordFloat + Default + FloatConst> Transform for Rotation<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+    for Rotation<T>
+{
     type TcC = Coordinate<T>;
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.transform(&Coordinate {

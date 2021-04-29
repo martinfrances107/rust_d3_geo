@@ -1,12 +1,16 @@
+use std::fmt::Display;
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
-use std::ops::AddAssign;
+use num_traits::AsPrimitive;
+
+use crate::Transform;
 
 use super::projection::Projection;
 use super::projection_mutator::ProjectionMutator;
 use super::ProjectionRawEnum;
-use crate::Transform;
 
 #[derive(Clone, Debug, Default)]
 pub struct EquirectangularRaw<T> {
@@ -16,7 +20,7 @@ pub struct EquirectangularRaw<T> {
 
 impl<T> EquirectangularRaw<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     pub fn gen_projection_mutator() -> ProjectionMutator<T> {
         let e = ProjectionRawEnum::E(EquirectangularRaw::default());

@@ -1,10 +1,12 @@
 use std::fmt::Debug;
+use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
@@ -56,7 +58,7 @@ where
 
 impl<T> Transform for RotateRadiansEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {

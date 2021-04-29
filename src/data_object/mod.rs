@@ -1,5 +1,7 @@
+use std::fmt::Display;
 use std::ops::AddAssign;
 
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use geo::CoordFloat;
@@ -59,7 +61,7 @@ where
 
 impl<T> Streamable<T> for DataObject<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type SC = Coordinate<T>;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {

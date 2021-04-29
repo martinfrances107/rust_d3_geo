@@ -1,7 +1,10 @@
+use std::fmt::Display;
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use std::ops::AddAssign;
 
 use super::antimeridian::line::Line as AntimeridianLine;
 use super::circle::line::Line as CircleLine;
@@ -13,7 +16,7 @@ use crate::stream::{Clean, CleanEnum};
 #[derive(Clone, Debug)]
 pub enum LineEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     Antimeridian(AntimeridianLine<T>),
     Circle(CircleLine<T>),
@@ -21,7 +24,7 @@ where
 
 impl<T> LineEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     pub fn stream_in(&mut self, stream: LineSinkEnum<T>) {
         match self {
@@ -42,7 +45,7 @@ where
 
 impl<T> Clean for LineEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn clean(&self) -> CleanEnum {
         match self {
@@ -54,7 +57,7 @@ where
 
 impl<T> Stream<T> for LineEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
 

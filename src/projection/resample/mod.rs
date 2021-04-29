@@ -1,10 +1,12 @@
 pub mod resample;
 pub mod resample_none;
 
+use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::clip_sink_enum::ClipSinkEnum;
@@ -18,7 +20,7 @@ use super::resample::resample_none::ResampleNone;
 #[derive(Clone, Debug)]
 pub enum ResampleEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     RN(ResampleNone<T>),
     R(Resample<T>),
@@ -27,7 +29,7 @@ where
 /// todo! find a better way.
 impl<T> Stream<T> for ResampleEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
 
@@ -76,7 +78,7 @@ where
 }
 impl<T> ResampleEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     pub fn stream_in(&mut self, stream: ClipSinkEnum<T>) {
@@ -93,7 +95,7 @@ where
 
 pub fn gen_resample_node<T>(project: Compose<T>, delta2: T) -> ResampleEnum<T>
 where
-    T: AddAssign + CoordFloat + Default + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     if delta2.is_zero() {
         ResampleEnum::RN(ResampleNone::new(project))
