@@ -49,9 +49,7 @@ pub trait Clean {
     /// A clip trait.
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
-    fn clean(&self) -> CleanEnum {
-        panic!("must related code to enum");
-    }
+    fn clean(&self) -> CleanEnum;
 }
 
 #[derive(Clone, Default, Debug)]
