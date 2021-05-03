@@ -6,12 +6,14 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::stream::stream_dst::StreamDst;
+use crate::stream::Clean;
+use crate::stream::CleanEnum;
+use crate::stream::Stream;
+
 use super::antimeridian::line::Line as AntimeridianLine;
 use super::circle::line::Line as CircleLine;
 use super::line_sink_enum::LineSinkEnum;
-use crate::stream::stream_dst::StreamDst;
-use crate::stream::Stream;
-use crate::stream::{Clean, CleanEnum};
 
 #[derive(Clone, Debug)]
 pub enum LineEnum<T>
@@ -20,6 +22,7 @@ where
 {
     Antimeridian(AntimeridianLine<T>),
     Circle(CircleLine<T>),
+    Blank,
 }
 
 impl<T> LineEnum<T>
@@ -30,6 +33,7 @@ where
         match self {
             LineEnum::Antimeridian(line) => line.stream_in(stream),
             LineEnum::Circle(line) => line.stream_in(stream),
+            LineEnum::Blank => panic!("LineEnum stream_in Shoud not be injecting a blank"),
         }
     }
     // deviation from javascript access to ring_buffer is through
@@ -39,6 +43,7 @@ where
         match self {
             LineEnum::Antimeridian(line) => line.get_stream(),
             LineEnum::Circle(line) => line.get_stream(),
+            LineEnum::Blank => panic!("LineEnum get_stream Should not be returning from  a blank."),
         }
     }
 }
@@ -51,6 +56,7 @@ where
         match self {
             LineEnum::Antimeridian(l) => l.clean(),
             LineEnum::Circle(l) => l.clean(),
+            LineEnum::Blank => panic!("should not be cleaning a blank."),
         }
     }
 }
@@ -66,6 +72,7 @@ where
         match self {
             LineEnum::Antimeridian(antimeridian) => antimeridian.get_dst(),
             LineEnum::Circle(circle) => circle.get_dst(),
+            LineEnum::Blank => panic!("blank has no destinaation"),
         }
     }
 
@@ -74,6 +81,7 @@ where
         match self {
             LineEnum::Antimeridian(antimeridian) => antimeridian.sphere(),
             LineEnum::Circle(circle) => circle.sphere(),
+            LineEnum::Blank => panic!("blank -- sphere!"),
         }
     }
 
@@ -82,6 +90,7 @@ where
         match self {
             LineEnum::Antimeridian(antimeridian) => antimeridian.polygon_start(),
             LineEnum::Circle(circle) => circle.polygon_start(),
+            LineEnum::Blank => panic!("blank -- polygon start!"),
         }
     }
 
@@ -90,6 +99,7 @@ where
         match self {
             LineEnum::Antimeridian(antimeridian) => antimeridian.polygon_end(),
             LineEnum::Circle(circle) => circle.polygon_end(),
+            LineEnum::Blank => panic!("blank -- polygon end!"),
         }
     }
 
@@ -98,6 +108,7 @@ where
         match self {
             LineEnum::Antimeridian(antimeridian) => antimeridian.line_start(),
             LineEnum::Circle(circle) => circle.line_start(),
+            LineEnum::Blank => panic!("blank -- line start!"),
         }
     }
 
@@ -106,6 +117,7 @@ where
         match self {
             LineEnum::Antimeridian(antimeridian) => antimeridian.line_end(),
             LineEnum::Circle(circle) => circle.line_end(),
+            LineEnum::Blank => panic!("blank -- line end!"),
         }
     }
 
@@ -114,8 +126,7 @@ where
         match self {
             LineEnum::Antimeridian(antimeridian) => antimeridian.point(p, m),
             LineEnum::Circle(circle) => circle.point(p, m),
-            // LineEnum::Stub => panic!("calling point on a stub!"),
+            LineEnum::Blank => panic!("blank -- point!"),
         }
     }
-    //// Todo must connect up other stream functions. or find a better way.
 }

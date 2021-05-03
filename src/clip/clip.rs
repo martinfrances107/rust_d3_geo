@@ -69,6 +69,9 @@ where
                 LineEnum::Circle(_) => {
                     panic!("mismatch ");
                 }
+                LineEnum::Blank => {
+                    panic!("Unexpetced used of blank");
+                }
             },
 
             ClipRaw::Circle(r) => match r.base.line {
@@ -106,6 +109,9 @@ where
                         line_end_fn: Self::line_end_default,
                     }
                 }
+                LineEnum::Blank => {
+                    panic!("Unexpected blank.");
+                }
             },
         }
     }
@@ -127,6 +133,9 @@ where
             }
             LineEnum::Circle(line) => {
                 line.stream_in(LineSinkEnum::CSE(self.base.sink.clone()));
+            }
+            LineEnum::Blank => {
+                panic!("cannot attach stream to Blank.");
             }
         }
     }
