@@ -40,10 +40,10 @@ where
 // should be rejoined.
 #[derive(Debug, Clone, Copy)]
 pub enum CleanEnum {
+    Undefined,
     IntersectionsOrEmpty,
     NoIntersections,
     IntersectionsRejoin,
-    Undefined,
 }
 
 pub trait Clean {

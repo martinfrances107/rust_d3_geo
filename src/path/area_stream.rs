@@ -67,6 +67,7 @@ where
     }
 
     fn area_point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+        println!("area_point");
         self.area_ring_sum += self.p0.y * p.x - self.p0.x * p.y;
         self.p0 = *p;
     }

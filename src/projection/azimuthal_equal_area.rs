@@ -2,7 +2,6 @@ use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
 
-use derivative::Derivative;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;

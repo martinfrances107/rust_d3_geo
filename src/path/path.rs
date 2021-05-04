@@ -1,23 +1,18 @@
-use std::collections::VecDeque;
 use std::default::Default;
 use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
 
-use crate::clip::buffer::LineElem;
 use crate::path::path_context_stream::PathContextStream;
 use crate::path::string::PathString;
 use crate::path::PathResult;
 use crate::projection::projection_mutator::ProjectionMutator;
-use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
-use crate::stream::StreamSourceDummy;
 use crate::stream::Streamable;
 use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
 
@@ -61,11 +56,12 @@ where
         projection: Option<ProjectionMutator<T>>,
         context: Option<CanvasRenderingContext2d>,
     ) -> Self {
+        println!("path genrate");
         Self::default().projection(projection).context(context)
     }
 
     #[inline]
-    fn from_object(&mut self, object: Option<DataObject<T>>) -> Option<PathResultEnum<T>> {
+    pub fn object(&mut self, object: Option<DataObject<T>>) -> Option<PathResultEnum<T>> {
         match object {
             Some(object) => {
                 // match self.point_radius{
@@ -78,9 +74,9 @@ where
                 //     }
                 // }
                 match &self.projection {
-                    Some(ps) => {
+                    Some(projection) => {
                         object.to_stream(
-                            &mut ps
+                            &mut projection
                                 .stream(StreamDst::PathContextStream(self.context_stream.clone())),
                         );
                     }
@@ -124,7 +120,6 @@ where
             }
             Some(projection) => {
                 self.projection = Some(projection);
-                // self.projection_stream = projection.stream();
                 self
             }
         }

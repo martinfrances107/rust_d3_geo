@@ -29,6 +29,7 @@ pub fn rejoin<T>(
 ) where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
+    println!("clip rejoin: segments: {:#?}", segments);
     let mut start_inside = start_inside;
     let mut subject = Vec::<Intersection<T>>::new();
     let mut clip = Vec::<Intersection<T>>::new();
@@ -40,7 +41,7 @@ pub fn rejoin<T>(
         };
         let mut p0: LineElem<T> = segment[0];
         let mut p1: LineElem<T> = segment[n];
-
+        println!("in segement loop p0 p1 {:?} {:?}", p0, p1);
         if point_equal(p0.p, p1.p) {
             if !p0.m.unwrap().is_zero() && !p1.m.unwrap().is_zero() {
                 stream.line_start();

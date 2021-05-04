@@ -14,9 +14,10 @@ use crate::stream::Clean;
 use crate::stream::CleanEnum;
 use crate::stream::Stream;
 
+use super::antimeridian::line::Line as AntimeridianLine;
 use super::buffer::ClipBuffer;
 use super::buffer::LineElem;
-
+use super::circle::line::Line as CircleLine;
 use super::clip_base::ClipBase;
 use super::clip_raw::ClipRaw;
 use super::clip_sink_enum::ClipSinkEnum;
@@ -47,72 +48,42 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     pub fn new(raw: ClipRaw<T>, start: LineElem<T>) -> Self {
-        let ring_buffer = LineSinkEnum::CB(ClipBuffer::default());
         match raw {
-            ClipRaw::Antimeridian(r) => match &r.base.line {
-                LineEnum::Antimeridian(l) => {
-                    let mut ring_sink = LineEnum::Antimeridian(l.clone());
-                    ring_sink.stream_in(ring_buffer);
-                    Self {
-                        raw: ClipRaw::Antimeridian(r.clone()),
-                        base: ClipBase {
-                            line: LineEnum::Antimeridian(l.clone()),
-                            ring_sink,
-                            start,
-                            ..ClipBase::default()
-                        },
-                        point_fn: Self::point_default,
-                        line_start_fn: Self::line_start_default,
-                        line_end_fn: Self::line_end_default,
-                    }
+            ClipRaw::Antimeridian(raw) => {
+                let ring_buffer = LineSinkEnum::CB(ClipBuffer::default());
+                let mut ring_sink = LineEnum::Antimeridian(AntimeridianLine::default());
+                ring_sink.stream_in(ring_buffer);
+                Self {
+                    raw: ClipRaw::Antimeridian(raw),
+                    base: ClipBase {
+                        line: LineEnum::Antimeridian(AntimeridianLine::default()),
+                        ring_sink,
+                        start,
+                        ..ClipBase::default()
+                    },
+                    point_fn: Self::point_default,
+                    line_start_fn: Self::line_start_default,
+                    line_end_fn: Self::line_end_default,
                 }
-                LineEnum::Circle(_) => {
-                    panic!("mismatch ");
-                }
-                LineEnum::Blank => {
-                    panic!("Unexpetced used of blank");
-                }
-            },
+            }
 
-            ClipRaw::Circle(r) => match r.base.line {
-                LineEnum::Antimeridian(ref l) => {
-                    let line = l.clone();
-                    let mut ring_sink = line.clone();
-                    ring_sink.stream_in(ring_buffer);
-                    Self {
-                        raw: ClipRaw::Circle(r.clone()),
-                        base: ClipBase {
-                            line: LineEnum::Antimeridian(line),
-                            ring_sink: LineEnum::Antimeridian(ring_sink),
-                            start,
-                            ..ClipBase::default()
-                        },
-                        point_fn: Self::point_default,
-                        line_start_fn: Self::line_start_default,
-                        line_end_fn: Self::line_end_default,
-                    }
+            ClipRaw::Circle(raw) => {
+                let ring_buffer = LineSinkEnum::CB(ClipBuffer::default());
+                let mut ring_sink = LineEnum::Circle(CircleLine::new(raw.radius));
+                ring_sink.stream_in(ring_buffer);
+                Self {
+                    raw: ClipRaw::Circle(raw.clone()),
+                    base: ClipBase {
+                        line: LineEnum::Circle(CircleLine::new(raw.radius)),
+                        ring_sink,
+                        start,
+                        ..ClipBase::default()
+                    },
+                    point_fn: Self::point_default,
+                    line_start_fn: Self::line_start_default,
+                    line_end_fn: Self::line_end_default,
                 }
-                LineEnum::Circle(ref l) => {
-                    let line = l.clone();
-                    let mut ring_sink = line.clone();
-                    ring_sink.stream_in(ring_buffer);
-                    Self {
-                        raw: ClipRaw::Circle(r),
-                        base: ClipBase {
-                            line: LineEnum::Circle(line),
-                            ring_sink: LineEnum::Circle(ring_sink),
-                            start,
-                            ..ClipBase::default()
-                        },
-                        point_fn: Self::point_default,
-                        line_start_fn: Self::line_start_default,
-                        line_end_fn: Self::line_end_default,
-                    }
-                }
-                LineEnum::Blank => {
-                    panic!("Unexpected blank.");
-                }
-            },
+            }
         }
     }
 }
@@ -135,61 +106,57 @@ where
                 line.stream_in(LineSinkEnum::CSE(self.base.sink.clone()));
             }
             LineEnum::Blank => {
-                panic!("cannot attach stream to Blank.");
+                panic!("Clip stream_in Should not be injecting stream into a  blank.");
             }
         }
     }
 
+    #[inline]
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        let pv = match &self.raw {
-            ClipRaw::Antimeridian(r) => r.point_visible(p, None),
-            ClipRaw::Circle(r) => r.point_visible(p, None),
-        };
-        if pv {
-            match &mut self.base.sink {
-                ClipSinkEnum::Blank => {
-                    panic!("ClickSinkEnum - actively using an unconnected blank");
-                }
-                ClipSinkEnum::Src(sink) => {
-                    sink.point(p, m);
-                }
-                ClipSinkEnum::Resample(sink) => {
-                    sink.point(p, m);
-                }
-            }
+        println!("clip point_default");
+        if self.raw.point_visible(p, None) {
+            self.base.sink.point(p, m);
         }
     }
 
     #[inline]
     fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        println!("clip point_line");
         self.base.line.point(p, m);
     }
 
     #[inline]
-    fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        self.base.ring.push(LineElem { p: *p, m });
-        self.base.ring_sink.point(p, m);
-    }
-
-    #[inline]
     fn line_start_default(&mut self) {
+        println!("clip line_start_default");
         self.point_fn = Self::point_line;
         self.base.line.line_start();
     }
 
     #[inline]
-    fn ring_start(&mut self) {
-        self.base.ring_sink.line_start();
-        self.base.ring.clear();
-    }
-
-    #[inline]
     fn line_end_default(&mut self) {
+        println!("clip line_end_default");
         self.point_fn = Self::point_default;
         self.base.line.line_end();
     }
 
+    #[inline]
+    fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        println!("clip point_ring {:?} {:?}", p, m);
+        println!("");
+        self.base.ring.push(LineElem { p: *p, m });
+        self.base.ring_sink.point(p, m);
+    }
+
+    #[inline]
+    fn ring_start(&mut self) {
+        println!("clip ring_start");
+        self.base.ring_sink.line_start();
+        self.base.ring.clear();
+        println!("end clip ring_start");
+    }
+
     fn ring_end(&mut self) {
+        println!("clip ring_end  entry {:#?}", self.base.ring);
         let le = self.base.ring[0];
         // javascript drops m here.
         self.point_ring(&le.p, None);
@@ -199,6 +166,7 @@ where
         // deviation from javascript.
         // access to the javascript varible 'ring_buffer' is
         // through the ring_sink varible.
+        // println!("ring_sink {:#?}", self.base.ring_sink);
         let mut ring_segments = match self.base.ring_sink.get_stream().result() {
             Some(PathResultEnum::ClipBufferOutput(result)) => {
                 // Can I find a way of doing this with the expense of dynamic conversion.
@@ -209,6 +177,7 @@ where
             }
             None => panic!("was expecting something."),
         };
+        println!("clip ring_end() - ring segments {:#?}", ring_segments);
         let n = ring_segments.len();
         let m;
         let mut point: Coordinate<T>;
@@ -223,10 +192,11 @@ where
         if n == 0 {
             return;
         }
-
+        println!("no intersections n = {:?}", n);
         // No intersections.
         match clean {
             CleanEnum::NoIntersections => {
+                println!("about to clean good path");
                 let segment = ring_segments
                     .pop_front()
                     .expect("We have previously checked that the .len() is >0 ( n ) ");
@@ -246,11 +216,10 @@ where
                 return;
             }
             CleanEnum::IntersectionsRejoin => {
+                println!("bad path");
                 // Rejoin connected segments.
                 // TODO reuse ringBuffer.rejoin()?
                 if n > 1 {
-                    // ringSegments.push(ringSegments.pop().concat(ringSegments.shift()));
-
                     let pb = [
                         ring_segments.pop_back().unwrap(),
                         ring_segments.pop_front().unwrap(),
@@ -259,7 +228,10 @@ where
                     ring_segments.push_back(pb);
                 }
             }
-            _ => {}
+            CleanEnum::IntersectionsOrEmpty => {}
+            CleanEnum::Undefined => {
+                panic!("must be defined by now.")
+            }
         }
 
         let filtered: Vec<Vec<LineElem<T>>> = ring_segments
@@ -301,6 +273,7 @@ where
     }
 
     fn polygon_start(&mut self) {
+        println!("clip  polygon start");
         self.point_fn = Self::point_ring;
         self.line_start_fn = Self::ring_start;
         self.line_end_fn = Self::ring_end;
@@ -309,9 +282,11 @@ where
     }
 
     fn polygon_end(&mut self) {
+        println!("clip polygon_end");
         self.point_fn = Self::point_default;
         self.line_start_fn = Self::line_start_default;
         self.line_end_fn = Self::line_end_default;
+        println!("about to merge {:?}", self.base.segments);
         let segments_merged: Vec<Vec<LineElem<T>>> =
             self.base.segments.clone().into_iter().flatten().collect();
         let start_inside = contains(&self.base.polygon, &self.base.start);
@@ -320,13 +295,14 @@ where
             if !self.base.polygon_started {
                 match &mut self.base.sink {
                     ClipSinkEnum::Blank => {
-                        panic!("ClickSinkEnum - actively using an unconnected blank");
+                        panic!("ClickSinkEnum - Actively using an unconnected blank.");
                     }
                     ClipSinkEnum::Src(s) => s.polygon_start(),
                     ClipSinkEnum::Resample(s) => s.polygon_start(),
                 };
                 self.base.polygon_started = true;
             }
+            println!("into rejoin this path");
             rejoin(
                 &segments_merged,
                 self.raw.clone(),
@@ -337,7 +313,7 @@ where
             if !self.base.polygon_started {
                 match &mut self.base.sink {
                     ClipSinkEnum::Blank => {
-                        panic!("ClickSinkEnum - actively using an unconnected blank");
+                        panic!("ClickSinkEnum - Actively using an unconnected blank.");
                     }
                     ClipSinkEnum::Src(s) => s.polygon_start(),
                     ClipSinkEnum::Resample(s) => s.polygon_start(),
@@ -346,7 +322,7 @@ where
             }
             match &mut self.base.sink {
                 ClipSinkEnum::Blank => {
-                    panic!("ClickSinkEnum - actively using an unconnected blank");
+                    panic!("ClickSinkEnum - Actively using an unconnected blank.");
                 }
                 ClipSinkEnum::Src(s) => {
                     s.line_start();
@@ -363,7 +339,7 @@ where
         if self.base.polygon_started {
             match &mut self.base.sink {
                 ClipSinkEnum::Blank => {
-                    panic!("ClickSinkEnum - actively using an unconnected blank");
+                    panic!("ClickSinkEnum - Actively using an unconnected blank.");
                 }
                 ClipSinkEnum::Src(s) => s.polygon_end(),
                 ClipSinkEnum::Resample(s) => s.polygon_end(),
@@ -372,6 +348,7 @@ where
         }
         self.base.segments.clear();
         self.base.polygon.clear();
+        println!("clip polygon_end -- exit");
     }
 
     fn sphere(&mut self) {
@@ -391,7 +368,7 @@ where
                 s.polygon_end();
             }
             ClipSinkEnum::Blank => {
-                panic!("ClickSinkEnum - actively using an unconnected blank");
+                panic!("ClickSinkEnum - Actively using an unconnected blank.");
             }
         };
     }

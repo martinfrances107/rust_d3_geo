@@ -9,7 +9,6 @@ use num_traits::AsPrimitive;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
-use super::azimuthal::azimuthal_raw;
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;

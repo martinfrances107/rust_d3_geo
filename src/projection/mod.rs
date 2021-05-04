@@ -1,4 +1,3 @@
-pub mod azimuthalEqualArea;
 pub mod equirectangular;
 pub mod orthographic;
 pub mod projection;
@@ -11,6 +10,7 @@ pub mod stream_transform;
 pub mod stream_transform_radians;
 
 pub mod azimuthal;
+mod azimuthal_equal_area;
 mod scale_translate;
 
 use std::fmt::Display;
@@ -23,7 +23,7 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
-use azimuthalEqualArea::AzimuthalEqualAreaRaw;
+use azimuthal_equal_area::AzimuthalEqualAreaRaw;
 use equirectangular::EquirectangularRaw;
 use orthographic::OrthographicRaw;
 use stereographic::StereographicRaw;

@@ -62,8 +62,8 @@ mod area_test {
             ]),
             vec![],
         )));
-        let ep = equirectangular::<f64>();
-        assert_eq!(test_area(ep, &object), 25.0);
+        let eq = equirectangular::<f64>();
+        assert_eq!(test_area(eq, &object), 25.0);
     }
 }
 

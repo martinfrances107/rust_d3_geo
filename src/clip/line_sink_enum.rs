@@ -27,6 +27,7 @@ impl<T> LineSinkEnum<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
+    #[inline]
     pub fn result(&mut self) -> Option<PathResultEnum<T>> {
         match self {
             LineSinkEnum::CB(l) => l.result(),
@@ -43,42 +44,55 @@ where
 {
     type C = Coordinate<T>;
 
+    #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         match self {
             LineSinkEnum::CSE(cse) => cse.point(p, m),
             LineSinkEnum::CB(cb) => cb.point(p, m),
         }
     }
+
+    #[inline]
     fn sphere(&mut self) {
         match self {
             LineSinkEnum::CSE(cse) => cse.sphere(),
             LineSinkEnum::CB(cb) => cb.sphere(),
         }
     }
+
+    #[inline]
     fn line_start(&mut self) {
         match self {
             LineSinkEnum::CSE(cse) => cse.line_start(),
             LineSinkEnum::CB(cb) => cb.line_start(),
         }
     }
+
+    #[inline]
     fn line_end(&mut self) {
         match self {
             LineSinkEnum::CSE(cse) => cse.line_end(),
             LineSinkEnum::CB(cb) => cb.line_end(),
         }
     }
+
+    #[inline]
     fn polygon_start(&mut self) {
         match self {
             LineSinkEnum::CSE(cse) => cse.sphere(),
             LineSinkEnum::CB(cb) => cb.sphere(),
         }
     }
+
+    #[inline]
     fn polygon_end(&mut self) {
         match self {
             LineSinkEnum::CSE(cse) => cse.sphere(),
             LineSinkEnum::CB(cb) => cb.sphere(),
         }
     }
+
+    #[inline]
     fn get_dst(&self) -> StreamDst<T> {
         match self {
             LineSinkEnum::CSE(cse) => cse.get_dst(),

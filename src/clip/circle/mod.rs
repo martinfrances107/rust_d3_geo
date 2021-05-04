@@ -16,7 +16,6 @@ use crate::stream::Stream;
 
 use super::buffer::LineElem;
 use super::clip::Clip;
-use super::clip_base::ClipBase;
 use super::clip_raw::ClipRaw;
 use super::ClipTraitRaw;
 
@@ -25,11 +24,10 @@ pub struct ClipCircle<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display,
 {
-    radius: T,
+    pub radius: T,
     small_radius: bool,
     delta: T,
     cr: T,
-    pub base: ClipBase<T>,
 }
 
 /// Returns a clip object
@@ -64,7 +62,6 @@ where
             delta: T::from(6u8).unwrap() * radius,
             small_radius,
             cr,
-            base: ClipBase::default(),
         });
 
         Clip::new(cr, start)

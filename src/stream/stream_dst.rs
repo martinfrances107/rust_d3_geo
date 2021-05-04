@@ -37,7 +37,7 @@ where
 
     fn get_dst(&self) -> StreamDst<T> {
         match self {
-            StreamDst::Context2D(c) => {
+            StreamDst::Context2D(_c) => {
                 panic!("what todo here.");
             }
             StreamDst::PathContextStream(pas) => pas.get_dst(),
@@ -52,7 +52,7 @@ where
     }
     fn sphere(&mut self) {
         match self {
-            StreamDst::Context2D(c) => {
+            StreamDst::Context2D(_c) => {
                 panic!("what todo here.");
             }
             StreamDst::PathContextStream(pas) => pas.sphere(),
@@ -67,7 +67,7 @@ where
     }
     fn polygon_start(&mut self) {
         match self {
-            StreamDst::Context2D(c) => {
+            StreamDst::Context2D(_c) => {
                 panic!("what todo here.");
             }
             StreamDst::PathContextStream(pas) => pas.polygon_start(),
@@ -82,7 +82,7 @@ where
     }
     fn polygon_end(&mut self) {
         match self {
-            StreamDst::Context2D(c) => {
+            StreamDst::Context2D(_c) => {
                 panic!("what todo here.");
             }
             StreamDst::PathContextStream(pas) => pas.polygon_end(),
@@ -97,7 +97,7 @@ where
     }
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
         match self {
-            StreamDst::Context2D(c) => {
+            StreamDst::Context2D(_c) => {
                 panic!("what todo here.");
             }
             StreamDst::PathContextStream(pas) => pas.point(p, m),
@@ -112,7 +112,7 @@ where
     }
     fn line_start(&mut self) {
         match self {
-            StreamDst::Context2D(c) => {
+            StreamDst::Context2D(_c) => {
                 panic!("what todo here.");
             }
             StreamDst::PathContextStream(pas) => pas.line_start(),
@@ -127,7 +127,7 @@ where
     }
     fn line_end(&mut self) {
         match self {
-            StreamDst::Context2D(c) => {
+            StreamDst::Context2D(_c) => {
                 panic!("what todo here.");
             }
             StreamDst::PathContextStream(pas) => pas.line_end(),

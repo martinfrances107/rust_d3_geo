@@ -4,7 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-    
+
     {
       "type": "lldb",
       "request": "launch",
@@ -119,6 +119,24 @@
       "args": [],
       "cwd": "${workspaceFolder}"
     }
-
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "'rust_d3_geo: clipcircle_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=clipcircle_test",
+          "--package=rust_d3_geo"
+        ],
+        "filter": {
+          "name": "clipcircle_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
   ]
 }

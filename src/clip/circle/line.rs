@@ -124,6 +124,7 @@ where
     /// and last points were visible.
     #[inline]
     fn clean(&self) -> CleanEnum {
+        println!("line(c) clean() ");
         match self.clean {
             CleanEnum::IntersectionsOrEmpty => CleanEnum::IntersectionsOrEmpty,
             CleanEnum::NoIntersections | CleanEnum::IntersectionsRejoin => {

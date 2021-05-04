@@ -6,7 +6,6 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use super::antimeridian::line::Line as AntimeridianLine;
 use super::buffer::LineElem;
 use super::clip_sink_enum::ClipSinkEnum;
 use super::line_enum::LineEnum;
@@ -31,11 +30,11 @@ where
         let mut segments = VecDeque::new();
         segments.push_front(vec![vec![]]);
         Self {
-            line: LineEnum::Antimeridian(AntimeridianLine::default()),
+            line: LineEnum::Blank,
             polygon_started: false,
             polygon: vec![vec![]],
             ring: vec![],
-            ring_sink: LineEnum::Antimeridian(AntimeridianLine::default()),
+            ring_sink: LineEnum::Blank,
             segments,
             sink: ClipSinkEnum::Blank,
             start: LineElem {

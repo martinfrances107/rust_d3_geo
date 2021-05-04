@@ -19,25 +19,8 @@ pub struct LineElem<T: CoordFloat> {
 }
 #[derive(Clone, Debug, Default)]
 pub struct ClipBuffer<T: CoordFloat> {
+    // line: Vec<LineElem<T>>,
     lines: VecDeque<Vec<LineElem<T>>>,
-}
-
-impl<T: CoordFloat + FloatConst> ClipBuffer<T> {
-    // #[inline]
-    // pub fn stream_in(&mut self, _stream: Box<dyn Stream<T, C = Coordinate<T>>>) {
-    //     panic!("Should I call stream_in on a buffer!");
-    // }
-
-    fn rejoin(&mut self) {
-        if self.lines.len() > 1 {
-            let pb = [
-                self.lines.pop_back().unwrap(),
-                self.lines.pop_front().unwrap(),
-            ]
-            .concat();
-            self.lines.push_front(pb);
-        }
-    }
 }
 
 impl<T: CoordFloat> PathResult for ClipBuffer<T> {
@@ -55,23 +38,47 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     type C = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: &Self::C, m: Option<u8>) {
+        println!("ClipBuffer point {:?} {:?}", p, m);
         match self.lines.back_mut() {
             Some(line) => {
                 line.push(LineElem { p: *p, m });
             }
             None => panic!("buffers: lines was not properly initialised."),
         }
+        // println!("lines {:?}", self.lines);
     }
 
     fn sphere(&mut self) {}
-    fn line_end(&mut self) {}
+    fn line_end(&mut self) {
+        println!("clipBuffer line_end() -- noop");
+    }
     #[inline]
     fn line_start(&mut self) {
-        self.lines.push_back(Vec::new());
+        println!("clipBuffer line_start()");
+        // self.line.clear();
+        self.lines.push_back(vec![]);
+        println!("ClipBuffer line_start lines {:#?}", self.lines);
+        println!("");
     }
-    fn polygon_start(&mut self) {}
-    fn polygon_end(&mut self) {}
+    fn polygon_start(&mut self) {
+        println!("clipBuffer polygon_start()");
+    }
+    fn polygon_end(&mut self) {
+        println!("clipBuffer polygon_end()");
+    }
     fn get_dst(&self) -> StreamDst<T> {
         todo!("ClipBuffer get_dst() should never be called.");
     }
 }
+// mpl<T: CoordFloat + FloatConst> ClipBuffer<T> {
+//     fn rejoin(&mut self) {
+//         if self.lines.len() > 1 {
+//             let pb = [
+//                 self.lines.pop_back().unwrap(),
+//                 self.lines.pop_front().unwrap(),
+//             ]
+//             .concat();
+//             self.lines.push_front(pb);
+//         }
+//     }
+// }

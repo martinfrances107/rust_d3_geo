@@ -6,12 +6,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use super::orthographic::OrthographicRaw;
-use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
-use super::resample::resample::Resample;
-use super::scale_translate_rotate::ScaleTranslateRotate;
-use super::ProjectionRawEnum;
+use crate::clip::antimeridian::ClipAntimeridian;
 use crate::clip::circle::ClipCircle;
 use crate::clip::clip::Clip;
 use crate::clip::clip_sink_enum::ClipSinkEnum;
@@ -26,6 +21,12 @@ use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
 use crate::stream::stream_dst::StreamDst;
 use crate::Transform;
+
+use super::projection::Projection;
+use super::projection::StreamOrValueMaybe;
+use super::resample::resample::Resample;
+use super::scale_translate_rotate::ScaleTranslateRotate;
+use super::ProjectionRawEnum;
 
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -96,7 +97,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
             lambda: T::zero(),
             phi: T::zero(),
             rotate: RotateRadiansEnum::I(RotationIdentity::default()), // pre-rotate
-            preclip: ClipCircle::gen_clip(T::one()),                   // stub value
+            preclip: ClipAntimeridian::gen_clip(),                     // stub value
             postclip: |x: ClipSinkEnum<T>| x,
             sx: T::one(), // reflectX
             sy: T::one(), // reflectX
@@ -117,6 +118,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
 
     #[inline]
     fn reset(self) -> ProjectionMutator<T> {
+        println!("projection_mutator reset");
         // self.cache_stream = None;
         // self.cache = None;
         self
@@ -180,7 +182,6 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
 
         let mut resample = self.project_resample.clone();
         resample.stream_in(postclip);
-
         let mut preclip = self.preclip.clone();
         preclip.stream_in(ClipSinkEnum::Resample(resample));
 
@@ -278,15 +279,15 @@ where
                 let theta = angle.to_radians();
                 self.theta = Some(theta);
                 self.preclip = ClipCircle::gen_clip(theta);
-                self
             }
             StreamOrValueMaybe::SP(_preclip) => {
-                self.theta = None;
+                todo!("must sort this out.");
+                // self.theta = None;
                 // self.preclip = preclip;
                 // self.reset();
-                self
             }
         }
+        self.reset()
     }
 
     fn get_extent(&self) -> Option<[Coordinate<T>; 2]> {

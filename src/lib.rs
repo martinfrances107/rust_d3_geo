@@ -4,9 +4,6 @@
 // #![allow(dead_code)]
 // #![allow(unused_imports)]
 
-use geo::{CoordFloat, Coordinate};
-use std::marker::PhantomData;
-
 extern crate derivative;
 extern crate rust_d3_array;
 extern crate web_sys;
