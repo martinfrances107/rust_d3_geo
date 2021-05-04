@@ -38,7 +38,7 @@ where
     fn default() -> Self {
         Self {
             c0: 0u8,
-            clean: CleanEnum::IntersectionsOrEmpty,
+            clean: CleanEnum::Undefined,
             radius: T::zero(),
             cr: T::zero(),
             not_hemisphere: false,
@@ -133,6 +133,7 @@ where
                     CleanEnum::IntersectionsOrEmpty
                 }
             }
+            CleanEnum::Undefined => panic!("Should not clean an undefined value."),
         }
     }
 }

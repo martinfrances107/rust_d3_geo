@@ -40,9 +40,7 @@ where
             radius: T::from(4.5).unwrap(),
         }
     }
-
 }
-
 
 impl<T> PointRadiusTrait for PathContext<T>
 where

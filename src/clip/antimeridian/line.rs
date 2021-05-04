@@ -35,7 +35,7 @@ where
     #[inline]
     fn default() -> Self {
         Line {
-            clean: CleanEnum::IntersectionsOrEmpty,
+            clean: CleanEnum::Undefined,
             lambda0: T::nan(),
             phi0: T::nan(),
             sign0: T::nan(),
@@ -70,6 +70,7 @@ where
             CleanEnum::IntersectionsOrEmpty => CleanEnum::IntersectionsRejoin,
             CleanEnum::NoIntersections => CleanEnum::NoIntersections,
             CleanEnum::IntersectionsRejoin => CleanEnum::IntersectionsOrEmpty,
+            CleanEnum::Undefined => panic!("Undefined should not be cleaned."),
         }
     }
 }

@@ -43,6 +43,7 @@ pub enum CleanEnum {
     IntersectionsOrEmpty,
     NoIntersections,
     IntersectionsRejoin,
+    Undefined,
 }
 
 pub trait Clean {
