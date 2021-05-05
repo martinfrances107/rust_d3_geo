@@ -148,16 +148,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     fn polygon_end(&mut self) {}
 
     fn get_dst(&self) -> StreamDst<T> {
-        match &self.stream {
-            LineSinkEnum::CB(cb) => cb.get_dst(),
-            LineSinkEnum::CSE(cse) => match cse {
-                ClipSinkEnum::Blank => {
-                    panic!("calling get_dst on a blank");
-                }
-                ClipSinkEnum::Resample(r) => r.get_dst(),
-                ClipSinkEnum::Src(s) => s.get_dst(),
-            },
-        }
+        self.stream.get_dst()
     }
     fn line_start(&mut self) {
         self.v00 = false;
@@ -194,18 +185,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
             self.v00 = v;
             self.v0 = v;
             if v {
-                match &mut self.stream {
-                    LineSinkEnum::CB(stream) => {
-                        stream.line_start();
-                    }
-                    LineSinkEnum::CSE(stream) => match stream {
-                        ClipSinkEnum::Blank => {
-                            panic!("ClickSinkEnum - actively using an unconnected blank");
-                        }
-                        ClipSinkEnum::Resample(stream) => stream.line_start(),
-                        ClipSinkEnum::Src(stream) => stream.line_start(),
-                    },
-                }
+                self.stream.line_start();
             }
         }
         if v != self.v0 {
@@ -239,68 +219,18 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                 self.clean = CleanEnum::IntersectionsOrEmpty;
                 if v {
                     // outside going in
-                    match self.stream.clone() {
-                        LineSinkEnum::CB(mut stream) => {
-                            stream.line_start();
-                        }
-                        LineSinkEnum::CSE(stream) => match stream {
-                            ClipSinkEnum::Blank => {
-                                panic!("ClickSinkEnum - actively using an unconnected blank");
-                            }
-                            ClipSinkEnum::Resample(mut stream) => {
-                                stream.line_start();
-                            }
-                            ClipSinkEnum::Src(mut stream) => {
-                                stream.line_start();
-                            }
-                        },
-                    }
+                    self.stream.line_start();
                     match intersect(&point1, &self.point0.clone().unwrap(), self.cr, false) {
                         IntersectReturn::None => {
                             // TODO Should I do a stream Point here??
                             next = None;
                         }
                         IntersectReturn::One(p) => {
-                            // self.stream.point(p, None);
-                            match self.stream.clone() {
-                                LineSinkEnum::CB(mut stream) => {
-                                    stream.point(&p, None);
-                                }
-                                LineSinkEnum::CSE(stream) => {
-                                    match stream {
-                                        ClipSinkEnum::Blank => {
-                                            panic!("ClickSinkEnum - actively using an unconnected blank");
-                                        }
-                                        ClipSinkEnum::Resample(mut stream) => {
-                                            stream.point(&p, None);
-                                        }
-                                        ClipSinkEnum::Src(mut stream) => {
-                                            stream.point(&p, None);
-                                        }
-                                    }
-                                }
-                            }
+                            self.stream.point(&p, None);
                             next = Some(p);
                         }
                         IntersectReturn::Two([p, _]) => {
-                            match self.stream.clone() {
-                                LineSinkEnum::CB(mut stream) => {
-                                    stream.point(&p, None);
-                                }
-                                LineSinkEnum::CSE(stream) => {
-                                    match stream {
-                                        ClipSinkEnum::Blank => {
-                                            panic!("ClickSinkEnum - actively using an unconnected blank");
-                                        }
-                                        ClipSinkEnum::Resample(mut stream) => {
-                                            stream.point(&p, None);
-                                        }
-                                        ClipSinkEnum::Src(mut stream) => {
-                                            stream.point(&p, None);
-                                        }
-                                    }
-                                }
-                            }
+                            self.stream.point(&p, None);
                             // p0_next = p;
                             panic!("Silently dropping second point.");
                         }
@@ -315,27 +245,8 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                             panic!("Must deal with no intersect.");
                         }
                         IntersectReturn::One(p) => {
-                            match self.stream.clone() {
-                                LineSinkEnum::CB(mut stream) => {
-                                    stream.point(&p, Some(2));
-                                    stream.line_end();
-                                }
-                                LineSinkEnum::CSE(stream) => {
-                                    match stream {
-                                        ClipSinkEnum::Blank => {
-                                            panic!("ClickSinkEnum - actively using an unconnected blank");
-                                        }
-                                        ClipSinkEnum::Resample(mut stream) => {
-                                            stream.point(&p, Some(2));
-                                            stream.line_end();
-                                        }
-                                        ClipSinkEnum::Src(mut stream) => {
-                                            stream.point(&p, Some(2));
-                                            stream.line_end();
-                                        }
-                                    }
-                                }
-                            }
+                            self.stream.point(&p, Some(2));
+                            self.stream.line_end();
                             next = Some(p);
                         }
                         IntersectReturn::Two([_p, _]) => {
@@ -360,57 +271,15 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                         IntersectReturn::Two(t) => {
                             self.clean = CleanEnum::IntersectionsOrEmpty;
                             if self.small_radius {
-                                match self.stream.clone() {
-                                    LineSinkEnum::CB(mut stream) => {
-                                        stream.line_start();
-                                        stream.point(&t[0], None);
-                                        stream.point(&t[1], None);
-                                        stream.line_end();
-                                    }
-                                    LineSinkEnum::CSE(stream) => match stream {
-                                        ClipSinkEnum::Blank => {
-                                            panic!("ClickSinkEnum - actively using an unconnected blank");
-                                        }
-                                        ClipSinkEnum::Resample(mut stream) => {
-                                            stream.line_start();
-                                            stream.point(&t[0], None);
-                                            stream.point(&t[1], None);
-                                            stream.line_end();
-                                        }
-                                        ClipSinkEnum::Src(mut stream) => {
-                                            stream.line_start();
-                                            stream.point(&t[0], None);
-                                            stream.point(&t[1], None);
-                                            stream.line_end();
-                                        }
-                                    },
-                                }
+                                self.stream.line_start();
+                                self.stream.point(&t[0], None);
+                                self.stream.point(&t[1], None);
+                                self.stream.line_end();
                             } else {
-                                match self.stream.clone() {
-                                    LineSinkEnum::CB(mut stream) => {
-                                        stream.point(&t[1], None);
-                                        stream.line_end();
-                                        stream.line_start();
-                                        stream.point(&t[0], Some(3u8));
-                                    }
-                                    LineSinkEnum::CSE(stream) => match stream {
-                                        ClipSinkEnum::Blank => {
-                                            panic!("ClickSinkEnum - actively using an unconnected blank");
-                                        }
-                                        ClipSinkEnum::Resample(mut stream) => {
-                                            stream.point(&t[1], None);
-                                            stream.line_end();
-                                            stream.line_start();
-                                            stream.point(&t[0], Some(3u8));
-                                        }
-                                        ClipSinkEnum::Src(mut stream) => {
-                                            stream.point(&t[1], None);
-                                            stream.line_end();
-                                            stream.line_start();
-                                            stream.point(&t[0], Some(3u8));
-                                        }
-                                    },
-                                }
+                                self.stream.point(&t[1], None);
+                                self.stream.line_end();
+                                self.stream.line_start();
+                                self.stream.point(&t[0], Some(3u8));
                             }
                         }
                     }
@@ -426,22 +295,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
     fn line_end(&mut self) {
         if self.v0 {
-            match self.stream.clone() {
-                LineSinkEnum::CB(mut stream) => {
-                    stream.line_end();
-                }
-                LineSinkEnum::CSE(stream) => match stream {
-                    ClipSinkEnum::Blank => {
-                        panic!("ClickSinkEnum - actively using an unconnected blank");
-                    }
-                    ClipSinkEnum::Resample(mut stream) => {
-                        stream.line_end();
-                    }
-                    ClipSinkEnum::Src(mut stream) => {
-                        stream.line_end();
-                    }
-                },
-            }
+            self.stream.line_end();
         }
         self.point0 = None;
     }
