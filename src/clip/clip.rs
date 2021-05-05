@@ -248,13 +248,7 @@ where
 {
     type C = Coordinate<T>;
     fn get_dst(&self) -> StreamDst<T> {
-        match &self.base.sink {
-            ClipSinkEnum::Blank => {
-                panic!("calling get_dst() on a blank");
-            }
-            ClipSinkEnum::Resample(r) => r.get_dst(),
-            ClipSinkEnum::Src(s) => s.get_dst(),
-        }
+        self.base.sink.get_dst()
     }
 
     #[inline]
@@ -293,13 +287,7 @@ where
 
         if !segments_merged.is_empty() {
             if !self.base.polygon_started {
-                match &mut self.base.sink {
-                    ClipSinkEnum::Blank => {
-                        panic!("ClickSinkEnum - Actively using an unconnected blank.");
-                    }
-                    ClipSinkEnum::Src(s) => s.polygon_start(),
-                    ClipSinkEnum::Resample(s) => s.polygon_start(),
-                };
+                self.base.sink.polygon_start();
                 self.base.polygon_started = true;
             }
             println!("into rejoin this path");
@@ -311,39 +299,16 @@ where
             );
         } else if start_inside {
             if !self.base.polygon_started {
-                match &mut self.base.sink {
-                    ClipSinkEnum::Blank => {
-                        panic!("ClickSinkEnum - Actively using an unconnected blank.");
-                    }
-                    ClipSinkEnum::Src(s) => s.polygon_start(),
-                    ClipSinkEnum::Resample(s) => s.polygon_start(),
-                };
+                self.base.sink.polygon_start();
                 self.base.polygon_started = true;
             }
-            match &mut self.base.sink {
-                ClipSinkEnum::Blank => {
-                    panic!("ClickSinkEnum - Actively using an unconnected blank.");
-                }
-                ClipSinkEnum::Src(s) => {
-                    s.line_start();
-                    self.raw.interpolate(None, None, T::one(), s);
-                    s.line_end();
-                }
-                ClipSinkEnum::Resample(s) => {
-                    s.line_start();
-                    self.raw.interpolate(None, None, T::one(), s);
-                    s.line_end();
-                }
-            }
+            self.base.sink.line_start();
+            self.raw
+                .interpolate(None, None, T::one(), &mut self.base.sink);
+            self.base.sink.line_end();
         };
         if self.base.polygon_started {
-            match &mut self.base.sink {
-                ClipSinkEnum::Blank => {
-                    panic!("ClickSinkEnum - Actively using an unconnected blank.");
-                }
-                ClipSinkEnum::Src(s) => s.polygon_end(),
-                ClipSinkEnum::Resample(s) => s.polygon_end(),
-            };
+            self.base.sink.polygon_end();
             self.base.polygon_started = false;
         }
         self.base.segments.clear();
@@ -352,24 +317,11 @@ where
     }
 
     fn sphere(&mut self) {
-        match &mut self.base.sink {
-            ClipSinkEnum::Src(s) => {
-                s.polygon_start();
-                s.line_start();
-                self.raw.interpolate(None, None, T::one(), s);
-                s.line_end();
-                s.polygon_end();
-            }
-            ClipSinkEnum::Resample(s) => {
-                s.polygon_start();
-                s.line_start();
-                self.raw.interpolate(None, None, T::one(), s);
-                s.line_end();
-                s.polygon_end();
-            }
-            ClipSinkEnum::Blank => {
-                panic!("ClickSinkEnum - Actively using an unconnected blank.");
-            }
-        };
+        self.base.sink.polygon_start();
+        self.base.sink.line_start();
+        self.raw
+            .interpolate(None, None, T::one(), &mut self.base.sink);
+        self.base.sink.line_end();
+        self.base.sink.polygon_end();
     }
 }
