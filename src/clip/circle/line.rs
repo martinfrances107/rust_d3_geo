@@ -57,14 +57,14 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     #[inline]
     pub fn new(radius: T) -> Self {
         // TODO small_radius, rc  is a shadow variables!!!
-        let rc = radius.cos();
-        let small_radius = rc.is_sign_positive();
+        let cr = radius.cos();
+        let small_radius = cr.is_sign_positive();
         Self {
             c0: 0,
             clean: CleanEnum::IntersectionsOrEmpty,
-            not_hemisphere: rc.abs() > T::epsilon(),
+            not_hemisphere: cr.abs() > T::epsilon(),
             point0: None,
-            cr: T::zero(),
+            cr,
             radius,
             small_radius,
             v0: false,
@@ -84,7 +84,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 
     #[inline]
-    fn point_visible(&self, p: &Coordinate<T>, _m: Option<u8>) -> bool {
+    fn visible(&self, p: &Coordinate<T>) -> bool {
         p.x.cos() * p.y.cos() > self.cr
     }
 
@@ -168,7 +168,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     fn point(&mut self, p: &Self::C, _m: Option<u8>) {
         let mut point1 = p.clone();
         let mut point2;
-        let v = self.point_visible(p, None);
+        let v = self.visible(p);
 
         let c = match self.small_radius {
             true => match v {
