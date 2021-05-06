@@ -9,6 +9,7 @@ use super::intersect::intersect;
 use super::intersect::IntersectReturn;
 
 use crate::clip::buffer::ClipBuffer;
+use crate::clip::buffer::LineElem;
 use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::clip::line_sink_enum::LineSinkEnum;
 use crate::point_equal::point_equal;
@@ -24,7 +25,7 @@ pub struct Line<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display +
     radius: T,
     cr: T,
     not_hemisphere: bool,
-    point0: Option<Coordinate<T>>, // previous point
+    point0: Option<LineElem<T>>, // previous point
     small_radius: bool,
     stream: LineSinkEnum<T>,
     v0: bool,  // visibility of previous point
@@ -158,8 +159,8 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 
     fn point(&mut self, p: &Self::C, _m: Option<u8>) {
-        let mut point1 = p.clone();
-        let mut point2;
+        let mut point1 = Some(LineElem { p: *p, m: None });
+        let mut point2: Option<LineElem<T>>;
         let v = self.visible(p);
 
         let c = match self.small_radius {
@@ -182,7 +183,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
             },
         };
         println!("clip:circle point entry v, c {:?} {:?}", v, c);
-        println!("self.point0 {:?}", self.point0);
+        println!("clip:circle point self.point0 {:?}", self.point0);
         if self.point0.is_none() {
             self.v00 = v;
             self.v0 = v;
@@ -194,21 +195,31 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
         println!("before intersect check {:?} {:?}", v, self.v0);
         if v != self.v0 {
             println!("intersect check");
-            point2 = intersect(
+            point2 = match intersect(
                 &self.point0.clone().unwrap(),
-                &point1,
+                &point1.clone().unwrap(),
                 self.radius.cos(),
                 false,
-            );
-            match point2 {
-                IntersectReturn::None => {
-                    point1.x = T::one();
-                }
-                IntersectReturn::One(p) => {
-                    if point_equal(self.point0.clone().unwrap(), p.clone())
-                        || point_equal(point1.clone(), p)
-                    {
-                        point1.x = T::one();
+            ) {
+                IntersectReturn::One(le) => {
+                    // if le.is_some() || point_equal(self.point0.clone().unwrap().p, le.unwrap().p.clone())
+                    //     || point_equal(point1.unwrap().p, le.p) {
+                    //         point1.unwrap().m = Some(1u8);
+                    //     }
+                    // Some(p)
+                    match le {
+                        None => {
+                            point1.unwrap().m = Some(1u8);
+                            None
+                        }
+                        Some(le) => {
+                            if point_equal(self.point0.clone().unwrap().p, le.p.clone())
+                                || point_equal(point1.unwrap().p, le.p)
+                            {
+                                point1.unwrap().m = Some(1u8);
+                            }
+                            Some(le)
+                        }
                     }
                 }
                 IntersectReturn::False => {
@@ -224,70 +235,64 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
         }
 
         if v != self.v0 {
-            let next: Option<Coordinate<T>>;
             self.clean = CleanEnum::IntersectionsOrEmpty;
             if v {
                 println!("outside going in");
                 // outside going in
                 self.stream.line_start();
-                match intersect(&point1, &self.point0.clone().unwrap(), self.cr, false) {
-                    IntersectReturn::None => {
-                        // TODO Should I do a stream Point here??
-                        next = None;
-                    }
-                    IntersectReturn::One(p) => {
-                        self.stream.point(&p, None);
-                        next = Some(p);
-                    }
+                point2 = match intersect(
+                    &point1.clone().unwrap(),
+                    &self.point0.clone().unwrap(),
+                    self.cr,
+                    false,
+                ) {
+                    IntersectReturn::One(le) => le,
                     IntersectReturn::Two([p, _]) => {
-                        self.stream.point(&p, None);
-                        // p0_next = p;
                         panic!("Silently dropping second point.");
                     }
                     IntersectReturn::False => {
                         todo!("must cover this case.");
                     }
-                }
+                };
+                self.stream.point(&point2.unwrap().p, None)
             } else {
                 // inside going out
                 println!("inside going out");
-                point2 = intersect(&self.point0.clone().unwrap(), &point1, self.cr, false);
-                match point2 {
-                    IntersectReturn::None => {
-                        // TODO should I stream a null point here?
-                        // stream.line_end(); ???
-                        panic!("Must deal with no intersect.");
-                    }
-                    IntersectReturn::One(p) => {
-                        self.stream.point(&p, Some(2));
-                        self.stream.line_end();
-                        next = Some(p);
-                    }
+                point2 = match intersect(
+                    &self.point0.clone().unwrap(),
+                    &point1.clone().unwrap(),
+                    self.cr,
+                    false,
+                ) {
+                    IntersectReturn::One(le) => le,
                     IntersectReturn::Two([_p, _]) => {
-                        // self.stream.point(p, Some(2));
-                        // self.stream.line_end();
-                        // next = p;
                         panic!("Silently dropping second point.");
                     }
                     IntersectReturn::False => {
                         todo!("must handle this case.");
                     }
-                }
+                };
+                self.stream.point(&point2.unwrap().p, Some(2));
+                self.stream.line_end();
             }
-            self.point0 = next;
-        } else if self.not_hemisphere && self.point0.is_none() && self.small_radius ^ v {
+            self.point0 = point2;
+        } else if self.not_hemisphere && self.point0.is_some() && self.small_radius ^ v {
             println!("within a small circle");
             // If the codes for two points are different, or are both zero,
             // and there this segment intersects with the small circle.
-            if (c & self.c0) != 0 {
-                let t = intersect(&point1, &self.point0.unwrap(), self.cr, true);
+            if self.c0 != c || c == 0 {
+                let t = intersect(
+                    &point1.clone().unwrap(),
+                    &self.point0.unwrap(),
+                    self.cr,
+                    true,
+                );
                 match t {
-                    IntersectReturn::None => {}
                     IntersectReturn::False => {
-                        todo!("must handle this case.");
+                        // None found
                     }
                     IntersectReturn::One(_) => {
-                        panic!("Requeted two received one.");
+                        panic!("Requeted two received one or none.");
                     }
                     IntersectReturn::Two(t) => {
                         self.clean = CleanEnum::IntersectionsOrEmpty;
@@ -306,10 +311,10 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                 }
             }
         }
-        if v && self.point0.is_none() || !point_equal(self.point0.unwrap(), point1) {
-            self.stream.point(&point1, None);
+        if v && self.point0.is_none() || !point_equal(self.point0.unwrap().p, point1.unwrap().p) {
+            self.stream.point(&point1.unwrap().p, None);
         }
-        self.point0 = Some(point1);
+        self.point0 = point1;
         self.v0 = v;
         self.c0 = c;
         println!("point end()");
