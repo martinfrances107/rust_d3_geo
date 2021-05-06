@@ -118,7 +118,6 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
 
     #[inline]
     fn reset(self) -> ProjectionMutator<T> {
-        println!("projection_mutator reset");
         // self.cache_stream = None;
         // self.cache = None;
         self

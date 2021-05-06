@@ -1,3 +1,5 @@
+pub mod azimuthal;
+pub mod azimuthal_equal_area;
 pub mod equirectangular;
 pub mod orthographic;
 pub mod projection;
@@ -9,8 +11,6 @@ pub mod stereographic;
 pub mod stream_transform;
 pub mod stream_transform_radians;
 
-pub mod azimuthal;
-mod azimuthal_equal_area;
 mod scale_translate;
 
 use std::fmt::Display;

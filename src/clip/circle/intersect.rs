@@ -12,6 +12,7 @@ use crate::cartesian::spherical_r;
 pub enum IntersectReturn<T: CoordFloat> {
     One(Coordinate<T>),
     Two([Coordinate<T>; 2]),
+    False,
     None,
 }
 
@@ -40,7 +41,7 @@ pub fn intersect<T: CoordFloat + FloatConst>(
         if !two {
             return IntersectReturn::One(*a);
         } else {
-            return IntersectReturn::None;
+            return IntersectReturn::False;
         }
     };
 
