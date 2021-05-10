@@ -14,7 +14,7 @@ use crate::circle::circle_stream::circle_stream;
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 
-use super::buffer::LineElem;
+use super::line_elem::LineElem;
 use super::clip::Clip;
 use super::clip_raw::ClipRaw;
 use super::ClipTraitRaw;

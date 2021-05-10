@@ -4,7 +4,7 @@ use num_traits::FloatConst;
 use crate::cartesian::cartesian;
 use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_normalize_in_place;
-use crate::clip::buffer::LineElem;
+use crate::clip::line_elem::LineElem;
 
 #[inline]
 fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {

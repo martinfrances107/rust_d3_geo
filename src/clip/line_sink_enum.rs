@@ -7,7 +7,7 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use super::buffer::ClipBuffer;
+use super::clip_buffer::ClipBuffer;
 use super::clip_sink_enum::ClipSinkEnum;
 use crate::path::PathResult;
 use crate::path::PathResultEnum;

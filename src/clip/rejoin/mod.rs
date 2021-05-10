@@ -15,7 +15,7 @@ use num_traits::Zero;
 use crate::point_equal::point_equal;
 use crate::stream::Stream;
 
-use super::buffer::LineElem;
+use super::line_elem::LineElem;
 use super::clip_raw::ClipRaw;
 use super::ClipTraitRaw;
 use intersection::Intersection;

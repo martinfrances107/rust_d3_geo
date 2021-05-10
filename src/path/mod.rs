@@ -16,7 +16,7 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
 
-use crate::clip::buffer::LineElem;
+use crate::clip::line_elem::LineElem;
 use crate::stream::Stream;
 
 #[derive(Clone, Debug)]

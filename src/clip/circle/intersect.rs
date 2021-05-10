@@ -7,7 +7,7 @@ use crate::cartesian::cartesian_cross;
 use crate::cartesian::cartesian_dot;
 use crate::cartesian::cartesian_scale;
 use crate::cartesian::spherical_r;
-use crate::clip::buffer::LineElem;
+use crate::clip::line_elem::LineElem;
 
 /// IntersectReturn none, one or two 2d floats.
 pub enum IntersectReturn<T: CoordFloat> {

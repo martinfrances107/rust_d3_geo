@@ -15,8 +15,8 @@ use crate::stream::CleanEnum;
 use crate::stream::Stream;
 
 use super::antimeridian::line::Line as AntimeridianLine;
-use super::buffer::ClipBuffer;
-use super::buffer::LineElem;
+use super::clip_buffer::ClipBuffer;
+use super::line_elem::LineElem;
 use super::circle::line::Line as CircleLine;
 use super::clip_base::ClipBase;
 use super::clip_raw::ClipRaw;

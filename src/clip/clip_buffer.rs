@@ -12,11 +12,8 @@ use crate::path::PathResultEnum;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
-#[derive(Clone, Copy, Debug)]
-pub struct LineElem<T: CoordFloat> {
-    pub p: Coordinate<T>,
-    pub m: Option<u8>,
-}
+use super::line_elem::LineElem;
+
 
 #[derive(Clone, Debug, Default)]
 pub struct ClipBuffer<T: CoordFloat> {

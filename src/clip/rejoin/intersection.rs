@@ -3,7 +3,7 @@ use num_traits::{Float, FloatConst};
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use super::super::buffer::LineElem;
+use crate::clip::line_elem::LineElem;
 
 #[derive(Clone, Debug)]
 pub struct Intersection<T>

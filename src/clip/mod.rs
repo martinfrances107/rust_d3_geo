@@ -1,10 +1,11 @@
 pub mod antimeridian;
-pub mod buffer;
+pub mod clip_buffer;
 pub mod circle;
 pub mod clip;
 pub mod clip_base;
 pub mod clip_raw;
 pub mod clip_sink_enum;
+pub mod line_elem;
 pub mod line_enum;
 pub mod line_sink_enum;
 pub mod rejoin;
@@ -22,7 +23,7 @@ use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
-use buffer::ClipBuffer;
+use clip_buffer::ClipBuffer;
 use rejoin::intersection::Intersection;
 
 pub trait ClipTraitRaw<T>

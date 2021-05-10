@@ -8,7 +8,7 @@ mod polygon_contains_test {
 
     use rust_d3_geo::circle::circle_generator::CircleGenerator;
     use rust_d3_geo::circle::CircleTrait;
-    use rust_d3_geo::clip::buffer::LineElem;
+    use rust_d3_geo::clip::line_elem::LineElem;
 
     use rust_d3_geo::polygon_contains::contains;
 
