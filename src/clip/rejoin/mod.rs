@@ -123,20 +123,20 @@ pub fn rejoin<T>(
         let mut is_subject = true;
 
         while current.clone().unwrap().borrow().v {
-            // current = current.n;
-            // if current == start {
-            //     return;
-            // }
-            match &current.clone().unwrap().borrow().n {
-                Some(_n) => {
+            current = match current.clone() {
+                Some(c) => c.borrow().n.clone(),
+                None => None,
+            };
+
+            match current.clone() {
+                Some(c) => {
                     todo!("must implement compare.");
-                    // current = n;
-                    // must implement compare
-                    // if current == start {
+                    // if c == start {
                     //     return;
                     // }
                 }
-                None => {}
+                None => { // No match}
+                }
             }
         }
         let mut points = (current.clone().unwrap()).borrow().z.clone();
@@ -222,11 +222,25 @@ pub fn rejoin<T>(
                 Some(c) => Some(c.clone()),
                 None => None,
             };
-            points = (current.clone().unwrap()).borrow().z.clone();
+
+            points = match current.clone() {
+                Some(c) => c.borrow().z.clone(),
+                None => None,
+            };
             is_subject = !is_subject;
 
-            if !(*current.clone().unwrap()).borrow().v {
-                break;
+            // if !(*current.clone().unwrap()).borrow().v {
+            //     break;
+            // }
+            match current {
+                Some(ref c) => {
+                    if !(*c).borrow().v {
+                        break;
+                    }
+                }
+                None => {
+                    break;
+                }
             }
         }
         stream.line_end();

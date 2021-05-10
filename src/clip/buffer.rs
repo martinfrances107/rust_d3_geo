@@ -17,6 +17,7 @@ pub struct LineElem<T: CoordFloat> {
     pub p: Coordinate<T>,
     pub m: Option<u8>,
 }
+
 #[derive(Clone, Debug, Default)]
 pub struct ClipBuffer<T: CoordFloat> {
     // line: Vec<LineElem<T>>,
