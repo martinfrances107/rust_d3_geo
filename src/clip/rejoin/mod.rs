@@ -130,10 +130,10 @@ pub fn rejoin<T>(
 
             match current.clone() {
                 Some(c) => {
-                    todo!("must implement compare.");
-                    // if c == start {
-                    //     return;
-                    // }
+                    // todo!("must implement compare.");
+                    if *c.borrow() == *start.borrow() {
+                        return;
+                    }
                 }
                 None => { // No match}
                 }

@@ -5,7 +5,7 @@ use std::rc::Rc;
 
 use crate::clip::line_elem::LineElem;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Intersection<T>
 where
     T: CoordFloat + FloatConst,
