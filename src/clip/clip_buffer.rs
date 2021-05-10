@@ -14,7 +14,6 @@ use crate::stream::Stream;
 
 use super::line_elem::LineElem;
 
-
 #[derive(Clone, Debug, Default)]
 pub struct ClipBuffer<T: CoordFloat> {
     // line: Vec<LineElem<T>>,

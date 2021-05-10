@@ -6,8 +6,8 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use super::line_elem::LineElem;
 use super::clip_sink_enum::ClipSinkEnum;
+use super::line_elem::LineElem;
 use super::line_enum::LineEnum;
 
 #[derive(Clone, Debug)]

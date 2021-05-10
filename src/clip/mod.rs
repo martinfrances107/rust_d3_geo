@@ -1,8 +1,8 @@
 pub mod antimeridian;
-pub mod clip_buffer;
 pub mod circle;
 pub mod clip;
 pub mod clip_base;
+pub mod clip_buffer;
 pub mod clip_raw;
 pub mod clip_sink_enum;
 pub mod line_elem;

@@ -12,9 +12,9 @@ use crate::stream::CompareIntersection;
 use crate::stream::Stream;
 use crate::stream::{Clean, CleanEnum};
 
-use super::line_elem::LineElem;
 use super::clip::Clip;
 use super::clip_base::ClipBase;
+use super::line_elem::LineElem;
 use super::ClipTraitRaw;
 use crate::clip::clip_raw::ClipRaw;
 
