@@ -14,8 +14,8 @@ pub fn stream_line<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Displa
 ) {
     let n = coordinates.len() - closed;
     stream.line_start();
-    for i in 0..n {
-        stream.point(&coordinates[i], None);
+    for c in &coordinates[0..n] {
+        stream.point(c, None);
     }
     stream.line_end();
 }
