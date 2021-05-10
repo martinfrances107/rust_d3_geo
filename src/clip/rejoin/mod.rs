@@ -1,7 +1,10 @@
 pub mod intersection;
+mod link;
 
+use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
+use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -15,8 +18,8 @@ use crate::stream::Stream;
 use super::buffer::LineElem;
 use super::clip_raw::ClipRaw;
 use super::ClipTraitRaw;
-
 use intersection::Intersection;
+use link::link;
 
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
@@ -31,8 +34,8 @@ pub fn rejoin<T>(
 {
     println!("clip rejoin: segments: {:#?}", segments);
     let mut start_inside = start_inside;
-    let mut subject = Vec::<Intersection<T>>::new();
-    let mut clip = Vec::<Intersection<T>>::new();
+    let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();
+    let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
 
     for segment in segments.iter() {
         let n = segment.len() - 1usize;
@@ -59,27 +62,41 @@ pub fn rejoin<T>(
             p1.p.x += T::from(2).unwrap() * T::epsilon();
         }
 
-        let mut x = Intersection::new(p0, Some(segment.to_vec()), None, true);
-        subject.push(x.clone());
-
-        x.o = Some(Box::new(Intersection::new(
+        let x1 = Rc::new(RefCell::new(Intersection::new(
             p0,
+            Some(segment.to_vec()),
             None,
-            Some(Box::new(x.clone())),
-            false,
-        )));
-        clip.push(*x.o.unwrap());
-
-        x = Intersection::new(p1, Some(segment.to_vec()), None, false);
-        subject.push(x.clone());
-
-        x.o = Some(Box::new(Intersection::new(
-            p1,
-            None,
-            Some(Box::new(x.clone())),
             true,
         )));
-        clip.push(*x.clone().o.unwrap());
+        subject.push(x1.clone());
+
+        let other1 = Rc::new(RefCell::new(Intersection::new(
+            p0,
+            None,
+            Some(x1.clone()),
+            false,
+        )));
+        (*x1).borrow_mut().o = Some(other1.clone());
+
+        x1.borrow_mut().o = Some(other1.clone());
+        clip.push(other1);
+
+        let x2 = Rc::new(RefCell::new(Intersection::new(
+            p1,
+            Some(segment.to_vec()),
+            None,
+            false,
+        )));
+        subject.push(x2.clone());
+        let other2 = Rc::new(RefCell::new(Intersection::new(
+            p1,
+            None,
+            Some(x1.clone()),
+            false,
+        )));
+        (*x2).borrow_mut().o = Some(other2.clone());
+
+        clip.push(other2);
     }
 
     if subject.is_empty() {
@@ -93,26 +110,27 @@ pub fn rejoin<T>(
 
     for i in 0..clip.len() {
         start_inside = !start_inside;
-        clip[i].e = start_inside;
+        (*clip[i]).borrow_mut().e = start_inside;
     }
 
-    let start = subject[0].clone();
+    let start = &subject[0];
     // let points: Vec<LineElem<T>>;
     let mut point;
 
     loop {
         // Find first unvisited intersection.
-        let mut current = start.clone();
+        let mut current: Option<Rc<RefCell<Intersection<T>>>> = Some(start.clone());
         let mut is_subject = true;
 
-        while current.v {
+        while current.clone().unwrap().borrow().v {
             // current = current.n;
             // if current == start {
             //     return;
             // }
-            match current.n {
-                Some(n) => {
-                    current = *n;
+            match &current.clone().unwrap().borrow().n {
+                Some(_n) => {
+                    todo!("must implement compare.");
+                    // current = n;
                     // must implement compare
                     // if current == start {
                     //     return;
@@ -121,21 +139,21 @@ pub fn rejoin<T>(
                 None => {}
             }
         }
-        let mut points = current.z;
+        let mut points = (current.clone().unwrap()).borrow().z.clone();
 
         stream.line_start();
         loop {
-            match &mut current.o {
+            match &mut (current.clone().unwrap()).borrow_mut().o {
                 Some(o) => {
-                    o.v = true;
+                    (*o).borrow_mut().v = true;
                 }
                 None => {
                     panic!("Cannot reach into blank and set true");
                 }
             }
-            current.v = true;
+            (current.clone().unwrap()).borrow_mut().v = true;
 
-            if current.e {
+            if (current.clone().unwrap()).borrow().e {
                 if is_subject {
                     match points {
                         Some(points) => {
@@ -148,63 +166,69 @@ pub fn rejoin<T>(
                     }
                 } else {
                     raw.interpolate(
-                        Some(current.x.p),
-                        Some(current.n.clone().unwrap().x.p),
+                        Some((current.clone().unwrap()).borrow().x.p),
+                        Some(
+                            (current.clone().unwrap())
+                                .borrow()
+                                .n
+                                .as_ref()
+                                .unwrap()
+                                .borrow()
+                                .x
+                                .p,
+                        ),
                         T::one(),
                         stream,
                     );
                 }
-                current = *current.n.unwrap();
+                let next = (*current.unwrap()).borrow().n.clone();
+                current = next;
             } else {
                 if is_subject {
-                    points = current.p.clone().unwrap().z;
+                    points = (*(*current.clone().unwrap()).borrow().p.as_ref().unwrap())
+                        .borrow()
+                        .z
+                        .clone();
                     for i in (1..points.clone().unwrap().len()).rev() {
                         point = points.clone().unwrap()[i];
                         stream.point(&point.p, None);
                     }
                 } else {
                     raw.interpolate(
-                        Some(current.x.p),
-                        Some(current.p.clone().unwrap().x.p),
+                        Some((*current.clone().unwrap()).borrow().x.p),
+                        Some(
+                            ((current.clone().unwrap()).borrow().p.as_ref().unwrap())
+                                .borrow()
+                                .x
+                                .p,
+                        ),
                         T::from(-1).unwrap(),
                         stream,
                     );
                 }
             }
-            current = *current.p.unwrap();
 
-            current = *current.o.unwrap();
-            points = current.z;
+            current = Some(
+                current
+                    .clone()
+                    .unwrap()
+                    .borrow()
+                    .p
+                    .as_ref()
+                    .unwrap()
+                    .clone(),
+            );
+            current = match &current.clone().unwrap().borrow().p {
+                Some(c) => Some(c.clone()),
+                None => None,
+            };
+            points = (current.clone().unwrap()).borrow().z.clone();
             is_subject = !is_subject;
 
-            if !current.v {
+            if !(*current.clone().unwrap()).borrow().v {
                 break;
             }
         }
         stream.line_end();
     }
-}
-
-fn link<T>(array: &mut Vec<Intersection<T>>)
-where
-    T: CoordFloat + FloatConst,
-{
-    if array.is_empty() {
-        return;
-    };
-    let n = array.len();
-
-    let mut a = array[0].clone();
-    let mut b: Intersection<T>;
-    for i in 1..n {
-        b = array[i].clone();
-        a.n = Some(Box::new(b.clone()));
-        b.p = Some(Box::new(a));
-        a = b;
-    }
-    b = array[0].clone();
-    a.n = Some(Box::new(b));
-
-    todo!("With the  command below javascript is updating the input array -- so must fix here.");
-    // b.p = Some(Box::new(a));
 }

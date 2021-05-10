@@ -159,7 +159,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 
     fn point(&mut self, p: &Self::C, _m: Option<u8>) {
-        let mut point1 = Some(LineElem { p: *p, m: None });
+        let point1 = Some(LineElem { p: *p, m: None });
         let mut point2: Option<LineElem<T>>;
         let v = self.visible(p);
 
@@ -265,7 +265,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                     false,
                 ) {
                     IntersectReturn::One(le) => le,
-                    IntersectReturn::Two([_p, _]) => {
+                    IntersectReturn::Two([_, _]) => {
                         panic!("Silently dropping second point.");
                     }
                     IntersectReturn::False => {

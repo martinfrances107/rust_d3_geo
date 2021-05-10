@@ -1,5 +1,7 @@
 use geo::CoordFloat;
 use num_traits::{Float, FloatConst};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 use super::super::buffer::LineElem;
 
@@ -10,11 +12,11 @@ where
 {
     pub x: LineElem<T>,
     pub z: Option<Vec<LineElem<T>>>,
-    pub o: Option<Box<Intersection<T>>>, // another intersection,
-    pub e: bool,                         // is any entry?
-    pub v: bool,                         // visited
-    pub n: Option<Box<Intersection<T>>>, // next
-    pub p: Option<Box<Intersection<T>>>, // previous
+    pub o: Option<Rc<RefCell<Intersection<T>>>>, // another intersection,
+    pub e: bool,                                 // is any entry?
+    pub v: bool,                                 // visited
+    pub n: Option<Rc<RefCell<Intersection<T>>>>, // next
+    pub p: Option<Rc<RefCell<Intersection<T>>>>, // previous
 }
 
 impl<T: Float> Intersection<T>
@@ -24,9 +26,9 @@ where
     pub fn new(
         point: LineElem<T>,
         points: Option<Vec<LineElem<T>>>,
-        other: Option<Box<Intersection<T>>>,
+        other: Option<Rc<RefCell<Intersection<T>>>>,
         entry: bool,
-    ) -> Self {
+    ) -> Intersection<T> {
         return Self {
             x: point,
             z: points,
