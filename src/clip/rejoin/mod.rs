@@ -45,9 +45,9 @@ pub fn rejoin<T>(
         };
         let mut p0: LineElem<T> = segment[0];
         let mut p1: LineElem<T> = segment[n];
-        println!("in segement loop p0 p1 {:?} {:?}", p0, p1);
+        println!("in segement loop p0 p1 {:#?} {:#?}", p0, p1);
         if point_equal(p0.p, p1.p) {
-            if !p0.m.unwrap().is_zero() && !p1.m.unwrap().is_zero() {
+            if p0.m.is_none() && p1.m.is_none() {
                 stream.line_start();
                 // let i: usize;
                 // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
@@ -60,7 +60,7 @@ pub fn rejoin<T>(
             }
             // handle degenerate cases by moving the point
             // p1[0] += 2F * f64::EPSILON;
-            p1.p.x += T::from(2).unwrap() * T::epsilon();
+            p1.p.x += T::from(2.0 * 1e-6).unwrap();
         }
 
         let x1 = Rc::new(RefCell::new(Intersection::new(
