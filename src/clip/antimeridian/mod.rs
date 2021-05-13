@@ -43,18 +43,6 @@ where
     }
 }
 
-impl<T> Clean for ClipAntimeridian<T>
-where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-{
-    /// A clip trait.
-    /// Rejoin first and last segments if there were intersections and the first
-    /// and last points were visible.
-    fn clean(&self) -> CleanEnum {
-        panic!("must relate code to enum")
-    }
-}
-
 impl<T> ClipTraitRaw<T> for ClipAntimeridian<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
