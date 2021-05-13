@@ -272,6 +272,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                         todo!("must handle this case.");
                     }
                 };
+                // panic!("about to insert 2 ");
                 self.stream.point(&point2.unwrap().p, Some(2));
                 self.stream.line_end();
             }
@@ -297,11 +298,13 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                     IntersectReturn::Two(t) => {
                         self.clean = CleanEnum::IntersectionsOrEmpty;
                         if self.small_radius {
+                            println!("small radius");
                             self.stream.line_start();
                             self.stream.point(&t[0], None);
                             self.stream.point(&t[1], None);
                             self.stream.line_end();
                         } else {
+                            println!("not a small radius");
                             self.stream.point(&t[1], None);
                             self.stream.line_end();
                             self.stream.line_start();
@@ -311,7 +314,9 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                 }
             }
         }
-        if v && self.point0.is_none() || !point_equal(self.point0.unwrap().p, point1.unwrap().p) {
+        println!("v, !point0 {:?} {:?}", v, self.point0.is_none());
+        if v && (self.point0.is_none() || !point_equal(self.point0.unwrap().p, point1.unwrap().p)) {
+            println!("point equal pass");
             self.stream.point(&point1.unwrap().p, None);
         }
         self.point0 = point1;

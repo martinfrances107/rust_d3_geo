@@ -278,6 +278,8 @@ where
                 let theta = angle.to_radians();
                 self.theta = Some(theta);
                 self.preclip = ClipCircle::gen_clip(theta);
+                // println!("preclip {:#?}", self.preclip);
+                // panic!("clip_angler stop");
             }
             StreamOrValueMaybe::SP(_preclip) => {
                 todo!("must sort this out.");

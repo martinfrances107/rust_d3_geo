@@ -141,11 +141,10 @@ where
 
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("clip point_ring {:?} {:?}", p, m);
         println!("");
+        println!("clip point_ring {:?} {:?}", p, m);
         // println!("about to ring/push - ring_sink ");
         // println!("self.base {:#?} ", self.base.ring_sink);
-        // panic!("about to inspect");
         self.base.ring.push(LineElem { p: *p, m });
         self.base.ring_sink.point(p, m);
         println!("clip point_ring -- end");
@@ -182,6 +181,7 @@ where
             None => panic!("was expecting something."),
         };
         println!("clip ring_end() - ring segments {:#?}", ring_segments);
+        // panic!("ring_end buffer result");
         let n = ring_segments.len();
         let m;
         let mut point: Coordinate<T>;
@@ -284,12 +284,14 @@ where
         self.point_fn = Self::point_default;
         self.line_start_fn = Self::line_start_default;
         self.line_end_fn = Self::line_end_default;
-        println!("about to merge {:?}", self.base.segments);
+        println!("about to merge {:#?}", self.base.segments);
         let segments_merged: Vec<Vec<LineElem<T>>> =
             self.base.segments.clone().into_iter().flatten().collect();
         let start_inside = contains(&self.base.polygon, &self.base.start);
 
         if !segments_merged.is_empty() {
+            println!("mergeed is not empty {:#?}", self.base.segments);
+            // panic!("pause here");
             if !self.base.polygon_started {
                 self.base.sink.polygon_start();
                 self.base.polygon_started = true;

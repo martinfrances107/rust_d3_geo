@@ -33,6 +33,7 @@ pub fn rejoin<T>(
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     println!("clip rejoin: segments: {:#?}", segments);
+    // panic!("just entered rejoin");
     let mut start_inside = start_inside;
     let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();
     let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
@@ -131,11 +132,13 @@ pub fn rejoin<T>(
             match current.clone() {
                 Some(c) => {
                     // todo!("must implement compare.");
+                    // panic!("about to compare. c {:?} start {:?}", c, start);
                     if *c.borrow() == *start.borrow() {
                         return;
                     }
                 }
-                None => { // No match}
+                None => {
+                    panic!("compare with none");
                 }
             }
         }
