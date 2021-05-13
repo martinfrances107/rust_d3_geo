@@ -47,7 +47,7 @@ pub fn cartesian_add<T: CoordFloat>(a: [T; 3], b: [T; 3]) -> [T; 3] {
 pub fn cartesian_add_in_place<T: CoordFloat>(a: &mut [T; 3], b: &[T; 3]) {
     a[0] = a[0] + b[0];
     a[1] = a[1] + b[1];
-    a[2] = a[1] + b[2];
+    a[2] = a[2] + b[2];
 }
 
 #[inline]
