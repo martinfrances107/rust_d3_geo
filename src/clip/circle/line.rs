@@ -126,17 +126,12 @@ where
     /// and last points were visible.
     #[inline]
     fn clean(&self) -> CleanEnum {
-        println!("line(c) clean() ");
-        match self.clean {
-            CleanEnum::IntersectionsOrEmpty => CleanEnum::IntersectionsOrEmpty,
-            CleanEnum::NoIntersections | CleanEnum::IntersectionsRejoin => {
-                if self.v00 && self.v0 {
-                    CleanEnum::IntersectionsRejoin
-                } else {
-                    CleanEnum::IntersectionsOrEmpty
-                }
-            }
-            CleanEnum::Undefined => panic!("Should not clean an undefined value."),
+        println!("line(c) clean() {:#?} {} {}", self.clean, self.v00, self.v0);
+        if self.v00 && self.v0 {
+            println!("output = rejoin");
+            CleanEnum::IntersectionsRejoin
+        } else {
+            self.clean
         }
     }
 }
@@ -201,29 +196,11 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                 self.radius.cos(),
                 false,
             ) {
-                IntersectReturn::One(le) => {
-                    // if le.is_some() || point_equal(self.point0.clone().unwrap().p, le.unwrap().p.clone())
-                    //     || point_equal(point1.unwrap().p, le.p) {
-                    //         point1.unwrap().m = Some(1u8);
-                    //     }
-                    // Some(p)
-                    match le {
-                        None => {
-                            point1.unwrap().m = Some(1u8);
-                            None
-                        }
-                        Some(le) => {
-                            if point_equal(self.point0.clone().unwrap().p, le.p.clone())
-                                || point_equal(point1.unwrap().p, le.p)
-                            {
-                                point1.unwrap().m = Some(1u8);
-                            }
-                            Some(le)
-                        }
-                    }
-                }
+                IntersectReturn::One(p_return) => p_return,
+                IntersectReturn::None => None,
                 IntersectReturn::False => {
                     todo!("This case is not handled by test");
+                    // I think I should set point2 to None here buy must test.
                 }
                 IntersectReturn::Two(_t) => {
                     // There is a subtle bug in the javascript here two points is handles
@@ -231,6 +208,12 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                     // For now just cause a panic here to see how many times it occurs.
                     panic!("Requested One or None found Two as !!");
                 }
+            };
+            if point2.is_some()
+                || point_equal(self.point0.clone().unwrap().p, point2.unwrap().p.clone())
+                || point_equal(point1.unwrap().p, point2.unwrap().p)
+            {
+                point1.unwrap().m = Some(1u8);
             }
         }
 
@@ -250,6 +233,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                     IntersectReturn::Two([p, _]) => {
                         panic!("Silently dropping second point.");
                     }
+                    IntersectReturn::None => None,
                     IntersectReturn::False => {
                         todo!("must cover this case.");
                     }
@@ -268,6 +252,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                     IntersectReturn::Two([_, _]) => {
                         panic!("Silently dropping second point.");
                     }
+                    IntersectReturn::None => None,
                     IntersectReturn::False => {
                         todo!("must handle this case.");
                     }
@@ -291,6 +276,9 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                 match t {
                     IntersectReturn::False => {
                         // None found
+                    }
+                    IntersectReturn::None => {
+                        // do nothing.
                     }
                     IntersectReturn::One(_) => {
                         panic!("Requeted two received one or none.");

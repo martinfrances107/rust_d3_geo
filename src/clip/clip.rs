@@ -196,11 +196,12 @@ where
         if n == 0 {
             return;
         }
-        println!("no intersections n = {:?}", n);
+        println!("no intersections n, c {:?} {:?}", n, clean);
         // No intersections.
         match clean {
             CleanEnum::NoIntersections => {
                 println!("about to clean good path");
+                // panic!("on the good path");
                 let segment = ring_segments
                     .pop_front()
                     .expect("We have previously checked that the .len() is >0 ( n ) ");
@@ -220,10 +221,11 @@ where
                 return;
             }
             CleanEnum::IntersectionsRejoin => {
-                println!("bad path");
                 // Rejoin connected segments.
                 // TODO reuse ringBuffer.rejoin()?
                 if n > 1 {
+                    println!("funny buisness");
+                    println!("ring_segemtns before fb {:#?}", ring_segments);
                     let pb = [
                         ring_segments.pop_back().unwrap(),
                         ring_segments.pop_front().unwrap(),
@@ -232,12 +234,15 @@ where
                     ring_segments.push_back(pb);
                 }
             }
-            CleanEnum::IntersectionsOrEmpty => {}
+            CleanEnum::IntersectionsOrEmpty => {
+                // No-op
+            }
             CleanEnum::Undefined => {
                 panic!("must be defined by now.")
             }
         }
-
+        println!("final segments before filter {:#?}", ring_segments);
+        // panic!("final segments");
         let filtered: Vec<Vec<LineElem<T>>> = ring_segments
             .into_iter()
             .filter(|segment| segment.len() > 1)

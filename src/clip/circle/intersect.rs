@@ -14,6 +14,7 @@ pub enum IntersectReturn<T: CoordFloat> {
     One(Option<LineElem<T>>),
     Two([Coordinate<T>; 2]),
     False,
+    None,
 }
 
 /// Intersects the great circle between a and b with the clip circle.
@@ -24,6 +25,8 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     cr: T,
     two: bool,
 ) -> IntersectReturn<T> {
+    println!("--------------------------");
+    println!("intersect entry {:#?} {:#?} {:#?} {:#?}", a, b, cr, two);
     let pa = cartesian(&a.p);
     let pb = cartesian(&b.p);
 
@@ -36,8 +39,9 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     let determinant = n2n2 - n1n2 * n1n2;
 
     // Two polar points.
-    if !determinant.is_zero() {
+    if determinant.is_zero() {
         // return !two && a;
+        println!("returns two polar points");
         if !two {
             return IntersectReturn::One(Some(*a));
         } else {
@@ -60,16 +64,23 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     let uu = cartesian_dot(&u, &u);
     let t2 = w * w - uu * (cartesian_dot(&A, &A) - T::one());
 
-    // if t2 < 0 return;
+    if t2 < T::zero() {
+        println!("intersect returns nothing.");
+        return IntersectReturn::None;
+    }
 
     let t = t2.sqrt();
     let mut q = cartesian_scale(&u, (-w - t) / uu);
     cartesian_add_in_place(&mut q, &A);
-
+    println!("q before spherical {:?}", q);
     // Javascript has implicit cast q of from [F;3] to a Point here.
     let q: Coordinate<T> = spherical_r(&q);
 
     if !two {
+        println!(
+            "intersect - return !two q = {:#?}",
+            Some(LineElem { p: q, m: None })
+        );
         return IntersectReturn::One(Some(LineElem { p: q, m: None }));
     };
 
