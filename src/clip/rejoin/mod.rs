@@ -65,7 +65,7 @@ pub fn rejoin<T>(
 
         let x1 = Rc::new(RefCell::new(Intersection::new(
             p0,
-            Some(segment.to_vec()),
+            Some(segment.clone()),
             None,
             true,
         )));
@@ -84,7 +84,7 @@ pub fn rejoin<T>(
 
         let x2 = Rc::new(RefCell::new(Intersection::new(
             p1,
-            Some(segment.to_vec()),
+            Some(segment.clone()),
             None,
             false,
         )));
@@ -93,7 +93,7 @@ pub fn rejoin<T>(
             p1,
             None,
             Some(x1.clone()),
-            false,
+            true,
         )));
         (*x2).borrow_mut().o = Some(other2.clone());
 
