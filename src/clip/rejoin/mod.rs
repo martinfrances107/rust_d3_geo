@@ -87,7 +87,7 @@ pub fn rejoin<T>(
         (*x2).borrow_mut().o = Some(Rc::new(RefCell::new(Intersection::new(
             p1,
             None,
-            Some(x1.clone()),
+            Some(x2.clone()),
             true,
         ))));
         clip.push((*x2).borrow().o.clone().unwrap());
