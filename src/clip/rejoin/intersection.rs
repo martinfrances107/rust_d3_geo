@@ -1,11 +1,13 @@
+use std::cell::RefCell;
+use std::fmt;
+use std::rc::Rc;
+
 use geo::CoordFloat;
 use num_traits::{Float, FloatConst};
-use std::cell::RefCell;
-use std::rc::Rc;
 
 use crate::clip::line_elem::LineElem;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, PartialEq)]
 pub struct Intersection<T>
 where
     T: CoordFloat + FloatConst,
@@ -17,6 +19,27 @@ where
     pub v: bool,                                 // visited
     pub n: Option<Rc<RefCell<Intersection<T>>>>, // next
     pub p: Option<Rc<RefCell<Intersection<T>>>>, // previous
+}
+
+/// Cannot auto derive debug.
+///
+/// Once link() is called on a array of Intersection(s)
+/// n, p by design become circular!
+/// In that state the auto-derive version overflows the stack.
+impl<T> fmt::Debug for Intersection<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Intersection")
+            .field("x", &self.x)
+            .field("z", &self.z)
+            //  .field("o", "maybe circular")
+            .field("e", &self.e)
+            .field("v", &self.v)
+            // ommit fields n , p
+            .finish()
+    }
 }
 
 impl<T: Float> Intersection<T>
