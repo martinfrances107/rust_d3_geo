@@ -41,10 +41,10 @@ mod area_test {
         match Path::generate(Some(projection), None).area(object) {
             Some(p) => match p {
                 PathResultEnum::Area(a) => return a,
-                _ => panic!("expecting an area"),
+                _ => panic!("Expecting an area."),
             },
             None => {
-                panic!("expecting a result");
+                panic!("Expecting an area result.");
             }
         }
     }
