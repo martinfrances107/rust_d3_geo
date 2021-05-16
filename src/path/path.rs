@@ -60,7 +60,6 @@ where
         Self::default().projection(projection).context(context)
     }
 
-    #[inline]
     pub fn object(&mut self, object: Option<DataObject<T>>) -> Option<PathResultEnum<T>> {
         match object {
             Some(object) => {
@@ -75,20 +74,29 @@ where
                 // }
                 match &self.projection {
                     Some(projection) => {
-                        object.to_stream(
-                            &mut projection
-                                .stream(StreamDst::PathContextStream(self.context_stream.clone())),
-                        );
+                        let mut stream_in = projection
+                            .stream(StreamDst::PathContextStream(self.context_stream.clone()));
+                        object.to_stream(&mut stream_in);
+                        let end_point = stream_in.get_dst();
+                        match end_point {
+                            StreamDst::PathString(mut pas) => pas.result(),
+                            _ => {
+                                panic!("Did no get the expected PathString.");
+                            }
+                        }
                     }
                     None => {
                         panic!("How to handle no projection dropping projection.");
                     }
                 }
             }
-            None => {}
+            None => {
+                panic!("No object supplied.");
+                None
+            }
         }
 
-        self.context_stream.result()
+        // self.context_stream.result()
     }
 
     #[inline]

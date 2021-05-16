@@ -3,7 +3,7 @@ pub mod path;
 
 mod context;
 pub mod path_context_stream;
-mod string;
+pub mod string;
 
 use std::collections::VecDeque;
 use std::default::Default;
