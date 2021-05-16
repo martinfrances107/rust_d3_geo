@@ -1,9 +1,8 @@
-pub mod area_stream;
 pub mod path;
-
-mod context;
+pub mod path_area_stream;
+pub mod path_context;
 pub mod path_context_stream;
-pub mod string;
+pub mod path_string;
 
 use std::collections::VecDeque;
 use std::default::Default;

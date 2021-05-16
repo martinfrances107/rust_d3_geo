@@ -12,9 +12,9 @@ use super::StreamSourceDummy;
 use crate::centroid::centroid_stream::CentroidStream;
 use crate::circle::circle::CircleStream;
 use crate::length::LengthStream;
-use crate::path::area_stream::PathAreaStream;
+use crate::path::path_area_stream::PathAreaStream;
 use crate::path::path_context_stream::PathContextStream;
-use crate::path::string::PathString;
+use crate::path::path_string::PathString;
 use crate::path::PathResult;
 use crate::path::PathResultEnum;
 

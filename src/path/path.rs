@@ -8,15 +8,15 @@ use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
 
 use crate::path::path_context_stream::PathContextStream;
-use crate::path::string::PathString;
+use crate::path::path_string::PathString;
 use crate::path::PathResult;
 use crate::projection::projection_mutator::ProjectionMutator;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::stream::Streamable;
-use crate::{data_object::DataObject, path::area_stream::PathAreaStream};
+use crate::{data_object::DataObject, path::path_area_stream::PathAreaStream};
 
-use super::context::PathContext;
+use super::path_context::PathContext;
 use super::PathResultEnum;
 use super::PointRadiusEnum;
 use super::PointRadiusTrait;

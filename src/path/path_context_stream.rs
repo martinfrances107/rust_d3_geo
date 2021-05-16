@@ -6,8 +6,8 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use super::context::PathContext;
-use super::string::PathString;
+use super::path_context::PathContext;
+use super::path_string::PathString;
 use super::PathResult;
 use super::PathResultEnum;
 use super::PointRadiusTrait;
