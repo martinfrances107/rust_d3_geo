@@ -31,8 +31,6 @@ pub fn rejoin<T>(
 ) where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    println!("rejoin - startInside {:?}", start_inside);
-    println!("clip rejoin: segments: {:#?}", segments);
     let mut start_inside = start_inside;
     let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();
     let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
@@ -44,7 +42,7 @@ pub fn rejoin<T>(
         };
         let mut p0: LineElem<T> = segment[0];
         let mut p1: LineElem<T> = segment[n];
-        println!("in segement loop p0 p1 {:#?} {:#?}", p0, p1);
+
         if point_equal(p0.p, p1.p) {
             if p0.m.is_none() && p1.m.is_none() {
                 stream.line_start();
@@ -97,21 +95,15 @@ pub fn rejoin<T>(
         return;
     }
 
-    println!("clip before sort {:#?}", clip);
     clip.sort_by(ClipRaw::compare_intersection);
-    println!("clip after sort {:#?}", clip);
 
     link(&mut subject);
     link(&mut clip);
 
     for i in 0..clip.len() {
-        println!("start inside loop {:?} {:?}", i, start_inside);
         start_inside = !start_inside;
         (*clip[i]).borrow_mut().e = start_inside;
     }
-
-    // println!("edge on clip");
-    // println!("{:#?}", clip);
 
     let start = &subject[0];
     // let points: Vec<LineElem<T>>;
@@ -122,49 +114,23 @@ pub fn rejoin<T>(
         let mut current: Rc<RefCell<Intersection<T>>> = start.clone();
         let mut is_subject = true;
 
-        let mut loop_count = 0;
-        println!("---------------------------------------------------");
-        println!("{:?}", current);
-        // panic!("here");
         while current.borrow().v {
-            println!("enter first unvisited loop");
             current = current.clone().borrow().n.clone().unwrap();
             if *current.borrow() == *start.borrow() {
                 return;
             }
-
-            if loop_count > 10 {
-                panic!("loop count exceeded.");
-            }
-            loop_count = loop_count + 1;
-            println!("updated current {:?}", current);
         }
 
         let mut points = current.borrow().z.clone();
 
         stream.line_start();
-        let mut mid_loop_count = 0;
         loop {
-            if mid_loop_count > 5 {
-                panic!("mid loop count exceeded");
-            }
-            mid_loop_count = mid_loop_count + 1;
-            println!("enter mid loop");
-
             current.borrow().o.clone().unwrap().borrow_mut().v = true;
             current.borrow_mut().v = true;
-
-            println!("marking current as visited other ");
-            println!("{:#?}", current.borrow().o.clone().unwrap().borrow());
-            println!("marking current as visited");
-            println!("{:#?}", current.borrow().clone());
-            println!("about to current.e ");
             if current.borrow().e {
-                println!("subject first is_subject");
                 if is_subject {
                     match points {
                         Some(points) => {
-                            println!("about to 4");
                             for i in 0..points.len() {
                                 point = points[i];
                                 stream.point(&point.p, point.m);
@@ -180,11 +146,8 @@ pub fn rejoin<T>(
                         stream,
                     );
                 }
-                println!("about to assign current from n");
                 current = current.clone().borrow().n.clone().unwrap();
             } else {
-                panic!("bad path ");
-                println!("subject -- else");
                 if is_subject {
                     points = (*(*current.clone()).borrow().p.as_ref().unwrap())
                         .borrow()
@@ -207,12 +170,8 @@ pub fn rejoin<T>(
                         stream,
                     );
                 }
-                println!("assigning current from p");
                 current = current.clone().borrow().p.clone().unwrap();
             }
-
-            // println!("about to set current(o) {:#?}", current);
-            println!("set current o");
 
             current = current.clone().borrow().o.clone().unwrap();
             points = current.clone().borrow().z.clone();
@@ -223,8 +182,6 @@ pub fn rejoin<T>(
                 break;
             }
         }
-
-        println!("exit loops rejoin about to line_end");
         stream.line_end();
     }
 }
