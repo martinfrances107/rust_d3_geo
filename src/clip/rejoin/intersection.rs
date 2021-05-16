@@ -7,7 +7,7 @@ use num_traits::{Float, FloatConst};
 
 use crate::clip::line_elem::LineElem;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 pub struct Intersection<T>
 where
     T: CoordFloat + FloatConst,
@@ -20,6 +20,17 @@ where
     pub n: Option<Rc<RefCell<Intersection<T>>>>, // next
     pub p: Option<Rc<RefCell<Intersection<T>>>>, // previous
 }
+
+impl<T> PartialEq for Intersection<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    /// Ignore potentially circular elements o, n, p
+    fn eq(&self, other: &Self) -> bool {
+        self.x == other.x && self.z == other.z && self.e == other.e && self.v == other.v
+    }
+}
+impl<T> Eq for Intersection<T> where T: CoordFloat + FloatConst {}
 
 /// Cannot auto derive debug.
 ///
