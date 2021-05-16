@@ -141,7 +141,6 @@ where
 
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("");
         println!("clip point_ring {:?} {:?}", p, m);
         // println!("about to ring/push - ring_sink ");
         // println!("self.base {:#?} ", self.base.ring_sink);

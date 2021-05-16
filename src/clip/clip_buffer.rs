@@ -55,7 +55,6 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
         // self.line.clear();
         self.lines.push_back(vec![]);
         println!("ClipBuffer line_start lines {:#?}", self.lines);
-        println!("");
     }
     fn polygon_start(&mut self) {
         println!("clipBuffer polygon_start()");

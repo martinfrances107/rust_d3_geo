@@ -10,7 +10,6 @@ use num_traits::FloatConst;
 
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
-use crate::stream::{Clean, CleanEnum};
 
 use super::clip::Clip;
 use super::clip_base::ClipBase;
