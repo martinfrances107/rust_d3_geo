@@ -78,7 +78,7 @@ where
     type Out = Option<PathResultEnum<T>>;
     #[inline]
     fn result(&mut self) -> Option<PathResultEnum<T>> {
-        if self.string.is_empty() {
+        if !self.string.is_empty() {
             let result = self.string.join(",");
             self.string = Vec::new();
             return Some(PathResultEnum::Sring(result));
@@ -96,8 +96,9 @@ where
 
     fn sphere(&mut self) {}
     fn get_dst(&self) -> StreamDst<T> {
-        todo!("is this a terminal");
+        StreamDst::PathString(self.clone())
     }
+
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(0f64);
