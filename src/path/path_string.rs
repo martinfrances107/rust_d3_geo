@@ -12,6 +12,13 @@ use crate::stream::Stream;
 use super::PointRadiusTrait;
 use super::{PathResult, PathResultEnum};
 
+#[derive(Clone, Debug)]
+enum PointState {
+    LineAtStart,
+    LineInProgress,
+    LineNotInProgress,
+}
+
 #[inline]
 fn circle<T>(radius: T) -> String
 where
@@ -31,8 +38,8 @@ where
     T: Display,
 {
     circle: Option<String>,
-    line: Option<f64>,
-    point: Option<f64>,
+    line: bool,
+    point: PointState,
     radius: T,
     string: Vec<String>,
 }
@@ -45,8 +52,8 @@ where
     fn default() -> Self {
         Self {
             circle: Some(circle(4.5f64)),
-            line: None,
-            point: None,
+            line: false,
+            point: PointState::LineNotInProgress,
             radius: T::from(4.5).unwrap(),
             string: Vec::new(),
         }
@@ -101,43 +108,37 @@ where
 
     #[inline]
     fn polygon_start(&mut self) {
-        self.line = Some(0f64);
+        self.line = false;
     }
 
     #[inline]
     fn polygon_end(&mut self) {
-        self.line = Some(f64::nan());
+        self.line = true;
     }
 
     #[inline]
     fn line_start(&mut self) {
-        self.point = Some(0f64);
+        self.point = PointState::LineAtStart;
     }
 
     fn line_end(&mut self) {
-        match self.line {
-            Some(line) => {
-                if line == 0f64 {
-                    self.string.push(String::from("Z"));
-                }
-            }
-            None => {}
+        if !self.line {
+            self.string.push(String::from("Z"));
         }
-
-        self.point = Some(1f64);
+        self.point = PointState::LineNotInProgress;
     }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         match self.point {
-            Some(0f64) => {
+            PointState::LineAtStart => {
                 self.string.push(format!("M{},{},", p.x, p.y));
-                self.point = Some(1f64);
+                self.point = PointState::LineInProgress;
             }
-            Some(1f64) => {
+            PointState::LineInProgress => {
                 self.string.push(format!("L{},{},", p.x, p.y));
             }
-            _ => {
+            PointState::LineNotInProgress => {
                 if self.circle.is_none() {
                     self.circle = Some(circle(self.radius));
                 }
