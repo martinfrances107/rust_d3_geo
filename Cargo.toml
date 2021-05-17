@@ -15,6 +15,8 @@ rust_d3_array = { git = "https://github.com/martinfrances107/rust_d3_array.git" 
 
 [dev-dependencies]
 pretty_assertions = "0.7.1"
+lazy_static = "1.4.0"
+regex="1.5.4"
 
 [dependencies.web-sys]
 version = "0.3.47"
