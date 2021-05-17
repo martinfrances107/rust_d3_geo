@@ -132,11 +132,11 @@ where
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         match self.point {
             PointState::LineAtStart => {
-                self.string.push(format!("M{},{},", p.x, p.y));
+                self.string.push(format!("M{},{}", p.x, p.y));
                 self.point = PointState::LineInProgress;
             }
             PointState::LineInProgress => {
-                self.string.push(format!("L{},{},", p.x, p.y));
+                self.string.push(format!("L{},{}", p.x, p.y));
             }
             PointState::LineNotInProgress => {
                 if self.circle.is_none() {
