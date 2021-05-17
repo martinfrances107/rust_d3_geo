@@ -79,7 +79,7 @@ where
     #[inline]
     fn result(&mut self) -> Option<PathResultEnum<T>> {
         if !self.string.is_empty() {
-            let result = self.string.join(",");
+            let result = self.string.join("");
             self.string = Vec::new();
             return Some(PathResultEnum::Sring(result));
         } else {
