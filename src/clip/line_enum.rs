@@ -39,7 +39,7 @@ where
     // deviation from javascript access to ring_buffer is through
     // ring_sink!
     #[inline]
-    pub fn get_stream(&self) -> LineSinkEnum<T> {
+    pub fn get_stream(&mut self) -> &mut LineSinkEnum<T> {
         match self {
             LineEnum::Antimeridian(line) => line.get_stream(),
             LineEnum::Circle(line) => line.get_stream(),

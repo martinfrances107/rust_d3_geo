@@ -179,6 +179,7 @@ where
             }
             None => panic!("was expecting something."),
         };
+
         println!("clip ring_end() - ring segments {:#?}", ring_segments);
         // panic!("ring_end buffer result");
         let n = ring_segments.len();

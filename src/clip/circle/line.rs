@@ -80,8 +80,8 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 
     #[inline]
-    pub fn get_stream(&self) -> LineSinkEnum<T> {
-        self.stream.clone()
+    pub fn get_stream(&mut self) -> &mut LineSinkEnum<T> {
+        &mut self.stream
     }
 
     #[inline]
