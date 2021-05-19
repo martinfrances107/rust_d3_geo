@@ -6,6 +6,7 @@ mod invert_test {
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualAreaRaw;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::orthographic::OrthographicRaw;
+    use rust_d3_geo::projection::mecator::MecatorRaw;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::stereographic::StereographicRaw;
     use rust_d3_geo::Transform;
@@ -15,8 +16,9 @@ mod invert_test {
         let projectors = vec![
             AzimuthalEqualAreaRaw::gen_projection_mutator(),
             EquirectangularRaw::gen_projection_mutator(),
-            StereographicRaw::gen_projection_mutator(),
             OrthographicRaw::gen_projection_mutator(),
+            MecatorRaw::gen_projection_mutator(),
+            StereographicRaw::gen_projection_mutator(),
         ];
 
         for pm in projectors {

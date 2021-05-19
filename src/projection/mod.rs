@@ -1,6 +1,7 @@
 pub mod azimuthal;
 pub mod azimuthal_equal_area;
 pub mod equirectangular;
+pub mod mecator;
 pub mod orthographic;
 pub mod projection;
 pub mod projection_equal;
@@ -25,6 +26,7 @@ use crate::Transform;
 
 use azimuthal_equal_area::AzimuthalEqualAreaRaw;
 use equirectangular::EquirectangularRaw;
+use mecator::MecatorRaw;
 use orthographic::OrthographicRaw;
 use stereographic::StereographicRaw;
 
@@ -36,6 +38,7 @@ where
     A(AzimuthalEqualAreaRaw<T>),
     E(EquirectangularRaw<T>),
     O(OrthographicRaw<T>),
+    M(MecatorRaw<T>),
     S(StereographicRaw<T>),
 }
 
@@ -46,9 +49,10 @@ where
     type TcC = Coordinate<T>;
     fn transform(&self, p: &Self::TcC) -> Self::TcC {
         match self {
-            ProjectionRawEnum::A(e) => e.transform(p),
+            ProjectionRawEnum::A(a) => a.transform(p),
             ProjectionRawEnum::E(e) => e.transform(p),
             ProjectionRawEnum::O(o) => o.transform(p),
+            ProjectionRawEnum::M(m) => m.transform(p),
             ProjectionRawEnum::S(s) => s.transform(p),
         }
     }
@@ -57,6 +61,7 @@ where
             ProjectionRawEnum::A(a) => a.invert(p),
             ProjectionRawEnum::E(e) => e.invert(p),
             ProjectionRawEnum::O(o) => o.invert(p),
+            ProjectionRawEnum::M(m) => m.invert(p),
             ProjectionRawEnum::S(s) => s.invert(p),
         }
     }
