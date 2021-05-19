@@ -3,6 +3,7 @@
 mod invert_test {
 
     use geo::Coordinate;
+    use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualAreaRaw;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::orthographic::OrthographicRaw;
     use rust_d3_geo::projection::projection_equal::projection_equal;
@@ -12,6 +13,7 @@ mod invert_test {
     #[test]
     fn symetric_invert() {
         let projectors = vec![
+            AzimuthalEqualAreaRaw::gen_projection_mutator(),
             EquirectangularRaw::gen_projection_mutator(),
             StereographicRaw::gen_projection_mutator(),
             OrthographicRaw::gen_projection_mutator(),

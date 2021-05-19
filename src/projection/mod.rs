@@ -54,7 +54,7 @@ where
     }
     fn invert(&self, p: &Self::TcC) -> Self::TcC {
         match self {
-            ProjectionRawEnum::A(e) => e.transform(p),
+            ProjectionRawEnum::A(a) => a.invert(p),
             ProjectionRawEnum::E(e) => e.invert(p),
             ProjectionRawEnum::O(o) => o.invert(p),
             ProjectionRawEnum::S(s) => s.invert(p),
