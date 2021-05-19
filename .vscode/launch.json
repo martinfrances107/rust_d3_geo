@@ -118,7 +118,26 @@
       },
       "args": [],
       "cwd": "${workspaceFolder}"
-    }
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "'invert_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=invert_test",
+          "--package=rust_d3_geo"
+        ],
+        "filter": {
+          "name": "invert_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
     {
       "type": "lldb",
       "request": "launch",
