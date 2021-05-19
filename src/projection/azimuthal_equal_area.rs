@@ -35,7 +35,7 @@ where
         let s = ProjectionRawEnum::A(AzimuthalEqualAreaRaw::default());
         let projection = ProjectionMutator::from_projection_raw(s, None);
         projection
-            .scale(T::from(124.74f64).unwrap())
+            .scale(T::from(124.75f64).unwrap())
             .clip_angle(StreamOrValueMaybe::Value(T::from(180f64 - 1e-3).unwrap()))
     }
 
