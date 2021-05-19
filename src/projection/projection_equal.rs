@@ -33,7 +33,7 @@ pub fn projection_equal<
     let actual_location = projection.invert(&expected_point);
     let actual_point = projection.transform(expected_location);
     println!(
-        "actual location [{:?}, {:?}], actual point [{:?}, {:?}]",
+        "actual location [{:?}, ----  {:?}], actual point [{:?}, {:?}]",
         actual_location.x, actual_location.y, actual_point.x, actual_point.y,
     );
     return planar_equal(&actual_point, expected_point, delta)
