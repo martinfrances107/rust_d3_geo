@@ -15,7 +15,7 @@ where
     }
     Coordinate {
         x: k * cy * p.x.sin(),
-        y: k.sin(),
+        y: k * p.y.sin(),
     }
 }
 
