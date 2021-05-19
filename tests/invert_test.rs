@@ -5,8 +5,8 @@ mod invert_test {
     use geo::Coordinate;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualAreaRaw;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
-    use rust_d3_geo::projection::orthographic::OrthographicRaw;
     use rust_d3_geo::projection::mecator::MecatorRaw;
+    use rust_d3_geo::projection::orthographic::OrthographicRaw;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::stereographic::StereographicRaw;
     use rust_d3_geo::Transform;
