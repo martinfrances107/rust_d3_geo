@@ -27,13 +27,13 @@ pub fn projection_equal<
     };
     println!("project_equal");
     println!(
-        "expected [{:?}, {:?}], [{:?}, {:?}]",
+        "expected location [{:?}, {:?}], expected point [{:?}, {:?}]",
         expected_location.x, expected_location.y, expected_point.x, expected_point.y,
     );
     let actual_location = projection.invert(&expected_point);
     let actual_point = projection.transform(expected_location);
     println!(
-        "actual [{:?}, {:?}], [{:?}, {:?}]",
+        "actual location [{:?}, {:?}], actual point [{:?}, {:?}]",
         actual_location.x, actual_location.y, actual_point.x, actual_point.y,
     );
     return planar_equal(&actual_point, expected_point, delta)
@@ -57,7 +57,7 @@ fn spherical_equal<T: CoordFloat + Debug + Display>(
 ) -> bool {
     let e0 = logitude_equal(actual.x, expected.x, delta);
     let e1 = in_delta(actual.y, expected.y, delta);
-    return e0 & e1;
+    return e0 && e1;
 }
 
 fn logitude_equal<T: Float>(actual: T, expected: T, delta: T) -> bool {
