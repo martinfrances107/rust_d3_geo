@@ -7,15 +7,19 @@ This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into a RUST
 Early draft port -  sub module by submodule. Sub module porting means the test have also been ported.
 No API stability guarentees.
 
-I have partial implementation of src/distance.rs and src/length.rs.
+Progress so far.
 
-Current the partially ported test show that they work for what I need DataObject::LineString and DataObject::FeatureCollection ( where LineString is involved)
+A list of all projections can be found in invert-test.rs. Out of the 15 distinct projections listed on 4 have been ported so far.
+(AziumuthalEqualArea, Equirectangular, Orthographic, Stereographic ) 
 
-Next sub modules on the roadmap -
+##TODO list
 
-* Clip, GeoStream, resample.
+Currently we have 47% test coverage ( as reported by cargo tarpaulin -o Html ) 
+* The current target is to increase the code coverage in resample.rs which has some known bugs.
+  clipcircle_test.ts and fit_test.rs exercise code in resample .. So I am focusing on those tests.
+* Next,  sections of projectionMutator.rs will have to be re-architected for the mecator projection to function like the javascript version.
 
-I am trying to get a program of mine to run faster, but I want this to eventually be a true library port. So feel free to add suggestions to my roadmap.
+I am trying to get a program of mine to run faster, but I want this to eventually be a true library port. So feel free to add suggestions to my todo list.
 
 ## Phase 2
 
@@ -25,5 +29,5 @@ API finialization. There maybe optimisation in the area of generics. So the API 
 Modules, passing test ready for phase 2 evaluation :-
 
 * rotation
-* projection
-* sterographic.
+* projection [ stream() does not yet cache the return value ].
+* The code in stream_dst.rs may need to be simplified.
