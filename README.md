@@ -9,10 +9,10 @@ No API stability guarentees.
 
 Progress so far.
 
-A list of all projections can be found in invert-test.rs. Out of the 15 distinct projections listed on 4 have been ported so far.
+A list of all projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 4 have been ported so far.
 (AziumuthalEqualArea, Equirectangular, Orthographic, Stereographic ) 
 
-##TODO list
+## TODO list
 
 Currently we have 47% test coverage ( as reported by cargo tarpaulin -o Html ) 
 * The current target is to increase the code coverage in resample.rs which has some known bugs.
