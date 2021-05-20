@@ -27,14 +27,14 @@ pub fn projection_equal<
     };
     println!("project_equal");
     println!(
-        "expected location [{:?}, {:?}], expected point [{:?}, {:?}]",
+        "1) expected location [{:?}, {:?}], expected point [{:?}, {:?}]",
         expected_location.x, expected_location.y, expected_point.x, expected_point.y,
     );
     let actual_location = projection.invert(&expected_point);
     let actual_point = projection.transform(expected_location);
     println!(
-        "actual location [{:?}, ----  {:?}], actual point [{:?}, {:?}]",
-        actual_location.x, actual_location.y, actual_point.x, actual_point.y,
+        "2) actual location {:?}, actual point {:?}",
+        actual_location, actual_point,
     );
     return planar_equal(&actual_point, expected_point, delta)
         && spherical_equal(&actual_location, expected_location, delta);
