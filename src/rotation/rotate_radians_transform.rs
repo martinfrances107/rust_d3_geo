@@ -28,6 +28,7 @@ where
     I(RotationIdentity<T>),
 }
 
+#[cfg(not(tarpaulin_include))]
 impl<T> Debug for RotateRadiansEnum<T>
 where
     T: CoordFloat + Default + FloatConst,
