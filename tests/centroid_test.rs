@@ -10,6 +10,7 @@ mod centroid_test {
     use geo::MultiPoint;
     use geo::Point;
     use rust_d3_geo::centroid::centroid_stream::CentroidStream;
+    use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::in_delta::in_delta_point;
 
     #[test]
@@ -297,7 +298,13 @@ mod centroid_test {
     //   test.ok(d3.geoCentroid({type: "Sphere"}).every(isNaN));
     //   test.end();
     // });
-
+    #[test]
+    fn the_centroid_of_a_sphere_is_ambigous() {
+        println!("the centroid of a sphere is ambiguous");
+        let point: Point<f64> = CentroidStream::default().centroid(&Sphere{});
+        assert!(point.x().is_nan());
+        assert!(point.y().is_nan());
+        }
     // tape("the centroid of a feature is the centroid of its constituent geometry", function(test) {
     //   test.inDelta(d3.geoCentroid({type: "Feature", geometry: {type: "LineString", coordinates: [[1, 1], [1, 1]]}}), [1, 1], 1e-6);
     //   test.inDelta(d3.geoCentroid({type: "Feature", geometry: {type: "Point", coordinates: [1, 1]}}), [1, 1], 1e-6);
