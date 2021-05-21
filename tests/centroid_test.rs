@@ -301,10 +301,10 @@ mod centroid_test {
     #[test]
     fn the_centroid_of_a_sphere_is_ambigous() {
         println!("the centroid of a sphere is ambiguous");
-        let point: Point<f64> = CentroidStream::default().centroid(&Sphere{});
+        let point: Point<f64> = CentroidStream::default().centroid(&Sphere {});
         assert!(point.x().is_nan());
         assert!(point.y().is_nan());
-        }
+    }
     // tape("the centroid of a feature is the centroid of its constituent geometry", function(test) {
     //   test.inDelta(d3.geoCentroid({type: "Feature", geometry: {type: "LineString", coordinates: [[1, 1], [1, 1]]}}), [1, 1], 1e-6);
     //   test.inDelta(d3.geoCentroid({type: "Feature", geometry: {type: "Point", coordinates: [1, 1]}}), [1, 1], 1e-6);

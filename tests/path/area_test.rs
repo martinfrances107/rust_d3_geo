@@ -14,6 +14,7 @@ mod area_test {
     use num_traits::AsPrimitive;
     use num_traits::FloatConst;
 
+    use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::path::Path;
     use rust_d3_geo::path::PathResultEnum;
@@ -90,19 +91,12 @@ mod area_test {
         let eq = equirectangular::<f64>();
         assert_eq!(test_area(eq, &object), 16.0);
     }
+
+    #[test]
+    fn test_area_of_a_sphere() {
+        println!("geoPath.area(…) of a sphere");
+        let eq = equirectangular::<f64>();
+        let object = DataObject::Sphere(Sphere {});
+        assert_eq!(test_area(eq, &object), 1620000.0);
+    }
 }
-
-// // tape("geoPath.area(…) of a polygon with holes", function(test) {
-// //   test.equal(testArea(equirectangular, {
-// //     type: "Polygon",
-// //     coordinates: [[[100, 0], [100, 1], [101, 1], [101, 0], [100, 0]], [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
-// //   }), 16);
-// //   test.end();
-// // });
-
-// // tape("geoPath.area(…) of a sphere", function(test) {
-// //   test.equal(testArea(equirectangular, {
-// //     type: "Sphere",
-// //   }), 1620000);
-// //   test.end();
-// // });

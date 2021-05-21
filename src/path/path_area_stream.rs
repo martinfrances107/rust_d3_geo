@@ -103,8 +103,12 @@ where
 {
     type C = Coordinate<T>;
 
-    fn sphere(&mut self) {}
+    #[inline]
+    fn sphere(&mut self) {
+        self.area_sum += T::from(2.0).unwrap() * T::PI();
+    }
 
+    #[inline]
     fn get_dst(&self) -> StreamDst<T> {
         StreamDst::PAS(self.clone())
     }
