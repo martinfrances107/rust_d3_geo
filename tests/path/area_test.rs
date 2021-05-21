@@ -1,6 +1,5 @@
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
-
 mod area_test {
 
     use std::f64::consts::PI;
