@@ -1,6 +1,7 @@
 pub mod azimuthal;
 pub mod azimuthal_equal_area;
 pub mod equirectangular;
+mod fit;
 pub mod mecator;
 pub mod orthographic;
 pub mod projection;

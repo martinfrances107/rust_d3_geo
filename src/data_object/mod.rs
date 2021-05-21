@@ -8,7 +8,10 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Geometry;
 
+pub mod sphere;
+
 use crate::stream::{Stream, Streamable};
+use sphere::Sphere;
 
 #[derive(Clone, Debug)]
 pub enum FeatureProperty<T>
@@ -55,6 +58,7 @@ pub enum DataObject<T>
 where
     T: CoordFloat + FloatConst,
 {
+    Sphere(Sphere),
     Geometry(Geometry<T>),
     Collection(Collection<T>),
 }
@@ -66,10 +70,11 @@ where
     type SC = Coordinate<T>;
     fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
         match self {
-            DataObject::Geometry(g) => g.to_stream(stream),
             DataObject::Collection(Collection::Feature { feature: _ }) => {
                 todo!("fixme");
             }
+            DataObject::Geometry(g) => g.to_stream(stream),
+            DataObject::Sphere(s) => s.to_stream(stream),
         }
     }
 }

@@ -1,3 +1,4 @@
+pub mod bounds_stream;
 pub mod path;
 pub mod path_area_stream;
 pub mod path_context;
@@ -28,7 +29,7 @@ where
     Sring(String),
     Area(T),
     Measure(T),
-    Bound(T),
+    Bounds([Coordinate<T>; 2]),
     Centroid(T),
 }
 
@@ -65,7 +66,7 @@ trait PathTrait: PointRadiusTrait // where
     }
     fn measure(&self, d: Self::PtDo) -> Self::PtPRE;
 
-    fn bound(&self, d: Self::PtDo) -> Self::PtPRE;
+    fn bounds(&self, d: Self::PtDo) -> Self::PtPRE;
 
     fn centroid(&self, d: Self::PtDo) -> Self::PtPRE;
 

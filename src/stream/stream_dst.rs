@@ -12,6 +12,7 @@ use super::StreamSourceDummy;
 use crate::centroid::centroid_stream::CentroidStream;
 use crate::circle::circle::CircleStream;
 use crate::length::LengthStream;
+use crate::path::bounds_stream::BoundsStream;
 use crate::path::path_area_stream::PathAreaStream;
 use crate::path::path_context_stream::PathContextStream;
 use crate::path::path_string::PathString;
@@ -25,6 +26,7 @@ where
 {
     Context2D(CanvasRenderingContext2d),
     Circle(CircleStream<T>),
+    BS(BoundsStream<T>),
     CS(CentroidStream<T>),
     LS(LengthStream<T>),
     PAS(PathAreaStream<T>),
@@ -45,8 +47,9 @@ where
                 None
             }
             StreamDst::Circle(_) => None,
-            StreamDst::CS(_) => None,
-            StreamDst::LS(_) => None,
+            StreamDst::BS(bs) => bs.result(),
+            StreamDst::CS(_cs) => None,
+            StreamDst::LS(_ls) => None,
             StreamDst::PAS(pas) => pas.result(),
             StreamDst::PathContextStream(pcs) => pcs.result(),
             StreamDst::PathString(ps) => ps.result(),
@@ -71,6 +74,7 @@ where
             StreamDst::PathContextStream(pas) => pas.get_dst(),
             StreamDst::PAS(pas) => pas.get_dst(),
             StreamDst::PathString(ps) => ps.get_dst(),
+            StreamDst::BS(bs) => bs.get_dst(),
             StreamDst::CS(cs) => cs.get_dst(),
             StreamDst::LS(ls) => ls.get_dst(),
             StreamDst::Circle(c) => c.get_dst(),
@@ -87,6 +91,7 @@ where
             StreamDst::PathContextStream(pas) => pas.sphere(),
             StreamDst::PAS(pas) => pas.sphere(),
             StreamDst::PathString(ps) => ps.sphere(),
+            StreamDst::BS(bs) => bs.sphere(),
             StreamDst::CS(cs) => cs.sphere(),
             StreamDst::LS(ls) => ls.sphere(),
             StreamDst::Circle(c) => c.sphere(),
@@ -103,6 +108,7 @@ where
             StreamDst::PathContextStream(pas) => pas.polygon_start(),
             StreamDst::PAS(pas) => pas.polygon_start(),
             StreamDst::PathString(ps) => ps.polygon_start(),
+            StreamDst::BS(bs) => bs.polygon_start(),
             StreamDst::CS(cs) => cs.polygon_start(),
             StreamDst::LS(ls) => ls.polygon_start(),
             StreamDst::Circle(c) => c.polygon_start(),
@@ -119,6 +125,7 @@ where
             StreamDst::PathContextStream(pas) => pas.polygon_end(),
             StreamDst::PAS(pas) => pas.polygon_end(),
             StreamDst::PathString(ps) => ps.polygon_end(),
+            StreamDst::BS(bs) => bs.polygon_end(),
             StreamDst::CS(cs) => cs.polygon_end(),
             StreamDst::LS(ls) => ls.polygon_end(),
             StreamDst::Circle(c) => c.polygon_end(),
@@ -135,6 +142,7 @@ where
             StreamDst::PathContextStream(pas) => pas.point(p, m),
             StreamDst::PAS(pas) => pas.point(p, m),
             StreamDst::PathString(ps) => ps.point(p, m),
+            StreamDst::BS(bs) => bs.point(p, m),
             StreamDst::CS(cs) => cs.point(p, m),
             StreamDst::LS(ls) => ls.point(p, m),
             StreamDst::Circle(c) => c.point(p, m),
@@ -151,6 +159,7 @@ where
             StreamDst::PathContextStream(pas) => pas.line_start(),
             StreamDst::PAS(pas) => pas.line_start(),
             StreamDst::PathString(ps) => ps.line_start(),
+            StreamDst::BS(bs) => bs.line_start(),
             StreamDst::CS(cs) => cs.line_start(),
             StreamDst::LS(ls) => ls.line_start(),
             StreamDst::Circle(c) => c.line_start(),
@@ -167,6 +176,7 @@ where
             StreamDst::PathContextStream(pas) => pas.line_end(),
             StreamDst::PAS(pas) => pas.line_end(),
             StreamDst::PathString(ps) => ps.line_end(),
+            StreamDst::BS(bs) => bs.line_end(),
             StreamDst::CS(cs) => cs.line_end(),
             StreamDst::LS(ls) => ls.line_end(),
             StreamDst::Circle(c) => c.line_end(),

@@ -2,9 +2,12 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
+
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::clip::clip_sink_enum::ClipSinkEnum;
+use crate::data_object::DataObject;
 use crate::stream::StreamSimpleNode;
 // use crate::stream::StreamProcessor;
 
@@ -143,7 +146,7 @@ pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Disp
     //  * @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
     //  * @param object A GeoJson Geometry Object or GeoSphere object supported by d3-geo (An extension of GeoJSON).
     //  */
-    // fitExtent(extent: [[number, number], [number, number]], object: GeoGeometryObjects): this;
+    fn fit_extent(self, extent: [Coordinate<T>; 2], object: DataObject<T>) -> ProjectionMutator<T>;
     // /**
     //  * Sets the projection’s scale and translate to fit the specified geographic geometry collection in the center of the given extent.
     //  * Returns the projection.
@@ -296,9 +299,9 @@ pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Disp
 
     fn rotate(self, angles: [T; 3]) -> ProjectionMutator<T>;
 
-    fn get_extent(&self) -> Option<[Coordinate<T>; 2]>;
+    fn get_clip_extent(&self) -> Option<[Coordinate<T>; 2]>;
 
-    fn extent(self) -> ProjectionMutator<T>;
+    fn clip_extent(self, extent: Option<[Coordinate<T>; 2]>) -> ProjectionMutator<T>;
 
     fn get_scale(&self) -> T;
     // /**

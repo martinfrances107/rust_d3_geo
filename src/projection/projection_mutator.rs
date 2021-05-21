@@ -2,6 +2,7 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 
 use derivative::Derivative;
+use geo::Geometry;
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -12,6 +13,7 @@ use crate::clip::clip::Clip;
 use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
 use crate::compose::ComposeElemEnum;
+use crate::data_object::DataObject;
 use crate::projection::resample::gen_resample_node;
 use crate::projection::resample::ResampleEnum;
 use crate::projection::stream_transform::StreamTransform;
@@ -27,6 +29,8 @@ use super::projection::StreamOrValueMaybe;
 use super::resample::resample::Resample;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 use super::ProjectionRawEnum;
+
+use super::fit::fit_extent;
 
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -270,6 +274,10 @@ where
         self.reset()
     }
 
+    fn fit_extent(self, extent: [Coordinate<T>; 2], object: DataObject<T>) -> ProjectionMutator<T> {
+        fit_extent(self, extent, object)
+    }
+
     // fn get_clip_angle(&self) -> T {}
 
     fn clip_angle(mut self, angle: StreamOrValueMaybe<T>) -> ProjectionMutator<T> {
@@ -291,7 +299,7 @@ where
         self.reset()
     }
 
-    fn get_extent(&self) -> Option<[Coordinate<T>; 2]> {
+    fn get_clip_extent(&self) -> Option<[Coordinate<T>; 2]> {
         match (self.x0, self.y0, self.x1, self.y1) {
             (Some(x0), Some(y0), Some(x1), Some(y1)) => {
                 Some([Coordinate { x: x0, y: y0 }, Coordinate { x: x1, y: y1 }])
@@ -300,9 +308,30 @@ where
         }
     }
 
-    fn extent(self) -> ProjectionMutator<T> {
-        // todo!("Must implement.");
-        self
+    //  (postclip = _ == null ? (x0 = y0 = x1 = y1 = null, identity) : clipRectangle(x0 = +_[0][0], y0 = +_[0][1], x1 = +_[1][0], y1 = +_[1][1]), reset()) :
+
+    fn clip_extent(mut self, extent: Option<[Coordinate<T>; 2]>) -> ProjectionMutator<T> {
+        match extent {
+            None => {
+                self.x0 = None;
+                self.y0 = None;
+                self.x1 = None;
+                self.y1 = None;
+                // self.postclip = Identity;
+                // Is this the identity projection Mutator???
+                todo!("must implement identity");
+            }
+            Some(extent) => {
+                // set x0 ...
+                self.x0 = Some(extent[0].x);
+                self.y0 = Some(extent[0].y);
+                self.x1 = Some(extent[1].x);
+                self.y1 = Some(extent[1].y);
+                // todo!("must implement clip rectangle")
+                // clipRectangle(self.x0, self.y0, self.x1, self.y1);
+                self.reset()
+            }
+        }
     }
 
     #[inline]
