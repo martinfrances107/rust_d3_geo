@@ -274,6 +274,7 @@ where
         self.reset()
     }
 
+    #[inline]
     fn fit_extent(self, extent: [Coordinate<T>; 2], object: DataObject<T>) -> ProjectionMutator<T> {
         fit_extent(self, extent, object)
     }
