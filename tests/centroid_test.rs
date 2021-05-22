@@ -4,7 +4,7 @@ mod centroid_test {
     extern crate pretty_assertions;
     use geo::line_string;
     use geo::point;
-    use geo::prelude::*;
+    use geo::polygon;
     use geo::Geometry;
     use geo::GeometryCollection;
     use geo::MultiPoint;
@@ -86,30 +86,17 @@ mod centroid_test {
     //   test.end();
     // });
 
-    // tape("the centroid of a line string is the (spherical) average of its constituent great arc segments", function(test) {
-    //   test.inDelta(d3.geoCentroid({type: "LineString", coordinates: [[0, 0], [1, 0]]}), [0.5, 0], 1e-6);
-    //   test.inDelta(d3.geoCentroid({type: "LineString", coordinates: [[0, 0], [0, 90]]}), [0, 45], 1e-6);
-    //   test.inDelta(d3.geoCentroid({type: "LineString", coordinates: [[0, 0], [0, 45], [0, 90]]}), [0, 45], 1e-6);
-    //   test.inDelta(d3.geoCentroid({type: "LineString", coordinates: [[-1, -1], [1, 1]]}), [0, 0], 1e-6);
-    //   test.inDelta(d3.geoCentroid({type: "LineString", coordinates: [[-60, -1], [60, 1]]}), [0, 0], 1e-6);
-    //   test.inDelta(d3.geoCentroid({type: "LineString", coordinates: [[179, -1], [-179, 1]]}), [180, 0], 1e-6);
-    //   test.inDelta(d3.geoCentroid({type: "LineString", coordinates: [[-179, 0], [0, 0], [179, 0]]}), [0, 0], 1e-6);
-    //   test.inDelta(d3.geoCentroid({type: "LineString", coordinates: [[-180, -90], [0, 0], [0, 90]]}), [0, 0], 1e-6);
-    //   test.end();
-    // });
     #[test]
     fn line_string_great_arc_segments() {
         println!("the centroid of a line string is the (spherical) average of its constituent great arc segments");
         assert!(in_delta_point(
-            CentroidStream::default()
-                .centroid(&line_string![(
-                    x: 0.0f64,
-                    y: 0.0f64
-                ), (
-                    x: 1.0f64,
-                    y: 0.0f64
-                )])
-                .centroid(),
+            CentroidStream::default().centroid(&line_string![(
+                x: 0.0f64,
+                y: 0.0f64
+            ), (
+                x: 1.0f64,
+                y: 0.0f64
+            )]),
             Point::new(0.5f64, 0f64),
             1e-6
         ));
@@ -203,6 +190,35 @@ mod centroid_test {
     //   test.end();
     // });
 
+    #[test]
+    fn an_empty_polygon_with_non_zero_extent_is_treated_as_a_line() {
+        println!("an empty polygon with non-zero extent is treated as a line");
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(&polygon![(
+            x: 1.0f64,
+            y: 1.0f64
+            ),
+            (
+                x: 2.0f64,
+                y: 1.0f64
+            ),
+            (
+                x: 3.0f64,
+                y: 1.0f64
+            ),
+            (
+                x: 2.0f64,
+                y: 1.0f64
+            ),
+            (
+                x: 1.0f64,
+                y: 1.0f64
+            )
+            ]),
+            Point::new(2f64, 1.000076f64),
+            1e-6
+        ));
+    }
     // tape("an empty polygon with zero extent is treated as a point", function(test) {
     //   test.inDelta(d3.geoCentroid({type: "Polygon", coordinates: [[[1, 1], [1, 1], [1, 1], [1, 1]]]}), [1, 1], 1e-6);
     //   test.inDelta(d3.geoCentroid({type: "GeometryCollection", geometries: [{type: "Point", coordinates: [0, 0]}, {type: "Polygon", coordinates: [[[1, 2], [1, 2], [1, 2], [1, 2]]]}]}), [0.799907, 1.600077], 1e-6);

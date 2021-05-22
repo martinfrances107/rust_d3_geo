@@ -10,7 +10,7 @@ use geo::{CoordFloat, Coordinate, Point};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-// TO MUST use a math library
+// TODO MUST use a math library
 pub const EPSILON: f64 = 1e-6;
 pub const EPSILON2: f64 = 1e-12;
 
@@ -133,6 +133,8 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display
     }
 
     fn centroid_ring_point_first(&mut self, p: &Coordinate<T>) {
+        self.lambda00 = p.x;
+        self.phi00 = p.y;
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let cos_phi = phi.cos();
@@ -176,7 +178,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display
     }
 
     pub fn centroid_ring_end(&mut self) {
-        self.centroid_point(&Coordinate {
+        self.centroid_ring_point(&Coordinate {
             x: self.lambda00,
             y: self.phi00,
         });
@@ -240,16 +242,19 @@ impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Default + Display
         (self.point_fn)(self, p);
     }
 
+    #[inline]
     fn polygon_start(&mut self) {
         self.line_start_fn = Self::centroid_ring_start;
         self.line_end_fn = Self::centroid_ring_end;
     }
 
+    #[inline]
     fn polygon_end(&mut self) {
         self.line_start_fn = Self::centroid_line_start;
         self.line_end_fn = Self::centroid_line_end;
     }
 
+    #[inline]
     fn get_dst(&self) -> StreamDst<T> {
         StreamDst::CS(self.clone())
     }
