@@ -174,17 +174,10 @@ where
     }
 
     fn line_point(&mut self, p: &Coordinate<T>) {
-        let p = p.clone();
         let c = cartesian(&p);
         let project_ptr = &self.project;
         let project = project_ptr;
-        let p = project.transform(&p);
-        self.x0 = p.x;
-        self.y0 = p.y;
-        self.lambda0 = p.x;
-        self.a0 = c[0];
-        self.b0 = c[1];
-        self.c0 = c[2];
+        let p_transform = project.transform(&p);
         self.resample_line_to(
             self.x0,
             self.y0,
@@ -192,15 +185,21 @@ where
             self.a0,
             self.b0,
             self.c0,
-            self.x0,
-            self.y0,
-            self.lambda0,
-            self.a0,
-            self.b0,
-            self.c0,
+            p_transform.x,
+            p_transform.y,
+            p.x,
+            c[0],
+            c[1],
+            c[2],
             MAXDEPTH,
             &mut self.stream.clone(),
         );
+        self.x0 = p_transform.x;
+        self.y0 = p_transform.y;
+        self.lambda0 = p.x;
+        self.a0 = c[0];
+        self.b0 = c[1];
+        self.c0 = c[2];
         self.stream.point(
             &Coordinate {
                 x: self.x0,
@@ -233,7 +232,6 @@ where
         let dy = y1 - y0;
         let d2 = dx * dx + dy * dy;
 
-        // if (d2 > 4 * delta2 && depth--) {
         if d2 > T::from(4f64).unwrap() * self.delta2 {
             depth -= 1u8;
             if depth > 0u8 {
@@ -275,13 +273,14 @@ where
                 {
                     a = a / m;
                     b = b / m;
-                    let s = stream;
                     self.resample_line_to(
-                        x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth, s,
+                        x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth, stream,
                     );
 
+                    stream.point(&Coordinate { x: x2, y: y2 }, None);
+
                     self.resample_line_to(
-                        x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, s,
+                        x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, stream,
                     );
                 }
             }
