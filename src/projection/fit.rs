@@ -1,15 +1,3 @@
-// import {default as geoStream} from "../stream.js";
-// import boundsStream from "../path/bounds.js";
-
-// function fit(projection, fitBounds, object) {
-//   var clip = projection.clipExtent && projection.clipExtent();
-//   projection.scale(150).translate([0, 0]);
-//   if (clip != null) projection.clipExtent(null);
-//   geoStream(object, projection.stream(boundsStream));
-//   fitBounds(boundsStream.result());
-//   if (clip != null) projection.clipExtent(clip);
-//   return projection;
-// }
 use std::fmt::Display;
 use std::ops::AddAssign;
 

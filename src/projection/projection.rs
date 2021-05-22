@@ -6,13 +6,10 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::data_object::DataObject;
 use crate::stream::StreamSimpleNode;
-// use crate::stream::StreamProcessor;
 
 pub enum StreamOrValueMaybe<T: CoordFloat> {
-    // None,
     Value(T),
     SP(StreamSimpleNode<T>),
 }

@@ -230,7 +230,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
                     false,
                 ) {
                     IntersectReturn::One(le) => le,
-                    IntersectReturn::Two([p, _]) => {
+                    IntersectReturn::Two([_p, _m]) => {
                         panic!("Silently dropping second point.");
                     }
                     IntersectReturn::None => None,

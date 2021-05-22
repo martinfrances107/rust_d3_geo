@@ -92,7 +92,6 @@ where
             }
             None => {
                 panic!("No object supplied.");
-                None
             }
         }
 

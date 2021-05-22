@@ -4,8 +4,6 @@ version = "0.1.0"
 authors = ["martin frances <martinfrances107@hotmail.com>"]
 edition = "2018"
 
-debug = true
-
 [dependencies]
 derivative = "2.2.0"
 num-traits="0.2.14"
