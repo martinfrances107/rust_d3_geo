@@ -88,7 +88,7 @@ where
         if !self.string.is_empty() {
             let result = self.string.join("");
             self.string = Vec::new();
-            return Some(PathResultEnum::Sring(result));
+            return Some(PathResultEnum::String(result));
         } else {
             return None;
         }

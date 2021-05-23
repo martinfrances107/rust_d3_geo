@@ -50,7 +50,7 @@
 
 //         match Path::generate(Some(projection), None).object(Some(d)) {
 //             Some(p) => match p {
-//                 PathResultEnum::Sring(s) => {
+//                 PathResultEnum::String(s) => {
 //                     println!("string  {:#?}", s);
 //                     let rounded = ROUND_DOWN.replace_all(&s, "");
 //                     println!();

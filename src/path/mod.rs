@@ -26,7 +26,7 @@ where
 {
     Path(Vec<Vec<Coordinate<T>>>),
     ClipBufferOutput(VecDeque<Vec<LineElem<T>>>),
-    Sring(String),
+    String(String),
     Area(T),
     Measure(T),
     Bounds([Coordinate<T>; 2]),
