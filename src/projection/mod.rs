@@ -1,6 +1,7 @@
 pub mod azimuthal;
 pub mod azimuthal_equal_area;
 pub mod equirectangular;
+pub mod gnomic;
 mod fit;
 pub mod mecator;
 pub mod orthographic;
@@ -27,6 +28,7 @@ use crate::Transform;
 
 use azimuthal_equal_area::AzimuthalEqualAreaRaw;
 use equirectangular::EquirectangularRaw;
+use gnomic::GnomicRaw;
 use mecator::MecatorRaw;
 use orthographic::OrthographicRaw;
 use stereographic::StereographicRaw;
@@ -39,6 +41,7 @@ where
     A(AzimuthalEqualAreaRaw<T>),
     E(EquirectangularRaw<T>),
     O(OrthographicRaw<T>),
+    G(GnomicRaw<T>),
     M(MecatorRaw<T>),
     S(StereographicRaw<T>),
 }
@@ -52,6 +55,7 @@ where
         match self {
             ProjectionRawEnum::A(a) => a.transform(p),
             ProjectionRawEnum::E(e) => e.transform(p),
+            ProjectionRawEnum::G(g) => g.transform(p),
             ProjectionRawEnum::O(o) => o.transform(p),
             ProjectionRawEnum::M(m) => m.transform(p),
             ProjectionRawEnum::S(s) => s.transform(p),
@@ -61,6 +65,7 @@ where
         match self {
             ProjectionRawEnum::A(a) => a.invert(p),
             ProjectionRawEnum::E(e) => e.invert(p),
+            ProjectionRawEnum::G(g) => g.invert(p),
             ProjectionRawEnum::O(o) => o.invert(p),
             ProjectionRawEnum::M(m) => m.invert(p),
             ProjectionRawEnum::S(s) => s.invert(p),
