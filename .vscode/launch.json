@@ -160,6 +160,25 @@
     {
       "type": "lldb",
       "request": "launch",
+      "name": "'index_test'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--test=index_test",
+          "--package=rust_d3_geo"
+        ],
+        "filter": {
+          "name": "index_test",
+          "kind": "test"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
       "name": "'rust_d3_geo: clipcircle_test'",
       "cargo": {
         "args": [
