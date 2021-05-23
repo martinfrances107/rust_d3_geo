@@ -1,4 +1,3 @@
-
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
@@ -27,10 +26,6 @@ where
     phantom: PhantomData<T>,
 }
 
-
-
-
-
 impl<T> GnomicRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
@@ -53,9 +48,6 @@ where
     }
 }
 
-
-
-
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
     for GnomicRaw<T>
 {
@@ -74,4 +66,3 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
         azimuthal_invert(p, Self::atan)
     }
 }
-

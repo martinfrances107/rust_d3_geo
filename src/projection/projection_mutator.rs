@@ -267,6 +267,35 @@ where
         self.delta2.sqrt()
     }
 
+    #[inline]
+    fn get_reflect_x(&self) -> bool {
+        self.sx < T::zero()
+    }
+
+    fn reflect_x(mut self, reflect: bool) -> ProjectionMutator<T> {
+        if reflect {
+            self.sx = T::from(-1.0).unwrap();
+        } else {
+            self.sx = T::one();
+        }
+        self.recenter()
+    }
+
+    #[inline]
+    fn get_reflect_y(&self) -> bool {
+        self.sy < T::zero()
+    }
+
+    #[inline]
+    fn reflect_y(mut self, reflect: bool) -> ProjectionMutator<T> {
+        if reflect {
+            self.sy = T::from(-1.0).unwrap();
+        } else {
+            self.sy = T::one();
+        }
+        self.recenter()
+    }
+
     fn precision(mut self, delta: T) -> ProjectionMutator<T> {
         self.delta2 = delta * delta;
         self.project_resample = gen_resample_node(self.project_transform.clone(), self.delta2);
