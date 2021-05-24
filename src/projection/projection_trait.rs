@@ -8,6 +8,7 @@ use num_traits::FloatConst;
 
 use crate::data_object::DataObject;
 use crate::stream::StreamSimpleNode;
+use super::scale::Scale;
 
 pub enum StreamOrValueMaybe<T: CoordFloat> {
     Value(T),
@@ -16,7 +17,9 @@ pub enum StreamOrValueMaybe<T: CoordFloat> {
 
 use crate::projection::projection_mutator::ProjectionMutator;
 
-pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> {
+pub trait ProjectionTrait<T> : Scale<T>
+where T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
+{
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.
@@ -308,16 +311,7 @@ pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Disp
 
     fn clip_extent(self, extent: Option<[Coordinate<T>; 2]>) -> ProjectionMutator<T>;
 
-    fn get_scale(&self) -> T;
-    // /**
-    //  * Sets the projection’s scale factor to the specified value and returns the projection.
-    //  * The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
-    //  *
-    //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
-    //  */
-    // fn scale(&mut self, scale: &F);
-    fn scale(self, scale: T) -> ProjectionMutator<T>;
-
+    
     fn get_translate(&self) -> Coordinate<T>;
 
     // /**

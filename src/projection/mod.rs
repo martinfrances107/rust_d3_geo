@@ -5,7 +5,7 @@ pub mod gnomic;
 mod fit;
 pub mod mecator;
 pub mod orthographic;
-pub mod projection;
+pub mod projection_trait;
 pub mod projection_equal;
 pub mod projection_mutator;
 pub mod resample;
@@ -13,6 +13,7 @@ pub mod scale_translate_rotate;
 pub mod stereographic;
 pub mod stream_transform;
 pub mod stream_transform_radians;
+pub mod scale;
 
 mod scale_translate;
 

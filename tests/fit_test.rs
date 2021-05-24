@@ -10,7 +10,8 @@ mod fit_test {
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::in_delta::in_delta;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
-    use rust_d3_geo::projection::projection::Projection;
+    use rust_d3_geo::projection::projection_trait::ProjectionTrait;
+    use rust_d3_geo::projection::scale::Scale;
 
     #[test]
     fn test_fit_extent_sphere_equirectangular() {

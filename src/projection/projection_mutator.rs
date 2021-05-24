@@ -23,11 +23,12 @@ use crate::rotation::rotation_identity::RotationIdentity;
 use crate::stream::stream_dst::StreamDst;
 use crate::Transform;
 
-use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
+use super::projection_trait::ProjectionTrait;
+use super::projection_trait::StreamOrValueMaybe;
 use super::resample::resample::Resample;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 use super::ProjectionRawEnum;
+use super::scale::Scale;
 
 use super::fit::fit_extent;
 
@@ -222,7 +223,23 @@ where
     }
 }
 
-impl<T> Projection<T> for ProjectionMutator<T>
+impl<T, ProjectionRaw<T>> Scale<T> for ProjectionMutator<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
+
+    #[inline]
+    fn get_scale(&self) -> T {
+        self.k
+    }
+
+    fn scale(mut self, scale: T) -> ProjectionMutator<T> {
+        self.k = scale;
+        self.recenter()
+    }
+}
+
+impl<T> ProjectionTrait<T> for ProjectionMutator<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
@@ -363,15 +380,6 @@ where
         }
     }
 
-    #[inline]
-    fn get_scale(&self) -> T {
-        self.k
-    }
-
-    fn scale(mut self, scale: T) -> ProjectionMutator<T> {
-        self.k = scale;
-        self.recenter()
-    }
 
     #[inline]
     fn get_translate(&self) -> Coordinate<T> {

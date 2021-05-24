@@ -8,7 +8,8 @@ use num_traits::AsPrimitive;
 
 use crate::Transform;
 
-use super::projection::Projection;
+// use super::projection::Projection;
+use super::scale::Scale;
 use super::projection_mutator::ProjectionMutator;
 use super::ProjectionRawEnum;
 

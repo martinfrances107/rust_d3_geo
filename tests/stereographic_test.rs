@@ -2,7 +2,8 @@
 #[cfg(test)]
 mod stereographic_tests {
     use geo::Coordinate;
-    use rust_d3_geo::projection::projection::Projection;
+    use rust_d3_geo::projection::projection_trait::ProjectionTrait;
+    use rust_d3_geo::projection::scale::Scale;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::stereographic::StereographicRaw;
 

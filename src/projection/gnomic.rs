@@ -9,8 +9,9 @@ use num_traits::AsPrimitive;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
-use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
+use super::projection_trait::ProjectionTrait;
+use super::scale::Scale;
+use super::projection_trait::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;
 use super::ProjectionRawEnum;
 

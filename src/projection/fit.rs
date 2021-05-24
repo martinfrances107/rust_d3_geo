@@ -15,7 +15,8 @@ use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
-use super::projection::Projection;
+use super::projection_trait::ProjectionTrait;
+use super::scale::Scale;
 use super::projection_mutator::ProjectionMutator;
 
 fn fit<T>(

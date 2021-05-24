@@ -18,7 +18,8 @@ mod area_test {
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::path::Path;
     use rust_d3_geo::path::PathResultEnum;
-    use rust_d3_geo::projection::projection::Projection;
+    use rust_d3_geo::projection::projection_trait::ProjectionTrait;
+    use rust_d3_geo::projection::scale::Scale;
     use rust_d3_geo::projection::{
         equirectangular::EquirectangularRaw, projection_mutator::ProjectionMutator,
     };
