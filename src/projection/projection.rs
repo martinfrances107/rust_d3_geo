@@ -276,6 +276,14 @@ pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Disp
     //  */
     fn precision(self, delta: T) -> ProjectionMutator<T>;
 
+    fn get_reflect_x(&self) -> bool;
+
+    fn reflect_x(self, reflect: bool) -> ProjectionMutator<T>;
+
+    fn get_reflect_y(&self) -> bool;
+
+    fn reflect_y(self, reflect: bool) -> ProjectionMutator<T>;
+
     // /**
     //  * Returns the projection’s current angle, which defaults to 0°.
     //  */
