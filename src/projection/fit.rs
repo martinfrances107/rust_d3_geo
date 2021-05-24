@@ -26,7 +26,6 @@ fn fit<T>(
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    // Must revisit.
     let clip = projection.get_clip_extent();
     let projection1 = projection
         .scale(T::from(150.0).unwrap())
@@ -34,13 +33,13 @@ where
             x: T::zero(),
             y: T::zero(),
         });
-    // revisit
-    // if clip.is_none() {
-    //     let projection2 = projection1.clip_extent(None);
-    // }
+    let projection2 = match clip {
+        Some(_) => projection1.clip_extent(None),
+        None => projection1,
+    };
 
     let bounds_stream = StreamDst::BS(BoundsStream::default());
-    let mut stream_in = projection1.stream(bounds_stream);
+    let mut stream_in = projection2.stream(bounds_stream);
 
     object.to_stream(&mut stream_in);
     let bounds = match stream_in.get_dst().result() {
@@ -49,12 +48,11 @@ where
             panic!("Expecting only a bounds result from a Bounds stream.");
         }
     };
-    let projection2 = fit_bounds(bounds, projection1);
-    // revisit
-    // if clip.is_none() {
-    //     projection = projection1.clip_extent(clip);
-    // }
-    projection2
+    let projection3 = fit_bounds(bounds, projection2);
+    match clip {
+        Some(_) => projection3.clip_extent(clip),
+        None => projection3,
+    }
 }
 
 pub fn fit_extent<T>(
