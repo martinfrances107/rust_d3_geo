@@ -11,7 +11,6 @@ use crate::Transform;
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;
-use super::ProjectionRawEnum;
 
 /// Why the Phantom Data is required here...
 ///
@@ -29,9 +28,9 @@ impl<T> OrthographicRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn gen_projection_mutator() -> ProjectionMutator<T> {
-        let o = ProjectionRawEnum::O(OrthographicRaw::default());
-        ProjectionMutator::from_projection_raw(o, None)
+    #[inline]
+    pub fn gen_projection_mutator() -> ProjectionMutator<OrthographicRaw<T>, T> {
+        ProjectionMutator::from_projection_raw(OrthographicRaw::default(), None)
             .scale(T::from(249.5f64).unwrap())
             .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
     }

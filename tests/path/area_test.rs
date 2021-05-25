@@ -27,14 +27,17 @@ mod area_test {
     fn equirectangular<
         'a,
         T: AsPrimitive<T> + AddAssign + CoordFloat + Default + Display + FloatConst,
-    >() -> ProjectionMutator<T> {
+    >() -> ProjectionMutator<EquirectangularRaw<T>, T> {
         EquirectangularRaw::gen_projection_mutator()
             .scale(T::from(900f64 / PI).unwrap())
             .precision(T::zero())
     }
 
     #[inline]
-    fn test_area<'a, T>(projection: ProjectionMutator<T>, object: &DataObject<T>) -> T
+    fn test_area<'a, T>(
+        projection: ProjectionMutator<EquirectangularRaw<T>, T>,
+        object: &DataObject<T>,
+    ) -> T
     where
         T: AsPrimitive<T> + CoordFloat + FloatConst + Display + AddAssign + Default,
     {

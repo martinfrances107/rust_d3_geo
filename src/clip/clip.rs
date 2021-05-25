@@ -13,6 +13,7 @@ use crate::stream::stream_dst::StreamDst;
 use crate::stream::Clean;
 use crate::stream::CleanEnum;
 use crate::stream::Stream;
+use crate::Transform;
 
 use super::antimeridian::line::Line as AntimeridianLine;
 use super::circle::line::Line as CircleLine;
@@ -29,12 +30,13 @@ use super::ClipTraitRaw;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct Clip<T>
+pub struct Clip<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    raw: ClipRaw<T>,
-    base: ClipBase<T>,
+    raw: ClipRaw<P, T>,
+    base: ClipBase<P, T>,
     #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
     #[derivative(Debug = "ignore")]
@@ -43,11 +45,12 @@ where
     line_end_fn: fn(&mut Self),
 }
 
-impl<T> Clip<T>
+impl<P, T> Clip<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn new(raw: ClipRaw<T>, start: LineElem<T>) -> Self {
+    pub fn new(raw: ClipRaw<P, T>, start: LineElem<T>) -> Self {
         match raw {
             ClipRaw::Antimeridian(raw) => {
                 let ring_buffer = LineSinkEnum::CB(ClipBuffer::default());
@@ -88,12 +91,13 @@ where
     }
 }
 
-impl<T> Clip<T>
+impl<P, T> Clip<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
-    pub fn stream_in(&mut self, stream: ClipSinkEnum<T>)
+    pub fn stream_in(&mut self, stream: ClipSinkEnum<P, T>)
     where
         T: CoordFloat + FloatConst,
     {
@@ -251,8 +255,9 @@ where
     }
 }
 
-impl<T> Stream<T> for Clip<T>
+impl<P, T> Stream<T> for Clip<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;

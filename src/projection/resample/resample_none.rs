@@ -12,18 +12,23 @@ use crate::stream::Stream;
 use crate::Transform;
 
 #[derive(Clone, Debug)]
-pub struct ResampleNone<T>
+pub struct ResampleNone<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    project: Compose<T>,
+    project: P,
     /// Box to prevent infinite recusion.
-    pub stream: Box<ClipSinkEnum<T>>,
+    pub stream: Box<ClipSinkEnum<P, T>>,
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> ResampleNone<T> {
+impl<P, T> ResampleNone<P, T>
+where
+    P: Clone,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
     #[inline]
-    pub fn new(project: Compose<T>) -> Self {
+    pub fn new(project: P) -> Self {
         Self {
             project: project,
             stream: Box::new(ClipSinkEnum::Blank), // stub value
@@ -31,15 +36,21 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> ResampleNone<T> {
+impl<P, T> ResampleNone<P, T>
+where
+    P: Clone,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
     #[inline]
-    pub fn stream_in(&mut self, stream: ClipSinkEnum<T>) {
+    pub fn stream_in(&mut self, stream: ClipSinkEnum<P, T>) {
         self.stream = Box::new(stream);
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
-    for ResampleNone<T>
+impl<P, T> Stream<T> for ResampleNone<P, T>
+where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
     #[inline]

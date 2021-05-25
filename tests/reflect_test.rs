@@ -16,14 +16,14 @@ mod reflect_tests {
         assert_eq!(projection.get_reflect_x(), false);
         assert_eq!(projection.get_reflect_y(), false);
         assert!(projection_equal(
-            projection.clone(),
+            &projection,
             &Coordinate { x: 0f64, y: 0f64 },
             &Coordinate { x: 0f64, y: 0f64 },
             None
         ));
 
         assert!(projection_equal(
-            projection.clone(),
+            &projection,
             &Coordinate { x: 10f64, y: 0f64 },
             &Coordinate {
                 x: 0.17632698070846498f64,
@@ -33,7 +33,7 @@ mod reflect_tests {
         ));
 
         assert!(projection_equal(
-            projection.clone(),
+            &projection,
             &Coordinate { x: 0f64, y: 10f64 },
             &Coordinate {
                 x: 0f64,
@@ -54,14 +54,14 @@ mod reflect_tests {
         assert_eq!(projection.get_reflect_x(), true);
 
         assert!(projection_equal(
-            projection.clone(),
+            &projection,
             &Coordinate { x: 0f64, y: 0f64 },
             &Coordinate { x: 0f64, y: 0f64 },
             None
         ));
 
         assert!(projection_equal(
-            projection.clone(),
+            &projection,
             &Coordinate { x: 10f64, y: 0f64 },
             &Coordinate {
                 x: -0.17632698070846498f64,
@@ -71,7 +71,7 @@ mod reflect_tests {
         ));
 
         assert!(projection_equal(
-            projection.clone(),
+            &projection,
             &Coordinate { x: 0f64, y: 10f64 },
             &Coordinate {
                 x: 0f64,
@@ -86,14 +86,14 @@ mod reflect_tests {
         assert_eq!(projection.get_reflect_y(), true);
 
         assert!(projection_equal(
-            projection.clone(),
+            &projection,
             &Coordinate { x: 0f64, y: 0f64 },
             &Coordinate { x: 0f64, y: 0f64 },
             None
         ));
 
         assert!(projection_equal(
-            projection.clone(),
+            &projection,
             &Coordinate { x: 10f64, y: 0f64 },
             &Coordinate {
                 x: 0.17632698070846498f64,
@@ -103,7 +103,7 @@ mod reflect_tests {
         ));
 
         assert!(projection_equal(
-            projection.clone(),
+            &projection,
             &Coordinate { x: 0f64, y: 10f64 },
             &Coordinate {
                 x: 0f64,

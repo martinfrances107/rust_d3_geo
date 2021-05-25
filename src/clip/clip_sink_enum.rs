@@ -9,20 +9,33 @@ use num_traits::FloatConst;
 use crate::projection::resample::ResampleEnum;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
+use crate::Transform;
 
 /// Wrapper for stream inputs to Clip.
 #[derive(Clone, Debug)]
-pub enum ClipSinkEnum<T>
+pub enum ClipSinkEnum<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    Resample(ResampleEnum<T>),
+    Resample(ResampleEnum<P, T>),
     Src(StreamDst<T>),
     Blank,
 }
 
-impl<T> Stream<T> for ClipSinkEnum<T>
+impl<P, T> Default for ClipSinkEnum<P, T>
 where
+    P: Clone,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
+    fn default() -> Self {
+        ClipSinkEnum::Blank
+    }
+}
+
+impl<P, T> Stream<T> for ClipSinkEnum<P, T>
+where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;

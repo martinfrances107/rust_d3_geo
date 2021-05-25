@@ -23,9 +23,9 @@ use link::link;
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
-pub fn rejoin<T>(
+pub fn rejoin<P: Clone, T>(
     segments: &Vec<Vec<LineElem<T>>>,
-    raw: ClipRaw<T>,
+    raw: ClipRaw<P, T>,
     start_inside: bool,
     stream: &mut impl Stream<T, C = Coordinate<T>>,
 ) where
@@ -95,7 +95,7 @@ pub fn rejoin<T>(
         return;
     }
 
-    clip.sort_by(ClipRaw::compare_intersection);
+    clip.sort_by(ClipRaw::<P, T>::compare_intersection);
 
     link(&mut subject);
     link(&mut clip);

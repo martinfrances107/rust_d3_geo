@@ -10,7 +10,6 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-use crate::compose::ComposeElemEnum;
 use crate::Transform;
 
 use super::rotation_identity::RotationIdentity;
@@ -22,10 +21,20 @@ pub enum RotateRadiansEnum<T>
 where
     T: CoordFloat + Default + FloatConst,
 {
-    C(Box<Compose<T>>),
+    C(Box<Compose<T, RotationLambda<T>, RotationPhiGamma<T>>>),
     RL(RotationLambda<T>),
     RPG(RotationPhiGamma<T>),
     I(RotationIdentity<T>),
+    Blank,
+}
+
+impl<T> Default for RotateRadiansEnum<T>
+where
+    T: CoordFloat + Default + FloatConst,
+{
+    fn default() -> Self {
+        RotateRadiansEnum::Blank
+    }
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -53,6 +62,10 @@ where
                 .debug_struct("RotateRadiansEnum::I")
                 .field("0", i)
                 .finish(),
+            RotateRadiansEnum::Blank => f
+                .debug_struct("RotateRadiansEnum::I")
+                .field("0", &String::from("RotateRadiansBlank"))
+                .finish(),
         }
     }
 }
@@ -68,6 +81,9 @@ where
             RotateRadiansEnum::RL(rl) => rl.transform(p),
             RotateRadiansEnum::RPG(rpg) => rpg.transform(p),
             RotateRadiansEnum::I(i) => i.transform(p),
+            RotateRadiansEnum::Blank => {
+                panic!("Calling transoform on a Blank")
+            }
         }
     }
 
@@ -77,6 +93,9 @@ where
             RotateRadiansEnum::RL(rl) => rl.invert(p),
             RotateRadiansEnum::RPG(rpg) => rpg.invert(p),
             RotateRadiansEnum::I(i) => i.invert(p),
+            RotateRadiansEnum::Blank => {
+                panic!("Calling transoform on a Blank")
+            }
         }
     }
 }
@@ -94,8 +113,8 @@ pub fn rotate_radians_transform<T: CoordFloat + Default + FloatConst>(
     return match (by_lambda, by_gamma, by_phi) {
         (true, true, true) | (true, true, false) | (true, false, true) => {
             RotateRadiansEnum::C(Box::new(Compose::new(
-                ComposeElemEnum::RL(RotationLambda::new(delta_lambda)),
-                ComposeElemEnum::RPG(RotationPhiGamma::new(&delta_phi, &delta_gamma)),
+                RotationLambda::new(delta_lambda),
+                RotationPhiGamma::new(&delta_phi, &delta_gamma),
             )))
         }
         (true, false, false) => RotateRadiansEnum::RL(RotationLambda::new(delta_lambda)),

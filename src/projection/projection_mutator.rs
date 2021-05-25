@@ -11,7 +11,6 @@ use crate::clip::circle::ClipCircle;
 use crate::clip::clip::Clip;
 use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::compose::Compose;
-use crate::compose::ComposeElemEnum;
 use crate::data_object::DataObject;
 use crate::projection::resample::gen_resample_node;
 use crate::projection::resample::ResampleEnum;
@@ -27,7 +26,7 @@ use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::resample::resample::Resample;
 use super::scale_translate_rotate::ScaleTranslateRotate;
-use super::ProjectionRawEnum;
+use super::scale_translate_rotate::ScaleTranslateRotateEnum;
 
 use super::fit::fit_extent;
 
@@ -36,9 +35,10 @@ use super::fit::fit_extent;
 #[derive(Clone)]
 /// A collection of functions that mutate a Projection struct.
 pub struct ProjectionMutator<
+    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 > {
-    project: ProjectionRawEnum<T>,
+    project: PR,
     alpha: T, // post-rotate angle
     // cache: Option<
     //     Box<dyn Fn(Rc<RefCell<dyn Stream<C = Coordinate<T>>>>) -> StreamTransformRadiansNode<T>>,
@@ -51,13 +51,16 @@ pub struct ProjectionMutator<
     delta2: T, // precision
     k: T,      // scale
 
-    project_resample: ResampleEnum<T>,
-    project_transform: Compose<T>,
-    project_rotate_transform: Compose<T>,
+    project_resample: ResampleEnum<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T>,
+    project_transform: Compose<T, PR, ScaleTranslateRotateEnum<T>>,
+    project_rotate_transform:
+        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
     phi: T, // center
-    preclip: Clip<T>,
+    preclip: Clip<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T>,
     #[derivative(Debug = "ignore")]
-    postclip: fn(ClipSinkEnum<T>) -> ClipSinkEnum<T>,
+    postclip: fn(
+        ClipSinkEnum<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T>,
+    ) -> ClipSinkEnum<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T>,
     x: T,
     y: T, // translate
     lambda: T,
@@ -71,13 +74,12 @@ pub struct ProjectionMutator<
     y1: Option<T>, // post-clip extent
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst>
-    ProjectionMutator<T>
+impl<PR, T> ProjectionMutator<PR, T>
+where
+    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn from_projection_raw(
-        project: ProjectionRawEnum<T>,
-        delta2_p: Option<T>,
-    ) -> ProjectionMutator<T> {
+    pub fn from_projection_raw(project: PR, delta2_p: Option<T>) -> ProjectionMutator<PR, T> {
         let delta2 = match delta2_p {
             None => {
                 T::from(0.5).unwrap() // precision
@@ -101,7 +103,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
             phi: T::zero(),
             rotate: RotateRadiansEnum::I(RotationIdentity::default()), // pre-rotate
             preclip: ClipAntimeridian::gen_clip(),                     // stub value
-            postclip: |x: ClipSinkEnum<T>| x,
+            postclip: |x: ClipSinkEnum<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T>| x,
             sx: T::one(), // reflectX
             sy: T::one(), // reflectX
             theta: None,  // pre-clip angle
@@ -112,21 +114,24 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
             y1: None, //postclip = identity, // post-clip extent
             y: T::from(250).unwrap(),
             project_resample: ResampleEnum::R(Resample::default()),
-            project_transform: Compose::default(),
-            project_rotate_transform: Compose::default(),
+            project_transform: Compose::new(PR::default(), ScaleTranslateRotateEnum::default()),
+            project_rotate_transform: Compose::new(
+                RotateRadiansEnum::I(RotationIdentity::default()),
+                Compose::new(PR::default(), ScaleTranslateRotateEnum::default()),
+            ),
         };
 
         pm.recenter()
     }
 
     #[inline]
-    fn reset(self) -> ProjectionMutator<T> {
+    fn reset(self) -> ProjectionMutator<PR, T> {
         // self.cache_stream = None;
         // self.cache = None;
         self
     }
 
-    fn recenter(mut self) -> ProjectionMutator<T> {
+    fn recenter(mut self) -> ProjectionMutator<PR, T> {
         let center = ScaleTranslateRotate::new(
             &self.k,
             &T::zero(),
@@ -151,15 +156,10 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
 
         self.rotate = rotate_radians_transform(self.delta_lambda, self.delta_phi, self.delta_gamma);
 
-        self.project_transform = Compose::new(
-            ComposeElemEnum::PRE(self.project.clone()),
-            ComposeElemEnum::STR(transform),
-        );
+        self.project_transform = Compose::new(self.project.clone(), transform);
 
-        self.project_rotate_transform = Compose::new(
-            ComposeElemEnum::RR(self.rotate.clone()),
-            ComposeElemEnum::C(Box::new(self.project_transform.clone())),
-        );
+        self.project_rotate_transform =
+            Compose::new(self.rotate.clone(), self.project_transform.clone());
 
         self.project_resample = gen_resample_node(self.project_transform.clone(), self.delta2);
 
@@ -171,7 +171,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     pub fn stream(
         &self,
         stream_dst: StreamDst<T>, // stream: Option<StreamSimpleNode<T>>,
-    ) -> StreamTransformRadians<T> {
+    ) -> StreamTransformRadians<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T> {
         // return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
         // return match &self.cache {
         //     Some(c) => Box::new(*c),
@@ -190,7 +190,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
         let mut t_rotate_node = StreamTransform::new(Some(self.rotate.clone()));
         t_rotate_node.stream_in(preclip);
 
-        let mut t_radians_node: StreamTransformRadians<T> = StreamTransformRadians::default();
+        let mut t_radians_node = StreamTransformRadians::default();
         t_radians_node.stream_in(t_rotate_node);
 
         // Output.
@@ -201,8 +201,9 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 }
 
-impl<T> Transform for ProjectionMutator<T>
+impl<PR, T> Transform for ProjectionMutator<PR, T>
 where
+    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type TcC = Coordinate<T>;
@@ -222,8 +223,9 @@ where
     }
 }
 
-impl<T> Projection<T> for ProjectionMutator<T>
+impl<PR, T> Projection<PR, T> for ProjectionMutator<PR, T>
 where
+    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     // #[inline]
@@ -272,7 +274,7 @@ where
         self.sx < T::zero()
     }
 
-    fn reflect_x(mut self, reflect: bool) -> ProjectionMutator<T> {
+    fn reflect_x(mut self, reflect: bool) -> ProjectionMutator<PR, T> {
         if reflect {
             self.sx = T::from(-1.0).unwrap();
         } else {
@@ -287,7 +289,7 @@ where
     }
 
     #[inline]
-    fn reflect_y(mut self, reflect: bool) -> ProjectionMutator<T> {
+    fn reflect_y(mut self, reflect: bool) -> ProjectionMutator<PR, T> {
         if reflect {
             self.sy = T::from(-1.0).unwrap();
         } else {
@@ -296,20 +298,24 @@ where
         self.recenter()
     }
 
-    fn precision(mut self, delta: T) -> ProjectionMutator<T> {
+    fn precision(mut self, delta: T) -> ProjectionMutator<PR, T> {
         self.delta2 = delta * delta;
         self.project_resample = gen_resample_node(self.project_transform.clone(), self.delta2);
         self.reset()
     }
 
     #[inline]
-    fn fit_extent(self, extent: [Coordinate<T>; 2], object: DataObject<T>) -> ProjectionMutator<T> {
+    fn fit_extent(
+        self,
+        extent: [Coordinate<T>; 2],
+        object: DataObject<T>,
+    ) -> ProjectionMutator<PR, T> {
         fit_extent(self, extent, object)
     }
 
     // fn get_clip_angle(&self) -> T {}
 
-    fn clip_angle(mut self, angle: StreamOrValueMaybe<T>) -> ProjectionMutator<T> {
+    fn clip_angle(mut self, angle: StreamOrValueMaybe<T>) -> ProjectionMutator<PR, T> {
         match angle {
             StreamOrValueMaybe::Value(angle) => {
                 let theta = angle.to_radians();
@@ -339,7 +345,7 @@ where
 
     //  (postclip = _ == null ? (x0 = y0 = x1 = y1 = null, identity) : clipRectangle(x0 = +_[0][0], y0 = +_[0][1], x1 = +_[1][0], y1 = +_[1][1]), reset()) :
 
-    fn clip_extent(mut self, extent: Option<[Coordinate<T>; 2]>) -> ProjectionMutator<T> {
+    fn clip_extent(mut self, extent: Option<[Coordinate<T>; 2]>) -> ProjectionMutator<PR, T> {
         match extent {
             None => {
                 self.x0 = None;
@@ -368,7 +374,7 @@ where
         self.k
     }
 
-    fn scale(mut self, scale: T) -> ProjectionMutator<T> {
+    fn scale(mut self, scale: T) -> ProjectionMutator<PR, T> {
         self.k = scale;
         self.recenter()
     }
@@ -381,7 +387,7 @@ where
         }
     }
 
-    fn translate(mut self, t: &Coordinate<T>) -> ProjectionMutator<T> {
+    fn translate(mut self, t: &Coordinate<T>) -> ProjectionMutator<PR, T> {
         self.x = t.x;
         self.y = t.y;
         self.recenter()
@@ -396,7 +402,7 @@ where
         ]
     }
 
-    fn rotate(mut self, angles: [T; 3]) -> ProjectionMutator<T> {
+    fn rotate(mut self, angles: [T; 3]) -> ProjectionMutator<PR, T> {
         let [delta_lambda, delta_phi, delta_gamma] = angles;
         let f360 = T::from(360f64).unwrap();
         self.delta_lambda = (delta_lambda % f360).to_radians();

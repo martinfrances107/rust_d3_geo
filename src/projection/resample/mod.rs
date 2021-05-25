@@ -10,25 +10,27 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::clip_sink_enum::ClipSinkEnum;
-use crate::compose::Compose;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
+use crate::Transform;
 
 use super::resample::resample::Resample;
 use super::resample::resample_none::ResampleNone;
 
 #[derive(Clone, Debug)]
-pub enum ResampleEnum<T>
+pub enum ResampleEnum<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    RN(ResampleNone<T>),
-    R(Resample<T>),
+    RN(ResampleNone<P, T>),
+    R(Resample<P, T>),
 }
 
 /// todo! find a better way.
-impl<T> Stream<T> for ResampleEnum<T>
+impl<P, T> Stream<T> for ResampleEnum<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
@@ -76,12 +78,13 @@ where
         }
     }
 }
-impl<T> ResampleEnum<T>
+impl<P, T> ResampleEnum<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
-    pub fn stream_in(&mut self, stream: ClipSinkEnum<T>) {
+    pub fn stream_in(&mut self, stream: ClipSinkEnum<P, T>) {
         match self {
             ResampleEnum::RN(s) => {
                 s.stream_in(stream);
@@ -93,8 +96,9 @@ where
     }
 }
 
-pub fn gen_resample_node<T>(project: Compose<T>, delta2: T) -> ResampleEnum<T>
+pub fn gen_resample_node<P, T>(project: P, delta2: T) -> ResampleEnum<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     if delta2.is_zero() {

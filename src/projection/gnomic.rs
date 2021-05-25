@@ -12,7 +12,6 @@ use super::azimuthal::azimuthal_invert;
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;
-use super::ProjectionRawEnum;
 
 /// Why the Phantom Data is required here...
 ///
@@ -30,8 +29,8 @@ impl<T> GnomicRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn gen_projection_mutator() -> ProjectionMutator<T> {
-        let g = ProjectionRawEnum::G(GnomicRaw::default());
+    pub fn gen_projection_mutator() -> ProjectionMutator<GnomicRaw<T>, T> {
+        let g = GnomicRaw::default();
         let projection = ProjectionMutator::from_projection_raw(g, None);
         projection
             .scale(T::from(144.049f64).unwrap())

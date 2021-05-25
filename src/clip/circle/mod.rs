@@ -13,6 +13,7 @@ use num_traits::FloatConst;
 use crate::circle::circle_stream::circle_stream;
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
+use crate::Transform;
 
 use super::clip::Clip;
 use super::clip_raw::ClipRaw;
@@ -35,7 +36,7 @@ impl<T> ClipCircle<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display + Debug,
 {
-    pub fn gen_clip(radius: T) -> Clip<T> {
+    pub fn gen_clip<P: Clone + Default + Transform<TcC = Coordinate<T>>>(radius: T) -> Clip<P, T> {
         let cr = radius.cos();
         let small_radius = cr > T::zero();
         let start;

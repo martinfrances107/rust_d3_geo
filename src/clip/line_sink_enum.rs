@@ -13,18 +13,21 @@ use crate::path::PathResult;
 use crate::path::PathResultEnum;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
+use crate::Transform;
 
 #[derive(Clone, Debug)]
-pub enum LineSinkEnum<T>
+pub enum LineSinkEnum<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    CSE(ClipSinkEnum<T>),
+    CSE(ClipSinkEnum<P, T>),
     CB(ClipBuffer<T>),
 }
 
-impl<T> LineSinkEnum<T>
+impl<P, T> LineSinkEnum<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
@@ -38,8 +41,9 @@ where
     }
 }
 
-impl<T> Stream<T> for LineSinkEnum<T>
+impl<P, T> Stream<T> for LineSinkEnum<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;

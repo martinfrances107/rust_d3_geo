@@ -14,9 +14,10 @@ use super::projection_mutator::ProjectionMutator;
 
 pub fn projection_equal<
     'a,
+    PM: Transform<TcC = Coordinate<T>> + Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Debug + Display + Default,
 >(
-    projection: ProjectionMutator<T>,
+    projection: &PM,
     expected_location: &'a Coordinate<T>,
     expected_point: &'a Coordinate<T>,
     delta_p: Option<T>,

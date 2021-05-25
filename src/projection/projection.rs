@@ -8,6 +8,7 @@ use num_traits::FloatConst;
 
 use crate::data_object::DataObject;
 use crate::stream::StreamSimpleNode;
+use crate::Transform;
 
 pub enum StreamOrValueMaybe<T: CoordFloat> {
     Value(T),
@@ -16,7 +17,11 @@ pub enum StreamOrValueMaybe<T: CoordFloat> {
 
 use crate::projection::projection_mutator::ProjectionMutator;
 
-pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> {
+pub trait Projection<PR, T>
+where
+    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.
@@ -75,7 +80,7 @@ pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Disp
     //  *
     //  * @param angle Set to null to switch to antimeridian cutting.
     //  */
-    fn clip_angle(self, angle: StreamOrValueMaybe<T>) -> ProjectionMutator<T>;
+    fn clip_angle(self, angle: StreamOrValueMaybe<T>) -> ProjectionMutator<PR, T>;
 
     // /**
     //  * Sets the projection’s clipPIng circle radius to the specified angle in degrees and returns the projection.
@@ -143,7 +148,11 @@ pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Disp
     //  * @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
     //  * @param object A GeoJson Geometry Object or GeoSphere object supported by d3-geo (An extension of GeoJSON).
     //  */
-    fn fit_extent(self, extent: [Coordinate<T>; 2], object: DataObject<T>) -> ProjectionMutator<T>;
+    fn fit_extent(
+        self,
+        extent: [Coordinate<T>; 2],
+        object: DataObject<T>,
+    ) -> ProjectionMutator<PR, T>;
     // /**
     //  * Sets the projection’s scale and translate to fit the specified geographic geometry collection in the center of the given extent.
     //  * Returns the projection.
@@ -274,15 +283,15 @@ pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Disp
     //  *
     //  * @param precision A numeric value in PIxels to use as the threshold for the projection’s adaptive resampling.
     //  */
-    fn precision(self, delta: T) -> ProjectionMutator<T>;
+    fn precision(self, delta: T) -> ProjectionMutator<PR, T>;
 
     fn get_reflect_x(&self) -> bool;
 
-    fn reflect_x(self, reflect: bool) -> ProjectionMutator<T>;
+    fn reflect_x(self, reflect: bool) -> ProjectionMutator<PR, T>;
 
     fn get_reflect_y(&self) -> bool;
 
-    fn reflect_y(self, reflect: bool) -> ProjectionMutator<T>;
+    fn reflect_y(self, reflect: bool) -> ProjectionMutator<PR, T>;
 
     // /**
     //  * Returns the projection’s current angle, which defaults to 0°.
@@ -302,11 +311,11 @@ pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Disp
     //  */
     fn get_rotate(&self) -> [T; 3];
 
-    fn rotate(self, angles: [T; 3]) -> ProjectionMutator<T>;
+    fn rotate(self, angles: [T; 3]) -> ProjectionMutator<PR, T>;
 
     fn get_clip_extent(&self) -> Option<[Coordinate<T>; 2]>;
 
-    fn clip_extent(self, extent: Option<[Coordinate<T>; 2]>) -> ProjectionMutator<T>;
+    fn clip_extent(self, extent: Option<[Coordinate<T>; 2]>) -> ProjectionMutator<PR, T>;
 
     fn get_scale(&self) -> T;
     // /**
@@ -316,7 +325,7 @@ pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Disp
     //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
     //  */
     // fn scale(&mut self, scale: &F);
-    fn scale(self, scale: T) -> ProjectionMutator<T>;
+    fn scale(self, scale: T) -> ProjectionMutator<PR, T>;
 
     fn get_translate(&self) -> Coordinate<T>;
 
@@ -326,5 +335,5 @@ pub trait Projection<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Disp
     //  *
     //  * @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
     //  */
-    fn translate(self, t: &Coordinate<T>) -> ProjectionMutator<T>;
+    fn translate(self, t: &Coordinate<T>) -> ProjectionMutator<PR, T>;
 }

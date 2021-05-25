@@ -14,16 +14,20 @@ use crate::path::PathResultEnum;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::stream::Streamable;
+use crate::Transform;
 
 use super::projection::Projection;
 use super::projection_mutator::ProjectionMutator;
 
-fn fit<T>(
-    projection: ProjectionMutator<T>,
-    fit_bounds: Box<dyn FnOnce([Coordinate<T>; 2], ProjectionMutator<T>) -> ProjectionMutator<T>>,
+fn fit<PR, T>(
+    projection: ProjectionMutator<PR, T>,
+    fit_bounds: Box<
+        dyn FnOnce([Coordinate<T>; 2], ProjectionMutator<PR, T>) -> ProjectionMutator<PR, T>,
+    >,
     object: DataObject<T>,
-) -> ProjectionMutator<T>
+) -> ProjectionMutator<PR, T>
 where
+    PR: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     let clip = projection.get_clip_extent();
@@ -55,18 +59,19 @@ where
     }
 }
 
-pub fn fit_extent<T>(
-    projection: ProjectionMutator<T>,
+pub fn fit_extent<PR, T>(
+    projection: ProjectionMutator<PR, T>,
     extent: [Coordinate<T>; 2],
     object: DataObject<T>,
-) -> ProjectionMutator<T>
+) -> ProjectionMutator<PR, T>
 where
+    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fit(
         projection,
         Box::new(
-            move |b: [Coordinate<T>; 2], projection: ProjectionMutator<T>| {
+            move |b: [Coordinate<T>; 2], projection: ProjectionMutator<PR, T>| {
                 let two = T::from(2.0).unwrap();
                 let w = extent[1].x - extent[0].y;
                 let h = extent[1].y - extent[0].y;

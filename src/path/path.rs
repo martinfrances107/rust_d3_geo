@@ -3,6 +3,7 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
@@ -14,6 +15,7 @@ use crate::projection::projection_mutator::ProjectionMutator;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::stream::Streamable;
+use crate::Transform;
 use crate::{data_object::DataObject, path::path_area_stream::PathAreaStream};
 
 use super::path_context::PathContext;
@@ -21,19 +23,21 @@ use super::PathResultEnum;
 use super::PointRadiusEnum;
 use super::PointRadiusTrait;
 
-pub struct Path<T>
+pub struct Path<PR, T>
 where
+    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     context: Option<CanvasRenderingContext2d>,
     context_stream: PathContextStream<T>,
     point_radius: PointRadiusEnum<T>,
     projection_stream: Option<PathContextStream<T>>,
-    projection: Option<ProjectionMutator<T>>,
+    projection: Option<ProjectionMutator<PR, T>>,
 }
 
-impl<T> Default for Path<T>
+impl<PR, T> Default for Path<PR, T>
 where
+    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn default() -> Self {
@@ -47,13 +51,14 @@ where
     }
 }
 
-impl<T> Path<T>
+impl<PR, T> Path<PR, T>
 where
+    PR: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     pub fn generate(
-        projection: Option<ProjectionMutator<T>>,
+        projection: Option<ProjectionMutator<PR, T>>,
         context: Option<CanvasRenderingContext2d>,
     ) -> Self {
         println!("path genrate");
@@ -118,7 +123,7 @@ where
         }
     }
 
-    fn projection(mut self, projection: Option<ProjectionMutator<T>>) -> Self {
+    fn projection(mut self, projection: Option<ProjectionMutator<PR, T>>) -> Self {
         match projection {
             None => {
                 self.projection = None;
@@ -132,11 +137,11 @@ where
         }
     }
 
-    // pub fn projection(p_in: Option<ProjectionMutator<T>>) -> Path<T>
+    // pub fn projection(p_in: Option<ProjectionMutator<PR, T>>) -> Path<T>
     // where
     //     T: CoordFloat + FloatConst,
     // {
-    //     let projection: Option<ProjectionMutator<T>>;
+    //     let projection: Option<ProjectionMutator<PR, T>>;
     //     let projection_stream: Box<
     //         dyn Fn(Box<dyn Stream<T, C = Coordinate<T>>>) -> StreamTransformRadians<T>,
     //     >;

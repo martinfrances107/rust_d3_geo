@@ -8,6 +8,7 @@ use num_traits::FloatConst;
 
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
+use crate::Transform;
 
 use super::stream_transform::StreamTransform;
 
@@ -32,13 +33,15 @@ where
 
 #[derive(Clone, Debug)]
 pub struct StreamTransformRadians<
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 > {
-    stream: StreamTransform<T>,
+    stream: StreamTransform<P, T>,
 }
 
-impl<T> Default for StreamTransformRadians<T>
+impl<P, T> Default for StreamTransformRadians<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn default() -> Self {
@@ -48,18 +51,21 @@ where
     }
 }
 
-impl<T> StreamTransformRadians<T>
+impl<P, T> StreamTransformRadians<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
-    pub fn stream_in(&mut self, stream: StreamTransform<T>) {
+    pub fn stream_in(&mut self, stream: StreamTransform<P, T>) {
         self.stream = stream;
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
-    for StreamTransformRadians<T>
+impl<P, T> Stream<T> for StreamTransformRadians<P, T>
+where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
 

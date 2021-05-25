@@ -10,23 +10,26 @@ use crate::clip::ClipBuffer;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::stream::{Clean, CleanEnum};
+use crate::Transform;
 
 use super::intersect::intersect;
 
 #[derive(Clone, Debug)]
-pub struct Line<T>
+pub struct Line<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     clean: CleanEnum,
     lambda0: T,
     phi0: T,
     sign0: T,
-    stream: LineSinkEnum<T>,
+    stream: LineSinkEnum<P, T>,
 }
 
-impl<T> Default for Line<T>
+impl<P, T> Default for Line<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
@@ -41,23 +44,25 @@ where
     }
 }
 
-impl<T> Line<T>
+impl<P, T> Line<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
-    pub fn stream_in(&mut self, stream: LineSinkEnum<T>) {
+    pub fn stream_in(&mut self, stream: LineSinkEnum<P, T>) {
         self.stream = stream;
     }
 
     #[inline]
-    pub fn get_stream(&mut self) -> &mut LineSinkEnum<T> {
+    pub fn get_stream(&mut self) -> &mut LineSinkEnum<P, T> {
         &mut self.stream
     }
 }
 
-impl<T> Clean for Line<T>
+impl<P, T> Clean for Line<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
@@ -73,8 +78,10 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
-    for Line<T>
+impl<P, T> Stream<T> for Line<P, T>
+where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
     fn sphere(&mut self) {

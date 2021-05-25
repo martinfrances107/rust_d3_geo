@@ -15,11 +15,12 @@ use crate::Transform;
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
 #[derive(Debug)]
-pub struct Resample<T>
+pub struct Resample<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub project: Compose<T>,
+    pub project: P,
     pub delta2: T,
 
     // first point
@@ -41,14 +42,15 @@ where
     pub cos_min_distance: T,
 
     // Box here prevents recurson.
-    pub stream: Box<ClipSinkEnum<T>>,
+    pub stream: Box<ClipSinkEnum<P, T>>,
     pub use_line_point: bool,
     pub use_line_start: bool,
     pub use_line_end: bool,
 }
 
-impl<T> Clone for Resample<T>
+impl<P, T> Clone for Resample<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn clone(&self) -> Self {
@@ -60,13 +62,14 @@ where
     }
 }
 
-impl<T> Default for Resample<T>
+impl<P, T> Default for Resample<P, T>
 where
+    P: Clone + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    fn default() -> Resample<T> {
+    fn default() -> Resample<P, T> {
         Self {
-            project: Compose::default(),
+            project: P::default(),
             delta2: T::zero(),
 
             // first point
@@ -95,11 +98,12 @@ where
     }
 }
 
-impl<T> Resample<T>
+impl<P, T> Resample<P, T>
 where
+    P: Clone + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn new(project: Compose<T>) -> Self {
+    pub fn new(project: P) -> Self {
         Self {
             project,
             ..Self::default()
@@ -107,12 +111,13 @@ where
     }
 }
 
-impl<T> Resample<T>
+impl<P, T> Resample<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
-    pub fn stream_in(&mut self, stream: ClipSinkEnum<T>) {
+    pub fn stream_in(&mut self, stream: ClipSinkEnum<P, T>) {
         self.stream = Box::new(stream);
     }
 
@@ -122,8 +127,9 @@ where
     }
 }
 
-impl<T> Resample<T>
+impl<P, T> Resample<P, T>
 where
+    P: Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
@@ -225,7 +231,7 @@ where
         b1: T,
         c1: T,
         depth_p: u8,
-        stream: &mut Box<ClipSinkEnum<T>>,
+        stream: &mut Box<ClipSinkEnum<P, T>>,
     ) {
         let mut depth = depth_p;
         let dx = x1 - x0;
@@ -288,8 +294,9 @@ where
     }
 }
 
-impl<T> Stream<T> for Resample<T>
+impl<P, T> Stream<T> for Resample<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;

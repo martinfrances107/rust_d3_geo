@@ -13,31 +13,31 @@ mod stereographic_tests {
             .scale(1f64);
 
         assert!(projection_equal(
-            stereo.clone(),
+            &stereo,
             &Coordinate { x: 0f64, y: 0f64 },
             &Coordinate { x: 0f64, y: 0f64 },
             None
         ));
         assert!(projection_equal(
-            stereo.clone(),
+            &stereo,
             &Coordinate { x: -90f64, y: 0f64 },
             &Coordinate { x: -1f64, y: 0f64 },
             None
         ));
         assert!(projection_equal(
-            stereo.clone(),
+            &stereo,
             &Coordinate { x: 90f64, y: 0f64 },
             &Coordinate { x: 1f64, y: 0f64 },
             None
         ));
         assert!(projection_equal(
-            stereo.clone(),
+            &stereo,
             &Coordinate { x: 0f64, y: -90f64 },
             &Coordinate { x: 0f64, y: 1f64 },
             None
         ));
         assert!(projection_equal(
-            stereo,
+            &stereo,
             &Coordinate { x: 0f64, y: 90f64 },
             &Coordinate { x: 0f64, y: -1f64 },
             None

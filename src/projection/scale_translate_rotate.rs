@@ -26,6 +26,16 @@ where
 {
     ST(ScaleTranslate<T>),
     STR(ScaleTranslateRotate<T>),
+    Blank,
+}
+
+impl<T> Default for ScaleTranslateRotateEnum<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn default() -> Self {
+        ScaleTranslateRotateEnum::Blank
+    }
 }
 
 impl<T: CoordFloat> Transform for ScaleTranslateRotateEnum<T>
@@ -37,6 +47,9 @@ where
         match self {
             ScaleTranslateRotateEnum::ST(st) => st.transform(p),
             ScaleTranslateRotateEnum::STR(str) => str.transform(p),
+            ScaleTranslateRotateEnum::Blank => {
+                panic!("calling transform on blank.")
+            }
         }
     }
 
@@ -45,6 +58,9 @@ where
         match self {
             ScaleTranslateRotateEnum::ST(st) => st.invert(p),
             ScaleTranslateRotateEnum::STR(str) => str.invert(p),
+            ScaleTranslateRotateEnum::Blank => {
+                panic!("calling transform on blank.")
+            }
         }
     }
 }

@@ -18,14 +18,14 @@ mod equirectangular_test {
         let pi = std::f64::consts::PI;
 
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: 0f64 },
             &Coordinate { x: 0f64, y: 0f64 },
             None
         ));
 
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -180f64,
                 y: 0f64
@@ -34,13 +34,13 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 180f64, y: 0f64 },
             &Coordinate { x: pi, y: 0f64 },
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: 30f64 },
             &Coordinate {
                 x: 0f64,
@@ -49,7 +49,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: -30f64 },
             &Coordinate {
                 x: 0f64,
@@ -58,7 +58,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 30f64, y: 30f64 },
             &Coordinate {
                 x: pi / 6f64,
@@ -67,7 +67,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: 30f64,
                 y: -30f64
@@ -79,7 +79,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -30f64,
                 y: 30f64
@@ -91,7 +91,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular,
+            &equirectangular,
             &Coordinate {
                 x: -30f64,
                 y: -30f64
@@ -115,7 +115,7 @@ mod equirectangular_test {
         let pi = std::f64::consts::PI;
 
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: 0f64 },
             &Coordinate {
                 x: pi / 6f64,
@@ -124,7 +124,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -180f64,
                 y: 0f64
@@ -136,7 +136,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 180f64, y: 0f64 },
             &Coordinate {
                 x: -5f64 / 6f64 * pi,
@@ -145,7 +145,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: 30f64 },
             &Coordinate {
                 x: pi / 6f64,
@@ -154,7 +154,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: -30f64 },
             &Coordinate {
                 x: pi / 6f64,
@@ -163,7 +163,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 30f64, y: 30f64 },
             &Coordinate {
                 x: pi / 3f64,
@@ -172,7 +172,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: 30f64,
                 y: -30f64
@@ -184,7 +184,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -30f64,
                 y: 30f64
@@ -196,7 +196,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -30f64,
                 y: -30f64
@@ -217,7 +217,7 @@ mod equirectangular_test {
             .scale(1f64);
 
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: 0f64 },
             &Coordinate {
                 x: 0.5880026035475674,
@@ -227,7 +227,7 @@ mod equirectangular_test {
         ));
 
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -180f64,
                 y: 0f64
@@ -239,7 +239,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 180f64, y: 0f64 },
             &Coordinate {
                 x: -2.5535900500422257f64,
@@ -248,7 +248,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: 30f64 },
             &Coordinate {
                 x: 0.8256075561643480f64,
@@ -257,7 +257,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: -30f64 },
             &Coordinate {
                 x: 0.4486429615608479f64,
@@ -266,7 +266,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 30f64, y: 30f64 },
             &Coordinate {
                 x: 1.4056476493802694f64,
@@ -275,7 +275,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: 30f64,
                 y: -30f64
@@ -287,7 +287,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -30f64,
                 y: 30f64
@@ -299,7 +299,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular,
+            &equirectangular,
             &Coordinate {
                 x: -30f64,
                 y: -30f64
@@ -323,14 +323,14 @@ mod equirectangular_test {
         let pi = std::f64::consts::PI;
 
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: 0f64 },
             &Coordinate { x: 0f64, y: 0f64 },
             None
         ));
 
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -180f64,
                 y: 0f64
@@ -339,13 +339,13 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 180f64, y: 0f64 },
             &Coordinate { x: pi, y: 0f64 },
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: 30f64 },
             &Coordinate {
                 x: -0.2810349015028135f64,
@@ -354,7 +354,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: -30f64 },
             &Coordinate {
                 x: 0.2810349015028135f64,
@@ -363,7 +363,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 30f64, y: 30f64 },
             &Coordinate {
                 x: 0.1651486774146268f64,
@@ -372,7 +372,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: 30f64,
                 y: -30f64
@@ -384,7 +384,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -30f64,
                 y: 30f64
@@ -396,7 +396,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular,
+            &equirectangular,
             &Coordinate {
                 x: -30f64,
                 y: -30f64
@@ -418,7 +418,7 @@ mod equirectangular_test {
             .scale(1f64);
 
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: 0f64 },
             &Coordinate {
                 x: 0.2810349015028135f64,
@@ -428,7 +428,7 @@ mod equirectangular_test {
         ));
 
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -180f64,
                 y: 0f64
@@ -440,7 +440,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 180f64, y: 0f64 },
             &Coordinate {
                 x: -2.8605577520869800f64,
@@ -449,7 +449,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: 30f64 },
             &Coordinate {
                 x: -0.0724760059270816f64,
@@ -458,7 +458,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 0f64, y: -30f64 },
             &Coordinate {
                 x: 0.4221351552567053f64,
@@ -467,7 +467,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate { x: 30f64, y: 30f64 },
             &Coordinate {
                 x: 1.2033744221750944f64,
@@ -476,7 +476,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: 30f64,
                 y: -30f64
@@ -488,7 +488,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular.clone(),
+            &equirectangular,
             &Coordinate {
                 x: -30f64,
                 y: 30f64
@@ -500,7 +500,7 @@ mod equirectangular_test {
             None
         ));
         assert!(projection_equal(
-            equirectangular,
+            &equirectangular,
             &Coordinate {
                 x: -30f64,
                 y: -30f64

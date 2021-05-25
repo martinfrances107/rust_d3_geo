@@ -17,9 +17,14 @@ use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::stream::StreamSourceDummy;
 use crate::stream::{Clean, CleanEnum};
+use crate::Transform;
 
 #[derive(Clone, Debug)]
-pub struct Line<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> {
+pub struct Line<P, T>
+where
+    P: Clone,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
     radius: T,
@@ -27,13 +32,14 @@ pub struct Line<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display +
     not_hemisphere: bool,
     point0: Option<LineElem<T>>, // previous point
     small_radius: bool,
-    stream: LineSinkEnum<T>,
+    stream: LineSinkEnum<P, T>,
     v0: bool,  // visibility of previous point
     v00: bool, // visibility of first point
 }
 
-impl<T> Default for Line<T>
+impl<P, T> Default for Line<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn default() -> Self {
@@ -54,7 +60,11 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Line<T> {
+impl<P, T> Line<P, T>
+where
+    P: Clone,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
     #[inline]
     pub fn new(radius: T) -> Self {
         // TODO small_radius, rc  is a shadow variables!!!
@@ -75,12 +85,12 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 
     #[inline]
-    pub fn stream_in(&mut self, stream: LineSinkEnum<T>) {
+    pub fn stream_in(&mut self, stream: LineSinkEnum<P, T>) {
         self.stream = stream;
     }
 
     #[inline]
-    pub fn get_stream(&mut self) -> &mut LineSinkEnum<T> {
+    pub fn get_stream(&mut self) -> &mut LineSinkEnum<P, T> {
         &mut self.stream
     }
 
@@ -118,8 +128,9 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 }
 
-impl<T> Clean for Line<T>
+impl<P, T> Clean for Line<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     /// Rejoin first and last segments if there were intersections and the first
@@ -136,8 +147,10 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
-    for Line<T>
+impl<P, T> Stream<T> for Line<P, T>
+where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;
     fn sphere(&mut self) {}

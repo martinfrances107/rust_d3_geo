@@ -10,7 +10,6 @@ use crate::Transform;
 
 use super::projection::Projection;
 use super::projection_mutator::ProjectionMutator;
-use super::ProjectionRawEnum;
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct MecatorRaw<T>
@@ -24,9 +23,9 @@ impl<T> MecatorRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn gen_projection_mutator() -> ProjectionMutator<T> {
+    pub fn gen_projection_mutator() -> ProjectionMutator<MecatorRaw<T>, T> {
         let tau = T::from(2).unwrap() * T::PI();
-        let o = ProjectionRawEnum::M(MecatorRaw::default());
+        let o = MecatorRaw::default();
         ProjectionMutator::from_projection_raw(o, None).scale(T::from(961).unwrap() / tau)
     }
 }

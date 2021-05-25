@@ -5,45 +5,67 @@ mod invert_test {
     use geo::Coordinate;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualAreaRaw;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
-    use rust_d3_geo::projection::mecator::MecatorRaw;
     use rust_d3_geo::projection::gnomic::GnomicRaw;
+    use rust_d3_geo::projection::mecator::MecatorRaw;
     use rust_d3_geo::projection::orthographic::OrthographicRaw;
     use rust_d3_geo::projection::projection_equal::projection_equal;
+    use rust_d3_geo::projection::projection_mutator::ProjectionMutator;
     use rust_d3_geo::projection::stereographic::StereographicRaw;
     use rust_d3_geo::Transform;
 
-    #[test]
-    fn symetric_invert() {
-        let projectors = vec![
-            AzimuthalEqualAreaRaw::gen_projection_mutator(),
-            EquirectangularRaw::gen_projection_mutator(),
-            GnomicRaw::gen_projection_mutator(),
-            OrthographicRaw::gen_projection_mutator(),
-            MecatorRaw::gen_projection_mutator(),
-            StereographicRaw::gen_projection_mutator(),
-        ];
-
-        for pm in projectors {
-            for p in vec![
-                &Coordinate {
-                    x: 0.0f64,
-                    y: 0.0f64,
-                },
-                &Coordinate {
-                    x: 30.3f64,
-                    y: 24.1f64,
-                },
-                &Coordinate {
-                    x: -10f64,
-                    y: 42f64,
-                },
-                &Coordinate {
-                    x: -2.0f64,
-                    y: -5.0f64,
-                },
-            ] {
-                assert!(projection_equal(pm.clone(), &p, &pm.transform(&p), None));
-            }
+    fn symetric_invert<PM>(pm: PM)
+    where
+        PM: Transform<TcC = Coordinate<f64>>,
+    {
+        for p in vec![
+            &Coordinate {
+                x: 0.0f64,
+                y: 0.0f64,
+            },
+            &Coordinate {
+                x: 30.3f64,
+                y: 24.1f64,
+            },
+            &Coordinate {
+                x: -10f64,
+                y: 42f64,
+            },
+            &Coordinate {
+                x: -2.0f64,
+                y: -5.0f64,
+            },
+        ] {
+            assert!(projection_equal(&pm, &p, &pm.transform(&p), None));
         }
+    }
+
+    #[test]
+    fn test_azimuthal_equal_area() {
+        symetric_invert(AzimuthalEqualAreaRaw::<f64>::gen_projection_mutator());
+    }
+
+    #[test]
+    fn test_equirectangular() {
+        symetric_invert(EquirectangularRaw::<f64>::gen_projection_mutator());
+    }
+
+    #[test]
+    fn test_gnomic() {
+        symetric_invert(GnomicRaw::<f64>::gen_projection_mutator());
+    }
+
+    #[test]
+    fn test_orthographic() {
+        symetric_invert(OrthographicRaw::<f64>::gen_projection_mutator());
+    }
+
+    #[test]
+    fn test_mecator() {
+        symetric_invert(MecatorRaw::<f64>::gen_projection_mutator());
+    }
+
+    #[test]
+    fn test_stereographic() {
+        symetric_invert(StereographicRaw::<f64>::gen_projection_mutator());
     }
 }

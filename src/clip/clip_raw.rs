@@ -18,16 +18,18 @@ use super::rejoin::intersection::Intersection;
 use super::ClipTraitRaw;
 
 #[derive(Clone, Debug)]
-pub enum ClipRaw<T>
+pub enum ClipRaw<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    Antimeridian(ClipAntimeridian<T>),
+    Antimeridian(ClipAntimeridian<P, T>),
     Circle(ClipCircle<T>),
 }
 
-impl<T> Default for ClipRaw<T>
+impl<P, T> Default for ClipRaw<P, T>
 where
+    P: Clone + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn default() -> Self {
@@ -35,8 +37,9 @@ where
     }
 }
 
-impl<T> ClipTraitRaw<T> for ClipRaw<T>
+impl<P, T> ClipTraitRaw<T> for ClipRaw<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type SctC = Coordinate<T>;

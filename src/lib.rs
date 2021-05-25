@@ -27,12 +27,12 @@ mod constant;
 mod point_equal;
 mod stream;
 
-pub trait TransformClone<'a>: Transform {
-    fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>>;
-}
+// pub trait TransformClone<'a>: Transform {
+//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>>;
+// }
 
 // Common to Projection, Rotation.
-pub trait Transform {
+pub trait Transform: Clone {
     type TcC;
     fn transform(&self, p: &Self::TcC) -> Self::TcC;
     fn invert(&self, p: &Self::TcC) -> Self::TcC;

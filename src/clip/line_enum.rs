@@ -10,26 +10,29 @@ use crate::stream::stream_dst::StreamDst;
 use crate::stream::Clean;
 use crate::stream::CleanEnum;
 use crate::stream::Stream;
+use crate::Transform;
 
 use super::antimeridian::line::Line as AntimeridianLine;
 use super::circle::line::Line as CircleLine;
 use super::line_sink_enum::LineSinkEnum;
 
 #[derive(Clone, Debug)]
-pub enum LineEnum<T>
+pub enum LineEnum<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    Antimeridian(AntimeridianLine<T>),
-    Circle(CircleLine<T>),
+    Antimeridian(AntimeridianLine<P, T>),
+    Circle(CircleLine<P, T>),
     Blank,
 }
 
-impl<T> LineEnum<T>
+impl<P, T> LineEnum<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn stream_in(&mut self, stream: LineSinkEnum<T>) {
+    pub fn stream_in(&mut self, stream: LineSinkEnum<P, T>) {
         match self {
             LineEnum::Antimeridian(line) => line.stream_in(stream),
             LineEnum::Circle(line) => line.stream_in(stream),
@@ -39,7 +42,7 @@ where
     // deviation from javascript access to ring_buffer is through
     // ring_sink!
     #[inline]
-    pub fn get_stream(&mut self) -> &mut LineSinkEnum<T> {
+    pub fn get_stream(&mut self) -> &mut LineSinkEnum<P, T> {
         match self {
             LineEnum::Antimeridian(line) => line.get_stream(),
             LineEnum::Circle(line) => line.get_stream(),
@@ -48,8 +51,9 @@ where
     }
 }
 
-impl<T> Clean for LineEnum<T>
+impl<P, T> Clean for LineEnum<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fn clean(&self) -> CleanEnum {
@@ -61,8 +65,9 @@ where
     }
 }
 
-impl<T> Stream<T> for LineEnum<T>
+impl<P, T> Stream<T> for LineEnum<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type C = Coordinate<T>;

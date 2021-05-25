@@ -10,6 +10,7 @@ use num_traits::FloatConst;
 
 use crate::stream::CompareIntersection;
 use crate::stream::Stream;
+use crate::Transform;
 
 use super::clip::Clip;
 use super::clip_base::ClipBase;
@@ -18,19 +19,21 @@ use super::ClipTraitRaw;
 use crate::clip::clip_raw::ClipRaw;
 
 #[derive(Clone, Default, Debug)]
-pub struct ClipAntimeridian<T>
+pub struct ClipAntimeridian<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub base: ClipBase<T>,
+    pub base: ClipBase<P, T>,
 }
 
-impl<T> ClipAntimeridian<T>
+impl<P, T> ClipAntimeridian<P, T>
 where
+    P: Clone + Default + Transform<TcC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_clip() -> Clip<T> {
+    pub fn gen_clip() -> Clip<P, T> {
         let start = LineElem {
             p: Coordinate {
                 x: -T::PI(),
@@ -42,8 +45,9 @@ where
     }
 }
 
-impl<T> ClipTraitRaw<T> for ClipAntimeridian<T>
+impl<P, T> ClipTraitRaw<T> for ClipAntimeridian<P, T>
 where
+    P: Clone,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type SctC = Coordinate<T>;

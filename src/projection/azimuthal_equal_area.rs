@@ -9,7 +9,6 @@ use num_traits::AsPrimitive;
 use super::projection::Projection;
 use super::projection::StreamOrValueMaybe;
 use super::projection_mutator::ProjectionMutator;
-use super::ProjectionRawEnum;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
@@ -31,10 +30,9 @@ impl<T> AzimuthalEqualAreaRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn gen_projection_mutator() -> ProjectionMutator<T> {
-        let s = ProjectionRawEnum::A(AzimuthalEqualAreaRaw::default());
-        let projection = ProjectionMutator::from_projection_raw(s, None);
-        projection
+    #[inline]
+    pub fn gen_projection_mutator() -> ProjectionMutator<AzimuthalEqualAreaRaw<T>, T> {
+        ProjectionMutator::from_projection_raw(AzimuthalEqualAreaRaw::default(), None)
             .scale(T::from(124.75f64).unwrap())
             .clip_angle(StreamOrValueMaybe::Value(T::from(180f64 - 1e-3).unwrap()))
     }
