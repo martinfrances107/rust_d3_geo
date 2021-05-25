@@ -10,8 +10,6 @@ use num_traits::FloatConst;
 use crate::in_delta::in_delta;
 use crate::Transform;
 
-use super::projection_mutator::ProjectionMutator;
-
 pub fn projection_equal<
     'a,
     PM: Transform<TcC = Coordinate<T>> + Clone,

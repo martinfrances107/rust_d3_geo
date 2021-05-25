@@ -7,7 +7,6 @@ use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
 use crate::clip::clip_sink_enum::ClipSinkEnum;
-use crate::compose::Compose;
 use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::Transform;

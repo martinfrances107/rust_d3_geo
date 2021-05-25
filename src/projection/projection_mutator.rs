@@ -343,8 +343,6 @@ where
         }
     }
 
-    //  (postclip = _ == null ? (x0 = y0 = x1 = y1 = null, identity) : clipRectangle(x0 = +_[0][0], y0 = +_[0][1], x1 = +_[1][0], y1 = +_[1][1]), reset()) :
-
     fn clip_extent(mut self, extent: Option<[Coordinate<T>; 2]>) -> ProjectionMutator<PR, T> {
         match extent {
             None => {

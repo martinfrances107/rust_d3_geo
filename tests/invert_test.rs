@@ -9,7 +9,6 @@ mod invert_test {
     use rust_d3_geo::projection::mecator::MecatorRaw;
     use rust_d3_geo::projection::orthographic::OrthographicRaw;
     use rust_d3_geo::projection::projection_equal::projection_equal;
-    use rust_d3_geo::projection::projection_mutator::ProjectionMutator;
     use rust_d3_geo::projection::stereographic::StereographicRaw;
     use rust_d3_geo::Transform;
 
