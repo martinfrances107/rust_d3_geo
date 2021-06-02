@@ -5,7 +5,10 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 /// Returns the signed angle of a cartesian point relative to [cosRadius, 0, 0].
-pub fn circle_radius<T: CoordFloat + FloatConst>(cos_radius: T, point_p: Coordinate<T>) -> T {
+pub fn circle_radius<T>(cos_radius: T, point_p: Coordinate<T>) -> T
+where
+    T: CoordFloat + FloatConst,
+{
     let mut point = cartesian(&point_p);
     point[0] = point[0] - cos_radius;
     cartesian_normalize_in_place(&mut point);
