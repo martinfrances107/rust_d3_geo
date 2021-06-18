@@ -20,7 +20,7 @@ use super::circle_radius::circle_radius;
 pub fn circle_stream<
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 >(
-    circle: &mut impl Stream<T, C = Coordinate<T>>,
+    circle: &mut impl Stream<SC = Coordinate<T>>,
     radius: T,
     delta: T,
     direction: T,

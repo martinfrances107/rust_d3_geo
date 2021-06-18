@@ -1,25 +1,31 @@
 use std::fmt::Display;
 use std::ops::AddAssign;
+use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
-use crate::clip::clip_sink_enum::ClipSinkEnum;
-use crate::stream::stream_dst::StreamDst;
+// use crate::clip::clip_sink_enum::ClipSinkEnum;
+// use crate::projection::ProjectionRawTrait;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::Transform;
 
+use super::ResampleTrait;
+
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
-#[derive(Debug)]
-pub struct Resample<P, T>
+// #[derive(Debug)]
+pub struct Resample<'a, PR, STREAM, T>
 where
-    P: Clone,
+    PR: Transform<C = Coordinate<T>>,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    STREAM: Stream<SC = Coordinate<T>>,
 {
-    pub project: P,
+    pub projection_raw: &'a PR,
     pub delta2: T,
 
     // first point
@@ -41,34 +47,35 @@ where
     pub cos_min_distance: T,
 
     // Box here prevents recurson.
-    pub stream: Box<ClipSinkEnum<P, T>>,
+    pub stream: Box<STREAM>,
     pub use_line_point: bool,
     pub use_line_start: bool,
     pub use_line_end: bool,
 }
 
-impl<P, T> Clone for Resample<P, T>
-where
-    P: Clone,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-{
-    fn clone(&self) -> Self {
-        Self {
-            project: self.project.clone(),
-            stream: self.stream.clone(),
-            ..*self
-        }
-    }
-}
+// impl<P, T> Clone for Resample<P, T>
+// where
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+// {
+//     fn clone(&self) -> Self {
+//         Self {
+//             project: self.project.clone(),
+//             stream: self.stream.clone(),
+//             ..*self
+//         }
+//     }
+// }
 
-impl<P, T> Default for Resample<P, T>
+impl<'a, PR, STREAM, T> Resample<'a, PR, STREAM, T>
 where
-    P: Clone + Default,
+    PR: Transform<C = Coordinate<T>>,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    fn default() -> Resample<P, T> {
+    pub fn new(projection_raw: &'a PR) -> Resample<PR, STREAM, T> {
         Self {
-            project: P::default(),
+            projection_raw,
             delta2: T::zero(),
 
             // first point
@@ -88,7 +95,7 @@ where
             c0: T::zero(),
 
             cos_min_distance: T::zero(),
-            stream: Box::new(ClipSinkEnum::Blank), // stub value
+            stream: Box::new(STREAM::default()), // stub value
 
             use_line_point: false,
             use_line_start: false,
@@ -97,38 +104,40 @@ where
     }
 }
 
-impl<P, T> Resample<P, T>
+impl<PR, STREAM, T> ResampleTrait for Resample<'_, PR, STREAM, T>
 where
-    P: Clone + Default,
+    PR: Transform<C = Coordinate<T>>,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn new(project: P) -> Self {
-        Self {
-            project,
-            ..Self::default()
-        }
-    }
 }
 
-impl<P, T> Resample<P, T>
+use crate::stream::stream_in_trait::StreamIn;
+impl<'a, PR, STREAM, T> StreamIn for Resample<'a, PR, STREAM, T>
 where
-    P: Clone + Default + Transform<TcC = Coordinate<T>>,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    PR: Transform<C = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    STREAM: Stream<SC = Coordinate<T>>,
 {
+    type SInput = STREAM;
     #[inline]
-    pub fn stream_in(&mut self, stream: ClipSinkEnum<P, T>) {
+    fn stream_in(&mut self, stream: STREAM) {
         self.stream = Box::new(stream);
     }
 
-    #[inline]
-    pub fn get_dst(&self) -> StreamDst<T> {
-        self.stream.get_dst()
-    }
+    // #[inline]
+    // pub fn get_dst(&self) -> dyn StreamDst<SC = Coordinate<T>, SD = SD, T = T, ST = T, Out = SD> {
+    //     self.stream.get_dst()
+    // }
 }
 
-impl<P, T> Resample<P, T>
+impl<'a, PR, STREAM, T> Resample<'a, PR, STREAM, T>
 where
-    P: Default + Transform<TcC = Coordinate<T>>,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
@@ -155,7 +164,7 @@ where
 
     fn ring_end(&mut self) {
         {
-            let mut s = self.stream.clone();
+            let mut s = self.stream;
             self.resample_line_to(
                 self.x0,
                 self.y0,
@@ -180,9 +189,7 @@ where
 
     fn line_point(&mut self, p: &Coordinate<T>) {
         let c = cartesian(&p);
-        let project_ptr = &self.project;
-        let project = project_ptr;
-        let p_transform = project.transform(&p);
+        let p_transformed = self.projection_raw.transform(&p);
         self.resample_line_to(
             self.x0,
             self.y0,
@@ -190,17 +197,17 @@ where
             self.a0,
             self.b0,
             self.c0,
-            p_transform.x,
-            p_transform.y,
+            p_transformed.x,
+            p_transformed.y,
             p.x,
             c[0],
             c[1],
             c[2],
             MAXDEPTH,
-            &mut self.stream.clone(),
+            &mut self.stream,
         );
-        self.x0 = p_transform.x;
-        self.y0 = p_transform.y;
+        self.x0 = p_transformed.x;
+        self.y0 = p_transformed.y;
         self.lambda0 = p.x;
         self.a0 = c[0];
         self.b0 = c[1];
@@ -230,7 +237,7 @@ where
         b1: T,
         c1: T,
         depth_p: u8,
-        stream: &mut Box<ClipSinkEnum<P, T>>,
+        stream: &mut Box<STREAM>,
     ) {
         let mut depth = depth_p;
         let dx = x1 - x0;
@@ -255,7 +262,7 @@ where
                     lambda2 = b.atan2(a);
                 };
 
-                let project_ptr = &self.project;
+                let project_ptr = &self.projection_raw;
                 let project = project_ptr;
                 let p = project.transform(&Coordinate {
                     x: lambda2,
@@ -293,16 +300,21 @@ where
     }
 }
 
-impl<P, T> Stream<T> for Resample<P, T>
+impl<'a, PR, STREAM, T> Stream for Resample<'a, PR, STREAM, T>
 where
-    P: Clone + Default + Transform<TcC = Coordinate<T>>,
+    PR: Transform<C = Coordinate<T>>,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type SC = Coordinate<T>;
 
-    fn get_dst(&self) -> StreamDst<T> {
-        self.stream.get_dst()
-    }
+    // fn get_dst(
+    //     &self,
+    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
+    // {
+    //     self.stream.get_dst()
+    // }
     fn sphere(&mut self) {
         self.stream.sphere();
     }
@@ -314,7 +326,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Self::C, _m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         if self.use_line_point {
             self.line_point(p);
         } else {

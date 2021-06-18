@@ -14,7 +14,7 @@ mod invert_test {
 
     fn symetric_invert<PM>(pm: PM)
     where
-        PM: Transform<TcC = Coordinate<f64>>,
+        PM: Transform,
     {
         for p in vec![
             &Coordinate {

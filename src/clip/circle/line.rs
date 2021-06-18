@@ -1,5 +1,6 @@
 use std::fmt::Display;
 use std::ops::AddAssign;
+// use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
@@ -8,21 +9,28 @@ use num_traits::FloatConst;
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
 
-use crate::clip::clip_buffer::ClipBuffer;
-use crate::clip::clip_sink_enum::ClipSinkEnum;
+// use crate::clip::clip_buffer::ClipBuffer;
+// use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::clip::line_elem::LineElem;
-use crate::clip::line_sink_enum::LineSinkEnum;
+// use crate::clip::line_sink_enum::LineSinkEnum;
+use crate::clip::clip_buffer::ClipBuffer;
+use crate::clip::LCB;
 use crate::point_equal::point_equal;
-use crate::stream::stream_dst::StreamDst;
+// use crate::projection::ProjectionRawTrait;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
-use crate::stream::StreamSourceDummy;
-use crate::stream::{Clean, CleanEnum};
-use crate::Transform;
+// use crate::stream::StreamSourceDummy;
+use crate::clip::Clean;
+use crate::clip::CleanEnum;
+use crate::stream::stream_in_trait::StreamIn;
+// use crate::Transform;
 
-#[derive(Clone, Debug)]
-pub struct Line<P, T>
+// #[derive(Debug)]
+pub struct Line<STREAM, T>
 where
-    P: Clone,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     c0: u8,           // code for previous point
@@ -32,37 +40,40 @@ where
     not_hemisphere: bool,
     point0: Option<LineElem<T>>, // previous point
     small_radius: bool,
-    stream: LineSinkEnum<P, T>,
+    stream: STREAM,
     v0: bool,  // visibility of previous point
     v00: bool, // visibility of first point
 }
 
-impl<P, T> Default for Line<P, T>
-where
-    P: Clone,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-{
-    fn default() -> Self {
-        Self {
-            c0: 0u8,
-            clean: CleanEnum::Undefined,
-            radius: T::zero(),
-            cr: T::zero(),
-            not_hemisphere: false,
-            point0: None,
-            small_radius: false,
-            stream: LineSinkEnum::CSE(ClipSinkEnum::Src(StreamDst::SRC(
-                StreamSourceDummy::default(),
-            ))),
-            v0: false,
-            v00: false,
-        }
-    }
-}
+// impl<'a, PR, SD, T> Default for Line<'a, PR, SD, T>
+// where
+//     Rc<PR>: Transform<C = Coordinate<T>>,
+//     PR: Transform<C = Coordinate<T>>,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+// {
+//     fn default() -> Self {
+//         Self {
+//             c0: 0u8,
+//             clean: CleanEnum::Undefined,
+//             radius: T::zero(),
+//             cr: T::zero(),
+//             not_hemisphere: false,
+//             point0: None,
+//             small_radius: false,
+//             stream: LineSinkEnum::CSE(ClipSinkEnum::Src(StreamDst::SRC(
+//                 StreamSourceDummy::default(),
+//             ))),
+//             v0: false,
+//             v00: false,
+//         }
+//     }
+// }
 
-impl<P, T> Line<P, T>
+impl<STREAM, T> Line<STREAM, T>
 where
-    P: Clone,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
@@ -80,18 +91,8 @@ where
             small_radius,
             v0: false,
             v00: false,
-            stream: LineSinkEnum::CB(ClipBuffer::default()),
+            stream: STREAM::default(),
         }
-    }
-
-    #[inline]
-    pub fn stream_in(&mut self, stream: LineSinkEnum<P, T>) {
-        self.stream = stream;
-    }
-
-    #[inline]
-    pub fn get_stream(&mut self) -> &mut LineSinkEnum<P, T> {
-        &mut self.stream
     }
 
     #[inline]
@@ -128,9 +129,35 @@ where
     }
 }
 
-impl<P, T> Clean for Line<P, T>
+impl<T> LCB for Line<ClipBuffer<T>, T> where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
+{
+}
+
+impl<STREAM, T> StreamIn for Line<STREAM, T>
 where
-    P: Clone,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
+    type SInput = STREAM;
+    #[inline]
+    fn stream_in(&mut self, stream: STREAM) {
+        self.stream = stream;
+    }
+
+    // #[inline]
+    // pub fn get_stream(&mut self) -> &mut STREAM {
+    //     &mut self.stream
+    // }
+}
+
+impl<STREAM, T> Clean for Line<STREAM, T>
+where
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     /// Rejoin first and last segments if there were intersections and the first
@@ -147,26 +174,34 @@ where
     }
 }
 
-impl<P, T> Stream<T> for Line<P, T>
+impl<STREAM, T> Stream for Line<STREAM, T>
 where
-    P: Clone + Default + Transform<TcC = Coordinate<T>>,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    // type ST = T;
+    type SC = Coordinate<T>;
+    // type SD = SD;
+
     fn sphere(&mut self) {}
     fn polygon_start(&mut self) {}
     fn polygon_end(&mut self) {}
 
-    fn get_dst(&self) -> StreamDst<T> {
-        self.stream.get_dst()
-    }
+    // fn get_dst(
+    //     &self,
+    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
+    // {
+    //     self.stream.get_dst()
+    // }
     fn line_start(&mut self) {
         self.v00 = false;
         self.v0 = false;
         self.clean = CleanEnum::NoIntersections;
     }
 
-    fn point(&mut self, p: &Self::C, _m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         let point1 = Some(LineElem { p: *p, m: None });
         let mut point2: Option<LineElem<T>>;
         let v = self.visible(p);

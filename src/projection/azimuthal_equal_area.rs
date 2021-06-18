@@ -6,9 +6,8 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
-use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
-use super::projection_mutator::ProjectionMutator;
+// use super::projection::Projection;
+// use super::projection::StreamOrValueMaybe;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
@@ -30,12 +29,12 @@ impl<T> AzimuthalEqualAreaRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    #[inline]
-    pub fn gen_projection_mutator() -> ProjectionMutator<AzimuthalEqualAreaRaw<T>, T> {
-        ProjectionMutator::from_projection_raw(AzimuthalEqualAreaRaw::default(), None)
-            .scale(T::from(124.75f64).unwrap())
-            .clip_angle(StreamOrValueMaybe::Value(T::from(180f64 - 1e-3).unwrap()))
-    }
+    // #[inline]
+    // pub fn gen_projection_mutator() -> Projection<AzimuthalEqualAreaRaw<T>, T> {
+    //     Projection::new(AzimuthalEqualAreaRaw::default(), None)
+    //         .scale(T::from(124.75f64).unwrap())
+    //         .clip_angle(StreamOrValueMaybe::Value(T::from(180f64 - 1e-3).unwrap()))
+    // }
 
     #[inline]
     fn cxcy(cxcy: T) -> T {
@@ -52,7 +51,7 @@ where
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
     for AzimuthalEqualAreaRaw<T>
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         azimuthal_raw(p, Self::cxcy)

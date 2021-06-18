@@ -8,7 +8,7 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
 
-use crate::stream::stream_dst::StreamDst;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
 use super::PathResult;
@@ -70,16 +70,19 @@ where
     }
 }
 
-impl<T> Stream<T> for PathContext<T>
+impl<T> Stream for PathContext<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst + AsPrimitive<T>,
 {
-    type C = Coordinate<T>;
+    type SC = Coordinate<T>;
 
     fn sphere(&mut self) {}
-    fn get_dst(&self) -> StreamDst<T> {
-        todo!("What to do here");
-    }
+    // fn get_dst(
+    //     &self,
+    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
+    // {
+    //     todo!("What to do here");
+    // }
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(T::zero());

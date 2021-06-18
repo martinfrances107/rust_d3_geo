@@ -10,11 +10,14 @@ use super::stream_line::stream_line;
 use super::Stream;
 use super::Streamable;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable<T>
-    for Polygon<T>
+impl<T> Streamable for Polygon<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
-    fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
+    // type SC = Coordinate<T>;
+    // type SD = Self;
+    type T = T;
+    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
         stream.polygon_start();
 
         let e_points: Vec<Coordinate<T>> = self.exterior().coords_iter().collect();

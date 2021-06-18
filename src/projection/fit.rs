@@ -1,5 +1,6 @@
 use std::fmt::Display;
 use std::ops::AddAssign;
+use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -11,23 +12,29 @@ use crate::data_object::DataObject;
 use crate::path::bounds_stream::BoundsStream;
 use crate::path::PathResult;
 use crate::path::PathResultEnum;
-use crate::stream::stream_dst::StreamDst;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::stream::Streamable;
+// use crate::Transform;
+use crate::projection::projection::Projection;
+// use super::projection::Projection;
+// use super::ProjectionRawTrait;
+use crate::projection::scale::Scale;
 use crate::Transform;
 
-use super::projection::Projection;
-use super::projection_mutator::ProjectionMutator;
+use super::clip_extent::ClipExtent;
+use super::projection_trait::ProjectionTrait;
+use super::translate::Translate;
 
-fn fit<PR, T>(
-    projection: ProjectionMutator<PR, T>,
-    fit_bounds: Box<
-        dyn FnOnce([Coordinate<T>; 2], ProjectionMutator<PR, T>) -> ProjectionMutator<PR, T>,
-    >,
+fn fit<PR, SD, T>(
+    projection: Projection<PR, SD, T>,
+    fit_bounds: Box<dyn FnOnce([Coordinate<T>; 2], Projection<PR, SD, T>) -> Projection<PR, SD, T>>,
     object: DataObject<T>,
-) -> ProjectionMutator<PR, T>
+) -> Projection<PR, SD, T>
 where
-    PR: Clone + Default + Transform<TcC = Coordinate<T>>,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    PR: Transform<C = Coordinate<T>>,
+    SD: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     let clip = projection.get_clip_extent();
@@ -42,11 +49,11 @@ where
         None => projection1,
     };
 
-    let bounds_stream = StreamDst::BS(BoundsStream::default());
-    let mut stream_in = projection2.stream(bounds_stream);
+    let bounds_stream = Box::new(BoundsStream::default());
+    let mut stream_in = projection2.stream(&mut Box::new(bounds_stream));
 
     object.to_stream(&mut stream_in);
-    let bounds = match stream_in.get_dst().result() {
+    let bounds = match bounds_stream.result() {
         Some(PathResultEnum::Bounds(bounds)) => bounds,
         _ => {
             panic!("Expecting only a bounds result from a Bounds stream.");
@@ -59,19 +66,21 @@ where
     }
 }
 
-pub fn fit_extent<PR, T>(
-    projection: ProjectionMutator<PR, T>,
+pub fn fit_extent<PR, SD, T>(
+    projection: Projection<PR, SD, T>,
     extent: [Coordinate<T>; 2],
     object: DataObject<T>,
-) -> ProjectionMutator<PR, T>
+) -> Projection<PR, SD, T>
 where
-    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    PR: Transform<C = Coordinate<T>>,
+    SD: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     fit(
         projection,
         Box::new(
-            move |b: [Coordinate<T>; 2], projection: ProjectionMutator<PR, T>| {
+            move |b: [Coordinate<T>; 2], projection: Projection<PR, SD, T>| {
                 let two = T::from(2.0).unwrap();
                 let w = extent[1].x - extent[0].y;
                 let h = extent[1].y - extent[0].y;

@@ -1,5 +1,6 @@
 use std::collections::VecDeque;
 use std::fmt::Display;
+// use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
@@ -9,18 +10,26 @@ use num_traits::FloatConst;
 
 use crate::path::PathResult;
 use crate::path::PathResultEnum;
-use crate::stream::stream_dst::StreamDst;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
 use super::line_elem::LineElem;
 
 #[derive(Clone, Debug, Default)]
-pub struct ClipBuffer<T: CoordFloat> {
+pub struct ClipBuffer<T>
+where
+    T: CoordFloat,
+{
+    // pd: PhantomData<SD>,
     // line: Vec<LineElem<T>>,
     lines: VecDeque<Vec<LineElem<T>>>,
 }
 
-impl<T: CoordFloat> PathResult for ClipBuffer<T> {
+impl<T> PathResult for ClipBuffer<T>
+where
+    // SD: StreamDst,
+    T: CoordFloat,
+{
     type Out = Option<PathResultEnum<T>>;
     fn result(&mut self) -> Option<PathResultEnum<T>> {
         let result = self.lines.clone();
@@ -29,12 +38,16 @@ impl<T: CoordFloat> PathResult for ClipBuffer<T> {
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
-    for ClipBuffer<T>
+impl<T> Stream for ClipBuffer<T>
+where
+    // SD: StreamDst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type SC = Coordinate<T>;
+    // type ST = T;
+    // type SD = SD;
     #[inline]
-    fn point(&mut self, p: &Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         println!("ClipBuffer point {:?} {:?}", p, m);
         match self.lines.back_mut() {
             Some(line) => {
@@ -62,9 +75,9 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     fn polygon_end(&mut self) {
         println!("clipBuffer polygon_end()");
     }
-    fn get_dst(&self) -> StreamDst<T> {
-        todo!("ClipBuffer get_dst() should never be called.");
-    }
+    // fn get_dst(&self) -> Self {
+    //     todo!("ClipBuffer get_dst() should never be called.");
+    // }
 }
 // mpl<T: CoordFloat + FloatConst> ClipBuffer<T> {
 //     fn rejoin(&mut self) {

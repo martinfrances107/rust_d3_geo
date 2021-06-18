@@ -1,25 +1,33 @@
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
+use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
+use super::projection_trait::ProjectionTrait;
+// use super::ProjectionRawTrait;
 use crate::in_delta::in_delta;
 use crate::Transform;
 
 pub fn projection_equal<
     'a,
-    PM: Transform<TcC = Coordinate<T>> + Clone,
+    P: ProjectionTrait<'a>,
+    // PR: ProjectionRawtrait,
     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Debug + Display + Default,
 >(
-    projection: &PM,
+    projection: &P,
     expected_location: &'a Coordinate<T>,
     expected_point: &'a Coordinate<T>,
     delta_p: Option<T>,
-) -> bool {
+) -> bool
+where
+    Rc<<P as ProjectionTrait<'a>>::PR>: Transform<C = Coordinate<T>>,
+    P: Transform<C = Coordinate<T>>,
+{
     let delta = match delta_p {
         Some(d) => d,
         None => T::from(1e-6f64).unwrap(),

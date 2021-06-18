@@ -27,7 +27,7 @@ impl<'a, T: CoordFloat> RotationPhiGamma<T> {
 }
 
 impl<T: CoordFloat> Transform for RotationPhiGamma<T> {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     #[allow(clippy::many_single_char_names)]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let lambda = p.x;

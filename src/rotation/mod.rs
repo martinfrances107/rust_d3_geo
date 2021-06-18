@@ -1,3 +1,4 @@
+pub mod rotate_radians_enum;
 pub mod rotate_radians_transform;
 pub mod rotation;
 pub mod rotation_identity;

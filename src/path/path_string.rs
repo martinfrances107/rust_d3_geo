@@ -6,7 +6,7 @@ use num_traits::AsPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-use crate::stream::stream_dst::StreamDst;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
 use super::PointRadiusTrait;
@@ -95,16 +95,16 @@ where
     }
 }
 
-impl<T> Stream<T> for PathString<T>
+impl<T> Stream for PathString<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type SC = Coordinate<T>;
 
     fn sphere(&mut self) {}
-    fn get_dst(&self) -> StreamDst<T> {
-        StreamDst::PathString(self.clone())
-    }
+    // fn get_dst(&self) -> Self {
+    //     self.clone()
+    // }
 
     #[inline]
     fn polygon_start(&mut self) {

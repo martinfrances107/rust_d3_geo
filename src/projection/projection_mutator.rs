@@ -1,85 +1,9 @@
-use std::fmt::Display;
-use std::ops::AddAssign;
-
-use derivative::Derivative;
-use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
-
-use crate::clip::antimeridian::ClipAntimeridian;
-use crate::clip::circle::ClipCircle;
-use crate::clip::clip::Clip;
-use crate::clip::clip_sink_enum::ClipSinkEnum;
-use crate::compose::Compose;
-use crate::data_object::DataObject;
-use crate::projection::resample::gen_resample_node;
-use crate::projection::resample::ResampleEnum;
-use crate::projection::stream_transform::StreamTransform;
-use crate::projection::stream_transform_radians::StreamTransformRadians;
-use crate::rotation::rotate_radians_transform::rotate_radians_transform;
-use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
-use crate::rotation::rotation_identity::RotationIdentity;
-use crate::stream::stream_dst::StreamDst;
-use crate::Transform;
-
-use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
-use super::resample::resample::Resample;
-use super::scale_translate_rotate::ScaleTranslateRotate;
-use super::scale_translate_rotate::ScaleTranslateRotateEnum;
-
-use super::fit::fit_extent;
-
-#[derive(Derivative)]
-#[derivative(Debug)]
-#[derive(Clone)]
-/// A collection of functions that mutate a Projection struct.
-pub struct ProjectionMutator<
-    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-> {
-    project: PR,
-    alpha: T, // post-rotate angle
-    // cache: Option<
-    //     Box<dyn Fn(Rc<RefCell<dyn Stream<C = Coordinate<T>>>>) -> StreamTransformRadiansNode<T>>,
-    // >,
-    // cache_stream: Option<StreamSimpleNode<T>>,
-    // clip_antimeridian: Option<Box<dyn Transform<>>>,
-    delta_lambda: T,
-    delta_phi: T,
-    delta_gamma: T,
-    delta2: T, // precision
-    k: T,      // scale
-
-    project_resample: ResampleEnum<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T>,
-    project_transform: Compose<T, PR, ScaleTranslateRotateEnum<T>>,
-    project_rotate_transform:
-        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
-    phi: T, // center
-    preclip: Clip<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T>,
-    #[derivative(Debug = "ignore")]
-    postclip: fn(
-        ClipSinkEnum<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T>,
-    ) -> ClipSinkEnum<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T>,
-    x: T,
-    y: T, // translate
-    lambda: T,
-    rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
-    sx: T,                        // reflectX
-    sy: T,                        // reflectY
-    theta: Option<T>,
-    x0: Option<T>,
-    y0: Option<T>,
-    x1: Option<T>,
-    y1: Option<T>, // post-clip extent
-}
-
 impl<PR, T> ProjectionMutator<PR, T>
 where
-    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
+    ProjectionRawTrait
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn from_projection_raw(project: PR, delta2_p: Option<T>) -> ProjectionMutator<PR, T> {
+    pub fn new(project: PR, delta2_p: Option<T>) -> ProjectionMutator<PR, T> {
         let delta2 = match delta2_p {
             None => {
                 T::from(0.5).unwrap() // precision
@@ -103,7 +27,7 @@ where
             phi: T::zero(),
             rotate: RotateRadiansEnum::I(RotationIdentity::default()), // pre-rotate
             preclip: ClipAntimeridian::gen_clip(),                     // stub value
-            postclip: |x: ClipSinkEnum<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T>| x,
+            postclip: |x: ClipSinkEnum<Compose<PR, ScaleTranslateRotateEnum<T>>, T>| x,
             sx: T::one(), // reflectX
             sy: T::one(), // reflectX
             theta: None,  // pre-clip angle
@@ -166,47 +90,14 @@ where
         self.reset()
     }
 
-    // In javascript stream is used as a property to be removed from the object.
-    // In rust that is a closure.
-    pub fn stream(
-        &self,
-        stream_dst: StreamDst<T>, // stream: Option<StreamSimpleNode<T>>,
-    ) -> StreamTransformRadians<Compose<T, PR, ScaleTranslateRotateEnum<T>>, T> {
-        // return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
-        // return match &self.cache {
-        //     Some(c) => Box::new(*c),
-        //     None => {
-        // self.cache_stream = Some(stream.clone());
-
-        // let mut postclip = self.postclip.clone();
-        // postclip.stream_in(ClipSinkEnum::Src(stream_dst));
-        let postclip = (self.postclip)(ClipSinkEnum::Src(stream_dst));
-
-        let mut resample = self.project_resample.clone();
-        resample.stream_in(postclip);
-        let mut preclip = self.preclip.clone();
-        preclip.stream_in(ClipSinkEnum::Resample(resample));
-
-        let mut t_rotate_node = StreamTransform::new(Some(self.rotate.clone()));
-        t_rotate_node.stream_in(preclip);
-
-        let mut t_radians_node = StreamTransformRadians::default();
-        t_radians_node.stream_in(t_rotate_node);
-
-        // Output.
-        t_radians_node
-
-        //     }
-        // };
-    }
 }
 
 impl<PR, T> Transform for ProjectionMutator<PR, T>
 where
-    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
+    ProjectionRawTrait
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let r = Coordinate {
             x: p.x.to_radians(),
@@ -223,9 +114,9 @@ where
     }
 }
 
-impl<PR, T> Projection<PR, T> for ProjectionMutator<PR, T>
+impl<PR, T> Projection<PR, T> for ProjectionMutator<PR,  T>
 where
-    PR: Transform<TcC = Coordinate<T>> + Clone + Default,
+    ProjectionRawTrait
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     // #[inline]

@@ -26,7 +26,7 @@ where
     FloatFn(Box<dyn Fn(&CircleInArg) -> Coordinate<T>>),
 }
 
-// pub struct CircleInArg
+#[derive(Debug)]
 pub enum CircleInArg {
     None,
     Arg(),

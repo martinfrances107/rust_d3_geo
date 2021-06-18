@@ -4,7 +4,7 @@ use std::ops::AddAssign;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::stream::stream_dst::StreamDst;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Streamable;
 
 use super::stream::Stream;
@@ -46,9 +46,21 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> LengthStream<T> {
-    pub fn calc(object: &impl Streamable<T, SC = Coordinate<T>>) -> T {
-        let mut ls = LengthStream::default();
+// impl<T> Streamable for LengthStream<T>
+// where
+// T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst{
+//     type SD=Self;
+//     type T=T;
+//     fn to_stream<SD: Stream>(stream: &mut SD){
+
+//     }
+// }
+impl<T> LengthStream<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
+    pub fn calc(object: &impl Streamable<T = T>) -> T {
+        let mut ls: LengthStream<T> = LengthStream::default();
         object.to_stream(&mut ls);
         return ls.length_sum;
     }
@@ -95,13 +107,14 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     fn line_end_noop(&mut self) {}
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
-    for LengthStream<T>
+impl<T> Stream for LengthStream<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type C = Coordinate<T>;
-    fn get_dst(&self) -> StreamDst<T> {
-        StreamDst::LS(self.clone())
-    }
+    type SC = Coordinate<T>;
+    // fn get_dst(&self) -> Self {
+    //     self.clone()
+    // }
     fn sphere(&mut self) {}
     fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
         (self.point_fn)(self, p);

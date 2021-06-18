@@ -11,7 +11,7 @@ pub struct ScaleTranslate<T> {
 }
 
 impl<T: CoordFloat> Transform for ScaleTranslate<T> {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;

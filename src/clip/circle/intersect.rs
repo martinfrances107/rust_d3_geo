@@ -10,6 +10,7 @@ use crate::cartesian::spherical_r;
 use crate::clip::line_elem::LineElem;
 
 /// IntersectReturn none, one or two 2d floats.
+#[derive(Debug)]
 pub enum IntersectReturn<T: CoordFloat> {
     One(Option<LineElem<T>>),
     Two([Coordinate<T>; 2]),
