@@ -9,11 +9,9 @@ use num_traits::AsPrimitive;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
-use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
-use super::projection_mutator::ProjectionMutator;
-//
-
+// use super::projection::Projection;
+// use super::projection::StreamOrValueMaybe;
+// use super::ProjectionRawTrait;
 /// Why the Phantom Data is required here...
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
@@ -30,12 +28,12 @@ impl<T> StereographicRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    #[inline]
-    pub fn gen_projection_mutator() -> ProjectionMutator<StereographicRaw<T>, T> {
-        ProjectionMutator::from_projection_raw(StereographicRaw::default(), None)
-            .scale(T::from(250f64).unwrap())
-            .clip_angle(StreamOrValueMaybe::Value(T::from(142f64).unwrap()))
-    }
+    // #[inline]
+    // pub fn gen_projection_mutator() -> Projection<StereographicRaw<T>, T> {
+    //     Projection::new(StereographicRaw::default(), None)
+    //         .scale(T::from(250f64).unwrap())
+    //         .clip_angle(StreamOrValueMaybe::Value(T::from(142f64).unwrap()))
+    // }
 
     #[inline]
     fn z(z: T) -> T
@@ -50,7 +48,7 @@ where
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
     for StereographicRaw<T>
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();
         let k = T::one() + p.x.cos() * cy;

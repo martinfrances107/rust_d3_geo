@@ -2,6 +2,7 @@ pub mod intersection;
 mod link;
 
 use std::cell::RefCell;
+use std::cmp::Ordering;
 use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
@@ -12,23 +13,34 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::point_equal::point_equal;
+// use crate::projection::ProjectionRawTrait;
+// use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::stream::Stream;
+// use crate::Transform;
 
-use super::clip_raw::ClipRaw;
+// use super::clip_raw::ClipRaw;
+// use super::compare_intersections::compare_intersections;
 use super::line_elem::LineElem;
-use super::ClipTraitRaw;
+// use super::Clip;
 use intersection::Intersection;
 use link::link;
-
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
-pub fn rejoin<P: Clone, T>(
+pub fn rejoin<'a, SINK, T>(
     segments: &Vec<Vec<LineElem<T>>>,
-    raw: ClipRaw<P, T>,
+    compare_intersections: fn(
+        a: &Rc<RefCell<Intersection<T>>>,
+        b: &Rc<RefCell<Intersection<T>>>,
+    ) -> Ordering,
     start_inside: bool,
-    stream: &mut impl Stream<T, C = Coordinate<T>>,
+    interpolate: Box<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut SINK) + '_>,
+
+    stream: &mut SINK,
 ) where
+    // PR: Transform<C = Coordinate<T>>,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     let mut start_inside = start_inside;
@@ -95,7 +107,7 @@ pub fn rejoin<P: Clone, T>(
         return;
     }
 
-    clip.sort_by(ClipRaw::<P, T>::compare_intersection);
+    clip.sort_by(compare_intersections);
 
     link(&mut subject);
     link(&mut clip);
@@ -139,7 +151,7 @@ pub fn rejoin<P: Clone, T>(
                         None => {}
                     }
                 } else {
-                    raw.interpolate(
+                    interpolate(
                         Some((current.clone()).borrow().x.p),
                         Some((current.clone()).borrow().n.as_ref().unwrap().borrow().x.p),
                         T::one(),
@@ -158,7 +170,7 @@ pub fn rejoin<P: Clone, T>(
                         stream.point(&point.p, None);
                     }
                 } else {
-                    raw.interpolate(
+                    interpolate(
                         Some((*current.clone()).borrow().x.p),
                         Some(
                             ((current.clone()).borrow().p.as_ref().unwrap())

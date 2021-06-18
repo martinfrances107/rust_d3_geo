@@ -1,68 +1,95 @@
 use std::fmt::Display;
+// use std::marker::PhantomData;
 use std::ops::AddAssign;
+// use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
+use num_traits::Float;
 use num_traits::FloatConst;
 
-use crate::clip::line_sink_enum::LineSinkEnum;
-use crate::clip::ClipBuffer;
-use crate::stream::stream_dst::StreamDst;
+// use crate::clip::line_sink_enum::LineSinkEnum;
+// use crate::clip::ClipBuffer;
+// use crate::projection::projection_trait::ProjectionTrait;s
+// use crate::projection::ProjectionRawTrait;
+// use crate::stream::stream_dst::StreamDst;
+use crate::clip::clip_buffer::ClipBuffer;
+use crate::clip::Clean;
+use crate::clip::CleanEnum;
+use crate::clip::LCB;
+use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
-use crate::stream::{Clean, CleanEnum};
-use crate::Transform;
+
+// use crate::Transform;
 
 use super::intersect::intersect;
 
-#[derive(Clone, Debug)]
-pub struct Line<P, T>
+#[derive(Debug, Default)]
+pub struct Line<STREAM, T>
 where
-    P: Clone,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    // SD: StreamDst,
+    STREAM: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + Float + FloatConst,
 {
+    // pd: PhantomData<&'a u8>,
     clean: CleanEnum,
     lambda0: T,
     phi0: T,
     sign0: T,
-    stream: LineSinkEnum<P, T>,
+    stream: STREAM,
 }
 
-impl<P, T> Default for Line<P, T>
-where
-    P: Clone,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+// impl<'a, STREAM, T> Default for Line<'a, STREAM, T>
+// where
+//     // Rc<PR>: Transform<C = Coordinate<T>>,
+//     // PR: Transform<C = Coordinate<T>>,
+//     STREAM: Stream<SC=Coordinate<T>> + Default,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+// {
+//     #[inline]
+//     fn default() -> Self {
+//         Line {
+//             pd: PhantomData,
+//             clean: CleanEnum::Undefined,
+//             lambda0: T::nan(),
+//             phi0: T::nan(),
+//             sign0: T::nan(),
+//             stream: STREAM::default()
+//         }
+//     }
+// }
+
+impl<T> LCB for Line<ClipBuffer<T>, T> where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
 {
-    #[inline]
-    fn default() -> Self {
-        Line {
-            clean: CleanEnum::Undefined,
-            lambda0: T::nan(),
-            phi0: T::nan(),
-            sign0: T::nan(),
-            stream: LineSinkEnum::CB(ClipBuffer::default()),
-        }
-    }
 }
 
-impl<P, T> Line<P, T>
+impl<STREAM, T> StreamIn for Line<STREAM, T>
 where
-    P: Clone,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
+    type SInput = STREAM;
     #[inline]
-    pub fn stream_in(&mut self, stream: LineSinkEnum<P, T>) {
+    fn stream_in(&mut self, stream: STREAM) {
         self.stream = stream;
     }
 
-    #[inline]
-    pub fn get_stream(&mut self) -> &mut LineSinkEnum<P, T> {
-        &mut self.stream
-    }
+    // #[inline]
+    // fn get_stream(&'a mut self) -> &'a mut STREAM {
+    //     &mut self.stream
+    // }
 }
 
-impl<P, T> Clean for Line<P, T>
+impl<STREAM, T> Clean for Line<STREAM, T>
 where
-    P: Clone,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
@@ -78,12 +105,16 @@ where
     }
 }
 
-impl<P, T> Stream<T> for Line<P, T>
+impl<STREAM, T> Stream for Line<STREAM, T>
 where
-    P: Clone + Default + Transform<TcC = Coordinate<T>>,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type SC = Coordinate<T>;
+    // type SD = SD;
+    // type ST = T;
     fn sphere(&mut self) {
         todo!("is this called")
     }
@@ -95,9 +126,12 @@ where
         todo!("is this called")
     }
 
-    fn get_dst(&self) -> StreamDst<T> {
-        self.stream.get_dst()
-    }
+    // fn get_dst(
+    //     &self,
+    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
+    // {
+    //     self.stream.get_dst()
+    // }
 
     fn line_start(&mut self) {
         println!("line(a) line_start()");
@@ -105,7 +139,7 @@ where
         self.clean = CleanEnum::NoIntersections;
     }
 
-    fn point(&mut self, p: &Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         println!("line(a) point {:?} {:?}", p, m);
         let mut lambda1 = p.x;
         let phi1 = p.y;

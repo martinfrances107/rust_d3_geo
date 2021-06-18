@@ -8,9 +8,9 @@ use num_traits::AsPrimitive;
 
 use crate::Transform;
 
-use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
-use super::projection_mutator::ProjectionMutator;
+// use super::projection::Projection;
+// use super::projection::StreamOrValueMaybe;
+// use super::ProjectionRawTrait;
 
 /// Why the Phantom Data is required here...
 ///
@@ -24,17 +24,28 @@ where
     phantom: PhantomData<T>,
 }
 
+// impl<T> ProjectionRawTrait for OrthographicRaw<T>
+// where
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+// {
+//     // #[inline]
+//     // fn gen_projection_mutator() -> Projection<OrthographicRaw<T>, T> {
+//     //     Projection::new(OrthographicRaw::default(), None)
+//     //         .scale(T::from(249.5f64).unwrap())
+//     //         .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
+//     // }
+// }
+
+// impl<T> ProjectionRawTrait for OrthographicRaw<T>
+// // where
+// //     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+// {
+// }
+
 impl<T> OrthographicRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    #[inline]
-    pub fn gen_projection_mutator() -> ProjectionMutator<OrthographicRaw<T>, T> {
-        ProjectionMutator::from_projection_raw(OrthographicRaw::default(), None)
-            .scale(T::from(249.5f64).unwrap())
-            .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
-    }
-
     #[inline]
     fn angle(z: T) -> T {
         z.asin()
@@ -62,7 +73,7 @@ where
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
     for OrthographicRaw<T>
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         Coordinate {

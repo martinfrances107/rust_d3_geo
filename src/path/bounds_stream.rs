@@ -6,7 +6,7 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::stream::stream_dst::StreamDst;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
 use super::PathResult;
@@ -57,14 +57,14 @@ where
     }
 }
 
-impl<T> Stream<T> for BoundsStream<T>
+impl<T> Stream for BoundsStream<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type SC = Coordinate<T>;
 
     #[inline]
-    fn point(&mut self, p: &Self::C, _m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         if p.x < self.p0.x {
             self.p0.x = p.x
         }
@@ -84,7 +84,7 @@ where
     fn line_end(&mut self) {}
     fn polygon_start(&mut self) {}
     fn polygon_end(&mut self) {}
-    fn get_dst(&self) -> StreamDst<T> {
-        StreamDst::BS(self.clone())
-    }
+    // fn get_dst(&self) -> BoundsStream<T> {
+    //     self.clone()
+    // }
 }

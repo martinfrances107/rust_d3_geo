@@ -9,9 +9,8 @@ use num_traits::AsPrimitive;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
-use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
-use super::projection_mutator::ProjectionMutator;
+// use super::projection::Projection;
+// use super::projection::StreamOrValueMaybe;
 
 /// Why the Phantom Data is required here...
 ///
@@ -29,13 +28,13 @@ impl<T> GnomicRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn gen_projection_mutator() -> ProjectionMutator<GnomicRaw<T>, T> {
-        let g = GnomicRaw::default();
-        let projection = ProjectionMutator::from_projection_raw(g, None);
-        projection
-            .scale(T::from(144.049f64).unwrap())
-            .clip_angle(StreamOrValueMaybe::Value(T::from(60f64).unwrap()))
-    }
+    // pub fn gen_projection_mutator() -> Projection<GnomicRaw<T>, T> {
+    //     let g = GnomicRaw::default();
+    //     let projection = Projection::new(g, None);
+    //     projection
+    //         .scale(T::from(144.049f64).unwrap())
+    //         .clip_angle(StreamOrValueMaybe::Value(T::from(60f64).unwrap()))
+    // }
 
     #[inline]
     fn atan(z: T) -> T
@@ -50,7 +49,7 @@ where
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
     for GnomicRaw<T>
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();
         let k = p.x.cos() * cy;

@@ -10,11 +10,12 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable<T>
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable
     for MultiPoint<T>
 {
-    type SC = Coordinate<T>;
-    fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
+    type T = T;
+    // type SD = Self;
+    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
         for p in self.iter() {
             // TODO there must be a better conversion.
             stream.point(&Coordinate { x: p.x(), y: p.y() }, None);

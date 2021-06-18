@@ -6,7 +6,7 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::stream::stream_dst::StreamDst;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
 use super::PathResult;
@@ -97,24 +97,26 @@ where
     }
 }
 
-impl<T> Stream<T> for PathAreaStream<T>
+impl<T> Stream for PathAreaStream<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type SC = Coordinate<T>;
+    // ?    type SD = PathAreaStream<T>;
+    // type ST = T;
 
     #[inline]
     fn sphere(&mut self) {
         self.area_sum += T::from(2.0).unwrap() * T::PI();
     }
 
-    #[inline]
-    fn get_dst(&self) -> StreamDst<T> {
-        StreamDst::PAS(self.clone())
-    }
+    // #[inline]
+    // fn get_dst(&self) -> Self {
+    //     self.clone()
+    // }
 
     #[inline]
-    fn point(&mut self, p: &Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         (self.point_fn)(self, p, m);
     }
 

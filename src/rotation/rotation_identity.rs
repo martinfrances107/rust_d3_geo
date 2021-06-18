@@ -35,7 +35,7 @@ fn normalise<'a, T: CoordFloat + FloatConst>(p: &'a Coordinate<T>) -> Coordinate
 }
 
 impl<T: CoordFloat + Default + FloatConst> Transform for RotationIdentity<T> {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let out = normalise(p);

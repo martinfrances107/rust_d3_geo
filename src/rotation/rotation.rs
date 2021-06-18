@@ -6,10 +6,9 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::rotate_radians_transform::rotate_radians_transform;
-use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
+use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
 use crate::Transform;
 
-#[derive(Clone)]
 pub struct Rotation<T>
 where
     T: CoordFloat + Default + FloatConst,
@@ -32,7 +31,7 @@ impl<'a, T: 'a + CoordFloat + Default + FloatConst> Rotation<T> {
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
     for Rotation<T>
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.transform(&Coordinate {
             x: coordinates.x.to_radians(),

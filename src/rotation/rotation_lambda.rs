@@ -37,7 +37,7 @@ impl<'a, T: CoordFloat + FloatConst> RotationLambda<T> {
 }
 
 impl<T: CoordFloat + FloatConst> Transform for RotationLambda<T> {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
         forward_rotation_lambda(self.delta_lambda, coordinates)

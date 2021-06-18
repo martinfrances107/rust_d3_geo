@@ -42,7 +42,7 @@ impl<T: CoordFloat> Transform for ScaleTranslateRotateEnum<T>
 where
     T: FloatConst,
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
             ScaleTranslateRotateEnum::ST(st) => st.transform(p),
@@ -96,7 +96,7 @@ impl<T: CoordFloat + FloatConst> ScaleTranslateRotate<T> {
 }
 
 impl<T: CoordFloat> Transform for ScaleTranslateRotate<T> {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;

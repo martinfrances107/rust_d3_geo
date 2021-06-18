@@ -1,4 +1,4 @@
-use crate::stream::stream_dst::StreamDst;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
@@ -190,8 +190,9 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display
         self.point_fn = Self::centroid_ring_point_first;
     }
 
-    pub fn centroid(&mut self, d_object: &impl Streamable<T, SC = Coordinate<T>>) -> Point<T> {
-        d_object.to_stream(self);
+    pub fn centroid(&mut self, d_object: &impl Streamable<T = T>) -> Point<T> {
+        let cs = self.clone();
+        d_object.to_stream(&mut cs);
 
         let mut x = self.X2;
         let mut y = self.Y2;
@@ -220,10 +221,12 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display
     }
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Default + Display> Stream<T>
+impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Default + Display> Stream
     for CentroidStream<T>
 {
-    type C = Coordinate<T>;
+    type SC = Coordinate<T>;
+    // type ST = T;
+    // type SD = CentroidStream<T>;
 
     fn sphere(&mut self) {}
 
@@ -238,7 +241,7 @@ impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Default + Display
     }
 
     #[inline]
-    fn point(&mut self, p: &Self::C, _m: Option<u8>) {
+    fn point(&mut self, p: &Self::SC, _m: Option<u8>) {
         (self.point_fn)(self, p);
     }
 
@@ -254,8 +257,8 @@ impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Default + Display
         self.line_end_fn = Self::centroid_line_end;
     }
 
-    #[inline]
-    fn get_dst(&self) -> StreamDst<T> {
-        StreamDst::CS(self.clone())
-    }
+    // #[inline]
+    // fn get_dst(&self) -> Self {
+    //     self.clone()
+    // }
 }
