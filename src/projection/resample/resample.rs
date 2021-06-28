@@ -1,6 +1,6 @@
 use std::fmt::Display;
 use std::ops::AddAssign;
-use std::rc::Rc;
+// use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
@@ -47,7 +47,8 @@ where
     pub cos_min_distance: T,
 
     // Box here prevents recurson.
-    pub stream: Box<STREAM>,
+    // pub stream: Box<STREAM>,
+    pub stream: STREAM,
     pub use_line_point: bool,
     pub use_line_start: bool,
     pub use_line_end: bool,
@@ -95,7 +96,8 @@ where
             c0: T::zero(),
 
             cos_min_distance: T::zero(),
-            stream: Box::new(STREAM::default()), // stub value
+            // stream: Box::new(STREAM::default()), // stub value
+            stream: STREAM::default(), // stub value
 
             use_line_point: false,
             use_line_start: false,
@@ -124,7 +126,7 @@ where
     type SInput = STREAM;
     #[inline]
     fn stream_in(&mut self, stream: STREAM) {
-        self.stream = Box::new(stream);
+        self.stream = stream;
     }
 
     // #[inline]
@@ -164,7 +166,7 @@ where
 
     fn ring_end(&mut self) {
         {
-            let mut s = self.stream;
+            // let mut s = self.stream;
             self.resample_line_to(
                 self.x0,
                 self.y0,
@@ -179,7 +181,7 @@ where
                 self.b00,
                 self.c00,
                 MAXDEPTH,
-                &mut s,
+                // &mut s,
             );
         }
         self.use_line_end = true;
@@ -204,7 +206,7 @@ where
             c[1],
             c[2],
             MAXDEPTH,
-            &mut self.stream,
+            // &mut self.stream,
         );
         self.x0 = p_transformed.x;
         self.y0 = p_transformed.y;
@@ -237,7 +239,7 @@ where
         b1: T,
         c1: T,
         depth_p: u8,
-        stream: &mut Box<STREAM>,
+        // stream: &mut Box<STREAM>,
     ) {
         let mut depth = depth_p;
         let dx = x1 - x0;
@@ -286,13 +288,13 @@ where
                     a = a / m;
                     b = b / m;
                     self.resample_line_to(
-                        x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth, stream,
+                        x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth,
                     );
 
-                    stream.point(&Coordinate { x: x2, y: y2 }, None);
+                    self.stream.point(&Coordinate { x: x2, y: y2 }, None);
 
                     self.resample_line_to(
-                        x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, stream,
+                        x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth,
                     );
                 }
             }

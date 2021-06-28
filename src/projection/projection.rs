@@ -1,37 +1,37 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
-use std::rc::Rc;
+// use std::rc::Rc;
 
 // use derivative::Derivative;
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::data_object::DataObject;
+// use crate::data_object::DataObject;
 use crate::stream::Stream;
 // use crate::stream::StreamSimpleNode;
 use super::center::Center;
 use super::clip_extent::ClipExtent;
-use super::fit::fit_extent;
-use crate::stream::stream_in_trait::StreamIn;
+// use super::fit::fit_extent;
+// use crate::stream::stream_in_trait::StreamIn;
 use crate::Transform;
 // use super::resample::resample::Resample;
-use super::resample::ResampleTrait;
+// use super::resample::ResampleTrait;
 use super::scale::Scale;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 use super::scale_translate_rotate::ScaleTranslateRotateEnum;
 use super::translate::Translate;
 // use super::ProjectionRawTrait;
-use crate::clip::antimeridian::ClipAntimeridian;
-use crate::clip::circle::ClipCircle;
+// use crate::clip::antimeridian::ClipAntimeridian;
+// use crate::clip::circle::ClipCircle;
 // use crate::clip::clip_sink_enum::ClipSinkEnum;
 // use crate::clip::interpolate_trait::Interpolate;
 // use crate::clip::point_visible_trait::PointVisible;
-use crate::clip::Clip;
+// use crate::clip::Clip;
 use crate::compose::Compose;
 use crate::projection::projection_trait::ProjectionTrait;
-use crate::projection::resample::gen_resample_node;
+// use crate::projection::resample::gen_resample_node;
 // use crate::projection::resample::ResampleEnum;
 // use crate::projection::resample::Resample;
 // use crate::projection::stream_transform::StreamTransform;
@@ -61,7 +61,7 @@ where
     // T: stream:Stream:T,
 {
     pd: PhantomData<&'a u8>,
-    projection_raw: &'a PR,
+    projection_raw: PR,
     alpha: T, // post-rotate angle
     // cache: Option<
     //     Box<dyn Fn(Rc<RefCell<dyn Stream<C = Coordinate<T>>>>) -> StreamTransformRadiansNode<T>>,
@@ -74,7 +74,7 @@ where
     delta2: T, // precision
     k: T,      // scale
 
-    project_resample: Box<dyn ResampleTrait<SInput = SD, SC = Coordinate<T>>>,
+    // project_resample: Box<dyn ResampleTrait<SInput = SD, SC = Coordinate<T>>>,
     project_transform: Compose<T, PR, ScaleTranslateRotateEnum<T>>,
     project_rotate_transform:
         Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
@@ -99,12 +99,12 @@ where
 
 impl<'a, PR, SD, T> Projection<'a, PR, SD, T>
 where
-    PR: Transform<C = Coordinate<T>>,
+    PR: Transform<C = Coordinate<T>> + Clone,
     // Rc<PR>: Transform<C = Coordinate<T>>,
     SD: 'a + Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    pub fn new(projection_raw: &'a PR, delta2_p: Option<T>) -> Projection<'a, PR, SD, T> {
+    pub fn new(projection_raw: PR, delta2_p: Option<T>) -> Projection<'a, PR, SD, T> {
         let delta2 = match delta2_p {
             None => {
                 T::from(0.5).unwrap() // precision
@@ -115,7 +115,7 @@ where
 
         let p = Self {
             pd: PhantomData,
-            projection_raw,
+            projection_raw: projection_raw.clone(),
             alpha: T::zero(), // post-rotate angle
             // cache: None,
             // cache_stream: None,
@@ -140,11 +140,14 @@ where
             x1: None,
             y1: None, //postclip = identity, // post-clip extent
             y: T::from(250).unwrap(),
-            project_resample: gen_resample_node(projection_raw, T::zero()),
-            project_transform: Compose::new(*projection_raw, ScaleTranslateRotateEnum::default()),
+            // project_resample: gen_resample_node(projection_raw, T::zero()),
+            project_transform: Compose::new(
+                projection_raw.clone(),
+                ScaleTranslateRotateEnum::default(),
+            ),
             project_rotate_transform: Compose::new(
                 RotateRadiansEnum::I(RotationIdentity::default()),
-                Compose::new(*projection_raw, ScaleTranslateRotateEnum::default()),
+                Compose::new(projection_raw, ScaleTranslateRotateEnum::default()),
             ),
         };
 
@@ -287,22 +290,24 @@ where
     //  *
     //  * @param angle Set to null to switch to antimeridian cutting.
     //  */
-    fn clip_angle(mut self, angle: StreamOrValueMaybe<T>) -> Projection<'a, PR, SD, T> {
-        match angle {
-            StreamOrValueMaybe::Value(angle) => {
-                let theta = angle.to_radians();
-                self.theta = Some(theta);
-                // self.preclip = Box::new(ClipCircle::new(self.projection_raw, theta));
-                // println!("preclip {:#?}", self.preclip);
-                // panic!("clip_angler stop");
-            }
-            StreamOrValueMaybe::SP(_preclip) => {
-                todo!("must sort this out.");
-                // self.theta = None;
-                // self.preclip = preclip;
-                // self.reset();
-            }
-        }
+    fn clip_angle(mut self, angle: T) -> Projection<'a, PR, SD, T> {
+        self.theta = Some(angle.to_radians());
+
+        // match angle {
+        //     StreamOrValueMaybe::Value(angle) => {
+        //         let theta = angle.to_radians();
+        //         self.theta = Some(theta);
+        //         // self.preclip = Box::new(ClipCircle::new(self.projection_raw, theta));
+        //         // println!("preclip {:#?}", self.preclip);
+        //         // panic!("clip_angler stop");
+        //     }
+        //     StreamOrValueMaybe::SP(_preclip) => {
+        //         todo!("must sort this out.");
+        //         // self.theta = None;
+        //         // self.preclip = preclip;
+        //         // self.reset();
+        //     }
+        // }
         self.reset()
     }
 
@@ -372,14 +377,16 @@ where
     //  * @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
     //  * @param object A GeoJson Geometry Object or GeoSphere object supported by d3-geo (An extension of GeoJSON).
     //  */
-    #[inline]
-    fn fit_extent(
-        self,
-        extent: [Coordinate<T>; 2],
-        object: DataObject<T>,
-    ) -> Projection<'a, PR, SD, T> {
-        fit_extent(self, extent, object)
-    }
+    // #[inline]
+
+    // fn fit_extent(
+    //     self,
+    //     extent: [Coordinate<T>; 2],
+    //     object: DataObject<T>,
+    // ) -> Projection<'a, PR, SD, T> {
+    //     fit_extent(self, extent, object)
+    // }
+
     // /**
     //  * Sets the projection’s scale and translate to fit the specified geographic geometry collection in the center of the given extent.
     //  * Returns the projection.
@@ -535,7 +542,7 @@ where
         // // self.project_resample = ResampleEnum::R(Resample::new(self.projection_raw));
         // self.project_resample.stream_in(self.project_transform);
 
-        self.reset()
+        // self.reset()
     }
     // /**
     //  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
@@ -583,7 +590,7 @@ where
 
     fn precision(mut self, delta: T) -> Projection<'a, PR, SD, T> {
         self.delta2 = delta * delta;
-        self.project_resample = gen_resample_node(self.projection_raw, self.delta2);
+        // self.project_resample = gen_resample_node(self.projection_raw, self.delta2);
         self.reset()
     }
 
@@ -637,7 +644,8 @@ where
 
     // In javascript stream is used as a property to be removed from the object.
     // In rust that is a closure.
-    fn stream(&self, stream_dst: SD) -> StreamTransformRadians<SD, T>
+    // fn stream(&self, stream_dst: SD) -> StreamTransformRadians<StreamTransform<SD, T>, T>
+    fn stream(&self, stream_dst: SD) -> StreamTransformRadians<StreamTransform<SD, T>, T>
     where
         SD: Stream<SC = Coordinate<T>> + Default,
     {
@@ -651,15 +659,15 @@ where
         // postclip.stream_in(ClipSinkEnum::Src(stream_dst));
         let postclip = (self.postclip)(stream_dst);
 
-        let mut resample = self.project_resample;
-        resample.stream_in(postclip);
+        // let mut resample = self.project_resample;
+        // resample.stream_in(postclip);
         // let mut preclip = self.preclip;
         // preclip.stream_in(resample);
 
         // using resample here bypasses preclip.
-        let mut t_rotate_node = StreamTransform::new(Some(self.rotate), resample);
+        let t_rotate_node = StreamTransform::new(&self.rotate, postclip);
 
-        let mut t_radians_node = StreamTransformRadians::new(t_rotate_node);
+        let t_radians_node = StreamTransformRadians::new(t_rotate_node);
         // t_radians_node.stream_in(t_rotate_node);
 
         // Output.
@@ -680,21 +688,21 @@ where
     // fn translate(self, t: &Coordinate<T>) -> Projection<PR, T>;
 }
 
-impl<'a, PR, SD, T> Scale for Projection<'a, PR, SD, T>
+impl<'a, PR, SD, ST> Scale for Projection<'a, PR, SD, ST>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,
-    PR: Transform<C = Coordinate<T>>,
-    SD: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    PR: Transform<C = Coordinate<ST>>,
+    SD: Stream<SC = Coordinate<ST>> + Default,
+    ST: AddAssign + AsPrimitive<ST> + CoordFloat + Default + Display + FloatConst,
 {
-    type P = Projection<'a, PR, SD, T>;
-    type T = T;
+    type P = Projection<'a, PR, SD, ST>;
+    type ST = ST;
     #[inline]
-    fn get_scale(&self) -> T {
+    fn get_scale(&self) -> Self::ST {
         self.k
     }
 
-    fn scale(mut self, scale: T) -> Projection<'a, PR, SD, T> {
+    fn scale(mut self, scale: ST) -> Projection<'a, PR, SD, ST> {
         self.k = scale;
         self.recenter()
     }

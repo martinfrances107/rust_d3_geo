@@ -15,7 +15,7 @@ use crate::stream::Stream;
 
 use super::line_elem::LineElem;
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct ClipBuffer<T>
 where
     T: CoordFloat,
@@ -23,6 +23,17 @@ where
     // pd: PhantomData<SD>,
     // line: Vec<LineElem<T>>,
     lines: VecDeque<Vec<LineElem<T>>>,
+}
+
+impl<T> Default for ClipBuffer<T>
+where
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            lines: VecDeque::default(),
+        }
+    }
 }
 
 impl<T> PathResult for ClipBuffer<T>

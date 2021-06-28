@@ -194,9 +194,10 @@ mod centroid_test {
     fn an_empty_polygon_with_non_zero_extent_is_treated_as_a_line() {
         println!("an empty polygon with non-zero extent is treated as a line");
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&polygon![(
-            x: 1.0f64,
-            y: 1.0f64
+            CentroidStream::default().centroid(&polygon![
+            (
+                x: 1.0f64,
+                y: 1.0f64
             ),
             (
                 x: 2.0f64,
@@ -317,7 +318,7 @@ mod centroid_test {
     #[test]
     fn the_centroid_of_a_sphere_is_ambigous() {
         println!("the centroid of a sphere is ambiguous");
-        let point: Point<f64> = CentroidStream::default().centroid(&Sphere {});
+        let point: Point<f64> = CentroidStream::default().centroid(&Sphere::new());
         assert!(point.x().is_nan());
         assert!(point.y().is_nan());
     }

@@ -1,7 +1,8 @@
-pub mod line;
-
 mod intersect;
+pub mod line;
+mod rejoin;
 
+use std::cell::RefCell;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
@@ -21,9 +22,10 @@ use crate::polygon_contains::contains;
 // use crate::stream::CompareIntersection;
 // use crate::clip::line_sink_enum::LineSinkEnum;
 use crate::path::PathResultEnum;
-use crate::stream::stream_in_trait::StreamIn;
+// use crate::stream::stream_in_trait::StreamIn;
 // use crate::stream::stream_dst::StreamDst;
 // use crate::clip::Clean;
+use crate::clip::rejoin::Rejoin;
 use crate::clip::CleanEnum;
 use crate::stream::Stream;
 use crate::Transform;
@@ -32,9 +34,9 @@ use crate::Transform;
 use super::clip_base::ClipBase;
 use super::compare_intersections::compare_intersections;
 use super::line_elem::LineElem;
-use super::rejoin::rejoin;
 use super::Clip;
 use super::ClipBuffer;
+use super::LCB;
 // use crate::clip::clip_sink_enum::ClipSinkEnum;
 use line::Line;
 
@@ -70,6 +72,12 @@ where
     // STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display + Debug,
 {
+    // type SINK = SINK;
+    // type T = T;
+    // type CC = Coordinate<T>;
+    // fn get_sink(&mut self) -> &mut SINK {
+    //     &mut self.base.sink
+    // }
 }
 
 /// Returns a clip object
@@ -116,9 +124,9 @@ where
         // the ClipBase::new() call is common between ClipCircle and
         // ClipAntimeridian.
         let line = Line::new(radius);
-        let ring_buffer = ClipBuffer::default();
-        let ring_sink = Box::new(Line::new(radius));
-        ring_sink.stream_in(ring_buffer);
+        let ring_buffer = Rc::new(RefCell::new(ClipBuffer::default()));
+        let mut ring_sink = Box::new(Line::new(radius));
+        ring_sink.link_to_stream(ring_buffer.clone());
         ClipCircle {
             // line: Line::default(),
             delta: T::from(6).unwrap().to_radians(),
@@ -150,6 +158,37 @@ where
     }
 }
 
+// impl<SINK, T> Interpolate for ClipCircle<SINK, T>
+// where
+//     // Rc<PR>: Transform<C = Coordinate<T>>,
+//     // PR: Transform<C = Coordinate<T>>,
+//     // MutStream: Stream<SC = Coordinate<T>>,
+//     SINK: Stream<SC = Coordinate<T>> + Default,
+//     // STREAM: Stream<SC = Coordinate<T>> + Default,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display,
+// {
+//     type IC = Coordinate<T>;
+//     type IT = T;
+//     type IStream = SINK;
+//     // type IPR = PR;
+//     // type IStream = &'a
+//     // type ISD = SD;
+//     #[inline]
+//     fn interpolate(
+//         &self,
+//     ) -> Box<dyn Fn(Option<Self::IC>, Option<Self::IC>, Self::IT, &mut Self::IStream) + '_> {
+//         Box::new(
+//             move |from: Option<Coordinate<T>>,
+//                   to: Option<Coordinate<T>>,
+//                   direction: T,
+//                   stream: &mut Self::IStream| {
+//                 // todo!("must fix");
+//                 circle_stream(stream, self.radius, self.delta, direction, from, to)
+//             },
+//         )
+//     }
+// }
+
 impl<SINK, T> Interpolate for ClipCircle<SINK, T>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,
@@ -157,7 +196,8 @@ where
     // MutStream: Stream<SC = Coordinate<T>>,
     SINK: Stream<SC = Coordinate<T>> + Default,
     // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    // <Self as Interpolate>::IT: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     type IC = Coordinate<T>;
     type IT = T;
@@ -165,35 +205,30 @@ where
     // type IPR = PR;
     // type IStream = &'a
     // type ISD = SD;
+    fn get_sink(&mut self) -> &mut SINK {
+        &mut self.base.sink
+    }
+
     #[inline]
     fn interpolate(
-        &self,
-    ) -> Box<dyn Fn(Option<Self::IC>, Option<Self::IC>, Self::IT, &mut Self::IStream) + '_> {
-        Box::new(
-            move |from: Option<Coordinate<T>>,
-                  to: Option<Coordinate<T>>,
-                  direction: T,
-                  stream: &mut Self::IStream| {
-                // todo!("must fix");
-                circle_stream(stream, self.radius, self.delta, direction, from, to)
-            },
+        &mut self,
+        from: Option<Coordinate<T>>,
+        to: Option<Coordinate<T>>,
+        direction: T,
+        // stream: &mut Self::IStream,
+    ) {
+        // todo!("must fix");
+
+        circle_stream(
+            &mut self.base.sink,
+            self.radius,
+            self.delta,
+            direction,
+            from,
+            to,
         )
     }
 }
-
-// impl<'a, MutStream,  SINK, STREAM, T> Clip for ClipCircle<'a, MutStream,  SINK, STREAM, T>
-// where
-//     // Rc<PR>: Transform<C = Coordinate<T>>,
-//     // PR: Transform<C = Coordinate<T>>,
-//     SINK: Stream<SC = Coordinate<T>>,
-//     STREAM: Stream<SC=Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display,
-// {
-//     // type SctC = Coordinate<T>;
-//     // type SctOC = Option<Coordinate<T>>;
-//     // type SctT = T;
-//     // type SctCi = CompareIntersection<T>;
-// }
 
 /// Warning this breaks DRY, the stream is common to both ClipAntimeridian and
 /// ClipCircle!!!!
@@ -280,7 +315,7 @@ where
 
         let clean = self.base.ring_sink.clean();
 
-        let mut ring_segments = match self.base.ring_buffer.result() {
+        let mut ring_segments = match self.base.ring_buffer.borrow_mut().result() {
             Some(PathResultEnum::ClipBufferOutput(result)) => {
                 // Can I find a way of doing this with the expense of dynamic conversion.
                 result
@@ -425,12 +460,13 @@ where
                 self.base.polygon_started = true;
             }
             println!("into rejoin this path");
-            rejoin(
+            self.rejoin(
                 &segments_merged,
                 compare_intersections,
                 start_inside,
-                self.interpolate(),
-                &mut self.base.sink,
+                // self,
+                // self.interpolate(),
+                // &mut self.base.sink,
             );
         } else if start_inside {
             if !self.base.polygon_started {
@@ -438,7 +474,7 @@ where
                 self.base.polygon_started = true;
             }
             self.base.sink.line_start();
-            self.interpolate()(None, None, T::one(), &mut self.base.sink);
+            self.interpolate(None, None, T::one());
             self.base.sink.line_end();
         };
         if self.base.polygon_started {
@@ -453,7 +489,7 @@ where
     fn sphere(&mut self) {
         self.base.sink.polygon_start();
         self.base.sink.line_start();
-        self.interpolate()(None, None, T::one(), &mut self.base.sink);
+        self.interpolate(None, None, T::one());
         self.base.sink.line_end();
         self.base.sink.polygon_end();
     }

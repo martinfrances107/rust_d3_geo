@@ -25,7 +25,7 @@ pub mod rotation;
 mod compose;
 mod constant;
 mod point_equal;
-mod stream;
+pub mod stream;
 
 // pub trait TransformClone<'a>: Transform {
 //     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>>;

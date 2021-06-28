@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::fmt::Display;
 use std::ops::AddAssign;
@@ -10,12 +11,12 @@ use num_traits::FloatConst;
 
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::stream_dst::StreamDst;
-use crate::stream::stream_in_trait::StreamIn;
+// use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
 use crate::Transform;
 
 use super::clip_buffer::ClipBuffer;
-use super::line_trait::LineTrait;
+// use super::line_trait::LineTrait;
 
 // use super::clip_sink_enum::ClipSinkEnum;
 use super::line_elem::LineElem;
@@ -34,15 +35,15 @@ where
     pub polygon_started: bool,
     pub polygon: Vec<Vec<LineElem<T>>>,
     pub ring: Vec<LineElem<T>>,
-    pub ring_sink: Box<dyn LCB<SInput = ClipBuffer<T>, SC = Coordinate<T>>>,
-    pub ring_buffer: ClipBuffer<T>,
+    pub ring_sink: Box<dyn LCB<STREAM = ClipBuffer<T>, T = T, SC = Coordinate<T>>>,
+    pub ring_buffer: Rc<RefCell<ClipBuffer<T>>>,
     pub segments: VecDeque<Vec<Vec<LineElem<T>>>>,
     pub start: LineElem<T>,
     // Why Box?
     // sink will be passed into interpolate in a closure
     // and the closure signature does not supprt impl!!!
     // pub sink: Box<ClipSinkEnum<'a, PR, T>>,
-    pub sink: Box<SINK>,
+    pub sink: SINK,
 }
 
 impl<L, SINK, T> ClipBase<L, SINK, T>
@@ -53,8 +54,8 @@ where
     pub fn new<PR>(
         projection_raw: Rc<PR>,
         line: L,
-        ring_buffer: ClipBuffer<T>,
-        ring_sink: Box<dyn LCB<SC = Coordinate<T>, SInput = ClipBuffer<T>>>,
+        ring_buffer: Rc<RefCell<ClipBuffer<T>>>,
+        ring_sink: Box<dyn LCB<SC = Coordinate<T>, T = T, STREAM = ClipBuffer<T>>>,
         start: LineElem<T>,
     ) -> Self
     where
@@ -73,7 +74,7 @@ where
             ring_buffer,
             segments,
             // sink: Box::new(ClipSinkEnum::new(projection_raw)),
-            sink: Box::new(SINK::default()),
+            sink: SINK::default(),
             start,
         }
     }
