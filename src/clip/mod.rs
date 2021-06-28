@@ -14,28 +14,32 @@ pub mod line_trait;
 pub mod point_visible_trait;
 pub mod rejoin;
 
-// use std::cell::RefCell;
+use std::cell::RefCell;
 // use std::cmp::Ordering;
 // use std::fmt::Display;
 // use std::ops::AddAssign;
-// use std::rc::Rc;
+use std::rc::Rc;
 
 // use geo::CoordFloat;
 // use geo::Coordinate;
+// use geo::CoordFloat;
 // use num_traits::AsPrimitive;
 // use num_traits::Float;
+
 // use num_traits::FloatConst;
-
+// use crate::clip::rejoin::intersection::Intersection;
+// use crate::clip::line_elem::LineElem;
 // use crate::stream::Stream;
-
+// use crate::clip::rejoin::link::link;
 use clip_buffer::ClipBuffer;
 // use rejoin::intersection::Intersection;
-
+use crate::clip::rejoin::Rejoin;
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::stream_dst::StreamDst;
+// use crate::point_equal::point_equal;
 use crate::stream::Stream;
-// use interpolate_trait::Interpolate;
-use crate::stream::stream_in_trait::StreamIn;
+use interpolate_trait::Interpolate;
+// use crate::stream::stream_in_trait::StreamIn;
 use point_visible_trait::PointVisible;
 // pub trait Clip: PointVisible + Interpolate + Stream
 
@@ -64,14 +68,20 @@ pub trait Clean {
     fn clean(&self) -> CleanEnum;
 }
 
-pub trait Clip: PointVisible + Stream
-// where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + Float + FloatConst,
+pub trait Clip: PointVisible + Stream + Interpolate + Rejoin
+// <Self as Clip>::T:
+//     AddAssign + AsPrimitive<Self::T> + CoordFloat + Default + Display + FloatConst,
+// <Self as Clip>::SINK: Stream<SC = Self::CC>,
 {
-    // type C;
+    // type SINK;
+    // type CT;
+    // type CC; // Clip Coordinate<T>
+    //          // used by rejoin().
+    // fn get_sink(&mut self) -> &mut Self::SINK;
 }
 
-// // Line wrapped around a clip buffer.
-/// TODO must revisit SInput always equal ClipBuffer<T> here
-/// is there a way to do static dispatch here!!!
-pub trait LCB: Clean + Stream + StreamIn {}
+pub trait LCB: Clean + Stream {
+    type T;
+    type STREAM;
+    fn link_to_stream(&mut self, stream: Rc<RefCell<Self::STREAM>>);
+}

@@ -3,7 +3,7 @@ pub mod resample_none;
 
 use std::fmt::Display;
 use std::ops::AddAssign;
-use std::rc::Rc;
+// use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;

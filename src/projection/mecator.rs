@@ -1,7 +1,7 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
-use std::rc::Rc;
+// use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
@@ -37,17 +37,17 @@ where
 //     }
 // }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
-    for Rc<MecatorRaw<T>>
-{
-    type C = Coordinate<T>;
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        self.transform(p)
-    }
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        self.invert(p)
-    }
-}
+// impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+//     for Rc<MecatorRaw<T>>
+// {
+//     type C = Coordinate<T>;
+//     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+//         self.transform(p)
+//     }
+//     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+//         self.invert(p)
+//     }
+// }
 
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
     for MecatorRaw<T>

@@ -18,6 +18,17 @@ where
     pd: PhantomData<T>,
 }
 
+impl<T> Sphere<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+{
+    pub fn new() -> Self {
+        Sphere {
+            pd: PhantomData::default(),
+        }
+    }
+}
+
 impl<T> Streamable for Sphere<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,

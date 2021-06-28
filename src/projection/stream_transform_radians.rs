@@ -1,18 +1,18 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
-use std::rc::Rc;
+// use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use super::stream_transform::StreamTransform;
+// use super::stream_transform::StreamTransform;
 // use crate::stream::stream_in_trait::StreamIn;
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
-use crate::Transform;
+// use crate::Transform;
 
 /// Why the Phantom Data is required here...
 ///
@@ -40,7 +40,7 @@ pub struct StreamTransformRadians<
     STREAM: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 > {
-    stream: StreamTransform<STREAM, T>,
+    stream: STREAM,
 }
 
 impl<STREAM, T> StreamTransformRadians<STREAM, T>
@@ -54,9 +54,7 @@ where
         // Rc<PR>: Transform<C = Coordinate<T>>,
         // PR: Transform<C = Coordinate<T>>,
     {
-        Self {
-            stream: StreamTransform::new(None, stream),
-        }
+        Self { stream }
     }
 }
 

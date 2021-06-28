@@ -1,21 +1,21 @@
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
-use std::rc::Rc;
+// use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-use super::projection_trait::ProjectionTrait;
+// use super::projection_trait::ProjectionTrait;
 // use super::ProjectionRawTrait;
 use crate::in_delta::in_delta;
 use crate::Transform;
 
 pub fn projection_equal<
     'a,
-    P: ProjectionTrait<'a>,
+    P: Transform,
     // PR: ProjectionRawtrait,
     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Debug + Display + Default,
 >(
@@ -25,7 +25,7 @@ pub fn projection_equal<
     delta_p: Option<T>,
 ) -> bool
 where
-    Rc<<P as ProjectionTrait<'a>>::PR>: Transform<C = Coordinate<T>>,
+    // Rc<<P as ProjectionTrait<'a>>::PR>: Transform<C = Coordinate<T>>,
     P: Transform<C = Coordinate<T>>,
 {
     let delta = match delta_p {

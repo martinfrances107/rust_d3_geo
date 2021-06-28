@@ -41,10 +41,10 @@ mod fit;
 
 // pub trait ProjectionRawTrait: Transform {
 //     // type T: AddAssign + CoordFloat + Default + Display + FloatConst;
-//     // fn gen_projection_mutator() -> Projection<T, PR=Self::PR>
-//     // where
-//     //     <Self as ProjectionRawTrait>::PR: Transform,
-//     //     <Self as ProjectionRawTrait>::PR: std::default::Default;
+//     fn gen_projection_mutator() -> Projection<T, PR=Self::PR>
+//     where
+//         <Self as ProjectionRawTrait>::PR: Transform,
+//         <Self as ProjectionRawTrait>::PR: std::default::Default;
 // }
 
 // #[derive(Clone, Debug)]

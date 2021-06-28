@@ -1,3 +1,4 @@
+use std::default::Default;
 use std::fmt::Display;
 // use std::marker::PhantomData;
 use std::ops::AddAssign;
@@ -17,14 +18,19 @@ use crate::clip::clip_buffer::ClipBuffer;
 use crate::clip::Clean;
 use crate::clip::CleanEnum;
 use crate::clip::LCB;
-use crate::stream::stream_in_trait::StreamIn;
+// use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
-
+// use crate::stream::StreamDummy;
 // use crate::Transform;
 
 use super::intersect::intersect;
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
+// Line is unlike other object that accept a STREAM object.
+// This struct is dual use ... it accepts STREAMS that
+// do and also do not implement PathResults
+// Therefore the object need to be passed in by reference only!
+// Hence the requirement for a lifetime specifier.
 pub struct Line<STREAM, T>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,
@@ -38,9 +44,24 @@ where
     lambda0: T,
     phi0: T,
     sign0: T,
-    stream: STREAM,
+    stream: Rc<RefCell<STREAM>>,
 }
 
+impl<'a, T, STREAM> Default for Line<STREAM, T>
+where
+    STREAM: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + Float + FloatConst,
+{
+    fn default() -> Self {
+        Self {
+            clean: CleanEnum::default(),
+            lambda0: T::zero(),
+            phi0: T::zero(),
+            sign0: T::zero(),
+            stream: Rc::new(RefCell::new(STREAM::default())),
+        }
+    }
+}
 // impl<'a, STREAM, T> Default for Line<'a, STREAM, T>
 // where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
@@ -61,29 +82,37 @@ where
 //     }
 // }
 
-impl<T> LCB for Line<ClipBuffer<T>, T> where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
-{
-}
-
-impl<STREAM, T> StreamIn for Line<STREAM, T>
+use std::cell::RefCell;
+use std::rc::Rc;
+impl<'a, T> LCB for Line<ClipBuffer<T>, T>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
-    STREAM: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
-    type SInput = STREAM;
-    #[inline]
-    fn stream_in(&mut self, stream: STREAM) {
+    type T = T;
+    type STREAM = ClipBuffer<T>;
+    fn link_to_stream(&mut self, stream: Rc<RefCell<Self::STREAM>>) {
         self.stream = stream;
     }
-
-    // #[inline]
-    // fn get_stream(&'a mut self) -> &'a mut STREAM {
-    //     &mut self.stream
-    // }
 }
+
+// impl<STREAM, T> StreamIn for Line<STREAM, T>
+// where
+//     // Rc<PR>: Transform<C = Coordinate<T>>,
+//     // PR: Transform<C = Coordinate<T>>,
+//     STREAM: Stream<SC = Coordinate<T>>,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+// {
+//     type SInput = STREAM;
+//     #[inline]
+//     fn stream_in(&mut self, stream: &STREAM) {
+//         self.stream = stream;
+//     }
+
+//     // #[inline]
+//     // fn get_stream(&'a mut self) -> &'a mut STREAM {
+//     //     &mut self.stream
+//     // }
+// }
 
 impl<STREAM, T> Clean for Line<STREAM, T>
 where
@@ -135,7 +164,7 @@ where
 
     fn line_start(&mut self) {
         println!("line(a) line_start()");
-        self.stream.line_start();
+        self.stream.borrow_mut().line_start();
         self.clean = CleanEnum::NoIntersections;
     }
 
@@ -159,30 +188,30 @@ where
             } else {
                 -T::FRAC_PI_2()
             };
-            self.stream.point(
+            self.stream.borrow_mut().point(
                 &Coordinate {
                     x: self.lambda0,
                     y: self.phi0,
                 },
                 None,
             );
-            self.stream.point(
+            self.stream.borrow_mut().point(
                 &Coordinate {
                     x: self.sign0,
                     y: self.phi0,
                 },
                 None,
             );
-            self.stream.line_end();
-            self.stream.line_start();
-            self.stream.point(
+            self.stream.borrow_mut().line_end();
+            self.stream.borrow_mut().line_start();
+            self.stream.borrow_mut().point(
                 &Coordinate {
                     x: sign1,
                     y: self.phi0,
                 },
                 None,
             );
-            self.stream.point(
+            self.stream.borrow_mut().point(
                 &Coordinate {
                     x: lambda1,
                     y: self.phi0,
@@ -201,16 +230,16 @@ where
             }
             self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
             println!("output of intersect {:?}", self.phi0);
-            self.stream.point(
+            self.stream.borrow_mut().point(
                 &Coordinate {
                     x: self.sign0,
                     y: self.phi0,
                 },
                 None,
             );
-            self.stream.line_end();
-            self.stream.line_start();
-            self.stream.point(
+            self.stream.borrow_mut().line_end();
+            self.stream.borrow_mut().line_start();
+            self.stream.borrow_mut().point(
                 &Coordinate {
                     x: sign1,
                     y: self.phi0,
@@ -224,7 +253,7 @@ where
 
         self.lambda0 = lambda1;
         self.phi0 = phi1;
-        self.stream.point(
+        self.stream.borrow_mut().point(
             &Coordinate {
                 x: self.lambda0,
                 y: self.phi0,
@@ -236,7 +265,7 @@ where
 
     fn line_end(&mut self) {
         println!("line(a) line_end");
-        self.stream.line_end();
+        self.stream.borrow_mut().line_end();
         self.lambda0 = T::nan();
         self.phi0 = T::nan();
     }

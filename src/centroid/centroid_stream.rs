@@ -191,8 +191,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display
     }
 
     pub fn centroid(&mut self, d_object: &impl Streamable<T = T>) -> Point<T> {
-        let cs = self.clone();
-        d_object.to_stream(&mut cs);
+        d_object.to_stream(self);
 
         let mut x = self.X2;
         let mut y = self.Y2;

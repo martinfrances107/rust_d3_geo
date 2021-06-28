@@ -2,29 +2,29 @@ use geo::Coordinate;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
-use std::rc::Rc;
+// use std::rc::Rc;
 
 use num_traits::AsPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-use crate::data_object::DataObject;
+// use crate::data_object::DataObject;
 use crate::stream::Stream;
 use crate::Transform;
 
 use super::center::Center;
 use super::clip_extent::ClipExtent;
 use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
+// use super::projection::StreamOrValueMaybe;
 use super::scale::Scale;
 use super::translate::Translate;
 // use crate::compose::Compose;
 
 // use super::scale_translate_rotate::ScaleTranslateRotateEnum;
 // use super::ProjectionRawTrait;
+use crate::projection::stream_transform::StreamTransform;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 // use crate::stream::stream_dst::StreamDst;
-// pub trait ProjectionTrait<'a>: Center + ClipExtent + Scale + Translate + Transform
 pub trait ProjectionTrait<'a>: Center + ClipExtent + Scale + Translate
 // Rc<<Self as ProjectionTrait<'a>>::PR>: ProjectionRawTrait,
 {
@@ -78,7 +78,8 @@ pub trait ProjectionTrait<'a>: Center + ClipExtent + Scale + Translate
     //  */
     fn clip_angle(
         self,
-        angle: StreamOrValueMaybe<<Self as ProjectionTrait<'a>>::T>,
+        angle: <Self as ProjectionTrait<'a>>::T,
+        // angle: StreamOrValueMaybe<<Self as ProjectionTrait<'a>>::T>,
     ) -> Projection<'a, Self::PR, Self::SD, <Self as ProjectionTrait<'a>>::T>
     where
         // Rc<<Self as ProjectionTrait<'a>>::PR>:
@@ -163,25 +164,25 @@ pub trait ProjectionTrait<'a>: Center + ClipExtent + Scale + Translate
     //  * @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
     //  * @param object A GeoJson Geometry Object or GeoSphere object supported by d3-geo (An extension of GeoJSON).
     //  */
-    fn fit_extent(
-        self,
-        extent: [<Self as ProjectionTrait<'a>>::C; 2],
-        object: DataObject<<Self as ProjectionTrait<'a>>::T>,
-    ) -> Projection<'a, Self::PR, Self::SD, <Self as ProjectionTrait<'a>>::T>
-    where
-        // Rc<<Self as ProjectionTrait<'a>>::PR>:
-        //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::PR:
-            Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::SD:
-            Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
-        <Self as ProjectionTrait<'a>>::T: AddAssign
-            + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-            + Debug
-            + Default
-            + Display
-            + Float
-            + FloatConst;
+    // fn fit_extent(
+    //     self,
+    //     extent: [<Self as ProjectionTrait<'a>>::C; 2],
+    //     object: DataObject<<Self as ProjectionTrait<'a>>::T>,
+    // ) -> Projection<'a, Self::PR, Self::SD, <Self as ProjectionTrait<'a>>::T>
+    // where
+    //     // Rc<<Self as ProjectionTrait<'a>>::PR>:
+    //     //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
+    //     <Self as ProjectionTrait<'a>>::PR:
+    //         Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
+    //     <Self as ProjectionTrait<'a>>::SD:
+    //         Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
+    //     <Self as ProjectionTrait<'a>>::T: AddAssign
+    //         + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
+    //         + Debug
+    //         + Default
+    //         + Display
+    //         + Float
+    //         + FloatConst;
     // /**
     //  * Sets the projection’s scale and translate to fit the specified geographic geometry collection in the center of the given extent.
     //  * Returns the projection.
@@ -454,7 +455,7 @@ pub trait ProjectionTrait<'a>: Center + ClipExtent + Scale + Translate
     fn stream(
         &self,
         stream_dst: Self::SD,
-    ) -> StreamTransformRadians<Self::SD, <Self as ProjectionTrait<'a>>::T>
+    ) -> StreamTransformRadians<StreamTransform<Self::SD, Self::T>, Self::T>
     where
         <Self as ProjectionTrait<'a>>::PR:
             Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,

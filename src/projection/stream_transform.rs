@@ -4,14 +4,14 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use std::fmt::Display;
 use std::ops::AddAssign;
-use std::rc::Rc;
+// use std::rc::Rc;
 
 // use crate::clip::antimeridian::ClipAntimeridian;
 // use crate::clip::interpolate_trait::Interpolate;
 // use crate::clip::Clip;
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
-use crate::rotation::rotation_identity::RotationIdentity;
-use crate::stream::stream_in_trait::StreamIn;
+// use crate::rotation::rotation_identity::RotationIdentity;
+// use crate::stream::stream_in_trait::StreamIn;
 // use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::Transform;
@@ -21,6 +21,7 @@ use crate::Transform;
 #[derive(Derivative)]
 #[derivative(Debug)]
 pub struct StreamTransform<
+    'a,
     STREAM: Stream<SC = Coordinate<T>>,
     // PR: Transform<C = Coordinate<T>>,
     // SD,
@@ -30,9 +31,9 @@ pub struct StreamTransform<
 //where
 //     dyn Clip<T>: Clip<T, C = Coordinate<T>> + Interpolate<T, C = Coordinate<T>>,
 {
-    pub transform: RotateRadiansEnum<T>,
     #[derivative(Debug = "ignore")]
     pub stream: STREAM,
+    pub transform: &'a RotateRadiansEnum<T>,
 }
 
 // impl<STREAM, T> Default for StreamTransform<STREAM, T>
@@ -66,16 +67,17 @@ pub struct StreamTransform<
 // }
 
 impl<
+        'a,
         // Rc<PR>: ProjectionRawTrait + Transform<C=Coordinate<T>>,
         // SD,
         STREAM: Stream<SC = Coordinate<T>>,
         T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-    > StreamTransform<STREAM, T>
+    > StreamTransform<'a, STREAM, T>
 {
     #[inline]
     pub fn new(
         // projection_raw: &PR,
-        transform_in: Option<RotateRadiansEnum<T>>,
+        transform: &'a RotateRadiansEnum<T>,
         stream: STREAM,
     ) -> StreamTransform<STREAM, T>
     where
@@ -84,23 +86,23 @@ impl<
         STREAM: Stream<SC = Coordinate<T>>,
     {
         {
-            let transform: RotateRadiansEnum<T>;
+            // let transform: RotateRadiansEnum<T>;
 
-            match transform_in {
-                Some(t) => {
-                    transform = t;
-                }
-                None => {
-                    transform = RotateRadiansEnum::I(RotationIdentity::<T>::default());
-                }
-            }
+            // match transform_in {
+            //     Some(t) => {
+            //         transform = t;
+            //     }
+            //     None => {
+            //         transform = RotateRadiansEnum::I(RotationIdentity::<T>::default());
+            //     }
+            // }
 
             Self { stream, transform }
         }
     }
 }
 
-impl<'a, STREAM, T> Transform for StreamTransform<STREAM, T>
+impl<'a, STREAM, T> Transform for StreamTransform<'a, STREAM, T>
 where
     // PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>>,
@@ -115,7 +117,7 @@ where
     }
 }
 
-impl<STREAM, T> Stream for StreamTransform<STREAM, T>
+impl<'a, STREAM, T> Stream for StreamTransform<'a, STREAM, T>
 where
     // PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>>,
