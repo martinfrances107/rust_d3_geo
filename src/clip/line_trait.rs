@@ -1,5 +1,5 @@
 use crate::clip::Clean;
 use crate::stream::stream_in_trait::StreamIn;
-use crate::stream::Stream;
+// use crate::stream::Stream;
 
-pub trait LineTrait: Clean + Stream + StreamIn {}
+pub trait LineTrait: Clean + StreamIn {}

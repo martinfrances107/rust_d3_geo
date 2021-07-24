@@ -10,7 +10,7 @@ use super::stream_line::stream_line;
 use super::Streamable;
 use crate::stream::Stream;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable
     for LineString<T>
 {
     // type SD = LineString<T>;

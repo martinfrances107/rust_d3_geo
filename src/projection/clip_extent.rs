@@ -12,7 +12,7 @@
 pub trait ClipExtent
 // where
 //     PR: ProjectionRawTrait,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 {
     type C;
     type P;

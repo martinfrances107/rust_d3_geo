@@ -25,7 +25,7 @@ use crate::Transform;
 
 pub struct CircleGenerator<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     center: Coordinate<T>,
     radius: T,
@@ -34,7 +34,7 @@ where
 
 impl<T> Default for CircleGenerator<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -51,7 +51,7 @@ where
 
 impl<T> CircleGenerator<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn circle(&self) -> CircleStream<T> {
         let c = self.center;
@@ -76,7 +76,7 @@ where
 
 impl<T> CircleTrait<T> for CircleGenerator<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     fn center(mut self, center: Coordinate<T>) -> CircleGenerator<T> {
         self.center = center;

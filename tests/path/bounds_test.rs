@@ -19,13 +19,13 @@ mod bounds_test {
     use rust_d3_geo::path::path::Path;
     use rust_d3_geo::path::PathResultEnum;
     use rust_d3_geo::projection::projection::Projection;
-    use rust_d3_geo::projection::equirectangular::EquirectangularRaw;    
+    use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
 
     #[inline]
     fn equirectangular<
         'a,
         PR, Transform<C=Coordinate<T>>,
-        T: AsPrimitive<T> + AddAssign + CoordFloat + Default + Display + FloatConst,
+        T: AsPrimitive<T> + AddAssign + CoordFloat +Display + FloatConst,
     >() -> ProjectionMutator<'a, PR, T> {
         EquirectangularRaw::gen_projection_mutator()
             .scale(T::from(900f64 / PI).unwrap())

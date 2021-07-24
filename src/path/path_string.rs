@@ -97,7 +97,7 @@ where
 
 impl<T> Stream for PathString<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
 

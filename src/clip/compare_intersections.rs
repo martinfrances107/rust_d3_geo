@@ -19,7 +19,7 @@ pub fn compare_intersections<T>(
     b: &Rc<RefCell<Intersection<T>>>,
 ) -> Ordering
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     let ax = a.borrow().x;
     let part1 = match ax.p.x < T::zero() {

@@ -12,7 +12,7 @@ use num_traits::FloatConst;
 
 use geo::MultiPolygon;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable
     for MultiPolygon<T>
 {
     // type T = T;

@@ -22,7 +22,7 @@
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     PR: Transform<C = Coordinate<T>>,
 //     // SD: StreamDst,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     CSE(Box<ClipSinkEnum<'a, PR, T>>),
 //     CB(ClipBuffer<T>),
@@ -33,7 +33,7 @@
 //     PR: Transform<C = Coordinate<T>>,
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     // SD: StreamDst,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     #[inline]
 //     pub fn result(&mut self) -> Option<PathResultEnum<T>> {
@@ -51,7 +51,7 @@
 //     PR: Transform<C = Coordinate<T>>,
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     // SD: StreamDst,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type SC = Coordinate<T>;
 //     // type SD = SD;

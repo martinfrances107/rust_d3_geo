@@ -13,7 +13,7 @@
 pub trait Scale
 // where
 //     PR: ProjectionRawTrait,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 {
     type ST;
     type P;

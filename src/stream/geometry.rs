@@ -12,7 +12,7 @@ use super::Streamable;
 
 impl<T> Streamable for Geometry<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // type SD = Self;
     type T = T;

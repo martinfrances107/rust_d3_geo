@@ -10,7 +10,7 @@ use crate::stream::Stream;
 
 use super::Streamable;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable
     for GeometryCollection<T>
 {
     // type SD = Self;

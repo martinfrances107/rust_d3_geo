@@ -16,20 +16,20 @@ use crate::Transform;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct MecatorRaw<T>
 where
-    T: CoordFloat + Default,
+    T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
 
 // impl<T> ProjectionRawTrait for Rc<MecatorRaw<T>>
 // // where
-// //     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+// //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 // }
 
 // impl<T> MecatorRaw<T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     pub fn gen_projection_mutator<'a>() -> Projection<'a, MecatorRaw<T>, T> {
 //         let tau = T::from(2).unwrap() * T::PI();
@@ -37,7 +37,7 @@ where
 //     }
 // }
 
-// impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+// impl<T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst> Transform
 //     for Rc<MecatorRaw<T>>
 // {
 //     type C = Coordinate<T>;
@@ -49,7 +49,7 @@ where
 //     }
 // }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
     for MecatorRaw<T>
 {
     type C = Coordinate<T>;

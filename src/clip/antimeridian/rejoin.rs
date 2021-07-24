@@ -25,10 +25,10 @@ use crate::clip::rejoin::link::link;
 use crate::clip::rejoin::Rejoin;
 
 // NB this breaks D.R.Y this is a identical impl for ClipAntimeridian!!!
-impl<'a, SINK, T> Rejoin for ClipAntimeridian<'a, SINK, T>
+impl<SINK, T> Rejoin for ClipAntimeridian<SINK, T>
 where
-    SINK: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    SINK: Default + Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
     fn rejoin(
@@ -47,7 +47,7 @@ where
         // Rc<PR>: Transform<C = Coordinate<T>>,
         //   SINK: Stream<SC = Coordinate<T>>,
         //   CLIP: Clip<CC = Coordinate<T>, SINK = SINK, T = T> + Interpolate<IT = T, IC = Coordinate<T>> + Interpolate<IStream = SINK>,
-        T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         // let stream = &self.base.sink;
         let mut start_inside = start_inside;
@@ -64,14 +64,14 @@ where
 
             if point_equal(p0.p, p1.p) {
                 if p0.m.is_none() && p1.m.is_none() {
-                    self.base.sink.line_start();
+                    self.base.sink.borrow_mut().line_start();
                     // let i: usize;
                     // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
                     for i in 0..n {
                         p0 = segment[i];
-                        self.base.sink.point(&p0.p, None);
+                        self.base.sink.borrow_mut().point(&p0.p, None);
                     }
-                    self.base.sink.line_end();
+                    self.base.sink.borrow_mut().line_end();
                     return;
                 }
                 // handle degenerate cases by moving the point
@@ -142,7 +142,7 @@ where
 
             let mut points = current.borrow().z.clone();
 
-            self.base.sink.line_start();
+            self.base.sink.borrow_mut().line_start();
             loop {
                 current.borrow().o.clone().unwrap().borrow_mut().v = true;
                 current.borrow_mut().v = true;
@@ -152,7 +152,7 @@ where
                             Some(points) => {
                                 for i in 0..points.len() {
                                     point = points[i];
-                                    self.base.sink.point(&point.p, point.m);
+                                    self.base.sink.borrow_mut().point(&point.p, point.m);
                                 }
                             }
                             None => {}
@@ -174,7 +174,7 @@ where
                             .clone();
                         for i in (1..points.clone().unwrap().len()).rev() {
                             point = points.clone().unwrap()[i];
-                            self.base.sink.point(&point.p, None);
+                            self.base.sink.borrow_mut().point(&point.p, None);
                         }
                     } else {
                         self.interpolate(
@@ -201,7 +201,7 @@ where
                     break;
                 }
             }
-            self.base.sink.line_end();
+            self.base.sink.borrow_mut().line_end();
         }
     }
 }

@@ -40,7 +40,7 @@
 //     I: Interpolate<T>,
 //     PR: ProjectionRawTrait,
 //     PV: PointVisible,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     polygon_started: bool,
 //     polygon: Vec<Vec<LineElem<T>>>,
@@ -63,7 +63,7 @@
 //     I: Interpolate<T>,
 //     PR: ProjectionRawTrait,
 //     PV: PointVisible,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     pub fn new(
 //         projection_raw: PR,
@@ -103,7 +103,7 @@
 
 // impl<CL, I, PR, PV, T> Clip<CL, I, PR, PV, T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     // #[inline]
 //     // pub fn stream_in(&mut self, stream: ClipSinkEnum<A, T>)
@@ -270,7 +270,7 @@
 //     I: Interpolate<T>,
 //     PR: ProjectionRawTrait,
 //     PV: PointVisible,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type C = Coordinate<T>;
 //     fn get_dst(&self) -> StreamDst<T> {

@@ -27,7 +27,7 @@ where
 
 impl<T> AzimuthalEqualAreaRaw<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // #[inline]
     // pub fn gen_projection_mutator() -> Projection<AzimuthalEqualAreaRaw<T>, T> {
@@ -48,7 +48,7 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
     for AzimuthalEqualAreaRaw<T>
 {
     type C = Coordinate<T>;

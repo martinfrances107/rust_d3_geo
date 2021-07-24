@@ -6,26 +6,27 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::cartesian::cartesian;
 // use crate::clip::clip_sink_enum::ClipSinkEnum;
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::stream_dst::StreamDst;
+use crate::cartesian::cartesian;
+use crate::stream::stream_in_trait::StreamCombo;
+use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::ResampleTrait;
+// use super::ResampleTrait;
 
 const MAXDEPTH: u8 = 16u8; // maximum depth of subdivision
 
 // #[derive(Debug)]
-pub struct Resample<'a, PR, STREAM, T>
+pub struct Resample<STREAM, T, TRANSFORMER>
 where
-    PR: Transform<C = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
     STREAM: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
 {
-    pub projection_raw: &'a PR,
+    pub projection_raw: TRANSFORMER,
     pub delta2: T,
 
     // first point
@@ -56,7 +57,7 @@ where
 
 // impl<P, T> Clone for Resample<P, T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     fn clone(&self) -> Self {
 //         Self {
@@ -67,14 +68,22 @@ where
 //     }
 // }
 
-impl<'a, PR, STREAM, T> Resample<'a, PR, STREAM, T>
+impl<'a, STREAM, T, TRANSFORMER> StreamCombo for Resample<STREAM, T, TRANSFORMER>
 where
-    PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
+{
+}
+
+impl<'a, STREAM, T, TRANSFORMER> Resample<STREAM, T, TRANSFORMER>
+where
     // Rc<PR>: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
 {
-    pub fn new(projection_raw: &'a PR) -> Resample<PR, STREAM, T> {
+    pub fn new(projection_raw: TRANSFORMER) -> Resample<STREAM, T, TRANSFORMER> {
         Self {
             projection_raw,
             delta2: T::zero(),
@@ -106,22 +115,19 @@ where
     }
 }
 
-impl<PR, STREAM, T> ResampleTrait for Resample<'_, PR, STREAM, T>
-where
-    PR: Transform<C = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-{
-}
+// impl<STREAM, T, TRANSFORMER> ResampleTrait for Resample<STREAM, T, TRANSFORMER>
+// where
+//     STREAM: Stream<SC = Coordinate<T>> + Default,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+//     TRANSFORMER: Transform<C = Coordinate<T>>,
+// {
+// }
 
-use crate::stream::stream_in_trait::StreamIn;
-impl<'a, PR, STREAM, T> StreamIn for Resample<'a, PR, STREAM, T>
+impl<'a, STREAM, T, TRANSFORMER> StreamIn for Resample<STREAM, T, TRANSFORMER>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    PR: Transform<C = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     STREAM: Stream<SC = Coordinate<T>>,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
 {
     type SInput = STREAM;
     #[inline]
@@ -135,12 +141,11 @@ where
     // }
 }
 
-impl<'a, PR, STREAM, T> Resample<'a, PR, STREAM, T>
+impl<'a, STREAM, T, TRANSFORMER> Resample<STREAM, T, TRANSFORMER>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
 {
     #[inline]
 
@@ -302,12 +307,11 @@ where
     }
 }
 
-impl<'a, PR, STREAM, T> Stream for Resample<'a, PR, STREAM, T>
+impl<'a, STREAM, T, TRANSFORMER> Stream for Resample<STREAM, T, TRANSFORMER>
 where
-    PR: Transform<C = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
 {
     type SC = Coordinate<T>;
 

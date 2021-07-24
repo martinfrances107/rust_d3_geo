@@ -3,13 +3,13 @@ pub mod link;
 
 use std::cell::RefCell;
 use std::cmp::Ordering;
-use std::fmt::Display;
-use std::ops::AddAssign;
+// use std::fmt::Display;
+// use std::ops::AddAssign;
 use std::rc::Rc;
 
 use geo::CoordFloat;
 // use geo::Coordinate;
-use num_traits::AsPrimitive;
+// use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 // use crate::point_equal::point_equal;
@@ -30,6 +30,7 @@ use intersection::Intersection;
 
 pub trait Rejoin {
     type T;
+    // The where constraint is required because LineElem Inersection have conditions.
     fn rejoin(
         &mut self,
         segments: &Vec<Vec<LineElem<Self::T>>>,
@@ -39,8 +40,7 @@ pub trait Rejoin {
         ) -> Ordering,
         start_inside: bool,
     ) where
-        <Self as Rejoin>::T:
-            AddAssign + AsPrimitive<Self::T> + CoordFloat + Default + Display + FloatConst;
+        Self::T: CoordFloat + FloatConst;
 }
 
 // impl Rejoin for ClipCircle{
@@ -60,7 +60,7 @@ pub trait Rejoin {
 //     SINK: Stream<SC = Coordinate<T>>,
 //     CLIP: Clip<CC = Coordinate<T>, SINK = SINK, T = T> + Interpolate<IT = T, IC = Coordinate<T>> + Interpolate<IStream = SINK>,
 
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     let stream = Clip::get_sink(clip_in);
 //     let mut start_inside = start_inside;

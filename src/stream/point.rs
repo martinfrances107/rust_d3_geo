@@ -10,9 +10,7 @@ use super::Stream;
 use super::Streamable;
 
 // Move this to another file.
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable
-    for Point<T>
-{
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable for Point<T> {
     // type SC = Coordinate<T>;
     // type C=Coordinate<T>;
     // type SD = Self;

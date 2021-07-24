@@ -12,7 +12,7 @@ pub fn stream_line<C, S>(coordinates: &[C], stream: &mut S, closed: usize)
 where
     S: Stream<SC = C>,
     // C
-    // T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    // T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 {
     let n = coordinates.len() - closed;
     stream.line_start();

@@ -1,7 +1,7 @@
 // impl<PR, T> ProjectionMutator<PR, T>
 // where
 //     ProjectionRawTrait
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     pub fn new(project: PR, delta2_p: Option<T>) -> ProjectionMutator<PR, T> {
 //         let delta2 = match delta2_p {
@@ -95,7 +95,7 @@
 // impl<PR, T> Transform for ProjectionMutator<PR, T>
 // where
 //     ProjectionRawTrait
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type C = Coordinate<T>;
 //     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
@@ -117,7 +117,7 @@
 // impl<PR, T> Projection<PR, T> for ProjectionMutator<PR,  T>
 // where
 //     ProjectionRawTrait
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     // #[inline]
 //     // fn get_preclip(&self) -> StreamPreClipNode<T> {

@@ -1,8 +1,9 @@
 use std::default::Default;
 use std::fmt::Display;
 // use std::marker::PhantomData;
+use std::cell::RefCell;
 use std::ops::AddAssign;
-// use std::rc::Rc;
+use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
@@ -14,9 +15,9 @@ use num_traits::FloatConst;
 // use crate::projection::projection_trait::ProjectionTrait;s
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::stream_dst::StreamDst;
-use crate::clip::clip_buffer::ClipBuffer;
-use crate::clip::Clean;
-use crate::clip::CleanEnum;
+use crate::clip::clean::Clean;
+use crate::clip::clean::CleanEnum;
+// use crate::clip::clip_buffer::ClipBuffer;
 use crate::clip::LCB;
 // use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
@@ -36,8 +37,8 @@ where
     // Rc<PR>: Transform<C = Coordinate<T>>,
     // PR: Transform<C = Coordinate<T>>,
     // SD: StreamDst,
-    STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + Float + FloatConst,
+    STREAM: Default + Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst,
 {
     // pd: PhantomData<&'a u8>,
     clean: CleanEnum,
@@ -50,7 +51,7 @@ where
 impl<'a, T, STREAM> Default for Line<STREAM, T>
 where
     STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + Float + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -67,7 +68,7 @@ where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     // PR: Transform<C = Coordinate<T>>,
 //     STREAM: Stream<SC=Coordinate<T>> + Default,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     #[inline]
 //     fn default() -> Self {
@@ -82,14 +83,13 @@ where
 //     }
 // }
 
-use std::cell::RefCell;
-use std::rc::Rc;
-impl<'a, T> LCB for Line<ClipBuffer<T>, T>
+impl<'a, STREAM, T> LCB for Line<STREAM, T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    STREAM: Default + Stream<SC = Coordinate<T>>,
 {
-    type T = T;
-    type STREAM = ClipBuffer<T>;
+    // type T = T;
+    type STREAM = STREAM;
     fn link_to_stream(&mut self, stream: Rc<RefCell<Self::STREAM>>) {
         self.stream = stream;
     }
@@ -100,7 +100,7 @@ where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     // PR: Transform<C = Coordinate<T>>,
 //     STREAM: Stream<SC = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type SInput = STREAM;
 //     #[inline]
@@ -118,8 +118,8 @@ impl<STREAM, T> Clean for Line<STREAM, T>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,
     // PR: Transform<C = Coordinate<T>>,
-    STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    STREAM: Default + Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     fn clean(&self) -> CleanEnum {
@@ -138,8 +138,8 @@ impl<STREAM, T> Stream for Line<STREAM, T>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,
     // PR: Transform<C = Coordinate<T>>,
-    STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    STREAM: Default + Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
     // type SD = SD;

@@ -52,7 +52,7 @@ where
 impl<T> Stream for ClipBuffer<T>
 where
     // SD: StreamDst,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
     // type ST = T;

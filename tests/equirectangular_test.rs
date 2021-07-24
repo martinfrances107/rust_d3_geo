@@ -10,12 +10,12 @@ mod equirectangular_test {
     use rust_d3_geo::projection::projection_trait::ProjectionTrait;
     use rust_d3_geo::projection::scale::Scale;
     use rust_d3_geo::projection::translate::Translate;
-    use rust_d3_geo::stream::StreamDummy;
+    // use rust_d3_geo::stream::StreamDummy;
 
     #[test]
     fn test_return_expected_result() {
         println!("equirectangular(point) returns the expected result");
-        let equirectangular: Projection<'_, EquirectangularRaw<f64>, StreamDummy<f64>, f64> =
+        let equirectangular: Projection<'_, EquirectangularRaw<f64>, f64> =
             Projection::new(EquirectangularRaw::default(), None)
                 .translate(&Coordinate { x: 0f64, y: 0f64 })
                 .scale(1f64);
@@ -112,7 +112,7 @@ mod equirectangular_test {
     #[test]
     fn test_rotate_30_0() {
         println!("equirectangular(point) returns the expected result");
-        let equirectangular: Projection<'_, EquirectangularRaw<f64>, StreamDummy<f64>, f64> =
+        let equirectangular: Projection<'_, EquirectangularRaw<f64>, f64> =
             Projection::new(EquirectangularRaw::default(), None)
                 .rotate([30f64, 0f64, 0f64])
                 .translate(&Coordinate { x: 0f64, y: 0f64 })
@@ -217,7 +217,7 @@ mod equirectangular_test {
     #[test]
     fn test_rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
-        let equirectangular: Projection<'_, EquirectangularRaw<f64>, StreamDummy<f64>, f64> =
+        let equirectangular: Projection<'_, EquirectangularRaw<f64>, f64> =
             EquirectangularRaw::gen_projection_mutator()
                 .rotate([30f64, 30f64, 0f64])
                 .translate(&Coordinate { x: 0f64, y: 0f64 })
@@ -322,7 +322,7 @@ mod equirectangular_test {
     #[test]
     fn test_rotate_0_0_30() {
         println!("equirectangular.rotate([0, 0, 30])(point) returns the expected result");
-        let equirectangular: Projection<'_, EquirectangularRaw<f64>, StreamDummy<f64>, f64> =
+        let equirectangular: Projection<'_, EquirectangularRaw<f64>, f64> =
             EquirectangularRaw::gen_projection_mutator()
                 .rotate([0f64, 0f64, 30f64])
                 .translate(&Coordinate { x: 0f64, y: 0f64 })
@@ -420,7 +420,7 @@ mod equirectangular_test {
     #[test]
     fn test_rotate_30_30_30() {
         println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
-        let equirectangular: Projection<'_, EquirectangularRaw<f64>, StreamDummy<f64>, f64> =
+        let equirectangular: Projection<'_, EquirectangularRaw<f64>, f64> =
             EquirectangularRaw::gen_projection_mutator()
                 .rotate([30f64, 30f64, 30f64])
                 .translate(&Coordinate { x: 0f64, y: 0f64 })

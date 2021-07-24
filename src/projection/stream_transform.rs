@@ -11,6 +11,7 @@ use std::ops::AddAssign;
 // use crate::clip::Clip;
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
 // use crate::rotation::rotation_identity::RotationIdentity;
+// use crate::stream::stream_in_trait::StreamCombo;
 // use crate::stream::stream_in_trait::StreamIn;
 // use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
@@ -22,17 +23,14 @@ use crate::Transform;
 #[derivative(Debug)]
 pub struct StreamTransform<
     'a,
-    STREAM: Stream<SC = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
-    // SD,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-    // Clip::T: T,
+    // STREAM: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 >
 //where
 //     dyn Clip<T>: Clip<T, C = Coordinate<T>> + Interpolate<T, C = Coordinate<T>>,
 {
     #[derivative(Debug = "ignore")]
-    pub stream: STREAM,
+    pub stream: Box<dyn Stream<SC = Coordinate<T>>>,
     pub transform: &'a RotateRadiansEnum<T>,
 }
 
@@ -41,7 +39,7 @@ pub struct StreamTransform<
 //     // P: Transform<TcC = Coordinate<T>>,
 //     // PR: ProjectionRawTrait,
 //     STREAM: Stream<SC = Coordinate<T>> + Default,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     fn default() -> Self {
 //         Self {
@@ -54,7 +52,7 @@ pub struct StreamTransform<
 // impl<STREAM, T> StreamIn for StreamTransform<STREAM, T>
 // where
 //     STREAM: Stream<SC = Coordinate<T>> + Default,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     // type C = Coordinate<T>;
 //     // type T = T;
@@ -70,20 +68,21 @@ impl<
         'a,
         // Rc<PR>: ProjectionRawTrait + Transform<C=Coordinate<T>>,
         // SD,
-        STREAM: Stream<SC = Coordinate<T>>,
-        T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-    > StreamTransform<'a, STREAM, T>
+        // STREAM: Stream<SC = Coordinate<T>>,
+        // STREAM: Stream<SC = Coordinate<T>>,
+        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    > StreamTransform<'a, T>
 {
     #[inline]
     pub fn new(
         // projection_raw: &PR,
         transform: &'a RotateRadiansEnum<T>,
-        stream: STREAM,
-    ) -> StreamTransform<STREAM, T>
-    where
+        stream: Box<dyn Stream<SC = Coordinate<T>>>,
+    ) -> StreamTransform<T>
+where
         // Rc<PR>: Transform<C = Coordinate<T>>,
         // PR: Transform<C = Coordinate<T>>,
-        STREAM: Stream<SC = Coordinate<T>>,
+        // STREAM: Stream<SC = Coordinate<T>>,
     {
         {
             // let transform: RotateRadiansEnum<T>;
@@ -102,11 +101,11 @@ impl<
     }
 }
 
-impl<'a, STREAM, T> Transform for StreamTransform<'a, STREAM, T>
+impl<'a, T> Transform for StreamTransform<'a, T>
 where
     // PR: Transform<C = Coordinate<T>>,
-    STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    // STREAM: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;
     fn transform(&self, p: &Self::C) -> Self::C {
@@ -117,11 +116,11 @@ where
     }
 }
 
-impl<'a, STREAM, T> Stream for StreamTransform<'a, STREAM, T>
+impl<'a, T> Stream for StreamTransform<'a, T>
 where
     // PR: Transform<C = Coordinate<T>>,
-    STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    // STREAM: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
 

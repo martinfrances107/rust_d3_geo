@@ -72,7 +72,7 @@ where
 
 impl<T> Stream for PathContext<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst + AsPrimitive<T>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst + AsPrimitive<T>,
 {
     type SC = Coordinate<T>;
 

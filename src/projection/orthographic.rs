@@ -19,14 +19,14 @@ use crate::Transform;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct OrthographicRaw<T>
 where
-    T: CoordFloat + Default,
+    T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
 
 // impl<T> ProjectionRawTrait for OrthographicRaw<T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     // #[inline]
 //     // fn gen_projection_mutator() -> Projection<OrthographicRaw<T>, T> {
@@ -38,13 +38,13 @@ where
 
 // impl<T> ProjectionRawTrait for OrthographicRaw<T>
 // // where
-// //     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+// //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 // }
 
 impl<T> OrthographicRaw<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     fn angle(z: T) -> T {
@@ -70,7 +70,7 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
     for OrthographicRaw<T>
 {
     type C = Coordinate<T>;

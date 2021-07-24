@@ -13,20 +13,19 @@ use num_traits::FloatConst;
 use super::resample::resample::Resample;
 use super::resample::resample_none::ResampleNone;
 // use crate::clip::clip_sink_enum::ClipSinkEnum;
-use crate::stream::stream_in_trait::StreamIn;
+use crate::stream::stream_in_trait::StreamCombo;
+// use crate::stream::stream_in_trait::StreamIn;
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::Transform;
-
-pub trait ResampleTrait: Stream + StreamIn {}
 
 // #[derive(Debug)]
 // pub enum ResampleEnum<'a, PR, STREAM, T>
 // where
 //     PR: Transform<C = Coordinate<T>>,
 //     Rc<PR>: Transform<C = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 //     STREAM: Stream<SC = Coordinate<T>>,
 // {
 //     RN(ResampleNone<'a, PR, STREAM, T>),
@@ -39,7 +38,7 @@ pub trait ResampleTrait: Stream + StreamIn {}
 //     PR: Transform<C = Coordinate<T>>,
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     STREAM: Stream<SC = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type SC = Coordinate<T>;
 
@@ -95,7 +94,7 @@ pub trait ResampleTrait: Stream + StreamIn {}
 //     PR: Transform<C = Coordinate<T>>,
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     STREAM: Stream<SC = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     #[inline]
 //     pub fn stream_in(&mut self, stream: STREAM) {
@@ -110,16 +109,14 @@ pub trait ResampleTrait: Stream + StreamIn {}
 //     }
 // }
 
-pub fn gen_resample_node<'a, PR, SInput: 'a, T>(
-    projection_raw: &'a PR,
+pub fn gen_resample_node<'a, SD, T, TRANSFORMER>(
+    projection_raw: TRANSFORMER,
     delta2: T,
-) -> Box<dyn ResampleTrait<SC = Coordinate<T>, SInput = SInput> + '_>
+) -> Box<dyn 'a + StreamCombo<SC = Coordinate<T>, SInput = SD>>
 where
-    PR: Transform<C = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-    SInput: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    SD: 'a + Stream<SC = Coordinate<T>> + Default,
+    TRANSFORMER: 'a + Transform<C = Coordinate<T>>,
 {
     if delta2.is_zero() {
         Box::new(ResampleNone::new(projection_raw))

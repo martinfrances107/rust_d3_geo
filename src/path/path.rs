@@ -34,7 +34,7 @@
 // where
 //     P: ProjectionTrait<'a>,
 //     Rc<<P as ProjectionTrait<'a>>::PR>: Transform<C = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 //     CS: Stream<SC = Coordinate<T>> + Default,
 // {
 //     pd: PhantomData<&'a u8>,
@@ -49,7 +49,7 @@
 // where
 //     P: ProjectionTrait<'a>,
 //     Rc<<P as ProjectionTrait<'a>>::PR>: Transform<C = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 //     CS: Stream<SC = Coordinate<T>> + Default,
 // {
 //     fn default() -> Self {
@@ -70,7 +70,7 @@
 //     P: ProjectionTrait<'a, C = Coordinate<T>, T = T, SD=Coordinate<T>>,
 //     Rc<<P as ProjectionTrait<'a>>::PR>: Transform<C = Coordinate<T>>,
 //     <P as ProjectionTrait<'a>>::PR: Transform<C = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 //     CS: Stream<SC = Coordinate<T>> + PathResult + PointRadiusTrait + Default,
 // {
 //     #[inline]
@@ -130,10 +130,10 @@
 // //     #[inline]
 // //     pub fn area(&self, object: &DataObject<T>) -> Option<PathResultEnum<T>>
 // //     where
-// //         T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst + Float,
+// //         T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst + Float,
 // //         // TODO Is this a bodge ... can I place this higher up?
 // //         <P as ProjectionTrait<'a>>::T:
-// //             AsPrimitive<T> + AddAssign + Default + std::fmt::Display + Float + FloatConst,
+// //             AsPrimitive<T> + AddAssign +std::fmt::Display + Float + FloatConst,
 // //         <P as ProjectionTrait<'a>>::T: AsPrimitive<<P as ProjectionTrait<'a>>::T>,
 // //         <P as ProjectionTrait<'a>>::SD:
 // //             Stream<SC = Coordinate<<P as ProjectionTrait<'a>>::T>> + Default,

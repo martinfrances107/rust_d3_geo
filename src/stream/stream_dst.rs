@@ -28,7 +28,7 @@
 // #[derive(Debug)]
 // pub enum StreamDst<'a, T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + Float + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + Float + FloatConst,
 // {
 //     Context2D(CanvasRenderingContext2d),
 //     Circle(&'a CircleStream<T>),
@@ -43,7 +43,7 @@
 
 // impl<'a, T> PathResult for StreamDst<'a, T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type Out = Option<PathResultEnum<T>>;
 //     fn result(&mut self) -> Self::Out {
@@ -68,7 +68,7 @@
 
 // impl<'a, T> Stream for StreamDst<'a, T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Debug + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Debug +Display + FloatConst,
 // {
 //     type SC = Coordinate<T>;
 

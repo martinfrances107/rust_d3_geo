@@ -4,12 +4,12 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
-#[derive(Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct Compose<T, TA, TB>
 where
-    T: CoordFloat + Default + FloatConst,
-    TA: Transform<C = Coordinate<T>>,
-    TB: Transform<C = Coordinate<T>>,
+    T: CoordFloat + FloatConst,
+    TA: Clone + Transform<C = Coordinate<T>>,
+    TB: Clone + Transform<C = Coordinate<T>>,
 {
     pub a: TA,
     pub b: TB,
@@ -17,9 +17,9 @@ where
 
 impl<T, TA, TB> Compose<T, TA, TB>
 where
-    T: CoordFloat + Default + FloatConst,
-    TA: Transform<C = Coordinate<T>>,
-    TB: Transform<C = Coordinate<T>>,
+    T: CoordFloat + FloatConst,
+    TA: Clone + Transform<C = Coordinate<T>>,
+    TB: Clone + Transform<C = Coordinate<T>>,
 {
     #[inline]
     pub fn new(a: TA, b: TB) -> Compose<T, TA, TB> {
@@ -29,9 +29,9 @@ where
 
 impl<T, TA, TB> Transform for Compose<T, TA, TB>
 where
-    TA: Transform<C = Coordinate<T>>,
-    TB: Transform<C = Coordinate<T>>,
-    T: CoordFloat + Default + FloatConst,
+    TA: Clone + Transform<C = Coordinate<T>>,
+    TB: Clone + Transform<C = Coordinate<T>>,
+    T: CoordFloat + FloatConst,
 {
     type C = Coordinate<T>;
     // Apply A then B.

@@ -6,7 +6,7 @@ pub mod path_context_stream;
 pub mod path_string;
 
 use std::collections::VecDeque;
-use std::default::Default;
+// use std::default::Default;
 use std::fmt;
 use std::fmt::Display;
 use std::ops::AddAssign;
@@ -92,6 +92,6 @@ trait PathTrait: PointRadiusTrait // where
 
 trait PathStreamTrait<T>: Stream + PathTrait + PathResult
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
 }

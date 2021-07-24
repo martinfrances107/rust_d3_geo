@@ -18,7 +18,7 @@ pub const EPSILON2: f64 = 1e-12;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct CentroidStream<T: CoordFloat + Default> {
+pub struct CentroidStream<T: CoordFloat> {
     W0: T,
     W1: T,
     X0: T,
@@ -71,9 +71,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display>
-    CentroidStream<T>
-{
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display> CentroidStream<T> {
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
         self.X0 += (x - self.X0) / self.W0;
@@ -220,7 +218,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display
     }
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Default + Display> Stream
+impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display> Stream
     for CentroidStream<T>
 {
     type SC = Coordinate<T>;

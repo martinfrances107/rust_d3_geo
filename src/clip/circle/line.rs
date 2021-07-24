@@ -13,15 +13,15 @@ use super::intersect::IntersectReturn;
 // use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::clip::line_elem::LineElem;
 // use crate::clip::line_sink_enum::LineSinkEnum;
-use crate::clip::clip_buffer::ClipBuffer;
+// use crate::clip::clip_buffer::ClipBuffer;
 use crate::clip::LCB;
 use crate::point_equal::point_equal;
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 // use crate::stream::StreamSourceDummy;
-use crate::clip::Clean;
-use crate::clip::CleanEnum;
+use crate::clip::clean::Clean;
+use crate::clip::clean::CleanEnum;
 // use crate::stream::stream_in_trait::StreamIn;
 // use crate::Transform;
 
@@ -31,7 +31,7 @@ where
     // Rc<PR>: Transform<C = Coordinate<T>>,
     // PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
@@ -49,7 +49,7 @@ where
 // where
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     PR: Transform<C = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     fn default() -> Self {
 //         Self {
@@ -74,7 +74,7 @@ where
     // Rc<PR>: Transform<C = Coordinate<T>>,
     // PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     pub fn new(radius: T) -> Self {
@@ -130,12 +130,12 @@ where
 }
 
 use std::cell::RefCell;
-impl<T> LCB for Line<ClipBuffer<T>, T>
+impl<S, T> LCB for Line<S, T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    S: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type T = T;
-    type STREAM = ClipBuffer<T>;
+    type STREAM = S;
     fn link_to_stream<'b>(&'b mut self, stream: Rc<RefCell<Self::STREAM>>) {
         self.stream = stream;
     }
@@ -146,7 +146,7 @@ where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     // PR: Transform<C = Coordinate<T>>,
 //     STREAM: Stream<SC = Coordinate<T>> + Default,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type SInput = STREAM;
 //     #[inline]
@@ -165,7 +165,7 @@ where
     // Rc<PR>: Transform<C = Coordinate<T>>,
     // PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
@@ -186,7 +186,7 @@ where
     // Rc<PR>: Transform<C = Coordinate<T>>,
     // PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // type ST = T;
     type SC = Coordinate<T>;

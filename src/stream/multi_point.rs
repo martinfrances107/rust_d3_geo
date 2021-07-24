@@ -10,7 +10,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable
     for MultiPoint<T>
 {
     type T = T;

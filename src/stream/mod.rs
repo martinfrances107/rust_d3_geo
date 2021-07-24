@@ -27,7 +27,7 @@ use num_traits::FloatConst;
 
 /// Applies to DataObject's
 pub trait Streamable {
-    type T: AddAssign + AsPrimitive<Self::T> + CoordFloat + Default + Display + FloatConst;
+    type T: AddAssign + AsPrimitive<Self::T> + CoordFloat + Display + FloatConst;
     fn to_stream<SD: Stream<SC = Coordinate<Self::T>>>(&self, stream: &mut SD);
 }
 
@@ -72,17 +72,6 @@ pub trait Stream {
     fn line_end(&mut self);
     fn polygon_start(&mut self);
     fn polygon_end(&mut self);
-    // fn get_dst(
-    //     &self,
-    // ) -> Box<
-    //     dyn StreamDst<
-    //         SC = <Self as Stream>::SC,
-    //         SD = Self::SD,
-    //         T = Self::ST,
-    //         ST = Self::ST,
-    //         Out = Self::SD,
-    //     >,
-    // >;
 }
 
 /// Ci CompareIntersections param type
@@ -94,8 +83,3 @@ where
 {
     x: Coordinate<T>,
 }
-
-// Node - holds state associated with the input/output of a StreamProcessor.
-// Something that can be cloned and mutated.
-
-// pub type StreamSimpleNode<T> = Box<dyn Stream>;

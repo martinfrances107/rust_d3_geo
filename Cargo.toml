@@ -10,6 +10,7 @@ num-traits="0.2.14"
 geo={git = "https://github.com/martinfrances107/geo.git", branch="cyclic_match" }
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 rust_d3_array = { git = "https://github.com/martinfrances107/rust_d3_array.git" }
+clip_macro = {path="./clip_macro"}
 
 [dev-dependencies]
 pretty_assertions = "0.7.1"

@@ -17,26 +17,28 @@ use crate::circle::circle_stream::circle_stream;
 use crate::clip::interpolate_trait::Interpolate;
 use crate::clip::point_visible_trait::PointVisible;
 use crate::path::PathResult;
-use crate::polygon_contains::contains;
+// use crate::polygon_contains::contains;
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::CompareIntersection;
 // use crate::clip::line_sink_enum::LineSinkEnum;
 use crate::path::PathResultEnum;
-// use crate::stream::stream_in_trait::StreamIn;
 // use crate::stream::stream_dst::StreamDst;
 // use crate::clip::Clean;
-use crate::clip::rejoin::Rejoin;
-use crate::clip::CleanEnum;
+// use crate::clip::clean::CleanEnum;
+// use crate::clip::rejoin::Rejoin;
+use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
 use crate::Transform;
 // use super::clip::Clip;
 // use super::clip_raw::ClipRaw;
 use super::clip_base::ClipBase;
-use super::compare_intersections::compare_intersections;
+// use super::compare_intersections::compare_intersections;
 use super::line_elem::LineElem;
 use super::Clip;
+use super::ClipBaseState;
 use super::ClipBuffer;
 use super::LCB;
+use crate::clip::clean::CleanEnum;
 // use crate::clip::clip_sink_enum::ClipSinkEnum;
 use line::Line;
 
@@ -49,14 +51,14 @@ where
     // MutStream: Stream<SC = Coordinate<T>>,
     SINK: Stream<SC = Coordinate<T>> + Default,
     // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display,
 {
-    // #[derivative(Debug = "ignore")]
-    point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
-    // #[derivative(Debug = "ignore")]
-    line_start_fn: fn(&mut Self),
-    // #[derivative(Debug = "ignore")]
-    line_end_fn: fn(&mut Self),
+    // // #[derivative(Debug = "ignore")]
+    // point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
+    // // #[derivative(Debug = "ignore")]
+    // line_start_fn: fn(&mut Self),
+    // // #[derivative(Debug = "ignore")]
+    // line_end_fn: fn(&mut Self),
     pub radius: T,
     small_radius: bool,
     delta: T,
@@ -65,12 +67,82 @@ where
     // line: Line<PR, T>,
 }
 
+impl<SINK, T> ClipBaseState for ClipCircle<SINK, T>
+where
+    SINK: Default + Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type CBST = T;
+    type L = Line<SINK, T>;
+    type SINK = SINK;
+
+    fn get_base(self) -> ClipBase<Line<SINK, T>, SINK, T> {
+        self.base
+    }
+    fn set_polygon_started(&mut self, started: bool) {}
+    // fn set_point_fn(&mut self, f: fn(&mut Self, p: &Coordinate<Self::CBOT>, m: Option<u8>)) {}
+    // fn set_line_start_fn(f: fn(&mut Self)) {}
+    // fn set_line_end_fn(f: fn(&mut Self)) {}
+    #[inline]
+    fn polygon_clear(&mut self) {
+        self.base.polygon.clear();
+    }
+
+    #[inline]
+    fn polygon_push(&mut self, v: Vec<LineElem<Self::CBST>>) {
+        self.base.polygon.push(v)
+    }
+
+    #[inline]
+    fn ring_clear(&mut self) {
+        self.base.ring.clear();
+    }
+    #[inline]
+    fn ring_push(&mut self, le: LineElem<Self::CBST>) {
+        self.base.ring.push(le);
+    }
+    #[inline]
+    fn ring_pop(&mut self) -> Option<LineElem<Self::CBST>> {
+        self.base.ring.pop()
+    }
+
+    #[inline]
+    fn ring_reset(&mut self) {
+        self.base.ring = Vec::new();
+    }
+
+    #[inline]
+    fn ring_sink_clean(&mut self) -> CleanEnum {
+        self.base.ring_sink.clean()
+    }
+
+    #[inline]
+    fn set_use_point_line(&mut self, u: bool) {
+        self.base.use_point_line = u;
+    }
+
+    #[inline]
+    fn set_use_ring_start(&mut self, u: bool) {
+        self.base.use_ring_start = u;
+    }
+
+    #[inline]
+    fn set_use_ring_end(&mut self, u: bool) {
+        self.base.use_ring_end = u;
+    }
+
+    #[inline]
+    fn segments_clear(&mut self) {
+        self.base.segments.clear();
+    }
+}
+
 impl<'a, SINK, T> Clip for ClipCircle<SINK, T>
 where
     // MutStream: Stream<SC = Coordinate<T>>,
-    SINK: Stream<SC = Coordinate<T>> + Default,
+    SINK: Default + Stream<SC = Coordinate<T>> + Default,
     // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display + Debug,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display + Debug,
 {
     // type SINK = SINK;
     // type T = T;
@@ -80,15 +152,33 @@ where
     // }
 }
 
+/// Warning this breaks DRY, the stream is common to both ClipAntimeridian and
+/// ClipCircle!!!!
+impl<S, T> StreamIn for ClipCircle<S, T>
+where
+    S: Default + Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type SInput = S;
+    #[inline]
+    fn stream_in(&mut self, stream: Self::SInput)
+    where
+        T: CoordFloat + FloatConst,
+    {
+        let stream = Rc::new(RefCell::new(stream));
+        self.base.line.link_to_stream(stream);
+    }
+}
+
 /// Returns a clip object
 impl<SINK, T> ClipCircle<SINK, T>
 where
     // MutStream: Stream<SC = Coordinate<T>>,
     SINK: Stream<SC = Coordinate<T>> + Default,
     // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display + Debug,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display + Debug,
 {
-    pub fn new<PR>(projection_raw: Rc<PR>, radius: T) -> Self
+    pub fn new<PR>(projection_raw: PR, radius: T) -> Self
     where
         // Rc<PR>: Transform<C = Coordinate<T>>,
         PR: Transform<C = Coordinate<T>>,
@@ -134,10 +224,11 @@ where
             radius,
             small_radius,
             // start,
-            line_end_fn: Self::line_end_default,
-            point_fn: Self::point_default,
-            line_start_fn: Self::line_start_default,
-            base: ClipBase::new(projection_raw, line, ring_buffer, ring_sink, start),
+            // line_end_fn: Self::line_end_default,
+            // point_fn: Self::point_default,
+            // line_start_fn: Self::line_start_default,
+            // base: ClipBase::new(projection_raw, line, ring_buffer, ring_sink, start),
+            base: ClipBase::new(line, ring_buffer, ring_sink, start),
         }
     }
 }
@@ -149,7 +240,7 @@ where
     // MutStream: Stream<SC = Coordinate<T>>,
     SINK: Stream<SC = Coordinate<T>> + Default,
     // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display,
 {
     type PVC = Coordinate<T>;
     #[inline]
@@ -163,9 +254,9 @@ where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     // PR: Transform<C = Coordinate<T>>,
 //     // MutStream: Stream<SC = Coordinate<T>>,
-//     SINK: Stream<SC = Coordinate<T>> + Default,
+//     SINK: Stream<SC = Coordinate<T>>
 //     // STREAM: Stream<SC = Coordinate<T>> + Default,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Default + Display,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst +Display,
 // {
 //     type IC = Coordinate<T>;
 //     type IT = T;
@@ -196,18 +287,18 @@ where
     // MutStream: Stream<SC = Coordinate<T>>,
     SINK: Stream<SC = Coordinate<T>> + Default,
     // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-    // <Self as Interpolate>::IT: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    // <Self as Interpolate>::IT: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 {
     type IC = Coordinate<T>;
     type IT = T;
-    type IStream = SINK;
+    // type IStream = SINK;
     // type IPR = PR;
     // type IStream = &'a
     // type ISD = SD;
-    fn get_sink(&mut self) -> &mut SINK {
-        &mut self.base.sink
-    }
+    // fn get_sink(&mut self) -> &mut SINK {
+    //     &mut self.base.sink
+    // }
 
     #[inline]
     fn interpolate(
@@ -220,7 +311,7 @@ where
         // todo!("must fix");
 
         circle_stream(
-            &mut self.base.sink,
+            &mut *self.base.sink.borrow_mut(),
             self.radius,
             self.delta,
             direction,
@@ -230,8 +321,8 @@ where
     }
 }
 
-/// Warning this breaks DRY, the stream is common to both ClipAntimeridian and
-/// ClipCircle!!!!
+// Warning this breaks DRY, the stream is common to both ClipAntimeridian and
+// ClipCircle!!!!
 impl<SINK, T> ClipCircle<SINK, T>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,
@@ -239,32 +330,13 @@ where
     // MutStream: Stream<SC = Coordinate<T>>,
     SINK: Stream<SC = Coordinate<T>> + Default,
     // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    // #[inline]
-    // pub fn stream_in(&mut self, stream: ClipSinkEnum<A, T>)
-    // where
-    //     T: CoordFloat + FloatConst,
-    // {
-    //     self.sink = stream;
-    //     match &mut self.line {
-    //         LineEnum::Antimeridian(line) => {
-    //             line.stream_in(LineSinkEnum::CSE(self.base.sink));
-    //         }
-    //         LineEnum::Circle(line) => {
-    //             line.stream_in(LineSinkEnum::CSE(self.base.sink));
-    //         }
-    //         LineEnum::Blank => {
-    //             panic!("Clip stream_in Should not be injecting stream into a  blank.");
-    //         }
-    //     }
-    // }
-
     #[inline]
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         println!("clip point_default");
         if self.point_visible(p, None) {
-            self.base.sink.point(p, m);
+            // self.base.sink.point(p, m);
         }
     }
 
@@ -277,14 +349,14 @@ where
     #[inline]
     fn line_start_default(&mut self) {
         println!("clip line_start_default");
-        self.point_fn = Self::point_line;
+        // self.point_fn = Self::point_line;
         self.line_start();
     }
 
     #[inline]
     fn line_end_default(&mut self) {
         println!("clip line_end_default");
-        self.point_fn = Self::point_default;
+        // self.point_fn = Self::point_default;
         self.base.line.line_end();
     }
 
@@ -354,15 +426,15 @@ where
                 m = segment.len() - 1;
                 if m > 0 {
                     if !self.base.polygon_started {
-                        self.base.sink.polygon_start();
+                        // self.base.sink.polygon_start();
                         self.base.polygon_started = true;
                     }
-                    self.base.sink.line_start();
+                    // self.base.sink.line_start();
                     for i in 0..m {
                         point = segment[i].p;
-                        self.base.sink.point(&point, None);
+                        // self.base.sink.point(&point, None);
                     }
-                    self.base.sink.line_end();
+                    // self.base.sink.line_end();
                 }
                 return;
             }
@@ -406,7 +478,7 @@ where
     // MutStream: Stream<SC = Coordinate<T>>,
     SINK: Stream<SC = Coordinate<T>> + Default,
     // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
     // type ST = T;
@@ -421,64 +493,65 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        (self.point_fn)(self, p, m);
+        // (self.point_fn)(self, p, m);
     }
 
     #[inline]
     fn line_start(&mut self) {
-        (self.line_start_fn)(self);
+        // (self.line_start_fn)(self);
     }
 
     #[inline]
     fn line_end(&mut self) {
-        (self.line_end_fn)(self);
+        // (self.line_end_fn)(self);
     }
 
     fn polygon_start(&mut self) {
         println!("clip  polygon start");
-        self.point_fn = Self::point_ring;
-        self.line_start_fn = Self::ring_start;
-        self.line_end_fn = Self::ring_end;
+        // self.point_fn = Self::point_ring;
+        // self.line_start_fn = Self::ring_start;
+        // self.line_end_fn = Self::ring_end;
         self.base.segments.clear();
         self.base.polygon.clear();
     }
     fn polygon_end(&mut self) {
         println!("clip polygon_end");
-        self.point_fn = Self::point_default;
-        self.line_start_fn = Self::line_start_default;
-        self.line_end_fn = Self::line_end_default;
+        // self.point_fn = Self::point_default;
+        // self.line_start_fn = Self::line_start_default;
+        // self.line_end_fn = Self::line_end_default;
         println!("about to merge {:#?}", self.base.segments);
         let segments_merged: Vec<Vec<LineElem<T>>> =
             self.base.segments.clone().into_iter().flatten().collect();
-        let start_inside = contains(&self.base.polygon, &self.base.start);
+        // let start_inside = contains(&self.base.polygon, &self.base.start);
+        let start_inside = true;
 
         if !segments_merged.is_empty() {
             println!("mergeed is not empty {:#?}", self.base.segments);
             // panic!("pause here");
             if !self.base.polygon_started {
-                self.base.sink.polygon_start();
+                // self.base.sink.polygon_start();
                 self.base.polygon_started = true;
             }
             println!("into rejoin this path");
-            self.rejoin(
-                &segments_merged,
-                compare_intersections,
-                start_inside,
-                // self,
-                // self.interpolate(),
-                // &mut self.base.sink,
-            );
+            // self.rejoin(
+            //     &segments_merged,
+            //     compare_intersections,
+            //     start_inside,
+            //     // self,
+            //     // self.interpolate(),
+            //     // &mut self.base.sink,
+            // );
         } else if start_inside {
             if !self.base.polygon_started {
-                self.base.sink.polygon_start();
+                // self.base.sink.polygon_start();
                 self.base.polygon_started = true;
             }
-            self.base.sink.line_start();
+            // self.base.sink.line_start();
             self.interpolate(None, None, T::one());
-            self.base.sink.line_end();
+            // self.base.sink.line_end();
         };
         if self.base.polygon_started {
-            self.base.sink.polygon_end();
+            // self.base.sink.polygon_end();
             self.base.polygon_started = false;
         }
         self.base.segments.clear();
@@ -487,10 +560,10 @@ where
     }
 
     fn sphere(&mut self) {
-        self.base.sink.polygon_start();
-        self.base.sink.line_start();
+        // self.base.sink.polygon_start();
+        // self.base.sink.line_start();
         self.interpolate(None, None, T::one());
-        self.base.sink.line_end();
-        self.base.sink.polygon_end();
+        // self.base.sink.line_end();
+        // self.base.sink.polygon_end();
     }
 }

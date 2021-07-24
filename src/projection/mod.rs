@@ -30,21 +30,22 @@ mod fit;
 
 // use crate::stream::Stream;
 // use crate::Transform;
+// use projection::Projection;
 
 // use azimuthal_equal_area::AzimuthalEqualAreaRaw;
 // use equirectangular::EquirectangularRaw;
 // use gnomic::GnomicRaw;
 // use mecator::MecatorRaw;
 // use orthographic::OrthographicRaw;
-// use projection::Projection;
 // use stereographic::StereographicRaw;
 
-// pub trait ProjectionRawTrait: Transform {
-//     // type T: AddAssign + CoordFloat + Default + Display + FloatConst;
-//     fn gen_projection_mutator() -> Projection<T, PR=Self::PR>
+// pub trait ProjectionRawTrait: Transform + Clone{
+//     // type T: AddAssign + CoordFloat +Display + FloatConst;
+//     fn gen_projection_mutator<PR, SD, T>() -> Projection< PR, SD, T>
 //     where
-//         <Self as ProjectionRawTrait>::PR: Transform,
-//         <Self as ProjectionRawTrait>::PR: std::default::Default;
+//         SD: Stream + Default,
+//         PR: Clone +Transform,
+
 // }
 
 // #[derive(Clone, Debug)]
@@ -62,7 +63,7 @@ mod fit;
 
 // impl<T> Transform for ProjectionRawEnum<T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type C = Coordinate<T>;
 //     fn transform(&self, p: &Self::C) -> Self::C {

@@ -35,15 +35,21 @@ where
 
 impl<T> Default for PathAreaStream<T>
 where
-    T: AddAssign + CoordFloat + Default,
+    T: AddAssign + CoordFloat,
 {
     #[inline]
     fn default() -> Self {
         Self {
             area_sum: T::zero(),
             area_ring_sum: T::zero(),
-            p0: Coordinate::default(),
-            p00: Coordinate::default(),
+            p0: Coordinate {
+                x: T::zero(),
+                y: T::zero(),
+            },
+            p00: Coordinate {
+                x: T::zero(),
+                y: T::zero(),
+            },
             point_fn: Self::point_noop,
             line_start_fn: Self::line_noop,
             line_end_fn: Self::line_noop,
@@ -99,7 +105,7 @@ where
 
 impl<T> Stream for PathAreaStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
     // ?    type SD = PathAreaStream<T>;

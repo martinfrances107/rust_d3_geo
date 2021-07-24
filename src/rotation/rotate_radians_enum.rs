@@ -18,28 +18,40 @@ use super::rotation_phi_gamma::RotationPhiGamma;
 
 pub enum RotateRadiansEnum<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     C(Box<Compose<T, RotationLambda<T>, RotationPhiGamma<T>>>),
     RL(RotationLambda<T>),
     RPG(RotationPhiGamma<T>),
     I(RotationIdentity<T>),
-    Blank,
 }
 
 impl<T> Default for RotateRadiansEnum<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
-        RotateRadiansEnum::Blank
+        RotateRadiansEnum::I(RotationIdentity::default())
     }
 }
 
+impl<T> Clone for RotateRadiansEnum<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn clone(&self) -> Self {
+        match self {
+            RotateRadiansEnum::C(c) => RotateRadiansEnum::C(Box::new(*c.clone())),
+            RotateRadiansEnum::RL(rl) => RotateRadiansEnum::RL(rl.clone()),
+            RotateRadiansEnum::RPG(rpg) => RotateRadiansEnum::RPG(rpg.clone()),
+            RotateRadiansEnum::I(i) => RotateRadiansEnum::I(i.clone()),
+        }
+    }
+}
 #[cfg(not(tarpaulin_include))]
 impl<T> Debug for RotateRadiansEnum<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
@@ -61,17 +73,13 @@ where
                 .debug_struct("RotateRadiansEnum::I")
                 .field("0", i)
                 .finish(),
-            RotateRadiansEnum::Blank => f
-                .debug_struct("RotateRadiansEnum::I")
-                .field("0", &String::from("RotateRadiansBlank"))
-                .finish(),
         }
     }
 }
 
 impl<T> Transform for RotateRadiansEnum<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
@@ -80,9 +88,6 @@ where
             RotateRadiansEnum::RL(rl) => rl.transform(p),
             RotateRadiansEnum::RPG(rpg) => rpg.transform(p),
             RotateRadiansEnum::I(i) => i.transform(p),
-            RotateRadiansEnum::Blank => {
-                panic!("Calling transoform on a Blank")
-            }
         }
     }
 
@@ -92,9 +97,6 @@ where
             RotateRadiansEnum::RL(rl) => rl.invert(p),
             RotateRadiansEnum::RPG(rpg) => rpg.invert(p),
             RotateRadiansEnum::I(i) => i.invert(p),
-            RotateRadiansEnum::Blank => {
-                panic!("Calling transoform on a Blank")
-            }
         }
     }
 }

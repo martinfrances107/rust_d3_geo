@@ -14,7 +14,7 @@ use super::{Stream, Streamable};
 
 impl<T> Streamable for MultiLineString<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     // SD: StreamDst,
 {
     // type T = T;

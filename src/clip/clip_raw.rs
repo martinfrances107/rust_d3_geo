@@ -21,7 +21,7 @@
 // #[derive(Debug)]
 // pub enum ClipRaw<A, PR, T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     Antimeridian(ClipAntimeridian< PR, T>),
 //     Circle(ClipCircle<T>),
@@ -29,7 +29,7 @@
 
 // impl<P, PR, T> Default for ClipRaw<A, T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     fn default() -> Self {
 //         ClipRaw::Antimeridian(ClipAntimeridian::default())
@@ -38,7 +38,7 @@
 
 // impl<A, PR, T> ClipRaw<T> for ClipRaw<A, PR, T>
 // where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type SctC = Coordinate<T>;
 //     type SctOC = Option<Coordinate<T>>;

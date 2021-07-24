@@ -25,7 +25,7 @@
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     PR: Transform<C = Coordinate<T>>,
 //     // SD: StreamDst,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     Antimeridian(AntimeridianLine<'a, PR, T>),
 //     Circle(CircleLine<'a, PR, T>),
@@ -37,7 +37,7 @@
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     PR: Transform<C = Coordinate<T>>,
 //     // SD: StreamDst,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     fn default() -> Self {
 //         LineEnum::Blank
@@ -48,7 +48,7 @@
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     PR: Transform<C = Coordinate<T>>,
 //     // SD: StreamDst,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     pub fn stream_in(&mut self, stream: LineSinkEnum<'a, PR, T>) {
 //         match self {
@@ -74,7 +74,7 @@
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     PR: Transform<C = Coordinate<T>>,
 //     // SD: StreamDst,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     fn clean(&self) -> CleanEnum {
 //         match self {
@@ -90,7 +90,7 @@
 //     Rc<PR>: Transform<C = Coordinate<T>>,
 //     PR: Transform<C = Coordinate<T>>,
 //     // SD: StreamDst,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type SC = Coordinate<T>;
 //     // type SD = SD;

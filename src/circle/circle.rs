@@ -15,28 +15,26 @@ use crate::Transform;
 
 /// Output of CircleGenertor::circle()
 #[derive(Debug)]
-pub struct CircleStream<T: CoordFloat + Default + FloatConst> {
+pub struct CircleStream<T: CoordFloat + FloatConst> {
     pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
     pub rotate: RotateRadiansEnum<T>,
     pub ring: Vec<Coordinate<T>>,
 }
 
-impl<T: CoordFloat + Default + FloatConst> Default for CircleStream<T> {
+impl<T: CoordFloat + FloatConst> Default for CircleStream<T> {
     #[inline]
     fn default() -> Self {
         Self {
             stream_type: StreamType::Polygon,
             coordinates: vec![vec![]],
-            rotate: RotateRadiansEnum::I(RotationIdentity::default()),
+            rotate: RotateRadiansEnum::I(RotationIdentity::<T>::default()),
             ring: vec![],
         }
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream
-    for CircleStream<T>
-{
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Stream for CircleStream<T> {
     type SC = Coordinate<T>;
     // type ST = T;
     // type SD = CircleStream<T>;

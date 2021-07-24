@@ -13,14 +13,14 @@ use crate::stream::{Stream, Streamable};
 #[derive(Clone, Debug)]
 pub struct Sphere<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pd: PhantomData<T>,
 }
 
 impl<T> Sphere<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new() -> Self {
         Sphere {
@@ -31,7 +31,7 @@ where
 
 impl<T> Streamable for Sphere<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
     #[inline]

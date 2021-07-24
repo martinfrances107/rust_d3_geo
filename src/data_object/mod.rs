@@ -58,7 +58,7 @@ where
 #[derive(Clone, Debug)]
 pub enum DataObject<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     Sphere(Sphere<T>),
     Geometry(Geometry<T>),
@@ -67,7 +67,7 @@ where
 
 impl<T> Streamable for DataObject<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
     // type SD = DataObject<T>;

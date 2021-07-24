@@ -33,6 +33,7 @@ impl<T> Default for ScaleTranslateRotateEnum<T>
 where
     T: CoordFloat + FloatConst,
 {
+    #[inline]
     fn default() -> Self {
         ScaleTranslateRotateEnum::Blank
     }
@@ -43,6 +44,8 @@ where
     T: FloatConst,
 {
     type C = Coordinate<T>;
+
+    #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
             ScaleTranslateRotateEnum::ST(st) => st.transform(p),

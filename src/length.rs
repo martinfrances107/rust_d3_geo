@@ -29,7 +29,7 @@ pub struct LengthStream<T: CoordFloat + FloatConst> {
     cos_phi0: T,
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Default
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default
     for LengthStream<T>
 {
     fn default() -> Self {
@@ -48,7 +48,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
 
 // impl<T> Streamable for LengthStream<T>
 // where
-// T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst{
+// T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst{
 //     type SD=Self;
 //     type T=T;
 //     fn to_stream<SD: Stream>(stream: &mut SD){
@@ -57,7 +57,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
 // }
 impl<T> LengthStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn calc(object: &impl Streamable<T = T>) -> T {
         let mut ls: LengthStream<T> = LengthStream::default();
@@ -109,7 +109,7 @@ where
 
 impl<T> Stream for LengthStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
     // fn get_dst(&self) -> Self {

@@ -23,7 +23,7 @@
 // where
 //     PR: Transform<C = Coordinate<T>>,
 //     Rc<PR>: Transform<C = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     Resample(ResampleEnum<'a, PR, T>),
 //     Src(&'a mut Box<dyn Stream<SC = Coordinate<T>>>),
@@ -33,7 +33,7 @@
 // where
 //     PR: Transform<C = Coordinate<T>>,
 //     Rc<PR>: Transform<C = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     pub fn new(projection_raw: Rc<PR>) -> Self {
 //         ClipSinkEnum::Resample(gen_resample_node(projection_raw, T::zero()))
@@ -44,7 +44,7 @@
 // where
 //     PR: Transform<C = Coordinate<T>>,
 //     Rc<PR>: Transform<C = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     type SC = Coordinate<T>;
 //     // type ST = T;

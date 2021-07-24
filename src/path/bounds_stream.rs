@@ -27,7 +27,7 @@ where
 
 impl<T> Default for BoundsStream<T>
 where
-    T: AddAssign + CoordFloat + Default,
+    T: AddAssign + CoordFloat,
 {
     #[inline]
     fn default() -> Self {
@@ -46,7 +46,7 @@ where
 
 impl<T> PathResult for BoundsStream<T>
 where
-    T: AddAssign + CoordFloat + Default,
+    T: AddAssign + CoordFloat,
 {
     type Out = Option<PathResultEnum<T>>;
     fn result(&mut self) -> Option<PathResultEnum<T>> {
@@ -59,7 +59,7 @@ where
 
 impl<T> Stream for BoundsStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
 

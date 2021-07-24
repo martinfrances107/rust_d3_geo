@@ -13,7 +13,7 @@ use num_traits::FloatConst;
 // use crate::stream::stream_dst::StreamDst;
 // use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
-use crate::Transform;
+// use crate::Transform;
 
 use super::clip_buffer::ClipBuffer;
 // use super::line_trait::LineTrait;
@@ -27,40 +27,51 @@ pub struct ClipBase<L, SINK, T>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,
     // PR: Transform<C = Coordinate<T>>,
-    SINK: Stream<SC = Coordinate<T>>,
+    // SINK: Stream<SC = Coordinate<T>>,
     // LB: LineTrait + StreamIn<SInput=ClipBuffer<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub line: L,
     pub polygon_started: bool,
     pub polygon: Vec<Vec<LineElem<T>>>,
     pub ring: Vec<LineElem<T>>,
-    pub ring_sink: Box<dyn LCB<STREAM = ClipBuffer<T>, T = T, SC = Coordinate<T>>>,
+    pub ring_sink: Box<dyn LCB<STREAM = ClipBuffer<T>, SC = Coordinate<T>>>,
     pub ring_buffer: Rc<RefCell<ClipBuffer<T>>>,
     pub segments: VecDeque<Vec<Vec<LineElem<T>>>>,
     pub start: LineElem<T>,
+
+    // // #[derivative(Debug = "ignore")]
+    // pub point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
+    // // #[derivative(Debug = "ignore")]
+    // pub line_start_fn: fn(&mut Self),
+    // // #[derivative(Debug = "ignore")]
+    // pub line_end_fn: fn(&mut Self),
+    pub use_point_line: bool,
+    pub use_ring_start: bool,
+    pub use_ring_end: bool,
+
     // Why Box?
     // sink will be passed into interpolate in a closure
     // and the closure signature does not supprt impl!!!
     // pub sink: Box<ClipSinkEnum<'a, PR, T>>,
-    pub sink: SINK,
+    pub sink: Rc<RefCell<SINK>>,
 }
 
 impl<L, SINK, T> ClipBase<L, SINK, T>
 where
     SINK: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    pub fn new<PR>(
-        projection_raw: Rc<PR>,
+    pub fn new(
+        // projection_raw: PR,
         line: L,
         ring_buffer: Rc<RefCell<ClipBuffer<T>>>,
-        ring_sink: Box<dyn LCB<SC = Coordinate<T>, T = T, STREAM = ClipBuffer<T>>>,
+        ring_sink: Box<dyn LCB<SC = Coordinate<T>, STREAM = ClipBuffer<T>>>,
         start: LineElem<T>,
     ) -> Self
-    where
+where
         // Rc<PR>: Transform<C = Coordinate<T>>,
-        PR: Transform<C = Coordinate<T>>,
+        // PR: Transform<C = Coordinate<T>>,
     {
         let mut segments = VecDeque::new();
         segments.push_front(vec![vec![]]);
@@ -72,9 +83,12 @@ where
             ring: vec![],
             ring_sink,
             ring_buffer,
+            use_point_line: false,
+            use_ring_start: false,
+            use_ring_end: false,
             segments,
             // sink: Box::new(ClipSinkEnum::new(projection_raw)),
-            sink: SINK::default(),
+            sink: Rc::new(RefCell::new(SINK::default())),
             start,
         }
     }

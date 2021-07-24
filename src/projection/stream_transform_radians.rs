@@ -28,7 +28,7 @@ where
 
 // impl<T> Stream for StreamTransformRadiansNodeStub<T>
 // where
-//     T: CoordFloat + Default + FloatConst,
+//     T: CoordFloat +FloatConst,
 // {
 //     type C = Coordinate<T>;
 // }
@@ -38,7 +38,7 @@ pub struct StreamTransformRadians<
     // PR: Transform<C = Coordinate<T>>,
     // SD,
     STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 > {
     stream: STREAM,
 }
@@ -47,7 +47,7 @@ impl<STREAM, T> StreamTransformRadians<STREAM, T>
 where
     // PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new(stream: STREAM) -> Self
 // where
@@ -61,7 +61,7 @@ where
 // impl<STREAM, T> StreamIn for StreamTransformRadians<STREAM, T>
 // where
 //     // PR: Transform<C = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 //     STREAM: Stream<SC = Coordinate<T>> + Default,
 // {
 //     type SInput = STREAM;
@@ -75,7 +75,7 @@ impl<STREAM, T> Stream for StreamTransformRadians<STREAM, T>
 where
     // PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
     // type ST = T;

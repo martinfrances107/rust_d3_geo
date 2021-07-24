@@ -9,6 +9,7 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 // use crate::data_object::DataObject;
+// use crate::stream::stream_in_trait::StreamCombo;
 use crate::stream::Stream;
 // use crate::stream::StreamSimpleNode;
 use super::center::Center;
@@ -17,11 +18,14 @@ use super::clip_extent::ClipExtent;
 // use crate::stream::stream_in_trait::StreamIn;
 use crate::Transform;
 // use super::resample::resample::Resample;
+// use crate::projection::resample::ResampleTrait;
+
 // use super::resample::ResampleTrait;
-use super::scale::Scale;
+// use super::scale::Scale;
 use super::scale_translate_rotate::ScaleTranslateRotate;
 use super::scale_translate_rotate::ScaleTranslateRotateEnum;
 use super::translate::Translate;
+use crate::projection::scale::Scale;
 // use super::ProjectionRawTrait;
 // use crate::clip::antimeridian::ClipAntimeridian;
 // use crate::clip::circle::ClipCircle;
@@ -38,8 +42,9 @@ use crate::projection::projection_trait::ProjectionTrait;
 use crate::projection::stream_transform::StreamTransform;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
-// use crate::rotation::rotate_radians_transform::rotate_radians_transform;
+use crate::rotation::rotate_radians_transform::rotate_radians_transform;
 use crate::rotation::rotation_identity::RotationIdentity;
+// use crate::stream::stream_in_trait::StreamIn;
 // use crate::stream::stream_dst::StreamDst;
 
 pub enum StreamOrValueMaybe<T: CoordFloat> {
@@ -50,15 +55,11 @@ pub enum StreamOrValueMaybe<T: CoordFloat> {
 // #[derive(Derivative)]
 // #[derivative(Debug)]
 /// A collection of functions that mutate a Projection struct.
-pub struct Projection<'a, PR, SD, T>
+pub struct Projection<'a, PR, T>
 where
-    PR: Transform<C = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // SD: StreamDst,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-    SD: Stream<SC = Coordinate<T>> + Default,
-    // dyn Clip<T=T>: Clip + Interpolate<T=T, C=Coordinate<T>> +Stream<T=T>,
-    // T: stream:Stream:T,
+    PR: Clone + Transform<C = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    // SD: Stream<SC = Coordinate<T>>,
 {
     pd: PhantomData<&'a u8>,
     projection_raw: PR,
@@ -74,16 +75,28 @@ where
     delta2: T, // precision
     k: T,      // scale
 
-    // project_resample: Box<dyn ResampleTrait<SInput = SD, SC = Coordinate<T>>>,
+    // project_resample: Box<dyn StreamCombo<SC = Coordinate<T>, SInput = SD>>,
     project_transform: Compose<T, PR, ScaleTranslateRotateEnum<T>>,
     project_rotate_transform:
         Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
     phi: T, // center
     // #[derivative(Debug = "ignore")]
-    // preclip: Box<dyn Clip<SC = Coordinate<T>, PVC = Coordinate<T>>>,
+    // preclip: Box<
+    //     dyn Clip<
+    //         CBST = Coordinate<T>,
+    //         PVC = Coordinate<T>,
+    //         SC = Coordinate<T>,
+    //         IT = T,
+    //         IC = Coordinate<T>,
+    //         IStream = Box<dyn StreamIn<SInput = SD> + Stream<SC = Coordinate<T>>>,
+    //         T = T,
+    //     >,
+    // >,
+    // preclip: Box<dyn StreamCombo<SC = Coordinate<T>, SInput = SD>>,
+
     // #[derivative(Debug = "ignore")]
     // postclip: fn(ClipSinkEnum<PR, T>) -> ClipSinkEnum<PR, T>,
-    postclip: fn(SD) -> SD,
+    // postclip: fn(SD) -> SD,
     x: T,
     y: T, // translate
     lambda: T,
@@ -97,14 +110,13 @@ where
     y1: Option<T>, // post-clip extent
 }
 
-impl<'a, PR, SD, T> Projection<'a, PR, SD, T>
+impl<'a, PR, T> Projection<'a, PR, T>
 where
-    PR: Transform<C = Coordinate<T>> + Clone,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    SD: 'a + Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    PR: Clone + Transform<C = Coordinate<T>>,
+    // SD: 'a + Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    pub fn new(projection_raw: PR, delta2_p: Option<T>) -> Projection<'a, PR, SD, T> {
+    pub fn new(projection_raw: PR, delta2_p: Option<T>) -> Projection<'a, PR, T> {
         let delta2 = match delta2_p {
             None => {
                 T::from(0.5).unwrap() // precision
@@ -113,10 +125,34 @@ where
         };
         // let projection_raw = Rc::new(projection_raw);
 
+        let x = T::from(480f64).unwrap();
+        let y = T::from(250).unwrap();
+        let lambda = T::zero();
+        let phi = T::zero();
+        let alpha = T::zero();
+        let k = T::from(150f64).unwrap();
+        let sx = T::one();
+        let sy = T::one();
+        let center = ScaleTranslateRotate::new(
+            &k,
+            &T::from(0).unwrap(),
+            &T::from(0).unwrap(),
+            &sx,
+            &sy,
+            alpha,
+        )
+        .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
+        let transform =
+            ScaleTranslateRotate::new(&k, &(x - center.x), &(y - center.y), &sx, &sy, alpha);
+        // let preclip = Box::new(|x| x);
+        let project_transform = Compose::new(projection_raw.clone(), transform);
+        // let c: Box<dyn StreamCombo<SC = Coordinate<T>, SInput = SD>> =
+        //     Box::new(ClipAntimeridian::new());
+
         let p = Self {
             pd: PhantomData,
             projection_raw: projection_raw.clone(),
-            alpha: T::zero(), // post-rotate angle
+            alpha, // post-rotate angle
             // cache: None,
             // cache_stream: None,
             delta2, // precision
@@ -124,27 +160,27 @@ where
             delta_phi: T::zero(),
             delta_gamma: T::zero(),
             // scale
-            k: T::from(150f64).unwrap(),
+            k,
             // translate
-            lambda: T::zero(),
-            phi: T::zero(),
+            lambda,
+            phi,
             rotate: RotateRadiansEnum::I(RotationIdentity::default()), // pre-rotate
-            // preclip: Box::new(ClipAntimeridian::new(projection_raw)),
-            postclip: |x| x,
-            sx: T::one(), // reflectX
-            sy: T::one(), // reflectX
-            theta: None,  // pre-clip angle
-            x: T::from(480f64).unwrap(),
+            // preclip,
+            // postclip: |x| x,
+            sx,          // reflectX
+            sy,          // reflectX
+            theta: None, // pre-clip angle
             x0: None,
             y0: None,
             x1: None,
             y1: None, //postclip = identity, // post-clip extent
-            y: T::from(250).unwrap(),
-            // project_resample: gen_resample_node(projection_raw, T::zero()),
+            x,
+            y,
             project_transform: Compose::new(
                 projection_raw.clone(),
                 ScaleTranslateRotateEnum::default(),
             ),
+            // project_resample: gen_resample_node(project_transform, T::zero()),
             project_rotate_transform: Compose::new(
                 RotateRadiansEnum::I(RotationIdentity::default()),
                 Compose::new(projection_raw, ScaleTranslateRotateEnum::default()),
@@ -154,15 +190,15 @@ where
         p.recenter()
     }
 }
-impl<'a, PR, SD, T> ClipExtent for Projection<'a, PR, SD, T>
+impl<'a, PR, T> ClipExtent for Projection<'a, PR, T>
 where
-    PR: Transform<C = Coordinate<T>>,
+    PR: Clone + Transform<C = Coordinate<T>>,
     // Rc<PR>: Transform<C = Coordinate<T>>,
-    SD: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    // SD: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;
-    type P = Projection<'a, PR, SD, T>;
+    type P = Projection<'a, PR, T>;
     fn get_clip_extent(&self) -> Option<[Coordinate<T>; 2]> {
         match (self.x0, self.y0, self.x1, self.y1) {
             (Some(x0), Some(y0), Some(x1), Some(y1)) => {
@@ -172,7 +208,7 @@ where
         }
     }
 
-    fn clip_extent(mut self, extent: Option<[Coordinate<T>; 2]>) -> Projection<'a, PR, SD, T> {
+    fn clip_extent(mut self, extent: Option<[Coordinate<T>; 2]>) -> Projection<'a, PR, T> {
         match extent {
             None => {
                 self.x0 = None;
@@ -197,15 +233,14 @@ where
     }
 }
 
-impl<'a, PR, SD, T> Center for Projection<'a, PR, SD, T>
+impl<'a, PR, T> Center for Projection<'a, PR, T>
 where
-    PR: Transform<C = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    SD: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    PR: Clone + Transform<C = Coordinate<T>>,
+    // SD: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;
-    type P = Projection<'a, PR, SD, T>;
+    type P = Projection<'a, PR, T>;
     fn get_center(&self) -> Coordinate<T> {
         return Coordinate {
             x: self.lambda.to_degrees(),
@@ -214,24 +249,23 @@ where
     }
 
     // TODO dynamic cast and unwrap - Must find a better way.
-    fn center(self, p: Coordinate<T>) -> Projection<'a, PR, SD, T> {
+    fn center(self, p: Coordinate<T>) -> Projection<'a, PR, T> {
         // self.lambda = (p[0] % F::from_u16(360u16).unwrap()).to_radians();
         // self.phi = (p[1] % F::from_u16(360u16).unwrap()).to_radians();
         self.recenter()
     }
 }
 
-impl<'a, PR, SD, T> ProjectionTrait<'a> for Projection<'a, PR, SD, T>
+impl<'a, PR, T> ProjectionTrait<'a> for Projection<'a, PR, T>
 where
-    PR: Transform<C = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    SD: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    PR: Clone + Transform<C = Coordinate<T>>,
+    // SD: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;
     type PR = PR;
     type T = T;
-    type SD = SD;
+    // type SD = Stream<SC = Coordinate<T>> + Default;
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.
@@ -290,7 +324,7 @@ where
     //  *
     //  * @param angle Set to null to switch to antimeridian cutting.
     //  */
-    fn clip_angle(mut self, angle: T) -> Projection<'a, PR, SD, T> {
+    fn clip_angle(mut self, angle: T) -> Projection<'a, PR, T> {
         self.theta = Some(angle.to_radians());
 
         // match angle {
@@ -505,13 +539,13 @@ where
     //  */
     // invert?(point: [number, number]): [number, number] | null;
     #[inline]
-    fn reset(self) -> Projection<'a, PR, SD, T> {
+    fn reset(self) -> Projection<'a, PR, T> {
         // self.cache_stream = None;
         // self.cache = None;
         self
     }
 
-    fn recenter(self) -> Projection<'a, PR, SD, T> {
+    fn recenter(mut self) -> Projection<'a, PR, T> {
         let center = ScaleTranslateRotate::new(
             &self.k,
             &T::zero(),
@@ -534,15 +568,13 @@ where
             self.alpha,
         );
 
-        todo!("must refactor the stream pipeline");
+        // todo!("must refactor the stream pipeline");
         // self.rotate = rotate_radians_transform(self.delta_lambda, self.delta_phi, self.delta_gamma);
-        // self.project_transform = Compose::new(self.projection_raw, transform);
+        // self.project_transform = Compose::new(self.projection_raw.clone(), transform);
         // self.project_rotate_transform = Compose::new(self.rotate, self.project_transform);
+        // self.project_resample = gen_resample_node(self.project_transform.clone(), T::zero());
 
-        // // self.project_resample = ResampleEnum::R(Resample::new(self.projection_raw));
-        // self.project_resample.stream_in(self.project_transform);
-
-        // self.reset()
+        self.reset()
     }
     // /**
     //  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
@@ -564,7 +596,7 @@ where
         self.sx < T::zero()
     }
 
-    fn reflect_x(mut self, reflect: bool) -> Projection<'a, PR, SD, T> {
+    fn reflect_x(mut self, reflect: bool) -> Projection<'a, PR, T> {
         if reflect {
             self.sx = T::from(-1.0).unwrap();
         } else {
@@ -579,7 +611,7 @@ where
     }
 
     #[inline]
-    fn reflect_y(mut self, reflect: bool) -> Projection<'a, PR, SD, T> {
+    fn reflect_y(mut self, reflect: bool) -> Projection<'a, PR, T> {
         if reflect {
             self.sy = T::from(-1.0).unwrap();
         } else {
@@ -588,8 +620,8 @@ where
         self.recenter()
     }
 
-    fn precision(mut self, delta: T) -> Projection<'a, PR, SD, T> {
-        self.delta2 = delta * delta;
+    fn precision(self, delta: &'a T) -> Projection<'a, PR, T> {
+        // self.delta2 = *delta * *delta;
         // self.project_resample = gen_resample_node(self.projection_raw, self.delta2);
         self.reset()
     }
@@ -619,7 +651,7 @@ where
         ]
     }
 
-    fn rotate(mut self, angles: [T; 3]) -> Projection<'a, PR, SD, T> {
+    fn rotate(mut self, angles: [T; 3]) -> Projection<'a, PR, T> {
         let [delta_lambda, delta_phi, delta_gamma] = angles;
         let f360 = T::from(360f64).unwrap();
         self.delta_lambda = (delta_lambda % f360).to_radians();
@@ -645,9 +677,12 @@ where
     // In javascript stream is used as a property to be removed from the object.
     // In rust that is a closure.
     // fn stream(&self, stream_dst: SD) -> StreamTransformRadians<StreamTransform<SD, T>, T>
-    fn stream(&self, stream_dst: SD) -> StreamTransformRadians<StreamTransform<SD, T>, T>
-    where
-        SD: Stream<SC = Coordinate<T>> + Default,
+    fn stream(
+        &self,
+        stream_dst: Box<dyn Stream<SC = Coordinate<T>>>,
+    ) -> StreamTransformRadians<StreamTransform<T>, T>
+// where
+    //     SD: Stream<SC = Coordinate<T>>,
     {
         // return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
         // return match &self.cache {
@@ -657,15 +692,17 @@ where
 
         // let mut postclip = self.postclip.clone();
         // postclip.stream_in(ClipSinkEnum::Src(stream_dst));
-        let postclip = (self.postclip)(stream_dst);
+        // let postclip = (self.postclip)(stream_dst);
 
         // let mut resample = self.project_resample;
-        // resample.stream_in(postclip);
+        // self.project_resample.stream_in(postclip);
         // let mut preclip = self.preclip;
-        // preclip.stream_in(resample);
+        // self.preclip.stream_in(resample);
 
         // using resample here bypasses preclip.
-        let t_rotate_node = StreamTransform::new(&self.rotate, postclip);
+        // let t_rotate_node = StreamTransform::new(&self.rotate, self.preclip);
+        // let t_rotate_node = StreamTransform::new(&self.rotate, self.project_resample);
+        let t_rotate_node = StreamTransform::new(&self.rotate, stream_dst);
 
         let t_radians_node = StreamTransformRadians::new(t_rotate_node);
         // t_radians_node.stream_in(t_rotate_node);
@@ -688,32 +725,31 @@ where
     // fn translate(self, t: &Coordinate<T>) -> Projection<PR, T>;
 }
 
-impl<'a, PR, SD, ST> Scale for Projection<'a, PR, SD, ST>
+impl<'a, PR, ST> Scale for Projection<'a, PR, ST>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,
-    PR: Transform<C = Coordinate<ST>>,
-    SD: Stream<SC = Coordinate<ST>> + Default,
-    ST: AddAssign + AsPrimitive<ST> + CoordFloat + Default + Display + FloatConst,
+    PR: Transform<C = Coordinate<ST>> + Clone,
+    // SD: Stream<SC = Coordinate<ST>> + Default,
+    ST: AddAssign + AsPrimitive<ST> + CoordFloat + Display + FloatConst,
 {
-    type P = Projection<'a, PR, SD, ST>;
+    type P = Projection<'a, PR, ST>;
     type ST = ST;
     #[inline]
     fn get_scale(&self) -> Self::ST {
         self.k
     }
 
-    fn scale(mut self, scale: ST) -> Projection<'a, PR, SD, ST> {
+    fn scale(mut self, scale: ST) -> Projection<'a, PR, ST> {
         self.k = scale;
         self.recenter()
     }
 }
 
-impl<'a, PR, SD, T> Transform for Projection<'a, PR, SD, T>
+impl<'a, PR, T> Transform for Projection<'a, PR, T>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    PR: Transform<C = Coordinate<T>>,
-    SD: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    PR: Clone + Transform<C = Coordinate<T>>,
+    // SD: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
@@ -732,14 +768,14 @@ where
     }
 }
 
-impl<'a, PR, SD, T> Translate for Projection<'a, PR, SD, T>
+impl<'a, PR, T> Translate for Projection<'a, PR, T>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,
-    PR: Transform<C = Coordinate<T>>,
-    SD: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    PR: Clone + Transform<C = Coordinate<T>>,
+    // SD: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type P = Projection<'a, PR, SD, T>;
+    type P = Projection<'a, PR, T>;
     type C = Coordinate<T>;
     #[inline]
     fn get_translate(&self) -> Coordinate<T> {
@@ -749,7 +785,7 @@ where
         }
     }
 
-    fn translate(mut self, t: &Coordinate<T>) -> Projection<'a, PR, SD, T> {
+    fn translate(mut self, t: &Coordinate<T>) -> Projection<'a, PR, T> {
         self.x = t.x;
         self.y = t.y;
         self.recenter()

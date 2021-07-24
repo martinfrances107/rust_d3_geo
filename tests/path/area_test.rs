@@ -28,7 +28,7 @@
 //     #[inline]
 //     fn equirectangular<
 //         'a,
-//         T: AsPrimitive<T> + AddAssign + CoordFloat + Default + Display + FloatConst,
+//         T: AsPrimitive<T> + AddAssign + CoordFloat +Display + FloatConst,
 //     >() -> Projection<'a, EquirectangularRaw<T>, StreamDummy<T>, T> {
 //         EquirectangularRaw::gen_projection_mutator()
 //             .scale(T::from(900f64 / PI).unwrap())

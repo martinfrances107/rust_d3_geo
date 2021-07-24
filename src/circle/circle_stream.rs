@@ -17,9 +17,7 @@ use super::circle_generator::CircleGenerator;
 use super::circle_radius::circle_radius;
 
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
-pub fn circle_stream<
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
->(
+pub fn circle_stream<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst>(
     circle: &mut impl Stream<SC = Coordinate<T>>,
     radius: T,
     delta: T,

@@ -10,9 +10,7 @@ use num_traits::FloatConst;
 use super::Stream;
 use super::Streamable;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable
-    for Line<T>
-{
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable for Line<T> {
     // type SD = Self;
     type T = T;
     #[inline]

@@ -1,5 +1,5 @@
 use std::fmt::Display;
-use std::marker::PhantomData;
+// use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
@@ -9,59 +9,64 @@ use num_traits::FloatConst;
 // use crate::clip::clip_sink_enum::ClipSinkEnum;
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::stream_dst::StreamDst;
-use super::ResampleTrait;
+// use super::ResampleTrait;
+use crate::stream::stream_in_trait::StreamCombo;
 use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
 use crate::Transform;
 
 // #[derive(Debug)]
-pub struct ResampleNone<'a, PR, STREAM, T>
+pub struct ResampleNone<STREAM, T, TRANSFORMER>
 where
-    PR: Transform<C = Coordinate<T>>,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
     // Rc<PR>: Transform<C = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     STREAM: Stream<SC = Coordinate<T>>,
 {
-    pd: PhantomData<&'a u8>,
-    projection_raw: &'a PR,
+    // pd: PhantomData<&'a u8>,
+    projection_raw: TRANSFORMER,
     /// Box to prevent infinite recusion.
     // pub stream: Box<ClipSinkEnum<'a, PR, T>>,
     pub stream: Box<STREAM>,
 }
 
-impl<'a, PR, STREAM, T> ResampleNone<'a, PR, STREAM, T>
+impl<STREAM, T, TRANSFORMER> ResampleNone<STREAM, T, TRANSFORMER>
 where
-    PR: Transform<C = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>> + Default,
-
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
 {
-    #[inline]
-    pub fn new(projection_raw: &'a PR) -> Self {
+    pub fn new(projection_raw: TRANSFORMER) -> ResampleNone<STREAM, T, TRANSFORMER> {
         Self {
-            pd: PhantomData,
+            // pd: PhantomData,
             projection_raw,
             stream: Box::new(STREAM::default()), // stub value
         }
     }
 }
 
-impl<'a, PR, STREAM, T> ResampleTrait for ResampleNone<'a, PR, STREAM, T>
+// impl<PR, STREAM, T> ResampleTrait for ResampleNone<PR, STREAM, T>
+// where
+//     PR: Transform<C = Coordinate<T>>,
+//     // Rc<PR>: Transform<C = Coordinate<T>>,
+//     STREAM: Stream<SC = Coordinate<T>> + Default,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+// {
+// }
+
+impl<'a, STREAM, T, TRANSFORMER> StreamCombo for ResampleNone<STREAM, T, TRANSFORMER>
 where
-    PR: Transform<C = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
 {
 }
 
-impl<'a, PR, STREAM, T> StreamIn for ResampleNone<'a, PR, STREAM, T>
+impl<STREAM, T, TRANSFORMER> StreamIn for ResampleNone<STREAM, T, TRANSFORMER>
 where
-    PR: Transform<C = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
 {
     type SInput = STREAM;
 
@@ -71,12 +76,11 @@ where
     }
 }
 
-impl<'a, PR, STREAM, T> Stream for ResampleNone<'a, PR, STREAM, T>
+impl<STREAM, T, TRANSFORMER> Stream for ResampleNone<STREAM, T, TRANSFORMER>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TRANSFORMER: Transform<C = Coordinate<T>>,
 {
     type SC = Coordinate<T>;
     // #[inline]
