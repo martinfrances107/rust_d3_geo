@@ -20,7 +20,6 @@ use crate::path::PathResult;
 // use crate::polygon_contains::contains;
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::CompareIntersection;
-// use crate::clip::line_sink_enum::LineSinkEnum;
 use crate::path::PathResultEnum;
 // use crate::clip::Clean;
 // use crate::clip::clean::CleanEnum;
@@ -38,7 +37,6 @@ use super::Clip;
 use super::ClipBuffer;
 use super::LCB;
 use crate::clip::clean::CleanEnum;
-// use crate::clip::clip_sink_enum::ClipSinkEnum;
 use line::Line;
 
 // #[derive(Derivative)]

@@ -17,7 +17,6 @@ use crate::stream::Stream;
 use super::clip_buffer::ClipBuffer;
 // use super::line_trait::LineTrait;
 
-// use super::clip_sink_enum::ClipSinkEnum;
 use super::line_elem::LineElem;
 use super::LCB;
 

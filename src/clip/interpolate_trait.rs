@@ -7,7 +7,6 @@
 // use num_traits::AsPrimitive;
 // use num_traits::FloatConst;
 
-// use crate::clip::clip_sink_enum::ClipSinkEnum;
 // use crate::stream::Stream;
 // use crate::Transform;
 

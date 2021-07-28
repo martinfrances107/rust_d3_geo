@@ -11,7 +11,6 @@ use num_traits::FloatConst;
 
 use crate::point_equal::point_equal;
 // use crate::projection::ProjectionRawTrait;
-// use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::stream::Stream;
 // use crate::Transform;
 // use super::clip_raw::ClipRaw;

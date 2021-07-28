@@ -10,7 +10,6 @@ use num_traits::AsPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-// use crate::clip::line_sink_enum::LineSinkEnum;
 // use crate::clip::ClipBuffer;
 // use crate::projection::projection_trait::ProjectionTrait;s
 // use crate::projection::ProjectionRawTrait;

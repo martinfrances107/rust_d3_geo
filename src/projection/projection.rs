@@ -29,7 +29,6 @@ use crate::projection::scale::Scale;
 // use super::ProjectionRawTrait;
 // use crate::clip::antimeridian::ClipAntimeridian;
 // use crate::clip::circle::ClipCircle;
-// use crate::clip::clip_sink_enum::ClipSinkEnum;
 // use crate::clip::interpolate_trait::Interpolate;
 // use crate::clip::point_visible_trait::PointVisible;
 // use crate::clip::Clip;

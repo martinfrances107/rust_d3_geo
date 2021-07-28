@@ -6,7 +6,6 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-// use crate::clip::clip_sink_enum::ClipSinkEnum;
 // use crate::projection::ProjectionRawTrait;
 use crate::cartesian::cartesian;
 use crate::stream::stream_in_trait::StreamCombo;

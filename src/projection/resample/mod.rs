@@ -12,7 +12,6 @@ use num_traits::FloatConst;
 
 use super::resample::resample::Resample;
 use super::resample::resample_none::ResampleNone;
-// use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::stream::stream_in_trait::StreamCombo;
 // use crate::stream::stream_in_trait::StreamIn;
 // use crate::projection::ProjectionRawTrait;
