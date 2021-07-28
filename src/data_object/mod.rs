@@ -10,7 +10,6 @@ use geo::Geometry;
 
 pub mod sphere;
 
-// use crate::stream::stream_dst::StreamDst;
 use crate::stream::{Stream, Streamable};
 
 use sphere::Sphere;

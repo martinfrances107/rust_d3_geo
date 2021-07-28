@@ -118,19 +118,9 @@ where
 
 impl<'a, T> Stream for StreamTransform<'a, T>
 where
-    // PR: Transform<C = Coordinate<T>>,
-    // STREAM: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
-
-    // #[inline]
-    // fn get_dst(
-    //     &self,
-    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
-    // {
-    //     self.stream.get_dst()
-    // }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

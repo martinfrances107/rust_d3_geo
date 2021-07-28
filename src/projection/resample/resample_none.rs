@@ -8,7 +8,6 @@ use num_traits::FloatConst;
 
 // use crate::clip::clip_sink_enum::ClipSinkEnum;
 // use crate::projection::ProjectionRawTrait;
-// use crate::stream::stream_dst::StreamDst;
 // use super::ResampleTrait;
 use crate::stream::stream_in_trait::StreamCombo;
 use crate::stream::stream_in_trait::StreamIn;
@@ -83,13 +82,6 @@ where
     TRANSFORMER: Transform<C = Coordinate<T>>,
 {
     type SC = Coordinate<T>;
-    // #[inline]
-    // fn get_dst(
-    //     &self,
-    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
-    // {
-    //     self.stream.get_dst()
-    // }
 
     #[inline]
     fn sphere(&mut self) {

@@ -6,7 +6,6 @@ use geo::{coords_iter::CoordsIter, CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-// use super::stream_dst::StreamDst;
 use super::stream_line::stream_line;
 use super::{Stream, Streamable};
 
@@ -15,11 +14,7 @@ use super::{Stream, Streamable};
 impl<T> Streamable for MultiLineString<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    // SD: StreamDst,
 {
-    // type T = T;
-    // type SC = Coordinate<T>;
-    // type SD = Stream<SC = Coordinate<T>>>;
     type T = T;
 
     fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {

@@ -5,14 +5,11 @@
 // use num_traits::AsPrimitive;
 // use num_traits::FloatConst;
 
-// use super::stream_dst::StreamDst;
 use super::Stream;
 
 pub fn stream_line<C, S>(coordinates: &[C], stream: &mut S, closed: usize)
 where
     S: Stream<SC = C>,
-    // C
-    // T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 {
     let n = coordinates.len() - closed;
     stream.line_start();

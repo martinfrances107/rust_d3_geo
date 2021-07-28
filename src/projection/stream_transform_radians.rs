@@ -10,7 +10,6 @@ use num_traits::FloatConst;
 // use super::stream_transform::StreamTransform;
 // use crate::stream::stream_in_trait::StreamIn;
 // use crate::projection::ProjectionRawTrait;
-// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 // use crate::Transform;
 
@@ -78,15 +77,7 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
-    // type ST = T;
-    // type SD = SD;
-    // #[inline]
-    // fn get_dst(
-    //     &self,
-    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
-    // {
-    //     self.stream.get_dst()
-    // }
+
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         self.stream.point(

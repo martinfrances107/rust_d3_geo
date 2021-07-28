@@ -4,7 +4,6 @@ use std::ops::AddAssign;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Streamable;
 
 use super::stream::Stream;

@@ -12,7 +12,6 @@ mod rect;
 mod stream_line;
 mod triangle;
 
-pub mod stream_dst;
 pub mod stream_in_trait;
 use std::fmt::Debug;
 use std::fmt::Display;
@@ -22,8 +21,6 @@ use std::ops::AddAssign;
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-
-// use stream_dst::StreamDst;
 
 /// Applies to DataObject's
 pub trait Streamable {

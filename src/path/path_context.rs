@@ -77,12 +77,7 @@ where
     type SC = Coordinate<T>;
 
     fn sphere(&mut self) {}
-    // fn get_dst(
-    //     &self,
-    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
-    // {
-    //     todo!("What to do here");
-    // }
+
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(T::zero());

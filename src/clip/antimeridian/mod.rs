@@ -23,7 +23,6 @@ use crate::clip::Clip;
 
 // use crate::polygon_contains::contains;
 // use crate::projection::ProjectionRawTrait;
-// use crate::stream::stream_dst::StreamDst;
 // use crate::clip::Clean;
 // use crate::clip::clean::CleanEnum;
 // use crate::clip::rejoin::Rejoin;
@@ -506,14 +505,6 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
-    // type SD = SD;
-    // type ST = T;
-    // fn get_dst(
-    //     &self,
-    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
-    // {
-    //     self.base.sink.get_dst()
-    // }
 
     #[inline]
     fn point(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {

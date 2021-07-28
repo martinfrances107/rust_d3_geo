@@ -22,7 +22,6 @@ use crate::path::PathResult;
 // use crate::stream::CompareIntersection;
 // use crate::clip::line_sink_enum::LineSinkEnum;
 use crate::path::PathResultEnum;
-// use crate::stream::stream_dst::StreamDst;
 // use crate::clip::Clean;
 // use crate::clip::clean::CleanEnum;
 // use crate::clip::rejoin::Rejoin;
@@ -481,15 +480,6 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
-    // type ST = T;
-    // type SD = SD;
-
-    // fn get_dst(
-    //     &self,
-    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
-    // {
-    //     self.base.sink.get_dst()
-    // }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

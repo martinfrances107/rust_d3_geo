@@ -2,7 +2,6 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 
 use super::Streamable;
-// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
 use geo::CoordFloat;

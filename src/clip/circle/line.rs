@@ -17,7 +17,6 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::LCB;
 use crate::point_equal::point_equal;
 // use crate::projection::ProjectionRawTrait;
-// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 // use crate::stream::StreamSourceDummy;
 use crate::clip::clean::Clean;
@@ -192,12 +191,6 @@ where
     fn polygon_start(&mut self) {}
     fn polygon_end(&mut self) {}
 
-    // fn get_dst(
-    //     &self,
-    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
-    // {
-    //     self.stream.get_dst()
-    // }
     fn line_start(&mut self) {
         self.v00 = false;
         self.v0 = false;

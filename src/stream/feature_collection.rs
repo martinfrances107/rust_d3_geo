@@ -7,7 +7,6 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::data_object::FeatureCollection;
-// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
 use super::Streamable;

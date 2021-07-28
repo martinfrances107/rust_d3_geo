@@ -24,7 +24,6 @@ use super::translate::Translate;
 // use super::ProjectionRawTrait;
 use crate::projection::stream_transform::StreamTransform;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
-// use crate::stream::stream_dst::StreamDst;
 pub trait ProjectionTrait<'a>: Center + ClipExtent + Scale + Translate
 // Rc<<Self as ProjectionTrait<'a>>::PR>: ProjectionRawTrait,
 where
@@ -32,8 +31,6 @@ where
     //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
     <Self as ProjectionTrait<'a>>::PR:
         Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-    // <Self as ProjectionTrait<'a>>::SD: StreamDst,
-    // <Self as ProjectionTrait<'a>>::SD: StreamDst,
     // <Self as ProjectionTrait<'a>>::SD:
     //     Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
     <Self as ProjectionTrait<'a>>::T: AddAssign

@@ -14,7 +14,6 @@ use num_traits::FloatConst;
 // use crate::clip::ClipBuffer;
 // use crate::projection::projection_trait::ProjectionTrait;s
 // use crate::projection::ProjectionRawTrait;
-// use crate::stream::stream_dst::StreamDst;
 use crate::clip::clean::Clean;
 use crate::clip::clean::CleanEnum;
 // use crate::clip::clip_buffer::ClipBuffer;
@@ -34,9 +33,6 @@ use super::intersect::intersect;
 // Hence the requirement for a lifetime specifier.
 pub struct Line<STREAM, T>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
-    // SD: StreamDst,
     STREAM: Default + Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst,
 {
@@ -153,13 +149,6 @@ where
     fn polygon_end(&mut self) {
         todo!("is this called")
     }
-
-    // fn get_dst(
-    //     &self,
-    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
-    // {
-    //     self.stream.get_dst()
-    // }
 
     fn line_start(&mut self) {
         println!("line(a) line_start()");
