@@ -36,8 +36,6 @@ impl<T: CoordFloat + FloatConst> Default for CircleStream<T> {
 
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Stream for CircleStream<T> {
     type SC = Coordinate<T>;
-    // type ST = T;
-    // type SD = CircleStream<T>;
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         let x_rotated = &self.rotate.invert(&p);
         self.ring.push(Coordinate {

@@ -38,7 +38,6 @@ where
 
 impl<T> PathResult for ClipBuffer<T>
 where
-    // SD: StreamDst,
     T: CoordFloat,
 {
     type Out = Option<PathResultEnum<T>>;
@@ -51,12 +50,9 @@ where
 
 impl<T> Stream for ClipBuffer<T>
 where
-    // SD: StreamDst,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
-    // type ST = T;
-    // type SD = SD;
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         println!("ClipBuffer point {:?} {:?}", p, m);

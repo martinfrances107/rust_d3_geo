@@ -216,11 +216,7 @@ where
 
 impl<SINK, T> PointVisible for ClipAntimeridian<SINK, T>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
-    // MutStream: Stream<SC = Coordinate<T>>,
     SINK: Default + Stream<SC = Coordinate<T>>,
-    // STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type PVC = Coordinate<T>;
@@ -233,17 +229,11 @@ where
 
 impl<SINK, T> Interpolate for ClipAntimeridian<SINK, T>
 where
-    // MutStream: Stream<SC = Coordinate<T>>,
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
     SINK: Default + Stream<SC = Coordinate<T>>,
-    // STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type IC = Coordinate<Self::IT>;
     type IT = T;
-    // type IPR = PR;
-    // type IStream = SINK;
 
     // fn get_sink(&mut self) -> &mut SINK {
     //     &mut self.base.sink

@@ -222,8 +222,6 @@ impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display> Stream
     for CentroidStream<T>
 {
     type SC = Coordinate<T>;
-    // type ST = T;
-    // type SD = CentroidStream<T>;
 
     fn sphere(&mut self) {}
 

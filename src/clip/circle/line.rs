@@ -183,14 +183,10 @@ where
 
 impl<STREAM, T> Stream for Line<STREAM, T>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
     STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    // type ST = T;
     type SC = Coordinate<T>;
-    // type SD = SD;
 
     fn sphere(&mut self) {}
     fn polygon_start(&mut self) {}

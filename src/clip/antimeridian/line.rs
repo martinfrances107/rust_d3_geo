@@ -88,7 +88,6 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     STREAM: Default + Stream<SC = Coordinate<T>>,
 {
-    // type T = T;
     type STREAM = STREAM;
     fn link_to_stream(&mut self, stream: Rc<RefCell<Self::STREAM>>) {
         self.stream = stream;

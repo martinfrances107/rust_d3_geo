@@ -106,8 +106,6 @@ pub trait ClipOpsMacro
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Debug + FloatConst,
 {
     type COT;
-    // type L;
-    // type SINK;
 
     fn hello_macro(&self) -> u32 {
         42
