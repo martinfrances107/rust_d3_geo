@@ -50,51 +50,6 @@ use point_visible_trait::PointVisible;
 use clean::Clean;
 // use line_elem::LineElem;
 
-// // Must be implemented individually by each struct implmenteing Clip!
-// // Breaks DRY.
-// pub trait ClipBaseState {
-//     type CBST;
-//     type L;
-//     type SINK;
-//     fn get_base(self) -> ClipBase<Self::L, Self::SINK, Self::CBST>
-//     where
-//         <Self as ClipBaseState>::CBST: AddAssign
-//             + AsPrimitive<<Self as ClipBaseState>::CBST>
-//             + CoordFloat
-//             + Display
-//             + FloatConst;
-//     fn ring_clear(&mut self);
-//     fn ring_reset(&mut self);
-//     fn set_polygon_started(&mut self, started: bool);
-//     fn set_use_point_line(&mut self, u: bool);
-//     fn set_use_ring_start(&mut self, u: bool);
-//     fn set_use_ring_end(&mut self, u: bool);
-//     fn polygon_clear(&mut self);
-//     fn polygon_push(&mut self, v: Vec<LineElem<Self::CBST>>)
-//     where
-//         <Self as ClipBaseState>::CBST: AddAssign
-//             + AsPrimitive<<Self as ClipBaseState>::CBST>
-//             + CoordFloat
-//             + Display
-//             + FloatConst;
-//     fn ring_push(&mut self, l: LineElem<Self::CBST>)
-//     where
-//         <Self as ClipBaseState>::CBST: AddAssign
-//             + AsPrimitive<<Self as ClipBaseState>::CBST>
-//             + CoordFloat
-//             + Display
-//             + FloatConst;
-//     fn ring_pop(&mut self) -> Option<LineElem<Self::CBST>>
-//     where
-//         <Self as ClipBaseState>::CBST: AddAssign
-//             + AsPrimitive<<Self as ClipBaseState>::CBST>
-//             + CoordFloat
-//             + Display
-//             + FloatConst;
-//     fn ring_sink_clean(&mut self) -> CleanEnum;
-//     fn segments_clear(&mut self);
-// }
-
 /// This trait is connected with the submodule
 /// clip_ops_macro_derive
 pub trait ClipOpsMacro

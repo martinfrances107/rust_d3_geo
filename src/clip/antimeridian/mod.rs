@@ -34,7 +34,6 @@ use super::clip_base::ClipBase;
 use super::line_elem::LineElem;
 // use crate::clip::clean::Clean;
 // use super::Clip;
-// use super::ClipBaseState;
 use super::ClipBuffer;
 use super::ClipOpsMacro;
 use super::LCB;
@@ -74,79 +73,6 @@ where
     SINK: Default + Stream<SC = Coordinate<T>>,
 {
 }
-
-// impl<SINK, T> ClipBaseState for ClipAntimeridian<SINK, T>
-// where
-//     SINK: Default + Stream<SC = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-// {
-//     type CBST = T;
-//     type L = Line<SINK, T>;
-//     type SINK = SINK;
-
-//     fn get_base(self) -> ClipBase<Line<SINK, T>, SINK, T> {
-//         self.base
-//     }
-//     fn set_polygon_started(&mut self, _started: bool) {}
-//     // fn set_point_fn(&mut self, f: fn(&mut Self, p: &Coordinate<Self::CBOT>, m: Option<u8>)) {}
-//     // fn set_line_start_fn(f: fn(&mut Self)) {}
-//     // fn set_line_end_fn(f: fn(&mut Self)) {}
-//     #[inline]
-//     fn polygon_clear(&mut self) {
-//         self.base.polygon.clear();
-//     }
-
-//     #[inline]
-//     fn polygon_push(&mut self, v: Vec<LineElem<Self::CBST>>) {
-//         self.base.polygon.push(v)
-//     }
-
-//     #[inline]
-//     fn ring_clear(&mut self) {
-//         self.base.ring.clear();
-//     }
-//     #[inline]
-//     fn ring_push(&mut self, le: LineElem<Self::CBST>) {
-//         self.base.ring.push(le);
-//     }
-
-//     #[inline]
-//     fn ring_pop(&mut self) -> Option<LineElem<Self::CBST>> {
-//         self.base.ring.pop()
-//     }
-
-//     #[inline]
-//     fn ring_sink_clean(&mut self) -> CleanEnum {
-//         // self.line.clean();
-//         // TODO what to do here!
-//         self.base.line.clean()
-//     }
-
-//     #[inline]
-//     fn ring_reset(&mut self) {
-//         self.base.ring = Vec::new();
-//     }
-
-//     #[inline]
-//     fn set_use_point_line(&mut self, u: bool) {
-//         self.base.use_point_line = u;
-//     }
-
-//     #[inline]
-//     fn set_use_ring_start(&mut self, u: bool) {
-//         self.base.use_ring_start = u;
-//     }
-
-//     #[inline]
-//     fn set_use_ring_end(&mut self, u: bool) {
-//         self.base.use_ring_end = u;
-//     }
-
-//     #[inline]
-//     fn segments_clear(&mut self) {
-//         self.base.segments.clear();
-//     }
-// }
 
 impl<SINK, T> Clip for ClipAntimeridian<SINK, T>
 where
