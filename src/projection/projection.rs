@@ -132,19 +132,19 @@ where
         let k = T::from(150f64).unwrap();
         let sx = T::one();
         let sy = T::one();
-        let center = ScaleTranslateRotate::new(
-            &k,
-            &T::from(0).unwrap(),
-            &T::from(0).unwrap(),
-            &sx,
-            &sy,
-            alpha,
-        )
-        .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
-        let transform =
-            ScaleTranslateRotate::new(&k, &(x - center.x), &(y - center.y), &sx, &sy, alpha);
+        // let center = ScaleTranslateRotate::new(
+        //     &k,
+        //     &T::from(0).unwrap(),
+        //     &T::from(0).unwrap(),
+        //     &sx,
+        //     &sy,
+        //     alpha,
+        // )
+        // .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
+        // let transform =
+        //     ScaleTranslateRotate::new(&k, &(x - center.x), &(y - center.y), &sx, &sy, alpha);
         // let preclip = Box::new(|x| x);
-        let project_transform = Compose::new(projection_raw.clone(), transform);
+        // let project_transform = Compose::new(projection_raw.clone(), transform);
         // let c: Box<dyn StreamCombo<SC = Coordinate<T>, SInput = SD>> =
         //     Box::new(ClipAntimeridian::new());
 
