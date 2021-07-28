@@ -1,5 +1,6 @@
 use std::fmt::Display;
 use std::ops::AddAssign;
+use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
@@ -8,22 +9,29 @@ use num_traits::FloatConst;
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
 
-use crate::clip::clip_buffer::ClipBuffer;
-use crate::clip::clip_sink_enum::ClipSinkEnum;
+// use crate::clip::clip_buffer::ClipBuffer;
+// use crate::clip::clip_sink_enum::ClipSinkEnum;
 use crate::clip::line_elem::LineElem;
-use crate::clip::line_sink_enum::LineSinkEnum;
+// use crate::clip::line_sink_enum::LineSinkEnum;
+// use crate::clip::clip_buffer::ClipBuffer;
+use crate::clip::LCB;
 use crate::point_equal::point_equal;
-use crate::stream::stream_dst::StreamDst;
+// use crate::projection::ProjectionRawTrait;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
-use crate::stream::StreamSourceDummy;
-use crate::stream::{Clean, CleanEnum};
-use crate::Transform;
+// use crate::stream::StreamSourceDummy;
+use crate::clip::clean::Clean;
+use crate::clip::clean::CleanEnum;
+// use crate::stream::stream_in_trait::StreamIn;
+// use crate::Transform;
 
-#[derive(Clone, Debug)]
-pub struct Line<P, T>
+// #[derive(Debug)]
+pub struct Line<STREAM, T>
 where
-    P: Clone,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
@@ -32,38 +40,41 @@ where
     not_hemisphere: bool,
     point0: Option<LineElem<T>>, // previous point
     small_radius: bool,
-    stream: LineSinkEnum<P, T>,
+    stream: Rc<RefCell<STREAM>>,
     v0: bool,  // visibility of previous point
     v00: bool, // visibility of first point
 }
 
-impl<P, T> Default for Line<P, T>
-where
-    P: Clone,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-{
-    fn default() -> Self {
-        Self {
-            c0: 0u8,
-            clean: CleanEnum::Undefined,
-            radius: T::zero(),
-            cr: T::zero(),
-            not_hemisphere: false,
-            point0: None,
-            small_radius: false,
-            stream: LineSinkEnum::CSE(ClipSinkEnum::Src(StreamDst::SRC(
-                StreamSourceDummy::default(),
-            ))),
-            v0: false,
-            v00: false,
-        }
-    }
-}
+// impl<'a, PR, SD, T> Default for Line<'a, PR, SD, T>
+// where
+//     Rc<PR>: Transform<C = Coordinate<T>>,
+//     PR: Transform<C = Coordinate<T>>,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
+// {
+//     fn default() -> Self {
+//         Self {
+//             c0: 0u8,
+//             clean: CleanEnum::Undefined,
+//             radius: T::zero(),
+//             cr: T::zero(),
+//             not_hemisphere: false,
+//             point0: None,
+//             small_radius: false,
+//             stream: LineSinkEnum::CSE(ClipSinkEnum::Src(StreamDst::SRC(
+//                 StreamSourceDummy::default(),
+//             ))),
+//             v0: false,
+//             v00: false,
+//         }
+//     }
+// }
 
-impl<P, T> Line<P, T>
+impl<STREAM, T> Line<STREAM, T>
 where
-    P: Clone,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     pub fn new(radius: T) -> Self {
@@ -80,18 +91,8 @@ where
             small_radius,
             v0: false,
             v00: false,
-            stream: LineSinkEnum::CB(ClipBuffer::default()),
+            stream: Rc::new(RefCell::new(STREAM::default())),
         }
-    }
-
-    #[inline]
-    pub fn stream_in(&mut self, stream: LineSinkEnum<P, T>) {
-        self.stream = stream;
-    }
-
-    #[inline]
-    pub fn get_stream(&mut self) -> &mut LineSinkEnum<P, T> {
-        &mut self.stream
     }
 
     #[inline]
@@ -128,10 +129,43 @@ where
     }
 }
 
-impl<P, T> Clean for Line<P, T>
+use std::cell::RefCell;
+impl<S, T> LCB for Line<S, T>
 where
-    P: Clone,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    S: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type STREAM = S;
+    fn link_to_stream<'b>(&'b mut self, stream: Rc<RefCell<Self::STREAM>>) {
+        self.stream = stream;
+    }
+}
+
+// impl<STREAM, T> StreamIn for Line<STREAM, T>
+// where
+//     // Rc<PR>: Transform<C = Coordinate<T>>,
+//     // PR: Transform<C = Coordinate<T>>,
+//     STREAM: Stream<SC = Coordinate<T>> + Default,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
+// {
+//     type SInput = STREAM;
+//     #[inline]
+//     fn stream_in(&mut self, stream: STREAM) {
+//         self.stream = stream;
+//     }
+
+//     // #[inline]
+//     // pub fn get_stream(&mut self) -> &mut STREAM {
+//     //     &mut self.stream
+//     // }
+// }
+
+impl<STREAM, T> Clean for Line<STREAM, T>
+where
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
@@ -147,26 +181,34 @@ where
     }
 }
 
-impl<P, T> Stream<T> for Line<P, T>
+impl<STREAM, T> Stream for Line<STREAM, T>
 where
-    P: Clone + Default + Transform<TcC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    // Rc<PR>: Transform<C = Coordinate<T>>,
+    // PR: Transform<C = Coordinate<T>>,
+    STREAM: Stream<SC = Coordinate<T>> + Default,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    // type ST = T;
+    type SC = Coordinate<T>;
+    // type SD = SD;
+
     fn sphere(&mut self) {}
     fn polygon_start(&mut self) {}
     fn polygon_end(&mut self) {}
 
-    fn get_dst(&self) -> StreamDst<T> {
-        self.stream.get_dst()
-    }
+    // fn get_dst(
+    //     &self,
+    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
+    // {
+    //     self.stream.get_dst()
+    // }
     fn line_start(&mut self) {
         self.v00 = false;
         self.v0 = false;
         self.clean = CleanEnum::NoIntersections;
     }
 
-    fn point(&mut self, p: &Self::C, _m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         let point1 = Some(LineElem { p: *p, m: None });
         let mut point2: Option<LineElem<T>>;
         let v = self.visible(p);
@@ -197,7 +239,7 @@ where
             self.v0 = v;
             println!("setting v ");
             if v {
-                self.stream.line_start();
+                self.stream.borrow_mut().line_start();
             }
         }
         println!("before intersect check {:?} {:?}", v, self.v0);
@@ -235,7 +277,7 @@ where
             if v {
                 println!("outside going in");
                 // outside going in
-                self.stream.line_start();
+                self.stream.borrow_mut().line_start();
                 point2 = match intersect(
                     &point1.clone().unwrap(),
                     &self.point0.clone().unwrap(),
@@ -251,7 +293,7 @@ where
                         todo!("must cover this case.");
                     }
                 };
-                self.stream.point(&point2.unwrap().p, None)
+                self.stream.borrow_mut().point(&point2.unwrap().p, None)
             } else {
                 // inside going out
                 println!("inside going out");
@@ -271,8 +313,8 @@ where
                     }
                 };
                 // panic!("about to insert 2 ");
-                self.stream.point(&point2.unwrap().p, Some(2));
-                self.stream.line_end();
+                self.stream.borrow_mut().point(&point2.unwrap().p, Some(2));
+                self.stream.borrow_mut().line_end();
             }
             self.point0 = point2;
         } else if self.not_hemisphere && self.point0.is_some() && self.small_radius ^ v {
@@ -300,16 +342,16 @@ where
                         self.clean = CleanEnum::IntersectionsOrEmpty;
                         if self.small_radius {
                             println!("small radius");
-                            self.stream.line_start();
-                            self.stream.point(&t[0], None);
-                            self.stream.point(&t[1], None);
-                            self.stream.line_end();
+                            self.stream.borrow_mut().line_start();
+                            self.stream.borrow_mut().point(&t[0], None);
+                            self.stream.borrow_mut().point(&t[1], None);
+                            self.stream.borrow_mut().line_end();
                         } else {
                             println!("not a small radius");
-                            self.stream.point(&t[1], None);
-                            self.stream.line_end();
-                            self.stream.line_start();
-                            self.stream.point(&t[0], Some(3u8));
+                            self.stream.borrow_mut().point(&t[1], None);
+                            self.stream.borrow_mut().line_end();
+                            self.stream.borrow_mut().line_start();
+                            self.stream.borrow_mut().point(&t[0], Some(3u8));
                         }
                     }
                 }
@@ -318,7 +360,7 @@ where
         println!("v, !point0 {:?} {:?}", v, self.point0.is_none());
         if v && (self.point0.is_none() || !point_equal(self.point0.unwrap().p, point1.unwrap().p)) {
             println!("point equal pass");
-            self.stream.point(&point1.unwrap().p, None);
+            self.stream.borrow_mut().point(&point1.unwrap().p, None);
         }
         self.point0 = point1;
         self.v0 = v;
@@ -328,7 +370,7 @@ where
     fn line_end(&mut self) {
         println!("clip circle line_end()");
         if self.v0 {
-            self.stream.line_end();
+            self.stream.borrow_mut().line_end();
         }
         self.point0 = None;
     }

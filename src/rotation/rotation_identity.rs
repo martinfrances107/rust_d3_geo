@@ -8,10 +8,10 @@ use crate::Transform;
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Copy, Debug)]
 pub struct RotationIdentity<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
@@ -34,8 +34,16 @@ fn normalise<'a, T: CoordFloat + FloatConst>(p: &'a Coordinate<T>) -> Coordinate
     Coordinate { x, y: phi }
 }
 
-impl<T: CoordFloat + Default + FloatConst> Transform for RotationIdentity<T> {
-    type TcC = Coordinate<T>;
+impl<T: CoordFloat> Default for RotationIdentity<T> {
+    fn default() -> Self {
+        Self {
+            phantom: PhantomData::<T>,
+        }
+    }
+}
+
+impl<T: CoordFloat + FloatConst> Transform for RotationIdentity<T> {
+    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let out = normalise(p);

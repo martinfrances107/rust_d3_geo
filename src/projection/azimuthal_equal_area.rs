@@ -7,18 +7,18 @@ use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
 use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
-use super::projection_mutator::ProjectionMutator;
-use crate::Transform;
-
+// use super::projection::StreamOrValueMaybe;
 use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
+use crate::projection::projection_trait::ProjectionTrait;
+use crate::projection::scale::Scale;
+use crate::Transform;
 
 /// Why the Phantom Data is required here...
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Copy, Clone, Debug, Default)]
+#[derive(Copy, Clone, Debug)]
 pub struct AzimuthalEqualAreaRaw<T>
 where
     T: CoordFloat,
@@ -26,15 +26,26 @@ where
     phantom: PhantomData<T>,
 }
 
+impl<T> Default for AzimuthalEqualAreaRaw<T>
+where
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            phantom: PhantomData::<T>,
+        }
+    }
+}
 impl<T> AzimuthalEqualAreaRaw<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator() -> ProjectionMutator<AzimuthalEqualAreaRaw<T>, T> {
-        ProjectionMutator::from_projection_raw(AzimuthalEqualAreaRaw::default(), None)
+    pub fn gen_projection_mutator<'a>() -> Projection<'a, AzimuthalEqualAreaRaw<T>, T> {
+        Projection::new(AzimuthalEqualAreaRaw::default(), None)
             .scale(T::from(124.75f64).unwrap())
-            .clip_angle(StreamOrValueMaybe::Value(T::from(180f64 - 1e-3).unwrap()))
+            // .clip_angle(StreamOrValueMaybe::Value(T::from(180f64 - 1e-3).unwrap()))
+            .clip_angle(T::from(180f64 - 1e-3).unwrap())
     }
 
     #[inline]
@@ -49,10 +60,10 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
     for AzimuthalEqualAreaRaw<T>
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         azimuthal_raw(p, Self::cxcy)

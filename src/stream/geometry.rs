@@ -10,12 +10,13 @@ use num_traits::FloatConst;
 use super::Stream;
 use super::Streamable;
 
-impl<T> Streamable<T> for Geometry<T>
+impl<T> Streamable for Geometry<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
-    fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
+    // type SD = Self;
+    type T = T;
+    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
         match self {
             Geometry::Point(p) => p.to_stream(stream),
             Geometry::Line(l) => l.to_stream(stream),

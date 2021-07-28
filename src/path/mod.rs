@@ -6,10 +6,12 @@ pub mod path_context_stream;
 pub mod path_string;
 
 use std::collections::VecDeque;
-use std::default::Default;
+// use std::default::Default;
+use std::fmt;
 use std::fmt::Display;
 use std::ops::AddAssign;
 
+// use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
@@ -48,10 +50,18 @@ trait PointRadiusTrait {
     fn point_radius(&mut self, val: Self::PrtT);
 }
 
-// #[derive(Clone)]
 enum PointRadiusEnum<T> {
     Val(T),
     F(Box<dyn Fn() -> T>),
+}
+
+impl<T> fmt::Debug for PointRadiusEnum<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("PointRadiusEnum").finish()
+    }
 }
 
 trait PathTrait: PointRadiusTrait // where
@@ -80,8 +90,8 @@ trait PathTrait: PointRadiusTrait // where
     // fn result(&self);
 }
 
-trait PathStreamTrait<T>: Stream<T> + PathTrait + PathResult
+trait PathStreamTrait<T>: Stream + PathTrait + PathResult
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
 }

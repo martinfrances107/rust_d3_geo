@@ -10,12 +10,13 @@ use crate::stream::Stream;
 
 use super::Streamable;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Streamable<T>
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable
     for GeometryCollection<T>
 {
-    type SC = Coordinate<T>;
+    // type SD = Self;
+    type T = T;
     #[inline]
-    fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
+    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
         for g in self {
             g.to_stream(stream);
         }

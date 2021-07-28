@@ -7,38 +7,38 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::StreamType;
-use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
+use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
-use crate::stream::stream_dst::StreamDst;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::Transform;
 
 /// Output of CircleGenertor::circle()
-#[derive(Clone, Debug)]
-pub struct CircleStream<T: CoordFloat + Default + FloatConst> {
+#[derive(Debug)]
+pub struct CircleStream<T: CoordFloat + FloatConst> {
     pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
     pub rotate: RotateRadiansEnum<T>,
     pub ring: Vec<Coordinate<T>>,
 }
 
-impl<T: CoordFloat + Default + FloatConst> Default for CircleStream<T> {
+impl<T: CoordFloat + FloatConst> Default for CircleStream<T> {
     #[inline]
     fn default() -> Self {
         Self {
             stream_type: StreamType::Polygon,
             coordinates: vec![vec![]],
-            rotate: RotateRadiansEnum::I(RotationIdentity::default()),
+            rotate: RotateRadiansEnum::I(RotationIdentity::<T>::default()),
             ring: vec![],
         }
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Stream<T>
-    for CircleStream<T>
-{
-    type C = Coordinate<T>;
-    fn point(&mut self, p: &Self::C, m: Option<u8>) {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Stream for CircleStream<T> {
+    type SC = Coordinate<T>;
+    // type ST = T;
+    // type SD = CircleStream<T>;
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         let x_rotated = &self.rotate.invert(&p);
         self.ring.push(Coordinate {
             x: x_rotated.x.to_degrees(),
@@ -51,8 +51,8 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     fn polygon_start(&mut self) {}
     fn polygon_end(&mut self) {}
 
-    #[inline]
-    fn get_dst(&self) -> StreamDst<T> {
-        StreamDst::Circle(self.clone())
-    }
+    // #[inline]
+    // fn get_dst(&self) -> Self {
+    //     self.clone()
+    // }
 }

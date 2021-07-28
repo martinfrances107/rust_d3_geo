@@ -7,7 +7,7 @@ use num_traits::FloatConst;
 
 use crate::length::LengthStream;
 
-pub fn distance<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst>(
+pub fn distance<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst>(
     a: &Coordinate<T>,
     b: &Coordinate<T>,
 ) -> T {

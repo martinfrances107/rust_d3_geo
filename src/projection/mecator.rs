@@ -1,39 +1,63 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
+// use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
+use super::projection::Projection;
+use super::scale::Scale;
 use crate::Transform;
 
-use super::projection::Projection;
-use super::projection_mutator::ProjectionMutator;
+// use super::ProjectionRawTrait;
 
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Copy, Debug)]
 pub struct MecatorRaw<T>
 where
-    T: CoordFloat + Default,
+    T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
 
-impl<T> MecatorRaw<T>
+impl<T> Default for MecatorRaw<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: CoordFloat,
 {
-    pub fn gen_projection_mutator() -> ProjectionMutator<MecatorRaw<T>, T> {
-        let tau = T::from(2).unwrap() * T::PI();
-        let o = MecatorRaw::default();
-        ProjectionMutator::from_projection_raw(o, None).scale(T::from(961).unwrap() / tau)
+    fn default() -> Self {
+        Self {
+            phantom: PhantomData::<T>,
+        }
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+impl<T> MecatorRaw<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    pub fn gen_projection_mutator<'a>() -> Projection<'a, MecatorRaw<T>, T> {
+        let tau = T::from(2).unwrap() * T::PI();
+        Projection::new(MecatorRaw::default(), None).scale(T::from(961).unwrap() / tau)
+    }
+}
+
+// impl<T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst> Transform
+//     for Rc<MecatorRaw<T>>
+// {
+//     type C = Coordinate<T>;
+//     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+//         self.transform(p)
+//     }
+//     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+//         self.invert(p)
+//     }
+// }
+
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
     for MecatorRaw<T>
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let two = T::from(2).unwrap();

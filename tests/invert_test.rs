@@ -9,12 +9,13 @@ mod invert_test {
     use rust_d3_geo::projection::mecator::MecatorRaw;
     use rust_d3_geo::projection::orthographic::OrthographicRaw;
     use rust_d3_geo::projection::projection_equal::projection_equal;
+    use rust_d3_geo::projection::projection_trait::ProjectionTrait;
     use rust_d3_geo::projection::stereographic::StereographicRaw;
     use rust_d3_geo::Transform;
 
-    fn symetric_invert<PM>(pm: PM)
+    fn symetric_invert<'a, PM>(pm: PM)
     where
-        PM: Transform<TcC = Coordinate<f64>>,
+        PM: Transform<C = Coordinate<f64>> + ProjectionTrait<'a>,
     {
         for p in vec![
             &Coordinate {

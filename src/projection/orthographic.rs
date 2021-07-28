@@ -9,32 +9,59 @@ use num_traits::AsPrimitive;
 use crate::Transform;
 
 use super::projection::Projection;
-use super::projection::StreamOrValueMaybe;
-use super::projection_mutator::ProjectionMutator;
+// use super::projection::StreamOrValueMaybe;
+// use super::ProjectionRawTrait;
+use crate::projection::projection_trait::ProjectionTrait;
+use crate::projection::scale::Scale;
+// use crate::stream::Stream;
+// use crate::Transform;
 
 /// Why the Phantom Data is required here...
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Copy, Debug)]
 pub struct OrthographicRaw<T>
 where
-    T: CoordFloat + Default,
+    T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
 
+impl<T> Default for OrthographicRaw<T>
+where
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            phantom: PhantomData::<T>,
+        }
+    }
+}
+
 impl<T> OrthographicRaw<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator() -> ProjectionMutator<OrthographicRaw<T>, T> {
-        ProjectionMutator::from_projection_raw(OrthographicRaw::default(), None)
+    pub fn gen_projection_mutator<'a>() -> Projection<'a, OrthographicRaw<T>, T> {
+        Projection::new(OrthographicRaw::default(), None)
             .scale(T::from(249.5f64).unwrap())
-            .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
+            // .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
+            .clip_angle(T::from(90f64 + 1e-6f64).unwrap())
     }
+}
 
+// impl<T> ProjectionRawTrait for OrthographicRaw<T>
+// // where
+// //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
+// {
+// }
+
+impl<T> OrthographicRaw<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
     #[inline]
     fn angle(z: T) -> T {
         z.asin()
@@ -59,10 +86,10 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
     for OrthographicRaw<T>
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         Coordinate {

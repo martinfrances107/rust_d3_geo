@@ -19,14 +19,14 @@ pub enum FnValMaybe<T> {
 
 pub enum FnValMaybe2D<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     // None,
     // FloatValue(Coordinate<T>),
     FloatFn(Box<dyn Fn(&CircleInArg) -> Coordinate<T>>),
 }
 
-// pub struct CircleInArg
+#[derive(Debug)]
 pub enum CircleInArg {
     None,
     Arg(),
@@ -37,7 +37,7 @@ pub enum StreamType {
     Polygon,
 }
 
-pub trait CircleTrait<T: CoordFloat + Default + FloatConst> {
+pub trait CircleTrait<T: CoordFloat + FloatConst> {
     fn center<'a>(self, center: Coordinate<T>) -> Self;
     fn get_center(&self) -> Coordinate<T>;
     fn radius(self, radius: T) -> Self;

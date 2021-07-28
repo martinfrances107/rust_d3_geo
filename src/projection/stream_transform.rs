@@ -1,102 +1,139 @@
-use std::fmt::Display;
-use std::ops::AddAssign;
-
+use derivative::Derivative;
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
+use std::fmt::Display;
+use std::ops::AddAssign;
+// use std::rc::Rc;
 
-use crate::clip::antimeridian::ClipAntimeridian;
-use crate::clip::clip::Clip;
-use crate::rotation::rotate_radians_transform::RotateRadiansEnum;
-use crate::rotation::rotation_identity::RotationIdentity;
-use crate::stream::stream_dst::StreamDst;
+// use crate::clip::antimeridian::ClipAntimeridian;
+// use crate::clip::interpolate_trait::Interpolate;
+// use crate::clip::Clip;
+use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
+// use crate::rotation::rotation_identity::RotationIdentity;
+// use crate::stream::stream_in_trait::StreamCombo;
+// use crate::stream::stream_in_trait::StreamIn;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::Transform;
 
-#[derive(Clone, Debug)]
+// use super::ProjectionRawTrait;
+
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub struct StreamTransform<
-    P: Clone,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-> {
-    pub transform: RotateRadiansEnum<T>,
-    pub stream: Clip<P, T>,
+    'a,
+    // STREAM: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+>
+//where
+//     dyn Clip<T>: Clip<T, C = Coordinate<T>> + Interpolate<T, C = Coordinate<T>>,
+{
+    #[derivative(Debug = "ignore")]
+    pub stream: Box<dyn Stream<SC = Coordinate<T>>>,
+    pub transform: &'a RotateRadiansEnum<T>,
 }
 
-impl<'a, P, T> Default for StreamTransform<P, T>
-where
-    P: Clone + Default + Transform<TcC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-{
-    fn default() -> Self {
-        Self {
-            transform: RotateRadiansEnum::I(RotationIdentity::default()),
-            stream: ClipAntimeridian::gen_clip(),
-        }
-    }
-}
+// impl<STREAM, T> Default for StreamTransform<STREAM, T>
+// where
+//     // P: Transform<TcC = Coordinate<T>>,
+//     // PR: ProjectionRawTrait,
+//     STREAM: Stream<SC = Coordinate<T>> + Default,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
+// {
+//     fn default() -> Self {
+//         Self {
+//             transform: RotateRadiansEnum::I(RotationIdentity::default()),
+//             stream: STREAM::default(),
+//         }
+//     }
+// }
 
-impl<P: Clone, T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst>
-    StreamTransform<P, T>
-{
-    #[inline]
-    pub fn stream_in(&mut self, stream: Clip<P, T>) {
-        self.stream = stream;
-    }
-}
+// impl<STREAM, T> StreamIn for StreamTransform<STREAM, T>
+// where
+//     STREAM: Stream<SC = Coordinate<T>> + Default,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
+// {
+//     // type C = Coordinate<T>;
+//     // type T = T;
+//     // type SD = SD;
+//     type SInput = STREAM;
+//     #[inline]
+//     fn stream_in(&mut self, stream: STREAM) {
+//         self.stream = stream;
+//     }
+// }
 
 impl<
-        P: Clone + Default + Transform<TcC = Coordinate<T>>,
-        T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
-    > StreamTransform<P, T>
+        'a,
+        // Rc<PR>: ProjectionRawTrait + Transform<C=Coordinate<T>>,
+        // SD,
+        // STREAM: Stream<SC = Coordinate<T>>,
+        // STREAM: Stream<SC = Coordinate<T>>,
+        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    > StreamTransform<'a, T>
 {
     #[inline]
-    pub fn new(transform_in: Option<RotateRadiansEnum<T>>) -> StreamTransform<P, T> {
+    pub fn new(
+        // projection_raw: &PR,
+        transform: &'a RotateRadiansEnum<T>,
+        stream: Box<dyn Stream<SC = Coordinate<T>>>,
+    ) -> StreamTransform<T>
+where
+        // Rc<PR>: Transform<C = Coordinate<T>>,
+        // PR: Transform<C = Coordinate<T>>,
+        // STREAM: Stream<SC = Coordinate<T>>,
+    {
         {
-            let transform: RotateRadiansEnum<T>;
+            // let transform: RotateRadiansEnum<T>;
 
-            match transform_in {
-                Some(t) => {
-                    transform = t.clone();
-                }
-                None => {
-                    transform = RotateRadiansEnum::I(RotationIdentity::<T>::default());
-                }
-            }
+            // match transform_in {
+            //     Some(t) => {
+            //         transform = t;
+            //     }
+            //     None => {
+            //         transform = RotateRadiansEnum::I(RotationIdentity::<T>::default());
+            //     }
+            // }
 
-            Self {
-                stream: ClipAntimeridian::gen_clip(),
-                transform,
-            }
+            Self { stream, transform }
         }
     }
 }
 
-impl<'a, P: Clone, T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst>
-    Transform for StreamTransform<P, T>
+impl<'a, T> Transform for StreamTransform<'a, T>
+where
+    // PR: Transform<C = Coordinate<T>>,
+    // STREAM: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type TcC = Coordinate<T>;
-    fn transform(&self, p: &Self::TcC) -> Self::TcC {
+    type C = Coordinate<T>;
+    fn transform(&self, p: &Self::C) -> Self::C {
         self.transform.transform(p)
     }
-    fn invert(&self, p: &Self::TcC) -> Self::TcC {
+    fn invert(&self, p: &Self::C) -> Self::C {
         self.transform.invert(p)
     }
 }
 
-impl<'a, P, T> Stream<T> for StreamTransform<P, T>
+impl<'a, T> Stream for StreamTransform<'a, T>
 where
-    P: Clone + Default + Transform<TcC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    // PR: Transform<C = Coordinate<T>>,
+    // STREAM: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type SC = Coordinate<T>;
+
+    // #[inline]
+    // fn get_dst(
+    //     &self,
+    // ) -> dyn StreamDst<SC = Self::SC, SD = Self::SD, T = Self::ST, ST = Self::ST, Out = Self::SD>
+    // {
+    //     self.stream.get_dst()
+    // }
 
     #[inline]
-    fn get_dst(&self) -> StreamDst<T> {
-        self.stream.get_dst()
-    }
-
-    #[inline]
-    fn point(&mut self, p: &Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         // Warning the javascript version return the value below but I think it break the implied spec!!!!
         self.stream.point(&self.transform(&p), m);
     }

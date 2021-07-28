@@ -33,6 +33,7 @@ impl<T> Default for ScaleTranslateRotateEnum<T>
 where
     T: CoordFloat + FloatConst,
 {
+    #[inline]
     fn default() -> Self {
         ScaleTranslateRotateEnum::Blank
     }
@@ -42,13 +43,15 @@ impl<T: CoordFloat> Transform for ScaleTranslateRotateEnum<T>
 where
     T: FloatConst,
 {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
+
+    #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
             ScaleTranslateRotateEnum::ST(st) => st.transform(p),
             ScaleTranslateRotateEnum::STR(str) => str.transform(p),
             ScaleTranslateRotateEnum::Blank => {
-                panic!("calling transform on blank.")
+                panic!("calling transform() on blank.")
             }
         }
     }
@@ -59,7 +62,7 @@ where
             ScaleTranslateRotateEnum::ST(st) => st.invert(p),
             ScaleTranslateRotateEnum::STR(str) => str.invert(p),
             ScaleTranslateRotateEnum::Blank => {
-                panic!("calling transform on blank.")
+                panic!("calling invert() on blank.")
             }
         }
     }
@@ -96,7 +99,7 @@ impl<T: CoordFloat + FloatConst> ScaleTranslateRotate<T> {
 }
 
 impl<T: CoordFloat> Transform for ScaleTranslateRotate<T> {
-    type TcC = Coordinate<T>;
+    type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;

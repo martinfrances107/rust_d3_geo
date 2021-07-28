@@ -10,7 +10,9 @@ use geo::Geometry;
 
 pub mod sphere;
 
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::{Stream, Streamable};
+
 use sphere::Sphere;
 
 #[derive(Clone, Debug)]
@@ -56,19 +58,21 @@ where
 #[derive(Clone, Debug)]
 pub enum DataObject<T>
 where
-    T: CoordFloat + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    Sphere(Sphere),
+    Sphere(Sphere<T>),
     Geometry(Geometry<T>),
     Collection(Collection<T>),
 }
 
-impl<T> Streamable<T> for DataObject<T>
+impl<T> Streamable for DataObject<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
-    fn to_stream(&self, stream: &mut impl Stream<T, C = Self::SC>) {
+    type T = T;
+    // type SD = DataObject<T>;
+    // type SD = Self::SD;
+    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
         match self {
             DataObject::Collection(Collection::Feature { feature: _ }) => {
                 todo!("fixme");

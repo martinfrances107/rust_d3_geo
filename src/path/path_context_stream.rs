@@ -11,7 +11,7 @@ use super::path_string::PathString;
 use super::PathResult;
 use super::PathResultEnum;
 use super::PointRadiusTrait;
-use crate::stream::stream_dst::StreamDst;
+// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
 #[derive(Clone, Debug)]
@@ -25,7 +25,7 @@ where
 
 impl<T> PathResult for PathContextStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type Out = Option<PathResultEnum<T>>;
     fn result(&mut self) -> Self::Out {
@@ -38,7 +38,7 @@ where
 
 impl<T> PointRadiusTrait for PathContextStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type PrtT = Option<T>;
     fn point_radius(&mut self, val: Self::PrtT) {
@@ -49,13 +49,13 @@ where
     }
 }
 
-impl<T> Stream<T> for PathContextStream<T>
+impl<T> Stream for PathContextStream<T>
 where
-    T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Default + Display,
+    T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display,
 {
-    type C = Coordinate<T>;
+    type SC = Coordinate<T>;
 
-    fn point(&mut self, p: &Self::C, m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         match self {
             PathContextStream::PC(pc) => pc.point(p, m),
             PathContextStream::PS(ps) => ps.point(p, m),
@@ -91,10 +91,10 @@ where
             PathContextStream::PS(ps) => ps.polygon_end(),
         }
     }
-    fn get_dst(&self) -> StreamDst<T> {
-        match self {
-            PathContextStream::PC(pc) => pc.get_dst(),
-            PathContextStream::PS(ps) => ps.get_dst(),
-        }
-    }
+    // fn get_dst(&self) -> Self {
+    //     match self {
+    //         PathContextStream::PC(pc) => pc.get_dst(),
+    //         PathContextStream::PS(ps) => ps.get_dst(),
+    //     }
+    // }
 }
