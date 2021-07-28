@@ -6,18 +6,19 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
-// use super::projection::Projection;
+use super::projection::Projection;
 // use super::projection::StreamOrValueMaybe;
-use crate::Transform;
-
 use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
+use crate::projection::projection_trait::ProjectionTrait;
+use crate::projection::scale::Scale;
+use crate::Transform;
 
 /// Why the Phantom Data is required here...
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Copy, Clone, Debug, Default)]
+#[derive(Copy, Clone, Debug)]
 pub struct AzimuthalEqualAreaRaw<T>
 where
     T: CoordFloat,
@@ -25,16 +26,27 @@ where
     phantom: PhantomData<T>,
 }
 
+impl<T> Default for AzimuthalEqualAreaRaw<T>
+where
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            phantom: PhantomData::<T>,
+        }
+    }
+}
 impl<T> AzimuthalEqualAreaRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    // #[inline]
-    // pub fn gen_projection_mutator() -> Projection<AzimuthalEqualAreaRaw<T>, T> {
-    //     Projection::new(AzimuthalEqualAreaRaw::default(), None)
-    //         .scale(T::from(124.75f64).unwrap())
-    //         .clip_angle(StreamOrValueMaybe::Value(T::from(180f64 - 1e-3).unwrap()))
-    // }
+    #[inline]
+    pub fn gen_projection_mutator<'a>() -> Projection<'a, AzimuthalEqualAreaRaw<T>, T> {
+        Projection::new(AzimuthalEqualAreaRaw::default(), None)
+            .scale(T::from(124.75f64).unwrap())
+            // .clip_angle(StreamOrValueMaybe::Value(T::from(180f64 - 1e-3).unwrap()))
+            .clip_angle(T::from(180f64 - 1e-3).unwrap())
+    }
 
     #[inline]
     fn cxcy(cxcy: T) -> T {

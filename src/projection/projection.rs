@@ -249,9 +249,9 @@ where
     }
 
     // TODO dynamic cast and unwrap - Must find a better way.
-    fn center(self, p: Coordinate<T>) -> Projection<'a, PR, T> {
-        // self.lambda = (p[0] % F::from_u16(360u16).unwrap()).to_radians();
-        // self.phi = (p[1] % F::from_u16(360u16).unwrap()).to_radians();
+    fn center(mut self, p: Coordinate<T>) -> Projection<'a, PR, T> {
+        self.lambda = (p.x % T::from(360u16).unwrap()).to_radians();
+        self.phi = (p.y % T::from(360u16).unwrap()).to_radians();
         self.recenter()
     }
 }
@@ -569,9 +569,10 @@ where
         );
 
         // todo!("must refactor the stream pipeline");
-        // self.rotate = rotate_radians_transform(self.delta_lambda, self.delta_phi, self.delta_gamma);
-        // self.project_transform = Compose::new(self.projection_raw.clone(), transform);
-        // self.project_rotate_transform = Compose::new(self.rotate, self.project_transform);
+        self.rotate = rotate_radians_transform(self.delta_lambda, self.delta_phi, self.delta_gamma);
+        self.project_transform = Compose::new(self.projection_raw.clone(), transform);
+        self.project_rotate_transform =
+            Compose::new(self.rotate.clone(), self.project_transform.clone());
         // self.project_resample = gen_resample_node(self.project_transform.clone(), T::zero());
 
         self.reset()
@@ -620,8 +621,8 @@ where
         self.recenter()
     }
 
-    fn precision(self, delta: &'a T) -> Projection<'a, PR, T> {
-        // self.delta2 = *delta * *delta;
+    fn precision(mut self, delta: &'a T) -> Projection<'a, PR, T> {
+        self.delta2 = *delta * *delta;
         // self.project_resample = gen_resample_node(self.projection_raw, self.delta2);
         self.reset()
     }

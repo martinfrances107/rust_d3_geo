@@ -17,22 +17,23 @@ pub mod rejoin;
 
 use std::cell::RefCell;
 // use std::cmp::Ordering;
-use std::fmt::Debug;
-use std::fmt::Display;
-use std::ops::AddAssign;
+// use std::fmt::Debug;
+// use std::fmt::Display;
+// use std::ops::AddAssign;
 use std::rc::Rc;
 
-use geo::CoordFloat;
-use geo::Coordinate;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
+// use geo::CoordFloat;
+// use geo::Coordinate;
+// use num_traits::AsPrimitive;
+// use num_traits::FloatConst;
 // use num_traits::Float;
 
 // use crate::clip::compare_intersections::compare_intersections;
 use crate::clip::rejoin::Rejoin;
-use crate::path::PathResult;
-use crate::path::PathResultEnum;
+// use crate::path::PathResult;
+// use crate::path::PathResultEnum;
 // use crate::polygon_contains::contains;
+
 use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
 
@@ -40,83 +41,88 @@ use crate::stream::Stream;
 // use crate::clip::line_elem::LineElem;
 // use crate::stream::Stream;
 // use crate::clip::rejoin::link::link;
-use clean::CleanEnum;
+// use clean::CleanEnum;
 use clip_buffer::ClipBuffer;
 // use rejoin::intersection::Intersection;
 // use crate::projection::ProjectionRawTrait;
 // use crate::stream::stream_dst::StreamDst;
 // use crate::point_equal::point_equal;
-use clip_base::ClipBase;
+// use clip_base::ClipBase;
 use interpolate_trait::Interpolate;
 use point_visible_trait::PointVisible;
 // pub trait Clip: PointVisible + Interpolate + Stream
 use clean::Clean;
-use line_elem::LineElem;
+// use line_elem::LineElem;
 
-// Must be implemented individually by each struct implmenteing Clip!
-// Breaks DRY.
-pub trait ClipBaseState {
-    type CBST;
-    type L;
-    type SINK;
-    fn get_base(self) -> ClipBase<Self::L, Self::SINK, Self::CBST>
-    where
-        <Self as ClipBaseState>::CBST: AddAssign
-            + AsPrimitive<<Self as ClipBaseState>::CBST>
-            + CoordFloat
-            + Display
-            + FloatConst;
-    fn ring_clear(&mut self);
-    fn ring_reset(&mut self);
-    fn set_polygon_started(&mut self, started: bool);
-    fn set_use_point_line(&mut self, u: bool);
-    fn set_use_ring_start(&mut self, u: bool);
-    fn set_use_ring_end(&mut self, u: bool);
-    fn polygon_clear(&mut self);
-    fn polygon_push(&mut self, v: Vec<LineElem<Self::CBST>>)
-    where
-        <Self as ClipBaseState>::CBST: AddAssign
-            + AsPrimitive<<Self as ClipBaseState>::CBST>
-            + CoordFloat
-            + Display
-            + FloatConst;
-    fn ring_push(&mut self, l: LineElem<Self::CBST>)
-    where
-        <Self as ClipBaseState>::CBST: AddAssign
-            + AsPrimitive<<Self as ClipBaseState>::CBST>
-            + CoordFloat
-            + Display
-            + FloatConst;
-    fn ring_pop(&mut self) -> Option<LineElem<Self::CBST>>
-    where
-        <Self as ClipBaseState>::CBST: AddAssign
-            + AsPrimitive<<Self as ClipBaseState>::CBST>
-            + CoordFloat
-            + Display
-            + FloatConst;
-    fn ring_sink_clean(&mut self) -> CleanEnum;
-    fn segments_clear(&mut self);
-}
+// // Must be implemented individually by each struct implmenteing Clip!
+// // Breaks DRY.
+// pub trait ClipBaseState {
+//     type CBST;
+//     type L;
+//     type SINK;
+//     fn get_base(self) -> ClipBase<Self::L, Self::SINK, Self::CBST>
+//     where
+//         <Self as ClipBaseState>::CBST: AddAssign
+//             + AsPrimitive<<Self as ClipBaseState>::CBST>
+//             + CoordFloat
+//             + Display
+//             + FloatConst;
+//     fn ring_clear(&mut self);
+//     fn ring_reset(&mut self);
+//     fn set_polygon_started(&mut self, started: bool);
+//     fn set_use_point_line(&mut self, u: bool);
+//     fn set_use_ring_start(&mut self, u: bool);
+//     fn set_use_ring_end(&mut self, u: bool);
+//     fn polygon_clear(&mut self);
+//     fn polygon_push(&mut self, v: Vec<LineElem<Self::CBST>>)
+//     where
+//         <Self as ClipBaseState>::CBST: AddAssign
+//             + AsPrimitive<<Self as ClipBaseState>::CBST>
+//             + CoordFloat
+//             + Display
+//             + FloatConst;
+//     fn ring_push(&mut self, l: LineElem<Self::CBST>)
+//     where
+//         <Self as ClipBaseState>::CBST: AddAssign
+//             + AsPrimitive<<Self as ClipBaseState>::CBST>
+//             + CoordFloat
+//             + Display
+//             + FloatConst;
+//     fn ring_pop(&mut self) -> Option<LineElem<Self::CBST>>
+//     where
+//         <Self as ClipBaseState>::CBST: AddAssign
+//             + AsPrimitive<<Self as ClipBaseState>::CBST>
+//             + CoordFloat
+//             + Display
+//             + FloatConst;
+//     fn ring_sink_clean(&mut self) -> CleanEnum;
+//     fn segments_clear(&mut self);
+// }
 
-pub trait ClipBaseOps<T>
-where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Debug + FloatConst,
+/// This trait is connected with the submodule
+/// clip_ops_macro_derive
+pub trait ClipOpsMacro
+// where
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Debug + FloatConst,
 {
-    type CBOT;
-    type L;
-    type SINK;
+    type COT;
+    // type L;
+    // type SINK;
 
-    fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>);
+    fn hello_macro(&self) -> u32 {
+        42
+    }
+    fn point_default(&mut self, p: &Self::COT, m: Option<u8>);
 
-    fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>);
+    fn point_line(&mut self, p: &Self::COT, m: Option<u8>);
     fn line_start_default(&mut self);
     fn line_end_default(&mut self);
-    fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>);
+    fn point_ring(&mut self, p: &Self::COT, m: Option<u8>);
     fn ring_start(&mut self);
     fn ring_end(&mut self);
 }
 
-pub trait Clip: ClipBaseState + PointVisible + Interpolate + Rejoin + Stream + StreamIn {}
+pub trait Clip: PointVisible + Interpolate + Rejoin + Stream + StreamIn {}
 
 pub trait LCB: Clean + Stream {
     // type T;
@@ -124,180 +130,180 @@ pub trait LCB: Clean + Stream {
     fn link_to_stream(&mut self, stream: Rc<RefCell<Self::STREAM>>);
 }
 
-/// Impl for dyn Clip<> this is common to ClipAntimeridian and ClipCircle.
-impl<L: LCB, S, T> ClipBaseOps<T>
-    for &mut dyn Clip<
-        CBST = T,
-        L = L,
-        IT = T,
-        IC = Coordinate<T>,
-        PVC = Coordinate<T>,
-        T = T,
-        SINK = S,
-        SInput = S,
-        SC = Coordinate<T>,
-    >
-where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
-    // MutStream: Stream<SC = Coordinate<T>>,
-    // C: Clip,
-    // SINK: Stream<SC = Coordinate<T>> + Default,
-    L: LCB<SC = Coordinate<T>>,
-    S: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-    type CBOT = T;
-    type L = L;
-    type SINK = S;
-    #[inline]
-    fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("clip point_default");
-        if self.point_visible(p, None) {
-            // self.get_base().sink.borrow_mut().point(p, m);
-        }
-    }
+// Impl for dyn Clip<> this is common to ClipAntimeridian and ClipCircle.
+// impl<L: LCB, S, T> ClipBaseOps<T>
+//     for &mut dyn Clip<
+//         CBST = T,
+//         L = L,
+//         IT = T,
+//         IC = Coordinate<T>,
+//         PVC = Coordinate<T>,
+//         T = T,
+//         SINK = S,
+//         SInput = S,
+//         SC = Coordinate<T>,
+//     >
+// where
+//     // Rc<PR>: Transform<C = Coordinate<T>>,
+//     // PR: Transform<C = Coordinate<T>>,
+//     // MutStream: Stream<SC = Coordinate<T>>,
+//     // C: Clip,
+//     // SINK: Stream<SC = Coordinate<T>> + Default,
+//     L: LCB<SC = Coordinate<T>>,
+//     S: Stream<SC = Coordinate<T>> + Default,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+// {
+//     type CBOT = T;
+//     type L = L;
+//     type SINK = S;
+//     #[inline]
+//     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+//         println!("clip point_default");
+//         if self.point_visible(p, None) {
+//             // self.get_base().sink.borrow_mut().point(p, m);
+//         }
+//     }
 
-    #[inline]
-    fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("clip point_line");
-        // self.get_base().line.point(p, m);
-    }
+//     #[inline]
+//     fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+//         println!("clip point_line");
+//         // self.get_base().line.point(p, m);
+//     }
 
-    #[inline]
-    fn line_start_default(&mut self) {
-        println!("clip line_start_default");
-        // let base = self.get_base();
-        // self.point_fn = Self::point_line;
-        self.set_use_point_line(true);
-        self.line_start();
-    }
+//     #[inline]
+//     fn line_start_default(&mut self) {
+//         println!("clip line_start_default");
+//         // let base = self.get_base();
+//         // self.point_fn = Self::point_line;
+//         self.set_use_point_line(true);
+//         self.line_start();
+//     }
 
-    #[inline]
-    fn line_end_default(&mut self) {
-        println!("clip line_end_default");
-        // self.point_fn = Self::point_default;
-        self.set_use_point_line(false);
-        // self.get_base().line.line_end();
-    }
+//     #[inline]
+//     fn line_end_default(&mut self) {
+//         println!("clip line_end_default");
+//         // self.point_fn = Self::point_default;
+//         self.set_use_point_line(false);
+//         // self.get_base().line.line_end();
+//     }
 
-    #[inline]
-    fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("clip point_ring {:?} {:?}", p, m);
-        // println!("about to ring/push - ring_sink ");
-        // println!("self.base {:#?} ", self.base.ring_sink);
-        // let mut base = self.get_base();
-        // base.ring.push(LineElem { p: *p, m });
-        // base.ring_sink.point(p, m);
-        println!("clip point_ring -- end");
-    }
+//     #[inline]
+//     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+//         println!("clip point_ring {:?} {:?}", p, m);
+//         // println!("about to ring/push - ring_sink ");
+//         // println!("self.base {:#?} ", self.base.ring_sink);
+//         // let mut base = self.get_base();
+//         // base.ring.push(LineElem { p: *p, m });
+//         // base.ring_sink.point(p, m);
+//         println!("clip point_ring -- end");
+//     }
 
-    #[inline]
-    fn ring_start(&mut self) {
-        println!("clip ring_start");
-        // self.get_base().ring_sink.line_start();
-        // self.base.ring.clear();
-        self.ring_clear();
-        println!("end clip ring_start");
-    }
+//     #[inline]
+//     fn ring_start(&mut self) {
+//         println!("clip ring_start");
+//         // self.get_base().ring_sink.line_start();
+//         // self.base.ring.clear();
+//         self.ring_clear();
+//         println!("end clip ring_start");
+//     }
 
-    fn ring_end(&mut self) {
-        // let mut base = self.get_base();
-        // println!("clip ring_end  entry {:#?}", base.ring);
-        // let le = base.ring[0];
-        // javascript version drops m here.
-        // self.point_ring(&le.p, None);
-        // let mut base = self.get_base();
-        // base.ring_sink.line_end();
+//     fn ring_end(&mut self) {
+//         // let mut base = self.get_base();
+//         // println!("clip ring_end  entry {:#?}", base.ring);
+//         // let le = base.ring[0];
+//         // javascript version drops m here.
+//         // self.point_ring(&le.p, None);
+//         // let mut base = self.get_base();
+//         // base.ring_sink.line_end();
 
-        // let clean = self.base.ring_sink.clean();
-        let clean = self.ring_sink_clean();
+//         // let clean = self.base.ring_sink.clean();
+//         let clean = self.ring_sink_clean();
 
-        // let mut ring_segments = match self.get_base().ring_buffer.borrow_mut().result() {
-        //     Some(PathResultEnum::ClipBufferOutput(result)) => {
-        //         // Can I find a way of doing this with the expense of dynamic conversion.
-        //         result
-        //     }
-        //     Some(_) => {
-        //         panic!("None buffer ");
-        //     }
-        //     None => panic!("was expecting something."),
-        // };
+//         // let mut ring_segments = match self.get_base().ring_buffer.borrow_mut().result() {
+//         //     Some(PathResultEnum::ClipBufferOutput(result)) => {
+//         //         // Can I find a way of doing this with the expense of dynamic conversion.
+//         //         result
+//         //     }
+//         //     Some(_) => {
+//         //         panic!("None buffer ");
+//         //     }
+//         //     None => panic!("was expecting something."),
+//         // };
 
-        // println!("clip ring_end() - ring segments {:#?}", ring_segments);
-        // panic!("ring_end buffer result");
-        // let n = ring_segments.len();
-        // let m;
-        let mut point: Coordinate<T>;
+//         // println!("clip ring_end() - ring segments {:#?}", ring_segments);
+//         // panic!("ring_end buffer result");
+//         // let n = ring_segments.len();
+//         // let m;
+//         let mut point: Coordinate<T>;
 
-        self.ring_pop();
-        // self.base.polygon.push(self.base.ring.clone());
-        // self.polygon_push(self.get_base().ring.clone());
-        // in this javascript version this value is set to NULL
-        // is my assumption that this is valid true?
-        // self.ring = None;
-        // self.base.ring = Vec::new();
-        self.ring_reset();
+//         self.ring_pop();
+//         // self.base.polygon.push(self.base.ring.clone());
+//         // self.polygon_push(self.get_base().ring.clone());
+//         // in this javascript version this value is set to NULL
+//         // is my assumption that this is valid true?
+//         // self.ring = None;
+//         // self.base.ring = Vec::new();
+//         self.ring_reset();
 
-        // if n == 0 {
-        //     return;
-        // }
-        // println!("no intersections n, c {:?} {:?}", n, clean);
-        // No intersections.
-        // match clean {
-        //     CleanEnum::NoIntersections => {
-        //         println!("about to clean good path");
-        //         // panic!("on the good path");
-        //         // let segment = ring_segments
-        //         //     .pop_front()
-        //         //     .expect("We have previously checked that the .len() is >0 ( n ) ");
-        //         // m = segment.len() - 1;
-        //         if m > 0 {
-        //             let base = self.get_base();
-        //             if !base.polygon_started {
-        //                 base.sink.borrow_mut().polygon_start();
-        //                 // self.base.polygon_started = true;
-        //                 self.set_polygon_started(true);
-        //             }
-        //             self.get_base().sink.borrow_mut().line_start();
-        //             for i in 0..m {
-        //                 // point = segment[i].p;
-        //                 // self.get_base().sink.borrow_mut().point(&point, None);
-        //             }
-        //             // self.get_base().sink.borrow_mut().line_end();
-        //         }
-        //         return;
-        //     }
-        //     // CleanEnum::IntersectionsRejoin => {
-        //     //     // Rejoin connected segments.
-        //     //     // TODO reuse ringBuffer.rejoin()?
-        //     //     if n > 1 {
-        //     //         println!("funny buisness");
-        //     //         println!("ring_segemtns before fb {:#?}", ring_segments);
-        //     //         let pb = [
-        //     //             ring_segments.pop_back().unwrap(),
-        //     //             ring_segments.pop_front().unwrap(),
-        //     //         ]
-        //     //         .concat();
-        //     //         ring_segments.push_back(pb);
-        //     //     }
-        //     // }
-        //     CleanEnum::IntersectionsOrEmpty => {
-        //         // No-op
-        //     }
-        //     CleanEnum::Undefined => {
-        //         panic!("must be defined by now.")
-        //     }
-        // }
-        // println!("final segments before filter {:#?}", ring_segments);
-        // panic!("final segments");
-        // let filtered: Vec<Vec<LineElem<T>>> = ring_segments
-        //     .into_iter()
-        //     .filter(|segment| segment.len() > 1)
-        //     .collect();
-        // self.get_base().segments.push_back(filtered);
-    }
-}
+//         // if n == 0 {
+//         //     return;
+//         // }
+//         // println!("no intersections n, c {:?} {:?}", n, clean);
+//         // No intersections.
+//         // match clean {
+//         //     CleanEnum::NoIntersections => {
+//         //         println!("about to clean good path");
+//         //         // panic!("on the good path");
+//         //         // let segment = ring_segments
+//         //         //     .pop_front()
+//         //         //     .expect("We have previously checked that the .len() is >0 ( n ) ");
+//         //         // m = segment.len() - 1;
+//         //         if m > 0 {
+//         //             let base = self.get_base();
+//         //             if !base.polygon_started {
+//         //                 base.sink.borrow_mut().polygon_start();
+//         //                 // self.base.polygon_started = true;
+//         //                 self.set_polygon_started(true);
+//         //             }
+//         //             self.get_base().sink.borrow_mut().line_start();
+//         //             for i in 0..m {
+//         //                 // point = segment[i].p;
+//         //                 // self.get_base().sink.borrow_mut().point(&point, None);
+//         //             }
+//         //             // self.get_base().sink.borrow_mut().line_end();
+//         //         }
+//         //         return;
+//         //     }
+//         //     // CleanEnum::IntersectionsRejoin => {
+//         //     //     // Rejoin connected segments.
+//         //     //     // TODO reuse ringBuffer.rejoin()?
+//         //     //     if n > 1 {
+//         //     //         println!("funny buisness");
+//         //     //         println!("ring_segemtns before fb {:#?}", ring_segments);
+//         //     //         let pb = [
+//         //     //             ring_segments.pop_back().unwrap(),
+//         //     //             ring_segments.pop_front().unwrap(),
+//         //     //         ]
+//         //     //         .concat();
+//         //     //         ring_segments.push_back(pb);
+//         //     //     }
+//         //     // }
+//         //     CleanEnum::IntersectionsOrEmpty => {
+//         //         // No-op
+//         //     }
+//         //     CleanEnum::Undefined => {
+//         //         panic!("must be defined by now.")
+//         //     }
+//         // }
+//         // println!("final segments before filter {:#?}", ring_segments);
+//         // panic!("final segments");
+//         // let filtered: Vec<Vec<LineElem<T>>> = ring_segments
+//         //     .into_iter()
+//         //     .filter(|segment| segment.len() > 1)
+//         //     .collect();
+//         // self.get_base().segments.push_back(filtered);
+//     }
+// }
 
 // Warning this breaks DRY, the stream is common to both ClipAntimeridian and
 // ClipCircle!!!!

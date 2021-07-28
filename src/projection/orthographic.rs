@@ -8,15 +8,19 @@ use num_traits::AsPrimitive;
 
 use crate::Transform;
 
-// use super::projection::Projection;
+use super::projection::Projection;
 // use super::projection::StreamOrValueMaybe;
 // use super::ProjectionRawTrait;
+use crate::projection::projection_trait::ProjectionTrait;
+use crate::projection::scale::Scale;
+// use crate::stream::Stream;
+// use crate::Transform;
 
 /// Why the Phantom Data is required here...
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Copy, Debug)]
 pub struct OrthographicRaw<T>
 where
     T: CoordFloat,
@@ -24,17 +28,29 @@ where
     phantom: PhantomData<T>,
 }
 
-// impl<T> ProjectionRawTrait for OrthographicRaw<T>
-// where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
-// {
-//     // #[inline]
-//     // fn gen_projection_mutator() -> Projection<OrthographicRaw<T>, T> {
-//     //     Projection::new(OrthographicRaw::default(), None)
-//     //         .scale(T::from(249.5f64).unwrap())
-//     //         .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
-//     // }
-// }
+impl<T> Default for OrthographicRaw<T>
+where
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            phantom: PhantomData::<T>,
+        }
+    }
+}
+
+impl<T> OrthographicRaw<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    #[inline]
+    pub fn gen_projection_mutator<'a>() -> Projection<'a, OrthographicRaw<T>, T> {
+        Projection::new(OrthographicRaw::default(), None)
+            .scale(T::from(249.5f64).unwrap())
+            // .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
+            .clip_angle(T::from(90f64 + 1e-6f64).unwrap())
+    }
+}
 
 // impl<T> ProjectionRawTrait for OrthographicRaw<T>
 // // where

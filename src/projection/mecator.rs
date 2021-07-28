@@ -7,13 +7,13 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
-// use super::projection::Projection;
-// use super::scale::Scale;
+use super::projection::Projection;
+use super::scale::Scale;
 use crate::Transform;
 
 // use super::ProjectionRawTrait;
 
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Copy, Debug)]
 pub struct MecatorRaw<T>
 where
     T: CoordFloat,
@@ -21,21 +21,26 @@ where
     phantom: PhantomData<T>,
 }
 
-// impl<T> ProjectionRawTrait for Rc<MecatorRaw<T>>
-// // where
-// //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
-// {
-// }
+impl<T> Default for MecatorRaw<T>
+where
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            phantom: PhantomData::<T>,
+        }
+    }
+}
 
-// impl<T> MecatorRaw<T>
-// where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
-// {
-//     pub fn gen_projection_mutator<'a>() -> Projection<'a, MecatorRaw<T>, T> {
-//         let tau = T::from(2).unwrap() * T::PI();
-//         Projection::new(MecatorRaw::default(), None).scale(T::from(961).unwrap() / tau)
-//     }
-// }
+impl<T> MecatorRaw<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    pub fn gen_projection_mutator<'a>() -> Projection<'a, MecatorRaw<T>, T> {
+        let tau = T::from(2).unwrap() * T::PI();
+        Projection::new(MecatorRaw::default(), None).scale(T::from(961).unwrap() / tau)
+    }
+}
 
 // impl<T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst> Transform
 //     for Rc<MecatorRaw<T>>

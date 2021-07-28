@@ -40,7 +40,7 @@ where
 
 impl<T> StereographicRaw<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
     pub fn gen_projection_mutator<'a>() -> Projection<'a, StereographicRaw<T>, T>
@@ -63,7 +63,7 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
     for StereographicRaw<T>
 {
     type C = Coordinate<T>;

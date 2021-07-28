@@ -51,7 +51,7 @@ where
             ScaleTranslateRotateEnum::ST(st) => st.transform(p),
             ScaleTranslateRotateEnum::STR(str) => str.transform(p),
             ScaleTranslateRotateEnum::Blank => {
-                panic!("calling transform on blank.")
+                panic!("calling transform() on blank.")
             }
         }
     }
@@ -62,7 +62,7 @@ where
             ScaleTranslateRotateEnum::ST(st) => st.invert(p),
             ScaleTranslateRotateEnum::STR(str) => str.invert(p),
             ScaleTranslateRotateEnum::Blank => {
-                panic!("calling transform on blank.")
+                panic!("calling invert() on blank.")
             }
         }
     }

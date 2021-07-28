@@ -35,7 +35,7 @@ use super::clip_base::ClipBase;
 // use super::compare_intersections::compare_intersections;
 use super::line_elem::LineElem;
 use super::Clip;
-use super::ClipBaseState;
+// use super::ClipBaseState;
 use super::ClipBuffer;
 use super::LCB;
 use crate::clip::clean::CleanEnum;
@@ -60,82 +60,82 @@ where
     // // #[derivative(Debug = "ignore")]
     // line_end_fn: fn(&mut Self),
     pub radius: T,
-    small_radius: bool,
+    // small_radius: bool,
     delta: T,
     cr: T,
     base: ClipBase<Line<SINK, T>, SINK, T>,
     // line: Line<PR, T>,
 }
 
-impl<SINK, T> ClipBaseState for ClipCircle<SINK, T>
-where
-    SINK: Default + Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-    type CBST = T;
-    type L = Line<SINK, T>;
-    type SINK = SINK;
+// impl<SINK, T> ClipBaseState for ClipCircle<SINK, T>
+// where
+//     SINK: Default + Stream<SC = Coordinate<T>>,
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+// {
+//     type CBST = T;
+//     type L = Line<SINK, T>;
+//     type SINK = SINK;
 
-    fn get_base(self) -> ClipBase<Line<SINK, T>, SINK, T> {
-        self.base
-    }
-    fn set_polygon_started(&mut self, started: bool) {}
-    // fn set_point_fn(&mut self, f: fn(&mut Self, p: &Coordinate<Self::CBOT>, m: Option<u8>)) {}
-    // fn set_line_start_fn(f: fn(&mut Self)) {}
-    // fn set_line_end_fn(f: fn(&mut Self)) {}
-    #[inline]
-    fn polygon_clear(&mut self) {
-        self.base.polygon.clear();
-    }
+//     fn get_base(self) -> ClipBase<Line<SINK, T>, SINK, T> {
+//         self.base
+//     }
+//     fn set_polygon_started(&mut self, _started: bool) {}
+//     // fn set_point_fn(&mut self, f: fn(&mut Self, p: &Coordinate<Self::CBOT>, m: Option<u8>)) {}
+//     // fn set_line_start_fn(f: fn(&mut Self)) {}
+//     // fn set_line_end_fn(f: fn(&mut Self)) {}
+//     #[inline]
+//     fn polygon_clear(&mut self) {
+//         self.base.polygon.clear();
+//     }
 
-    #[inline]
-    fn polygon_push(&mut self, v: Vec<LineElem<Self::CBST>>) {
-        self.base.polygon.push(v)
-    }
+//     #[inline]
+//     fn polygon_push(&mut self, v: Vec<LineElem<Self::CBST>>) {
+//         self.base.polygon.push(v)
+//     }
 
-    #[inline]
-    fn ring_clear(&mut self) {
-        self.base.ring.clear();
-    }
-    #[inline]
-    fn ring_push(&mut self, le: LineElem<Self::CBST>) {
-        self.base.ring.push(le);
-    }
-    #[inline]
-    fn ring_pop(&mut self) -> Option<LineElem<Self::CBST>> {
-        self.base.ring.pop()
-    }
+//     #[inline]
+//     fn ring_clear(&mut self) {
+//         self.base.ring.clear();
+//     }
+//     #[inline]
+//     fn ring_push(&mut self, le: LineElem<Self::CBST>) {
+//         self.base.ring.push(le);
+//     }
+//     #[inline]
+//     fn ring_pop(&mut self) -> Option<LineElem<Self::CBST>> {
+//         self.base.ring.pop()
+//     }
 
-    #[inline]
-    fn ring_reset(&mut self) {
-        self.base.ring = Vec::new();
-    }
+//     #[inline]
+//     fn ring_reset(&mut self) {
+//         self.base.ring = Vec::new();
+//     }
 
-    #[inline]
-    fn ring_sink_clean(&mut self) -> CleanEnum {
-        self.base.ring_sink.clean()
-    }
+//     #[inline]
+//     fn ring_sink_clean(&mut self) -> CleanEnum {
+//         self.base.ring_sink.clean()
+//     }
 
-    #[inline]
-    fn set_use_point_line(&mut self, u: bool) {
-        self.base.use_point_line = u;
-    }
+//     #[inline]
+//     fn set_use_point_line(&mut self, u: bool) {
+//         self.base.use_point_line = u;
+//     }
 
-    #[inline]
-    fn set_use_ring_start(&mut self, u: bool) {
-        self.base.use_ring_start = u;
-    }
+//     #[inline]
+//     fn set_use_ring_start(&mut self, u: bool) {
+//         self.base.use_ring_start = u;
+//     }
 
-    #[inline]
-    fn set_use_ring_end(&mut self, u: bool) {
-        self.base.use_ring_end = u;
-    }
+//     #[inline]
+//     fn set_use_ring_end(&mut self, u: bool) {
+//         self.base.use_ring_end = u;
+//     }
 
-    #[inline]
-    fn segments_clear(&mut self) {
-        self.base.segments.clear();
-    }
-}
+//     #[inline]
+//     fn segments_clear(&mut self) {
+//         self.base.segments.clear();
+//     }
+// }
 
 impl<'a, SINK, T> Clip for ClipCircle<SINK, T>
 where
@@ -178,7 +178,7 @@ where
     // STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display + Debug,
 {
-    pub fn new<PR>(projection_raw: PR, radius: T) -> Self
+    pub fn new<PR>(_projection_raw: PR, radius: T) -> Self
     where
         // Rc<PR>: Transform<C = Coordinate<T>>,
         PR: Transform<C = Coordinate<T>>,
@@ -222,7 +222,7 @@ where
             delta: T::from(6).unwrap().to_radians(),
             cr,
             radius,
-            small_radius,
+            // small_radius,
             // start,
             // line_end_fn: Self::line_end_default,
             // point_fn: Self::point_default,
@@ -349,7 +349,7 @@ where
     #[inline]
     fn line_start_default(&mut self) {
         println!("clip line_start_default");
-        // self.point_fn = Self::point_line;
+        // self.base.point_fn = Self::point_line;
         self.line_start();
     }
 
