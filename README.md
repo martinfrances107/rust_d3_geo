@@ -9,8 +9,8 @@ No API stability guarentees.
 
 Progress so far.
 
-A list of all projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 4 have been ported so far.
-(AziumuthalEqualArea, Equirectangular, Orthographic, Stereographic )
+A list of all projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 6 have been ported so far.
+(AziumuthalEqualArea, Equirectangular, Gnomic, Mecator,  Orthographic, Stereographic )
 
 ## TODO list
 
