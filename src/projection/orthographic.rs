@@ -21,34 +21,34 @@ use crate::stream::Stream;
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Copy, Debug)]
-pub struct OrthographicRaw<T>
+pub struct Orthographic<T>
 where
     T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
 
-impl<T> Default for OrthographicRaw<T>
+impl<T> Default for Orthographic<T>
 where
     T: CoordFloat,
 {
     fn default() -> Self {
-        Self {
+        Orthographic {
             phantom: PhantomData::<T>,
         }
     }
 }
 
-impl<T> OrthographicRaw<T>
+impl<T> Orthographic<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, OrthographicRaw<T>, T>
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, Orthographic<T>, T>
     where
         DRAIN: 'static + Default + Stream<SC = Coordinate<T>>,
     {
-        Projection::new(OrthographicRaw::default(), None)
+        Projection::new(Orthographic::default(), None)
             .scale(T::from(249.5f64).unwrap())
             // .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
             .clip_angle(T::from(90f64 + 1e-6f64).unwrap())
@@ -61,7 +61,7 @@ where
 // {
 // }
 
-impl<T> OrthographicRaw<T>
+impl<T> Orthographic<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -72,7 +72,7 @@ where
 
     pub fn azimuthal_invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let z = (p.x * p.x + p.y * p.y).sqrt();
-        let c = OrthographicRaw::angle(z);
+        let c = Orthographic::angle(z);
         let sc = c.sin();
         let cc = c.cos();
 
@@ -90,7 +90,7 @@ where
 }
 
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
-    for OrthographicRaw<T>
+    for Orthographic<T>
 {
     type C = Coordinate<T>;
     #[inline]

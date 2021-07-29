@@ -7,7 +7,7 @@ mod invert_test {
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::gnomic::GnomicRaw;
     use rust_d3_geo::projection::mecator::MecatorRaw;
-    use rust_d3_geo::projection::orthographic::OrthographicRaw;
+    use rust_d3_geo::projection::orthographic::Orthographic;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::projection_trait::ProjectionTrait;
@@ -65,8 +65,8 @@ mod invert_test {
 
     #[test]
     fn test_orthographic() {
-        let o: Projection<'_, StreamDrainStub<f64>, OrthographicRaw<f64>, f64> =
-            OrthographicRaw::<f64>::gen_projection_mutator();
+        let o: Projection<'_, StreamDrainStub<f64>, Orthographic<f64>, f64> =
+            Orthographic::<f64>::gen_projection_mutator();
         symetric_invert(o);
     }
 
