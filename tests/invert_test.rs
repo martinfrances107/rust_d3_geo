@@ -3,7 +3,7 @@
 mod invert_test {
 
     use geo::Coordinate;
-    use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualAreaRaw;
+    use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::gnomic::GnomicRaw;
     use rust_d3_geo::projection::mecator::MecatorRaw;
@@ -44,15 +44,15 @@ mod invert_test {
 
     #[test]
     fn test_azimuthal_equal_area() {
-        let a: Projection<'_, StreamDrainStub<f64>, AzimuthalEqualAreaRaw<f64>, f64> =
-            AzimuthalEqualAreaRaw::<f64>::gen_projection_mutator();
+        let a: Projection<'_, StreamDrainStub<f64>, AzimuthalEqualArea<f64>, f64> =
+            AzimuthalEqualArea::<f64>::gen_projection_mutator();
         symetric_invert(a);
     }
 
     #[test]
     fn test_equirectangular() {
-        let a: Projection<'_, StreamDrainStub<f64>, AzimuthalEqualAreaRaw<f64>, f64> =
-            AzimuthalEqualAreaRaw::<f64>::gen_projection_mutator();
+        let a: Projection<'_, StreamDrainStub<f64>, AzimuthalEqualArea<f64>, f64> =
+            AzimuthalEqualArea::<f64>::gen_projection_mutator();
         symetric_invert(a);
     }
 

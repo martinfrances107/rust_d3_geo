@@ -20,33 +20,33 @@ use crate::Transform;
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Copy, Clone, Debug)]
-pub struct AzimuthalEqualAreaRaw<T>
+pub struct AzimuthalEqualArea<T>
 where
     T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
 
-impl<T> Default for AzimuthalEqualAreaRaw<T>
+impl<T> Default for AzimuthalEqualArea<T>
 where
     T: CoordFloat,
 {
     fn default() -> Self {
-        Self {
+        AzimuthalEqualArea {
             phantom: PhantomData::<T>,
         }
     }
 }
-impl<T> AzimuthalEqualAreaRaw<T>
+impl<T> AzimuthalEqualArea<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, AzimuthalEqualAreaRaw<T>, T>
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, AzimuthalEqualArea<T>, T>
     where
         DRAIN: 'a + Default + Stream<SC = Coordinate<T>>,
     {
-        Projection::new(AzimuthalEqualAreaRaw::default(), None)
+        Projection::new(AzimuthalEqualArea::default(), None)
             .scale(T::from(124.75f64).unwrap())
             // .clip_angle(StreamOrValueMaybe::Value(T::from(180f64 - 1e-3).unwrap()))
             .clip_angle(T::from(180f64 - 1e-3).unwrap())
@@ -65,7 +65,7 @@ where
 }
 
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
-    for AzimuthalEqualAreaRaw<T>
+    for AzimuthalEqualArea<T>
 {
     type C = Coordinate<T>;
     #[inline]
