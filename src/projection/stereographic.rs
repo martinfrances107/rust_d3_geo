@@ -19,34 +19,34 @@ use crate::Transform;
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Copy, Clone, Debug)]
-pub struct StereographicRaw<T>
+pub struct Stereographic<T>
 where
     T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
 
-impl<T> Default for StereographicRaw<T>
+impl<T> Default for Stereographic<T>
 where
     T: CoordFloat,
 {
     fn default() -> Self {
-        Self {
+        Stereographic {
             phantom: PhantomData::<T>,
         }
     }
 }
 
-impl<T> StereographicRaw<T>
+impl<T> Stereographic<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, StereographicRaw<T>, T>
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, Stereographic<T>, T>
     where
         DRAIN: 'a + Default + Stream<SC = Coordinate<T>>,
     {
-        Projection::new(StereographicRaw::default(), None)
+        Projection::new(Stereographic::default(), None)
             .scale(T::from(250f64).unwrap())
             // .clip_angle(StreamOrValueMaybe::Value(T::from(142f64).unwrap()))
             .clip_angle(T::from(142f64).unwrap())
@@ -63,7 +63,7 @@ where
 }
 
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
-    for StereographicRaw<T>
+    for Stereographic<T>
 {
     type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

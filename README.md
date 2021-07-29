@@ -10,11 +10,11 @@ No API stability guarentees.
 Progress so far.
 
 A list of all projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 4 have been ported so far.
-(AziumuthalEqualArea, Equirectangular, Orthographic, Stereographic ) 
+(AziumuthalEqualArea, Equirectangular, Orthographic, Stereographic )
 
 ## TODO list
 
-Currently we have 47% test coverage ( as reported by cargo tarpaulin -o Html ) 
+Currently we have 47% test coverage ( as reported by cargo tarpaulin -o Html )
 * The current target is to increase the code coverage in resample.rs which has some known bugs.
   clipcircle_test.ts and fit_test.rs exercise code in resample .. So I am focusing on those tests.
 * Next,  sections of projectionMutator.rs will have to be re-architected for the mecator projection to function like the javascript version.

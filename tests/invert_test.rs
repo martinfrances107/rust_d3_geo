@@ -11,7 +11,7 @@ mod invert_test {
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::projection_trait::ProjectionTrait;
-    use rust_d3_geo::projection::stereographic::StereographicRaw;
+    use rust_d3_geo::projection::stereographic::Stereographic;
     use rust_d3_geo::stream::StreamDrainStub;
     // use rust_d3_geo::stream::StreamDummy;
     use rust_d3_geo::Transform;
@@ -79,8 +79,8 @@ mod invert_test {
 
     #[test]
     fn test_stereographic() {
-        let s: Projection<'_, StreamDrainStub<f64>, StereographicRaw<f64>, f64> =
-            StereographicRaw::<f64>::gen_projection_mutator();
+        let s: Projection<'_, StreamDrainStub<f64>, Stereographic<f64>, f64> =
+            Stereographic::<f64>::gen_projection_mutator();
         symetric_invert(s);
     }
 }
