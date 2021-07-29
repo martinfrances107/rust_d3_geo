@@ -5,8 +5,8 @@ mod invert_test {
     use geo::Coordinate;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
-    use rust_d3_geo::projection::gnomic::GnomicRaw;
-    use rust_d3_geo::projection::mecator::MecatorRaw;
+    use rust_d3_geo::projection::gnomic::Gnomic;
+    use rust_d3_geo::projection::mecator::Mecator;
     use rust_d3_geo::projection::orthographic::Orthographic;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
@@ -58,8 +58,8 @@ mod invert_test {
 
     #[test]
     fn test_gnomic() {
-        let g: Projection<'_, StreamDrainStub<f64>, GnomicRaw<f64>, f64> =
-            GnomicRaw::<f64>::gen_projection_mutator();
+        let g: Projection<'_, StreamDrainStub<f64>, Gnomic<f64>, f64> =
+            Gnomic::<f64>::gen_projection_mutator();
         symetric_invert(g);
     }
 
@@ -72,8 +72,8 @@ mod invert_test {
 
     #[test]
     fn test_mecator() {
-        let m: Projection<'_, StreamDrainStub<f64>, MecatorRaw<f64>, f64> =
-            MecatorRaw::<f64>::gen_projection_mutator();
+        let m: Projection<'_, StreamDrainStub<f64>, Mecator<f64>, f64> =
+            Mecator::<f64>::gen_projection_mutator();
         symetric_invert(m);
     }
 

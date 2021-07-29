@@ -20,19 +20,19 @@ use crate::stream::Stream;
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Copy, Clone, Debug)]
-pub struct GnomicRaw<T>
+pub struct Gnomic<T>
 where
     T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
 
-impl<T> Default for GnomicRaw<T>
+impl<T> Default for Gnomic<T>
 where
     T: CoordFloat,
 {
     fn default() -> Self {
-        Self {
+        Gnomic {
             phantom: PhantomData::<T>,
             // lambda: T::zero(),
             // phi: T::zero(),
@@ -40,15 +40,15 @@ where
     }
 }
 
-impl<T> GnomicRaw<T>
+impl<T> Gnomic<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, GnomicRaw<T>, T>
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, Gnomic<T>, T>
     where
         DRAIN: 'a + Default + Stream<SC = Coordinate<T>>,
     {
-        let g = GnomicRaw::default();
+        let g = Gnomic::default();
         let projection = Projection::new(g, None);
         projection
             .scale(T::from(144.049f64).unwrap())
@@ -66,7 +66,7 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for GnomicRaw<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Gnomic<T> {
     type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();

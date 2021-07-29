@@ -2,7 +2,7 @@
 #[cfg(test)]
 mod reflect_tests {
     use geo::Coordinate;
-    use rust_d3_geo::projection::gnomic::GnomicRaw;
+    use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::projection_trait::ProjectionTrait;
@@ -13,8 +13,8 @@ mod reflect_tests {
     #[test]
     fn test_reflect_x_defaults_to_false() {
         println!("projection.reflectX(…) defaults to false");
-        let projection: Projection<StreamDrainStub<f64>, GnomicRaw<f64>, f64> =
-            GnomicRaw::gen_projection_mutator()
+        let projection: Projection<StreamDrainStub<f64>, Gnomic<f64>, f64> =
+            Gnomic::gen_projection_mutator()
                 .scale(1f64)
                 .translate(&Coordinate { x: 0f64, y: 0f64 });
 
@@ -51,8 +51,8 @@ mod reflect_tests {
     #[test]
     fn test_reflect_mirrors_x_after_processing() {
         println!("projection.reflectX(…) defaults to false");
-        let mut projection: Projection<StreamDrainStub<f64>, GnomicRaw<f64>, f64> =
-            GnomicRaw::gen_projection_mutator()
+        let mut projection: Projection<StreamDrainStub<f64>, Gnomic<f64>, f64> =
+            Gnomic::gen_projection_mutator()
                 .scale(1f64)
                 .translate(&Coordinate { x: 0f64, y: 0f64 })
                 .reflect_x(true);
