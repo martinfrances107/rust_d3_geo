@@ -17,27 +17,25 @@
 //     use rust_d3_geo::data_object::sphere::Sphere;
 //     use rust_d3_geo::data_object::DataObject;
 //     // use rust_d3_geo::path::path::Path;
-//     use rust_d3_geo::stream::StreamDummy;
 //     use rust_d3_geo::path::PathResultEnum;
 //     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
 //     use rust_d3_geo::projection::projection::Projection;
 //     use rust_d3_geo::projection::projection_trait::ProjectionTrait;
 //     use rust_d3_geo::projection::scale::Scale;
+//     use rust_d3_geo::stream::StreamDummy;
 //     // use rust_d3_geo::projection::projection_mutator::ProjectionMutator;
 
 //     #[inline]
-//     fn equirectangular<
-//         'a,
-//         T: AsPrimitive<T> + AddAssign + CoordFloat +Display + FloatConst,
-//     >() -> Projection<'a, EquirectangularRaw<T>, StreamDummy<T>, T> {
+//     fn equirectangular<'a, T: AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst>(
+//     ) -> Projection<'a, EquirectangularRaw<T>, T> {
 //         EquirectangularRaw::gen_projection_mutator()
 //             .scale(T::from(900f64 / PI).unwrap())
-//             .precision(T::zero())
+//             .precision(&T::zero())
 //     }
 
 //     #[inline]
 //     fn test_area<'a, T>(
-//         projection: Projection<'a, EquirectangularRaw<T>, StreamDummy<T>, T>,
+//         projection: Projection<'a, EquirectangularRaw<T>, T>,
 //         object: &DataObject<T>,
 //     ) -> T
 //     where

@@ -175,37 +175,6 @@ where
     }
 }
 
-// impl<SINK, T> Interpolate for ClipCircle<SINK, T>
-// where
-//     // Rc<PR>: Transform<C = Coordinate<T>>,
-//     // PR: Transform<C = Coordinate<T>>,
-//     // MutStream: Stream<SC = Coordinate<T>>,
-//     SINK: Stream<SC = Coordinate<T>>
-//     // STREAM: Stream<SC = Coordinate<T>> + Default,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst +Display,
-// {
-//     type IC = Coordinate<T>;
-//     type IT = T;
-//     type IStream = SINK;
-//     // type IPR = PR;
-//     // type IStream = &'a
-//     // type ISD = SD;
-//     #[inline]
-//     fn interpolate(
-//         &self,
-//     ) -> Box<dyn Fn(Option<Self::IC>, Option<Self::IC>, Self::IT, &mut Self::IStream) + '_> {
-//         Box::new(
-//             move |from: Option<Coordinate<T>>,
-//                   to: Option<Coordinate<T>>,
-//                   direction: T,
-//                   stream: &mut Self::IStream| {
-//                 // todo!("must fix");
-//                 circle_stream(stream, self.radius, self.delta, direction, from, to)
-//             },
-//         )
-//     }
-// }
-
 impl<SINK, T> Interpolate for ClipCircle<SINK, T>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,

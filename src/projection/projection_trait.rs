@@ -27,12 +27,8 @@ use crate::projection::stream_transform_radians::StreamTransformRadians;
 pub trait ProjectionTrait<'a>: Center + ClipExtent + Scale + Translate
 // Rc<<Self as ProjectionTrait<'a>>::PR>: ProjectionRawTrait,
 where
-    // Rc<<Self as ProjectionTrait<'a>>::PR>:
-    //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
     <Self as ProjectionTrait<'a>>::PR:
         Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-    // <Self as ProjectionTrait<'a>>::SD:
-    //     Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
     <Self as ProjectionTrait<'a>>::T: AddAssign
         + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
         + Debug
@@ -43,7 +39,6 @@ where
     type PR;
     type T;
     type C;
-    // type SD;
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.
