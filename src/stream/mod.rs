@@ -13,6 +13,8 @@ mod stream_line;
 mod triangle;
 
 pub mod stream_in_trait;
+use crate::stream::stream_in_trait::StreamCombo;
+use crate::stream::stream_in_trait::StreamIn;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::marker::PhantomData;
@@ -29,25 +31,14 @@ pub trait Streamable {
 }
 
 #[derive(Clone, Debug)]
-pub struct StreamDummy<T>
+pub struct StreamDrainStub<T>
 where
     T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
 
-impl<T> Default for StreamDummy<T>
-where
-    T: CoordFloat,
-{
-    fn default() -> Self {
-        Self {
-            phantom: PhantomData::default(),
-        }
-    }
-}
-
-impl<T> Stream for StreamDummy<T>
+impl<T> Stream for StreamDrainStub<T>
 where
     T: CoordFloat,
 {
@@ -58,6 +49,59 @@ where
     fn line_end(&mut self) {}
     fn polygon_start(&mut self) {}
     fn polygon_end(&mut self) {}
+}
+
+impl<T> Default for StreamDrainStub<T>
+where
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            phantom: PhantomData::default(),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct StreamStageStub<STREAMIN, T>
+where
+    T: CoordFloat,
+{
+    phantom: PhantomData<T>,
+    phantomInput: PhantomData<STREAMIN>,
+}
+
+impl<STREAMIN, T> Default for StreamStageStub<STREAMIN, T>
+where
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            phantom: PhantomData::default(),
+            phantomInput: PhantomData::default(),
+        }
+    }
+}
+
+impl<STREAMIN, T> Stream for StreamStageStub<STREAMIN, T>
+where
+    T: CoordFloat,
+{
+    type SC = Coordinate<T>;
+    fn point(&mut self, _p: &Self::SC, _m: Option<u8>) {}
+    fn sphere(&mut self) {}
+    fn line_start(&mut self) {}
+    fn line_end(&mut self) {}
+    fn polygon_start(&mut self) {}
+    fn polygon_end(&mut self) {}
+}
+impl<STREAMIN, T: CoordFloat> StreamCombo for StreamStageStub<STREAMIN, T> {}
+impl<T, STREAMIN> StreamIn for StreamStageStub<STREAMIN, T>
+where
+    T: CoordFloat,
+{
+    type SInput = STREAMIN;
+    fn stream_in(&mut self, stream: Self::SInput) {}
 }
 
 pub trait Stream {

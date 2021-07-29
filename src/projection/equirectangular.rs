@@ -1,25 +1,20 @@
 use std::fmt::Display;
 use std::ops::AddAssign;
-// use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
-// use num_traits::AsPrimitive;
 
-// use super::projection::Projection;
-use super::scale::Scale;
-// use super::ProjectionRawTrait;
-use super::projection::Projection;
-// use crate::clip::Clip;
-// use crate::projection::resample::ResampleTrait;
 use crate::stream::Stream;
 use crate::Transform;
+
+use super::projection::Projection;
+use super::scale::Scale;
+
 #[derive(Clone, Debug)]
 pub struct EquirectangularRaw<T>
 where
-    // T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     T: CoordFloat,
 {
     lambda: T,

@@ -19,7 +19,7 @@ use crate::clip::clean::CleanEnum;
 use crate::clip::LCB;
 // use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
-// use crate::stream::StreamDummy;
+
 // use crate::Transform;
 
 use super::intersect::intersect;

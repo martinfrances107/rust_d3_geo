@@ -1,4 +1,6 @@
 use crate::projection::resample::gen_resample_node;
+use crate::stream::stream_in_trait::StreamDynIn;
+use crate::stream::StreamStageStub;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
@@ -91,7 +93,7 @@ where
     //         T = T,
     //     >,
     // >,
-    // preclip: Box<dyn StreamCombo<SC = Coordinate<T>, SInput = SD>>,
+    // preclip: Box<dyn 'a + StreamDynIn<SDIT = T>>,
 
     // #[derivative(Debug = "ignore")]
     postclip: fn(Box<DRAIN>) -> Box<DRAIN>,
@@ -132,6 +134,7 @@ where
         let sx = T::one();
         let sy = T::one();
 
+        // let preclip = Box::new(StreamStageStub::default());
         let project_transform =
             Compose::new(projection_raw.clone(), ScaleTranslateRotateEnum::default());
 
@@ -151,7 +154,7 @@ where
             lambda,
             phi,
             rotate: RotateRadiansEnum::I(RotationIdentity::default()), // pre-rotate
-            // preclip,
+            // preclip: preclip,
             postclip: |x| x,
             sx,          // reflectX
             sy,          // reflectX
@@ -682,7 +685,7 @@ where
         // let mut resample = self.project_resample;
         // self.project_resample.stream_in(postclip);
         // let mut preclip = self.preclip;
-        // self.preclip.stream_in(resample);
+        // preclip.stream_in(postclip);
 
         // using resample here bypasses preclip.
         // let t_rotate_node = StreamTransform::new(&self.rotate, self.preclip);

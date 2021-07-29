@@ -14,7 +14,6 @@ use crate::projection::scale::Scale;
 use crate::stream::Stream;
 use crate::Transform;
 
-// use super::ProjectionRawTrait;
 /// Why the Phantom Data is required here...
 ///
 /// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )

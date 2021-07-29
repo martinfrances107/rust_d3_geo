@@ -12,7 +12,8 @@ mod invert_test {
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::projection_trait::ProjectionTrait;
     use rust_d3_geo::projection::stereographic::StereographicRaw;
-    use rust_d3_geo::stream::StreamDummy;
+    use rust_d3_geo::stream::StreamDrainStub;
+    // use rust_d3_geo::stream::StreamDummy;
     use rust_d3_geo::Transform;
 
     fn symetric_invert<'a, PM>(pm: PM)
@@ -43,42 +44,42 @@ mod invert_test {
 
     #[test]
     fn test_azimuthal_equal_area() {
-        let a: Projection<'_, StreamDummy<f64>, AzimuthalEqualAreaRaw<f64>, f64> =
+        let a: Projection<'_, StreamDrainStub<f64>, AzimuthalEqualAreaRaw<f64>, f64> =
             AzimuthalEqualAreaRaw::<f64>::gen_projection_mutator();
         symetric_invert(a);
     }
 
     #[test]
     fn test_equirectangular() {
-        let a: Projection<'_, StreamDummy<f64>, AzimuthalEqualAreaRaw<f64>, f64> =
+        let a: Projection<'_, StreamDrainStub<f64>, AzimuthalEqualAreaRaw<f64>, f64> =
             AzimuthalEqualAreaRaw::<f64>::gen_projection_mutator();
         symetric_invert(a);
     }
 
     #[test]
     fn test_gnomic() {
-        let g: Projection<'_, StreamDummy<f64>, GnomicRaw<f64>, f64> =
+        let g: Projection<'_, StreamDrainStub<f64>, GnomicRaw<f64>, f64> =
             GnomicRaw::<f64>::gen_projection_mutator();
         symetric_invert(g);
     }
 
     #[test]
     fn test_orthographic() {
-        let o: Projection<'_, StreamDummy<f64>, OrthographicRaw<f64>, f64> =
+        let o: Projection<'_, StreamDrainStub<f64>, OrthographicRaw<f64>, f64> =
             OrthographicRaw::<f64>::gen_projection_mutator();
         symetric_invert(o);
     }
 
     #[test]
     fn test_mecator() {
-        let m: Projection<'_, StreamDummy<f64>, MecatorRaw<f64>, f64> =
+        let m: Projection<'_, StreamDrainStub<f64>, MecatorRaw<f64>, f64> =
             MecatorRaw::<f64>::gen_projection_mutator();
         symetric_invert(m);
     }
 
     #[test]
     fn test_stereographic() {
-        let s: Projection<'_, StreamDummy<f64>, StereographicRaw<f64>, f64> =
+        let s: Projection<'_, StreamDrainStub<f64>, StereographicRaw<f64>, f64> =
             StereographicRaw::<f64>::gen_projection_mutator();
         symetric_invert(s);
     }
