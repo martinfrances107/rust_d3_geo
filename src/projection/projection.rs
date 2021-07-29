@@ -93,7 +93,6 @@ where
     // preclip: Box<dyn StreamCombo<SC = Coordinate<T>, SInput = SD>>,
 
     // #[derivative(Debug = "ignore")]
-    // postclip: fn(ClipSinkEnum<PR, T>) -> ClipSinkEnum<PR, T>,
     postclip: fn(Box<DRAIN>) -> Box<DRAIN>,
     x: T,
     y: T, // translate
@@ -131,21 +130,6 @@ where
         let k = T::from(150f64).unwrap();
         let sx = T::one();
         let sy = T::one();
-        // let center = ScaleTranslateRotate::new(
-        //     &k,
-        //     &T::from(0).unwrap(),
-        //     &T::from(0).unwrap(),
-        //     &sx,
-        //     &sy,
-        //     alpha,
-        // )
-        // .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
-        // let transform =
-        //     ScaleTranslateRotate::new(&k, &(x - center.x), &(y - center.y), &sx, &sy, alpha);
-        // let preclip = Box::new(|x| x);
-        // let project_transform = Compose::new(projection_raw.clone(), transform);
-        // let c: Box<dyn StreamCombo<SC = Coordinate<T>, SInput = SD>> =
-        //     Box::new(ClipAntimeridian::new());
 
         let p = Self {
             pd: PhantomData,
@@ -686,8 +670,6 @@ where
         //     None => {
         // self.cache_stream = Some(stream.clone());
 
-        // let mut postclip = self.postclip.clone();
-        // postclip.stream_in(ClipSinkEnum::Src(stream_dst));
         let postclip = (self.postclip)(stream_dst);
 
         // let mut resample = self.project_resample;
