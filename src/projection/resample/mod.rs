@@ -107,13 +107,13 @@ use crate::Transform;
 //     }
 // }
 
-pub fn gen_resample_node<'a, SD, T, TRANSFORMER>(
+pub fn gen_resample_node<'a, DRAIN, T, TRANSFORMER>(
     projection_raw: TRANSFORMER,
     delta2: T,
-) -> Box<dyn 'a + StreamCombo<SC = Coordinate<T>, SInput = SD>>
+) -> Box<dyn 'a + StreamCombo<SC = Coordinate<T>, SInput = DRAIN>>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    SD: 'a + Stream<SC = Coordinate<T>> + Default,
+    DRAIN: 'a + Stream<SC = Coordinate<T>> + Default,
     TRANSFORMER: 'a + Transform<C = Coordinate<T>>,
 {
     if delta2.is_zero() {

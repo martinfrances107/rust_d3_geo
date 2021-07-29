@@ -1,3 +1,4 @@
+use crate::projection::resample::gen_resample_node;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
@@ -9,7 +10,7 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 // use crate::data_object::DataObject;
-// use crate::stream::stream_in_trait::StreamCombo;
+use crate::stream::stream_in_trait::StreamCombo;
 use crate::stream::Stream;
 // use crate::stream::StreamSimpleNode;
 use super::center::Center;
@@ -73,7 +74,7 @@ where
     delta2: T, // precision
     k: T,      // scale
 
-    // project_resample: Box<dyn StreamCombo<SC = Coordinate<T>, SInput = SD>>,
+    // project_resample: Box<dyn StreamCombo<SC = Coordinate<T>, SInput = DRAIN>>,
     project_transform: Compose<T, PR, ScaleTranslateRotateEnum<T>>,
     project_rotate_transform:
         Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
@@ -131,6 +132,9 @@ where
         let sx = T::one();
         let sy = T::one();
 
+        let project_transform =
+            Compose::new(projection_raw.clone(), ScaleTranslateRotateEnum::default());
+
         let p = Self {
             pd: PhantomData,
             projection_raw: projection_raw.clone(),
@@ -158,10 +162,7 @@ where
             y1: None, //postclip = identity, // post-clip extent
             x,
             y,
-            project_transform: Compose::new(
-                projection_raw.clone(),
-                ScaleTranslateRotateEnum::default(),
-            ),
+            project_transform,
             // project_resample: gen_resample_node(project_transform, T::zero()),
             project_rotate_transform: Compose::new(
                 RotateRadiansEnum::I(RotationIdentity::default()),
@@ -657,9 +658,15 @@ where
     // // fn scale(&mut self, scale: &F);
     // fn scale(self, scale: T) -> Projection<PR, T>;
 
-    // In javascript stream is used as a property to be removed from the object.
-    // In rust that is a closure.
-    // fn stream(&self, stream_dst: SD) -> StreamTransformRadians<StreamTransform<SD, T>, T>
+    /// Connects a DRAIN to projection.
+    ///
+    /// The Projection Stream Pipeline :-
+    ///
+    /// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
+    ///
+    ///
+    /// In javascript stream is used as a property to be removed from the object.
+    /// In rust that is a closure.
     fn stream(&self, stream_dst: Box<DRAIN>) -> StreamTransformRadians<StreamTransform<T>, T>
 // where
     //     SD: Stream<SC = Coordinate<T>>,
