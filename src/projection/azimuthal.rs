@@ -19,25 +19,6 @@ where
     }
 }
 
-// pub(super) fn azimuthalInvert<T>(angle: fn(T) -> T) -> impl Fn(Coordinate<T>) -> Coordinate<T>
-// where T: CoordFloat
-// {
-//     move |p: Coordinate<T>| {
-//         let z = (p.x*p.x - p.y * p.y).sqrt();
-//         let c = angle(z);
-//         let sc = c.sin();
-//         let cc = c.cos();
-//         let y_out;
-//         if z.is_zero() {
-//             y_out = T::zero();
-//         } else {
-//             y_out = p.y * sc / z;
-//         };
-
-//         Coordinate{x: (p.x * sc ).atan2(z * cc), y: y_out }
-
-//     }
-// }
 pub(super) fn azimuthal_invert<T>(p: &Coordinate<T>, angle: fn(z: T) -> T) -> Coordinate<T>
 where
     T: CoordFloat,
