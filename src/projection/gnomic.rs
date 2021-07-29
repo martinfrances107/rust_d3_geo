@@ -12,7 +12,7 @@ use super::azimuthal::azimuthal_invert;
 use super::projection::Projection;
 use super::projection_trait::ProjectionTrait;
 use super::scale::Scale;
-// use crate::stream::Stream;
+use crate::stream::Stream;
 // use super::projection::StreamOrValueMaybe;
 
 /// Why the Phantom Data is required here...
@@ -44,9 +44,9 @@ impl<T> GnomicRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    pub fn gen_projection_mutator<'a>() -> Projection<'a, GnomicRaw<T>, T>
-// where
-        // SD: 'a + Stream<SC = Coordinate<T>> + Default,
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, GnomicRaw<T>, T>
+    where
+        DRAIN: 'a + Default + Stream<SC = Coordinate<T>>,
     {
         let g = GnomicRaw::default();
         let projection = Projection::new(g, None);

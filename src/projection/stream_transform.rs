@@ -30,7 +30,7 @@ pub struct StreamTransform<
 //     dyn Clip<T>: Clip<T, C = Coordinate<T>> + Interpolate<T, C = Coordinate<T>>,
 {
     #[derivative(Debug = "ignore")]
-    pub stream: Box<dyn Stream<SC = Coordinate<T>>>,
+    pub stream: Box<dyn 'a + Stream<SC = Coordinate<T>>>,
     pub transform: &'a RotateRadiansEnum<T>,
 }
 
@@ -77,8 +77,8 @@ impl<
     pub fn new(
         // projection_raw: &PR,
         transform: &'a RotateRadiansEnum<T>,
-        stream: Box<dyn Stream<SC = Coordinate<T>>>,
-    ) -> StreamTransform<T>
+        stream: Box<dyn 'a + Stream<SC = Coordinate<T>>>,
+    ) -> StreamTransform<'a, T>
 where
         // Rc<PR>: Transform<C = Coordinate<T>>,
         // PR: Transform<C = Coordinate<T>>,
@@ -96,7 +96,10 @@ where
             //     }
             // }
 
-            Self { stream, transform }
+            Self {
+                stream: stream,
+                transform,
+            }
         }
     }
 }

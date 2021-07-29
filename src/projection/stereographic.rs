@@ -11,7 +11,7 @@ use super::projection::Projection;
 // use super::projection::StreamOrValueMaybe;
 use crate::projection::projection_trait::ProjectionTrait;
 use crate::projection::scale::Scale;
-// use crate::stream::Stream;
+use crate::stream::Stream;
 use crate::Transform;
 
 // use super::ProjectionRawTrait;
@@ -43,9 +43,9 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a>() -> Projection<'a, StereographicRaw<T>, T>
-// where
-    //     SD: 'a + Stream<SC = Coordinate<T>> + Default,
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, StereographicRaw<T>, T>
+    where
+        DRAIN: 'a + Default + Stream<SC = Coordinate<T>>,
     {
         Projection::new(StereographicRaw::default(), None)
             .scale(T::from(250f64).unwrap())

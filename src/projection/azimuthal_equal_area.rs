@@ -12,6 +12,7 @@ use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
 use crate::projection::projection_trait::ProjectionTrait;
 use crate::projection::scale::Scale;
+use crate::stream::Stream;
 use crate::Transform;
 
 /// Why the Phantom Data is required here...
@@ -41,7 +42,10 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a>() -> Projection<'a, AzimuthalEqualAreaRaw<T>, T> {
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, AzimuthalEqualAreaRaw<T>, T>
+    where
+        DRAIN: 'a + Default + Stream<SC = Coordinate<T>>,
+    {
         Projection::new(AzimuthalEqualAreaRaw::default(), None)
             .scale(T::from(124.75f64).unwrap())
             // .clip_angle(StreamOrValueMaybe::Value(T::from(180f64 - 1e-3).unwrap()))

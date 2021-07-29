@@ -9,6 +9,7 @@ use num_traits::AsPrimitive;
 
 use super::projection::Projection;
 use super::scale::Scale;
+use crate::stream::Stream;
 use crate::Transform;
 
 // use super::ProjectionRawTrait;
@@ -36,7 +37,10 @@ impl<T> MecatorRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    pub fn gen_projection_mutator<'a>() -> Projection<'a, MecatorRaw<T>, T> {
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, MecatorRaw<T>, T>
+    where
+        DRAIN: 'a + Default + Stream<SC = Coordinate<T>>,
+    {
         let tau = T::from(2).unwrap() * T::PI();
         Projection::new(MecatorRaw::default(), None).scale(T::from(961).unwrap() / tau)
     }

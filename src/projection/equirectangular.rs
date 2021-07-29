@@ -14,7 +14,7 @@ use super::scale::Scale;
 use super::projection::Projection;
 // use crate::clip::Clip;
 // use crate::projection::resample::ResampleTrait;
-// use crate::stream::Stream;
+use crate::stream::Stream;
 use crate::Transform;
 #[derive(Clone, Debug)]
 pub struct EquirectangularRaw<T>
@@ -43,9 +43,9 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a>() -> Projection<'a, EquirectangularRaw<T>, T>
-// where
-    //     SD: 'a + Stream<SC = Coordinate<T>> + Default,
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, EquirectangularRaw<T>, T>
+    where
+        DRAIN: 'a + Default + Stream<SC = Coordinate<T>>,
     {
         Projection::new(EquirectangularRaw::default(), None).scale(T::from(152.63f64).unwrap())
     }

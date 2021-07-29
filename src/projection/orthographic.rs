@@ -13,7 +13,7 @@ use super::projection::Projection;
 // use super::ProjectionRawTrait;
 use crate::projection::projection_trait::ProjectionTrait;
 use crate::projection::scale::Scale;
-// use crate::stream::Stream;
+use crate::stream::Stream;
 // use crate::Transform;
 
 /// Why the Phantom Data is required here...
@@ -44,7 +44,10 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a>() -> Projection<'a, OrthographicRaw<T>, T> {
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, OrthographicRaw<T>, T>
+    where
+        DRAIN: 'static + Default + Stream<SC = Coordinate<T>>,
+    {
         Projection::new(OrthographicRaw::default(), None)
             .scale(T::from(249.5f64).unwrap())
             // .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))

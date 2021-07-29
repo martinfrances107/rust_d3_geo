@@ -39,6 +39,7 @@ where
     type PR;
     type T;
     type C;
+    type DRAIN;
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.
@@ -87,16 +88,16 @@ where
         self,
         angle: <Self as ProjectionTrait<'a>>::T,
         // angle: StreamOrValueMaybe<<Self as ProjectionTrait<'a>>::T>,
-    ) -> Projection<'a, Self::PR, <Self as ProjectionTrait<'a>>::T>;
-    // where
-    //     // Rc<<Self as ProjectionTrait<'a>>::PR>:
-    //     //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-    //     <Self as ProjectionTrait<'a>>::PR:
-    //         Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-    //     // <Self as ProjectionTrait<'a>>::SD: StreamDst,
-    //     // <Self as ProjectionTrait<'a>>::SD: StreamDst,
-    //     <Self as ProjectionTrait<'a>>::SD:
-    //         Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
+    ) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
+    where
+        //     // Rc<<Self as ProjectionTrait<'a>>::PR>:
+        //     //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
+        //     <Self as ProjectionTrait<'a>>::PR:
+        //         Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
+        //     // <Self as ProjectionTrait<'a>>::SD: StreamDst,
+        //     // <Self as ProjectionTrait<'a>>::SD: StreamDst,
+        <Self as ProjectionTrait<'a>>::DRAIN:
+            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>;
     //     <Self as ProjectionTrait<'a>>::T: AddAssign
     //         + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
     //         + Debug
@@ -323,14 +324,14 @@ where
     fn precision(
         self,
         delta: &'a <Self as ProjectionTrait<'a>>::T,
-    ) -> Projection<Self::PR, <Self as ProjectionTrait<'a>>::T>
+    ) -> Projection<Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
     where
         // Rc<<Self as ProjectionTrait<'a>>::PR>:
         //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::PR:
             Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        // <Self as ProjectionTrait<'a>>::SD:
-        //     Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
+        <Self as ProjectionTrait<'a>>::DRAIN:
+            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::T: AddAssign
             + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
             + Debug
@@ -340,14 +341,17 @@ where
 
     fn get_reflect_x(&self) -> bool;
 
-    fn reflect_x(self, reflect: bool) -> Projection<'a, Self::PR, <Self as ProjectionTrait<'a>>::T>
+    fn reflect_x(
+        self,
+        reflect: bool,
+    ) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
     where
         // Rc<<Self as ProjectionTrait<'a>>::PR>:
         //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::PR:
             Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        // <Self as ProjectionTrait<'a>>::SD:
-        //     Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
+        <Self as ProjectionTrait<'a>>::DRAIN:
+            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::T: AddAssign
             + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
             + Debug
@@ -357,14 +361,17 @@ where
 
     fn get_reflect_y(&self) -> bool;
 
-    fn reflect_y(self, reflect: bool) -> Projection<'a, Self::PR, <Self as ProjectionTrait<'a>>::T>
+    fn reflect_y(
+        self,
+        reflect: bool,
+    ) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
     where
         // Rc<<Self as ProjectionTrait<'a>>::PR>:
         //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::PR:
             Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        // <Self as ProjectionTrait<'a>>::SD:
-        //     Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
+        <Self as ProjectionTrait<'a>>::DRAIN:
+            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::T: AddAssign
             + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
             + Debug
@@ -382,14 +389,14 @@ where
     //  */
     // angle(angle: number): this;
 
-    fn reset(self) -> Projection<'a, Self::PR, <Self as ProjectionTrait<'a>>::T>
+    fn reset(self) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
     where
         // Rc<<Self as ProjectionTrait<'a>>::PR>:
         //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::PR:
             Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        // <Self as ProjectionTrait<'a>>::SD:
-        //     Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
+        <Self as ProjectionTrait<'a>>::DRAIN:
+            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::T: AddAssign
             + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
             + Debug
@@ -397,14 +404,14 @@ where
             + Float
             + FloatConst;
 
-    fn recenter(self) -> Projection<'a, Self::PR, <Self as ProjectionTrait<'a>>::T>
+    fn recenter(self) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
     where
         // Rc<<Self as ProjectionTrait<'a>>::PR>:
         //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::PR:
             Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        // <Self as ProjectionTrait<'a>>::SD:
-        //     Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
+        <Self as ProjectionTrait<'a>>::DRAIN:
+            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::T: AddAssign
             + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
             + Debug
@@ -431,14 +438,14 @@ where
     fn rotate(
         self,
         angles: [<Self as ProjectionTrait<'a>>::T; 3],
-    ) -> Projection<'a, Self::PR, <Self as ProjectionTrait<'a>>::T>
+    ) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
     where
         // Rc<<Self as ProjectionTrait<'a>>::PR>:
         //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::PR:
             Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        // <Self as ProjectionTrait<'a>>::SD:
-        //     Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
+        <Self as ProjectionTrait<'a>>::DRAIN:
+            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::T: AddAssign
             + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
             + Debug
@@ -448,14 +455,14 @@ where
 
     fn stream(
         &self,
-        stream_dst: Box<dyn Stream<SC = Coordinate<Self::T>>>,
+        stream_dst: Box<Self::DRAIN>,
     ) -> StreamTransformRadians<StreamTransform<Self::T>, Self::T>
     where
         <Self as ProjectionTrait<'a>>::PR:
             Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         // SD: Stream<SC = Coordinate<Self::T>>,
-        // <Self as ProjectionTrait<'a>>::SD:
-        //     Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
+        <Self as ProjectionTrait<'a>>::DRAIN:
+            Clone + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
         <Self as ProjectionTrait<'a>>::T: AddAssign
             + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
             + Debug

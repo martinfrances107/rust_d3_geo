@@ -8,14 +8,15 @@ mod reflect_tests {
     use rust_d3_geo::projection::projection_trait::ProjectionTrait;
     use rust_d3_geo::projection::scale::Scale;
     use rust_d3_geo::projection::translate::Translate;
-    // use rust_d3_geo::stream::StreamDummy;
+    use rust_d3_geo::stream::StreamDummy;
 
     #[test]
     fn test_reflect_x_defaults_to_false() {
         println!("projection.reflectX(…) defaults to false");
-        let projection: Projection<'_, GnomicRaw<f64>, f64> = GnomicRaw::gen_projection_mutator()
-            .scale(1f64)
-            .translate(&Coordinate { x: 0f64, y: 0f64 });
+        let projection: Projection<StreamDummy<f64>, GnomicRaw<f64>, f64> =
+            GnomicRaw::gen_projection_mutator()
+                .scale(1f64)
+                .translate(&Coordinate { x: 0f64, y: 0f64 });
 
         assert_eq!(projection.get_reflect_x(), false);
         assert_eq!(projection.get_reflect_y(), false);
@@ -50,7 +51,7 @@ mod reflect_tests {
     #[test]
     fn test_reflect_mirrors_x_after_processing() {
         println!("projection.reflectX(…) defaults to false");
-        let mut projection: Projection<'_, GnomicRaw<f64>, f64> =
+        let mut projection: Projection<StreamDummy<f64>, GnomicRaw<f64>, f64> =
             GnomicRaw::gen_projection_mutator()
                 .scale(1f64)
                 .translate(&Coordinate { x: 0f64, y: 0f64 })
