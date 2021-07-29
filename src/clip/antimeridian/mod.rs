@@ -35,9 +35,9 @@ use super::line_elem::LineElem;
 // use crate::clip::clean::Clean;
 // use super::Clip;
 use super::ClipBuffer;
-use super::ClipOpsMacro;
+use super::ClipOps;
 use super::LCB;
-use clip_ops_macro_derive::ClipOpsMacro;
+use clip_ops_macro_derive::ClipOps;
 // use crate::clip::clip_raw::ClipRaw;
 // use crate::projection::projection_trait::ProjectionTrait;
 
@@ -47,7 +47,7 @@ use line::Line;
 
 // #[derive(Derivative)]
 // #[derivative(Debug)]
-#[derive(ClipOpsMacro)]
+#[derive(ClipOps)]
 pub struct ClipAntimeridian<SINK, T>
 where
     // Rc<PR>: Transform<C = Coordinate<T>>,

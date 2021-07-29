@@ -52,7 +52,7 @@ use clean::Clean;
 
 /// This trait is connected with the submodule
 /// clip_ops_macro_derive
-pub trait ClipOpsMacro
+pub trait ClipOps
 // where
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Debug + FloatConst,
 {

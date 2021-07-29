@@ -6,7 +6,7 @@ mod clip_maco_integration_test {
     use std::ops::AddAssign;
     use std::rc::Rc;
 
-    use clip_ops_macro_derive::ClipOpsMacro;
+    use clip_ops_macro_derive::ClipOps;
     use geo::CoordFloat;
     use geo::Coordinate;
     use num_traits::AsPrimitive;
@@ -18,11 +18,11 @@ mod clip_maco_integration_test {
     use rust_d3_geo::clip::clip_buffer::ClipBuffer;
     use rust_d3_geo::clip::line_elem::LineElem;
     use rust_d3_geo::clip::point_visible_trait::PointVisible;
-    use rust_d3_geo::clip::ClipOpsMacro;
+    use rust_d3_geo::clip::ClipOps;
     use rust_d3_geo::clip::LCB;
     use rust_d3_geo::stream::Stream;
 
-    #[derive(ClipOpsMacro)]
+    #[derive(ClipOps)]
     pub struct ClipTest<SINK, T>
     where
         SINK: Default + Stream<SC = Coordinate<T>>,

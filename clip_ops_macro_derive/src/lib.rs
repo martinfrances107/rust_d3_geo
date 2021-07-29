@@ -4,7 +4,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn;
 
-#[proc_macro_derive(ClipOpsMacro)]
+#[proc_macro_derive(ClipOps)]
 pub fn clip_ops_macro_derive(input: TokenStream) -> TokenStream {
     // Construct a representation of Rust code as a syntax tree
     // that we can manipulate
@@ -17,7 +17,7 @@ pub fn clip_ops_macro_derive(input: TokenStream) -> TokenStream {
 fn impl_clip_ops_macro(ast: &syn::DeriveInput) -> TokenStream {
     let name = &ast.ident;
     let gen = quote! {
-        impl<SINK, T> ClipOpsMacro for #name<SINK, T>
+        impl<SINK, T> ClipOps for #name<SINK, T>
             where
             SINK: Stream<SC = Coordinate<T>> + Default,
             T: ::core::ops::AddAssign + ::num_traits::AsPrimitive<T> + ::geo::CoordFloat + ::num_traits::FloatConst + ::core::fmt::Display,{
