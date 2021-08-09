@@ -2,8 +2,8 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
-use crate::cartesian::cartesian_cross;
-use crate::cartesian::cartesian_normalize_in_place;
+use crate::cartesian::cross;
+use crate::cartesian::normalize_in_place;
 use crate::clip::line_elem::LineElem;
 
 #[inline]
@@ -26,7 +26,7 @@ pub fn contains<T: CoordFloat + FloatConst>(
     let mut angle = T::zero();
 
     let mut sum = T::zero();
-    let mut winding = 0i32;
+    let mut winding = 0_i32;
 
     if sin_phi == T::one() {
         phi = T::FRAC_PI_2() + T::epsilon();
@@ -72,10 +72,10 @@ pub fn contains<T: CoordFloat + FloatConst>(
             // if antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda {
             // if (antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda) {
             if antimeridian ^ (lambda0 >= lambda) ^ (lambda1 >= lambda) {
-                let mut arc = cartesian_cross(&cartesian(&point0.p), &cartesian(&point1.p));
-                cartesian_normalize_in_place(&mut arc);
-                let mut intersection = cartesian_cross(&normal, &arc);
-                cartesian_normalize_in_place(&mut intersection);
+                let mut arc = cross(&cartesian(&point0.p), &cartesian(&point1.p));
+                normalize_in_place(&mut arc);
+                let mut intersection = cross(&normal, &arc);
+                normalize_in_place(&mut intersection);
                 let phi_arc: T;
                 if antimeridian ^ (delta >= T::zero()) {
                     phi_arc = -(intersection[2].asin());

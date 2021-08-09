@@ -1,294 +1,93 @@
+pub mod interpolate;
 mod intersect;
 pub mod line;
-mod rejoin;
-
-// use derivative::Derivative;
-// use std::collections::VecDeque;
-use std::cell::RefCell;
+pub mod pv;
 use std::fmt::Display;
 use std::ops::AddAssign;
-use std::rc::Rc;
+// use std::rc::Rc;
 
-// use crate::stream::stream_in_trait::StreamIn;
-use geo::{CoordFloat, Coordinate};
+// use clip_ops_macro_derive::ClipOps;
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-// use crate::stream::CompareIntersection;
-// use crate::clip::compare_intersections::compare_intersections;
-use crate::clip::interpolate_trait::Interpolate;
-use crate::clip::point_visible_trait::PointVisible;
-use crate::clip::Clip;
-// use crate::path::PathResult;
 
-// use crate::polygon_contains::contains;
-// use crate::projection::ProjectionRawTrait;
-// use crate::clip::Clean;
-// use crate::clip::clean::CleanEnum;
-// use crate::clip::rejoin::Rejoin;
-use crate::stream::stream_in_trait::StreamCombo;
-use crate::stream::stream_in_trait::StreamIn;
+use crate::clip::antimeridian::interpolate::Interpolate;
+use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::pv::PV;
+use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
-// use crate::Transform;
-// use super::clip::Clip;
-use super::clip_base::ClipBase;
-use super::line_elem::LineElem;
-// use crate::clip::clean::Clean;
-// use super::Clip;
-use super::ClipBuffer;
-use super::ClipOps;
-use super::LCB;
-use clip_ops_macro_derive::ClipOps;
-// use crate::clip::clip_raw::ClipRaw;
-// use crate::projection::projection_trait::ProjectionTrait;
 
-// use super::rejoin::rejoin;
+// use crate::clip::antimeridian::pv::PV;
+// use line::Line;
 
-use line::Line;
-
-// #[derive(Derivative)]
-// #[derivative(Debug)]
-#[derive(ClipOps)]
-pub struct ClipAntimeridian<SINK, T>
+pub(crate) fn gen_clip_factory_antimeridian<PR, SINK, T>(
+    projection_raw: PR,
+    radius: T,
+) -> StreamNodeClipFactory<Interpolate<T>, Line<T>, PV<T>, SINK, T>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
-    // MutStream: Stream<SC = Coordinate<T>>,
-    SINK: Default + Stream<SC = Coordinate<T>>,
-    // STREAM: Stream<SC = Coordinate<T>> + Default,
+    PR: ProjectionRaw<T = T>,
+    SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    // // #[derivative(Debug = "ignore")]
-    // point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
-    // // #[derivative(Debug = "ignore")]
-    // line_start_fn: fn(&mut Self),
-    // // #[derivative(Debug = "ignore")]
-    // line_end_fn: fn(&mut Self),
-    // base: Box<ClipBase<Line<SINK, T>, SINK, T>>,
-    base: ClipBase<Line<SINK, T>, SINK, T>,
+    StreamNodeClipFactory::new(Interpolate::default(), Line::default(), PV::default())
 }
 
-impl<SINK, T> StreamCombo for ClipAntimeridian<SINK, T>
-where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    SINK: Default + Stream<SC = Coordinate<T>>,
-{
-}
-
-impl<SINK, T> Clip for ClipAntimeridian<SINK, T>
-where
-    //     // MutStream: Stream<SC = Coordinate<T>>,
-    SINK: 'static + Default + Stream<SC = Coordinate<T>>,
-    //     // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-}
-
-impl<SINK, T> ClipAntimeridian<SINK, T>
-where
-    SINK: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-    #[inline]
-    // pub fn new<PR>(projection_raw: PR) -> ClipAntimeridian<'a, SINK, T>
-    pub fn new() -> ClipAntimeridian<SINK, T>
+// fn gen_antimmeridian() -> Clip {
+//     Clip {
+//         point_visible_factory: StreamNodeFactory{Point}
+//         line_factory,
+//         interpolate_factory,
+//         start,
+//     }
+// }
+// impl<T> NodeFactory for StreamNodeFactory<Clip<Interpolate<T>, Line<T>, PV<T>, T>, T>
 // where
-    //     PR: Transform<C = Coordinate<T>>,
-    {
-        let start = LineElem {
-            p: Coordinate {
-                x: -T::PI(),
-                y: -T::PI() / T::from(2u8).unwrap(),
-            },
-            m: None,
-        };
-        let line = Line::default();
-        let ring_buffer = Rc::new(RefCell::new(ClipBuffer::default()));
-        let mut ring_sink: Box<Line<ClipBuffer<T>, T>> = Box::new(Line::default());
-        ring_sink.link_to_stream(ring_buffer.clone());
-
-        ClipAntimeridian::<SINK, T> {
-            // line_end_fn: Self::line_end_default,
-            // point_fn: Self::point_default,
-            // line_start_fn: Self::line_start_default,
-            base: ClipBase::new(
-                // projection_raw,
-                line,
-                ring_buffer,
-                ring_sink,
-                start,
-            ),
-        }
-    }
-
-    //     #[inline]
-    //     pub fn gen_clip(projection_raw: PR) -> Clip<PR, L, T> {
-    //         let start = LineElem {
-    //             p: Coordinate {
-    //                 x: -T::PI(),
-    //                 y: -T::PI() / T::from(2u8).unwrap(),
-    //             },
-    //             m: None,
-    //         };
-    //         Self::new(
-    //             projection_raw,
-    //             // ClipRaw::Antimeridian(ClipAntimeridian::new(projection_raw)),
-    //             start,
-    //         )
-    //     }
-}
-
-impl<SINK, T> PointVisible for ClipAntimeridian<SINK, T>
-where
-    SINK: Default + Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-    type PVC = Coordinate<T>;
-
-    #[inline]
-    fn point_visible(&self, _p: &Coordinate<T>, _z: Option<u8>) -> bool {
-        true
-    }
-}
-
-impl<SINK, T> Interpolate for ClipAntimeridian<SINK, T>
-where
-    SINK: Default + Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-    type IC = Coordinate<Self::IT>;
-    type IT = T;
-
-    // fn get_sink(&mut self) -> &mut SINK {
-    //     &mut self.base.sink
-    // }
-
-    fn interpolate(
-        &mut self,
-        to: Option<Coordinate<T>>,
-        from: Option<Coordinate<T>>,
-        direction: T,
-        // stream: &mut Self::IStream,
-    ) {
-        // let stream = Interpolate::get_sink(self);
-        let mut stream = self.base.sink.borrow_mut();
-        let phi: T;
-        match from {
-            None => {
-                phi = direction * T::FRAC_PI_2();
-                stream.point(
-                    &Coordinate {
-                        x: -T::PI(),
-                        y: phi,
-                    },
-                    None,
-                );
-                stream.point(
-                    &Coordinate {
-                        x: T::zero(),
-                        y: phi,
-                    },
-                    None,
-                );
-                stream.point(&Coordinate { x: T::PI(), y: phi }, None);
-                stream.point(
-                    &Coordinate {
-                        x: T::PI(),
-                        y: T::zero(),
-                    },
-                    None,
-                );
-                stream.point(
-                    &Coordinate {
-                        x: T::PI(),
-                        y: -phi,
-                    },
-                    None,
-                );
-                stream.point(
-                    &Coordinate {
-                        x: T::zero(),
-                        y: -phi,
-                    },
-                    None,
-                );
-                stream.point(
-                    &Coordinate {
-                        x: -T::PI(),
-                        y: -phi,
-                    },
-                    None,
-                );
-                stream.point(
-                    &Coordinate {
-                        x: -T::PI(),
-                        y: T::zero(),
-                    },
-                    None,
-                );
-                stream.point(
-                    &Coordinate {
-                        x: -T::PI(),
-                        y: phi,
-                    },
-                    None,
-                );
-            }
-            Some(from) => {
-                let to = to.unwrap();
-                if (from.x - to.x).abs() > T::epsilon() {
-                    let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
-
-                    phi = direction * lambda / T::from(2).unwrap();
-                    stream.point(&Coordinate { x: -lambda, y: phi }, None);
-                    stream.point(
-                        &Coordinate {
-                            x: T::zero(),
-                            y: phi,
-                        },
-                        None,
-                    );
-                    stream.point(&Coordinate { x: lambda, y: phi }, None);
-                } else {
-                    stream.point(&to, None);
-                }
-            }
-        }
-    }
-}
-
-/// Warning this breaks DRY, the stream is common to both ClipAntimeridian and
-/// ClipCircle!!!!
-impl<SINK, T> StreamIn for ClipAntimeridian<SINK, T>
-where
-    SINK: Default + Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-    type SInput = SINK;
-    #[inline]
-    fn stream_in(&mut self, stream: SINK)
-    where
-        T: CoordFloat + FloatConst,
-    {
-        let stream = Rc::new(RefCell::new(stream));
-        self.base.line.link_to_stream(stream);
-    }
-}
-
-// impl<'a, SINK, T> ClipAntimeridian<'a, SINK, T>
-// where
-//     // Rc<PR>: Transform<C = Coordinate<T>>,
-//     // PR: Transform<C = Coordinate<T>>,
-//     // MutStream: Stream<SC = Coordinate<T>>,
-//     SINK: Default + Stream<SC = Coordinate<T>>,
-//     // STREAM: Stream<SC = Coordinate<T>>,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 // {
+//     type T = T;
+//     fn generate(
+//         &self,
+//         sink: Rc<RefCell<dyn Stream<SC = Coordinate<Self::T>>>>,
+//     ) -> Rc<RefCell<dyn Stream<SC = Coordinate<Self::T>>>>
+// // where
+//     //     PR: Transform<C = Coordinate<T>>,
+//     {
+//         let start = LineElem {
+//             p: Coordinate {
+//                 x: -T::PI(),
+//                 y: -T::PI() / T::from(2u8).unwrap(),
+//             },
+//             m: None,
+//         };
+//         let line_factory = StreamNodeFactory::new(Line::default()).generate(sink);
+//         let ring_buffer = Rc::new(RefCell::new(ClipBuffer::default()));
+//         let mut ring_sink = line_factory.generate(ring_buffer);
+
+//         Rc::new(RefCell::new(Clip {
+//             pv: PV {},
+//             line_factory: StreamNodeFactory::new(Line::default()),
+//             interpolate: StreamNodeFactory::new(Interpolate {}),
+//             start,
+//         }))
+//     }
+// }
+
 //     #[inline]
-//     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-//         println!("clip point_default");
-//         if self.point_visible(p, None) {
-//             self.base.sink.point(p, m);
-//         }
+//     pub fn gen_clip(projection_raw: PR) -> Clip<PR, L, T> {
+//         let start = LineElem {
+//             p: Coordinate {
+//                 x: -T::PI(),
+//                 y: -T::PI() / T::from(2u8).unwrap(),
+//             },
+//             m: None,
+//         };
+//         Self::new(
+//             projection_raw,
+//             // ClipRaw::Antimeridian(ClipAntimeridian::new(projection_raw)),
+//             start,
+//         )
 //     }
 
 //     #[inline]
@@ -338,7 +137,7 @@ where
 
 //         let clean = self.base.ring_sink.clean();
 //         let mut ring_segments = match self.base.ring_buffer.borrow_mut().result() {
-//             Some(PathResultEnum::ClipBufferOutput(result)) => {
+//             Some(ResultEnum::ClipBufferOutput(result)) => {
 //                 // Can I find a way of doing this with the expense of dynamic conversion.
 //                 result
 //             }
@@ -416,95 +215,3 @@ where
 //         self.base.segments.push_back(filtered);
 //     }
 // }
-
-// /// Warning this breaks DRY, the stream is common to both ClipAntimeridian and
-// /// ClipCircle!!!!
-impl<'a, SINK, T> Stream for ClipAntimeridian<SINK, T>
-where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
-    // MutStream: Stream<SC = Coordinate<T>>,
-    SINK: Default + Stream<SC = Coordinate<T>>,
-    // STREAM: Stream<SC = Coordinate<T>> + Default,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-    type SC = Coordinate<T>;
-
-    #[inline]
-    fn point(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {
-        // (self.point_fn)(self, p, m);
-    }
-
-    #[inline]
-    fn line_start(&mut self) {
-        // (self.line_start_fn)(self);
-    }
-
-    #[inline]
-    fn line_end(&mut self) {
-        // (self.line_end_fn)(self);
-    }
-
-    fn polygon_start(&mut self) {
-        println!("clip  polygon start");
-        // self.point_fn = Self::point_ring;
-        // self.line_start_fn = Self::ring_start;
-        // self.line_end_fn = Self::ring_end;
-        self.base.segments.clear();
-        self.base.polygon.clear();
-    }
-    fn polygon_end(&mut self) {
-        println!("clip polygon_end");
-        // self.point_fn = Self::point_default;
-        // self.line_start_fn = Self::line_start_default;
-        // self.line_end_fn = Self::line_end_default;
-        println!("about to merge {:#?}", self.base.segments);
-        let segments_merged: Vec<Vec<LineElem<T>>> =
-            self.base.segments.clone().into_iter().flatten().collect();
-        // let start_inside = contains(&self.base.polygon, &self.base.start);
-        let start_inside = true;
-
-        if !segments_merged.is_empty() {
-            println!("mergeed is not empty {:#?}", self.base.segments);
-            // panic!("pause here");
-            if !self.base.polygon_started {
-                // self.base.sink.polygon_start();
-                self.base.polygon_started = true;
-            }
-            println!("into rejoin this path");
-
-            // self.rejoin(
-            //     &segments_merged,
-            //     compare_intersections,
-            //     start_inside,
-            //     // self,
-            //     // self.interpolate(),
-            //     // &mut self.base.sink,
-            // );
-        } else if start_inside {
-            if !self.base.polygon_started {
-                // self.base.sink.polygon_start();
-                self.base.polygon_started = true;
-            }
-            // self.base.sink.line_start();
-            self.interpolate(None, None, T::one());
-            // self.base.sink.line_end();
-        };
-        if self.base.polygon_started {
-            // self.base.sink.polygon_end();
-            self.base.polygon_started = false;
-        }
-        self.base.segments.clear();
-        self.base.polygon.clear();
-        println!("clip polygon_end -- exit");
-    }
-
-    fn sphere(&mut self) {
-        // self.base.sink.polygon_start();
-        // self.base.sink.line_start();
-        // self.interpolate(None, None, T::one(), &mut self.base.sink);
-        self.interpolate(None, None, T::one());
-        // self.base.sink.line_end();
-        // self.base.sink.polygon_end();
-    }
-}

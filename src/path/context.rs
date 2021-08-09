@@ -11,13 +11,13 @@ use web_sys::CanvasRenderingContext2d;
 // use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
-use super::PathResult;
-use super::PathResultEnum;
 use super::PointRadiusTrait;
+use super::Result;
+use super::ResultEnum;
 
 // use super::RenderingContext2d;
 #[derive(Clone, Debug)]
-pub struct PathContext<T>
+pub struct Context<T>
 where
     T: AsPrimitive<T>,
 {
@@ -27,7 +27,7 @@ where
     context: CanvasRenderingContext2d,
 }
 
-impl<T> PathContext<T>
+impl<T> Context<T>
 where
     T: AsPrimitive<T> + CoordFloat,
 {
@@ -42,7 +42,7 @@ where
     }
 }
 
-impl<T> PointRadiusTrait for PathContext<T>
+impl<T> PointRadiusTrait for Context<T>
 where
     T: AsPrimitive<T>,
 {
@@ -59,18 +59,18 @@ where
     }
 }
 
-impl<T> PathResult for PathContext<T>
+impl<T> Result for Context<T>
 where
     T: AsPrimitive<T> + CoordFloat,
 {
-    type Out = Option<PathResultEnum<T>>;
+    type Out = Option<ResultEnum<T>>;
     #[inline]
-    fn result(&mut self) -> Option<PathResultEnum<T>> {
+    fn result(&mut self) -> Option<ResultEnum<T>> {
         None
     }
 }
 
-impl<T> Stream for PathContext<T>
+impl<T> Stream for Context<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst + AsPrimitive<T>,
 {
@@ -123,7 +123,7 @@ where
                             p.x.to_f64().unwrap(),
                             p.y.to_f64().unwrap(),
                             self.radius.to_f64().unwrap(),
-                            0f64,
+                            0_f64,
                             std::f64::consts::TAU,
                         )
                         .expect("error writing arc to context");

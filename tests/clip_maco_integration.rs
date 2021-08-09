@@ -12,10 +12,10 @@ mod clip_maco_integration_test {
     use num_traits::AsPrimitive;
     use num_traits::FloatConst;
 
-    use rust_d3_geo::centroid::centroid_stream::CentroidStream;
+    use rust_d3_geo::centroid::stream::Stream;
     use rust_d3_geo::clip::antimeridian::line::Line;
-    use rust_d3_geo::clip::clip_base::ClipBase;
-    use rust_d3_geo::clip::clip_buffer::ClipBuffer;
+    use rust_d3_geo::clip::buffer::Buffer;
+    // use rust_d3_geo::clip::clip_base::ClipBase;
     use rust_d3_geo::clip::line_elem::LineElem;
     use rust_d3_geo::clip::point_visible_trait::PointVisible;
     use rust_d3_geo::clip::ClipOps;
@@ -23,19 +23,18 @@ mod clip_maco_integration_test {
     use rust_d3_geo::stream::Stream;
 
     #[derive(ClipOps)]
-    pub struct ClipTest<SINK, T>
+    pub struct ClipTest<T>
     where
-        SINK: Default + Stream<SC = Coordinate<T>>,
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         pub x: u32,
-        pub s: SINK,
-        base: ClipBase<Line<SINK, T>, SINK, T>,
+        // pub s: SINK,
+        base: ClipBase<Line<T>, T>,
     }
 
-    impl<SINK, T> PointVisible for ClipTest<SINK, T>
+    impl<SINK, T> PointVisible for StreamNode<ClipTest<SINK, T>, T>
     where
-        SINK: Default + Stream<SC = Coordinate<T>>,
+        SINK: Stream<SC = Coordinate<T>>,
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         type PVC = Coordinate<T>;
@@ -46,9 +45,8 @@ mod clip_maco_integration_test {
         }
     }
 
-    impl<SINK, T> Stream for ClipTest<SINK, T>
+    impl<T> Stream for StreamNode<ClipTest<SINK, T>, T>
     where
-        SINK: Default + Stream<SC = Coordinate<T>>,
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         type SC = Coordinate<T>;
@@ -70,8 +68,8 @@ mod clip_maco_integration_test {
             m: None,
         };
         let line = Line::default();
-        let ring_buffer = Rc::new(RefCell::new(ClipBuffer::default()));
-        let mut ring_sink: Box<Line<ClipBuffer<f64>, f64>> = Box::new(Line::default());
+        let ring_buffer = Rc::new(RefCell::new(Buffer::default()));
+        let mut ring_sink: Box<Line<Buffer<f64>, f64>> = Box::new(Line::default());
         ring_sink.link_to_stream(ring_buffer.clone());
 
         let a = ClipTest {

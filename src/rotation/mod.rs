@@ -28,8 +28,8 @@ mod tests {
         println!("a rotation of [+90°, 0°] wraps around when crossing the antimeridian");
         let rotation =
             Rotation::new(90f64, 0f64, 0f64).transform(&Coordinate { x: 150f64, y: 0f64 });
-        assert!(in_delta(rotation.x, -120f64, 1e-6));
-        assert!(in_delta(rotation.y, 0f64, 1e-6));
+        assert!(in_delta(rotation.x, -120_f64, 1e-6));
+        assert!(in_delta(rotation.y, 0_f64, 1e-6));
     }
 
     #[test]
@@ -37,16 +37,16 @@ mod tests {
         println!("a rotation of [-45°, 45°] rotates longitude and latitude");
         let rotation =
             Rotation::new(-45f64, 45f64, 0f64).transform(&Coordinate { x: 0f64, y: 0f64 });
-        assert!(in_delta(rotation.x, -54.73561f64, 1e-6));
-        assert!(in_delta(rotation.y, 30f64, 1e-6));
+        assert!(in_delta(rotation.x, -54.73561_f64, 1e-6));
+        assert!(in_delta(rotation.y, 30_f64, 1e-6));
     }
 
     #[test]
     fn rotation_inverse_long_lat() {
         println!("a rotation of [-45°, 45°] rotates longitude and latitude");
-        let rotation = Rotation::new(-45f64, 45f64, 0f64).invert(&Coordinate {
-            x: -54.73561f64,
-            y: 30f64,
+        let rotation = Rotation::new(-45_f64, 45_f64, 0_f64).invert(&Coordinate {
+            x: -54.73561_f64,
+            y: 30_f64,
         });
         assert!(in_delta(rotation.x, 0f64, 1e-6));
         assert!(in_delta(rotation.y, 0f64, 1e-6));

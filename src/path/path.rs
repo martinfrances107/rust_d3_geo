@@ -17,7 +17,6 @@
 // use crate::path::PathResult;
 // // use crate::projection::projection_mutator::ProjectionMutator;
 // use crate::projection::projection_trait::ProjectionTrait;
-// // use crate::projection::ProjectionRawTrait;
 // // use crate::stream::stream_dst::StreamDst;
 // use crate::stream::Stream;
 // use crate::stream::Streamable;
@@ -25,7 +24,7 @@
 // use crate::{data_object::DataObject, path::path_area_stream::PathAreaStream};
 
 // use super::path_context::PathContext;
-// use super::PathResultEnum;
+// use super::ResultEnum;
 // use super::PointRadiusEnum;
 // use super::PointRadiusTrait;
 
@@ -81,7 +80,7 @@
 //             .context_fn(context)
 //     }
 
-//     pub fn object(&mut self, object: Option<DataObject<T>>) -> Option<PathResultEnum<T>>
+//     pub fn object(&mut self, object: Option<DataObject<T>>) -> Option<ResultEnum<T>>
 //     where
 //         <P as ProjectionTrait<'a>>::T: AsPrimitive<<P as ProjectionTrait<'a>>::T>
 //             + AddAssign
@@ -129,7 +128,7 @@
 //     }
 
 //     //     #[inline]
-//     //     pub fn area(&self, object: &DataObject<T>) -> Option<PathResultEnum<T>>
+//     //     pub fn area(&self, object: &DataObject<T>) -> Option<ResultEnum<T>>
 //     //     where
 //     //         T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst + Float,
 //     //         // TODO Is this a bodge ... can I place this higher up?

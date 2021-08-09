@@ -30,7 +30,7 @@ where
 {
     let delta = match delta_p {
         Some(d) => d,
-        None => T::from(1e-6f64).unwrap(),
+        None => T::from(1e-6_f64).unwrap(),
     };
     println!("project_equal");
     println!(
@@ -68,6 +68,6 @@ fn spherical_equal<T: CoordFloat + Debug + Display>(
 }
 
 fn logitude_equal<T: Float>(actual: T, expected: T, delta: T) -> bool {
-    let actual = (actual - expected).abs() % T::from(360f64).unwrap();
-    return actual <= delta || actual >= T::from(360f64).unwrap() - delta;
+    let actual = (actual - expected).abs() % T::from(360_f64).unwrap();
+    return actual <= delta || actual >= T::from(360_f64).unwrap() - delta;
 }

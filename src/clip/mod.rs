@@ -1,24 +1,22 @@
 pub mod antimeridian;
+pub mod buffer;
 pub mod circle;
 mod clean;
 pub mod clip;
-pub mod clip_base;
-pub mod clip_buffer;
-pub mod clip_raw;
+// pub mod clip_enum;
 pub mod compare_intersections;
-pub mod interpolate_trait;
 pub mod line_elem;
-pub mod line_trait;
 pub mod point_visible_trait;
-pub mod rejoin;
 
-use std::cell::RefCell;
+mod rejoin;
+pub mod stream_node_clip_factory;
+// use std::cell::RefCell;
 // use std::cmp::Ordering;
 // use std::fmt::Debug;
 // use std::fmt::Display;
 // use std::ops::AddAssign;
-use std::rc::Rc;
-
+// use super::clip_enum::ClipEnum;
+// use std::rc::Rc;
 // use geo::CoordFloat;
 // use geo::Coordinate;
 // use num_traits::AsPrimitive;
@@ -26,29 +24,51 @@ use std::rc::Rc;
 // use num_traits::Float;
 
 // use crate::clip::compare_intersections::compare_intersections;
-use crate::clip::rejoin::Rejoin;
+// use crate::clip::rejoin::rejoin;
 // use crate::path::PathResult;
-// use crate::path::PathResultEnum;
+// use crate::path::ResultEnum;
 // use crate::polygon_contains::contains;
 
-use crate::stream::stream_in_trait::StreamIn;
 use crate::stream::Stream;
+use crate::Debug;
+
+// Takes a line and cuts into visible segments. Return values used for polygon
+// clipPing: 0 - there were intersections or the line was empty; 1 - no
+// intersections 2 - there were intersections, and the first and last segments
+// should be rejoined.
+#[derive(Debug, Clone, Copy)]
+pub enum CleanEnum {
+    Undefined,
+    IntersectionsOrEmpty,
+    NoIntersections,
+    IntersectionsRejoin,
+}
+
+impl Default for CleanEnum {
+    fn default() -> CleanEnum {
+        CleanEnum::Undefined
+    }
+}
+
+pub trait Clean {
+    /// A clip trait.
+    /// Rejoin first and last segments if there were intersections and the first
+    /// and last points were visible.
+    fn clean(&self) -> CleanEnum;
+}
 
 // use crate::clip::rejoin::intersection::Intersection;
 // use crate::clip::line_elem::LineElem;
 // use crate::stream::Stream;
 // use crate::clip::rejoin::link::link;
 // use clean::CleanEnum;
-use clip_buffer::ClipBuffer;
+// use buffer::Buffer;
 // use rejoin::intersection::Intersection;
-// use crate::projection::ProjectionRawTrait;
 // use crate::point_equal::point_equal;
 // use clip_base::ClipBase;
-use interpolate_trait::Interpolate;
-use point_visible_trait::PointVisible;
-// pub trait Clip: PointVisible + Interpolate + Stream
-use clean::Clean;
-// use line_elem::LineElem;
+// use interpolate_trait::Interpolate;
+// use point_visible_trait::PointVisible;
+// pub trait Clip: PointVisible + Interpolate + Strea// use line_elem::LineElem;
 
 /// This trait is connected with the submodule
 /// clip_ops_macro_derive
@@ -71,13 +91,36 @@ pub trait ClipOps
     fn ring_end(&mut self);
 }
 
-pub trait Clip: PointVisible + Interpolate + Rejoin + Stream + StreamIn {}
+pub trait ClipTrait: Clone + PointVisible + InterpolateTrait + Stream {}
 
-pub trait LCB: Clean + Stream {
-    // type T;
-    type STREAM;
-    fn link_to_stream(&mut self, stream: Rc<RefCell<Self::STREAM>>);
+pub trait PointVisible: Clone + Debug {
+    type PVC;
+    fn point_visible(&self, p: &Self::PVC, z: Option<u8>) -> bool;
 }
+
+pub trait InterpolateRaw: Clone + Debug {}
+pub trait InterpolateTrait {
+    type IT;
+    type IC;
+
+    fn interpolate(
+        &mut self,
+        to: Option<Self::IC>,
+        from: Option<Self::IC>,
+        dir: Self::IT,
+        // stream: &mut Self::IStream,
+    );
+}
+
+pub trait LineRaw: Clone + Debug {}
+pub trait LineFactory {}
+pub trait Line: Clone + Clean + Debug {}
+
+// pub trait LCB: Clean + Stream {
+//     // type T;
+//     type STREAM;
+//     fn link_to_stream(&mut self, stream: Rc<RefCell<Self::STREAM>>);
+// }
 
 // Impl for dyn Clip<> this is common to ClipAntimeridian and ClipCircle.
 // impl<L: LCB, S, T> ClipBaseOps<T>
@@ -169,7 +212,7 @@ pub trait LCB: Clean + Stream {
 //         let clean = self.ring_sink_clean();
 
 //         // let mut ring_segments = match self.get_base().ring_buffer.borrow_mut().result() {
-//         //     Some(PathResultEnum::ClipBufferOutput(result)) => {
+//         //     Some(ResultEnum::BufferOutput(result)) => {
 //         //         // Can I find a way of doing this with the expense of dynamic conversion.
 //         //         result
 //         //     }

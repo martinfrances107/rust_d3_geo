@@ -18,7 +18,7 @@ mod equirectangular_test {
         let equirectangular: Projection<StreamDrainStub<f64>, EquirectangularRaw<f64>, f64> =
             Projection::new(EquirectangularRaw::default(), None)
                 .translate(&Coordinate { x: 0f64, y: 0f64 })
-                .scale(1f64);
+                .scale(1_f64);
 
         let pi = std::f64::consts::PI;
 
@@ -116,7 +116,7 @@ mod equirectangular_test {
             Projection::new(EquirectangularRaw::default(), None)
                 .rotate([30f64, 0f64, 0f64])
                 .translate(&Coordinate { x: 0f64, y: 0f64 })
-                .scale(1f64);
+                .scale(1_f64);
 
         let pi = std::f64::consts::PI;
 
@@ -218,10 +218,10 @@ mod equirectangular_test {
     fn test_rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
         let equirectangular: Projection<StreamDrainStub<f64>, EquirectangularRaw<f64>, f64> =
-            EquirectangularRaw::gen_projection_mutator()
+            EquirectangularRaw::gen_projection()
                 .rotate([30f64, 30f64, 0f64])
                 .translate(&Coordinate { x: 0f64, y: 0f64 })
-                .scale(1f64);
+                .scale(1_f64);
 
         assert!(projection_equal(
             &equirectangular,
@@ -382,20 +382,20 @@ mod equirectangular_test {
         assert!(projection_equal(
             &equirectangular,
             &Coordinate {
-                x: 30f64,
-                y: -30f64
+                x: 30_f64,
+                y: -30_f64
             },
             &Coordinate {
-                x: 0.6947382761967031f64,
-                y: 0.21823451436745964f64
+                x: 0.6947382761967031_f64,
+                y: 0.21823451436745964_f64
             },
             None
         ));
         assert!(projection_equal(
             &equirectangular,
             &Coordinate {
-                x: -30f64,
-                y: 30f64
+                x: -30_f64,
+                y: 30_f64
             },
             &Coordinate {
                 x: -0.6947382761967031f64,

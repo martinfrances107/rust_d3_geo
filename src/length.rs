@@ -6,7 +6,7 @@ use num_traits::FloatConst;
 
 use crate::stream::Streamable;
 
-use super::stream::Stream;
+use super::stream::Stream as StreamTrait;
 
 use derivative::Derivative;
 use geo::{CoordFloat, Coordinate};
@@ -14,7 +14,7 @@ use geo::{CoordFloat, Coordinate};
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct LengthStream<T: CoordFloat + FloatConst> {
+pub struct Stream<T: CoordFloat + FloatConst> {
     // sphere_fn: fn(&mut Self, f64, f64),
     #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, &Coordinate<T>),
@@ -28,9 +28,7 @@ pub struct LengthStream<T: CoordFloat + FloatConst> {
     cos_phi0: T,
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default
-    for LengthStream<T>
-{
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default for Stream<T> {
     fn default() -> Self {
         return Self {
             // sphere_fn: Self::noop,
@@ -54,12 +52,12 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default
 
 //     }
 // }
-impl<T> LengthStream<T>
+impl<T> Stream<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn calc(object: &impl Streamable<T = T>) -> T {
-        let mut ls: LengthStream<T> = LengthStream::default();
+        let mut ls = Stream::default();
         object.to_stream(&mut ls);
         return ls.length_sum;
     }
@@ -106,7 +104,7 @@ where
     fn line_end_noop(&mut self) {}
 }
 
-impl<T> Stream for LengthStream<T>
+impl<T> StreamTrait for Stream<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {

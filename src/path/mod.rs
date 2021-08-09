@@ -1,9 +1,9 @@
+pub mod area_stream;
 pub mod bounds_stream;
+pub mod context;
+pub mod context_stream;
 pub mod path;
-pub mod path_area_stream;
-pub mod path_context;
-pub mod path_context_stream;
-pub mod path_string;
+pub mod string;
 
 use std::collections::VecDeque;
 // use std::default::Default;
@@ -22,12 +22,12 @@ use crate::clip::line_elem::LineElem;
 use crate::stream::Stream;
 
 #[derive(Clone, Debug)]
-pub enum PathResultEnum<T>
+pub enum ResultEnum<T>
 where
     T: CoordFloat,
 {
     Path(Vec<Vec<Coordinate<T>>>),
-    ClipBufferOutput(VecDeque<Vec<LineElem<T>>>),
+    BufferOutput(VecDeque<Vec<LineElem<T>>>),
     String(String),
     Area(T),
     Measure(T),
@@ -35,8 +35,7 @@ where
     Centroid(T),
 }
 
-pub trait PathResult // where
-{
+pub trait Result {
     type Out;
     fn result(&mut self) -> Self::Out;
 }
@@ -45,7 +44,7 @@ trait PointRadiusTrait {
     type PrtT;
     // TODO must add getter here.
     // There are complication about the mix return type here.
-    // PathContext or PathString .. wrapped in a PathContextStream!
+    // Context or PathString .. wrapped in a ContextStream!
     // fn get_point_radius...
     fn point_radius(&mut self, val: Self::PrtT);
 }
@@ -90,7 +89,7 @@ trait PathTrait: PointRadiusTrait // where
     // fn result(&self);
 }
 
-trait PathStreamTrait<T>: Stream + PathTrait + PathResult
+trait PathStreamTrait<T>: Stream + PathTrait + Result
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {

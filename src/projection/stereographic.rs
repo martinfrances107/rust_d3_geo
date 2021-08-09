@@ -1,3 +1,12 @@
+use crate::clip::antimeridian::interpolate::Interpolate;
+use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::pv::PV;
+use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::projection::builder::Builder;
+use crate::projection::scale::Scale;
+use crate::projection::stream_node_factory::StreamNodeFactory;
+use crate::projection::Raw;
+use crate::stream::Stream;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
@@ -7,11 +16,6 @@ use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
 use super::azimuthal::azimuthal_invert;
-use super::projection::Projection;
-// use super::projection::StreamOrValueMaybe;
-use crate::projection::projection_trait::ProjectionTrait;
-use crate::projection::scale::Scale;
-use crate::stream::Stream;
 use crate::Transform;
 
 /// Why the Phantom Data is required here...
@@ -21,14 +25,14 @@ use crate::Transform;
 #[derive(Copy, Clone, Debug)]
 pub struct Stereographic<T>
 where
-    T: CoordFloat,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     phantom: PhantomData<T>,
 }
 
 impl<T> Default for Stereographic<T>
 where
-    T: CoordFloat,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn default() -> Self {
         Stereographic {
@@ -37,19 +41,29 @@ where
     }
 }
 
+impl<T> Raw for Stereographic<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type T = T;
+}
 impl<T> Stereographic<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, Stereographic<T>, T>
+    pub fn gen_projection_mutator<'a, DRAIN>(
+    ) -> Builder<DRAIN, Interpolate<T>, Line<T>, Stereographic<T>, PV<T>, T>
     where
-        DRAIN: 'a + Default + Stream<SC = Coordinate<T>>,
+        DRAIN: Stream<SC = Coordinate<T>>,
     {
-        Projection::new(Stereographic::default(), None)
-            .scale(T::from(250f64).unwrap())
-            // .clip_angle(StreamOrValueMaybe::Value(T::from(142f64).unwrap()))
-            .clip_angle(T::from(142f64).unwrap())
+        Builder::new(
+            StreamNodeClipFactory::new(Interpolate::default(), Line::default(), PV::default()),
+            Stereographic::default(),
+        )
+        .scale(T::from(250_f64).unwrap())
+        // .clip_angle(T::from(142_f64).unwrap())
+        // .clip_angle(StreamOrValueMaybe::Value(T::from(142f64).unwrap()))
     }
 
     #[inline]
@@ -62,7 +76,7 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Transform
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
     for Stereographic<T>
 {
     type C = Coordinate<T>;

@@ -8,8 +8,8 @@ use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
-use super::PathResult;
-use super::PathResultEnum;
+use super::Result;
+use super::ResultEnum;
 
 use derivative::Derivative;
 
@@ -43,16 +43,16 @@ where
     }
 }
 
-impl<T> PathResult for BoundsStream<T>
+impl<T> Result for BoundsStream<T>
 where
     T: AddAssign + CoordFloat,
 {
-    type Out = Option<PathResultEnum<T>>;
-    fn result(&mut self) -> Option<PathResultEnum<T>> {
+    type Out = Option<ResultEnum<T>>;
+    fn result(&mut self) -> Option<ResultEnum<T>> {
         let bounds = [self.p0, self.p1];
-        Some(PathResultEnum::Bounds(bounds));
+        Some(ResultEnum::Bounds(bounds));
         *self = Self::default();
-        Some(PathResultEnum::Bounds(bounds))
+        Some(ResultEnum::Bounds(bounds))
     }
 }
 

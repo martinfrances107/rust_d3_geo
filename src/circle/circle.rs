@@ -9,19 +9,19 @@ use num_traits::FloatConst;
 use super::StreamType;
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
 use crate::rotation::rotation_identity::RotationIdentity;
-use crate::stream::Stream;
+use crate::stream::Stream as StreamTrait;
 use crate::Transform;
 
 /// Output of CircleGenertor::circle()
-#[derive(Debug)]
-pub struct CircleStream<T: CoordFloat + FloatConst> {
+#[derive(Clone, Debug)]
+pub struct Stream<T: CoordFloat + FloatConst> {
     pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
     pub rotate: RotateRadiansEnum<T>,
     pub ring: Vec<Coordinate<T>>,
 }
 
-impl<T: CoordFloat + FloatConst> Default for CircleStream<T> {
+impl<T: CoordFloat + FloatConst> Default for Stream<T> {
     #[inline]
     fn default() -> Self {
         Self {
@@ -33,7 +33,7 @@ impl<T: CoordFloat + FloatConst> Default for CircleStream<T> {
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Stream for CircleStream<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> StreamTrait for Stream<T> {
     type SC = Coordinate<T>;
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         let x_rotated = &self.rotate.invert(&p);

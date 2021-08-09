@@ -1,3 +1,5 @@
+use crate::projection::stream_node::StreamNode;
+use crate::stream::Stream;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::fmt::Formatter;
@@ -98,5 +100,36 @@ where
             RotateRadiansEnum::RPG(rpg) => rpg.invert(p),
             RotateRadiansEnum::I(i) => i.invert(p),
         }
+    }
+}
+
+impl<SINK, T> Stream for StreamNode<RotateRadiansEnum<T>, SINK, T>
+where
+    SINK: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type SC = Coordinate<T>;
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        self.sink.borrow_mut().point(&self.raw.transform(p), m);
+    }
+    #[inline]
+    fn sphere(&mut self) {
+        self.sink.borrow_mut().sphere();
+    }
+    #[inline]
+    fn line_start(&mut self) {
+        self.sink.borrow_mut().line_start();
+    }
+    #[inline]
+    fn line_end(&mut self) {
+        self.sink.borrow_mut().line_end();
+    }
+    #[inline]
+    fn polygon_start(&mut self) {
+        self.sink.borrow_mut().polygon_start()
+    }
+    #[inline]
+    fn polygon_end(&mut self) {
+        self.sink.borrow_mut().polygon_end();
     }
 }

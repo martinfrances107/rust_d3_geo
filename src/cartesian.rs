@@ -26,12 +26,12 @@ pub fn cartesian<T: CoordFloat>(spherical: &Coordinate<T>) -> [T; 3] {
 }
 
 #[inline]
-pub fn cartesian_dot<T: CoordFloat>(a: &[T; 3], b: &[T; 3]) -> T {
+pub fn dot<T: CoordFloat>(a: &[T; 3], b: &[T; 3]) -> T {
     a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 }
 
 #[inline]
-pub fn cartesian_cross<T: CoordFloat>(a: &[T; 3], b: &[T; 3]) -> [T; 3] {
+pub fn cross<T: CoordFloat>(a: &[T; 3], b: &[T; 3]) -> [T; 3] {
     [
         a[1] * b[2] - a[2] * b[1],
         a[2] * b[0] - a[0] * b[2],
@@ -40,29 +40,29 @@ pub fn cartesian_cross<T: CoordFloat>(a: &[T; 3], b: &[T; 3]) -> [T; 3] {
 }
 
 #[inline]
-pub fn cartesian_add<T: CoordFloat>(a: [T; 3], b: [T; 3]) -> [T; 3] {
+pub fn add<T: CoordFloat>(a: [T; 3], b: [T; 3]) -> [T; 3] {
     [a[0] + b[0], a[1] + b[1], a[2] + b[2]]
 }
 
-pub fn cartesian_add_in_place<T: CoordFloat>(a: &mut [T; 3], b: &[T; 3]) {
+pub fn add_in_place<T: CoordFloat>(a: &mut [T; 3], b: &[T; 3]) {
     a[0] = a[0] + b[0];
     a[1] = a[1] + b[1];
     a[2] = a[2] + b[2];
 }
 
 #[inline]
-pub fn cartesian_scale<T: CoordFloat>(vector: &[T; 3], k: T) -> [T; 3] {
+pub fn scale<T: CoordFloat>(vector: &[T; 3], k: T) -> [T; 3] {
     [k * vector[0], k * vector[1], k * vector[2]]
 }
 
-pub fn cartesian_normalize_in_place<T: CoordFloat>(d: &mut [T; 3]) {
+pub fn normalize_in_place<T: CoordFloat>(d: &mut [T; 3]) {
     let l = (d[0] * d[0] + d[1] * d[1] + d[2] * d[2]).sqrt();
     d[0] = d[0] / l;
     d[1] = d[1] / l;
     d[2] = d[2] / l;
 }
 
-pub fn cartesian_normalize<T: CoordFloat>(d: &[T; 3]) -> [T; 3] {
+pub fn normalize<T: CoordFloat>(d: &[T; 3]) -> [T; 3] {
     let l = (d[0] * d[0] + d[1] * d[1] + d[2] * d[2]).sqrt();
     return [d[0] / l, d[1] / l, d[2] / l];
 }

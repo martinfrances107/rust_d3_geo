@@ -16,7 +16,7 @@ pub trait Scale
 //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 {
     type ST;
-    type P;
+    // type Projection;
     fn get_scale(&self) -> Self::ST;
     // /**
     //  * Sets the projection’s scale factor to the specified value and returns the projection.
@@ -25,5 +25,5 @@ pub trait Scale
     //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
     //  */
     // fn scale(&mut self, scale: &F);
-    fn scale(self, scale: Self::ST) -> Self::P;
+    fn scale(self, scale: Self::ST) -> Self;
 }

@@ -7,15 +7,14 @@
 // use num_traits::FloatConst;
 
 // use super::projection::Projection;
-// use super::ProjectionRawTrait;
 
 pub trait Center
 // where
-//     PR: ProjectionRawTrait,
+//     PR: ProjectionRaw,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 {
     type C;
-    type P;
+    // type Projection;
     /**
      * Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
      */
@@ -28,5 +27,5 @@ pub trait Center
      *
      * @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
      */
-    fn center(self, point: Self::C) -> Self::P;
+    fn center(self, point: Self::C) -> Self;
 }

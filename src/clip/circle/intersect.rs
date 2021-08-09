@@ -1,11 +1,11 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
+use crate::cartesian::add_in_place;
 use crate::cartesian::cartesian;
-use crate::cartesian::cartesian_add_in_place;
-use crate::cartesian::cartesian_cross;
-use crate::cartesian::cartesian_dot;
-use crate::cartesian::cartesian_scale;
+use crate::cartesian::cross;
+use crate::cartesian::dot;
+use crate::cartesian::scale;
 use crate::cartesian::spherical_r;
 use crate::clip::line_elem::LineElem;
 
@@ -33,8 +33,8 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     // We have two planes, n1.p = d1 and n2.p = d2.
     // Find intersection line p(t) = c1 n1 + c2 n2 + t (n1 ⨯ n2).
     let n1 = [T::one(), T::zero(), T::zero()]; // normal
-    let n2 = cartesian_cross(&pa, &pb);
-    let n2n2 = cartesian_dot(&n2, &n2);
+    let n2 = cross(&pa, &pb);
+    let n2n2 = dot(&n2, &n2);
     let n1n2 = n2[0]; // cartesianDot(n1, n2),
     let determinant = n2n2 - n1n2 * n1n2;
 
@@ -42,27 +42,27 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     if determinant.is_zero() {
         // return !two && a;
         println!("returns two polar points");
-        if !two {
-            return IntersectReturn::One(Some(*a));
-        } else {
+        if two {
             return IntersectReturn::False;
+        } else {
+            return IntersectReturn::One(Some(*a));
         }
     };
 
     let c1 = cr * n2n2 / determinant;
     let c2 = -cr * n1n2 / determinant;
-    let n1xn2 = cartesian_cross(&n1, &n2);
+    let n1xn2 = cross(&n1, &n2);
     #[allow(non_snake_case)]
-    let mut A = cartesian_scale(&n1, c1);
+    let mut A = scale(&n1, c1);
     #[allow(non_snake_case)]
-    let B = cartesian_scale(&n2, c2);
-    cartesian_add_in_place(&mut A, &B);
+    let B = scale(&n2, c2);
+    add_in_place(&mut A, &B);
 
     // Solve |p(t)|^2 = 1.
     let u = n1xn2;
-    let w = cartesian_dot(&A, &u);
-    let uu = cartesian_dot(&u, &u);
-    let t2 = w * w - uu * (cartesian_dot(&A, &A) - T::one());
+    let w = dot(&A, &u);
+    let uu = dot(&u, &u);
+    let t2 = w * w - uu * (dot(&A, &A) - T::one());
 
     if t2 < T::zero() {
         println!("intersect returns nothing.");
@@ -70,8 +70,8 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     }
 
     let t = t2.sqrt();
-    let mut q = cartesian_scale(&u, (-w - t) / uu);
-    cartesian_add_in_place(&mut q, &A);
+    let mut q = scale(&u, (-w - t) / uu);
+    add_in_place(&mut q, &A);
     println!("q before spherical {:?}", q);
     // Javascript has implicit cast q of from [F;3] to a Point here.
     let q: Coordinate<T> = spherical_r(&q);
@@ -136,8 +136,8 @@ pub fn intersect<T: CoordFloat + FloatConst>(
 
     // No javascript test uses this code block!!!!
     if condition {
-        let mut q1 = cartesian_scale(&u, (-w + t) / uu);
-        cartesian_add_in_place(&mut q1, &A);
+        let mut q1 = scale(&u, (-w + t) / uu);
+        add_in_place(&mut q1, &A);
         return IntersectReturn::Two([q, spherical_r(&q1)]);
     }
 

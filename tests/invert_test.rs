@@ -4,7 +4,7 @@ mod invert_test {
 
     use geo::Coordinate;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
-    use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
+    // use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mecator::Mecator;
     use rust_d3_geo::projection::orthographic::Orthographic;

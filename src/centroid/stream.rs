@@ -1,4 +1,4 @@
-use crate::stream::Stream;
+use crate::stream::Stream as StreamTrait;
 use crate::stream::Streamable;
 
 use std::fmt::Display;
@@ -17,7 +17,7 @@ pub const EPSILON2: f64 = 1e-12;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct CentroidStream<T: CoordFloat> {
+pub struct Stream<T: CoordFloat> {
     W0: T,
     W1: T,
     X0: T,
@@ -42,27 +42,29 @@ pub struct CentroidStream<T: CoordFloat> {
     line_end_fn: fn(&mut Self),
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst> Default
-    for CentroidStream<T>
-{
+/// The use is nan.
+///
+/// A) In the JS version these varibles are undefined.
+/// The intent is to insists that the values are written before being read.
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default for Stream<T> {
     fn default() -> Self {
         return Self {
-            W0: T::default(),
-            W1: T::default(),
-            X0: T::default(),
-            Y0: T::default(),
-            Z0: T::default(),
-            X1: T::default(),
-            Y1: T::default(),
-            Z1: T::default(),
-            X2: T::default(),
-            Y2: T::default(),
-            Z2: T::default(),
-            lambda00: T::default(),
-            phi00: T::default(),
-            x0: T::default(),
-            y0: T::default(),
-            z0: T::default(),
+            W0: T::nan(),
+            W1: T::nan(),
+            X0: T::nan(),
+            Y0: T::nan(),
+            Z0: T::nan(),
+            X1: T::nan(),
+            Y1: T::nan(),
+            Z1: T::nan(),
+            X2: T::nan(),
+            Y2: T::nan(),
+            Z2: T::nan(),
+            lambda00: T::nan(),
+            phi00: T::nan(),
+            x0: T::nan(),
+            y0: T::nan(),
+            z0: T::nan(),
             point_fn: Self::centroid_point,
             line_start_fn: Self::centroid_line_start,
             line_end_fn: Self::centroid_line_end,
@@ -70,7 +72,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display> CentroidStream<T> {
+impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display> Stream<T> {
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
         self.X0 += (x - self.X0) / self.W0;
@@ -155,10 +157,10 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display> Centroid
         let m = (cx * cx + cy * cy + cz * cz).sqrt();
         let w = m.asin(); // line weight = angle
         let v;
-        if m != T::zero() {
-            v = -w / m;
-        } else {
+        if m == T::zero() {
             v = T::zero();
+        } else {
+            v = -w / m;
         } // area weight multiplier
 
         self.X2 += v * cx;
@@ -217,9 +219,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display> Centroid
     }
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display> Stream
-    for CentroidStream<T>
-{
+impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display> StreamTrait for Stream<T> {
     type SC = Coordinate<T>;
 
     fn sphere(&mut self) {}

@@ -8,15 +8,16 @@ use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
-use super::PathResult;
-use super::PathResultEnum;
+use super::Result;
+use super::ResultEnum;
 
 use derivative::Derivative;
 
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct PathAreaStream<T>
+/// AreaStream is a pipeline terminating object ( a drain object ).
+pub struct AreaStream<T>
 where
     T: CoordFloat,
 {
@@ -32,7 +33,7 @@ where
     line_end_fn: fn(&mut Self),
 }
 
-impl<T> Default for PathAreaStream<T>
+impl<T> Default for AreaStream<T>
 where
     T: AddAssign + CoordFloat,
 {
@@ -56,7 +57,7 @@ where
     }
 }
 
-impl<T> PathAreaStream<T>
+impl<T> AreaStream<T>
 where
     T: AddAssign + CoordFloat,
 {
@@ -90,24 +91,24 @@ where
     fn line_noop(&mut self) {}
 }
 
-impl<T> PathResult for PathAreaStream<T>
+impl<T> Result for AreaStream<T>
 where
     T: AddAssign + CoordFloat,
 {
-    type Out = Option<PathResultEnum<T>>;
-    fn result(&mut self) -> Option<PathResultEnum<T>> {
+    type Out = Option<ResultEnum<T>>;
+    fn result(&mut self) -> Option<ResultEnum<T>> {
         let area = self.area_sum / T::from(2).unwrap();
         self.area_sum = T::zero();
-        Some(PathResultEnum::Area(area))
+        Some(ResultEnum::Area(area))
     }
 }
 
-impl<T> Stream for PathAreaStream<T>
+impl<T> Stream for AreaStream<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
-    // ?    type SD = PathAreaStream<T>;
+    // ?    type SD = AreaStream<T>;
     // type ST = T;
 
     #[inline]

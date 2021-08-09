@@ -20,7 +20,7 @@
 //     use rust_d3_geo::path::path::Path;
 //     use rust_d3_geo::path::path_string::PathString;
 //     use rust_d3_geo::Transform;
-//     use rust_d3_geo::path::PathResultEnum;
+//     use rust_d3_geo::path::ResultEnum;
 //     use rust_d3_geo::projection::projection_trait::ProjectionTrait;
 //     use rust_d3_geo::projection::scale::Scale;
 //     use rust_d3_geo::projection::projection::Projection;
@@ -42,7 +42,7 @@
 //     {
 //         match Path::generate(Some(projection), None).object(Some(object)) {
 //             Some(p) => match p {
-//                 PathResultEnum::String(s) => return s,
+//                 ResultEnum::String(s) => return s,
 //                 _ => panic!("Expecting an area."),
 //             },
 //             None => {

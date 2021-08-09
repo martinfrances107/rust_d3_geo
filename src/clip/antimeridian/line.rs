@@ -1,124 +1,68 @@
 use std::default::Default;
 use std::fmt::Display;
-// use std::marker::PhantomData;
-use std::cell::RefCell;
 use std::ops::AddAssign;
-use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-// use crate::clip::ClipBuffer;
-// use crate::projection::projection_trait::ProjectionTrait;s
-// use crate::projection::ProjectionRawTrait;
-use crate::clip::clean::Clean;
-use crate::clip::clean::CleanEnum;
-// use crate::clip::clip_buffer::ClipBuffer;
-use crate::clip::LCB;
-// use crate::stream::stream_in_trait::StreamIn;
+use crate::clip::Clean;
+use crate::clip::CleanEnum;
+use crate::clip::Line as LineTrait;
+use crate::clip::LineRaw;
+use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
-
-// use crate::Transform;
 
 use super::intersect::intersect;
 
-#[derive(Debug)]
-// Line is unlike other object that accept a STREAM object.
-// This struct is dual use ... it accepts STREAMS that
-// do and also do not implement PathResults
-// Therefore the object need to be passed in by reference only!
-// Hence the requirement for a lifetime specifier.
-pub struct Line<STREAM, T>
+/// Antimeridian Line.
+#[derive(Debug, Copy, Clone)]
+pub struct Line<T>
 where
-    STREAM: Default + Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst,
 {
-    // pd: PhantomData<&'a u8>,
-    clean: CleanEnum,
     lambda0: T,
     phi0: T,
     sign0: T,
-    stream: Rc<RefCell<STREAM>>,
+    clean: CleanEnum,
 }
 
-impl<'a, T, STREAM> Default for Line<STREAM, T>
+impl<T> LineRaw for Line<T> where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst
+{
+}
+
+impl<T> Default for Line<T>
 where
-    STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst,
 {
-    fn default() -> Self {
+    fn default() -> Line<T> {
         Self {
-            clean: CleanEnum::default(),
-            lambda0: T::zero(),
-            phi0: T::zero(),
-            sign0: T::zero(),
-            stream: Rc::new(RefCell::new(STREAM::default())),
+            lambda0: T::nan(),
+            phi0: T::nan(),
+            sign0: T::nan(),
+            clean: CleanEnum::NoIntersections,
         }
     }
 }
-// impl<'a, STREAM, T> Default for Line<'a, STREAM, T>
-// where
-//     // Rc<PR>: Transform<C = Coordinate<T>>,
-//     // PR: Transform<C = Coordinate<T>>,
-//     STREAM: Stream<SC=Coordinate<T>> + Default,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
-// {
-//     #[inline]
-//     fn default() -> Self {
-//         Line {
-//             pd: PhantomData,
-//             clean: CleanEnum::Undefined,
-//             lambda0: T::nan(),
-//             phi0: T::nan(),
-//             sign0: T::nan(),
-//             stream: STREAM::default()
-//         }
-//     }
-// }
 
-impl<'a, STREAM, T> LCB for Line<STREAM, T>
+impl<SINK, T> LineTrait for StreamNode<Line<T>, SINK, T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    STREAM: Default + Stream<SC = Coordinate<T>>,
+    SINK: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst,
 {
-    type STREAM = STREAM;
-    fn link_to_stream(&mut self, stream: Rc<RefCell<Self::STREAM>>) {
-        self.stream = stream;
-    }
 }
 
-// impl<STREAM, T> StreamIn for Line<STREAM, T>
-// where
-//     // Rc<PR>: Transform<C = Coordinate<T>>,
-//     // PR: Transform<C = Coordinate<T>>,
-//     STREAM: Stream<SC = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
-// {
-//     type SInput = STREAM;
-//     #[inline]
-//     fn stream_in(&mut self, stream: &STREAM) {
-//         self.stream = stream;
-//     }
-
-//     // #[inline]
-//     // fn get_stream(&'a mut self) -> &'a mut STREAM {
-//     //     &mut self.stream
-//     // }
-// }
-
-impl<STREAM, T> Clean for Line<STREAM, T>
+impl<SINK, T> Clean for StreamNode<Line<T>, SINK, T>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
-    STREAM: Default + Stream<SC = Coordinate<T>>,
+    SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     fn clean(&self) -> CleanEnum {
-        println!("line(A) clean  initial value{:?}", self.clean);
-        match self.clean {
+        println!("line(A) clean  initial value{:?}", self.raw.clean);
+        match self.raw.clean {
             // if intersections, rejoin first and last segments
             CleanEnum::IntersectionsOrEmpty => CleanEnum::IntersectionsRejoin,
             CleanEnum::NoIntersections => CleanEnum::NoIntersections,
@@ -128,11 +72,9 @@ where
     }
 }
 
-impl<STREAM, T> Stream for Line<STREAM, T>
+impl<SINK, T> Stream for StreamNode<Line<T>, SINK, T>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
-    STREAM: Default + Stream<SC = Coordinate<T>>,
+    SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
@@ -151,8 +93,8 @@ where
 
     fn line_start(&mut self) {
         println!("line(a) line_start()");
-        self.stream.borrow_mut().line_start();
-        self.clean = CleanEnum::NoIntersections;
+        self.sink.borrow_mut().line_start();
+        self.raw.clean = CleanEnum::NoIntersections;
     }
 
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -164,96 +106,97 @@ where
         } else {
             -T::PI()
         };
-        let delta = (lambda1 - self.lambda0).abs();
+        let delta = (lambda1 - self.raw.lambda0).abs();
 
         if (delta - T::PI()).abs() < T::epsilon() {
             // Line crosses a pole.
             println!("line crosses a pole.");
-            let f_2 = T::from(2f64).unwrap();
-            self.phi0 = if (self.phi0 + phi1 / f_2).is_sign_positive() {
+            let f_2 = T::from(2_f64).unwrap();
+            self.raw.phi0 = if (self.raw.phi0 + phi1 / f_2).is_sign_positive() {
                 T::FRAC_PI_2()
             } else {
                 -T::FRAC_PI_2()
             };
-            self.stream.borrow_mut().point(
+            self.sink.borrow_mut().point(
                 &Coordinate {
-                    x: self.lambda0,
-                    y: self.phi0,
+                    x: self.raw.lambda0,
+                    y: self.raw.phi0,
                 },
                 None,
             );
-            self.stream.borrow_mut().point(
+            self.sink.borrow_mut().point(
                 &Coordinate {
-                    x: self.sign0,
-                    y: self.phi0,
+                    x: self.raw.sign0,
+                    y: self.raw.phi0,
                 },
                 None,
             );
-            self.stream.borrow_mut().line_end();
-            self.stream.borrow_mut().line_start();
-            self.stream.borrow_mut().point(
+            self.sink.borrow_mut().line_end();
+            self.sink.borrow_mut().line_start();
+            self.sink.borrow_mut().point(
                 &Coordinate {
                     x: sign1,
-                    y: self.phi0,
+                    y: self.raw.phi0,
                 },
                 None,
             );
-            self.stream.borrow_mut().point(
+            self.sink.borrow_mut().point(
                 &Coordinate {
                     x: lambda1,
-                    y: self.phi0,
+                    y: self.raw.phi0,
                 },
                 None,
             );
-            self.clean = CleanEnum::IntersectionsOrEmpty;
-        } else if self.sign0 != sign1 && delta >= T::PI() {
+            self.raw.clean = CleanEnum::IntersectionsOrEmpty;
+        } else if self.raw.sign0 != sign1 && delta >= T::PI() {
             // Line crosses antimeridian.
             println!("line crosses antimeridian.");
-            if (self.lambda0 - self.sign0).abs() < T::epsilon() {
-                self.lambda0 = self.lambda0 - self.sign0 * T::epsilon(); // handle degeneracies
+            if (self.raw.lambda0 - self.raw.sign0).abs() < T::epsilon() {
+                self.raw.lambda0 = self.raw.lambda0 - self.raw.sign0 * T::epsilon();
+                // handle degeneracies
             }
             if (lambda1 - sign1).abs() < T::epsilon() {
                 lambda1 = lambda1 - sign1 * T::epsilon();
             }
-            self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
-            println!("output of intersect {:?}", self.phi0);
-            self.stream.borrow_mut().point(
+            self.raw.phi0 = intersect(self.raw.lambda0, self.raw.phi0, lambda1, phi1);
+            println!("output of intersect {:?}", self.raw.phi0);
+            self.sink.borrow_mut().point(
                 &Coordinate {
-                    x: self.sign0,
-                    y: self.phi0,
+                    x: self.raw.sign0,
+                    y: self.raw.phi0,
                 },
                 None,
             );
-            self.stream.borrow_mut().line_end();
-            self.stream.borrow_mut().line_start();
-            self.stream.borrow_mut().point(
+            self.sink.borrow_mut().line_end();
+            self.sink.borrow_mut().line_start();
+            self.sink.borrow_mut().point(
                 &Coordinate {
                     x: sign1,
-                    y: self.phi0,
+                    y: self.raw.phi0,
                 },
                 None,
             );
-            self.clean = CleanEnum::IntersectionsOrEmpty;
+            self.raw.clean = CleanEnum::IntersectionsOrEmpty;
         } else {
             println!("line crossed nothing");
         }
 
-        self.lambda0 = lambda1;
-        self.phi0 = phi1;
-        self.stream.borrow_mut().point(
+        self.raw.lambda0 = lambda1;
+        self.raw.phi0 = phi1;
+        self.sink.borrow_mut().point(
             &Coordinate {
-                x: self.lambda0,
-                y: self.phi0,
+                x: self.raw.lambda0,
+                y: self.raw.phi0,
             },
             None,
         );
-        self.sign0 = sign1;
+        self.raw.sign0 = sign1;
     }
 
     fn line_end(&mut self) {
         println!("line(a) line_end");
-        self.stream.borrow_mut().line_end();
-        self.lambda0 = T::nan();
-        self.phi0 = T::nan();
+        self.sink.borrow_mut().line_end();
+        self.raw.lambda0 = T::nan();
+        self.raw.phi0 = T::nan();
     }
 }

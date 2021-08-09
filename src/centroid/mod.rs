@@ -1,1 +1,1 @@
-pub mod centroid_stream;
+pub mod stream;

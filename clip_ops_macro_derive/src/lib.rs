@@ -17,10 +17,9 @@ pub fn clip_ops_macro_derive(input: TokenStream) -> TokenStream {
 fn impl_clip_ops_macro(ast: &syn::DeriveInput) -> TokenStream {
     let name = &ast.ident;
     let gen = quote! {
-        impl<SINK, T> ClipOps for #name<SINK, T>
+        impl<T> ClipOps for StreamNode<#name<T>,T>
             where
-            SINK: Stream<SC = Coordinate<T>> + Default,
-            T: ::core::ops::AddAssign + ::num_traits::AsPrimitive<T> + ::geo::CoordFloat + ::num_traits::FloatConst + ::core::fmt::Display,{
+            T: ::core::ops::AddAssign + ::num_traits::AsPrimitive<T> + std::default::Default + ::core::fmt::Display + ::geo::CoordFloat + ::num_traits::FloatConst {
             type COT = Coordinate<T>;
             fn hello_macro(&self) -> u32{
                 println!("Hello, Macro! My name is {}!", stringify!(#name));
@@ -74,7 +73,7 @@ fn impl_clip_ops_macro(ast: &syn::DeriveInput) -> TokenStream {
             fn ring_start(&mut self) {
                 println!("clip ring_start");
                 // self.get_base().ring_sink.line_start();
-                self.base.ring.clear();
+                self.raw.ring.clear();
                 // self.ring_clear();
                 println!("end clip ring_start");
             }
@@ -92,7 +91,7 @@ fn impl_clip_ops_macro(ast: &syn::DeriveInput) -> TokenStream {
                 // let clean = self.ring_sink_clean();
 
                 // let mut ring_segments = match self.get_base().ring_buffer.borrow_mut().result() {
-                //     Some(PathResultEnum::ClipBufferOutput(result)) => {
+                //     Some(ResultEnum::ClipBufferOutput(result)) => {
                 //         // Can I find a way of doing this with the expense of dynamic conversion.
                 //         result
                 //     }
@@ -108,13 +107,13 @@ fn impl_clip_ops_macro(ast: &syn::DeriveInput) -> TokenStream {
                 // let m;
                 let mut point: Coordinate<T>;
 
-                self.base.ring.pop();
+                self.raw.ring.pop();
                 // self.base.polygon.push(self.base.ring.clone());
                 // self.polygon_push(self.get_base().ring.clone());
                 // in this javascript version this value is set to NULL
                 // is my assumption that this is valid true?
                 // self.ring = None;
-                self.base.ring = Vec::new();
+                self.raw.ring = Vec::new();
                 // self.ring_reset();
 
                 // if n == 0 {

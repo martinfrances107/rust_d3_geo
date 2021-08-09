@@ -29,7 +29,7 @@
 
 //     use rust_d3_geo::data_object::DataObject;
 //     use rust_d3_geo::path::path::Path;
-//     use rust_d3_geo::path::PathResultEnum;
+//     use rust_d3_geo::path::ResultEnum;
 //     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualAreaRaw;
 //     use rust_d3_geo::projection::projection::Projection;
 //     use rust_d3_geo::projection::projection::StreamOrValueMaybe;
@@ -50,7 +50,7 @@
 
 //         match Path::generate(Some(projection), None).object(Some(d)) {
 //             Some(p) => match p {
-//                 PathResultEnum::String(s) => {
+//                 ResultEnum::String(s) => {
 //                     println!("string  {:#?}", s);
 //                     let rounded = ROUND_DOWN.replace_all(&s, "");
 //                     println!();
@@ -65,7 +65,7 @@
 //                 }
 //             },
 //             None => {
-//                 panic!("Expecting a PathResultEnum::String.");
+//                 panic!("Expecting a ResultEnum::String.");
 //             }
 //         }
 //     }

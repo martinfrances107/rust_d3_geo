@@ -8,25 +8,36 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::path::PathResult;
-use crate::path::PathResultEnum;
+use crate::path::Result;
+use crate::path::ResultEnum;
 use crate::stream::Stream;
 
 use super::line_elem::LineElem;
 
-#[derive(Clone, Debug)]
-pub struct ClipBuffer<T>
+/// Buffer is a pipeline terminating object ( a drain object ).
+///
+/// Stored data can be extracted via ::result()
+#[derive(Debug)]
+pub struct Buffer<T>
 where
-    T: CoordFloat,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    // pd: PhantomData<SD>,
     // line: Vec<LineElem<T>>,
     lines: VecDeque<Vec<LineElem<T>>>,
 }
 
-impl<T> Default for ClipBuffer<T>
+impl<T> Clone for Buffer<T>
 where
-    T: CoordFloat,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    fn clone(&self) -> Buffer<T> {
+        self.clone()
+    }
+}
+
+impl<T> Default for Buffer<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -35,26 +46,26 @@ where
     }
 }
 
-impl<T> PathResult for ClipBuffer<T>
+impl<T> Result for Buffer<T>
 where
-    T: CoordFloat,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type Out = Option<PathResultEnum<T>>;
-    fn result(&mut self) -> Option<PathResultEnum<T>> {
+    type Out = Option<ResultEnum<T>>;
+    fn result(&mut self) -> Option<ResultEnum<T>> {
         let result = self.lines.clone();
         self.lines.clear();
-        return Some(PathResultEnum::ClipBufferOutput(result));
+        return Some(ResultEnum::BufferOutput(result));
     }
 }
 
-impl<T> Stream for ClipBuffer<T>
+impl<T> Stream for Buffer<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type SC = Coordinate<T>;
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("ClipBuffer point {:?} {:?}", p, m);
+        println!("Buffer point {:?} {:?}", p, m);
         match self.lines.back_mut() {
             Some(line) => {
                 line.push(LineElem { p: *p, m });
@@ -66,34 +77,22 @@ where
 
     fn sphere(&mut self) {}
     fn line_end(&mut self) {
-        println!("clipBuffer line_end() -- noop");
+        println!("Buffer line_end() -- noop");
     }
     #[inline]
     fn line_start(&mut self) {
-        println!("clipBuffer line_start()");
+        println!("Buffer line_start()");
         // self.line.clear();
         self.lines.push_back(vec![]);
-        println!("ClipBuffer line_start lines {:#?}", self.lines);
+        println!("Buffer line_start lines {:#?}", self.lines);
     }
     fn polygon_start(&mut self) {
-        println!("clipBuffer polygon_start()");
+        println!("Buffer polygon_start()");
     }
     fn polygon_end(&mut self) {
-        println!("clipBuffer polygon_end()");
+        println!("Buffer polygon_end()");
     }
     // fn get_dst(&self) -> Self {
-    //     todo!("ClipBuffer get_dst() should never be called.");
+    //     todo!("Buffer get_dst() should never be called.");
     // }
 }
-// mpl<T: CoordFloat + FloatConst> ClipBuffer<T> {
-//     fn rejoin(&mut self) {
-//         if self.lines.len() > 1 {
-//             let pb = [
-//                 self.lines.pop_back().unwrap(),
-//                 self.lines.pop_front().unwrap(),
-//             ]
-//             .concat();
-//             self.lines.push_front(pb);
-//         }
-//     }
-// }

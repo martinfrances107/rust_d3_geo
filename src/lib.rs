@@ -1,12 +1,13 @@
-// #![allow(clippy::needless_return)]
-#![allow(clippy::all)]
-// #![allow(unused_variables)]
+#![allow(clippy::pedantic)]
+#![allow(clippy::many_single_char_names)]
 // #![allow(dead_code)]
 // #![allow(unused_imports)]
 
 extern crate derivative;
 extern crate rust_d3_array;
 extern crate web_sys;
+
+use std::fmt::Debug;
 
 pub mod cartesian;
 pub mod centroid;
@@ -32,7 +33,7 @@ pub mod stream;
 // }
 
 // Common to Projection, Rotation.
-pub trait Transform {
+pub trait Transform: Clone + Debug {
     type C;
     fn transform(&self, p: &Self::C) -> Self::C;
     fn invert(&self, p: &Self::C) -> Self::C;

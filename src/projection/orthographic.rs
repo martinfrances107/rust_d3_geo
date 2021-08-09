@@ -1,3 +1,10 @@
+use crate::clip::antimeridian::interpolate::Interpolate;
+use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::pv::PV;
+use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::projection::builder::Builder;
+use crate::projection::Raw;
+use crate::stream::Stream;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
@@ -8,12 +15,12 @@ use num_traits::AsPrimitive;
 
 use crate::Transform;
 
-use super::projection::Projection;
+// use super::projection::Projection;
 // use super::projection::StreamOrValueMaybe;
 // use super::ProjectionRawTrait;
-use crate::projection::projection_trait::ProjectionTrait;
+// use crate::projection::projection_trait::ProjectionTrait;
 use crate::projection::scale::Scale;
-use crate::stream::Stream;
+// use crate::stream::Stream;
 // use crate::Transform;
 
 /// Why the Phantom Data is required here...
@@ -39,19 +46,31 @@ where
     }
 }
 
+impl<T> Raw for Orthographic<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type T = T;
+}
+
 impl<T> Orthographic<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, Orthographic<T>, T>
+    pub fn gen_projection_mutator<'a, DRAIN>(
+    ) -> Builder<DRAIN, Interpolate<T>, Line<T>, Orthographic<T>, PV<T>, T>
     where
-        DRAIN: 'static + Default + Stream<SC = Coordinate<T>>,
+        DRAIN: Stream<SC = Coordinate<T>>,
     {
-        Projection::new(Orthographic::default(), None)
-            .scale(T::from(249.5f64).unwrap())
-            // .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
-            .clip_angle(T::from(90f64 + 1e-6f64).unwrap())
+        Builder::new(
+            StreamNodeClipFactory::new(Interpolate::default(), Line::default(), PV::default()),
+            Orthographic::default(),
+            // None,
+        )
+        .scale(T::from(249.5_f64).unwrap())
+        // .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
+        // .clip_angle(T::from(90_f64 + 1e-6_f64).unwrap())
     }
 }
 

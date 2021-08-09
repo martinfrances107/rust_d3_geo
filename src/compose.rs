@@ -23,7 +23,7 @@ where
 {
     #[inline]
     pub fn new(a: TA, b: TB) -> Compose<T, TA, TB> {
-        Compose { a: a, b: b }
+        Compose { a, b }
     }
 }
 

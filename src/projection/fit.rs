@@ -11,13 +11,12 @@
 // use crate::data_object::DataObject;
 // use crate::path::bounds_stream::BoundsStream;
 // use crate::path::PathResult;
-// use crate::path::PathResultEnum;
+// use crate::path::ResultEnum;
 // use crate::projection::projection::Projection;
 // use crate::stream::Stream;
 // use crate::stream::Streamable;
 // use crate::Transform;
 // // use super::projection::Projection;
-// // use super::ProjectionRawTrait;
 // use crate::projection::scale::Scale;
 // // use crate::Transform;
 
@@ -53,7 +52,7 @@
 
 //     object.to_stream(&mut stream_in);
 //     let bounds = match bounds_stream.result() {
-//         Some(PathResultEnum::Bounds(bounds)) => bounds,
+//         Some(ResultEnum::Bounds(bounds)) => bounds,
 //         _ => {
 //             panic!("Expecting only a bounds result from a Bounds stream.");
 //         }

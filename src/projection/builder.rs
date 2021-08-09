@@ -1,45 +1,369 @@
-use geo::Coordinate;
-use std::fmt::Debug;
+use crate::clip::InterpolateRaw;
+use crate::clip::LineRaw;
+use crate::projection::resample::gen_resample_factory;
+use crate::projection::resample::ResampleEnum;
+use crate::projection::scale_translate_rotate::ScaleTranslateRotateEnum;
+use crate::stream::Stream;
 use std::fmt::Display;
 use std::ops::AddAssign;
-// use std::rc::Rc;
 
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::AsPrimitive;
-use num_traits::Float;
 use num_traits::FloatConst;
 
-// use crate::data_object::DataObject;
-use crate::stream::Stream;
+use crate::clip::circle::gen_clip_factory_circle;
+use crate::clip::circle::interpolate::Interpolate as CircleInterpolate;
+use crate::clip::circle::line::Line as CircleLine;
+use crate::clip::circle::pv::PV as CirclePV;
+use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::clip::PointVisible;
+use crate::compose::Compose;
+use crate::projection::center::Center;
+use crate::projection::clip_extent::ClipExtent;
+use crate::projection::scale::Scale;
+use crate::projection::scale_translate_rotate::ScaleTranslateRotate;
+use crate::projection::stream_node_factory::StreamNodeFactory;
+use crate::projection::translate::Translate;
+use crate::projection::Raw as ProjectionRaw;
+use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
+use crate::rotation::rotate_radians_transform::rotate_radians_transform;
+use crate::rotation::rotation_identity::RotationIdentity;
 use crate::Transform;
 
-use super::center::Center;
-use super::clip_extent::ClipExtent;
-use super::projection::Projection;
-// use super::projection::StreamOrValueMaybe;
-use super::scale::Scale;
-use super::translate::Translate;
-// use crate::compose::Compose;
-
-// use super::scale_translate_rotate::ScaleTranslateRotateEnum;
-// use super::ProjectionRawTrait;
-use crate::projection::stream_transform::StreamTransform;
-use crate::projection::stream_transform_radians::StreamTransformRadians;
-pub trait ProjectionTrait<'a>: Center + ClipExtent + Scale + Translate
-// Rc<<Self as ProjectionTrait<'a>>::PR>: ProjectionRawTrait,
+#[derive(Clone)]
+pub struct Builder<DRAIN, I, L, PR, PV, T>
 where
-    <Self as ProjectionTrait<'a>>::PR:
-        Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-    <Self as ProjectionTrait<'a>>::T: AddAssign
-        + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-        + Debug
-        + Display
-        + Float
-        + FloatConst,
+    DRAIN: Stream<SC = Coordinate<T>>,
+    I: InterpolateRaw,
+    L: LineRaw,
+    PR: ProjectionRaw<T = T>,
+    PV: PointVisible,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type PR;
-    type T;
-    type C;
-    type DRAIN;
+    projection_raw: PR,
+
+    phi: T, // center
+    lambda: T,
+
+    alpha: T, // post-rotate angle
+    k: T,     // scale
+    sx: T,    // reflectX
+    sy: T,    // reflectY
+
+    x: T,
+    y: T, // translate
+
+    delta_lambda: T,
+    delta_phi: T,
+    delta_gamma: T,
+
+    delta2: T, // precision
+
+    theta: Option<T>,
+
+    x0: Option<T>,
+    y0: Option<T>,
+    x1: Option<T>,
+    y1: Option<T>, // post-clip extent
+    clip_factory: StreamNodeClipFactory<I, L, PV, DRAIN, T>,
+
+    rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
+    resample_factory: StreamNodeFactory<ResampleEnum<PR, T>, DRAIN, T>,
+    project_rotate_transform:
+        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+    project_transform_factory:
+        StreamNodeFactory<Compose<T, PR, ScaleTranslateRotateEnum<T>>, DRAIN, T>,
+}
+
+/// @todo must implement this trait for every raw projection type
+/// Not just AzimuthalEqualArea and Stereographic
+
+impl<DRAIN, I, L, PR, PV, T> Builder<DRAIN, I, L, PR, PV, T>
+where
+    DRAIN: Stream<SC = Coordinate<T>>,
+    I: InterpolateRaw,
+    L: LineRaw,
+    PR: ProjectionRaw<T = T> + Clone + Copy,
+    PV: PointVisible,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    pub fn new(
+        clip_factory: StreamNodeClipFactory<I, L, PV, DRAIN, T>,
+        projection_raw: PR,
+    ) -> Self {
+        let x = T::from(480_f64).unwrap();
+        let y = T::from(250_f64).unwrap();
+        let lambda = T::zero();
+        let phi = T::zero();
+        let alpha = T::zero();
+        let k = T::from(150_f64).unwrap();
+        let sx = T::one();
+        let sy = T::one();
+
+        let center = ScaleTranslateRotate::new(&k, &T::zero(), &T::zero(), &sx, &sy, alpha)
+            .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
+
+        let transform =
+            ScaleTranslateRotate::new(&k, &(x - center.x), &(y - center.y), &sx, &sy, alpha);
+        let rotate = RotateRadiansEnum::I(RotationIdentity::default()); // pre-rotate
+        let projection_transform = Compose::new(projection_raw, transform);
+        let projection_rotate_transform = Compose::new(projection_raw, rotate);
+        let project_transform_factory = StreamNodeFactory::new(projection_rotate_transform);
+
+        Self {
+            /// Input passing onto Projection.
+            projection_raw,
+            // clip_factory: StreamNodeClipFactory::new(
+            //     StreamNodeFactory::new(I::default()),
+            //     StreamNodeFactory::new(Line::default()),
+            //     PV::default(),
+            // ),
+            clip_factory,
+            // Zero implied no resampling by default.
+            resample_factory: gen_resample_factory(projection_raw, T::zero()),
+
+            /// Internal state
+            delta_lambda: T::zero(),
+            delta_phi: T::zero(),
+            delta_gamma: T::zero(),
+
+            x,
+            y,
+
+            x0: None,
+            y0: None,
+            x1: None,
+            y1: None, //postclip = identity, // post-clip extent
+
+            delta2: T::from(0.5_f64).unwrap(),
+            lambda,
+            phi,
+
+            alpha,
+            k,
+            theta: None,
+            sx,
+            sy,
+
+            /// Pass into Projection,
+            rotate,
+            project_rotate_transform: Compose::new(rotate, projection_transform),
+            project_transform_factory,
+        }
+    }
+
+    // /**
+    //  * Switches to antimeridian cutting rather than small-circle clipPIng.
+    //  * See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
+    //  *
+    //  * @param angle Set to null to switch to antimeridian cutting.
+    //  */
+    pub fn clip_angle(
+        mut self,
+        angle: T,
+    ) -> Builder<DRAIN, CircleInterpolate<T>, CircleLine<T>, PR, CirclePV<T>, T> {
+        self.theta = Some(angle.to_radians());
+
+        // match angle {
+        //     StreamOrValueMaybe::Value(angle) => {
+        //         let theta = angle.to_radians();
+        //         self.theta = Some(theta);
+        //         // self.preclip = Box::new(ClipCircle::new(self.projection_raw, theta));
+        //         // println!("preclip {:#?}", self.preclip);
+        //         // panic!("clip_angler stop");
+        //     }
+        //     StreamOrValueMaybe::SP(_preclip) => {
+        //         todo!("must sort this out.");
+        //         // self.theta = None;
+        //         // self.preclip = preclip;
+        //         // self.reset();
+        //     }
+        // }
+
+        // Only change is the resample_factory.
+
+        let clip_factory = gen_clip_factory_circle(self.projection_raw, angle);
+        let out = Builder::new(clip_factory, self.projection_raw);
+        out.theta = Some(angle.to_radians());
+        out
+    }
+
+    fn reset(self) -> Builder<DRAIN, I, L, PR, PV, T> {
+        // self.cache_stream = None;
+        // self.cache = None;
+        self
+    }
+
+    fn recenter(mut self) -> Builder<DRAIN, I, L, PR, PV, T> {
+        let center = ScaleTranslateRotate::new(
+            &self.k,
+            &T::zero(),
+            &T::zero(),
+            &self.sx,
+            &self.sy,
+            self.alpha,
+        )
+        .transform(&self.projection_raw.transform(&Coordinate {
+            x: self.lambda,
+            y: self.phi,
+        }));
+
+        let transform = ScaleTranslateRotate::new(
+            &self.k,
+            &(self.x - center.x),
+            &(self.y - center.y),
+            &self.sx,
+            &self.sy,
+            self.alpha,
+        );
+
+        // todo!("must refactor the stream pipeline");
+        self.project_rotate_transform =
+            rotate_radians_transform(self.delta_lambda, self.delta_phi, self.delta_gamma);
+        self.project_transform_factory =
+            StreamNodeFactory::new(Compose::new(self.projection_raw.clone(), transform));
+        // self.project_rotate_transform =
+        //     Compose::new(self.rotate.clone(), self.project_transform_factory.clone());
+        self.resample_factory = gen_resample_factory(self.projection_raw, self.delta2);
+
+        self.reset()
+    }
+}
+
+impl<'a, DRAIN, I, L, PR, PV, T> Translate for Builder<DRAIN, I, L, PR, PV, T>
+where
+    DRAIN: Stream<SC = Coordinate<T>>,
+    I: InterpolateRaw,
+    L: LineRaw,
+    PR: ProjectionRaw<T = T>,
+    PV: PointVisible,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type P = Builder<DRAIN, I, L, PR, PV, T>;
+    type C = Coordinate<T>;
+    #[inline]
+    fn get_translate(&self) -> Coordinate<T> {
+        Coordinate {
+            x: self.x,
+            y: self.y,
+        }
+    }
+
+    fn translate(mut self, t: &Coordinate<T>) -> Builder<DRAIN, I, L, PR, PV, T> {
+        self.x = t.x;
+        self.y = t.y;
+        self.recenter()
+    }
+}
+
+impl<'a, DRAIN, I, L, PR, PV, T> Center for Builder<DRAIN, I, L, PR, PV, T>
+where
+    DRAIN: Stream<SC = Coordinate<T>>,
+    I: InterpolateRaw,
+    L: LineRaw,
+    PR: ProjectionRaw<T = T>,
+    PV: PointVisible,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type C = Coordinate<T>;
+
+    fn get_center(&self) -> Coordinate<T> {
+        return Coordinate {
+            x: self.lambda.to_degrees(),
+            y: self.phi.to_degrees(),
+        };
+    }
+
+    fn center(mut self, p: Coordinate<T>) -> Builder<DRAIN, I, L, PR, PV, T> {
+        self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
+        self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
+        self.recenter()
+    }
+}
+
+impl<'a, DRAIN, I, L, PR, PV, T> Scale for Builder<DRAIN, I, L, PR, PV, T>
+where
+    DRAIN: Stream<SC = Coordinate<T>>,
+    I: InterpolateRaw,
+    L: LineRaw,
+    PR: ProjectionRaw<T = T> + Clone + Copy,
+    PV: PointVisible,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type ST = T;
+    #[inline]
+    fn get_scale(&self) -> Self::ST {
+        self.k
+    }
+
+    fn scale(mut self, scale: T) -> Builder<DRAIN, I, L, PR, PV, T> {
+        self.k = scale;
+        self.recenter()
+    }
+}
+
+impl<'a, DRAIN, I, L, PR, PV, T> ClipExtent for Builder<DRAIN, I, L, PR, PV, T>
+where
+    DRAIN: Stream<SC = Coordinate<T>>,
+    I: InterpolateRaw,
+    L: LineRaw,
+    PR: ProjectionRaw<T = T>,
+    PV: PointVisible,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type C = Coordinate<T>;
+    fn get_clip_extent(&self) -> Option<[Coordinate<T>; 2]> {
+        match (self.x0, self.y0, self.x1, self.y1) {
+            (Some(x0), Some(y0), Some(x1), Some(y1)) => {
+                Some([Coordinate { x: x0, y: y0 }, Coordinate { x: x1, y: y1 }])
+            }
+            _ => None,
+        }
+    }
+
+    fn clip_extent(
+        mut self,
+        extent: Option<[Coordinate<T>; 2]>,
+    ) -> Builder<DRAIN, I, L, PR, PV, T> {
+        match extent {
+            None => {
+                self.x0 = None;
+                self.y0 = None;
+                self.x1 = None;
+                self.y1 = None;
+                // self.postclip = Identity;
+                // Is this the identity projection Mutator???
+                todo!("must implement identity");
+            }
+            Some(extent) => {
+                // set x0 ...
+                self.x0 = Some(extent[0].x);
+                self.y0 = Some(extent[0].y);
+                self.x1 = Some(extent[1].x);
+                self.y1 = Some(extent[1].y);
+                // todo!("must implement clip rectangle")
+                // clipRectangle(self.x0, self.y0, self.x1, self.y1);
+                self.reset()
+            }
+        }
+    }
+}
+
+impl<DRAIN, I, L, PR, PV, T> Builder<DRAIN, I, L, PR, PV, T>
+where
+    DRAIN: Stream<SC = Coordinate<T>>,
+    I: InterpolateRaw,
+    L: LineRaw,
+    PR: ProjectionRaw<T = T>,
+    PV: PointVisible,
+
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    // type C = Coordinate<T>;
+    // type PR = PR;
+    // type T = T;
+    // type DRAIN = DRAIN;
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
     //  * The point must be specified as a two-element array [longitude, latitude] in degrees.
@@ -48,6 +372,20 @@ where
     //  * @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
     //  */
     // (point: [number, number]): [number, number] | null;
+
+    // /**
+    //  * Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
+    //  */
+    // fn get_center(&self) -> Point;
+
+    // /**
+    //  * Sets the projection’s center to the specified center,
+    //  * a two-element array of longitude and latitude in degrees and returns the projection.
+    //  * The default is ⟨0°,0°⟩.
+    //  *
+    //  * @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
+    //  */
+    // fn center(&mut self, point: Point);
 
     // /**
     //  * Returns the current spherical clipPIng function.
@@ -77,34 +415,6 @@ where
     //  * Post-clipPIng operates on planar coordinates, in PIxels.
     //  */
     // fn postclip(&mut self, postclip: StreamProcessor<T>);
-
-    // /**
-    //  * Switches to antimeridian cutting rather than small-circle clipPIng.
-    //  * See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
-    //  *
-    //  * @param angle Set to null to switch to antimeridian cutting.
-    //  */
-    fn clip_angle(
-        self,
-        angle: <Self as ProjectionTrait<'a>>::T,
-        // angle: StreamOrValueMaybe<<Self as ProjectionTrait<'a>>::T>,
-    ) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
-    where
-        //     // Rc<<Self as ProjectionTrait<'a>>::PR>:
-        //     //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        //     <Self as ProjectionTrait<'a>>::PR:
-        //         Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        //     // <Self as ProjectionTrait<'a>>::SD: StreamDst,
-        //     // <Self as ProjectionTrait<'a>>::SD: StreamDst,
-        <Self as ProjectionTrait<'a>>::DRAIN:
-            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>;
-    //     <Self as ProjectionTrait<'a>>::T: AddAssign
-    //         + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-    //         + Debug
-    //         + Default
-    //         + Display
-    //         + Float
-    //         + FloatConst;
 
     // /**
     //  * Sets the projection’s clipPIng circle radius to the specified angle in degrees and returns the projection.
@@ -172,25 +482,16 @@ where
     //  * @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
     //  * @param object A GeoJson Geometry Object or GeoSphere object supported by d3-geo (An extension of GeoJSON).
     //  */
+    // #[inline]
+
     // fn fit_extent(
     //     self,
-    //     extent: [<Self as ProjectionTrait<'a>>::C; 2],
-    //     object: DataObject<<Self as ProjectionTrait<'a>>::T>,
-    // ) -> Projection<'a, Self::PR, Self::SD, <Self as ProjectionTrait<'a>>::T>
-    // where
-    //     // Rc<<Self as ProjectionTrait<'a>>::PR>:
-    //     //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-    //     <Self as ProjectionTrait<'a>>::PR:
-    //         Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-    //     <Self as ProjectionTrait<'a>>::SD:
-    //         Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>> + Default,
-    //     <Self as ProjectionTrait<'a>>::T: AddAssign
-    //         + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-    //         + Debug
-    //         + Default
-    //         + Display
-    //         + Float
-    //         + FloatConst;
+    //     extent: [Coordinate<T>; 2],
+    //     object: DataObject<T>,
+    // ) -> Projection<'a, PR, SD, T> {
+    //     fit_extent(self, extent, object)
+    // }
+
     // /**
     //  * Sets the projection’s scale and translate to fit the specified geographic geometry collection in the center of the given extent.
     //  * Returns the projection.
@@ -308,76 +609,57 @@ where
     //  * @param point The projected point, specified as a two-element array [x, y] (tyPIcally in PIxels).
     //  */
     // invert?(point: [number, number]): [number, number] | null;
-
+    #[inline]
     // /**
     //  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
     //  * This value corresponds to the Douglas–Peucker distance.
     //  */
-    fn get_precision(self) -> <Self as ProjectionTrait<'a>>::T;
-
     // /**
     //  * Sets the threshold for the projection’s adaptive resampling to the specified value in PIxels and returns the projection.
     //  * This value corresponds to the Douglas–Peucker distance.
     //  *
     //  * @param precision A numeric value in PIxels to use as the threshold for the projection’s adaptive resampling.
     //  */
-    fn precision(
-        self,
-        delta: &'a <Self as ProjectionTrait<'a>>::T,
-    ) -> Projection<Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
-    where
-        // Rc<<Self as ProjectionTrait<'a>>::PR>:
-        //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::PR:
-            Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::DRAIN:
-            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::T: AddAssign
-            + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-            + Debug
-            + Display
-            + Float
-            + FloatConst;
+    #[inline]
+    fn get_precision(self) -> T {
+        self.delta2.sqrt()
+    }
 
-    fn get_reflect_x(&self) -> bool;
+    #[inline]
+    fn get_reflect_x(&self) -> bool {
+        self.sx < T::zero()
+    }
 
-    fn reflect_x(
-        self,
-        reflect: bool,
-    ) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
-    where
-        // Rc<<Self as ProjectionTrait<'a>>::PR>:
-        //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::PR:
-            Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::DRAIN:
-            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::T: AddAssign
-            + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-            + Debug
-            + Display
-            + Float
-            + FloatConst;
+    fn reflect_x(mut self, reflect: bool) -> Self {
+        if reflect {
+            self.sx = T::from(-1.0).unwrap();
+        } else {
+            self.sx = T::one();
+        }
+        self.recenter()
+    }
 
-    fn get_reflect_y(&self) -> bool;
+    #[inline]
+    fn get_reflect_y(&self) -> bool {
+        self.sy < T::zero()
+    }
 
-    fn reflect_y(
-        self,
-        reflect: bool,
-    ) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
-    where
-        // Rc<<Self as ProjectionTrait<'a>>::PR>:
-        //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::PR:
-            Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::DRAIN:
-            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::T: AddAssign
-            + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-            + Debug
-            + Display
-            + Float
-            + FloatConst;
+    #[inline]
+    fn reflect_y(mut self, reflect: bool) -> Self {
+        if reflect {
+            self.sy = T::from(-1.0).unwrap();
+        } else {
+            self.sy = T::one();
+        }
+        self.recenter()
+    }
+
+    fn precision(self, delta: &T) -> Builder<DRAIN, I, L, PR, PV, T> {
+        let out = Builder::new(self.clip_factory, self.projection_raw.clone());
+        out.resample_factory = gen_resample_factory(self.projection_raw, self.delta2);
+        out.delta2 = *delta * *delta;
+        out
+    }
 
     // /**
     //  * Returns the projection’s current angle, which defaults to 0°.
@@ -389,84 +671,27 @@ where
     //  */
     // angle(angle: number): this;
 
-    fn reset(self) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
-    where
-        // Rc<<Self as ProjectionTrait<'a>>::PR>:
-        //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::PR:
-            Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::DRAIN:
-            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::T: AddAssign
-            + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-            + Debug
-            + Display
-            + Float
-            + FloatConst;
-
-    fn recenter(self) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
-    where
-        // Rc<<Self as ProjectionTrait<'a>>::PR>:
-        //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::PR:
-            Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::DRAIN:
-            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::T: AddAssign
-            + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-            + Debug
-            + Display
-            + Float
-            + FloatConst;
     // /**
     //  * Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
     //  *
     //  * @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
     //  * (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
     //  */
-    fn get_rotate(&self) -> [<Self as ProjectionTrait<'a>>::T; 3]
-    where
-        <Self as ProjectionTrait<'a>>::PR:
-            Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::T: AddAssign
-            + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-            + Debug
-            + Display
-            + Float
-            + FloatConst;
+    #[inline]
+    fn get_rotate(&self) -> [T; 3] {
+        [
+            self.delta_lambda.to_degrees(),
+            self.delta_phi.to_degrees(),
+            self.delta_lambda.to_degrees(),
+        ]
+    }
 
-    fn rotate(
-        self,
-        angles: [<Self as ProjectionTrait<'a>>::T; 3],
-    ) -> Projection<'a, Self::DRAIN, Self::PR, <Self as ProjectionTrait<'a>>::T>
-    where
-        // Rc<<Self as ProjectionTrait<'a>>::PR>:
-        //     Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::PR:
-            Clone + Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::DRAIN:
-            'a + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::T: AddAssign
-            + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-            + Debug
-            + Display
-            + Float
-            + FloatConst;
-
-    fn stream(
-        &self,
-        stream_dst: Box<Self::DRAIN>,
-    ) -> StreamTransformRadians<StreamTransform<Self::T>, Self::T>
-    where
-        <Self as ProjectionTrait<'a>>::PR:
-            Transform<C = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        // SD: Stream<SC = Coordinate<Self::T>>,
-        <Self as ProjectionTrait<'a>>::DRAIN:
-            Clone + Default + Stream<SC = Coordinate<<Self as ProjectionTrait<'a>>::T>>,
-        <Self as ProjectionTrait<'a>>::T: AddAssign
-            + AsPrimitive<<Self as ProjectionTrait<'a>>::T>
-            + Debug
-            + Display
-            + Float
-            + FloatConst;
+    fn rotate(mut self, angles: [T; 3]) -> Builder<DRAIN, I, L, PR, PV, T> {
+        let [delta_lambda, delta_phi, delta_gamma] = angles;
+        let f360 = T::from(360_f64).unwrap();
+        self.delta_lambda = (delta_lambda % f360).to_radians();
+        self.delta_phi = (delta_phi % f360).to_radians();
+        self.delta_gamma = (delta_gamma % f360).to_radians();
+        self.recenter()
+    }
 }

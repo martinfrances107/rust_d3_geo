@@ -5,7 +5,7 @@ use geo::{CoordFloat, Coordinate, LineString};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::length::LengthStream;
+use crate::length::Stream;
 
 pub fn distance<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst>(
     a: &Coordinate<T>,
@@ -15,5 +15,5 @@ pub fn distance<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatCons
     // It does not need to be created each time.
     let object = LineString(vec![(*a).clone().into(), (*b).clone().into()]);
 
-    return LengthStream::<T>::calc(&object);
+    return Stream::<T>::calc(&object);
 }

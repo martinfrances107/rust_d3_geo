@@ -1,3 +1,10 @@
+use crate::clip::antimeridian::interpolate::Interpolate;
+use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::pv::PV;
+use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::projection::builder::Builder;
+use crate::projection::Raw;
+use crate::stream::Stream;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
@@ -9,10 +16,10 @@ use num_traits::AsPrimitive;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
-use super::projection::Projection;
-use super::projection_trait::ProjectionTrait;
+// use super::projection::Projection;
+// use super::projection_trait::ProjectionTrait;
 use super::scale::Scale;
-use crate::stream::Stream;
+// use crate::stream::Stream;
 // use super::projection::StreamOrValueMaybe;
 
 /// Why the Phantom Data is required here...
@@ -40,20 +47,30 @@ where
     }
 }
 
+impl<T> Raw for Gnomic<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type T = T;
+}
 impl<T> Gnomic<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    pub fn gen_projection_mutator<'a, DRAIN>() -> Projection<'a, DRAIN, Gnomic<T>, T>
+    pub fn gen_projection_mutator<'a, DRAIN>(
+    ) -> Builder<DRAIN, Interpolate<T>, Line<T>, Gnomic<T>, PV<T>, T>
     where
-        DRAIN: 'a + Default + Stream<SC = Coordinate<T>>,
+        DRAIN: Stream<SC = Coordinate<T>>,
     {
         let g = Gnomic::default();
-        let projection = Projection::new(g, None);
-        projection
-            .scale(T::from(144.049f64).unwrap())
-            // .clip_angle(StreamOrValueMaybe::Value(T::from(60f64).unwrap()))
-            .clip_angle(T::from(60f64).unwrap())
+        Builder::new(
+            StreamNodeClipFactory::new(Interpolate::default(), Line::default(), PV::default()),
+            g,
+        )
+        .scale(T::from(144.049_f64).unwrap())
+        // .clip_angle(StreamOrValueMaybe::Value(T::from(60f64).unwrap()))
+        // todo turn clip angle back on a adjust gpm return type to clipCircle stuff
+        // .clip_angle(T::from(60_f64).unwrap())
     }
 
     #[inline]

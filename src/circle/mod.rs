@@ -2,10 +2,10 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
+pub mod calc_radius;
 pub mod circle;
-pub mod circle_generator;
-pub mod circle_radius;
-pub mod circle_stream;
+pub mod generate;
+pub mod generator;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -14,7 +14,7 @@ use num_traits::FloatConst;
 pub enum FnValMaybe<T> {
     // None,
     FloatValue(T),
-    FloatFn(Box<dyn Fn(&CircleInArg) -> T>),
+    FloatFn(Box<dyn Fn(&InArg) -> T>),
 }
 
 pub enum FnValMaybe2D<T>
@@ -23,11 +23,11 @@ where
 {
     // None,
     // FloatValue(Coordinate<T>),
-    FloatFn(Box<dyn Fn(&CircleInArg) -> Coordinate<T>>),
+    FloatFn(Box<dyn Fn(&InArg) -> Coordinate<T>>),
 }
 
 #[derive(Debug)]
-pub enum CircleInArg {
+pub enum InArg {
     None,
     Arg(),
 }

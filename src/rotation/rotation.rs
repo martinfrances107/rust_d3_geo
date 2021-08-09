@@ -9,6 +9,7 @@ use super::rotate_radians_transform::rotate_radians_transform;
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
 use crate::Transform;
 
+#[derive(Clone, Debug)]
 pub struct Rotation<T>
 where
     T: CoordFloat + FloatConst,
