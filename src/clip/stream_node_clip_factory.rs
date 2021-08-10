@@ -64,8 +64,7 @@ where
         line_raw: L,
         pv: PV,
     ) -> StreamNodeClipFactory<I, L, PV, SINK, T> {
-        let line_ring_buffer_factory: StreamNodeFactory<L, Buffer<T>, T> =
-            StreamNodeFactory::new(line_raw);
+        let line_ring_buffer_factory = StreamNodeFactory::new(line_raw);
         let line_sink_factory = StreamNodeFactory::new(line_raw);
         let interpolate_factory = StreamNodeFactory::new(interpolate_raw);
         StreamNodeClipFactory {
@@ -92,7 +91,7 @@ where
     fn generate(
         &self,
         sink: Rc<RefCell<Self::Sink>>,
-    ) -> Rc<RefCell<StreamNode<Self::Raw, Self::Sink, Self::T>>>
+    ) -> StreamNode<Self::Raw, Self::Sink, Self::T>
 // where
     //     PR: Transform<C = Coordinate<T>>,
     {
@@ -104,9 +103,11 @@ where
             m: None,
         };
 
-        let ring_buffer_node: Rc<RefCell<Buffer<T>>> = Rc::new(RefCell::new(Buffer::default()));
-        let mut ring_sink = self.line_ring_buffer_factory.generate(ring_buffer_node);
-        Rc::new(RefCell::new(StreamNode {
+        // ring_buffer needs the Rc<RefCell<>> wrapper because it is a pipeline source
+        // [internal to the clip node].
+        let ring_buffer: Rc<RefCell<Buffer<T>>> = Rc::new(RefCell::new(Buffer::default()));
+        let mut ring_sink_node = self.line_ring_buffer_factory.generate(ring_buffer);
+        StreamNode {
             raw: Clip {
                 pv: self.pv,
                 line_node: self.line_sink_factory.generate(sink),
@@ -116,8 +117,8 @@ where
                 polygon_started: false,
                 polygon: Vec::new(),
                 ring: Vec::new(),
-                // ring_sink,
-                ring_buffer_node,
+                ring_sink_node,
+                ring_buffer,
                 segments: VecDeque::new(),
 
                 use_point_line: false,
@@ -126,6 +127,6 @@ where
             },
             sink,
             pd: PhantomData::<T>,
-        }))
+        }
     }
 }

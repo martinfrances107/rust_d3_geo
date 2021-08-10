@@ -15,6 +15,8 @@ use num_traits::FloatConst;
 
 use crate::clip::buffer::Buffer;
 use crate::clip::line_elem::LineElem;
+use crate::clip::CleanEnum;
+use crate::path::ResultEnum;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
@@ -26,17 +28,18 @@ where
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    /// Nodes.
-    pub line_node: Rc<RefCell<StreamNode<L, SINK, T>>>,
-    pub interpolate_node: Rc<RefCell<StreamNode<I, SINK, T>>>,
-    pub ring_buffer_node: Rc<RefCell<Buffer<T>>>,
+    pub line_node: StreamNode<L, SINK, T>,
+    pub interpolate_node: StreamNode<I, SINK, T>,
+
+    /// A pipeline source node.
+    pub ring_buffer: Rc<RefCell<Buffer<T>>>,
 
     pub pv: PV,
     start: LineElem<T>,
     pub polygon_started: bool,
     pub polygon: Vec<Vec<LineElem<T>>>,
     pub ring: Vec<LineElem<T>>,
-    // pub ring_sink: Rc<RefCell<dyn Stream<SC = Coordinate<T>>>>,
+    pub ring_sink_node: StreamNode<L, Buffer<T>, T>,
     pub segments: VecDeque<Vec<Vec<LineElem<T>>>>,
 
     // // #[derivative(Debug = "ignore")]
@@ -48,6 +51,160 @@ where
     pub use_point_line: bool,
     pub use_ring_start: bool,
     pub use_ring_end: bool,
+}
+
+impl<'a, I, L, PV, SINK, T> StreamNode<Clip<I, L, PV, SINK, T>, SINK, T>
+where
+    I: InterpolateRaw,
+    L: LineRaw,
+    PV: PointVisible<T = T>,
+    SINK: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    #[inline]
+    fn point_default(&mut self, p: &Coordinate<T>, m: ::std::option::Option<u8>) {
+        println!("clip point_default");
+        if self.raw.pv.point_visible(p, None) {
+            // self.get_base().sink.borrow_mut().point(p, m);
+        }
+    }
+
+    #[inline]
+    fn point_line(&mut self, p: &Coordinate<T>, m: ::std::option::Option<u8>) {
+        println!("clip point_line");
+        // self.get_base().line.point(p, m);
+    }
+
+    #[inline]
+    fn line_start_default(&mut self) {
+        println!("clip line_start_default");
+        // let base = self.get_base();
+        // self.point_fn = Self::point_line;
+        // self.base.use_point_line = true;
+        // self.set_use_point_line(true);
+        self.sink.borrow_mut().line_start();
+    }
+
+    #[inline]
+    fn line_end_default(&mut self) {
+        println!("clip line_end_default");
+        // self.point_fn = Self::point_default;
+        // self.set_use_point_line(false);
+        // self.base.use_point_line = false;
+        // self.get_base().line.line_end();
+    }
+
+    #[inline]
+    fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        println!("clip point_ring {:?} {:?}", p, m);
+        // println!("about to ring/push - ring_sink ");
+        // println!("self.base {:#?} ", self.base.ring_sink);
+        // let mut base = self.get_base();
+        self.raw.ring.push(LineElem { p: *p, m });
+        self.raw.ring_sink_node.sink.borrow_mut().point(p, m);
+        println!("clip point_ring -- end");
+    }
+
+    #[inline]
+    fn ring_start(&mut self) {
+        println!("clip ring_start");
+        self.raw.ring_sink_node.sink.borrow_mut().line_start();
+        self.raw.ring.clear();
+        println!("end clip ring_start");
+    }
+
+    fn ring_end(&mut self) {
+        println!("clip ring_end  entry {:#?}", self.raw.ring);
+        let le = self.raw.ring[0];
+        // javascript version drops m here.
+        self.point_ring(&le.p, None);
+        self.raw.ring_sink_node.sink.borrow_mut().line_end();
+
+        // let clean = self.raw.ring_sink_node.clean();
+
+        // let mut ring_segments = match self.raw.ring_sink_node.result() {
+        //     Some(ResultEnum::BufferOutput(result)) => {
+        //         // Can I find a way of doing this with the expense of dynamic conversion.
+        //         result
+        //     }
+        //     Some(_) => {
+        //         panic!("None buffer ");
+        //     }
+        //     None => panic!("was expecting something."),
+        // };
+
+        // println!("clip ring_end() - ring segments {:#?}", ring_segments);
+        // panic!("ring_end buffer result");
+        // let n = ring_segments.len();
+        // let m;
+        // let mut point: Coordinate<T>;
+
+        self.raw.ring.pop();
+        // self.base.polygon.push(self.base.ring.clone());
+        // self.polygon_push(self.get_base().ring.clone());
+        // in this javascript version this value is set to NULL
+        // is my assumption that this is valid true?
+        // self.ring = None;
+        self.raw.ring = Vec::new();
+        // self.raw.ring_reset();
+
+        // if n == 0 {
+        //     return;
+        // }
+        // println!("no intersections n, c {:?} {:?}", n, clean);
+        // No intersections.
+        // match clean {
+        //     CleanEnum::NoIntersections => {
+        //         println!("about to clean good path");
+        //         // panic!("on the good path");
+        //         // let segment = ring_segments
+        //         //     .pop_front()
+        //         //     .expect("We have previously checked that the .len() is >0 ( n ) ");
+        //         // m = segment.len() - 1;
+        //         if m > 0 {
+        //             if !self.raw.polygon_started {
+        //                 self.sink.borrow_mut().polygon_start();
+        //                 // self.base.polygon_started = true;
+        //                 self.raw.set_polygon_started(true);
+        //             }
+        //             self.sink.borrow_mut().line_start();
+        //             for i in 0..m {
+        //                 // point = segment[i].p;
+        //                 // self.get_base().sink.borrow_mut().point(&point, None);
+        //             }
+        //             // self.get_base().sink.borrow_mut().line_end();
+        //         }
+        //         return;
+        //     }
+        // CleanEnum::IntersectionsRejoin => {
+        //     // Rejoin connected segments.
+        //     // TODO reuse ringBuffer.rejoin()?
+        //     if n > 1 {
+        //         println!("funny buisness");
+        //         println!("ring_segemtns before fb {:#?}", ring_segments);
+        //         let pb = [
+        //             ring_segments.pop_back().unwrap(),
+        //             ring_segments.pop_front().unwrap(),
+        //         ]
+        //         .concat();
+        //         ring_segments.push_back(pb);
+        //     }
+        // }
+        //     CleanEnum::IntersectionsOrEmpty => {
+        //         // No-op
+        //     }
+        //     CleanEnum::Undefined => {
+        //         panic!("must be defined by now.")
+        //     }
+        // }
+        //     println!("final segments before filter {:#?}", ring_segments);
+        //     panic!("final segments");
+        //     let filtered: Vec<Vec<LineElem<T>>> = ring_segments
+        //         .into_iter()
+        //         .filter(|segment| segment.len() > 1)
+        //         .collect();
+        //     self.raw.segments.push_back(filtered);
+    }
 }
 
 impl<'a, I, L, PV, SINK, T> Stream for StreamNode<Clip<I, L, PV, SINK, T>, SINK, T>
@@ -117,10 +274,7 @@ where
                 self.raw.polygon_started = true;
             }
             // self.base.sink.line_start();
-            self.raw
-                .interpolate_node
-                .borrow_mut()
-                .interpolate(None, None, T::one());
+            // self.raw.interpolate_node.interpolate(None, None, T::one());
             // self.base.sink.line_end();
         };
         if self.raw.polygon_started {
@@ -136,10 +290,7 @@ where
         // self.base.sink.polygon_start();
         // self.base.sink.line_start();
         // self.interpolate(None, None, T::one(), &mut self.base.sink);
-        self.raw
-            .interpolate_node
-            .borrow_mut()
-            .interpolate(None, None, T::one());
+        // self.raw.interpolate_node.interpolate(None, None, T::one());
         // self.base.sink.line_end();
         // self.base.sink.polygon_end();
     }

@@ -18,7 +18,7 @@ impl<T> PointVisible for PV<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type PVC = Coordinate<T>;
+    type T = T;
     #[inline]
     fn point_visible(&self, p: &Coordinate<T>, _m: Option<u8>) -> bool {
         p.x.cos() * p.y.cos() > self.cr

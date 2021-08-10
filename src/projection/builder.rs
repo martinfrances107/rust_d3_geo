@@ -38,7 +38,7 @@ where
     I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     projection_raw: PR,
@@ -85,7 +85,7 @@ where
     I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Clone + Copy,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new(
@@ -237,7 +237,7 @@ where
     I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type P = Builder<DRAIN, I, L, PR, PV, T>;
@@ -263,7 +263,7 @@ where
     I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;
@@ -288,7 +288,7 @@ where
     I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Clone + Copy,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type ST = T;
@@ -309,7 +309,7 @@ where
     I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;
@@ -356,7 +356,7 @@ where
     I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
 
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {

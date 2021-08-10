@@ -61,11 +61,11 @@ where
     fn generate(
         &self,
         sink: Rc<RefCell<Self::Sink>>,
-    ) -> Rc<RefCell<StreamNode<Self::Raw, Self::Sink, Self::T>>> {
-        Rc::new(RefCell::new(StreamNode {
+    ) -> StreamNode<Self::Raw, Self::Sink, Self::T> {
+        StreamNode {
             raw: self.raw,
             sink,
             pd: PhantomData::<T>,
-        }))
+        }
     }
 }

@@ -12,16 +12,15 @@ mod rejoin;
 pub mod stream_node_clip_factory;
 // use std::cell::RefCell;
 // use std::cmp::Ordering;
-// use std::fmt::Debug;
-// use std::fmt::Display;
-// use std::ops::AddAssign;
+use std::fmt::Display;
+use std::ops::AddAssign;
 // use super::clip_enum::ClipEnum;
 // use std::rc::Rc;
 // use geo::CoordFloat;
-// use geo::Coordinate;
-// use num_traits::AsPrimitive;
-// use num_traits::FloatConst;
-// use num_traits::Float;
+use geo::Coordinate;
+use num_traits::AsPrimitive;
+use num_traits::Float;
+use num_traits::FloatConst;
 
 // use crate::clip::compare_intersections::compare_intersections;
 // use crate::clip::rejoin::rejoin;
@@ -93,9 +92,13 @@ pub trait ClipOps
 
 pub trait ClipTrait: Clone + PointVisible + InterpolateTrait + Stream {}
 
-pub trait PointVisible: Clone + Debug {
-    type PVC;
-    fn point_visible(&self, p: &Self::PVC, z: Option<u8>) -> bool;
+pub trait PointVisible: Clone + Debug
+where
+    <Self as PointVisible>::T:
+        AddAssign + AsPrimitive<<Self as PointVisible>::T> + Debug + Display + Float + FloatConst,
+{
+    type T;
+    fn point_visible(&self, p: &Coordinate<Self::T>, z: Option<u8>) -> bool;
 }
 
 pub trait InterpolateRaw: Clone + Debug {}

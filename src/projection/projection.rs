@@ -45,7 +45,7 @@ where
     I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // pd: PhantomData<&'a u8>,
@@ -57,16 +57,11 @@ where
         Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
 
     pub transform_radians_factory: StreamNodeFactory<StreamTransformRadians, DRAIN, T>,
-
-    // project_transform_factory:
-    //     StreamNodeFactory<Compose<T, PR, ScaleTranslateRotateEnum<T>>, DRAIN, T>,
     pub transform_rotate_factory: StreamNodeFactory<RotateRadiansEnum<T>, DRAIN, T>,
-    preclip_factory: StreamNodeClipFactory<I, L, PV, DRAIN, T>,
-    resample_factory: StreamNodeFactory<ResampleEnum<PR, T>, DRAIN, T>,
 
-    // #[derivative(Debug = "ignore")]
-    // postclip: fn(Box<DRAIN>) -> Box<DRAIN>,
     postclip: fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>,
+    resample_factory: StreamNodeFactory<ResampleEnum<PR, T>, DRAIN, T>,
+    preclip_factory: StreamNodeClipFactory<I, L, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
 }
 
 impl<'a, DRAIN, I, L, PR, PV, T> Projection<DRAIN, I, L, PR, PV, T>
@@ -75,7 +70,7 @@ where
     I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Connects a DRAIN to projection.
@@ -87,10 +82,7 @@ where
     ///
     /// In javascript stream is used as a property to be removed from the object.
     /// In rust that is a closure.
-    fn stream(
-        &self,
-        drain: Rc<RefCell<DRAIN>>,
-    ) -> Rc<RefCell<StreamNode<StreamTransformRadians, DRAIN, T>>>
+    fn stream(&self, drain: Rc<RefCell<DRAIN>>) -> StreamNode<StreamTransformRadians, DRAIN, T>
 // where
     //     SD: Stream<SC = Coordinate<T>>,
     {
@@ -102,21 +94,17 @@ where
 
         let postclip = (self.postclip)(drain);
 
-        // let mut resample = self.project_resample;
-        let resample_node = self.resample_factory.generate(postclip);
+        let resample_node = Rc::new(RefCell::new(self.resample_factory.generate(postclip)));
 
-        let preclip_node = self.preclip_factory.generate(resample_node);
+        let preclip_node = Rc::new(RefCell::new(self.preclip_factory.generate(resample_node)));
 
-        // using resample here bypasses preclip.
-        // let t_rotate_node = StreamTransform::new(&self.rotate, self.preclip);
-        // let t_rotate_node = StreamTransform::new(&self.rotate, self.project_resample);
-        let transform_rotate_node = self.transform_rotate_factory.generate(preclip_node);
+        let transform_rotate_node = Rc::new(RefCell::new(
+            self.transform_rotate_factory.generate(preclip_node),
+        ));
 
         let transform_radians_node = self
             .transform_radians_factory
             .generate(transform_rotate_node);
-        // StreamNodeFactory::new(StreamTransformRadians::default()).generate(t_rotate_node);
-        // t_radians_node.stream_in(t_rotate_node);
 
         // Output.
         transform_radians_node
@@ -129,7 +117,7 @@ where
     I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;

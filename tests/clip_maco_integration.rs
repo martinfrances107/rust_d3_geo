@@ -37,7 +37,7 @@ mod clip_maco_integration_test {
         SINK: Stream<SC = Coordinate<T>>,
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        type PVC = Coordinate<T>;
+        type T = T;
 
         #[inline]
         fn point_visible(&self, _p: &Coordinate<T>, _z: Option<u8>) -> bool {

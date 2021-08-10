@@ -42,7 +42,6 @@ pub mod stream_transform;
 pub mod stream_transform_radians;
 pub mod translate;
 
-// Internal to projection.
 mod fit;
 
 /// Projection Raw.
@@ -53,7 +52,21 @@ where
     type T;
 }
 
-trait Builder {
+trait Builder
+where
+    <Self as Builder>::Drain: Stream<SC = Coordinate<<Self as Builder>::T>>,
+    <Self as Builder>::I: InterpolateRaw,
+    <Self as Builder>::L: LineRaw,
+    <Self as Builder>::PR: Raw<T = Self::T>,
+    <Self as Builder>::PV: PointVisible<T = Self::T>,
+    <Self as Builder>::T: AddAssign
+        + AsPrimitive<<Self as Builder>::T>
+        + Default
+        + Debug
+        + Display
+        + Float
+        + FloatConst,
+{
     type Drain;
     type I;
     type L;
@@ -62,20 +75,7 @@ trait Builder {
     type T;
     fn build<'a>(
         s: &'a Self::PR,
-    ) -> Projection<Self::Drain, Self::I, Self::L, Self::PR, Self::PV, Self::T>
-    where
-        <Self as Builder>::Drain: Stream<SC = Coordinate<<Self as Builder>::T>>,
-        <Self as Builder>::I: InterpolateRaw,
-        <Self as Builder>::L: LineRaw,
-        <Self as Builder>::PR: Raw<T = Self::T>,
-        <Self as Builder>::PV: PointVisible,
-        <Self as Builder>::T: AddAssign
-            + AsPrimitive<<Self as Builder>::T>
-            + Default
-            + Debug
-            + Display
-            + Float
-            + FloatConst;
+    ) -> Projection<Self::Drain, Self::I, Self::L, Self::PR, Self::PV, Self::T>;
 }
 
 /// Generates elements of the  projection stream pipeline.
@@ -83,16 +83,6 @@ pub trait NodeFactory {
     type Raw;
     type Sink;
     type T;
-    fn generate(
-        &self,
-        sink: Rc<RefCell<Self::Sink>>,
-    ) -> Rc<RefCell<StreamNode<Self::Raw, Self::Sink, Self::T>>>;
-    // where
-    //     <Self as NodeFactory>::T: AddAssign
-    //         + AsPrimitive<<Self as NodeFactory>::T>
-    //         + Default
-    //         + Debug
-    //         + Display
-    //         + Float
-    //         + FloatConst;
+    fn generate(&self, sink: Rc<RefCell<Self::Sink>>)
+        -> StreamNode<Self::Raw, Self::Sink, Self::T>;
 }
