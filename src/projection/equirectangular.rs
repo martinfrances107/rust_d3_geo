@@ -1,4 +1,4 @@
-use crate::clip::antimeridian::interpolate::Interpolate;
+// use crate::clip::antimeridian::interpolate::Interpolate;
 use crate::clip::antimeridian::line::Line;
 use crate::clip::antimeridian::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
@@ -47,18 +47,20 @@ where
 {
     type T = T;
 }
+
+use crate::clip::antimeridian::interpolate::generate as generate_interpolate;
 impl<T> EquirectangularRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     pub fn gen_projection_mutator<'a, DRAIN>(
-    ) -> Builder<DRAIN, Interpolate<T>, Line<T>, EquirectangularRaw<T>, PV<T>, T>
+    ) -> Builder<DRAIN, Line<T>, EquirectangularRaw<T>, PV<T>, T>
     where
         DRAIN: Stream<SC = Coordinate<T>>,
     {
         Builder::new(
-            StreamNodeClipFactory::new(Interpolate::default(), Line::default(), PV::default()),
+            StreamNodeClipFactory::new(generate_interpolate(), Line::default(), PV::default()),
             EquirectangularRaw::default(),
         )
         .scale(T::from(152.63_f64).unwrap())

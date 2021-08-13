@@ -1,4 +1,4 @@
-use crate::clip::antimeridian::interpolate::Interpolate;
+use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
 use crate::clip::antimeridian::line::Line;
 use crate::clip::antimeridian::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
@@ -48,14 +48,13 @@ impl<T> Mecator<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    pub fn gen_projection_mutator<'a, DRAIN>(
-    ) -> Builder<DRAIN, Interpolate<T>, Line<T>, Mecator<T>, PV<T>, T>
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Builder<DRAIN, Line<T>, Mecator<T>, PV<T>, T>
     where
         DRAIN: Stream<SC = Coordinate<T>>,
     {
         let tau = T::from(2).unwrap() * T::PI();
         Builder::new(
-            StreamNodeClipFactory::new(Interpolate::default(), Line::default(), PV::default()),
+            StreamNodeClipFactory::new(gen_interpolate(), Line::default(), PV::default()),
             Mecator::default(),
         )
         .scale(T::from(961).unwrap() / tau)

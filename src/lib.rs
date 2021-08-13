@@ -33,7 +33,7 @@ pub mod stream;
 // }
 
 // Common to Projection, Rotation.
-pub trait Transform: Clone + Debug {
+pub trait Transform: Clone {
     type C;
     fn transform(&self, p: &Self::C) -> Self::C;
     fn invert(&self, p: &Self::C) -> Self::C;

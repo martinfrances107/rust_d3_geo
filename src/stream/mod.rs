@@ -93,7 +93,7 @@ where
 //     fn polygon_end(&mut self) {}
 // }
 
-pub trait Stream: Clone + Debug {
+pub trait Stream: Clone {
     type SC;
 
     fn point(&mut self, _p: &Self::SC, _m: Option<u8>);

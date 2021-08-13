@@ -20,7 +20,7 @@ const MAXDEPTH: u8 = 16_u8; // maximum depth of subdivision
 pub struct Resample<PR, T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    PR: ProjectionRaw,
+    PR: ProjectionRaw<T = T>,
 {
     pub projection_raw: PR,
     pub delta2: T,

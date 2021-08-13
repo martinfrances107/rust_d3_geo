@@ -1,4 +1,4 @@
-use crate::clip::antimeridian::interpolate::Interpolate;
+use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
 use crate::clip::antimeridian::line::Line;
 use crate::clip::antimeridian::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
@@ -56,12 +56,12 @@ where
 {
     #[inline]
     pub fn gen_projection_builder<'a, DRAIN>(
-    ) -> Builder<DRAIN, Interpolate<T>, Line<T>, AzimuthalEqualArea<T>, PV<T>, T>
+    ) -> Builder<DRAIN, Line<T>, AzimuthalEqualArea<T>, PV<T>, T>
     where
         DRAIN: Stream<SC = Coordinate<T>>,
     {
         Builder::new(
-            StreamNodeClipFactory::new(Interpolate::default(), Line::default(), PV::default()),
+            StreamNodeClipFactory::new(gen_interpolate(), Line::default(), PV::default()),
             AzimuthalEqualArea::default(),
         )
         .scale(T::from(124.75_f64).unwrap())

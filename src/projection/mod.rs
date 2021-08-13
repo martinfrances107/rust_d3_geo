@@ -1,4 +1,3 @@
-use crate::clip::InterpolateRaw;
 use crate::clip::LineRaw;
 use crate::clip::PointVisible;
 use crate::projection::projection::Projection;
@@ -55,7 +54,6 @@ where
 trait Builder
 where
     <Self as Builder>::Drain: Stream<SC = Coordinate<<Self as Builder>::T>>,
-    <Self as Builder>::I: InterpolateRaw,
     <Self as Builder>::L: LineRaw,
     <Self as Builder>::PR: Raw<T = Self::T>,
     <Self as Builder>::PV: PointVisible<T = Self::T>,
@@ -68,14 +66,11 @@ where
         + FloatConst,
 {
     type Drain;
-    type I;
     type L;
     type PR;
     type PV;
     type T;
-    fn build<'a>(
-        s: &'a Self::PR,
-    ) -> Projection<Self::Drain, Self::I, Self::L, Self::PR, Self::PV, Self::T>;
+    fn build<'a>(s: &'a Self::PR) -> Projection<Self::Drain, Self::L, Self::PR, Self::PV, Self::T>;
 }
 
 /// Generates elements of the  projection stream pipeline.

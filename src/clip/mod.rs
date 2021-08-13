@@ -12,8 +12,10 @@ mod rejoin;
 pub mod stream_node_clip_factory;
 // use std::cell::RefCell;
 // use std::cmp::Ordering;
+use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
+use std::rc::Rc;
 // use super::clip_enum::ClipEnum;
 // use std::rc::Rc;
 // use geo::CoordFloat;
@@ -56,17 +58,6 @@ pub trait Clean {
     fn clean(&self) -> CleanEnum;
 }
 
-// use crate::clip::rejoin::intersection::Intersection;
-// use crate::clip::line_elem::LineElem;
-// use crate::stream::Stream;
-// use crate::clip::rejoin::link::link;
-// use clean::CleanEnum;
-// use buffer::Buffer;
-// use rejoin::intersection::Intersection;
-// use crate::point_equal::point_equal;
-// use clip_base::ClipBase;
-// use interpolate_trait::Interpolate;
-// use point_visible_trait::PointVisible;
 // pub trait Clip: PointVisible + Interpolate + Strea// use line_elem::LineElem;
 
 /// This trait is connected with the submodule
@@ -90,7 +81,7 @@ pub trait ClipOps
     fn ring_end(&mut self);
 }
 
-pub trait ClipTrait: Clone + PointVisible + InterpolateTrait + Stream {}
+pub trait ClipTrait: Clone + PointVisible + Stream {}
 
 pub trait PointVisible: Clone + Debug
 where
@@ -100,24 +91,25 @@ where
     type T;
     fn point_visible(&self, p: &Coordinate<Self::T>, z: Option<u8>) -> bool;
 }
+pub type InterpolateFn<STREAM, T> =
+    Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, Rc<RefCell<STREAM>>)>;
+// pub trait InterpolateRaw: Clone + Debug {}
+// pub trait InterpolateTrait {
+//     type IT;
+//     type IC;
 
-pub trait InterpolateRaw: Clone + Debug {}
-pub trait InterpolateTrait {
-    type IT;
-    type IC;
-
-    fn interpolate(
-        &mut self,
-        to: Option<Self::IC>,
-        from: Option<Self::IC>,
-        dir: Self::IT,
-        // stream: &mut Self::IStream,
-    );
-}
+//     fn interpolate(
+//         &mut self,
+//         to: Option<Self::IC>,
+//         from: Option<Self::IC>,
+//         dir: Self::IT,
+//         // stream: &mut Self::IStream,
+//     );
+// }
 
 pub trait LineRaw: Clone + Debug {}
 pub trait LineFactory {}
-pub trait Line: Clone + Clean + Debug {}
+pub trait Line: Clone + Clean {}
 
 // pub trait LCB: Clean + Stream {
 //     // type T;

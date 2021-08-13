@@ -1,9 +1,3 @@
-use crate::clip::InterpolateRaw;
-use crate::clip::LineRaw;
-use crate::projection::resample::gen_resample_factory;
-use crate::projection::resample::ResampleEnum;
-use crate::projection::scale_translate_rotate::ScaleTranslateRotateEnum;
-use crate::stream::Stream;
 use std::fmt::Display;
 use std::ops::AddAssign;
 
@@ -13,29 +7,32 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::circle::gen_clip_factory_circle;
-use crate::clip::circle::interpolate::Interpolate as CircleInterpolate;
+// use crate::clip::circle::interpolate::Interpolate as CircleInterpolate;
 use crate::clip::circle::line::Line as CircleLine;
 use crate::clip::circle::pv::PV as CirclePV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::clip::LineRaw;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::projection::center::Center;
 use crate::projection::clip_extent::ClipExtent;
+use crate::projection::resample::gen_resample_factory;
+use crate::projection::resample::ResampleEnum;
 use crate::projection::scale::Scale;
 use crate::projection::scale_translate_rotate::ScaleTranslateRotate;
+use crate::projection::scale_translate_rotate::ScaleTranslateRotateEnum;
 use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::translate::Translate;
 use crate::projection::Raw as ProjectionRaw;
+use crate::rotation::rotate_radians::rotate_radians;
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
-use crate::rotation::rotate_radians_transform::rotate_radians_transform;
-use crate::rotation::rotation_identity::RotationIdentity;
+use crate::stream::Stream;
 use crate::Transform;
 
 #[derive(Clone)]
-pub struct Builder<DRAIN, I, L, PR, PV, T>
+pub struct Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<SC = Coordinate<T>>,
-    I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
     PV: PointVisible<T = T>,
@@ -66,30 +63,31 @@ where
     y0: Option<T>,
     x1: Option<T>,
     y1: Option<T>, // post-clip extent
-    clip_factory: StreamNodeClipFactory<I, L, PV, DRAIN, T>,
+    clip_factory: StreamNodeClipFactory<L, PR, PV, DRAIN, T>,
 
+    // Used by recenter() to build the factories.
     rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
+    transform: Compose<T, PR, ScaleTranslateRotateEnum<T>>,
+    rotate_transform: Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+
     resample_factory: StreamNodeFactory<ResampleEnum<PR, T>, DRAIN, T>,
-    project_rotate_transform:
+    rotate_transform_factory: StreamNodeFactory<
         Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
-    project_transform_factory:
-        StreamNodeFactory<Compose<T, PR, ScaleTranslateRotateEnum<T>>, DRAIN, T>,
+        DRAIN,
+        T,
+    >,
 }
 
-/// @todo must implement this trait for every raw projection type
-/// Not just AzimuthalEqualArea and Stereographic
-
-impl<DRAIN, I, L, PR, PV, T> Builder<DRAIN, I, L, PR, PV, T>
+impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<SC = Coordinate<T>>,
-    I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Clone + Copy,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new(
-        clip_factory: StreamNodeClipFactory<I, L, PV, DRAIN, T>,
+        clip_factory: StreamNodeClipFactory<L, PR, PV, DRAIN, T>,
         projection_raw: PR,
     ) -> Self {
         let x = T::from(480_f64).unwrap();
@@ -100,33 +98,31 @@ where
         let k = T::from(150_f64).unwrap();
         let sx = T::one();
         let sy = T::one();
+        let delta_lambda = T::zero();
+        let delta_phi = T::zero();
+        let delta_gamma = T::zero();
+
+        // Zero implies no resampling by default.
+        let resample_factory = gen_resample_factory(projection_raw, T::zero());
 
         let center = ScaleTranslateRotate::new(&k, &T::zero(), &T::zero(), &sx, &sy, alpha)
             .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
+        let str = ScaleTranslateRotate::new(&k, &(x - center.x), &(y - center.y), &sx, &sy, alpha);
 
-        let transform =
-            ScaleTranslateRotate::new(&k, &(x - center.x), &(y - center.y), &sx, &sy, alpha);
-        let rotate = RotateRadiansEnum::I(RotationIdentity::default()); // pre-rotate
-        let projection_transform = Compose::new(projection_raw, transform);
-        let projection_rotate_transform = Compose::new(projection_raw, rotate);
-        let project_transform_factory = StreamNodeFactory::new(projection_rotate_transform);
+        let rotate = rotate_radians(delta_lambda, delta_phi, delta_gamma); // pre-rotate
+        let transform = Compose::new(projection_raw, str);
+        let rotate_transform = Compose::new(rotate, transform);
+        let rotate_transform_factory = StreamNodeFactory::new(rotate_transform);
 
         Self {
             /// Input passing onto Projection.
             projection_raw,
-            // clip_factory: StreamNodeClipFactory::new(
-            //     StreamNodeFactory::new(I::default()),
-            //     StreamNodeFactory::new(Line::default()),
-            //     PV::default(),
-            // ),
             clip_factory,
-            // Zero implied no resampling by default.
-            resample_factory: gen_resample_factory(projection_raw, T::zero()),
 
             /// Internal state
-            delta_lambda: T::zero(),
-            delta_phi: T::zero(),
-            delta_gamma: T::zero(),
+            delta_lambda,
+            delta_phi,
+            delta_gamma,
 
             x,
             y,
@@ -146,10 +142,12 @@ where
             sx,
             sy,
 
+            resample_factory,
+            transform,
+            rotate_transform,
             /// Pass into Projection,
             rotate,
-            project_rotate_transform: Compose::new(rotate, projection_transform),
-            project_transform_factory,
+            rotate_transform_factory,
         }
     }
 
@@ -159,10 +157,7 @@ where
     //  *
     //  * @param angle Set to null to switch to antimeridian cutting.
     //  */
-    pub fn clip_angle(
-        mut self,
-        angle: T,
-    ) -> Builder<DRAIN, CircleInterpolate<T>, CircleLine<T>, PR, CirclePV<T>, T> {
+    pub fn clip_angle(mut self, angle: T) -> Builder<DRAIN, CircleLine<T>, PR, CirclePV<T>, T> {
         self.theta = Some(angle.to_radians());
 
         // match angle {
@@ -189,13 +184,13 @@ where
         out
     }
 
-    fn reset(self) -> Builder<DRAIN, I, L, PR, PV, T> {
+    fn reset(self) -> Builder<DRAIN, L, PR, PV, T> {
         // self.cache_stream = None;
         // self.cache = None;
         self
     }
 
-    fn recenter(mut self) -> Builder<DRAIN, I, L, PR, PV, T> {
+    fn recenter(mut self) -> Builder<DRAIN, L, PR, PV, T> {
         let center = ScaleTranslateRotate::new(
             &self.k,
             &T::zero(),
@@ -209,7 +204,7 @@ where
             y: self.phi,
         }));
 
-        let transform = ScaleTranslateRotate::new(
+        let str = ScaleTranslateRotate::new(
             &self.k,
             &(self.x - center.x),
             &(self.y - center.y),
@@ -218,29 +213,26 @@ where
             self.alpha,
         );
 
-        // todo!("must refactor the stream pipeline");
-        self.project_rotate_transform =
-            rotate_radians_transform(self.delta_lambda, self.delta_phi, self.delta_gamma);
-        self.project_transform_factory =
-            StreamNodeFactory::new(Compose::new(self.projection_raw.clone(), transform));
-        // self.project_rotate_transform =
-        //     Compose::new(self.rotate.clone(), self.project_transform_factory.clone());
+        self.rotate = rotate_radians(self.delta_lambda, self.delta_phi, self.delta_gamma);
+        self.transform = Compose::new(self.projection_raw.clone(), str);
+        self.rotate_transform = Compose::new(self.rotate, self.transform);
+
+        //todo update every factory.
         self.resample_factory = gen_resample_factory(self.projection_raw, self.delta2);
 
         self.reset()
     }
 }
 
-impl<'a, DRAIN, I, L, PR, PV, T> Translate for Builder<DRAIN, I, L, PR, PV, T>
+impl<'a, DRAIN, L, PR, PV, T> Translate for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<SC = Coordinate<T>>,
-    I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type P = Builder<DRAIN, I, L, PR, PV, T>;
+    type P = Builder<DRAIN, L, PR, PV, T>;
     type C = Coordinate<T>;
     #[inline]
     fn get_translate(&self) -> Coordinate<T> {
@@ -250,17 +242,16 @@ where
         }
     }
 
-    fn translate(mut self, t: &Coordinate<T>) -> Builder<DRAIN, I, L, PR, PV, T> {
+    fn translate(mut self, t: &Coordinate<T>) -> Builder<DRAIN, L, PR, PV, T> {
         self.x = t.x;
         self.y = t.y;
         self.recenter()
     }
 }
 
-impl<'a, DRAIN, I, L, PR, PV, T> Center for Builder<DRAIN, I, L, PR, PV, T>
+impl<'a, DRAIN, L, PR, PV, T> Center for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<SC = Coordinate<T>>,
-    I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
     PV: PointVisible<T = T>,
@@ -275,17 +266,16 @@ where
         };
     }
 
-    fn center(mut self, p: Coordinate<T>) -> Builder<DRAIN, I, L, PR, PV, T> {
+    fn center(mut self, p: Coordinate<T>) -> Builder<DRAIN, L, PR, PV, T> {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
         self.recenter()
     }
 }
 
-impl<'a, DRAIN, I, L, PR, PV, T> Scale for Builder<DRAIN, I, L, PR, PV, T>
+impl<'a, DRAIN, L, PR, PV, T> Scale for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<SC = Coordinate<T>>,
-    I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Clone + Copy,
     PV: PointVisible<T = T>,
@@ -297,16 +287,15 @@ where
         self.k
     }
 
-    fn scale(mut self, scale: T) -> Builder<DRAIN, I, L, PR, PV, T> {
+    fn scale(mut self, scale: T) -> Builder<DRAIN, L, PR, PV, T> {
         self.k = scale;
         self.recenter()
     }
 }
 
-impl<'a, DRAIN, I, L, PR, PV, T> ClipExtent for Builder<DRAIN, I, L, PR, PV, T>
+impl<'a, DRAIN, L, PR, PV, T> ClipExtent for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<SC = Coordinate<T>>,
-    I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
     PV: PointVisible<T = T>,
@@ -322,10 +311,7 @@ where
         }
     }
 
-    fn clip_extent(
-        mut self,
-        extent: Option<[Coordinate<T>; 2]>,
-    ) -> Builder<DRAIN, I, L, PR, PV, T> {
+    fn clip_extent(mut self, extent: Option<[Coordinate<T>; 2]>) -> Builder<DRAIN, L, PR, PV, T> {
         match extent {
             None => {
                 self.x0 = None;
@@ -350,10 +336,9 @@ where
     }
 }
 
-impl<DRAIN, I, L, PR, PV, T> Builder<DRAIN, I, L, PR, PV, T>
+impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<SC = Coordinate<T>>,
-    I: InterpolateRaw,
     L: LineRaw,
     PR: ProjectionRaw<T = T>,
     PV: PointVisible<T = T>,
@@ -654,7 +639,7 @@ where
         self.recenter()
     }
 
-    fn precision(self, delta: &T) -> Builder<DRAIN, I, L, PR, PV, T> {
+    fn precision(self, delta: &T) -> Builder<DRAIN, L, PR, PV, T> {
         let out = Builder::new(self.clip_factory, self.projection_raw.clone());
         out.resample_factory = gen_resample_factory(self.projection_raw, self.delta2);
         out.delta2 = *delta * *delta;
@@ -686,7 +671,7 @@ where
         ]
     }
 
-    fn rotate(mut self, angles: [T; 3]) -> Builder<DRAIN, I, L, PR, PV, T> {
+    fn rotate(mut self, angles: [T; 3]) -> Builder<DRAIN, L, PR, PV, T> {
         let [delta_lambda, delta_phi, delta_gamma] = angles;
         let f360 = T::from(360_f64).unwrap();
         self.delta_lambda = (delta_lambda % f360).to_radians();

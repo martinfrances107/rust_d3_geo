@@ -1,14 +1,7 @@
 pub mod intersection;
 pub mod link;
 
-// use crate::clip::clip::Clip;
-use crate::clip::InterpolateRaw;
-use crate::clip::InterpolateTrait;
-use crate::projection::stream_node::StreamNode;
-// use crate::clip::LineRaw;
-// use crate::clip::PointVisible;
-// use crate::projection::stream_node_factory::StreamNodeFactory;
-// use crate::projection::NodeFactory;
+use crate::clip::InterpolateFn;
 use crate::stream::Stream;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -31,17 +24,18 @@ use intersection::Intersection;
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
-pub fn rejoin<SINK, I, T>(
+pub fn rejoin<SINK, T>(
     segments: &Vec<Vec<LineElem<T>>>,
     compare_intersections: fn(
         a: &Rc<RefCell<Intersection<T>>>,
         b: &Rc<RefCell<Intersection<T>>>,
     ) -> Ordering,
     start_inside: bool,
-    interpolate_node: Rc<RefCell<StreamNode<I, SINK, T>>>,
+    interpolate_fn: InterpolateFn<SINK, T>,
     stream: Rc<RefCell<SINK>>,
 ) where
-    I: InterpolateRaw,
+    // DRAIN: Stream<SC = Coordinate<T>>,
+    // PR: ProjectionRaw<T = T>,
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -157,10 +151,11 @@ pub fn rejoin<SINK, I, T>(
                         }
                     }
                 } else {
-                    interpolate_node.borrow_mut().interpolate(
+                    interpolate_fn(
                         Some((current.clone()).borrow().x.p),
                         Some((current.clone()).borrow().n.as_ref().unwrap().borrow().x.p),
                         T::one(),
+                        stream,
                     );
                 }
                 current = current.clone().borrow().n.clone().unwrap();
@@ -175,7 +170,7 @@ pub fn rejoin<SINK, I, T>(
                         stream.borrow_mut().point(&point.p, None);
                     }
                 } else {
-                    interpolate_node.borrow_mut().interpolate(
+                    interpolate_fn(
                         Some((*current.clone()).borrow().x.p),
                         Some(
                             ((current.clone()).borrow().p.as_ref().unwrap())
@@ -184,7 +179,7 @@ pub fn rejoin<SINK, I, T>(
                                 .p,
                         ),
                         T::from(-1).unwrap(),
-                        // stream,
+                        stream,
                     );
                 }
                 current = current.clone().borrow().p.clone().unwrap();

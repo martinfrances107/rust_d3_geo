@@ -1,7 +1,3 @@
-use crate::clip::InterpolateRaw;
-use crate::clip::InterpolateTrait;
-use crate::clip::LineRaw;
-use crate::clip::PointVisible;
 use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::fmt::Display;
@@ -13,27 +9,36 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::buffer::Buffer;
-use crate::clip::line_elem::LineElem;
-use crate::clip::CleanEnum;
-use crate::path::ResultEnum;
+use super::buffer::Buffer;
+use super::compare_intersections::compare_intersections;
+use super::line_elem::LineElem;
+use super::rejoin::rejoin;
+use super::InterpolateFn;
+use super::LineRaw;
+use super::PointVisible;
+
 use crate::projection::stream_node::StreamNode;
+use crate::projection::stream_node_factory::StreamNodeFactory;
+use crate::projection::NodeFactory;
 use crate::stream::Stream;
 
-#[derive(Clone, Debug)]
-pub struct Clip<I, L, PV, SINK, T>
+#[derive(Clone)]
+pub struct Clip<L, PV, SINK, T>
 where
-    I: InterpolateRaw,
     L: LineRaw,
+    // PR: ProjectionRaw<T = T>,
+    PV: PointVisible,
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
+    /// Phantom Data is needed because of the complexity of the IF.
+    // phantomDrain: PhantomData<DRAIN>,
+    // pub phantomPR: PhantomData<PR>,
     pub line_node: StreamNode<L, SINK, T>,
-    pub interpolate_node: StreamNode<I, SINK, T>,
+    pub interpolate_fn: InterpolateFn<SINK, T>,
 
     /// A pipeline source node.
     pub ring_buffer: Rc<RefCell<Buffer<T>>>,
-
     pub pv: PV,
     start: LineElem<T>,
     pub polygon_started: bool,
@@ -53,10 +58,50 @@ where
     pub use_ring_end: bool,
 }
 
-impl<'a, I, L, PV, SINK, T> StreamNode<Clip<I, L, PV, SINK, T>, SINK, T>
+impl<L, PV, SINK, T> Clip<L, PV, SINK, T>
 where
-    I: InterpolateRaw,
     L: LineRaw,
+    // PR: ProjectionRaw<T = T>,
+    PV: PointVisible,
+    SINK: Stream<SC = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    pub fn new(
+        pv: PV,
+        line_raw: L,
+        interpolate_fn: InterpolateFn<SINK, T>,
+        ring_buffer: Rc<RefCell<Buffer<T>>>,
+        ring_sink_node: StreamNode<L, Buffer<T>, T>,
+        sink: Rc<RefCell<SINK>>,
+        start: LineElem<T>,
+    ) -> Clip<L, PV, SINK, T> {
+        // let ring_buffer: Rc<RefCell<Buffer<T>>> = Rc::new(RefCell::new(Buffer::default()));
+        // let mut ring_sink_node = self.line_ring_buffer_factory.generate(ring_buffer);
+        let line_sink_factory = StreamNodeFactory::new(line_raw);
+        Clip {
+            pv,
+            line_node: line_sink_factory.generate(sink),
+            interpolate_fn,
+            start,
+
+            polygon_started: false,
+            polygon: Vec::new(),
+            ring: Vec::new(),
+            ring_sink_node,
+            ring_buffer,
+            segments: VecDeque::new(),
+
+            use_point_line: false,
+            use_ring_start: false,
+            use_ring_end: false,
+        }
+    }
+}
+
+impl<L, PV, SINK, T> StreamNode<Clip<L, PV, SINK, T>, SINK, T>
+where
+    L: LineRaw,
+    // PR: ProjectionRaw<T = T>,
     PV: PointVisible<T = T>,
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -207,10 +252,10 @@ where
     }
 }
 
-impl<'a, I, L, PV, SINK, T> Stream for StreamNode<Clip<I, L, PV, SINK, T>, SINK, T>
+impl<L, PV, SINK, T> Stream for StreamNode<Clip<L, PV, SINK, T>, SINK, T>
 where
-    I: InterpolateRaw,
     L: LineRaw,
+    // PR: ProjectionRaw<T = T>,
     PV: PointVisible,
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -260,14 +305,13 @@ where
             }
             println!("into rejoin this path");
 
-            // self.rejoin(
-            //     &segments_merged,
-            //     compare_intersections,
-            //     start_inside,
-            //     // self,
-            //     // self.interpolate(),
-            //     // &mut self.base.sink,
-            // );
+            rejoin(
+                &segments_merged,
+                compare_intersections,
+                start_inside,
+                self.raw.interpolate_fn,
+                self.sink,
+            );
         } else if start_inside {
             if !self.raw.polygon_started {
                 // self.base.sink.polygon_start();

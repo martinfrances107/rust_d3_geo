@@ -10,24 +10,26 @@ use num_traits::FloatConst;
 use std::fmt::Display;
 use std::ops::AddAssign;
 
-use crate::clip::circle::interpolate::Interpolate;
+// use crate::clip::circle::interpolate::Interpolate;
 use crate::clip::circle::line::Line;
 use crate::clip::circle::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 
+use crate::clip::circle::interpolate::generate as generate_interpolate;
+
 pub(crate) fn gen_clip_factory_circle<PR, SINK, T>(
     projection_raw: PR,
     radius: T,
-) -> StreamNodeClipFactory<Interpolate<T>, Line<T>, PV<T>, SINK, T>
+) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
 where
-    PR: ProjectionRaw,
+    PR: ProjectionRaw<T = T>,
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     StreamNodeClipFactory::new(
-        Interpolate::new(radius),
+        generate_interpolate(radius),
         Line::new(radius),
         PV { cr: radius.cos() },
     )

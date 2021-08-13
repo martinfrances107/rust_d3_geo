@@ -2,9 +2,9 @@ pub mod interpolate;
 mod intersect;
 pub mod line;
 pub mod pv;
+use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
 use std::fmt::Display;
 use std::ops::AddAssign;
-// use std::rc::Rc;
 
 // use clip_ops_macro_derive::ClipOps;
 use geo::CoordFloat;
@@ -12,7 +12,7 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::interpolate::Interpolate;
+// use crate::clip::antimeridian::interpolate::interpolate;
 use crate::clip::antimeridian::line::Line;
 use crate::clip::antimeridian::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
@@ -25,13 +25,13 @@ use crate::stream::Stream;
 pub(crate) fn gen_clip_factory_antimeridian<PR, SINK, T>(
     projection_raw: PR,
     radius: T,
-) -> StreamNodeClipFactory<Interpolate<T>, Line<T>, PV<T>, SINK, T>
+) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
 where
     PR: ProjectionRaw<T = T>,
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    StreamNodeClipFactory::new(Interpolate::default(), Line::default(), PV::default())
+    StreamNodeClipFactory::new(gen_interpolate::<SINK, T>(), Line::default(), PV::default())
 }
 
 // fn gen_antimmeridian() -> Clip {

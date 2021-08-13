@@ -1,67 +1,33 @@
-use crate::circle::generate::generate;
-use crate::clip::InterpolateRaw;
+use crate::circle::stream::stream as circle_stream;
+use crate::clip::InterpolateFn;
 use crate::stream::Stream;
-// use crate::clip::clip::Clip;
-use crate::clip::InterpolateTrait;
-use crate::projection::stream_node::StreamNode;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
+use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
+use std::rc::Rc;
 
-/// Circle Interpolate.
-#[derive(Clone, Debug)]
-pub struct Interpolate<T>
+pub fn generate<STREAM, T>(radius: T) -> InterpolateFn<STREAM, T>
 where
+    STREAM: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    radius: T,
-    delta: T,
-}
+    let cr = radius.cos();
+    let delta = T::from(6_f64).unwrap().to_radians();
+    let smallRadius = cr > T::zero();
+    // notHemisphere = abs(cr) > epsilon; // TODO optimise for this common case
 
-impl<T> InterpolateRaw for Interpolate<T> where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst
-{
-}
+    let out: InterpolateFn<STREAM, T> = Rc::new(
+        move |from: Option<Coordinate<T>>,
+              to: Option<Coordinate<T>>,
+              direction: T,
+              stream: Rc<RefCell<STREAM>>| {
+            circle_stream(stream, radius, delta, direction, from, to)
+        },
+    );
 
-impl<T> Interpolate<T>
-where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-    pub fn new(radius: T) -> Self {
-        Self {
-            radius,
-            delta: T::from(6.0_f64 * std::f64::consts::PI / 180.0_f64).unwrap(),
-        }
-    }
-}
-
-// use super::line::Line;
-// use super::pv::PV;
-impl<SINK, T> InterpolateTrait for StreamNode<Interpolate<T>, SINK, T>
-where
-    SINK: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-    type IC = Coordinate<T>;
-    type IT = T;
-
-    #[inline]
-    fn interpolate(
-        &mut self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
-        direction: T,
-    ) {
-        generate(
-            self.sink,
-            self.raw.radius,
-            self.raw.delta,
-            direction,
-            from,
-            to,
-        )
-    }
+    out
 }

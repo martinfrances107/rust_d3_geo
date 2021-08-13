@@ -1,10 +1,10 @@
-use crate::clip::antimeridian::interpolate::Interpolate;
+// use crate::clip::antimeridian::interpolate::Interpolate;
+use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
 use crate::clip::antimeridian::line::Line;
 use crate::clip::antimeridian::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::builder::Builder;
 use crate::projection::scale::Scale;
-use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::Raw;
 use crate::stream::Stream;
 use std::fmt::Display;
@@ -47,18 +47,18 @@ where
 {
     type T = T;
 }
+
 impl<T> Stereographic<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a, DRAIN>(
-    ) -> Builder<DRAIN, Interpolate<T>, Line<T>, Stereographic<T>, PV<T>, T>
+    pub fn gen_projection_mutator<'a, DRAIN>() -> Builder<DRAIN, Line<T>, Stereographic<T>, PV<T>, T>
     where
         DRAIN: Stream<SC = Coordinate<T>>,
     {
         Builder::new(
-            StreamNodeClipFactory::new(Interpolate::default(), Line::default(), PV::default()),
+            StreamNodeClipFactory::new(gen_interpolate(), Line::default(), PV::default()),
             Stereographic::default(),
         )
         .scale(T::from(250_f64).unwrap())
