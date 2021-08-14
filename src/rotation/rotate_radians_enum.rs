@@ -81,7 +81,7 @@ where
 
 impl<T> Transform for RotateRadiansEnum<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type C = Coordinate<T>;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
@@ -106,7 +106,7 @@ where
 impl<SINK, T> Stream for StreamNode<RotateRadiansEnum<T>, SINK, T>
 where
     SINK: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type SC = Coordinate<T>;
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
