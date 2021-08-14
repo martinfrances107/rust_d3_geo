@@ -5,21 +5,18 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
 
-use crate::projection::resample::none::None;
-use crate::projection::resample::resample::Resample;
-use crate::projection::stream_node::StreamNode;
-use crate::projection::stream_node_factory::StreamNodeFactory;
-use crate::projection::Raw as ProjectionRaw;
-
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
-// use crate::Transform;
 
-trait ResampleTrait {}
+use super::resample::none::None;
+use super::resample::resample::Resample;
+use super::stream_node::StreamNode;
+use super::stream_node_factory::StreamNodeFactory;
+use super::Raw as ProjectionRaw;
 
 #[derive(Debug)]
 pub enum ResampleEnum<PR, T>
