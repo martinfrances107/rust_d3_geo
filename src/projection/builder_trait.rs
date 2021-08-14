@@ -1,35 +1,20 @@
-// use crate::projection::projection_builder::Builder;
-use geo::Coordinate;
-// use std::cell::RefCell;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
-// use std::rc::Rc;
-// use std::rc::Rc;
 
+use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
-// use crate::data_object::DataObject;
-// use crate::stream::Stream;
 use crate::Transform;
 
 use super::center::Center;
 use super::clip_extent::ClipExtent;
-// use super::projection::Projection;
-// use super::projection::StreamOrValueMaybe;
 use super::scale::Scale;
 use super::translate::Translate;
-// use crate::compose::Compose;
-
-// use super::scale_translate_rotate::ScaleTranslateRotateEnum;
-// use super::ProjectionRawTrait;
-// use crate::projection::stream_transform::StreamTransform;
-// use crate::projection::stream_transform_radians::StreamTransformRadians;
 
 pub trait BuilderTrait: Center + ClipExtent + Scale + Translate
-// Rc<<Self as BuilderTrait>::PR>: ProjectionRawTrait,
 where
     <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
     <Self as BuilderTrait>::T:

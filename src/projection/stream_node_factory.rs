@@ -1,19 +1,18 @@
-use crate::projection::NodeFactory;
-use crate::projection::StreamNode;
 use core::marker::PhantomData;
-use geo::CoordFloat;
-use geo::Coordinate;
 use std::cell::RefCell;
+use std::fmt::Display;
+use std::ops::AddAssign;
 use std::rc::Rc;
 
-// use geo::Coordinate;
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use std::fmt::Display;
-use std::ops::AddAssign;
-
 use crate::stream::Stream;
+
+use super::NodeFactory;
+use super::StreamNode;
 
 // use super::stream_node::StreamNode;
 

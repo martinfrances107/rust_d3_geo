@@ -5,7 +5,6 @@ use std::ops::AddAssign;
 use std::rc::Rc;
 
 use geo::CoordFloat;
-// use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 

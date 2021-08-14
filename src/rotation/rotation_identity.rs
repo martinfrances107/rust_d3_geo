@@ -1,6 +1,7 @@
+use std::marker::PhantomData;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::marker::PhantomData;
 
 use crate::Transform;
 

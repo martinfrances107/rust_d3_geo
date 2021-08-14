@@ -49,6 +49,7 @@ where
 
     ///Factories.
     resample_factory: StreamNodeFactory<ResampleEnum<PR, T>, DRAIN, T>,
+
     preclip_factory: StreamNodeClipFactory<L, PR, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
 
     rotate_transform_factory: StreamNodeFactory<
@@ -60,8 +61,20 @@ where
         >,
         T,
     >,
-    transform_radians_factory:
-        StreamNodeFactory<StreamTransformRadians, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
+
+    transform_radians_factory: StreamNodeFactory<
+        StreamTransformRadians,
+        StreamNode<
+            Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+            StreamNode<
+                Clip<L, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
+                StreamNode<ResampleEnum<PR, T>, DRAIN, T>,
+                T,
+            >,
+            T,
+        >,
+        T,
+    >,
 }
 
 impl<'a, DRAIN, L, PR, PV, T> Projection<DRAIN, L, PR, PV, T>

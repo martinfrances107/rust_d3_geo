@@ -1,15 +1,15 @@
 pub mod none;
 pub mod resample;
 
+use std::fmt::Debug;
+use std::fmt::Display;
+use std::ops::AddAssign;
+
 use crate::projection::resample::none::None;
 use crate::projection::resample::resample::Resample;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::Raw as ProjectionRaw;
-use std::fmt::Debug;
-use std::fmt::Display;
-use std::ops::AddAssign;
-// use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;

@@ -1,10 +1,9 @@
-// use delaunator::Point;
 use geo::{CoordFloat, Coordinate};
 
 use crate::Transform;
 
 #[derive(Clone, Copy, Debug, Default)]
-pub struct RotationPhiGamma<T>
+pub(super) struct RotationPhiGamma<T>
 where
     T: CoordFloat,
 {

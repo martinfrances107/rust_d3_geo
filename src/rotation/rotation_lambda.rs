@@ -1,11 +1,10 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-// use crate::math::TAU;
 use crate::Transform;
 
 #[derive(Clone, Copy, Default, Debug)]
-pub struct RotationLambda<T> {
+pub(super) struct RotationLambda<T> {
     pub delta_lambda: T,
 }
 

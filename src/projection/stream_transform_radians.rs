@@ -1,20 +1,16 @@
-use crate::projection::StreamNode;
 use std::fmt::Display;
 use std::ops::AddAssign;
-// use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-// use super::stream_transform::StreamTransform;
-// use crate::stream::stream_in_trait::StreamIn;
-// use crate::projection::ProjectionRawTrait;
 use crate::stream::Stream;
-// use crate::Transform;
+
+use super::StreamNode;
 
 #[derive(Clone, Default, Debug)]
-pub struct StreamTransformRadians {}
+pub(super) struct StreamTransformRadians {}
 
 impl<T, SINK> Stream for StreamNode<StreamTransformRadians, SINK, T>
 where

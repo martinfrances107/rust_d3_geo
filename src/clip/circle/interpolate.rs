@@ -1,14 +1,16 @@
-use crate::circle::stream::stream as circle_stream;
-use crate::clip::InterpolateFn;
-use crate::stream::Stream;
-use geo::CoordFloat;
-use geo::Coordinate;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
+
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
+
+use crate::circle::stream::stream as circle_stream;
+use crate::clip::InterpolateFn;
+use crate::stream::Stream;
 
 pub fn generate<STREAM, T>(radius: T) -> InterpolateFn<STREAM, T>
 where

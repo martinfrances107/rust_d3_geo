@@ -1,5 +1,3 @@
-use crate::projection::stream_node::StreamNode;
-use crate::stream::Stream;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::fmt::Formatter;
@@ -12,6 +10,8 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
+use crate::projection::stream_node::StreamNode;
+use crate::stream::Stream;
 use crate::Transform;
 
 use super::rotation_identity::RotationIdentity;

@@ -5,9 +5,10 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use super::rotate_radians::rotate_radians;
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
 use crate::Transform;
+
+use super::rotate_radians::rotate_radians;
 
 #[derive(Clone, Debug)]
 pub struct Rotation<T>

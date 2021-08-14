@@ -1,11 +1,3 @@
-// use crate::clip::antimeridian::interpolate::Interpolate;
-use crate::clip::antimeridian::line::Line;
-use crate::clip::antimeridian::pv::PV;
-use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
-use crate::projection::builder::Builder;
-use crate::projection::Raw;
-use crate::stream::Stream;
-
 use std::fmt::Display;
 use std::ops::AddAssign;
 
@@ -14,11 +6,15 @@ use geo::Coordinate;
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
-// use crate::stream::Stream;
+use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::pv::PV;
+use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::stream::Stream;
 use crate::Transform;
 
-// use super::projection::Projection;
+use super::builder::Builder;
 use super::scale::Scale;
+use super::Raw;
 
 #[derive(Clone, Copy, Debug)]
 pub struct EquirectangularRaw<T>

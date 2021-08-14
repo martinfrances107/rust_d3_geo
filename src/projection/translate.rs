@@ -1,19 +1,4 @@
-// use std::fmt::Display;
-// use std::ops::AddAssign;
-
-// use geo::{CoordFloat, Coordinate};
-
-// use num_traits::AsPrimitive;
-// use num_traits::FloatConst;
-
-// use super::projection::Projection;
-// use super::ProjectionRawTrait;
-
-pub trait Translate
-// where
-//     PR: ProjectionRawTrait,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
-{
+pub trait Translate {
     type C;
     type P;
     fn get_translate(&self) -> Self::C;

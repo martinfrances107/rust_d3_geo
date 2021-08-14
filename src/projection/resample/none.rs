@@ -42,26 +42,6 @@ where
     }
 }
 
-// impl<PR, SINK, T> NodeFactory for StreamNodeFactory<SINK, None<PR, T>, T>
-// where
-//     PR: ProjectionRaw<T = T>,
-//     SINK: Stream<SC = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-// {
-//     type T = T;
-//     type Sink = SINK;
-//     type SR = None<PR, T>;
-//     fn generate(
-//         &self,
-//         sink: Rc<RefCell<Self::Sink>>,
-//     ) -> Rc<RefCell<StreamNode<Self::SR, Self::Sink>>> {
-//         Rc::new(RefCell::new(StreamNode {
-//             raw: self.raw.clone(),
-//             sink: sink,
-//         }))
-//     }
-// }
-
 impl<PR, T> None<PR, T>
 where
     // STREAM: Stream<SC = Coordinate<T>> + Default,

@@ -12,7 +12,6 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
-// use std::rc::Rc;
 
 use crate::projection::stream_node::StreamNode;
 
@@ -28,20 +27,18 @@ pub mod mecator;
 pub mod orthographic;
 pub mod projection;
 pub mod projection_equal;
-pub mod resample;
 pub mod scale;
 pub mod scale_translate;
 pub mod scale_translate_rotate;
 pub mod stereographic;
-// used by clip
 pub mod stream_node;
-// use by clip
 pub mod stream_node_factory;
 pub mod stream_transform;
 pub mod stream_transform_radians;
 pub mod translate;
 
 mod fit;
+mod resample;
 
 /// Projection Raw.
 pub trait Raw: Clone + Copy + Default + Transform<C = Coordinate<Self::T>>

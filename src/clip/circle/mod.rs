@@ -3,21 +3,21 @@ mod intersect;
 pub mod line;
 pub mod pv;
 
+use std::fmt::Display;
+use std::ops::AddAssign;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use std::fmt::Display;
-use std::ops::AddAssign;
 
-// use crate::clip::circle::interpolate::Interpolate;
-use crate::clip::circle::line::Line;
-use crate::clip::circle::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 
-use crate::clip::circle::interpolate::generate as generate_interpolate;
+use super::circle::interpolate::generate as generate_interpolate;
+use super::circle::line::Line;
+use super::circle::pv::PV;
 
 pub(crate) fn gen_clip_factory_circle<PR, SINK, T>(
     projection_raw: PR,

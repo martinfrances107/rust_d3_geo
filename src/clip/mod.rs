@@ -1,34 +1,26 @@
-pub mod antimeridian;
-pub mod buffer;
 pub mod circle;
-mod clean;
 pub mod clip;
-// pub mod clip_enum;
+
 pub mod compare_intersections;
 pub mod line_elem;
-pub mod point_visible_trait;
-
-mod rejoin;
 pub mod stream_node_clip_factory;
-// use std::cell::RefCell;
-// use std::cmp::Ordering;
+
+pub(crate) mod antimeridian;
+
+pub(super) mod buffer;
+
+mod clean;
+mod rejoin;
+
 use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
-// use super::clip_enum::ClipEnum;
-// use std::rc::Rc;
-// use geo::CoordFloat;
+
 use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
-
-// use crate::clip::compare_intersections::compare_intersections;
-// use crate::clip::rejoin::rejoin;
-// use crate::path::PathResult;
-// use crate::path::ResultEnum;
-// use crate::polygon_contains::contains;
 
 use crate::stream::Stream;
 use crate::Debug;

@@ -1,6 +1,3 @@
-use crate::stream::Stream as StreamTrait;
-use crate::stream::Streamable;
-
 use std::fmt::Display;
 use std::ops::AddAssign;
 
@@ -8,6 +5,9 @@ use derivative::Derivative;
 use geo::{CoordFloat, Coordinate, Point};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
+
+use crate::stream::Stream as StreamTrait;
+use crate::stream::Streamable;
 
 // TODO MUST use a math library
 pub const EPSILON: f64 = 1e-6;

@@ -1,13 +1,15 @@
-use crate::clip::InterpolateFn;
-use crate::stream::Stream;
-use geo::CoordFloat;
-use geo::Coordinate;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
+
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
+
+use crate::clip::InterpolateFn;
+use crate::stream::Stream;
 
 // fn gen_interpolate<F>(radius: T) ->F
 // where F: FnMut( Option<Coordinate<T>,  Option<Coordinate<T>>, T,  Rc<RefCell<STREAM>>)

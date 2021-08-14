@@ -7,27 +7,27 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::circle::gen_clip_factory_circle;
-// use crate::clip::circle::interpolate::Interpolate as CircleInterpolate;
 use crate::clip::circle::line::Line as CircleLine;
 use crate::clip::circle::pv::PV as CirclePV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::LineRaw;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
-use crate::projection::center::Center;
-use crate::projection::clip_extent::ClipExtent;
-use crate::projection::resample::gen_resample_factory;
-use crate::projection::resample::ResampleEnum;
-use crate::projection::scale::Scale;
-use crate::projection::scale_translate_rotate::ScaleTranslateRotate;
-use crate::projection::scale_translate_rotate::ScaleTranslateRotateEnum;
-use crate::projection::stream_node_factory::StreamNodeFactory;
-use crate::projection::translate::Translate;
-use crate::projection::Raw as ProjectionRaw;
 use crate::rotation::rotate_radians::rotate_radians;
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
 use crate::stream::Stream;
 use crate::Transform;
+
+use super::center::Center;
+use super::clip_extent::ClipExtent;
+use super::resample::gen_resample_factory;
+use super::resample::ResampleEnum;
+use super::scale::Scale;
+use super::scale_translate_rotate::ScaleTranslateRotate;
+use super::scale_translate_rotate::ScaleTranslateRotateEnum;
+use super::stream_node_factory::StreamNodeFactory;
+use super::translate::Translate;
+use super::Raw as ProjectionRaw;
 
 #[derive(Clone)]
 pub struct Builder<DRAIN, L, PR, PV, T>

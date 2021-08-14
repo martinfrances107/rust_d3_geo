@@ -1,12 +1,3 @@
-// use crate::clip::antimeridian::interpolate::Interpolate;
-use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
-use crate::clip::antimeridian::line::Line;
-use crate::clip::antimeridian::pv::PV;
-use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
-use crate::projection::builder::Builder;
-use crate::projection::scale::Scale;
-use crate::projection::Raw;
-use crate::stream::Stream;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
@@ -15,8 +6,17 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
-use super::azimuthal::azimuthal_invert;
+use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
+use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::pv::PV;
+use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::stream::Stream;
 use crate::Transform;
+
+use super::azimuthal::azimuthal_invert;
+use super::builder::Builder;
+use super::scale::Scale;
+use super::Raw;
 
 /// Why the Phantom Data is required here...
 ///

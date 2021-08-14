@@ -6,12 +6,10 @@ pub mod path;
 pub mod string;
 
 use std::collections::VecDeque;
-// use std::default::Default;
 use std::fmt;
 use std::fmt::Display;
 use std::ops::AddAssign;
 
-// use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;

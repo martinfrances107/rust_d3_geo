@@ -3,13 +3,13 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
-use crate::cartesian::cartesian;
-use crate::cartesian::normalize_in_place;
-use crate::cartesian::spherical_r;
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::cartesian::cartesian;
+use crate::cartesian::normalize_in_place;
+use crate::cartesian::spherical_r;
 use crate::stream::Stream;
 use crate::Transform;
 

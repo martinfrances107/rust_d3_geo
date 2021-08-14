@@ -1,25 +1,14 @@
-use crate::projection::StreamNode;
-// use derivative::Derivative;
+use std::fmt::Display;
+use std::ops::AddAssign;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-// use std::cell::RefCell;
-use std::fmt::Display;
-use std::ops::AddAssign;
-// use std::rc::Rc;
 
-// use crate::clip::antimeridian::ClipAntimeridian;
-// use crate::clip::interpolate_trait::Interpolate;
-// use crate::clip::Clip;
-// use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
-// use crate::rotation::rotation_identity::RotationIdentity;
-// use crate::stream::stream_in_trait::StreamCombo;
-// use crate::stream::stream_in_trait::StreamIn;
-// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 use crate::Transform;
 
-// use super::ProjectionRawTrait;
+use super::StreamNode;
 
 #[derive(Clone, Debug)]
 pub struct StreamTransform<T, TRANSFORMER>

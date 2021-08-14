@@ -24,13 +24,8 @@ pub mod projection;
 pub mod rotation;
 
 mod compose;
-mod constant;
 mod point_equal;
 pub mod stream;
-
-// pub trait TransformClone<'a>: Transform {
-//     fn box_clone(&'a self) -> Box<dyn TransformClone<'a, TcC = Self::TcC>>;
-// }
 
 // Common to Projection, Rotation.
 pub trait Transform: Clone {

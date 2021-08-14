@@ -1,8 +1,5 @@
-use crate::clip::LineRaw;
-use crate::projection::stream_node::StreamNode;
 use std::fmt::Display;
 use std::ops::AddAssign;
-// use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
@@ -15,7 +12,9 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::Clean;
 use crate::clip::CleanEnum;
 use crate::clip::Line as LineTrait;
+use crate::clip::LineRaw;
 use crate::point_equal::point_equal;
+use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
 /// Circle Line.

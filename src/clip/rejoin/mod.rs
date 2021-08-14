@@ -1,21 +1,21 @@
 pub mod intersection;
 pub mod link;
 
-use crate::clip::InterpolateFn;
-use crate::stream::Stream;
-use geo::CoordFloat;
-use geo::Coordinate;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
+
 use crate::clip::rejoin::link::link;
+use crate::clip::InterpolateFn;
 use crate::point_equal::point_equal;
-// use crate::projection::stream_node::StreamNode;
+use crate::stream::Stream;
 
 use super::line_elem::LineElem;
 use intersection::Intersection;

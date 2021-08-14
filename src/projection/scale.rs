@@ -1,15 +1,3 @@
-// use std::fmt::Display;
-// use std::ops::AddAssign;
-
-// use geo::CoordFloat;
-
-// use crate::Transform;
-// use num_traits::AsPrimitive;
-// use num_traits::FloatConst;
-
-// use super::projection::Projection;
-// use super::ProjectionRawTrait;
-
 pub trait Scale
 // where
 //     PR: ProjectionRawTrait,

@@ -1,7 +1,3 @@
-// use crate::clip::clip::Clip;
-// use crate::clip::InterpolateTrait;
-// use crate::clip::Line;
-// use crate::projection::stream_node::StreamNode;
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::ops::AddAssign;
@@ -12,7 +8,6 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::PointVisible;
-// use crate::projection::stream_node::StreamNode;
 
 /// Antimeridian PV ( Point Visible).
 #[derive(Clone, Debug)]

@@ -5,23 +5,22 @@ use super::InterpolateFn;
 use super::LineRaw;
 use super::PointVisible;
 
-use crate::projection::resample::ResampleEnum;
-use crate::projection::stream_node::StreamNode;
-use crate::projection::stream_node_factory::StreamNodeFactory;
-use crate::projection::NodeFactory;
-use crate::projection::Raw as ProjectionRaw;
-use crate::stream::Stream;
+use std::cell::RefCell;
+use std::fmt::Display;
+use std::ops::AddAssign;
+use std::rc::Rc;
 
 use core::marker::PhantomData;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use std::cell::RefCell;
-use std::collections::VecDeque;
-use std::fmt::Display;
-use std::ops::AddAssign;
-use std::rc::Rc;
+
+use crate::projection::stream_node::StreamNode;
+use crate::projection::stream_node_factory::StreamNodeFactory;
+use crate::projection::NodeFactory;
+use crate::projection::Raw as ProjectionRaw;
+use crate::stream::Stream;
 
 /// Used in the construct of a Projection stream pipeline.
 ///
@@ -120,26 +119,5 @@ where
             start,
         );
         StreamNodeFactory::new(clip).generate(sink)
-        // StreamNode {
-        //     // raw: Clip {
-        //     //     pv: self.pv,
-        //     //     line_node: self.line_sink_factory.generate(sink),
-        //     //     interpolate_fn: self.interpolate_fn,
-        //     //     start,
-
-        //     //     polygon_started: false,
-        //     //     polygon: Vec::new(),
-        //     //     ring: Vec::new(),
-        //     //     ring_sink_node,
-        //     //     ring_buffer,
-        //     //     segments: VecDeque::new(),
-
-        //     //     use_point_line: false,
-        //     //     use_ring_start: false,
-        //     //     use_ring_end: false,
-        //     // },
-        //     sink,
-        //     pd: PhantomData::<T>,
-        // }
     }
 }
