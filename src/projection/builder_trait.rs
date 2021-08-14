@@ -307,11 +307,7 @@ where
     //  */
     fn precision(self, delta: &<Self as BuilderTrait>::T) -> Self
     where
-        // Rc<<Self as BuilderTrait>::PR>:
-        //     Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-        // <Self as BuilderTrait>::DRAIN:
-        //     'a + Default + Stream<SC = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
             + Debug
@@ -323,11 +319,7 @@ where
 
     fn reflect_x(self, reflect: bool) -> Self
     where
-        // Rc<<Self as BuilderTrait>::PR>:
-        //     Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-        // <Self as BuilderTrait>::DRAIN:
-        //     'a + Default + Stream<SC = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
             + Debug
@@ -339,11 +331,7 @@ where
 
     fn reflect_y(self, reflect: bool) -> Self
     where
-        // Rc<<Self as BuilderTrait>::PR>:
-        //     Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-        // <Self as BuilderTrait>::DRAIN:
-        //     'a + Default + Stream<SC = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
             + Debug
@@ -363,11 +351,7 @@ where
 
     fn reset(self) -> Self
     where
-        // Rc<<Self as BuilderTrait>::PR>:
-        //     Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-        // <Self as BuilderTrait>::DRAIN:
-        //     'a + Default + Stream<SC = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
             + Debug
@@ -377,11 +361,7 @@ where
 
     fn recenter(self) -> Self
     where
-        // Rc<<Self as BuilderTrait>::PR>:
-        //     Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-        // <Self as BuilderTrait>::DRAIN:
-        //     'a + Default + Stream<SC = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
             + Debug
@@ -406,11 +386,7 @@ where
 
     fn rotate(self, angles: [<Self as BuilderTrait>::T; 3]) -> Self
     where
-        // Rc<<Self as BuilderTrait>::PR>:
-        //     Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-        // <Self as BuilderTrait>::DRAIN:
-        //     'a + Default + Stream<SC = Coordinate<<Self as BuilderTrait>::T>>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
             + Debug
