@@ -64,12 +64,12 @@ where
         line_raw: L,
         pv: PV,
     ) -> StreamNodeClipFactory<L, PR, PV, SINK, T> {
-        let line_ring_buffer_factory = StreamNodeFactory::new(line_raw);
+        let line_ring_buffer_factory = StreamNodeFactory::new(line_raw.clone());
 
         // ring_buffer needs the Rc<RefCell<>> wrapper because it is a pipeline source
         // [internal to the clip node].
         let ring_buffer: Rc<RefCell<Buffer<T>>> = Rc::new(RefCell::new(Buffer::default()));
-        let ring_sink_node = line_ring_buffer_factory.generate(ring_buffer);
+        let ring_sink_node = line_ring_buffer_factory.generate(ring_buffer.clone());
 
         // let interpolate_factory = StreamNodeFactory::new(interpolate_raw);
         StreamNodeClipFactory {
@@ -110,12 +110,12 @@ where
         };
 
         let clip = Clip::new(
-            self.pv,
-            self.line_raw,
-            self.interpolate_fn,
-            self.ring_buffer,
-            self.ring_sink_node,
-            sink,
+            self.pv.clone(),
+            self.line_raw.clone(),
+            self.interpolate_fn.clone(),
+            self.ring_buffer.clone(),
+            self.ring_sink_node.clone(),
+            sink.clone(),
             start,
         );
         StreamNodeFactory::new(clip).generate(sink)

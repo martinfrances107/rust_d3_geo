@@ -54,14 +54,14 @@ pub fn rejoin<SINK, T>(
 
         if point_equal(p0.p, p1.p) {
             if p0.m.is_none() && p1.m.is_none() {
-                stream.borrow_mut().line_start();
+                stream.clone().borrow_mut().line_start();
                 // let i: usize;
                 // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
                 for i in 0..n {
                     p0 = segment[i];
-                    stream.borrow_mut().point(&p0.p, None);
+                    stream.clone().borrow_mut().point(&p0.p, None);
                 }
-                stream.borrow_mut().line_end();
+                stream.clone().borrow_mut().line_end();
                 return;
             }
             // handle degenerate cases by moving the point
@@ -115,7 +115,6 @@ pub fn rejoin<SINK, T>(
     }
 
     let start = &subject[0];
-    // let points: Vec<LineElem<T>>;
     let mut point;
 
     loop {
@@ -132,7 +131,7 @@ pub fn rejoin<SINK, T>(
 
         let mut points = current.borrow().z.clone();
 
-        stream.borrow_mut().line_start();
+        stream.clone().borrow_mut().line_start();
 
         loop {
             current.borrow().o.clone().unwrap().borrow_mut().v = true;
@@ -143,7 +142,7 @@ pub fn rejoin<SINK, T>(
                         Some(points) => {
                             for i in 0..points.len() {
                                 point = points[i];
-                                stream.borrow_mut().point(&point.p, point.m);
+                                stream.clone().borrow_mut().point(&point.p, point.m);
                             }
                         }
                         None => {
@@ -155,7 +154,7 @@ pub fn rejoin<SINK, T>(
                         Some((current.clone()).borrow().x.p),
                         Some((current.clone()).borrow().n.as_ref().unwrap().borrow().x.p),
                         T::one(),
-                        stream,
+                        stream.clone(),
                     );
                 }
                 current = current.clone().borrow().n.clone().unwrap();
@@ -179,7 +178,7 @@ pub fn rejoin<SINK, T>(
                                 .p,
                         ),
                         T::from(-1).unwrap(),
-                        stream,
+                        stream.clone(),
                     );
                 }
                 current = current.clone().borrow().p.clone().unwrap();

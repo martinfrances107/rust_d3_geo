@@ -67,7 +67,7 @@ where
     fn polygon_end(&mut self) {
         todo!("must fix.");
     }
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {
         todo!("must fix.");
     }
     fn line_start(&mut self) {

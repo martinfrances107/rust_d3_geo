@@ -101,23 +101,22 @@ where
 impl<L, PV, SINK, T> StreamNode<Clip<L, PV, SINK, T>, SINK, T>
 where
     L: LineRaw,
-    // PR: ProjectionRaw<T = T>,
     PV: PointVisible<T = T>,
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    fn point_default(&mut self, p: &Coordinate<T>, m: ::std::option::Option<u8>) {
+    fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         println!("clip point_default");
         if self.raw.pv.point_visible(p, None) {
-            // self.get_base().sink.borrow_mut().point(p, m);
+            self.sink.borrow_mut().point(p, m);
         }
     }
 
     #[inline]
-    fn point_line(&mut self, p: &Coordinate<T>, m: ::std::option::Option<u8>) {
+    fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         println!("clip point_line");
-        // self.get_base().line.point(p, m);
+        self.raw.line_node.sink.borrow_mut().point(p, m);
     }
 
     #[inline]
@@ -309,8 +308,8 @@ where
                 &segments_merged,
                 compare_intersections,
                 start_inside,
-                self.raw.interpolate_fn,
-                self.sink,
+                self.raw.interpolate_fn.clone(),
+                self.sink.clone(),
             );
         } else if start_inside {
             if !self.raw.polygon_started {

@@ -1,12 +1,9 @@
 use std::fmt::Debug;
-use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;

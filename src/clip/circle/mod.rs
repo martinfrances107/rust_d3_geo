@@ -20,7 +20,7 @@ use super::circle::line::Line;
 use super::circle::pv::PV;
 
 pub(crate) fn gen_clip_factory_circle<PR, SINK, T>(
-    projection_raw: PR,
+    // projection_raw: PR,
     radius: T,
 ) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
 where

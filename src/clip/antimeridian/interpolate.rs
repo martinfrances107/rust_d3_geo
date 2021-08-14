@@ -37,62 +37,64 @@ where
               direction: T,
               stream_in: Rc<RefCell<STREAM>>| {
             let phi: T;
-            let stream = stream_in.borrow_mut();
+            // let stream = stream_in.borrow_mut();
             match from {
                 None => {
                     phi = direction * T::FRAC_PI_2();
-                    stream.point(
+                    stream_in.borrow_mut().point(
                         &Coordinate {
                             x: -T::PI(),
                             y: phi,
                         },
                         None,
                     );
-                    stream.point(
+                    stream_in.borrow_mut().point(
                         &Coordinate {
                             x: T::zero(),
                             y: phi,
                         },
                         None,
                     );
-                    stream.point(&Coordinate { x: T::PI(), y: phi }, None);
+                    stream_in
+                        .borrow_mut()
+                        .point(&Coordinate { x: T::PI(), y: phi }, None);
 
-                    stream.point(
+                    stream_in.borrow_mut().point(
                         &Coordinate {
                             x: T::PI(),
                             y: T::zero(),
                         },
                         None,
                     );
-                    stream.point(
+                    stream_in.borrow_mut().point(
                         &Coordinate {
                             x: T::PI(),
                             y: -phi,
                         },
                         None,
                     );
-                    stream.point(
+                    stream_in.borrow_mut().point(
                         &Coordinate {
                             x: T::zero(),
                             y: -phi,
                         },
                         None,
                     );
-                    stream.point(
+                    stream_in.borrow_mut().point(
                         &Coordinate {
                             x: -T::PI(),
                             y: -phi,
                         },
                         None,
                     );
-                    stream.point(
+                    stream_in.borrow_mut().point(
                         &Coordinate {
                             x: -T::PI(),
                             y: T::zero(),
                         },
                         None,
                     );
-                    stream.point(
+                    stream_in.borrow_mut().point(
                         &Coordinate {
                             x: -T::PI(),
                             y: phi,
@@ -106,17 +108,21 @@ where
                         let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
 
                         phi = direction * lambda / T::from(2).unwrap();
-                        stream.point(&Coordinate { x: -lambda, y: phi }, None);
-                        stream.point(
+                        stream_in
+                            .borrow_mut()
+                            .point(&Coordinate { x: -lambda, y: phi }, None);
+                        stream_in.borrow_mut().point(
                             &Coordinate {
                                 x: T::zero(),
                                 y: phi,
                             },
                             None,
                         );
-                        stream.point(&Coordinate { x: lambda, y: phi }, None);
+                        stream_in
+                            .borrow_mut()
+                            .point(&Coordinate { x: lambda, y: phi }, None);
                     } else {
-                        stream.point(&to, None);
+                        stream_in.borrow_mut().point(&to, None);
                     }
                 }
             }

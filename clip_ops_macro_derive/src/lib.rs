@@ -26,7 +26,7 @@ fn impl_clip_ops_macro(ast: &syn::DeriveInput) -> TokenStream {
                 42
             }
             #[inline]
-            fn point_default(&mut self, p: &Coordinate<T>, m: ::std::option::Option<u8>) {
+            fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
                 println!("clip point_default");
                 if self.point_visible(p, None) {
                     // self.get_base().sink.borrow_mut().point(p, m);
@@ -34,7 +34,7 @@ fn impl_clip_ops_macro(ast: &syn::DeriveInput) -> TokenStream {
             }
 
             #[inline]
-            fn point_line(&mut self, p: &Coordinate<T>, m: ::std::option::Option<u8>) {
+            fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
                 println!("clip point_line");
                 // self.get_base().line.point(p, m);
             }

@@ -17,9 +17,9 @@ where
     STREAM: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    let cr = radius.cos();
+    // let cr = radius.cos();
     let delta = T::from(6_f64).unwrap().to_radians();
-    let smallRadius = cr > T::zero();
+    // let smallRadius = cr > T::zero();
     // notHemisphere = abs(cr) > epsilon; // TODO optimise for this common case
 
     let out: InterpolateFn<STREAM, T> = Rc::new(

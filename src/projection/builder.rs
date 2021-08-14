@@ -111,8 +111,8 @@ where
 
         let rotate = rotate_radians(delta_lambda, delta_phi, delta_gamma); // pre-rotate
         let transform = Compose::new(projection_raw, str);
-        let rotate_transform = Compose::new(rotate, transform);
-        let rotate_transform_factory = StreamNodeFactory::new(rotate_transform);
+        let rotate_transform = Compose::new(rotate.clone(), transform.clone());
+        let rotate_transform_factory = StreamNodeFactory::new(rotate_transform.clone());
 
         Self {
             /// Input passing onto Projection.
@@ -177,9 +177,8 @@ where
         // }
 
         // Only change is the resample_factory.
-
-        let clip_factory = gen_clip_factory_circle(self.projection_raw, angle);
-        let out = Builder::new(clip_factory, self.projection_raw);
+        let clip_factory = gen_clip_factory_circle(angle);
+        let mut out = Builder::new(clip_factory, self.projection_raw);
         out.theta = Some(angle.to_radians());
         out
     }
@@ -215,7 +214,7 @@ where
 
         self.rotate = rotate_radians(self.delta_lambda, self.delta_phi, self.delta_gamma);
         self.transform = Compose::new(self.projection_raw.clone(), str);
-        self.rotate_transform = Compose::new(self.rotate, self.transform);
+        self.rotate_transform = Compose::new(self.rotate.clone(), self.transform.clone());
 
         //todo update every factory.
         self.resample_factory = gen_resample_factory(self.projection_raw, self.delta2);
@@ -640,7 +639,7 @@ where
     }
 
     fn precision(self, delta: &T) -> Builder<DRAIN, L, PR, PV, T> {
-        let out = Builder::new(self.clip_factory, self.projection_raw.clone());
+        let mut out = Builder::new(self.clip_factory, self.projection_raw.clone());
         out.resample_factory = gen_resample_factory(self.projection_raw, self.delta2);
         out.delta2 = *delta * *delta;
         out
