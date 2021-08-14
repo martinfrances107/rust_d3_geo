@@ -98,20 +98,18 @@ where
         &self,
         drain: Rc<RefCell<DRAIN>>,
     ) -> StreamNode<
-        RotateRadiansEnum<T>,
+        StreamTransformRadians,
         StreamNode<
-            Clip<L, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
-            StreamNode<ResampleEnum<PR, T>, DRAIN, T>,
+            Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+            StreamNode<
+                Clip<L, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
+                StreamNode<ResampleEnum<PR, T>, DRAIN, T>,
+                T,
+            >,
             T,
         >,
         T,
     > {
-        // return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
-        // return match &self.cache {
-        //     Some(c) => Box::new(*c),
-        //     None => {
-        // self.cache_stream = Some(stream.clone());
-
         let postclip = (self.postclip)(drain);
 
         let resample_node = Rc::new(RefCell::new(self.resample_factory.generate(postclip)));
