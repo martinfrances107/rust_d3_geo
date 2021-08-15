@@ -17,5 +17,5 @@ where
         true => -radius,
         false => radius,
     };
-    return radius_signed + T::TAU() - T::epsilon() % T::TAU();
+    radius_signed + T::TAU() - T::epsilon() % T::TAU()
 }

@@ -66,7 +66,7 @@ where
         other: Option<Rc<RefCell<Intersection<T>>>>,
         entry: bool,
     ) -> Intersection<T> {
-        return Self {
+        Self {
             x: point,
             z: points,
             o: other,
@@ -74,6 +74,6 @@ where
             v: false,
             n: None,
             p: None,
-        };
+        }
     }
 }

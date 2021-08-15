@@ -17,7 +17,7 @@ use crate::rotation::rotation_identity::RotationIdentity;
 // use crate::stream::Stream;
 // // use crate::stream::StreamSimpleNode;
 use super::stream::Stream;
-use super::streamFn::streamFn;
+use super::stream_fn::stream_fn;
 // use super::CircleTrait;
 // use super::FnValMaybe;
 // use super::FnValMaybe2D;
@@ -78,7 +78,7 @@ where
         //     coordinates: vec![vec![]],
         // }));
 
-        streamFn(self.stream.clone(), r, p, T::one(), None, None);
+        stream_fn(self.stream.clone(), r, p, T::one(), None, None);
 
         let coordinates = vec![self.stream.borrow().ring.clone()];
 

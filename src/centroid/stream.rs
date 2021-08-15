@@ -48,7 +48,7 @@ pub struct Stream<T: CoordFloat> {
 /// The intent is to insists that the values are written before being read.
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default for Stream<T> {
     fn default() -> Self {
-        return Self {
+        Self {
             W0: T::nan(),
             W1: T::nan(),
             X0: T::nan(),
@@ -68,7 +68,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default 
             point_fn: Self::centroid_point,
             line_start_fn: Self::centroid_line_start,
             line_end_fn: Self::centroid_line_end,
-        };
+        }
     }
 }
 
@@ -215,7 +215,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display> Stream<T
             }
         }
 
-        return Point::new(y.atan2(x).to_degrees(), (z / m).asin().to_degrees());
+        Point::new(y.atan2(x).to_degrees(), (z / m).asin().to_degrees())
     }
 }
 

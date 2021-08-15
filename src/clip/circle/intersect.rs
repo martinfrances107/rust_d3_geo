@@ -141,5 +141,5 @@ pub fn intersect<T: CoordFloat + FloatConst>(
         return IntersectReturn::Two([q, spherical_r(&q1)]);
     }
 
-    return IntersectReturn::One(None);
+    IntersectReturn::One(None)
 }

@@ -54,7 +54,7 @@ where
     fn result(&mut self) -> Option<ResultEnum<T>> {
         let result = self.lines.clone();
         self.lines.clear();
-        return Some(ResultEnum::BufferOutput(result));
+        Some(ResultEnum::BufferOutput(result))
     }
 }
 

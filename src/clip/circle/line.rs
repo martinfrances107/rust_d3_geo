@@ -116,7 +116,8 @@ where
         } else if phi > r {
             code |= Self::CODE_ABOVE;
         }
-        return code;
+
+        code
     }
 }
 
@@ -195,8 +196,8 @@ where
         if v != self.raw.v0 {
             println!("intersect check");
             point2 = match intersect(
-                &self.raw.point0.clone().unwrap(),
-                &point1.clone().unwrap(),
+                &self.raw.point0.unwrap(),
+                &point1.unwrap(),
                 self.raw.radius.cos(),
                 false,
             ) {
@@ -214,10 +215,7 @@ where
                 }
             };
             if point2.is_some()
-                || point_equal(
-                    self.raw.point0.clone().unwrap().p,
-                    point2.unwrap().p.clone(),
-                )
+                || point_equal(self.raw.point0.unwrap().p, point2.unwrap().p)
                 || point_equal(point1.unwrap().p, point2.unwrap().p)
             {
                 point1.unwrap().m = Some(1_u8);
@@ -231,8 +229,8 @@ where
                 // outside going in
                 self.sink.borrow_mut().line_start();
                 point2 = match intersect(
-                    &point1.clone().unwrap(),
-                    &self.raw.point0.clone().unwrap(),
+                    &point1.unwrap(),
+                    &self.raw.point0.unwrap(),
                     self.raw.cr,
                     false,
                 ) {
@@ -250,8 +248,8 @@ where
                 // inside going out
                 println!("inside going out");
                 point2 = match intersect(
-                    &self.raw.point0.clone().unwrap(),
-                    &point1.clone().unwrap(),
+                    &self.raw.point0.unwrap(),
+                    &point1.unwrap(),
                     self.raw.cr,
                     false,
                 ) {
@@ -276,7 +274,7 @@ where
             // and there this segment intersects with the small circle.
             if self.raw.c0 != c || c == 0 {
                 let t = intersect(
-                    &point1.clone().unwrap(),
+                    &point1.unwrap(),
                     &self.raw.point0.unwrap(),
                     self.raw.cr,
                     true,

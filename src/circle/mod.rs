@@ -5,7 +5,7 @@
 pub mod calc_radius;
 pub mod generator;
 pub mod stream;
-pub mod streamFn;
+pub mod stream_fn;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;

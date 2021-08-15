@@ -16,7 +16,7 @@ use crate::Transform;
 use super::calc_radius::calc_radius;
 
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
-pub fn streamFn<STREAM, T>(
+pub fn stream_fn<STREAM, T>(
     stream: Rc<RefCell<STREAM>>,
     radius: T,
     delta: T,
@@ -44,7 +44,7 @@ pub fn streamFn<STREAM, T>(
                 false => t0 > t1,
             };
             if check {
-                t0 = t0 + direction * T::TAU();
+                t0 += direction * T::TAU();
             }
         }
         (_, _) => {

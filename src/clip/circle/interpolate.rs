@@ -8,7 +8,7 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::circle::streamFn::streamFn;
+use crate::circle::stream_fn::stream_fn;
 use crate::clip::InterpolateFn;
 use crate::stream::Stream;
 
@@ -27,7 +27,7 @@ where
               to: Option<Coordinate<T>>,
               direction: T,
               stream: Rc<RefCell<STREAM>>| {
-            streamFn(stream, radius, delta, direction, from, to)
+            stream_fn(stream, radius, delta, direction, from, to)
         },
     );
 

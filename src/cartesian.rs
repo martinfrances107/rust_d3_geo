@@ -22,7 +22,7 @@ pub fn cartesian<T: CoordFloat>(spherical: &Coordinate<T>) -> [T; 3] {
     let lambda = spherical.x;
     let phi = spherical.y;
     let cos_phi = phi.cos();
-    return [cos_phi * lambda.cos(), cos_phi * lambda.sin(), phi.sin()];
+    [cos_phi * lambda.cos(), cos_phi * lambda.sin(), phi.sin()]
 }
 
 #[inline]
@@ -64,5 +64,5 @@ pub fn normalize_in_place<T: CoordFloat>(d: &mut [T; 3]) {
 
 pub fn normalize<T: CoordFloat>(d: &[T; 3]) -> [T; 3] {
     let l = (d[0] * d[0] + d[1] * d[1] + d[2] * d[2]).sqrt();
-    return [d[0] / l, d[1] / l, d[2] / l];
+    [d[0] / l, d[1] / l, d[2] / l]
 }
