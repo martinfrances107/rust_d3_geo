@@ -29,8 +29,9 @@ pub struct Stream<T: CoordFloat + FloatConst> {
 }
 
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default for Stream<T> {
+    #[inline]
     fn default() -> Self {
-        return Self {
+        Self {
             // sphere_fn: Self::noop,
             point_fn: Self::point_noop,
             line_start_fn: Self::length_line_start,
@@ -39,7 +40,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default 
             lambda0: T::zero(),
             sin_phi0: T::zero(),
             cos_phi0: T::zero(),
-        };
+        }
     }
 }
 

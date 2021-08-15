@@ -189,7 +189,7 @@ pub fn rejoin<SINK, T>(
 
             is_subject = !is_subject;
 
-            if current.borrow().v == true {
+            if current.borrow().v {
                 break;
             }
         }

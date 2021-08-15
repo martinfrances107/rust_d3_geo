@@ -10,7 +10,6 @@ use crate::stream::Stream;
 
 use super::Result;
 use super::ResultEnum;
-use derivative::Derivative;
 
 // #[derive(Derivative)]
 // #[derivative(Debug)]

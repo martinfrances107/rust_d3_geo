@@ -264,7 +264,7 @@ where
         );
 
         self.rotate = rotate_radians(self.delta_lambda, self.delta_phi, self.delta_gamma);
-        self.transform = Compose::new(self.projection_raw.clone(), str);
+        self.transform = Compose::new(self.projection_raw, str);
         self.rotate_transform = Compose::new(self.rotate.clone(), self.transform.clone());
 
         //todo update every factory.
@@ -309,11 +309,12 @@ where
 {
     type C = Coordinate<T>;
 
+    #[inline]
     fn get_center(&self) -> Coordinate<T> {
-        return Coordinate {
+        Coordinate {
             x: self.lambda.to_degrees(),
             y: self.phi.to_degrees(),
-        };
+        }
     }
 
     fn center(mut self, p: Coordinate<T>) -> Builder<DRAIN, L, PR, PV, T> {
