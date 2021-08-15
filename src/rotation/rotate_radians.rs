@@ -18,7 +18,7 @@ pub fn rotate_radians<T: CoordFloat + FloatConst>(
     let by_lambda = !delta_lambda.is_zero();
     let by_phi = !delta_phi.is_zero();
     let by_gamma = !delta_gamma.is_zero();
-    return match (by_lambda, by_gamma, by_phi) {
+    match (by_lambda, by_gamma, by_phi) {
         (true, true, true) | (true, true, false) | (true, false, true) => {
             RotateRadiansEnum::C(Box::new(Compose::new(
                 RotationLambda::new(delta_lambda),
@@ -30,5 +30,5 @@ pub fn rotate_radians<T: CoordFloat + FloatConst>(
             RotateRadiansEnum::RPG(RotationPhiGamma::new(&delta_phi, &delta_gamma))
         }
         (false, false, false) => RotateRadiansEnum::I(RotationIdentity::default()),
-    };
+    }
 }

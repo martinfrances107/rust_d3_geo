@@ -38,8 +38,8 @@ where
         "2) actual location {:?}, actual point {:?}",
         actual_location, actual_point,
     );
-    return planar_equal(&actual_point, expected_point, delta)
-        && spherical_equal(&actual_location, expected_location, delta);
+    planar_equal(&actual_point, expected_point, delta)
+        && spherical_equal(&actual_location, expected_location, delta)
 }
 
 fn planar_equal<T: CoordFloat + Debug + Display>(
@@ -49,7 +49,7 @@ fn planar_equal<T: CoordFloat + Debug + Display>(
 ) -> bool {
     let e0 = in_delta(actual.x, expected.x, delta);
     let e1 = in_delta(actual.y, expected.y, delta);
-    return e0 && e1;
+    e0 && e1
 }
 
 fn spherical_equal<T: CoordFloat + Debug + Display>(
@@ -59,10 +59,10 @@ fn spherical_equal<T: CoordFloat + Debug + Display>(
 ) -> bool {
     let e0 = logitude_equal(actual.x, expected.x, delta);
     let e1 = in_delta(actual.y, expected.y, delta);
-    return e0 && e1;
+    e0 && e1
 }
 
 fn logitude_equal<T: Float>(actual: T, expected: T, delta: T) -> bool {
     let actual = (actual - expected).abs() % T::from(360_f64).unwrap();
-    return actual <= delta || actual >= T::from(360_f64).unwrap() - delta;
+    actual <= delta || actual >= T::from(360_f64).unwrap() - delta
 }

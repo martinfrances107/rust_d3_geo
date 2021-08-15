@@ -20,13 +20,13 @@ where
 
 impl<'a, T: 'a + CoordFloat + FloatConst> Rotation<T> {
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
-        return Self {
+        Self {
             rotate: rotate_radians(
                 delta_lambda.to_radians(),
                 delta_phi.to_radians(),
                 delta_gamma.to_radians(),
             ),
-        };
+        }
     }
 }
 

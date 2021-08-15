@@ -1,3 +1,4 @@
+use crate::clip::PostClipFn;
 use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
@@ -39,7 +40,7 @@ where
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    pub postclip: Rc<dyn Fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>>,
+    pub postclip: PostClipFn<DRAIN>,
     pub projection_raw: PR,
     pub preclip_factory:
         StreamNodeClipFactory<L, PR, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,

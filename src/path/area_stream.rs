@@ -80,7 +80,7 @@ where
 
     #[inline]
     fn area_ring_end(&mut self) {
-        let p00 = self.p00.clone();
+        let p00 = self.p00;
         self.area_point(&p00, None);
     }
 

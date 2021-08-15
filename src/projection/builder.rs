@@ -1,7 +1,7 @@
 use crate::clip::clip::Clip;
+use crate::clip::PostClipFn;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Projection;
-use crate::projection::RefCell;
 use crate::projection::StreamNode;
 use std::fmt::Display;
 use std::ops::AddAssign;
@@ -34,8 +34,10 @@ use super::scale_translate_rotate::ScaleTranslateRotateEnum;
 use super::stream_node_factory::StreamNodeFactory;
 use super::translate::Translate;
 use super::Raw as ProjectionRaw;
+use derivative::Derivative;
 
-#[derive(Clone)]
+#[derive(Clone, Derivative)]
+#[derivative(Debug)]
 pub struct Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<SC = Coordinate<T>>,
@@ -71,7 +73,8 @@ where
     y1: Option<T>, // post-clip extent
     preclip_factory: StreamNodeClipFactory<L, PR, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
 
-    postclip: Rc<dyn Fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>>,
+    #[derivative(Debug = "ignore")]
+    postclip: PostClipFn<DRAIN>,
     // Used by recenter() to build the factories.
     rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
     transform: Compose<T, PR, ScaleTranslateRotateEnum<T>>,
@@ -122,9 +125,9 @@ where
         // Zero implies no resampling by default.
         let resample_factory = gen_resample_factory(projection_raw, T::zero());
 
-        let center = ScaleTranslateRotate::new(&k, &T::zero(), &T::zero(), &sx, &sy, alpha)
+        let center = ScaleTranslateRotate::new(&k, &T::zero(), &T::zero(), &sx, &sy, &alpha)
             .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
-        let str = ScaleTranslateRotate::new(&k, &(x - center.x), &(y - center.y), &sx, &sy, alpha);
+        let str = ScaleTranslateRotate::new(&k, &(x - center.x), &(y - center.y), &sx, &sy, &alpha);
 
         let rotate = rotate_radians(delta_lambda, delta_phi, delta_gamma); // pre-rotate
         let transform = Compose::new(projection_raw, str);
@@ -168,7 +171,7 @@ where
         }
     }
 
-    fn build(&self) -> Projection<DRAIN, L, PR, PV, T> {
+    pub fn build(&self) -> Projection<DRAIN, L, PR, PV, T> {
         let transform_radians_factory: StreamNodeFactory<
             StreamTransformRadians,
             StreamNode<
@@ -244,7 +247,7 @@ where
             &T::zero(),
             &self.sx,
             &self.sy,
-            self.alpha,
+            &self.alpha,
         )
         .transform(&self.projection_raw.transform(&Coordinate {
             x: self.lambda,
@@ -257,7 +260,7 @@ where
             &(self.y - center.y),
             &self.sx,
             &self.sy,
-            self.alpha,
+            &self.alpha,
         );
 
         self.rotate = rotate_radians(self.delta_lambda, self.delta_phi, self.delta_gamma);
@@ -687,7 +690,7 @@ where
     }
 
     pub fn precision(self, delta: &T) -> Builder<DRAIN, L, PR, PV, T> {
-        let mut out = Builder::new(self.preclip_factory, self.projection_raw.clone());
+        let mut out = Builder::new(self.preclip_factory, self.projection_raw);
         out.resample_factory = gen_resample_factory(self.projection_raw, self.delta2);
         out.delta2 = *delta * *delta;
         out

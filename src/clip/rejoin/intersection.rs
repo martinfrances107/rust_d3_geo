@@ -6,6 +6,7 @@ use geo::CoordFloat;
 use num_traits::{Float, FloatConst};
 
 use crate::clip::line_elem::LineElem;
+use derivative::Derivative;
 
 #[derive(Clone)]
 pub struct Intersection<T>
@@ -14,10 +15,13 @@ where
 {
     pub x: LineElem<T>,
     pub z: Option<Vec<LineElem<T>>>,
+    // #[derivative(Debug = "ignore")]
     pub o: Option<Rc<RefCell<Intersection<T>>>>, // another intersection,
     pub e: bool,                                 // is any entry?
-    pub v: bool,                                 // visited
+    pub v: bool,
+    // #[derivative(Debug = "ignore")]
     pub n: Option<Rc<RefCell<Intersection<T>>>>, // next
+    // #[derivative(Debug = "ignore")]
     pub p: Option<Rc<RefCell<Intersection<T>>>>, // previous
 }
 

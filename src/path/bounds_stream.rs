@@ -10,12 +10,11 @@ use crate::stream::Stream;
 
 use super::Result;
 use super::ResultEnum;
-
 use derivative::Derivative;
 
-#[derive(Derivative)]
-#[derivative(Debug)]
-#[derive(Clone)]
+// #[derive(Derivative)]
+// #[derivative(Debug)]
+#[derive(Clone, Debug)]
 pub struct BoundsStream<T>
 where
     T: CoordFloat,

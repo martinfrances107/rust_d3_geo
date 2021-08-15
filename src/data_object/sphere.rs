@@ -18,11 +18,11 @@ where
     pd: PhantomData<T>,
 }
 
-impl<T> Sphere<T>
+impl<T> Default for Sphere<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    pub fn new() -> Self {
+    fn default() -> Self {
         Sphere {
             pd: PhantomData::default(),
         }

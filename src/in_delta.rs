@@ -15,7 +15,7 @@ pub fn in_delta<T: CoordFloat + Debug + Display>(actual: T, expected: T, delta: 
             actual - expected
         );
     }
-    return is_ok;
+    is_ok
 }
 
 pub fn in_delta_point<T: CoordFloat + Debug + Display>(
@@ -27,5 +27,5 @@ pub fn in_delta_point<T: CoordFloat + Debug + Display>(
         "in_delta_point: expected(Point) {:?} actual {:?} delta {:?}",
         expected, actual, delta
     );
-    return in_delta(actual.x(), expected.x(), delta) && in_delta(actual.y(), expected.y(), delta);
+    in_delta(actual.x(), expected.x(), delta) && in_delta(actual.y(), expected.y(), delta)
 }

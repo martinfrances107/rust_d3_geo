@@ -21,6 +21,7 @@ use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::NodeFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
+use derivative::Derivative;
 
 /// Used in the construct of a Projection stream pipeline.
 ///
@@ -30,7 +31,8 @@ use crate::stream::Stream;
 ///
 /// Inside Projection::stream() NodeFactory::generate() will be called to
 /// construct the pipeline.
-#[derive(Clone)]
+#[derive(Clone, Derivative)]
+#[derivative(Debug)]
 pub struct StreamNodeClipFactory<L, PR, PV, SINK, T>
 where
     L: LineRaw,
@@ -38,12 +40,11 @@ where
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    // phantomDrain: PhantomData<DRAIN>,
     phantom_pr: PhantomData<PR>,
-    // phantomT: PhantomData<T>,
 
     // Passed to ::generate()
     pv: PV,
+    #[derivative(Debug = "ignore")]
     interpolate_fn: InterpolateFn<SINK, T>,
     line_raw: L,
 
@@ -80,7 +81,6 @@ where
             // line_ring_buffer,
             line_raw,
             phantom_pr: PhantomData::<PR>,
-            // phantomT: PhantomData::<T>,
             pv,
         }
     }

@@ -45,8 +45,8 @@ where
 {
     fn clone(&self) -> Self {
         match self {
-            ResampleEnum::RN(rn) => ResampleEnum::RN(rn.clone()),
-            ResampleEnum::R(r) => ResampleEnum::R(r.clone()),
+            ResampleEnum::RN(rn) => ResampleEnum::RN(*rn),
+            ResampleEnum::R(r) => ResampleEnum::R(*r),
         }
     }
 }

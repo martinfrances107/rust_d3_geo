@@ -21,8 +21,10 @@ use crate::projection::stream_node::StreamNode;
 use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::NodeFactory;
 use crate::stream::Stream;
+use derivative::Derivative;
 
-#[derive(Clone)]
+#[derive(Clone, Derivative)]
+#[derivative(Debug)]
 pub struct Clip<L, PV, SINK, T>
 where
     L: LineRaw,
@@ -35,6 +37,7 @@ where
     // phantomDrain: PhantomData<DRAIN>,
     // pub phantomPR: PhantomData<PR>,
     pub line_node: StreamNode<L, SINK, T>,
+    #[derivative(Debug = "ignore")]
     pub interpolate_fn: InterpolateFn<SINK, T>,
 
     /// A pipeline source node.

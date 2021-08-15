@@ -70,7 +70,7 @@ where
 
 impl<T: CoordFloat + FloatConst> ScaleTranslateRotate<T> {
     #[inline]
-    pub fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: T) -> ScaleTranslateRotateEnum<T> {
+    pub fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: &T) -> ScaleTranslateRotateEnum<T> {
         if alpha.is_zero() {
             ScaleTranslateRotateEnum::ST(ScaleTranslate {
                 k: *k,

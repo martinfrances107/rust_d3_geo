@@ -34,6 +34,7 @@ where
 {
     phantom: PhantomData<T>,
 }
+
 impl<T> Raw for AzimuthalEqualArea<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -51,12 +52,13 @@ where
         }
     }
 }
+
 impl<T> AzimuthalEqualArea<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_builder<'a, DRAIN>(
+    pub fn gen_projection_builder<DRAIN>(
     ) -> Builder<DRAIN, Line<T>, AzimuthalEqualArea<T>, PV<T>, T>
     where
         DRAIN: Stream<SC = Coordinate<T>>,

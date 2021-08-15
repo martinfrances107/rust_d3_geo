@@ -17,7 +17,7 @@ use super::line_elem::LineElem;
 /// Buffer is a pipeline terminating object ( a drain object ).
 ///
 /// Stored data can be extracted via ::result()
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Buffer<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -26,14 +26,14 @@ where
     lines: VecDeque<Vec<LineElem<T>>>,
 }
 
-impl<T> Clone for Buffer<T>
-where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-    fn clone(&self) -> Buffer<T> {
-        self.clone()
-    }
-}
+// impl<T> Clone for Buffer<T>
+// where
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+// {
+//     fn clone(&self) -> Buffer<T> {
+//         self.clone()
+//     }
+// }
 
 impl<T> Default for Buffer<T>
 where

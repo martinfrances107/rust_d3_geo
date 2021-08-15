@@ -46,7 +46,7 @@ impl<T> Mecator<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    pub fn gen_projection_mutator<'a, DRAIN>() -> Builder<DRAIN, Line<T>, Mecator<T>, PV<T>, T>
+    pub fn gen_projection_mutator<DRAIN>() -> Builder<DRAIN, Line<T>, Mecator<T>, PV<T>, T>
     where
         DRAIN: Stream<SC = Coordinate<T>>,
     {

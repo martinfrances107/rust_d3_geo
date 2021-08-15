@@ -50,7 +50,7 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
-    pub fn gen_projection_mutator<'a, DRAIN>(
+    pub fn gen_projection_builder<DRAIN>(
     ) -> Builder<DRAIN, Line<T>, EquirectangularRaw<T>, PV<T>, T>
     where
         DRAIN: Stream<SC = Coordinate<T>>,

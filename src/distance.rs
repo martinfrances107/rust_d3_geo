@@ -13,7 +13,7 @@ pub fn distance<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatCons
 ) -> T {
     // TODO consider making object static outside of distance.
     // It does not need to be created each time.
-    let object = LineString(vec![(*a).clone().into(), (*b).clone().into()]);
+    let object = LineString(vec![*a, *b]);
 
-    return Stream::<T>::calc(&object);
+    Stream::<T>::calc(&object)
 }

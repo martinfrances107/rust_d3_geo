@@ -47,8 +47,7 @@ impl<T: CoordFloat + FloatConst> Transform for RotationIdentity<T> {
     type C = Coordinate<T>;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let out = normalise(p);
-        out
+        normalise(p)
     }
 
     #[inline]

@@ -41,9 +41,9 @@ where
     fn clone(&self) -> Self {
         match self {
             RotateRadiansEnum::C(c) => RotateRadiansEnum::C(Box::new(*c.clone())),
-            RotateRadiansEnum::RL(rl) => RotateRadiansEnum::RL(rl.clone()),
-            RotateRadiansEnum::RPG(rpg) => RotateRadiansEnum::RPG(rpg.clone()),
-            RotateRadiansEnum::I(i) => RotateRadiansEnum::I(i.clone()),
+            RotateRadiansEnum::RL(rl) => RotateRadiansEnum::RL(*rl),
+            RotateRadiansEnum::RPG(rpg) => RotateRadiansEnum::RPG(*rpg),
+            RotateRadiansEnum::I(i) => RotateRadiansEnum::I(*i),
         }
     }
 }

@@ -15,7 +15,7 @@ fn forward_rotation_lambda<T: CoordFloat + FloatConst>(
 ) -> Coordinate<T> {
     let lambda = p.x + delta_lambda;
     let phi = p.y;
-    return match (lambda > T::PI(), lambda < -T::PI()) {
+    match (lambda > T::PI(), lambda < -T::PI()) {
         (false, false) => Coordinate { x: lambda, y: phi }, // -PI <= lambda <= PI
         (true, _) => Coordinate {
             x: lambda - T::TAU(),
@@ -25,7 +25,7 @@ fn forward_rotation_lambda<T: CoordFloat + FloatConst>(
             x: lambda + T::TAU(),
             y: phi,
         }, // lambda < -PI
-    };
+    }
 }
 
 impl<'a, T: CoordFloat + FloatConst> RotationLambda<T> {

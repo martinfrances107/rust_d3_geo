@@ -119,7 +119,6 @@ pub fn contains<T: CoordFloat + FloatConst>(
     let epsilon = T::from(1e-6).unwrap();
     let epsilon2 = T::from(1e-12).unwrap();
     let is_south_pole_inside = angle < -epsilon || angle < epsilon && sum < -epsilon2;
-    let ret = is_south_pole_inside ^ is_winding_odd;
 
-    return ret;
+    is_south_pole_inside ^ is_winding_odd
 }

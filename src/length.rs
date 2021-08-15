@@ -59,7 +59,7 @@ where
     pub fn calc(object: &impl Streamable<T = T>) -> T {
         let mut ls = Stream::default();
         object.to_stream(&mut ls);
-        return ls.length_sum;
+        ls.length_sum
     }
 
     fn length_point_first(&mut self, p: &Coordinate<T>) {
@@ -85,7 +85,7 @@ where
         let y = self.cos_phi0 * sin_phi - self.sin_phi0 * cos_phi * cos_delta;
         let z = self.sin_phi0 * sin_phi + self.cos_phi0 * cos_phi * cos_delta;
 
-        self.length_sum = self.length_sum + ((x * x + y * y).sqrt()).atan2(z);
+        self.length_sum += ((x * x + y * y).sqrt()).atan2(z);
         self.lambda0 = lambda;
         self.sin_phi0 = sin_phi;
         self.cos_phi0 = cos_phi;

@@ -3,7 +3,10 @@
 mod invert_test {
 
     use geo::Coordinate;
+    use rust_d3_geo::clip::antimeridian::line::Line;
+    use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
+    use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     // use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::builder_trait::BuilderTrait;
     use rust_d3_geo::projection::gnomic::Gnomic;
@@ -18,7 +21,7 @@ mod invert_test {
 
     fn symetric_invert<'a, PM>(pm: PM)
     where
-        PM: Transform<C = Coordinate<f64>> + ProjectionTrait<'a>,
+        PM: Transform<C = Coordinate<f64>>,
     {
         for p in vec![
             &Coordinate {
@@ -44,43 +47,43 @@ mod invert_test {
 
     #[test]
     fn test_azimuthal_equal_area() {
-        let a: Projection<'_, StreamDrainStub<f64>, AzimuthalEqualArea<f64>, f64> =
-            AzimuthalEqualArea::<f64>::gen_projection_mutator();
+        let a: Projection<StreamDrainStub<f64>, Line<f64>, AzimuthalEqualArea<f64>, PV<f64>, f64> =
+            AzimuthalEqualArea::<f64>::gen_projection_builder().build();
         symetric_invert(a);
     }
 
     #[test]
     fn test_equirectangular() {
-        let a: Projection<'_, StreamDrainStub<f64>, AzimuthalEqualArea<f64>, f64> =
-            AzimuthalEqualArea::<f64>::gen_projection_mutator();
-        symetric_invert(a);
+        let e: Projection<StreamDrainStub<f64>, Line<f64>, EquirectangularRaw<f64>, PV<f64>, f64> =
+            EquirectangularRaw::<f64>::gen_projection_builder().build();
+        symetric_invert(e);
     }
 
     #[test]
     fn test_gnomic() {
-        let g: Projection<'_, StreamDrainStub<f64>, Gnomic<f64>, f64> =
-            Gnomic::<f64>::gen_projection_mutator();
+        let g: Projection<StreamDrainStub<f64>, Line<f64>, Gnomic<f64>, PV<f64>, f64> =
+            Gnomic::<f64>::gen_projection_builder().build();
         symetric_invert(g);
     }
 
     #[test]
     fn test_orthographic() {
-        let o: Projection<'_, StreamDrainStub<f64>, Orthographic<f64>, f64> =
-            Orthographic::<f64>::gen_projection_mutator();
+        let o: Projection<StreamDrainStub<f64>, Line<f64>, Orthographic<f64>, PV<f64>, f64> =
+            Orthographic::<f64>::gen_projection_builder().build();
         symetric_invert(o);
     }
 
     #[test]
     fn test_mecator() {
-        let m: Projection<'_, StreamDrainStub<f64>, Mecator<f64>, f64> =
-            Mecator::<f64>::gen_projection_mutator();
+        let m: Projection<StreamDrainStub<f64>, Line<f64>, Mecator<f64>, PV<f64>, f64> =
+            Mecator::<f64>::gen_projection_mutator().build();
         symetric_invert(m);
     }
 
     #[test]
     fn test_stereographic() {
-        let s: Projection<'_, StreamDrainStub<f64>, Stereographic<f64>, f64> =
-            Stereographic::<f64>::gen_projection_mutator();
+        let s: Projection<StreamDrainStub<f64>, Line<f64>, Stereographic<f64>, PV<f64>, f64> =
+            Stereographic::<f64>::gen_projection_builder().build();
         symetric_invert(s);
     }
 }

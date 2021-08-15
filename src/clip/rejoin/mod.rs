@@ -54,7 +54,7 @@ pub fn rejoin<SINK, T>(
 
         if point_equal(p0.p, p1.p) {
             if p0.m.is_none() && p1.m.is_none() {
-                stream.clone().borrow_mut().line_start();
+                stream.borrow_mut().line_start();
                 // let i: usize;
                 // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
                 for i in 0..n {

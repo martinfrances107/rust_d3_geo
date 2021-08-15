@@ -83,6 +83,9 @@ where
     type T;
     fn point_visible(&self, p: &Coordinate<Self::T>, z: Option<u8>) -> bool;
 }
+
+pub type PostClipFn<DRAIN> = Rc<dyn Fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>>;
+
 pub type InterpolateFn<STREAM, T> =
     Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, Rc<RefCell<STREAM>>)>;
 // pub trait InterpolateRaw: Clone + Debug {}
