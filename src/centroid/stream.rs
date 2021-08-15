@@ -250,9 +250,4 @@ impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display> StreamTr
         self.line_start_fn = Self::centroid_line_start;
         self.line_end_fn = Self::centroid_line_end;
     }
-
-    // #[inline]
-    // fn get_dst(&self) -> Self {
-    //     self.clone()
-    // }
 }

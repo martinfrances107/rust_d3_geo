@@ -3,9 +3,9 @@
 #![allow(unused_imports)]
 
 pub mod calc_radius;
-pub mod circle;
 pub mod generator;
 pub mod stream;
+pub mod streamFn;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;

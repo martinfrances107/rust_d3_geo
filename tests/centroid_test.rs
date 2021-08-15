@@ -318,7 +318,7 @@
 //     #[test]
 //     fn the_centroid_of_a_sphere_is_ambigous() {
 //         println!("the centroid of a sphere is ambiguous");
-//         let point: Point<f64> = CentroidStream::default().centroid(&Sphere::new());
+//         let point: Point<f64> = CentroidStream::default().centroid(&Sphere::default());
 //         assert!(point.x().is_nan());
 //         assert!(point.y().is_nan());
 //     }

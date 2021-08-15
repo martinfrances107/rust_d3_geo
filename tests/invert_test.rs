@@ -7,8 +7,6 @@ mod invert_test {
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
-    // use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
-    use rust_d3_geo::projection::builder_trait::BuilderTrait;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mecator::Mecator;
     use rust_d3_geo::projection::orthographic::Orthographic;
@@ -16,7 +14,6 @@ mod invert_test {
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::stereographic::Stereographic;
     use rust_d3_geo::stream::StreamDrainStub;
-    // use rust_d3_geo::stream::StreamDummy;
     use rust_d3_geo::Transform;
 
     fn symetric_invert<'a, PM>(pm: PM)

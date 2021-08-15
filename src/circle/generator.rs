@@ -1,18 +1,23 @@
 // use crate::circle::generate::generate;
-// use std::cell::RefCell;
-// use std::fmt::Debug;
-// use std::fmt::Display;
-// use std::ops::AddAssign;
-// use std::rc::Rc;
 
-// use geo::{CoordFloat, Coordinate};
-// use num_traits::AsPrimitive;
-// use num_traits::FloatConst;
+use std::cell::RefCell;
+use std::fmt::Debug;
+use std::fmt::Display;
+use std::ops::AddAssign;
+use std::rc::Rc;
 
-// use crate::rotation::rotate_radians::rotate_radians;
+use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
+
+use crate::rotation::rotate_radians::rotate_radians;
+use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
+use crate::rotation::rotation_identity::RotationIdentity;
+
 // use crate::stream::Stream;
 // // use crate::stream::StreamSimpleNode;
-// use super::circle::Stream as CircleStream;
+use super::stream::Stream;
+use super::streamFn::streamFn;
 // use super::CircleTrait;
 // use super::FnValMaybe;
 // use super::FnValMaybe2D;
@@ -23,88 +28,98 @@
 // use crate::cartesian::normalize_in_place;
 // use crate::Transform;
 
-// pub struct Generator<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     center: Coordinate<T>,
-//     radius: T,
-//     precision: T,
-// }
+pub struct Generator<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    center: Coordinate<T>,
+    radius: T,
+    precision: T,
+    // ring: Vec<Coordinate<T>>,
+    // rotate: RotateRadiansEnum<T>,
+    stream: Rc<RefCell<Stream<T>>>,
+}
 
-// impl<T> Default for Generator<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     #[inline]
-//     fn default() -> Self {
-//         return Self {
-//             center: Coordinate {
-//                 x: T::zero(),
-//                 y: T::zero(),
-//             },
-//             radius: T::from(90_f64).unwrap(),
-//             precision: T::from(6).unwrap(),
-//         };
-//     }
-// }
+impl<T> Default for Generator<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    #[inline]
+    fn default() -> Self {
+        Self {
+            center: Coordinate {
+                x: T::zero(),
+                y: T::zero(),
+            },
+            radius: T::from(90_f64).unwrap(),
+            precision: T::from(6).unwrap(),
+            stream: Rc::new(RefCell::new(Stream::default())),
+        }
+    }
+}
 
-// impl<T> Generator<T>
-// where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-// {
-//     pub fn circle(&self) -> Rc<RefCell<CircleStream<T>>> {
-//         let c = self.center;
-//         let r = self.radius.to_radians();
-//         let p = self.precision.to_radians();
-//         let rotate = rotate_radians(-c.x.to_radians(), -c.y.to_radians(), T::zero());
+impl<T> Generator<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    pub fn circle(&self) -> Vec<Vec<Coordinate<T>>> {
+        let c = self.center;
+        let r = self.radius.to_radians();
+        let p = self.precision.to_radians();
 
-//         let mut cs = Rc::new(RefCell::new(CircleStream {
-//             ring: Vec::new(),
-//             rotate,
-//             stream_type: StreamType::Polygon,
-//             coordinates: vec![vec![]],
-//         }));
+        self.stream.borrow_mut().ring = Vec::new();
+        self.stream.borrow_mut().rotate =
+            rotate_radians(-c.x.to_radians(), -c.y.to_radians(), T::zero());
 
-//         generate(cs, r, p, T::one(), None, None);
+        // let mut cs = Rc::new(RefCell::new(CircleStream {
+        //     ring: Vec::new(),
+        //     rotate,
+        //     stream_type: StreamType::Polygon,
+        //     coordinates: vec![vec![]],
+        // }));
 
-//         cs.borrow_mut().coordinates = vec![cs.borrow().ring.clone()];
+        streamFn(self.stream.clone(), r, p, T::one(), None, None);
 
-//         cs
-//     }
-// }
+        let coordinates = vec![self.stream.borrow().ring.clone()];
 
-// impl<T> CircleTrait<T> for Generator<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     fn center(mut self, center: Coordinate<T>) -> Generator<T> {
-//         self.center = center;
-//         self
-//     }
+        self.stream.borrow_mut().ring.clear();
+        self.stream.borrow_mut().rotate = RotateRadiansEnum::I(RotationIdentity::default());
 
-//     #[inline]
-//     fn get_center(&self) -> Coordinate<T> {
-//         self.center
-//     }
+        coordinates
+    }
+}
 
-//     fn radius(mut self, radius: T) -> Self {
-//         self.radius = radius;
-//         self
-//     }
+impl<T> Generator<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    pub fn center(mut self, center: Coordinate<T>) -> Generator<T> {
+        self.center = center;
+        self
+    }
 
-//     #[inline]
-//     fn get_radius(&self) -> T {
-//         self.radius
-//     }
+    #[inline]
+    fn get_center(&self) -> Coordinate<T> {
+        self.center
+    }
 
-//     fn precision(mut self, precision: T) -> Self {
-//         self.precision = precision;
-//         self
-//     }
+    pub fn radius(mut self, radius: T) -> Self {
+        self.radius = radius;
+        self
+    }
 
-//     #[inline]
-//     fn get_precision(&self) -> T {
-//         self.precision
-//     }
-// }
+    #[inline]
+    fn get_radius(&self) -> T {
+        self.radius
+    }
+
+    fn precision(mut self, precision: T) -> Self {
+        self.precision = precision;
+        self
+    }
+
+    #[inline]
+    fn get_precision(&self) -> T {
+        self.precision
+    }
+}

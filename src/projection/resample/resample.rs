@@ -1,18 +1,14 @@
-use crate::projection::stream_node::StreamNode;
-use crate::projection::Raw as ProjectionRaw;
 use std::fmt::Display;
 use std::ops::AddAssign;
-// use std::rc::Rc;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-// use crate::projection::ProjectionRawTrait;
 use crate::cartesian::cartesian;
+use crate::projection::stream_node::StreamNode;
+use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
-
-// use super::ResampleTrait;
 
 const MAXDEPTH: u8 = 16_u8; // maximum depth of subdivision
 
@@ -50,19 +46,6 @@ where
     pub use_line_start: bool,
     pub use_line_end: bool,
 }
-
-// impl<P, T> Clone for Resample<P, T>
-// where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
-// {
-//     fn clone(&self) -> Self {
-//         Self {
-//             project: self.project.clone(),
-//             stream: self.stream.clone(),
-//             ..*self
-//         }
-//     }
-// }
 
 impl<'a, PR, T> Resample<PR, T>
 where
@@ -128,7 +111,6 @@ where
 
     fn ring_end(&mut self) {
         {
-            // let mut s = self.stream;
             self.resample_line_to(
                 self.raw.x0,
                 self.raw.y0,
@@ -143,7 +125,6 @@ where
                 self.raw.b00,
                 self.raw.c00,
                 MAXDEPTH,
-                // &mut s,
             );
         }
         self.raw.use_line_end = true;
@@ -168,7 +149,6 @@ where
             c[1],
             c[2],
             MAXDEPTH,
-            // &mut self.stream,
         );
         self.raw.x0 = p_transformed.x;
         self.raw.y0 = p_transformed.y;
@@ -201,7 +181,6 @@ where
         b1: T,
         c1: T,
         depth_p: u8,
-        // stream: &mut Box<STREAM>,
     ) {
         let mut depth = depth_p;
         let dx = x1 - x0;

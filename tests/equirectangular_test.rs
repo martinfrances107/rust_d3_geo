@@ -8,7 +8,6 @@ mod equirectangular_test {
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::projection::builder::Builder;
-    use rust_d3_geo::projection::builder_trait::BuilderTrait;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;

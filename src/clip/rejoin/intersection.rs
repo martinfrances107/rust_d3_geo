@@ -6,7 +6,6 @@ use geo::CoordFloat;
 use num_traits::{Float, FloatConst};
 
 use crate::clip::line_elem::LineElem;
-use derivative::Derivative;
 
 #[derive(Clone)]
 pub struct Intersection<T>

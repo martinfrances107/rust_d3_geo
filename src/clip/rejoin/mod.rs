@@ -59,9 +59,9 @@ pub fn rejoin<SINK, T>(
                 // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
                 for i in 0..n {
                     p0 = segment[i];
-                    stream.clone().borrow_mut().point(&p0.p, None);
+                    stream.borrow_mut().point(&p0.p, None);
                 }
-                stream.clone().borrow_mut().line_end();
+                stream.borrow_mut().line_end();
                 return;
             }
             // handle degenerate cases by moving the point
