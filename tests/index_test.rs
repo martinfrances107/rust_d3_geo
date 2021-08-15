@@ -21,7 +21,7 @@
 //     use rust_d3_geo::path::path_string::PathString;
 //     use rust_d3_geo::Transform;
 //     use rust_d3_geo::path::ResultEnum;
-//     use rust_d3_geo::projection::projection_trait::ProjectionTrait;
+//     projection::BuilderTrait;
 //     use rust_d3_geo::projection::scale::Scale;
 //     use rust_d3_geo::projection::projection::Projection;
 

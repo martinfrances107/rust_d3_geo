@@ -4,10 +4,12 @@
 mod equirectangular_test {
 
     use geo::Coordinate;
+    use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
+    use rust_d3_geo::projection::builder::Builder;
+    use rust_d3_geo::projection::builder_trait::BuilderTrait;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
-    use rust_d3_geo::projection::projection_trait::ProjectionTrait;
     use rust_d3_geo::projection::scale::Scale;
     use rust_d3_geo::projection::translate::Translate;
     use rust_d3_geo::stream::StreamDrainStub;
@@ -15,10 +17,12 @@ mod equirectangular_test {
     #[test]
     fn test_return_expected_result() {
         println!("equirectangular(point) returns the expected result");
-        let equirectangular: Projection<StreamDrainStub<f64>, EquirectangularRaw<f64>, f64> =
-            Projection::new(EquirectangularRaw::default(), None)
-                .translate(&Coordinate { x: 0f64, y: 0f64 })
-                .scale(1_f64);
+        let equirectangular = Builder::new(
+            gen_clip_factory_antimeridian(),
+            EquirectangularRaw::default(),
+        )
+        .translate(&Coordinate { x: 0f64, y: 0f64 })
+        .scale(1_f64);
 
         let pi = std::f64::consts::PI;
 
@@ -112,11 +116,14 @@ mod equirectangular_test {
     #[test]
     fn test_rotate_30_0() {
         println!("equirectangular(point) returns the expected result");
-        let equirectangular: Projection<StreamDrainStub<f64>, EquirectangularRaw<f64>, f64> =
-            Projection::new(EquirectangularRaw::default(), None)
-                .rotate([30f64, 0f64, 0f64])
-                .translate(&Coordinate { x: 0f64, y: 0f64 })
-                .scale(1_f64);
+        let equirectangular = Builder::new(
+            gen_clip_factory_antimeridian(),
+            EquirectangularRaw::default(),
+        )
+        .rotate([30f64, 0f64, 0f64])
+        .translate(&Coordinate { x: 0f64, y: 0f64 })
+        .scale(1_f64)
+        .build();
 
         let pi = std::f64::consts::PI;
 
@@ -217,11 +224,10 @@ mod equirectangular_test {
     #[test]
     fn test_rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
-        let equirectangular: Projection<StreamDrainStub<f64>, EquirectangularRaw<f64>, f64> =
-            EquirectangularRaw::gen_projection()
-                .rotate([30f64, 30f64, 0f64])
-                .translate(&Coordinate { x: 0f64, y: 0f64 })
-                .scale(1_f64);
+        let equirectangular = EquirectangularRaw::gen_projection()
+            .rotate([30f64, 30f64, 0f64])
+            .translate(&Coordinate { x: 0f64, y: 0f64 })
+            .scale(1_f64);
 
         assert!(projection_equal(
             &equirectangular,
@@ -322,11 +328,10 @@ mod equirectangular_test {
     #[test]
     fn test_rotate_0_0_30() {
         println!("equirectangular.rotate([0, 0, 30])(point) returns the expected result");
-        let equirectangular: Projection<StreamDrainStub<f64>, EquirectangularRaw<f64>, f64> =
-            EquirectangularRaw::gen_projection_mutator()
-                .rotate([0f64, 0f64, 30f64])
-                .translate(&Coordinate { x: 0f64, y: 0f64 })
-                .scale(1f64);
+        let equirectangular = EquirectangularRaw::gen_projection_mutator()
+            .rotate([0f64, 0f64, 30f64])
+            .translate(&Coordinate { x: 0f64, y: 0f64 })
+            .scale(1f64);
 
         let pi = std::f64::consts::PI;
 
@@ -420,11 +425,10 @@ mod equirectangular_test {
     #[test]
     fn test_rotate_30_30_30() {
         println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
-        let equirectangular: Projection<StreamDrainStub<f64>, EquirectangularRaw<f64>, f64> =
-            EquirectangularRaw::gen_projection_mutator()
-                .rotate([30f64, 30f64, 30f64])
-                .translate(&Coordinate { x: 0f64, y: 0f64 })
-                .scale(1f64);
+        let equirectangular = EquirectangularRaw::gen_projection_mutator()
+            .rotate([30f64, 30f64, 30f64])
+            .translate(&Coordinate { x: 0f64, y: 0f64 })
+            .scale(1f64);
 
         assert!(projection_equal(
             &equirectangular,

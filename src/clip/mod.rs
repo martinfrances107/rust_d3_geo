@@ -5,9 +5,9 @@ pub mod compare_intersections;
 pub mod line_elem;
 pub mod stream_node_clip_factory;
 
-pub(crate) mod antimeridian;
+pub mod antimeridian;
 
-pub(super) mod buffer;
+pub mod buffer;
 
 mod clean;
 mod rejoin;

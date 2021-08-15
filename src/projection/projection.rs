@@ -39,20 +39,20 @@ where
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    // pd: PhantomData<&'a u8>,
-    projection_raw: PR,
-    rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
+    pub postclip: Rc<dyn Fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>>,
+    pub projection_raw: PR,
+    pub preclip_factory:
+        StreamNodeClipFactory<L, PR, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
+
+    pub resample_factory: StreamNodeFactory<ResampleEnum<PR, T>, DRAIN, T>,
+
+    pub rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
 
     /// Used exclusive by Transform( not stream releated).
-    rotate_transform: Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
-    postclip: fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>,
+    pub rotate_transform:
+        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
 
-    ///Factories.
-    resample_factory: StreamNodeFactory<ResampleEnum<PR, T>, DRAIN, T>,
-
-    preclip_factory: StreamNodeClipFactory<L, PR, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
-
-    rotate_transform_factory: StreamNodeFactory<
+    pub rotate_transform_factory: StreamNodeFactory<
         Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
         StreamNode<
             Clip<L, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
@@ -62,7 +62,7 @@ where
         T,
     >,
 
-    transform_radians_factory: StreamNodeFactory<
+    pub transform_radians_factory: StreamNodeFactory<
         StreamTransformRadians,
         StreamNode<
             Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,

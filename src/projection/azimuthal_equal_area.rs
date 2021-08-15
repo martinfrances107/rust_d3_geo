@@ -18,7 +18,7 @@ use crate::stream::Stream;
 // use super::projection::StreamOrValueMaybe;
 use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
-// use crate::projection::projection_trait::ProjectionTrait;
+// use crate::projection::ProjectionTrait;
 use crate::projection::scale::Scale;
 // use crate::stream::Stream;
 use crate::Transform;

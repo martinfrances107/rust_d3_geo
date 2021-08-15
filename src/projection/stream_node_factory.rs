@@ -1,4 +1,3 @@
-use crate::projection::Raw as ProjectionRaw;
 use core::marker::PhantomData;
 use std::cell::RefCell;
 use std::fmt::Display;
@@ -31,8 +30,8 @@ where
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    phantomT: PhantomData<T>,
-    phantomSINK: PhantomData<SINK>,
+    phantom_t: PhantomData<T>,
+    phantom_sink: PhantomData<SINK>,
     pub raw: RAW,
 }
 
@@ -43,16 +42,17 @@ where
 {
     pub fn new(raw: RAW) -> StreamNodeFactory<RAW, SINK, T> {
         StreamNodeFactory {
-            phantomT: PhantomData::<T>,
-            phantomSINK: PhantomData::<SINK>,
+            phantom_t: PhantomData::<T>,
+            phantom_sink: PhantomData::<SINK>,
             raw,
         }
     }
 }
 
+/// RAW here can be projection_raw or line_raw,
 impl<RAW, SINK, T> NodeFactory for StreamNodeFactory<RAW, SINK, T>
 where
-    RAW: ProjectionRaw<T = T>,
+    RAW: Clone,
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {

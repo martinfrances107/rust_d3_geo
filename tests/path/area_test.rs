@@ -20,7 +20,7 @@
 //     use rust_d3_geo::path::ResultEnum;
 //     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
 //     use rust_d3_geo::projection::projection::Projection;
-//     use rust_d3_geo::projection::projection_trait::ProjectionTrait;
+//     projection::BuilderTrait;
 //     use rust_d3_geo::projection::scale::Scale;
 //     use rust_d3_geo::stream::StreamDummy;
 //     // use rust_d3_geo::projection::projection_mutator::ProjectionMutator;

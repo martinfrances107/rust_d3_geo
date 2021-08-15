@@ -20,7 +20,6 @@ use super::circle::line::Line;
 use super::circle::pv::PV;
 
 pub(crate) fn gen_clip_factory_circle<PR, SINK, T>(
-    // projection_raw: PR,
     radius: T,
 ) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
 where
@@ -31,7 +30,8 @@ where
     StreamNodeClipFactory::new(
         generate_interpolate(radius),
         Line::new(radius),
-        PV { cr: radius.cos() },
+        // PV { cr: radius.cos() },
+        PV::new(radius),
     )
 }
 

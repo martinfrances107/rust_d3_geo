@@ -10,7 +10,7 @@ use std::rc::Rc;
 /// sink: the next streamNode in the chain.
 ///
 #[derive(Clone, Debug)]
-pub(crate) struct StreamNode<RAW, SINK, T> {
+pub struct StreamNode<RAW, SINK, T> {
     pub raw: RAW,
     pub sink: Rc<RefCell<SINK>>,
     pub pd: PhantomData<T>,

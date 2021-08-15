@@ -16,7 +16,7 @@
 // use crate::path::path_string::PathString;
 // use crate::path::PathResult;
 // // use crate::projection::projection_mutator::ProjectionMutator;
-// use crate::projection::projection_trait::ProjectionTrait;
+// use crate::projection::ProjectionTrait;
 // // use crate::stream::stream_dst::StreamDst;
 // use crate::stream::Stream;
 // use crate::stream::Streamable;

@@ -23,7 +23,7 @@ use crate::stream::Stream;
 // use crate::clip::antimeridian::pv::PV;
 // use line::Line;
 
-pub(crate) fn gen_clip_factory_antimeridian<PR, SINK, T>(
+pub fn gen_clip_factory_antimeridian<PR, SINK, T>(
 ) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
 where
     PR: ProjectionRaw<T = T>,

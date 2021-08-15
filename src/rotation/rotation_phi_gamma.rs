@@ -3,7 +3,7 @@ use geo::{CoordFloat, Coordinate};
 use crate::Transform;
 
 #[derive(Clone, Copy, Debug, Default)]
-pub(super) struct RotationPhiGamma<T>
+pub struct RotationPhiGamma<T>
 where
     T: CoordFloat,
 {

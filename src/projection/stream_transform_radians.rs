@@ -10,7 +10,7 @@ use crate::stream::Stream;
 use super::StreamNode;
 
 #[derive(Clone, Default, Debug)]
-pub(super) struct StreamTransformRadians {}
+pub struct StreamTransformRadians {}
 
 impl<T, SINK> Stream for StreamNode<StreamTransformRadians, SINK, T>
 where

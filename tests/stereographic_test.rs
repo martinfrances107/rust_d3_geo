@@ -11,39 +11,56 @@ mod stereographic_tests {
 
     #[test]
     fn test_stereographic() {
-        let stereo: Projection<'_, StreamDrainStub<f64>, Stereographic<f64>, f64> =
-            Stereographic::gen_projection_mutator()
-                .translate(&Coordinate { x: 0f64, y: 0f64 })
-                .scale(1f64);
+        let stereo = Stereographic::gen_projection_mutator()
+            .translate(&Coordinate { x: 0f64, y: 0f64 })
+            .scale(1f64);
 
         assert!(projection_equal(
             &stereo,
-            &Coordinate { x: 0f64, y: 0f64 },
-            &Coordinate { x: 0f64, y: 0f64 },
+            &Coordinate { x: 0_f64, y: 0_f64 },
+            &Coordinate { x: 0_f64, y: 0_f64 },
             None
         ));
         assert!(projection_equal(
             &stereo,
-            &Coordinate { x: -90f64, y: 0f64 },
-            &Coordinate { x: -1f64, y: 0f64 },
+            &Coordinate {
+                x: -90_f64,
+                y: 0_f64
+            },
+            &Coordinate {
+                x: -1_f64,
+                y: 0_f64
+            },
             None
         ));
         assert!(projection_equal(
             &stereo,
-            &Coordinate { x: 90f64, y: 0f64 },
-            &Coordinate { x: 1f64, y: 0f64 },
+            &Coordinate {
+                x: 90_f64,
+                y: 0_f64
+            },
+            &Coordinate { x: 1_f64, y: 0_f64 },
             None
         ));
         assert!(projection_equal(
             &stereo,
-            &Coordinate { x: 0f64, y: -90f64 },
-            &Coordinate { x: 0f64, y: 1f64 },
+            &Coordinate {
+                x: 0_f64,
+                y: -90_f64
+            },
+            &Coordinate { x: 0_f64, y: 1_f64 },
             None
         ));
         assert!(projection_equal(
             &stereo,
-            &Coordinate { x: 0f64, y: 90f64 },
-            &Coordinate { x: 0f64, y: -1f64 },
+            &Coordinate {
+                x: 0_f64,
+                y: 90_f64
+            },
+            &Coordinate {
+                x: 0_f64,
+                y: -1_f64
+            },
             None
         ));
     }

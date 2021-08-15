@@ -5,12 +5,12 @@ mod invert_test {
     use geo::Coordinate;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     // use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
+    use rust_d3_geo::projection::builder_trait::BuilderTrait;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mecator::Mecator;
     use rust_d3_geo::projection::orthographic::Orthographic;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
-    use rust_d3_geo::projection::projection_trait::ProjectionTrait;
     use rust_d3_geo::projection::stereographic::Stereographic;
     use rust_d3_geo::stream::StreamDrainStub;
     // use rust_d3_geo::stream::StreamDummy;

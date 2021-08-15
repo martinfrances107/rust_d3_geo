@@ -61,7 +61,6 @@ where
 impl<L, PV, SINK, T> Clip<L, PV, SINK, T>
 where
     L: LineRaw,
-    // PR: ProjectionRaw<T = T>,
     PV: PointVisible,
     SINK: Stream<SC = Coordinate<T>>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -77,7 +76,7 @@ where
     ) -> Clip<L, PV, SINK, T> {
         // let ring_buffer: Rc<RefCell<Buffer<T>>> = Rc::new(RefCell::new(Buffer::default()));
         // let mut ring_sink_node = self.line_ring_buffer_factory.generate(ring_buffer);
-        let line_sink_factory = StreamNodeFactory::new(line_raw);
+        let line_sink_factory: StreamNodeFactory<L, SINK, T> = StreamNodeFactory::new(line_raw);
         Clip {
             pv,
             line_node: line_sink_factory.generate(sink),

@@ -39,7 +39,7 @@ where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // phantomDrain: PhantomData<DRAIN>,
-    phantomPR: PhantomData<PR>,
+    phantom_pr: PhantomData<PR>,
     // phantomT: PhantomData<T>,
 
     // Passed to ::generate()
@@ -79,7 +79,7 @@ where
             interpolate_fn,
             // line_ring_buffer,
             line_raw,
-            phantomPR: PhantomData::<PR>,
+            phantom_pr: PhantomData::<PR>,
             // phantomT: PhantomData::<T>,
             pv,
         }

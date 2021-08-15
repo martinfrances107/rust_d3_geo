@@ -4,7 +4,7 @@ use num_traits::FloatConst;
 use crate::Transform;
 
 #[derive(Clone, Copy, Default, Debug)]
-pub(super) struct RotationLambda<T> {
+pub struct RotationLambda<T> {
     pub delta_lambda: T,
 }
 
