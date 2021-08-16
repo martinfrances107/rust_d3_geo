@@ -1,4 +1,5 @@
 #![allow(clippy::pedantic)]
+#![warn(missing_debug_implementations)]
 #![allow(clippy::many_single_char_names)]
 // #![allow(dead_code)]
 // #![allow(unused_imports)]

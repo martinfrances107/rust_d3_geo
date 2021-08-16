@@ -3,7 +3,7 @@ pub mod bounds_stream;
 pub mod context;
 pub mod context_stream;
 pub mod path;
-pub mod string;
+pub mod path_string;
 
 use std::collections::VecDeque;
 use std::fmt;

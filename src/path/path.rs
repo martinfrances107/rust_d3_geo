@@ -1,3 +1,4 @@
+// use std::cell::RefCell;
 // use std::default::Default;
 // use std::fmt::Display;
 // use std::marker::PhantomData;
@@ -7,47 +8,45 @@
 // use geo::CoordFloat;
 // use geo::Coordinate;
 // use num_traits::AsPrimitive;
-// use num_traits::Float;
 // use num_traits::FloatConst;
 
 // use web_sys::CanvasRenderingContext2d;
 
-// use crate::path::path_context_stream::PathContextStream;
-// use crate::path::path_string::PathString;
-// use crate::path::PathResult;
-// // use crate::projection::projection_mutator::ProjectionMutator;
-// use crate::projection::ProjectionTrait;
+// use crate::projection::projection::Projection;
+// use crate::projection::Raw as ProjectionRaw;
 // // use crate::stream::stream_dst::StreamDst;
+// use crate::clip::antimeridian::line::Line;
+// use crate::clip::antimeridian::pv::PV;
+// use crate::data_object::DataObject;
 // use crate::stream::Stream;
 // use crate::stream::Streamable;
 // use crate::Transform;
-// use crate::{data_object::DataObject, path::path_area_stream::PathAreaStream};
 
-// use super::path_context::PathContext;
-// use super::ResultEnum;
+// use super::area_stream::AreaStream;
+// use super::context::Context as PathContext;
+// use super::context_stream::ContextStream as PathContextStream;
 // use super::PointRadiusEnum;
 // use super::PointRadiusTrait;
+// use super::ResultEnum;
 
 // #[derive(Debug)]
-// pub struct Path<'a, CS, P, T>
+// pub struct Path<'a, CS, PR, T>
 // where
-//     P: ProjectionTrait<'a>,
-//     Rc<<P as ProjectionTrait<'a>>::PR>: Transform<C = Coordinate<T>>,
+//     PR: ProjectionRaw<T = T>,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 //     CS: Stream<SC = Coordinate<T>> + Default,
 // {
 //     pd: PhantomData<&'a u8>,
 //     context: Option<CanvasRenderingContext2d>,
-//     context_stream: CS,
+//     context_stream: Rc<RefCell<CS>>,
 //     point_radius: PointRadiusEnum<T>,
 //     projection_stream: Option<PathContextStream<T>>,
-//     projection: Option<P>,
+//     projection: Option<Projection<CS, Line<T>, PR, PV<T>, T>>,
 // }
 
-// impl<'a, CS, P, T> Default for Path<'a, CS, P, T>
+// impl<'a, CS, PR, T> Default for Path<'a, CS, PR, T>
 // where
-//     P: ProjectionTrait<'a>,
-//     Rc<<P as ProjectionTrait<'a>>::PR>: Transform<C = Coordinate<T>>,
+//     PR: ProjectionRaw<T = T>,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 //     CS: Stream<SC = Coordinate<T>> + Default,
 // {
@@ -56,7 +55,7 @@
 //             // pd: PhantomData::<PR>::new(),
 //             pd: PhantomData::<&u8>,
 //             context: None,
-//             context_stream: CS::default(),
+//             context_stream: Rc::new(RefCell::new(CS::default())),
 //             point_radius: PointRadiusEnum::Val(T::zero()),
 //             projection_stream: None,
 //             projection: None,
@@ -64,16 +63,17 @@
 //     }
 // }
 
-// impl<'a, CS, P, T> Path<'a, CS, P, T>
+// impl<'a, CS, PR, T> Path<'a, CS, PR, T>
 // where
-//     P: ProjectionTrait<'a, C = Coordinate<T>, T = T>,
-//     Rc<<P as ProjectionTrait<'a>>::PR>: Transform<C = Coordinate<T>>,
-//     <P as ProjectionTrait<'a>>::PR: Transform<C = Coordinate<T>>,
+//     PR: ProjectionRaw<T = T>,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 //     CS: Stream<SC = Coordinate<T>> + Default,
 // {
 //     #[inline]
-//     pub fn generate(projection: Option<P>, context: Option<CanvasRenderingContext2d>) -> Self {
+//     pub fn generate(
+//         projection: Option<Projection<CS, Line<T>, PR, PV<T>, T>>,
+//         context: Option<CanvasRenderingContext2d>,
+//     ) -> Self {
 //         println!("path generate");
 //         Self::default()
 //             .projection_fn(projection)
@@ -81,14 +81,14 @@
 //     }
 
 //     pub fn object(&mut self, object: Option<DataObject<T>>) -> Option<ResultEnum<T>>
-//     where
-//         <P as ProjectionTrait<'a>>::T: AsPrimitive<<P as ProjectionTrait<'a>>::T>
-//             + AddAssign
-//             + CoordFloat
-//             + Default
-//             + Display
-//             + Float
-//             + FloatConst,
+// // where
+//         // <P as ProjectionTrait<'a>>::T: AsPrimitive<<P as ProjectionTrait<'a>>::T>
+//         //     + AddAssign
+//         //     + CoordFloat
+//         //     + Default
+//         //     + Display
+//         //     + Float
+//         //     + FloatConst,
 //     {
 //         match object {
 //             Some(object) => {
@@ -103,8 +103,8 @@
 //                 // }
 //                 match &self.projection {
 //                     Some(projection) => {
-//                         let mut stream_in = projection.stream(&mut self.context_stream);
-//                         object.to_stream(&mut Box::new(stream_in));
+//                         let mut stream_in = projection.stream(self.context_stream);
+//                         object.to_stream(&mut stream_in);
 //                         // let end_point = stream_in.get_dst();
 //                         // match end_point {
 //                         //     StreamDst::PathString(mut pas) => pas.result(),
@@ -112,7 +112,7 @@
 //                         //         panic!("Did no get the expected PathString.");
 //                         //     }
 //                         // }
-//                         self.context_stream.result()
+//                         self.context_stream.borrow().result()
 //                     }
 //                     None => {
 //                         panic!("How to handle no projection dropping projection.");
@@ -155,7 +155,7 @@
 //     //         }
 //     //     }
 
-//     fn projection_fn(mut self, projection: Option<P>) -> Self
+//     fn projection_fn(mut self, projection: Option<Projection<CS, Line<T>, PR, PV<T>, T>>) -> Self
 // // where
 //     //     <P as ProjectionTrait<'a>>::SD: Stream<SC = Coordinate<T>>,
 //     {
@@ -198,11 +198,11 @@
 //         match c_in {
 //             None => {
 //                 self.context = None;
-//                 self.context_stream = CS::default();
+//                 self.context_stream = Rc::new(RefCell::new(CS::default()));
 //             }
 //             Some(c) => {
 //                 self.context = Some(c.clone());
-//                 self.context_stream = PathContext::new(c);
+//                 self.context_stream = Rc::new(RefCell::new(PathContext::new(c)));
 //             }
 //         }
 //         match &self.point_radius {
@@ -210,7 +210,7 @@
 //                 // do nothing.
 //             }
 //             PointRadiusEnum::Val(pr) => {
-//                 self.context_stream.point_radius(Some(*pr));
+//                 self.context_stream.borrow().point_radius(Some(*pr));
 //             }
 //         }
 //         self

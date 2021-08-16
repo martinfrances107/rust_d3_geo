@@ -30,6 +30,7 @@ where
 }
 
 /// FeatruesCollection - An array of feature objects.
+#[derive(Debug)]
 pub struct FeatureCollection<T: CoordFloat>(pub Vec<FeaturesStruct<T>>);
 
 // Signular version of the struct.

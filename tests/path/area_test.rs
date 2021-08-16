@@ -14,28 +14,28 @@
 //     use num_traits::AsPrimitive;
 //     use num_traits::FloatConst;
 
+//     use rust_d3_geo::clip::antimeridian::line::Line;
+//     use rust_d3_geo::clip::antimeridian::pv::PV;
 //     use rust_d3_geo::data_object::sphere::Sphere;
 //     use rust_d3_geo::data_object::DataObject;
-//     // use rust_d3_geo::path::path::Path;
 //     use rust_d3_geo::path::ResultEnum;
 //     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
 //     use rust_d3_geo::projection::projection::Projection;
-//     projection::BuilderTrait;
 //     use rust_d3_geo::projection::scale::Scale;
-//     use rust_d3_geo::stream::StreamDummy;
-//     // use rust_d3_geo::projection::projection_mutator::ProjectionMutator;
+//     use rust_d3_geo::stream::StreamDrainStub;
 
 //     #[inline]
 //     fn equirectangular<'a, T: AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst>(
-//     ) -> Projection<'a, EquirectangularRaw<T>, T> {
-//         EquirectangularRaw::gen_projection_mutator()
+//     ) -> Projection<StreamDrainStub<T>, Line<T>, EquirectangularRaw<T>, PV<T>, T> {
+//         EquirectangularRaw::gen_projection_builder()
 //             .scale(T::from(900f64 / PI).unwrap())
 //             .precision(&T::zero())
+//             .build()
 //     }
 
 //     #[inline]
 //     fn test_area<'a, T>(
-//         projection: Projection<'a, EquirectangularRaw<T>, T>,
+//         projection: Projection<StreamDrainStub<T>, Line<T>, EquirectangularRaw<T>, PV<T>, T>,
 //         object: &DataObject<T>,
 //     ) -> T
 //     where
@@ -99,7 +99,7 @@
 //     fn test_area_of_a_sphere() {
 //         println!("geoPath.area(…) of a sphere");
 //         let eq = equirectangular::<f64>();
-//         let object = DataObject::Sphere(Sphere::new());
+//         let object = DataObject::Sphere(Sphere::default());
 //         assert_eq!(test_area(eq, &object), 1620000.0);
 //     }
 // }

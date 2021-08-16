@@ -24,10 +24,7 @@ use super::stream_fn::stream_fn;
 // use super::InArg;
 // use super::StreamType;
 
-// use crate::cartesian::cartesian;
-// use crate::cartesian::normalize_in_place;
-// use crate::Transform;
-
+#[derive(Debug)]
 pub struct Generator<T>
 where
     T: CoordFloat + FloatConst,
@@ -35,8 +32,6 @@ where
     center: Coordinate<T>,
     radius: T,
     precision: T,
-    // ring: Vec<Coordinate<T>>,
-    // rotate: RotateRadiansEnum<T>,
     stream: Rc<RefCell<Stream<T>>>,
 }
 

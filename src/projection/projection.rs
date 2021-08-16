@@ -5,6 +5,7 @@ use std::ops::AddAssign;
 use std::rc::Rc;
 
 // use derivative::Derivative;
+use derivative::Derivative;
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -31,6 +32,8 @@ use super::StreamNode;
 //     SP(Box<dyn Stream<SC = Coordinate<T>>>),
 // }
 
+#[derive(Derivative)]
+#[derivative(Debug)]
 #[derive(Clone)]
 pub struct Projection<DRAIN, L, PR, PV, T>
 where
@@ -40,6 +43,7 @@ where
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
+    #[derivative(Debug = "ignore")]
     pub postclip: PostClipFn<DRAIN>,
     pub projection_raw: PR,
     pub preclip_factory:
@@ -95,7 +99,7 @@ where
     ///
     /// In javascript stream is used as a property to be removed from the object.
     /// In rust that is a closure.
-    fn stream(
+    pub fn stream(
         &self,
         drain: Rc<RefCell<DRAIN>>,
     ) -> StreamNode<
