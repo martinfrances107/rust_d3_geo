@@ -92,8 +92,13 @@ mod invert_test {
 
     #[test]
     fn test_stereographic() {
-        let s: Projection<StreamDrainStub<f64>, Line<f64>, Stereographic<f64>, PV<f64>, f64> =
-            Stereographic::<f64>::gen_projection_builder().build();
+        let s: Projection<
+            StreamDrainStub<f64>,
+            LineCircle<f64>,
+            Stereographic<f64>,
+            PVCircle<f64>,
+            f64,
+        > = Stereographic::<f64>::gen_projection_builder().build();
         symetric_invert(s);
     }
 }
