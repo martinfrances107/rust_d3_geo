@@ -47,8 +47,8 @@ pub fn contains<T: CoordFloat + FloatConst>(
         let mut sin_phi0 = phi0.sin();
         let mut cos_phi0 = phi0.cos();
 
-        for j in 0..m {
-            let point1 = ring[j];
+        for point1 in ring.iter().take(m) {
+            // let point1 = ring[j];
             let lambda1 = longitude(&point1.p);
             let phi1 = point1.p.y / T::from(2).unwrap() + T::FRAC_PI_4();
             let sin_phi1 = phi1.sin();
@@ -95,7 +95,7 @@ pub fn contains<T: CoordFloat + FloatConst>(
             lambda0 = lambda1;
             sin_phi0 = sin_phi1;
             cos_phi0 = cos_phi1;
-            point0 = point1;
+            point0 = *point1;
         }
     }
 

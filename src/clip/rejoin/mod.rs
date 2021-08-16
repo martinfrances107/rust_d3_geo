@@ -20,16 +20,16 @@ use crate::stream::Stream;
 use super::line_elem::LineElem;
 use intersection::Intersection;
 
+type CompareIntersectionsFn<T> =
+    fn(a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>) -> Ordering;
+
 // use link::link;
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
 pub fn rejoin<SINK, T>(
     segments: &Vec<Vec<LineElem<T>>>,
-    compare_intersections: fn(
-        a: &Rc<RefCell<Intersection<T>>>,
-        b: &Rc<RefCell<Intersection<T>>>,
-    ) -> Ordering,
+    compare_intersections: CompareIntersectionsFn<T>,
     start_inside: bool,
     interpolate_fn: InterpolateFn<SINK, T>,
     stream: Rc<RefCell<SINK>>,
@@ -55,10 +55,9 @@ pub fn rejoin<SINK, T>(
         if point_equal(p0.p, p1.p) {
             if p0.m.is_none() && p1.m.is_none() {
                 stream.borrow_mut().line_start();
-                // let i: usize;
-                // for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
-                for i in 0..n {
-                    p0 = segment[i];
+                // for i in 0..n {
+                for elem in segment.iter().take(n) {
+                    p0 = *elem;
                     stream.borrow_mut().point(&p0.p, None);
                 }
                 stream.borrow_mut().line_end();
@@ -109,9 +108,9 @@ pub fn rejoin<SINK, T>(
     link(&mut subject);
     link(&mut clip);
 
-    for i in 0..clip.len() {
+    for c in clip {
         start_inside = !start_inside;
-        (*clip[i]).borrow_mut().e = start_inside;
+        c.borrow_mut().e = start_inside;
     }
 
     let start = &subject[0];
@@ -140,8 +139,8 @@ pub fn rejoin<SINK, T>(
                 if is_subject {
                     match points {
                         Some(points) => {
-                            for i in 0..points.len() {
-                                point = points[i];
+                            for p in points {
+                                point = p;
                                 stream.clone().borrow_mut().point(&point.p, point.m);
                             }
                         }

@@ -19,7 +19,7 @@ where
 
 // By design a stateless function.
 // TODO maybe add attributes to suggest inlining this where possible.
-fn normalise<'a, T: CoordFloat + FloatConst>(p: &'a Coordinate<T>) -> Coordinate<T> {
+fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
     let lambda = p.x;
     let phi = p.y;
 

@@ -21,8 +21,9 @@ where
 
     let mut a = array[0].clone();
     let mut b: Rc<RefCell<Intersection<T>>>;
-    for i in 1..n {
-        b = array[i].clone();
+    // for i in 1..n
+    for elem in array.iter().take(n).skip(1) {
+        b = elem.clone();
         (*a).borrow_mut().n = Some(b.clone());
         (*b).borrow_mut().p = Some(a.clone());
         a = b;

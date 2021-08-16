@@ -67,7 +67,7 @@ where
     type PR;
     type PV;
     type T;
-    fn build<'a>(s: &'a Self::PR) -> Projection<Self::Drain, Self::L, Self::PR, Self::PV, Self::T>;
+    fn build(s: Self::PR) -> Projection<Self::Drain, Self::L, Self::PR, Self::PV, Self::T>;
 }
 
 /// Generates elements of the  projection stream pipeline.
