@@ -2,6 +2,7 @@
 #[cfg(test)]
 mod stereographic_tests {
     use geo::Coordinate;
+
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::projection::projection::Projection;

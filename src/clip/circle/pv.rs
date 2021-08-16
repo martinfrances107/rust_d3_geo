@@ -14,6 +14,15 @@ pub struct PV<T> {
     cr: T,
 }
 
+impl<T> Default for PV<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    fn default() -> Self {
+        PV::new(T::one())
+    }
+}
+
 impl<T> PV<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -22,6 +31,7 @@ where
         Self { cr: radius.cos() }
     }
 }
+
 impl<T> PointVisible for PV<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,

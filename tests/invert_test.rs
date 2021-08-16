@@ -3,8 +3,11 @@
 mod invert_test {
 
     use geo::Coordinate;
+
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
+    use rust_d3_geo::clip::circle::line::Line as LineCircle;
+    use rust_d3_geo::clip::circle::pv::PV as PVCircle;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::gnomic::Gnomic;
@@ -44,8 +47,13 @@ mod invert_test {
 
     #[test]
     fn test_azimuthal_equal_area() {
-        let a: Projection<StreamDrainStub<f64>, Line<f64>, AzimuthalEqualArea<f64>, PV<f64>, f64> =
-            AzimuthalEqualArea::<f64>::gen_projection_builder().build();
+        let a: Projection<
+            StreamDrainStub<f64>,
+            LineCircle<f64>,
+            AzimuthalEqualArea<f64>,
+            PVCircle<f64>,
+            f64,
+        > = AzimuthalEqualArea::<f64>::gen_projection_builder().build();
         symetric_invert(a);
     }
 
@@ -58,15 +66,20 @@ mod invert_test {
 
     #[test]
     fn test_gnomic() {
-        let g: Projection<StreamDrainStub<f64>, Line<f64>, Gnomic<f64>, PV<f64>, f64> =
+        let g: Projection<StreamDrainStub<f64>, LineCircle<f64>, Gnomic<f64>, PVCircle<f64>, f64> =
             Gnomic::<f64>::gen_projection_builder().build();
         symetric_invert(g);
     }
 
     #[test]
     fn test_orthographic() {
-        let o: Projection<StreamDrainStub<f64>, Line<f64>, Orthographic<f64>, PV<f64>, f64> =
-            Orthographic::<f64>::gen_projection_builder().build();
+        let o: Projection<
+            StreamDrainStub<f64>,
+            LineCircle<f64>,
+            Orthographic<f64>,
+            PVCircle<f64>,
+            f64,
+        > = Orthographic::<f64>::gen_projection_builder().build();
         symetric_invert(o);
     }
 

@@ -36,35 +36,17 @@ where
 
 impl<T> LineRaw for Line<T> where T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst {}
 
-// impl<'a, PR, SD, T> Default for Line<'a, PR, SD, T>
-// where
-//     Rc<PR>: Transform<C = Coordinate<T>>,
-//     PR: Transform<C = Coordinate<T>>,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
-// {
-//     fn default() -> Self {
-//         Self {
-//             c0: 0u8,
-//             clean: CleanEnum::Undefined,
-//             radius: T::zero(),
-//             cr: T::zero(),
-//             not_hemisphere: false,
-//             point0: None,
-//             small_radius: false,
-//             stream: LineSinkEnum::CSE(ClipSinkEnum::Src(StreamDst::SRC(
-//                 StreamSourceDummy::default(),
-//             ))),
-//             v0: false,
-//             v00: false,
-//         }
-//     }
-// }
+impl<T> Default for Line<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    fn default() -> Self {
+        Line::new(T::one())
+    }
+}
 
 impl<T> Line<T>
 where
-    // Rc<PR>: Transform<C = Coordinate<T>>,
-    // PR: Transform<C = Coordinate<T>>,
-    // STREAM: Stream<SC = Coordinate<T>> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
@@ -82,7 +64,6 @@ where
             small_radius,
             v0: false,
             v00: false,
-            // stream: Rc::new(RefCell::new(STREAM::default())),
         }
     }
 

@@ -9,6 +9,7 @@ mod centroid_test {
     use geo::GeometryCollection;
     use geo::MultiPoint;
     use geo::Point;
+
     use rust_d3_geo::centroid::stream::Stream as CentroidStream;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::in_delta::in_delta_point;

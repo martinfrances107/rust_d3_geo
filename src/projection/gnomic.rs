@@ -7,8 +7,8 @@ use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
 use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
-use crate::clip::antimeridian::line::Line;
-use crate::clip::antimeridian::pv::PV;
+use crate::clip::circle::line::Line;
+use crate::clip::circle::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::stream::Stream;
 use crate::Transform;
@@ -59,13 +59,11 @@ where
     {
         let g = Gnomic::default();
         Builder::new(
-            StreamNodeClipFactory::new(gen_interpolate(), Line::default(), PV::default()),
+            StreamNodeClipFactory::new(gen_interpolate(), Line::<T>::default(), PV::<T>::default()),
             g,
         )
         .scale(T::from(144.049_f64).unwrap())
-        // .clip_angle(StreamOrValueMaybe::Value(T::from(60f64).unwrap()))
-        // todo turn clip angle back on a adjust gpm return type to clipCircle stuff
-        // .clip_angle(T::from(60_f64).unwrap())
+        .clip_angle(T::from(60_f64).unwrap())
     }
 
     #[inline]

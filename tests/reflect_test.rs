@@ -2,8 +2,9 @@
 #[cfg(test)]
 mod reflect_tests {
     use geo::Coordinate;
-    use rust_d3_geo::clip::antimeridian::line::Line;
-    use rust_d3_geo::clip::antimeridian::pv::PV;
+
+    use rust_d3_geo::clip::circle::line::Line;
+    use rust_d3_geo::clip::circle::pv::PV;
     use rust_d3_geo::projection::builder::Builder;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::projection_equal::projection_equal;

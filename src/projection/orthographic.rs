@@ -6,9 +6,9 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
-use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
-use crate::clip::antimeridian::line::Line;
-use crate::clip::antimeridian::pv::PV;
+use crate::clip::circle::interpolate::generate as gen_interpolate;
+use crate::clip::circle::line::Line;
+use crate::clip::circle::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::stream::Stream;
 use crate::Transform;
@@ -57,13 +57,15 @@ where
         DRAIN: Stream<SC = Coordinate<T>>,
     {
         Builder::new(
-            StreamNodeClipFactory::new(gen_interpolate(), Line::default(), PV::default()),
+            StreamNodeClipFactory::new(
+                gen_interpolate(T::one()),
+                Line::<T>::default(),
+                PV::default(),
+            ),
             Orthographic::default(),
-            // None,
         )
         .scale(T::from(249.5_f64).unwrap())
-        // .clip_angle(StreamOrValueMaybe::Value(T::from(90f64 + 1e-6f64).unwrap()))
-        // .clip_angle(T::from(90_f64 + 1e-6_f64).unwrap())
+        .clip_angle(T::from(90_f64 + 1e-6_f64).unwrap())
     }
 }
 
