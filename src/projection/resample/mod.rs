@@ -33,6 +33,7 @@ where
     PR: ProjectionRaw<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Debug + Display + FloatConst,
 {
+    #[inline]
     fn default() -> Self {
         ResampleEnum::RN(None::<PR, T>::default())
     }
@@ -43,6 +44,7 @@ where
     PR: ProjectionRaw<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Debug + Display + FloatConst,
 {
+    #[inline]
     fn clone(&self) -> Self {
         match self {
             ResampleEnum::RN(rn) => ResampleEnum::RN(*rn),
@@ -78,6 +80,7 @@ where
     }
 }
 
+#[inline]
 pub fn gen_resample_factory<PR, SINK, T>(
     projection_raw: PR,
     delta2: T,

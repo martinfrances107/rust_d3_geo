@@ -318,9 +318,9 @@ where
                 // self.base.sink.polygon_start();
                 self.raw.polygon_started = true;
             }
-            // self.base.sink.line_start();
-            // self.raw.interpolate_node.interpolate(None, None, T::one());
-            // self.base.sink.line_end();
+            self.sink.borrow_mut().line_start();
+            (self.raw.interpolate_fn)(None, None, T::one(), self.sink.clone());
+            self.sink.borrow_mut().line_end();
         };
         if self.raw.polygon_started {
             // self.base.sink.polygon_end();
@@ -332,11 +332,10 @@ where
     }
 
     fn sphere(&mut self) {
-        // self.base.sink.polygon_start();
-        // self.base.sink.line_start();
-        // self.interpolate(None, None, T::one(), &mut self.base.sink);
-        // self.raw.interpolate_node.interpolate(None, None, T::one());
-        // self.base.sink.line_end();
-        // self.base.sink.polygon_end();
+        self.sink.borrow_mut().polygon_start();
+        self.raw.line_node.sink.borrow_mut().line_start();
+        (self.raw.interpolate_fn)(None, None, T::one(), self.sink.clone());
+        self.sink.borrow_mut().line_end();
+        self.sink.borrow_mut().polygon_end();
     }
 }
