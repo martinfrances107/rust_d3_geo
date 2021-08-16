@@ -4,6 +4,7 @@
 mod equirectangular_test {
 
     use geo::Coordinate;
+
     use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;

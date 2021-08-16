@@ -6,11 +6,8 @@ mod polygon_contains_test {
     use geo::Coordinate;
     use pretty_assertions::assert_eq;
 
-    // use rust_d3_geo::circle::circle_generator::CircleGenerator;
     use rust_d3_geo::circle::generator::Generator as CircleGenerator;
-    // use rust_d3_geo::circle::CircleTrait;
     use rust_d3_geo::clip::line_elem::LineElem;
-
     use rust_d3_geo::polygon_contains::contains;
 
     fn polygon_contains<T>(polygon_p: &Vec<Vec<Coordinate<f64>>>, point: &Coordinate<f64>) -> bool {

@@ -20,21 +20,21 @@ mod centroid_test {
             Point::new(0f64, 0f64),
             1e-6
         ));
-        // assert!(in_delta_point(
-        //     CentroidStream::default().centroid(&Point::new(1f64, 1f64)),
-        //     Point::new(1f64, 1f64),
-        //     1e-6
-        // ));
-        // assert!(in_delta_point(
-        //     CentroidStream::default().centroid(&Point::new(2f64, 3f64)),
-        //     Point::new(2f64, 3f64),
-        //     1e-6
-        // ));
-        // assert!(in_delta_point(
-        //     CentroidStream::default().centroid(&Point::new(-4f64, -5f64)),
-        //     Point::new(-4f64, -5f64),
-        //     1e-6
-        // ));
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(&Point::new(1f64, 1f64)),
+            Point::new(1f64, 1f64),
+            1e-6
+        ));
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(&Point::new(2f64, 3f64)),
+            Point::new(2f64, 3f64),
+            1e-6
+        ));
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(&Point::new(-4f64, -5f64)),
+            Point::new(-4f64, -5f64),
+            1e-6
+        ));
     }
 
     #[test]
