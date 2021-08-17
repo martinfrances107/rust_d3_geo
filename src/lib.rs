@@ -8,6 +8,7 @@ extern crate derivative;
 extern crate rust_d3_array;
 extern crate web_sys;
 
+use num_traits::FloatConst;
 use std::fmt::Debug;
 
 use geo::CoordFloat;
@@ -32,9 +33,11 @@ mod compose;
 mod point_equal;
 
 /// Common to Projection, Rotation.
+///
+/// FloatConst is required by forward_rotation_lambda()
 pub trait Transform: Clone
 where
-    <Self as Transform>::T: CoordFloat,
+    <Self as Transform>::T: CoordFloat + FloatConst,
 {
     type T;
     fn transform(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;

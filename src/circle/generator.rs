@@ -27,7 +27,7 @@ use super::stream_fn::stream_fn;
 #[derive(Debug)]
 pub struct Generator<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     center: Coordinate<T>,
     radius: T,

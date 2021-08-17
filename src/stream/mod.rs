@@ -22,7 +22,7 @@ use num_traits::FloatConst;
 
 /// Applies to DataObject's
 pub trait Streamable {
-    type T: AsPrimitive<Self::T> + CoordFloat + Display + FloatConst;
+    type T: CoordFloat;
     fn to_stream<SD: Stream<T = Self::T>>(&self, stream: &mut SD);
 }
 

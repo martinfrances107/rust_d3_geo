@@ -1,8 +1,3 @@
-use std::fmt::Display;
-
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
-
 use crate::stream::Streamable;
 
 use super::stream::Stream as StreamTrait;
@@ -13,7 +8,7 @@ use geo::{CoordFloat, Coordinate};
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct Stream<T: CoordFloat + FloatConst> {
+pub struct Stream<T: CoordFloat> {
     // sphere_fn: fn(&mut Self, f64, f64),
     #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, &Coordinate<T>),
@@ -29,7 +24,7 @@ pub struct Stream<T: CoordFloat + FloatConst> {
 
 impl<T> Default for Stream<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     #[inline]
     fn default() -> Self {
@@ -57,7 +52,7 @@ where
 // }
 impl<T> Stream<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     pub fn calc(object: &impl Streamable<T = T>) -> T {
         let mut ls = Stream::default();
@@ -109,7 +104,7 @@ where
 
 impl<T> StreamTrait for Stream<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
 

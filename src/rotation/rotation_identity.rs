@@ -1,4 +1,3 @@
-use num_traits::AsPrimitive;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
@@ -38,7 +37,7 @@ fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
 
 impl<T> Default for RotationIdentity<T>
 where
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -49,7 +48,7 @@ where
 
 impl<T> Transform for RotationIdentity<T>
 where
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

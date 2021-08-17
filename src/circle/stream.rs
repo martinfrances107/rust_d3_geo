@@ -16,7 +16,7 @@ use crate::Transform;
 #[derive(Clone, Debug)]
 pub struct Stream<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     // pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
