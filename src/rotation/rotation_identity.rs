@@ -13,7 +13,10 @@ use crate::Transform;
 /// Raw is generic over T ( Raw<T=T> )
 ///
 #[derive(Clone, Copy, Debug)]
-pub struct RotationIdentity<T> {
+pub struct RotationIdentity<T>
+where
+    T: CoordFloat,
+{
     phantom: PhantomData<T>,
 }
 

@@ -111,7 +111,7 @@ where
 #[derive(Clone, Debug, Default)]
 pub struct CompareIntersection<T: CoordFloat>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     x: Coordinate<T>,
 }

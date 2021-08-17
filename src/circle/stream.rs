@@ -26,7 +26,7 @@ where
 
 impl<T> Default for Stream<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -41,7 +41,7 @@ where
 
 impl<T> StreamTrait for Stream<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

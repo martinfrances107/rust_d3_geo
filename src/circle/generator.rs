@@ -37,7 +37,7 @@ where
 
 impl<T> Default for Generator<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -55,7 +55,7 @@ where
 
 impl<T> Generator<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     pub fn circle(&self) -> Vec<Vec<Coordinate<T>>> {
         let c = self.center;
@@ -86,7 +86,7 @@ where
 
 impl<T> Generator<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     pub fn center(mut self, center: Coordinate<T>) -> Generator<T> {
         self.center = center;
