@@ -8,13 +8,13 @@ extern crate derivative;
 extern crate rust_d3_array;
 extern crate web_sys;
 
+use std::fmt::Debug;
+use std::fmt::Display;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use std::fmt::Debug;
-use std::fmt::Display;
-use std::ops::AddAssign;
 
 pub mod cartesian;
 pub mod centroid;
@@ -38,7 +38,7 @@ pub mod stream;
 pub trait Transform: Clone
 where
     <Self as Transform>::T:
-        AddAssign + AsPrimitive<<Self as Transform>::T> + Debug + Display + CoordFloat + FloatConst,
+        AsPrimitive<<Self as Transform>::T> + Debug + Display + CoordFloat + FloatConst,
 {
     type T;
     fn transform(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;

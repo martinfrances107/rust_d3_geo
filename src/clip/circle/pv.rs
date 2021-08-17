@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -16,7 +15,7 @@ pub struct PV<T> {
 
 impl<T> Default for PV<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn default() -> Self {
         PV::new(T::one())
@@ -25,7 +24,7 @@ where
 
 impl<T> PV<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new(radius: T) -> Self {
         Self { cr: radius.cos() }
@@ -34,7 +33,7 @@ where
 
 impl<T> PointVisible for PV<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
     #[inline]

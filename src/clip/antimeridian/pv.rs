@@ -1,6 +1,5 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -25,7 +24,7 @@ impl<T> Default for PV<T> {
 }
 impl<T> PointVisible for PV<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 

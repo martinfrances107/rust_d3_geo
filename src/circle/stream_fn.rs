@@ -24,7 +24,7 @@ pub fn stream_fn<STREAM, T>(
     t0_in: Option<Coordinate<T>>,
     t1_in: Option<Coordinate<T>>,
 ) where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     STREAM: Stream<T = T>,
 {
     if delta.is_zero() {
@@ -44,7 +44,7 @@ pub fn stream_fn<STREAM, T>(
                 false => t0 > t1,
             };
             if check {
-                t0 += direction * T::TAU();
+                t0 = t0 + direction * T::TAU();
             }
         }
         (_, _) => {

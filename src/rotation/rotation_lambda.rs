@@ -2,7 +2,6 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use crate::Transform;
 
@@ -40,7 +39,7 @@ impl<'a, T: CoordFloat + FloatConst> RotationLambda<T> {
 
 impl<T> Transform for RotationLambda<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 

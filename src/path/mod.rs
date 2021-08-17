@@ -8,7 +8,6 @@ pub mod path_string;
 use std::collections::VecDeque;
 use std::fmt;
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -87,6 +86,6 @@ trait PathTrait: PointRadiusTrait {
 
 trait PathStreamTrait<T>: Stream + PathTrait + Result
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
 }

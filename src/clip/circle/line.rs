@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
@@ -21,7 +20,7 @@ use crate::stream::Stream;
 #[derive(Copy, Clone, Debug)]
 pub struct Line<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
@@ -34,11 +33,11 @@ where
     v00: bool, // visibility of first point
 }
 
-impl<T> LineRaw for Line<T> where T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst {}
+impl<T> LineRaw for Line<T> where T: AsPrimitive<T> + CoordFloat + Display + FloatConst {}
 
 impl<T> Default for Line<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn default() -> Self {
         Line::new(T::one())
@@ -47,7 +46,7 @@ where
 
 impl<T> Line<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     pub fn new(radius: T) -> Self {
@@ -102,11 +101,10 @@ where
     }
 }
 
-impl<T> LineTrait for Line<T> where T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst
-{}
+impl<T> LineTrait for Line<T> where T: AsPrimitive<T> + CoordFloat + Display + FloatConst {}
 impl<T> Clean for Line<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
@@ -125,7 +123,7 @@ where
 impl<SINK, T> Stream for StreamNode<Line<T>, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 

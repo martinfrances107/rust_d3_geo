@@ -1,6 +1,5 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use num_traits::float::FloatConst;
@@ -12,14 +11,14 @@ use crate::stream::{Stream, Streamable};
 #[derive(Clone, Debug)]
 pub struct Sphere<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pd: PhantomData<T>,
 }
 
 impl<T> Default for Sphere<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn default() -> Self {
         Sphere {
@@ -30,7 +29,7 @@ where
 
 impl<T> Streamable for Sphere<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
     #[inline]

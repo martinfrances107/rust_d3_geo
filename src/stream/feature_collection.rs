@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -12,7 +11,7 @@ use super::Streamable;
 
 impl<T> Streamable for FeatureCollection<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // type SD = Self;
     type T = T;

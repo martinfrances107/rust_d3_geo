@@ -1,6 +1,5 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
@@ -30,21 +29,21 @@ use crate::Transform;
 #[derive(Copy, Clone, Debug)]
 pub struct AzimuthalEqualArea<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     phantom: PhantomData<T>,
 }
 
 impl<T> Raw for AzimuthalEqualArea<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 }
 
 impl<T> Default for AzimuthalEqualArea<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn default() -> Self {
         AzimuthalEqualArea {
@@ -55,7 +54,7 @@ where
 
 impl<T> AzimuthalEqualArea<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     pub fn gen_projection_builder<DRAIN>(
@@ -87,9 +86,7 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
-    for AzimuthalEqualArea<T>
-{
+impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for AzimuthalEqualArea<T> {
     type T = T;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

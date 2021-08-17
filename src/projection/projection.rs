@@ -1,7 +1,6 @@
 use crate::clip::PostClipFn;
 use std::cell::RefCell;
 use std::fmt::Display;
-use std::ops::AddAssign;
 use std::rc::Rc;
 
 // use derivative::Derivative;
@@ -41,7 +40,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[derivative(Debug = "ignore")]
     pub postclip: PostClipFn<DRAIN>,
@@ -88,7 +87,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Connects a DRAIN to projection.
     ///
@@ -137,7 +136,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

@@ -1,6 +1,5 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
@@ -45,13 +44,13 @@ where
 
 impl<T> Raw for Gnomic<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 }
 impl<T> Gnomic<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Gnomic<T>, PV<T>, T>
     where
@@ -76,7 +75,7 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Gnomic<T> {
+impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Gnomic<T> {
     type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();

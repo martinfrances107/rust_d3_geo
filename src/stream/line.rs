@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Line;
@@ -9,7 +8,7 @@ use num_traits::FloatConst;
 use super::Stream;
 use super::Streamable;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable for Line<T> {
+impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable for Line<T> {
     // type SD = Self;
     type T = T;
     #[inline]

@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -39,7 +38,7 @@ where
 
 impl<T> Raw for EquirectangularRaw<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 }
@@ -47,7 +46,7 @@ where
 use crate::clip::antimeridian::interpolate::generate as generate_interpolate;
 impl<T> EquirectangularRaw<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     pub fn gen_projection_builder<DRAIN>(
@@ -65,7 +64,7 @@ where
 
 impl<T> Transform for EquirectangularRaw<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

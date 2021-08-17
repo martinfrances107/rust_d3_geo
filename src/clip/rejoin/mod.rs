@@ -4,7 +4,6 @@ pub mod link;
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::fmt::Display;
-use std::ops::AddAssign;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -36,7 +35,7 @@ pub fn rejoin<SINK, T>(
     // DRAIN: Stream<T=T>,
     // PR: ProjectionRaw<T=T> + Transform<T=T>,
     SINK: Stream<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // let stream = &self.base.sink;
     let mut start_inside = start_inside;
@@ -63,7 +62,7 @@ pub fn rejoin<SINK, T>(
                 return;
             }
             // handle degenerate cases by moving the point
-            p1.p.x += T::from(2.0 * 1e-6).unwrap();
+            p1.p.x = p1.p.x + T::from(2.0 * 1e-6).unwrap();
         }
 
         let x1 = Rc::new(RefCell::new(Intersection::new(

@@ -1,6 +1,5 @@
 use std::fmt::Display;
 use std::marker::PhantomData;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
@@ -42,14 +41,14 @@ where
 
 impl<T> Raw for Orthographic<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 }
 
 impl<T> Orthographic<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Orthographic<T>, PV<T>, T>
@@ -77,7 +76,7 @@ where
 
 impl<T> Orthographic<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     fn angle(z: T) -> T {
@@ -103,9 +102,7 @@ where
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
-    for Orthographic<T>
-{
+impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Orthographic<T> {
     type T = T;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

@@ -1,7 +1,6 @@
 use num_traits::AsPrimitive;
 use std::fmt::Display;
 use std::marker::PhantomData;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -17,8 +16,8 @@ use crate::Transform;
 ///
 #[derive(Clone, Copy, Debug)]
 pub struct RotationIdentity<T>
-where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+// where
+//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     phantom: PhantomData<T>,
 }
@@ -43,7 +42,7 @@ fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
 
 impl<T> Default for RotationIdentity<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -54,7 +53,7 @@ where
 
 impl<T> Transform for RotationIdentity<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 

@@ -16,7 +16,7 @@ use crate::Transform;
 #[derive(Clone, Debug)]
 pub struct Stream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
@@ -26,7 +26,7 @@ where
 
 impl<T> Default for Stream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -41,7 +41,7 @@ where
 
 impl<T> StreamTrait for Stream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

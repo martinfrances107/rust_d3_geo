@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -35,7 +34,7 @@ where
 
 impl<T> Default for AreaStream<T>
 where
-    T: AddAssign + CoordFloat,
+    T: CoordFloat,
 {
     #[inline]
     fn default() -> Self {
@@ -59,7 +58,7 @@ where
 
 impl<T> AreaStream<T>
 where
-    T: AddAssign + CoordFloat,
+    T: CoordFloat,
 {
     #[inline]
     fn area_ring_start(&mut self) {
@@ -74,7 +73,7 @@ where
 
     fn area_point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         println!("area_point");
-        self.area_ring_sum += self.p0.y * p.x - self.p0.x * p.y;
+        self.area_ring_sum = self.area_ring_sum + self.p0.y * p.x - self.p0.x * p.y;
         self.p0 = *p;
     }
 
@@ -93,7 +92,7 @@ where
 
 impl<T> Result for AreaStream<T>
 where
-    T: AddAssign + CoordFloat,
+    T: CoordFloat,
 {
     type Out = Option<ResultEnum<T>>;
     fn result(&mut self) -> Option<ResultEnum<T>> {
@@ -105,21 +104,14 @@ where
 
 impl<T> Stream for AreaStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
-    // ?    type SD = AreaStream<T>;
-    // type ST = T;
 
     #[inline]
     fn sphere(&mut self) {
-        self.area_sum += T::from(2.0).unwrap() * T::PI();
+        self.area_sum = self.area_sum + T::from(2.0).unwrap() * T::PI();
     }
-
-    // #[inline]
-    // fn get_dst(&self) -> Self {
-    //     self.clone()
-    // }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -144,7 +136,7 @@ where
         self.line_start_fn = Self::line_noop;
         self.line_end_fn = Self::line_noop;
         self.point_fn = Self::point_noop;
-        self.area_sum += self.area_ring_sum.abs();
+        self.area_sum = self.area_sum + self.area_ring_sum.abs();
         self.area_ring_sum = T::zero();
     }
 }

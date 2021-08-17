@@ -72,7 +72,10 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default 
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display> Stream<T> {
+impl<T> Stream<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display,
+{
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
         self.X0 += (x - self.X0) / self.W0;
@@ -230,7 +233,10 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display> Stream<T
     }
 }
 
-impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display> StreamTrait for Stream<T> {
+impl<T> StreamTrait for Stream<T>
+where
+    T: AddAssign + CoordFloat + FloatConst + AsPrimitive<T> + Display,
+{
     type T = T;
 
     fn sphere(&mut self) {}

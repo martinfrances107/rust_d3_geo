@@ -1,22 +1,17 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
-
-use super::Streamable;
-use crate::stream::Stream;
 
 use geo::CoordFloat;
+use geo::MultiPolygon;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use geo::MultiPolygon;
+use crate::stream::Stream;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable
-    for MultiPolygon<T>
-{
-    // type T = T;
-    // type T=T;
-    // type SD = Self;
+use super::Streamable;
+
+impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable for MultiPolygon<T> {
     type T = T;
+
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         for p in self.iter() {
             p.to_stream(stream);

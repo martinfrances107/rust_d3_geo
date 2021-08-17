@@ -1,6 +1,5 @@
 use std::fmt::Debug;
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
@@ -13,7 +12,7 @@ use crate::Transform;
 pub fn projection_equal<
     'a,
     P: Transform,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Debug + Display + Default,
+    T: AsPrimitive<T> + CoordFloat + FloatConst + Debug + Display + Default,
 >(
     projection: &P,
     expected_location: &'a Coordinate<T>,

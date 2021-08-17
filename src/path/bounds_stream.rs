@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -24,7 +23,7 @@ where
 
 impl<T> Default for BoundsStream<T>
 where
-    T: AddAssign + CoordFloat,
+    T: CoordFloat,
 {
     #[inline]
     fn default() -> Self {
@@ -43,7 +42,7 @@ where
 
 impl<T> Result for BoundsStream<T>
 where
-    T: AddAssign + CoordFloat,
+    T: CoordFloat,
 {
     type Out = Option<ResultEnum<T>>;
     fn result(&mut self) -> Option<ResultEnum<T>> {
@@ -56,7 +55,7 @@ where
 
 impl<T> Stream for BoundsStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 

@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -58,7 +57,7 @@ where
 #[derive(Clone, Debug)]
 pub enum DataObject<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     Sphere(Sphere<T>),
     Geometry(Geometry<T>),
@@ -67,7 +66,7 @@ where
 
 impl<T> Streamable for DataObject<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
     // type SD = DataObject<T>;

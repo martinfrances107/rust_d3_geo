@@ -1,6 +1,5 @@
 use crate::Transform;
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
@@ -16,7 +15,7 @@ const MAXDEPTH: u8 = 16_u8; // maximum depth of subdivision
 #[derive(Clone, Copy, Debug)]
 pub struct Resample<PR, T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
 {
     pub projection_raw: PR,
@@ -51,7 +50,7 @@ where
 impl<'a, PR, T> Resample<PR, T>
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new(projection_raw: PR) -> Resample<PR, T> {
         Self {
@@ -86,7 +85,7 @@ impl<'a, PR, SINK, T> StreamNode<Resample<PR, T>, SINK, T>
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
 
@@ -250,7 +249,7 @@ impl<'a, PR, SINK, T> Stream for StreamNode<Resample<PR, T>, SINK, T>
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 

@@ -1,7 +1,6 @@
 extern crate web_sys;
 
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
@@ -72,7 +71,7 @@ where
 
 impl<T> Stream for Context<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst + AsPrimitive<T>,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst + AsPrimitive<T>,
 {
     type T = T;
 

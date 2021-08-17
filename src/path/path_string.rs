@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
@@ -20,7 +19,7 @@ enum PointState {
 #[inline]
 fn circle<T>(radius: T) -> String
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     let two = T::from(2_f64).unwrap();
     format!(
@@ -35,7 +34,7 @@ where
 #[derive(Debug, Clone)]
 pub struct PathString<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     circle: Option<String>,
     line: bool,
@@ -46,7 +45,7 @@ where
 
 impl<T> Default for PathString<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -62,7 +61,7 @@ where
 
 impl<T> PointRadiusTrait for PathString<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type PrtT = Option<T>;
     fn point_radius(&mut self, d: Self::PrtT) {
@@ -80,7 +79,7 @@ where
 
 impl<T> Result for PathString<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type Out = Option<ResultEnum<T>>;
     #[inline]
@@ -97,7 +96,7 @@ where
 
 impl<T> Stream for PathString<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 

@@ -4,7 +4,6 @@ use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Projection;
 use crate::projection::StreamNode;
 use std::fmt::Display;
-use std::ops::AddAssign;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -44,7 +43,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     projection_raw: PR,
 
@@ -98,7 +97,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T> + Clone + Copy,
     PV: PointVisible<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new(
         preclip_factory: StreamNodeClipFactory<
@@ -280,7 +279,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type P = Builder<DRAIN, L, PR, PV, T>;
     type C = Coordinate<T>;
@@ -305,7 +304,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;
 
@@ -330,7 +329,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T> + Clone + Copy,
     PV: PointVisible<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type ST = T;
     #[inline]
@@ -350,7 +349,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type C = Coordinate<T>;
     fn get_clip_extent(&self) -> Option<[Coordinate<T>; 2]> {
@@ -394,7 +393,7 @@ where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
 
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // type C = Coordinate<T>;
     // type PR = PR;

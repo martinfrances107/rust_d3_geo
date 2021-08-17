@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate, LineString};
 use num_traits::AsPrimitive;
@@ -7,7 +6,7 @@ use num_traits::FloatConst;
 
 use crate::length::Stream;
 
-pub fn distance<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst>(
+pub fn distance<T: AsPrimitive<T> + CoordFloat + Display + FloatConst>(
     a: &Coordinate<T>,
     b: &Coordinate<T>,
 ) -> T {

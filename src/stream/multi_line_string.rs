@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::MultiLineString;
 use geo::{coords_iter::CoordsIter, CoordFloat, Coordinate};
@@ -13,7 +12,7 @@ use super::{Stream, Streamable};
 
 impl<T> Streamable for MultiLineString<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 

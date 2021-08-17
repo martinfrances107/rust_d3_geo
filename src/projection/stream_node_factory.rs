@@ -1,7 +1,6 @@
 use core::marker::PhantomData;
 use std::cell::RefCell;
 use std::fmt::Display;
-use std::ops::AddAssign;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -27,7 +26,7 @@ use super::StreamNode;
 pub struct StreamNodeFactory<RAW, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     phantom_t: PhantomData<T>,
     phantom_sink: PhantomData<SINK>,
@@ -37,7 +36,7 @@ where
 impl<RAW, SINK, T> StreamNodeFactory<RAW, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new(raw: RAW) -> StreamNodeFactory<RAW, SINK, T> {
         StreamNodeFactory {
@@ -53,7 +52,7 @@ impl<RAW, SINK, T> NodeFactory for StreamNodeFactory<RAW, SINK, T>
 where
     RAW: Clone,
     SINK: Stream<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type Sink = SINK;
     type Raw = RAW;

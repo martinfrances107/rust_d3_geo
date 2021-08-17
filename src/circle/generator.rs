@@ -27,7 +27,7 @@ use super::stream_fn::stream_fn;
 #[derive(Debug)]
 pub struct Generator<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     center: Coordinate<T>,
     radius: T,
@@ -37,7 +37,7 @@ where
 
 impl<T> Default for Generator<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -86,7 +86,7 @@ where
 
 impl<T> Generator<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn center(mut self, center: Coordinate<T>) -> Generator<T> {
         self.center = center;

@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -28,7 +27,10 @@ pub struct Stream<T: CoordFloat + FloatConst> {
     cos_phi0: T,
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default for Stream<T> {
+impl<T> Default for Stream<T>
+where
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
     #[inline]
     fn default() -> Self {
         Self {
@@ -55,7 +57,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default 
 // }
 impl<T> Stream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn calc(object: &impl Streamable<T = T>) -> T {
         let mut ls = Stream::default();
@@ -86,7 +88,7 @@ where
         let y = self.cos_phi0 * sin_phi - self.sin_phi0 * cos_phi * cos_delta;
         let z = self.sin_phi0 * sin_phi + self.cos_phi0 * cos_phi * cos_delta;
 
-        self.length_sum += ((x * x + y * y).sqrt()).atan2(z);
+        self.length_sum = self.length_sum + ((x * x + y * y).sqrt()).atan2(z);
         self.lambda0 = lambda;
         self.sin_phi0 = sin_phi;
         self.cos_phi0 = cos_phi;
@@ -107,7 +109,7 @@ where
 
 impl<T> StreamTrait for Stream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 

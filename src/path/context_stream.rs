@@ -1,22 +1,22 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::stream::Stream;
+
 use super::context::Context;
 use super::path_string::PathString;
 use super::PointRadiusTrait;
 use super::Result;
 use super::ResultEnum;
-use crate::stream::Stream;
 
 #[derive(Clone, Debug)]
 pub enum ContextStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     PC(Context<T>),
     PS(PathString<T>),
@@ -24,7 +24,7 @@ where
 
 impl<T> Result for ContextStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type Out = Option<ResultEnum<T>>;
     fn result(&mut self) -> Self::Out {
@@ -37,7 +37,7 @@ where
 
 impl<T> PointRadiusTrait for ContextStream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type PrtT = Option<T>;
     fn point_radius(&mut self, val: Self::PrtT) {
@@ -50,7 +50,7 @@ where
 
 impl<T> Stream for ContextStream<T>
 where
-    T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display,
+    T: CoordFloat + FloatConst + AsPrimitive<T> + Display,
 {
     type T = T;
 

@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::{CoordFloat, GeometryCollection};
 use num_traits::AsPrimitive;
@@ -9,9 +8,7 @@ use crate::stream::Stream;
 
 use super::Streamable;
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable
-    for GeometryCollection<T>
-{
+impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable for GeometryCollection<T> {
     // type SD = Self;
     type T = T;
     #[inline]
