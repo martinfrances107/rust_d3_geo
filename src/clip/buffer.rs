@@ -2,8 +2,6 @@ use std::collections::VecDeque;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 
 use crate::path::Result;
 use crate::path::ResultEnum;
@@ -17,7 +15,7 @@ use super::line_elem::LineElem;
 #[derive(Clone, Debug)]
 pub struct Buffer<T>
 where
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     // line: Vec<LineElem<T>>,
     lines: VecDeque<Vec<LineElem<T>>>,
@@ -34,7 +32,7 @@ where
 
 impl<T> Default for Buffer<T>
 where
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     fn default() -> Self {
         Self {
@@ -45,7 +43,7 @@ where
 
 impl<T> Result for Buffer<T>
 where
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type Out = Option<ResultEnum<T>>;
     fn result(&mut self) -> Option<ResultEnum<T>> {
@@ -57,7 +55,7 @@ where
 
 impl<T> Stream for Buffer<T>
 where
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
     #[inline]
@@ -89,7 +87,4 @@ where
     fn polygon_end(&mut self) {
         println!("Buffer polygon_end()");
     }
-    // fn get_dst(&self) -> Self {
-    //     todo!("Buffer get_dst() should never be called.");
-    // }
 }

@@ -40,7 +40,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     #[derivative(Debug = "ignore")]
     pub postclip: PostClipFn<DRAIN>,
@@ -87,7 +87,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to projection.
     ///

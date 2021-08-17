@@ -20,7 +20,7 @@ use crate::stream::Stream;
 #[derive(Copy, Clone, Debug)]
 pub struct Line<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     c0: u8,           // code for previous point
     clean: CleanEnum, // no intersections
@@ -33,11 +33,11 @@ where
     v00: bool, // visibility of first point
 }
 
-impl<T> LineRaw for Line<T> where T: AsPrimitive<T> + CoordFloat + Display + FloatConst {}
+impl<T> LineRaw for Line<T> where T: CoordFloat {}
 
 impl<T> Default for Line<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     fn default() -> Self {
         Line::new(T::one())
@@ -46,7 +46,7 @@ where
 
 impl<T> Line<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     #[inline]
     pub fn new(radius: T) -> Self {
@@ -66,14 +66,20 @@ where
         }
     }
 
+    // todo remove this duplicate.
     #[inline]
     fn visible(&self, p: &Coordinate<T>) -> bool {
         println!("point_visible cr {:?}", self.cr);
         p.x.cos() * p.y.cos() > self.cr
     }
+}
 
-    /// Generates a 4-bit vector representing the location of a point relative to
-    /// the small circle's bounding box.
+/// Generates a 4-bit vector representing the location of a point relative to
+/// the small circle's bounding box.
+impl<T> Line<T>
+where
+    T: CoordFloat + FloatConst,
+{
     const CODE_LEFT: u8 = 1;
     const CODE_RIGHT: u8 = 2;
     const CODE_BELOW: u8 = 4;
@@ -104,7 +110,7 @@ where
 impl<T> LineTrait for Line<T> where T: AsPrimitive<T> + CoordFloat + Display + FloatConst {}
 impl<T> Clean for Line<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
@@ -123,7 +129,7 @@ where
 impl<SINK, T> Stream for StreamNode<Line<T>, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

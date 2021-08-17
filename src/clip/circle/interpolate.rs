@@ -1,10 +1,8 @@
 use std::cell::RefCell;
-use std::fmt::Display;
 use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::circle::stream_fn::stream_fn;
@@ -14,7 +12,7 @@ use crate::stream::Stream;
 pub fn generate<STREAM, T>(radius: T) -> InterpolateFn<STREAM, T>
 where
     STREAM: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     // let cr = radius.cos();
     let delta = T::from(6_f64).unwrap().to_radians();

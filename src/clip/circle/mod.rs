@@ -3,10 +3,7 @@ mod intersect;
 pub mod line;
 pub mod pv;
 
-use std::fmt::Display;
-
 use geo::CoordFloat;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
@@ -24,7 +21,7 @@ pub(crate) fn gen_clip_factory_circle<PR, SINK, T>(
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     StreamNodeClipFactory::new(
         generate_interpolate(radius),

@@ -2,7 +2,7 @@ use geo::{CoordFloat, Point};
 use std::fmt::Debug;
 use std::fmt::Display;
 
-pub fn in_delta<T: CoordFloat + Debug + Display>(actual: T, expected: T, delta: T) -> bool {
+pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bool {
     println!(
         "in_delta() expected {:?} actual {:?} delta {:?}",
         expected, actual, delta

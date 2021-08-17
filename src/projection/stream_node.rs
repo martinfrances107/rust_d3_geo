@@ -10,6 +10,7 @@ use std::rc::Rc;
 /// sink: the next streamNode in the chain.
 ///
 #[derive(Clone, Debug)]
+/// todo return and remove T.
 pub struct StreamNode<RAW, SINK, T> {
     pub raw: RAW,
     pub sink: Rc<RefCell<SINK>>,

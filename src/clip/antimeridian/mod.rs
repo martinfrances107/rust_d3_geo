@@ -3,10 +3,7 @@ mod intersect;
 pub mod line;
 pub mod pv;
 
-use std::fmt::Display;
-
 use geo::CoordFloat;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
@@ -22,7 +19,7 @@ pub fn gen_clip_factory_antimeridian<PR, SINK, T>(
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     StreamNodeClipFactory::new(gen_interpolate::<SINK, T>(), Line::default(), PV::default())
 }

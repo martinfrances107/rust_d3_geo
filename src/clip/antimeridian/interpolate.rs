@@ -1,10 +1,8 @@
 use std::cell::RefCell;
-use std::fmt::Display;
 use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::InterpolateFn;
@@ -27,7 +25,7 @@ use crate::stream::Stream;
 pub fn generate<STREAM, T>() -> InterpolateFn<STREAM, T>
 where
     STREAM: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     let out: InterpolateFn<STREAM, T> = Rc::new(
         move |to: Option<Coordinate<T>>,

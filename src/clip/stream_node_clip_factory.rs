@@ -12,7 +12,6 @@ use std::rc::Rc;
 use core::marker::PhantomData;
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::projection::stream_node::StreamNode;
@@ -37,7 +36,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     phantom_pr: PhantomData<PR>,
 
@@ -57,7 +56,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     pub fn new(
         interpolate_fn: InterpolateFn<SINK, T>,
@@ -91,7 +90,7 @@ where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type Sink = SINK;
     type T = T;

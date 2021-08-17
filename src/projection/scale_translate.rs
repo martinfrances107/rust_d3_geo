@@ -1,5 +1,4 @@
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::Transform;
@@ -15,7 +14,7 @@ pub struct ScaleTranslate<T> {
 
 impl<T> Transform for ScaleTranslate<T>
 where
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

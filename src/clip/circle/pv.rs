@@ -1,21 +1,20 @@
-use std::fmt::Display;
-
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 
 use crate::clip::PointVisible;
 
 /// Circle PV (Point Visible ).
 #[derive(Clone, Debug)]
-pub struct PV<T> {
+pub struct PV<T>
+where
+    T: CoordFloat,
+{
     cr: T,
 }
 
 impl<T> Default for PV<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     fn default() -> Self {
         PV::new(T::one())
@@ -24,7 +23,7 @@ where
 
 impl<T> PV<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     pub fn new(radius: T) -> Self {
         Self { cr: radius.cos() }
@@ -33,7 +32,7 @@ where
 
 impl<T> PointVisible for PV<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
     #[inline]

@@ -1,14 +1,11 @@
 #![allow(clippy::pedantic)]
 #![warn(missing_debug_implementations)]
 #![allow(clippy::many_single_char_names)]
-// #![allow(dead_code)]
-// #![allow(unused_imports)]
 
 extern crate derivative;
 extern crate rust_d3_array;
 extern crate web_sys;
 
-use num_traits::FloatConst;
 use std::fmt::Debug;
 
 use geo::CoordFloat;
@@ -37,7 +34,7 @@ mod point_equal;
 /// FloatConst is required by forward_rotation_lambda()
 pub trait Transform: Clone
 where
-    <Self as Transform>::T: CoordFloat + FloatConst,
+    <Self as Transform>::T: CoordFloat,
 {
     type T;
     fn transform(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;

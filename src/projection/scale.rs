@@ -1,8 +1,5 @@
-pub trait Scale
-// where
-//     PR: ProjectionRawTrait,
-//     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
-{
+pub trait Scale {
+    // todo rename ST to T.
     type ST;
     // type Projection;
     fn get_scale(&self) -> Self::ST;

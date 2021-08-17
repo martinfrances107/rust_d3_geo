@@ -4,7 +4,6 @@ use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::buffer::Buffer;
@@ -29,7 +28,7 @@ where
     // PR: ProjectionRaw<T=T> + Transform<T=T>,
     PV: PointVisible,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Phantom Data is needed because of the complexity of the IF.
     // phantomDrain: PhantomData<DRAIN>,
@@ -64,7 +63,7 @@ where
     L: LineRaw,
     PV: PointVisible,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     pub fn new(
         pv: PV,
@@ -103,7 +102,7 @@ where
     L: LineRaw,
     PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     #[inline]
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -256,7 +255,7 @@ where
     L: LineRaw,
     PV: PointVisible,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

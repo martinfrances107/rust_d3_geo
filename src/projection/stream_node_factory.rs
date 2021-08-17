@@ -3,8 +3,6 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use geo::CoordFloat;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
@@ -25,7 +23,7 @@ use super::StreamNode;
 pub struct StreamNodeFactory<RAW, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     phantom_t: PhantomData<T>,
     phantom_sink: PhantomData<SINK>,
@@ -35,7 +33,7 @@ where
 impl<RAW, SINK, T> StreamNodeFactory<RAW, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     pub fn new(raw: RAW) -> StreamNodeFactory<RAW, SINK, T> {
         StreamNodeFactory {
@@ -51,7 +49,7 @@ impl<RAW, SINK, T> NodeFactory for StreamNodeFactory<RAW, SINK, T>
 where
     RAW: Clone,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type Sink = SINK;
     type Raw = RAW;

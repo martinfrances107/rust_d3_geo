@@ -1,7 +1,5 @@
 use geo::CoordFloat;
-use std::fmt::Display;
 
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
@@ -13,7 +11,7 @@ use super::rotation_phi_gamma::RotationPhiGamma;
 
 pub fn rotate_radians<T>(delta_lambda_p: T, delta_phi: T, delta_gamma: T) -> RotateRadiansEnum<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     let delta_lambda = delta_lambda_p % T::TAU();
     // Should I rotate by lambda, phi or gamma.

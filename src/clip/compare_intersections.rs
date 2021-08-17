@@ -3,7 +3,6 @@ use std::cmp::Ordering;
 use std::rc::Rc;
 
 use geo::CoordFloat;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::rejoin::intersection::Intersection;
@@ -16,7 +15,7 @@ pub fn compare_intersections<T>(
     b: &Rc<RefCell<Intersection<T>>>,
 ) -> Ordering
 where
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     let ax = a.borrow().x;
     let part1 = match ax.p.x < T::zero() {

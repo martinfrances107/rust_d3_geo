@@ -14,12 +14,9 @@ mod rejoin;
 
 use geo::CoordFloat;
 use std::cell::RefCell;
-use std::fmt::Display;
 use std::rc::Rc;
 
 use geo::Coordinate;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 
 use crate::stream::Stream;
 use crate::Debug;
@@ -76,8 +73,7 @@ pub trait ClipTrait: Clone + PointVisible + Stream {}
 
 pub trait PointVisible: Clone + Debug
 where
-    <Self as PointVisible>::T:
-        AsPrimitive<<Self as PointVisible>::T> + Debug + Display + CoordFloat + FloatConst,
+    <Self as PointVisible>::T: CoordFloat,
 {
     type T;
     fn point_visible(&self, p: &Coordinate<Self::T>, z: Option<u8>) -> bool;

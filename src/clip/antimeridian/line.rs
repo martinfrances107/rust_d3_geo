@@ -1,8 +1,6 @@
 use std::default::Default;
-use std::fmt::Display;
 
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
 
 use num_traits::FloatConst;
 
@@ -19,7 +17,7 @@ use super::intersect::intersect;
 #[derive(Debug, Copy, Clone)]
 pub struct Line<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     lambda0: T,
     phi0: T,
@@ -27,11 +25,11 @@ where
     clean: CleanEnum,
 }
 
-impl<T> LineRaw for Line<T> where T: AsPrimitive<T> + CoordFloat + Display + FloatConst {}
+impl<T> LineRaw for Line<T> where T: CoordFloat {}
 
 impl<T> Default for Line<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     fn default() -> Line<T> {
         Self {
@@ -46,14 +44,14 @@ where
 impl<SINK, T> LineTrait for StreamNode<Line<T>, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
 }
 
 impl<SINK, T> Clean for StreamNode<Line<T>, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     #[inline]
     fn clean(&self) -> CleanEnum {
@@ -71,7 +69,7 @@ where
 impl<SINK, T> Stream for StreamNode<Line<T>, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
     fn sphere(&mut self) {

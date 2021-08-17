@@ -6,7 +6,6 @@ use std::cmp::Ordering;
 use std::rc::Rc;
 
 use geo::CoordFloat;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::rejoin::link::link;
@@ -34,7 +33,7 @@ pub fn rejoin<SINK, T>(
     // DRAIN: Stream<T=T>,
     // PR: ProjectionRaw<T=T> + Transform<T=T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     // let stream = &self.base.sink;
     let mut start_inside = start_inside;

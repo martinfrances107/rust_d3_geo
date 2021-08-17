@@ -1,9 +1,7 @@
-use std::fmt::Display;
 use std::ops::AddAssign;
 
 use derivative::Derivative;
 use geo::{CoordFloat, Coordinate, Point};
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::stream::Stream as StreamTrait;
@@ -46,7 +44,7 @@ pub struct Stream<T: CoordFloat> {
 ///
 /// A) In the JS version these varibles are undefined.
 /// The intent is to insists that the values are written before being read.
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default for Stream<T> {
+impl<T: AddAssign + CoordFloat + FloatConst> Default for Stream<T> {
     fn default() -> Self {
         Self {
             W0: T::nan(),
@@ -74,7 +72,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Default 
 
 impl<T> Stream<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display,
+    T: AddAssign + CoordFloat + FloatConst,
 {
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
@@ -235,7 +233,7 @@ where
 
 impl<T> StreamTrait for Stream<T>
 where
-    T: AddAssign + CoordFloat + FloatConst + AsPrimitive<T> + Display,
+    T: AddAssign + CoordFloat + FloatConst,
 {
     type T = T;
 
