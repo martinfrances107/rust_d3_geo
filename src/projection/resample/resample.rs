@@ -1,3 +1,4 @@
+use crate::Transform;
 use std::fmt::Display;
 use std::ops::AddAssign;
 
@@ -16,7 +17,7 @@ const MAXDEPTH: u8 = 16_u8; // maximum depth of subdivision
 pub struct Resample<PR, T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
 {
     pub projection_raw: PR,
     pub delta2: T,
@@ -49,7 +50,7 @@ where
 
 impl<'a, PR, T> Resample<PR, T>
 where
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new(projection_raw: PR) -> Resample<PR, T> {
@@ -83,8 +84,8 @@ where
 
 impl<'a, PR, SINK, T> StreamNode<Resample<PR, T>, SINK, T>
 where
-    PR: ProjectionRaw<T = T>,
-    SINK: Stream<SC = Coordinate<T>>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
@@ -247,11 +248,11 @@ where
 
 impl<'a, PR, SINK, T> Stream for StreamNode<Resample<PR, T>, SINK, T>
 where
-    PR: ProjectionRaw<T = T>,
-    SINK: Stream<SC = Coordinate<T>>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
+    type T = T;
 
     fn sphere(&mut self) {
         self.sink.borrow_mut().sphere();

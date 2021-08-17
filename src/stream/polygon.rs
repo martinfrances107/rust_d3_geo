@@ -14,10 +14,10 @@ impl<T> Streamable for Polygon<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    // type SC = Coordinate<T>;
+    // type T=T;
     // type SD = Self;
     type T = T;
-    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
+    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         stream.polygon_start();
 
         let e_points: Vec<Coordinate<T>> = self.exterior().coords_iter().collect();

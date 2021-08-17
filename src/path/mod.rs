@@ -61,9 +61,7 @@ where
     }
 }
 
-trait PathTrait: PointRadiusTrait // where
-//     T: CoordFloat + FloatConst,
-{
+trait PathTrait: PointRadiusTrait {
     type PtDo;
     type PtPRE;
     fn area(&self, _d: Self::PtDo) -> Option<String> {

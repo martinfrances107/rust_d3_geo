@@ -32,7 +32,7 @@
 // where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     PR: Transform<C = Coordinate<T>>,
-//     SD: Stream<SC = Coordinate<T>> + Default,
+//     SD: Stream<T=T> + Default,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     let clip = projection.get_clip_extent();
@@ -72,7 +72,7 @@
 // where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     PR: Transform<C = Coordinate<T>>,
-//     SD: Stream<SC = Coordinate<T>> + Default,
+//     SD: Stream<T=T> + Default,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     fit(

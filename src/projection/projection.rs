@@ -29,7 +29,7 @@ use super::StreamNode;
 
 // pub enum StreamOrValueMaybe<T: CoordFloat> {
 //     Value(T),
-//     SP(Box<dyn Stream<SC = Coordinate<T>>>),
+//     SP(Box<dyn Stream<T=T>>),
 // }
 
 #[derive(Derivative)]
@@ -37,9 +37,9 @@ use super::StreamNode;
 #[derive(Clone)]
 pub struct Projection<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<SC = Coordinate<T>>,
+    DRAIN: Stream<T = T>,
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -84,9 +84,9 @@ where
 
 impl<'a, DRAIN, L, PR, PV, T> Projection<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<SC = Coordinate<T>>,
+    DRAIN: Stream<T = T>,
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -133,13 +133,13 @@ where
 
 impl<'a, DRAIN, L, PR, PV, T> Transform for Projection<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<SC = Coordinate<T>>,
+    DRAIN: Stream<T = T>,
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let r = Coordinate {
             x: p.x.to_radians(),

@@ -4,7 +4,7 @@ use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
-use num_traits::Float;
+
 use num_traits::FloatConst;
 
 use crate::clip::Clean;
@@ -20,7 +20,7 @@ use super::intersect::intersect;
 #[derive(Debug, Copy, Clone)]
 pub struct Line<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     lambda0: T,
     phi0: T,
@@ -28,14 +28,11 @@ where
     clean: CleanEnum,
 }
 
-impl<T> LineRaw for Line<T> where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst
-{
-}
+impl<T> LineRaw for Line<T> where T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst {}
 
 impl<T> Default for Line<T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn default() -> Line<T> {
         Self {
@@ -49,14 +46,14 @@ where
 
 impl<SINK, T> LineTrait for StreamNode<Line<T>, SINK, T>
 where
-    SINK: Stream<SC = Coordinate<T>>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Float + FloatConst,
+    SINK: Stream<T = T>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
 }
 
 impl<SINK, T> Clean for StreamNode<Line<T>, SINK, T>
 where
-    SINK: Stream<SC = Coordinate<T>>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
@@ -74,12 +71,10 @@ where
 
 impl<SINK, T> Stream for StreamNode<Line<T>, SINK, T>
 where
-    SINK: Stream<SC = Coordinate<T>>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
-    // type SD = SD;
-    // type ST = T;
+    type T = T;
     fn sphere(&mut self) {
         todo!("is this called")
     }

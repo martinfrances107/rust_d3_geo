@@ -1,5 +1,9 @@
 use crate::Transform;
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
+use std::fmt::Display;
+use std::ops::AddAssign;
 
 #[derive(Clone, Debug, Default)]
 pub struct ScaleTranslate<T> {
@@ -10,8 +14,12 @@ pub struct ScaleTranslate<T> {
     pub sy: T,
 }
 
-impl<T: CoordFloat> Transform for ScaleTranslate<T> {
-    type C = Coordinate<T>;
+impl<T> Transform for ScaleTranslate<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type T = T;
+
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;

@@ -2,9 +2,8 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
 
-use geo::Coordinate;
+use geo::CoordFloat;
 use num_traits::AsPrimitive;
-use num_traits::Float;
 use num_traits::FloatConst;
 
 use crate::Transform;
@@ -16,13 +15,16 @@ use super::translate::Translate;
 
 pub trait BuilderTrait: Center + ClipExtent + Scale + Translate
 where
-    <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-    <Self as BuilderTrait>::T:
-        AddAssign + AsPrimitive<<Self as BuilderTrait>::T> + Debug + Display + Float + FloatConst,
+    <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
+    <Self as BuilderTrait>::T: AddAssign
+        + AsPrimitive<<Self as BuilderTrait>::T>
+        + CoordFloat
+        + Debug
+        + Display
+        + FloatConst,
 {
     type PR;
     type T;
-    type C;
     // type DRAIN;
     // /**
     //  * Returns a new array [x, y] (tyPIcally in PIxels) representing the projected point of the given point.
@@ -307,36 +309,36 @@ where
     //  */
     fn precision(self, delta: &<Self as BuilderTrait>::T) -> Self
     where
-        <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
+        <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
+            + CoordFloat
             + Debug
             + Display
-            + Float
             + FloatConst;
 
     fn get_reflect_x(&self) -> bool;
 
     fn reflect_x(self, reflect: bool) -> Self
     where
-        <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
+        <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
+            + CoordFloat
             + Debug
             + Display
-            + Float
             + FloatConst;
 
     fn get_reflect_y(&self) -> bool;
 
     fn reflect_y(self, reflect: bool) -> Self
     where
-        <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
+        <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
+            + CoordFloat
             + Debug
             + Display
-            + Float
             + FloatConst;
 
     // /**
@@ -351,22 +353,22 @@ where
 
     fn reset(self) -> Self
     where
-        <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
+        <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
+            + CoordFloat
             + Debug
             + Display
-            + Float
             + FloatConst;
 
     fn recenter(self) -> Self
     where
-        <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
+        <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
+            + CoordFloat
             + Debug
             + Display
-            + Float
             + FloatConst;
     // /**
     //  * Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
@@ -376,22 +378,22 @@ where
     //  */
     fn get_rotate(&self) -> [<Self as BuilderTrait>::T; 3]
     where
-        <Self as BuilderTrait>::PR: Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
+        <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
+            + CoordFloat
             + Debug
             + Display
-            + Float
             + FloatConst;
 
     fn rotate(self, angles: [<Self as BuilderTrait>::T; 3]) -> Self
     where
-        <Self as BuilderTrait>::PR: Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
+        <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
         <Self as BuilderTrait>::T: AddAssign
             + AsPrimitive<<Self as BuilderTrait>::T>
+            + CoordFloat
             + Debug
             + Display
-            + Float
             + FloatConst;
 
     // fn stream(

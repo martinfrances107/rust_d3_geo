@@ -21,7 +21,7 @@ mod invert_test {
 
     fn symetric_invert<'a, PM>(pm: PM)
     where
-        PM: Transform<C = Coordinate<f64>>,
+        PM: Transform<T = f64>,
     {
         for p in vec![
             &Coordinate {

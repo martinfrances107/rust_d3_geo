@@ -53,7 +53,7 @@ where
     pub fn gen_projection_builder<DRAIN>(
     ) -> Builder<DRAIN, Line<T>, EquirectangularRaw<T>, PV<T>, T>
     where
-        DRAIN: Stream<SC = Coordinate<T>>,
+        DRAIN: Stream<T = T>,
     {
         Builder::new(
             StreamNodeClipFactory::new(generate_interpolate(), Line::default(), PV::default()),
@@ -67,11 +67,11 @@ impl<T> Transform for EquirectangularRaw<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type C = Coordinate<T>;
-    fn transform(&self, p: &Coordinate<T>) -> Self::C {
+    type T = T;
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         *p
     }
-    fn invert(&self, p: &Coordinate<T>) -> Self::C {
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         *p
     }
 }

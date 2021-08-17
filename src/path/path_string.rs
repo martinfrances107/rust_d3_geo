@@ -99,7 +99,7 @@ impl<T> Stream for PathString<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
+    type T = T;
 
     fn sphere(&mut self) {}
     // fn get_dst(&self) -> Self {

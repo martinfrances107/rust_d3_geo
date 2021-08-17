@@ -4,7 +4,7 @@ use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
-use num_traits::Float;
+
 use num_traits::FloatConst;
 
 use crate::in_delta::in_delta;
@@ -21,7 +21,7 @@ pub fn projection_equal<
     delta_p: Option<T>,
 ) -> bool
 where
-    P: Transform<C = Coordinate<T>>,
+    P: Transform<T = T>,
 {
     let delta = match delta_p {
         Some(d) => d,
@@ -62,7 +62,7 @@ fn spherical_equal<T: CoordFloat + Debug + Display>(
     e0 && e1
 }
 
-fn logitude_equal<T: Float>(actual: T, expected: T, delta: T) -> bool {
+fn logitude_equal<T: CoordFloat + Debug + Display>(actual: T, expected: T, delta: T) -> bool {
     let actual = (actual - expected).abs() % T::from(360_f64).unwrap();
     actual <= delta || actual >= T::from(360_f64).unwrap() - delta
 }

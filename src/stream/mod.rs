@@ -24,7 +24,7 @@ use num_traits::FloatConst;
 /// Applies to DataObject's
 pub trait Streamable {
     type T: AddAssign + AsPrimitive<Self::T> + CoordFloat + Display + FloatConst;
-    fn to_stream<SD: Stream<SC = Coordinate<Self::T>>>(&self, stream: &mut SD);
+    fn to_stream<SD: Stream<T = Self::T>>(&self, stream: &mut SD);
 }
 
 #[derive(Clone, Debug)]
@@ -37,10 +37,10 @@ where
 
 impl<T> Stream for StreamDrainStub<T>
 where
-    T: CoordFloat,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
-    fn point(&mut self, _p: &Self::SC, _m: Option<u8>) {}
+    type T = T;
+    fn point(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {}
     fn sphere(&mut self) {}
     fn line_start(&mut self) {}
     fn line_end(&mut self) {}
@@ -84,7 +84,7 @@ where
 // where
 //     T: CoordFloat,
 // {
-//     type SC = Coordinate<T>;
+//     type T=T;
 //     fn point(&mut self, _p: &Self::SC, _m: Option<u8>) {}
 //     fn sphere(&mut self) {}
 //     fn line_start(&mut self) {}
@@ -93,10 +93,14 @@ where
 //     fn polygon_end(&mut self) {}
 // }
 
-pub trait Stream: Clone {
-    type SC;
+pub trait Stream: Clone
+where
+    <Self as Stream>::T:
+        AddAssign + AsPrimitive<<Self as Stream>::T> + Debug + Display + CoordFloat + FloatConst,
+{
+    type T;
 
-    fn point(&mut self, _p: &Self::SC, _m: Option<u8>);
+    fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>);
     fn sphere(&mut self);
     fn line_start(&mut self);
     fn line_end(&mut self);

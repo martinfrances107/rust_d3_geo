@@ -1,4 +1,7 @@
+use num_traits::AsPrimitive;
+use std::fmt::Display;
 use std::marker::PhantomData;
+use std::ops::AddAssign;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -7,12 +10,15 @@ use crate::Transform;
 
 /// Why the Phantom Data is required here...
 ///
-/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+///
+/// Raw is generic over T ( Raw<T=T> )
+///
 #[derive(Clone, Copy, Debug)]
 pub struct RotationIdentity<T>
 where
-    T: CoordFloat,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     phantom: PhantomData<T>,
 }
@@ -35,7 +41,10 @@ fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
     Coordinate { x, y: phi }
 }
 
-impl<T: CoordFloat> Default for RotationIdentity<T> {
+impl<T> Default for RotationIdentity<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
     fn default() -> Self {
         Self {
             phantom: PhantomData::<T>,
@@ -43,8 +52,12 @@ impl<T: CoordFloat> Default for RotationIdentity<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst> Transform for RotationIdentity<T> {
-    type C = Coordinate<T>;
+impl<T> Transform for RotationIdentity<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type T = T;
+
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         normalise(p)

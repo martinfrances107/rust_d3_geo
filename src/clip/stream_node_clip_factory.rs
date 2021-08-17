@@ -4,6 +4,7 @@ use super::line_elem::LineElem;
 use super::InterpolateFn;
 use super::LineRaw;
 use super::PointVisible;
+use crate::Transform;
 
 use std::cell::RefCell;
 use std::fmt::Display;
@@ -36,8 +37,8 @@ use derivative::Derivative;
 pub struct StreamNodeClipFactory<L, PR, PV, SINK, T>
 where
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
-    SINK: Stream<SC = Coordinate<T>>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     phantom_pr: PhantomData<PR>,
@@ -56,8 +57,8 @@ where
 impl<L, PR, PV, SINK, T> StreamNodeClipFactory<L, PR, PV, SINK, T>
 where
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
-    SINK: Stream<SC = Coordinate<T>>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new(
@@ -89,9 +90,9 @@ where
 impl<L, PR, PV, SINK, T> NodeFactory for StreamNodeClipFactory<L, PR, PV, SINK, T>
 where
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible,
-    SINK: Stream<SC = Coordinate<T>>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type Sink = SINK;

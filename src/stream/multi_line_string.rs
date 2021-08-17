@@ -17,7 +17,7 @@ where
 {
     type T = T;
 
-    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
+    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         for ls in self {
             let points: Vec<Coordinate<T>> = ls.coords_iter().collect();
             stream_line(&points, stream, 0);

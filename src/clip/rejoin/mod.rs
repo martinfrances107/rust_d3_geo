@@ -8,7 +8,6 @@ use std::ops::AddAssign;
 use std::rc::Rc;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
@@ -34,9 +33,9 @@ pub fn rejoin<SINK, T>(
     interpolate_fn: InterpolateFn<SINK, T>,
     stream: Rc<RefCell<SINK>>,
 ) where
-    // DRAIN: Stream<SC = Coordinate<T>>,
-    // PR: ProjectionRaw<T = T>,
-    SINK: Stream<SC = Coordinate<T>>,
+    // DRAIN: Stream<T=T>,
+    // PR: ProjectionRaw<T=T> + Transform<T=T>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // let stream = &self.base.sink;

@@ -13,12 +13,15 @@ use super::rotate_radians::rotate_radians;
 #[derive(Clone, Debug)]
 pub struct Rotation<T>
 where
-    T: CoordFloat + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     rotate: RotateRadiansEnum<T>,
 }
 
-impl<'a, T: 'a + CoordFloat + FloatConst> Rotation<T> {
+impl<T> Rotation<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
         Self {
             rotate: rotate_radians(
@@ -31,11 +34,11 @@ impl<'a, T: 'a + CoordFloat + FloatConst> Rotation<T> {
 }
 
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Rotation<T> {
-    type C = Coordinate<T>;
-    fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
+    type T = T;
+    fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.transform(&Coordinate {
-            x: coordinates.x.to_radians(),
-            y: coordinates.y.to_radians(),
+            x: coordinate.x.to_radians(),
+            y: coordinate.y.to_radians(),
         });
         Coordinate {
             x: temp.x.to_degrees(),
@@ -43,10 +46,10 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transfor
         }
     }
 
-    fn invert(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.invert(&Coordinate {
-            x: coordinates.x.to_radians(),
-            y: coordinates.y.to_radians(),
+            x: coordinate.x.to_radians(),
+            y: coordinate.y.to_radians(),
         });
         Coordinate {
             x: temp.x.to_degrees(),

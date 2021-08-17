@@ -48,7 +48,7 @@ where
 {
     pub fn gen_projection_mutator<DRAIN>() -> Builder<DRAIN, Line<T>, Mecator<T>, PV<T>, T>
     where
-        DRAIN: Stream<SC = Coordinate<T>>,
+        DRAIN: Stream<T = T>,
     {
         let tau = T::from(2).unwrap() * T::PI();
         Builder::new(
@@ -60,7 +60,7 @@ where
 }
 
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Mecator<T> {
-    type C = Coordinate<T>;
+    type T = T;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let two = T::from(2).unwrap();

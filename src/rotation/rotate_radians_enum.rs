@@ -1,6 +1,9 @@
+use num_traits::AsPrimitive;
 use std::fmt::Debug;
+use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;
+use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -17,7 +20,7 @@ use super::rotation_phi_gamma::RotationPhiGamma;
 
 pub enum RotateRadiansEnum<T>
 where
-    T: CoordFloat + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     C(Box<Compose<T, RotationLambda<T>, RotationPhiGamma<T>>>),
     RL(RotationLambda<T>),
@@ -27,7 +30,7 @@ where
 
 impl<T> Default for RotateRadiansEnum<T>
 where
-    T: CoordFloat + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn default() -> Self {
         RotateRadiansEnum::I(RotationIdentity::default())
@@ -36,7 +39,7 @@ where
 
 impl<T> Clone for RotateRadiansEnum<T>
 where
-    T: CoordFloat + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn clone(&self) -> Self {
         match self {
@@ -50,7 +53,7 @@ where
 #[cfg(not(tarpaulin_include))]
 impl<T> Debug for RotateRadiansEnum<T>
 where
-    T: CoordFloat + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
@@ -78,9 +81,10 @@ where
 
 impl<T> Transform for RotateRadiansEnum<T>
 where
-    T: CoordFloat + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type T = T;
+
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
             RotateRadiansEnum::C(c) => c.transform(p),
@@ -102,10 +106,10 @@ where
 
 impl<SINK, T> Stream for StreamNode<RotateRadiansEnum<T>, SINK, T>
 where
-    SINK: Stream<SC = Coordinate<T>>,
-    T: CoordFloat + FloatConst,
+    SINK: Stream<T = T>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
+    type T = T;
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         self.sink.borrow_mut().point(&self.raw.transform(p), m);
     }

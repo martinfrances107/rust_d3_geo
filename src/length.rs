@@ -109,10 +109,8 @@ impl<T> StreamTrait for Stream<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
-    // fn get_dst(&self) -> Self {
-    //     self.clone()
-    // }
+    type T = T;
+
     fn sphere(&mut self) {}
     fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
         (self.point_fn)(self, p);

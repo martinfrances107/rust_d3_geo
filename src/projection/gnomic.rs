@@ -20,7 +20,7 @@ use super::Raw;
 
 /// Why the Phantom Data is required here...
 ///
-/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Copy, Clone, Debug)]
 pub struct Gnomic<T>
@@ -55,7 +55,7 @@ where
 {
     pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Gnomic<T>, PV<T>, T>
     where
-        DRAIN: Stream<SC = Coordinate<T>>,
+        DRAIN: Stream<T = T>,
     {
         let g = Gnomic::default();
         Builder::new(
@@ -77,7 +77,7 @@ where
 }
 
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Gnomic<T> {
-    type C = Coordinate<T>;
+    type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();
         let k = p.x.cos() * cy;

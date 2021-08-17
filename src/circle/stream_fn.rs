@@ -25,7 +25,7 @@ pub fn stream_fn<STREAM, T>(
     t1_in: Option<Coordinate<T>>,
 ) where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    STREAM: Stream<SC = Coordinate<T>>,
+    STREAM: Stream<T = T>,
 {
     if delta.is_zero() {
         return;

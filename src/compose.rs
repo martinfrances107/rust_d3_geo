@@ -12,9 +12,9 @@ use crate::Transform;
 #[derive(Clone, Debug)]
 pub struct Compose<T, TA, TB>
 where
-    T: CoordFloat + FloatConst,
-    TA: Clone + Transform<C = Coordinate<T>>,
-    TB: Clone + Transform<C = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TA: Transform<T = T>,
+    TB: Transform<T = T>,
 {
     pub a: TA,
     pub b: TB,
@@ -22,9 +22,9 @@ where
 
 impl<T, TA, TB> Compose<T, TA, TB>
 where
-    T: CoordFloat + FloatConst,
-    TA: Clone + Transform<C = Coordinate<T>>,
-    TB: Clone + Transform<C = Coordinate<T>>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    TA: Transform<T = T>,
+    TB: Transform<T = T>,
 {
     #[inline]
     pub fn new(a: TA, b: TB) -> Compose<T, TA, TB> {
@@ -34,32 +34,32 @@ where
 
 impl<T, TA, TB> Transform for Compose<T, TA, TB>
 where
-    TA: Clone + Transform<C = Coordinate<T>>,
-    TB: Clone + Transform<C = Coordinate<T>>,
-    T: CoordFloat + FloatConst,
+    TA: Transform<T = T>,
+    TB: Transform<T = T>,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type T = T;
     // Apply A then B.
-    fn transform(&self, coordinates: &<TA as Transform>::C) -> Coordinate<T> {
-        let temp = self.a.transform(coordinates);
+    fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
+        let temp = self.a.transform(coordinate);
         self.b.transform(&temp)
     }
 
     // Apply B them A.
-    fn invert(&self, coordinates: &<TA as Transform>::C) -> Coordinate<T> {
-        let temp = self.b.invert(coordinates);
+    fn invert(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
+        let temp = self.b.invert(coordinate);
         self.a.invert(&temp)
     }
 }
 
 impl<SINK, T, TA, TB> Stream for StreamNode<Compose<T, TA, TB>, SINK, T>
 where
-    SINK: Stream<SC = Coordinate<T>>,
-    TA: Clone + Transform<C = Coordinate<T>>,
-    TB: Clone + Transform<C = Coordinate<T>>,
+    SINK: Stream<T = T>,
+    TA: Transform<T = T>,
+    TB: Transform<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
+    type T = T;
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         self.sink.borrow_mut().point(&self.raw.transform(p), m);
     }

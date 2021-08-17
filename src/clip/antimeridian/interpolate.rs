@@ -27,8 +27,7 @@ use crate::stream::Stream;
 /// Antimerdian interpolate function.
 pub fn generate<STREAM, T>() -> InterpolateFn<STREAM, T>
 where
-    // PR: ProjectionRaw<T = T>,
-    STREAM: Stream<SC = Coordinate<T>>,
+    STREAM: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     let out: InterpolateFn<STREAM, T> = Rc::new(

@@ -1,5 +1,8 @@
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
+use std::fmt::Display;
+use std::ops::AddAssign;
 
 use crate::Transform;
 
@@ -35,14 +38,18 @@ impl<'a, T: CoordFloat + FloatConst> RotationLambda<T> {
     }
 }
 
-impl<T: CoordFloat + FloatConst> Transform for RotationLambda<T> {
-    type C = Coordinate<T>;
+impl<T> Transform for RotationLambda<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type T = T;
+
     #[inline]
-    fn transform(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
-        forward_rotation_lambda(self.delta_lambda, coordinates)
+    fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
+        forward_rotation_lambda(self.delta_lambda, coordinate)
     }
     #[inline]
-    fn invert(&self, coordinates: &Coordinate<T>) -> Coordinate<T> {
-        forward_rotation_lambda(-self.delta_lambda, coordinates)
+    fn invert(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
+        forward_rotation_lambda(-self.delta_lambda, coordinate)
     }
 }

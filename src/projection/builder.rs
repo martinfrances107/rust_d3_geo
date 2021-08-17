@@ -40,9 +40,9 @@ use derivative::Derivative;
 #[derivative(Debug)]
 pub struct Builder<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<SC = Coordinate<T>>,
+    DRAIN: Stream<T = T>,
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -94,9 +94,9 @@ where
 
 impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<SC = Coordinate<T>>,
+    DRAIN: Stream<T = T>,
     L: LineRaw,
-    PR: ProjectionRaw<T = T> + Clone + Copy,
+    PR: ProjectionRaw<T = T> + Transform<T = T> + Clone + Copy,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -276,9 +276,9 @@ where
 
 impl<DRAIN, L, PR, PV, T> Translate for Builder<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<SC = Coordinate<T>>,
+    DRAIN: Stream<T = T>,
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -301,9 +301,9 @@ where
 
 impl<DRAIN, L, PR, PV, T> Center for Builder<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<SC = Coordinate<T>>,
+    DRAIN: Stream<T = T>,
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -326,9 +326,9 @@ where
 
 impl<DRAIN, L, PR, PV, T> Scale for Builder<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<SC = Coordinate<T>>,
+    DRAIN: Stream<T = T>,
     L: LineRaw,
-    PR: ProjectionRaw<T = T> + Clone + Copy,
+    PR: ProjectionRaw<T = T> + Transform<T = T> + Clone + Copy,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -346,9 +346,9 @@ where
 
 impl<DRAIN, L, PR, PV, T> ClipExtent for Builder<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<SC = Coordinate<T>>,
+    DRAIN: Stream<T = T>,
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -389,9 +389,9 @@ where
 
 impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<SC = Coordinate<T>>,
+    DRAIN: Stream<T = T>,
     L: LineRaw,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
 
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,

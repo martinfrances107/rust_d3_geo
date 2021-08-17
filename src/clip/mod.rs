@@ -12,6 +12,7 @@ pub mod buffer;
 mod clean;
 mod rejoin;
 
+use geo::CoordFloat;
 use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
@@ -19,7 +20,6 @@ use std::rc::Rc;
 
 use geo::Coordinate;
 use num_traits::AsPrimitive;
-use num_traits::Float;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
@@ -77,8 +77,12 @@ pub trait ClipTrait: Clone + PointVisible + Stream {}
 
 pub trait PointVisible: Clone + Debug
 where
-    <Self as PointVisible>::T:
-        AddAssign + AsPrimitive<<Self as PointVisible>::T> + Debug + Display + Float + FloatConst,
+    <Self as PointVisible>::T: AddAssign
+        + AsPrimitive<<Self as PointVisible>::T>
+        + Debug
+        + Display
+        + CoordFloat
+        + FloatConst,
 {
     type T;
     fn point_visible(&self, p: &Coordinate<Self::T>, z: Option<u8>) -> bool;
@@ -128,11 +132,11 @@ pub trait Line: Clone + Clean {}
 // where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     // PR: Transform<C = Coordinate<T>>,
-//     // MutStream: Stream<SC = Coordinate<T>>,
+//     // MutStream: Stream<T=T>,
 //     // C: Clip,
-//     // SINK: Stream<SC = Coordinate<T>> + Default,
+//     // SINK: Stream<T=T> + Default,
 //     L: LCB<SC = Coordinate<T>>,
-//     S: Stream<SC = Coordinate<T>> + Default,
+//     S: Stream<T=T> + Default,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 // {
 //     type CBOT = T;
@@ -306,15 +310,15 @@ pub trait Line: Clone + Clean {}
 //     C: ClipBaseOps<T>,
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     // PR: Transform<C = Coordinate<T>>,
-//     // MutStream: Stream<SC = Coordinate<T>>,
-//     // SINK: Stream<SC = Coordinate<T>> + Default,
+//     // MutStream: Stream<T=T>,
+//     // SINK: Stream<T=T> + Default,
 //     // C: ClipBase<T>,
-//     // S: Stream<SC = Coordinate<T>> + Default,
+//     // S: Stream<T=T> + Default,
 //     L: LCB,
-//     L: Stream<SC = Coordinate<T>>,
+//     L: Stream<T=T>,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 // {
-//     type SC = Coordinate<T>;
+//     type T=T;
 //     // type ST = T;
 //     // type SD = SD;
 

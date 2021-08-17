@@ -7,13 +7,13 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
+use crate::Transform;
 
 use super::circle::interpolate::generate as generate_interpolate;
 use super::circle::line::Line;
@@ -23,8 +23,8 @@ pub(crate) fn gen_clip_factory_circle<PR, SINK, T>(
     radius: T,
 ) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
 where
-    PR: ProjectionRaw<T = T>,
-    SINK: Stream<SC = Coordinate<T>>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     StreamNodeClipFactory::new(
@@ -45,9 +45,9 @@ where
 // where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     // PR: Transform<C = Coordinate<T>>,
-//     // MutStream: Stream<SC = Coordinate<T>>,
-//     // SINK: Stream<SC = Coordinate<T>> + Default,
-//     // STREAM: Stream<SC = Coordinate<T>> + Default,
+//     // MutStream: Stream<T=T>,
+//     // SINK: Stream<T=T> + Default,
+//     // STREAM: Stream<T=T> + Default,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 // {
 //     // // #[derivative(Debug = "ignore")]
@@ -112,9 +112,9 @@ where
 // where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     // PR: Transform<C = Coordinate<T>>,
-//     // MutStream: Stream<SC = Coordinate<T>>,
-//     // SINK: Stream<SC = Coordinate<T>> + Default,
-//     // STREAM: Stream<SC = Coordinate<T>> + Default,
+//     // MutStream: Stream<T=T>,
+//     // SINK: Stream<T=T> + Default,
+//     // STREAM: Stream<T=T> + Default,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 // {
 //     #[inline]
@@ -260,12 +260,12 @@ where
 // where
 //     // Rc<PR>: Transform<C = Coordinate<T>>,
 //     // PR: Transform<C = Coordinate<T>>,
-//     // MutStream: Stream<SC = Coordinate<T>>,
-//     // SINK: Stream<SC = Coordinate<T>> + Default,
-//     // STREAM: Stream<SC = Coordinate<T>> + Default,
+//     // MutStream: Stream<T=T>,
+//     // SINK: Stream<T=T> + Default,
+//     // STREAM: Stream<T=T> + Default,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 // {
-//     type SC = Coordinate<T>;
+//     type T=T;
 
 //     #[inline]
 //     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

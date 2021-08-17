@@ -1,15 +1,14 @@
 use std::fmt::Display;
+use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
-use std::marker::PhantomData;
 
 use crate::stream::{Stream, Streamable};
 
-// Unit sphere.
+/// Unit sphere.
 #[derive(Clone, Debug)]
 pub struct Sphere<T>
 where
@@ -35,7 +34,7 @@ where
 {
     type T = T;
     #[inline]
-    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
+    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         stream.sphere();
     }
 }

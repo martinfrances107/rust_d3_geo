@@ -32,9 +32,9 @@
 // #[derive(Debug)]
 // pub struct Path<'a, CS, PR, T>
 // where
-//     PR: ProjectionRaw<T = T>,
+//     PR: ProjectionRaw<T=T> + Transform<T=T>,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-//     CS: Stream<SC = Coordinate<T>> + Default,
+//     CS: Stream<T=T> + Default,
 // {
 //     pd: PhantomData<&'a u8>,
 //     context: Option<CanvasRenderingContext2d>,
@@ -46,9 +46,9 @@
 
 // impl<'a, CS, PR, T> Default for Path<'a, CS, PR, T>
 // where
-//     PR: ProjectionRaw<T = T>,
+//     PR: ProjectionRaw<T=T> + Transform<T=T>,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-//     CS: Stream<SC = Coordinate<T>> + Default,
+//     CS: Stream<T=T> + Default,
 // {
 //     fn default() -> Self {
 //         Self {
@@ -65,9 +65,9 @@
 
 // impl<'a, CS, PR, T> Path<'a, CS, PR, T>
 // where
-//     PR: ProjectionRaw<T = T>,
+//     PR: ProjectionRaw<T=T> + Transform<T=T>,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-//     CS: Stream<SC = Coordinate<T>> + Default,
+//     CS: Stream<T=T> + Default,
 // {
 //     #[inline]
 //     pub fn generate(
@@ -157,7 +157,7 @@
 
 //     fn projection_fn(mut self, projection: Option<Projection<CS, Line<T>, PR, PV<T>, T>>) -> Self
 // // where
-//     //     <P as ProjectionTrait<'a>>::SD: Stream<SC = Coordinate<T>>,
+//     //     <P as ProjectionTrait<'a>>::SD: Stream<T=T>,
 //     {
 //         match projection {
 //             None => {

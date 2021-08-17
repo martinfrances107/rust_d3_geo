@@ -1,4 +1,5 @@
 use crate::projection::stream_node::StreamNode;
+use crate::Transform;
 // use crate::projection::stream_node_factory::StreamNodeFactory;
 // use crate::projection::NodeFactory;
 use crate::projection::Raw as ProjectionRaw;
@@ -21,7 +22,7 @@ use crate::stream::Stream;
 #[derive(Clone, Copy, Debug)]
 pub struct None<PR, T>
 where
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // pd: PhantomData<&'a u8>,
@@ -32,7 +33,7 @@ where
 
 impl<PR, T> Default for None<PR, T>
 where
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     fn default() -> Self {
@@ -44,9 +45,9 @@ where
 
 impl<PR, T> None<PR, T>
 where
-    // STREAM: Stream<SC = Coordinate<T>> + Default,
+    // STREAM: Stream<T=T> + Default,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    PR: ProjectionRaw<T = T>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
 {
     pub fn new(projection_raw: PR) -> None<PR, T> {
         Self {
@@ -59,11 +60,11 @@ where
 
 impl<PR, SINK, T> Stream for StreamNode<None<PR, T>, SINK, T>
 where
-    PR: ProjectionRaw<T = T>,
-    SINK: Stream<SC = Coordinate<T>>,
+    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
+    type T = T;
 
     #[inline]
     fn sphere(&mut self) {

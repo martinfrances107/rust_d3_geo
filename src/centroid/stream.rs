@@ -231,7 +231,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst + Display> Stream<T
 }
 
 impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display> StreamTrait for Stream<T> {
-    type SC = Coordinate<T>;
+    type T = T;
 
     fn sphere(&mut self) {}
 
@@ -246,7 +246,7 @@ impl<T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display> StreamTr
     }
 
     #[inline]
-    fn point(&mut self, p: &Self::SC, _m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<Self::T>, _m: Option<u8>) {
         (self.point_fn)(self, p);
     }
 

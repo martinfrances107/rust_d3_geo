@@ -1,5 +1,8 @@
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
+use std::fmt::Display;
+use std::ops::AddAssign;
 
 use crate::Transform;
 
@@ -41,9 +44,9 @@ where
 
 impl<T: CoordFloat> Transform for ScaleTranslateRotateEnum<T>
 where
-    T: FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type T = T;
 
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
@@ -98,8 +101,11 @@ impl<T: CoordFloat + FloatConst> ScaleTranslateRotate<T> {
     }
 }
 
-impl<T: CoordFloat> Transform for ScaleTranslateRotate<T> {
-    type C = Coordinate<T>;
+impl<T> Transform for ScaleTranslateRotate<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;

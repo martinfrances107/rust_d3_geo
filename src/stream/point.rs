@@ -11,12 +11,12 @@ use super::Streamable;
 
 // Move this to another file.
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable for Point<T> {
-    // type SC = Coordinate<T>;
+    // type T=T;
     // type C=Coordinate<T>;
     // type SD = Self;
     type T = T;
     #[inline]
-    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
+    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         // TODO there must be a better way to cast a Point to Coordinate.
         stream.point(
             &Coordinate {

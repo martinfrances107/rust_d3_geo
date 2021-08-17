@@ -15,7 +15,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamab
 {
     // type SD = LineString<T>;
     type T = T;
-    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
+    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         let points: Vec<Coordinate<T>> = self.coords_iter().collect();
         stream_line(&points, stream, 0);
     }

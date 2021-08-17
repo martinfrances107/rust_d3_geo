@@ -19,7 +19,7 @@ use super::Raw;
 
 /// Why the Phantom Data is required here...
 ///
-/// The Transform trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Copy, Debug)]
 pub struct Orthographic<T>
@@ -54,7 +54,7 @@ where
     #[inline]
     pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Orthographic<T>, PV<T>, T>
     where
-        DRAIN: Stream<SC = Coordinate<T>>,
+        DRAIN: Stream<T = T>,
     {
         Builder::new(
             StreamNodeClipFactory::new(
@@ -106,7 +106,7 @@ where
 impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform
     for Orthographic<T>
 {
-    type C = Coordinate<T>;
+    type T = T;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         Coordinate {

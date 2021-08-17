@@ -5,7 +5,6 @@ use super::Streamable;
 use crate::stream::Stream;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
@@ -15,10 +14,10 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamab
     for MultiPolygon<T>
 {
     // type T = T;
-    // type SC = Coordinate<T>;
+    // type T=T;
     // type SD = Self;
     type T = T;
-    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
+    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         for p in self.iter() {
             p.to_stream(stream);
         }

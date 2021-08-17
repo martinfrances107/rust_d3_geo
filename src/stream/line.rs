@@ -2,7 +2,6 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use geo::Line;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -14,7 +13,7 @@ impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamab
     // type SD = Self;
     type T = T;
     #[inline]
-    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, _stream: &mut SD) {
+    fn to_stream<SD: Stream<T = T>>(&self, _stream: &mut SD) {
         todo!("line start line end?");
     }
 }

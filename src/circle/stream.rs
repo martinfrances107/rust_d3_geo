@@ -14,14 +14,20 @@ use crate::Transform;
 
 // /// Output of CircleGenertor::circle()
 #[derive(Clone, Debug)]
-pub struct Stream<T: CoordFloat + FloatConst> {
+pub struct Stream<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
     // pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
     pub rotate: RotateRadiansEnum<T>,
     pub ring: Vec<Coordinate<T>>,
 }
 
-impl<T: CoordFloat + FloatConst> Default for Stream<T> {
+impl<T> Default for Stream<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
     #[inline]
     fn default() -> Self {
         Self {
@@ -33,8 +39,11 @@ impl<T: CoordFloat + FloatConst> Default for Stream<T> {
     }
 }
 
-impl<T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst> StreamTrait for Stream<T> {
-    type SC = Coordinate<T>;
+impl<T> StreamTrait for Stream<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type T = T;
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         let x_rotated = &self.rotate.invert(&p);
         self.ring.push(Coordinate {

@@ -14,10 +14,10 @@ pub struct StreamTransformRadians {}
 
 impl<T, SINK> Stream for StreamNode<StreamTransformRadians, SINK, T>
 where
-    SINK: Stream<SC = Coordinate<T>>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
+    type T = T;
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

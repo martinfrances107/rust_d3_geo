@@ -1,19 +1,19 @@
-use crate::clip::LineRaw;
-use crate::clip::PointVisible;
-use crate::projection::projection::Projection;
-use crate::stream::Stream;
-use crate::Transform;
-use geo::Coordinate;
-use num_traits::AsPrimitive;
-use num_traits::Float;
-use num_traits::FloatConst;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
+use geo::CoordFloat;
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
+
+use crate::clip::LineRaw;
+use crate::clip::PointVisible;
+use crate::projection::projection::Projection;
 use crate::projection::stream_node::StreamNode;
+use crate::stream::Stream;
+use crate::Transform;
 
 pub mod azimuthal;
 pub mod azimuthal_equal_area;
@@ -41,26 +41,24 @@ mod fit;
 mod resample;
 
 /// Projection Raw.
-pub trait Raw: Clone + Copy + Default + Transform<C = Coordinate<Self::T>>
+pub trait Raw: Clone + Copy + Default + Transform
 where
-    <Self as Raw>::T: Debug + Display + Float + FloatConst,
+    <Self as Raw>::T:
+        AddAssign + AsPrimitive<<Self as Raw>::T> + Debug + Display + CoordFloat + FloatConst,
+    <Self as Transform>::T:
+        AddAssign + AsPrimitive<<Self as Transform>::T> + Debug + Display + CoordFloat + FloatConst,
 {
     type T;
 }
 
 trait Builder
 where
-    <Self as Builder>::Drain: Stream<SC = Coordinate<<Self as Builder>::T>>,
+    <Self as Builder>::Drain: Stream<T = <Self as Builder>::T>,
     <Self as Builder>::L: LineRaw,
-    <Self as Builder>::PR: Raw<T = Self::T>,
+    <Self as Builder>::PR: Raw<T = Self::T> + Transform<T = Self::T>,
     <Self as Builder>::PV: PointVisible<T = Self::T>,
-    <Self as Builder>::T: AddAssign
-        + AsPrimitive<<Self as Builder>::T>
-        + Default
-        + Debug
-        + Display
-        + Float
-        + FloatConst,
+    <Self as Builder>::T:
+        AddAssign + AsPrimitive<<Self as Builder>::T> + Debug + Display + CoordFloat + FloatConst,
 {
     type Drain;
     type L;

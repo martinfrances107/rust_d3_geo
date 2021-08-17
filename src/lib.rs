@@ -8,7 +8,13 @@ extern crate derivative;
 extern crate rust_d3_array;
 extern crate web_sys;
 
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
 use std::fmt::Debug;
+use std::fmt::Display;
+use std::ops::AddAssign;
 
 pub mod cartesian;
 pub mod centroid;
@@ -29,8 +35,12 @@ mod point_equal;
 pub mod stream;
 
 // Common to Projection, Rotation.
-pub trait Transform: Clone {
-    type C;
-    fn transform(&self, p: &Self::C) -> Self::C;
-    fn invert(&self, p: &Self::C) -> Self::C;
+pub trait Transform: Clone
+where
+    <Self as Transform>::T:
+        AddAssign + AsPrimitive<<Self as Transform>::T> + Debug + Display + CoordFloat + FloatConst,
+{
+    type T;
+    fn transform(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;
+    fn invert(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;
 }

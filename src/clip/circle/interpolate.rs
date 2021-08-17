@@ -14,7 +14,7 @@ use crate::stream::Stream;
 
 pub fn generate<STREAM, T>(radius: T) -> InterpolateFn<STREAM, T>
 where
-    STREAM: Stream<SC = Coordinate<T>>,
+    STREAM: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     // let cr = radius.cos();

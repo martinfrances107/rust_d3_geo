@@ -124,10 +124,10 @@ where
 
 impl<SINK, T> Stream for StreamNode<Line<T>, SINK, T>
 where
-    SINK: Stream<SC = Coordinate<T>>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
+    type T = T;
 
     fn sphere(&mut self) {}
     fn polygon_start(&mut self) {}

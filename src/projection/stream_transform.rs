@@ -14,7 +14,7 @@ use super::StreamNode;
 pub struct StreamTransform<T, TRANSFORMER>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    TRANSFORMER: Transform<C = Coordinate<T>>,
+    TRANSFORMER: Transform<T = T>,
 {
     pub transformer: TRANSFORMER,
 }
@@ -23,7 +23,7 @@ where
 // where
 //     // P: Transform<TcC = Coordinate<T>>,
 //     // PR: ProjectionRawTrait,
-//     STREAM: Stream<SC = Coordinate<T>> + Default,
+//     STREAM: Stream<T=T> + Default,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     fn default() -> Self {
@@ -36,7 +36,7 @@ where
 
 // impl<STREAM, T> StreamIn for StreamTransform<STREAM, T>
 // where
-//     STREAM: Stream<SC = Coordinate<T>> + Default,
+//     STREAM: Stream<T=T> + Default,
 //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 //     // type C = Coordinate<T>;
@@ -52,7 +52,7 @@ where
 impl<T, TRANSFORMER> StreamTransform<T, TRANSFORMER>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    TRANSFORMER: Transform<C = Coordinate<T>>,
+    TRANSFORMER: Transform<T = T>,
 {
     #[inline]
     pub fn new(transformer: TRANSFORMER) -> StreamTransform<T, TRANSFORMER> {
@@ -81,11 +81,11 @@ where
 
 impl<SINK, T, TRANSFORMER> Stream for StreamNode<StreamTransform<T, TRANSFORMER>, SINK, T>
 where
-    SINK: Stream<SC = Coordinate<T>>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    TRANSFORMER: Transform<C = Coordinate<T>>,
+    TRANSFORMER: Transform<T = T>,
 {
-    type SC = Coordinate<T>;
+    type T = T;
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

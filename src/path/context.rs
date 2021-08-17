@@ -74,7 +74,7 @@ impl<T> Stream for Context<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst + AsPrimitive<T>,
 {
-    type SC = Coordinate<T>;
+    type T = T;
 
     fn sphere(&mut self) {}
 

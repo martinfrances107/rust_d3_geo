@@ -1,4 +1,8 @@
 use geo::CoordFloat;
+use std::fmt::Display;
+use std::ops::AddAssign;
+
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
@@ -8,11 +12,10 @@ use super::rotation_identity::RotationIdentity;
 use super::rotation_lambda::RotationLambda;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
-pub fn rotate_radians<T: CoordFloat + FloatConst>(
-    delta_lambda_p: T,
-    delta_phi: T,
-    delta_gamma: T,
-) -> RotateRadiansEnum<T> {
+pub fn rotate_radians<T>(delta_lambda_p: T, delta_phi: T, delta_gamma: T) -> RotateRadiansEnum<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
     let delta_lambda = delta_lambda_p % T::TAU();
     // Should I rotate by lambda, phi or gamma.
     let by_lambda = !delta_lambda.is_zero();

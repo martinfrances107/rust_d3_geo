@@ -58,7 +58,7 @@ impl<T> Stream for BoundsStream<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
+    type T = T;
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {

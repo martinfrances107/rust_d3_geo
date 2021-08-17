@@ -28,9 +28,9 @@ use derivative::Derivative;
 pub struct Clip<L, PV, SINK, T>
 where
     L: LineRaw,
-    // PR: ProjectionRaw<T = T>,
+    // PR: ProjectionRaw<T=T> + Transform<T=T>,
     PV: PointVisible,
-    SINK: Stream<SC = Coordinate<T>>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Phantom Data is needed because of the complexity of the IF.
@@ -65,7 +65,7 @@ impl<L, PV, SINK, T> Clip<L, PV, SINK, T>
 where
     L: LineRaw,
     PV: PointVisible,
-    SINK: Stream<SC = Coordinate<T>>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     pub fn new(
@@ -104,7 +104,7 @@ impl<L, PV, SINK, T> StreamNode<Clip<L, PV, SINK, T>, SINK, T>
 where
     L: LineRaw,
     PV: PointVisible<T = T>,
-    SINK: Stream<SC = Coordinate<T>>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     #[inline]
@@ -256,12 +256,12 @@ where
 impl<L, PV, SINK, T> Stream for StreamNode<Clip<L, PV, SINK, T>, SINK, T>
 where
     L: LineRaw,
-    // PR: ProjectionRaw<T = T>,
+    // PR: ProjectionRaw<T=T> + Transform<T=T>,
     PV: PointVisible,
-    SINK: Stream<SC = Coordinate<T>>,
+    SINK: Stream<T = T>,
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
+    type T = T;
 
     #[inline]
     fn point(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {

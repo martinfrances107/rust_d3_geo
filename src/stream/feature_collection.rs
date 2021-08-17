@@ -2,7 +2,6 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
@@ -17,7 +16,7 @@ where
 {
     // type SD = Self;
     type T = T;
-    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
+    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         for f in &self.0 {
             for g in &f.geometry {
                 g.to_stream(stream);

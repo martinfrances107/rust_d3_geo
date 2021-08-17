@@ -52,7 +52,7 @@ impl<T> Stream for ContextStream<T>
 where
     T: CoordFloat + FloatConst + AddAssign + AsPrimitive<T> + Display,
 {
-    type SC = Coordinate<T>;
+    type T = T;
 
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         match self {

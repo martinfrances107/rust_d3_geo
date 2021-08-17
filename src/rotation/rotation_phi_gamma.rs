@@ -1,4 +1,8 @@
 use geo::{CoordFloat, Coordinate};
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
+use std::fmt::Display;
+use std::ops::AddAssign;
 
 use crate::Transform;
 
@@ -25,8 +29,12 @@ impl<'a, T: CoordFloat> RotationPhiGamma<T> {
     }
 }
 
-impl<T: CoordFloat> Transform for RotationPhiGamma<T> {
-    type C = Coordinate<T>;
+impl<T> Transform for RotationPhiGamma<T>
+where
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+    type T = T;
+
     #[allow(clippy::many_single_char_names)]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let lambda = p.x;

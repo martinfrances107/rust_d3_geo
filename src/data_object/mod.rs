@@ -72,7 +72,7 @@ where
     type T = T;
     // type SD = DataObject<T>;
     // type SD = Self::SD;
-    fn to_stream<SD: Stream<SC = Coordinate<T>>>(&self, stream: &mut SD) {
+    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         match self {
             DataObject::Collection(Collection::Feature { feature: _ }) => {
                 todo!("fixme");

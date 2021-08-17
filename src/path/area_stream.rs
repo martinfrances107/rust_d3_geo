@@ -107,7 +107,7 @@ impl<T> Stream for AreaStream<T>
 where
     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type SC = Coordinate<T>;
+    type T = T;
     // ?    type SD = AreaStream<T>;
     // type ST = T;
 
