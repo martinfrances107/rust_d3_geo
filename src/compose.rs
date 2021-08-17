@@ -1,7 +1,5 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
-use std::fmt::Display;
-
 use num_traits::FloatConst;
 
 use crate::projection::stream_node::StreamNode;
@@ -11,7 +9,7 @@ use crate::Transform;
 #[derive(Clone, Debug)]
 pub struct Compose<T, TA, TB>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
     TA: Transform<T = T>,
     TB: Transform<T = T>,
 {
@@ -21,7 +19,7 @@ where
 
 impl<T, TA, TB> Compose<T, TA, TB>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
     TA: Transform<T = T>,
     TB: Transform<T = T>,
 {
@@ -35,7 +33,7 @@ impl<T, TA, TB> Transform for Compose<T, TA, TB>
 where
     TA: Transform<T = T>,
     TB: Transform<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
     // Apply A then B.
@@ -56,7 +54,7 @@ where
     SINK: Stream<T = T>,
     TA: Transform<T = T>,
     TB: Transform<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

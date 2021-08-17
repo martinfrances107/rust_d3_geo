@@ -1,6 +1,5 @@
 use std::cell::RefCell;
 use std::cmp::Ordering;
-use std::fmt::Display;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -17,7 +16,7 @@ pub fn compare_intersections<T>(
     b: &Rc<RefCell<Intersection<T>>>,
 ) -> Ordering
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let ax = a.borrow().x;
     let part1 = match ax.p.x < T::zero() {

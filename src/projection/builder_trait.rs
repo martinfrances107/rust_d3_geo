@@ -16,12 +16,7 @@ use super::translate::Translate;
 pub trait BuilderTrait: Center + ClipExtent + Scale + Translate
 where
     <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
-    <Self as BuilderTrait>::T: AddAssign
-        + AsPrimitive<<Self as BuilderTrait>::T>
-        + CoordFloat
-        + Debug
-        + Display
-        + FloatConst,
+    <Self as BuilderTrait>::T: AddAssign + AsPrimitive<<Self as BuilderTrait>::T> + CoordFloat,
 {
     type PR;
     type T;

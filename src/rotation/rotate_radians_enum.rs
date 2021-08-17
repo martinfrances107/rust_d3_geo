@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;
 
@@ -19,7 +18,7 @@ use super::rotation_phi_gamma::RotationPhiGamma;
 
 pub enum RotateRadiansEnum<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     C(Box<Compose<T, RotationLambda<T>, RotationPhiGamma<T>>>),
     RL(RotationLambda<T>),
@@ -29,7 +28,7 @@ where
 
 impl<T> Default for RotateRadiansEnum<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fn default() -> Self {
         RotateRadiansEnum::I(RotationIdentity::default())
@@ -38,7 +37,7 @@ where
 
 impl<T> Clone for RotateRadiansEnum<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fn clone(&self) -> Self {
         match self {
@@ -52,7 +51,7 @@ where
 #[cfg(not(tarpaulin_include))]
 impl<T> Debug for RotateRadiansEnum<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
@@ -80,7 +79,7 @@ where
 
 impl<T> Transform for RotateRadiansEnum<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -106,7 +105,7 @@ where
 impl<SINK, T> Stream for StreamNode<RotateRadiansEnum<T>, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

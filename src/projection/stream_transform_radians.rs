@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -14,7 +12,7 @@ pub struct StreamTransformRadians {}
 impl<T, SINK> Stream for StreamNode<StreamTransformRadians, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 

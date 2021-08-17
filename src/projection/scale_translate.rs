@@ -1,8 +1,8 @@
-use crate::Transform;
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use std::fmt::Display;
+
+use crate::Transform;
 
 #[derive(Clone, Debug, Default)]
 pub struct ScaleTranslate<T> {
@@ -15,7 +15,7 @@ pub struct ScaleTranslate<T> {
 
 impl<T> Transform for ScaleTranslate<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 

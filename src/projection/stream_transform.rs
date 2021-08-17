@@ -12,7 +12,7 @@ use super::StreamNode;
 #[derive(Clone, Debug)]
 pub struct StreamTransform<T, TRANSFORMER>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
     TRANSFORMER: Transform<T = T>,
 {
     pub transformer: TRANSFORMER,

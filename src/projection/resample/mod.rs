@@ -22,7 +22,7 @@ use super::Raw as ProjectionRaw;
 pub enum ResampleEnum<PR, T>
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Debug + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     RN(None<PR, T>),
     R(Resample<PR, T>),
@@ -31,7 +31,7 @@ where
 impl<PR, T> Default for ResampleEnum<PR, T>
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Debug + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     #[inline]
     fn default() -> Self {
@@ -42,7 +42,7 @@ where
 impl<PR, T> Clone for ResampleEnum<PR, T>
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Debug + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     #[inline]
     fn clone(&self) -> Self {
@@ -56,7 +56,7 @@ impl<'a, PR, SINK, T> Stream for StreamNode<ResampleEnum<PR, T>, SINK, T>
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 

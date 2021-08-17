@@ -94,8 +94,7 @@ where
 
 pub trait Stream: Clone
 where
-    <Self as Stream>::T:
-        AsPrimitive<<Self as Stream>::T> + Debug + Display + CoordFloat + FloatConst,
+    <Self as Stream>::T: CoordFloat,
 {
     type T;
 

@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -14,7 +12,7 @@ use crate::Transform;
 pub struct None<PR, T>
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     // pd: PhantomData<&'a u8>,
     projection_raw: PR, // Box to prevent infinite recusion.
@@ -25,7 +23,7 @@ where
 impl<PR, T> Default for None<PR, T>
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -37,7 +35,7 @@ where
 impl<PR, T> None<PR, T>
 where
     // STREAM: Stream<T=T> + Default,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
 {
     pub fn new(projection_raw: PR) -> None<PR, T> {
@@ -53,7 +51,7 @@ impl<PR, SINK, T> Stream for StreamNode<None<PR, T>, SINK, T>
 where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 

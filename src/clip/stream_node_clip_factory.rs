@@ -7,7 +7,6 @@ use super::PointVisible;
 use crate::Transform;
 
 use std::cell::RefCell;
-use std::fmt::Display;
 use std::rc::Rc;
 
 use core::marker::PhantomData;
@@ -38,7 +37,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     phantom_pr: PhantomData<PR>,
 
@@ -58,7 +57,7 @@ where
     L: LineRaw,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     pub fn new(
         interpolate_fn: InterpolateFn<SINK, T>,
@@ -92,7 +91,7 @@ where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type Sink = SINK;
     type T = T;

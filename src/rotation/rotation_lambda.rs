@@ -1,12 +1,14 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use std::fmt::Display;
 
 use crate::Transform;
 
 #[derive(Clone, Copy, Default, Debug)]
-pub struct RotationLambda<T> {
+pub struct RotationLambda<T>
+where
+    T: CoordFloat,
+{
     pub delta_lambda: T,
 }
 
@@ -39,7 +41,7 @@ impl<'a, T: CoordFloat + FloatConst> RotationLambda<T> {
 
 impl<T> Transform for RotationLambda<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 

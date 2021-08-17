@@ -1,6 +1,5 @@
 use std::cell::RefCell;
 use std::collections::VecDeque;
-use std::fmt::Display;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -30,7 +29,7 @@ where
     // PR: ProjectionRaw<T=T> + Transform<T=T>,
     PV: PointVisible,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     /// Phantom Data is needed because of the complexity of the IF.
     // phantomDrain: PhantomData<DRAIN>,
@@ -65,7 +64,7 @@ where
     L: LineRaw,
     PV: PointVisible,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     pub fn new(
         pv: PV,
@@ -104,7 +103,7 @@ where
     L: LineRaw,
     PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     #[inline]
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -257,7 +256,7 @@ where
     L: LineRaw,
     PV: PointVisible,
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 

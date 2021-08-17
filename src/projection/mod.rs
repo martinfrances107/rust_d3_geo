@@ -1,6 +1,4 @@
 use std::cell::RefCell;
-use std::fmt::Debug;
-use std::fmt::Display;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -42,8 +40,7 @@ mod resample;
 /// Projection Raw.
 pub trait Raw: Clone + Copy + Default + Transform
 where
-    <Self as Raw>::T: AsPrimitive<<Self as Raw>::T> + Debug + Display + CoordFloat,
-    <Self as Transform>::T: AsPrimitive<<Self as Transform>::T> + Debug + Display + CoordFloat,
+    <Self as Raw>::T: CoordFloat,
 {
     type T;
 }
@@ -54,8 +51,7 @@ where
     <Self as Builder>::L: LineRaw,
     <Self as Builder>::PR: Raw<T = Self::T> + Transform<T = Self::T>,
     <Self as Builder>::PV: PointVisible<T = Self::T>,
-    <Self as Builder>::T:
-        AsPrimitive<<Self as Builder>::T> + Debug + Display + CoordFloat + FloatConst,
+    <Self as Builder>::T: AsPrimitive<<Self as Builder>::T> + CoordFloat + FloatConst,
 {
     type Drain;
     type L;

@@ -1,5 +1,4 @@
 use std::collections::VecDeque;
-use std::fmt::Display;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -18,7 +17,7 @@ use super::line_elem::LineElem;
 #[derive(Clone, Debug)]
 pub struct Buffer<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     // line: Vec<LineElem<T>>,
     lines: VecDeque<Vec<LineElem<T>>>,
@@ -35,7 +34,7 @@ where
 
 impl<T> Default for Buffer<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Self {
@@ -46,7 +45,7 @@ where
 
 impl<T> Result for Buffer<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type Out = Option<ResultEnum<T>>;
     fn result(&mut self) -> Option<ResultEnum<T>> {
@@ -58,7 +57,7 @@ where
 
 impl<T> Stream for Buffer<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
     #[inline]
