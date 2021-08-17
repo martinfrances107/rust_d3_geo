@@ -13,11 +13,9 @@ mod stream_line;
 mod triangle;
 
 use std::fmt::Debug;
-use std::fmt::Display;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 /// Applies to DataObject's
@@ -36,7 +34,7 @@ where
 
 impl<T> Stream for StreamDrainStub<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
     fn point(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {}
