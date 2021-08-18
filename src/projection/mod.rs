@@ -5,7 +5,7 @@ use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::LineRaw;
+use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::projection::projection::Projection;
 use crate::projection::stream_node::StreamNode;
@@ -48,7 +48,7 @@ where
 trait Builder
 where
     <Self as Builder>::Drain: Stream<T = <Self as Builder>::T>,
-    <Self as Builder>::L: LineRaw,
+    <Self as Builder>::L: Line,
     <Self as Builder>::PR: Raw<T = Self::T> + Transform<T = Self::T>,
     <Self as Builder>::PV: PointVisible<T = Self::T>,
     <Self as Builder>::T: AsPrimitive<<Self as Builder>::T> + CoordFloat + FloatConst,

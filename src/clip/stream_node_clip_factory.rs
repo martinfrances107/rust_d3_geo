@@ -2,7 +2,7 @@ use super::buffer::Buffer;
 use super::clip::Clip;
 use super::line_elem::LineElem;
 use super::InterpolateFn;
-use super::LineRaw;
+use super::Line;
 use super::PointVisible;
 use crate::Transform;
 
@@ -33,7 +33,7 @@ use derivative::Derivative;
 #[derivative(Debug)]
 pub struct StreamNodeClipFactory<L, PR, PV, SINK, T>
 where
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
     T: CoordFloat,
@@ -53,7 +53,7 @@ where
 
 impl<L, PR, PV, SINK, T> StreamNodeClipFactory<L, PR, PV, SINK, T>
 where
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     SINK: Stream<T = T>,
     T: CoordFloat,
@@ -86,9 +86,9 @@ where
 
 impl<L, PR, PV, SINK, T> NodeFactory for StreamNodeClipFactory<L, PR, PV, SINK, T>
 where
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
-    PV: PointVisible,
+    PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {

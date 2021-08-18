@@ -11,7 +11,7 @@ use num_traits::FloatConst;
 
 use crate::clip::clip::Clip;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
-use crate::clip::LineRaw;
+use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
@@ -37,7 +37,7 @@ use super::StreamNode;
 pub struct Projection<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
@@ -84,7 +84,7 @@ where
 impl<'a, DRAIN, L, PR, PV, T> Projection<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
@@ -133,7 +133,7 @@ where
 impl<'a, DRAIN, L, PR, PV, T> Transform for Projection<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AsPrimitive<T> + CoordFloat + Display + FloatConst,

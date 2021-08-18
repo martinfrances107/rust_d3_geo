@@ -2,6 +2,7 @@ use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -11,22 +12,43 @@ use super::compare_intersections::compare_intersections;
 use super::line_elem::LineElem;
 use super::rejoin::rejoin;
 use super::InterpolateFn;
-use super::LineRaw;
+use super::Line;
 use super::PointVisible;
 
+use crate::path::Result;
+use crate::path::ResultEnum;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::NodeFactory;
 use crate::stream::Stream;
-use derivative::Derivative;
+
+use super::CleanEnum;
+
+#[derive(Clone, Debug)]
+enum PointFn {
+    DEFAULT,
+    LINE,
+    RING,
+}
+
+#[derive(Clone, Debug)]
+enum LineStartFn {
+    LINE,
+    RING,
+}
+
+#[derive(Clone, Debug)]
+enum LineEndFn {
+    LINE,
+    RING,
+}
 
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
 pub struct Clip<L, PV, SINK, T>
 where
-    L: LineRaw,
-    // PR: ProjectionRaw<T=T> + Transform<T=T>,
-    PV: PointVisible,
+    L: Line,
+    PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
@@ -46,22 +68,15 @@ where
     pub ring: Vec<LineElem<T>>,
     pub ring_sink_node: StreamNode<L, Buffer<T>, T>,
     pub segments: VecDeque<Vec<Vec<LineElem<T>>>>,
-
-    // // #[derivative(Debug = "ignore")]
-    // pub point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
-    // // #[derivative(Debug = "ignore")]
-    // pub line_start_fn: fn(&mut Self),
-    // // #[derivative(Debug = "ignore")]
-    // pub line_end_fn: fn(&mut Self),
-    pub use_point_line: bool,
-    pub use_ring_start: bool,
-    pub use_ring_end: bool,
+    point_fn: PointFn,
+    line_start_fn: LineStartFn,
+    line_end_fn: LineEndFn,
 }
 
 impl<L, PV, SINK, T> Clip<L, PV, SINK, T>
 where
-    L: LineRaw,
-    PV: PointVisible,
+    L: Line,
+    PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
@@ -90,22 +105,23 @@ where
             ring_buffer,
             segments: VecDeque::new(),
 
-            use_point_line: false,
-            use_ring_start: false,
-            use_ring_end: false,
+            // Cannot use 'point_fn' what is the default value?
+            point_fn: PointFn::DEFAULT,
+            line_start_fn: LineStartFn::RING,
+            line_end_fn: LineEndFn::RING,
         }
     }
 }
 
 impl<L, PV, SINK, T> StreamNode<Clip<L, PV, SINK, T>, SINK, T>
 where
-    L: LineRaw,
+    L: Line,
     PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
     #[inline]
-    fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    pub(super) fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         println!("clip point_default");
         if self.raw.pv.point_visible(p, None) {
             self.sink.borrow_mut().point(p, m);
@@ -121,20 +137,15 @@ where
     #[inline]
     fn line_start_default(&mut self) {
         println!("clip line_start_default");
-        // let base = self.get_base();
-        // self.point_fn = Self::point_line;
-        // self.base.use_point_line = true;
-        // self.set_use_point_line(true);
-        self.sink.borrow_mut().line_start();
+        self.raw.point_fn = PointFn::LINE;
+        self.raw.line_node.sink.borrow_mut().line_start();
     }
 
     #[inline]
     fn line_end_default(&mut self) {
         println!("clip line_end_default");
-        // self.point_fn = Self::point_default;
-        // self.set_use_point_line(false);
-        // self.base.use_point_line = false;
-        // self.get_base().line.line_end();
+        self.raw.point_fn = PointFn::DEFAULT;
+        self.raw.line_node.sink.borrow_mut().line_end();
     }
 
     #[inline]
@@ -142,7 +153,6 @@ where
         println!("clip point_ring {:?} {:?}", p, m);
         // println!("about to ring/push - ring_sink ");
         // println!("self.base {:#?} ", self.base.ring_sink);
-        // let mut base = self.get_base();
         self.raw.ring.push(LineElem { p: *p, m });
         self.raw.ring_sink_node.sink.borrow_mut().point(p, m);
         println!("clip point_ring -- end");
@@ -163,130 +173,139 @@ where
         self.point_ring(&le.p, None);
         self.raw.ring_sink_node.sink.borrow_mut().line_end();
 
-        // let clean = self.raw.ring_sink_node.clean();
+        let clean = self.raw.ring_sink_node.raw.clean();
 
-        // let mut ring_segments = match self.raw.ring_sink_node.result() {
-        //     Some(ResultEnum::BufferOutput(result)) => {
-        //         // Can I find a way of doing this with the expense of dynamic conversion.
-        //         result
-        //     }
-        //     Some(_) => {
-        //         panic!("None buffer ");
-        //     }
-        //     None => panic!("was expecting something."),
-        // };
+        let mut ring_segments = match self.raw.ring_sink_node.sink.borrow_mut().result() {
+            Some(ResultEnum::BufferOutput(result)) => {
+                // Can I find a way of doing this with the expense of dynamic conversion.
+                result
+            }
+            Some(_) => {
+                panic!("None buffer ");
+            }
+            None => panic!("was expecting something."),
+        };
 
-        // println!("clip ring_end() - ring segments {:#?}", ring_segments);
+        println!("clip ring_end() - ring segments {:#?}", ring_segments);
         // panic!("ring_end buffer result");
-        // let n = ring_segments.len();
-        // let m;
+        let n = ring_segments.len();
+        let m;
         // let mut point: Coordinate<T>;
 
         self.raw.ring.pop();
         // self.base.polygon.push(self.base.ring.clone());
-        // self.polygon_push(self.get_base().ring.clone());
+        self.raw.polygon.push(self.raw.ring.clone());
         // in this javascript version this value is set to NULL
         // is my assumption that this is valid true?
         // self.ring = None;
         self.raw.ring = Vec::new();
         // self.raw.ring_reset();
 
-        // if n == 0 {
-        //     return;
-        // }
-        // println!("no intersections n, c {:?} {:?}", n, clean);
+        if n == 0 {
+            return;
+        }
+        println!("no intersections n, c {:?} {:?}", n, clean);
         // No intersections.
-        // match clean {
-        //     CleanEnum::NoIntersections => {
-        //         println!("about to clean good path");
-        //         // panic!("on the good path");
-        //         // let segment = ring_segments
-        //         //     .pop_front()
-        //         //     .expect("We have previously checked that the .len() is >0 ( n ) ");
-        //         // m = segment.len() - 1;
-        //         if m > 0 {
-        //             if !self.raw.polygon_started {
-        //                 self.sink.borrow_mut().polygon_start();
-        //                 // self.base.polygon_started = true;
-        //                 self.raw.set_polygon_started(true);
-        //             }
-        //             self.sink.borrow_mut().line_start();
-        //             for i in 0..m {
-        //                 // point = segment[i].p;
-        //                 // self.get_base().sink.borrow_mut().point(&point, None);
-        //             }
-        //             // self.get_base().sink.borrow_mut().line_end();
-        //         }
-        //         return;
-        //     }
-        // CleanEnum::IntersectionsRejoin => {
-        //     // Rejoin connected segments.
-        //     // TODO reuse ringBuffer.rejoin()?
-        //     if n > 1 {
-        //         println!("funny buisness");
-        //         println!("ring_segemtns before fb {:#?}", ring_segments);
-        //         let pb = [
-        //             ring_segments.pop_back().unwrap(),
-        //             ring_segments.pop_front().unwrap(),
-        //         ]
-        //         .concat();
-        //         ring_segments.push_back(pb);
-        //     }
-        // }
-        //     CleanEnum::IntersectionsOrEmpty => {
-        //         // No-op
-        //     }
-        //     CleanEnum::Undefined => {
-        //         panic!("must be defined by now.")
-        //     }
-        // }
-        //     println!("final segments before filter {:#?}", ring_segments);
-        //     panic!("final segments");
-        //     let filtered: Vec<Vec<LineElem<T>>> = ring_segments
-        //         .into_iter()
-        //         .filter(|segment| segment.len() > 1)
-        //         .collect();
-        //     self.raw.segments.push_back(filtered);
+        match clean {
+            CleanEnum::NoIntersections => {
+                println!("about to clean good path");
+                // panic!("on the good path");
+                let segment = ring_segments
+                    .pop_front()
+                    .expect("We have previously checked that the .len() is >0 ( n ) ");
+                m = segment.len() - 1;
+                if m > 0 {
+                    if !self.raw.polygon_started {
+                        self.sink.borrow_mut().polygon_start();
+                        self.raw.polygon_started = true;
+                    }
+                    self.sink.borrow_mut().line_start();
+                    for i in 0..m {
+                        let point = segment[i].p;
+                        self.sink.borrow_mut().point(&point, None);
+                    }
+                    self.sink.borrow_mut().line_end();
+                }
+                return;
+            }
+            CleanEnum::IntersectionsRejoin => {
+                // Rejoin connected segments.
+                // TODO reuse ringBuffer.rejoin()?
+                if n > 1 {
+                    println!("funny buisness");
+                    println!("ring_segemtns before fb {:#?}", ring_segments);
+                    let pb = [
+                        ring_segments.pop_back().unwrap(),
+                        ring_segments.pop_front().unwrap(),
+                    ]
+                    .concat();
+                    ring_segments.push_back(pb);
+                }
+            }
+            CleanEnum::IntersectionsOrEmpty => {
+                // No-op
+            }
+            CleanEnum::Undefined => {
+                panic!("must be defined by now.")
+            }
+        }
+        println!("final segments before filter {:#?}", ring_segments);
+        // panic!("final segments");
+        let filtered: Vec<Vec<LineElem<T>>> = ring_segments
+            .into_iter()
+            .filter(|segment| segment.len() > 1)
+            .collect();
+        self.raw.segments.push_back(filtered);
     }
 }
 
 impl<L, PV, SINK, T> Stream for StreamNode<Clip<L, PV, SINK, T>, SINK, T>
 where
-    L: LineRaw,
-    PV: PointVisible,
+    L: Line,
+    PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
 
     #[inline]
-    fn point(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {
-        // (self.point_fn)(self, p, m);
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        match self.raw.point_fn {
+            PointFn::DEFAULT => self.point_default(p, m),
+            PointFn::LINE => self.point_line(p, m),
+            PointFn::RING => self.point_ring(p, m),
+        }
     }
 
     #[inline]
     fn line_start(&mut self) {
-        // (self.line_start_fn)(self);
+        match self.raw.line_start_fn {
+            LineStartFn::RING => self.ring_start(),
+            LineStartFn::LINE => self.line_start_default(),
+        }
     }
 
     #[inline]
     fn line_end(&mut self) {
-        // (self.line_end_fn)(self);
+        match self.raw.line_end_fn {
+            LineEndFn::RING => self.ring_end(),
+            LineEndFn::LINE => self.line_end_default(),
+        }
     }
 
     fn polygon_start(&mut self) {
         println!("clip  polygon start");
-        // self.point_fn = Self::point_ring;
-        // self.line_start_fn = Self::ring_start;
-        // self.line_end_fn = Self::ring_end;
+        self.raw.point_fn = PointFn::RING;
+        self.raw.line_start_fn = LineStartFn::RING;
+        self.raw.line_end_fn = LineEndFn::RING;
         self.raw.segments.clear();
         self.raw.polygon.clear();
     }
     fn polygon_end(&mut self) {
         println!("clip polygon_end");
-        // self.point_fn = Self::point_default;
-        // self.line_start_fn = Self::line_start_default;
-        // self.line_end_fn = Self::line_end_default;
+        self.raw.point_fn = PointFn::DEFAULT;
+        self.raw.line_start_fn = LineStartFn::LINE;
+        self.raw.line_end_fn = LineEndFn::LINE;
         println!("about to merge {:#?}", self.raw.segments);
         let segments_merged: Vec<Vec<LineElem<T>>> =
             self.raw.segments.clone().into_iter().flatten().collect();

@@ -7,7 +7,6 @@ use num_traits::FloatConst;
 use crate::clip::Clean;
 use crate::clip::CleanEnum;
 use crate::clip::Line as LineTrait;
-use crate::clip::LineRaw;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
@@ -25,7 +24,7 @@ where
     clean: CleanEnum,
 }
 
-impl<T> LineRaw for Line<T> where T: CoordFloat {}
+impl<T> LineTrait for Line<T> where T: CoordFloat {}
 
 impl<T> Default for Line<T>
 where
@@ -41,22 +40,20 @@ where
     }
 }
 
-impl<SINK, T> LineTrait for StreamNode<Line<T>, SINK, T>
-where
-    SINK: Stream<T = T>,
-    T: CoordFloat,
-{
-}
+// impl<T> LineTrait for Line<T> where
+//     // SINK: Stream<T = T>,
+//     T: CoordFloat,
+// {
+// }
 
-impl<SINK, T> Clean for StreamNode<Line<T>, SINK, T>
+impl<T> Clean for Line<T>
 where
-    SINK: Stream<T = T>,
     T: CoordFloat,
 {
     #[inline]
     fn clean(&self) -> CleanEnum {
-        println!("line(A) clean  initial value{:?}", self.raw.clean);
-        match self.raw.clean {
+        println!("line(A) clean  initial value{:?}", self.clean);
+        match self.clean {
             // if intersections, rejoin first and last segments
             CleanEnum::IntersectionsOrEmpty => CleanEnum::IntersectionsRejoin,
             CleanEnum::NoIntersections => CleanEnum::NoIntersections,

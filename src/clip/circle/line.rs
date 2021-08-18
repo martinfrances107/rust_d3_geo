@@ -1,7 +1,4 @@
-use std::fmt::Display;
-
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::intersect::intersect;
@@ -11,7 +8,6 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::Clean;
 use crate::clip::CleanEnum;
 use crate::clip::Line as LineTrait;
-use crate::clip::LineRaw;
 use crate::point_equal::point_equal;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
@@ -33,7 +29,7 @@ where
     v00: bool, // visibility of first point
 }
 
-impl<T> LineRaw for Line<T> where T: CoordFloat {}
+impl<T> LineTrait for Line<T> where T: CoordFloat {}
 
 impl<T> Default for Line<T>
 where
@@ -107,7 +103,9 @@ where
     }
 }
 
-impl<T> LineTrait for Line<T> where T: AsPrimitive<T> + CoordFloat + Display + FloatConst {}
+/// TODO: T is overcontrained.
+// impl<T> LineTrait for Line<T> where T: AsPrimitive<T> + CoordFloat + Display + FloatConst {}
+
 impl<T> Clean for Line<T>
 where
     T: CoordFloat,

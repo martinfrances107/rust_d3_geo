@@ -48,28 +48,28 @@ pub trait Clean {
 
 // pub trait Clip: PointVisible + Interpolate + Strea// use line_elem::LineElem;
 
-/// This trait is connected with the submodule
-/// clip_ops_macro_derive
-pub trait ClipOps
-// where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Debug + FloatConst,
-{
-    type COT;
+// /// This trait is connected with the submodule
+// /// clip_ops_macro_derive
+// pub trait ClipOps
+// // where
+// //     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + Debug + FloatConst,
+// {
+//     type COT;
 
-    fn hello_macro(&self) -> u32 {
-        42
-    }
-    fn point_default(&mut self, p: &Self::COT, m: Option<u8>);
+//     fn hello_macro(&self) -> u32 {
+//         42
+//     }
+//     fn point_default(&mut self, p: &Self::COT, m: Option<u8>);
 
-    fn point_line(&mut self, p: &Self::COT, m: Option<u8>);
-    fn line_start_default(&mut self);
-    fn line_end_default(&mut self);
-    fn point_ring(&mut self, p: &Self::COT, m: Option<u8>);
-    fn ring_start(&mut self);
-    fn ring_end(&mut self);
-}
+//     fn point_line(&mut self, p: &Self::COT, m: Option<u8>);
+//     fn line_start_default(&mut self);
+//     fn line_end_default(&mut self);
+//     fn point_ring(&mut self, p: &Self::COT, m: Option<u8>);
+//     fn ring_start(&mut self);
+//     fn ring_end(&mut self);
+// }
 
-pub trait ClipTrait: Clone + PointVisible + Stream {}
+pub trait ClipTrait: PointVisible + Stream {}
 
 pub trait PointVisible: Clone + Debug
 where
@@ -97,9 +97,8 @@ pub type InterpolateFn<STREAM, T> =
 //     );
 // }
 
-pub trait LineRaw: Clone + Debug {}
+pub trait Line: Clean + Clone + Debug {}
 pub trait LineFactory {}
-pub trait Line: Clone + Clean {}
 
 // pub trait LCB: Clean + Stream {
 //     // type T;
@@ -150,7 +149,6 @@ pub trait Line: Clone + Clean {}
 //     #[inline]
 //     fn line_start_default(&mut self) {
 //         println!("clip line_start_default");
-//         // let base = self.get_base();
 //         // self.point_fn = Self::point_line;
 //         self.set_use_point_line(true);
 //         self.line_start();

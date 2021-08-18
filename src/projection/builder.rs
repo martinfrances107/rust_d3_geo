@@ -15,7 +15,7 @@ use crate::clip::circle::gen_clip_factory_circle;
 use crate::clip::circle::line::Line as CircleLine;
 use crate::clip::circle::pv::PV as CirclePV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
-use crate::clip::LineRaw;
+use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::rotation::rotate_radians::rotate_radians;
@@ -40,7 +40,7 @@ use derivative::Derivative;
 pub struct Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
@@ -94,7 +94,7 @@ where
 impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T> + Clone + Copy,
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
@@ -276,7 +276,7 @@ where
 impl<DRAIN, L, PR, PV, T> Translate for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -301,7 +301,7 @@ where
 impl<DRAIN, L, PR, PV, T> Center for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -326,7 +326,7 @@ where
 impl<DRAIN, L, PR, PV, T> Scale for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T> + Clone + Copy,
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
@@ -346,7 +346,7 @@ where
 impl<DRAIN, L, PR, PV, T> ClipExtent for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -389,7 +389,7 @@ where
 impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: LineRaw,
+    L: Line,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     PV: PointVisible<T = T>,
 
