@@ -12,10 +12,7 @@ where
     PR: ProjectionRaw<T = T> + Transform<T = T>,
     T: CoordFloat,
 {
-    // pd: PhantomData<&'a u8>,
-    projection_raw: PR, // Box to prevent infinite recusion.
-                        // pub stream: Box<ClipSinkEnum<'a, PR, T>>,
-                        // pub stream: Box<STREAM>
+    projection_raw: PR,
 }
 
 impl<PR, T> Default for None<PR, T>
@@ -32,16 +29,11 @@ where
 
 impl<PR, T> None<PR, T>
 where
-    // STREAM: Stream<T=T> + Default,
     T: CoordFloat,
     PR: ProjectionRaw<T = T> + Transform<T = T>,
 {
     pub fn new(projection_raw: PR) -> None<PR, T> {
-        Self {
-            // pd: PhantomData,
-            projection_raw,
-            // stream: Box::new(STREAM::default()), // stub value
-        }
+        Self { projection_raw }
     }
 }
 

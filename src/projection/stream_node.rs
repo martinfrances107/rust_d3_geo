@@ -9,7 +9,7 @@ use std::rc::Rc;
 /// raw: the proto-node.
 /// sink: the next streamNode in the chain.
 ///
-/// todo return and remove T.
+/// T is required because SINK: Stream<T=T>
 #[derive(Clone, Debug)]
 pub struct StreamNode<RAW, SINK, T> {
     pub raw: RAW,

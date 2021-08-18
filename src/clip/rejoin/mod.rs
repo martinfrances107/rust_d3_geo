@@ -30,12 +30,9 @@ pub fn rejoin<SINK, T>(
     interpolate_fn: InterpolateFn<SINK, T>,
     stream: Rc<RefCell<SINK>>,
 ) where
-    // DRAIN: Stream<T=T>,
-    // PR: ProjectionRaw<T=T> + Transform<T=T>,
     SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
-    // let stream = &self.base.sink;
     let mut start_inside = start_inside;
     let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();
     let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
