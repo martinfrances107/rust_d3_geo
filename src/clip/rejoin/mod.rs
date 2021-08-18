@@ -38,10 +38,11 @@ pub fn rejoin<SINK, T>(
     let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
 
     for segment in segments.iter() {
-        let n = segment.len() - 1_usize;
-        if n <= 0 {
+        let (n, has_overflown) = segment.len().overflowing_sub(1_usize);
+        if n == 0 || has_overflown {
             return;
         };
+
         let mut p0: LineElem<T> = segment[0];
         let mut p1: LineElem<T> = segment[n];
 

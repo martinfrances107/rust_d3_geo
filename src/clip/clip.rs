@@ -215,8 +215,8 @@ where
                         self.raw.polygon_started = true;
                     }
                     self.sink.borrow_mut().line_start();
-                    for i in 0..m {
-                        let point = segment[i].p;
+                    for s in segment.iter().take(m) {
+                        let point = s.p;
                         self.sink.borrow_mut().point(&point, None);
                     }
                     self.sink.borrow_mut().line_end();
