@@ -52,9 +52,6 @@ where
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
-    /// Phantom Data is needed because of the complexity of the IF.
-    // phantomDrain: PhantomData<DRAIN>,
-    // pub phantomPR: PhantomData<PR>,
     pub line_node: StreamNode<L, SINK, T>,
     #[derivative(Debug = "ignore")]
     pub interpolate_fn: InterpolateFn<SINK, T>,
@@ -89,8 +86,6 @@ where
         sink: Rc<RefCell<SINK>>,
         start: LineElem<T>,
     ) -> Clip<L, PV, SINK, T> {
-        // let ring_buffer: Rc<RefCell<Buffer<T>>> = Rc::new(RefCell::new(Buffer::default()));
-        // let mut ring_sink_node = self.line_ring_buffer_factory.generate(ring_buffer);
         let line_sink_factory: StreamNodeFactory<L, SINK, T> = StreamNodeFactory::new(line_raw);
         Clip {
             pv,
