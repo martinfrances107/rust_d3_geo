@@ -282,7 +282,8 @@ where
     T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type P = Builder<DRAIN, L, PR, PV, T>;
-    type C = Coordinate<T>;
+    type T = T;
+
     #[inline]
     fn get_translate(&self) -> Coordinate<T> {
         Coordinate {
@@ -306,7 +307,7 @@ where
     PV: PointVisible<T = T>,
     T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type T = T;
 
     #[inline]
     fn get_center(&self) -> Coordinate<T> {
@@ -331,9 +332,9 @@ where
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
-    type ST = T;
+    type T = T;
     #[inline]
-    fn get_scale(&self) -> Self::ST {
+    fn get_scale(&self) -> Self::T {
         self.k
     }
 
@@ -351,7 +352,8 @@ where
     PV: PointVisible<T = T>,
     T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type C = Coordinate<T>;
+    type T = T;
+
     fn get_clip_extent(&self) -> Option<[Coordinate<T>; 2]> {
         match (self.x0, self.y0, self.x1, self.y1) {
             (Some(x0), Some(y0), Some(x1), Some(y1)) => {

@@ -139,6 +139,7 @@ where
     T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
+
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let r = Coordinate {
             x: p.x.to_radians(),
