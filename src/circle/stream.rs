@@ -44,6 +44,7 @@ where
     T: CoordFloat + FloatConst,
 {
     type T = T;
+
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         let x_rotated = &self.rotate.invert(&p);
         self.ring.push(Coordinate {
@@ -51,9 +52,4 @@ where
             y: x_rotated.y.to_degrees(),
         });
     }
-    fn sphere(&mut self) {}
-    fn line_start(&mut self) {}
-    fn line_end(&mut self) {}
-    fn polygon_start(&mut self) {}
-    fn polygon_end(&mut self) {}
 }

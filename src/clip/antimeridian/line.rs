@@ -69,16 +69,6 @@ where
     T: CoordFloat + FloatConst,
 {
     type T = T;
-    fn sphere(&mut self) {
-        todo!("is this called")
-    }
-    fn polygon_start(&mut self) {
-        todo!("is this called")
-    }
-
-    fn polygon_end(&mut self) {
-        todo!("is this called")
-    }
 
     fn line_start(&mut self) {
         println!("line(a) line_start()");

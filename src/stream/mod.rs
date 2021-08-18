@@ -90,18 +90,19 @@ where
 //     fn polygon_end(&mut self) {}
 // }
 
+/// Default implmentation is a no-op.
 pub trait Stream: Clone
 where
     <Self as Stream>::T: CoordFloat,
 {
     type T;
 
-    fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>);
-    fn sphere(&mut self);
-    fn line_start(&mut self);
-    fn line_end(&mut self);
-    fn polygon_start(&mut self);
-    fn polygon_end(&mut self);
+    fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}
+    fn sphere(&mut self) {}
+    fn line_start(&mut self) {}
+    fn line_end(&mut self) {}
+    fn polygon_start(&mut self) {}
+    fn polygon_end(&mut self) {}
 }
 
 /// Ci CompareIntersections param type

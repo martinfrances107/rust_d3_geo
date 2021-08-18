@@ -108,7 +108,6 @@ where
 {
     type T = T;
 
-    fn sphere(&mut self) {}
     fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
         (self.point_fn)(self, p);
     }
@@ -120,7 +119,4 @@ where
     fn line_end(&mut self) {
         (self.line_end_fn)(self);
     }
-    fn polygon_start(&mut self) {}
-
-    fn polygon_end(&mut self) {}
 }

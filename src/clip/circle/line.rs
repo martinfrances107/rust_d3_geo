@@ -131,10 +131,6 @@ where
 {
     type T = T;
 
-    fn sphere(&mut self) {}
-    fn polygon_start(&mut self) {}
-    fn polygon_end(&mut self) {}
-
     fn line_start(&mut self) {
         self.raw.v00 = false;
         self.raw.v0 = false;

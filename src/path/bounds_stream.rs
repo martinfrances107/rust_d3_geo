@@ -74,13 +74,4 @@ where
             self.p1.y = p.y
         }
     }
-
-    fn sphere(&mut self) {}
-    fn line_start(&mut self) {}
-    fn line_end(&mut self) {}
-    fn polygon_start(&mut self) {}
-    fn polygon_end(&mut self) {}
-    // fn get_dst(&self) -> BoundsStream<T> {
-    //     self.clone()
-    // }
 }

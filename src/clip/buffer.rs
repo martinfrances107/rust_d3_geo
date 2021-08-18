@@ -70,7 +70,6 @@ where
         // println!("lines {:?}", self.lines);
     }
 
-    fn sphere(&mut self) {}
     fn line_end(&mut self) {
         println!("Buffer line_end() -- noop");
     }
