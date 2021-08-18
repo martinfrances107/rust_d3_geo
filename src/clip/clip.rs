@@ -26,21 +26,21 @@ use super::CleanEnum;
 
 #[derive(Clone, Debug)]
 enum PointFn {
-    DEFAULT,
-    LINE,
-    RING,
+    Default,
+    Line,
+    Ring,
 }
 
 #[derive(Clone, Debug)]
 enum LineStartFn {
-    LINE,
-    RING,
+    Line,
+    Ring,
 }
 
 #[derive(Clone, Debug)]
 enum LineEndFn {
-    LINE,
-    RING,
+    Line,
+    Ring,
 }
 
 #[derive(Clone, Derivative)]
@@ -106,9 +106,9 @@ where
             segments: VecDeque::new(),
 
             // Cannot use 'point_fn' what is the default value?
-            point_fn: PointFn::DEFAULT,
-            line_start_fn: LineStartFn::RING,
-            line_end_fn: LineEndFn::RING,
+            point_fn: PointFn::Default,
+            line_start_fn: LineStartFn::Ring,
+            line_end_fn: LineEndFn::Ring,
         }
     }
 }
@@ -137,14 +137,14 @@ where
     #[inline]
     fn line_start_default(&mut self) {
         println!("clip line_start_default");
-        self.raw.point_fn = PointFn::LINE;
+        self.raw.point_fn = PointFn::Line;
         self.raw.line_node.sink.borrow_mut().line_start();
     }
 
     #[inline]
     fn line_end_default(&mut self) {
         println!("clip line_end_default");
-        self.raw.point_fn = PointFn::DEFAULT;
+        self.raw.point_fn = PointFn::Default;
         self.raw.line_node.sink.borrow_mut().line_end();
     }
 
@@ -271,41 +271,41 @@ where
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         match self.raw.point_fn {
-            PointFn::DEFAULT => self.point_default(p, m),
-            PointFn::LINE => self.point_line(p, m),
-            PointFn::RING => self.point_ring(p, m),
+            PointFn::Default => self.point_default(p, m),
+            PointFn::Line => self.point_line(p, m),
+            PointFn::Ring => self.point_ring(p, m),
         }
     }
 
     #[inline]
     fn line_start(&mut self) {
         match self.raw.line_start_fn {
-            LineStartFn::RING => self.ring_start(),
-            LineStartFn::LINE => self.line_start_default(),
+            LineStartFn::Ring => self.ring_start(),
+            LineStartFn::Line => self.line_start_default(),
         }
     }
 
     #[inline]
     fn line_end(&mut self) {
         match self.raw.line_end_fn {
-            LineEndFn::RING => self.ring_end(),
-            LineEndFn::LINE => self.line_end_default(),
+            LineEndFn::Ring => self.ring_end(),
+            LineEndFn::Line => self.line_end_default(),
         }
     }
 
     fn polygon_start(&mut self) {
         println!("clip  polygon start");
-        self.raw.point_fn = PointFn::RING;
-        self.raw.line_start_fn = LineStartFn::RING;
-        self.raw.line_end_fn = LineEndFn::RING;
+        self.raw.point_fn = PointFn::Ring;
+        self.raw.line_start_fn = LineStartFn::Ring;
+        self.raw.line_end_fn = LineEndFn::Ring;
         self.raw.segments.clear();
         self.raw.polygon.clear();
     }
     fn polygon_end(&mut self) {
         println!("clip polygon_end");
-        self.raw.point_fn = PointFn::DEFAULT;
-        self.raw.line_start_fn = LineStartFn::LINE;
-        self.raw.line_end_fn = LineEndFn::LINE;
+        self.raw.point_fn = PointFn::Default;
+        self.raw.line_start_fn = LineStartFn::Line;
+        self.raw.line_end_fn = LineEndFn::Line;
         println!("about to merge {:#?}", self.raw.segments);
         let segments_merged: Vec<Vec<LineElem<T>>> =
             self.raw.segments.clone().into_iter().flatten().collect();
