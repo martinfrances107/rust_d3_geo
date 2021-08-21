@@ -47,10 +47,10 @@ where
     PR: ProjectionRaw<T>,
     T: CoordFloat,
 {
-    pub fn new(projection_raw: PR) -> Resample<PR, T> {
+    pub fn new(projection_raw: PR, delta2: T) -> Resample<PR, T> {
         Self {
             projection_raw,
-            delta2: T::zero(),
+            delta2,
 
             // first point
             lambda00: T::zero(),

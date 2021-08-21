@@ -89,6 +89,6 @@ where
     if delta2.is_zero() {
         StreamNodeFactory::new(ResampleEnum::RN(None::new(projection_raw)))
     } else {
-        StreamNodeFactory::new(ResampleEnum::R(Resample::new(projection_raw)))
+        StreamNodeFactory::new(ResampleEnum::R(Resample::new(projection_raw, delta2)))
     }
 }
