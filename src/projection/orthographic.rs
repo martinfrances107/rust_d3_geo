@@ -1,9 +1,7 @@
-use std::fmt::Display;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
-use num_traits::AsPrimitive;
 
 use crate::clip::circle::interpolate::generate as gen_interpolate;
 use crate::clip::circle::line::Line;
@@ -23,14 +21,14 @@ use super::Raw;
 #[derive(Clone, Copy, Debug)]
 pub struct Orthographic<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     phantom: PhantomData<T>,
 }
 
 impl<T> Default for Orthographic<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Orthographic {
@@ -39,16 +37,16 @@ where
     }
 }
 
-impl<T> Raw for Orthographic<T>
+impl<T> Raw<T> for Orthographic<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 }
 
 impl<T> Orthographic<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     #[inline]
     pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Orthographic<T>, PV<T>, T>
@@ -76,7 +74,7 @@ where
 
 impl<T> Orthographic<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     #[inline]
     fn angle(z: T) -> T {
@@ -102,7 +100,10 @@ where
     }
 }
 
-impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Orthographic<T> {
+impl<T> Transform for Orthographic<T>
+where
+    T: CoordFloat + FloatConst,
+{
     type T = T;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

@@ -1,7 +1,4 @@
-use std::fmt::Display;
-
 use geo::CoordFloat;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::data_object::FeatureCollection;
@@ -11,7 +8,7 @@ use super::Streamable;
 
 impl<T> Streamable for FeatureCollection<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     // type SD = Self;
     type T = T;

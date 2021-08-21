@@ -32,7 +32,7 @@ where
     phantom: PhantomData<T>,
 }
 
-impl<T> Raw for AzimuthalEqualArea<T>
+impl<T> Raw<T> for AzimuthalEqualArea<T>
 where
     T: 'static + CoordFloat + FloatConst,
 {

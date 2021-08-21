@@ -1,23 +1,23 @@
 pub mod area_stream;
 pub mod bounds_stream;
+pub mod builder;
 pub mod context;
 pub mod context_stream;
 pub mod path;
-pub mod path_string;
+pub mod string;
 
 use std::collections::VecDeque;
 use std::fmt;
-use std::fmt::Display;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
-use web_sys::CanvasRenderingContext2d;
 
+// use web_sys::CanvasRenderingContext2d;
 use crate::clip::line_elem::LineElem;
-use crate::stream::Stream;
 
+// use crate::stream::Stream;
+
+/// Path::ResultEnum
 #[derive(Clone, Debug)]
 pub enum ResultEnum<T>
 where
@@ -32,6 +32,7 @@ where
     Centroid(T),
 }
 
+/// Path Result.
 pub trait Result {
     type Out;
     fn result(&mut self) -> Self::Out;
@@ -53,39 +54,39 @@ enum PointRadiusEnum<T> {
 
 impl<T> fmt::Debug for PointRadiusEnum<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("PointRadiusEnum").finish()
     }
 }
 
-trait PathTrait: PointRadiusTrait {
-    type PtDo;
-    type PtPRE;
-    fn area(&self, _d: Self::PtDo) -> Option<String> {
-        // Stream(d, self.projection_stream);
-        // PathArea::result();
-        None
-    }
-    fn measure(&self, d: Self::PtDo) -> Self::PtPRE;
+// trait PathTrait: PointRadiusTrait {
+//     type PtDo;
+//     type PtPRE;
+//     fn area(&self, _d: Self::PtDo) -> Option<String> {
+//         // Stream(d, self.projection_stream);
+//         // PathArea::result();
+//         None
+//     }
+//     fn measure(&self, d: Self::PtDo) -> Self::PtPRE;
 
-    fn bounds(&self, d: Self::PtDo) -> Self::PtPRE;
+//     fn bounds(&self, d: Self::PtDo) -> Self::PtPRE;
 
-    fn centroid(&self, d: Self::PtDo) -> Self::PtPRE;
+//     fn centroid(&self, d: Self::PtDo) -> Self::PtPRE;
 
-    fn projection(&self, d: Self::PtDo) -> Self::PtPRE;
+//     fn projection(&self, d: Self::PtDo) -> Self::PtPRE;
 
-    fn context_get(&self) -> CanvasRenderingContext2d;
-    fn context(&self);
-    // fn point_radius_get(&self);
-    // fn point_radius_set(&self);
-    // fn point_radius(&self);
-    // fn result(&self);
-}
+//     fn context_get(&self) -> CanvasRenderingContext2d;
+//     fn context(&self);
+//     // fn point_radius_get(&self);
+//     // fn point_radius_set(&self);
+//     // fn point_radius(&self);
+//     // fn result(&self);
+// }
 
-trait PathStreamTrait<T>: Stream + PathTrait + Result
-where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
-{
-}
+// trait PathStreamTrait<T>: Stream + PathTrait + Result
+// where
+//     T: CoordFloat,
+// {
+// }

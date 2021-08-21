@@ -1,27 +1,29 @@
 use geo::{CoordFloat, Coordinate};
+use std::marker::PhantomData;
 
 use crate::projection::stream_node::StreamNode;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
-use crate::Transform;
 
 /// Resample None.
 #[derive(Clone, Copy, Debug)]
 pub struct None<PR, T>
 where
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     T: CoordFloat,
 {
+    pt: PhantomData<T>,
     projection_raw: PR,
 }
 
 impl<PR, T> Default for None<PR, T>
 where
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     T: CoordFloat,
 {
     fn default() -> Self {
         Self {
+            pt: PhantomData::<T>,
             projection_raw: PR::default(),
         }
     }
@@ -30,16 +32,19 @@ where
 impl<PR, T> None<PR, T>
 where
     T: CoordFloat,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
 {
     pub fn new(projection_raw: PR) -> None<PR, T> {
-        Self { projection_raw }
+        Self {
+            pt: PhantomData::<T>,
+            projection_raw,
+        }
     }
 }
 
 impl<PR, SINK, T> Stream for StreamNode<None<PR, T>, SINK, T>
 where
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
     T: CoordFloat,
 {

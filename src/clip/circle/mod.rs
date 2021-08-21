@@ -9,7 +9,6 @@ use num_traits::FloatConst;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
-use crate::Transform;
 
 use super::circle::interpolate::generate as generate_interpolate;
 use super::circle::line::Line;
@@ -19,7 +18,7 @@ pub(crate) fn gen_clip_factory_circle<PR, SINK, T>(
     radius: T,
 ) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
 where
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {

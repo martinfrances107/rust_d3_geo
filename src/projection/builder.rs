@@ -1,14 +1,15 @@
 use crate::clip::clip::Clip;
 use crate::clip::PostClipFn;
+// use crate::projection::fit::fit_extent;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Projection;
 use crate::projection::StreamNode;
-use std::fmt::Display;
+use num_traits::AsPrimitive;
+
 use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::circle::gen_clip_factory_circle;
@@ -41,7 +42,7 @@ pub struct Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -95,7 +96,7 @@ impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T> + Clone + Copy,
+    PR: ProjectionRaw<T> + Clone + Copy,
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -277,9 +278,9 @@ impl<DRAIN, L, PR, PV, T> Translate for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type P = Builder<DRAIN, L, PR, PV, T>;
     type T = T;
@@ -303,9 +304,9 @@ impl<DRAIN, L, PR, PV, T> Center for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -328,7 +329,7 @@ impl<DRAIN, L, PR, PV, T> Scale for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T> + Clone + Copy,
+    PR: ProjectionRaw<T> + Clone + Copy,
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -348,9 +349,9 @@ impl<DRAIN, L, PR, PV, T> ClipExtent for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -390,12 +391,12 @@ where
 
 impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
 where
-    DRAIN: Stream<T = T>,
+    DRAIN: Stream<T = T> + Default,
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
 
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     // type C = Coordinate<T>;
     // type PR = PR;
@@ -525,7 +526,7 @@ where
     //     self,
     //     extent: [Coordinate<T>; 2],
     //     object: DataObject<T>,
-    // ) -> Projection<'a, PR, SD, T> {
+    // ) -> Builder<DRAIN, L, PR, PV, T> {
     //     fit_extent(self, extent, object)
     // }
 

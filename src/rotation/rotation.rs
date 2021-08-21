@@ -1,7 +1,4 @@
-use std::fmt::Display;
-
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
@@ -12,14 +9,14 @@ use super::rotate_radians::rotate_radians;
 #[derive(Clone, Debug)]
 pub struct Rotation<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     rotate: RotateRadiansEnum<T>,
 }
 
 impl<T> Rotation<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
         Self {
@@ -32,7 +29,10 @@ where
     }
 }
 
-impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Rotation<T> {
+impl<T> Transform for Rotation<T>
+where
+    T: CoordFloat + FloatConst,
+{
     type T = T;
     fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.transform(&Coordinate {

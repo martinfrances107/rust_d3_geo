@@ -1,8 +1,6 @@
-use std::fmt::Display;
-
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
+
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
@@ -104,7 +102,7 @@ where
 
 impl<T> Stream for AreaStream<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

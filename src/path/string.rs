@@ -1,8 +1,6 @@
-use std::fmt::Display;
-
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
+use std::fmt::Display;
+use std::string::String as S;
 
 use crate::stream::Stream;
 
@@ -17,9 +15,9 @@ enum PointState {
 }
 
 #[inline]
-fn circle<T>(radius: T) -> String
+fn circle<T>(radius: T) -> S
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + Display,
 {
     let two = T::from(2_f64).unwrap();
     format!(
@@ -32,20 +30,20 @@ where
 
 /// PathString.
 #[derive(Debug, Clone)]
-pub struct PathString<T>
+pub struct String<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
-    circle: Option<String>,
+    circle: Option<S>,
     line: bool,
     point: PointState,
     radius: T,
-    string: Vec<String>,
+    string: Vec<S>,
 }
 
-impl<T> Default for PathString<T>
+impl<T> Default for String<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + Display,
 {
     #[inline]
     fn default() -> Self {
@@ -59,9 +57,9 @@ where
     }
 }
 
-impl<T> PointRadiusTrait for PathString<T>
+impl<T> PointRadiusTrait for String<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     type PrtT = Option<T>;
     fn point_radius(&mut self, d: Self::PrtT) {
@@ -77,9 +75,9 @@ where
     }
 }
 
-impl<T> Result for PathString<T>
+impl<T> Result for String<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     type Out = Option<ResultEnum<T>>;
     #[inline]
@@ -94,16 +92,11 @@ where
     }
 }
 
-impl<T> Stream for PathString<T>
+impl<T> Stream for String<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + Display,
 {
     type T = T;
-
-    fn sphere(&mut self) {}
-    // fn get_dst(&self) -> Self {
-    //     self.clone()
-    // }
 
     #[inline]
     fn polygon_start(&mut self) {
@@ -122,7 +115,7 @@ where
 
     fn line_end(&mut self) {
         if !self.line {
-            self.string.push(String::from("Z"));
+            self.string.push(S::from("Z"));
         }
         self.point = PointState::LineNotInProgress;
     }

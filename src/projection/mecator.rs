@@ -1,9 +1,7 @@
-use std::fmt::Display;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
-use num_traits::AsPrimitive;
 
 use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
 use crate::clip::antimeridian::line::Line;
@@ -19,14 +17,14 @@ use super::Raw;
 #[derive(Clone, Copy, Debug)]
 pub struct Mecator<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     phantom: PhantomData<T>,
 }
 
 impl<T> Default for Mecator<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Mecator {
@@ -35,15 +33,16 @@ where
     }
 }
 
-impl<T> Raw for Mecator<T>
+impl<T> Raw<T> for Mecator<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 }
+
 impl<T> Mecator<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     pub fn gen_projection_mutator<DRAIN>() -> Builder<DRAIN, Line<T>, Mecator<T>, PV<T>, T>
     where
@@ -58,7 +57,10 @@ where
     }
 }
 
-impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Mecator<T> {
+impl<T> Transform for Mecator<T>
+where
+    T: CoordFloat + FloatConst,
+{
     type T = T;
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

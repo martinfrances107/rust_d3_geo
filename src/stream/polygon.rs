@@ -1,9 +1,5 @@
-use std::fmt::Display;
-
 use geo::CoordFloat;
 use geo::{coords_iter::CoordsIter, Coordinate, Polygon};
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 
 use super::stream_line::stream_line;
 use super::Stream;
@@ -11,7 +7,7 @@ use super::Streamable;
 
 impl<T> Streamable for Polygon<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     // type T=T;
     // type SD = Self;

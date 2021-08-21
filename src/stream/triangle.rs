@@ -1,14 +1,13 @@
-use std::fmt::Display;
-
 use geo::CoordFloat;
 use geo::Triangle;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 
 use super::Stream;
 use super::Streamable;
 
-impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable for Triangle<T> {
+impl<T> Streamable for Triangle<T>
+where
+    T: CoordFloat,
+{
     type T = T;
 
     #[inline]

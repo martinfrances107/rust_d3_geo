@@ -1,18 +1,16 @@
-use crate::clip::PostClipFn;
 use std::cell::RefCell;
-use std::fmt::Display;
 use std::rc::Rc;
 
 // use derivative::Derivative;
 use derivative::Derivative;
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::clip::Clip;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
+use crate::clip::PostClipFn;
 use crate::compose::Compose;
 use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
 use crate::stream::Stream;
@@ -38,7 +36,7 @@ pub struct Projection<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -85,7 +83,7 @@ impl<'a, DRAIN, L, PR, PV, T> Projection<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -134,9 +132,9 @@ impl<'a, DRAIN, L, PR, PV, T> Transform for Projection<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

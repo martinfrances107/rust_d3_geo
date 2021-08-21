@@ -1,9 +1,7 @@
-use std::fmt::Display;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
-use num_traits::AsPrimitive;
 
 use crate::clip::circle::interpolate::generate as gen_interpolate;
 use crate::clip::circle::line::Line;
@@ -22,11 +20,17 @@ use super::Raw;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Copy, Clone, Debug)]
-pub struct Stereographic<T> {
+pub struct Stereographic<T>
+where
+    T: CoordFloat,
+{
     phantom: PhantomData<T>,
 }
 
-impl<T> Default for Stereographic<T> {
+impl<T> Default for Stereographic<T>
+where
+    T: CoordFloat + FloatConst,
+{
     fn default() -> Self {
         Stereographic {
             phantom: PhantomData::<T>,
@@ -34,16 +38,16 @@ impl<T> Default for Stereographic<T> {
     }
 }
 
-impl<T> Raw for Stereographic<T>
+impl<T> Raw<T> for Stereographic<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
 }
 
 impl<T> Stereographic<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     #[inline]
     pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Stereographic<T>, PV<T>, T>
@@ -74,7 +78,7 @@ where
 
 impl<T> Transform for Stereographic<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
 

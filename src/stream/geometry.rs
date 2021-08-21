@@ -1,8 +1,5 @@
-use std::fmt::Display;
-
 use geo::CoordFloat;
 use geo::Geometry;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::Stream;
@@ -10,7 +7,7 @@ use super::Streamable;
 
 impl<T> Streamable for Geometry<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     // type SD = Self;
     type T = T;

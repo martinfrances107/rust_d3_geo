@@ -1,15 +1,13 @@
-use std::fmt::Display;
-
 use geo::CoordFloat;
 use geo::{Coordinate, Point};
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 
 use super::Stream;
 use super::Streamable;
 
-// Move this to another file.
-impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable for Point<T> {
+impl<T> Streamable for Point<T>
+where
+    T: CoordFloat,
+{
     type T = T;
     #[inline]
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {

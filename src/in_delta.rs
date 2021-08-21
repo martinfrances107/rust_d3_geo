@@ -1,6 +1,6 @@
-use geo::{CoordFloat, Point};
-use std::fmt::Debug;
 use std::fmt::Display;
+
+use geo::{CoordFloat, Point};
 
 pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bool {
     println!(
@@ -18,7 +18,7 @@ pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bo
     is_ok
 }
 
-pub fn in_delta_point<T: CoordFloat + Debug + Display>(
+pub fn in_delta_point<T: CoordFloat + Display>(
     actual: Point<T>,
     expected: Point<T>,
     delta: T,

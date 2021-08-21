@@ -12,12 +12,11 @@ use crate::clip::antimeridian::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
-use crate::Transform;
 
 pub fn gen_clip_factory_antimeridian<PR, SINK, T>(
 ) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
 where
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {

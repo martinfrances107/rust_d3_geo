@@ -1,7 +1,6 @@
 pub mod none;
 pub mod resample;
 
-use crate::Transform;
 use std::fmt::Debug;
 
 use geo::CoordFloat;
@@ -18,7 +17,7 @@ use super::Raw as ProjectionRaw;
 #[derive(Debug)]
 pub enum ResampleEnum<PR, T>
 where
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     T: CoordFloat,
 {
     RN(None<PR, T>),
@@ -27,7 +26,7 @@ where
 
 impl<PR, T> Default for ResampleEnum<PR, T>
 where
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     T: CoordFloat,
 {
     #[inline]
@@ -38,7 +37,7 @@ where
 
 impl<PR, T> Clone for ResampleEnum<PR, T>
 where
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     T: CoordFloat,
 {
     #[inline]
@@ -51,7 +50,7 @@ where
 }
 impl<'a, PR, SINK, T> Stream for StreamNode<ResampleEnum<PR, T>, SINK, T>
 where
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
@@ -83,7 +82,7 @@ pub fn gen_resample_factory<PR, SINK, T>(
     delta2: T,
 ) -> StreamNodeFactory<ResampleEnum<PR, T>, SINK, T>
 where
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
     T: CoordFloat,
 {

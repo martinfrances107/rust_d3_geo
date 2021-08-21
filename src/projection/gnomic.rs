@@ -1,9 +1,7 @@
-use std::fmt::Display;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
-use num_traits::AsPrimitive;
 
 use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
 use crate::clip::circle::line::Line;
@@ -24,14 +22,14 @@ use super::Raw;
 #[derive(Copy, Clone, Debug)]
 pub struct Gnomic<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     phantom: PhantomData<T>,
 }
 
 impl<T> Default for Gnomic<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Gnomic {
@@ -42,15 +40,16 @@ where
     }
 }
 
-impl<T> Raw for Gnomic<T>
+impl<T> Raw<T> for Gnomic<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
 }
+
 impl<T> Gnomic<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Gnomic<T>, PV<T>, T>
     where
@@ -75,7 +74,10 @@ where
     }
 }
 
-impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Transform for Gnomic<T> {
+impl<T> Transform for Gnomic<T>
+where
+    T: 'static + CoordFloat + FloatConst,
+{
     type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();

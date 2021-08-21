@@ -4,7 +4,6 @@ use super::line_elem::LineElem;
 use super::InterpolateFn;
 use super::Line;
 use super::PointVisible;
-use crate::Transform;
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -34,7 +33,7 @@ use derivative::Derivative;
 pub struct StreamNodeClipFactory<L, PR, PV, SINK, T>
 where
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
@@ -54,7 +53,7 @@ where
 impl<L, PR, PV, SINK, T> StreamNodeClipFactory<L, PR, PV, SINK, T>
 where
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
@@ -87,7 +86,7 @@ where
 impl<L, PR, PV, SINK, T> NodeFactory for StreamNodeClipFactory<L, PR, PV, SINK, T>
 where
     L: Line,
-    PR: ProjectionRaw<T = T> + Transform<T = T>,
+    PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,

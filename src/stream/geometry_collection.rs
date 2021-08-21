@@ -1,14 +1,14 @@
-use std::fmt::Display;
-
 use geo::{CoordFloat, GeometryCollection};
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
 use super::Streamable;
 
-impl<T: AsPrimitive<T> + CoordFloat + Display + FloatConst> Streamable for GeometryCollection<T> {
+impl<T> Streamable for GeometryCollection<T>
+where
+    T: CoordFloat + FloatConst,
+{
     // type SD = Self;
     type T = T;
     #[inline]

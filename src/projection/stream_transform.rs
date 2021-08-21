@@ -1,8 +1,4 @@
-use std::fmt::Display;
-
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 
 use crate::stream::Stream;
 use crate::Transform;
@@ -12,7 +8,7 @@ use super::StreamNode;
 #[derive(Clone, Debug)]
 pub struct StreamTransform<T, TRANSFORMER>
 where
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
     TRANSFORMER: Transform<T = T>,
 {
     pub transformer: TRANSFORMER,
@@ -50,7 +46,7 @@ where
 
 impl<T, TRANSFORMER> StreamTransform<T, TRANSFORMER>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
     TRANSFORMER: Transform<T = T>,
 {
     #[inline]
@@ -81,7 +77,7 @@ where
 impl<SINK, T, TRANSFORMER> Stream for StreamNode<StreamTransform<T, TRANSFORMER>, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
     TRANSFORMER: Transform<T = T>,
 {
     type T = T;

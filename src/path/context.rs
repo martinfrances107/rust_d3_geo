@@ -1,37 +1,33 @@
 extern crate web_sys;
 
-use std::fmt::Display;
-
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
+use std::rc::Rc;
+
 use web_sys::CanvasRenderingContext2d;
 
-// use crate::stream::stream_dst::StreamDst;
 use crate::stream::Stream;
 
 use super::PointRadiusTrait;
 use super::Result;
 use super::ResultEnum;
 
-// use super::RenderingContext2d;
 #[derive(Clone, Debug)]
 pub struct Context<T>
 where
-    T: AsPrimitive<T>,
+    T: CoordFloat,
 {
     line: Option<T>,
     point: Option<T>,
     radius: T,
-    context: CanvasRenderingContext2d,
+    context: Rc<CanvasRenderingContext2d>,
 }
 
 impl<T> Context<T>
 where
-    T: AsPrimitive<T> + CoordFloat,
+    T: CoordFloat,
 {
     #[inline]
-    pub fn new(context: CanvasRenderingContext2d) -> Self {
+    pub fn new(context: Rc<CanvasRenderingContext2d>) -> Self {
         Self {
             context,
             line: None,
@@ -43,7 +39,7 @@ where
 
 impl<T> PointRadiusTrait for Context<T>
 where
-    T: AsPrimitive<T>,
+    T: CoordFloat,
 {
     type PrtT = Option<T>;
     fn point_radius(&mut self, val: Self::PrtT) {
@@ -60,7 +56,7 @@ where
 
 impl<T> Result for Context<T>
 where
-    T: AsPrimitive<T> + CoordFloat,
+    T: CoordFloat,
 {
     type Out = Option<ResultEnum<T>>;
     #[inline]
@@ -71,7 +67,7 @@ where
 
 impl<T> Stream for Context<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst + AsPrimitive<T>,
+    T: CoordFloat,
 {
     type T = T;
 

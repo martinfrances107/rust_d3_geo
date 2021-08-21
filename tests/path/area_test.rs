@@ -4,7 +4,6 @@
 
 //     use std::f64::consts::PI;
 //     use std::fmt::Display;
-//     use std::ops::AddAssign;
 
 //     use geo::CoordFloat;
 //     use geo::Coordinate;
@@ -18,15 +17,18 @@
 //     use rust_d3_geo::clip::antimeridian::pv::PV;
 //     use rust_d3_geo::data_object::sphere::Sphere;
 //     use rust_d3_geo::data_object::DataObject;
+//     use rust_d3_geo::path::builder::Builder as PathBuilder;
+//     use rust_d3_geo::path::context_stream::ContextStream;
 //     use rust_d3_geo::path::ResultEnum;
 //     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
 //     use rust_d3_geo::projection::projection::Projection;
 //     use rust_d3_geo::projection::scale::Scale;
-//     use rust_d3_geo::stream::StreamDrainStub;
 
 //     #[inline]
-//     fn equirectangular<'a, T: AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst>(
-//     ) -> Projection<StreamDrainStub<T>, Line<T>, EquirectangularRaw<T>, PV<T>, T> {
+//     fn equirectangular<T>() -> Projection<ContextStream<T>, Line<T>, EquirectangularRaw<T>, PV<T>, T>
+//     where
+//         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+//     {
 //         EquirectangularRaw::gen_projection_builder()
 //             .scale(T::from(900f64 / PI).unwrap())
 //             .precision(&T::zero())
@@ -35,13 +37,15 @@
 
 //     #[inline]
 //     fn test_area<'a, T>(
-//         projection: Projection<StreamDrainStub<T>, Line<T>, EquirectangularRaw<T>, PV<T>, T>,
-//         object: &DataObject<T>,
+//         projection: Projection<ContextStream<T>, Line<T>, EquirectangularRaw<T>, PV<T>, T>,
+//         object: DataObject<T>,
 //     ) -> T
 //     where
-//         T: AsPrimitive<T> + CoordFloat + FloatConst + Display + AddAssign + Default,
+//         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 //     {
-//         match Path::generate(Some(projection), None).area(object) {
+//         let builder = PathBuilder::init(Some(projection), None);
+//         let area = builder.area(object);
+//         match area {
 //             Some(p) => match p {
 //                 ResultEnum::Area(a) => return a,
 //                 _ => panic!("Expecting an area."),
@@ -66,7 +70,7 @@
 //             vec![],
 //         )));
 //         let eq = equirectangular::<f64>();
-//         assert_eq!(test_area(eq, &object), 25.0);
+//         assert_eq!(test_area(eq, object), 25.0);
 //     }
 
 //     #[test]
@@ -92,7 +96,7 @@
 //             ],
 //         )));
 //         let eq = equirectangular::<f64>();
-//         assert_eq!(test_area(eq, &object), 16.0);
+//         assert_eq!(test_area(eq, object), 16.0);
 //     }
 
 //     #[test]
@@ -100,6 +104,6 @@
 //         println!("geoPath.area(…) of a sphere");
 //         let eq = equirectangular::<f64>();
 //         let object = DataObject::Sphere(Sphere::default());
-//         assert_eq!(test_area(eq, &object), 1620000.0);
+//         assert_eq!(test_area(eq, object), 1620000.0);
 //     }
 // }

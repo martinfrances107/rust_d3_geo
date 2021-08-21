@@ -1,11 +1,7 @@
-use std::fmt::Display;
-
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
-
 use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Geometry;
+use num_traits::FloatConst;
 
 pub mod sphere;
 
@@ -29,19 +25,19 @@ where
 }
 
 /// FeatruesCollection - An array of feature objects.
-#[derive(Debug)]
-pub struct FeatureCollection<T: CoordFloat>(pub Vec<FeaturesStruct<T>>);
+#[derive(Clone, Debug)]
+pub struct FeatureCollection<T: CoordFloat>(pub Vec<Features<T>>);
 
 // Signular version of the struct.
 #[derive(Clone, Debug)]
-pub struct FeatureStruct<T: CoordFloat> {
+pub struct Feature<T: CoordFloat> {
     pub properties: Vec<FeatureProperty<T>>,
     pub geometry: Geometry<T>,
 }
 
 // Pluralization of the struct,
 #[derive(Clone, Debug)]
-pub struct FeaturesStruct<T: CoordFloat> {
+pub struct Features<T: CoordFloat> {
     pub properties: Vec<FeatureProperty<T>>,
     pub geometry: Vec<Geometry<T>>,
 }
@@ -49,15 +45,15 @@ pub struct FeaturesStruct<T: CoordFloat> {
 #[derive(Clone, Debug)]
 pub enum Collection<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Feature - a feature containing one of the above geometry objects.
-    Feature { feature: FeatureStruct<T> },
+    Feature { feature: Feature<T> },
 }
 #[derive(Clone, Debug)]
 pub enum DataObject<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     Sphere(Sphere<T>),
     Geometry(Geometry<T>),
@@ -66,7 +62,7 @@ where
 
 impl<T> Streamable for DataObject<T>
 where
-    T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
     // type SD = DataObject<T>;

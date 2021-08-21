@@ -2,18 +2,11 @@ use std::fmt::Debug;
 use std::fmt::Display;
 
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
-
-use num_traits::FloatConst;
 
 use crate::in_delta::in_delta;
 use crate::Transform;
 
-pub fn projection_equal<
-    'a,
-    P: Transform,
-    T: AsPrimitive<T> + CoordFloat + FloatConst + Debug + Display + Default,
->(
+pub fn projection_equal<'a, P, T>(
     projection: &P,
     expected_location: &'a Coordinate<T>,
     expected_point: &'a Coordinate<T>,
@@ -21,6 +14,7 @@ pub fn projection_equal<
 ) -> bool
 where
     P: Transform<T = T>,
+    T: CoordFloat + Display,
 {
     let delta = match delta_p {
         Some(d) => d,
@@ -51,17 +45,19 @@ fn planar_equal<T: CoordFloat + Debug + Display>(
     e0 && e1
 }
 
-fn spherical_equal<T: CoordFloat + Debug + Display>(
-    actual: &Coordinate<T>,
-    expected: &Coordinate<T>,
-    delta: T,
-) -> bool {
+fn spherical_equal<T>(actual: &Coordinate<T>, expected: &Coordinate<T>, delta: T) -> bool
+where
+    T: CoordFloat + Display,
+{
     let e0 = logitude_equal(actual.x, expected.x, delta);
     let e1 = in_delta(actual.y, expected.y, delta);
     e0 && e1
 }
 
-fn logitude_equal<T: CoordFloat + Debug + Display>(actual: T, expected: T, delta: T) -> bool {
+fn logitude_equal<T>(actual: T, expected: T, delta: T) -> bool
+where
+    T: CoordFloat,
+{
     let actual = (actual - expected).abs() % T::from(360_f64).unwrap();
     actual <= delta || actual >= T::from(360_f64).unwrap() - delta
 }

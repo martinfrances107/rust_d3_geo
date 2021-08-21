@@ -9,6 +9,7 @@ mod multi_polygon;
 mod point;
 mod polygon;
 mod rect;
+// mod stream_geometry_map;
 mod stream_line;
 mod triangle;
 
@@ -16,7 +17,6 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
 
 /// Applies to DataObject's
 pub trait Streamable {
@@ -34,7 +34,7 @@ where
 
 impl<T> Stream for StreamDrainStub<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
     fn point(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {}
@@ -90,6 +90,7 @@ where
 //     fn polygon_end(&mut self) {}
 // }
 
+/// Is a node in the stream pipeline.
 /// Default implmentation is a no-op.
 pub trait Stream: Clone
 where
@@ -108,7 +109,7 @@ where
 /// Ci CompareIntersections param type
 /// See StreamClip.
 #[derive(Clone, Debug, Default)]
-pub struct CompareIntersection<T: CoordFloat>
+pub struct CompareIntersection<T>
 where
     T: CoordFloat,
 {
