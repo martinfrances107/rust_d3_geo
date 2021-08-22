@@ -213,15 +213,13 @@ where
             Some(projection) => b.projection(projection),
             None => b.projection_reset(),
         };
-        let b = match context {
+        match context {
             Some(context) => b.context(context),
             None => {
                 b.context_pathstring()
                 // todo!("must resolve changing output type");
                 // b.context_pathstring()
             }
-        };
-
-        b
+        }
     }
 }
