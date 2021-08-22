@@ -688,11 +688,13 @@ where
     }
 
     pub fn precision(self, delta: &T) -> Builder<DRAIN, L, PR, PV, T> {
-        let mut out = Builder::new(self.preclip_factory, self.projection_raw);
-        // out.resample_factory = gen_resample_factory(self.projection_raw, self.delta2);
-        out.resample_factory = StreamNodeResampleFactory::new(self.projection_raw, self.delta2);
-        out.delta2 = *delta * *delta;
-        out
+        let delta2 = *delta * *delta;
+        let resample_factory = StreamNodeResampleFactory::new(self.projection_raw, delta2);
+        Builder {
+            delta2,
+            resample_factory,
+            ..self
+        }
     }
 
     // /**

@@ -237,8 +237,6 @@ where
 {
     type T = T;
 
-    fn sphere(&mut self) {}
-
     #[inline]
     fn line_end(&mut self) {
         (self.line_end_fn)(self);

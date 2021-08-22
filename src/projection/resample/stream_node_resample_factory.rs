@@ -74,6 +74,5 @@ where
                 pd: PhantomData::<T>,
             }),
         }
-        // StreamNodeFactory::new(resample).generate(sink)
     }
 }

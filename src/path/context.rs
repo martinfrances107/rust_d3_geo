@@ -71,8 +71,6 @@ where
 {
     type T = T;
 
-    fn sphere(&mut self) {}
-
     #[inline]
     fn polygon_start(&mut self) {
         self.line = Some(T::zero());
