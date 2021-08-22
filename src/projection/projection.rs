@@ -1,4 +1,5 @@
 use crate::projection::resample::stream_node_resample_factory::StreamNodeResampleFactory;
+use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -18,7 +19,7 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::resample::ResampleNode;
-use super::scale_translate_rotate::ScaleTranslateRotateEnum;
+// use super::scale_translate_rotate::ScaleTranslateRotateEnum;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::NodeFactory;
@@ -51,11 +52,10 @@ where
     pub rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
 
     /// Used exclusive by Transform( not stream releated).
-    pub rotate_transform:
-        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+    pub rotate_transform: Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     pub rotate_transform_factory: StreamNodeFactory<
-        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
         StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
     >,
@@ -63,7 +63,7 @@ where
     pub transform_radians_factory: StreamNodeFactory<
         StreamTransformRadians,
         StreamNode<
-            Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+            Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
             StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
             T,
         >,
@@ -94,7 +94,7 @@ where
     ) -> StreamNode<
         StreamTransformRadians,
         StreamNode<
-            Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+            Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
             StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
             T,
         >,

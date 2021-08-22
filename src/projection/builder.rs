@@ -30,8 +30,10 @@ use super::clip_extent::ClipExtent;
 // use super::resample::gen_resample_factory;
 use super::resample::ResampleNode;
 use super::scale::Scale;
-use super::scale_translate_rotate::ScaleTranslateRotate;
-use super::scale_translate_rotate::ScaleTranslateRotateEnum;
+// use super::scale_translate_rotate::ScaleTranslateRotate;
+// use super::scale_translate_rotate::ScaleTranslateRotateEnum;
+use super::str::generate as generate_str;
+use super::str::scale_translate_rotate::ScaleTranslateRotate;
 use super::stream_node_factory::StreamNodeFactory;
 use super::translate::Translate;
 use super::Raw as ProjectionRaw;
@@ -78,12 +80,12 @@ where
     postclip: PostClipFn<DRAIN>,
     // Used by recenter() to build the factories.
     rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
-    transform: Compose<T, PR, ScaleTranslateRotateEnum<T>>,
-    rotate_transform: Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+    transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+    rotate_transform: Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
     rotate_transform_factory: StreamNodeFactory<
-        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
         StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
     >,
@@ -117,9 +119,9 @@ where
         // let resample_factory = gen_resample_factory(projection_raw, T::zero());
         let resample_factory = StreamNodeResampleFactory::new(projection_raw, T::zero());
 
-        let center = ScaleTranslateRotate::new(&k, &T::zero(), &T::zero(), &sx, &sy, &alpha)
+        let center = generate_str(&k, &T::zero(), &T::zero(), &sx, &sy, &alpha)
             .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
-        let str = ScaleTranslateRotate::new(&k, &(x - center.x), &(y - center.y), &sx, &sy, &alpha);
+        let str = generate_str(&k, &(x - center.x), &(y - center.y), &sx, &sy, &alpha);
 
         let rotate = rotate_radians(delta_lambda, delta_phi, delta_gamma); // pre-rotate
         let transform = Compose::new(projection_raw, str);
@@ -167,7 +169,7 @@ where
         let transform_radians_factory: StreamNodeFactory<
             StreamTransformRadians,
             StreamNode<
-                Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
+                Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
                 StreamNode<
                     Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>,
                     ResampleNode<PR, DRAIN, T>,
@@ -233,7 +235,7 @@ where
     }
 
     fn recenter(mut self) -> Builder<DRAIN, L, PR, PV, T> {
-        let center = ScaleTranslateRotate::new(
+        let center = generate_str(
             &self.k,
             &T::zero(),
             &T::zero(),
@@ -246,7 +248,7 @@ where
             y: self.phi,
         }));
 
-        let str = ScaleTranslateRotate::new(
+        let str = generate_str(
             &self.k,
             &(self.x - center.x),
             &(self.y - center.y),

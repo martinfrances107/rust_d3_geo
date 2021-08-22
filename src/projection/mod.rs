@@ -25,8 +25,8 @@ pub mod orthographic;
 pub mod projection;
 pub mod projection_equal;
 pub mod scale;
-pub mod scale_translate;
-pub mod scale_translate_rotate;
+pub mod str;
+
 pub mod stereographic;
 pub mod stream_node;
 pub mod stream_node_factory;
@@ -61,7 +61,7 @@ where
     fn build(s: Self::PR) -> Projection<Self::Drain, Self::L, Self::PR, Self::PV, Self::T>;
 }
 
-/// Generates elements of the  projection stream pipeline.
+/// Generates elements of the projection stream pipeline.
 pub trait NodeFactory
 where
     <Self as NodeFactory>::T: CoordFloat,
@@ -71,6 +71,4 @@ where
     type T;
     type Node;
     fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node;
-
-    // -> Self::Node<Self::Raw, Self::Sink, Self::T>;
 }

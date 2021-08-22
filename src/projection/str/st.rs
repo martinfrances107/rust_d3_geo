@@ -1,10 +1,15 @@
 use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
 
 use crate::Transform;
 
-#[derive(Clone, Debug, Default)]
-pub struct ScaleTranslate<T> {
+/// An inner type of the Enum ScaleTranslateRotate.
+///
+/// Simplification when only  translate is needed.
+#[derive(Clone, Debug)]
+pub struct St<T>
+where
+    T: CoordFloat,
+{
     pub k: T,
     pub dx: T,
     pub dy: T,
@@ -12,9 +17,27 @@ pub struct ScaleTranslate<T> {
     pub sy: T,
 }
 
-impl<T> Transform for ScaleTranslate<T>
+/// Default is a identity tranform.
+///
+/// Unity scaling, zero translation.
+impl<T> Default for St<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            k: T::one(),
+            dx: T::zero(),
+            dy: T::zero(),
+            sx: T::one(),
+            sy: T::one(),
+        }
+    }
+}
+
+impl<T> Transform for St<T>
+where
+    T: CoordFloat,
 {
     type T = T;
 
