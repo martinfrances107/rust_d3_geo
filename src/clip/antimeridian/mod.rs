@@ -6,12 +6,13 @@ pub mod pv;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
-use crate::clip::antimeridian::line::Line;
-use crate::clip::antimeridian::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
+
+use interpolate::generate as gen_interpolate;
+use line::Line;
+use pv::PV;
 
 pub fn gen_clip_factory_antimeridian<PR, SINK, T>(
 ) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>

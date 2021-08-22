@@ -1,9 +1,9 @@
+use derivative::Derivative;
+use geo::{CoordFloat, Coordinate};
+
 use crate::stream::Streamable;
 
 use super::stream::Stream as StreamTrait;
-
-use derivative::Derivative;
-use geo::{CoordFloat, Coordinate};
 
 #[derive(Derivative)]
 #[derivative(Debug)]

@@ -16,18 +16,18 @@ where
     projection_raw: PR,
 }
 
-impl<PR, T> Default for None<PR, T>
-where
-    PR: ProjectionRaw<T>,
-    T: CoordFloat,
-{
-    fn default() -> Self {
-        Self {
-            pt: PhantomData::<T>,
-            projection_raw: PR::default(),
-        }
-    }
-}
+// impl<PR, T> Default for None<PR, T>
+// where
+//     PR: ProjectionRaw<T>,
+//     T: CoordFloat,
+// {
+//     fn default() -> Self {
+//         Self {
+//             pt: PhantomData::<T>,
+//             projection_raw: PR::default(),
+//         }
+//     }
+// }
 
 impl<PR, T> None<PR, T>
 where

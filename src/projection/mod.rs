@@ -6,10 +6,11 @@ use num_traits::FloatConst;
 
 use crate::clip::Line;
 use crate::clip::PointVisible;
-use crate::projection::projection::Projection;
-use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 use crate::Transform;
+
+use projection::Projection;
+use stream_node::StreamNode;
 
 pub mod azimuthal;
 pub mod azimuthal_equal_area;
@@ -68,6 +69,8 @@ where
     type Raw;
     type Sink;
     type T;
-    fn generate(&self, sink: Rc<RefCell<Self::Sink>>)
-        -> StreamNode<Self::Raw, Self::Sink, Self::T>;
+    type Node;
+    fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node;
+
+    // -> Self::Node<Self::Raw, Self::Sink, Self::T>;
 }

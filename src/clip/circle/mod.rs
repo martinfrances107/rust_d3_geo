@@ -10,9 +10,9 @@ use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 
-use super::circle::interpolate::generate as generate_interpolate;
-use super::circle::line::Line;
-use super::circle::pv::PV;
+use interpolate::generate as generate_interpolate;
+use line::Line;
+use pv::PV;
 
 pub(crate) fn gen_clip_factory_circle<PR, SINK, T>(
     radius: T,

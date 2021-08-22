@@ -94,6 +94,7 @@ where
     type Sink = SINK;
     type T = T;
     type Raw = Clip<L, PV, SINK, T>;
+    type Node = StreamNode<Self::Raw, Self::Sink, Self::T>;
     fn generate(
         &self,
         sink: Rc<RefCell<Self::Sink>>,

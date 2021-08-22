@@ -1,3 +1,4 @@
+use crate::projection::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -16,7 +17,7 @@ use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::resample::ResampleEnum;
+use super::resample::ResampleNode;
 use super::scale_translate_rotate::ScaleTranslateRotateEnum;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
@@ -43,10 +44,9 @@ where
     #[derivative(Debug = "ignore")]
     pub postclip: PostClipFn<DRAIN>,
     pub projection_raw: PR,
-    pub preclip_factory:
-        StreamNodeClipFactory<L, PR, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
+    pub preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
 
-    pub resample_factory: StreamNodeFactory<ResampleEnum<PR, T>, DRAIN, T>,
+    pub resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
 
     pub rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
 
@@ -56,11 +56,7 @@ where
 
     pub rotate_transform_factory: StreamNodeFactory<
         Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
-        StreamNode<
-            Clip<L, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
-            StreamNode<ResampleEnum<PR, T>, DRAIN, T>,
-            T,
-        >,
+        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
     >,
 
@@ -68,11 +64,7 @@ where
         StreamTransformRadians,
         StreamNode<
             Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
-            StreamNode<
-                Clip<L, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
-                StreamNode<ResampleEnum<PR, T>, DRAIN, T>,
-                T,
-            >,
+            StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
             T,
         >,
         T,
@@ -103,11 +95,7 @@ where
         StreamTransformRadians,
         StreamNode<
             Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotateEnum<T>>>,
-            StreamNode<
-                Clip<L, PV, StreamNode<ResampleEnum<PR, T>, DRAIN, T>, T>,
-                StreamNode<ResampleEnum<PR, T>, DRAIN, T>,
-                T,
-            >,
+            StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
             T,
         >,
         T,
