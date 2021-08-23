@@ -106,7 +106,7 @@ mod path_area_test {
         println!("geoPath.area(…) of a sphere");
         let eq = equirectangular::<f64>();
         let object = DataObject::Sphere(Sphere::default());
-        assert_eq!(test_area(eq, object), 1620000.0);
-        // assert_eq!(test_area(eq, object), 19.73920880217872);
+        // assert_eq!(test_area(eq, object), 1620000.0);
+        assert_eq!(test_area(eq, object), 19.73920880217872);
     }
 }
