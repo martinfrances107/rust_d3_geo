@@ -33,64 +33,63 @@ where
               direction: T,
               stream_in: Rc<RefCell<STREAM>>| {
             let phi: T;
-            // let stream = stream_in.borrow_mut();
+            let mut s = stream_in.borrow_mut();
             match from {
                 None => {
                     phi = direction * T::FRAC_PI_2();
-                    stream_in.borrow_mut().point(
-                        &Coordinate {
-                            x: -T::PI(),
-                            y: phi,
-                        },
-                        None,
-                    );
-                    stream_in.borrow_mut().point(
-                        &Coordinate {
-                            x: T::zero(),
-                            y: phi,
-                        },
-                        None,
-                    );
-                    stream_in
-                        .borrow_mut()
-                        .point(&Coordinate { x: T::PI(), y: phi }, None);
 
-                    stream_in.borrow_mut().point(
+                    s.point(
+                        &Coordinate {
+                            x: -T::PI(),
+                            y: phi,
+                        },
+                        None,
+                    );
+                    s.point(
+                        &Coordinate {
+                            x: T::zero(),
+                            y: phi,
+                        },
+                        None,
+                    );
+                    s.point(&Coordinate { x: T::PI(), y: phi }, None);
+
+                    s.point(
                         &Coordinate {
                             x: T::PI(),
                             y: T::zero(),
                         },
                         None,
                     );
-                    stream_in.borrow_mut().point(
+                    s.point(
                         &Coordinate {
                             x: T::PI(),
                             y: -phi,
                         },
                         None,
                     );
-                    stream_in.borrow_mut().point(
+                    s.point(
                         &Coordinate {
                             x: T::zero(),
                             y: -phi,
                         },
                         None,
                     );
-                    stream_in.borrow_mut().point(
+                    s.point(
                         &Coordinate {
                             x: -T::PI(),
                             y: -phi,
                         },
                         None,
                     );
-                    stream_in.borrow_mut().point(
+                    s.point(
                         &Coordinate {
                             x: -T::PI(),
                             y: T::zero(),
                         },
                         None,
                     );
-                    stream_in.borrow_mut().point(
+                    s.point(
                         &Coordinate {
                             x: -T::PI(),
                             y: phi,
@@ -104,21 +103,17 @@ where
                         let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
 
                         phi = direction * lambda / T::from(2).unwrap();
-                        stream_in
-                            .borrow_mut()
-                            .point(&Coordinate { x: -lambda, y: phi }, None);
-                        stream_in.borrow_mut().point(
+                        s.point(&Coordinate { x: -lambda, y: phi }, None);
+                        s.point(
                             &Coordinate {
                                 x: T::zero(),
                                 y: phi,
                             },
                             None,
                         );
-                        stream_in
-                            .borrow_mut()
-                            .point(&Coordinate { x: lambda, y: phi }, None);
+                        s.point(&Coordinate { x: lambda, y: phi }, None);
                     } else {
-                        stream_in.borrow_mut().point(&to, None);
+                        s.point(&to, None);
                     }
                 }
             }
