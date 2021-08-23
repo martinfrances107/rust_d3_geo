@@ -87,6 +87,7 @@ where
         };
         let delta = (lambda1 - self.raw.lambda0).abs();
 
+        let mut s = self.sink.borrow_mut();
         if (delta - T::PI()).abs() < T::epsilon() {
             // Line crosses a pole.
             println!("line crosses a pole.");
@@ -96,30 +97,30 @@ where
             } else {
                 -T::FRAC_PI_2()
             };
-            self.sink.borrow_mut().point(
+            s.point(
                 &Coordinate {
                     x: self.raw.lambda0,
                     y: self.raw.phi0,
                 },
                 None,
             );
-            self.sink.borrow_mut().point(
+            s.point(
                 &Coordinate {
                     x: self.raw.sign0,
                     y: self.raw.phi0,
                 },
                 None,
             );
-            self.sink.borrow_mut().line_end();
-            self.sink.borrow_mut().line_start();
-            self.sink.borrow_mut().point(
+            s.line_end();
+            s.line_start();
+            s.point(
                 &Coordinate {
                     x: sign1,
                     y: self.raw.phi0,
                 },
                 None,
             );
-            self.sink.borrow_mut().point(
+            s.point(
                 &Coordinate {
                     x: lambda1,
                     y: self.raw.phi0,
@@ -139,16 +140,16 @@ where
             }
             self.raw.phi0 = intersect(self.raw.lambda0, self.raw.phi0, lambda1, phi1);
             println!("output of intersect {:?}", self.raw.phi0);
-            self.sink.borrow_mut().point(
+            s.point(
                 &Coordinate {
                     x: self.raw.sign0,
                     y: self.raw.phi0,
                 },
                 None,
             );
-            self.sink.borrow_mut().line_end();
-            self.sink.borrow_mut().line_start();
-            self.sink.borrow_mut().point(
+            s.line_end();
+            s.line_start();
+            s.point(
                 &Coordinate {
                     x: sign1,
                     y: self.raw.phi0,
@@ -162,7 +163,7 @@ where
 
         self.raw.lambda0 = lambda1;
         self.raw.phi0 = phi1;
-        self.sink.borrow_mut().point(
+        s.point(
             &Coordinate {
                 x: self.raw.lambda0,
                 y: self.raw.phi0,
