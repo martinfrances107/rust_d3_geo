@@ -10,8 +10,8 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::rotation::rotate_radians::rotate_radians;
-use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
+use crate::rotation::rotate_radians;
+use crate::rotation::rotate_radians::RotateRadiams;
 use crate::rotation::rotation_identity::RotationIdentity;
 
 // use crate::stream::Stream;
@@ -78,7 +78,7 @@ where
         let coordinates = vec![self.stream.borrow().ring.clone()];
 
         self.stream.borrow_mut().ring.clear();
-        self.stream.borrow_mut().rotate = RotateRadiansEnum::I(RotationIdentity::default());
+        self.stream.borrow_mut().rotate = RotateRadiams::I(RotationIdentity::default());
 
         coordinates
     }

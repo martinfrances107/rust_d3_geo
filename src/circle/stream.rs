@@ -7,7 +7,7 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 // use super::StreamType;
-use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
+use crate::rotation::rotate_radians::RotateRadiams;
 use crate::rotation::rotation_identity::RotationIdentity;
 use crate::stream::Stream as StreamTrait;
 use crate::Transform;
@@ -20,7 +20,7 @@ where
 {
     // pub stream_type: StreamType,
     pub coordinates: Vec<Vec<Coordinate<T>>>,
-    pub rotate: RotateRadiansEnum<T>,
+    pub rotate: RotateRadiams<T>,
     pub ring: Vec<Coordinate<T>>,
 }
 
@@ -33,7 +33,7 @@ where
         Self {
             // stream_type: StreamType::Polygon,
             coordinates: vec![vec![]],
-            rotate: RotateRadiansEnum::I(RotationIdentity::<T>::default()),
+            rotate: RotateRadiams::I(RotationIdentity::<T>::default()),
             ring: vec![],
         }
     }

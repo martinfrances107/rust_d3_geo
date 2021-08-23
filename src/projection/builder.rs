@@ -18,8 +18,8 @@ use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
-use crate::rotation::rotate_radians::rotate_radians;
-use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
+use crate::rotation::rotate_radians;
+use crate::rotation::rotate_radians::RotateRadiams;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -76,13 +76,13 @@ where
     #[derivative(Debug = "ignore")]
     postclip: PostClipFn<DRAIN>,
     // Used by recenter() to build the factories.
-    rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
+    rotate: RotateRadiams<T>, //rotate, pre-rotate
     transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-    rotate_transform: Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+    rotate_transform: Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
     rotate_transform_factory: StreamNodeFactory<
-        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+        Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
         StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
     >,
@@ -165,7 +165,7 @@ where
         let transform_radians_factory: StreamNodeFactory<
             StreamTransformRadians,
             StreamNode<
-                Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+                Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
                 StreamNode<
                     Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>,
                     ResampleNode<PR, DRAIN, T>,

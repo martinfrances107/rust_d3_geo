@@ -1,17 +1,17 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
+use crate::rotation::rotate_radians::RotateRadiams;
 use crate::Transform;
 
-use super::rotate_radians::rotate_radians;
+use super::rotate_radians;
 
 #[derive(Clone, Debug)]
 pub struct Rotation<T>
 where
     T: CoordFloat + FloatConst,
 {
-    rotate: RotateRadiansEnum<T>,
+    rotate: RotateRadiams<T>,
 }
 
 impl<T> Rotation<T>

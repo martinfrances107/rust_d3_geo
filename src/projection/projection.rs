@@ -13,7 +13,7 @@ use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::clip::PostClipFn;
 use crate::compose::Compose;
-use crate::rotation::rotate_radians_enum::RotateRadiansEnum;
+use crate::rotation::rotate_radians::RotateRadiams;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -47,13 +47,13 @@ where
 
     pub resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
 
-    pub rotate: RotateRadiansEnum<T>, //rotate, pre-rotate
+    pub rotate: RotateRadiams<T>, //rotate, pre-rotate
 
     /// Used exclusive by Transform( not stream releated).
-    pub rotate_transform: Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+    pub rotate_transform: Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     pub rotate_transform_factory: StreamNodeFactory<
-        Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+        Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
         StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
     >,
@@ -61,7 +61,7 @@ where
     pub transform_radians_factory: StreamNodeFactory<
         StreamTransformRadians,
         StreamNode<
-            Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+            Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
             StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
             T,
         >,
@@ -92,7 +92,7 @@ where
     ) -> StreamNode<
         StreamTransformRadians,
         StreamNode<
-            Compose<T, RotateRadiansEnum<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+            Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
             StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
             T,
         >,
