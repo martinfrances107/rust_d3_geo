@@ -1,18 +1,16 @@
 use crate::clip::clip::Clip;
-use crate::clip::PostClipFn;
-use crate::projection::resample::stream_node_resample_factory::StreamNodeResampleFactory;
-// use crate::projection::fit::fit_extent;
-use crate::projection::stream_transform_radians::StreamTransformRadians;
-use crate::projection::Projection;
-use crate::projection::StreamNode;
-use num_traits::AsPrimitive;
 
 use std::rc::Rc;
 
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::clip::PostClipFn;
+use crate::projection::resample::stream_node_resample_factory::StreamNodeResampleFactory;
+// use crate::projection::fit::fit_extent;
 use crate::clip::circle::gen_clip_factory_circle;
 use crate::clip::circle::line::Line as CircleLine;
 use crate::clip::circle::pv::PV as CirclePV;
@@ -27,17 +25,16 @@ use crate::Transform;
 
 use super::center::Center;
 use super::clip_extent::ClipExtent;
-// use super::resample::gen_resample_factory;
 use super::resample::ResampleNode;
 use super::scale::Scale;
-// use super::scale_translate_rotate::ScaleTranslateRotate;
-// use super::scale_translate_rotate::ScaleTranslateRotateEnum;
 use super::str::generate as generate_str;
 use super::str::scale_translate_rotate::ScaleTranslateRotate;
 use super::stream_node_factory::StreamNodeFactory;
+use super::stream_transform_radians::StreamTransformRadians;
 use super::translate::Translate;
+use super::Projection;
 use super::Raw as ProjectionRaw;
-use derivative::Derivative;
+use super::StreamNode;
 
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
@@ -116,7 +113,6 @@ where
         let delta_gamma = T::zero();
 
         // Zero implies no resampling by default.
-        // let resample_factory = gen_resample_factory(projection_raw, T::zero());
         let resample_factory = StreamNodeResampleFactory::new(projection_raw, T::zero());
 
         let center = generate_str(&k, &T::zero(), &T::zero(), &sx, &sy, &alpha)
@@ -263,7 +259,6 @@ where
 
         //todo update every factory.
         self.resample_factory = StreamNodeResampleFactory::new(self.projection_raw, self.delta2);
-        // self.resample_factory = gen_resample_factory(self.projection_raw, self.delta2);
 
         self.reset()
     }

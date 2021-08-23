@@ -1,3 +1,4 @@
+use crate::polygon_contains::polygon_contains;
 use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
@@ -304,8 +305,7 @@ where
         println!("about to merge {:#?}", self.raw.segments);
         let segments_merged: Vec<Vec<LineElem<T>>> =
             self.raw.segments.clone().into_iter().flatten().collect();
-        // let start_inside = contains(&self.base.polygon, &self.base.start);
-        let start_inside = true;
+        let start_inside = polygon_contains(&self.raw.polygon, &self.raw.start);
 
         if !segments_merged.is_empty() {
             println!("merged is not empty {:#?}", self.raw.segments);
@@ -325,7 +325,6 @@ where
             );
         } else if start_inside {
             if !self.raw.polygon_started {
-                // self.base.sink.polygon_start();
                 self.raw.polygon_started = true;
             }
             self.sink.borrow_mut().line_start();
@@ -342,6 +341,7 @@ where
     }
 
     fn sphere(&mut self) {
+        println!("clip sphere()");
         self.sink.borrow_mut().polygon_start();
         self.raw.line_node.sink.borrow_mut().line_start();
         (self.raw.interpolate_fn)(None, None, T::one(), self.sink.clone());

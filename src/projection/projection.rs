@@ -3,7 +3,6 @@ use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-// use derivative::Derivative;
 use derivative::Derivative;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -19,7 +18,6 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::resample::ResampleNode;
-// use super::scale_translate_rotate::ScaleTranslateRotateEnum;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::NodeFactory;

@@ -15,7 +15,7 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
     }
 }
 
-pub fn contains<T: CoordFloat + FloatConst>(
+pub fn polygon_contains<T: CoordFloat + FloatConst>(
     polygon: &Vec<Vec<LineElem<T>>>,
     point: &LineElem<T>,
 ) -> bool {
