@@ -4,7 +4,6 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-
     {
       "type": "lldb",
       "request": "launch",
@@ -103,16 +102,16 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "'area_test'",
+      "name": "path: area test",
       "cargo": {
         "args": [
           "test",
           "--no-run",
-          "--test=area_test",
+          "--test=path_area_test",
           "--package=rust_d3_geo"
         ],
         "filter": {
-          "name": "area_test",
+          "name": "path_area_test",
           "kind": "test"
         }
       },
