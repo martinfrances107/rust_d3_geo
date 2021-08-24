@@ -30,7 +30,6 @@ pub mod str;
 pub mod stereographic;
 pub mod stream_node;
 pub mod stream_node_factory;
-pub mod stream_transform;
 pub mod stream_transform_radians;
 pub mod translate;
 
