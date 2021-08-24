@@ -65,7 +65,6 @@ where
     // todo remove this duplicate.
     #[inline]
     fn visible(&self, p: &Coordinate<T>) -> bool {
-        println!("point_visible cr {:?}", self.cr);
         p.x.cos() * p.y.cos() > self.cr
     }
 }
@@ -114,9 +113,7 @@ where
     /// and last points were visible.
     #[inline]
     fn clean(&self) -> CleanEnum {
-        println!("line(c) clean() {:#?} {} {}", self.clean, self.v00, self.v0);
         if self.v00 && self.v0 {
-            println!("output = rejoin");
             CleanEnum::IntersectionsRejoin
         } else {
             self.clean
@@ -161,20 +158,15 @@ where
                 false => 0_u8,
             },
         };
-        println!("clip:circle point entry v, c {:?} {:?}", v, c);
-        println!("clip:circle point self.point0 {:?}", self.raw.point0);
         let mut s = self.sink.borrow_mut();
         if self.raw.point0.is_none() {
             self.raw.v00 = v;
             self.raw.v0 = v;
-            println!("setting v ");
             if v {
                 s.line_start();
             }
         }
-        println!("before intersect check {:?} {:?}", v, self.raw.v0);
         if v != self.raw.v0 {
-            println!("intersect check");
             point2 = match intersect(
                 &self.raw.point0.unwrap(),
                 &point1.unwrap(),
@@ -205,7 +197,6 @@ where
         if v != self.raw.v0 {
             self.raw.clean = CleanEnum::IntersectionsOrEmpty;
             if v {
-                println!("outside going in");
                 // outside going in
                 s.line_start();
                 point2 = match intersect(
@@ -225,8 +216,7 @@ where
                 };
                 s.point(&point2.unwrap().p, None)
             } else {
-                // inside going out
-                println!("inside going out");
+                // Inside going out.
                 point2 = match intersect(
                     &self.raw.point0.unwrap(),
                     &point1.unwrap(),
@@ -242,14 +232,13 @@ where
                         todo!("must handle this case.");
                     }
                 };
-                // panic!("about to insert 2 ");
+
                 s.point(&point2.unwrap().p, Some(2));
                 s.line_end();
             }
             self.raw.point0 = point2;
         } else if self.raw.not_hemisphere && self.raw.point0.is_some() && self.raw.small_radius ^ v
         {
-            println!("within a small circle");
             // If the codes for two points are different, or are both zero,
             // and there this segment intersects with the small circle.
             if self.raw.c0 != c || c == 0 {
@@ -272,13 +261,11 @@ where
                     IntersectReturn::Two(t) => {
                         self.raw.clean = CleanEnum::IntersectionsOrEmpty;
                         if self.raw.small_radius {
-                            println!("small radius");
                             s.line_start();
                             s.point(&t[0], None);
                             s.point(&t[1], None);
                             s.line_end();
                         } else {
-                            println!("not a small radius");
                             s.point(&t[1], None);
                             s.line_end();
                             s.line_start();
@@ -288,20 +275,16 @@ where
                 }
             }
         }
-        println!("v, !point0 {:?} {:?}", v, self.raw.point0.is_none());
         if v && (self.raw.point0.is_none()
             || !point_equal(self.raw.point0.unwrap().p, point1.unwrap().p))
         {
-            println!("point equal pass");
             s.point(&point1.unwrap().p, None);
         }
         self.raw.point0 = point1;
         self.raw.v0 = v;
         self.raw.c0 = c;
-        println!("point end()");
     }
     fn line_end(&mut self) {
-        println!("clip circle line_end()");
         if self.raw.v0 {
             self.sink.borrow_mut().line_end();
         }

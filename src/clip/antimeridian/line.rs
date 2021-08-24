@@ -77,7 +77,6 @@ where
     }
 
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        // println!("line(a) point {:?} {:?}", p, m);
         let mut lambda1 = p.x;
         let phi1 = p.y;
         let sign1 = if lambda1 > T::zero() {
@@ -90,7 +89,6 @@ where
         let mut s = self.sink.borrow_mut();
         if (delta - T::PI()).abs() < T::epsilon() {
             // Line crosses a pole.
-            println!("line crosses a pole.");
             let f_2 = T::from(2_f64).unwrap();
             self.raw.phi0 = if (self.raw.phi0 + phi1 / f_2).is_sign_positive() {
                 T::FRAC_PI_2()
@@ -130,7 +128,6 @@ where
             self.raw.clean = CleanEnum::IntersectionsOrEmpty;
         } else if self.raw.sign0 != sign1 && delta >= T::PI() {
             // Line crosses antimeridian.
-            println!("line crosses antimeridian.");
             if (self.raw.lambda0 - self.raw.sign0).abs() < T::epsilon() {
                 self.raw.lambda0 = self.raw.lambda0 - self.raw.sign0 * T::epsilon();
                 // handle degeneracies
@@ -139,7 +136,6 @@ where
                 lambda1 = lambda1 - sign1 * T::epsilon();
             }
             self.raw.phi0 = intersect(self.raw.lambda0, self.raw.phi0, lambda1, phi1);
-            println!("output of intersect {:?}", self.raw.phi0);
             s.point(
                 &Coordinate {
                     x: self.raw.sign0,
@@ -157,8 +153,6 @@ where
                 None,
             );
             self.raw.clean = CleanEnum::IntersectionsOrEmpty;
-        } else {
-            println!("line crossed nothing");
         }
 
         self.raw.lambda0 = lambda1;
@@ -174,7 +168,6 @@ where
     }
 
     fn line_end(&mut self) {
-        // println!(" line_end");
         self.sink.borrow_mut().line_end();
         self.raw.lambda0 = T::nan();
         self.raw.phi0 = T::nan();

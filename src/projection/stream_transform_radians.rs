@@ -18,8 +18,6 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        dbg!("transform radians point()");
-        dbg!(p);
         self.sink.borrow_mut().point(
             &Coordinate {
                 x: p.x.to_radians(),
@@ -28,14 +26,17 @@ where
             m,
         );
     }
+
     #[inline]
     fn sphere(&mut self) {
         self.sink.borrow_mut().sphere();
     }
+
     #[inline]
     fn line_start(&mut self) {
         self.sink.borrow_mut().line_start();
     }
+
     #[inline]
     fn line_end(&mut self) {
         self.sink.borrow_mut().line_end();

@@ -38,8 +38,7 @@ where
     // Apply A then B.
     fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.a.transform(coordinate);
-        let out = self.b.transform(&temp);
-        out
+        self.b.transform(&temp)
     }
 
     // Apply B them A.

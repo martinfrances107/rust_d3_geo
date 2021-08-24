@@ -17,23 +17,14 @@ pub struct Buffer<T>
 where
     T: CoordFloat,
 {
-    // line: Vec<LineElem<T>>,
     lines: VecDeque<Vec<LineElem<T>>>,
 }
-
-// impl<T> Clone for Buffer<T>
-// where
-//     T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-// {
-//     fn clone(&self) -> Buffer<T> {
-//         self.clone()
-//     }
-// }
 
 impl<T> Default for Buffer<T>
 where
     T: CoordFloat,
 {
+    #[inline]
     fn default() -> Self {
         Self {
             lines: VecDeque::default(),
@@ -46,6 +37,7 @@ where
     T: CoordFloat,
 {
     type Out = Option<ResultEnum<T>>;
+
     fn result(&mut self) -> Option<ResultEnum<T>> {
         let result = self.lines.clone();
         self.lines.clear();
@@ -60,30 +52,16 @@ where
     type T = T;
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        // println!("Buffer point {:?} {:?}", p, m);
         match self.lines.back_mut() {
             Some(line) => {
                 line.push(LineElem { p: *p, m });
             }
             None => panic!("buffers: lines was not properly initialised."),
         }
-        // println!("lines {:?}", self.lines);
     }
 
-    fn line_end(&mut self) {
-        // println!("Buffer line_end() -- noop");
-    }
     #[inline]
     fn line_start(&mut self) {
-        // println!("Buffer line_start()");
-        // self.line.clear();
         self.lines.push_back(vec![]);
-        // println!("Buffer line_start lines {:#?}", self.lines);
-    }
-    fn polygon_start(&mut self) {
-        // println!("Buffer polygon_start()");
-    }
-    fn polygon_end(&mut self) {
-        // println!("Buffer polygon_end()");
     }
 }

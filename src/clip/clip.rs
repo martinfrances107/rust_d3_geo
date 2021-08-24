@@ -225,7 +225,7 @@ where
                 panic!("must be defined by now.")
             }
         }
-        println!("final segments before filter {:#?}", ring_segments);
+
         let filtered: Vec<Vec<LineElem<T>>> = ring_segments
             .into_iter()
             .filter(|segment| segment.len() > 1)
@@ -245,7 +245,6 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        dbg!("clip point");
         match self.raw.point_fn {
             PointFn::Default => self.point_default(p, m),
             PointFn::Line => self.point_line(p, m),
@@ -289,7 +288,6 @@ where
             if !self.raw.polygon_started {
                 self.raw.polygon_started = true;
             }
-            println!("into rejoin this path");
 
             rejoin(
                 &segments_merged,
