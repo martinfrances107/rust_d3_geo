@@ -81,6 +81,7 @@ where
 
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         let t = &self.raw.projection_transform.transform(p);
-        self.sink.borrow_mut().point(t, m);
+        let mut s = self.sink.borrow_mut();
+        s.point(t, m);
     }
 }

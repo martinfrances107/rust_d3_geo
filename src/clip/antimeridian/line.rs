@@ -52,7 +52,7 @@ where
 {
     #[inline]
     fn clean(&self) -> CleanEnum {
-        println!("line(A) clean  initial value{:?}", self.clean);
+        // println!("line(A) clean  initial value{:?}", self.clean);
         match self.clean {
             // if intersections, rejoin first and last segments
             CleanEnum::IntersectionsOrEmpty => CleanEnum::IntersectionsRejoin,
@@ -71,13 +71,13 @@ where
     type T = T;
 
     fn line_start(&mut self) {
-        println!("line(a) line_start()");
+        // println!("line(a) line_start()");
         self.sink.borrow_mut().line_start();
         self.raw.clean = CleanEnum::NoIntersections;
     }
 
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("line(a) point {:?} {:?}", p, m);
+        // println!("line(a) point {:?} {:?}", p, m);
         let mut lambda1 = p.x;
         let phi1 = p.y;
         let sign1 = if lambda1 > T::zero() {
@@ -174,7 +174,7 @@ where
     }
 
     fn line_end(&mut self) {
-        println!("line(a) line_end");
+        // println!(" line_end");
         self.sink.borrow_mut().line_end();
         self.raw.lambda0 = T::nan();
         self.raw.phi0 = T::nan();

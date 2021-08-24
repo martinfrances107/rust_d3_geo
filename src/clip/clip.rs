@@ -146,7 +146,7 @@ where
 
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("clip point_ring {:?} {:?}", p, m);
+        // println!("clip point_ring {:?} {:?}", p, m);
         // println!("about to ring/push - ring_sink ");
         // println!("self.base {:#?} ", self.base.ring_sink);
         self.raw.ring.push(LineElem { p: *p, m });
@@ -163,7 +163,7 @@ where
     }
 
     fn ring_end(&mut self) {
-        println!("clip ring_end  entry {:#?}", self.raw.ring);
+        // println!("clip ring_end  entry {:#?}", self.raw.ring);
         let le = self.raw.ring[0];
         // javascript version drops m here.
         self.point_ring(&le.p, None);
@@ -182,9 +182,11 @@ where
             None => panic!("was expecting something."),
         };
 
-        println!("clip ring_end() - ring segments {:#?}", ring_segments);
+        // println!("clip ring_end() - ring segments {:#?}", ring_segments);
         // panic!("ring_end buffer result");
         let n = ring_segments.len();
+        dbg!("ring_segments ");
+        dbg!(ring_segments.clone());
         let m;
         // let mut point: Coordinate<T>;
 
@@ -229,7 +231,7 @@ where
                 // TODO reuse ringBuffer.rejoin()?
                 if n > 1 {
                     println!("funny buisness");
-                    println!("ring_segemtns before fb {:#?}", ring_segments);
+                    // println!("ring_segemtns before fb {:#?}", ring_segments);
                     let pb = [
                         ring_segments.pop_back().unwrap(),
                         ring_segments.pop_front().unwrap(),
@@ -266,6 +268,7 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        dbg!("clip point");
         match self.raw.point_fn {
             PointFn::Default => self.point_default(p, m),
             PointFn::Line => self.point_line(p, m),
@@ -275,6 +278,7 @@ where
 
     #[inline]
     fn line_start(&mut self) {
+        dbg!("clip line_start");
         match self.raw.line_start_fn {
             LineStartFn::Ring => self.ring_start(),
             LineStartFn::Line => self.line_start_default(),
@@ -283,6 +287,7 @@ where
 
     #[inline]
     fn line_end(&mut self) {
+        dbg!("clip line end");
         match self.raw.line_end_fn {
             LineEndFn::Ring => self.ring_end(),
             LineEndFn::Line => self.line_end_default(),
@@ -302,13 +307,13 @@ where
         self.raw.point_fn = PointFn::Default;
         self.raw.line_start_fn = LineStartFn::Line;
         self.raw.line_end_fn = LineEndFn::Line;
-        println!("about to merge {:#?}", self.raw.segments);
+        // println!("about to merge {:#?}", self.raw.segments);
         let segments_merged: Vec<Vec<LineElem<T>>> =
             self.raw.segments.clone().into_iter().flatten().collect();
         let start_inside = polygon_contains(&self.raw.polygon, &self.raw.start);
 
         if !segments_merged.is_empty() {
-            println!("merged is not empty {:#?}", self.raw.segments);
+            // println!("merged is not empty {:#?}", self.raw.segments);
             // panic!("pause here");
             if !self.raw.polygon_started {
                 // self.base.sink.polygon_start();

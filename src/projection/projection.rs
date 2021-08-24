@@ -42,13 +42,16 @@ where
 {
     #[derivative(Debug = "ignore")]
     pub postclip: PostClipFn<DRAIN>,
-    pub projection_raw: PR,
+
     pub preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
 
     pub resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
 
-    pub rotate: RotateRadiams<T>, //rotate, pre-rotate
-
+    pub rotate_factory: StreamNodeFactory<
+        RotateRadiams<T>,
+        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
+        T,
+    >,
     /// Used exclusive by Transform( not stream releated).
     pub rotate_transform: Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
@@ -61,7 +64,7 @@ where
     pub transform_radians_factory: StreamNodeFactory<
         StreamTransformRadians,
         StreamNode<
-            Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+            RotateRadiams<T>,
             StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
             T,
         >,
@@ -92,7 +95,7 @@ where
     ) -> StreamNode<
         StreamTransformRadians,
         StreamNode<
-            Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+            RotateRadiams<T>,
             StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
             T,
         >,
@@ -104,13 +107,10 @@ where
 
         let preclip_node = Rc::new(RefCell::new(self.preclip_factory.generate(resample_node)));
 
-        let rotate_transform_node = Rc::new(RefCell::new(
-            self.rotate_transform_factory.generate(preclip_node),
-        ));
+        let rotate_node = Rc::new(RefCell::new(self.rotate_factory.generate(preclip_node)));
 
         // Output stage is a transform_radians node.
-        self.transform_radians_factory
-            .generate(rotate_transform_node)
+        self.transform_radians_factory.generate(rotate_node)
     }
 }
 

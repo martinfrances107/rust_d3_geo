@@ -80,6 +80,11 @@ where
     transform: Compose<T, PR, ScaleTranslateRotate<T>>,
     rotate_transform: Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
+    rotate_factory: StreamNodeFactory<
+        RotateRadiams<T>,
+        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
+        T,
+    >,
     resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
     rotate_transform_factory: StreamNodeFactory<
         Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
@@ -119,6 +124,7 @@ where
         let str = generate_str(&k, &(x - center.x), &(y - center.y), &sx, &sy, &alpha);
 
         let rotate = rotate_radians(delta_lambda, delta_phi, delta_gamma); // pre-rotate
+        let rotate_factory = StreamNodeFactory::new(rotate.clone());
         let transform = Compose::new(projection_raw, str);
         let resample_factory = StreamNodeResampleFactory::new(transform, T::zero());
         let rotate_transform = Compose::new(rotate.clone(), transform);
@@ -157,38 +163,22 @@ where
             rotate_transform,
             /// Pass into Projection,
             rotate,
+            rotate_factory,
             rotate_transform_factory,
         }
     }
 
+    #[inline]
     pub fn build(&self) -> Projection<DRAIN, L, PR, PV, T> {
-        let transform_radians_factory: StreamNodeFactory<
-            StreamTransformRadians,
-            StreamNode<
-                Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
-                StreamNode<
-                    Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>,
-                    ResampleNode<PR, DRAIN, T>,
-                    T,
-                >,
-                T,
-            >,
-            T,
-        >;
-
-        transform_radians_factory = StreamNodeFactory::new(StreamTransformRadians {});
         Projection {
             postclip: self.postclip.clone(),
             preclip_factory: self.preclip_factory.clone(),
-            projection_raw: self.projection_raw,
-
             resample_factory: self.resample_factory.clone(),
-
-            rotate: self.rotate.clone(),
 
             rotate_transform: self.rotate_transform.clone(),
             rotate_transform_factory: self.rotate_transform_factory.clone(),
-            transform_radians_factory,
+            rotate_factory: self.rotate_factory.clone(),
+            transform_radians_factory: StreamNodeFactory::new(StreamTransformRadians {}),
         }
     }
 
@@ -259,7 +249,8 @@ where
 
         //todo update every factory.
         self.resample_factory = StreamNodeResampleFactory::new(self.transform, self.delta2);
-
+        self.rotate_factory = StreamNodeFactory::new(self.rotate.clone());
+        self.rotate_transform_factory = StreamNodeFactory::new(self.rotate_transform.clone());
         self.reset()
     }
 }

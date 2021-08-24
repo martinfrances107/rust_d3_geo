@@ -18,6 +18,8 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        dbg!("transform radians point()");
+        dbg!(p);
         self.sink.borrow_mut().point(
             &Coordinate {
                 x: p.x.to_radians(),

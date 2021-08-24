@@ -60,7 +60,7 @@ where
     type T = T;
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("Buffer point {:?} {:?}", p, m);
+        // println!("Buffer point {:?} {:?}", p, m);
         match self.lines.back_mut() {
             Some(line) => {
                 line.push(LineElem { p: *p, m });
@@ -71,19 +71,19 @@ where
     }
 
     fn line_end(&mut self) {
-        println!("Buffer line_end() -- noop");
+        // println!("Buffer line_end() -- noop");
     }
     #[inline]
     fn line_start(&mut self) {
-        println!("Buffer line_start()");
+        // println!("Buffer line_start()");
         // self.line.clear();
         self.lines.push_back(vec![]);
-        println!("Buffer line_start lines {:#?}", self.lines);
+        // println!("Buffer line_start lines {:#?}", self.lines);
     }
     fn polygon_start(&mut self) {
-        println!("Buffer polygon_start()");
+        // println!("Buffer polygon_start()");
     }
     fn polygon_end(&mut self) {
-        println!("Buffer polygon_end()");
+        // println!("Buffer polygon_end()");
     }
 }
