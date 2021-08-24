@@ -44,7 +44,7 @@ impl<T> Mecator<T>
 where
     T: 'static + CoordFloat + FloatConst,
 {
-    pub fn gen_projection_mutator<DRAIN>() -> Builder<DRAIN, Line<T>, Mecator<T>, PV<T>, T>
+    pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Mecator<T>, PV<T>, T>
     where
         DRAIN: Stream<T = T>,
     {
