@@ -1,19 +1,23 @@
+use crate::compose::Compose;
+use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
+use crate::Transform;
 
 const MAXDEPTH: u8 = 16_u8; // maximum depth of subdivision
 
 #[derive(Clone, Copy, Debug)]
 pub struct Resample<PR, T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
     PR: ProjectionRaw<T>,
 {
-    pub projection_raw: PR,
+    pub projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
     pub delta2: T,
 
     // first point
@@ -45,11 +49,14 @@ where
 impl<'a, PR, T> Resample<PR, T>
 where
     PR: ProjectionRaw<T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
-    pub fn new(projection_raw: PR, delta2: T) -> Resample<PR, T> {
+    pub fn new(
+        projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+        delta2: T,
+    ) -> Resample<PR, T> {
         Self {
-            projection_raw,
+            projection_transform,
             delta2,
 
             // first point
@@ -80,7 +87,7 @@ impl<'a, PR, SINK, T> StreamNode<Resample<PR, T>, SINK, T>
 where
     PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     #[inline]
 
@@ -128,8 +135,8 @@ where
     }
 
     fn line_point(&mut self, p: &Coordinate<T>) {
-        let c = cartesian(&p);
-        let p_transformed = self.raw.projection_raw.transform(p);
+        let c = cartesian(p);
+        let p_transformed = self.raw.projection_transform.transform(p);
         self.resample_line_to(
             self.raw.x0,
             self.raw.y0,
@@ -200,7 +207,7 @@ where
                     lambda2 = b.atan2(a);
                 };
 
-                let project_ptr = &self.raw.projection_raw;
+                let project_ptr = &self.raw.projection_transform;
                 let project = project_ptr;
                 let p = project.transform(&Coordinate {
                     x: lambda2,
@@ -244,7 +251,7 @@ impl<'a, PR, SINK, T> Stream for StreamNode<Resample<PR, T>, SINK, T>
 where
     PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

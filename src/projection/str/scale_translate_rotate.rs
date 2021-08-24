@@ -6,7 +6,7 @@ use crate::Transform;
 use super::st::St;
 use super::str::Str;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum ScaleTranslateRotate<T>
 where
     T: CoordFloat + FloatConst,

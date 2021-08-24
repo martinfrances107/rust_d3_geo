@@ -5,7 +5,7 @@ use crate::Transform;
 /// An inner type of the Enum ScaleTranslateRotate.
 ///
 /// Simplification when only  translate is needed.
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct St<T>
 where
     T: CoordFloat,

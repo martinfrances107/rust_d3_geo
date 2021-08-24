@@ -87,7 +87,7 @@ where
         // Warning the javascript version return the value below but I think it break the implied spec!!!!
         self.sink
             .borrow_mut()
-            .point(&self.raw.transformer.transform(&p), m);
+            .point(&self.raw.transformer.transform(p), m);
     }
 
     #[inline]

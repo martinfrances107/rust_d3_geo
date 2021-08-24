@@ -1,4 +1,6 @@
+use crate::compose::Compose;
 use crate::projection::resample::Resample;
+use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -28,23 +30,26 @@ use super::ResampleNode;
 pub struct StreamNodeResampleFactory<PR, SINK, T>
 where
     PR: ProjectionRaw<T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     phantom_sink: PhantomData<SINK>,
-    projection_raw: PR,
+    projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
     delta2: T,
 }
 
 impl<PR, SINK, T> StreamNodeResampleFactory<PR, SINK, T>
 where
     PR: ProjectionRaw<T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
-    pub fn new(projection_raw: PR, delta2: T) -> StreamNodeResampleFactory<PR, SINK, T> {
+    pub fn new(
+        projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+        delta2: T,
+    ) -> StreamNodeResampleFactory<PR, SINK, T> {
         // let interpolate_factory = StreamNodeFactory::new(interpolate_raw);
         StreamNodeResampleFactory {
             delta2,
-            projection_raw,
+            projection_transform,
             phantom_sink: PhantomData::<SINK>,
             // projection,
         }
@@ -64,12 +69,12 @@ where
     fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
         match self.delta2.is_zero() {
             true => ResampleNode::RN(StreamNode {
-                raw: ResampleNone::new(PR::default()),
+                raw: ResampleNone::new(self.projection_transform),
                 sink,
                 pd: PhantomData::<T>,
             }),
             false => ResampleNode::R(StreamNode {
-                raw: Resample::new(self.projection_raw, self.delta2),
+                raw: Resample::new(self.projection_transform, self.delta2),
                 sink,
                 pd: PhantomData::<T>,
             }),

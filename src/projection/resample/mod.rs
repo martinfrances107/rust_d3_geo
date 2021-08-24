@@ -2,6 +2,7 @@ pub mod none;
 pub mod resample;
 pub mod stream_node_resample_factory;
 
+use num_traits::FloatConst;
 use std::fmt::Debug;
 
 use geo::CoordFloat;
@@ -20,7 +21,7 @@ use super::Raw as ProjectionRaw;
 pub enum ResampleNode<PR, SINK, T>
 where
     PR: ProjectionRaw<T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     RN(StreamNode<None<PR, T>, SINK, T>),
     R(StreamNode<Resample<PR, T>, SINK, T>),
@@ -61,7 +62,7 @@ impl<'a, PR, SINK, T> Stream for ResampleNode<PR, SINK, T>
 where
     PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

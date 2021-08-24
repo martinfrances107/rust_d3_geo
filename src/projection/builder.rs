@@ -113,7 +113,6 @@ where
         let delta_gamma = T::zero();
 
         // Zero implies no resampling by default.
-        let resample_factory = StreamNodeResampleFactory::new(projection_raw, T::zero());
 
         let center = generate_str(&k, &T::zero(), &T::zero(), &sx, &sy, &alpha)
             .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
@@ -121,7 +120,8 @@ where
 
         let rotate = rotate_radians(delta_lambda, delta_phi, delta_gamma); // pre-rotate
         let transform = Compose::new(projection_raw, str);
-        let rotate_transform = Compose::new(rotate.clone(), transform.clone());
+        let resample_factory = StreamNodeResampleFactory::new(transform, T::zero());
+        let rotate_transform = Compose::new(rotate.clone(), transform);
         let rotate_transform_factory = StreamNodeFactory::new(rotate_transform.clone());
 
         Self {
@@ -244,7 +244,7 @@ where
             y: self.phi,
         }));
 
-        let str = generate_str(
+        let transform = generate_str(
             &self.k,
             &(self.x - center.x),
             &(self.y - center.y),
@@ -254,11 +254,11 @@ where
         );
 
         self.rotate = rotate_radians(self.delta_lambda, self.delta_phi, self.delta_gamma);
-        self.transform = Compose::new(self.projection_raw, str);
-        self.rotate_transform = Compose::new(self.rotate.clone(), self.transform.clone());
+        self.transform = Compose::new(self.projection_raw, transform);
+        self.rotate_transform = Compose::new(self.rotate.clone(), self.transform);
 
         //todo update every factory.
-        self.resample_factory = StreamNodeResampleFactory::new(self.projection_raw, self.delta2);
+        self.resample_factory = StreamNodeResampleFactory::new(self.transform, self.delta2);
 
         self.reset()
     }
@@ -684,7 +684,7 @@ where
 
     pub fn precision(self, delta: &T) -> Builder<DRAIN, L, PR, PV, T> {
         let delta2 = *delta * *delta;
-        let resample_factory = StreamNodeResampleFactory::new(self.projection_raw, delta2);
+        let resample_factory = StreamNodeResampleFactory::new(self.transform, delta2);
         Builder {
             delta2,
             resample_factory,

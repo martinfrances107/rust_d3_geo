@@ -46,7 +46,7 @@ where
     type T = T;
 
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        let x_rotated = &self.rotate.invert(&p);
+        let x_rotated = &self.rotate.invert(p);
         self.ring.push(Coordinate {
             x: x_rotated.x.to_degrees(),
             y: x_rotated.y.to_degrees(),

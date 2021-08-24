@@ -25,7 +25,7 @@ where
         "1) expected location [{:?}, {:?}], expected point [{:?}, {:?}]",
         expected_location.x, expected_location.y, expected_point.x, expected_point.y,
     );
-    let actual_location = projection.invert(&expected_point);
+    let actual_location = projection.invert(expected_point);
     let actual_point = projection.transform(expected_location);
     println!(
         "2) actual location {:?}, actual point {:?}",
