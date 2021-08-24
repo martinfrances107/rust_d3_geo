@@ -118,7 +118,6 @@ where
 {
     #[inline]
     pub(super) fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("clip point_default");
         if self.raw.pv.point_visible(p, None) {
             self.sink.borrow_mut().point(p, m);
         }
@@ -126,44 +125,34 @@ where
 
     #[inline]
     fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        println!("clip point_line");
         self.raw.line_node.sink.borrow_mut().point(p, m);
     }
 
     #[inline]
     fn line_start_default(&mut self) {
-        println!("clip line_start_default");
         self.raw.point_fn = PointFn::Line;
         self.raw.line_node.sink.borrow_mut().line_start();
     }
 
     #[inline]
     fn line_end_default(&mut self) {
-        println!("clip line_end_default");
         self.raw.point_fn = PointFn::Default;
         self.raw.line_node.sink.borrow_mut().line_end();
     }
 
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        // println!("clip point_ring {:?} {:?}", p, m);
-        // println!("about to ring/push - ring_sink ");
-        // println!("self.base {:#?} ", self.base.ring_sink);
         self.raw.ring.push(LineElem { p: *p, m });
         self.raw.ring_sink_node.sink.borrow_mut().point(p, m);
-        println!("clip point_ring -- end");
     }
 
     #[inline]
     fn ring_start(&mut self) {
-        println!("clip ring_start");
         self.raw.ring_sink_node.sink.borrow_mut().line_start();
         self.raw.ring.clear();
-        println!("end clip ring_start");
     }
 
     fn ring_end(&mut self) {
-        // println!("clip ring_end  entry {:#?}", self.raw.ring);
         let le = self.raw.ring[0];
         // javascript version drops m here.
         self.point_ring(&le.p, None);
@@ -182,32 +171,23 @@ where
             None => panic!("was expecting something."),
         };
 
-        // println!("clip ring_end() - ring segments {:#?}", ring_segments);
-        // panic!("ring_end buffer result");
         let n = ring_segments.len();
-        dbg!("ring_segments ");
-        dbg!(ring_segments.clone());
         let m;
-        // let mut point: Coordinate<T>;
 
         self.raw.ring.pop();
-        // self.base.polygon.push(self.base.ring.clone());
         self.raw.polygon.push(self.raw.ring.clone());
         // in this javascript version this value is set to NULL
         // is my assumption that this is valid true?
         // self.ring = None;
         self.raw.ring = Vec::new();
-        // self.raw.ring_reset();
 
         if n == 0 {
             return;
         }
-        println!("no intersections n, c {:?} {:?}", n, clean);
+
         // No intersections.
         match clean {
             CleanEnum::NoIntersections => {
-                println!("about to clean good path");
-                // panic!("on the good path");
                 let segment = ring_segments
                     .pop_front()
                     .expect("We have previously checked that the .len() is >0 ( n ) ");
@@ -230,8 +210,6 @@ where
                 // Rejoin connected segments.
                 // TODO reuse ringBuffer.rejoin()?
                 if n > 1 {
-                    println!("funny buisness");
-                    // println!("ring_segemtns before fb {:#?}", ring_segments);
                     let pb = [
                         ring_segments.pop_back().unwrap(),
                         ring_segments.pop_front().unwrap(),
@@ -248,7 +226,6 @@ where
             }
         }
         println!("final segments before filter {:#?}", ring_segments);
-        // panic!("final segments");
         let filtered: Vec<Vec<LineElem<T>>> = ring_segments
             .into_iter()
             .filter(|segment| segment.len() > 1)
@@ -278,7 +255,6 @@ where
 
     #[inline]
     fn line_start(&mut self) {
-        dbg!("clip line_start");
         match self.raw.line_start_fn {
             LineStartFn::Ring => self.ring_start(),
             LineStartFn::Line => self.line_start_default(),
@@ -287,7 +263,6 @@ where
 
     #[inline]
     fn line_end(&mut self) {
-        dbg!("clip line end");
         match self.raw.line_end_fn {
             LineEndFn::Ring => self.ring_end(),
             LineEndFn::Line => self.line_end_default(),
@@ -295,7 +270,6 @@ where
     }
 
     fn polygon_start(&mut self) {
-        println!("clip  polygon start");
         self.raw.point_fn = PointFn::Ring;
         self.raw.line_start_fn = LineStartFn::Ring;
         self.raw.line_end_fn = LineEndFn::Ring;
@@ -303,20 +277,16 @@ where
         self.raw.polygon.clear();
     }
     fn polygon_end(&mut self) {
-        println!("clip polygon_end");
         self.raw.point_fn = PointFn::Default;
         self.raw.line_start_fn = LineStartFn::Line;
         self.raw.line_end_fn = LineEndFn::Line;
-        // println!("about to merge {:#?}", self.raw.segments);
+
         let segments_merged: Vec<Vec<LineElem<T>>> =
             self.raw.segments.clone().into_iter().flatten().collect();
         let start_inside = polygon_contains(&self.raw.polygon, &self.raw.start);
 
         if !segments_merged.is_empty() {
-            // println!("merged is not empty {:#?}", self.raw.segments);
-            // panic!("pause here");
             if !self.raw.polygon_started {
-                // self.base.sink.polygon_start();
                 self.raw.polygon_started = true;
             }
             println!("into rejoin this path");
@@ -337,16 +307,14 @@ where
             self.sink.borrow_mut().line_end();
         };
         if self.raw.polygon_started {
-            // self.base.sink.polygon_end();
+            self.sink.borrow_mut().polygon_end();
             self.raw.polygon_started = false;
         }
         self.raw.segments.clear();
         self.raw.polygon.clear();
-        println!("clip polygon_end -- exit");
     }
 
     fn sphere(&mut self) {
-        println!("clip sphere()");
         self.sink.borrow_mut().polygon_start();
         self.raw.line_node.sink.borrow_mut().line_start();
         (self.raw.interpolate_fn)(None, None, T::one(), self.sink.clone());

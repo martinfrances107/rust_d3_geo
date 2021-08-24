@@ -56,50 +56,48 @@ mod path_area_test {
         }
     }
 
-    // #[test]
-    // fn test_polygon_with_no_holes() {
-    //     println!("geoPath.area(…) of a polygon with no holes");
-    //     let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(
-    //         LineString::from(vec![
-    //             Coordinate { x: 100., y: 0. },
-    //             Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
-    //             Coordinate { x: 101., y: 1. },
-    //             Coordinate { x: 101., y: 0. },
-    //             Coordinate { x: 100., y: 0. },
-    //         ]),
-    //         vec![],
-    //     )));
-    //     let eq = equirectangular::<f64>();
-    //     // assert_eq!(test_area(eq, object), 25.0);
-    //     assert_eq!(test_area(eq, object), 0.0);
-    // }
+    #[test]
+    fn test_polygon_with_no_holes() {
+        println!("geoPath.area(…) of a polygon with no holes");
+        let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+            LineString::from(vec![
+                Coordinate { x: 100., y: 0. },
+                Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
+                Coordinate { x: 101., y: 1. },
+                Coordinate { x: 101., y: 0. },
+                Coordinate { x: 100., y: 0. },
+            ]),
+            vec![],
+        )));
+        let eq = equirectangular::<f64>();
+        assert_eq!(test_area(eq, object), 25.0);
+    }
 
-    // #[test]
-    // fn test_polygon_with_holes() {
-    //     println!("geoPath.area(…) of a polygon with holes");
-    //     let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(
-    //         LineString::from(vec![
-    //             Coordinate { x: 100., y: 0. },
-    //             Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
-    //             Coordinate { x: 101., y: 1. },
-    //             Coordinate { x: 101., y: 0. },
-    //             Coordinate { x: 100., y: 0. },
-    //         ]),
-    //         vec![
-    //             // [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]
-    //             LineString::from(vec![
-    //                 Coordinate { x: 100.2, y: 0.2 },
-    //                 Coordinate { x: 100.8, y: 0.2 },
-    //                 Coordinate { x: 100.8, y: 0.8 },
-    //                 Coordinate { x: 100.2, y: 0.8 },
-    //                 Coordinate { x: 100.2, y: 0.2 },
-    //             ]),
-    //         ],
-    //     )));
-    //     let eq = equirectangular::<f64>();
-    //     // assert_eq!(test_area(eq, object), 16.0);
-    //     assert_eq!(test_area(eq, object), 0.0);
-    // }
+    #[test]
+    fn test_polygon_with_holes() {
+        println!("geoPath.area(…) of a polygon with holes");
+        let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+            LineString::from(vec![
+                Coordinate { x: 100., y: 0. },
+                Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
+                Coordinate { x: 101., y: 1. },
+                Coordinate { x: 101., y: 0. },
+                Coordinate { x: 100., y: 0. },
+            ]),
+            vec![
+                // [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]
+                LineString::from(vec![
+                    Coordinate { x: 100.2, y: 0.2 },
+                    Coordinate { x: 100.8, y: 0.2 },
+                    Coordinate { x: 100.8, y: 0.8 },
+                    Coordinate { x: 100.2, y: 0.8 },
+                    Coordinate { x: 100.2, y: 0.2 },
+                ]),
+            ],
+        )));
+        let eq = equirectangular::<f64>();
+        assert_eq!(test_area(eq, object), 16.0);
+    }
 
     #[test]
     fn test_area_of_a_sphere() {

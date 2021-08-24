@@ -76,7 +76,7 @@ where
         self.raw.clean = CleanEnum::NoIntersections;
     }
 
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         // println!("line(a) point {:?} {:?}", p, m);
         let mut lambda1 = p.x;
         let phi1 = p.y;

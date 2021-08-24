@@ -39,8 +39,6 @@ where
     fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.a.transform(coordinate);
         let out = self.b.transform(&temp);
-        dbg!("compose transform out");
-        dbg!(out);
         out
     }
 
@@ -62,8 +60,6 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        dbg!("compose");
-        dbg!(self.raw.transform(p));
         self.sink.borrow_mut().point(&self.raw.transform(p), m);
     }
 
