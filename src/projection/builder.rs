@@ -97,7 +97,7 @@ impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T> + Clone + Copy,
+    PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -310,7 +310,7 @@ impl<DRAIN, L, PR, PV, T> Scale for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
     L: Line,
-    PR: ProjectionRaw<T> + Clone + Copy,
+    PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
