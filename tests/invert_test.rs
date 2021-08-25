@@ -86,7 +86,7 @@ mod invert_test {
     #[test]
     fn test_mecator() {
         let m: Projection<StreamDrainStub<f64>, Line<f64>, Mecator<f64>, PV<f64>, f64> =
-            Mecator::<f64>::gen_projection_mutator().build();
+            Mecator::<f64>::gen_projection_builder().build();
         symetric_invert(m);
     }
 
