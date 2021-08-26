@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::fmt::Debug;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -20,7 +21,8 @@ pub mod center;
 pub mod clip_extent;
 pub mod equirectangular;
 pub mod gnomic;
-pub mod mecator;
+pub mod mercator;
+pub mod mercator_builder;
 pub mod orthographic;
 pub mod projection;
 pub mod projection_equal;
@@ -37,11 +39,13 @@ mod fit;
 mod resample;
 
 /// Projection Raw.
-pub trait Raw<T>: Clone + Copy + Default + Transform<T = T>
+pub trait Raw<T>: Clone + Debug + Default + Transform<T = T>
 where
     <Self as Transform>::T: CoordFloat,
 {
     type T;
+    type Builder;
+    fn builder() -> Self::Builder;
 }
 
 trait Builder

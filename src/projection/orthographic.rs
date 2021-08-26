@@ -19,37 +19,37 @@ use super::Raw;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Copy, Debug)]
-pub struct Orthographic<T>
+pub struct Orthographic<DRAIN, T>
 where
+    DRAIN: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
-    phantom: PhantomData<T>,
+    p_drain: PhantomData<DRAIN>,
+    p_t: PhantomData<T>,
 }
 
-impl<T> Default for Orthographic<T>
+impl<DRAIN, T> Default for Orthographic<DRAIN, T>
 where
+    DRAIN: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Orthographic {
-            phantom: PhantomData::<T>,
+            p_drain: PhantomData::<DRAIN>,
+            p_t: PhantomData::<T>,
         }
     }
 }
 
-impl<T> Raw<T> for Orthographic<T>
+impl<DRAIN, T> Raw<T> for Orthographic<DRAIN, T>
 where
-    T: CoordFloat + FloatConst,
-{
-    type T = T;
-}
-
-impl<T> Orthographic<T>
-where
+    DRAIN: Stream<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
+    type Builder = Builder<DRAIN, Line<T>, Orthographic<DRAIN, T>, PV<T>, T>;
+    type T = T;
     #[inline]
-    pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Orthographic<T>, PV<T>, T>
+    fn builder() -> Builder<DRAIN, Line<T>, Orthographic<DRAIN, T>, PV<T>, T>
     where
         DRAIN: Stream<T = T>,
     {
@@ -66,14 +66,22 @@ where
     }
 }
 
+impl<DRAIN, T> Orthographic<DRAIN, T>
+where
+    DRAIN: Stream<T = T>,
+    T: 'static + CoordFloat + FloatConst,
+{
+}
+
 // impl<T> ProjectionRawTrait for OrthographicRaw<T>
 // // where
 // //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
 // {
 // }
 
-impl<T> Orthographic<T>
+impl<DRAIN, T> Orthographic<DRAIN, T>
 where
+    DRAIN: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
     #[inline]
@@ -83,7 +91,7 @@ where
 
     pub fn azimuthal_invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let z = (p.x * p.x + p.y * p.y).sqrt();
-        let c = Orthographic::angle(z);
+        let c = Orthographic::<DRAIN, T>::angle(z);
         let sc = c.sin();
         let cc = c.cos();
 
@@ -100,8 +108,9 @@ where
     }
 }
 
-impl<T> Transform for Orthographic<T>
+impl<DRAIN, T> Transform for Orthographic<DRAIN, T>
 where
+    DRAIN: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;

@@ -20,38 +20,35 @@ use super::Raw;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Copy, Clone, Debug)]
-pub struct Gnomic<T>
+pub struct Gnomic<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
-    phantom: PhantomData<T>,
+    p_drain: PhantomData<DRAIN>,
+    p_t: PhantomData<T>,
 }
 
-impl<T> Default for Gnomic<T>
+impl<DRAIN, T> Default for Gnomic<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Gnomic {
-            phantom: PhantomData::<T>,
-            // lambda: T::zero(),
-            // phi: T::zero(),
+            p_drain: PhantomData::<DRAIN>,
+            p_t: PhantomData::<T>,
         }
     }
 }
 
-impl<T> Raw<T> for Gnomic<T>
+impl<DRAIN, T> Raw<T> for Gnomic<DRAIN, T>
 where
+    DRAIN: Stream<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
+    type Builder = Builder<DRAIN, Line<T>, Gnomic<DRAIN, T>, PV<T>, T>;
     type T = T;
-}
 
-impl<T> Gnomic<T>
-where
-    T: 'static + CoordFloat + FloatConst,
-{
-    pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Gnomic<T>, PV<T>, T>
+    fn builder() -> Self::Builder
     where
         DRAIN: Stream<T = T>,
     {
@@ -63,7 +60,12 @@ where
         .scale(T::from(144.049_f64).unwrap())
         .clip_angle(T::from(60_f64).unwrap())
     }
+}
 
+impl<DRAIN, T> Gnomic<DRAIN, T>
+where
+    T: CoordFloat + FloatConst,
+{
     #[inline]
     fn atan(z: T) -> T
     where
@@ -74,9 +76,10 @@ where
     }
 }
 
-impl<T> Transform for Gnomic<T>
+impl<DRAIN, T> Transform for Gnomic<DRAIN, T>
 where
-    T: 'static + CoordFloat + FloatConst,
+    DRAIN: Stream<T = T>,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

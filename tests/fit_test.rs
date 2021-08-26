@@ -10,13 +10,14 @@
 //     use rust_d3_geo::data_object::DataObject;
 //     use rust_d3_geo::in_delta::in_delta;
 //     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
+//     use rust_d3_geo::projection::Raw;
 //     // use rust_d3_geo::projection::projection::Projection;
 
 //     #[test]
 //     fn test_fit_extent_sphere_equirectangular() {
 //         println!("projection.fitExtent(…) sphere equirectangular");
 //         let d_object = DataObject::Sphere(Sphere::default());
-//         let projection = EquirectangularRaw::gen_projection_builder()
+//         let projection = EquirectangularRaw::builder()
 //             .fit_extent(
 //                 [
 //                     Coordinate { x: 50.0, y: 50.0 },

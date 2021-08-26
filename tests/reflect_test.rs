@@ -10,16 +10,22 @@ mod reflect_tests {
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::scale::Scale;
     use rust_d3_geo::projection::translate::Translate;
+    use rust_d3_geo::projection::Raw;
     use rust_d3_geo::stream::StreamDrainStub;
 
     #[test]
     fn test_reflect_x_defaults_to_false() {
         println!("projection.reflectX(…) defaults to false");
 
-        let builder: Builder<StreamDrainStub<f64>, Line<f64>, Gnomic<f64>, PV<f64>, f64> =
-            Gnomic::gen_projection_builder()
-                .scale(1f64)
-                .translate(&Coordinate { x: 0_f64, y: 0_f64 });
+        let builder: Builder<
+            StreamDrainStub<f64>,
+            Line<f64>,
+            Gnomic<StreamDrainStub<f64>, f64>,
+            PV<f64>,
+            f64,
+        > = Gnomic::builder()
+            .scale(1f64)
+            .translate(&Coordinate { x: 0_f64, y: 0_f64 });
 
         assert_eq!(builder.get_reflect_x(), false);
         assert_eq!(builder.get_reflect_y(), false);
@@ -62,11 +68,16 @@ mod reflect_tests {
     #[test]
     fn test_reflect_mirrors_x_after_processing() {
         println!("projection.reflectX(…) defaults to false");
-        let mut builder: Builder<StreamDrainStub<f64>, Line<f64>, Gnomic<f64>, PV<f64>, f64> =
-            Gnomic::gen_projection_builder()
-                .scale(1_f64)
-                .translate(&Coordinate { x: 0_f64, y: 0_f64 })
-                .reflect_x(true);
+        let mut builder: Builder<
+            StreamDrainStub<f64>,
+            Line<f64>,
+            Gnomic<StreamDrainStub<f64>, f64>,
+            PV<f64>,
+            f64,
+        > = Gnomic::builder()
+            .scale(1_f64)
+            .translate(&Coordinate { x: 0_f64, y: 0_f64 })
+            .reflect_x(true);
 
         assert_eq!(builder.get_reflect_x(), true);
 

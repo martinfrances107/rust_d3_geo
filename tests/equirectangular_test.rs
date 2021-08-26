@@ -14,6 +14,7 @@ mod equirectangular_test {
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::scale::Scale;
     use rust_d3_geo::projection::translate::Translate;
+    use rust_d3_geo::projection::Raw;
     use rust_d3_geo::stream::StreamDrainStub;
 
     #[test]
@@ -22,7 +23,7 @@ mod equirectangular_test {
         let equirectangular: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<f64>,
+            EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
         > = Builder::new(
@@ -128,7 +129,7 @@ mod equirectangular_test {
         let equirectangular: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<f64>,
+            EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
         > = Builder::new(
@@ -242,10 +243,10 @@ mod equirectangular_test {
         let equirectangular: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<f64>,
+            EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
-        > = EquirectangularRaw::gen_projection_builder()
+        > = EquirectangularRaw::builder()
             .rotate([30f64, 30f64, 0f64])
             .translate(&Coordinate { x: 0f64, y: 0f64 })
             .scale(1_f64)
@@ -353,10 +354,10 @@ mod equirectangular_test {
         let equirectangular: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<f64>,
+            EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
-        > = EquirectangularRaw::gen_projection_builder()
+        > = EquirectangularRaw::builder()
             .rotate([0f64, 0f64, 30f64])
             .translate(&Coordinate { x: 0f64, y: 0f64 })
             .scale(1f64)
@@ -457,10 +458,10 @@ mod equirectangular_test {
         let equirectangular: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<f64>,
+            EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
-        > = EquirectangularRaw::gen_projection_builder()
+        > = EquirectangularRaw::builder()
             .rotate([30f64, 30f64, 30f64])
             .translate(&Coordinate { x: 0f64, y: 0f64 })
             .scale(1f64)

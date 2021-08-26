@@ -14,7 +14,7 @@ pub const EPSILON2: f64 = 1e-12;
 #[allow(non_snake_case)]
 #[derive(Derivative)]
 #[derivative(Debug)]
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct Stream<T: CoordFloat> {
     W0: T,
     W1: T,

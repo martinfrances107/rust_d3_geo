@@ -15,53 +15,51 @@ use super::scale::Scale;
 use super::Raw;
 
 #[derive(Clone, Copy, Debug)]
-pub struct Mecator<T>
+pub struct Mercator<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
-    phantom: PhantomData<T>,
+    p_drain: PhantomData<DRAIN>,
+    p_t: PhantomData<T>,
 }
 
-impl<T> Default for Mecator<T>
+impl<DRAIN, T> Default for Mercator<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
-        Mecator {
-            phantom: PhantomData::<T>,
+        Mercator {
+            p_drain: PhantomData::<DRAIN>,
+            p_t: PhantomData::<T>,
         }
     }
 }
 
-impl<T> Raw<T> for Mecator<T>
+impl<DRAIN, T> Raw<T> for Mercator<DRAIN, T>
 where
-    T: CoordFloat + FloatConst,
-{
-    type T = T;
-}
-
-impl<T> Mecator<T>
-where
+    DRAIN: Stream<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
-    pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Mecator<T>, PV<T>, T>
-    where
-        DRAIN: Stream<T = T>,
-    {
+    type Builder = Builder<DRAIN, Line<T>, Mercator<DRAIN, T>, PV<T>, T>;
+    type T = T;
+
+    fn builder() -> Self::Builder {
         let tau = T::from(2).unwrap() * T::PI();
         Builder::new(
             StreamNodeClipFactory::new(gen_interpolate(), Line::default(), PV::default()),
-            Mecator::default(),
+            Mercator::default(),
         )
         .scale(T::from(961).unwrap() / tau)
     }
 }
 
-impl<T> Transform for Mecator<T>
+impl<DRAIN, T> Transform for Mercator<DRAIN, T>
 where
+    DRAIN: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
+
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let two = T::from(2).unwrap();

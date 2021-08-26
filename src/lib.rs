@@ -32,7 +32,7 @@ mod point_equal;
 /// Common to Projection, Rotation.
 ///
 /// FloatConst is required by forward_rotation_lambda()
-pub trait Transform: Clone
+pub trait Transform: Clone + Debug
 where
     <Self as Transform>::T: CoordFloat,
 {

@@ -20,37 +20,38 @@ use super::Raw;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Copy, Clone, Debug)]
-pub struct Stereographic<T>
+pub struct Stereographic<DRAIN, T>
 where
+    DRAIN: Stream<T = T>,
     T: CoordFloat,
 {
-    phantom: PhantomData<T>,
+    p_drain: PhantomData<DRAIN>,
+    p_t: PhantomData<T>,
 }
 
-impl<T> Default for Stereographic<T>
+impl<DRAIN, T> Default for Stereographic<DRAIN, T>
 where
+    DRAIN: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Stereographic {
-            phantom: PhantomData::<T>,
+            p_drain: PhantomData::<DRAIN>,
+            p_t: PhantomData::<T>,
         }
     }
 }
 
-impl<T> Raw<T> for Stereographic<T>
+impl<DRAIN, T> Raw<T> for Stereographic<DRAIN, T>
 where
+    DRAIN: Stream<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
+    type Builder = Builder<DRAIN, Line<T>, Stereographic<DRAIN, T>, PV<T>, T>;
     type T = T;
-}
 
-impl<T> Stereographic<T>
-where
-    T: 'static + CoordFloat + FloatConst,
-{
     #[inline]
-    pub fn gen_projection_builder<DRAIN>() -> Builder<DRAIN, Line<T>, Stereographic<T>, PV<T>, T>
+    fn builder() -> Self::Builder
     where
         DRAIN: Stream<T = T>,
     {
@@ -65,7 +66,13 @@ where
         .scale(T::from(250_f64).unwrap())
         .clip_angle(T::from(142_f64).unwrap())
     }
+}
 
+impl<DRAIN, T> Stereographic<DRAIN, T>
+where
+    DRAIN: Stream<T = T>,
+    T: 'static + CoordFloat + FloatConst,
+{
     #[inline]
     fn z(z: T) -> T
     where
@@ -76,8 +83,9 @@ where
     }
 }
 
-impl<T> Transform for Stereographic<T>
+impl<DRAIN, T> Transform for Stereographic<DRAIN, T>
 where
+    DRAIN: Stream<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     type T = T;

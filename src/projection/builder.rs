@@ -125,9 +125,9 @@ where
 
         let rotate = rotate_radians(delta_lambda, delta_phi, delta_gamma); // pre-rotate
         let rotate_factory = StreamNodeFactory::new(rotate.clone());
-        let transform = Compose::new(projection_raw, str);
-        let resample_factory = StreamNodeResampleFactory::new(transform, T::zero());
-        let rotate_transform = Compose::new(rotate.clone(), transform);
+        let transform = Compose::new(projection_raw.clone(), str);
+        let resample_factory = StreamNodeResampleFactory::new(transform.clone(), T::zero());
+        let rotate_transform = Compose::new(rotate.clone(), transform.clone());
         let rotate_transform_factory = StreamNodeFactory::new(rotate_transform.clone());
 
         Self {
@@ -244,11 +244,11 @@ where
         );
 
         self.rotate = rotate_radians(self.delta_lambda, self.delta_phi, self.delta_gamma);
-        self.transform = Compose::new(self.projection_raw, transform);
-        self.rotate_transform = Compose::new(self.rotate.clone(), self.transform);
+        self.transform = Compose::new(self.projection_raw.clone(), transform);
+        self.rotate_transform = Compose::new(self.rotate.clone(), self.transform.clone());
 
         //todo update every factory.
-        self.resample_factory = StreamNodeResampleFactory::new(self.transform, self.delta2);
+        self.resample_factory = StreamNodeResampleFactory::new(self.transform.clone(), self.delta2);
         self.rotate_factory = StreamNodeFactory::new(self.rotate.clone());
         self.rotate_transform_factory = StreamNodeFactory::new(self.rotate_transform.clone());
         self.reset()
@@ -314,13 +314,14 @@ where
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
+    type Builder = Self;
     type T = T;
     #[inline]
     fn get_scale(&self) -> Self::T {
         self.k
     }
 
-    fn scale(mut self, scale: T) -> Builder<DRAIN, L, PR, PV, T> {
+    fn scale(mut self, scale: T) -> Self {
         self.k = scale;
         self.recenter()
     }
@@ -675,7 +676,7 @@ where
 
     pub fn precision(self, delta: &T) -> Builder<DRAIN, L, PR, PV, T> {
         let delta2 = *delta * *delta;
-        let resample_factory = StreamNodeResampleFactory::new(self.transform, delta2);
+        let resample_factory = StreamNodeResampleFactory::new(self.transform.clone(), delta2);
         Builder {
             delta2,
             resample_factory,

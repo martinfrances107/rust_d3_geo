@@ -19,7 +19,6 @@
 // use crate::projection::scale::Scale;
 // use crate::projection::Raw as ProjectionRaw;
 // use crate::stream::Streamable;
-// use crate::Transform;
 
 // use super::clip_extent::ClipExtent;
 // // use super::projection_trait::ProjectionTrait;
@@ -104,6 +103,7 @@
 //         object,
 //     )
 // }
+
 // // // export function fitExtent(projection, extent, object) {
 // // //   return fit(projection, function(b) {
 // // //     var w = extent[1][0] - extent[0][0],

@@ -10,14 +10,14 @@ No API stability guarentees.
 Progress so far.
 
 A list of all projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 6 have been ported so far.
-(AziumuthalEqualArea, Equirectangular, Gnomic, Mecator,  Orthographic, Stereographic )
+(AziumuthalEqualArea, Equirectangular, Gnomic, Mercator,  Orthographic, Stereographic )
 
 ## TODO list
 
 Currently we have 47% test coverage ( as reported by cargo tarpaulin -o Html )
 * The current target is to increase the code coverage in resample.rs which has some known bugs.
   clipcircle_test.ts and fit_test.rs exercise code in resample .. So I am focusing on those tests.
-* Next,  sections of projectionMutator.rs will have to be re-architected for the mecator projection to function like the javascript version.
+* Next,  sections of projectionMutator.rs will have to be re-architected for the mercator projection to function like the javascript version.
 
 I am trying to get a program of mine to run faster, but I want this to eventually be a true library port. So feel free to add suggestions to my todo list.
 

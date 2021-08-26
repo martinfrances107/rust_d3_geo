@@ -69,12 +69,12 @@ where
     fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
         match self.delta2.is_zero() {
             true => ResampleNode::RN(StreamNode {
-                raw: ResampleNone::new(self.projection_transform),
+                raw: ResampleNone::new(self.projection_transform.clone()),
                 sink,
                 pd: PhantomData::<T>,
             }),
             false => ResampleNode::R(StreamNode {
-                raw: Resample::new(self.projection_transform, self.delta2),
+                raw: Resample::new(self.projection_transform.clone(), self.delta2),
                 sink,
                 pd: PhantomData::<T>,
             }),

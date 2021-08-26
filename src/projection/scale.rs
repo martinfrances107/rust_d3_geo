@@ -1,5 +1,6 @@
 pub trait Scale {
     type T;
+    type Builder;
 
     fn get_scale(&self) -> Self::T;
 
@@ -10,5 +11,5 @@ pub trait Scale {
     //  * @param scale Scale factor to be used for the projection; the default scale is projection-specific.
     //  */
     // fn scale(&mut self, scale: &F);
-    fn scale(self, scale: Self::T) -> Self;
+    fn scale(self, scale: Self::T) -> Self::Builder;
 }

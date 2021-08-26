@@ -2,6 +2,7 @@
 #[cfg(test)]
 mod path_area_test {
 
+    use rust_d3_geo::stream::Stream;
     use std::f64::consts::PI;
     use std::fmt::Display;
 
@@ -23,24 +24,28 @@ mod path_area_test {
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::scale::Scale;
+    use rust_d3_geo::projection::Raw;
 
     #[inline]
-    fn equirectangular<T>() -> Projection<ContextStream<T>, Line<T>, EquirectangularRaw<T>, PV<T>, T>
+    fn equirectangular<DRAIN, T>(
+    ) -> Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>
     where
+        DRAIN: Stream<T = T> + Default,
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        EquirectangularRaw::gen_projection_builder()
+        EquirectangularRaw::builder()
             .scale(T::from(900f64 / PI).unwrap())
             .precision(&T::zero())
             .build()
     }
 
     #[inline]
-    fn test_area<'a, T>(
-        projection: Projection<ContextStream<T>, Line<T>, EquirectangularRaw<T>, PV<T>, T>,
+    fn test_area<'a, DRAIN, T>(
+        projection: Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
         object: DataObject<T>,
     ) -> T
     where
+        DRAIN: Stream<T = T>,
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         let builder = PathBuilder::init(Some(projection), None);
@@ -69,7 +74,7 @@ mod path_area_test {
             ]),
             vec![],
         )));
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular::<ContextStream<f64>, f64>();
         assert_eq!(test_area(eq, object), 25.0);
     }
 
@@ -95,14 +100,14 @@ mod path_area_test {
                 ]),
             ],
         )));
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular::<ContextStream<f64>, f64>();
         assert_eq!(test_area(eq, object), 16.0);
     }
 
     #[test]
     fn test_area_of_a_sphere() {
         println!("geoPath.area(…) of a sphere");
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular::<ContextStream<f64>, f64>();
         let object = DataObject::Sphere(Sphere::default());
         assert_eq!(test_area(eq, object), 1620000.0);
     }

@@ -24,7 +24,7 @@ pub trait Streamable {
     fn to_stream<SD: Stream<T = Self::T>>(&self, stream: &mut SD);
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct StreamDrainStub<T>
 where
     T: CoordFloat,
@@ -92,7 +92,7 @@ where
 
 /// Is a node in the stream pipeline.
 /// Default implmentation is a no-op.
-pub trait Stream: Clone
+pub trait Stream: Clone + Debug
 where
     <Self as Stream>::T: CoordFloat,
 {

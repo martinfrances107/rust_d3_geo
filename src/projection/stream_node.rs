@@ -1,3 +1,4 @@
+use crate::stream::Stream;
 use std::cell::RefCell;
 use std::marker::PhantomData;
 use std::rc::Rc;
@@ -15,6 +16,7 @@ use geo::CoordFloat;
 #[derive(Clone, Debug)]
 pub struct StreamNode<RAW, SINK, T>
 where
+    SINK: Stream<T = T>,
     T: CoordFloat,
 {
     pub raw: RAW,

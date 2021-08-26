@@ -21,6 +21,7 @@ use super::Raw as ProjectionRaw;
 pub enum ResampleNode<PR, SINK, T>
 where
     PR: ProjectionRaw<T>,
+    SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
     RN(StreamNode<None<PR, T>, SINK, T>),
