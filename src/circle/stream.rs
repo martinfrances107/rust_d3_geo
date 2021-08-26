@@ -6,13 +6,12 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-// use super::StreamType;
 use crate::rotation::rotate_radians::RotateRadiams;
 use crate::rotation::rotation_identity::RotationIdentity;
 use crate::stream::Stream as StreamTrait;
 use crate::Transform;
 
-// /// Output of CircleGenertor::circle()
+/// Output of CircleGenertor::circle()
 #[derive(Clone, Debug)]
 pub struct Stream<T>
 where

@@ -1,14 +1,12 @@
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
-
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
 use super::Result;
 use super::ResultEnum;
-
-use derivative::Derivative;
 
 #[derive(Derivative)]
 #[derivative(Debug)]

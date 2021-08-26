@@ -1,7 +1,8 @@
 pub mod interpolate;
-mod intersect;
 pub mod line;
 pub mod pv;
+
+mod intersect;
 
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -25,7 +26,6 @@ where
     StreamNodeClipFactory::new(
         generate_interpolate(radius),
         Line::new(radius),
-        // PV { cr: radius.cos() },
         PV::new(radius),
     )
 }

@@ -1,5 +1,3 @@
-use crate::clip::clip::Clip;
-
 use std::rc::Rc;
 
 use derivative::Derivative;
@@ -8,15 +6,14 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::PostClipFn;
-use crate::projection::resample::stream_node_resample_factory::StreamNodeResampleFactory;
-// use crate::projection::fit::fit_extent;
 use crate::clip::circle::gen_clip_factory_circle;
 use crate::clip::circle::line::Line as CircleLine;
 use crate::clip::circle::pv::PV as CirclePV;
+use crate::clip::clip::Clip;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
+use crate::clip::PostClipFn;
 use crate::compose::Compose;
 use crate::rotation::rotate_radians;
 use crate::rotation::rotate_radians::RotateRadiams;
@@ -25,6 +22,7 @@ use crate::Transform;
 
 use super::center::Center;
 use super::clip_extent::ClipExtent;
+use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
 use super::scale::Scale;
 use super::str::generate as generate_str;

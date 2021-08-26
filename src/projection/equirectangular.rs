@@ -1,7 +1,8 @@
+use std::marker::PhantomData;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
-use std::marker::PhantomData;
 
 use crate::clip::antimeridian::interpolate::generate as generate_interpolate;
 use crate::clip::antimeridian::line::Line;

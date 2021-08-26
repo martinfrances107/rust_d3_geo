@@ -1,6 +1,3 @@
-use crate::compose::Compose;
-use crate::projection::resample::Resample;
-use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -9,6 +6,9 @@ use derivative::Derivative;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::compose::Compose;
+use crate::projection::resample::Resample;
+use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::NodeFactory;
 use crate::projection::Raw as ProjectionRaw;

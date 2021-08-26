@@ -12,19 +12,19 @@ pub mod buffer;
 mod clean;
 mod rejoin;
 
-use geo::CoordFloat;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use geo::CoordFloat;
 use geo::Coordinate;
 
 use crate::stream::Stream;
 use crate::Debug;
 
-// Takes a line and cuts into visible segments. Return values used for polygon
-// clipPing: 0 - there were intersections or the line was empty; 1 - no
-// intersections 2 - there were intersections, and the first and last segments
-// should be rejoined.
+/// Takes a line and cuts into visible segments. Return values used for polygon
+/// clipPing: 0 - there were intersections or the line was empty; 1 - no
+/// intersections 2 - there were intersections, and the first and last segments
+/// should be rejoined.
 #[derive(Debug, Clone, Copy)]
 pub enum CleanEnum {
     Undefined,

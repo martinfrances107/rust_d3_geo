@@ -6,7 +6,6 @@ pub mod rotation_lambda;
 pub mod rotation_phi_gamma;
 
 use geo::CoordFloat;
-
 use num_traits::FloatConst;
 
 use crate::compose::Compose;

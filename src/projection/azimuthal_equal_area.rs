@@ -9,17 +9,13 @@ use crate::clip::circle::line::Line;
 use crate::clip::circle::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::builder::Builder;
+use crate::projection::scale::Scale;
 use crate::projection::Raw;
 use crate::stream::Stream;
+use crate::Transform;
 
-// use super::projection::Projection;
-// use super::projection::StreamOrValueMaybe;
 use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
-// use crate::projection::ProjectionTrait;
-use crate::projection::scale::Scale;
-// use crate::stream::Stream;
-use crate::Transform;
 
 /// Why the Phantom Data is required here...
 ///

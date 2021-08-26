@@ -27,9 +27,8 @@ pub mod orthographic;
 pub mod projection;
 pub mod projection_equal;
 pub mod scale;
-pub mod str;
-
 pub mod stereographic;
+pub mod str;
 pub mod stream_node;
 pub mod stream_node_factory;
 pub mod stream_transform_radians;

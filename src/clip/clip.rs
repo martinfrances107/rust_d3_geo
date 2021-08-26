@@ -1,4 +1,3 @@
-use crate::polygon_contains::polygon_contains;
 use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
@@ -18,6 +17,7 @@ use super::PointVisible;
 
 use crate::path::Result;
 use crate::path::ResultEnum;
+use crate::polygon_contains::polygon_contains;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::NodeFactory;

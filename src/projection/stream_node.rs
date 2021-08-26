@@ -1,9 +1,10 @@
-use crate::stream::Stream;
 use std::cell::RefCell;
 use std::marker::PhantomData;
 use std::rc::Rc;
 
 use geo::CoordFloat;
+
+use crate::stream::Stream;
 
 /// Stream node is a internal to projection and clip.
 ///

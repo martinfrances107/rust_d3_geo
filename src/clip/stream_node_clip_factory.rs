@@ -1,14 +1,8 @@
-use super::buffer::Buffer;
-use super::clip::Clip;
-use super::line_elem::LineElem;
-use super::InterpolateFn;
-use super::Line;
-use super::PointVisible;
-
+use core::marker::PhantomData;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use core::marker::PhantomData;
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -18,7 +12,13 @@ use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::NodeFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
-use derivative::Derivative;
+
+use super::buffer::Buffer;
+use super::clip::Clip;
+use super::line_elem::LineElem;
+use super::InterpolateFn;
+use super::Line;
+use super::PointVisible;
 
 /// Used in the construct of a Projection stream pipeline.
 ///

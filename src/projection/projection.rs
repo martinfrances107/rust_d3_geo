@@ -1,5 +1,3 @@
-use crate::projection::resample::stream_node_resample_factory::StreamNodeResampleFactory;
-use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -17,7 +15,9 @@ use crate::rotation::rotate_radians::RotateRadiams;
 use crate::stream::Stream;
 use crate::Transform;
 
+use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
+use super::str::scale_translate_rotate::ScaleTranslateRotate;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::NodeFactory;

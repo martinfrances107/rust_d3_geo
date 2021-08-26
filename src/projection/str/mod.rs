@@ -2,9 +2,10 @@ pub mod scale_translate_rotate;
 pub mod st;
 pub mod str;
 
-use self::str::Str;
 use geo::CoordFloat;
 use num_traits::FloatConst;
+
+use self::str::Str;
 use scale_translate_rotate::ScaleTranslateRotate;
 use st::St;
 

@@ -1,24 +1,25 @@
-use crate::data_object::DataObject;
-use crate::path::ResultEnum;
-use num_traits::AsPrimitive;
 use std::cell::RefCell;
 use std::fmt::Display;
 use std::rc::Rc;
-use web_sys::CanvasRenderingContext2d;
 
 use geo::CoordFloat;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
+use web_sys::CanvasRenderingContext2d;
+
+use crate::clip::Line;
+use crate::clip::PointVisible;
+use crate::data_object::DataObject;
+use crate::path::area_stream::AreaStream as PathArea;
+use crate::path::Result;
+use crate::path::ResultEnum;
+use crate::projection::projection::Projection;
+use crate::projection::Raw as ProjectionRaw;
+use crate::stream::Streamable;
 
 use super::context::Context as PathContext;
 use super::context_stream::ContextStream;
 use super::string::String as PathString;
-use crate::clip::Line;
-use crate::clip::PointVisible;
-use crate::path::area_stream::AreaStream as PathArea;
-use crate::path::Result;
-use crate::projection::projection::Projection;
-use crate::projection::Raw as ProjectionRaw;
-use crate::stream::Streamable;
 
 // #[derive(Debug)]
 // enum StreamObjectType {

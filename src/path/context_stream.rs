@@ -6,12 +6,11 @@ use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
+use super::area_stream::AreaStream;
 use super::context::Context;
+use super::string::String as PathString;
 use super::Result;
 use super::ResultEnum;
-
-use super::area_stream::AreaStream;
-use super::string::String as PathString;
 
 #[derive(Clone, Debug)]
 pub enum ContextStream<T>

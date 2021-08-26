@@ -1,9 +1,9 @@
-use crate::compose::Compose;
-use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
+use crate::compose::Compose;
+use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
@@ -38,9 +38,6 @@ where
 
     pub cos_min_distance: T,
 
-    // Box here prevents recurson.
-    // pub stream: Box<STREAM>,
-    // pub stream: STREAM,
     pub use_line_point: bool,
     pub use_line_start: bool,
     pub use_line_end: bool,

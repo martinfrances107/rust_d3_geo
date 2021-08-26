@@ -1,9 +1,9 @@
+pub mod sphere;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Geometry;
 use num_traits::FloatConst;
-
-pub mod sphere;
 
 use crate::stream::{Stream, Streamable};
 
@@ -28,14 +28,14 @@ where
 #[derive(Clone, Debug)]
 pub struct FeatureCollection<T: CoordFloat>(pub Vec<Features<T>>);
 
-// Signular version of the struct.
+/// Signular version of the struct.
 #[derive(Clone, Debug)]
 pub struct Feature<T: CoordFloat> {
     pub properties: Vec<FeatureProperty<T>>,
     pub geometry: Geometry<T>,
 }
 
-// Pluralization of the struct,
+/// Pluralization of the struct,
 #[derive(Clone, Debug)]
 pub struct Features<T: CoordFloat> {
     pub properties: Vec<FeatureProperty<T>>,
@@ -50,6 +50,7 @@ where
     /// Feature - a feature containing one of the above geometry objects.
     Feature { feature: Feature<T> },
 }
+
 #[derive(Clone, Debug)]
 pub enum DataObject<T>
 where
@@ -65,8 +66,6 @@ where
     T: CoordFloat + FloatConst,
 {
     type T = T;
-    // type SD = DataObject<T>;
-    // type SD = Self::SD;
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         match self {
             DataObject::Collection(Collection::Feature { feature: _ }) => {

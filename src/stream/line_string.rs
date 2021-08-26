@@ -1,9 +1,10 @@
 use geo::LineString;
 use geo::{coords_iter::CoordsIter, CoordFloat, Coordinate};
 
+use crate::stream::Stream;
+
 use super::stream_line::stream_line;
 use super::Streamable;
-use crate::stream::Stream;
 
 impl<T: CoordFloat> Streamable for LineString<T> {
     // type SD = LineString<T>;

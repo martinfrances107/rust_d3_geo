@@ -2,20 +2,19 @@ pub mod none;
 pub mod resample;
 pub mod stream_node_resample_factory;
 
-use num_traits::FloatConst;
 use std::fmt::Debug;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
 use super::stream_node::StreamNode;
+use super::Raw as ProjectionRaw;
 
 use none::None;
 use resample::Resample;
-
-use super::Raw as ProjectionRaw;
 
 #[derive(Debug, Clone)]
 pub enum ResampleNode<PR, SINK, T>
@@ -42,20 +41,6 @@ where
 //             pd: PhantomData::<T>,
 //         };
 //         ResampleNode::RN(stream_node)
-//     }
-// }
-
-// impl<PR, T> Clone for ResampleEnum<PR, T>
-// where
-//     PR: ProjectionRaw<T>,
-//     T: CoordFloat,
-// {
-//     #[inline]
-//     fn clone(&self) -> Self {
-//         match self {
-//             ResampleEnum::RN(rn) => ResampleEnum::RN(*rn),
-//             ResampleEnum::R(r) => ResampleEnum::R(*r),
-//         }
 //     }
 // }
 

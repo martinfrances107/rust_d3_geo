@@ -1,8 +1,6 @@
-extern crate web_sys;
-
-use geo::{CoordFloat, Coordinate};
 use std::rc::Rc;
 
+use geo::{CoordFloat, Coordinate};
 use web_sys::CanvasRenderingContext2d;
 
 use crate::stream::Stream;

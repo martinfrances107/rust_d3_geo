@@ -1,6 +1,7 @@
-use geo::{CoordFloat, Coordinate};
 use std::fmt::Display;
 use std::string::String as S;
+
+use geo::{CoordFloat, Coordinate};
 
 use crate::stream::Stream;
 

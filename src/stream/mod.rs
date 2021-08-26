@@ -9,7 +9,6 @@ mod multi_polygon;
 mod point;
 mod polygon;
 mod rect;
-// mod stream_geometry_map;
 mod stream_line;
 mod triangle;
 

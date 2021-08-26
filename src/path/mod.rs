@@ -12,10 +12,7 @@ use std::fmt;
 use geo::CoordFloat;
 use geo::Coordinate;
 
-// use web_sys::CanvasRenderingContext2d;
 use crate::clip::line_elem::LineElem;
-
-// use crate::stream::Stream;
 
 /// Path::ResultEnum
 #[derive(Clone, Debug)]

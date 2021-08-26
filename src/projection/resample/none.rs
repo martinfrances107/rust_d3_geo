@@ -1,6 +1,7 @@
+use std::marker::PhantomData;
+
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-use std::marker::PhantomData;
 
 use crate::compose::Compose;
 use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
@@ -19,19 +20,6 @@ where
     pt: PhantomData<T>,
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
 }
-
-// impl<PR, T> Default for None<PR, T>
-// where
-//     PR: ProjectionRaw<T>,
-//     T: CoordFloat,
-// {
-//     fn default() -> Self {
-//         Self {
-//             pt: PhantomData::<T>,
-//             projection_raw: PR::default(),
-//         }
-//     }
-// }
 
 impl<PR, T> None<PR, T>
 where

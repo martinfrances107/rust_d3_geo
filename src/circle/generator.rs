@@ -1,5 +1,3 @@
-// use crate::circle::generate::generate;
-
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::fmt::Display;
@@ -14,8 +12,6 @@ use crate::rotation::rotate_radians;
 use crate::rotation::rotate_radians::RotateRadiams;
 use crate::rotation::rotation_identity::RotationIdentity;
 
-// use crate::stream::Stream;
-// // use crate::stream::StreamSimpleNode;
 use super::stream::Stream;
 use super::stream_fn::stream_fn;
 // use super::CircleTrait;

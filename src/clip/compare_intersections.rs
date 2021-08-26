@@ -7,9 +7,9 @@ use num_traits::FloatConst;
 
 use super::rejoin::intersection::Intersection;
 
-// Intersections are sorted along the clip edge. For both antimeridian cutting
-// and circle clipPIng, the same comparison is used.
-// fn compare_intersection(&self, _a: Self::SctCi, _b: Self::SctCi) -> Self::SctT;
+/// Intersections are sorted along the clip edge. For both antimeridian cutting
+/// and circle clipPIng, the same comparison is used.
+/// fn compare_intersection(&self, _a: Self::SctCi, _b: Self::SctCi) -> Self::SctT;
 pub fn compare_intersections<T>(
     a: &Rc<RefCell<Intersection<T>>>,
     b: &Rc<RefCell<Intersection<T>>>,
