@@ -22,8 +22,6 @@ where
     T: CoordFloat,
 {
     p_drain: PhantomData<DRAIN>,
-    lambda: T,
-    phi: T,
 }
 
 impl<DRAIN, T> Default for EquirectangularRaw<DRAIN, T>
@@ -34,8 +32,6 @@ where
     fn default() -> Self {
         Self {
             p_drain: PhantomData::<DRAIN>,
-            lambda: T::zero(),
-            phi: T::zero(),
         }
     }
 }
