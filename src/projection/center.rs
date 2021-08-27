@@ -1,9 +1,13 @@
 use geo::CoordFloat;
 use geo::Coordinate;
 
+/// Controls the projections center point.
+///
+/// Projection builder sub trait.
 pub trait Center // where
 //     T: CoordFloat,
 {
+    /// f64 or f32
     type T;
 
     /**

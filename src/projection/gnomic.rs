@@ -15,10 +15,10 @@ use super::builder::Builder;
 use super::scale::Scale;
 use super::Raw;
 
-/// Why the Phantom Data is required here...
+/// GnomicRaw
 ///
-/// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
-/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+/// Root transform.
+/// Used to define a projection builder.
 #[derive(Copy, Clone, Debug)]
 pub struct Gnomic<DRAIN, T>
 where

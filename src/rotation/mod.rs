@@ -2,7 +2,9 @@ pub mod rotate_radians;
 pub mod rotation;
 pub mod rotation_identity;
 
+/// A rotation in one direction.
 pub mod rotation_lambda;
+/// A rotation in two directions.
 pub mod rotation_phi_gamma;
 
 use geo::CoordFloat;

@@ -14,9 +14,13 @@ pub struct Str<T: CoordFloat> {
     pub bi: T,
     pub ci: T,
     pub fi: T,
+    /// x - translation.
     pub dx: T,
+    /// y - translation.
     pub dy: T,
+    /// x - scaling.
     pub sx: T,
+    /// y- scaling.
     pub sy: T,
 }
 

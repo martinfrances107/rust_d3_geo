@@ -15,13 +15,18 @@ use super::rotation_identity::RotationIdentity;
 use super::rotation_lambda::RotationLambda;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
+/// Output from a rotate.
 pub enum RotateRadiams<T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// A combination of rotations.
     C(Box<Compose<T, RotationLambda<T>, RotationPhiGamma<T>>>),
+    /// Just roation in one direction.
     RL(RotationLambda<T>),
+    /// Rotate, Phi and Gamma.
     RPG(RotationPhiGamma<T>),
+    /// No rotation.
     I(RotationIdentity<T>),
 }
 

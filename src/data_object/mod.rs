@@ -1,3 +1,4 @@
+/// Related to the unit sphere.
 pub mod sphere;
 
 use geo::CoordFloat;
@@ -9,18 +10,27 @@ use crate::stream::{Stream, Streamable};
 
 use sphere::Sphere;
 
+/// Specifies a valie feature property.
 #[derive(Clone, Debug)]
 pub enum FeatureProperty<T>
 where
     T: CoordFloat,
 {
+    /// Circumcenter.
     Circumecenter(Coordinate<T>),
+    /// Length.
     Length(T),
+    /// Source.
     Source(Coordinate<T>),
+    /// Target.
     Target(Coordinate<T>),
+    /// Urquhart distances.
     Urquhart(bool),
+    /// Site Coordinate.
     Site(Coordinate<T>),
+    /// Sites Coordinates.
     Sitecoordinates(Coordinate<T>),
+    ///  A collection of indexes.
     Neighbors(Vec<usize>),
 }
 
@@ -31,33 +41,45 @@ pub struct FeatureCollection<T: CoordFloat>(pub Vec<Features<T>>);
 /// Signular version of the struct.
 #[derive(Clone, Debug)]
 pub struct Feature<T: CoordFloat> {
+    /// A collection of feature properties.
     pub properties: Vec<FeatureProperty<T>>,
+    /// The associated gemetry function.
     pub geometry: Geometry<T>,
 }
 
 /// Pluralization of the struct,
 #[derive(Clone, Debug)]
 pub struct Features<T: CoordFloat> {
+    /// A collection of feature properties.
     pub properties: Vec<FeatureProperty<T>>,
+    /// A collections of assocated geometries.
     pub geometry: Vec<Geometry<T>>,
 }
 
 #[derive(Clone, Debug)]
+/// A collection of features.
 pub enum Collection<T>
 where
     T: CoordFloat,
 {
     /// Feature - a feature containing one of the above geometry objects.
-    Feature { feature: Feature<T> },
+    Feature {
+        /// The feature.
+        feature: Feature<T>,
+    },
 }
 
+/// Related to D3 data objects.
 #[derive(Clone, Debug)]
 pub enum DataObject<T>
 where
     T: CoordFloat,
 {
+    /// D3 sphere
     Sphere(Sphere<T>),
+    /// D3 geometry
     Geometry(Geometry<T>),
+    /// A D3 geometry collect.
     Collection(Collection<T>),
 }
 

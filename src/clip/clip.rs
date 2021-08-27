@@ -44,6 +44,7 @@ enum LineEndFn {
     Ring,
 }
 
+/// State for a clipping node.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
 pub struct Clip<L, PV, SINK, T>
@@ -53,19 +54,19 @@ where
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
-    pub line_node: StreamNode<L, SINK, T>,
+    line_node: StreamNode<L, SINK, T>,
     #[derivative(Debug = "ignore")]
-    pub interpolate_fn: InterpolateFn<SINK, T>,
+    interpolate_fn: InterpolateFn<SINK, T>,
 
     /// A pipeline source node.
     pub ring_buffer: Rc<RefCell<Buffer<T>>>,
-    pub pv: PV,
+    pv: PV,
     start: LineElem<T>,
-    pub polygon_started: bool,
-    pub polygon: Vec<Vec<LineElem<T>>>,
-    pub ring: Vec<LineElem<T>>,
-    pub ring_sink_node: StreamNode<L, Buffer<T>, T>,
-    pub segments: VecDeque<Vec<Vec<LineElem<T>>>>,
+    polygon_started: bool,
+    polygon: Vec<Vec<LineElem<T>>>,
+    ring: Vec<LineElem<T>>,
+    ring_sink_node: StreamNode<L, Buffer<T>, T>,
+    segments: VecDeque<Vec<Vec<LineElem<T>>>>,
     point_fn: PointFn,
     line_start_fn: LineStartFn,
     line_end_fn: LineEndFn,
@@ -78,7 +79,7 @@ where
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
-    pub fn new(
+    pub(super) fn new(
         pv: PV,
         line_raw: L,
         interpolate_fn: InterpolateFn<SINK, T>,

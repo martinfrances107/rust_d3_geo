@@ -8,6 +8,7 @@ use super::stream::Stream as StreamTrait;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
+/// Length Stream.
 pub struct Stream<T: CoordFloat> {
     // sphere_fn: fn(&mut Self, f64, f64),
     #[derivative(Debug = "ignore")]
@@ -54,6 +55,7 @@ impl<T> Stream<T>
 where
     T: CoordFloat,
 {
+    /// Calculate the objects assocated length.
     pub fn calc(object: &impl Streamable<T = T>) -> T {
         let mut ls = Stream::default();
         object.to_stream(&mut ls);

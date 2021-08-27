@@ -20,7 +20,9 @@ where
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
+    /// The proto node, that is the struct without reference to the sink.
     pub raw: RAW,
+    /// The downstream node.
     pub sink: Rc<RefCell<SINK>>,
-    pub pd: PhantomData<T>,
+    // pub pd: PhantomData<T>,
 }

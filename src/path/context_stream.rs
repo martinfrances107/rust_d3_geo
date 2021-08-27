@@ -12,14 +12,19 @@ use super::string::String as PathString;
 use super::Result;
 use super::ResultEnum;
 
+/// Context Stream which stream endpoint is being considered.
 #[derive(Clone, Debug)]
 pub enum ContextStream<T>
 where
     T: CoordFloat,
 {
+    /// Path area endpoint.
     A(AreaStream<T>),
+    /// Path context endpoint.
     C(Context<T>),
+    /// Path string endpoint.
     S(PathString<T>),
+    /// Uninitialised state.
     UNDEFINED,
 }
 

@@ -5,13 +5,16 @@ use crate::Transform;
 
 use super::st::St;
 use super::str::Str;
-
+/// The scale translate rotate transform can be optimiised into
+/// a faster variant, just scale translate.
 #[derive(Clone, Copy, Debug)]
 pub enum ScaleTranslateRotate<T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// Scale Translate.
     ST(St<T>),
+    /// Scale Translate Rotate.
     STR(Str<T>),
 }
 

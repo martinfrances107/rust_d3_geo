@@ -6,6 +6,7 @@ use crate::stream::Stream;
 
 use super::StreamNode;
 
+/// TODO: Can this be optimised away?
 #[derive(Clone, Default, Debug)]
 pub struct StreamTransformRadians {}
 

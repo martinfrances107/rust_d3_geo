@@ -3,11 +3,13 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
+/// A single rotation.
 #[derive(Clone, Copy, Default, Debug)]
 pub struct RotationLambda<T>
 where
     T: CoordFloat,
 {
+    /// The change roations.
     pub delta_lambda: T,
 }
 
@@ -32,6 +34,7 @@ fn forward_rotation_lambda<T: CoordFloat + FloatConst>(
 }
 
 impl<'a, T: CoordFloat + FloatConst> RotationLambda<T> {
+    /// Contructor.
     #[inline]
     pub fn new(delta_lambda: T) -> RotationLambda<T> {
         Self { delta_lambda }

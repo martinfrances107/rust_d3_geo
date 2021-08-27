@@ -20,14 +20,14 @@ use super::StreamNode;
 /// Inside Projection::stream() NodeFactory::generate() will be called to
 /// construct the pipeline.
 #[derive(Copy, Clone, Debug)]
-pub struct StreamNodeFactory<RAW, SINK, T>
+pub(crate) struct StreamNodeFactory<RAW, SINK, T>
 where
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
     phantom_t: PhantomData<T>,
     phantom_sink: PhantomData<SINK>,
-    pub raw: RAW,
+    raw: RAW,
 }
 
 impl<RAW, SINK, T> StreamNodeFactory<RAW, SINK, T>
@@ -35,7 +35,7 @@ where
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
-    pub fn new(raw: RAW) -> StreamNodeFactory<RAW, SINK, T> {
+    pub(crate) fn new(raw: RAW) -> StreamNodeFactory<RAW, SINK, T> {
         StreamNodeFactory {
             phantom_t: PhantomData::<T>,
             phantom_sink: PhantomData::<SINK>,
@@ -52,17 +52,13 @@ where
     T: CoordFloat,
 {
     type Sink = SINK;
-    type Raw = RAW;
     type T = T;
-    type Node = StreamNode<Self::Raw, Self::Sink, Self::T>;
-    fn generate(
-        &self,
-        sink: Rc<RefCell<Self::Sink>>,
-    ) -> StreamNode<Self::Raw, Self::Sink, Self::T> {
+    type Node = StreamNode<RAW, Self::Sink, Self::T>;
+    fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
         StreamNode {
             raw: self.raw.clone(),
             sink,
-            pd: PhantomData::<T>,
+            // pd: PhantomData::<T>,
         }
     }
 }

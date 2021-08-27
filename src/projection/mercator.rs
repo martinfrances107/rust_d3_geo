@@ -14,6 +14,10 @@ use super::builder::Builder;
 use super::scale::Scale;
 use super::Raw;
 
+/// MercatorRaw
+///
+/// Root transform.
+/// Used to define a projection builder.
 #[derive(Clone, Copy, Debug)]
 pub struct Mercator<DRAIN, T>
 where

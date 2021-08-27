@@ -47,6 +47,7 @@ where
     PV: PointVisible<T = T>,
     T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
+    /// Returns the area of object input.
     pub fn area(&self, object: DataObject<T>) -> Option<ResultEnum<T>> {
         let path_area = Rc::new(RefCell::new(ContextStream::A(PathArea::default())));
         let mut projected = self.p.as_ref().unwrap().stream(path_area.clone());
@@ -57,6 +58,7 @@ where
     }
 }
 
+/// Path builder.
 #[derive(Debug)]
 pub struct Builder<L, PR, PV, T>
 where
@@ -121,10 +123,12 @@ where
     PV: PointVisible<T = T>,
     T: CoordFloat + Display + FloatConst,
 {
+    /// Returns the state within the builder.
     pub fn get_context(&self) {
         todo!("must implement");
     }
 
+    /// Programe the builder with the context.
     pub fn context(self, context: CanvasRenderingContext2d) -> Builder<L, PR, PV, T> {
         // let context_stream = Some(Rc::new(RefCell::new(PathString::default())));
 
@@ -164,12 +168,9 @@ where
     PV: PointVisible<T = T>,
     T: CoordFloat + Display + FloatConst,
 {
-    pub fn get_projection() {
-        todo!("must implment.");
-    }
-
+    /// From the progammed state generate a new projection.
     #[inline]
-    pub fn projection(
+    pub fn build(
         self,
         projection: Projection<ContextStream<T>, L, PR, PV, T>,
     ) -> Builder<L, PR, PV, T> {
@@ -205,13 +206,14 @@ where
     PV: PointVisible<T = T>,
     T: CoordFloat + Display + FloatConst,
 {
+    /// Supply raw projection and conext.
     pub fn init(
         projection: Option<Projection<ContextStream<T>, L, PR, PV, T>>,
         context: Option<CanvasRenderingContext2d>,
     ) -> Builder<L, PR, PV, T> {
         let b = Builder::<L, PR, PV, T>::default();
         let b = match projection {
-            Some(projection) => b.projection(projection),
+            Some(projection) => b.build(projection),
             None => b.projection_reset(),
         };
         match context {

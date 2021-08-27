@@ -6,8 +6,7 @@ use crate::stream::Stream;
 use super::Result;
 use super::ResultEnum;
 
-// #[derive(Derivative)]
-// #[derivative(Debug)]
+/// A stream node endpoint for computing a bounding box.
 #[derive(Clone, Debug)]
 pub struct BoundsStream<T>
 where

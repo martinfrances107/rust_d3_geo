@@ -1,15 +1,25 @@
+/// Related the specifics of antimeridian clipping.
+pub mod antimeridian;
+/// Related the specifics of circle clipping.
 pub mod circle;
+/// Holds the clip struct.
 pub mod clip;
-
+/// Helper function.
 pub mod compare_intersections;
+/// The state of the line segments??
 pub mod line_elem;
+/// Factory takes in complex definition and output a stream pipeline node element.
 pub mod stream_node_clip_factory;
 
-pub mod antimeridian;
-
+/// Clipping algorithm need to stores points
+/// until the end of the polygon is signalled
+/// and then clipping can calculate the a new clip polygon.
 pub mod buffer;
 
+/// Holds the state of what need to be clipped and rejoined.
 mod clean;
+
+/// Clipping break line into segments which can lasted be reconnected together.
 mod rejoin;
 
 use std::cell::RefCell;
@@ -27,9 +37,13 @@ use crate::Debug;
 /// should be rejoined.
 #[derive(Debug, Clone, Copy)]
 pub enum CleanEnum {
+    /// Initial state.
     Undefined,
+    /// There were not intersections or the line was empty.
     IntersectionsOrEmpty,
+    /// There were no intersections and the first and last segments should be rejoined.
     NoIntersections,
+    /// Intesections Rejoin.
     IntersectionsRejoin,
 }
 
@@ -39,27 +53,41 @@ impl Default for CleanEnum {
     }
 }
 
+/// Clean
+///
+/// A clip trait.
+/// Rejoin first and last segments if there were intersections and the first
+/// and last points were visible.
 pub trait Clean {
-    /// A clip trait.
-    /// Rejoin first and last segments if there were intersections and the first
-    /// and last points were visible.
+    /// Returns the clean state.
     fn clean(&self) -> CleanEnum;
 }
 
+/// ClipTrait
+///
+///  Related to a stream node pipeline stage.
 pub trait ClipTrait: PointVisible + Stream {}
 
+/// Clip Stream Node - helper function.
 pub trait PointVisible: Clone + Debug
 where
     <Self as PointVisible>::T: CoordFloat,
 {
+    /// f64 or f32
     type T;
+    /// Is the point visible after clipping?
     fn point_visible(&self, p: &Coordinate<Self::T>, z: Option<u8>) -> bool;
 }
 
-pub type PostClipFn<DRAIN> = Rc<dyn Fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>>;
+/// A stage in the projector pipeline.
+pub(crate) type PostClipFn<DRAIN> = Rc<dyn Fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>>;
 
-pub type InterpolateFn<STREAM, T> =
+/// Resample Stream Node - helper function.
+pub(crate) type InterpolateFn<STREAM, T> =
     Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, Rc<RefCell<STREAM>>)>;
 
+/// Part of the clipping definition.
 pub trait Line: Clean + Clone + Debug {}
-pub trait LineFactory {}
+
+/// Line, part of the clipping function.
+pub(crate) trait LineFactory {}

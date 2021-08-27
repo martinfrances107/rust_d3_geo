@@ -44,6 +44,7 @@ impl<T> Line<T>
 where
     T: CoordFloat,
 {
+    /// Constructor.
     #[inline]
     pub fn new(radius: T) -> Self {
         // TODO small_radius, rc  is a shadow variables!!!

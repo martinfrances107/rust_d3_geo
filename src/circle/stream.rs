@@ -17,9 +17,10 @@ pub struct Stream<T>
 where
     T: CoordFloat + FloatConst,
 {
-    // pub stream_type: StreamType,
-    pub coordinates: Vec<Vec<Coordinate<T>>>,
+    coordinates: Vec<Vec<Coordinate<T>>>,
+    /// The rotation used to generate the circle stream.
     pub rotate: RotateRadiams<T>,
+    /// The coordinates of the ring.
     pub ring: Vec<Coordinate<T>>,
 }
 

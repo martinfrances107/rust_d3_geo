@@ -25,6 +25,7 @@ impl<T> PV<T>
 where
     T: CoordFloat,
 {
+    /// Given a radius construct the clip circles point visible function.
     pub fn new(radius: T) -> Self {
         Self { cr: radius.cos() }
     }

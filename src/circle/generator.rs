@@ -20,6 +20,7 @@ use super::stream_fn::stream_fn;
 // use super::InArg;
 // use super::StreamType;
 
+/// Allow for circle to be defined and then input to a stream.
 #[derive(Debug)]
 pub struct Generator<T>
 where
@@ -53,6 +54,7 @@ impl<T> Generator<T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// Injects the previously defined circle into the stream.
     pub fn circle(&self) -> Vec<Vec<Coordinate<T>>> {
         let c = self.center;
         let r = self.radius.to_radians();
@@ -84,23 +86,27 @@ impl<T> Generator<T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// center is use to programe the generator.
     pub fn center(mut self, center: Coordinate<T>) -> Generator<T> {
         self.center = center;
         self
     }
 
+    /// Returns the currently programmed center.
     #[inline]
-    fn get_center(&self) -> Coordinate<T> {
+    pub fn get_center(&self) -> Coordinate<T> {
         self.center
     }
 
+    /// radius used to programe the generator.
     pub fn radius(mut self, radius: T) -> Self {
         self.radius = radius;
         self
     }
 
+    /// Returns the currently programmed radius.
     #[inline]
-    fn get_radius(&self) -> T {
+    pub fn get_radius(&self) -> T {
         self.radius
     }
 

@@ -6,6 +6,7 @@ use crate::Transform;
 
 use super::rotate_radians;
 
+/// TODO can I simplify this.
 #[derive(Clone, Debug)]
 pub struct Rotation<T>
 where
@@ -18,6 +19,7 @@ impl<T> Rotation<T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// Constructor.
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
         Self {
             rotate: rotate_radians(

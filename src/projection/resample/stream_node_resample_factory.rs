@@ -64,19 +64,19 @@ where
 {
     type Sink = SINK;
     type T = T;
-    type Raw = ResampleNode<PR, SINK, T>;
+    // type Raw = ResampleNode<PR, SINK, T>;
     type Node = ResampleNode<PR, SINK, Self::T>;
     fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
         match self.delta2.is_zero() {
             true => ResampleNode::RN(StreamNode {
                 raw: ResampleNone::new(self.projection_transform.clone()),
                 sink,
-                pd: PhantomData::<T>,
+                // pd: PhantomData::<T>,
             }),
             false => ResampleNode::R(StreamNode {
                 raw: Resample::new(self.projection_transform.clone(), self.delta2),
                 sink,
-                pd: PhantomData::<T>,
+                // pd: PhantomData::<T>,
             }),
         }
     }

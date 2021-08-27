@@ -13,12 +13,15 @@ use super::clip_extent::ClipExtent;
 use super::scale::Scale;
 use super::translate::Translate;
 
+/// Projection builder Trait.
 pub trait BuilderTrait: Center + ClipExtent + Scale + Translate
 where
     <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
     <Self as BuilderTrait>::T: AddAssign + AsPrimitive<<Self as BuilderTrait>::T> + CoordFloat,
 {
+    /// Projection Raw.
     type PR;
+    /// f64 or f32.
     type T;
     // type DRAIN;
     // /**
@@ -59,12 +62,12 @@ where
     //  */
     // fn postclip(&mut self, postclip: StreamProcessor<T>);
 
-    // /**
-    //  * Switches to antimeridian cutting rather than small-circle clipPIng.
-    //  * See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
-    //  *
-    //  * @param angle Set to null to switch to antimeridian cutting.
-    //  */
+    ///
+    ///  Switches to antimeridian cutting rather than small-circle clipPIng.
+    ///  See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
+    ///
+    ///  @param angle Set to null to switch to antimeridian cutting.
+    ///
     fn clip_angle(
         self,
         angle: <Self as BuilderTrait>::T,
@@ -290,18 +293,16 @@ where
     //  */
     // invert?(point: [number, number]): [number, number] | null;
 
-    // /**
-    //  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
-    //  * This value corresponds to the Douglas–Peucker distance.
-    //  */
+    /// Returns the projection’s current resampling precision which defaults to square root of 0.5.
+    /// This value corresponds to the Douglas–Peucker distance.
+    ///
     fn get_precision(self) -> <Self as BuilderTrait>::T;
 
-    // /**
-    //  * Sets the threshold for the projection’s adaptive resampling to the specified value in PIxels and returns the projection.
-    //  * This value corresponds to the Douglas–Peucker distance.
-    //  *
-    //  * @param precision A numeric value in PIxels to use as the threshold for the projection’s adaptive resampling.
-    //  */
+    ///  Sets the threshold for the projection’s adaptive resampling to the specified value in PIxels and returns the projection.
+    ///  This value corresponds to the Douglas–Peucker distance.
+    ///
+    ///  @param precision A numeric value in PIxels to use as the threshold for the projection’s adaptive resampling.
+    ///
     fn precision(self, delta: &<Self as BuilderTrait>::T) -> Self
     where
         <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
@@ -312,8 +313,10 @@ where
             + Display
             + FloatConst;
 
+    /// Is the projection builder set to invert the x-coordinate.
     fn get_reflect_x(&self) -> bool;
 
+    /// Set the projection builder to invert the x-coordinate.
     fn reflect_x(self, reflect: bool) -> Self
     where
         <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
@@ -324,8 +327,10 @@ where
             + Display
             + FloatConst;
 
+    /// Is the projection builder set to invert the x-coordinate.
     fn get_reflect_y(&self) -> bool;
 
+    /// Set the projection builder to invert the y-coordinate.
     fn reflect_y(self, reflect: bool) -> Self
     where
         <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
@@ -336,16 +341,13 @@ where
             + Display
             + FloatConst;
 
-    // /**
-    //  * Returns the projection’s current angle, which defaults to 0°.
-    //  */
-    // angle(): number;
-    // /**
-    //  * Sets the projection’s post-projection planar rotation angle to the specified angle in degrees and returns the projection.
-    //  * @param angle The new rotation angle of the projection.
-    //  */
-    // angle(angle: number): this;
-
+    ///  Returns the projection’s current angle, which defaults to 0°.
+    ///
+    /// angle(): number;
+    ///
+    ///   Sets the projection’s post-projection planar rotation angle to the specified angle in degrees and returns the projection.
+    ///   @param angle The new rotation angle of the projection.
+    ///
     fn reset(self) -> Self
     where
         <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
@@ -365,12 +367,12 @@ where
             + Debug
             + Display
             + FloatConst;
-    // /**
-    //  * Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
-    //  *
-    //  * @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
-    //  * (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
-    //  */
+    /// /**
+    ///  * Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
+    ///  *
+    ///  * @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
+    ///  * (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
+    ///  */
     fn get_rotate(&self) -> [<Self as BuilderTrait>::T; 3]
     where
         <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,

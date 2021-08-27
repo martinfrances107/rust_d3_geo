@@ -1,5 +1,8 @@
+/// Holds the clip circle interpolate function.
 pub mod interpolate;
+/// Holds the clip circle line function.
 pub mod line;
+/// Holds the clip circle point visible function.
 pub mod pv;
 
 mod intersect;

@@ -1,7 +1,11 @@
+/// Holds the clip antimeridian interpolate function.
 pub mod interpolate;
-mod intersect;
+/// Holds the clip antimeridian line function.
 pub mod line;
+/// Holds the clip antimeridian point visible function.
 pub mod pv;
+
+mod intersect;
 
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -14,6 +18,7 @@ use interpolate::generate as gen_interpolate;
 use line::Line;
 use pv::PV;
 
+/// Returns a clip factory setup for antimeridian clipping.
 pub fn gen_clip_factory_antimeridian<PR, SINK, T>(
 ) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
 where

@@ -9,6 +9,7 @@ use crate::circle::stream_fn::stream_fn;
 use crate::clip::InterpolateFn;
 use crate::stream::Stream;
 
+/// Sets up a clip circle interpolate function, for a given radius.
 pub fn generate<STREAM, T>(radius: T) -> InterpolateFn<STREAM, T>
 where
     STREAM: Stream<T = T>,

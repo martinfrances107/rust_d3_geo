@@ -7,10 +7,12 @@ use num_traits::FloatConst;
 use crate::stream::Stream as StreamTrait;
 use crate::stream::Streamable;
 
-// TODO MUST use a math library
+/// TODO MUST use a math library.
 pub const EPSILON: f64 = 1e-6;
+/// Must move to math library.
 pub const EPSILON2: f64 = 1e-12;
 
+/// Centroid Stream.
 #[allow(non_snake_case)]
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -74,6 +76,7 @@ impl<T> Stream<T>
 where
     T: AddAssign + CoordFloat + FloatConst,
 {
+    /// Arithmetic mean of Cartesian vectors.
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
         self.X0 += (x - self.X0) / self.W0;
@@ -177,7 +180,7 @@ where
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
-    pub fn centroid_ring_end(&mut self) {
+    fn centroid_ring_end(&mut self) {
         self.centroid_ring_point(&Coordinate {
             x: self.lambda00,
             y: self.phi00,
@@ -185,11 +188,14 @@ where
         self.point_fn = Self::centroid_point;
     }
 
+    /// See J. E. Brock, The Inertia Tensor for a Spherical Triangle,
+    /// J. Applied Mechanics 42, 239 (1975).
     #[inline]
     fn centroid_ring_start(&mut self) {
         self.point_fn = Self::centroid_ring_point_first;
     }
 
+    /// Compute the centroid.
     pub fn centroid(&mut self, d_object: &impl Streamable<T = T>) -> Point<T> {
         self.W0 = T::zero();
         self.W1 = T::zero();

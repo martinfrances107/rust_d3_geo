@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use geo::{CoordFloat, Point};
 
+/// True if two points are identical within the specified difference.
 pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bool {
     println!(
         "in_delta() expected {:?} actual {:?} delta {:?}",
@@ -18,6 +19,9 @@ pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bo
     is_ok
 }
 
+/// Returns true if two points are considered equal, within the specified differnce.
+///
+/// Debug and test helper function.
 pub fn in_delta_point<T: CoordFloat + Display>(
     actual: Point<T>,
     expected: Point<T>,

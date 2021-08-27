@@ -19,10 +19,13 @@ use geo::{CoordFloat, Coordinate};
 
 /// Applies to DataObject's
 pub trait Streamable {
+    /// f32 or f64.
     type T: CoordFloat;
+    /// Injects the object to a stream.
     fn to_stream<SD: Stream<T = Self::T>>(&self, stream: &mut SD);
 }
 
+///
 #[derive(Clone, Copy, Debug)]
 pub struct StreamDrainStub<T>
 where
@@ -95,13 +98,20 @@ pub trait Stream: Clone + Debug
 where
     <Self as Stream>::T: CoordFloat,
 {
+    /// f32 or f64.
     type T;
 
+    /// Declare a point.
     fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}
+    /// Decalre a sphere object.
     fn sphere(&mut self) {}
+    /// Declare the start of a line segments.
     fn line_start(&mut self) {}
+    /// Declare the end of a line segments.
     fn line_end(&mut self) {}
+    /// Declare the start of a polygon.
     fn polygon_start(&mut self) {}
+    /// Declare the end of a polygon.
     fn polygon_end(&mut self) {}
 }
 

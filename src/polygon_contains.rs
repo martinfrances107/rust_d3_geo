@@ -15,6 +15,7 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
     }
 }
 
+/// Determines wheather a point is inside the polygon.
 pub fn polygon_contains<T: CoordFloat + FloatConst>(
     polygon: &Vec<Vec<LineElem<T>>>,
     point: &LineElem<T>,

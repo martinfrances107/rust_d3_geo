@@ -57,6 +57,7 @@ where
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
+    /// Constructor.
     pub fn new(
         interpolate_fn: InterpolateFn<SINK, T>,
         line_raw: L,
@@ -93,12 +94,9 @@ where
 {
     type Sink = SINK;
     type T = T;
-    type Raw = Clip<L, PV, SINK, T>;
-    type Node = StreamNode<Self::Raw, Self::Sink, Self::T>;
-    fn generate(
-        &self,
-        sink: Rc<RefCell<Self::Sink>>,
-    ) -> StreamNode<Self::Raw, Self::Sink, Self::T> {
+    // type Raw = ;
+    type Node = StreamNode<Clip<L, PV, SINK, T>, Self::Sink, Self::T>;
+    fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
         let start = LineElem {
             p: Coordinate {
                 x: -T::PI(),

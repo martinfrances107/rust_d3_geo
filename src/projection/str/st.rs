@@ -10,10 +10,15 @@ pub struct St<T>
 where
     T: CoordFloat,
 {
+    /// Scaling factor.
     pub k: T,
+    /// x translation.
     pub dx: T,
+    /// y translation.
     pub dy: T,
+    /// x - scaling.
     pub sx: T,
+    /// y scaling.
     pub sy: T,
 }
 

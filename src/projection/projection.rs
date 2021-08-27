@@ -29,6 +29,9 @@ use super::StreamNode;
 //     SP(Box<dyn Stream<T=T>>),
 // }
 
+/// Projection output struct of Builder.
+///
+/// Commnon functionality for all raw projection structs.
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
@@ -41,13 +44,13 @@ where
     T: CoordFloat + FloatConst,
 {
     #[derivative(Debug = "ignore")]
-    pub postclip: PostClipFn<DRAIN>,
+    pub(crate) postclip: PostClipFn<DRAIN>,
 
-    pub preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
+    pub(crate) preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
 
-    pub resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
+    pub(crate) resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
 
-    pub rotate_factory: StreamNodeFactory<
+    pub(crate) rotate_factory: StreamNodeFactory<
         RotateRadiams<T>,
         StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
@@ -55,13 +58,13 @@ where
     /// Used exclusive by Transform( not stream releated).
     pub rotate_transform: Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
-    pub rotate_transform_factory: StreamNodeFactory<
+    pub(crate) rotate_transform_factory: StreamNodeFactory<
         Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
         StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
     >,
 
-    pub transform_radians_factory: StreamNodeFactory<
+    pub(crate) transform_radians_factory: StreamNodeFactory<
         StreamTransformRadians,
         StreamNode<
             RotateRadiams<T>,

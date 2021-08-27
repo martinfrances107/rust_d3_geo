@@ -6,6 +6,8 @@ use geo::{CoordFloat, Coordinate};
 use crate::in_delta::in_delta;
 use crate::Transform;
 
+/// Helper test function.
+/// A point projected and then inverted returns to the original location.
 pub fn projection_equal<'a, P, T>(
     projection: &P,
     expected_location: &'a Coordinate<T>,

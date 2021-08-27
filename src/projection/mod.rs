@@ -13,25 +13,42 @@ use crate::Transform;
 use projection::Projection;
 use stream_node::StreamNode;
 
+/// Helper functions.
 pub mod azimuthal;
+/// The raw projection.
 pub mod azimuthal_equal_area;
 pub mod builder;
 pub mod builder_trait;
+/// A projection builder sub trait.
 pub mod center;
+/// A projection builder sub trait.
 pub mod clip_extent;
+/// The raw projection.
 pub mod equirectangular;
+/// The raw projection.
 pub mod gnomic;
+/// The raw projection.
 pub mod mercator;
 pub mod mercator_builder;
+/// The raw projection.
 pub mod orthographic;
+/// Projection object.
 pub mod projection;
+/// Debug and test helper function.
 pub mod projection_equal;
+/// A projection builder subtrait.
 pub mod scale;
+/// The raw projection.
 pub mod stereographic;
+/// Scale translate and rotate.
 pub mod str;
+/// Stream node pipeline stage.
 pub mod stream_node;
+/// Generates stream node objects.
 pub mod stream_node_factory;
+/// A stream node pipeline stage.
 pub mod stream_transform_radians;
+/// A projection builder sub trait.
 pub mod translate;
 
 mod fit;
@@ -42,8 +59,11 @@ pub trait Raw<T>: Clone + Debug + Default + Transform<T = T>
 where
     <Self as Transform>::T: CoordFloat,
 {
+    /// f32 or f64.
     type T;
+    /// The default builder.
     type Builder;
+    /// Constructs the default projection builder.
     fn builder() -> Self::Builder;
 }
 
@@ -68,9 +88,13 @@ pub trait NodeFactory
 where
     <Self as NodeFactory>::T: CoordFloat,
 {
-    type Raw;
-    type Sink;
-    type T;
+    /// The resultant node type.
     type Node;
+    /// The downstream node.
+    type Sink;
+    /// f32 or f64.
+    type T;
+
+    /// Combine the sink with the proto-node and output a StreamNode.
     fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node;
 }

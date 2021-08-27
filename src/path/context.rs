@@ -9,6 +9,7 @@ use super::PointRadiusTrait;
 use super::Result;
 use super::ResultEnum;
 
+/// Path Context.
 #[derive(Clone, Debug)]
 pub struct Context<T>
 where

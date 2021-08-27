@@ -14,10 +14,10 @@ use super::builder::Builder;
 use super::scale::Scale;
 use super::Raw;
 
-/// Why the Phantom Data is required here...
+/// Orthographic
 ///
-/// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
-/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+/// Root transform.
+/// Used to define a projection builder.
 #[derive(Clone, Copy, Debug)]
 pub struct Orthographic<DRAIN, T>
 where
@@ -69,19 +69,6 @@ where
 impl<DRAIN, T> Orthographic<DRAIN, T>
 where
     DRAIN: Stream<T = T>,
-    T: 'static + CoordFloat + FloatConst,
-{
-}
-
-// impl<T> ProjectionRawTrait for OrthographicRaw<T>
-// // where
-// //     T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst,
-// {
-// }
-
-impl<DRAIN, T> Orthographic<DRAIN, T>
-where
-    DRAIN: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
     #[inline]
@@ -89,7 +76,7 @@ where
         z.asin()
     }
 
-    pub fn azimuthal_invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn azimuthal_invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let z = (p.x * p.x + p.y * p.y).sqrt();
         let c = Orthographic::<DRAIN, T>::angle(z);
         let sc = c.sin();

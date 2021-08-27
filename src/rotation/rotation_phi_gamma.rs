@@ -3,6 +3,7 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
+/// A rotation is two directions.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct RotationPhiGamma<T>
 where
@@ -15,6 +16,7 @@ where
 }
 
 impl<'a, T: CoordFloat> RotationPhiGamma<T> {
+    /// Constructor.
     #[inline]
     pub fn new(delta_phi: &'a T, delta_gamma: &'a T) -> Self {
         Self {

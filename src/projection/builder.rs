@@ -1,3 +1,6 @@
+use crate::data_object::DataObject;
+use crate::path::bounds_stream::BoundsStream;
+use crate::projection::fit::fit_extent;
 use std::rc::Rc;
 
 use derivative::Derivative;
@@ -34,6 +37,9 @@ use super::Projection;
 use super::Raw as ProjectionRaw;
 use super::StreamNode;
 
+/// Projection builder
+///
+/// Holds State related to the construction of the a projection.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
 pub struct Builder<DRAIN, L, PR, PV, T>
@@ -99,6 +105,8 @@ where
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
+    /// Given a Raw Projection and a clipping defintion create the associated
+    /// Projection builder.
     pub fn new(
         preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
         projection_raw: PR,
@@ -166,6 +174,7 @@ where
         }
     }
 
+    /// Using the currently programmed state output a new projection.
     #[inline]
     pub fn build(&self) -> Projection<DRAIN, L, PR, PV, T> {
         Projection {
@@ -180,12 +189,12 @@ where
         }
     }
 
-    // /**
-    //  * Switches to antimeridian cutting rather than small-circle clipPIng.
-    //  * See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
-    //  *
-    //  * @param angle Set to null to switch to antimeridian cutting.
-    //  */
+    /// /**
+    ///  * Switches to antimeridian cutting rather than small-circle clipPIng.
+    ///  * See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
+    ///  *
+    ///  * @param angle Set to null to switch to antimeridian cutting.
+    ///  */
     pub fn clip_angle(mut self, angle: T) -> Builder<DRAIN, CircleLine<T>, PR, CirclePV<T>, T> {
         self.theta = Some(angle.to_radians());
 
@@ -261,7 +270,6 @@ where
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
-    type P = Builder<DRAIN, L, PR, PV, T>;
     type T = T;
 
     #[inline]
@@ -506,7 +514,7 @@ where
     //     self,
     //     extent: [Coordinate<T>; 2],
     //     object: DataObject<T>,
-    // ) -> Builder<DRAIN, L, PR, PV, T> {
+    // ) -> Builder<BoundsStream<T>, L, PR, PV, T> {
     //     fit_extent(self, extent, object)
     // }
 
@@ -627,27 +635,29 @@ where
     //  * @param point The projected point, specified as a two-element array [x, y] (tyPIcally in PIxels).
     //  */
     // invert?(point: [number, number]): [number, number] | null;
-    #[inline]
-    // /**
-    //  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
-    //  * This value corresponds to the Douglas–Peucker distance.
-    //  */
-    // /**
-    //  * Sets the threshold for the projection’s adaptive resampling to the specified value in PIxels and returns the projection.
-    //  * This value corresponds to the Douglas–Peucker distance.
-    //  *
-    //  * @param precision A numeric value in PIxels to use as the threshold for the projection’s adaptive resampling.
-    //  */
+
+    /// /**
+    ///  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
+    ///  * This value corresponds to the Douglas–Peucker distance.
+    ///  */
+    /// /**
+    ///  * Sets the threshold for the projection’s adaptive resampling to the specified value in PIxels and returns the projection.
+    ///  * This value corresponds to the Douglas–Peucker distance.
+    ///  *
+    ///  * @param precision A numeric value in PIxels to use as the threshold for the projection’s adaptive resampling.
+    ///  */
     #[inline]
     pub fn get_precision(self) -> T {
         self.delta2.sqrt()
     }
 
+    /// Is the projection builder set to invert the x-coordinate.
     #[inline]
     pub fn get_reflect_x(&self) -> bool {
         self.sx < T::zero()
     }
 
+    /// Set the projection builder to invert the x-coordinate.
     pub fn reflect_x(mut self, reflect: bool) -> Self {
         if reflect {
             self.sx = T::from(-1.0).unwrap();
@@ -657,11 +667,13 @@ where
         self.recenter()
     }
 
+    /// Is the projection builder set to invert the y-coordinate.
     #[inline]
     pub fn get_reflect_y(&self) -> bool {
         self.sy < T::zero()
     }
 
+    /// Set the projection builder to invert the y-coordinate.
     #[inline]
     pub fn reflect_y(mut self, reflect: bool) -> Self {
         if reflect {
@@ -672,6 +684,9 @@ where
         self.recenter()
     }
 
+    /// Set the projection builder precision
+    ///
+    /// delta is related to clip angle.
     pub fn precision(self, delta: &T) -> Builder<DRAIN, L, PR, PV, T> {
         let delta2 = *delta * *delta;
         let resample_factory = StreamNodeResampleFactory::new(self.transform.clone(), delta2);
@@ -692,12 +707,11 @@ where
     //  */
     // angle(angle: number): this;
 
-    // /**
-    //  * Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
-    //  *
-    //  * @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
-    //  * (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
-    //  */
+    ///  Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
+    ///
+    ///  @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
+    ///  (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
+    ///
     #[inline]
     pub fn get_rotate(&self) -> [T; 3] {
         [
@@ -707,6 +721,7 @@ where
         ]
     }
 
+    /// Sets the rotation angles as measured in degrees.
     pub fn rotate(mut self, angles: [T; 3]) -> Builder<DRAIN, L, PR, PV, T> {
         let [delta_lambda, delta_phi, delta_gamma] = angles;
         let f360 = T::from(360_f64).unwrap();
