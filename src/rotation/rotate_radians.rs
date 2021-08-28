@@ -15,8 +15,8 @@ use super::rotation_identity::RotationIdentity;
 use super::rotation_lambda::RotationLambda;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
-/// Output from a rotate.
-pub enum RotateRadiams<T>
+/// A 3-axis rotation transform.
+pub enum RotateRadians<T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -30,52 +30,52 @@ where
     I(RotationIdentity<T>),
 }
 
-impl<T> Default for RotateRadiams<T>
+impl<T> Default for RotateRadians<T>
 where
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
-        RotateRadiams::I(RotationIdentity::default())
+        RotateRadians::I(RotationIdentity::default())
     }
 }
 
-impl<T> Clone for RotateRadiams<T>
+impl<T> Clone for RotateRadians<T>
 where
     T: CoordFloat + FloatConst,
 {
     fn clone(&self) -> Self {
         match self {
-            RotateRadiams::C(c) => RotateRadiams::C(Box::new(*c.clone())),
-            RotateRadiams::RL(rl) => RotateRadiams::RL(*rl),
-            RotateRadiams::RPG(rpg) => RotateRadiams::RPG(*rpg),
-            RotateRadiams::I(i) => RotateRadiams::I(*i),
+            RotateRadians::C(c) => RotateRadians::C(Box::new(*c.clone())),
+            RotateRadians::RL(rl) => RotateRadians::RL(*rl),
+            RotateRadians::RPG(rpg) => RotateRadians::RPG(*rpg),
+            RotateRadians::I(i) => RotateRadians::I(*i),
         }
     }
 }
 #[cfg(not(tarpaulin_include))]
-impl<T> Debug for RotateRadiams<T>
+impl<T> Debug for RotateRadians<T>
 where
     T: CoordFloat + FloatConst,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            RotateRadiams::C(_c) => {
+            RotateRadians::C(_c) => {
                 todo!("must find a way to do Box");
-                // f.debug_struct("RotateRadiams::C")
+                // f.debug_struct("RotateRadians::C")
                 // .field("0", "TODO")
                 // .finish()
             }
-            RotateRadiams::RL(rl) => f.debug_struct("RotateRadiams::RL").field("0", rl).finish(),
-            RotateRadiams::RPG(rpg) => f
-                .debug_struct("RotateRadiams::RPG")
+            RotateRadians::RL(rl) => f.debug_struct("RotateRadians::RL").field("0", rl).finish(),
+            RotateRadians::RPG(rpg) => f
+                .debug_struct("RotateRadians::RPG")
                 .field("0", rpg)
                 .finish(),
-            RotateRadiams::I(i) => f.debug_struct("RotateRadiams::I").field("0", i).finish(),
+            RotateRadians::I(i) => f.debug_struct("RotateRadians::I").field("0", i).finish(),
         }
     }
 }
 
-impl<T> Transform for RotateRadiams<T>
+impl<T> Transform for RotateRadians<T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -83,24 +83,24 @@ where
 
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            RotateRadiams::C(c) => c.transform(p),
-            RotateRadiams::RL(rl) => rl.transform(p),
-            RotateRadiams::RPG(rpg) => rpg.transform(p),
-            RotateRadiams::I(i) => i.transform(p),
+            RotateRadians::C(c) => c.transform(p),
+            RotateRadians::RL(rl) => rl.transform(p),
+            RotateRadians::RPG(rpg) => rpg.transform(p),
+            RotateRadians::I(i) => i.transform(p),
         }
     }
 
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            RotateRadiams::C(c) => c.invert(p),
-            RotateRadiams::RL(rl) => rl.invert(p),
-            RotateRadiams::RPG(rpg) => rpg.invert(p),
-            RotateRadiams::I(i) => i.invert(p),
+            RotateRadians::C(c) => c.invert(p),
+            RotateRadians::RL(rl) => rl.invert(p),
+            RotateRadians::RPG(rpg) => rpg.invert(p),
+            RotateRadians::I(i) => i.invert(p),
         }
     }
 }
 
-impl<SINK, T> Stream for StreamNode<RotateRadiams<T>, SINK, T>
+impl<SINK, T> Stream for StreamNode<RotateRadians<T>, SINK, T>
 where
     SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,

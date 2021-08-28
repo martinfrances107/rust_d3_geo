@@ -1,10 +1,12 @@
+/// Output type for a 3-axis rotation.
 pub mod rotate_radians;
+/// The rotation transform (in degrees).
 pub mod rotation;
+/// An Inner type for the 3-axis rotation.
 pub mod rotation_identity;
-
-/// A rotation in one direction.
+/// An Inner type for the 3-axis rotation.
 pub mod rotation_lambda;
-/// A rotation in two directions.
+/// An Inner type for the 3-axis rotation.
 pub mod rotation_phi_gamma;
 
 use geo::CoordFloat;
@@ -12,12 +14,13 @@ use num_traits::FloatConst;
 
 use crate::compose::Compose;
 
-use rotate_radians::RotateRadiams;
+use rotate_radians::RotateRadians;
 use rotation_identity::RotationIdentity;
 use rotation_lambda::RotationLambda;
 use rotation_phi_gamma::RotationPhiGamma;
 
-pub fn rotate_radians<T>(delta_lambda_p: T, delta_phi: T, delta_gamma: T) -> RotateRadiams<T>
+/// Construct a 3-axis rotation transform.
+pub fn rotate_radians<T>(delta_lambda_p: T, delta_phi: T, delta_gamma: T) -> RotateRadians<T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -28,16 +31,16 @@ where
     let by_gamma = !delta_gamma.is_zero();
     match (by_lambda, by_gamma, by_phi) {
         (true, true, true) | (true, true, false) | (true, false, true) => {
-            RotateRadiams::C(Box::new(Compose::new(
+            RotateRadians::C(Box::new(Compose::new(
                 RotationLambda::new(delta_lambda),
                 RotationPhiGamma::new(&delta_phi, &delta_gamma),
             )))
         }
-        (true, false, false) => RotateRadiams::RL(RotationLambda::new(delta_lambda)),
+        (true, false, false) => RotateRadians::RL(RotationLambda::new(delta_lambda)),
         (false, true, true) | (false, true, false) | (false, false, true) => {
-            RotateRadiams::RPG(RotationPhiGamma::new(&delta_phi, &delta_gamma))
+            RotateRadians::RPG(RotationPhiGamma::new(&delta_phi, &delta_gamma))
         }
-        (false, false, false) => RotateRadiams::I(RotationIdentity::default()),
+        (false, false, false) => RotateRadians::I(RotationIdentity::default()),
     }
 }
 

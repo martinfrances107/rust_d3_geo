@@ -19,7 +19,7 @@ use crate::clip::PointVisible;
 use crate::clip::PostClipFn;
 use crate::compose::Compose;
 use crate::rotation::rotate_radians;
-use crate::rotation::rotate_radians::RotateRadiams;
+use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -37,7 +37,7 @@ use super::Projection;
 use super::Raw as ProjectionRaw;
 use super::StreamNode;
 
-/// Projection builder
+/// Projection builder.
 ///
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Derivative)]
@@ -80,18 +80,18 @@ where
     #[derivative(Debug = "ignore")]
     postclip: PostClipFn<DRAIN>,
     // Used by recenter() to build the factories.
-    rotate: RotateRadiams<T>, //rotate, pre-rotate
+    rotate_radians: RotateRadians<T>, //rotate, pre-rotate
     transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-    rotate_transform: Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+    rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     rotate_factory: StreamNodeFactory<
-        RotateRadiams<T>,
+        RotateRadians<T>,
         StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
     >,
     resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
     rotate_transform_factory: StreamNodeFactory<
-        Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+        Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
         StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
     >,
@@ -129,11 +129,11 @@ where
             .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
         let str = generate_str(&k, &(x - center.x), &(y - center.y), &sx, &sy, &alpha);
 
-        let rotate = rotate_radians(delta_lambda, delta_phi, delta_gamma); // pre-rotate
-        let rotate_factory = StreamNodeFactory::new(rotate.clone());
+        let rotate_radians = rotate_radians(delta_lambda, delta_phi, delta_gamma); // pre-rotate
+        let rotate_factory = StreamNodeFactory::new(rotate_radians.clone());
         let transform = Compose::new(projection_raw.clone(), str);
         let resample_factory = StreamNodeResampleFactory::new(transform.clone(), T::zero());
-        let rotate_transform = Compose::new(rotate.clone(), transform.clone());
+        let rotate_transform = Compose::new(rotate_radians.clone(), transform.clone());
         let rotate_transform_factory = StreamNodeFactory::new(rotate_transform.clone());
 
         Self {
@@ -168,7 +168,7 @@ where
             transform,
             rotate_transform,
             /// Pass into Projection,
-            rotate,
+            rotate_radians,
             rotate_factory,
             rotate_transform_factory,
         }
@@ -250,13 +250,13 @@ where
             &self.alpha,
         );
 
-        self.rotate = rotate_radians(self.delta_lambda, self.delta_phi, self.delta_gamma);
+        self.rotate_radians = rotate_radians(self.delta_lambda, self.delta_phi, self.delta_gamma);
         self.transform = Compose::new(self.projection_raw.clone(), transform);
-        self.rotate_transform = Compose::new(self.rotate.clone(), self.transform.clone());
+        self.rotate_transform = Compose::new(self.rotate_radians.clone(), self.transform.clone());
 
         //todo update every factory.
         self.resample_factory = StreamNodeResampleFactory::new(self.transform.clone(), self.delta2);
-        self.rotate_factory = StreamNodeFactory::new(self.rotate.clone());
+        self.rotate_factory = StreamNodeFactory::new(self.rotate_radians.clone());
         self.rotate_transform_factory = StreamNodeFactory::new(self.rotate_transform.clone());
         self.reset()
     }

@@ -5,23 +5,45 @@ use crate::Transform;
 
 /// An inner type of the Enum ScaleTranslateRotate.
 ///
-/// Cover both  translate and rotate.
+/// Covers both translate and rotate.
 #[derive(Clone, Copy, Debug, Default)]
-pub struct Str<T: CoordFloat> {
-    pub a: T,
-    pub b: T,
-    pub ai: T,
-    pub bi: T,
-    pub ci: T,
-    pub fi: T,
-    /// x - translation.
-    pub dx: T,
-    /// y - translation.
-    pub dy: T,
-    /// x - scaling.
-    pub sx: T,
-    /// y- scaling.
-    pub sy: T,
+pub struct Str<T: CoordFloat>
+where
+    T: CoordFloat + FloatConst,
+{
+    a: T,
+    b: T,
+    ai: T,
+    bi: T,
+    ci: T,
+    fi: T,
+    dx: T,
+    dy: T,
+    sx: T,
+    sy: T,
+}
+
+impl<T> Str<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    /// Constructor.
+    pub(crate) fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: &T) -> Self {
+        let cos_alpha = alpha.cos();
+        let sin_alpha = alpha.sin();
+        Str {
+            a: cos_alpha * *k,
+            b: sin_alpha * *k,
+            ai: cos_alpha / *k,
+            bi: sin_alpha / *k,
+            ci: (sin_alpha * *dy - cos_alpha * *dx) / *k,
+            fi: (sin_alpha * *dx + cos_alpha * *dy) / *k,
+            dx: *dx,
+            dy: *dy,
+            sx: *sx,
+            sy: *sy,
+        }
+    }
 }
 
 impl<T> Transform for Str<T>

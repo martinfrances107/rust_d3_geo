@@ -1,18 +1,20 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::rotation::rotate_radians::RotateRadiams;
+use crate::rotation::rotate_radians::RotateRadians;
 use crate::Transform;
 
 use super::rotate_radians;
 
-/// TODO can I simplify this.
+/// Transform converting degree to radians.
+///
+/// All other rotations elements assume all angles are in radians.
 #[derive(Clone, Debug)]
 pub struct Rotation<T>
 where
     T: CoordFloat + FloatConst,
 {
-    rotate: RotateRadiams<T>,
+    rotate: RotateRadians<T>,
 }
 
 impl<T> Rotation<T>

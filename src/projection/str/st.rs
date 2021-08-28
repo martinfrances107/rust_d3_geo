@@ -10,16 +10,11 @@ pub struct St<T>
 where
     T: CoordFloat,
 {
-    /// Scaling factor.
-    pub k: T,
-    /// x translation.
-    pub dx: T,
-    /// y translation.
-    pub dy: T,
-    /// x - scaling.
-    pub sx: T,
-    /// y scaling.
-    pub sy: T,
+    k: T,
+    dx: T,
+    dy: T,
+    sx: T,
+    sy: T,
 }
 
 /// Default is a identity tranform.
@@ -36,6 +31,22 @@ where
             dy: T::zero(),
             sx: T::one(),
             sy: T::one(),
+        }
+    }
+}
+
+impl<T> St<T>
+where
+    T: CoordFloat,
+{
+    /// Constructor.
+    pub fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T) -> Self {
+        Self {
+            k: *k,
+            dx: *dx,
+            dy: *dy,
+            sx: *sx,
+            sy: *sy,
         }
     }
 }

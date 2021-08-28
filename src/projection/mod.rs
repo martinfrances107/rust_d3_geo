@@ -17,6 +17,7 @@ use stream_node::StreamNode;
 pub mod azimuthal;
 /// The raw projection.
 pub mod azimuthal_equal_area;
+/// The projection builder.
 pub mod builder;
 pub mod builder_trait;
 /// A projection builder sub trait.

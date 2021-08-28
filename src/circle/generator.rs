@@ -9,7 +9,7 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::rotation::rotate_radians;
-use crate::rotation::rotate_radians::RotateRadiams;
+use crate::rotation::rotate_radians::RotateRadians;
 use crate::rotation::rotation_identity::RotationIdentity;
 
 use super::stream::Stream;
@@ -76,7 +76,7 @@ where
         let coordinates = vec![self.stream.borrow().ring.clone()];
 
         self.stream.borrow_mut().ring.clear();
-        self.stream.borrow_mut().rotate = RotateRadiams::I(RotationIdentity::default());
+        self.stream.borrow_mut().rotate = RotateRadians::I(RotationIdentity::default());
 
         coordinates
     }

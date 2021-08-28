@@ -1,5 +1,4 @@
 use std::cell::RefCell;
-use std::marker::PhantomData;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -24,5 +23,4 @@ where
     pub raw: RAW,
     /// The downstream node.
     pub sink: Rc<RefCell<SINK>>,
-    // pub pd: PhantomData<T>,
 }

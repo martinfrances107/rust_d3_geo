@@ -25,6 +25,7 @@ impl<T> Context<T>
 where
     T: CoordFloat,
 {
+    /// Contructor.
     #[inline]
     pub fn new(context: Rc<CanvasRenderingContext2d>) -> Self {
         Self {

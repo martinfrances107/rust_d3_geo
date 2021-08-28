@@ -11,7 +11,7 @@ use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::clip::PostClipFn;
 use crate::compose::Compose;
-use crate::rotation::rotate_radians::RotateRadiams;
+use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -51,15 +51,15 @@ where
     pub(crate) resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
 
     pub(crate) rotate_factory: StreamNodeFactory<
-        RotateRadiams<T>,
+        RotateRadians<T>,
         StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
     >,
     /// Used exclusive by Transform( not stream releated).
-    pub rotate_transform: Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+    pub rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     pub(crate) rotate_transform_factory: StreamNodeFactory<
-        Compose<T, RotateRadiams<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+        Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
         StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
         T,
     >,
@@ -67,7 +67,7 @@ where
     pub(crate) transform_radians_factory: StreamNodeFactory<
         StreamTransformRadians,
         StreamNode<
-            RotateRadiams<T>,
+            RotateRadians<T>,
             StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
             T,
         >,
@@ -98,7 +98,7 @@ where
     ) -> StreamNode<
         StreamTransformRadians,
         StreamNode<
-            RotateRadiams<T>,
+            RotateRadians<T>,
             StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
             T,
         >,

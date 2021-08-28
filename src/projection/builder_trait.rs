@@ -367,12 +367,8 @@ where
             + Debug
             + Display
             + FloatConst;
-    /// /**
-    ///  * Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
-    ///  *
-    ///  * @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
-    ///  * (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
-    ///  */
+
+    /// Returns the projection builders three-axis rotation.
     fn get_rotate(&self) -> [<Self as BuilderTrait>::T; 3]
     where
         <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
@@ -383,6 +379,10 @@ where
             + Display
             + FloatConst;
 
+    ///   Sets the projection builder’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
+    ///
+    ///   @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
+    ///   (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
     fn rotate(self, angles: [<Self as BuilderTrait>::T; 3]) -> Self
     where
         <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,

@@ -6,7 +6,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::rotation::rotate_radians::RotateRadiams;
+use crate::rotation::rotate_radians::RotateRadians;
 use crate::rotation::rotation_identity::RotationIdentity;
 use crate::stream::Stream as StreamTrait;
 use crate::Transform;
@@ -19,7 +19,7 @@ where
 {
     coordinates: Vec<Vec<Coordinate<T>>>,
     /// The rotation used to generate the circle stream.
-    pub rotate: RotateRadiams<T>,
+    pub rotate: RotateRadians<T>,
     /// The coordinates of the ring.
     pub ring: Vec<Coordinate<T>>,
 }
@@ -33,7 +33,7 @@ where
         Self {
             // stream_type: StreamType::Polygon,
             coordinates: vec![vec![]],
-            rotate: RotateRadiams::I(RotationIdentity::<T>::default()),
+            rotate: RotateRadians::I(RotationIdentity::<T>::default()),
             ring: vec![],
         }
     }
