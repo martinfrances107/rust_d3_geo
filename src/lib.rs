@@ -1,10 +1,10 @@
 #![allow(clippy::pedantic)]
-#![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
+#![warn(missing_debug_implementations)]
 #![allow(clippy::many_single_char_names)]
-/// Rust port of d3-geo
-///
-/// (see README.md)
+//! # Rust port of d3-geo
+//!
+//! (see README.md)
 
 /// Allows the ommission of complex fields from debug output.
 extern crate derivative;

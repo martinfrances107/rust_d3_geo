@@ -144,6 +144,7 @@ where
         }
     }
 
+    /// Returns a Builder from default values.
     pub fn context_pathstring(self) -> Builder<L, PR, PV, T> {
         let c_stream = Some(Rc::new(RefCell::new(ContextStream::S(
             PathString::default(),

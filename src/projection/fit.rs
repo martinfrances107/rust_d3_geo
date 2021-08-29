@@ -84,14 +84,14 @@ where
     PV: PointVisible<T = T>,
     T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
+    let two = T::from(2.0).unwrap();
     fit(
         builder,
         Box::new(
             move |b: [Coordinate<T>; 2], builder: Builder<BoundsStream<T>, L, PR, PV, T>| {
-                let two = T::from(2.0).unwrap();
-                let w = extent[1].x - extent[0].y;
+                let w = extent[1].x - extent[0].x;
                 let h = extent[1].y - extent[0].y;
-                let k = (w / (b[1].x - b[0].x)).min(h / (b[0].y - b[0].y));
+                let k = (w / (b[1].x - b[0].x)).min(h / (b[1].y - b[0].y));
                 let x = extent[0].x + (w - k * (b[1].x + b[0].x)) / two;
                 let y = extent[0].y + (h - k * (b[1].y + b[0].y)) / two;
 

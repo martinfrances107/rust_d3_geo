@@ -30,6 +30,7 @@ pub mod equirectangular;
 pub mod gnomic;
 /// The raw projection.
 pub mod mercator;
+/// Mecators has a specalised builder wrapping the default mecator.
 pub mod mercator_builder;
 /// The raw projection.
 pub mod orthographic;

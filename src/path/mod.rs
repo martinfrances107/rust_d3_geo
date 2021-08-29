@@ -15,7 +15,9 @@ pub mod string;
 
 use std::collections::VecDeque;
 use std::fmt;
+use std::fmt::Debug;
 
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 
@@ -62,10 +64,11 @@ trait PointRadiusTrait {
 
 enum PointRadiusEnum<T> {
     Val(T),
+    // #[derivative(Debug = "ignore")]
     F(Box<dyn Fn() -> T>),
 }
 
-impl<T> fmt::Debug for PointRadiusEnum<T>
+impl<T> Debug for PointRadiusEnum<T>
 where
     T: CoordFloat,
 {
