@@ -16,9 +16,6 @@ pub mod stream_node_clip_factory;
 /// and then clipping can calculate the a new clip polygon.
 pub mod buffer;
 
-/// Holds the state of what need to be clipped and rejoined.
-mod clean;
-
 /// Clipping break line into segments which can lasted be reconnected together.
 mod rejoin;
 
