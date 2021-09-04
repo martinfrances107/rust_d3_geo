@@ -22,6 +22,7 @@ use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::NodeFactory;
 use super::Raw as ProjectionRaw;
+use super::RotateFactory;
 use super::StreamNode;
 
 // pub enum StreamOrValueMaybe<T: CoordFloat> {
@@ -50,11 +51,7 @@ where
 
     pub(crate) resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
 
-    pub(crate) rotate_factory: StreamNodeFactory<
-        RotateRadians<T>,
-        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
-        T,
-    >,
+    pub(crate) rotate_factory: RotateFactory<DRAIN, L, PR, PV, T>,
     /// Used exclusive by Transform( not stream releated).
     pub rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 

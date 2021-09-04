@@ -1,3 +1,7 @@
+use crate::clip::clip::Clip;
+use crate::projection::resample::ResampleNode;
+use crate::projection::stream_node_factory::StreamNodeFactory;
+use crate::rotation::rotate_radians::RotateRadians;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::rc::Rc;
@@ -55,6 +59,12 @@ pub mod translate;
 
 mod fit;
 mod resample;
+
+pub(crate) type RotateFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
+    RotateRadians<T>,
+    StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
+    T,
+>;
 
 /// Projection Raw.
 pub trait Raw<T>: Clone + Debug + Default + Transform<T = T>

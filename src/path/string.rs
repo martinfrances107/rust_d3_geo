@@ -64,14 +64,11 @@ where
 {
     type PrtT = Option<T>;
     fn point_radius(&mut self, d: Self::PrtT) {
-        match d {
-            Some(d) => {
-                if self.radius != d {
-                    self.radius = d;
-                    self.circle = None;
-                }
+        if let Some(d) = d {
+            if self.radius != d {
+                self.radius = d;
+                self.circle = None;
             }
-            None => {}
         }
     }
 }

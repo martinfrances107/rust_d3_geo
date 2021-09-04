@@ -52,6 +52,7 @@ where
         }
     }
 }
+
 #[cfg(not(tarpaulin_include))]
 impl<T> Debug for RotateRadians<T>
 where
@@ -60,10 +61,8 @@ where
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             RotateRadians::C(_c) => {
-                todo!("must find a way to do Box");
-                // f.debug_struct("RotateRadians::C")
-                // .field("0", "TODO")
-                // .finish()
+                // todo!("must find a way to do Box");
+                f.debug_struct("RotateRadians::C").finish()
             }
             RotateRadians::RL(rl) => f.debug_struct("RotateRadians::RL").field("0", rl).finish(),
             RotateRadians::RPG(rpg) => f

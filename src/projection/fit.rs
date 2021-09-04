@@ -97,7 +97,7 @@ where
 
                 builder
                     .scale(T::from(150.0).unwrap() * k)
-                    .translate(&Coordinate { x: x, y: y })
+                    .translate(&Coordinate { x, y })
             },
         ),
         object,

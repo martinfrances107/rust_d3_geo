@@ -1,6 +1,3 @@
-use crate::data_object::DataObject;
-use crate::path::bounds_stream::BoundsStream;
-use crate::projection::fit::fit_extent;
 use std::rc::Rc;
 
 use derivative::Derivative;
@@ -35,6 +32,7 @@ use super::stream_transform_radians::StreamTransformRadians;
 use super::translate::Translate;
 use super::Projection;
 use super::Raw as ProjectionRaw;
+use super::RotateFactory;
 use super::StreamNode;
 
 /// Projection builder.
@@ -84,11 +82,7 @@ where
     transform: Compose<T, PR, ScaleTranslateRotate<T>>,
     rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
-    rotate_factory: StreamNodeFactory<
-        RotateRadians<T>,
-        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
-        T,
-    >,
+    rotate_factory: RotateFactory<DRAIN, L, PR, PV, T>,
     resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
     rotate_transform_factory: StreamNodeFactory<
         Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
