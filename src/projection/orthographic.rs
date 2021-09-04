@@ -83,12 +83,8 @@ where
         let cc = c.cos();
 
         let ret_x = (p.x * sc).atan2(z * cc);
-        let y_out;
-        if z == T::zero() {
-            y_out = z;
-        } else {
-            y_out = p.y * sc / z;
-        }
+
+        let y_out = if z == T::zero() { z } else { p.y * sc / z };
         let ret_y = y_out.asin();
 
         Coordinate { x: ret_x, y: ret_y }
