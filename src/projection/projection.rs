@@ -1,3 +1,4 @@
+use crate::projection::RotateTransformFactory;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -55,11 +56,7 @@ where
     /// Used exclusive by Transform( not stream releated).
     pub rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
-    pub(crate) rotate_transform_factory: StreamNodeFactory<
-        Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
-        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
-        T,
-    >,
+    pub(crate) rotate_transform_factory: RotateTransformFactory<DRAIN, L, PR, PV, T>,
 
     pub(crate) transform_radians_factory: StreamNodeFactory<
         StreamTransformRadians,

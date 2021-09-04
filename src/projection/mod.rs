@@ -1,7 +1,3 @@
-use crate::clip::clip::Clip;
-use crate::projection::resample::ResampleNode;
-use crate::projection::stream_node_factory::StreamNodeFactory;
-use crate::rotation::rotate_radians::RotateRadians;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::rc::Rc;
@@ -9,13 +5,19 @@ use std::rc::Rc;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::clip::Clip;
 use crate::clip::Line;
 use crate::clip::PointVisible;
+use crate::compose::Compose;
+use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
+use self::str::scale_translate_rotate::ScaleTranslateRotate;
 use projection::Projection;
+use resample::ResampleNode;
 use stream_node::StreamNode;
+use stream_node_factory::StreamNodeFactory;
 
 /// Helper functions.
 pub mod azimuthal;
@@ -62,6 +64,12 @@ mod resample;
 
 pub(crate) type RotateFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
     RotateRadians<T>,
+    StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
+    T,
+>;
+
+pub(crate) type RotateTransformFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
+    Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
     StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
     T,
 >;

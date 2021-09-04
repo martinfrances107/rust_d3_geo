@@ -9,7 +9,6 @@ use num_traits::FloatConst;
 use crate::clip::circle::gen_clip_factory_circle;
 use crate::clip::circle::line::Line as CircleLine;
 use crate::clip::circle::pv::PV as CirclePV;
-use crate::clip::clip::Clip;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
@@ -33,7 +32,7 @@ use super::translate::Translate;
 use super::Projection;
 use super::Raw as ProjectionRaw;
 use super::RotateFactory;
-use super::StreamNode;
+use super::RotateTransformFactory;
 
 /// Projection builder.
 ///
@@ -84,11 +83,7 @@ where
 
     rotate_factory: RotateFactory<DRAIN, L, PR, PV, T>,
     resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
-    rotate_transform_factory: StreamNodeFactory<
-        Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
-        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
-        T,
-    >,
+    rotate_transform_factory: RotateTransformFactory<DRAIN, L, PR, PV, T>,
 }
 
 impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
