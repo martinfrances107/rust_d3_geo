@@ -52,10 +52,9 @@ where
     where
         DRAIN: Stream<T = T>,
     {
-        let g = Gnomic::default();
         Builder::new(
             StreamNodeClipFactory::new(gen_interpolate(), Line::<T>::default(), PV::<T>::default()),
-            g,
+            Gnomic::default(),
         )
         .scale(T::from(144.049_f64).unwrap())
         .clip_angle(T::from(60_f64).unwrap())
