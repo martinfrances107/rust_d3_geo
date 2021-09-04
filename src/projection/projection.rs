@@ -31,6 +31,26 @@ use super::StreamNode;
 //     SP(Box<dyn Stream<T=T>>),
 // }
 
+type TransformRadiansFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
+    StreamTransformRadians,
+    StreamNode<
+        RotateRadians<T>,
+        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
+        T,
+    >,
+    T,
+>;
+
+type ProjectionStreamOutput<DRAIN, L, PR, PV, T> = StreamNode<
+    StreamTransformRadians,
+    StreamNode<
+        RotateRadians<T>,
+        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
+        T,
+    >,
+    T,
+>;
+
 /// Projection output struct of Builder.
 ///
 /// Commnon functionality for all raw projection structs.
@@ -58,15 +78,7 @@ where
 
     pub(crate) rotate_transform_factory: RotateTransformFactory<DRAIN, L, PR, PV, T>,
 
-    pub(crate) transform_radians_factory: StreamNodeFactory<
-        StreamTransformRadians,
-        StreamNode<
-            RotateRadians<T>,
-            StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
-            T,
-        >,
-        T,
-    >,
+    pub(crate) transform_radians_factory: TransformRadiansFactory<DRAIN, L, PR, PV, T>,
 }
 
 impl<'a, DRAIN, L, PR, PV, T> Projection<DRAIN, L, PR, PV, T>
@@ -86,18 +98,7 @@ where
     ///
     /// In javascript stream is used as a property to be removed from the object.
     /// In rust that is a closure.
-    pub fn stream(
-        &self,
-        drain: Rc<RefCell<DRAIN>>,
-    ) -> StreamNode<
-        StreamTransformRadians,
-        StreamNode<
-            RotateRadians<T>,
-            StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
-            T,
-        >,
-        T,
-    > {
+    pub fn stream(&self, drain: Rc<RefCell<DRAIN>>) -> ProjectionStreamOutput<DRAIN, L, PR, PV, T> {
         let postclip = (self.postclip)(drain);
 
         let resample_node = Rc::new(RefCell::new(self.resample_factory.generate(postclip)));
