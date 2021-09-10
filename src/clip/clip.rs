@@ -104,8 +104,8 @@ where
 
             // Cannot use 'point_fn' what is the default value?
             point_fn: PointFn::Default,
-            line_start_fn: LineStartFn::Ring,
-            line_end_fn: LineEndFn::Ring,
+            line_start_fn: LineStartFn::Line,
+            line_end_fn: LineEndFn::Line,
         }
     }
 }
@@ -180,7 +180,7 @@ where
         // in this javascript version this value is set to NULL
         // is my assumption that this is valid true?
         // self.ring = None;
-        self.raw.ring = Vec::new();
+        self.raw.ring.clear();
 
         if n == 0 {
             return;
@@ -276,6 +276,7 @@ where
         self.raw.segments.clear();
         self.raw.polygon.clear();
     }
+
     fn polygon_end(&mut self) {
         self.raw.point_fn = PointFn::Default;
         self.raw.line_start_fn = LineStartFn::Line;

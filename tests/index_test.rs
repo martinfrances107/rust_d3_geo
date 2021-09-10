@@ -4,6 +4,7 @@ mod index_test {
 
 	use std::f64::consts::PI;
 
+	use geo::line_string;
 	use geo::Geometry;
 	use geo::Point;
 
@@ -110,7 +111,7 @@ mod index_test {
 	// 	println!("geoPath(Point) renders a point");
 	// 	let object = DataObject::Geometry(Geometry::Point(Point::new(-63.0, 18.0)));
 	// 	let eq = equirectangular();
-	// 	assert_eq!(test_path(eq, object), "M170,160,A165,160,");
+	// 	assert_eq!(test_path(equirectangular(), object), "M170,160,A165,160,");
 	// }
 
 	//     // tape("geoPath(MultiPoint) renders a point", function(test) {
@@ -136,6 +137,18 @@ mod index_test {
 	//     //   ]);
 	//     //   test.end();
 	//     // });
+
+	#[test]
+	fn test_render_line_string() {
+		println!("geoPath(LineString) renders a line string");
+		let object = DataObject::Geometry(Geometry::LineString(line_string![
+			(x: -63_f64, y: 18_f64),(x: -62_f64, y: 18_f64), (x: -62_f64, y:17_f64) ]));
+
+		assert_eq!(
+			test_path(equirectangular(), object),
+			"M165,160L170,160L170,165Z"
+		);
+	}
 
 	//     // tape("geoPath(Polygon) renders a polygon", function(test) {
 	//     //   test.deepEqual(testPath(equirectangular, {
