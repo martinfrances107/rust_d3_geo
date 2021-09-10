@@ -17,24 +17,6 @@ where
     sy: T,
 }
 
-/// Default is a identity tranform.
-///
-/// Unity scaling, zero translation.
-impl<T> Default for St<T>
-where
-    T: CoordFloat,
-{
-    fn default() -> Self {
-        Self {
-            k: T::one(),
-            dx: T::zero(),
-            dy: T::zero(),
-            sx: T::one(),
-            sy: T::one(),
-        }
-    }
-}
-
 impl<T> St<T>
 where
     T: CoordFloat,

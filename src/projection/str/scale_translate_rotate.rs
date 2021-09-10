@@ -18,16 +18,6 @@ where
     STR(Str<T>),
 }
 
-impl<T> Default for ScaleTranslateRotate<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    #[inline]
-    fn default() -> Self {
-        ScaleTranslateRotate::ST(St::default())
-    }
-}
-
 impl<T: CoordFloat> Transform for ScaleTranslateRotate<T>
 where
     T: CoordFloat + FloatConst,
