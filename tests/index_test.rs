@@ -49,9 +49,7 @@ mod index_test {
 	) -> String {
 		let pb: PathBuilder<Line<f64>, EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
 			PathBuilder::context_pathstring();
-		let mut p = pb.build(projection);
-		dbg!("---{:?}", &p);
-		match p.object(object) {
+		match pb.build(projection).object(object) {
 			Some(r) => match r {
 				ResultEnum::String(s) => s,
 				_ => todo!("must handle "),

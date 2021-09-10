@@ -41,7 +41,8 @@ where
     PV: PointVisible<T = T>,
     T: CoordFloat + Display + FloatConst,
 {
-    fn new(context_stream: Rc<RefCell<ContextStream<T>>>) -> Builder<L, PR, PV, T> {
+    /// Constructor.
+    pub fn new(context_stream: Rc<RefCell<ContextStream<T>>>) -> Builder<L, PR, PV, T> {
         Self {
             context: None,
             context_stream,
