@@ -686,16 +686,20 @@ where
         }
     }
 
-    // /**
-    //  * Returns the projection’s current angle, which defaults to 0°.
-    //  */
-    // angle(): number;
-    // /**
-    //  * Sets the projection’s post-projection planar rotation angle to the specified angle in degrees and returns the projection.
-    //  * @param angle The new rotation angle of the projection.
-    //  */
-    // angle(angle: number): this;
+    /// Returns the projection’s post-projection planar rotation angle.
+    /// defaults to 0°.
+    #[inline]
+    pub fn get_angle(&self) -> T {
+        self.alpha.to_degrees()
+    }
 
+    /// Sets the projection’s post-projection planar rotation angle to the
+    /// specified angle in degrees and returns the projection.
+    ///
+    pub fn angle(mut self, angle: T) -> Builder<DRAIN, L, PR, PV, T> {
+        self.alpha = (angle % T::from(360).unwrap()).to_radians();
+        self.recenter()
+    }
     ///  Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
     ///
     ///  @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
