@@ -17,7 +17,6 @@ use std::collections::VecDeque;
 use std::fmt;
 use std::fmt::Debug;
 
-use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 
@@ -62,9 +61,11 @@ trait PointRadiusTrait {
     fn point_radius(&mut self, val: Self::PrtT);
 }
 
-enum PointRadiusEnum<T> {
+/// Can be a scalar or a function that outputs a scalar.
+pub enum PointRadiusEnum<T> {
+    /// Holds a scalr value.
     Val(T),
-    // #[derivative(Debug = "ignore")]
+    /// A function that output a scalar.
     F(Box<dyn Fn() -> T>),
 }
 
@@ -76,33 +77,3 @@ where
         f.debug_struct("PointRadiusEnum").finish()
     }
 }
-
-// trait PathTrait: PointRadiusTrait {
-//     type PtDo;
-//     type PtPRE;
-//     fn area(&self, _d: Self::PtDo) -> Option<String> {
-//         // Stream(d, self.projection_stream);
-//         // PathArea::result();
-//         None
-//     }
-//     fn measure(&self, d: Self::PtDo) -> Self::PtPRE;
-
-//     fn bounds(&self, d: Self::PtDo) -> Self::PtPRE;
-
-//     fn centroid(&self, d: Self::PtDo) -> Self::PtPRE;
-
-//     fn projection(&self, d: Self::PtDo) -> Self::PtPRE;
-
-//     fn context_get(&self) -> CanvasRenderingContext2d;
-//     fn context(&self);
-//     // fn point_radius_get(&self);
-//     // fn point_radius_set(&self);
-//     // fn point_radius(&self);
-//     // fn result(&self);
-// }
-
-// trait PathStreamTrait<T>: Stream + PathTrait + Result
-// where
-//     T: CoordFloat,
-// {
-// }

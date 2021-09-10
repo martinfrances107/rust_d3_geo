@@ -41,7 +41,9 @@ type TransformRadiansFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
     T,
 >;
 
-type ProjectionStreamOutput<DRAIN, L, PR, PV, T> = StreamNode<
+/// Output of projection.stream().
+/// use by GeoPath
+pub type ProjectionStreamOutput<DRAIN, L, PR, PV, T> = StreamNode<
     StreamTransformRadians,
     StreamNode<
         RotateRadians<T>,

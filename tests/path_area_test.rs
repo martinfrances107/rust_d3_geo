@@ -5,6 +5,7 @@ mod path_area_test {
     use rust_d3_geo::stream::Stream;
     use std::f64::consts::PI;
     use std::fmt::Display;
+    use std::ops::AddAssign;
 
     use geo::CoordFloat;
     use geo::Coordinate;
@@ -46,10 +47,10 @@ mod path_area_test {
     ) -> T
     where
         DRAIN: Stream<T = T>,
-        T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let builder = PathBuilder::init(Some(projection), None);
-        let area = builder.area(object);
+        let builder = PathBuilder::context_pathstring();
+        let area = builder.build(projection).area(&object);
         match area {
             Some(p) => match p {
                 ResultEnum::Area(a) => return a,

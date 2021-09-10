@@ -1,3 +1,4 @@
+use crate::path::PointRadiusTrait;
 use std::fmt::Display;
 
 use geo::CoordFloat;
@@ -13,6 +14,7 @@ use super::Result;
 use super::ResultEnum;
 
 /// Context Stream which stream endpoint is being considered.
+/// TODO can I optimise this away.
 #[derive(Clone, Debug)]
 pub enum ContextStream<T>
 where
@@ -28,6 +30,8 @@ where
     UNDEFINED,
 }
 
+/// This is requires when building a Projection
+/// when the final ContextStram is not yet defined.
 impl<T> Default for ContextStream<T>
 where
     T: CoordFloat,
@@ -44,7 +48,8 @@ where
     type Out = Option<ResultEnum<T>>;
     fn result(&mut self) -> Self::Out {
         match self {
-            ContextStream::A(a) => a.result(),
+            // ContextStream::A(a) => a.result(),
+            ContextStream::A(pc) => pc.result(),
             ContextStream::C(pc) => pc.result(),
             ContextStream::S(ps) => ps.result(),
             ContextStream::UNDEFINED => panic!("Result of undefined."),
@@ -52,20 +57,20 @@ where
     }
 }
 
-// impl<T> PointRadiusTrait for ContextStream<T>
-// where
-//     T: CoordFloat,
-// {
-//     type PrtT = Option<T>;
-//     fn point_radius(&mut self, val: Self::PrtT) {
-//         match self {
-//             ContextStream::A(a) => a.point_radius(val),
-//             ContextStream::C(c) => c.point_radius(val),
-//             ContextStream::S(s) => s.point_radius(val),
-//             ContextStream::UNDEFINED => panic!("radius of undefined."),
-//         }
-//     }
-// }
+impl<T> PointRadiusTrait for ContextStream<T>
+where
+    T: CoordFloat,
+{
+    type PrtT = Option<T>;
+    fn point_radius(&mut self, val: Self::PrtT) {
+        match self {
+            ContextStream::A(_a) => todo!("how to handle this?"),
+            ContextStream::C(c) => c.point_radius(val),
+            ContextStream::S(s) => s.point_radius(val),
+            ContextStream::UNDEFINED => panic!("radius of undefined."),
+        }
+    }
+}
 
 impl<T> Stream for ContextStream<T>
 where
