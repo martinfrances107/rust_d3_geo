@@ -161,6 +161,7 @@ mod angle_test {
 
 		// this rounds to 29.9999999 not 30!!
 		// assert_eq!(pb.get_angle(), 30_f64);
+		assert!(in_delta(pb.get_angle(), 30_f64, 1e-6));
 		let projection = pb.build();
 
 		assert!(projection_equal(
@@ -289,7 +290,7 @@ mod angle_test {
 			.angle(-30_f64);
 
 		// this rounds to 29.9999999 not 30!!
-		// assert_eq!(pb.get_angle(), -30_f64);
+		assert!(in_delta(pb.get_angle(), -30_f64, 1e-6));
 		let projection = pb.build();
 
 		assert!(projection_equal(
@@ -402,8 +403,22 @@ mod angle_test {
 			None
 		));
 	}
+
+	#[test]
+	fn tests_wraps_360() {
+		println!("projection.angle(…) wraps around 360°");
+		let pb: Builder<
+			StreamDrainStub<f64>,
+			Line<f64>,
+			Gnomic<StreamDrainStub<f64>, f64>,
+			PV<f64>,
+			f64,
+		> = Gnomic::builder()
+			.scale(1_f64)
+			.translate(&Coordinate { x: 0_f64, y: 0_f64 })
+			.angle(360_f64);
+
+		assert!(in_delta(pb.get_angle(), 0_f64, 1e-6));
+	}
+	// TODO add geoIdentity test
 }
-
-// TODO add wraps tests
-
-// TODO add geoIdentity test
