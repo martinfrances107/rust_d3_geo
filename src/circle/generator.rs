@@ -60,9 +60,9 @@ where
         let r = self.radius.to_radians();
         let p = self.precision.to_radians();
 
-        self.stream.borrow_mut().ring = Vec::new();
-        self.stream.borrow_mut().rotate =
-            rotate_radians(-c.x.to_radians(), -c.y.to_radians(), T::zero());
+        let mut stream_b = self.stream.borrow_mut();
+        stream_b.ring = Vec::new();
+        stream_b.rotate = rotate_radians(-c.x.to_radians(), -c.y.to_radians(), T::zero());
 
         // let mut cs = Rc::new(RefCell::new(CircleStream {
         //     ring: Vec::new(),
@@ -75,8 +75,8 @@ where
 
         let coordinates = vec![self.stream.borrow().ring.clone()];
 
-        self.stream.borrow_mut().ring.clear();
-        self.stream.borrow_mut().rotate = RotateRadians::I(RotationIdentity::default());
+        stream_b.ring.clear();
+        stream_b.rotate = RotateRadians::I(RotationIdentity::default());
 
         coordinates
     }

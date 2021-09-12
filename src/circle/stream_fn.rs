@@ -56,9 +56,10 @@ pub fn stream_fn<STREAM, T>(
     let mut point: Coordinate<T>;
     let mut t = t0;
     let mut cond = true;
+    let mut stream_b = stream.borrow_mut();
     while cond {
         point = spherical_r(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
-        stream.borrow_mut().point(&point, None);
+        stream_b.point(&point, None);
 
         t = t - step;
         cond = match direction.is_sign_positive() {
