@@ -157,9 +157,10 @@ pub fn rejoin<SINK, T>(
                         .borrow()
                         .z
                         .clone();
+                    let mut stream_b = stream.borrow_mut();
                     for i in (1..points.clone().unwrap().len()).rev() {
                         point = points.clone().unwrap()[i];
-                        stream.borrow_mut().point(&point.p, None);
+                        stream_b.point(&point.p, None);
                     }
                 } else {
                     interpolate_fn(
