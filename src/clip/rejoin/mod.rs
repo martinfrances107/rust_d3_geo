@@ -36,7 +36,7 @@ pub fn rejoin<SINK, T>(
     let mut start_inside = start_inside;
     let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();
     let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
-
+    let mut stream_b = stream.borrow_mut();
     for segment in segments.iter() {
         let (n, has_overflown) = segment.len().overflowing_sub(1_usize);
         if n == 0 || has_overflown {
@@ -48,13 +48,13 @@ pub fn rejoin<SINK, T>(
 
         if point_equal(p0.p, p1.p) {
             if p0.m.is_none() && p1.m.is_none() {
-                stream.borrow_mut().line_start();
+                stream_b.line_start();
                 // for i in 0..n {
                 for elem in segment.iter().take(n) {
                     p0 = *elem;
-                    stream.borrow_mut().point(&p0.p, None);
+                    stream_b.point(&p0.p, None);
                 }
-                stream.borrow_mut().line_end();
+                stream_b.line_end();
                 return;
             }
             // handle degenerate cases by moving the point
