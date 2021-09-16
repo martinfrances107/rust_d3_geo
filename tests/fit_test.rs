@@ -1,37 +1,47 @@
-// #[cfg(not(tarpaulin_include))]
-// #[cfg(test)]
+#[cfg(not(tarpaulin_include))]
+#[cfg(test)]
 
-// mod fit_test {
+mod fit_test {
 
-//     use geo::Coordinate;
-//     use std::f64::consts::PI;
+	use geo::Coordinate;
+	use rust_d3_geo::path::bounds_stream::BoundsStream;
+	use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
+	use std::f64::consts::PI;
 
-//     use rust_d3_geo::data_object::sphere::Sphere;
-//     use rust_d3_geo::data_object::DataObject;
-//     use rust_d3_geo::in_delta::in_delta;
-//     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
-//     use rust_d3_geo::projection::Raw;
-//     // use rust_d3_geo::projection::projection::Projection;
+	use rust_d3_geo::data_object::sphere::Sphere;
+	use rust_d3_geo::data_object::DataObject;
+	use rust_d3_geo::in_delta::in_delta;
+	use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
+	use rust_d3_geo::projection::Fit;
+	use rust_d3_geo::projection::Raw;
+	use rust_d3_geo::projection::Scale;
+	use rust_d3_geo::projection::Translate;
 
-//     #[test]
-//     fn test_fit_extent_sphere_equirectangular() {
-//         println!("projection.fitExtent(…) sphere equirectangular");
-//         let d_object = DataObject::Sphere(Sphere::default());
-//         let projection = EquirectangularRaw::builder()
-//             .fit_extent(
-//                 [
-//                     Coordinate { x: 50.0, y: 50.0 },
-//                     Coordinate { x: 950.0, y: 950.0 },
-//                 ],
-//                 d_object,
-//             )
-//             .build();
-//         assert!(in_delta(projection.get_scale(), 900. / (2. * PI), 1e-6));
-//         let translate = projection.get_translate();
-//         assert!(in_delta(translate.x, 500., 1e-6));
-//         assert!(in_delta(translate.y, 500., 1e-6));
-//     }
-// }
+	// use rust_d3_geo::projection::projection::Projection;
+
+	#[test]
+	fn test_fit_extent_sphere_equirectangular() {
+		println!("projection.fitExtent(…) sphere equirectangular");
+		let d_object = DataObject::Sphere(Sphere::default());
+		let projection: ProjectionBuilder<
+			BoundsStream<f64>,
+			_,
+			EquirectangularRaw<BoundsStream<f64>, f64>,
+			_,
+			f64,
+		> = EquirectangularRaw::builder().fit_extent(
+			[
+				Coordinate { x: 50.0, y: 50.0 },
+				Coordinate { x: 950.0, y: 950.0 },
+			],
+			d_object,
+		);
+		assert!(in_delta(projection.get_scale(), 900. / (2. * PI), 1e-6));
+		let translate = projection.get_translate();
+		assert!(in_delta(translate.x, 500., 1e-6));
+		assert!(in_delta(translate.y, 500., 1e-6));
+	}
+}
 
 // // // tape("projection.fitExtent(…) world equirectangular", function(test) {
 // // //   var projection = d3.geoEquirectangular();

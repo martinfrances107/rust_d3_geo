@@ -1,3 +1,6 @@
+use crate::data_object::DataObject;
+use crate::path::bounds_stream::BoundsStream;
+use num_traits::AsPrimitive;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::rc::Rc;
@@ -55,6 +58,7 @@ pub mod stream_node_factory;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
 
+/// Helper functions found measuring the extent, width or height.
 mod fit;
 mod resample;
 
@@ -110,25 +114,23 @@ pub trait Center // where
     /// f64 or f32
     type T;
 
-    /**
-     * Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
-     */
+    ///  Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
     fn get_center(&self) -> Coordinate<Self::T>
     where
         Self::T: CoordFloat;
 
-    /**
-     * Sets the projection’s center to the specified center,
-     * a two-element array of longitude and latitude in degrees and returns the projection.
-     * The default is ⟨0°,0°⟩.
-     *
-     * @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
-     */
+    /// Sets the projection’s center to the specified center,
+    /// a two-element array of longitude and latitude in degrees and returns the projection.
+    /// The default is ⟨0°,0°⟩.
+    ///
+    /// @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
+    ///
     fn center(self, point: Coordinate<Self::T>) -> Self
     where
         Self::T: CoordFloat;
 }
 
+/// Returns or sets the bounding box.
 /// A projection builder sub trait.
 pub trait ClipExtent {
     /// f64 or f32
@@ -141,6 +143,35 @@ pub trait ClipExtent {
 
     /// Sets the bounding box.
     fn clip_extent(self, extent: Option<[Coordinate<Self::T>; 2]>) -> Self
+    where
+        Self::T: CoordFloat;
+}
+
+/// Returns or sets the extent of the projection.
+/// A projection builder sub trait.
+pub trait Fit {
+    /// f64 or f32
+    type T;
+
+    ///   Sets the projection’s scale and translate to fit the specified geographic feature in the center of the given extent.
+    ///   Returns the projection.
+    ///
+    ///   Any clip extent is ignored when determining the new scale and translate. The precision used to compute the bounding box of the given object is computed at an effective scale of 150.
+    ///
+    ///   @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
+    ///   @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
+    fn fit_extent(self, extent: [Coordinate<Self::T>; 2], object: DataObject<Self::T>) -> Self
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
+
+    ///  Sets the projection’s scale and translate to fit the specified geographic feature in the center of an extent with the given size and top-left corner of [0, 0].
+    ///  Returns the projection.
+    ///
+    ///  Any clip extent is ignored when determining the new scale and translate. The precision used to compute the bounding box of the given object is computed at an effective scale of 150.
+    ///
+    ///  @param size The size of the extent, specified as an array [width, height].
+    ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
+    fn fit_size(self, size: [Coordinate<Self::T>; 2], object: DataObject<Self::T>) -> Self
     where
         Self::T: CoordFloat;
 }

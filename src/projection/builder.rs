@@ -1,3 +1,6 @@
+use crate::projection::BoundsStream;
+use crate::projection::DataObject;
+use crate::projection::Fit;
 use std::rc::Rc;
 
 use derivative::Derivative;
@@ -20,6 +23,7 @@ use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
+use super::fit::fit_extent;
 use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
 use super::str::generate as generate_str;
@@ -83,6 +87,7 @@ where
     /// Used by recenter() to build the factories.
     pub rotate: RotateRadians<T>, //rotate, pre-rotate
     project_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+    /// Used by rotate_transform_factory and projections transform.
     pub project_rotate_transform:
         Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
@@ -294,6 +299,7 @@ where
     T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
+
     #[inline]
     fn get_center(&self) -> Coordinate<T> {
         Coordinate {
@@ -309,6 +315,29 @@ where
     }
 }
 
+impl<L, PR, PV, T> Fit for Builder<BoundsStream<T>, L, PR, PV, T>
+where
+    L: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: 'static + CoordFloat + FloatConst,
+{
+    type T = T;
+
+    #[inline]
+    fn fit_extent(self, extent: [Coordinate<Self::T>; 2], object: DataObject<Self::T>) -> Self
+    where
+        Self::T: AsPrimitive<T> + CoordFloat,
+    {
+        fit_extent(self, extent, object)
+    }
+
+    fn fit_size(self, size: [Coordinate<T>; 2], object: DataObject<T>) -> Self {
+        todo!("must implement");
+        self
+    }
+}
+
 impl<DRAIN, L, PR, PV, T> Scale for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
@@ -318,6 +347,7 @@ where
     T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
+
     #[inline]
     fn get_scale(&self) -> Self::T {
         self.k
@@ -512,16 +542,6 @@ where
     // clipExtent(extent: [[number, number], [number, number]]): this;
 
     // /**
-    //  * Sets the projection’s scale and translate to fit the specified geographic feature in the center of the given extent.
-    //  * Returns the projection.
-    //  *
-    //  * Any clip extent is ignored when determining the new scale and translate. The precision used to compute the bounding box of the given object is computed at an effective scale of 150.
-    //  *
-    //  * @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
-    //  * @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-    //  */
-    // fitExtent(extent: [[number, number], [number, number]], object: ExtendedFeature): this;
-    // /**
     //  * Sets the projection’s scale and translate to fit the specified geographic feature collection in the center of the given extent.
     //  * Returns the projection.
     //  *
@@ -541,14 +561,6 @@ where
     //  * @param object A GeoJson Geometry Object or GeoSphere object supported by d3-geo (An extension of GeoJSON).
     //  */
     // #[inline]
-
-    // fn fit_extent(
-    //     self,
-    //     extent: [Coordinate<T>; 2],
-    //     object: DataObject<T>,
-    // ) -> Builder<BoundsStream<T>, L, PR, PV, T> {
-    //     fit_extent(self, extent, object)
-    // }
 
     // /**
     //  * Sets the projection’s scale and translate to fit the specified geographic geometry collection in the center of the given extent.
