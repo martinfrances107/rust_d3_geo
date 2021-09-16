@@ -24,8 +24,9 @@ mod path_area_test {
     use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
-    use rust_d3_geo::projection::scale::Scale;
+    use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Raw;
+    use rust_d3_geo::projection::Scale;
 
     #[inline]
     fn equirectangular<DRAIN, T>(

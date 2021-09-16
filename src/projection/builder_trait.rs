@@ -8,10 +8,10 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
-use super::center::Center;
-use super::clip_extent::ClipExtent;
-use super::scale::Scale;
-use super::translate::Translate;
+use super::Center;
+use super::ClipExtent;
+use super::Scale;
+use super::Translate;
 
 /// Projection builder Trait.
 pub trait BuilderTrait: Center + ClipExtent + Scale + Translate
@@ -358,6 +358,7 @@ where
             + Display
             + FloatConst;
 
+    /// Adjust the translate portion of the scale translate rotate tranform.
     fn recenter(self) -> Self
     where
         <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,

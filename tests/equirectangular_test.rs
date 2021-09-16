@@ -12,9 +12,9 @@ mod equirectangular_test {
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
-    use rust_d3_geo::projection::scale::Scale;
-    use rust_d3_geo::projection::translate::Translate;
     use rust_d3_geo::projection::Raw;
+    use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::projection::Translate;
     use rust_d3_geo::stream::StreamDrainStub;
 
     #[test]

@@ -47,6 +47,8 @@ where
         // it should be :-
         // self.dy + self.k * y
         // but that would mean a departure from the copy and would have to be adjusted elsewhere.
+        println!("in st {:?} {:?} {:?}", self.sx, self.sy, self.k);
+        println!("in st {:?} {:?}", self.dx, self.dy);
         Coordinate {
             x: self.dx + self.k * x,
             y: self.dy - self.k * y,

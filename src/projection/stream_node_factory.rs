@@ -20,7 +20,7 @@ use super::StreamNode;
 /// Inside Projection::stream() NodeFactory::generate() will be called to
 /// construct the pipeline.
 #[derive(Copy, Clone, Debug)]
-pub(crate) struct StreamNodeFactory<RAW, SINK, T>
+pub struct StreamNodeFactory<RAW, SINK, T>
 where
     SINK: Stream<T = T>,
     T: CoordFloat,

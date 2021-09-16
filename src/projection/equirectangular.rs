@@ -12,8 +12,8 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder::Builder;
-use super::scale::Scale;
 use super::Raw;
+use super::Scale;
 
 /// EquirectangularRaw
 ///

@@ -8,9 +8,9 @@ mod reflect_tests {
     use rust_d3_geo::projection::builder::Builder;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::projection_equal::projection_equal;
-    use rust_d3_geo::projection::scale::Scale;
-    use rust_d3_geo::projection::translate::Translate;
     use rust_d3_geo::projection::Raw;
+    use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::projection::Translate;
     use rust_d3_geo::stream::StreamDrainStub;
 
     #[test]

@@ -3,6 +3,7 @@ use std::fmt::Debug;
 use std::rc::Rc;
 
 use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::clip::Clip;
@@ -19,35 +20,32 @@ use resample::ResampleNode;
 use stream_node::StreamNode;
 use stream_node_factory::StreamNodeFactory;
 
-/// Helper functions.
-pub mod azimuthal;
 /// The raw projection.
 pub mod azimuthal_equal_area;
-/// The projection builder.
-pub mod builder;
-pub mod builder_trait;
-/// A projection builder sub trait.
-pub mod center;
-/// A projection builder sub trait.
-pub mod clip_extent;
 /// The raw projection.
 pub mod equirectangular;
 /// The raw projection.
 pub mod gnomic;
 /// The raw projection.
 pub mod mercator;
-/// Mecators has a specalised builder wrapping the default mecator.
-pub mod mercator_builder;
 /// The raw projection.
 pub mod orthographic;
+/// The raw projection.
+pub mod stereographic;
+
+/// Sub Traits
+pub mod builder_trait;
+
+/// Helper functions.
+pub mod azimuthal;
+/// The default projection builder.
+pub mod builder;
+/// A specalised builder wrapping the default mecator.
+pub mod mercator_builder;
 /// Projection object.
 pub mod projection;
 /// Debug and test helper function.
 pub mod projection_equal;
-/// A projection builder subtrait.
-pub mod scale;
-/// The raw projection.
-pub mod stereographic;
 /// Scale translate and rotate.
 pub mod str;
 /// Stream node pipeline stage.
@@ -56,19 +54,19 @@ pub mod stream_node;
 pub mod stream_node_factory;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
-/// A projection builder sub trait.
-pub mod translate;
 
 mod fit;
 mod resample;
 
-pub(crate) type RotateFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
+/// Projection type.
+pub type RotateFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
     RotateRadians<T>,
     StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
     T,
 >;
 
-pub(crate) type RotateTransformFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
+/// Projection type.
+pub type RotateTransformFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
     Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
     StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
     T,
@@ -79,10 +77,10 @@ pub trait Raw<T>: Clone + Debug + Default + Transform<T = T>
 where
     <Self as Transform>::T: CoordFloat,
 {
-    /// f32 or f64.
-    type T;
     /// The default builder.
     type Builder;
+    /// f32 or f64.
+    type T;
     /// Constructs the default projection builder.
     fn builder() -> Self::Builder;
 }
@@ -103,6 +101,50 @@ where
     fn build(s: Self::PR) -> Projection<Self::Drain, Self::L, Self::PR, Self::PV, Self::T>;
 }
 
+/// Controls the projections center point.
+///
+/// Projection builder sub trait.
+pub trait Center // where
+//     T: CoordFloat,
+{
+    /// f64 or f32
+    type T;
+
+    /**
+     * Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
+     */
+    fn get_center(&self) -> Coordinate<Self::T>
+    where
+        Self::T: CoordFloat;
+
+    /**
+     * Sets the projection’s center to the specified center,
+     * a two-element array of longitude and latitude in degrees and returns the projection.
+     * The default is ⟨0°,0°⟩.
+     *
+     * @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
+     */
+    fn center(self, point: Coordinate<Self::T>) -> Self
+    where
+        Self::T: CoordFloat;
+}
+
+/// A projection builder sub trait.
+pub trait ClipExtent {
+    /// f64 or f32
+    type T;
+
+    /// Returns a bounding box.
+    fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]>
+    where
+        Self::T: CoordFloat;
+
+    /// Sets the bounding box.
+    fn clip_extent(self, extent: Option<[Coordinate<Self::T>; 2]>) -> Self
+    where
+        Self::T: CoordFloat;
+}
+
 /// Generates elements of the projection stream pipeline.
 pub trait NodeFactory
 where
@@ -117,4 +159,56 @@ where
 
     /// Combine the sink with the proto-node and output a StreamNode.
     fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node;
+}
+
+/// Resampling getter and setters.
+pub trait Precision {
+    /// f64 or f32
+    type T;
+
+    ///  Returns the projection’s current resampling precision which defaults to square root of 0.5.
+    ///  This value corresponds to the Douglas–Peucker distance.
+    fn get_precision(&self) -> Self::T;
+
+    ///  Sets the threshold for the projection’s adaptive resampling to the specified value in Pixels and returns the projection.
+    ///  This value corresponds to the Douglas–Peucker distance.
+    fn precision(self, delta: &Self::T) -> Self;
+}
+
+/// Controls the projections scaling factor.
+///
+/// Projection builder sub trait.
+pub trait Scale {
+    /// f32 or f64.
+    type T;
+
+    /// Returns the programmed scaling factor.
+    fn get_scale(&self) -> Self::T;
+
+    ///  Sets the projection’s scale factor to the specified value and returns the projection.
+    ///  The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
+    ///
+    ///  @param scale Scale factor to be used for the projection; the default scale is projection-specific.
+    fn scale(self, scale: Self::T) -> Self;
+}
+
+/// Controls the projections translation factor.
+///
+/// Projection builder sub trait.
+pub trait Translate {
+    /// f32 or f64.
+    type T;
+
+    /// Returns the projections translation.
+    fn get_translate(&self) -> Coordinate<Self::T>
+    where
+        Self::T: CoordFloat;
+
+    ///  Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
+    ///  The translation offset determines the PIxel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
+    ///
+    ///  @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
+    fn translate(self, t: &Coordinate<Self::T>) -> Self
+    where
+        Self::T: CoordFloat;
 }

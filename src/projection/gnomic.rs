@@ -12,8 +12,8 @@ use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
 use super::builder::Builder;
-use super::scale::Scale;
 use super::Raw;
+use super::Scale;
 
 /// GnomicRaw
 ///

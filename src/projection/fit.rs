@@ -14,16 +14,16 @@ use crate::path::bounds_stream::BoundsStream;
 use crate::path::Result;
 use crate::path::ResultEnum;
 use crate::projection::builder::Builder;
-use crate::projection::scale::Scale;
 use crate::projection::Line;
 use crate::projection::PointVisible;
 use crate::projection::Raw as ProjectionRaw;
+use crate::projection::Scale;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
-use super::clip_extent::ClipExtent;
+use super::ClipExtent;
 // use super::projection_trait::ProjectionTrait;
-use super::translate::Translate;
+use super::Translate;
 
 type FitBounds<DRAIN, L, PR, PV, T> = Box<
     dyn FnOnce([Coordinate<T>; 2], Builder<DRAIN, L, PR, PV, T>) -> Builder<DRAIN, L, PR, PV, T>,

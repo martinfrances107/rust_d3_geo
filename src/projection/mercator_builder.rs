@@ -1,170 +1,255 @@
-// use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
-// use crate::projection::resample::ResampleNode;
-// use geo::CoordFloat;
-// use geo::Coordinate;
-// use num_traits::FloatConst;
+use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::projection::mercator::Mercator;
+use crate::projection::Projection;
+use crate::rotation::rotate_radians;
+use derivative::Derivative;
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
 
-// use crate::clip::circle::line::Line as LineCircle;
-// use crate::clip::circle::pv::PV;
-// use crate::projection::clip_extent::ClipExtent;
-// use crate::projection::mercator::Mercator;
-// use crate::projection::scale::Scale;
-// use crate::projection::Line;
-// use crate::projection::PointVisible;
-// use crate::projection::Raw as ProjectionRaw;
-// use crate::stream::Stream;
+use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::clip::Line;
+use crate::clip::PointVisible;
+use crate::stream::Stream;
+use crate::Transform;
 
-// use crate::clip::circle::interpolate::generate as gen_interpolate;
+use super::builder::Builder as ProjectionBuilder;
+use super::stream_node_factory::StreamNodeFactory;
+use super::stream_transform_radians::StreamTransformRadians;
+use super::ClipExtent;
+use super::Precision;
+use super::Raw as ProjectionRaw;
+use super::Scale;
+use super::Translate;
 
-// use super::builder::Builder as BuilderDefault;
+/// A wrapper for Projectio\Builder which overrides the traits - scale translate and center.
+#[derive(Clone, Derivative)]
+#[derivative(Debug)]
+pub struct MercatorBuilder<DRAIN, L, PR, PV, T>
+where
+	DRAIN: Stream<T = T> + Default,
+	L: Line,
+	PV: PointVisible<T = T>,
+	PR: ProjectionRaw<T>, // TODO limit this to only certain types of PR
+	T: AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	// pr: PR,
+	base: ProjectionBuilder<DRAIN, L, PR, PV, T>,
+	x0: Option<T>,
+	y0: Option<T>,
+	x1: Option<T>,
+	y1: Option<T>, // post-clip extent
+}
 
-// use std::any::type_name;
+impl<DRAIN, PR, T> MercatorBuilder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T>
+where
+	DRAIN: Stream<T = T> + Default,
+	PR: ProjectionRaw<T>,
+	T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	/// Wrap a default projector and provides mercator specific overrides.
+	pub fn new(pr: PR) -> Self {
+		let base: ProjectionBuilder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> =
+			ProjectionBuilder::new(
+				StreamNodeClipFactory::new(
+					gen_interpolate(),
+					LineAntimeridian::<T>::default(),
+					PVAntimeridian::default(),
+				),
+				pr,
+			);
+		// dbg!(&base.get_scale());
+		Self {
+			base,
+			x0: None,
+			y0: None,
+			x1: None,
+			y1: None,
+		}
+	}
 
-// fn type_of<T>(_: T) -> &'static str {
-//     type_name::<T>()
-// }
+	/// Using the currently programmed state output a new projection.
+	#[inline]
+	pub fn build(&self) -> Projection<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> {
+		Projection {
+			postclip: self.base.postclip.clone(),
+			preclip_factory: self.base.preclip_factory.clone(),
+			resample_factory: self.base.resample_factory.clone(),
 
-// pub fn gen_mercator_builder<DRAIN, PR, T>(
-// ) -> MercatorBuilderGenerator<DRAIN, LineCircle<T>, PR, PV<T>, T>
-// where
-//     DRAIN: Stream<T = T>,
-//     PR: ProjectionRaw<T>,
-//     T: 'static + CoordFloat + FloatConst,
-// {
-//     let tau = T::from(2_f64).unwrap() * T::PI();
-//     MercatorBuilderGenerator::new(
-//         StreamNodeClipFactory::new(
-//             gen_interpolate(T::one()),
-//             LineCircle::<T>::default(),
-//             PV::default(),
-//         ),
-//         PR::default(),
-//     )
-//     .scale(T::from(961_f64).unwrap() / tau)
-// }
+			rotate_transform: self.base.project_rotate_transform.clone(),
+			rotate_transform_factory: self.base.rotate_transform_factory.clone(),
+			rotate_factory: self.base.rotate_factory.clone(),
+			transform_radians_factory: StreamNodeFactory::new(StreamTransformRadians {}),
+		}
+	}
+}
 
-// /// Generates a projection builder.
-// ///
-// /// It takes a inner projector...
-// ///
-// #[derive(Debug)]
-// struct MercatorBuilderGenerator<DRAIN, L, PR, PV, T>
-// where
-//     DRAIN: Stream<T = T>,
-//     L: Line,
-//     PV: PointVisible<T = T>,
-//     PR: ProjectionRaw<T>,
-//     T: 'static + CoordFloat + FloatConst,
-// {
-//     projection_raw: PR,
-//     m: BuilderDefault<DRAIN, L, PR, PV, T>,
+impl<DRAIN, L, PR, PV, T> MercatorBuilder<DRAIN, L, PR, PV, T>
+where
+	DRAIN: Stream<T = T> + Default,
+	L: Line,
+	PR: ProjectionRaw<T>,
+	PV: PointVisible<T = T>,
+	T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	fn reclip(mut self) -> Self {
+		dbg!("mercator reclip");
+		let k = T::PI() * self.get_scale();
 
-//     /// Clip Extent.
-//     x0: Option<T>,
-//     y0: T,
-//     x1: T,
-//     y1: T,
-// }
+		let rotate_raw = self.base.get_rotate();
+		let t = rotate_radians(rotate_raw).invert(&Coordinate {
+			x: T::zero(),
+			y: T::zero(),
+		});
+		println!("mercator reclip t first{:?}", t);
+		let t = self.base.build().transform(&t);
+		dbg!(&self.x0);
+		dbg!(k);
+		dbg!("t final", t);
+		let ce = match (self.x0, self.y0, self.x1, self.y1) {
+			(Some(_x0), Some(y0), Some(x1), Some(y1)) => {
+				todo!("not yet");
+				[
+					Coordinate {
+						x: (t.x - k).max(t.y - k),
+						y: y0,
+					},
+					Coordinate {
+						x: (t.x + k).min(x1),
+						y: y1,
+					},
+				]
+				// _ => [
+				// 	Coordinate {
+				// 		x: x0,
+				// 		y: (t.y - k).max(self.y0),
+				// 	},
+				// 	Coordinate {
+				// 		x: self.x1,
+				// 		y: (t.y + k).min(self.y1),
+				// 	},
+				// ],
+			}
+			_ => [
+				Coordinate {
+					x: t.x - k,
+					y: t.y - k,
+				},
+				Coordinate {
+					x: t.x + k,
+					y: t.y + k,
+				},
+			],
+		};
 
-// impl<DRAIN, L, PR, PV, T> MercatorBuilderGenerator<DRAIN, L, PR, PV, T>
-// where
-//     DRAIN: Stream<T = T>,
-//     L: Line,
-//     PR: ProjectionRaw<T>,
-//     PV: PointVisible<T = T>,
-//     T: 'static + CoordFloat + FloatConst,
-// {
-//     fn new(
-//         preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
-//         projection_raw: PR,
-//     ) -> Self {
-//         Self {
-//             projection_raw,
-//             m: BuilderDefault::new(preclip_factory, projection_raw),
-//             x0: None,
-//             y0: T::nan(),
-//             x1: T::nan(),
-//             y1: T::nan(),
-//         }
-//     }
+		dbg!(&ce);
+		self.base = self.base.clip_extent(Some(ce));
+		self
+	}
+}
 
-//     // fn is_of_type<X: 'static>(x: &dyn ProjectionRaw<T>) -> bool {
-//     //     x.as_any().is::<X>()
-//     // }
+impl<DRAIN, L, PR, PV, T> Scale for MercatorBuilder<DRAIN, L, PR, PV, T>
+where
+	DRAIN: Stream<T = T> + Default,
+	L: Line,
+	PR: ProjectionRaw<T>,
+	PV: PointVisible<T = T>,
+	T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	type T = T;
 
-//     fn reclip(self) {
-//         let k = T::PI() * self.m.get_scale();
-//         // let t = rotate_radians(m.get_rotate()).invert(Coordinate {
-//         //     x: T::zero(),
-//         //     y: T::zero(),
-//         // });
+	#[inline]
+	fn get_scale(&self) -> T {
+		self.base.get_scale()
+	}
 
-//         let t = Coordinate {
-//             x: T::one(),
-//             y: T::one(),
-//         };
+	fn scale(mut self, scale: T) -> Self {
+		self.base = self.base.scale(scale);
+		self.reclip()
+	}
+}
 
-//         let ce = match self.x0 {
-//             None => [
-//                 Coordinate {
-//                     x: t.x - k,
-//                     y: t.y - k,
-//                 },
-//                 Coordinate {
-//                     x: t.x + k,
-//                     y: t.y + k,
-//                 },
-//             ],
-//             Some(x0) => {
-//                 let pr_type = type_of(self.projection_raw);
-//                 dbg!("raw_type");
-//                 match type_of(self.projection_raw) {
-//                     "MERCATOR" => [
-//                         Coordinate {
-//                             x: (t.x - k).max(t.y - k),
-//                             y: self.y0,
-//                         },
-//                         Coordinate {
-//                             x: (t.x + k).min(self.x1),
-//                             y: self.y1,
-//                         },
-//                     ],
-//                     _ => [
-//                         Coordinate {
-//                             x: x0,
-//                             y: (t.y - k).max(self.y0),
-//                         },
-//                         Coordinate {
-//                             x: self.x1,
-//                             y: (t.y + k).min(self.y1),
-//                         },
-//                     ],
-//                 }
-//             }
-//         };
+impl<DRAIN, L, PR, PV, T> Translate for MercatorBuilder<DRAIN, L, PR, PV, T>
+where
+	DRAIN: Stream<T = T> + Default,
+	L: Line,
+	PR: ProjectionRaw<T>,
+	PV: PointVisible<T = T>,
+	T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	type T = T;
 
-//         // self.m.clip_extent(Some(ce))
-//     }
-// }
+	#[inline]
+	fn get_translate(&self) -> Coordinate<T> {
+		self.base.get_translate()
+	}
 
-// impl<DRAIN, L, PR, PV, T> Scale for MercatorBuilderGenerator<DRAIN, L, PR, PV, T>
-// where
-//     DRAIN: Stream<T = T>,
-//     L: Line,
-//     PR: ProjectionRaw<T>,
-//     PV: PointVisible<T = T>,
-//     T: 'static + CoordFloat + FloatConst,
-// {
-//     type T = T;
-//     type Builder = Self;
+	fn translate(mut self, t: &Coordinate<T>) -> Self {
+		self.base = self.base.translate(t);
+		self.reclip()
+	}
+}
 
-//     #[inline]
-//     fn get_scale(&self) -> T {
-//         self.m.get_scale()
-//     }
+impl<DRAIN, L, PR, PV, T> Precision for MercatorBuilder<DRAIN, L, PR, PV, T>
+where
+	DRAIN: Stream<T = T> + Default,
+	L: Line,
+	PR: ProjectionRaw<T>,
+	PV: PointVisible<T = T>,
+	T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	type T = T;
+	#[inline]
+	fn get_precision(&self) -> T {
+		self.base.get_precision()
+	}
 
-//     fn scale(mut self, scale: T) -> Self {
-//         self.m.scale(scale);
-//         self.reclip()
-//     }
-// }
+	fn precision(mut self, delta: &T) -> Self {
+		self.base = self.base.precision(delta);
+		self
+	}
+}
+
+impl<DRAIN, L, PR, PV, T> ClipExtent for MercatorBuilder<DRAIN, L, PR, PV, T>
+where
+	DRAIN: Stream<T = T> + Default,
+	L: Line,
+	PR: ProjectionRaw<T>,
+	PV: PointVisible<T = T>,
+	T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	/// f64 or f32
+	type T = T;
+	/// Returns a bounding box.
+	fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
+		match (self.x0, self.y0, self.x1, self.y1) {
+			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
+				Some([Coordinate { x: x0, y: y0 }, Coordinate { x: x1, y: y1 }])
+			}
+			_ => None,
+		}
+	}
+
+	/// Sets the bounding box.
+	fn clip_extent(mut self, extent: Option<[Coordinate<Self::T>; 2]>) -> Self {
+		match extent {
+			Some(e) => {
+				self.x0 = Some(e[0].x);
+				self.y0 = Some(e[0].y);
+				self.x1 = Some(e[1].x);
+				self.y1 = Some(e[1].y);
+				self.reclip()
+			}
+			None => {
+				self.x0 = None;
+				self.y0 = None;
+				self.x1 = None;
+				self.y1 = None;
+				self
+			}
+		}
+	}
+}

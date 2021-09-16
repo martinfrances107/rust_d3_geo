@@ -1,3 +1,4 @@
+use num_traits::AsPrimitive;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
@@ -10,14 +11,11 @@ use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::builder::Builder;
-use super::scale::Scale;
+use super::mercator_builder::MercatorBuilder;
 use super::Raw;
+use super::Scale;
 
-/// MercatorRaw
-///
-/// Root transform.
-/// Used to define a projection builder.
+/// Defines a projection.
 #[derive(Clone, Copy, Debug)]
 pub struct Mercator<DRAIN, T>
 where
@@ -41,19 +39,16 @@ where
 
 impl<DRAIN, T> Raw<T> for Mercator<DRAIN, T>
 where
-    DRAIN: Stream<T = T>,
-    T: 'static + CoordFloat + FloatConst,
+    DRAIN: Stream<T = T> + Default,
+    // SINK: Stream<T = T>,
+    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, Line<T>, Mercator<DRAIN, T>, PV<T>, T>;
+    type Builder = MercatorBuilder<DRAIN, Line<T>, Mercator<DRAIN, T>, PV<T>, T>;
     type T = T;
 
     fn builder() -> Self::Builder {
         let tau = T::from(2).unwrap() * T::PI();
-        Builder::new(
-            StreamNodeClipFactory::new(gen_interpolate(), Line::default(), PV::default()),
-            Mercator::default(),
-        )
-        .scale(T::from(961).unwrap() / tau)
+        MercatorBuilder::new(Mercator::default()).scale(T::from(961).unwrap() / tau)
     }
 }
 

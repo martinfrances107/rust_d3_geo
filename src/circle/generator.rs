@@ -14,11 +14,6 @@ use crate::rotation::rotation_identity::RotationIdentity;
 
 use super::stream::Stream;
 use super::stream_fn::stream_fn;
-// use super::CircleTrait;
-// use super::FnValMaybe;
-// use super::FnValMaybe2D;
-// use super::InArg;
-// use super::StreamType;
 
 /// Allow for circle to be defined and then input to a stream.
 #[derive(Debug)]
@@ -61,7 +56,7 @@ where
         let p = self.precision.to_radians();
 
         self.stream.borrow_mut().rotate =
-            rotate_radians(-c.x.to_radians(), -c.y.to_radians(), T::zero());
+            rotate_radians([-c.x.to_radians(), -c.y.to_radians(), T::zero()]);
 
         // let mut cs = Rc::new(RefCell::new(CircleStream {
         //     ring: Vec::new(),

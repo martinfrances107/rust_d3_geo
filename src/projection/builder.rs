@@ -14,25 +14,26 @@ use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::clip::PostClipFn;
 use crate::compose::Compose;
+use crate::projection::Precision;
 use crate::rotation::rotate_radians;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::center::Center;
-use super::clip_extent::ClipExtent;
 use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
-use super::scale::Scale;
 use super::str::generate as generate_str;
 use super::str::scale_translate_rotate::ScaleTranslateRotate;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
-use super::translate::Translate;
+use super::Center;
+use super::ClipExtent;
 use super::Projection;
 use super::Raw as ProjectionRaw;
 use super::RotateFactory;
 use super::RotateTransformFactory;
+use super::Scale;
+use super::Translate;
 
 /// Projection builder.
 ///
@@ -72,18 +73,25 @@ where
     y0: Option<T>,
     x1: Option<T>,
     y1: Option<T>, // post-clip extent
-    preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
 
+    /// Projection pipeline stage.
+    pub preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
+
+    /// Projection postclip.
     #[derivative(Debug = "ignore")]
-    postclip: PostClipFn<DRAIN>,
-    // Used by recenter() to build the factories.
-    rotate_radians: RotateRadians<T>, //rotate, pre-rotate
-    transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-    rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+    pub postclip: PostClipFn<DRAIN>,
+    /// Used by recenter() to build the factories.
+    pub rotate: RotateRadians<T>, //rotate, pre-rotate
+    project_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+    pub project_rotate_transform:
+        Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
-    rotate_factory: RotateFactory<DRAIN, L, PR, PV, T>,
-    resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
-    rotate_transform_factory: RotateTransformFactory<DRAIN, L, PR, PV, T>,
+    /// Projection pipeline stage.
+    pub rotate_factory: RotateFactory<DRAIN, L, PR, PV, T>,
+    /// Projection pipeline stage
+    pub resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
+    /// Projection pipeline stage
+    pub rotate_transform_factory: RotateTransformFactory<DRAIN, L, PR, PV, T>,
 }
 
 impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
@@ -112,20 +120,19 @@ where
         let delta_phi = T::zero();
         let delta_gamma = T::zero();
 
-        // Zero implies no resampling by default.
-
         let center = generate_str(&k, &T::zero(), &T::zero(), &sx, &sy, &alpha)
             .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
         let str = generate_str(&k, &(x - center.x), &(y - center.y), &sx, &sy, &alpha);
 
-        let rotate_radians = rotate_radians(delta_lambda, delta_phi, delta_gamma); // pre-rotate
-        let rotate_factory = StreamNodeFactory::new(rotate_radians.clone());
-        let transform = Compose::new(projection_raw.clone(), str);
-        let resample_factory = StreamNodeResampleFactory::new(transform.clone(), T::zero());
-        let rotate_transform = Compose::new(rotate_radians.clone(), transform.clone());
-        let rotate_transform_factory = StreamNodeFactory::new(rotate_transform.clone());
+        let rotate = rotate_radians([delta_lambda, delta_phi, delta_gamma]); // pre-rotate
+        let project_transform = Compose::new(projection_raw.clone(), str);
+        let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
 
-        Self {
+        let rotate_factory = StreamNodeFactory::new(rotate.clone());
+        let resample_factory = StreamNodeResampleFactory::new(project_transform.clone(), T::zero());
+        let rotate_transform_factory = StreamNodeFactory::new(project_rotate_transform.clone());
+
+        let out = Self {
             /// Input passing onto Projection.
             projection_raw,
 
@@ -152,15 +159,17 @@ where
             sx,
             sy,
 
+            rotate,
+            project_transform,
+            project_rotate_transform,
+            /// Pass into Projection,
             preclip_factory,
             resample_factory,
-            transform,
-            rotate_transform,
-            /// Pass into Projection,
-            rotate_radians,
             rotate_factory,
             rotate_transform_factory,
-        }
+        };
+
+        out.recenter()
     }
 
     /// Using the currently programmed state output a new projection.
@@ -171,19 +180,17 @@ where
             preclip_factory: self.preclip_factory.clone(),
             resample_factory: self.resample_factory.clone(),
 
-            rotate_transform: self.rotate_transform.clone(),
+            rotate_transform: self.project_rotate_transform.clone(),
             rotate_transform_factory: self.rotate_transform_factory.clone(),
             rotate_factory: self.rotate_factory.clone(),
             transform_radians_factory: StreamNodeFactory::new(StreamTransformRadians {}),
         }
     }
 
-    /// /**
-    ///  * Switches to antimeridian cutting rather than small-circle clipPIng.
-    ///  * See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
-    ///  *
-    ///  * @param angle Set to null to switch to antimeridian cutting.
-    ///  */
+    /// Switches to antimeridian cutting rather than small-circle clipPIng.
+    /// See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
+    ///
+    /// @param angle Set to null to switch to antimeridian cutting.
     pub fn clip_angle(mut self, angle: T) -> Builder<DRAIN, CircleLine<T>, PR, CirclePV<T>, T> {
         self.theta = Some(angle.to_radians());
 
@@ -229,7 +236,6 @@ where
             x: self.lambda,
             y: self.phi,
         }));
-
         let transform = generate_str(
             &self.k,
             &(self.x - center.x),
@@ -239,14 +245,17 @@ where
             &self.alpha,
         );
 
-        self.rotate_radians = rotate_radians(self.delta_lambda, self.delta_phi, self.delta_gamma);
-        self.transform = Compose::new(self.projection_raw.clone(), transform);
-        self.rotate_transform = Compose::new(self.rotate_radians.clone(), self.transform.clone());
+        self.rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]);
+        self.project_transform = Compose::new(self.projection_raw.clone(), transform);
+        self.project_rotate_transform =
+            Compose::new(self.rotate.clone(), self.project_transform.clone());
 
-        //todo update every factory.
-        self.resample_factory = StreamNodeResampleFactory::new(self.transform.clone(), self.delta2);
-        self.rotate_factory = StreamNodeFactory::new(self.rotate_radians.clone());
-        self.rotate_transform_factory = StreamNodeFactory::new(self.rotate_transform.clone());
+        self.resample_factory =
+            StreamNodeResampleFactory::new(self.project_transform.clone(), self.delta2);
+        self.rotate_factory = StreamNodeFactory::new(self.rotate.clone());
+        self.rotate_transform_factory =
+            StreamNodeFactory::new(self.project_rotate_transform.clone());
+
         self.reset()
     }
 }
@@ -269,7 +278,7 @@ where
         }
     }
 
-    fn translate(mut self, t: &Coordinate<T>) -> Builder<DRAIN, L, PR, PV, T> {
+    fn translate(mut self, t: &Coordinate<T>) -> Self {
         self.x = t.x;
         self.y = t.y;
         self.recenter()
@@ -285,7 +294,6 @@ where
     T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
-
     #[inline]
     fn get_center(&self) -> Coordinate<T> {
         Coordinate {
@@ -294,7 +302,7 @@ where
         }
     }
 
-    fn center(mut self, p: Coordinate<T>) -> Builder<DRAIN, L, PR, PV, T> {
+    fn center(mut self, p: Coordinate<T>) -> Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
         self.recenter()
@@ -309,7 +317,6 @@ where
     PV: PointVisible<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
-    type Builder = Self;
     type T = T;
     #[inline]
     fn get_scale(&self) -> Self::T {
@@ -341,7 +348,7 @@ where
         }
     }
 
-    fn clip_extent(mut self, extent: Option<[Coordinate<T>; 2]>) -> Builder<DRAIN, L, PR, PV, T> {
+    fn clip_extent(mut self, extent: Option<[Coordinate<T>; 2]>) -> Self {
         match extent {
             None => {
                 self.x0 = None;
@@ -366,13 +373,49 @@ where
     }
 }
 
+impl<DRAIN, L, PR, PV, T> Precision for Builder<DRAIN, L, PR, PV, T>
+where
+    DRAIN: Stream<T = T>,
+    L: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: 'static + CoordFloat + FloatConst,
+{
+    type T = T;
+
+    /// /**
+    ///  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
+    ///  * This value corresponds to the Douglas–Peucker distance.
+    ///  */
+    /// /**
+    ///  * Sets the threshold for the projection’s adaptive resampling to the specified value in PIxels and returns the projection.
+    ///  * This value corresponds to the Douglas–Peucker distance.
+    ///  *
+    ///  * @param precision A numeric value in PIxels to use as the threshold for the projection’s adaptive resampling.
+    ///  */
+    #[inline]
+    fn get_precision(&self) -> T {
+        self.delta2.sqrt()
+    }
+
+    /// Set the projection builder precision
+    ///
+    /// delta is related to clip angle.
+    fn precision(mut self, delta: &T) -> Self {
+        let delta2 = *delta * *delta;
+        self.delta2 = *delta * *delta;
+        self.resample_factory =
+            StreamNodeResampleFactory::new(self.project_transform.clone(), delta2);
+        self
+    }
+}
+
 impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-
     T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     // type C = Coordinate<T>;
@@ -625,21 +668,6 @@ where
     //  */
     // invert?(point: [number, number]): [number, number] | null;
 
-    /// /**
-    ///  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
-    ///  * This value corresponds to the Douglas–Peucker distance.
-    ///  */
-    /// /**
-    ///  * Sets the threshold for the projection’s adaptive resampling to the specified value in PIxels and returns the projection.
-    ///  * This value corresponds to the Douglas–Peucker distance.
-    ///  *
-    ///  * @param precision A numeric value in PIxels to use as the threshold for the projection’s adaptive resampling.
-    ///  */
-    #[inline]
-    pub fn get_precision(self) -> T {
-        self.delta2.sqrt()
-    }
-
     /// Is the projection builder set to invert the x-coordinate.
     #[inline]
     pub fn get_reflect_x(&self) -> bool {
@@ -671,19 +699,6 @@ where
             self.sy = T::one();
         }
         self.recenter()
-    }
-
-    /// Set the projection builder precision
-    ///
-    /// delta is related to clip angle.
-    pub fn precision(self, delta: &T) -> Builder<DRAIN, L, PR, PV, T> {
-        let delta2 = *delta * *delta;
-        let resample_factory = StreamNodeResampleFactory::new(self.transform.clone(), delta2);
-        Builder {
-            delta2,
-            resample_factory,
-            ..self
-        }
     }
 
     /// Returns the projection’s post-projection planar rotation angle.

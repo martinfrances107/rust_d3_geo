@@ -6,7 +6,6 @@ mod index_test {
 
 	use geo::line_string;
 	use geo::Geometry;
-	use geo::Point;
 
 	use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
 	use rust_d3_geo::clip::antimeridian::line::Line;
@@ -18,7 +17,8 @@ mod index_test {
 	use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
 	use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
 	use rust_d3_geo::projection::projection::Projection;
-	use rust_d3_geo::projection::scale::Scale;
+	use rust_d3_geo::projection::Precision;
+	use rust_d3_geo::projection::Scale;
 
 	#[inline]
 	fn equirectangular() -> Projection<

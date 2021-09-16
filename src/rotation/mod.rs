@@ -20,15 +20,17 @@ use rotation_lambda::RotationLambda;
 use rotation_phi_gamma::RotationPhiGamma;
 
 /// Construct a 3-axis rotation transform.
-pub fn rotate_radians<T>(delta_lambda_p: T, delta_phi: T, delta_gamma: T) -> RotateRadians<T>
+pub fn rotate_radians<T>(delta: [T; 3]) -> RotateRadians<T>
 where
     T: CoordFloat + FloatConst,
 {
-    let delta_lambda = delta_lambda_p % T::TAU();
+    let delta_lambda = delta[0] % T::TAU();
+    let delta_phi = delta[1];
+    let delta_gamma = delta[2];
     // Should I rotate by lambda, phi or gamma.
     let by_lambda = !delta_lambda.is_zero();
-    let by_phi = !delta_phi.is_zero();
-    let by_gamma = !delta_gamma.is_zero();
+    let by_phi = !delta[1].is_zero();
+    let by_gamma = !delta[2].is_zero();
     match (by_lambda, by_gamma, by_phi) {
         (true, true, true) | (true, true, false) | (true, false, true) => {
             RotateRadians::C(Box::new(Compose::new(

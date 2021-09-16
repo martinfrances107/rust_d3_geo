@@ -129,6 +129,7 @@ where
             x: p.x.to_radians(),
             y: p.y.to_radians(),
         };
+        dbg!("in projection transform", &r);
         self.rotate_transform.transform(&r)
     }
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {

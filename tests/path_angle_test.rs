@@ -4,21 +4,17 @@
 mod angle_test {
 
 	use geo::Coordinate;
-	use std::f64::consts::PI;
 
 	use rust_d3_geo::clip::circle::line::Line;
 	use rust_d3_geo::clip::circle::pv::PV;
-	use rust_d3_geo::data_object::sphere::Sphere;
-	use rust_d3_geo::data_object::DataObject;
 	use rust_d3_geo::in_delta::in_delta;
 	use rust_d3_geo::projection::builder::Builder;
 	use rust_d3_geo::projection::gnomic::Gnomic;
 	use rust_d3_geo::projection::projection_equal::projection_equal;
-	use rust_d3_geo::projection::scale::Scale;
-	use rust_d3_geo::projection::translate::Translate;
 	use rust_d3_geo::projection::Raw;
+	use rust_d3_geo::projection::Scale;
+	use rust_d3_geo::projection::Translate;
 	use rust_d3_geo::stream::StreamDrainStub;
-	// use rust_d3_geo::projection::projection::Projection;
 
 	#[test]
 	fn test_angle_defaults_to_zero() {

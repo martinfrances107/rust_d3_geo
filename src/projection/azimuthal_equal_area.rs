@@ -9,8 +9,8 @@ use crate::clip::circle::line::Line;
 use crate::clip::circle::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::builder::Builder;
-use crate::projection::scale::Scale;
 use crate::projection::Raw;
+use crate::projection::Scale;
 use crate::stream::Stream;
 use crate::Transform;
 

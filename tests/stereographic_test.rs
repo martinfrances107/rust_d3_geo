@@ -7,10 +7,10 @@ mod stereographic_tests {
     use rust_d3_geo::clip::circle::pv::PV;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
-    use rust_d3_geo::projection::scale::Scale;
     use rust_d3_geo::projection::stereographic::Stereographic;
-    use rust_d3_geo::projection::translate::Translate;
     use rust_d3_geo::projection::Raw;
+    use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::projection::Translate;
     use rust_d3_geo::stream::StreamDrainStub;
 
     #[test]
