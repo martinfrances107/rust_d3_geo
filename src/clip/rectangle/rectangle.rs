@@ -220,70 +220,69 @@ where
 					sink_b.point(&p, None);
 				};
 			}
-		} else {
-			if v && self.raw.v_ {
-				if self.raw.use_buffer_stream {
-					self.raw.buffer_stream.borrow_mut().point(&p, m);
-				} else {
-					self.sink.borrow_mut().point(&p, m);
-				}
+		} else if v && self.raw.v_ {
+			if self.raw.use_buffer_stream {
+				self.raw.buffer_stream.borrow_mut().point(&p, m);
 			} else {
-				self.raw.x_ = Float::max(
-					self.raw.clip_min,
-					Float::min(self.raw.clip_max, self.raw.x_),
-				);
-				self.raw.y_ = Float::max(
-					self.raw.clip_min,
-					Float::min(self.raw.clip_max, self.raw.y_),
-				);
-				let a = [self.raw.x_, self.raw.y_];
-				p.x = Float::max(self.raw.clip_min, Float::min(self.raw.clip_max, p.x));
-				p.y = Float::max(self.raw.clip_min, Float::min(self.raw.clip_max, p.y));
-				let b = [p.x, p.y];
-				if clip_line(a, b, self.raw.x0, self.raw.y0, self.raw.x1, self.raw.y1) {
-					if !self.raw.v_ {
-						if self.raw.use_buffer_stream {
-							let mut bs_b = self.raw.buffer_stream.borrow_mut();
-							bs_b.line_start();
-							bs_b.point(&Coordinate { x: a[0], y: a[1] }, None);
-						} else {
-							let mut sink_b = self.sink.borrow_mut();
-							sink_b.line_start();
-							sink_b.point(&Coordinate { x: a[0], y: a[1] }, None);
-						}
-					}
+				self.sink.borrow_mut().point(&p, m);
+			}
+		} else {
+			self.raw.x_ = Float::max(
+				self.raw.clip_min,
+				Float::min(self.raw.clip_max, self.raw.x_),
+			);
+			self.raw.y_ = Float::max(
+				self.raw.clip_min,
+				Float::min(self.raw.clip_max, self.raw.y_),
+			);
+			let a = [self.raw.x_, self.raw.y_];
+			p.x = Float::max(self.raw.clip_min, Float::min(self.raw.clip_max, p.x));
+			p.y = Float::max(self.raw.clip_min, Float::min(self.raw.clip_max, p.y));
+			let b = [p.x, p.y];
+			if clip_line(a, b, self.raw.x0, self.raw.y0, self.raw.x1, self.raw.y1) {
+				if !self.raw.v_ {
 					if self.raw.use_buffer_stream {
-						self.raw
-							.buffer_stream
-							.borrow_mut()
-							.point(&Coordinate { x: b[0], y: b[1] }, None);
-					} else {
-						self.sink
-							.borrow_mut()
-							.point(&Coordinate { x: b[0], y: b[1] }, None);
-					}
-					if !v {
-						if self.raw.use_buffer_stream {
-							self.raw.buffer_stream.borrow_mut().line_end();
-						} else {
-							self.sink.borrow_mut().line_end();
-						}
-						self.raw.clean = false;
-					}
-				} else if v {
-					if self.raw.use_buffer_stream {
-						let mut as_b = self.raw.buffer_stream.borrow_mut();
-						as_b.line_start();
-						as_b.point(&p, None);
+						let mut bs_b = self.raw.buffer_stream.borrow_mut();
+						bs_b.line_start();
+						bs_b.point(&Coordinate { x: a[0], y: a[1] }, None);
 					} else {
 						let mut sink_b = self.sink.borrow_mut();
 						sink_b.line_start();
-						sink_b.point(&p, None);
+						sink_b.point(&Coordinate { x: a[0], y: a[1] }, None);
+					}
+				}
+				if self.raw.use_buffer_stream {
+					self.raw
+						.buffer_stream
+						.borrow_mut()
+						.point(&Coordinate { x: b[0], y: b[1] }, None);
+				} else {
+					self.sink
+						.borrow_mut()
+						.point(&Coordinate { x: b[0], y: b[1] }, None);
+				}
+				if !v {
+					if self.raw.use_buffer_stream {
+						self.raw.buffer_stream.borrow_mut().line_end();
+					} else {
+						self.sink.borrow_mut().line_end();
 					}
 					self.raw.clean = false;
 				}
+			} else if v {
+				if self.raw.use_buffer_stream {
+					let mut as_b = self.raw.buffer_stream.borrow_mut();
+					as_b.line_start();
+					as_b.point(&p, None);
+				} else {
+					let mut sink_b = self.sink.borrow_mut();
+					sink_b.line_start();
+					sink_b.point(&p, None);
+				}
+				self.raw.clean = false;
 			}
 		}
+
 		self.raw.x_ = p.x;
 		self.raw.y_ = p.y;
 		self.raw.v_ = v;
