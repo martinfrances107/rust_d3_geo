@@ -23,7 +23,7 @@ use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::NodeFactory;
 use crate::stream::Stream;
 
-use super::CleanEnum;
+use super::CleanState;
 
 #[derive(Clone, Debug)]
 enum PointFn {
@@ -188,7 +188,7 @@ where
 
         // No intersections.
         match clean {
-            CleanEnum::NoIntersections => {
+            CleanState::NoIntersections => {
                 let segment = ring_segments
                     .pop_front()
                     .expect("We have previously checked that the .len() is >0 ( n ) ");
@@ -207,7 +207,7 @@ where
                 }
                 return;
             }
-            CleanEnum::IntersectionsRejoin => {
+            CleanState::IntersectionsRejoin => {
                 // Rejoin connected segments.
                 // TODO reuse ringBuffer.rejoin()?
                 if n > 1 {
@@ -219,10 +219,10 @@ where
                     ring_segments.push_back(pb);
                 }
             }
-            CleanEnum::IntersectionsOrEmpty => {
+            CleanState::IntersectionsOrEmpty => {
                 // No-op
             }
-            CleanEnum::Undefined => {
+            CleanState::Undefined => {
                 panic!("must be defined by now.")
             }
         }

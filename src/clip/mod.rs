@@ -38,7 +38,7 @@ use crate::Debug;
 /// intersections 2 - there were intersections, and the first and last segments
 /// should be rejoined.
 #[derive(Debug, Clone, Copy)]
-pub enum CleanEnum {
+pub enum CleanState {
     /// Initial state.
     Undefined,
     /// There were not intersections or the line was empty.
@@ -49,9 +49,9 @@ pub enum CleanEnum {
     IntersectionsRejoin,
 }
 
-impl Default for CleanEnum {
-    fn default() -> CleanEnum {
-        CleanEnum::Undefined
+impl Default for CleanState {
+    fn default() -> CleanState {
+        CleanState::Undefined
     }
 }
 
@@ -62,7 +62,7 @@ impl Default for CleanEnum {
 /// and last points were visible.
 pub trait Clean {
     /// Returns the clean state.
-    fn clean(&self) -> CleanEnum;
+    fn clean(&self) -> CleanState;
 }
 
 /// ClipTrait

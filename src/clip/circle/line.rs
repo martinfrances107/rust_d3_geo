@@ -6,7 +6,7 @@ use super::intersect::IntersectReturn;
 
 use crate::clip::line_elem::LineElem;
 use crate::clip::Clean;
-use crate::clip::CleanEnum;
+use crate::clip::CleanState;
 use crate::clip::Line as LineTrait;
 use crate::point_equal::point_equal;
 use crate::projection::stream_node::StreamNode;
@@ -18,8 +18,8 @@ pub struct Line<T>
 where
     T: CoordFloat,
 {
-    c0: u8,           // code for previous point
-    clean: CleanEnum, // no intersections
+    c0: u8,            // code for previous point
+    clean: CleanState, // no intersections
     radius: T,
     cr: T,
     not_hemisphere: bool,
@@ -52,7 +52,7 @@ where
         let small_radius = cr.is_sign_positive();
         Self {
             c0: 0,
-            clean: CleanEnum::IntersectionsOrEmpty,
+            clean: CleanState::IntersectionsOrEmpty,
             not_hemisphere: cr.abs() > T::epsilon(),
             point0: None,
             cr,
@@ -113,9 +113,9 @@ where
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
     #[inline]
-    fn clean(&self) -> CleanEnum {
+    fn clean(&self) -> CleanState {
         if self.v00 && self.v0 {
-            CleanEnum::IntersectionsRejoin
+            CleanState::IntersectionsRejoin
         } else {
             self.clean
         }
@@ -132,7 +132,7 @@ where
     fn line_start(&mut self) {
         self.raw.v00 = false;
         self.raw.v0 = false;
-        self.raw.clean = CleanEnum::NoIntersections;
+        self.raw.clean = CleanState::NoIntersections;
     }
 
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
@@ -196,7 +196,7 @@ where
         }
 
         if v != self.raw.v0 {
-            self.raw.clean = CleanEnum::IntersectionsOrEmpty;
+            self.raw.clean = CleanState::IntersectionsOrEmpty;
             if v {
                 // outside going in
                 s.line_start();
@@ -260,7 +260,7 @@ where
                         panic!("Requeted two received one or none.");
                     }
                     IntersectReturn::Two(t) => {
-                        self.raw.clean = CleanEnum::IntersectionsOrEmpty;
+                        self.raw.clean = CleanState::IntersectionsOrEmpty;
                         if self.raw.small_radius {
                             s.line_start();
                             s.point(&t[0], None);

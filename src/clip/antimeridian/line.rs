@@ -5,7 +5,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::clip::Clean;
-use crate::clip::CleanEnum;
+use crate::clip::CleanState;
 use crate::clip::Line as LineTrait;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
@@ -21,7 +21,7 @@ where
     lambda0: T,
     phi0: T,
     sign0: T,
-    clean: CleanEnum,
+    clean: CleanState,
 }
 
 impl<T> LineTrait for Line<T> where T: CoordFloat {}
@@ -35,7 +35,7 @@ where
             lambda0: T::nan(),
             phi0: T::nan(),
             sign0: T::nan(),
-            clean: CleanEnum::NoIntersections,
+            clean: CleanState::NoIntersections,
         }
     }
 }
@@ -51,14 +51,14 @@ where
     T: CoordFloat,
 {
     #[inline]
-    fn clean(&self) -> CleanEnum {
+    fn clean(&self) -> CleanState {
         // println!("line(A) clean  initial value{:?}", self.clean);
         match self.clean {
             // if intersections, rejoin first and last segments
-            CleanEnum::IntersectionsOrEmpty => CleanEnum::IntersectionsRejoin,
-            CleanEnum::NoIntersections => CleanEnum::NoIntersections,
-            CleanEnum::IntersectionsRejoin => CleanEnum::IntersectionsOrEmpty,
-            CleanEnum::Undefined => panic!("Undefined should not be cleaned."),
+            CleanState::IntersectionsOrEmpty => CleanState::IntersectionsRejoin,
+            CleanState::NoIntersections => CleanState::NoIntersections,
+            CleanState::IntersectionsRejoin => CleanState::IntersectionsOrEmpty,
+            CleanState::Undefined => panic!("Undefined should not be cleaned."),
         }
     }
 }
@@ -73,7 +73,7 @@ where
     fn line_start(&mut self) {
         // println!("line(a) line_start()");
         self.sink.borrow_mut().line_start();
-        self.raw.clean = CleanEnum::NoIntersections;
+        self.raw.clean = CleanState::NoIntersections;
     }
 
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
@@ -125,7 +125,7 @@ where
                 },
                 None,
             );
-            self.raw.clean = CleanEnum::IntersectionsOrEmpty;
+            self.raw.clean = CleanState::IntersectionsOrEmpty;
         } else if self.raw.sign0 != sign1 && delta >= T::PI() {
             // Line crosses antimeridian.
             if (self.raw.lambda0 - self.raw.sign0).abs() < T::epsilon() {
@@ -152,7 +152,7 @@ where
                 },
                 None,
             );
-            self.raw.clean = CleanEnum::IntersectionsOrEmpty;
+            self.raw.clean = CleanState::IntersectionsOrEmpty;
         }
 
         self.raw.lambda0 = lambda1;

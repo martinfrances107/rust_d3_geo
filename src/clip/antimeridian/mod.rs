@@ -160,7 +160,7 @@ where
 //         println!("no intersections n, c {:?} {:?}", n, clean);
 //         // No intersections.
 //         match clean {
-//             CleanEnum::NoIntersections => {
+//             CleanState::NoIntersections => {
 //                 println!("about to clean good path");
 //                 // panic!("on the good path");
 //                 let segment = ring_segments
@@ -181,7 +181,7 @@ where
 //                 }
 //                 return;
 //             }
-//             CleanEnum::IntersectionsRejoin => {
+//             CleanState::IntersectionsRejoin => {
 //                 // Rejoin connected segments.
 //                 // TODO reuse ringBuffer.rejoin()?
 //                 if n > 1 {
@@ -194,10 +194,10 @@ where
 //                     ring_segments.push_back(pb);
 //                 }
 //             }
-//             CleanEnum::IntersectionsOrEmpty => {
+//             CleanState::IntersectionsOrEmpty => {
 //                 // No-op
 //             }
-//             CleanEnum::Undefined => {
+//             CleanState::Undefined => {
 //                 panic!("must be defined by now.")
 //             }
 //         }
