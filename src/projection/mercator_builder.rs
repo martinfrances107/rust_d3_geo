@@ -1,26 +1,29 @@
-use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
-use crate::projection::mercator::Mercator;
-use crate::projection::Projection;
-use crate::rotation::rotate_radians;
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
+use num_traits::Float;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
+use crate::rotation::rotate_radians;
 use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder::Builder as ProjectionBuilder;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
+use super::BoundsStream;
 use super::ClipExtent;
+use super::DataObject;
+use super::Fit;
 use super::Precision;
+use super::Projection;
 use super::Raw as ProjectionRaw;
 use super::Scale;
 use super::Translate;
@@ -111,14 +114,13 @@ where
 		dbg!("t final", t);
 		let ce = match (self.x0, self.y0, self.x1, self.y1) {
 			(Some(_x0), Some(y0), Some(x1), Some(y1)) => {
-				todo!("not yet");
 				[
 					Coordinate {
-						x: (t.x - k).max(t.y - k),
+						x: Float::max(t.x - k, t.y - k),
 						y: y0,
 					},
 					Coordinate {
-						x: (t.x + k).min(x1),
+						x: Float::min(t.x + k, x1),
 						y: y1,
 					},
 				]
@@ -209,6 +211,34 @@ where
 
 	fn precision(mut self, delta: &T) -> Self {
 		self.base = self.base.precision(delta);
+		self
+	}
+}
+
+impl<L, PR, PV, T> Fit for MercatorBuilder<BoundsStream<T>, L, PR, PV, T>
+where
+	L: Line,
+	PR: ProjectionRaw<T>,
+	PV: PointVisible<T = T>,
+	T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	type T = T;
+
+	#[inline]
+	fn fit_extent(mut self, extent: [[T; 2]; 2], object: DataObject<Self::T>) -> Self
+	where
+		Self::T: AsPrimitive<T> + CoordFloat,
+	{
+		self.base = self.base.fit_extent(extent, object);
+		self
+	}
+
+	#[inline]
+	fn fit_size(mut self, size: [T; 2], object: DataObject<T>) -> Self
+	where
+		Self::T: AsPrimitive<T> + CoordFloat,
+	{
+		self.base = self.base.fit_size(size, object);
 		self
 	}
 }

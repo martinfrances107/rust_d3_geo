@@ -4,10 +4,8 @@ use std::marker::PhantomData;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
 use crate::clip::antimeridian::line::Line;
 use crate::clip::antimeridian::pv::PV;
-use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::stream::Stream;
 use crate::Transform;
 

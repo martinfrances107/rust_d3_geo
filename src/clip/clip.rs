@@ -273,8 +273,8 @@ where
         self.raw.point_fn = PointFn::Ring;
         self.raw.line_start_fn = LineStartFn::Ring;
         self.raw.line_end_fn = LineEndFn::Ring;
-        self.raw.segments.clear();
-        self.raw.polygon.clear();
+        self.raw.segments = VecDeque::new();
+        self.raw.polygon = Vec::new();
     }
 
     fn polygon_end(&mut self) {
@@ -282,17 +282,17 @@ where
         self.raw.line_start_fn = LineStartFn::Line;
         self.raw.line_end_fn = LineEndFn::Line;
 
-        let segments_merged: Vec<Vec<LineElem<T>>> =
+        let segments_inner: Vec<Vec<LineElem<T>>> =
             self.raw.segments.clone().into_iter().flatten().collect();
         let start_inside = polygon_contains(&self.raw.polygon, &self.raw.start);
 
-        if !segments_merged.is_empty() {
+        if !segments_inner.is_empty() {
             if !self.raw.polygon_started {
                 self.raw.polygon_started = true;
             }
 
             rejoin(
-                &segments_merged,
+                &segments_inner,
                 compare_intersections,
                 start_inside,
                 self.raw.interpolate_fn.clone(),

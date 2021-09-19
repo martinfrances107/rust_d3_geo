@@ -87,42 +87,44 @@ where
     }
 
     fn line_end(&mut self) {
-        match self.line {
-            Some(line) => {
-                if line.is_zero() {
-                    self.context.close_path();
-                }
+        if let Some(line) = self.line {
+            // match self.line {
+            // Some(line) => {
+            if line.is_zero() {
+                self.context.close_path();
             }
-            None => {}
+            // }
+            // None => {}
         }
         self.point = Some(T::nan());
     }
 
     fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
-        match self.point {
-            Some(point) => {
-                if point == T::zero() {
-                    self.context
-                        .move_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
-                    self.point = Some(T::one());
-                } else if point == T::one() {
-                    self.context
-                        .line_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
-                } else {
-                    self.context
-                        .move_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
-                    self.context
-                        .arc(
-                            p.x.to_f64().unwrap(),
-                            p.y.to_f64().unwrap(),
-                            self.radius.to_f64().unwrap(),
-                            0_f64,
-                            std::f64::consts::TAU,
-                        )
-                        .expect("error writing arc to context");
-                }
+        if let Some(point) = self.point {
+            // match self.point {
+            // Some(point) => {
+            if point == T::zero() {
+                self.context
+                    .move_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
+                self.point = Some(T::one());
+            } else if point == T::one() {
+                self.context
+                    .line_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
+            } else {
+                self.context
+                    .move_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
+                self.context
+                    .arc(
+                        p.x.to_f64().unwrap(),
+                        p.y.to_f64().unwrap(),
+                        self.radius.to_f64().unwrap(),
+                        0_f64,
+                        std::f64::consts::TAU,
+                    )
+                    .expect("error writing arc to context");
             }
-            None => {}
         }
+        // None => {}
+        // }
     }
 }

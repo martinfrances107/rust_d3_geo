@@ -16,8 +16,13 @@ pub mod stream_node_clip_factory;
 /// and then clipping can calculate the a new clip polygon.
 pub mod buffer;
 
+pub(crate) mod rectangle;
+
+mod intersection;
+/// Rectangle helper function.
+mod line;
 /// Clipping break line into segments which can lasted be reconnected together.
-mod rejoin;
+pub(crate) mod rejoin;
 
 use std::cell::RefCell;
 use std::rc::Rc;

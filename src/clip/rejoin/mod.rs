@@ -1,4 +1,3 @@
-pub mod intersection;
 pub mod link;
 
 use std::cell::RefCell;
@@ -8,13 +7,13 @@ use std::rc::Rc;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::intersection::Intersection;
 use crate::clip::rejoin::link::link;
 use crate::clip::InterpolateFn;
 use crate::point_equal::point_equal;
 use crate::stream::Stream;
 
 use super::line_elem::LineElem;
-use intersection::Intersection;
 
 type CompareIntersectionsFn<T> =
     fn(a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>) -> Ordering;

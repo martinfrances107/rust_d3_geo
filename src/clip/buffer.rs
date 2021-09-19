@@ -45,6 +45,21 @@ where
     }
 }
 
+impl<T> Buffer<T>
+where
+    T: CoordFloat,
+{
+    /// Stich first and last elements together.
+    pub fn rejoin(&mut self) {
+        if self.lines.len() > 1 {
+            let line_last = self.lines.pop_back().unwrap();
+            let line_first = self.lines.pop_front().unwrap();
+            let combined = [line_last, line_first].concat();
+            self.lines.push_back(combined)
+        }
+    }
+}
+
 impl<T> Stream for Buffer<T>
 where
     T: CoordFloat,

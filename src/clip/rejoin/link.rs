@@ -4,7 +4,7 @@ use std::rc::Rc;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use super::intersection::Intersection;
+use crate::clip::intersection::Intersection;
 
 /// Given a vec of Intersetions :-
 ///

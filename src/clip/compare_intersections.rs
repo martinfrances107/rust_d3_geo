@@ -5,11 +5,10 @@ use std::rc::Rc;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use super::rejoin::intersection::Intersection;
+use super::intersection::Intersection;
 
 /// Intersections are sorted along the clip edge. For both antimeridian cutting
-/// and circle clipPIng, the same comparison is used.
-/// fn compare_intersection(&self, _a: Self::SctCi, _b: Self::SctCi) -> Self::SctT;
+/// and circle clipping, the same comparison is used.
 pub fn compare_intersections<T>(
     a: &Rc<RefCell<Intersection<T>>>,
     b: &Rc<RefCell<Intersection<T>>>,
@@ -17,6 +16,8 @@ pub fn compare_intersections<T>(
 where
     T: CoordFloat + FloatConst,
 {
+    // TODO the JS version uses 1e-6 for epsilon
+    // T::epsilon() is way smaller!
     let ax = a.borrow().x;
     let part1 = match ax.p.x < T::zero() {
         true => ax.p.y - T::FRAC_PI_2() - T::epsilon(),

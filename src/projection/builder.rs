@@ -12,6 +12,7 @@ use num_traits::FloatConst;
 use crate::clip::circle::gen_clip_factory_circle;
 use crate::clip::circle::line::Line as CircleLine;
 use crate::clip::circle::pv::PV as CirclePV;
+use crate::clip::rectangle::rectangle::Rectangle as ClipRectangle;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
@@ -24,6 +25,7 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::fit::fit_extent;
+use super::fit::fit_size;
 use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
 use super::str::generate as generate_str;
@@ -325,16 +327,19 @@ where
     type T = T;
 
     #[inline]
-    fn fit_extent(self, extent: [Coordinate<Self::T>; 2], object: DataObject<Self::T>) -> Self
+    fn fit_extent(self, extent: [[T; 2]; 2], object: DataObject<Self::T>) -> Self
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {
         fit_extent(self, extent, object)
     }
 
-    fn fit_size(self, size: [Coordinate<T>; 2], object: DataObject<T>) -> Self {
-        todo!("must implement");
-        self
+    #[inline]
+    fn fit_size(self, size: [T; 2], object: DataObject<T>) -> Self
+    where
+        Self::T: AsPrimitive<T> + CoordFloat,
+    {
+        fit_size(self, size, object)
     }
 }
 
@@ -395,8 +400,12 @@ where
                 self.y0 = Some(extent[0].y);
                 self.x1 = Some(extent[1].x);
                 self.y1 = Some(extent[1].y);
-                // todo!("must implement clip rectangle")
-                // clipRectangle(self.x0, self.y0, self.x1, self.y1);
+                ClipRectangle::new(
+                    self.x0.unwrap(),
+                    self.y0.unwrap(),
+                    self.x1.unwrap(),
+                    self.y1.unwrap(),
+                );
                 self.reset()
             }
         }

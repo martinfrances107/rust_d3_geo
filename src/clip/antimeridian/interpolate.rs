@@ -8,19 +8,6 @@ use num_traits::FloatConst;
 use crate::clip::InterpolateFn;
 use crate::stream::Stream;
 
-// fn gen_interpolate<F>(radius: T) ->F
-// where F: FnMut( Option<Coordinate<T>,  Option<Coordinate<T>>, T,  Rc<RefCell<STREAM>>)
-// {
-//     var cr = cos(radius),
-//     delta = 6 * radians,
-//     smallRadius = cr > 0,
-//     notHemisphere = abs(cr) > epsilon; // TODO optimise for this common case
-
-//     |from: Option<Coordinate<T>, to: Option<Coordinate<T>>, direction:T, stream: Rc<RefCell<STREAM>>| ->{
-//         circleStream(stream, radius, delta, direction, from , to);
-//     }
-// }
-
 /// Antimerdian interpolate function.
 pub fn generate<STREAM, T>() -> InterpolateFn<STREAM, T>
 where

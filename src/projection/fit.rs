@@ -1,5 +1,6 @@
 // use crate::projection::builder::Builder;
 use num_traits::AsPrimitive;
+use num_traits::Float;
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -72,13 +73,12 @@ where
     }
 }
 
-pub fn fit_extent<L, PR, PV, T>(
+pub(super) fn fit_extent<L, PR, PV, T>(
     builder: Builder<BoundsStream<T>, L, PR, PV, T>,
-    extent: [Coordinate<T>; 2],
+    extent: [[T; 2]; 2],
     object: DataObject<T>,
 ) -> Builder<BoundsStream<T>, L, PR, PV, T>
 where
-    // DRAIN: Stream<T = T> + Default,
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -89,11 +89,11 @@ where
         builder,
         Box::new(
             move |b: [Coordinate<T>; 2], builder: Builder<BoundsStream<T>, L, PR, PV, T>| {
-                let w = extent[1].x - extent[0].x;
-                let h = extent[1].y - extent[0].y;
-                let k = (w / (b[1].x - b[0].x)).min(h / (b[1].y - b[0].y));
-                let x = extent[0].x + (w - k * (b[1].x + b[0].x)) / two;
-                let y = extent[0].y + (h - k * (b[1].y + b[0].y)) / two;
+                let w = extent[1][0] - extent[0][0];
+                let h = extent[1][1] - extent[0][1];
+                let k = Float::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
+                let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
+                let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
 
                 builder
                     .scale(T::from(150.0).unwrap() * k)
@@ -102,6 +102,21 @@ where
         ),
         object,
     )
+}
+
+pub(super) fn fit_size<L, PR, PV, T>(
+    builder: Builder<BoundsStream<T>, L, PR, PV, T>,
+    size: [T; 2],
+    object: DataObject<T>,
+) -> Builder<BoundsStream<T>, L, PR, PV, T>
+where
+    // DRAIN: Stream<T = T> + Default,
+    L: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
+{
+    fit_extent(builder, [[T::zero(), T::zero()], size], object)
 }
 
 // // // export function fitExtent(projection, extent, object) {
