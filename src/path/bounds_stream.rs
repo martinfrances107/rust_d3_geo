@@ -42,7 +42,6 @@ where
     type Out = Option<ResultEnum<T>>;
     fn result(&mut self) -> Option<ResultEnum<T>> {
         let bounds = [self.p0, self.p1];
-        Some(ResultEnum::Bounds(bounds));
         *self = Self::default();
         Some(ResultEnum::Bounds(bounds))
     }
