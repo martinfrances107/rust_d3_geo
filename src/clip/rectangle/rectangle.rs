@@ -397,19 +397,17 @@ where
 	fn polygon_end(&mut self) {
 		let start_inside = self.raw.polygon_inside();
 		let clean_inside = self.raw.clean && start_inside;
-		// let segments = merge(self.segments).length();
-		// let visible = self
-		// 	.raw
-		// 	.segments
-		// 	.unwrap()
-		// 	.into_iter()
-		// 	.flatten()
-		// 	.collect::<LineElem<T>>()
-		// 	.len();
-		// resolve this bypass.
-		let visible = true;
+		let num_visible_elements = self
+			.raw
+			.segments
+			.clone()
+			.unwrap()
+			.into_iter()
+			.flatten()
+			.collect::<Vec<LineElem<T>>>()
+			.len();
+		let visible = !num_visible_elements.is_zero();
 
-		//TODO resolve clip_rejoin fn types.
 		if clean_inside || visible {
 			{
 				let mut sb = self.sink.borrow_mut();
@@ -426,10 +424,7 @@ where
 			let compare_intersection: CompareIntersectionsFn<T> = Box::new(
 				move |a: &Rc<RefCell<Intersection<T>>>,
 				      b: &Rc<RefCell<Intersection<T>>>|
-				      -> Ordering {
-					compare_point(a.borrow().x.p, b.borrow().x.p)
-					// Ordering::Equal
-				},
+				      -> Ordering { compare_point(a.borrow().x.p, b.borrow().x.p) },
 			);
 
 			if visible {
