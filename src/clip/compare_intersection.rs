@@ -9,7 +9,7 @@ use super::intersection::Intersection;
 
 /// Intersections are sorted along the clip edge. For both antimeridian cutting
 /// and circle clipping, the same comparison is used.
-pub fn compare_intersections<T>(
+pub fn compare_intersection<T>(
     a: &Rc<RefCell<Intersection<T>>>,
     b: &Rc<RefCell<Intersection<T>>>,
 ) -> Ordering

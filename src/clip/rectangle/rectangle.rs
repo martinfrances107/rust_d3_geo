@@ -13,7 +13,7 @@ use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
 use crate::clip::buffer::Buffer as ClipBuffer;
-use crate::clip::compare_intersections::compare_intersections;
+use crate::clip::compare_intersection::compare_intersection;
 use crate::clip::intersection::Intersection;
 use crate::clip::line::line as clip_line;
 use crate::clip::line_elem::LineElem;
@@ -408,7 +408,7 @@ where
 			if visible {
 				clip_rejoin(
 					&(self.raw.segments.as_ref().unwrap().clone()),
-					compare_intersections,
+					compare_intersection,
 					start_inside,
 					interpolate,
 					self.sink.clone(),

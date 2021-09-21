@@ -5,7 +5,7 @@ pub mod circle;
 /// Holds the clip struct.
 pub mod clip;
 /// Helper function.
-pub mod compare_intersections;
+pub mod compare_intersection;
 /// The state of the line segments??
 pub mod line_elem;
 /// Factory takes in complex definition and output a stream pipeline node element.

@@ -25,7 +25,7 @@ type CompareIntersectionsFn<T> =
 /// along the clip edge.
 pub fn rejoin<SINK, T>(
     segments: &Vec<Vec<LineElem<T>>>,
-    compare_intersections: CompareIntersectionsFn<T>,
+    compare_intersection: CompareIntersectionsFn<T>,
     start_inside: bool,
     interpolate_fn: InterpolateFn<SINK, T>,
     stream: Rc<RefCell<SINK>>,
@@ -97,7 +97,7 @@ pub fn rejoin<SINK, T>(
         return;
     }
 
-    clip.sort_by(compare_intersections);
+    clip.sort_by(compare_intersection);
 
     link(&mut subject);
     link(&mut clip);
