@@ -16,8 +16,8 @@ use crate::stream::Stream;
 
 use super::line_elem::LineElem;
 
-type CompareIntersectionsFn<T> =
-    fn(a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>) -> Ordering;
+pub(crate) type CompareIntersectionsFn<T> =
+    Box<dyn Fn(&Rc<RefCell<Intersection<T>>>, &Rc<RefCell<Intersection<T>>>) -> Ordering>;
 
 // use link::link;
 /// A generalized polygon clipping algorithm: given a polygon that has been cut

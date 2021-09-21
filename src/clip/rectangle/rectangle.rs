@@ -1,6 +1,8 @@
+use crate::clip::rejoin::CompareIntersectionsFn;
 use crate::clip::InterpolateFn;
 use num_traits::Float;
 use std::cell::RefCell;
+use std::cmp::Ordering;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -13,7 +15,7 @@ use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
 use crate::clip::buffer::Buffer as ClipBuffer;
-use crate::clip::compare_intersection::compare_intersection;
+use crate::clip::compare_intersection::gen_compare_intersection;
 use crate::clip::intersection::Intersection;
 use crate::clip::line::line as clip_line;
 use crate::clip::line_elem::LineElem;
@@ -166,25 +168,40 @@ where
 	}
 
 	#[inline]
-	fn compare_intersection(self, a: Intersection<T>, b: Intersection<T>) -> T {
+	fn gen_compare_intersection(&self) -> CompareIntersectionsFn<T> {
 		let compare_point = self.gen_compare_point();
-		compare_point(a.x.p, b.x.p)
+		Box::new(
+			move |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| {
+				compare_point(a.borrow().x.p, b.borrow().x.p)
+			},
+		)
 	}
 
 	/// Warning from JS a, b are LineElem.
-	fn gen_compare_point(&self) -> Box<dyn Fn(Coordinate<T>, Coordinate<T>) -> T> {
+	fn gen_compare_point(&self) -> Box<dyn Fn(Coordinate<T>, Coordinate<T>) -> Ordering> {
 		let corner = self.gen_corner();
-		Box::new(move |a: Coordinate<T>, b: Coordinate<T>| -> T {
+		Box::new(move |a: Coordinate<T>, b: Coordinate<T>| -> Ordering {
 			let ca = corner(&a, &T::one());
 			let cb = corner(&b, &T::one());
 			if ca != cb {
-				T::from(ca - cb).unwrap()
+				if (ca - cb) > 0 {
+					Ordering::Greater
+				} else {
+					Ordering::Less
+				}
 			} else {
-				match ca {
+				let diff = match ca {
 					0 => b.y - a.y,
 					1 => a.x - b.x,
 					2 => a.y - b.y,
 					_ => b.x - a.x,
+				};
+				if diff > T::zero() {
+					Ordering::Greater
+				} else if diff < T::zero() {
+					Ordering::Less
+				} else {
+					Ordering::Equal
 				}
 			}
 		})
@@ -321,7 +338,7 @@ where
 						a = corner(&from, &direction);
 						a1 = corner(&to, &direction);
 						let mut s_mut = stream.borrow_mut();
-						let cp = compare_point(from, to) < T::zero();
+						let cp = compare_point(from, to) < Ordering::Less;
 						let is_direction = direction > T::zero();
 						// logical exor: cp ^^ is_direction
 						if a != a1 || (cp && !is_direction) || (!cp && is_direction) {
@@ -404,6 +421,16 @@ where
 
 			let mut sb = self.sink.borrow_mut();
 			sb.line_end();
+
+			let compare_point = self.raw.gen_compare_point();
+			let compare_intersection: CompareIntersectionsFn<T> = Box::new(
+				move |a: &Rc<RefCell<Intersection<T>>>,
+				      b: &Rc<RefCell<Intersection<T>>>|
+				      -> Ordering {
+					compare_point(a.borrow().x.p, b.borrow().x.p)
+					// Ordering::Equal
+				},
+			);
 
 			if visible {
 				clip_rejoin(

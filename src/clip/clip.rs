@@ -8,7 +8,7 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use super::buffer::Buffer;
-use super::compare_intersection::compare_intersection;
+use super::compare_intersection::gen_compare_intersection;
 use super::line_elem::LineElem;
 use super::rejoin::rejoin;
 use super::InterpolateFn;
@@ -293,7 +293,7 @@ where
 
             rejoin(
                 &segments_inner,
-                compare_intersection,
+                gen_compare_intersection(),
                 start_inside,
                 self.raw.interpolate_fn.clone(),
                 self.sink.clone(),
