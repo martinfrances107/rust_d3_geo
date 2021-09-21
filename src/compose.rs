@@ -37,9 +37,7 @@ where
     // Apply A then B.
     fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.a.transform(coordinate);
-        let b = self.b.transform(&temp);
-        println!("compose {:?} {:?} - {:?} {:?}", temp.x, temp.y, b.x, b.y);
-        b
+        self.b.transform(&temp)
     }
 
     // Apply B them A.
