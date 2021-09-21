@@ -252,11 +252,11 @@ mod fit_test {
 	fn fit_size_resampling() {
 		println!("projection.fitSize(…) resampling - world mercator");
 		let d_object = DataObject::Geometry(Geometry::Polygon(polygon![
-			(x:  0f64, y: 0f64 ),
-			(x:  3f64, y: 0f64 ),
-			(x:  3f64, y: 3f64 ),
-			(x:  0f64, y: 3f64 ),
-			(x:  0f64, y: 0f64 )
+			(x: -135f64, y: 45f64 ),
+			(x: -45f64, y: 45f64 ),
+			(x: -45f64, y: -45f64 ),
+			(x: -135f64, y: -45f64 ),
+			(x: -135f64, y: 45f64 )
 		]));
 		let p1 = Mercator::builder()
 			.precision(&0.1_f64)
@@ -268,12 +268,12 @@ mod fit_test {
 		let t2 = p2.get_translate();
 		assert_eq!(p1.get_precision(), 0.1_f64);
 		assert_eq!(p2.get_precision(), 0_f64);
-		// assert!(in_delta(p1.get_scale(), 436.218018, 1e-6));
-		// assert!(in_delta(p2.get_scale(), 567.296328, 1e-6));
-		// assert!(in_delta(t1.x, 1185.209661_f64, 1e-6));
-		// assert!(in_delta(t2.x, 1391.106989_f64, 1e-6));
-		// assert!(in_delta(t1.y, 500_f64, 1e-6));
-		// assert!(in_delta(t1.y, t2.y, 1e-6));
+		assert!(in_delta(p1.get_scale(), 436.218018, 1e-6));
+		assert!(in_delta(p2.get_scale(), 567.296328, 1e-6));
+		assert!(in_delta(t1.x, 1185.209661_f64, 1e-6));
+		assert!(in_delta(t2.x, 1391.106989_f64, 1e-6));
+		assert!(in_delta(t1.y, 500_f64, 1e-6));
+		assert!(in_delta(t1.y, t2.y, 1e-6));
 	}
 
 	// // // tape("projection.fitWidth(…) world equirectangular", function(test) {

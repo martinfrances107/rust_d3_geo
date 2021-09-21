@@ -404,8 +404,7 @@ where
 			.unwrap()
 			.into_iter()
 			.flatten()
-			.collect::<Vec<LineElem<T>>>()
-			.len();
+			.count();
 		let visible = !num_visible_elements.is_zero();
 
 		if clean_inside || visible {
