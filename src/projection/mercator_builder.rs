@@ -107,7 +107,6 @@ where
 			x: T::zero(),
 			y: T::zero(),
 		});
-		println!("mercator reclip t first{:?}", t);
 		let t = self.base.build().transform(&t);
 		dbg!(&self.x0);
 		dbg!(k);

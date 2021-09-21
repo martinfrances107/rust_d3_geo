@@ -390,9 +390,8 @@ where
                 self.y0 = None;
                 self.x1 = None;
                 self.y1 = None;
-                // self.postclip = Identity;
-                // Is this the identity projection Mutator???
-                todo!("must implement identity");
+                self.postclip = Rc::new(|x| x);
+                self
             }
             Some(extent) => {
                 // set x0 ...

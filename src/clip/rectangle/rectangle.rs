@@ -1,3 +1,4 @@
+use crate::clip::InterpolateFn;
 use num_traits::Float;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -12,6 +13,7 @@ use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
 use crate::clip::buffer::Buffer as ClipBuffer;
+use crate::clip::compare_intersections::compare_intersections;
 use crate::clip::intersection::Intersection;
 use crate::clip::line::line as clip_line;
 use crate::clip::line_elem::LineElem;
@@ -54,7 +56,7 @@ where
 
 impl<T> Rectangle<T>
 where
-	T: CoordFloat + FloatConst,
+	T: 'static + CoordFloat + FloatConst,
 {
 	#[inline]
 	pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<T> {
@@ -94,31 +96,37 @@ where
 		self.x0 <= p.x && p.x <= self.x1 && self.y0 <= p.y && p.y <= self.y1
 	}
 
-	fn corner(&self, p: &Coordinate<T>, direction: &i8) -> i8 {
-		let epsilon = T::from(1e-6).unwrap();
-		if (p.x - self.x0).abs() < epsilon {
-			if direction > &0 {
-				0
-			} else {
+	fn gen_corner(&self) -> Box<dyn Fn(&Coordinate<T>, &T) -> i8> {
+		let x0 = self.x0;
+		let y0 = self.y0;
+		let x1 = self.x1;
+		let y1 = self.y1;
+		Box::new(move |p: &Coordinate<T>, direction: &T| -> i8 {
+			let epsilon = T::from(1e-6).unwrap();
+			if (p.x - x0).abs() < epsilon {
+				if direction > &T::zero() {
+					0
+				} else {
+					3
+				}
+			} else if (p.x - x1).abs() < epsilon {
+				if direction > &T::zero() {
+					2
+				} else {
+					1
+				}
+			} else if (p.y - y0).abs() < epsilon {
+				if direction > &T::zero() {
+					1
+				} else {
+					0
+				}
+			} else if direction > &T::zero() {
 				3
-			}
-		} else if (p.x - self.x1).abs() < epsilon {
-			if direction > &0 {
+			} else {
 				2
-			} else {
-				1
 			}
-		} else if (p.y - self.y0).abs() < epsilon {
-			if direction > &0 {
-				1
-			} else {
-				0
-			}
-		} else if direction > &0 {
-			3
-		} else {
-			2
-		}
+		})
 	}
 
 	fn polygon_inside(&self) -> bool {
@@ -160,30 +168,34 @@ where
 
 	#[inline]
 	fn compare_intersection(self, a: Intersection<T>, b: Intersection<T>) -> T {
-		self.compare_point(a.x.p, b.x.p)
+		let compare_point = self.gen_compare_point();
+		compare_point(a.x.p, b.x.p)
 	}
 
 	/// Warning from JS a, b are LineElem.
-	fn compare_point(&self, a: Coordinate<T>, b: Coordinate<T>) -> T {
-		let ca = self.corner(&a, &1);
-		let cb = self.corner(&b, &1);
-		if ca != cb {
-			T::from(ca - cb).unwrap()
-		} else {
-			match ca {
-				0 => b.y - a.y,
-				1 => a.x - b.x,
-				2 => a.y - b.y,
-				_ => b.x - a.x,
+	fn gen_compare_point(&self) -> Box<dyn Fn(Coordinate<T>, Coordinate<T>) -> T> {
+		let corner = self.gen_corner();
+		Box::new(move |a: Coordinate<T>, b: Coordinate<T>| -> T {
+			let ca = corner(&a, &T::one());
+			let cb = corner(&b, &T::one());
+			if ca != cb {
+				T::from(ca - cb).unwrap()
+			} else {
+				match ca {
+					0 => b.y - a.y,
+					1 => a.x - b.x,
+					2 => a.y - b.y,
+					_ => b.x - a.x,
+				}
 			}
-		}
+		})
 	}
 }
 
 impl<SINK, T> StreamNode<Rectangle<T>, SINK, T>
 where
 	SINK: Stream<T = T>,
-	T: CoordFloat + FloatConst,
+	T: 'static + CoordFloat + FloatConst,
 {
 	#[inline]
 	fn default_point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -288,57 +300,62 @@ where
 		self.raw.v_ = v;
 	}
 
-	fn interpolate(
-		self,
-		from: Option<Coordinate<T>>,
-		to: Option<Coordinate<T>>,
-		direction: i8,
-		stream: Rc<RefCell<SINK>>,
-	) {
-		let mut a;
-		let a1;
+	pub fn gen_interpolate(&self) -> InterpolateFn<SINK, T> {
+		// Is capturing here a good thing.
+		let x0 = self.raw.x0;
+		let y0 = self.raw.y0;
+		let x1 = self.raw.x1;
+		let y1 = self.raw.y1;
 
-		match (to, from) {
-			(Some(to), Some(from)) => {
-				a = self.raw.corner(&from, &direction);
-				a1 = self.raw.corner(&to, &direction);
-				let mut s_mut = stream.borrow_mut();
-				let cp = self.raw.compare_point(from, to) < T::zero();
-				let is_direction = direction > 0;
-				// logical exor: cp ^^ is_direction
-				if a != a1 || (cp && !is_direction) || (!cp && is_direction) {
-					loop {
-						let p = Coordinate {
-							x: if a == 0 || a == 3 {
-								self.raw.x0
-							} else {
-								self.raw.x1
-							},
-							y: if a > 1 { self.raw.y1 } else { self.raw.y0 },
-						};
-						s_mut.point(&p, None);
+		let compare_point = self.raw.gen_compare_point();
+		let corner = self.raw.gen_corner();
+		Rc::new(
+			move |from: Option<Coordinate<T>>,
+			      to: Option<Coordinate<T>>,
+			      direction: T,
+			      stream: Rc<RefCell<SINK>>| {
+				let mut a;
+				let a1;
+				let direction_i8: i8 = T::to_i8(&direction).unwrap();
+				match (to, from) {
+					(Some(to), Some(from)) => {
+						a = corner(&from, &direction);
+						a1 = corner(&to, &direction);
+						let mut s_mut = stream.borrow_mut();
+						let cp = compare_point(from, to) < T::zero();
+						let is_direction = direction > T::zero();
+						// logical exor: cp ^^ is_direction
+						if a != a1 || (cp && !is_direction) || (!cp && is_direction) {
+							loop {
+								let p = Coordinate {
+									x: if a == 0 || a == 3 { x0 } else { x1 },
+									y: if a > 1 { y1 } else { y0 },
+								};
+								s_mut.point(&p, None);
 
-						a = (a + direction + 4) % 4;
-						if a == a1 {
-							break;
+								a = (a + direction_i8 + 4) % 4;
+								if a == a1 {
+									break;
+								}
+							}
 						}
 					}
+					(Some(to), None) => {
+						stream.borrow_mut().point(&to, None);
+					}
+					_ => {
+						panic!("did not expect only from and no to .. or Nothing at all Does the JS version get here?");
+					}
 				}
-			}
-			(Some(to), None) => {
-				stream.borrow_mut().point(&to, None);
-			}
-			_ => {
-				panic!("did not expect only from and no to .. or Nothing at all Does the JS version get here?");
-			}
-		}
+			},
+		)
 	}
 }
 
 impl<SINK, T> Stream for StreamNode<Rectangle<T>, SINK, T>
 where
 	SINK: Stream<T = T>,
-	T: CoordFloat + FloatConst,
+	T: 'static + CoordFloat + FloatConst,
 {
 	type T = T;
 
@@ -377,23 +394,31 @@ where
 		let visible = true;
 
 		//TODO resolve clip_rejoin fn types.
-		// if clean_inside || visible {
-		// 	let sb = self.sink.borrow_mut();
-		// 	sb.line_start();
-		// 	self.interpolate(None, None, 1, self.sink.clone());
-		// 	sb.line_end();
+		if clean_inside || visible {
+			{
+				let mut sb = self.sink.borrow_mut();
+				sb.line_start();
+			}
+			let interpolate: InterpolateFn<SINK, T> = self.gen_interpolate();
 
-		// 	if visible {
-		// 		clip_rejoin(
-		// 			&self.raw.segments.unwrap(),
-		// 			self.raw.compare_intersection,
-		// 			start_inside,
-		// 			self.interpolate,
-		// 			self.sink.clone(),
-		// 		);
-		// 	}
-		// 	sb.polygon_end();
-		// }
+			interpolate(None, None, T::one(), self.sink.clone());
+
+			let mut sb = self.sink.borrow_mut();
+			sb.line_end();
+
+			if visible {
+				clip_rejoin(
+					&(self.raw.segments.as_ref().unwrap().clone()),
+					compare_intersections,
+					start_inside,
+					interpolate,
+					self.sink.clone(),
+				);
+			}
+
+			let mut sb = self.sink.borrow_mut();
+			sb.polygon_end();
+		}
 	}
 
 	fn line_start(&mut self) {
