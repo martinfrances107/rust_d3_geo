@@ -100,7 +100,6 @@ where
 		let x0 = self.x0;
 		let y0 = self.y0;
 		let x1 = self.x1;
-		let y1 = self.y1;
 		Box::new(move |p: &Coordinate<T>, direction: &T| -> i8 {
 			let epsilon = T::from(1e-6).unwrap();
 			if (p.x - x0).abs() < epsilon {
