@@ -158,7 +158,7 @@ mod polygon_contains_test {
 
     #[test]
     fn north_pole() {
-        println!("geoPolygonContains(southPole, point) returns the expected value");
+        println!("geoPolygonContains(northPole, point) returns the expected value");
         let polygon = vec![vec![
             Coordinate { x: 60f64, y: 80f64 },
             Coordinate {
@@ -371,7 +371,7 @@ mod polygon_contains_test {
 
     #[test]
     fn large_near_north_pole() {
-        println!("geoPolygonContains(largeNearSouthPole, point) returns the expected value");
+        println!("geoPolygonContains(largeNearNorthPole, point) returns the expected value");
         let ring = vec![
             Coordinate {
                 x: 60f64,
@@ -433,7 +433,7 @@ mod polygon_contains_test {
 
     #[test]
     fn large_narrow_strip_hole() {
-        println!("geoPolygonContains(largeNearSouthPole, point) returns the expected value");
+        println!("geoPolygonContains(largeNarrowStripHole, point) returns the expected value");
         let ring = vec![
             Coordinate {
                 x: -170f64,
@@ -496,7 +496,7 @@ mod polygon_contains_test {
 
     #[test]
     fn large_narrow_equatorial_strip() {
-        println!("geoPolygonContains(empty, point) returns false");
+        println!"geoPolygonContains(largeNarrowEquatorialHole, point) returns the expected value");
 
         let circle = CircleGenerator::default()
             .center(Coordinate { x: 0f64, y: -90f64 })
@@ -1159,7 +1159,7 @@ mod polygon_contains_test {
     #[test]
     fn triangle_touching_the_north_pole() {
         println!(
-            "geoPolygonContains(triangleTouchingTheSouthPole2, point) returns the expected value"
+            "geoPolygonContains(triangleTouchingTheNorthPole, point) returns the expected value"
         );
         let polygon = vec![vec![
             Coordinate {

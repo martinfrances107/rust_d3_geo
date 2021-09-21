@@ -470,6 +470,7 @@ where
 			// if let Some(ResultEnum::Path(result)) = self.raw.buffer_stream.borrow_mut().result() {
 			// 	segments.push(result);
 			// }
+			todo!("must implement");
 		}
 		self.raw.use_line_point = false;
 		if self.raw.v_ {

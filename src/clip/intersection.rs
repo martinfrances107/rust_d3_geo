@@ -10,8 +10,6 @@ use crate::clip::line_elem::LineElem;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-/// TODO move this up in the namespace hierarchy
-/// as it is common to clip/rectangle.
 pub struct Intersection<T>
 where
     T: CoordFloat + FloatConst,
