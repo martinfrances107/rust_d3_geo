@@ -9,14 +9,27 @@ use super::PointRadiusTrait;
 use super::Result;
 use super::ResultEnum;
 
+#[derive(Clone, Debug)]
+enum PointState {
+    Init,
+    LineStart,
+    Next,
+}
+
+#[derive(Clone, Debug)]
+enum LineState {
+    Init,
+    PolygonStarted,
+}
+
 /// Path Context.
 #[derive(Clone, Debug)]
 pub struct Context<T>
 where
     T: CoordFloat,
 {
-    line: Option<T>,
-    point: Option<T>,
+    line: LineState,
+    point: PointState,
     radius: T,
     context: Rc<CanvasRenderingContext2d>,
 }
@@ -30,8 +43,8 @@ where
     pub fn new(context: Rc<CanvasRenderingContext2d>) -> Self {
         Self {
             context,
-            line: None,
-            point: None,
+            line: LineState::Init,
+            point: PointState::Init,
             radius: T::from(4.5).unwrap(),
         }
     }
@@ -73,46 +86,44 @@ where
 
     #[inline]
     fn polygon_start(&mut self) {
-        self.line = Some(T::zero());
+        self.line = LineState::PolygonStarted;
     }
 
     #[inline]
     fn polygon_end(&mut self) {
-        self.line = Some(T::nan());
+        self.line = LineState::Init;
     }
 
     #[inline]
     fn line_start(&mut self) {
-        self.point = Some(T::zero());
+        self.point = PointState::LineStart;
     }
 
     fn line_end(&mut self) {
-        if let Some(line) = self.line {
-            // match self.line {
-            // Some(line) => {
-            if line.is_zero() {
-                self.context.close_path();
-            }
-            // }
-            // None => {}
+        if let LineState::PolygonStarted = self.line {
+            self.context.close_path();
         }
-        self.point = Some(T::nan());
+
+        self.point = PointState::Init;
     }
 
     fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
-        if let Some(point) = self.point {
-            // match self.point {
-            // Some(point) => {
-            if point == T::zero() {
+        dbg!(&self.point);
+        match self.point {
+            PointState::LineStart => {
                 self.context
                     .move_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
-                self.point = Some(T::one());
-            } else if point == T::one() {
+                self.point = PointState::Next;
+            }
+            PointState::Next => {
                 self.context
                     .line_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
-            } else {
-                self.context
-                    .move_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
+            }
+            PointState::Init => {
+                self.context.move_to(
+                    p.x.to_f64().unwrap() + self.radius.to_f64().unwrap(),
+                    p.y.to_f64().unwrap(),
+                );
                 self.context
                     .arc(
                         p.x.to_f64().unwrap(),
@@ -124,7 +135,5 @@ where
                     .expect("error writing arc to context");
             }
         }
-        // None => {}
-        // }
     }
 }
