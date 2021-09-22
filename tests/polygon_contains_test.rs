@@ -496,7 +496,7 @@ mod polygon_contains_test {
 
     #[test]
     fn large_narrow_equatorial_strip() {
-        println!"geoPolygonContains(largeNarrowEquatorialHole, point) returns the expected value");
+        println!("geoPolygonContains(largeNarrowEquatorialHole, point) returns the expected value");
 
         let circle = CircleGenerator::default()
             .center(Coordinate { x: 0f64, y: -90f64 })
