@@ -1,5 +1,3 @@
-use crate::clip::rejoin::CompareIntersectionsFn;
-use crate::clip::InterpolateFn;
 use num_traits::Float;
 use std::cell::RefCell;
 use std::cmp::Ordering;
@@ -10,17 +8,15 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 use num_traits::Zero;
 
-use crate::path::Result;
-use crate::projection::stream_node::StreamNode;
-use crate::stream::Stream;
-
 use crate::clip::buffer::Buffer as ClipBuffer;
-use crate::clip::compare_intersection::gen_compare_intersection;
 use crate::clip::intersection::Intersection;
 use crate::clip::line::line as clip_line;
 use crate::clip::line_elem::LineElem;
 use crate::clip::rejoin::rejoin as clip_rejoin;
-use crate::path::ResultEnum;
+use crate::clip::rejoin::CompareIntersectionsFn;
+use crate::clip::InterpolateFn;
+use crate::projection::stream_node::StreamNode;
+use crate::stream::Stream;
 
 #[derive(Clone, Debug)]
 pub(crate) struct Rectangle<T>
@@ -167,16 +163,6 @@ where
 		!winding.is_zero()
 	}
 
-	#[inline]
-	fn gen_compare_intersection(&self) -> CompareIntersectionsFn<T> {
-		let compare_point = self.gen_compare_point();
-		Box::new(
-			move |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| {
-				compare_point(a.borrow().x.p, b.borrow().x.p)
-			},
-		)
-	}
-
 	/// Warning from JS a, b are LineElem.
 	fn gen_compare_point(&self) -> Box<dyn Fn(Coordinate<T>, Coordinate<T>) -> Ordering> {
 		let corner = self.gen_corner();
@@ -316,7 +302,7 @@ where
 		self.raw.v_ = v;
 	}
 
-	pub fn gen_interpolate(&self) -> InterpolateFn<SINK, T> {
+	fn gen_interpolate(&self) -> InterpolateFn<SINK, T> {
 		// Is capturing here a good thing.
 		let x0 = self.raw.x0;
 		let y0 = self.raw.y0;
