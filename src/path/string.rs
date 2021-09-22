@@ -15,6 +15,12 @@ enum PointState {
     LineNotInProgress,
 }
 
+#[derive(Clone, Debug)]
+enum LineState {
+    Init,
+    Started,
+}
+
 #[inline]
 fn circle<T>(radius: T) -> S
 where
@@ -36,7 +42,7 @@ where
     T: CoordFloat,
 {
     circle: Option<S>,
-    line: bool,
+    line: LineState,
     point: PointState,
     radius: T,
     string: Vec<S>,
@@ -50,7 +56,7 @@ where
     fn default() -> Self {
         Self {
             circle: Some(circle(T::from(4.5_f64).unwrap())),
-            line: false,
+            line: LineState::Init,
             point: PointState::LineNotInProgress,
             radius: T::from(4.5).unwrap(),
             string: Vec::new(),
@@ -98,12 +104,12 @@ where
 
     #[inline]
     fn polygon_start(&mut self) {
-        self.line = false;
+        self.line = LineState::Started;
     }
 
     #[inline]
     fn polygon_end(&mut self) {
-        self.line = true;
+        self.line = LineState::Init;
     }
 
     #[inline]
@@ -112,7 +118,7 @@ where
     }
 
     fn line_end(&mut self) {
-        if !self.line {
+        if let LineState::Started = self.line {
             self.string.push(S::from("Z"));
         }
         self.point = PointState::LineNotInProgress;
@@ -133,12 +139,7 @@ where
                     self.circle = Some(circle(self.radius));
                 }
                 self.string.push(format!("M{},{}", p.x, p.y));
-                match &self.circle {
-                    Some(circle) => {
-                        self.string.push(circle.clone());
-                    }
-                    None => {}
-                }
+                self.string.push(self.circle.as_ref().unwrap().clone());
             }
         }
     }

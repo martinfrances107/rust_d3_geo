@@ -2,6 +2,7 @@
 #[cfg(test)]
 mod index_test {
 
+	use geo::Point;
 	use std::f64::consts::PI;
 
 	use geo::line_string;
@@ -109,8 +110,7 @@ mod index_test {
 	// #[test]
 	// fn test_path_point_renders_a_point() {
 	// 	println!("geoPath(Point) renders a point");
-	// 	let object = DataObject::Geometry(Geometry::Point(Point::new(-63.0, 18.0)));
-	// 	let eq = equirectangular();
+	// 	let object = DataObject::Geometry(Geometry::Point(Point::new(-63.0_f64, 18.0_f64)));
 	// 	assert_eq!(test_path(equirectangular(), object), "M170,160,A165,160,");
 	// }
 
@@ -146,7 +146,7 @@ mod index_test {
 
 		assert_eq!(
 			test_path(equirectangular(), object),
-			"M165,160L170,160L170,165Z"
+			"M165,160L170,160L170,165"
 		);
 	}
 
