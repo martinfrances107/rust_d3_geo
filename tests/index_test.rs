@@ -2,7 +2,11 @@
 #[cfg(test)]
 mod index_test {
 
+	use geo::Coordinate;
+	use geo::LineString;
+	use geo::MultiPoint;
 	use geo::Point;
+	use geo::Polygon;
 	use std::f64::consts::PI;
 
 	use geo::line_string;
@@ -126,17 +130,14 @@ mod index_test {
 	//     //   test.end();
 	//     // });
 
-	//     // tape("geoPath(LineString) renders a line string", function(test) {
-	//     //   test.deepEqual(testPath(equirectangular, {
-	//     //     type: "LineString",
-	//     //     coordinates: [[-63, 18], [-62, 18], [-62, 17]]
-	//     //   }), [
-	//     //     {type: "moveTo", x: 165, y: 160},
-	//     //     {type: "lineTo", x: 170, y: 160},
-	//     //     {type: "lineTo", x: 170, y: 165}
-	//     //   ]);
-	//     //   test.end();
-	//     // });
+	// #[test]
+	// fn test_render_a_multipoint() {
+	// 	println!("geoPath(MultiPoint) renders a point");
+	// 	let object = DataObject::Geometry(Geometry::MultiPoint(
+	// 		vec![(-63_f64, 18_f64), (-62_f64, 18_f64), (-62_f64, 17_f64)].into(),
+	// 	));
+	// 	assert_eq!(test_path(equirectangular(), object), "happ");
+	// }
 
 	#[test]
 	fn test_render_line_string() {
@@ -150,6 +151,30 @@ mod index_test {
 		);
 	}
 
+	#[test]
+	fn test_render_a_polygon() {
+		println!("geoPath(Polygon) renders a polygon");
+		let exterior: LineString<f64> = LineString(vec![
+			Coordinate {
+				x: -63_f64,
+				y: 18_f64,
+			},
+			Coordinate {
+				x: -62_f64,
+				y: 18_f64,
+			},
+			Coordinate {
+				x: -62_f64,
+				y: 17_f64,
+			},
+		]);
+		let interiors = vec![];
+		let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(exterior, interiors)));
+		assert_eq!(
+			test_path(equirectangular(), object),
+			"M165,160L170,160L170,165Z"
+		);
+	}
 	//     // tape("geoPath(Polygon) renders a polygon", function(test) {
 	//     //   test.deepEqual(testPath(equirectangular, {
 	//     //     type: "Polygon",
