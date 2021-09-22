@@ -6,6 +6,7 @@ use crate::cartesian::cross;
 use crate::cartesian::normalize_in_place;
 use crate::clip::line_elem::LineElem;
 
+#[cfg(not(tarpaulin_include))]
 #[inline]
 fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
     if point.x.abs() <= T::PI() {
@@ -15,6 +16,7 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
     }
 }
 
+#[cfg(not(tarpaulin_include))]
 /// Determines wheather a point is inside the polygon.
 pub fn polygon_contains<T: CoordFloat + FloatConst>(
     polygon: &Vec<Vec<LineElem<T>>>,

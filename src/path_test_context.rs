@@ -1,12 +1,14 @@
 use geo::CoordFloat;
 use geo::Coordinate;
 
+#[cfg(not(tarpaulin_include))]
 /// Used by index_test
 #[derive(Clone, Debug, Default)]
 pub struct TestContext {
 	buffer: Vec<String>,
 }
 
+#[cfg(not(tarpaulin_include))]
 /// stub for web_sys rendering context
 pub trait RenderingContext2d<T>
 where
@@ -19,6 +21,7 @@ where
 	fn rect(&mut self, p: &Coordinate<T>, w: T, h: T);
 }
 
+#[cfg(not(tarpaulin_include))]
 impl TestContext {
 	/// Buffered strings.
 	pub fn result(&mut self) -> Vec<String> {
@@ -28,6 +31,7 @@ impl TestContext {
 	}
 }
 
+#[cfg(not(tarpaulin_include))]
 impl<T> RenderingContext2d<T> for TestContext
 where
 	T: CoordFloat,
