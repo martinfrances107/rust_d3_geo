@@ -113,6 +113,9 @@ mod index_test {
 
 	// #[test]
 	// fn test_path_point_renders_a_point() {
+	// todo!(
+	// 	"Must mock CanvasRederingConext2D otherwise this test is identical to path_string_test.rs"
+	// );
 	// 	println!("geoPath(Point) renders a point");
 	// 	let object = DataObject::Geometry(Geometry::Point(Point::new(-63.0_f64, 18.0_f64)));
 	// 	assert_eq!(test_path(equirectangular(), object), "M170,160,A165,160,");
@@ -147,7 +150,7 @@ mod index_test {
 
 		assert_eq!(
 			test_path(equirectangular(), object),
-			"M165,160L170,160L170,165"
+			["M165,160", "L170,160", "L170,165"].join("")
 		);
 	}
 
@@ -172,7 +175,7 @@ mod index_test {
 		let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(exterior, interiors)));
 		assert_eq!(
 			test_path(equirectangular(), object),
-			"M165,160L170,160L170,165Z"
+			["M165,160", "L170,160", "L170,165", "Z"].join("")
 		);
 	}
 	//     // tape("geoPath(Polygon) renders a polygon", function(test) {
@@ -239,16 +242,18 @@ mod index_test {
 	//     //   test.end();
 	//     // });
 
-	//     // tape("geoPath(…) wraps longitudes outside of ±180°", function(test) {
-	//     //   test.deepEqual(testPath(equirectangular, {
-	//     //     type: "Point",
-	//     //     coordinates: [180 + 1e-6, 0]
-	//     //   }), [
-	//     //     {type: "moveTo", x: -415, y: 250},
-	//     //     {type: "arc", x: -420, y: 250, r: 4.5}
-	//     //   ]);
-	//     //   test.end();
-	//     // });
+	// #[test]
+	// fn test_wrap_longitude_outside_180() {
+	// todo!(
+	// 	"Must mock CanvasRederingConext2D otherwise this test is identical to path_string_test.rs"
+	// );
+	// 	println!("geoPath(Point) renders a point");
+	// 	let object = DataObject::Geometry(Geometry::Point(Point::new(180_f64 + 1e-6_f64, 0_f64)));
+	// 	assert_eq!(
+	// 		test_path(equirectangular(), object),
+	// 		["M-415,250", "A-420,250,4.5"].join("")
+	// 	);
+	// }
 
 	//     // tape("geoPath(…) observes the correct winding order of a tiny polygon", function(test) {
 	//     //   test.deepEqual(testPath(equirectangular, {
