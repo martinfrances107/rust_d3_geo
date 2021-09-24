@@ -4,7 +4,7 @@ use num_traits::FloatConst;
 
 use crate::length::Stream;
 
-/// Computes the distancre between two 2-D surface points.
+/// Computes the distance between two 2-D surface points.
 pub fn distance<T: AsPrimitive<T> + CoordFloat + FloatConst>(
     a: &Coordinate<T>,
     b: &Coordinate<T>,
