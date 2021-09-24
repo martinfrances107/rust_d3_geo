@@ -251,7 +251,7 @@ mod fit_test {
 	#[test]
 	fn fit_size_resampling() {
 		println!("projection.fitSize(…) resampling - world mercator");
-		let d_object = DataObject::Geometry(Geometry::Polygon(polygon![
+		let box_object = DataObject::Geometry(Geometry::Polygon(polygon![
 			(x: -135f64, y: 45f64 ),
 			(x: -45f64, y: 45f64 ),
 			(x: -45f64, y: -45f64 ),
@@ -260,10 +260,10 @@ mod fit_test {
 		]));
 		let p1 = Mercator::builder()
 			.precision(&0.1_f64)
-			.fit_size([1000_f64, 1000_f64], d_object.clone());
+			.fit_size([1000_f64, 1000_f64], box_object.clone());
 		let p2 = Mercator::builder()
 			.precision(&0.0_f64)
-			.fit_size([1000_f64, 1000_f64], d_object);
+			.fit_size([1000_f64, 1000_f64], box_object);
 		let t1 = p1.get_translate();
 		let t2 = p2.get_translate();
 		assert_eq!(p1.get_precision(), 0.1_f64);
