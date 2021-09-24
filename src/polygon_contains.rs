@@ -19,7 +19,7 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
 #[cfg(not(tarpaulin_include))]
 /// Determines wheather a point is inside the polygon.
 pub fn polygon_contains<T: CoordFloat + FloatConst>(
-    polygon: &Vec<Vec<LineElem<T>>>,
+    polygon: &[Vec<LineElem<T>>],
     point: &LineElem<T>,
 ) -> bool {
     let lambda = longitude(&point.p);

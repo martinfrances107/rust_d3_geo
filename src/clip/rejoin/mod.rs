@@ -24,7 +24,7 @@ pub(crate) type CompareIntersectionsFn<T> =
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
 pub fn rejoin<SINK, T>(
-    segments: &Vec<Vec<LineElem<T>>>,
+    segments: &[Vec<LineElem<T>>],
     compare_intersection: CompareIntersectionsFn<T>,
     start_inside: bool,
     interpolate_fn: InterpolateFn<SINK, T>,
