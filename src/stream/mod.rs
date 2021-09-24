@@ -17,7 +17,7 @@ use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
 
-/// Applies to DataObject's
+/// Applies to DataObjects
 pub trait Streamable {
     /// f32 or f64.
     type T: CoordFloat;
