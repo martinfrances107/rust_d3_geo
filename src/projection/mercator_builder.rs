@@ -1,3 +1,4 @@
+use crate::projection::Rotate;
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -28,7 +29,7 @@ use super::Raw as ProjectionRaw;
 use super::Scale;
 use super::Translate;
 
-/// A wrapper for Projectio\Builder which overrides the traits - scale translate and center.
+/// A wrapper for Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
 pub struct MercatorBuilder<DRAIN, L, PR, PV, T>
@@ -64,7 +65,6 @@ where
 				),
 				pr,
 			);
-		// dbg!(&base.get_scale());
 		Self {
 			base,
 			x0: None,
@@ -99,7 +99,6 @@ where
 	T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	fn reclip(mut self) -> Self {
-		dbg!("mercator reclip");
 		let k = T::PI() * self.get_scale();
 
 		let rotate_raw = self.base.get_rotate();
@@ -108,9 +107,6 @@ where
 			y: T::zero(),
 		});
 		let t = self.base.build().transform(&t);
-		dbg!(&self.x0);
-		dbg!(k);
-		dbg!("t final", t);
 		let ce = match (self.x0, self.y0, self.x1, self.y1) {
 			(Some(_x0), Some(y0), Some(x1), Some(y1)) => {
 				[
@@ -146,7 +142,6 @@ where
 			],
 		};
 
-		dbg!(&ce);
 		self.base = self.base.clip_extent(Some(ce));
 		self
 	}
@@ -280,5 +275,25 @@ where
 				self
 			}
 		}
+	}
+}
+impl<L, PR, PV, T> Rotate for MercatorBuilder<BoundsStream<T>, L, PR, PV, T>
+where
+	L: Line,
+	PR: ProjectionRaw<T>,
+	PV: PointVisible<T = T>,
+	T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	type T = T;
+
+	#[inline]
+	fn get_rotate(&self) -> [T; 3] {
+		self.base.get_rotate()
+	}
+
+	/// Sets the rotation angles as measured in degrees.
+	fn rotate(mut self, angles: [T; 3]) -> Self {
+		self.base = self.base.rotate(angles);
+		self
 	}
 }

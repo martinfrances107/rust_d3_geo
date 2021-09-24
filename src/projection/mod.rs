@@ -206,6 +206,22 @@ pub trait Precision {
     fn precision(self, delta: &Self::T) -> Self;
 }
 
+/// Rotation getter and setters.
+pub trait Rotate {
+    /// f64 or f32
+    type T;
+
+    /// Returns the three-axis rotaation.
+    fn get_rotate(&self) -> [Self::T; 3];
+
+    ///  Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
+    ///
+    ///  @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
+    ///  (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
+    ///
+    fn rotate(self, angles: [Self::T; 3]) -> Self;
+}
+
 /// Controls the projections scaling factor.
 ///
 /// Projection builder sub trait.

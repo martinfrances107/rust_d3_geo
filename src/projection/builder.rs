@@ -1,6 +1,7 @@
 use crate::projection::BoundsStream;
 use crate::projection::DataObject;
 use crate::projection::Fit;
+use crate::projection::Rotate;
 use std::rc::Rc;
 
 use derivative::Derivative;
@@ -339,7 +340,7 @@ where
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {
-        fit_size(self, size, object)
+         fit_size(self, size, object)
     }
 }
 
@@ -445,6 +446,41 @@ where
         self.resample_factory =
             StreamNodeResampleFactory::new(self.project_transform.clone(), delta2);
         self
+    }
+}
+
+impl<DRAIN, L, PR, PV, T> Rotate for Builder<DRAIN, L, PR, PV, T>
+where
+    DRAIN: Stream<T = T>,
+    L: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: 'static + CoordFloat + FloatConst,
+{
+    type T = T;
+
+    ///  Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
+    ///
+    ///  @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
+    ///  (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
+    ///
+    #[inline]
+    fn get_rotate(&self) -> [T; 3] {
+        [
+            self.delta_lambda.to_degrees(),
+            self.delta_phi.to_degrees(),
+            self.delta_lambda.to_degrees(),
+        ]
+    }
+
+    /// Sets the rotation angles as measured in degrees.
+    fn rotate(mut self, angles: [T; 3]) -> Builder<DRAIN, L, PR, PV, T> {
+        let [delta_lambda, delta_phi, delta_gamma] = angles;
+        let f360 = T::from(360_f64).unwrap();
+        self.delta_lambda = (delta_lambda % f360).to_radians();
+        self.delta_phi = (delta_phi % f360).to_radians();
+        self.delta_gamma = (delta_gamma % f360).to_radians();
+        self.recenter()
     }
 }
 
@@ -733,29 +769,6 @@ where
     ///
     pub fn angle(mut self, angle: T) -> Builder<DRAIN, L, PR, PV, T> {
         self.alpha = (angle % T::from(360).unwrap()).to_radians();
-        self.recenter()
-    }
-    ///  Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
-    ///
-    ///  @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
-    ///  (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
-    ///
-    #[inline]
-    pub fn get_rotate(&self) -> [T; 3] {
-        [
-            self.delta_lambda.to_degrees(),
-            self.delta_phi.to_degrees(),
-            self.delta_lambda.to_degrees(),
-        ]
-    }
-
-    /// Sets the rotation angles as measured in degrees.
-    pub fn rotate(mut self, angles: [T; 3]) -> Builder<DRAIN, L, PR, PV, T> {
-        let [delta_lambda, delta_phi, delta_gamma] = angles;
-        let f360 = T::from(360_f64).unwrap();
-        self.delta_lambda = (delta_lambda % f360).to_radians();
-        self.delta_phi = (delta_phi % f360).to_radians();
-        self.delta_gamma = (delta_gamma % f360).to_radians();
         self.recenter()
     }
 }
