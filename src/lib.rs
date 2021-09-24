@@ -18,7 +18,6 @@ use geo::Coordinate;
 
 /// Vector arithmatic operations on 3-D vectors.
 pub mod cartesian;
-
 /// Stream end point: calculation of centroid point.
 pub mod centroid;
 /// Related to the injection of circles into a stream.
@@ -37,7 +36,6 @@ pub mod in_delta;
 pub mod length;
 /// Stream end point: calculation of paths to a string or rendering context.
 pub mod path;
-mod point_equal;
 /// Determins when points are located inside data objects.
 pub mod polygon_contains;
 /// Holds proctions and associated builders.
@@ -47,7 +45,9 @@ pub mod rotation;
 /// Stream related helper functions.
 pub mod stream;
 
-/// Common to Projections and, Rotations.
+mod point_equal;
+
+/// 2-D Transform common to projections and, rotations.
 ///
 /// FloatConst is required by forward_rotation_lambda()
 pub trait Transform: Clone + Debug
