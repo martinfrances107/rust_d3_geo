@@ -1,4 +1,3 @@
-use crate::path::area_stream::AreaStream;
 use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
@@ -11,6 +10,8 @@ use num_traits::FloatConst;
 use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::data_object::DataObject;
+use crate::path::area_stream::AreaStream;
+use crate::path::bounds_stream::BoundsStream;
 use crate::path::context_stream::ContextStream;
 use crate::path::Result;
 use crate::projection::projection::Projection;
@@ -76,6 +77,22 @@ where
 		T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 	{
 		let stream_dst = Rc::new(RefCell::new(ContextStream::A(AreaStream::default())));
+		let mut stream_in = self.projection.stream(stream_dst.clone());
+		object.to_stream(&mut stream_in);
+
+		let x = stream_dst.borrow_mut().result();
+		x
+	}
+
+
+	#[inline]
+	/// Returns the area of the Path
+	/// This operation consumes the  Path.
+	pub fn bounds(self, object: &DataObject<T>) -> Option<ResultEnum<T>>
+	where
+		T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+	{
+		let stream_dst = Rc::new(RefCell::new(ContextStream::B(BoundsStream::default())));
 		let mut stream_in = self.projection.stream(stream_dst.clone());
 		object.to_stream(&mut stream_in);
 

@@ -8,6 +8,7 @@ use num_traits::FloatConst;
 use crate::stream::Stream;
 
 use super::area_stream::AreaStream;
+use super::bounds_stream::BoundsStream;
 use super::context::Context;
 use super::string::String as PathString;
 use super::Result;
@@ -22,6 +23,8 @@ where
 {
     /// Path area endpoint.
     A(AreaStream<T>),
+    /// Bounds endpoint.
+    B(BoundsStream<T>),
     /// Path context endpoint.
     C(Context<T>),
     /// Path string endpoint.
@@ -50,6 +53,7 @@ where
         match self {
             // ContextStream::A(a) => a.result(),
             ContextStream::A(pc) => pc.result(),
+            ContextStream::B(pc) => pc.result(),
             ContextStream::C(pc) => pc.result(),
             ContextStream::S(ps) => ps.result(),
             ContextStream::UNDEFINED => panic!("Result of undefined."),
@@ -65,6 +69,7 @@ where
     fn point_radius(&mut self, val: Self::PrtT) {
         match self {
             ContextStream::A(_a) => todo!("how to handle this?"),
+            ContextStream::B(b) => todo!("how to handle this?"),
             ContextStream::C(c) => c.point_radius(val),
             ContextStream::S(s) => s.point_radius(val),
             ContextStream::UNDEFINED => panic!("radius of undefined."),
@@ -81,6 +86,7 @@ where
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         match self {
             ContextStream::A(a) => a.point(p, m),
+            ContextStream::B(b) => b.point(p, m),
             ContextStream::C(c) => c.point(p, m),
             ContextStream::S(s) => s.point(p, m),
             ContextStream::UNDEFINED => panic!("point of undefined."),
@@ -89,6 +95,7 @@ where
     fn sphere(&mut self) {
         match self {
             ContextStream::A(a) => a.sphere(),
+            ContextStream::B(b) => b.sphere(),
             ContextStream::C(c) => c.sphere(),
             ContextStream::S(s) => s.sphere(),
             ContextStream::UNDEFINED => panic!("sphere of undefined."),
@@ -97,6 +104,7 @@ where
     fn line_start(&mut self) {
         match self {
             ContextStream::A(a) => a.line_start(),
+            ContextStream::B(b) => b.line_start(),
             ContextStream::C(c) => c.line_start(),
             ContextStream::S(s) => s.line_start(),
             ContextStream::UNDEFINED => panic!("line_start of undefined."),
@@ -105,6 +113,7 @@ where
     fn line_end(&mut self) {
         match self {
             ContextStream::A(a) => a.line_end(),
+            ContextStream::B(b) => b.line_end(),
             ContextStream::C(c) => c.line_end(),
             ContextStream::S(s) => s.line_end(),
             ContextStream::UNDEFINED => panic!("line_end of undefined."),
@@ -113,6 +122,7 @@ where
     fn polygon_start(&mut self) {
         match self {
             ContextStream::A(a) => a.polygon_start(),
+            ContextStream::B(b) => b.polygon_start(),
             ContextStream::C(c) => c.polygon_start(),
             ContextStream::S(s) => s.polygon_start(),
             ContextStream::UNDEFINED => panic!("polygon start of undefined."),
@@ -121,6 +131,7 @@ where
     fn polygon_end(&mut self) {
         match self {
             ContextStream::A(a) => a.polygon_end(),
+            ContextStream::B(b) => b.polygon_end(),
             ContextStream::C(c) => c.polygon_end(),
             ContextStream::S(s) => s.polygon_end(),
             ContextStream::UNDEFINED => panic!("polygon_end of undefined."),
