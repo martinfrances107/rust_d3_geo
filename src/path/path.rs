@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::fmt::Display;
+use std::ops::Add;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
@@ -29,14 +30,10 @@ where
 	L: Line,
 	T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 	PV: PointVisible<T = T>,
-	// CS: Stream<T = T> + Default,
 {
-	// context: Option<Rc<CanvasRenderingContext2d>>,
-	// Rc and RefCell  needed below to mach the input to Projection.stream();
 	context_stream: Rc<RefCell<ContextStream<T>>>,
 	point_radius: PointRadiusEnum<T>,
 	/// don't store projection stream.
-	// projection_stream: Option<ProjectionStreamOutput<T>>,
 	projection: Projection<ContextStream<T>, L, PR, PV, T>,
 }
 
@@ -46,18 +43,15 @@ where
 	PR: ProjectionRaw<T>,
 	T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 	PV: PointVisible<T = T>,
-	// CS: Stream<T = T> + Default,
 {
-	/// Constructor
+	/// Constructor.
 	pub fn new(
 		context_stream: Rc<RefCell<ContextStream<T>>>,
 		projection: Projection<ContextStream<T>, L, PR, PV, T>,
 	) -> Self {
 		Self {
-			// context: None,
 			context_stream,
 			point_radius: PointRadiusEnum::Val(T::from(4.5_f64).unwrap()),
-			// projection_stream: None,
 			projection,
 		}
 	}
@@ -84,8 +78,6 @@ where
 		x
 	}
 
-
-	#[inline]
 	/// Returns the area of the Path
 	/// This operation consumes the  Path.
 	pub fn bounds(self, object: &DataObject<T>) -> Option<ResultEnum<T>>
@@ -98,6 +90,13 @@ where
 
 		let x = stream_dst.borrow_mut().result();
 		x
+	}
+
+	/// Sets the context stream.
+	pub fn context(mut self, context_stream: Rc<RefCell<ContextStream<T>>>) -> Self
+	where T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst{
+		self.context_stream = context_stream;
+		self
 	}
 
 	// 	fn projection_fn(

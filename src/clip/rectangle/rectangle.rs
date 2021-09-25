@@ -1,10 +1,10 @@
-use num_traits::Float;
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::Float;
 use num_traits::FloatConst;
 use num_traits::Zero;
 
