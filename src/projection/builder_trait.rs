@@ -313,33 +313,7 @@ where
             + Display
             + FloatConst;
 
-    /// Is the projection builder set to invert the x-coordinate.
-    fn get_reflect_x(&self) -> bool;
 
-    /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x(self, reflect: bool) -> Self
-    where
-        <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
-        <Self as BuilderTrait>::T: AddAssign
-            + AsPrimitive<<Self as BuilderTrait>::T>
-            + CoordFloat
-            + Debug
-            + Display
-            + FloatConst;
-
-    /// Is the projection builder set to invert the x-coordinate.
-    fn get_reflect_y(&self) -> bool;
-
-    /// Set the projection builder to invert the y-coordinate.
-    fn reflect_y(self, reflect: bool) -> Self
-    where
-        <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
-        <Self as BuilderTrait>::T: AddAssign
-            + AsPrimitive<<Self as BuilderTrait>::T>
-            + CoordFloat
-            + Debug
-            + Display
-            + FloatConst;
 
     ///  Returns the projection’s current angle, which defaults to 0°.
     ///

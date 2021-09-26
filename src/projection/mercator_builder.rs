@@ -1,4 +1,5 @@
-use crate::projection::Rotate;
+use std::fmt::Display;
+
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -18,11 +19,14 @@ use crate::Transform;
 
 use super::builder::Builder as ProjectionBuilder;
 use super::stream_node_factory::StreamNodeFactory;
+use crate::projection::Rotate;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::BoundsStream;
 use super::ClipExtent;
 use super::DataObject;
 use super::Fit;
+use super::Reflect;
+use super::Angle;
 use super::Precision;
 use super::Projection;
 use super::Raw as ProjectionRaw;
@@ -277,6 +281,28 @@ where
 		}
 	}
 }
+
+impl<L, PR, PV, T> Angle for MercatorBuilder<BoundsStream<T>, L, PR, PV, T>
+where
+	L: Line,
+	PR: ProjectionRaw<T>,
+	PV: PointVisible<T = T>,
+	T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	type T = T;
+
+	#[inline]
+	fn get_angle(&self) -> T {
+		self.base.get_angle()
+	}
+
+	/// Sets the rotation angles as measured in degrees.
+	fn angle(mut self, angle: T) -> Self {
+		self.base = self.base.angle(angle);
+		self
+	}
+}
+
 impl<L, PR, PV, T> Rotate for MercatorBuilder<BoundsStream<T>, L, PR, PV, T>
 where
 	L: Line,
@@ -296,4 +322,39 @@ where
 		self.base = self.base.rotate(angles);
 		self
 	}
+}
+
+impl<L, PR, PV, T> Reflect for MercatorBuilder<BoundsStream<T>, L, PR, PV, T>
+where
+	L: Line,
+	PR: ProjectionRaw<T>,
+	PV: PointVisible<T = T>,
+	T: 'static + std::ops::AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+{
+	type T = T;
+
+    /// Is the projection builder set to invert the x-coordinate.
+    #[inline]
+    fn get_reflect_x(&self) -> bool {
+        self.base.get_reflect_x()
+    }
+
+    /// Set the projection builder to invert the x-coordinate.
+    fn reflect_x(mut self, reflect: bool) -> Self {
+        self.base = self.base.reflect_x(reflect);
+		self
+    }
+
+    /// Is the projection builder set to invert the y-coordinate.
+    #[inline]
+    fn get_reflect_y(&self) -> bool {
+        self.base.get_reflect_y()
+    }
+
+    /// Set the projection builder to invert the y-coordinate.
+    #[inline]
+    fn reflect_y(mut self, reflect: bool) -> Self {
+		self.base = self.base.reflect_y(reflect);
+		self
+    }
 }

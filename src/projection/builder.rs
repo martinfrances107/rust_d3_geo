@@ -25,6 +25,7 @@ use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
+use super::Reflect;
 use super::fit::fit_extent;
 use super::fit::fit_size;
 use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
@@ -40,6 +41,7 @@ use super::Raw as ProjectionRaw;
 use super::RotateFactory;
 use super::RotateTransformFactory;
 use super::Scale;
+use super::Angle;
 use super::Translate;
 
 /// Projection builder.
@@ -344,6 +346,33 @@ where
     }
 }
 
+impl<DRAIN, L, PR, PV, T> Angle for Builder<DRAIN, L, PR, PV, T>
+where
+    DRAIN: Stream<T = T>,
+    L: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: 'static + CoordFloat + FloatConst{
+    /// f64 or f32
+    type T = T;
+
+    /// Returns the projection’s post-projection planar rotation angle.
+    /// defaults to 0°.
+    #[inline]
+    fn get_angle(&self) -> Self::T {
+        self.alpha.to_degrees()
+    }
+
+    /// Sets the projection’s post-projection planar rotation angle to the
+    /// specified angle in degrees and returns the projection.
+    ///
+    fn angle(mut self, angle: T) -> Self {
+        self.alpha = (angle % T::from(360).unwrap()).to_radians();
+        self.recenter()
+    }
+}
+
+
 impl<DRAIN, L, PR, PV, T> Scale for Builder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
@@ -480,6 +509,51 @@ where
         self.delta_lambda = (delta_lambda % f360).to_radians();
         self.delta_phi = (delta_phi % f360).to_radians();
         self.delta_gamma = (delta_gamma % f360).to_radians();
+        self.recenter()
+    }
+}
+
+
+impl<DRAIN, L, PR, PV, T> Reflect for Builder<DRAIN, L, PR, PV, T>
+where
+    DRAIN: Stream<T = T>,
+    L: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: 'static + CoordFloat + FloatConst,
+{
+    type T = T;
+
+    /// Is the projection builder set to invert the x-coordinate.
+    #[inline]
+    fn get_reflect_x(&self) -> bool {
+        self.sx < T::zero()
+    }
+
+    /// Set the projection builder to invert the x-coordinate.
+    fn reflect_x(mut self, reflect: bool) -> Self {
+        if reflect {
+            self.sx = T::from(-1.0).unwrap();
+        } else {
+            self.sx = T::one();
+        }
+        self.recenter()
+    }
+
+    /// Is the projection builder set to invert the y-coordinate.
+    #[inline]
+    fn get_reflect_y(&self) -> bool {
+        self.sy < T::zero()
+    }
+
+    /// Set the projection builder to invert the y-coordinate.
+    #[inline]
+    fn reflect_y(mut self, reflect: bool) -> Self {
+        if reflect {
+            self.sy = T::from(-1.0).unwrap();
+        } else {
+            self.sy = T::one();
+        }
         self.recenter()
     }
 }
@@ -724,51 +798,7 @@ where
     //  */
     // invert?(point: [number, number]): [number, number] | null;
 
-    /// Is the projection builder set to invert the x-coordinate.
-    #[inline]
-    pub fn get_reflect_x(&self) -> bool {
-        self.sx < T::zero()
-    }
 
-    /// Set the projection builder to invert the x-coordinate.
-    pub fn reflect_x(mut self, reflect: bool) -> Self {
-        if reflect {
-            self.sx = T::from(-1.0).unwrap();
-        } else {
-            self.sx = T::one();
-        }
-        self.recenter()
-    }
 
-    /// Is the projection builder set to invert the y-coordinate.
-    #[inline]
-    pub fn get_reflect_y(&self) -> bool {
-        self.sy < T::zero()
-    }
 
-    /// Set the projection builder to invert the y-coordinate.
-    #[inline]
-    pub fn reflect_y(mut self, reflect: bool) -> Self {
-        if reflect {
-            self.sy = T::from(-1.0).unwrap();
-        } else {
-            self.sy = T::one();
-        }
-        self.recenter()
-    }
-
-    /// Returns the projection’s post-projection planar rotation angle.
-    /// defaults to 0°.
-    #[inline]
-    pub fn get_angle(&self) -> T {
-        self.alpha.to_degrees()
-    }
-
-    /// Sets the projection’s post-projection planar rotation angle to the
-    /// specified angle in degrees and returns the projection.
-    ///
-    pub fn angle(mut self, angle: T) -> Builder<DRAIN, L, PR, PV, T> {
-        self.alpha = (angle % T::from(360).unwrap()).to_radians();
-        self.recenter()
-    }
 }

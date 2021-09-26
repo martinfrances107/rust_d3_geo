@@ -1,14 +1,16 @@
-use crate::data_object::DataObject;
-use crate::path::bounds_stream::BoundsStream;
-use num_traits::AsPrimitive;
 use std::cell::RefCell;
+use std::fmt::Display;
 use std::fmt::Debug;
+use std::ops::AddAssign;
 use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::data_object::DataObject;
+use crate::path::bounds_stream::BoundsStream;
 use crate::clip::clip::Clip;
 use crate::clip::Line;
 use crate::clip::PointVisible;
@@ -176,11 +178,59 @@ pub trait Fit {
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
 
-/// Generates elements of the projection stream pipeline.
-pub trait NodeFactory
-where
+pub trait Angle {
+    /// f64 or f32
+    type T;
+
+    /// Returns the projection’s post-projection planar rotation angle.
+    /// defaults to 0°.
+    fn get_angle(&self) -> Self::T;
+
+    /// Sets the projection’s post-projection planar rotation angle to the
+    /// specified angle in degrees and returns the projection.
+    ///
+    fn angle(self, angle: Self::T) -> Self;
+}
+
+pub trait Reflect{
+
+    /// f64 or f32
+    type T;
+
+    /// Is the projection builder set to invert the x-coordinate.
+    fn get_reflect_x(&self) -> bool;
+
+    /// Set the projection builder to invert the x-coordinate.
+    fn reflect_x(self, reflect: bool) -> Self
+    where
+    // <Self as Reflect>::PR: Transform<T = <Self as Reflect>::T>,
+    <Self as Reflect>::T: AddAssign
+    + AsPrimitive<<Self as Reflect>::T>
+    + CoordFloat
+    + Debug
+    + Display
+    + FloatConst;
+
+    /// Is the projection builder set to invert the x-coordinate.
+    fn get_reflect_y(&self) -> bool;
+
+    /// Set the projection builder to invert the y-coordinate.
+    fn reflect_y(self, reflect: bool) -> Self
+    where
+    // <Self as Reflect>::PR: Transform<T = <Self as Reflect>::T>,
+    <Self as Reflect>::T: AddAssign
+    + AsPrimitive<<Self as Reflect>::T>
+    + CoordFloat
+    + Debug
+    + Display
+    + FloatConst;
+}
+
+    /// Generates elements of the projection stream pipeline.
+    pub trait NodeFactory
+    where
     <Self as NodeFactory>::T: CoordFloat,
-{
+    {
     /// The resultant node type.
     type Node;
     /// The downstream node.
