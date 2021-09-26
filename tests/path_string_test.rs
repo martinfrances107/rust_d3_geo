@@ -12,7 +12,8 @@
 		use geo::Coordinate;
 		use geo::Geometry;
 		use geo::LineString;
-		use geo::point;
+		use geo::MultiPoint;
+use geo::point;
 		use geo::Polygon;
 		use num_traits::AsPrimitive;
 		use num_traits::FloatConst;
@@ -113,5 +114,20 @@
 					panic!("was expecting a result");
 				}
 			};
+		}
+
+		#[test]
+		fn test_renders_multipoint(){
+			println!("geoPath(MultiPoint) renders a point");
+			let object = DataObject::Geometry(Geometry::MultiPoint(vec![
+				point![x:-63_f64, y:18_f64],
+				point![x:-62_f64, y:18_f64],
+				point![x:-62_f64, y:17_f64]
+				].into())
+			);
+			let eq = equirectangular::<ContextStream<f64>, f64>();
+			assert_eq!(test_path(eq, object),
+			"M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,165m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z");
+
 		}
 	}
