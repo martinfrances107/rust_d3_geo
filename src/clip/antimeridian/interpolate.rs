@@ -21,6 +21,7 @@ where
               stream_in: Rc<RefCell<STREAM>>| {
             let phi: T;
             let mut s = stream_in.borrow_mut();
+            let epsilon = T::from(1e-6).unwrap();
             match from {
                 None => {
                     phi = direction * T::FRAC_PI_2();
@@ -86,7 +87,7 @@ where
                 }
                 Some(from) => {
                     let to = to.unwrap();
-                    if (from.x - to.x).abs() > T::epsilon() {
+                    if (from.x - to.x).abs() > epsilon {
                         let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
 
                         phi = direction * lambda / T::from(2).unwrap();
