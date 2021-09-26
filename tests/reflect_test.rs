@@ -9,7 +9,6 @@ mod reflect_tests {
     use rust_d3_geo::projection::builder::Builder;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mercator::Mercator;
-    use rust_d3_geo::projection::mercator_builder::MercatorBuilder;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::Raw;
     use rust_d3_geo::projection::Scale;

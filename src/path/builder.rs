@@ -18,7 +18,6 @@ use super::context::Context as PathContext;
 use super::context_stream::ContextStream;
 use super::path::Path;
 use super::string::String as PathString;
-use super::PointRadiusEnum;
 
 
 /// Path builder.

@@ -2,30 +2,22 @@
 #[cfg(test)]
 	mod path_string_test {
 
-		use std::cell::RefCell;
 		use std::f64::consts::PI;
 		use std::fmt::Display;
 		use std::ops::AddAssign;
-		use std::rc::Rc;
 
 		use geo::CoordFloat;
-		use geo::Coordinate;
 		use geo::Geometry;
-		use geo::LineString;
-		use geo::MultiPoint;
-use geo::point;
-		use geo::Polygon;
+		use geo::point;
 		use num_traits::AsPrimitive;
 		use num_traits::FloatConst;
 
 		use rust_d3_geo::stream::Stream;
 		use rust_d3_geo::clip::antimeridian::line::Line;
 		use rust_d3_geo::clip::antimeridian::pv::PV;
-		use rust_d3_geo::data_object::sphere::Sphere;
 		use rust_d3_geo::data_object::DataObject;
 		use rust_d3_geo::path::builder::Builder as PathBuilder;
 		use rust_d3_geo::path::context_stream::ContextStream;
-		use rust_d3_geo::path::string::String as PathString;
 		use rust_d3_geo::path::ResultEnum;
 		use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
 		use rust_d3_geo::projection::projection::Projection;
@@ -128,6 +120,5 @@ use geo::point;
 			let eq = equirectangular::<ContextStream<f64>, f64>();
 			assert_eq!(test_path(eq, object),
 			"M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,165m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z");
-
 		}
 	}

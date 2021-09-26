@@ -178,6 +178,8 @@ pub trait Fit {
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
 
+/// Returns or sets the post-projection planar rotation angle.
+/// A projection builder sub trait.
 pub trait Angle {
     /// f64 or f32
     type T;

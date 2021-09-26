@@ -7,23 +7,20 @@ use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-
 use num_traits::FloatConst;
 
 use crate::data_object::DataObject;
 use crate::path::bounds_stream::BoundsStream;
 use crate::path::Result;
 use crate::path::ResultEnum;
-use crate::projection::builder::Builder;
-use crate::projection::Line;
-use crate::projection::PointVisible;
-use crate::projection::Raw as ProjectionRaw;
-use crate::projection::Scale;
-use crate::stream::Stream;
 use crate::stream::Streamable;
 
+use super::builder::Builder;
+use super::Line;
+use super::PointVisible;
+use super::Raw as ProjectionRaw;
+use super::Scale;
 use super::ClipExtent;
-// use super::projection_trait::ProjectionTrait;
 use super::Translate;
 
 type FitBounds<DRAIN, L, PR, PV, T> = Box<
@@ -36,7 +33,6 @@ fn fit<L, PR, PV, T>(
     object: DataObject<T>,
 ) -> Builder<BoundsStream<T>, L, PR, PV, T>
 where
-    // DRAIN: Stream<T = T> + Default,
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -110,7 +106,6 @@ pub(super) fn fit_size<L, PR, PV, T>(
     object: DataObject<T>,
 ) -> Builder<BoundsStream<T>, L, PR, PV, T>
 where
-    // DRAIN: Stream<T = T> + Default,
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -118,38 +113,3 @@ where
 {
     fit_extent(builder, [[T::zero(), T::zero()], size], object)
 }
-
-// // // export function fitExtent(projection, extent, object) {
-// // //   return fit(projection, function(b) {
-// // //     var w = extent[1][0] - extent[0][0],
-// // //         h = extent[1][1] - extent[0][1],
-// // //         k = Math.min(w / (b[1][0] - b[0][0]), h / (b[1][1] - b[0][1])),
-// // //         x = +extent[0][0] + (w - k * (b[1][0] + b[0][0])) / 2,
-// // //         y = +extent[0][1] + (h - k * (b[1][1] + b[0][1])) / 2;
-// // //     projection.scale(150 * k).translate([x, y]);
-// // //   }, object);
-// // // }
-
-// // // export function fitSize(projection, size, object) {
-// // //   return fitExtent(projection, [[0, 0], size], object);
-// // // }
-
-// // // export function fitWidth(projection, width, object) {
-// // //   return fit(projection, function(b) {
-// // //     var w = +width,
-// // //         k = w / (b[1][0] - b[0][0]),
-// // //         x = (w - k * (b[1][0] + b[0][0])) / 2,
-// // //         y = -k * b[0][1];
-// // //     projection.scale(150 * k).translate([x, y]);
-// // //   }, object);
-// // // }
-
-// // // export function fitHeight(projection, height, object) {
-// // //   return fit(projection, function(b) {
-// // //     var h = +height,
-// // //         k = h / (b[1][1] - b[0][1]),
-// // //         x = -k * b[0][0],
-// // //         y = (h - k * (b[1][1] + b[0][1])) / 2;
-// // //     projection.scale(150 * k).translate([x, y]);
-// // //   }, object);
-// // // }
