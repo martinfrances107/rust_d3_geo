@@ -9,6 +9,7 @@ mod mercator_tests {
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::data_object::DataObject;
+    use rust_d3_geo::in_delta::in_delta_coordinate;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::context_stream::ContextStream;
     use rust_d3_geo::path::ResultEnum;
@@ -20,7 +21,6 @@ mod mercator_tests {
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Raw;
     use rust_d3_geo::projection::Rotate;
-    use rust_d3_geo::in_delta::in_delta_coordinate;
     use rust_d3_geo::projection::Scale;
     use rust_d3_geo::projection::Translate;
 
@@ -87,6 +87,7 @@ mod mercator_tests {
                 x: 75115911.95344563_f64,
                 y: 2586046.4116968135_f64
             },
-            1e-6));
+            1e-6
+        ));
     }
 }

@@ -50,10 +50,11 @@ where
         // TODO small_radius, rc  is a shadow variables!!!
         let cr = radius.cos();
         let small_radius = cr.is_sign_positive();
+        let epsilon = T::from(1e-6).unwrap();
         Self {
             c0: 0,
             clean: CleanState::IntersectionsOrEmpty,
-            not_hemisphere: cr.abs() > T::epsilon(),
+            not_hemisphere: cr.abs() > epsilon,
             point0: None,
             cr,
             radius,
