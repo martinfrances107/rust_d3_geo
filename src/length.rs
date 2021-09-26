@@ -42,15 +42,6 @@ where
     }
 }
 
-// impl<T> Streamable for LengthStream<T>
-// where
-// T: AddAssign + AsPrimitive<T> + CoordFloat +Display + FloatConst{
-//     type SD=Self;
-//     type T=T;
-//     fn to_stream<SD: Stream>(stream: &mut SD){
-
-//     }
-// }
 impl<T> Stream<T>
 where
     T: CoordFloat,

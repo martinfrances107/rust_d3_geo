@@ -27,23 +27,6 @@ where
     R(StreamNode<Resample<PR, T>, SINK, T>),
 }
 
-// impl<PR, SINK, T> Default for ResampleNode<PR, SINK, T>
-// where
-//     PR: ProjectionRaw<T>,
-//     SINK: Default + Stream<T = T>,
-//     T: CoordFloat,
-// {
-//     #[inline]
-//     fn default() -> Self {
-//         let stream_node = StreamNode {
-//             raw: None::default(),
-//             sink: Rc::new(RefCell::new(SINK::default())),
-//             pd: PhantomData::<T>,
-//         };
-//         ResampleNode::RN(stream_node)
-//     }
-// }
-
 impl<'a, PR, SINK, T> Stream for ResampleNode<PR, SINK, T>
 where
     PR: ProjectionRaw<T>,
@@ -89,23 +72,3 @@ where
         };
     }
 }
-
-// #[inline]
-// pub fn gen_resample_factory<PR, SINK, T>(
-//     projection_raw: PR,
-//     delta2: T,
-// ) -> StreamNodeFactory<ResampleNode<PR, SINK, T>, SINK, T>
-// where
-//     PR: ProjectionRaw<T>,
-//     SINK: Stream<T = T>,
-//     T: CoordFloat,
-// {
-//     if delta2.is_zero() {
-//         StreamNodeFactory::new(ResampleNode::RN(StreamNode{
-//             raw, ResampleNone::new(self.projection_raw),
-//             sink, SINK::default,
-//             (None::new(projection_raw))))
-//     } else {
-//         StreamNodeFactory::new(ResampleNode::R(Resample::new(projection_raw, delta2)))
-//     }
-// }

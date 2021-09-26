@@ -40,12 +40,6 @@ where
     }
 }
 
-// impl<T> LineTrait for Line<T> where
-//     // SINK: Stream<T = T>,
-//     T: CoordFloat,
-// {
-// }
-
 impl<T> Clean for Line<T>
 where
     T: CoordFloat,

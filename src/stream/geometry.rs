@@ -9,7 +9,6 @@ impl<T> Streamable for Geometry<T>
 where
     T: CoordFloat + FloatConst,
 {
-    // type SD = Self;
     type T = T;
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         match self {

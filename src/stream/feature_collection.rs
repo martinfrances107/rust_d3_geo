@@ -10,7 +10,6 @@ impl<T> Streamable for FeatureCollection<T>
 where
     T: CoordFloat + FloatConst,
 {
-    // type SD = Self;
     type T = T;
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         for f in &self.0 {

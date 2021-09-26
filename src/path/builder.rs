@@ -98,7 +98,6 @@ where
 /// Projection related methods.
 impl<L, PR, PV, T> Builder<L, PR, PV, T>
 where
-    // DRAIN: Stream<T = T> + Default,
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,

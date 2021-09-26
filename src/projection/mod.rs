@@ -194,6 +194,8 @@ pub trait Angle {
     fn angle(self, angle: Self::T) -> Self;
 }
 
+/// Returns or sets the x or y reflection.
+/// A projection builder sub trait.
 pub trait Reflect{
 
     /// f64 or f32

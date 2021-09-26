@@ -73,22 +73,7 @@ where
         angle: <Self as BuilderTrait>::T,
         // angle: StreamOrValueMaybe<<Self as BuilderTrait>::T>,
     ) -> Self;
-    // where
-    //     // Rc<<Self as BuilderTrait>::PR>:
-    //     //     Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-    //     <Self as BuilderTrait>::PR:
-    //         Clone + Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-    //     // <Self as BuilderTrait>::SD: StreamDst,
-    //     // <Self as BuilderTrait>::SD: StreamDst,
-    // <Self as BuilderTrait>::DRAIN:
-    //     'a + Default + Stream<SC = Coordinate<<Self as BuilderTrait>::T>>;
-    //     <Self as BuilderTrait>::T: AddAssign
-    //         + AsPrimitive<<Self as BuilderTrait>::T>
-    //         + Debug
-    //         + Default
-    //         + Display
-    //         + Float
-    //         + FloatConst;
+
 
     // /**
     //  * Sets the projection’s clipPIng circle radius to the specified angle in degrees and returns the projection.
@@ -156,25 +141,7 @@ where
     //  * @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
     //  * @param object A GeoJson Geometry Object or GeoSphere object supported by d3-geo (An extension of GeoJSON).
     //  */
-    // fn fit_extent(
-    //     self,
-    //     extent: [<Self as BuilderTrait>::C; 2],
-    //     object: DataObject<<Self as BuilderTrait>::T>,
-    // ) -> Projection<'a, Self::PR, Self::SD, <Self as BuilderTrait>::T>
-    // where
-    //     // Rc<<Self as BuilderTrait>::PR>:
-    //     //     Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-    //     <Self as BuilderTrait>::PR:
-    //         Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-    //     <Self as BuilderTrait>::SD:
-    //         Stream<SC = Coordinate<<Self as BuilderTrait>::T>> + Default,
-    //     <Self as BuilderTrait>::T: AddAssign
-    //         + AsPrimitive<<Self as BuilderTrait>::T>
-    //         + Debug
-    //         + Default
-    //         + Display
-    //         + Float
-    //         + FloatConst;
+
     // /**
     //  * Sets the projection’s scale and translate to fit the specified geographic geometry collection in the center of the given extent.
     //  * Returns the projection.
@@ -368,25 +335,5 @@ where
             + Display
             + FloatConst;
 
-    // fn stream(
-    //     &self,
-    //     stream_dst: Rc<
-    //         RefCell<dyn Stream<SC = Coordinate<<Self as BuilderTrait>::T>>>,
-    //     >,
-    // ) -> StreamTransformRadians<
-    //     StreamTransform<<Self as BuilderTrait>::T>,
-    //     <Self as BuilderTrait>::T,
-    // >
-    // where
-    //     <Self as BuilderTrait>::PR:
-    //         Transform<C = Coordinate<<Self as BuilderTrait>::T>>,
-    //     // SD: Stream<SC = Coordinate<Self::T>>,
-    //     // <Self as BuilderTrait>::DRAIN:
-    //     //     Clone + Default + Stream<SC = Coordinate<<Self as BuilderTrait>::T>>,
-    //     <Self as BuilderTrait>::T: AddAssign
-    //         + AsPrimitive<<Self as BuilderTrait>::T>
-    //         + Debug
-    //         + Display
-    //         + Float
-    //         + FloatConst;
+
 }

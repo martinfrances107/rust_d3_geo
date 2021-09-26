@@ -38,7 +38,6 @@ where
 impl<DRAIN, T> Raw<T> for Mercator<DRAIN, T>
 where
     DRAIN: Stream<T = T> + Default,
-    // SINK: Stream<T = T>,
     T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type Builder = MercatorBuilder<DRAIN, Line<T>, Mercator<DRAIN, T>, PV<T>, T>;

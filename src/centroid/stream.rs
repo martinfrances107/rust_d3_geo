@@ -109,7 +109,6 @@ where
         let w0 = self.y0 * z - self.z0 * y;
         let w1 = self.z0 * x - self.x0 * z;
         let w2 = self.x0 * y - self.y0 * x;
-        // let  w = atan2(sqrt((w = y0 * z - z0 * y) * w + (w = z0 * x - x0 * z) * w + (w = x0 * y - y0 * x) * w), x0 * x + y0 * y + z0 * z);
         let w =
             ((w0 * w0 + w1 * w1 + w2 * w2).sqrt()).atan2(self.x0 * x + self.y0 * y + self.z0 * z);
         self.W1 += w;
