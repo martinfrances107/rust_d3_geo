@@ -13,11 +13,13 @@ use crate::clip::PointVisible;
 use crate::projection::projection::Projection;
 use crate::projection::Raw as ProjectionRaw;
 
+use super::PointRadiusTrait;
 use super::context::Context as PathContext;
 use super::context_stream::ContextStream;
 use super::path::Path;
 use super::string::String as PathString;
 use super::PointRadiusEnum;
+
 
 /// Path builder.
 #[derive(Debug)]
@@ -28,7 +30,7 @@ where
     PV: PointVisible<T = T>,
     T: CoordFloat + Display + FloatConst,
 {
-    point_radius: PointRadiusEnum<T>,
+    pr: Option<T>,
     context: Option<Rc<CanvasRenderingContext2d>>,
     context_stream: Rc<RefCell<ContextStream<T>>>,
     projection: Option<Projection<ContextStream<T>, L, PR, PV, T>>,
@@ -46,7 +48,7 @@ where
         Self {
             context: None,
             context_stream,
-            point_radius: PointRadiusEnum::Val(T::from(4.5_f64).unwrap()),
+            pr: Some(T::from(4.5_f64).unwrap()),
             projection: None,
         }
     }
@@ -69,13 +71,20 @@ where
     pub fn context(self, context: CanvasRenderingContext2d) -> Builder<L, PR, PV, T> {
         let context = Rc::new(context);
         Builder {
-            point_radius: self.point_radius,
+            pr: self.pr,
             context: Some(context.clone()),
             context_stream: Rc::new(RefCell::new(ContextStream::C(PathContext::<T>::new(
                 context,
             )))),
             projection: self.projection,
         }
+    }
+
+    /// Sets the radius of the displayed point, None implies no point to is drawn.
+    pub fn point_radius(mut self, radius: Option<T>) -> Self{
+        self.pr = radius;
+        self.context_stream.borrow_mut().point_radius(self.pr);
+        self
     }
 
     /// Returns a Builder from default values.

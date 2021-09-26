@@ -86,4 +86,32 @@
 			assert_eq!(test_path(eq, object), "M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z");
 		}
 
+		#[test]
+		fn test_point_renders_a_point_of_given_radius() {
+			println!("geoPath.point(…) renders a point of a given radius");
+
+			let builder: PathBuilder<Line<f64>, EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
+			PathBuilder::context_pathstring()
+			.point_radius(Some(10_f64));
+
+			let eq = equirectangular::<ContextStream<f64>, f64>();
+			let mut path = builder.build(eq);
+			let object = DataObject::Geometry(Geometry::Point(
+				point!(x: -63_f64, y:18_f64)
+			));
+
+			let result = path.object(object);
+			match result {
+				Some(ResultEnum::String(result)) => {
+					assert_eq!(result,  "M165,160m0,10a10,10 0 1,1 0,-20a10,10 0 1,1 0,20z");
+
+				}
+				Some(_) => {
+					panic!("was expecting a String result")
+				}
+				None => {
+					panic!("was expecting a result");
+				}
+			};
+		}
 	}
