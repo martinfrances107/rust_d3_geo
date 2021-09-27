@@ -22,33 +22,44 @@ mod bounds_test {
 
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::data_object::DataObject;
+    use rust_d3_geo::path::builder::Builder;
     use rust_d3_geo::path::path::Path;
-	use rust_d3_geo::path::builder::Builder;
     use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
-    use rust_d3_geo::projection::Scale;
-	use rust_d3_geo::projection::Precision;
+    use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Raw as ProjectionRaw;
+    use rust_d3_geo::projection::Scale;
 
     #[inline]
     fn equirectangular<T: AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst>(
-    ) -> Projection<ContextStream<T>, Line<T>, EquirectangularRaw<ContextStream<T>, T>, PV<T>, T> {
-        EquirectangularRaw::builder()
-            .scale(T::from(900f64 / PI).unwrap())
-            .precision(&T::zero())
-            .build()
+    ) -> Rc<Projection<ContextStream<T>, Line<T>, EquirectangularRaw<ContextStream<T>, T>, PV<T>, T>>
+    {
+        Rc::new(
+            EquirectangularRaw::builder()
+                .scale(T::from(900f64 / PI).unwrap())
+                .precision(&T::zero())
+                .build(),
+        )
     }
 
     #[inline]
     fn test_bounds<'a, T>(
-        projection: Projection<ContextStream<T>, Line<T>, EquirectangularRaw<ContextStream<T>, T>, PV<T>, T>,
+        projection: Rc<
+            Projection<
+                ContextStream<T>,
+                Line<T>,
+                EquirectangularRaw<ContextStream<T>, T>,
+                PV<T>,
+                T,
+            >,
+        >,
         object: &DataObject<T>,
-    ) -> [Coordinate<T>;2]
+    ) -> [Coordinate<T>; 2]
     where
         T: AsPrimitive<T> + CoordFloat + FloatConst + Display + AddAssign + Default,
     {
-		let cs = Rc::new(RefCell::new(ContextStream::default()));
+        let cs = Rc::new(RefCell::new(ContextStream::default()));
         match Builder::new(cs).build(projection).bounds(object) {
             Some(p) => match p {
                 ResultEnum::Bounds(b) => return b,
@@ -74,7 +85,19 @@ mod bounds_test {
             vec![],
         )));
         let eq = equirectangular::<f64>();
-        assert_eq!(test_bounds(eq, &object), [Coordinate{x:980_f64, y:245_f64}, Coordinate{x:985_f64, y:250_f64}]);
+        assert_eq!(
+            test_bounds(eq, &object),
+            [
+                Coordinate {
+                    x: 980_f64,
+                    y: 245_f64
+                },
+                Coordinate {
+                    x: 985_f64,
+                    y: 250_f64
+                }
+            ]
+        );
     }
 
     #[test]
@@ -100,7 +123,19 @@ mod bounds_test {
             ],
         )));
         let eq = equirectangular::<f64>();
-        assert_eq!(test_bounds(eq, &object), [Coordinate{x: 980_f64, y: 245_f64}, Coordinate{x: 985_f64,y: 250_f64}]);
+        assert_eq!(
+            test_bounds(eq, &object),
+            [
+                Coordinate {
+                    x: 980_f64,
+                    y: 245_f64
+                },
+                Coordinate {
+                    x: 985_f64,
+                    y: 250_f64
+                }
+            ]
+        );
     }
 
     #[test]
@@ -108,6 +143,18 @@ mod bounds_test {
         println!("geoPath.area(…) of a sphere");
         let eq = equirectangular::<f64>();
         let object = DataObject::Sphere(Sphere::default());
-        assert_eq!(test_bounds(eq, &object), [Coordinate{x: -420_f64, y: -200_f64}, Coordinate{x: 1380_f64,y: 700_f64}]);
+        assert_eq!(
+            test_bounds(eq, &object),
+            [
+                Coordinate {
+                    x: -420_f64,
+                    y: -200_f64
+                },
+                Coordinate {
+                    x: 1380_f64,
+                    y: 700_f64
+                }
+            ]
+        );
     }
 }

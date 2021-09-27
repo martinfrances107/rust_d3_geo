@@ -13,12 +13,11 @@ use crate::clip::PointVisible;
 use crate::projection::projection::Projection;
 use crate::projection::Raw as ProjectionRaw;
 
-use super::PointRadiusTrait;
 use super::context::Context as PathContext;
 use super::context_stream::ContextStream;
 use super::path::Path;
 use super::string::String as PathString;
-
+use super::PointRadiusTrait;
 
 /// Path builder.
 #[derive(Debug)]
@@ -80,7 +79,7 @@ where
     }
 
     /// Sets the radius of the displayed point, None implies no point to is drawn.
-    pub fn point_radius(mut self, radius: Option<T>) -> Self{
+    pub fn point_radius(mut self, radius: Option<T>) -> Self {
         self.pr = radius;
         self.context_stream.borrow_mut().point_radius(self.pr);
         self
@@ -105,7 +104,10 @@ where
 {
     /// From the progammed state generate a new projection.
     #[inline]
-    pub fn build(self, projection: Projection<ContextStream<T>, L, PR, PV, T>) -> Path<L, PR, PV, T>
+    pub fn build(
+        self,
+        projection: Rc<Projection<ContextStream<T>, L, PR, PV, T>>,
+    ) -> Path<L, PR, PV, T>
     where
         PR: ProjectionRaw<T>,
     {

@@ -6,6 +6,7 @@ mod path_area_test {
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
+    use std::rc::Rc;
 
     use geo::CoordFloat;
     use geo::Coordinate;
@@ -30,20 +31,24 @@ mod path_area_test {
 
     #[inline]
     fn equirectangular<DRAIN, T>(
-    ) -> Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>
+    ) -> Rc<Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
     where
         DRAIN: Stream<T = T> + Default,
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        EquirectangularRaw::builder()
-            .scale(T::from(900f64 / PI).unwrap())
-            .precision(&T::zero())
-            .build()
+        Rc::new(
+            EquirectangularRaw::builder()
+                .scale(T::from(900f64 / PI).unwrap())
+                .precision(&T::zero())
+                .build(),
+        )
     }
 
     #[inline]
     fn test_area<'a, DRAIN, T>(
-        projection: Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
+        projection: Rc<
+            Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
+        >,
         object: DataObject<T>,
     ) -> T
     where
