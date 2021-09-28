@@ -59,6 +59,13 @@ where
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let two = T::from(2).unwrap();
+        // Divergence between f64 and f32
+        // when p.y  = 1.5707963267948966
+        // f64 outputs the correct result -37.33185619326892
+        // The f32 value is junk... at least different from JS
+        // tan(pi/2) is undefined. The value returned
+        //from tan(pi_f64/2_f64) happens to be the same
+        // large number in both the JS and RUST.
         Coordinate {
             x: p.x,
             y: ((T::FRAC_PI_2() + p.y) / two).tan().ln(),
