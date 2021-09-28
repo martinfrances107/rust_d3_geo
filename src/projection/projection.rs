@@ -75,7 +75,7 @@ where
     pub(crate) resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
 
     pub(crate) rotate_factory: RotateFactory<DRAIN, L, PR, PV, T>,
-    /// Used exclusive by Transform( not stream releated).
+    /// Used exclusively by Transform( not stream releated).
     pub rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     pub(crate) rotate_transform_factory: RotateTransformFactory<DRAIN, L, PR, PV, T>,
