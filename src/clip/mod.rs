@@ -81,8 +81,8 @@ where
     fn point_visible(&self, p: &Coordinate<Self::T>, z: Option<u8>) -> bool;
 }
 
-/// A stage in the projector pipeline.
-pub(crate) type PostClipFn<DRAIN> = Rc<dyn Fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>>;
+// /// A stage in the projector pipeline.
+// pub(crate) type PostClipFn<DRAIN> = Rc<dyn Fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>>;
 
 /// Resample Stream Node - helper function.
 pub(crate) type InterpolateFn<STREAM, T> =

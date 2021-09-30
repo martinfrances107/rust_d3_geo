@@ -1,7 +1,3 @@
-use crate::projection::BoundsStream;
-use crate::projection::DataObject;
-use crate::projection::Fit;
-use crate::projection::Rotate;
 use std::rc::Rc;
 
 use derivative::Derivative;
@@ -17,31 +13,40 @@ use crate::clip::rectangle::rectangle::Rectangle as ClipRectangle;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
-use crate::clip::PostClipFn;
+// use crate::clip::PostClipFn;
 use crate::compose::Compose;
+use crate::identity::Identity;
+use crate::projection::post_clip_node::PostClipNode;
 use crate::projection::Precision;
 use crate::rotation::rotate_radians;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::Reflect;
 use super::fit::fit_extent;
 use super::fit::fit_size;
+use super::post_clip::PostClip;
 use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
 use super::str::generate as generate_str;
 use super::str::scale_translate_rotate::ScaleTranslateRotate;
+use super::stream_node::StreamNode;
 use super::stream_node_factory::StreamNodeFactory;
+use super::stream_node_post_clip_factory::StreamNodePostClipFactory;
 use super::stream_transform_radians::StreamTransformRadians;
+use super::Angle;
+use super::BoundsStream;
 use super::Center;
 use super::ClipExtent;
+use super::DataObject;
+use super::Fit;
 use super::Projection;
 use super::Raw as ProjectionRaw;
+use super::Reflect;
+use super::Rotate;
 use super::RotateFactory;
 use super::RotateTransformFactory;
 use super::Scale;
-use super::Angle;
 use super::Translate;
 
 /// Projection builder.
@@ -55,7 +60,7 @@ where
     L: Line,
     PR: ProjectionRaw<T> + Transform<T = T>,
     PV: PointVisible<T = T>,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     projection_raw: PR,
 
@@ -83,12 +88,6 @@ where
     x1: Option<T>,
     y1: Option<T>, // post-clip extent
 
-    /// Projection pipeline stage.
-    pub preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
-
-    /// Projection postclip.
-    #[derivative(Debug = "ignore")]
-    pub postclip: PostClipFn<DRAIN>,
     /// Used by recenter() to build the factories.
     pub rotate: RotateRadians<T>, //rotate, pre-rotate
     project_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
@@ -97,9 +96,14 @@ where
         Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     /// Projection pipeline stage.
+    pub postclip_factory: StreamNodePostClipFactory<DRAIN, T>,
+    /// Projection pipeline stage.
+    pub preclip_factory:
+        StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+    /// Projection pipeline stage.
     pub rotate_factory: RotateFactory<DRAIN, L, PR, PV, T>,
     /// Projection pipeline stage
-    pub resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
+    pub resample_factory: StreamNodeResampleFactory<PR, PostClipNode<DRAIN, T>, T>,
     /// Projection pipeline stage
     pub rotate_transform_factory: RotateTransformFactory<DRAIN, L, PR, PV, T>,
 }
@@ -115,7 +119,13 @@ where
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
     pub fn new(
-        preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
+        preclip_factory: StreamNodeClipFactory<
+            L,
+            PR,
+            PV,
+            ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+            T,
+        >,
         projection_raw: PR,
     ) -> Self {
         let x = T::from(480_f64).unwrap();
@@ -138,6 +148,7 @@ where
         let project_transform = Compose::new(projection_raw.clone(), str);
         let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
 
+        let postclip_factory = StreamNodePostClipFactory::new(PostClip::I(Identity {}));
         let rotate_factory = StreamNodeFactory::new(rotate.clone());
         let resample_factory = StreamNodeResampleFactory::new(project_transform.clone(), T::zero());
         let rotate_transform_factory = StreamNodeFactory::new(project_rotate_transform.clone());
@@ -150,7 +161,7 @@ where
             delta_lambda,
             delta_phi,
             delta_gamma,
-            postclip: Rc::new(|x| x),
+            // postclip: Rc::new(|x| x),
             x,
             y,
 
@@ -173,6 +184,7 @@ where
             project_transform,
             project_rotate_transform,
             /// Pass into Projection,
+            postclip_factory,
             preclip_factory,
             resample_factory,
             rotate_factory,
@@ -186,7 +198,7 @@ where
     #[inline]
     pub fn build(&self) -> Projection<DRAIN, L, PR, PV, T> {
         Projection {
-            postclip: self.postclip.clone(),
+            postclip_factory: self.postclip_factory.clone(),
             preclip_factory: self.preclip_factory.clone(),
             resample_factory: self.resample_factory.clone(),
 
@@ -342,7 +354,7 @@ where
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {
-         fit_size(self, size, object)
+        fit_size(self, size, object)
     }
 }
 
@@ -352,7 +364,8 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + CoordFloat + FloatConst{
+    T: 'static + CoordFloat + FloatConst,
+{
     /// f64 or f32
     type T = T;
 
@@ -371,7 +384,6 @@ where
         self.recenter()
     }
 }
-
 
 impl<DRAIN, L, PR, PV, T> Scale for Builder<DRAIN, L, PR, PV, T>
 where
@@ -420,7 +432,7 @@ where
                 self.y0 = None;
                 self.x1 = None;
                 self.y1 = None;
-                self.postclip = Rc::new(|x| x);
+                self.postclip_factory = StreamNodePostClipFactory::new(PostClip::I(Identity {}));
                 self
             }
             Some(extent) => {
@@ -429,12 +441,13 @@ where
                 self.y0 = Some(extent[0].y);
                 self.x1 = Some(extent[1].x);
                 self.y1 = Some(extent[1].y);
-                ClipRectangle::new(
-                    self.x0.unwrap(),
-                    self.y0.unwrap(),
-                    self.x1.unwrap(),
-                    self.y1.unwrap(),
-                );
+                self.postclip_factory =
+                    StreamNodePostClipFactory::new(PostClip::R(ClipRectangle::new(
+                        self.x0.unwrap(),
+                        self.y0.unwrap(),
+                        self.x1.unwrap(),
+                        self.y1.unwrap(),
+                    )));
                 self.reset()
             }
         }
@@ -512,7 +525,6 @@ where
         self.recenter()
     }
 }
-
 
 impl<DRAIN, L, PR, PV, T> Reflect for Builder<DRAIN, L, PR, PV, T>
 where
@@ -797,8 +809,4 @@ where
     //  * @param point The projected point, specified as a two-element array [x, y] (tyPIcally in PIxels).
     //  */
     // invert?(point: [number, number]): [number, number] | null;
-
-
-
-
 }

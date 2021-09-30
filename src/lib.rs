@@ -45,8 +45,8 @@ pub mod rotation;
 /// Stream related helper functions.
 pub mod stream;
 
+mod identity;
 mod point_equal;
-
 /// 2-D Transform common to projections and, rotations.
 ///
 /// FloatConst is required by forward_rotation_lambda()

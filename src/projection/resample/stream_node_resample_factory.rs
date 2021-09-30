@@ -7,6 +7,7 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
+use crate::projection::post_clip_node::PostClipNode;
 use crate::projection::resample::Resample;
 use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use crate::projection::stream_node::StreamNode;
@@ -64,8 +65,7 @@ where
 {
     type Sink = SINK;
     type T = T;
-    // type Raw = ResampleNode<PR, SINK, T>;
-    type Node = ResampleNode<PR, SINK, Self::T>;
+    type Node = ResampleNode<PR, Self::Sink, Self::T>;
     fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
         match self.delta2.is_zero() {
             true => ResampleNode::RN(StreamNode {

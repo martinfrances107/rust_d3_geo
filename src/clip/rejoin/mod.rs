@@ -31,6 +31,7 @@ pub fn rejoin<SINK, T>(
     SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
+    dbg!("rejoin entry");
     let mut start_inside = start_inside;
     let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();
     let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
@@ -90,7 +91,7 @@ pub fn rejoin<SINK, T>(
         ))));
         clip.push((*x2).borrow().o.clone().unwrap());
     }
-
+    dbg!("rejoin", segments);
     if subject.is_empty() {
         return;
     }

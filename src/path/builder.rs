@@ -26,7 +26,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + Display + FloatConst,
 {
     pr: Option<T>,
     context: Option<Rc<CanvasRenderingContext2d>>,

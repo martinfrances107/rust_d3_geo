@@ -1,6 +1,6 @@
 use std::cell::RefCell;
-use std::fmt::Display;
 use std::fmt::Debug;
+use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
@@ -9,16 +9,17 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::data_object::DataObject;
-use crate::path::bounds_stream::BoundsStream;
 use crate::clip::clip::Clip;
 use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
+use crate::data_object::DataObject;
+use crate::path::bounds_stream::BoundsStream;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
+use self::post_clip_node::PostClipNode;
 use self::str::scale_translate_rotate::ScaleTranslateRotate;
 use projection::Projection;
 use resample::ResampleNode;
@@ -57,24 +58,47 @@ pub mod str;
 pub mod stream_node;
 /// Generates stream node objects.
 pub mod stream_node_factory;
+/// Generate post clip stream node.
+pub mod stream_node_post_clip_factory;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
 
 /// Helper functions found measuring the extent, width or height.
 mod fit;
+mod post_clip;
+mod post_clip_node;
 mod resample;
+
+/// Projection type.
+pub type PostClipFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
+    PostClipNode<DRAIN, T>,
+    StreamNode<
+        Clip<L, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+        ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+        T,
+    >,
+    T,
+>;
 
 /// Projection type.
 pub type RotateFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
     RotateRadians<T>,
-    StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
+    StreamNode<
+        Clip<L, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+        ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+        T,
+    >,
     T,
 >;
 
 /// Projection type.
 pub type RotateTransformFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
     Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
-    StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
+    StreamNode<
+        Clip<L, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+        ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+        T,
+    >,
     T,
 >;
 
@@ -196,8 +220,7 @@ pub trait Angle {
 
 /// Returns or sets the x or y reflection.
 /// A projection builder sub trait.
-pub trait Reflect{
-
+pub trait Reflect {
     /// f64 or f32
     type T;
 
@@ -207,13 +230,13 @@ pub trait Reflect{
     /// Set the projection builder to invert the x-coordinate.
     fn reflect_x(self, reflect: bool) -> Self
     where
-    // <Self as Reflect>::PR: Transform<T = <Self as Reflect>::T>,
-    <Self as Reflect>::T: AddAssign
-    + AsPrimitive<<Self as Reflect>::T>
-    + CoordFloat
-    + Debug
-    + Display
-    + FloatConst;
+        // <Self as Reflect>::PR: Transform<T = <Self as Reflect>::T>,
+        <Self as Reflect>::T: AddAssign
+            + AsPrimitive<<Self as Reflect>::T>
+            + CoordFloat
+            + Debug
+            + Display
+            + FloatConst;
 
     /// Is the projection builder set to invert the x-coordinate.
     fn get_reflect_y(&self) -> bool;
@@ -221,20 +244,20 @@ pub trait Reflect{
     /// Set the projection builder to invert the y-coordinate.
     fn reflect_y(self, reflect: bool) -> Self
     where
-    // <Self as Reflect>::PR: Transform<T = <Self as Reflect>::T>,
-    <Self as Reflect>::T: AddAssign
-    + AsPrimitive<<Self as Reflect>::T>
-    + CoordFloat
-    + Debug
-    + Display
-    + FloatConst;
+        // <Self as Reflect>::PR: Transform<T = <Self as Reflect>::T>,
+        <Self as Reflect>::T: AddAssign
+            + AsPrimitive<<Self as Reflect>::T>
+            + CoordFloat
+            + Debug
+            + Display
+            + FloatConst;
 }
 
-    /// Generates elements of the projection stream pipeline.
-    pub trait NodeFactory
-    where
+/// Generates elements of the projection stream pipeline.
+pub trait NodeFactory
+where
     <Self as NodeFactory>::T: CoordFloat,
-    {
+{
     /// The resultant node type.
     type Node;
     /// The downstream node.

@@ -22,6 +22,7 @@ use super::StreamNode;
 #[derive(Copy, Clone, Debug)]
 pub struct StreamNodeFactory<RAW, SINK, T>
 where
+    RAW: Clone,
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
@@ -32,6 +33,7 @@ where
 
 impl<RAW, SINK, T> StreamNodeFactory<RAW, SINK, T>
 where
+    RAW: Clone,
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
@@ -44,7 +46,8 @@ where
     }
 }
 
-/// RAW here can be projection_raw or line_raw,
+// /// RAW here can be projection_raw or line_raw,
+/// as used by link_sink_factory.
 impl<RAW, SINK, T> NodeFactory for StreamNodeFactory<RAW, SINK, T>
 where
     RAW: Clone,

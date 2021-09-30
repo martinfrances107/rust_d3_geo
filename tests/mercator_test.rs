@@ -1,6 +1,8 @@
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod mercator_tests {
+    use std::rc::Rc;
+
     use geo::Coordinate;
     use geo::Geometry;
 
@@ -27,12 +29,14 @@ mod mercator_tests {
     // #[test]
     // fn test_clip_extent_defaults_to_automatic() {
     //     println!("mercator.clipExtent(null) sets the default automatic clip extent");
-    //     let projection = Mercator::builder()
-    //         .translate(&Coordinate { x: 0_f32, y: 0_f32 })
-    //         .scale(1_f32)
-    //         .clip_extent(None)
-    //         .precision(&0_f32)
-    //         .build();
+    //     let projection = Rc::new(
+    //         Mercator::builder()
+    //             .translate(&Coordinate { x: 0_f32, y: 0_f32 })
+    //             .scale(1_f32)
+    //             .clip_extent(None)
+    //             .precision(&0_f32)
+    //             .build(),
+    //     );
 
     //     let path_builder = PathBuilder::context_pathstring();
 
@@ -42,6 +46,44 @@ mod mercator_tests {
     //         Some(r) => match r {
     //             ResultEnum::String(s) => {
     //                 assert_eq!(s, "M3.141593,-3.141593L3.141593,0L3.141593,3.141593L3.141593,3.141593L-3.141593,3.141593L-3.141593,3.141593L-3.141593,0L-3.141593,-3.141593L-3.141593,-3.141593L3.141593,-3.141593Z");
+    //             }
+    //             _ => todo!("must handle "),
+    //         },
+    //         None => panic!("Expecting an string."),
+    //     }
+    // }
+
+    // #[test]
+    // fn test_updates_the_intersected_clip_extent() {
+    //     println!(
+    //         "mercator.clipExtent(extent).translate(translate) updates the intersected clip extent"
+    //     );
+    //     let projection = Rc::new(
+    //         Mercator::builder()
+    //             .scale(1_f64)
+    //             .clip_extent(Some([
+    //                 Coordinate {
+    //                     x: -10_f64,
+    //                     y: -10_f64,
+    //                 },
+    //                 Coordinate {
+    //                     x: 10_f64,
+    //                     y: 10_f64,
+    //                 },
+    //             ]))
+    //             .translate(&Coordinate { x: 0_f64, y: 0_f64 })
+    //             .precision(&0_f64)
+    //             .build(),
+    //     );
+
+    //     let path_builder = PathBuilder::context_pathstring();
+
+    //     let object = DataObject::Sphere(Sphere::default());
+
+    //     match path_builder.build(projection).object(object) {
+    //         Some(r) => match r {
+    //             ResultEnum::String(s) => {
+    //                 assert_eq!(s, "M3.141593,-10L3.141593,0L3.141593,10L3.141593,10L-3.141593,10L-3.141593,10L-3.141593,0L-3.141593,-10L-3.141593,-10L3.141593,-10Z");
     //             }
     //             _ => todo!("must handle "),
     //         },

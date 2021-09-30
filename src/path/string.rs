@@ -126,6 +126,8 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+        dbg!("string point");
+        dbg!(p);
         match self.point {
             PointState::LineAtStart => {
                 self.string.push(format!("M{},{}", p.x, p.y));

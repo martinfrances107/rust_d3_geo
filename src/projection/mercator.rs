@@ -66,6 +66,7 @@ where
         // tan(pi/2) is undefined. The value returned
         //from tan(pi_f64/2_f64) happens to be the same
         // large number in both the JS and RUST.
+        dbg!(((T::FRAC_PI_2() + p.y) / two).tan().ln());
         Coordinate {
             x: p.x,
             y: ((T::FRAC_PI_2() + p.y) / two).tan().ln(),

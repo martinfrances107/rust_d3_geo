@@ -10,16 +10,18 @@ use crate::clip::clip::Clip;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
-use crate::clip::PostClipFn;
+// use crate::clip::PostClipFn;
 use crate::compose::Compose;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
+use super::post_clip_node::PostClipNode;
 use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
 use super::str::scale_translate_rotate::ScaleTranslateRotate;
 use super::stream_node_factory::StreamNodeFactory;
+use super::stream_node_post_clip_factory::StreamNodePostClipFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::NodeFactory;
 use super::Raw as ProjectionRaw;
@@ -35,7 +37,11 @@ type TransformRadiansFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
     StreamTransformRadians,
     StreamNode<
         RotateRadians<T>,
-        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
+        StreamNode<
+            Clip<L, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+            ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+            T,
+        >,
         T,
     >,
     T,
@@ -47,7 +53,11 @@ pub type ProjectionStreamOutput<DRAIN, L, PR, PV, T> = StreamNode<
     StreamTransformRadians,
     StreamNode<
         RotateRadians<T>,
-        StreamNode<Clip<L, PV, ResampleNode<PR, DRAIN, T>, T>, ResampleNode<PR, DRAIN, T>, T>,
+        StreamNode<
+            Clip<L, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+            ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+            T,
+        >,
         T,
     >,
     T,
@@ -65,14 +75,14 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
-    #[derivative(Debug = "ignore")]
-    pub(crate) postclip: PostClipFn<DRAIN>,
+    pub(crate) postclip_factory: StreamNodePostClipFactory<DRAIN, T>,
 
-    pub(crate) preclip_factory: StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, DRAIN, T>, T>,
+    pub(crate) resample_factory: StreamNodeResampleFactory<PR, PostClipNode<DRAIN, T>, T>,
 
-    pub(crate) resample_factory: StreamNodeResampleFactory<PR, DRAIN, T>,
+    pub(crate) preclip_factory:
+        StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
 
     pub(crate) rotate_factory: RotateFactory<DRAIN, L, PR, PV, T>,
     /// Used exclusively by Transform( not stream releated).
@@ -101,9 +111,10 @@ where
     /// In javascript stream is used as a property to be removed from the object.
     /// In rust that is a closure.
     pub fn stream(&self, drain: Rc<RefCell<DRAIN>>) -> ProjectionStreamOutput<DRAIN, L, PR, PV, T> {
-        let postclip = (self.postclip)(drain);
+        // let postclip = (self.postclip)(drain);
+        let postclip_node = Rc::new(RefCell::new(self.postclip_factory.generate(drain)));
 
-        let resample_node = Rc::new(RefCell::new(self.resample_factory.generate(postclip)));
+        let resample_node = Rc::new(RefCell::new(self.resample_factory.generate(postclip_node)));
 
         let preclip_node = Rc::new(RefCell::new(self.preclip_factory.generate(resample_node)));
 
