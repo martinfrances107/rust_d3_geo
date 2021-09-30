@@ -6,7 +6,6 @@ use derivative::Derivative;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::identity::Identity;
 use crate::projection::post_clip_node::PostClipNode;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::NodeFactory;
@@ -36,6 +35,7 @@ impl<SINK, T> StreamNodePostClipFactory<SINK, T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// Given a PostClip construct a StreamNode.
     pub fn new(post_clip: PostClip<T>) -> StreamNodePostClipFactory<SINK, T> {
         StreamNodePostClipFactory {
             phantom_sink: PhantomData::<SINK>,
@@ -56,8 +56,8 @@ where
     fn generate(&self, sink: Rc<RefCell<SINK>>) -> Self::Node {
         match &self.post_clip {
             PostClip::I(i) => PostClipNode::I(StreamNode {
-                raw: Identity {},
-                sink: sink,
+                raw: i.clone(),
+                sink,
             }),
             PostClip::R(r) => PostClipNode::R(StreamNode {
                 raw: r.clone(),

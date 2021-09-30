@@ -1,6 +1,5 @@
 use std::cell::RefCell;
 use std::cmp::Ordering;
-use std::marker::PhantomData;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -16,9 +15,7 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::rejoin::rejoin as clip_rejoin;
 use crate::clip::rejoin::CompareIntersectionsFn;
 use crate::clip::InterpolateFn;
-use crate::projection::projection::Projection;
 use crate::projection::stream_node::StreamNode;
-use crate::projection::Raw;
 use crate::stream::Stream;
 
 ///A primitive type used to for a PostClipNode pipeline stage.

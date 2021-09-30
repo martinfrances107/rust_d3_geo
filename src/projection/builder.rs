@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -13,7 +11,6 @@ use crate::clip::rectangle::rectangle::Rectangle as ClipRectangle;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
-// use crate::clip::PostClipFn;
 use crate::compose::Compose;
 use crate::identity::Identity;
 use crate::projection::post_clip_node::PostClipNode;
@@ -30,7 +27,6 @@ use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
 use super::str::generate as generate_str;
 use super::str::scale_translate_rotate::ScaleTranslateRotate;
-use super::stream_node::StreamNode;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_node_post_clip_factory::StreamNodePostClipFactory;
 use super::stream_transform_radians::StreamTransformRadians;

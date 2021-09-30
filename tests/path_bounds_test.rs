@@ -2,10 +2,6 @@
 #[cfg(test)]
 mod bounds_test {
 
-    use rust_d3_geo::clip::antimeridian::line::Line;
-    use rust_d3_geo::clip::antimeridian::pv::PV;
-    use rust_d3_geo::path::context_stream::ContextStream;
-    use rust_d3_geo::stream::StreamDrainStub;
     use std::cell::RefCell;
     use std::f64::consts::PI;
     use std::fmt::Display;
@@ -20,10 +16,12 @@ mod bounds_test {
     use num_traits::AsPrimitive;
     use num_traits::FloatConst;
 
+    use rust_d3_geo::clip::antimeridian::line::Line;
+    use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::builder::Builder;
-    use rust_d3_geo::path::path::Path;
+    use rust_d3_geo::path::context_stream::ContextStream;
     use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;

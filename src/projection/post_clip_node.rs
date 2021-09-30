@@ -1,6 +1,3 @@
-use std::cell::RefCell;
-use std::rc::Rc;
-
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -8,10 +5,7 @@ use crate::clip::rectangle::rectangle::Rectangle;
 use crate::identity::Identity;
 use crate::stream::Stream;
 
-use super::resample::resample::Resample;
 use super::stream_node::StreamNode;
-use super::stream_node_factory::StreamNodeFactory;
-use super::{NodeFactory, Raw};
 
 #[derive(Clone, Debug)]
 pub enum PostClipNode<SINK, T>
