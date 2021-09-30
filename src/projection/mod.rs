@@ -10,6 +10,7 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::clip::Clip;
+use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
@@ -19,7 +20,6 @@ use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
-use self::post_clip_node::PostClipNode;
 use self::str::scale_translate_rotate::ScaleTranslateRotate;
 use projection::Projection;
 use resample::ResampleNode;
@@ -58,15 +58,12 @@ pub mod str;
 pub mod stream_node;
 /// Generates stream node objects.
 pub mod stream_node_factory;
-/// Generate post clip stream node.
-pub mod stream_node_post_clip_factory;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
 
 /// Helper functions found measuring the extent, width or height.
 mod fit;
-mod post_clip;
-mod post_clip_node;
+
 mod resample;
 
 /// Projection type.

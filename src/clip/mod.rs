@@ -1,5 +1,9 @@
 /// Related the specifics of antimeridian clipping.
 pub mod antimeridian;
+/// Clipping algorithm need to stores points
+/// until the end of the polygon is signalled
+/// and then clipping can calculate the a new clip polygon.
+pub mod buffer;
 /// Related the specifics of circle clipping.
 pub mod circle;
 /// Holds the clip struct.
@@ -8,15 +12,13 @@ pub mod clip;
 pub mod compare_intersection;
 /// The state of the line segments??
 pub mod line_elem;
+pub mod post_clip;
+pub mod post_clip_node;
+pub(crate) mod rectangle;
 /// Factory takes in complex definition and output a stream pipeline node element.
 pub mod stream_node_clip_factory;
-
-/// Clipping algorithm need to stores points
-/// until the end of the polygon is signalled
-/// and then clipping can calculate the a new clip polygon.
-pub mod buffer;
-
-pub(crate) mod rectangle;
+/// Generate post clip stream node.
+pub mod stream_node_post_clip_factory;
 
 mod intersection;
 /// Rectangle helper function.

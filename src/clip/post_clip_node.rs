@@ -3,9 +3,8 @@ use num_traits::FloatConst;
 
 use crate::clip::rectangle::rectangle::Rectangle;
 use crate::identity::Identity;
+use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
-
-use super::stream_node::StreamNode;
 
 #[derive(Clone, Debug)]
 pub enum PostClipNode<SINK, T>

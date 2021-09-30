@@ -7,7 +7,9 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::clip::clip::Clip;
+use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::clip::stream_node_post_clip_factory::StreamNodePostClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
 // use crate::clip::PostClipFn;
@@ -16,12 +18,10 @@ use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::post_clip_node::PostClipNode;
 use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
 use super::str::scale_translate_rotate::ScaleTranslateRotate;
 use super::stream_node_factory::StreamNodeFactory;
-use super::stream_node_post_clip_factory::StreamNodePostClipFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::NodeFactory;
 use super::Raw as ProjectionRaw;

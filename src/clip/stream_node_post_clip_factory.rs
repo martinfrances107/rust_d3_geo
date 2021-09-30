@@ -6,7 +6,7 @@ use derivative::Derivative;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::post_clip_node::PostClipNode;
+use super::post_clip_node::PostClipNode;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::NodeFactory;
 use crate::stream::Stream;
