@@ -146,7 +146,7 @@ where
             ],
         };
 
-        self.base = self.base.clip_extent(Some(ce));
+        self.base = self.base.clip_extent(ce);
         self
     }
 }
@@ -261,24 +261,22 @@ where
         }
     }
 
+    /// clears the bounding box.
+    fn clip_extent_clear(mut self) -> Self {
+        self.x0 = None;
+        self.y0 = None;
+        self.x1 = None;
+        self.y1 = None;
+        self
+    }
+
     /// Sets the bounding box.
-    fn clip_extent(mut self, extent: Option<[Coordinate<Self::T>; 2]>) -> Self {
-        match extent {
-            Some(e) => {
-                self.x0 = Some(e[0].x);
-                self.y0 = Some(e[0].y);
-                self.x1 = Some(e[1].x);
-                self.y1 = Some(e[1].y);
-                self.reclip()
-            }
-            None => {
-                self.x0 = None;
-                self.y0 = None;
-                self.x1 = None;
-                self.y1 = None;
-                self
-            }
-        }
+    fn clip_extent(mut self, extent: [Coordinate<Self::T>; 2]) -> Self {
+        self.x0 = Some(extent[0].x);
+        self.y0 = Some(extent[0].y);
+        self.x1 = Some(extent[1].x);
+        self.y1 = Some(extent[1].y);
+        self.reclip()
     }
 }
 

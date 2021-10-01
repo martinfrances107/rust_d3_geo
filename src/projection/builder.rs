@@ -421,32 +421,28 @@ where
         }
     }
 
-    fn clip_extent(mut self, extent: Option<[Coordinate<T>; 2]>) -> Self {
-        match extent {
-            None => {
-                self.x0 = None;
-                self.y0 = None;
-                self.x1 = None;
-                self.y1 = None;
-                self.postclip_factory = StreamNodePostClipFactory::new(PostClip::I(Identity {}));
-                self
-            }
-            Some(extent) => {
-                // set x0 ...
-                self.x0 = Some(extent[0].x);
-                self.y0 = Some(extent[0].y);
-                self.x1 = Some(extent[1].x);
-                self.y1 = Some(extent[1].y);
-                self.postclip_factory =
-                    StreamNodePostClipFactory::new(PostClip::R(ClipRectangle::new(
-                        self.x0.unwrap(),
-                        self.y0.unwrap(),
-                        self.x1.unwrap(),
-                        self.y1.unwrap(),
-                    )));
-                self.reset()
-            }
-        }
+    fn clip_extent_clear(mut self) -> Self {
+        self.x0 = None;
+        self.y0 = None;
+        self.x1 = None;
+        self.y1 = None;
+        self.postclip_factory = StreamNodePostClipFactory::new(PostClip::I(Identity {}));
+        self
+    }
+
+    fn clip_extent(mut self, extent: [Coordinate<T>; 2]) -> Self {
+        // set x0 ...
+        self.x0 = Some(extent[0].x);
+        self.y0 = Some(extent[0].y);
+        self.x1 = Some(extent[1].x);
+        self.y1 = Some(extent[1].y);
+        self.postclip_factory = StreamNodePostClipFactory::new(PostClip::R(ClipRectangle::new(
+            self.x0.unwrap(),
+            self.y0.unwrap(),
+            self.x1.unwrap(),
+            self.y1.unwrap(),
+        )));
+        self.reset()
     }
 }
 

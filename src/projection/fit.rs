@@ -16,11 +16,11 @@ use crate::path::ResultEnum;
 use crate::stream::Streamable;
 
 use super::builder::Builder;
+use super::ClipExtent;
 use super::Line;
 use super::PointVisible;
 use super::Raw as ProjectionRaw;
 use super::Scale;
-use super::ClipExtent;
 use super::Translate;
 
 type FitBounds<DRAIN, L, PR, PV, T> = Box<
@@ -47,7 +47,7 @@ where
         });
 
     let builder2 = match clip {
-        Some(_) => builder1.clip_extent(None),
+        Some(_) => builder1.clip_extent_clear(),
         None => builder1,
     };
 
@@ -64,7 +64,7 @@ where
     };
     let builder3 = fit_bounds(bounds, builder2);
     match clip {
-        Some(_) => builder3.clip_extent(clip),
+        Some(extent) => builder3.clip_extent(extent),
         None => builder3,
     }
 }

@@ -93,13 +93,10 @@ mod mercator_tests {
 
     #[test]
     fn test_rotate_does_not_affect_automatic_clip_extent() {
-        println!("geoPath(MultiPoint) renders a point");
+        println!("mercator.rotate(…) does not affect the automatic clip extent");
 
-        let pb = Mercator::builder()
-            .translate(&Coordinate { x: 0_f64, y: 0_f64 })
-            .scale(1_f64)
-            .clip_extent(None)
-            .precision(&0_f64);
+        let pb = Mercator::builder();
+
         let object = DataObject::Geometry(Geometry::MultiPoint(
             vec![
                 (-82.35024908550241, 29.649391549778745),

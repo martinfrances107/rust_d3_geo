@@ -164,8 +164,13 @@ pub trait ClipExtent {
     where
         Self::T: CoordFloat;
 
+    /// clears the bounding box.
+    fn clip_extent_clear(self) -> Self
+    where
+        Self::T: CoordFloat;
+
     /// Sets the bounding box.
-    fn clip_extent(self, extent: Option<[Coordinate<Self::T>; 2]>) -> Self
+    fn clip_extent(self, extent: [Coordinate<Self::T>; 2]) -> Self
     where
         Self::T: CoordFloat;
 }
