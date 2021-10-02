@@ -30,6 +30,7 @@ use super::Projection;
 use super::Raw as ProjectionRaw;
 use super::Reflect;
 use super::Scale;
+use super::TransformExtent;
 use super::Translate;
 use crate::projection::Rotate;
 
@@ -44,7 +45,7 @@ where
     PR: ProjectionRaw<T>, // TODO limit this to only certain types of PR
     T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
-    // pr: PR,
+    pr: PR,
     base: ProjectionBuilder<DRAIN, L, PR, PV, T>,
     x0: Option<T>,
     y0: Option<T>,
@@ -67,9 +68,10 @@ where
                     LineAntimeridian::<T>::default(),
                     PVAntimeridian::default(),
                 ),
-                pr,
+                pr.clone(),
             );
         Self {
+            pr,
             base,
             x0: None,
             y0: None,
@@ -98,7 +100,7 @@ impl<DRAIN, L, PR, PV, T> MercatorBuilder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
     L: Line,
-    PR: ProjectionRaw<T>,
+    PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -112,27 +114,10 @@ where
         });
         let t = self.base.build().transform(&t);
         let ce = match (self.x0, self.y0, self.x1, self.y1) {
-            (Some(_x0), Some(y0), Some(x1), Some(y1)) => {
-                [
-                    Coordinate {
-                        x: Float::max(t.x - k, t.y - k),
-                        y: y0,
-                    },
-                    Coordinate {
-                        x: Float::min(t.x + k, x1),
-                        y: y1,
-                    },
-                ]
-                // _ => [
-                // 	Coordinate {
-                // 		x: x0,
-                // 		y: (t.y - k).max(self.y0),
-                // 	},
-                // 	Coordinate {
-                // 		x: self.x1,
-                // 		y: (t.y + k).min(self.y1),
-                // 	},
-                // ],
+            (Some(x0), Some(y0), Some(x1), Some(y1)) => {
+                // MercatorRaw and MercatorTransverseRaw supply different
+                // transforms
+                self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
             }
             _ => [
                 Coordinate {
@@ -155,7 +140,7 @@ impl<DRAIN, L, PR, PV, T> Scale for MercatorBuilder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
     L: Line,
-    PR: ProjectionRaw<T>,
+    PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -176,7 +161,7 @@ impl<DRAIN, L, PR, PV, T> Translate for MercatorBuilder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
     L: Line,
-    PR: ProjectionRaw<T>,
+    PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -245,7 +230,7 @@ impl<DRAIN, L, PR, PV, T> ClipExtent for MercatorBuilder<DRAIN, L, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
     L: Line,
-    PR: ProjectionRaw<T>,
+    PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
 {

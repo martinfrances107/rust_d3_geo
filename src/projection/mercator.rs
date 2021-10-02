@@ -1,4 +1,5 @@
 use num_traits::AsPrimitive;
+use num_traits::Float;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
@@ -12,6 +13,7 @@ use crate::Transform;
 use super::mercator_builder::MercatorBuilder;
 use super::Raw;
 use super::Scale;
+use super::TransformExtent;
 
 /// Defines a projection.
 #[derive(Clone, Copy, Debug)]
@@ -27,11 +29,42 @@ impl<DRAIN, T> Default for Mercator<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
+    #[inline]
     fn default() -> Self {
         Mercator {
             p_drain: PhantomData::<DRAIN>,
             p_t: PhantomData::<T>,
         }
+    }
+}
+
+impl<DRAIN, T> TransformExtent<T> for Mercator<DRAIN, T>
+where
+    DRAIN: Stream<T = T> + Default,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
+{
+    type T = T;
+
+    #[inline]
+    fn transform_extent(
+        self,
+        k: T,
+        t: Coordinate<T>,
+        x0: T,
+        y0: T,
+        x1: T,
+        y1: T,
+    ) -> [Coordinate<T>; 2] {
+        [
+            Coordinate {
+                x: Float::max(t.x - k, t.y - k),
+                y: y0,
+            },
+            Coordinate {
+                x: Float::min(t.x + k, x1),
+                y: y1,
+            },
+        ]
     }
 }
 

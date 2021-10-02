@@ -15,6 +15,8 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::rejoin::rejoin as clip_rejoin;
 use crate::clip::rejoin::CompareIntersectionsFn;
 use crate::clip::InterpolateFn;
+use crate::path::Result;
+use crate::path::ResultEnum;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 

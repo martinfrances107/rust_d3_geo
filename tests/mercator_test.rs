@@ -61,7 +61,7 @@ mod mercator_tests {
     //     let projection = Rc::new(
     //         Mercator::builder()
     //             .scale(1_f64)
-    //             .clip_extent(Some([
+    //             .clip_extent([
     //                 Coordinate {
     //                     x: -10_f64,
     //                     y: -10_f64,
@@ -70,7 +70,7 @@ mod mercator_tests {
     //                     x: 10_f64,
     //                     y: 10_f64,
     //                 },
-    //             ]))
+    //             ])
     //             .translate(&Coordinate { x: 0_f64, y: 0_f64 })
     //             .precision(&0_f64)
     //             .build(),

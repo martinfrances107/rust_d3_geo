@@ -99,6 +99,30 @@ pub type RotateTransformFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
     T,
 >;
 
+/// Provides specialization over 'Projection Raw'
+///
+/// Mercator projections [MercatorTransverseRaw and MercatorRaw]
+/// have a extent_transform() for their individual needs.
+pub trait TransformExtent<T>: Raw<T>
+where
+    <Self as Transform>::T: CoordFloat,
+{
+    /// f64 or f32
+    type T;
+
+    /// Transform the extent stored in MercatorBuilder before
+    /// being passing into the base projection builder.
+    fn transform_extent(
+        self,
+        k: T,
+        t: Coordinate<T>,
+        x0: T,
+        y0: T,
+        x1: T,
+        y1: T,
+    ) -> [Coordinate<T>; 2];
+}
+
 /// Projection Raw.
 pub trait Raw<T>: Clone + Debug + Default + Transform<T = T>
 where
