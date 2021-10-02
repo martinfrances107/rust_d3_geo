@@ -40,7 +40,7 @@ where
     y1: T,
 
     // pr_pd: PhantomData<PR>,
-    polygon: Vec<Vec<Coordinate<T>>>,
+    polygon: Option<Vec<Vec<Coordinate<T>>>>,
     segments: Option<Vec<Vec<LineElem<T>>>>,
     ring: Vec<Coordinate<T>>,
 
@@ -78,7 +78,7 @@ where
             y1,
 
             // pr_pd: PhantomData::new(),
-            polygon: Vec::new(),
+            polygon: None,
             segments: None,
             ring: Vec::new(),
 
@@ -136,37 +136,39 @@ where
     fn polygon_inside(&self) -> bool {
         let mut winding = 0;
 
-        // TODO I have looked at the JS version .. it seems polygons is only every push an empty array
-        // but yet when I console.log is carries data... I can't see where the JS version sets polygons!!!
-        for p in self.polygon.iter().take(1) {
-            let ring = p;
-            let j = 1;
-            let mut point = ring[j];
-            let mut a0;
-            let mut a1;
-            let mut b0 = point.x;
-            let mut b1 = point.y;
-            for r in ring {
-                a0 = b0;
-                a1 = b1;
-                point = *r;
-                b0 = point.x;
-                b1 = point.y;
-                // a0 = b0, a1 = b1, point = ring[j], b0 = point[0], b1 = point[1];
+        if let Some(polygon) = &self.polygon {
+            for p in polygon.iter().skip(1) {
+                let ring = p;
+                let j = 1;
+                let mut point = ring[j];
+                let mut a0;
+                let mut a1;
+                let mut b0 = point.x;
+                let mut b1 = point.y;
+                for r in ring {
+                    a0 = b0;
+                    a1 = b1;
+                    point = *r;
+                    b0 = point.x;
+                    b1 = point.y;
+                    // a0 = b0, a1 = b1, point = ring[j], b0 = point[0], b1 = point[1];
 
-                // if (a1 <= y1) { if (b1 > y1 && (b0 - a0) * (y1 - a1) > (b1 - a1) * (x0 - a0)) ++winding; }
-                // else { if (b1 <= y1 && (b0 - a0) * (y1 - a1) < (b1 - a1) * (x0 - a0)) --winding; }
+                    // if (a1 <= y1) { if (b1 > y1 && (b0 - a0) * (y1 - a1) > (b1 - a1) * (x0 - a0)) ++winding; }
+                    // else { if (b1 <= y1 && (b0 - a0) * (y1 - a1) < (b1 - a1) * (x0 - a0)) --winding; }
 
-                if a1 <= self.y1 {
-                    if b1 > self.y1 && (b0 - a0) * (self.y1 - a1) > (b1 - a1) * (self.x0 - a0) {
-                        winding += 1;
+                    if a1 <= self.y1 {
+                        if b1 > self.y1 && (b0 - a0) * (self.y1 - a1) > (b1 - a1) * (self.x0 - a0) {
+                            winding += 1;
+                        }
+                    } else if b1 <= self.y1
+                        && (b0 - a0) * (self.y1 - a1) < (b1 - a1) * (self.x0 - a0)
+                    {
+                        winding -= 1
                     }
-                } else if b1 <= self.y1 && (b0 - a0) * (self.y1 - a1) < (b1 - a1) * (self.x0 - a0) {
-                    winding -= 1
                 }
             }
         }
-
+        dbg!("winding {}", winding);
         !winding.is_zero()
     }
 
@@ -219,6 +221,7 @@ where
     }
 
     fn line_point(&mut self, p_in: &Coordinate<T>, m: Option<u8>) {
+        dbg!("line point", p_in);
         let mut p = *p_in;
         let v = self.raw.visible(&p);
 
@@ -385,7 +388,7 @@ where
         self.raw.use_buffer_stream = true;
 
         self.raw.segments = Some(Vec::new());
-        self.raw.polygon = Vec::new();
+        self.raw.polygon = Some(Vec::new());
         self.raw.clean = true;
     }
 
@@ -439,10 +442,13 @@ where
 
     fn line_start(&mut self) {
         self.raw.use_line_point = true;
-        // if self.raw.polygon {
-        self.raw.ring = Vec::new();
-        self.raw.polygon.push(Vec::new());
-        // }
+        match &mut self.raw.polygon {
+            Some(polygon) => {
+                self.raw.ring = Vec::new();
+                polygon.push(Vec::new())
+            }
+            None => {}
+        }
         self.raw.first = true;
         self.raw.v_ = false;
         self.raw.x_ = T::nan();
@@ -464,8 +470,11 @@ where
 
             // TODO must uncomments.
             // if let Some(ResultEnum::Path(result)) = self.raw.buffer_stream.borrow_mut().result() {
-            // 	segments.push(result);
+            //     dbg!(result.clone());
+            //     // segments.push(result);
             // }
+            let tmp = self.raw.buffer_stream.borrow();
+            dbg!(tmp);
             todo!("must implement");
         }
         self.raw.use_line_point = false;
