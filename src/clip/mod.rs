@@ -12,7 +12,9 @@ pub mod clip;
 pub mod compare_intersection;
 /// The state of the line segments??
 pub mod line_elem;
+/// A Stream pipeline stage.
 pub mod post_clip;
+/// A stream pipeline stage
 pub mod post_clip_node;
 pub(crate) mod rectangle;
 /// Factory takes in complex definition and output a stream pipeline node element.

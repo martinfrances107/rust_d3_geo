@@ -6,13 +6,16 @@ use crate::identity::Identity;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
+/// A Stream pipeline stage.
 #[derive(Clone, Debug)]
 pub enum PostClipNode<SINK, T>
 where
     SINK: Stream<T = T>,
     T: CoordFloat,
 {
+    /// Default pass thru.
     I(StreamNode<Identity, SINK, T>),
+    /// Clipping rectangle.
     R(StreamNode<Rectangle<T>, SINK, T>),
 }
 
