@@ -225,8 +225,9 @@ where
         let mut p = *p_in;
         let v = self.raw.visible(&p);
 
-        // JS has if (polygon) {..} here which is never false;
-        self.raw.ring.push(p);
+        if self.raw.polygon.is_some() {
+            self.raw.ring.push(p);
+        }
 
         if self.raw.first {
             self.raw.x__ = p.x;
@@ -409,14 +410,16 @@ where
         if clean_inside || visible {
             {
                 let mut sb = self.sink.borrow_mut();
-                sb.line_start();
+                sb.polygon_start();
             }
-            let interpolate: InterpolateFn<SINK, T> = self.gen_interpolate();
 
-            interpolate(None, None, T::one(), self.sink.clone());
-
-            let mut sb = self.sink.borrow_mut();
-            sb.line_end();
+            let interpolate_fn: InterpolateFn<SINK, T> = self.gen_interpolate();
+            if clean_inside {
+                let mut sb = self.sink.borrow_mut();
+                sb.line_start();
+                interpolate_fn(None, None, T::one(), self.sink.clone());
+                sb.line_end();
+            }
 
             let compare_point = self.raw.gen_compare_point();
             let compare_intersection: CompareIntersectionsFn<T> = Box::new(
@@ -430,7 +433,7 @@ where
                     &(self.raw.segments.as_ref().unwrap().clone()),
                     compare_intersection,
                     start_inside,
-                    interpolate,
+                    interpolate_fn,
                     self.sink.clone(),
                 );
             }
