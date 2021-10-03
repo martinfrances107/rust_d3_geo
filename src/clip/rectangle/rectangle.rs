@@ -69,7 +69,7 @@ where
             first: false,
             clean: false,
             clip_max: T::from(1e9).unwrap(),
-            clip_min: T::from(-1e9).unwrap(),
+            clip_min: -T::from(1e9).unwrap(),
             epsilon: T::from(1e-6).unwrap(),
 
             x0,
