@@ -96,7 +96,7 @@ where
         }
     }
 
-    #[inline]
+    #[inline(always)]
     fn visible(&self, p: &Coordinate<T>) -> bool {
         self.x0 <= p.x && p.x <= self.x1 && self.y0 <= p.y && p.y <= self.y1
     }
@@ -105,8 +105,8 @@ where
         let x0 = self.x0;
         let y0 = self.y0;
         let x1 = self.x1;
+        let epsilon = T::from(1e-6).unwrap();
         Box::new(move |p: &Coordinate<T>, direction: &T| -> i8 {
-            let epsilon = T::from(1e-6).unwrap();
             if (p.x - x0).abs() < epsilon {
                 if direction > &T::zero() {
                     0
