@@ -83,13 +83,13 @@ where
             ring: Vec::new(),
 
             // first point.
-            x__: T::zero(),
-            y__: T::zero(),
+            x__: T::nan(),
+            y__: T::nan(),
             v__: false,
 
             // previous point.
-            x_: T::zero(),
-            y_: T::zero(),
+            x_: T::nan(),
+            y_: T::nan(),
             v_: false,
             use_line_point: false,
             use_buffer_stream: false,
@@ -221,7 +221,6 @@ where
     }
 
     fn line_point(&mut self, p_in: &Coordinate<T>, m: Option<u8>) {
-        dbg!("line point", p_in);
         let mut p = *p_in;
         let v = self.raw.visible(&p);
 
@@ -235,7 +234,6 @@ where
             self.raw.v__ = v;
             self.raw.first = false;
             if v {
-                // let as_b = self.raw.active_stream.borrow_mut();
                 if self.raw.use_buffer_stream {
                     let mut as_b = self.raw.buffer_stream.borrow_mut();
                     as_b.line_start();
@@ -261,11 +259,19 @@ where
                 self.raw.clip_min,
                 Float::min(self.raw.clip_max, self.raw.y_),
             );
-            let a = [self.raw.x_, self.raw.y_];
-            p.x = Float::max(self.raw.clip_min, Float::min(self.raw.clip_max, p.x));
-            p.y = Float::max(self.raw.clip_min, Float::min(self.raw.clip_max, p.y));
-            let b = [p.x, p.y];
-            if clip_line(a, b, self.raw.x0, self.raw.y0, self.raw.x1, self.raw.y1) {
+
+            let mut a = [self.raw.x_, self.raw.y_];
+            p.x = T::max(self.raw.clip_min, T::min(self.raw.clip_max, p.x));
+            p.y = T::max(self.raw.clip_min, T::min(self.raw.clip_max, p.y));
+            let mut b = [p.x, p.y];
+            if clip_line(
+                &mut a,
+                &mut b,
+                self.raw.x0,
+                self.raw.y0,
+                self.raw.x1,
+                self.raw.y1,
+            ) {
                 if !self.raw.v_ {
                     if self.raw.use_buffer_stream {
                         let mut bs_b = self.raw.buffer_stream.borrow_mut();
