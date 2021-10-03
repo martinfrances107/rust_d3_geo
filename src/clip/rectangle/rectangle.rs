@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::cmp::Ordering;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -436,7 +437,7 @@ where
 
             if visible {
                 clip_rejoin(
-                    &(self.raw.segments.as_ref().unwrap().clone()),
+                    self.raw.segments.as_ref().unwrap(),
                     compare_intersection,
                     start_inside,
                     interpolate_fn,
@@ -478,7 +479,9 @@ where
             }
 
             // TODO must uncomments.
-            // if let Some(ResultEnum::Path(result)) = self.raw.buffer_stream.borrow_mut().result() {
+            // if let Some(ResultEnum::BufferOutput(result)) =
+            //     self.raw.buffer_stream.borrow_mut().result()
+            // {
             //     dbg!(result.clone());
             //     // segments.push(result);
             // }
