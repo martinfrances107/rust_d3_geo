@@ -40,9 +40,8 @@ where
     x1: T,
     y1: T,
 
-    // pr_pd: PhantomData<PR>,
     polygon: Option<Vec<Vec<Coordinate<T>>>>,
-    segments: Option<Vec<Vec<LineElem<T>>>>,
+    segments: Option<VecDeque<VecDeque<Vec<LineElem<T>>>>>,
     ring: Vec<Coordinate<T>>,
 
     // first point.
@@ -152,7 +151,6 @@ where
                     point = *r;
                     b0 = point.x;
                     b1 = point.y;
-                    // a0 = b0, a1 = b1, point = ring[j], b0 = point[0], b1 = point[1];
 
                     // if (a1 <= y1) { if (b1 > y1 && (b0 - a0) * (y1 - a1) > (b1 - a1) * (x0 - a0)) ++winding; }
                     // else { if (b1 <= y1 && (b0 - a0) * (y1 - a1) < (b1 - a1) * (x0 - a0)) --winding; }
@@ -206,7 +204,6 @@ where
 
 impl<SINK, T> StreamNode<Rectangle<T>, SINK, T>
 where
-    // PR: Raw<T>,
     SINK: Stream<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -375,7 +372,6 @@ where
 
 impl<SINK, T> Stream for StreamNode<Rectangle<T>, SINK, T>
 where
-    // PR: Raw<T>,
     SINK: Stream<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -395,23 +391,28 @@ where
         // activeStream = bufferStream,
         self.raw.use_buffer_stream = true;
 
-        self.raw.segments = Some(Vec::new());
+        self.raw.segments = Some(VecDeque::new());
         self.raw.polygon = Some(Vec::new());
         self.raw.clean = true;
     }
 
     fn polygon_end(&mut self) {
-        dbg!("rectangle polygon end");
         let start_inside = self.raw.polygon_inside();
         let clean_inside = self.raw.clean && start_inside;
-        let num_visible_elements = self
+
+        // Performance if all lengths are know. Can I flatern into a
+        // array of arrays or something that implies a contigious block of memory.
+        let merged_segments = self
             .raw
             .segments
             .clone()
             .unwrap()
             .into_iter()
             .flatten()
-            .count();
+            .collect::<Vec<Vec<LineElem<T>>>>();
+
+        let num_visible_elements = merged_segments.len();
+
         let visible = !num_visible_elements.is_zero();
 
         if clean_inside || visible {
@@ -437,7 +438,7 @@ where
 
             if visible {
                 clip_rejoin(
-                    self.raw.segments.as_ref().unwrap(),
+                    &merged_segments,
                     compare_intersection,
                     start_inside,
                     interpolate_fn,
@@ -466,7 +467,7 @@ where
     }
 
     fn line_end(&mut self) {
-        if let Some(segments) = &self.raw.segments {
+        if let Some(segments) = &mut self.raw.segments.clone() {
             self.line_point(
                 &Coordinate {
                     x: self.raw.x__,
@@ -478,20 +479,14 @@ where
                 self.raw.buffer_stream.borrow_mut().rejoin();
             }
 
-            // TODO must uncomments.
-            // if let Some(ResultEnum::BufferOutput(result)) =
-            //     self.raw.buffer_stream.borrow_mut().result()
-            // {
-            //     dbg!(result.clone());
-            //     // segments.push(result);
-            // }
-            let tmp = self.raw.buffer_stream.borrow();
-            dbg!(tmp);
-            todo!("must implement");
+            if let Some(ResultEnum::BufferOutput(result)) =
+                self.raw.buffer_stream.borrow_mut().result()
+            {
+                segments.push_back(result);
+            }
         }
         self.raw.use_line_point = false;
         if self.raw.v_ {
-            // self.raw.active_stream.borrow_mut().line_end();
             if self.raw.use_buffer_stream {
                 self.raw.buffer_stream.borrow_mut().line_end();
             } else {
