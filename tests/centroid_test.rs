@@ -5,8 +5,11 @@ mod centroid_test {
     use geo::line_string;
     use geo::point;
     use geo::polygon;
+    use geo::Coordinate;
     use geo::Geometry;
     use geo::GeometryCollection;
+    use geo::LineString;
+    use geo::MultiLineString;
     use geo::MultiPoint;
     use geo::Point;
 
@@ -174,20 +177,24 @@ mod centroid_test {
     //     //   test.end();
     //     // });
 
-    //     // tape("the centroid of a set of line strings is the (spherical) average of its constituent great arc segments", function(test) {
-    //     //   test.inDelta(d3.geoCentroid({type: "MultiLineString", coordinates: [[[0, 0], [0, 2]]]}), [0, 1], 1e-6);
-    //     //   test.end();
-    //     // });
+    #[test]
+    fn a_set_of_line_strings_is_the_spherical_average_of_its_great_arc_segments() {
+        println!("the centroid of a set of line strings is the (spherical) average of its constituent great arc segments");
+        let mls = MultiLineString(vec![LineString(vec![
+            Coordinate { x: 0_f64, y: 0_f64 },
+            Coordinate { x: 0_f64, y: 2_f64 },
+        ])]);
+
+        assert!(in_delta_point(
+            CentroidStream::default().centroid(&mls),
+            Point::new(0_f64, 1_f64),
+            1e-6_f64
+        ));
+    }
 
     //     // tape("a line of zero length is treated as points", function(test) {
     //     //   test.inDelta(d3.geoCentroid({type: "LineString", coordinates: [[1, 1], [1, 1]]}), [1, 1], 1e-6);
     //     //   test.inDelta(d3.geoCentroid({type: "GeometryCollection", geometries: [{type: "Point", coordinates: [0, 0]}, {type: "LineString", coordinates: [[1, 2], [1, 2]]}]}), [0.666534, 1.333408], 1e-6);
-    //     //   test.end();
-    //     // });
-
-    //     // tape("an empty polygon with non-zero extent is treated as a line", function(test) {
-    //     //   test.inDelta(d3.geoCentroid({type: "Polygon", coordinates: [[[1, 1], [2, 1], [3, 1], [2, 1], [1, 1]]]}), [2, 1.000076], 1e-6);
-    //     //   test.inDelta(d3.geoCentroid({type: "GeometryCollection", geometries: [{type: "Point", coordinates: [0, 0]}, {type: "Polygon", coordinates: [[[1, 2], [1, 2], [1, 2], [1, 2]]]}]}), [0.799907, 1.600077], 1e-6);
     //     //   test.end();
     //     // });
 
