@@ -462,7 +462,7 @@ where
     }
 
     fn line_end(&mut self) {
-        if let Some(segments) = &mut self.raw.segments.clone() {
+        if self.raw.segments.is_some() {
             self.line_point(
                 &Coordinate {
                     x: self.raw.x__,
@@ -477,7 +477,7 @@ where
             if let Some(ResultEnum::BufferOutput(result)) =
                 self.raw.buffer_stream.borrow_mut().result()
             {
-                segments.push_back(result);
+                self.raw.segments.as_mut().unwrap().push_back(result);
             }
         }
         self.raw.use_line_point = false;
