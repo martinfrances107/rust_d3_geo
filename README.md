@@ -6,7 +6,7 @@ This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into a RUST
 * Phase Two is about performance
 * Phase Three sweeping up infrequently used code and making the library complete.
 
-Currently we have 62% code coverage ( as reported by cargo tarpaulin -o Html )
+Currently we have 73% code coverage ( as reported by cargo tarpaulin -o Html )
 
 Early indications show that the performace is only three times better than the original javascript [ I think a eight times speedup is a good long term target].
 
@@ -16,7 +16,7 @@ Early draft port -  sub module by submodule. Sub module porting means the test h
 No API stability guarentees.
 
 ### Phase One todos
-Code coverage in the clip mod stands at only 25%.
+Code coverage in the clip mod stands at only 40%.
 so I am working on porting over test into fit_test.rs and mercator_test.rs
 
 ## Phase Two
