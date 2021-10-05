@@ -123,7 +123,7 @@ pub fn rejoin<SINK, T>(
 
         let mut points = current.borrow().z.clone();
 
-        stream.clone().borrow_mut().line_start();
+        stream_b.line_start();
 
         loop {
             current.borrow().o.clone().unwrap().borrow_mut().v = true;
@@ -134,7 +134,7 @@ pub fn rejoin<SINK, T>(
                         Some(points) => {
                             for p in points {
                                 point = p;
-                                stream.clone().borrow_mut().point(&point.p, point.m);
+                                stream_b.point(&point.p, point.m);
                             }
                         }
                         None => {
@@ -186,6 +186,6 @@ pub fn rejoin<SINK, T>(
                 break;
             }
         }
-        stream.borrow_mut().line_end();
+        stream_b.line_end();
     }
 }
