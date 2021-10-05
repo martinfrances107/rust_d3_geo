@@ -42,7 +42,6 @@ where
 
     polygon: Option<Vec<Vec<Coordinate<T>>>>,
     segments: Option<VecDeque<VecDeque<Vec<LineElem<T>>>>>,
-    ring: Vec<Coordinate<T>>,
 
     // first point.
     x__: T,
@@ -80,7 +79,6 @@ where
             // pr_pd: PhantomData::new(),
             polygon: None,
             segments: None,
-            ring: Vec::new(),
 
             // first point.
             x__: T::nan(),
@@ -137,23 +135,19 @@ where
         let mut winding = 0;
 
         if let Some(polygon) = &self.polygon {
-            for p in polygon.iter().skip(1) {
-                let ring = p;
+            for p in polygon.iter() {
                 let j = 1;
-                let mut point = ring[j];
+                let mut point = p[0];
                 let mut a0;
                 let mut a1;
                 let mut b0 = point.x;
                 let mut b1 = point.y;
-                for r in ring {
+                for ring in p.iter().skip(1) {
                     a0 = b0;
                     a1 = b1;
-                    point = *r;
+                    point = *ring;
                     b0 = point.x;
                     b1 = point.y;
-
-                    // if (a1 <= y1) { if (b1 > y1 && (b0 - a0) * (y1 - a1) > (b1 - a1) * (x0 - a0)) ++winding; }
-                    // else { if (b1 <= y1 && (b0 - a0) * (y1 - a1) < (b1 - a1) * (x0 - a0)) --winding; }
 
                     if a1 <= self.y1 {
                         if b1 > self.y1 && (b0 - a0) * (self.y1 - a1) > (b1 - a1) * (self.x0 - a0) {
@@ -167,7 +161,6 @@ where
                 }
             }
         }
-        dbg!("winding {}", winding);
         !winding.is_zero()
     }
 
@@ -222,8 +215,13 @@ where
         let mut p = *p_in;
         let v = self.raw.visible(&p);
 
-        if self.raw.polygon.is_some() {
-            self.raw.ring.push(p);
+        // Divergence from JS.
+        // Here the JS version pushes to a variable called 'ring'
+        // which in array terms is always the last item on the polygon array
+        if let Some(polygon) = &mut self.raw.polygon {
+            if let Some(last) = polygon.last_mut() {
+                last.push(p);
+            }
         }
 
         if self.raw.first {
@@ -454,10 +452,7 @@ where
     fn line_start(&mut self) {
         self.raw.use_line_point = true;
         match &mut self.raw.polygon {
-            Some(polygon) => {
-                self.raw.ring = Vec::new();
-                polygon.push(Vec::new())
-            }
+            Some(polygon) => polygon.push(Vec::new()),
             None => {}
         }
         self.raw.first = true;
