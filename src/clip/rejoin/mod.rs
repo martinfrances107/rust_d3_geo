@@ -35,61 +35,64 @@ pub fn rejoin<SINK, T>(
     let mut start_inside = start_inside;
     let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();
     let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
-    let mut stream_b = stream.borrow_mut();
-    for segment in segments.iter() {
-        let (n, has_overflown) = segment.len().overflowing_sub(1_usize);
-        if n == 0 || has_overflown {
-            return;
-        };
-
-        let mut p0: LineElem<T> = segment[0];
-        let mut p1: LineElem<T> = segment[n];
-
-        if point_equal(p0.p, p1.p) {
-            if p0.m.is_none() && p1.m.is_none() {
-                stream_b.line_start();
-                // for i in 0..n {
-                for elem in segment.iter().take(n) {
-                    p0 = *elem;
-                    stream_b.point(&p0.p, None);
-                }
-                stream_b.line_end();
+    // limt scope of stream_b to just the segement for loop.
+    {
+        let mut stream_b = stream.borrow_mut();
+        for segment in segments.iter() {
+            let (n, has_overflown) = segment.len().overflowing_sub(1_usize);
+            if n == 0 || has_overflown {
                 return;
+            };
+
+            let mut p0: LineElem<T> = segment[0];
+            let mut p1: LineElem<T> = segment[n];
+
+            if point_equal(p0.p, p1.p) {
+                if p0.m.is_none() && p1.m.is_none() {
+                    stream_b.line_start();
+                    // for i in 0..n {
+                    for elem in segment.iter().take(n) {
+                        p0 = *elem;
+                        stream_b.point(&p0.p, None);
+                    }
+                    stream_b.line_end();
+                    return;
+                }
+                // handle degenerate cases by moving the point
+                p1.p.x = p1.p.x + T::from(2.0 * 1e-6).unwrap();
             }
-            // handle degenerate cases by moving the point
-            p1.p.x = p1.p.x + T::from(2.0 * 1e-6).unwrap();
+
+            let x1 = Rc::new(RefCell::new(Intersection::new(
+                p0,
+                Some(segment.clone()),
+                None,
+                true,
+            )));
+            subject.push(x1.clone());
+
+            (*x1).borrow_mut().o = Some(Rc::new(RefCell::new(Intersection::new(
+                p0,
+                None,
+                Some(x1.clone()),
+                false,
+            ))));
+            clip.push((*x1).borrow().o.clone().unwrap());
+
+            let x2 = Rc::new(RefCell::new(Intersection::new(
+                p1,
+                Some(segment.clone()),
+                None,
+                false,
+            )));
+            subject.push(x2.clone());
+            (*x2).borrow_mut().o = Some(Rc::new(RefCell::new(Intersection::new(
+                p1,
+                None,
+                Some(x2.clone()),
+                true,
+            ))));
+            clip.push((*x2).borrow().o.clone().unwrap());
         }
-
-        let x1 = Rc::new(RefCell::new(Intersection::new(
-            p0,
-            Some(segment.clone()),
-            None,
-            true,
-        )));
-        subject.push(x1.clone());
-
-        (*x1).borrow_mut().o = Some(Rc::new(RefCell::new(Intersection::new(
-            p0,
-            None,
-            Some(x1.clone()),
-            false,
-        ))));
-        clip.push((*x1).borrow().o.clone().unwrap());
-
-        let x2 = Rc::new(RefCell::new(Intersection::new(
-            p1,
-            Some(segment.clone()),
-            None,
-            false,
-        )));
-        subject.push(x2.clone());
-        (*x2).borrow_mut().o = Some(Rc::new(RefCell::new(Intersection::new(
-            p1,
-            None,
-            Some(x2.clone()),
-            true,
-        ))));
-        clip.push((*x2).borrow().o.clone().unwrap());
     }
     dbg!("rejoin", segments);
     if subject.is_empty() {
@@ -123,7 +126,7 @@ pub fn rejoin<SINK, T>(
 
         let mut points = current.borrow().z.clone();
 
-        stream_b.line_start();
+        stream.borrow_mut().line_start();
 
         loop {
             current.borrow().o.clone().unwrap().borrow_mut().v = true;
@@ -134,7 +137,7 @@ pub fn rejoin<SINK, T>(
                         Some(points) => {
                             for p in points {
                                 point = p;
-                                stream_b.point(&point.p, point.m);
+                                stream.borrow_mut().point(&point.p, point.m);
                             }
                         }
                         None => {
@@ -186,6 +189,6 @@ pub fn rejoin<SINK, T>(
                 break;
             }
         }
-        stream_b.line_end();
+        stream.borrow_mut().line_end();
     }
 }
