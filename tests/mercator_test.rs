@@ -6,18 +6,12 @@ mod mercator_tests {
     use geo::Coordinate;
     use geo::Geometry;
 
-    use rust_d3_geo::clip::antimeridian::line::Line;
-    // use rust_d3_geo::clip::circle::line::Line;
-    use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::in_delta::in_delta_coordinate;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::path::context_stream::ContextStream;
     use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::mercator::Mercator;
-    use rust_d3_geo::projection::mercator_builder::MercatorBuilder;
-    use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::ClipExtent;
     use rust_d3_geo::projection::Fit;
     use rust_d3_geo::projection::Precision;
@@ -31,10 +25,10 @@ mod mercator_tests {
     //     println!("mercator.clipExtent(null) sets the default automatic clip extent");
     //     let projection = Rc::new(
     //         Mercator::builder()
-    //             .translate(&Coordinate { x: 0_f32, y: 0_f32 })
-    //             .scale(1_f32)
+    //             .translate(&Coordinate { x: 0_f64, y: 0_f64 })
+    //             .scale(1_f64)
     //             .clip_extent_clear()
-    //             .precision(&0_f32)
+    //             .precision(&0_f64)
     //             .build(),
     //     );
 
@@ -45,7 +39,7 @@ mod mercator_tests {
     //     match path_builder.build(projection).object(object) {
     //         Some(r) => match r {
     //             ResultEnum::String(s) => {
-    //                 assert_eq!(s, "M3.141592653589793,-3.141592653589793L3.141592653589793,0L3.141592653589793,3.141592653589793L3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,0L-3.141592653589793,-3.141592653589793L-3.141592653589793,-3.141592653589793L3.141592653589793,-3.141592653589793Z");
+    //                 assert_eq!(s, "M3.141592653589793,-3.1415927L3.141592653589793,0L3.141592653589793,3.1415927L3.141592653589793,3.1415927L-3.141592653589793,3.1415927L-3.141592653589793,3.1415927L-3.141592653589793,0L-3.141592653589793,-3.1415927L-3.141592653589793,-3.1415927L3.141592653589793,-3.1415927Z");
     //             }
     //             _ => todo!("must handle "),
     //         },

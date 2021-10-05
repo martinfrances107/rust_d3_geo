@@ -20,6 +20,8 @@
 
 // mod clipcircle_test {
 
+//     use std::rc::Rc;
+
 //     use lazy_static::lazy_static;
 //     use regex::Regex;
 
@@ -28,27 +30,36 @@
 //     use geo::Geometry;
 
 //     use rust_d3_geo::data_object::DataObject;
+//     use rust_d3_geo::path::builder::Builder as PathBuilder;
 //     use rust_d3_geo::path::path::Path;
 //     use rust_d3_geo::path::ResultEnum;
-//     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualAreaRaw;
+//     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
 //     use rust_d3_geo::projection::projection::Projection;
-//     use rust_d3_geo::projection::projection::StreamOrValueMaybe;
+//     use rust_d3_geo::projection::Raw;
+//     use rust_d3_geo::projection::Rotate;
+//     use rust_d3_geo::projection::Translate;
+//     // use rust_d3_geo::projection::projection::StreamOrValueMaybe;
 //     #[test]
 //     fn test_projection_clip_angle_degenerate_polygons() {
 //         println!("projection.clipAngle() deals with degenerate polygons");
 
-//         lazy_static!{
+//         lazy_static! {
 //             /// Ignore every digit in a number after the decimal.
 //             static ref ROUND_DOWN: Regex = Regex::new(r"\.\d+").unwrap();
 //         }
 //         let poly = polygon![(x: -120., y:-30.),(x:0., y:-30.),(x:0., y:-90.),(x:0., y:-30.),(x:120., y:-30.),(x:-120., y:-30.)];
 //         let d: DataObject<f64> = DataObject::Geometry(Geometry::Polygon(poly));
-//         let projection = AzimuthalEqualAreaRaw::gen_projection_mutator()
-//             .translate(&Coordinate { x: 0.5, y: 0.5 })
-//             .rotate([0., -90., 0.])
-//             .clip_angle(StreamOrValueMaybe::Value(170.));
+//         let projection = Rc::new(
+//             AzimuthalEqualArea::builder()
+//                 .translate(&Coordinate { x: 0.5, y: 0.5 })
+//                 .rotate([0., -90., 0.])
+//                 .clip_angle(170_f64)
+//                 .build(),
+//         );
 
-//         match Path::generate(Some(projection), None).object(Some(d)) {
+//         let path_builder = PathBuilder::context_pathstring();
+
+//         match path_builder.build(projection).object(d) {
 //             Some(p) => match p {
 //                 ResultEnum::String(s) => {
 //                     println!("string  {:#?}", s);
