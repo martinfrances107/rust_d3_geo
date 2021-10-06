@@ -16,6 +16,8 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use geo::Coordinate;
 
+/// GeoArea Stream.
+pub mod area;
 /// Vector arithmatic operations on 3-D vectors.
 pub mod cartesian;
 /// Stream end point: calculation of centroid point.
@@ -47,6 +49,7 @@ pub mod stream;
 
 mod identity;
 mod point_equal;
+
 /// 2-D Transform common to projections and, rotations.
 ///
 /// FloatConst is required by forward_rotation_lambda()
