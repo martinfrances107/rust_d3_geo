@@ -11,8 +11,8 @@ use super::ResultEnum;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-/// AreaStream is a pipeline terminating object ( a drain object ).
-pub struct AreaStream<T>
+/// Area is a pipeline terminating object ( a drain object ).
+pub struct Area<T>
 where
     T: CoordFloat,
 {
@@ -28,7 +28,7 @@ where
     line_end_fn: fn(&mut Self),
 }
 
-impl<T> Default for AreaStream<T>
+impl<T> Default for Area<T>
 where
     T: CoordFloat,
 {
@@ -52,7 +52,7 @@ where
     }
 }
 
-impl<T> AreaStream<T>
+impl<T> Area<T>
 where
     T: CoordFloat,
 {
@@ -85,7 +85,7 @@ where
     fn line_noop(&mut self) {}
 }
 
-impl<T> Result for AreaStream<T>
+impl<T> Result for Area<T>
 where
     T: CoordFloat,
 {
@@ -97,7 +97,7 @@ where
     }
 }
 
-impl<T> Stream for AreaStream<T>
+impl<T> Stream for Area<T>
 where
     T: CoordFloat + FloatConst,
 {

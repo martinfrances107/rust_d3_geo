@@ -10,7 +10,7 @@ use num_traits::FloatConst;
 use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::data_object::DataObject;
-use crate::path::area_stream::AreaStream;
+use crate::path::area::Area;
 use crate::path::bounds_stream::BoundsStream;
 use crate::path::context_stream::ContextStream;
 use crate::path::Result;
@@ -69,7 +69,7 @@ where
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = Rc::new(RefCell::new(ContextStream::A(AreaStream::default())));
+        let stream_dst = Rc::new(RefCell::new(ContextStream::A(Area::default())));
         let mut stream_in = self.projection.stream(stream_dst.clone());
         object.to_stream(&mut stream_in);
 

@@ -1,5 +1,5 @@
 /// Stream node end point calculating area.
-pub mod area_stream;
+pub mod area;
 /// Stream node end point calculating bounding boxes.
 pub mod bounds_stream;
 /// Path builder
