@@ -31,7 +31,7 @@ use super::str::scale_translate_rotate::ScaleTranslateRotate;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::Angle;
-use super::BoundsStream;
+use super::Bounds;
 use super::Center;
 use super::ClipExtent;
 use super::DataObject;
@@ -328,7 +328,7 @@ where
     }
 }
 
-impl<L, PR, PV, T> Fit for Builder<BoundsStream<T>, L, PR, PV, T>
+impl<L, PR, PV, T> Fit for Builder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,
     PR: ProjectionRaw<T>,

@@ -10,7 +10,7 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::data_object::DataObject;
-use crate::path::bounds_stream::BoundsStream;
+use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::path::ResultEnum;
 use crate::stream::Streamable;
@@ -28,10 +28,10 @@ type FitBounds<DRAIN, L, PR, PV, T> = Box<
 >;
 
 fn fit<L, PR, PV, T>(
-    builder: Builder<BoundsStream<T>, L, PR, PV, T>,
-    fit_bounds: FitBounds<BoundsStream<T>, L, PR, PV, T>,
+    builder: Builder<Bounds<T>, L, PR, PV, T>,
+    fit_bounds: FitBounds<Bounds<T>, L, PR, PV, T>,
     object: DataObject<T>,
-) -> Builder<BoundsStream<T>, L, PR, PV, T>
+) -> Builder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,
     PR: ProjectionRaw<T>,
@@ -51,7 +51,7 @@ where
         None => builder1,
     };
 
-    let bounds_stream = Rc::new(RefCell::new(BoundsStream::default()));
+    let bounds_stream = Rc::new(RefCell::new(Bounds::default()));
     let mut stream_in = builder2.build().stream(bounds_stream.clone());
 
     object.to_stream(&mut stream_in);
@@ -70,10 +70,10 @@ where
 }
 
 pub(super) fn fit_extent<L, PR, PV, T>(
-    builder: Builder<BoundsStream<T>, L, PR, PV, T>,
+    builder: Builder<Bounds<T>, L, PR, PV, T>,
     extent: [[T; 2]; 2],
     object: DataObject<T>,
-) -> Builder<BoundsStream<T>, L, PR, PV, T>
+) -> Builder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,
     PR: ProjectionRaw<T>,
@@ -84,7 +84,7 @@ where
     fit(
         builder,
         Box::new(
-            move |b: [Coordinate<T>; 2], builder: Builder<BoundsStream<T>, L, PR, PV, T>| {
+            move |b: [Coordinate<T>; 2], builder: Builder<Bounds<T>, L, PR, PV, T>| {
                 let w = extent[1][0] - extent[0][0];
                 let h = extent[1][1] - extent[0][1];
                 let k = Float::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
@@ -101,10 +101,10 @@ where
 }
 
 pub(super) fn fit_size<L, PR, PV, T>(
-    builder: Builder<BoundsStream<T>, L, PR, PV, T>,
+    builder: Builder<Bounds<T>, L, PR, PV, T>,
     size: [T; 2],
     object: DataObject<T>,
-) -> Builder<BoundsStream<T>, L, PR, PV, T>
+) -> Builder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,
     PR: ProjectionRaw<T>,

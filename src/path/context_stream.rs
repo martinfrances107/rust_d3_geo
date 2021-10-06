@@ -8,7 +8,7 @@ use num_traits::FloatConst;
 use crate::stream::Stream;
 
 use super::area::Area;
-use super::bounds_stream::BoundsStream;
+use super::bounds::Bounds;
 use super::context::Context;
 use super::string::String as PathString;
 use super::Result;
@@ -24,7 +24,7 @@ where
     /// Path area endpoint.
     A(Area<T>),
     /// Bounds endpoint.
-    B(BoundsStream<T>),
+    B(Bounds<T>),
     /// Path context endpoint.
     C(Context<T>),
     /// Path string endpoint.

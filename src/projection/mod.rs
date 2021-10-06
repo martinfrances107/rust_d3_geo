@@ -15,7 +15,7 @@ use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::data_object::DataObject;
-use crate::path::bounds_stream::BoundsStream;
+use crate::path::bounds::Bounds;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;

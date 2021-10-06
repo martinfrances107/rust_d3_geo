@@ -21,7 +21,7 @@ use super::builder::Builder as ProjectionBuilder;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::Angle;
-use super::BoundsStream;
+use super::Bounds;
 use super::ClipExtent;
 use super::DataObject;
 use super::Fit;
@@ -198,7 +198,7 @@ where
     }
 }
 
-impl<L, PR, PV, T> Fit for MercatorBuilder<BoundsStream<T>, L, PR, PV, T>
+impl<L, PR, PV, T> Fit for MercatorBuilder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,
     PR: ProjectionRaw<T>,
@@ -265,7 +265,7 @@ where
     }
 }
 
-impl<L, PR, PV, T> Angle for MercatorBuilder<BoundsStream<T>, L, PR, PV, T>
+impl<L, PR, PV, T> Angle for MercatorBuilder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,
     PR: ProjectionRaw<T>,
@@ -286,7 +286,7 @@ where
     }
 }
 
-impl<L, PR, PV, T> Rotate for MercatorBuilder<BoundsStream<T>, L, PR, PV, T>
+impl<L, PR, PV, T> Rotate for MercatorBuilder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,
     PR: ProjectionRaw<T>,
@@ -307,7 +307,7 @@ where
     }
 }
 
-impl<L, PR, PV, T> Reflect for MercatorBuilder<BoundsStream<T>, L, PR, PV, T>
+impl<L, PR, PV, T> Reflect for MercatorBuilder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,
     PR: ProjectionRaw<T>,

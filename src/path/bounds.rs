@@ -8,7 +8,7 @@ use super::ResultEnum;
 
 /// A stream node endpoint for computing a bounding box.
 #[derive(Clone, Debug)]
-pub struct BoundsStream<T>
+pub struct Bounds<T>
 where
     T: CoordFloat,
 {
@@ -16,7 +16,7 @@ where
     p1: Coordinate<T>,
 }
 
-impl<T> Default for BoundsStream<T>
+impl<T> Default for Bounds<T>
 where
     T: CoordFloat,
 {
@@ -35,7 +35,7 @@ where
     }
 }
 
-impl<T> Result for BoundsStream<T>
+impl<T> Result for Bounds<T>
 where
     T: CoordFloat,
 {
@@ -47,7 +47,7 @@ where
     }
 }
 
-impl<T> Stream for BoundsStream<T>
+impl<T> Stream for Bounds<T>
 where
     T: CoordFloat,
 {
