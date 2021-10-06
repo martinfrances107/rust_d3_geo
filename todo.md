@@ -4,10 +4,16 @@
 * Justify whey PathResult is not implemented for LengthStream? is cal() a deviation from the interface.
 * Same arguement for CicleStream.
 
+Performance is not showing the expected gains over javascript .. I think there is lots of copying of data going on where pass by reference is needed.
 
 The state of testing
 
 src/rotation
+
+area_test - src or test not yet implemented.
+
+bounds_test - src or test not yet implemented.
+
 centroid_test - Needs lots of work.
 
 clip_circle_test - Needs regex development.. Path::API has changed since this last compiled.
