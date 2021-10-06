@@ -353,6 +353,19 @@ mod centroid_test {
     //     //   ]}), [179.5, 0], 1e-6);
     //     //   test.end();
     //     // });
+    #[test]
+    fn geometry_collection_non_empty_line_string_and_point() {
+        println!(
+            "the centroid of a non-empty line string and a point only considers the line string"
+        );
+
+        let data_object = GeometryCollection(vec![
+            Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
+            Geometry::Point(point!(x:0_f64, y: 0_f64)),
+        ]);
+        let centroid: Point<f64> = CentroidStream::default().centroid(&data_object);
+        assert!(in_delta_point(centroid, (179.5_f64, 0_f64).into(), 1e-6));
+    }
 
     //     // tape("the centroid of a non-empty polygon, a non-empty line string and a point only considers the polygon", function(test) {
     //     //   test.inDelta(d3.geoCentroid({type: "GeometryCollection", geometries: [
