@@ -22,6 +22,7 @@ use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::Angle;
 use super::Bounds;
+use super::Center;
 use super::ClipExtent;
 use super::DataObject;
 use super::Fit;
@@ -133,6 +134,27 @@ where
 
         self.base = self.base.clip_extent(ce);
         self
+    }
+}
+
+impl<DRAIN, L, PR, PV, T> Center for MercatorBuilder<DRAIN, L, PR, PV, T>
+where
+    DRAIN: Stream<T = T> + Default,
+    L: Line,
+    PR: TransformExtent<T>,
+    PV: PointVisible<T = T>,
+    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+    type T = T;
+
+    #[inline]
+    fn get_center(&self) -> Coordinate<T> {
+        self.base.get_center()
+    }
+
+    fn center(mut self, center: Coordinate<T>) -> Self {
+        self.base = self.base.center(center);
+        self.reclip()
     }
 }
 

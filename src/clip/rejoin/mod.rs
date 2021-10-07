@@ -94,6 +94,7 @@ pub fn rejoin<SINK, T>(
             clip.push((*x2).borrow().o.clone().unwrap());
         }
     }
+    dbg!("clip", clip.clone());
     dbg!("rejoin", segments);
     if subject.is_empty() {
         return;
