@@ -174,7 +174,7 @@ pub fn rejoin<SINK, T>(
                                 .x
                                 .p,
                         ),
-                        T::from(-1).unwrap(),
+                        -T::one(),
                         stream.clone(),
                     );
                 }
