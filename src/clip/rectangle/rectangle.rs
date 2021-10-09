@@ -136,7 +136,6 @@ where
 
         if let Some(polygon) = &self.polygon {
             for p in polygon.iter() {
-                let j = 1;
                 let mut point = p[0];
                 let mut a0;
                 let mut a1;
