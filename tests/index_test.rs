@@ -67,7 +67,9 @@ mod index_test {
                 ResultEnum::String(s) => s,
                 _ => todo!("must handle "),
             },
-            None => panic!("Expecting an area."),
+            None => {
+                panic!("Expecting an area.");
+            }
         }
     }
 

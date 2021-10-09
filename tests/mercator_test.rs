@@ -40,9 +40,9 @@ mod mercator_tests {
     //             ResultEnum::String(s) => {
     //                 assert_eq!(s, "M3.141592653589793,-3.1415927L3.141592653589793,0L3.141592653589793,3.1415927L3.141592653589793,3.1415927L-3.141592653589793,3.1415927L-3.141592653589793,3.1415927L-3.141592653589793,0L-3.141592653589793,-3.1415927L-3.141592653589793,-3.1415927L3.141592653589793,-3.1415927Z");
     //             }
-    //             _ => todo!("must handle "),
+    //             _ => assert!(false, "Incorrect result "),
     //         },
-    //         None => panic!("Expecting an string."),
+    //         None => assert!(false, "Expecting an string."),
     //     }
     //     assert_eq!(projection_builder.get_clip_extent(), None);
     // }
@@ -69,9 +69,9 @@ mod mercator_tests {
     //             ResultEnum::String(s) => {
     //                 assert_eq!(s, "M2.967060,-2.966167L2.967060,0.175426L2.967060,3.317018L2.967060,3.317018L-3.316126,3.317018L-3.316126,3.317019L-3.316126,0.175426L-3.316126,-2.966167L-3.316126,-2.966167L2.967060,-2.966167Z");
     //             }
-    //             _ => todo!("must handle "),
+    //             _ => todo!("Expecting a string"),
     //         },
-    //         None => panic!("Expecting an string."),
+    //         None => assert!(false, "Expecting an Some(String)."),
     //     }
 
     //     assert_eq!(projection_builder.get_clip_extent(), None);
@@ -111,9 +111,9 @@ mod mercator_tests {
                 ResultEnum::String(s) => {
                     assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
                 }
-                _ => todo!("must handle "),
+                _ => assert!(false, "Incorrect Result"),
             },
-            None => panic!("Expecting an string."),
+            None => assert!(false, "Expecting an string."),
         }
 
         assert_eq!(
@@ -164,9 +164,9 @@ mod mercator_tests {
                 ResultEnum::String(s) => {
                     assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
                 }
-                _ => todo!("must handle "),
+                _ => assert!(false, "Incorrect result"),
             },
-            None => panic!("Expecting an string."),
+            None => assert!(false, "Expecting an string."),
         }
 
         assert_eq!(
@@ -217,9 +217,9 @@ mod mercator_tests {
                 ResultEnum::String(s) => {
                     assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
                 }
-                _ => todo!("must handle "),
+                _ => assert!(false, "Incorrect Result"),
             },
-            None => panic!("Expecting an string."),
+            None => assert!(false, "Expecting an string."),
         }
 
         assert_eq!(
