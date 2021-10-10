@@ -172,7 +172,7 @@ pub trait Center // where
     ///
     /// @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
     ///
-    fn center(self, point: Coordinate<Self::T>) -> Self
+    fn center(self, point: &Coordinate<Self::T>) -> Self
     where
         Self::T: CoordFloat;
 }

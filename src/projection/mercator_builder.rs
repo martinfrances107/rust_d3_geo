@@ -151,7 +151,7 @@ where
         self.base.get_center()
     }
 
-    fn center(mut self, center: Coordinate<T>) -> Self {
+    fn center(mut self, center: &Coordinate<T>) -> Self {
         self.base = self.base.center(center);
         self.reclip()
     }

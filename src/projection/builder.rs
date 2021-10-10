@@ -321,7 +321,7 @@ where
         }
     }
 
-    fn center(mut self, p: Coordinate<T>) -> Self {
+    fn center(mut self, p: &Coordinate<T>) -> Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
         self.recenter()
