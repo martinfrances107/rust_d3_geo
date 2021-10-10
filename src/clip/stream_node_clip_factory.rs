@@ -70,13 +70,11 @@ where
         let ring_buffer: Rc<RefCell<Buffer<T>>> = Rc::new(RefCell::new(Buffer::default()));
         let ring_sink_node = line_ring_buffer_factory.generate(ring_buffer.clone());
 
-        // let interpolate_factory = StreamNodeFactory::new(interpolate_raw);
         StreamNodeClipFactory {
             ring_buffer,
             ring_sink_node,
 
             interpolate_fn,
-            // line_ring_buffer,
             line_raw,
             phantom_pr: PhantomData::<PR>,
             pv,
@@ -94,7 +92,7 @@ where
 {
     type Sink = SINK;
     type T = T;
-    // type Raw = ;
+
     type Node = StreamNode<Clip<L, PV, SINK, T>, Self::Sink, Self::T>;
     fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
         let start = LineElem {
