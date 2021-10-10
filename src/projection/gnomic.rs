@@ -19,7 +19,7 @@ use super::Scale;
 ///
 /// Root transform.
 /// Used to define a projection builder.
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct Gnomic<DRAIN, T>
 where
     T: CoordFloat + FloatConst,

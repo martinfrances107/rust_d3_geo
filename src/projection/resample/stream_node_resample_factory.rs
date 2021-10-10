@@ -2,11 +2,10 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use core::marker::PhantomData;
-use derivative::Derivative;
+use derivative::*;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::post_clip_node::PostClipNode;
 use crate::compose::Compose;
 use crate::projection::resample::Resample;
 use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;

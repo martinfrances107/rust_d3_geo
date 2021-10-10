@@ -1,4 +1,4 @@
-use derivative::Derivative;
+use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;

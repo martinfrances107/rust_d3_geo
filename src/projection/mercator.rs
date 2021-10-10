@@ -50,7 +50,7 @@ where
         self,
         k: T,
         t: Coordinate<T>,
-        x0: T,
+        _x0: T,
         y0: T,
         x1: T,
         y1: T,

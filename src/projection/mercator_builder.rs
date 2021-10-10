@@ -1,10 +1,9 @@
 use std::fmt::Display;
 
-use derivative::Derivative;
+use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
-use num_traits::Float;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::generate as gen_interpolate;

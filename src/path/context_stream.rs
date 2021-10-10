@@ -69,7 +69,7 @@ where
     fn point_radius(&mut self, val: Self::PrtT) {
         match self {
             ContextStream::A(_a) => todo!("how to handle this?"),
-            ContextStream::B(b) => todo!("how to handle this?"),
+            ContextStream::B(_b) => todo!("how to handle this?"),
             ContextStream::C(c) => c.point_radius(val),
             ContextStream::S(s) => s.point_radius(val),
             ContextStream::UNDEFINED => panic!("radius of undefined."),

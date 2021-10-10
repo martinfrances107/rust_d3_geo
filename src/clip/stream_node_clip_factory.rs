@@ -2,7 +2,7 @@ use core::marker::PhantomData;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use derivative::Derivative;
+use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;

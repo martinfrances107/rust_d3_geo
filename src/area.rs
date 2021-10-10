@@ -85,7 +85,7 @@ where
     fn area_ring_start(&mut self) {
         self.point_fn = PointFn::AreaFirst;
     }
-    fn area_point_first(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn area_point_first(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         // areaStream.point = areaPoint;
         self.point_fn = PointFn::Area;
         // lambda00 = lambda, phi00 = phi;
