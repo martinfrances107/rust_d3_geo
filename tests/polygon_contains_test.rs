@@ -97,7 +97,7 @@ mod polygon_contains_test {
         println!("geoPolygonContains wraps longitudes");
 
         // let circle = CircleGenerator::default().center(Coordinate { x: 300f64, y: 0f64 });
-        let circle = CircleGenerator::default().center(Coordinate { x: 300f64, y: 0f64 });
+        let circle = CircleGenerator::default().center(&Coordinate { x: 300f64, y: 0f64 });
         let c = circle.circle();
         let polygon = c;
 
@@ -471,7 +471,7 @@ mod polygon_contains_test {
     fn large_narrow_equatorial_hole() {
         println!("geoPolygonContains(largeNarrowEquatorialHole, point) returns the expected value");
         let circle_gen = CircleGenerator::default()
-            .center(Coordinate { x: 0f64, y: -90f64 })
+            .center(&Coordinate { x: 0f64, y: -90f64 })
             .radius(90f64 - 0.1f64);
         // let ring0 = circle_gen.circle(&CircleInArg::None).clone().coordinates[0];
         let temp = &circle_gen.circle()[0];
@@ -499,14 +499,14 @@ mod polygon_contains_test {
         println!("geoPolygonContains(largeNarrowEquatorialHole, point) returns the expected value");
 
         let circle = CircleGenerator::default()
-            .center(Coordinate { x: 0f64, y: -90f64 })
+            .center(&Coordinate { x: 0f64, y: -90f64 })
             .radius(90f64 + 0.1f64);
 
         let c1 = circle.circle();
         let ring1 = c1[0].clone();
 
         let circle = CircleGenerator::default()
-            .center(Coordinate { x: 0f64, y: -90f64 })
+            .center(&Coordinate { x: 0f64, y: -90f64 })
             .radius(90f64 - 0.1f64);
         let c2_temp = &circle.circle()[0];
         let c2 = c2_temp.clone();

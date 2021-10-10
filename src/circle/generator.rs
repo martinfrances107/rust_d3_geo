@@ -82,8 +82,8 @@ where
     T: CoordFloat + FloatConst,
 {
     /// center is use to programe the generator.
-    pub fn center(mut self, center: Coordinate<T>) -> Generator<T> {
-        self.center = center;
+    pub fn center(mut self, center: &Coordinate<T>) -> Generator<T> {
+        self.center = *center;
         self
     }
 
