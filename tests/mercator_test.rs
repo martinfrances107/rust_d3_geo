@@ -106,7 +106,7 @@ mod mercator_tests {
         // There is a bodge associated with this test
         // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
         // See MercatorRaw::transform for an expanation of the issue.
-        match path_builder.build(projection).object(object) {
+        match path_builder.build(projection).object(&object) {
             Some(r) => match r {
                 ResultEnum::String(s) => {
                     assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
@@ -159,7 +159,7 @@ mod mercator_tests {
         // There is a bodge associated with this test
         // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
         // See MercatorRaw::transform for an expanation of the issue.
-        match path_builder.build(projection).object(object) {
+        match path_builder.build(projection).object(&object) {
             Some(r) => match r {
                 ResultEnum::String(s) => {
                     assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
@@ -212,7 +212,7 @@ mod mercator_tests {
         // There is a bodge associated with this test
         // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
         // See MercatorRaw::transform for an expanation of the issue.
-        match path_builder.build(projection).object(object) {
+        match path_builder.build(projection).object(&object) {
             Some(r) => match r {
                 ResultEnum::String(s) => {
                     assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");

@@ -54,7 +54,7 @@ mod path_string_test {
     {
         // let stream_dst = Rc::new(RefCell::new(ContextStream::S(PathString::default())));
         let builder = PathBuilder::context_pathstring();
-        let string = builder.build(projection).object(object);
+        let string = builder.build(projection).object(&object);
         match string {
             Some(p) => match p {
                 ResultEnum::String(s) => return s,
@@ -92,7 +92,7 @@ mod path_string_test {
         let mut path = builder.build(eq);
         let object = DataObject::Geometry(Geometry::Point(point!(x: -63_f64, y:18_f64)));
 
-        let result = path.object(object);
+        let result = path.object(&object);
         match result {
             Some(ResultEnum::String(result)) => {
                 assert_eq!(result, "M165,160m0,10a10,10 0 1,1 0,-20a10,10 0 1,1 0,20z");

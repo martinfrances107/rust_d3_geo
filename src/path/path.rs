@@ -56,7 +56,7 @@ where
     }
 
     /// Combines projection, context stream and object.
-    pub fn object(&mut self, object: DataObject<T>) -> Option<ResultEnum<T>> {
+    pub fn object(&mut self, object: &DataObject<T>) -> Option<ResultEnum<T>> {
         let mut stream_in = self.projection.stream(self.context_stream.clone());
         object.to_stream(&mut stream_in);
         self.context_stream.borrow_mut().result()
