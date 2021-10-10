@@ -84,7 +84,7 @@ mod mercator_tests {
         );
         let projection_builder = Mercator::builder()
             .translate(&Coordinate { x: 0_f64, y: 0_f64 })
-            .clip_extent([
+            .clip_extent(&[
                 Coordinate {
                     x: -10_f64,
                     y: -10_f64,
@@ -138,7 +138,7 @@ mod mercator_tests {
         );
         let projection_builder = Mercator::builder()
             .translate(&Coordinate { x: 0_f64, y: 0_f64 })
-            .clip_extent([
+            .clip_extent(&[
                 Coordinate {
                     x: -10_f64,
                     y: -10_f64,
@@ -191,7 +191,7 @@ mod mercator_tests {
         );
         let projection_builder = Mercator::builder()
             .scale(1_f64)
-            .clip_extent([
+            .clip_extent(&[
                 Coordinate {
                     x: -10_f64,
                     y: -10_f64,

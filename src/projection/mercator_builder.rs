@@ -131,7 +131,7 @@ where
             ],
         };
 
-        self.base = self.base.clip_extent(ce);
+        self.base = self.base.clip_extent(&ce);
         self
     }
 }
@@ -277,7 +277,7 @@ where
     }
 
     /// Sets the bounding box.
-    fn clip_extent(mut self, extent: [Coordinate<Self::T>; 2]) -> Self {
+    fn clip_extent(mut self, extent: &[Coordinate<Self::T>; 2]) -> Self {
         self.x0 = Some(extent[0].x);
         self.y0 = Some(extent[0].y);
         self.x1 = Some(extent[1].x);

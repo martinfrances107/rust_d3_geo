@@ -64,7 +64,7 @@ where
     };
     let builder3 = fit_bounds(bounds, builder2);
     match clip {
-        Some(extent) => builder3.clip_extent(extent),
+        Some(extent) => builder3.clip_extent(&extent),
         None => builder3,
     }
 }

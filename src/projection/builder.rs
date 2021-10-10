@@ -430,7 +430,7 @@ where
         self
     }
 
-    fn clip_extent(mut self, extent: [Coordinate<T>; 2]) -> Self {
+    fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self {
         // set x0 ...
         self.x0 = Some(extent[0].x);
         self.y0 = Some(extent[0].y);
