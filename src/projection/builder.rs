@@ -338,7 +338,7 @@ where
     type T = T;
 
     #[inline]
-    fn fit_extent(self, extent: [[T; 2]; 2], object: DataObject<Self::T>) -> Self
+    fn fit_extent(self, extent: [[T; 2]; 2], object: &DataObject<Self::T>) -> Self
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {
@@ -346,7 +346,7 @@ where
     }
 
     #[inline]
-    fn fit_size(self, size: [T; 2], object: DataObject<T>) -> Self
+    fn fit_size(self, size: [T; 2], object: &DataObject<T>) -> Self
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {

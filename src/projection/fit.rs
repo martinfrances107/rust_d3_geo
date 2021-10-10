@@ -30,7 +30,7 @@ type FitBounds<DRAIN, L, PR, PV, T> = Box<
 fn fit<L, PR, PV, T>(
     builder: Builder<Bounds<T>, L, PR, PV, T>,
     fit_bounds: FitBounds<Bounds<T>, L, PR, PV, T>,
-    object: DataObject<T>,
+    object: &DataObject<T>,
 ) -> Builder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,
@@ -72,7 +72,7 @@ where
 pub(super) fn fit_extent<L, PR, PV, T>(
     builder: Builder<Bounds<T>, L, PR, PV, T>,
     extent: [[T; 2]; 2],
-    object: DataObject<T>,
+    object: &DataObject<T>,
 ) -> Builder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,
@@ -103,7 +103,7 @@ where
 pub(super) fn fit_size<L, PR, PV, T>(
     builder: Builder<Bounds<T>, L, PR, PV, T>,
     size: [T; 2],
-    object: DataObject<T>,
+    object: &DataObject<T>,
 ) -> Builder<Bounds<T>, L, PR, PV, T>
 where
     L: Line,

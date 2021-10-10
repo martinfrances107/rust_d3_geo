@@ -33,7 +33,7 @@ mod fit_test {
             _,
             f64,
         > = EquirectangularRaw::builder()
-            .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], d_object);
+            .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &d_object);
         assert!(in_delta(projection.get_scale(), 900. / (2. * PI), 1e-6));
         let translate = projection.get_translate();
         assert!(in_delta(translate.x, 500., 1e-6));
@@ -260,10 +260,10 @@ mod fit_test {
         ]));
         let p1 = Mercator::builder()
             .precision(&0.1_f64)
-            .fit_size([1000_f64, 1000_f64], box_object.clone());
+            .fit_size([1000_f64, 1000_f64], &box_object);
         let p2 = Mercator::builder()
             .precision(&0.0_f64)
-            .fit_size([1000_f64, 1000_f64], box_object);
+            .fit_size([1000_f64, 1000_f64], &box_object);
         let t1 = p1.get_translate();
         let t2 = p2.get_translate();
         assert_eq!(p1.get_precision(), 0.1_f64);

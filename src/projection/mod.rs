@@ -212,7 +212,7 @@ pub trait Fit {
     ///
     ///   @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
     ///   @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-    fn fit_extent(self, extent: [[Self::T; 2]; 2], object: DataObject<Self::T>) -> Self
+    fn fit_extent(self, extent: [[Self::T; 2]; 2], object: &DataObject<Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
@@ -223,7 +223,7 @@ pub trait Fit {
     ///
     ///  @param size The size of the extent, specified as an array [width, height].
     ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-    fn fit_size(self, size: [Self::T; 2], object: DataObject<Self::T>) -> Self
+    fn fit_size(self, size: [Self::T; 2], object: &DataObject<Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
