@@ -322,7 +322,7 @@ where
     }
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate(mut self, angles: [T; 3]) -> Self {
+    fn rotate(mut self, angles: &[T; 3]) -> Self {
         self.base = self.base.rotate(angles);
         self
     }

@@ -322,7 +322,7 @@ pub trait Rotate {
     ///  @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
     ///  (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
     ///
-    fn rotate(self, angles: [Self::T; 3]) -> Self;
+    fn rotate(self, angles: &[Self::T; 3]) -> Self;
 }
 
 /// Controls the projections scaling factor.

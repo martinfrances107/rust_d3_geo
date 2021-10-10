@@ -508,8 +508,8 @@ where
     }
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate(mut self, angles: [T; 3]) -> Builder<DRAIN, L, PR, PV, T> {
-        let [delta_lambda, delta_phi, delta_gamma] = angles;
+    fn rotate(mut self, angles: &[T; 3]) -> Builder<DRAIN, L, PR, PV, T> {
+        let [delta_lambda, delta_phi, delta_gamma] = *angles;
         let f360 = T::from(360_f64).unwrap();
         self.delta_lambda = (delta_lambda % f360).to_radians();
         self.delta_phi = (delta_phi % f360).to_radians();

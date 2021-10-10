@@ -137,7 +137,7 @@ mod equirectangular_test {
             gen_clip_factory_antimeridian(),
             EquirectangularRaw::default(),
         )
-        .rotate([30f64, 0f64, 0f64])
+        .rotate(&[30f64, 0f64, 0f64])
         .translate(&Coordinate { x: 0f64, y: 0f64 })
         .scale(1_f64)
         .build();
@@ -248,7 +248,7 @@ mod equirectangular_test {
             PV<f64>,
             f64,
         > = EquirectangularRaw::builder()
-            .rotate([30f64, 30f64, 0f64])
+            .rotate(&[30f64, 30f64, 0f64])
             .translate(&Coordinate { x: 0f64, y: 0f64 })
             .scale(1_f64)
             .build();
@@ -359,7 +359,7 @@ mod equirectangular_test {
             PV<f64>,
             f64,
         > = EquirectangularRaw::builder()
-            .rotate([0f64, 0f64, 30f64])
+            .rotate(&[0f64, 0f64, 30f64])
             .translate(&Coordinate { x: 0f64, y: 0f64 })
             .scale(1f64)
             .build();
@@ -463,7 +463,7 @@ mod equirectangular_test {
             PV<f64>,
             f64,
         > = EquirectangularRaw::builder()
-            .rotate([30f64, 30f64, 30f64])
+            .rotate(&[30f64, 30f64, 30f64])
             .translate(&Coordinate { x: 0f64, y: 0f64 })
             .scale(1f64)
             .build();
