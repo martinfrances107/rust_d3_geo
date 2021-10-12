@@ -4,6 +4,7 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
@@ -142,7 +143,7 @@ where
     <Self as Builder>::L: Line,
     <Self as Builder>::PR: Raw<Self::T>,
     <Self as Builder>::PV: PointVisible<T = Self::T>,
-    <Self as Builder>::T: CoordFloat + FloatConst,
+    <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;
     type L;

@@ -7,6 +7,7 @@ mod path_string_test {
     use std::ops::AddAssign;
     use std::rc::Rc;
 
+    use approx::AbsDiffEq;
     use geo::point;
     use geo::CoordFloat;
     use geo::Geometry;
@@ -31,7 +32,7 @@ mod path_string_test {
     ) -> Rc<Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
     where
         DRAIN: Stream<T = T> + Default,
-        T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         Rc::new(
             EquirectangularRaw::builder()
@@ -50,7 +51,7 @@ mod path_string_test {
     ) -> String
     where
         DRAIN: Stream<T = T>,
-        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         // let stream_dst = Rc::new(RefCell::new(ContextStream::S(PathString::default())));
         let builder = PathBuilder::context_pathstring();

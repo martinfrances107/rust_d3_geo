@@ -1,3 +1,4 @@
+use approx::AbsDiffEq;
 // use crate::projection::builder::Builder;
 use num_traits::AsPrimitive;
 use num_traits::Float;
@@ -36,7 +37,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let clip = builder.get_clip_extent();
     let builder1 = builder
@@ -78,7 +79,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let two = T::from(2.0).unwrap();
     fit(
@@ -109,7 +110,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fit_extent(builder, [[T::zero(), T::zero()], size], object)
 }

@@ -2,6 +2,7 @@ use crate::projection::RotateTransformFactory;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use approx::AbsDiffEq;
 use derivative::*;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -75,7 +76,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
 {
     pub(crate) postclip_factory: StreamNodePostClipFactory<DRAIN, T>,
 
@@ -99,7 +100,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to projection.
     ///
@@ -131,7 +132,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
 {
     type T = T;
 

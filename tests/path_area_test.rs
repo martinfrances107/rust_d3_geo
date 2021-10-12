@@ -2,6 +2,7 @@
 #[cfg(test)]
 mod path_area_test {
 
+    use approx::AbsDiffEq;
     use rust_d3_geo::stream::Stream;
     use std::f64::consts::PI;
     use std::fmt::Display;
@@ -34,7 +35,7 @@ mod path_area_test {
     ) -> Rc<Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
     where
         DRAIN: Stream<T = T> + Default,
-        T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         Rc::new(
             EquirectangularRaw::builder()
@@ -53,7 +54,7 @@ mod path_area_test {
     ) -> T
     where
         DRAIN: Stream<T = T>,
-        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         let builder = PathBuilder::context_pathstring();
         let area = builder.build(projection).area(&object);

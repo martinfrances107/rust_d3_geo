@@ -8,6 +8,7 @@ mod bounds_test {
     use std::ops::AddAssign;
     use std::rc::Rc;
 
+    use approx::AbsDiffEq;
     use geo::CoordFloat;
     use geo::Coordinate;
     use geo::Geometry;
@@ -30,7 +31,9 @@ mod bounds_test {
     use rust_d3_geo::projection::Scale;
 
     #[inline]
-    fn equirectangular<T: AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst>(
+    fn equirectangular<
+        T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst,
+    >(
     ) -> Rc<Projection<ContextStream<T>, Line<T>, EquirectangularRaw<ContextStream<T>, T>, PV<T>, T>>
     {
         Rc::new(
@@ -55,7 +58,13 @@ mod bounds_test {
         object: &DataObject<T>,
     ) -> [Coordinate<T>; 2]
     where
-        T: AsPrimitive<T> + CoordFloat + FloatConst + Display + AddAssign + Default,
+        T: AbsDiffEq<Epsilon = T>
+            + AsPrimitive<T>
+            + CoordFloat
+            + FloatConst
+            + Display
+            + AddAssign
+            + Default,
     {
         let cs = Rc::new(RefCell::new(ContextStream::default()));
         match Builder::new(cs).build(projection).bounds(object) {

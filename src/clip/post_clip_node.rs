@@ -1,3 +1,4 @@
+use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -22,7 +23,7 @@ where
 impl<'a, SINK, T> Stream for PostClipNode<SINK, T>
 where
     SINK: Stream<T = T>,
-    T: 'static + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
 {
     type T = T;
 

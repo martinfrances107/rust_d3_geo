@@ -3,6 +3,7 @@ use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::Float;
@@ -370,7 +371,7 @@ where
 impl<SINK, T> Stream for StreamNode<Rectangle<T>, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: 'static + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
 {
     type T = T;
 

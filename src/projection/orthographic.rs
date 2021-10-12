@@ -1,5 +1,6 @@
 use std::marker::PhantomData;
 
+use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
@@ -44,7 +45,7 @@ where
 impl<DRAIN, T> Raw<T> for Orthographic<DRAIN, T>
 where
     DRAIN: Stream<T = T>,
-    T: 'static + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
 {
     type Builder = Builder<DRAIN, Line<T>, Orthographic<DRAIN, T>, PV<T>, T>;
     type T = T;

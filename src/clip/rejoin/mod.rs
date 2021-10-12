@@ -7,10 +7,11 @@ use std::rc::Rc;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use approx::AbsDiffEq;
+
 use crate::clip::intersection::Intersection;
 use crate::clip::rejoin::link::link;
 use crate::clip::InterpolateFn;
-use crate::point_equal::point_equal;
 use crate::stream::Stream;
 
 use super::line_elem::LineElem;
@@ -29,7 +30,7 @@ pub fn rejoin<SINK, T>(
     stream: Rc<RefCell<SINK>>,
 ) where
     SINK: Stream<T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     dbg!("rejoin entry");
     let mut start_inside = start_inside;
@@ -47,7 +48,8 @@ pub fn rejoin<SINK, T>(
             let mut p0: LineElem<T> = segment[0];
             let mut p1: LineElem<T> = segment[n];
 
-            if point_equal(p0.p, p1.p) {
+            // if point_equal(p0.p, p1.p) {
+            if p0.p.abs_diff_eq(&p1.p, T::from(1e-6).unwrap()) {
                 if p0.m.is_none() && p1.m.is_none() {
                     stream_b.line_start();
                     // for i in 0..n {

@@ -1,3 +1,4 @@
+use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -8,7 +9,6 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::Clean;
 use crate::clip::CleanState;
 use crate::clip::Line as LineTrait;
-use crate::point_equal::point_equal;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
@@ -126,7 +126,7 @@ where
 impl<SINK, T> Stream for StreamNode<Line<T>, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -188,9 +188,15 @@ where
                     panic!("Requested One or None found Two as !!");
                 }
             };
+            let epsilon = T::from(1e-6_f64).unwrap();
             if point2.is_some()
-                || point_equal(self.raw.point0.unwrap().p, point2.unwrap().p)
-                || point_equal(point1.unwrap().p, point2.unwrap().p)
+                || self
+                    .raw
+                    .point0
+                    .unwrap()
+                    .p
+                    .abs_diff_eq(&point2.unwrap().p, epsilon)
+                || point1.unwrap().p.abs_diff_eq(&point2.unwrap().p, epsilon)
             {
                 point1.unwrap().m = Some(1_u8);
             }
@@ -278,7 +284,12 @@ where
             }
         }
         if v && (self.raw.point0.is_none()
-            || !point_equal(self.raw.point0.unwrap().p, point1.unwrap().p))
+            || !self
+                .raw
+                .point0
+                .unwrap()
+                .p
+                .abs_diff_eq(&point1.unwrap().p, T::from(1e-6_f64).unwrap()))
         {
             s.point(&point1.unwrap().p, None);
         }

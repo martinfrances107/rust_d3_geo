@@ -2,6 +2,7 @@ use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
+use approx::AbsDiffEq;
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -240,7 +241,7 @@ where
     L: Line,
     PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 

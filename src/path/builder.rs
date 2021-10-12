@@ -3,6 +3,7 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -26,7 +27,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + CoordFloat + Display + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + Display + FloatConst,
 {
     pr: Option<T>,
     context: Option<Rc<CanvasRenderingContext2d>>,
@@ -39,7 +40,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon=T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
     pub fn new(context_stream: Rc<RefCell<ContextStream<T>>>) -> Builder<L, PR, PV, T> {
@@ -58,7 +59,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon=T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the state within the builder.
     pub fn get_context(&self) {
@@ -100,7 +101,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon=T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// From the progammed state generate a new projection.
     #[inline]

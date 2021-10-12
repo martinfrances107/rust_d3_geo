@@ -3,6 +3,7 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -27,7 +28,7 @@ pub struct Path<L, PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     L: Line,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon=T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
 {
     context_stream: Rc<RefCell<ContextStream<T>>>,
@@ -40,7 +41,7 @@ impl<L, PR, PV, T> Path<L, PR, PV, T>
 where
     L: Line,
     PR: ProjectionRaw<T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon=T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
 {
     /// Constructor.

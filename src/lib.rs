@@ -48,7 +48,6 @@ pub mod rotation;
 pub mod stream;
 
 mod identity;
-mod point_equal;
 
 /// 2-D Transform common to projections and, rotations.
 ///

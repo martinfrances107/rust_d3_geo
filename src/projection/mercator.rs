@@ -1,3 +1,4 @@
+use approx::AbsDiffEq;
 use num_traits::AsPrimitive;
 use num_traits::Float;
 use std::marker::PhantomData;
@@ -41,7 +42,7 @@ where
 impl<DRAIN, T> TransformExtent<T> for Mercator<DRAIN, T>
 where
     DRAIN: Stream<T = T> + Default,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -71,7 +72,7 @@ where
 impl<DRAIN, T> Raw<T> for Mercator<DRAIN, T>
 where
     DRAIN: Stream<T = T> + Default,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type Builder = MercatorBuilder<DRAIN, Line<T>, Mercator<DRAIN, T>, PV<T>, T>;
     type T = T;

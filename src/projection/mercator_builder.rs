@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use approx::AbsDiffEq;
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -43,7 +44,7 @@ where
     L: Line,
     PV: PointVisible<T = T>,
     PR: ProjectionRaw<T>, // TODO limit this to only certain types of PR
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     pr: PR,
     base: ProjectionBuilder<DRAIN, L, PR, PV, T>,
@@ -57,7 +58,7 @@ impl<DRAIN, PR, T> MercatorBuilder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridia
 where
     DRAIN: Stream<T = T> + Default,
     PR: ProjectionRaw<T>,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     /// Wrap a default projector and provides mercator specific overrides.
     pub fn new(pr: PR) -> Self {
@@ -102,7 +103,7 @@ where
     L: Line,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fn reclip(mut self) -> Self {
         let k = T::PI() * self.get_scale();
@@ -142,7 +143,7 @@ where
     L: Line,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -163,7 +164,7 @@ where
     L: Line,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -184,7 +185,7 @@ where
     L: Line,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -205,7 +206,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
     #[inline]
@@ -224,7 +225,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -253,7 +254,7 @@ where
     L: Line,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     /// f64 or f32
     type T = T;
@@ -291,7 +292,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -312,7 +313,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -333,7 +334,13 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + std::ops::AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static
+        + AbsDiffEq<Epsilon = T>
+        + std::ops::AddAssign
+        + AsPrimitive<T>
+        + CoordFloat
+        + Display
+        + FloatConst,
 {
     type T = T;
 
