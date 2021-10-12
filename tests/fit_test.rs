@@ -2,9 +2,11 @@
 #[cfg(test)]
 
 mod fit_test {
+    extern crate pretty_assertions;
 
     use geo::polygon;
     use geo::Geometry;
+    use pretty_assertions::assert_eq;
     use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use std::f64::consts::PI;

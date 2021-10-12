@@ -7,6 +7,7 @@ mod area_test {
     use geo::Geometry;
     use geo::MultiLineString;
     use geo::Point;
+    use pretty_assertions::assert_eq;
 
     use geo::polygon;
     use rust_d3_geo::area::Area;

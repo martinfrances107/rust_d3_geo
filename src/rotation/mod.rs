@@ -49,11 +49,13 @@ where
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod tests {
-    use super::*;
+    extern crate pretty_assertions;
 
+    use super::*;
     use crate::in_delta::in_delta;
     use crate::Transform;
     use geo::Coordinate;
+    use pretty_assertions::assert_eq;
     use rotation::Rotation;
 
     #[test]

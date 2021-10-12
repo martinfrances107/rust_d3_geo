@@ -2,11 +2,14 @@
 #[cfg(test)]
 mod index_test {
 
+    extern crate pretty_assertions;
+
     use geo::Coordinate;
     use geo::LineString;
     use geo::MultiPoint;
     use geo::Point;
     use geo::Polygon;
+    use pretty_assertions::assert_eq;
     use std::f64::consts::PI;
     use std::rc::Rc;
 

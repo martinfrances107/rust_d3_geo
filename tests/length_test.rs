@@ -3,8 +3,11 @@
 mod length_test {
     extern crate pretty_assertions;
 
+    use std::f64::consts::PI;
+
     use geo::line_string;
     use geo::polygon;
+    use pretty_assertions::assert_eq;
     // use geo::Geometry;
     use geo::LineString;
     use geo::MultiLineString;
@@ -16,7 +19,6 @@ mod length_test {
     // use rust_d3_geo::data_object::FeaturesStruct;
     use rust_d3_geo::in_delta::in_delta;
     use rust_d3_geo::length::Stream as LengthStream;
-    use std::f64::consts::PI;
 
     #[test]
     fn point_returns_zero() {

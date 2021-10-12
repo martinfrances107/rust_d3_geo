@@ -16,6 +16,7 @@ mod bounds_test {
     use geo::Polygon;
     use num_traits::AsPrimitive;
     use num_traits::FloatConst;
+    use pretty_assertions::assert_eq;
 
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;

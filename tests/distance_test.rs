@@ -4,6 +4,7 @@ mod distance_test {
     extern crate pretty_assertions;
 
     use geo::Coordinate;
+    use pretty_assertions::assert_eq;
     use rust_d3_geo::distance::distance;
     use rust_d3_geo::in_delta::in_delta;
 

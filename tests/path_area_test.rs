@@ -2,13 +2,13 @@
 #[cfg(test)]
 mod path_area_test {
 
-    use approx::AbsDiffEq;
     use rust_d3_geo::stream::Stream;
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
     use std::rc::Rc;
 
+    use approx::AbsDiffEq;
     use geo::CoordFloat;
     use geo::Coordinate;
     use geo::Geometry;
@@ -16,6 +16,7 @@ mod path_area_test {
     use geo::Polygon;
     use num_traits::AsPrimitive;
     use num_traits::FloatConst;
+    use pretty_assertions::assert_eq;
 
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
