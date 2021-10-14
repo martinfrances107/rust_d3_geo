@@ -39,10 +39,10 @@ mod mercator_tests {
 
     //     let object = DataObject::Sphere(Sphere::default());
 
-    //     match path_builder.build(projection).object(object) {
+    //     match path_builder.build(projection).object(&object) {
     //         Some(r) => match r {
     //             ResultEnum::String(s) => {
-    //                 assert_eq!(s, "M3.141592653589793,-3.1415927L3.141592653589793,0L3.141592653589793,3.1415927L3.141592653589793,3.1415927L-3.141592653589793,3.1415927L-3.141592653589793,3.1415927L-3.141592653589793,0L-3.141592653589793,-3.1415927L-3.141592653589793,-3.1415927L3.141592653589793,-3.1415927Z");
+    //                 // assert_eq!(s, "M3.141592653589793,-3.141592653589793L3.141592653589793,0L3.141592653589793,3.141592653589793L3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,0L-3.141592653589793,-3.141592653589793L-3.141592653589793,-3.141592653589793L3.141592653589793,-3.141592653589793Z");
     //             }
     //             _ => assert!(false, "Incorrect result "),
     //         },
@@ -52,12 +52,12 @@ mod mercator_tests {
     // }
 
     // #[test]
-    // fn cneter_set_correct_automatic() {
+    // fn center_set_correct_automatic() {
     //     println!("mercator.center(center) sets the correct automatic clip extent");
     //     let projection_builder = Mercator::builder()
     //         .translate(&Coordinate { x: 0_f64, y: 0_f64 })
     //         .scale(1_f64)
-    //         .center(Coordinate {
+    //         .center(&Coordinate {
     //             x: 10_f64,
     //             y: 10_f64,
     //         })
@@ -68,7 +68,7 @@ mod mercator_tests {
 
     //     let object = DataObject::Sphere(Sphere::default());
 
-    //     match path_builder.build(projection).object(object) {
+    //     match path_builder.build(projection).object(&object) {
     //         Some(r) => match r {
     //             ResultEnum::String(s) => {
     //                 assert_eq!(s, "M2.967060,-2.966167L2.967060,0.175426L2.967060,3.317018L2.967060,3.317018L-3.316126,3.317018L-3.316126,3.317019L-3.316126,0.175426L-3.316126,-2.966167L-3.316126,-2.966167L2.967060,-2.966167Z");

@@ -72,13 +72,14 @@ pub fn rejoin<SINK, T>(
             )));
             subject.push(x1.clone());
 
-            (*x1).borrow_mut().o = Some(Rc::new(RefCell::new(Intersection::new(
+            let o = Rc::new(RefCell::new(Intersection::new(
                 p0,
                 None,
                 Some(x1.clone()),
                 false,
-            ))));
-            clip.push((*x1).borrow().o.clone().unwrap());
+            )));
+            (*x1).borrow_mut().o = Some(o.clone());
+            clip.push(o);
 
             let x2 = Rc::new(RefCell::new(Intersection::new(
                 p1,
@@ -87,13 +88,14 @@ pub fn rejoin<SINK, T>(
                 false,
             )));
             subject.push(x2.clone());
-            (*x2).borrow_mut().o = Some(Rc::new(RefCell::new(Intersection::new(
+            let o2 = Rc::new(RefCell::new(Intersection::new(
                 p1,
                 None,
                 Some(x2.clone()),
                 true,
-            ))));
-            clip.push((*x2).borrow().o.clone().unwrap());
+            )));
+            (*x2).borrow_mut().o = Some(o2.clone());
+            clip.push(o2);
         }
     }
     dbg!("clip", clip.clone());

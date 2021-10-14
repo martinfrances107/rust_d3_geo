@@ -3,7 +3,7 @@ use std::collections::VecDeque;
 use std::rc::Rc;
 
 use approx::AbsDiffEq;
-use derivative::Derivative;
+use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
