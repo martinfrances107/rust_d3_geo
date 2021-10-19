@@ -5,6 +5,9 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::gen_clip_factory_antimeridian;
+use crate::clip::antimeridian::line::Line as AntimeridainLine;
+use crate::clip::antimeridian::pv::PV as AntimeridianPV;
 use crate::clip::circle::gen_clip_factory_circle;
 use crate::clip::circle::line::Line as CircleLine;
 use crate::clip::circle::pv::PV as CirclePV;
@@ -206,34 +209,29 @@ where
         }
     }
 
-    /// Switches to antimeridian cutting rather than small-circle clipPIng.
-    /// See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
-    ///
-    /// @param angle Set to null to switch to antimeridian cutting.
-    pub fn clip_angle(mut self, angle: T) -> Builder<DRAIN, CircleLine<T>, PR, CirclePV<T>, T> {
-        self.theta = Some(angle.to_radians());
-
-        // match angle {
-        //     StreamOrValueMaybe::Value(angle) => {
-        //         let theta = angle.to_radians();
-        //         self.theta = Some(theta);
-        //         // self.preclip = Box::new(ClipCircle::new(self.projection_raw, theta));
-        //         // println!("preclip {:#?}", self.preclip);
-        //         // panic!("clip_angler stop");
-        //     }
-        //     StreamOrValueMaybe::SP(_preclip) => {
-        //         todo!("must sort this out.");
-        //         // self.theta = None;
-        //         // self.preclip = preclip;
-        //         // self.reset();
-        //     }
-        // }
-
-        // Only change is the resample_factory.
-        let preclip_factory = gen_clip_factory_circle(angle);
+    /// Set the internal clip angle (theta) to null and return a builder
+    /// which uses the antimeridian clipping stratergy.
+    pub fn clip_angle_reset(self) -> Builder<DRAIN, AntimeridainLine<T>, PR, AntimeridianPV<T>, T> {
+        let preclip_factory = gen_clip_factory_antimeridian();
         let mut out = Builder::new(preclip_factory, self.projection_raw);
-        out.theta = Some(angle.to_radians());
-        out
+        out.theta = None;
+        // TODO must find a way of copying over previous internal state.
+        out.reset()
+    }
+
+    /// Given an angle in degrees. Sets the internal clip angle and returns a builder
+    /// which uses the clip circle stratergy.
+    pub fn clip_angle(self, angle: T) -> Builder<DRAIN, CircleLine<T>, PR, CirclePV<T>, T> {
+        if angle == T::zero() {
+            panic!("must call clip_angle_reset() instead");
+        }
+        // Only change is the resample_factory.
+        // TODO the JS preserves the internal state (projection) scale rotation etc.
+        let theta = angle.to_radians();
+        let preclip_factory = gen_clip_factory_circle(theta);
+        let mut out = Builder::new(preclip_factory, self.projection_raw);
+        out.theta = Some(theta);
+        out.reset()
     }
 
     fn reset(self) -> Builder<DRAIN, L, PR, PV, T> {
