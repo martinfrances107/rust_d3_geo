@@ -68,12 +68,7 @@ where
     ///
     ///  @param angle Set to null to switch to antimeridian cutting.
     ///
-    fn clip_angle(
-        self,
-        angle: <Self as BuilderTrait>::T,
-        // angle: StreamOrValueMaybe<<Self as BuilderTrait>::T>,
-    ) -> Self;
-
+    fn clip_angle(self, angle: <Self as BuilderTrait>::T) -> Self;
 
     // /**
     //  * Sets the projection’s clipPIng circle radius to the specified angle in degrees and returns the projection.
@@ -141,7 +136,6 @@ where
     //  * @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
     //  * @param object A GeoJson Geometry Object or GeoSphere object supported by d3-geo (An extension of GeoJSON).
     //  */
-
     // /**
     //  * Sets the projection’s scale and translate to fit the specified geographic geometry collection in the center of the given extent.
     //  * Returns the projection.
@@ -280,8 +274,6 @@ where
             + Display
             + FloatConst;
 
-
-
     ///  Returns the projection’s current angle, which defaults to 0°.
     ///
     /// angle(): number;
@@ -334,6 +326,4 @@ where
             + Debug
             + Display
             + FloatConst;
-
-
 }
