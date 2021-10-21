@@ -258,6 +258,7 @@ where
 {
     /// f64 or f32
     type T = T;
+
     /// Returns a bounding box.
     fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
         match (self.x0, self.y0, self.x1, self.y1) {
@@ -287,8 +288,9 @@ where
     }
 }
 
-impl<L, PR, PV, T> Angle for MercatorBuilder<Bounds<T>, L, PR, PV, T>
+impl<DRAIN, L, PR, PV, T> Angle for MercatorBuilder<DRAIN, L, PR, PV, T>
 where
+    DRAIN: Default + Stream<T = T>,
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -308,8 +310,9 @@ where
     }
 }
 
-impl<L, PR, PV, T> Rotate for MercatorBuilder<Bounds<T>, L, PR, PV, T>
+impl<DRAIN, L, PR, PV, T> Rotate for MercatorBuilder<DRAIN, L, PR, PV, T>
 where
+    DRAIN: Stream<T = T> + Default,
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -329,8 +332,9 @@ where
     }
 }
 
-impl<L, PR, PV, T> Reflect for MercatorBuilder<Bounds<T>, L, PR, PV, T>
+impl<DRAIN, L, PR, PV, T> Reflect for MercatorBuilder<DRAIN, L, PR, PV, T>
 where
+    DRAIN: Default + Stream<T = T>,
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
