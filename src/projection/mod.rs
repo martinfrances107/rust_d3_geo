@@ -318,11 +318,10 @@ pub trait Rotate {
     /// Returns the three-axis rotaation.
     fn get_rotate(&self) -> [Self::T; 3];
 
-    ///  Sets the projection’s three-axis rotation to the specified angles, which must be a two- or three-element array of numbers.
+    ///  Sets the projection’s three-axis rotation to the specified angles, which must be a three-element array of numbers.
     ///
-    ///  @param angles  A two- or three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
-    ///  (These correspond to yaw, PItch and roll.) If the rotation angle gamma is omitted, it defaults to 0.
-    ///
+    ///  @param angles  A three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
+    ///  (These correspond to yaw, PItch and roll.)
     fn rotate(self, angles: &[Self::T; 3]) -> Self;
 }
 
