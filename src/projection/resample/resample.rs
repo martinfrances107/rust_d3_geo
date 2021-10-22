@@ -199,8 +199,8 @@ where
                 c = c / m;
                 let phi2 = c.asin();
                 let lambda2;
-                if (c.abs() - T::one()).abs() < T::epsilon()
-                    || (lambda0 - lambda1).abs() < T::epsilon()
+                if (c.abs() - T::one()).abs() < self.raw.epsilon
+                    || (lambda0 - lambda1).abs() < self.raw.epsilon
                 {
                     lambda2 = (lambda0 + lambda1) / T::from(2).unwrap();
                 } else {

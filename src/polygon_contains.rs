@@ -34,9 +34,9 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
     let mut winding = 0_i32;
 
     if sin_phi == T::one() {
-        phi = T::FRAC_PI_2() + T::epsilon();
+        phi = T::FRAC_PI_2() + T::from(EPSILON).unwrap();
     } else if sin_phi == -T::one() {
-        phi = -T::FRAC_PI_2() - T::epsilon();
+        phi = -T::FRAC_PI_2() - T::from(EPSILON).unwrap();
     }
 
     for polygon_i in polygon {

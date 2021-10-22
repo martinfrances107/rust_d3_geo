@@ -1,8 +1,10 @@
 use geo::CoordFloat;
 
+use crate::math::EPSILON;
+
 pub fn intersect<T: CoordFloat>(lambda0: T, phi0: T, lambda1: T, phi1: T) -> T {
     let sin_lambda0_lambda1 = (lambda0 - lambda1).sin();
-    match (sin_lambda0_lambda1).abs() > T::epsilon() {
+    match (sin_lambda0_lambda1).abs() > T::from(EPSILON).unwrap() {
         true => {
             let cos_phi0 = phi0.cos();
             let cos_phi1 = phi1.cos();

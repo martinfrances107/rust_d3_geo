@@ -7,6 +7,7 @@ use num_traits::FloatConst;
 use crate::clip::Clean;
 use crate::clip::CleanState;
 use crate::clip::Line as LineTrait;
+use crate::math::EPSILON;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
@@ -22,6 +23,7 @@ where
     phi0: T,
     sign0: T,
     clean: CleanState,
+    epsilon: T,
 }
 
 impl<T> LineTrait for Line<T> where T: CoordFloat {}
@@ -36,6 +38,7 @@ where
             phi0: T::nan(),
             sign0: T::nan(),
             clean: CleanState::NoIntersections,
+            epsilon: T::from(EPSILON).unwrap(),
         }
     }
 }
@@ -81,7 +84,7 @@ where
         let delta = (lambda1 - self.raw.lambda0).abs();
 
         let mut s = self.sink.borrow_mut();
-        if (delta - T::PI()).abs() < T::epsilon() {
+        if (delta - T::PI()).abs() < self.raw.epsilon {
             // Line crosses a pole.
             let f_2 = T::from(2_f64).unwrap();
             self.raw.phi0 = if (self.raw.phi0 + phi1 / f_2).is_sign_positive() {
@@ -122,12 +125,12 @@ where
             self.raw.clean = CleanState::IntersectionsOrEmpty;
         } else if self.raw.sign0 != sign1 && delta >= T::PI() {
             // Line crosses antimeridian.
-            if (self.raw.lambda0 - self.raw.sign0).abs() < T::epsilon() {
-                self.raw.lambda0 = self.raw.lambda0 - self.raw.sign0 * T::epsilon();
+            if (self.raw.lambda0 - self.raw.sign0).abs() < self.raw.epsilon {
+                self.raw.lambda0 = self.raw.lambda0 - self.raw.sign0 * self.raw.epsilon;
                 // handle degeneracies
             }
-            if (lambda1 - sign1).abs() < T::epsilon() {
-                lambda1 = lambda1 - sign1 * T::epsilon();
+            if (lambda1 - sign1).abs() < self.raw.epsilon {
+                lambda1 = lambda1 - sign1 * self.raw.epsilon;
             }
             self.raw.phi0 = intersect(self.raw.lambda0, self.raw.phi0, lambda1, phi1);
             s.point(

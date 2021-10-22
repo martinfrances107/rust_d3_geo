@@ -8,6 +8,7 @@ use crate::cartesian::dot;
 use crate::cartesian::scale;
 use crate::cartesian::spherical_r;
 use crate::clip::line_elem::LineElem;
+use crate::math::EPSILON;
 
 /// IntersectReturn none, one or two 2d floats.
 #[derive(Debug)]
@@ -89,8 +90,9 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     }
 
     let delta = lambda1 - lambda0;
-    let polar = (delta - T::PI()).abs() < T::epsilon();
-    let meridian = polar || delta < T::epsilon();
+    let epsilon = T::from(EPSILON).unwrap();
+    let polar = (delta - T::PI()).abs() < epsilon;
+    let meridian = polar || delta < epsilon;
 
     if !polar && phi1 < phi0 {
         z = phi0;
@@ -112,7 +114,7 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     let condition: bool;
     if meridian {
         if polar {
-            let phi_threshold = if (q.x - lambda0).abs() < T::epsilon() {
+            let phi_threshold = if (q.x - lambda0).abs() < epsilon {
                 phi0
             } else {
                 phi1
