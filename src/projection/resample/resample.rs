@@ -59,22 +59,23 @@ where
             delta2,
 
             // first point
-            lambda00: T::zero(),
-            x00: T::zero(),
-            y00: T::zero(),
-            a00: T::zero(),
-            b00: T::zero(),
-            c00: T::zero(),
+            lambda00: T::nan(),
+            x00: T::nan(),
+            y00: T::nan(),
+            a00: T::nan(),
+            b00: T::nan(),
+            c00: T::nan(),
 
             // previous point
-            lambda0: T::zero(),
-            x0: T::zero(),
-            y0: T::zero(),
-            a0: T::zero(),
-            b0: T::zero(),
-            c0: T::zero(),
+            lambda0: T::nan(),
+            x0: T::nan(),
+            y0: T::nan(),
+            a0: T::nan(),
+            b0: T::nan(),
+            c0: T::nan(),
 
-            cos_min_distance: T::zero(),
+            // cos(minimium angular distance)
+            cos_min_distance: T::from(30_f64).unwrap().to_radians().cos(),
             use_line_point: false,
             use_line_start: false,
             use_line_end: false,
