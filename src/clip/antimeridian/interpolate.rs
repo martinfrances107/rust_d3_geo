@@ -6,6 +6,7 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::InterpolateFn;
+use crate::math::EPSILON;
 use crate::stream::Stream;
 
 /// Antimerdian interpolate function.
@@ -21,7 +22,7 @@ where
               stream_in: Rc<RefCell<STREAM>>| {
             let phi: T;
             let mut s = stream_in.borrow_mut();
-            let epsilon = T::from(1e-6).unwrap();
+            let epsilon = T::from(EPSILON).unwrap();
             match from {
                 None => {
                     phi = direction * T::FRAC_PI_2();

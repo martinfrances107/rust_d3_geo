@@ -4,6 +4,7 @@ use std::fmt::Display;
 use geo::{CoordFloat, Coordinate};
 
 use crate::in_delta::in_delta;
+use crate::math::EPSILON;
 use crate::Transform;
 
 /// Helper test function.
@@ -20,7 +21,7 @@ where
 {
     let delta = match delta_p {
         Some(d) => d,
-        None => T::from(1e-6_f64).unwrap(),
+        None => T::from(EPSILON).unwrap(),
     };
     println!("project_equal");
     println!(

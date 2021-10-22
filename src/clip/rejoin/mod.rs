@@ -12,6 +12,7 @@ use approx::AbsDiffEq;
 use crate::clip::intersection::Intersection;
 use crate::clip::rejoin::link::link;
 use crate::clip::InterpolateFn;
+use crate::math::EPSILON;
 use crate::stream::Stream;
 
 use super::line_elem::LineElem;
@@ -32,7 +33,6 @@ pub fn rejoin<SINK, T>(
     SINK: Stream<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    dbg!("rejoin entry");
     let mut start_inside = start_inside;
     let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();
     let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
@@ -49,7 +49,7 @@ pub fn rejoin<SINK, T>(
             let mut p1: LineElem<T> = segment[n];
 
             // if point_equal(p0.p, p1.p) {
-            if p0.p.abs_diff_eq(&p1.p, T::from(1e-6).unwrap()) {
+            if p0.p.abs_diff_eq(&p1.p, T::from(EPSILON).unwrap()) {
                 if p0.m.is_none() && p1.m.is_none() {
                     stream_b.line_start();
                     // for i in 0..n {
@@ -61,7 +61,7 @@ pub fn rejoin<SINK, T>(
                     return;
                 }
                 // handle degenerate cases by moving the point
-                p1.p.x = p1.p.x + T::from(2.0 * 1e-6).unwrap();
+                p1.p.x = p1.p.x + T::from(2.0 * EPSILON).unwrap();
             }
 
             let x1 = Rc::new(RefCell::new(Intersection::new(
@@ -98,8 +98,6 @@ pub fn rejoin<SINK, T>(
             clip.push(o2);
         }
     }
-    dbg!("clip", clip.clone());
-    dbg!("rejoin", segments);
     if subject.is_empty() {
         return;
     }

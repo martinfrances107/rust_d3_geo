@@ -3,6 +3,7 @@ use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
 use crate::compose::Compose;
+use crate::math::EPSILON;
 use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::Raw as ProjectionRaw;
@@ -41,6 +42,7 @@ where
     pub use_line_point: bool,
     pub use_line_start: bool,
     pub use_line_end: bool,
+    epsilon: T,
 }
 
 impl<'a, PR, T> Resample<PR, T>
@@ -76,6 +78,7 @@ where
             use_line_point: false,
             use_line_start: false,
             use_line_end: false,
+            epsilon: T::from(EPSILON).unwrap(),
         }
     }
 }

@@ -9,6 +9,7 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::Clean;
 use crate::clip::CleanState;
 use crate::clip::Line as LineTrait;
+use crate::math::EPSILON;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
@@ -50,7 +51,7 @@ where
         // TODO small_radius, rc  is a shadow variables!!!
         let cr = radius.cos();
         let small_radius = cr.is_sign_positive();
-        let epsilon = T::from(1e-6).unwrap();
+        let epsilon = T::from(EPSILON).unwrap();
         Self {
             c0: 0,
             clean: CleanState::IntersectionsOrEmpty,
@@ -188,7 +189,7 @@ where
                     panic!("Requested One or None found Two as !!");
                 }
             };
-            let epsilon = T::from(1e-6_f64).unwrap();
+            let epsilon = T::from(EPSILON).unwrap();
             if point2.is_some()
                 || self
                     .raw
@@ -289,7 +290,7 @@ where
                 .point0
                 .unwrap()
                 .p
-                .abs_diff_eq(&point1.unwrap().p, T::from(1e-6_f64).unwrap()))
+                .abs_diff_eq(&point1.unwrap().p, T::from(EPSILON).unwrap()))
         {
             s.point(&point1.unwrap().p, None);
         }

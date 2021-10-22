@@ -17,6 +17,7 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::rejoin::rejoin as clip_rejoin;
 use crate::clip::rejoin::CompareIntersectionsFn;
 use crate::clip::InterpolateFn;
+use crate::math::EPSILON;
 use crate::path::Result;
 use crate::path::ResultEnum;
 use crate::projection::stream_node::StreamNode;
@@ -70,7 +71,7 @@ where
             clean: false,
             clip_max: T::from(1e9).unwrap(),
             clip_min: -T::from(1e9).unwrap(),
-            epsilon: T::from(1e-6).unwrap(),
+            epsilon: T::from(EPSILON).unwrap(),
 
             x0,
             y0,
@@ -104,7 +105,7 @@ where
         let x0 = self.x0;
         let y0 = self.y0;
         let x1 = self.x1;
-        let epsilon = T::from(1e-6).unwrap();
+        let epsilon = T::from(EPSILON).unwrap();
         Box::new(move |p: &Coordinate<T>, direction: &T| -> i8 {
             if (p.x - x0).abs() < epsilon {
                 if direction > &T::zero() {
@@ -371,7 +372,7 @@ where
 impl<SINK, T> Stream for StreamNode<Rectangle<T>, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -398,7 +399,7 @@ where
         let start_inside = self.raw.polygon_inside();
         let clean_inside = self.raw.clean && start_inside;
 
-        // Performance if all lengths are know. Can I flatern into a
+        // Performance if all lengths are known. Can I flatern into a
         // array of arrays or something that implies a contigious block of memory.
         let merged_segments = self
             .raw
@@ -408,7 +409,6 @@ where
             .into_iter()
             .flatten()
             .collect::<Vec<Vec<LineElem<T>>>>();
-
         let num_visible_elements = merged_segments.len();
 
         let visible = !num_visible_elements.is_zero();

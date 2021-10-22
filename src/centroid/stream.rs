@@ -4,13 +4,15 @@ use derivative::Derivative;
 use geo::{CoordFloat, Coordinate, Point};
 use num_traits::FloatConst;
 
+use crate::math::EPSILON;
+use crate::math::EPSILON2;
 use crate::stream::Stream as StreamTrait;
 use crate::stream::Streamable;
 
 /// TODO MUST use a math library.
-pub const EPSILON: f64 = 1e-6;
+// pub const EPSILON: f64 = 1e-6;
 /// Must move to math library.
-pub const EPSILON2: f64 = 1e-12;
+// pub const EPSILON2: f64 = 1e-12;
 
 /// Centroid Stream.
 #[allow(non_snake_case)]

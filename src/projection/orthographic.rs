@@ -8,6 +8,7 @@ use crate::clip::circle::interpolate::generate as gen_interpolate;
 use crate::clip::circle::line::Line;
 use crate::clip::circle::pv::PV;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+use crate::math::EPSILON;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -45,7 +46,7 @@ where
 impl<DRAIN, T> Raw<T> for Orthographic<DRAIN, T>
 where
     DRAIN: Stream<T = T>,
-    T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type Builder = Builder<DRAIN, Line<T>, Orthographic<DRAIN, T>, PV<T>, T>;
     type T = T;
@@ -63,7 +64,7 @@ where
             Orthographic::default(),
         )
         .scale(T::from(249.5_f64).unwrap())
-        .clip_angle(T::from(90_f64 + 1e-6_f64).unwrap())
+        .clip_angle(T::from(90_f64 + EPSILON).unwrap())
     }
 }
 

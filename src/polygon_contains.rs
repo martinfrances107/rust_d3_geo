@@ -5,6 +5,8 @@ use crate::cartesian::cartesian;
 use crate::cartesian::cross;
 use crate::cartesian::normalize_in_place;
 use crate::clip::line_elem::LineElem;
+use crate::math::EPSILON;
+use crate::math::EPSILON2;
 
 #[cfg(not(tarpaulin_include))]
 #[inline]
@@ -119,8 +121,8 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
         is_winding_odd = false;
     }
 
-    let epsilon = T::from(1e-6).unwrap();
-    let epsilon2 = T::from(1e-12).unwrap();
+    let epsilon = T::from(EPSILON).unwrap();
+    let epsilon2 = T::from(EPSILON2).unwrap();
     let is_south_pole_inside = angle < -epsilon || angle < epsilon && sum < -epsilon2;
 
     is_south_pole_inside ^ is_winding_odd

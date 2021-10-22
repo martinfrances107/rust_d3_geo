@@ -108,7 +108,6 @@ where
     }
 
     fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
-        dbg!(&self.point);
         match self.point {
             PointState::LineStart => {
                 self.context
