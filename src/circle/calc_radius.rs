@@ -6,7 +6,7 @@ use crate::cartesian::normalize_in_place;
 use crate::math::EPSILON;
 
 /// Returns the signed angle of a cartesian point relative to [cosRadius, 0, 0].
-pub(super) fn calc_radius<T>(cos_radius: T, point_p: Coordinate<T>) -> T
+pub(super) fn calc_radius<T>(cos_radius: T, point_p: &Coordinate<T>) -> T
 where
     T: CoordFloat + FloatConst,
 {

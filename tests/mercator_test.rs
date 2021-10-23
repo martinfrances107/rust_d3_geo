@@ -271,8 +271,8 @@ mod mercator_tests {
             .fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
         assert_eq!(pb.get_scale(), 35781690.650920525_f64);
         assert!(in_delta_coordinate(
-            pb.get_translate(),
-            Coordinate {
+            &pb.get_translate(),
+            &Coordinate {
                 x: 75115911.95344563_f64,
                 y: 2586046.4116968135_f64
             },

@@ -41,8 +41,8 @@ pub fn in_delta_point<T: CoordFloat + Display>(
 ///
 /// Debug and test helper function.
 pub fn in_delta_coordinate<T: CoordFloat + Display>(
-    actual: Coordinate<T>,
-    expected: Coordinate<T>,
+    actual: &Coordinate<T>,
+    expected: &Coordinate<T>,
     delta: T,
 ) -> bool {
     println!(

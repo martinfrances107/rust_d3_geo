@@ -37,8 +37,8 @@ pub fn stream_fn<STREAM, T>(
     let t1: T;
     match (t0_in, t1_in) {
         (Some(p0), Some(p1)) => {
-            t0 = calc_radius(cos_radius, p0);
-            t1 = calc_radius(cos_radius, p1);
+            t0 = calc_radius(cos_radius, &p0);
+            t1 = calc_radius(cos_radius, &p1);
             let check = match direction.is_sign_positive() {
                 true => t0 < t1,
                 false => t0 > t1,

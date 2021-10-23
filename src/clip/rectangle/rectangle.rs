@@ -166,9 +166,9 @@ where
     }
 
     /// Warning from JS a, b are LineElem.
-    fn gen_compare_point(&self) -> Box<dyn Fn(Coordinate<T>, Coordinate<T>) -> Ordering> {
+    fn gen_compare_point(&self) -> Box<dyn Fn(&Coordinate<T>, &Coordinate<T>) -> Ordering> {
         let corner = self.gen_corner();
-        Box::new(move |a: Coordinate<T>, b: Coordinate<T>| -> Ordering {
+        Box::new(move |a: &Coordinate<T>, b: &Coordinate<T>| -> Ordering {
             let ca = corner(&a, &T::one());
             let cb = corner(&b, &T::one());
             if ca != cb {
@@ -339,7 +339,7 @@ where
                         a = corner(&from, &direction);
                         a1 = corner(&to, &direction);
                         let mut s_mut = stream.borrow_mut();
-                        let cp = compare_point(from, to) < Ordering::Less;
+                        let cp = compare_point(&from, &to) < Ordering::Less;
                         let is_direction = direction > T::zero();
                         // logical exor: cp ^^ is_direction
                         if a != a1 || (cp && !is_direction) || (!cp && is_direction) {
@@ -431,7 +431,9 @@ where
             let compare_intersection: CompareIntersectionsFn<T> = Box::new(
                 move |a: &Rc<RefCell<Intersection<T>>>,
                       b: &Rc<RefCell<Intersection<T>>>|
-                      -> Ordering { compare_point(a.borrow().x.p, b.borrow().x.p) },
+                      -> Ordering {
+                    compare_point(&a.borrow().x.p, &b.borrow().x.p)
+                },
             );
 
             if visible {
