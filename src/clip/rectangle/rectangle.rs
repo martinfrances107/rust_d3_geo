@@ -169,8 +169,8 @@ where
     fn gen_compare_point(&self) -> Box<dyn Fn(&Coordinate<T>, &Coordinate<T>) -> Ordering> {
         let corner = self.gen_corner();
         Box::new(move |a: &Coordinate<T>, b: &Coordinate<T>| -> Ordering {
-            let ca = corner(&a, &T::one());
-            let cb = corner(&b, &T::one());
+            let ca = corner(a, &T::one());
+            let cb = corner(b, &T::one());
             if ca != cb {
                 if (ca - cb) > 0 {
                     Ordering::Greater

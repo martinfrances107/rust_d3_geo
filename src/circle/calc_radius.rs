@@ -10,7 +10,7 @@ pub(super) fn calc_radius<T>(cos_radius: T, point_p: &Coordinate<T>) -> T
 where
     T: CoordFloat + FloatConst,
 {
-    let mut point = cartesian(&point_p);
+    let mut point = cartesian(point_p);
     point[0] = point[0] - cos_radius;
     normalize_in_place(&mut point);
     let radius = (-point[1]).acos();
