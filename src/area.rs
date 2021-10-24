@@ -81,10 +81,6 @@ where
         a.area_sum * a.two
     }
 
-    #[inline]
-    fn area_ring_start(&mut self) {
-        self.point_fn = PointFn::AreaFirst;
-    }
     fn area_point_first(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         // areaStream.point = areaPoint;
         self.point_fn = PointFn::Area;
@@ -129,6 +125,11 @@ where
         self.lambda0 = lambda;
         self.cos_phi0 = cos_phi;
         self.sin_phi0 = sin_phi;
+    }
+
+    #[inline]
+    fn area_ring_start(&mut self) {
+        self.point_fn = PointFn::AreaFirst;
     }
 
     #[inline]

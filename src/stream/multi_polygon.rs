@@ -11,6 +11,7 @@ where
 {
     type T = T;
 
+    #[inline]
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         for p in self.iter() {
             p.to_stream(stream);

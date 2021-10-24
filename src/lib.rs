@@ -48,6 +48,7 @@ pub mod rotation;
 pub mod stream;
 
 mod identity;
+/// A container for crate specific functions and constants.
 mod math;
 
 /// 2-D Transform common to projections and, rotations.

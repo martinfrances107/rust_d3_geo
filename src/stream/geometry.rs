@@ -10,6 +10,8 @@ where
     T: CoordFloat + FloatConst,
 {
     type T = T;
+
+    #[inline]
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         match self {
             Geometry::Point(p) => p.to_stream(stream),
