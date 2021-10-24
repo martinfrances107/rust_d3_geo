@@ -1,7 +1,6 @@
-use std::f64::consts::PI;
-
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::FloatConst;
 
 use crate::stream::Stream;
 use crate::stream::Streamable;
@@ -17,9 +16,7 @@ where
     lambda0: T,
     cos_phi0: T,
     sin_phi0: T,
-    tau: T,
     two: T,
-    quarter_pi: T,
     area_ring_sum: T,
     area_sum: T,
 
@@ -57,9 +54,7 @@ where
             lambda0: T::nan(),
             cos_phi0: T::nan(),
             sin_phi0: T::nan(),
-            tau: T::from(2_f64 * PI).unwrap(),
             two: T::from(2_f64).unwrap(),
-            quarter_pi: T::from(PI / 4_f64).unwrap(),
             area_ring_sum: T::nan(),
             area_sum: T::zero(),
 
@@ -72,7 +67,7 @@ where
 
 impl<T> Area<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     /// Calculate the objects assocated area.
     pub fn calc(object: &impl Streamable<T = T>) -> T {
@@ -82,32 +77,26 @@ where
     }
 
     fn area_point_first(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        // areaStream.point = areaPoint;
         self.point_fn = PointFn::Area;
-        // lambda00 = lambda, phi00 = phi;
         self.lambda00 = p.x;
         self.phi00 = p.y;
-        // lambda *= radians, phi *= radians;
         self.lambda0 = p.x.to_radians();
         let phi = p.y.to_radians();
-        let phi = phi / self.two + self.quarter_pi;
-        // lambda0 = lambda, cosPhi0 = cos(phi = phi / 2 + quarterPi), sinPhi0 = sin(phi);
+        let phi = phi / self.two + T::FRAC_PI_4();
         self.cos_phi0 = phi.cos();
         self.sin_phi0 = phi.sin();
     }
 
     fn area_point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        // lambda *= radians, phi *= radians;
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
 
-        let phi = phi / self.two + self.quarter_pi; // half the angular distance from south pole
+        let phi = phi / self.two + T::FRAC_PI_4(); // half the angular distance from south pole
 
         // Spherical excess E for a spherical triangle with vertices: south pole,
         // previous point, current point.  Uses a formula derived from Cagnoli’s
         // theorem.  See Todhunter, Spherical Trig. (1871), Sec. 103, Eq. (2).
         let d_lambda = lambda - self.lambda0;
-        // let sdLambda = dLambda >= 0 ? 1 : -1,
         let sd_lambda = if d_lambda >= T::zero() {
             T::one()
         } else {
@@ -146,7 +135,7 @@ where
 
 impl<T> Stream for Area<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -184,15 +173,19 @@ where
 
     fn polygon_end(&mut self) {
         let area_ring = self.area_ring_sum;
-        self.area_sum = if area_ring < T::zero() {
-            self.tau + area_ring
+        if area_ring < T::zero() {
+            self.area_sum = self.area_sum + T::TAU() + area_ring;
         } else {
-            area_ring
-        };
+            self.area_sum = self.area_sum + area_ring;
+        }
+
+        self.line_start_fn = LineStartFn::Noop;
+        self.line_end_fn = LineEndFn::Noop;
+        self.point_fn = PointFn::Noop;
     }
 
     #[inline]
     fn sphere(&mut self) {
-        self.area_sum = self.area_sum + self.tau;
+        self.area_sum = self.area_sum + T::TAU();
     }
 }
