@@ -213,9 +213,46 @@ where
     /// which uses the antimeridian clipping stratergy.
     pub fn clip_angle_reset(self) -> Builder<DRAIN, AntimeridainLine<T>, PR, AntimeridianPV<T>, T> {
         let preclip_factory = gen_clip_factory_antimeridian();
-        let mut out = Builder::new(preclip_factory, self.projection_raw);
-        out.theta = None;
-        // TODO must find a way of copying over previous internal state.
+
+        // update only theta and preclip_factory.
+        let out: Builder<DRAIN, AntimeridainLine<T>, PR, AntimeridianPV<T>, T> = Builder {
+            projection_raw: self.projection_raw,
+
+            /// Internal state.
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+
+            x: self.x,
+            y: self.y,
+
+            x0: self.x0,
+            y0: self.y0,
+            x1: self.x1,
+            y1: self.y1,
+
+            delta2: self.delta2,
+            lambda: self.lambda,
+            phi: self.phi,
+
+            alpha: self.alpha,
+            k: self.k,
+            theta: None,
+            sx: self.sx,
+            sy: self.sy,
+
+            rotate: self.rotate.clone(),
+            project_transform: self.project_transform,
+            project_rotate_transform: self.project_rotate_transform.clone(),
+            postclip_factory: self.postclip_factory,
+            preclip_factory,
+
+            resample_factory: self.resample_factory,
+
+            rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
+            rotate_factory: StreamNodeFactory::new(self.rotate),
+        };
+
         out.reset()
     }
 
@@ -225,12 +262,53 @@ where
         if angle == T::zero() {
             panic!("must call clip_angle_reset() instead");
         }
-        // Only change is the resample_factory.
-        // TODO the JS preserves the internal state (projection) scale rotation etc.
+
         let theta = angle.to_radians();
         let preclip_factory = gen_clip_factory_circle(theta);
-        let mut out = Builder::new(preclip_factory, self.projection_raw);
-        out.theta = Some(theta);
+        // let mut out = Builder::new(preclip_factory, self.projection_raw);
+        // out.theta = Some(theta);
+
+        // update only theta and preclip_factory.
+        let out: Builder<DRAIN, CircleLine<T>, PR, CirclePV<T>, T> = Builder {
+            projection_raw: self.projection_raw,
+
+            /// Internal state.
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+
+            x: self.x,
+            y: self.y,
+
+            x0: self.x0,
+            y0: self.y0,
+            x1: self.x1,
+            y1: self.y1,
+
+            delta2: self.delta2,
+            lambda: self.lambda,
+            phi: self.phi,
+
+            alpha: self.alpha,
+            k: self.k,
+
+            theta: Some(theta),
+
+            sx: self.sx,
+            sy: self.sy,
+
+            rotate: self.rotate.clone(),
+            project_transform: self.project_transform,
+            project_rotate_transform: self.project_rotate_transform.clone(),
+            postclip_factory: self.postclip_factory,
+            preclip_factory,
+
+            resample_factory: self.resample_factory,
+
+            rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
+            rotate_factory: StreamNodeFactory::new(self.rotate),
+        };
+
         out.reset()
     }
 

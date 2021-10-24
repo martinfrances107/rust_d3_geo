@@ -9,7 +9,7 @@ pub struct RotationLambda<T>
 where
     T: CoordFloat,
 {
-    /// The change roations.
+    /// The change in rotation.
     pub delta_lambda: T,
 }
 
