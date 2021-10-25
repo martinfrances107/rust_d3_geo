@@ -1,4 +1,5 @@
 # Rust D3 Geo
+Rust 2021 Edition.
 
 This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into a RUST library crate/package. It is in a very early development phase.
 
@@ -52,6 +53,14 @@ I am trying to get a program of mine to run faster, but I want this to eventuall
 
 ## Other To-do's
 
-Detail API changes such as
+### Document API changes such as
   * src/projection/clip_angle_reset()
   * src/projection/clip_extent_clear()
+
+### To be implemented
+  path/measure and measure-test.js
+  Identity.js and Identity-test.js
+
+### Missing test
+  area_test.rs: The stripes() function needs to be added so tests such as 'area: Polygon - stripes -45°, 45°' can be implmented.
+

@@ -4,16 +4,17 @@
 mod fit_test {
     extern crate pretty_assertions;
 
+    use std::f64::consts::PI;
+
     use geo::polygon;
     use geo::Geometry;
     use pretty_assertions::assert_eq;
-    use rust_d3_geo::path::bounds::Bounds;
-    use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
-    use std::f64::consts::PI;
 
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::in_delta::in_delta;
+    use rust_d3_geo::path::bounds::Bounds;
+    use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::mercator::Mercator;
     use rust_d3_geo::projection::Fit;
@@ -230,23 +231,6 @@ mod fit_test {
     // // //   var projection = d3.geoTransverseMercator().fitExtent([[50, 50], [950, 950]], world).scale(500);
     // // //   test.equal(projection.scale(), 500);
     // // //   test.inDelta(projection.translate(), [473.829551, 500], 1e-6);
-    // // //   test.end();
-    // // // });
-
-    // // // tape("projection.fitSize(…) resampling - world mercator", function(test) {
-    // // //   var box = {"type": "Polygon", "coordinates": [[[-135, 45], [-45, 45], [-45, -45], [-135, -45], [-135, 45]]]},
-    // // //       p1 = d3.geoMercator().precision(0.1).fitSize([1000, 1000], box),
-    // // //       p2 = d3.geoMercator().precision(0).fitSize([1000, 1000], box),
-    // // //       t1 = p1.translate(),
-    // // //       t2 = p2.translate();
-    // // //   test.equal(p1.precision(), 0.1);
-    // // //   test.equal(p2.precision(), 0);
-    // // //   test.inDelta(p1.scale(), 436.218018, 1e-6);
-    // // //   test.inDelta(p2.scale(), 567.296328, 1e-6);
-    // // //   test.inDelta(t1[0], 1185.209661, 1e-6);
-    // // //   test.inDelta(t2[0], 1391.106989, 1e-6);
-    // // //   test.inDelta(t1[1], 500, 1e-6);
-    // // //   test.inDelta(t1[1], t2[1], 1e-6);
     // // //   test.end();
     // // // });
 
