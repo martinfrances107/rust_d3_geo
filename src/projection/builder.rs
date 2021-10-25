@@ -552,10 +552,9 @@ where
     ///
     /// delta is related to clip angle.
     fn precision(mut self, delta: &T) -> Self {
-        let delta2 = *delta * *delta;
         self.delta2 = *delta * *delta;
         self.resample_factory =
-            StreamNodeResampleFactory::new(self.project_transform.clone(), delta2);
+            StreamNodeResampleFactory::new(self.project_transform.clone(), self.delta2);
         self
     }
 }

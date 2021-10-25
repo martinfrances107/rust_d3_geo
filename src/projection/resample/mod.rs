@@ -35,40 +35,51 @@ where
 {
     type T = T;
 
-    fn sphere(&mut self) {
-        match self {
-            ResampleNode::RN(n) => n.sphere(),
-            ResampleNode::R(r) => r.sphere(),
-        };
-    }
-    fn polygon_start(&mut self) {
-        match self {
-            ResampleNode::RN(n) => n.polygon_start(),
-            ResampleNode::R(r) => r.polygon_start(),
-        };
-    }
-    fn polygon_end(&mut self) {
-        match self {
-            ResampleNode::RN(n) => n.polygon_end(),
-            ResampleNode::R(r) => r.polygon_end(),
-        };
-    }
+    #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         match self {
             ResampleNode::RN(n) => n.point(p, m),
             ResampleNode::R(r) => r.point(p, m),
         };
     }
+
+    #[inline]
+    fn polygon_start(&mut self) {
+        match self {
+            ResampleNode::RN(n) => n.polygon_start(),
+            ResampleNode::R(r) => r.polygon_start(),
+        };
+    }
+
+    #[inline]
+    fn polygon_end(&mut self) {
+        match self {
+            ResampleNode::RN(n) => n.polygon_end(),
+            ResampleNode::R(r) => r.polygon_end(),
+        };
+    }
+
+    #[inline]
     fn line_start(&mut self) {
         match self {
             ResampleNode::RN(n) => n.line_start(),
             ResampleNode::R(r) => r.line_start(),
         };
     }
+
+    #[inline]
     fn line_end(&mut self) {
         match self {
             ResampleNode::RN(n) => n.line_end(),
             ResampleNode::R(r) => r.line_end(),
+        };
+    }
+
+    #[inline]
+    fn sphere(&mut self) {
+        match self {
+            ResampleNode::RN(n) => n.sphere(),
+            ResampleNode::R(r) => r.sphere(),
         };
     }
 }

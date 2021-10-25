@@ -42,16 +42,15 @@ where
     PR: ProjectionRaw<T>,
     T: CoordFloat + FloatConst,
 {
+    #[inline]
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
         delta2: T,
     ) -> StreamNodeResampleFactory<PR, SINK, T> {
-        // let interpolate_factory = StreamNodeFactory::new(interpolate_raw);
         StreamNodeResampleFactory {
             delta2,
             projection_transform,
             phantom_sink: PhantomData::<SINK>,
-            // projection,
         }
     }
 }
@@ -65,17 +64,17 @@ where
     type Sink = SINK;
     type T = T;
     type Node = ResampleNode<PR, Self::Sink, Self::T>;
+
+    #[inline]
     fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
         match self.delta2.is_zero() {
             true => ResampleNode::RN(StreamNode {
                 raw: ResampleNone::new(self.projection_transform.clone()),
                 sink,
-                // pd: PhantomData::<T>,
             }),
             false => ResampleNode::R(StreamNode {
                 raw: Resample::new(self.projection_transform.clone(), self.delta2),
                 sink,
-                // pd: PhantomData::<T>,
             }),
         }
     }
