@@ -47,9 +47,12 @@ pub mod rotation;
 /// Stream related helper functions.
 pub mod stream;
 
+/// Graticules are Major a Minor circles on a sphere.
+pub mod graticule;
+
 mod identity;
 /// A container for crate specific functions and constants.
-mod math;
+pub mod math;
 
 /// 2-D Transform common to projections and, rotations.
 ///
