@@ -417,6 +417,6 @@ mod graticule_test {
             vec![],
         );
 
-        // assert_eq!(outline, expected);
+        assert_eq!(outline, expected);
     }
 }
