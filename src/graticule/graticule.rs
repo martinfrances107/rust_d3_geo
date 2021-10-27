@@ -116,9 +116,7 @@ where
         yr.reverse();
         let mut yr = yr.split_off(1);
         c.append(&mut yr);
-        // c.extent(
-        //     self.Y(self.Y1)
-        // )
+
         Polygon::new(LineString::from(c), vec![])
     }
 
@@ -147,7 +145,7 @@ where
         self.X1 = param[1][0];
         self.Y1 = param[1][1];
         if self.X0 > self.X1 {
-            swap(&mut self.X0, &mut self.Y0);
+            swap(&mut self.X0, &mut self.X1);
         }
         if self.Y0 > self.Y1 {
             swap(&mut self.Y0, &mut self.Y1);

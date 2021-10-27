@@ -4,12 +4,12 @@ mod area_test {
     extern crate pretty_assertions;
 
     use geo::line_string;
+    use geo::polygon;
     use geo::Geometry;
     use geo::MultiLineString;
     use geo::Point;
     use pretty_assertions::assert_eq;
 
-    use geo::polygon;
     use rust_d3_geo::area::Area;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::graticule::generate as generate_graticule;

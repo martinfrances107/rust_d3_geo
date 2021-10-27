@@ -15,10 +15,24 @@ mod graticule_test {
     use rust_d3_geo::math::EPSILON;
 
     #[test]
+    fn gets_sets_precision() {
+        println!("graticule.extent() gets precision");
+        let g = generate();
+        assert_eq!(g.get_precision(), 2.5);
+        let g999 = g.precision(&999_f64);
+        assert_eq!(g999.get_precision(), 999_f64);
+    }
+
+    #[test]
     fn read_write_extent_minor_and_major() {
         println!("graticule.extent(…) sets extentMinor and extentMajor");
 
         let g = generate().extent([[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        assert_eq!(g.get_extent_minor(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        assert_eq!(g.get_extent_major(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
+
+        // tests malformed ranges.( x0 > x1 etc)
+        let g = generate().extent([[90_f64, 45_f64], [-90_f64, -45_f64]]);
         assert_eq!(g.get_extent_minor(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
         assert_eq!(g.get_extent_major(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
     }
@@ -258,10 +272,13 @@ mod graticule_test {
     fn outline_return_a_polygon() {
         println!("graticule.outline() returns a Polygon encompassing the major extent");
 
-        let outline = generate::<f64>()
+        let graticule = generate::<f64>()
             .extent_major([[-90_f64, -45_f64], [90_f64, 45_f64]])
-            .precision(&3_f64)
-            .outline();
+            .precision(&3_f64);
+
+        assert_eq!(graticule.get_precision(), 3_f64);
+
+        let outline = graticule.outline();
 
         let expected = Polygon::new(
             LineString::from(vec![
