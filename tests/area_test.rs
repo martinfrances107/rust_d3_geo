@@ -12,6 +12,7 @@ mod area_test {
     use geo::polygon;
     use rust_d3_geo::area::Area;
     use rust_d3_geo::data_object::sphere::Sphere;
+    use rust_d3_geo::graticule::generate as generate_graticule;
     use rust_d3_geo::in_delta::in_delta;
 
     #[test]
@@ -190,7 +191,35 @@ mod area_test {
         assert!(in_delta(area, 2_f64 * std::f64::consts::PI, 1e-6));
     }
 
-    // TODO add graticle tests here.
+    #[test]
+    fn graticule_outline_sphere() {
+        println!("area: Polygon - graticule outline sphere");
+        let outline = generate_graticule()
+            .extent([[-180_f64, -90_f64], [180_f64, 90_f64]])
+            .outline();
+        let area = Area::<f64>::calc(&outline);
+        assert!(in_delta(area, 4_f64 * std::f64::consts::PI, 1e-5));
+    }
+
+    #[test]
+    fn graticule_outline_hemisphere() {
+        println!("area: Polygon - graticule outline hemisphere");
+        let outline = generate_graticule()
+            .extent([[-180_f64, 0_f64], [180_f64, 90_f64]])
+            .outline();
+        let area = Area::<f64>::calc(&outline);
+        assert!(in_delta(area, 2_f64 * std::f64::consts::PI, 1e-5));
+    }
+
+    #[test]
+    fn graticule_outline_semilune() {
+        println!("area: Polygon - graticule outline semilune");
+        let outline = generate_graticule()
+            .extent([[0_f64, 0_f64], [90_f64, 90_f64]])
+            .outline();
+        let area = Area::<f64>::calc(&outline);
+        assert!(in_delta(area, std::f64::consts::FRAC_PI_2, 1e-5));
+    }
 
     // TODO add geoCircle tests here.
 

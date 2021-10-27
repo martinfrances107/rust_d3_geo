@@ -14,12 +14,6 @@ mod graticule_test {
     use rust_d3_geo::graticule::generate;
     use rust_d3_geo::math::EPSILON;
 
-    // it("graticule.extent(…) sets extentMinor and extentMajor", () => {
-    //   const g = geoGraticule().extent([[-90, -45], [90, 45]]);
-    //   assert.deepStrictEqual(g.extentMinor(), [[-90, -45], [90, 45]]);
-    //   assert.deepStrictEqual(g.extentMajor(), [[-90, -45], [90, 45]]);
-    // });
-
     #[test]
     fn read_write_extent_minor_and_major() {
         println!("graticule.extent(…) sets extentMinor and extentMajor");
@@ -29,21 +23,12 @@ mod graticule_test {
         assert_eq!(g.get_extent_major(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
     }
 
-    // it("graticule.extent() gets extentMinor", () => {
-    //   const g = geoGraticule().extentMinor([[-90, -45], [90, 45]]);
-    //   assert.deepStrictEqual(g.extent(), [[-90, -45], [90, 45]]);
-    // });
     #[test]
     fn read_write_extent_minor() {
         let g = generate().extent_minor([[-90_f64, -45_f64], [90_f64, 45_f64]]);
         assert_eq!(g.get_extent(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
     }
 
-    // it("graticule.extentMajor() default longitude ranges from 180°W (inclusive) to 180°E (exclusive)", () => {
-    //   const e = geoGraticule().extentMajor();
-    //   assert.strictEqual(e[0][0], -180);
-    //   assert.strictEqual(e[1][0], +180);
-    // });
     #[test]
     fn extent_major_default_ranges_longitude() {
         println!("graticule.extentMajor() default longitude ranges from 180°W (inclusive) to 180°E (exclusive)");
@@ -52,11 +37,6 @@ mod graticule_test {
         assert_eq!(e[1][0], 180_f64);
     }
 
-    // it("graticule.extentMajor() default latitude ranges from 90°S (exclusive) to 90°N (exclusive)", () => {
-    //   const e = geoGraticule().extentMajor();
-    //   assert.strictEqual(e[0][1], -90 + 1e-6);
-    //   assert.strictEqual(e[1][1], +90 - 1e-6);
-    // });
     #[test]
     fn extent_major_default_ranges_latitude() {
         println!("graticule.extentMajor() default latitude ranges from 90°S (exclusive) to 90°N (exclusive)");
@@ -144,9 +124,6 @@ mod graticule_test {
         assert_eq!(e.get_step_major(), [22.5_f64, 22.5_f64]);
     }
 
-    // it("graticule.stepMinor() defaults to 10°, 10°", () => {
-    //   assert.deepStrictEqual(geoGraticule().stepMinor(), [10, 10]);
-    // });
     #[test]
     fn step_minor_default() {
         println!("graticule.stepMinor() defaults to 10°, 10°");
@@ -164,9 +141,6 @@ mod graticule_test {
     //   assert.strictEqual(s[1], 11.25);
     // });
 
-    // it("graticule.stepMajor() defaults to 90°, 360°", () => {
-    //   assert.deepStrictEqual(geoGraticule().stepMajor(), [90, 360]);
-    // });
     #[test]
     fn step_major_default() {
         println!("graticule.stepMajor() defaults to 90°, 360°");
@@ -279,6 +253,7 @@ mod graticule_test {
     //     ]]
     //   });
     // });
+
     #[test]
     fn outline_return_a_polygon() {
         println!("graticule.outline() returns a Polygon encompassing the major extent");

@@ -1,6 +1,7 @@
-use super::range;
+use std::mem::swap;
+
 use derivative::*;
-use geo::polygon;
+
 use geo::CoordFloat;
 use geo::LineString;
 use geo::Polygon;
@@ -9,6 +10,7 @@ use crate::math::EPSILON;
 
 use super::graticule_x;
 use super::graticule_y;
+use super::range;
 use super::CoordFn;
 
 #[derive(Derivative)]
@@ -145,18 +147,13 @@ where
         self.X1 = param[1][0];
         self.Y1 = param[1][1];
         if self.X0 > self.X1 {
-            let hold = self.X0;
-            self.X0 = self.X1;
-            self.X1 = hold;
+            swap(&mut self.X0, &mut self.Y0);
         }
         if self.Y0 > self.Y1 {
-            let hold = self.Y0;
-            self.Y0 = self.Y1;
-            self.Y1 = hold;
+            swap(&mut self.Y0, &mut self.Y1);
         }
-        // self.precision(&self.precision)
-        // TODO add precision()
-        self
+        let p = self.precision;
+        self.precision(&p)
     }
 
     /// Returns the range assoicated with the minor ticks.
@@ -172,16 +169,15 @@ where
         self.x1 = param[1][0];
         self.y1 = param[1][1];
         if self.x0 > self.x1 {
-            let hold = self.x0;
-            self.x0 = self.x1;
-            self.x1 = hold;
+            swap(&mut self.x0, &mut self.x1);
         }
+
         if self.y0 > self.y1 {
-            let hold = self.y0;
-            self.y0 = self.y1;
-            self.y1 = hold;
+            swap(&mut self.y0, &mut self.y1);
         }
-        self
+
+        let p = self.precision;
+        self.precision(&p)
     }
 
     /// Sets the step for both the major and minor ticks.
