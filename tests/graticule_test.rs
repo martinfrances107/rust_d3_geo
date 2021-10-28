@@ -71,11 +71,6 @@ mod graticule_test {
     //   assert.strictEqual(e[1][1], +45);
     // });
 
-    // it("graticule.extentMinor() default longitude ranges from 180°W (inclusive) to 180°E (exclusive)", () => {
-    //   const e = geoGraticule().extentMinor();
-    //   assert.strictEqual(e[0][0], -180);
-    //   assert.strictEqual(e[1][0], +180);
-    // });
     #[test]
     fn extent_minor_default_ranges_longitude() {
         println!("graticule.extentMinor() default latitude ranges from 80°S (inclusive) to 80°N (inclusive)");
@@ -84,12 +79,6 @@ mod graticule_test {
         assert_eq!(e[0][0], -180_f64);
         assert_eq!(e[1][0], 180_f64);
     }
-
-    // it("graticule.extentMinor() default latitude ranges from 80°S (inclusive) to 80°N (inclusive)", () => {
-    //   const e = geoGraticule().extentMinor();
-    //   assert.strictEqual(e[0][1], -80 - 1e-6);
-    //   assert.strictEqual(e[1][1], +80 + 1e-6);
-    // });
 
     #[test]
     fn extent_minor_default_ranges_latitude() {
@@ -125,10 +114,6 @@ mod graticule_test {
         assert_eq!(e.get_step_major(), [22.5_f64, 22.5_f64]);
     }
 
-    // it("graticule.step() gets the minor step", () => {
-    //   const g = geoGraticule().stepMinor([22.5, 22.5]);
-    //   assert.deepStrictEqual(g.step(), [22.5, 22.5]);
-    // });
     #[test]
     fn sets_minor_step() {
         println!("graticule.step() gets the minor step");
@@ -250,21 +235,6 @@ mod graticule_test {
     //   assert.deepStrictEqual(g(), {
     //     type: "MultiLineString",
     //     coordinates: g.lines().map(line => line.coordinates)
-    //   });
-    // });
-
-    // it("graticule.outline() returns a Polygon encompassing the major extent", () => {
-    //   assert.deepStrictEqual(geoGraticule()
-    //       .extentMajor([[-90, -45], [90, 45]])
-    //       .precision(3)
-    //       .outline(), {
-    //     type: "Polygon",
-    //     coordinates: [[
-    //       [-90,-45],[-90,45], // meridian
-    //       [-87,45],[-84,45],[-81,45],[-78,45],[-75,45],[-72,45],[-69,45],[-66,45],[-63,45],[-60,45],[-57,45],[-54,45],[-51,45],[-48,45],[-45,45],[-42,45],[-39,45],[-36,45],[-33,45],[-30,45],[-27,45],[-24,45],[-21,45],[-18,45],[-15,45],[-12,45],[-9,45],[-6,45],[-3,45],[0,45],[3,45],[6,45],[9,45],[12,45],[15,45],[18,45],[21,45],[24,45],[27,45],[30,45],[33,45],[36,45],[39,45],[42,45],[45,45],[48,45],[51,45],[54,45],[57,45],[60,45],[63,45],[66,45],[69,45],[72,45],[75,45],[78,45],[81,45],[84,45],[87,45],
-    //       [90,45],[90,-45], // meridian
-    //       [87,-45],[84,-45],[81,-45],[78,-45],[75,-45],[72,-45],[69,-45],[66,-45],[63,-45],[60,-45],[57,-45],[54,-45],[51,-45],[48,-45],[45,-45],[42,-45],[39,-45],[36,-45],[33,-45],[30,-45],[27,-45],[24,-45],[21,-45],[18,-45],[15,-45],[12,-45],[9,-45],[6,-45],[3,-45],[0,-45],[-3,-45],[-6,-45],[-9,-45],[-12,-45],[-15,-45],[-18,-45],[-21,-45],[-24,-45],[-27,-45],[-30,-45],[-33,-45],[-36,-45],[-39,-45],[-42,-45],[-45,-45],[-48,-45],[-51,-45],[-54,-45],[-57,-45],[-60,-45],[-63,-45],[-66,-45],[-69,-45],[-72,-45],[-75,-45],[-78,-45],[-81,-45],[-84,-45],[-87,-45],[-90,-45]
-    //     ]]
     //   });
     // });
 

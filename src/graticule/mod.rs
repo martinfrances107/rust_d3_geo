@@ -4,21 +4,7 @@ use crate::math::EPSILON;
 use geo::CoordFloat;
 use graticule::Graticule;
 
-// TODO: Code smell. I needed something of the form 0_f64..100_f64.step_by(0.1)
-// but I had to hand craft this!
-fn range<T>(start: T, stop: T, step: T) -> Vec<T>
-where
-    T: CoordFloat,
-{
-    let mut v = Vec::new();
-    let mut value = start;
-    // JS has concat which I don;t understand.
-    while value < stop {
-        v.push(value);
-        value = value + step;
-    }
-    v
-}
+use rust_d3_array::range::range;
 
 type CoordFn<T> = Box<dyn Fn(T) -> Vec<(T, T)>>;
 

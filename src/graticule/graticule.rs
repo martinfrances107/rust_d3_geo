@@ -8,9 +8,10 @@ use geo::Polygon;
 
 use crate::math::EPSILON;
 
+use rust_d3_array::range::range;
+
 use super::graticule_x;
 use super::graticule_y;
-use super::range;
 use super::CoordFn;
 
 #[derive(Derivative)]
