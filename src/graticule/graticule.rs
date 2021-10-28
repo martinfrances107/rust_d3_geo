@@ -17,7 +17,7 @@ use super::CoordFn;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[allow(non_snake_case)]
-/// A graticule is a network of lines.
+/// A graticule is a network of lines used for plotting, scaling.
 pub struct Graticule<T>
 where
     T: CoordFloat,
