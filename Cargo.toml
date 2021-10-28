@@ -2,7 +2,7 @@
 name = "rust_d3_geo"
 version = "0.1.0"
 authors = ["martin frances <martinfrances107@hotmail.com>"]
-edition = "2018"
+edition = "2021"
 description="A port of D3/d3-geo"
 repository="https://github.com/martinfrances107/rust_d3_geo"
 
