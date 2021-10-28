@@ -28,7 +28,7 @@ pub struct Path<L, PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     L: Line,
-    T: AbsDiffEq<Epsilon=T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
 {
     context_stream: Rc<RefCell<ContextStream<T>>>,
@@ -41,7 +41,7 @@ impl<L, PR, PV, T> Path<L, PR, PV, T>
 where
     L: Line,
     PR: ProjectionRaw<T>,
-    T: AbsDiffEq<Epsilon=T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
 {
     /// Constructor.
@@ -78,7 +78,8 @@ where
         x
     }
 
-    /// Returns the area of the Path
+    /// Returns the area of the Path.
+    ///
     /// This operation consumes the  Path.
     pub fn bounds(self, object: &DataObject<T>) -> Option<ResultEnum<T>>
     where

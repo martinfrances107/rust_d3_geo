@@ -8,7 +8,7 @@ pub mod builder;
 pub mod context;
 /// A collection of Path endpoints.
 pub mod context_stream;
-/// Output of a Path builer
+/// Output of a Path builer.
 pub mod path;
 /// Path String.
 pub mod string;

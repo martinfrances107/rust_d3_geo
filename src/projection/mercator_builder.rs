@@ -256,7 +256,7 @@ where
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-    /// f64 or f32
+    /// f64 or f32.
     type T = T;
 
     /// Returns a bounding box.

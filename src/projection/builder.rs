@@ -157,7 +157,7 @@ where
             /// Input passing onto Projection.
             projection_raw,
 
-            /// Internal state
+            /// Internal state.
             delta_lambda,
             delta_phi,
             delta_gamma,
@@ -439,7 +439,7 @@ where
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    /// f64 or f32
+    /// f64 or f32.
     type T = T;
 
     /// Returns the projection’s post-projection planar rotation angle.

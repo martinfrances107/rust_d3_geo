@@ -1,4 +1,4 @@
-pub mod graticule;
+mod graticule;
 
 use crate::math::EPSILON;
 use geo::CoordFloat;

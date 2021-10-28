@@ -40,7 +40,7 @@ pub mod orthographic;
 /// The raw projection.
 pub mod stereographic;
 
-/// Sub Traits
+/// Sub Traits.
 pub mod builder_trait;
 
 /// Helper functions.
@@ -156,10 +156,8 @@ where
 /// Controls the projections center point.
 ///
 /// Projection builder sub trait.
-pub trait Center // where
-//     T: CoordFloat,
-{
-    /// f64 or f32
+pub trait Center {
+    /// f64 or f32.
     type T;
 
     ///  Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
@@ -203,7 +201,7 @@ pub trait ClipExtent {
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
 pub trait Fit {
-    /// f64 or f32
+    /// f64 or f32.
     type T;
 
     ///   Sets the projection’s scale and translate to fit the specified geographic feature in the center of the given extent.
@@ -248,7 +246,7 @@ pub trait Angle {
 /// Returns or sets the x or y reflection.
 /// A projection builder sub trait.
 pub trait Reflect {
-    /// f64 or f32
+    /// f64 or f32.
     type T;
 
     /// Is the projection builder set to invert the x-coordinate.
@@ -298,7 +296,7 @@ where
 
 /// Resampling getter and setters.
 pub trait Precision {
-    /// f64 or f32
+    /// f64 or f32.
     type T;
 
     ///  Returns the projection’s current resampling precision which defaults to square root of 0.5.
@@ -312,7 +310,7 @@ pub trait Precision {
 
 /// Rotation getter and setters.
 pub trait Rotate {
-    /// f64 or f32
+    /// f64 or f32.
     type T;
 
     /// Returns the three-axis rotaation.

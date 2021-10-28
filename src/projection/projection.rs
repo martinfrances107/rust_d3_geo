@@ -49,7 +49,8 @@ type TransformRadiansFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
 >;
 
 /// Output of projection.stream().
-/// use by GeoPath
+///
+/// use by GeoPath.
 pub type ProjectionStreamOutput<DRAIN, L, PR, PV, T> = StreamNode<
     StreamTransformRadians,
     StreamNode<
@@ -76,7 +77,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     pub(crate) postclip_factory: StreamNodePostClipFactory<DRAIN, T>,
 
@@ -100,7 +101,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to projection.
     ///
@@ -132,7 +133,7 @@ where
     L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 

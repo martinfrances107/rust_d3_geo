@@ -1,7 +1,7 @@
 /// Related the specifics of antimeridian clipping.
 pub mod antimeridian;
 /// Clipping algorithm need to stores points
-/// until the end of the polygon is signalled
+/// until the end of the polygon is signalled.
 /// and then clipping can calculate the a new clip polygon.
 pub mod buffer;
 /// Related the specifics of circle clipping.
@@ -14,7 +14,7 @@ pub mod compare_intersection;
 pub mod line_elem;
 /// A Stream pipeline stage.
 pub mod post_clip;
-/// A stream pipeline stage
+/// A stream pipeline stage.
 pub mod post_clip_node;
 pub(crate) mod rectangle;
 /// Factory takes in complex definition and output a stream pipeline node element.
@@ -79,7 +79,7 @@ pub trait PointVisible: Clone + Debug
 where
     <Self as PointVisible>::T: CoordFloat,
 {
-    /// f64 or f32
+    /// f64 or f32.
     type T;
     /// Is the point visible after clipping?
     fn point_visible(&self, p: &Coordinate<Self::T>, z: Option<u8>) -> bool;
