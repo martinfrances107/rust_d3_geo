@@ -5,15 +5,49 @@ mod area_test {
 
     use geo::line_string;
     use geo::polygon;
+    use geo::CoordFloat;
     use geo::Geometry;
+    use geo::LineString;
     use geo::MultiLineString;
     use geo::Point;
+    use geo::Polygon;
+
     use pretty_assertions::assert_eq;
 
+    use rust_d3_array::range::range;
     use rust_d3_geo::area::Area;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::graticule::generate as generate_graticule;
     use rust_d3_geo::in_delta::in_delta;
+
+    fn stripes<T>(a: T, b: T) -> Polygon<T>
+    where
+        T: CoordFloat,
+    {
+        let mut exterior: Vec<(T, T)> = Vec::new();
+        let mut interior: Vec<(T, T)> = Vec::new();
+        for (i, d) in [a, b].iter().enumerate() {
+            let mut stripe: Vec<(T, T)> = Vec::new();
+            stripe = range(
+                T::from(-180_f64).unwrap(),
+                T::from(180_f64).unwrap(),
+                T::from(0.1_f64).unwrap(),
+            )
+            .iter()
+            .map(|x| (*x, *d))
+            .collect();
+            stripe.push(stripe[0]);
+
+            if i == 0usize {
+                exterior = stripe;
+            } else {
+                stripe.reverse();
+                interior = stripe;
+            }
+        }
+
+        Polygon::new(LineString::from(exterior), vec![LineString::from(interior)])
+    }
 
     #[test]
     fn point() {
@@ -223,7 +257,41 @@ mod area_test {
 
     // TODO add geoCircle tests here.
 
-    // TODO stripes tests here.
+    #[test]
+    fn stripes_45_minus_45() {
+        println!("area: Polygon - stripes 45°, -45°");
+        let stripes = stripes(45_f64, -45_f64);
+        let area = Area::<f64>::calc(&stripes);
+        assert!(in_delta(
+            area,
+            std::f64::consts::PI * 2_f64 * 2f64.sqrt(),
+            1e-5
+        ));
+    }
+
+    #[test]
+    fn stripes_minus_45_minus_45() {
+        println!("area: Polygon - stripes 45°, -45°");
+        let stripes = stripes(-45_f64, 45_f64);
+        let area = Area::<f64>::calc(&stripes);
+        assert!(in_delta(
+            area,
+            std::f64::consts::PI * 2_f64 * (2_f64 - 2f64.sqrt()),
+            1e-5
+        ));
+    }
+
+    #[test]
+    fn stripes_45_30() {
+        println!("area: Polygon - stripes 45°, 30°");
+        let stripes = stripes(45_f64, 30_f64);
+        let area = Area::<f64>::calc(&stripes);
+        assert!(in_delta(
+            area,
+            std::f64::consts::PI * (2f64.sqrt() - 1_f64),
+            1e-5
+        ));
+    }
 
     #[test]
     fn sphere() {
