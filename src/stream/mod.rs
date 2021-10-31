@@ -69,7 +69,7 @@ where
 
     /// Declare a point.
     fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}
-    /// Decalre a sphere object.
+    /// Declare a sphere object.
     fn sphere(&mut self) {}
     /// Declare the start of a line segments.
     fn line_start(&mut self) {}
