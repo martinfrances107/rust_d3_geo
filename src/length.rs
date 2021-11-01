@@ -1,4 +1,4 @@
-use derivative::Derivative;
+use derivative::*;
 use geo::{CoordFloat, Coordinate};
 
 use crate::stream::Streamable;

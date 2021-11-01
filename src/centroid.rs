@@ -1,6 +1,6 @@
 use std::ops::AddAssign;
 
-use derivative::Derivative;
+use derivative::*;
 use geo::{CoordFloat, Coordinate, Point};
 use num_traits::FloatConst;
 
@@ -9,17 +9,12 @@ use crate::math::EPSILON2;
 use crate::stream::Stream as StreamTrait;
 use crate::stream::Streamable;
 
-/// TODO MUST use a math library.
-// pub const EPSILON: f64 = 1e-6;
-/// Must move to math library.
-// pub const EPSILON2: f64 = 1e-12;
-
 /// Centroid Stream.
 #[allow(non_snake_case)]
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone, Copy)]
-pub struct Stream<T: CoordFloat> {
+pub struct Centroid<T: CoordFloat> {
     W0: T,
     W1: T,
     X0: T,
@@ -48,7 +43,7 @@ pub struct Stream<T: CoordFloat> {
 ///
 /// A) In the JS version these varibles are undefined.
 /// The intent is to insists that the values are written before being read.
-impl<T: AddAssign + CoordFloat + FloatConst> Default for Stream<T> {
+impl<T: AddAssign + CoordFloat + FloatConst> Default for Centroid<T> {
     fn default() -> Self {
         Self {
             W0: T::nan(),
@@ -74,7 +69,7 @@ impl<T: AddAssign + CoordFloat + FloatConst> Default for Stream<T> {
     }
 }
 
-impl<T> Stream<T>
+impl<T> Centroid<T>
 where
     T: AddAssign + CoordFloat + FloatConst,
 {
@@ -238,7 +233,7 @@ where
     }
 }
 
-impl<T> StreamTrait for Stream<T>
+impl<T> StreamTrait for Centroid<T>
 where
     T: AddAssign + CoordFloat + FloatConst,
 {

@@ -13,29 +13,29 @@ mod centroid_test {
     use geo::MultiPoint;
     use geo::Point;
 
-    use rust_d3_geo::centroid::stream::Stream as CentroidStream;
+    use rust_d3_geo::centroid::Centroid;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::in_delta::in_delta_point;
 
     #[test]
     fn the_centroid_of_a_point_is_itself() {
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&Point::new(0f64, 0f64)),
+            Centroid::default().centroid(&Point::new(0f64, 0f64)),
             Point::new(0f64, 0f64),
             1e-6
         ));
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&Point::new(1f64, 1f64)),
+            Centroid::default().centroid(&Point::new(1f64, 1f64)),
             Point::new(1f64, 1f64),
             1e-6
         ));
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&Point::new(2f64, 3f64)),
+            Centroid::default().centroid(&Point::new(2f64, 3f64)),
             Point::new(2f64, 3f64),
             1e-6
         ));
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&Point::new(-4f64, -5f64)),
+            Centroid::default().centroid(&Point::new(-4f64, -5f64)),
             Point::new(-4f64, -5f64),
             1e-6
         ));
@@ -48,7 +48,7 @@ mod centroid_test {
         );
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&GeometryCollection(vec![
+            Centroid::default().centroid(&GeometryCollection(vec![
                 Geometry::Point(Point::new(0f64, 0f64)),
                 Geometry::Point(Point::new(1f64, 2f64))
             ])),
@@ -57,7 +57,7 @@ mod centroid_test {
         ));
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&MultiPoint(vec![
+            Centroid::default().centroid(&MultiPoint(vec![
                 Point::new(0f64, 0f64),
                 Point::new(1f64, 2f64),
             ])),
@@ -69,7 +69,7 @@ mod centroid_test {
         ));
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&MultiPoint(vec![
+            Centroid::default().centroid(&MultiPoint(vec![
                 Point::new(179f64, 0f64),
                 Point::new(-179f64, 0f64),
             ])),
@@ -94,7 +94,7 @@ mod centroid_test {
     fn line_string_great_arc_segments() {
         println!("the centroid of a line string is the (spherical) average of its constituent great arc segments");
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&line_string![(
+            Centroid::default().centroid(&line_string![(
                 x: 0.0f64,
                 y: 0.0f64
             ), (
@@ -106,7 +106,7 @@ mod centroid_test {
         ));
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&line_string![
+            Centroid::default().centroid(&line_string![
               ( x: 0.0f64, y: 0.0f64),
               ( x: 0f64, y: 90f64 )
             ]),
@@ -115,7 +115,7 @@ mod centroid_test {
         ));
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&line_string![
+            Centroid::default().centroid(&line_string![
                 ( x: 0f64, y: 0f64 ),
                 ( x: 0f64, y: 45f64 ),
                 ( x: 0f64, y: 90f64)
@@ -125,7 +125,7 @@ mod centroid_test {
         ));
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&line_string![
+            Centroid::default().centroid(&line_string![
                 ( x: -1f64, y: -1f64 ), ( x: 1f64, y: 1f64 )
             ]),
             Point::new(0f64, 0f64),
@@ -133,7 +133,7 @@ mod centroid_test {
         ));
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&line_string![
+            Centroid::default().centroid(&line_string![
                 ( x: -60f64, y: -1f64 ),
                 ( x: 60f64, y: 1f64 ),
             ]),
@@ -142,7 +142,7 @@ mod centroid_test {
         ));
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&line_string![
+            Centroid::default().centroid(&line_string![
             ( x: 179f64, y: -1f64 ),
             ( x: -179f64, y: 1f64 ),
             ]),
@@ -151,7 +151,7 @@ mod centroid_test {
         ));
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&line_string![
+            Centroid::default().centroid(&line_string![
                 (x: -179f64,  y: 0f64),
                 (x: 0f64, y: 0f64),
                 (x: 179f64, y: 0f64)
@@ -161,7 +161,7 @@ mod centroid_test {
         ));
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&line_string![
+            Centroid::default().centroid(&line_string![
              ( x: -180f64, y: -90f64 ),
              ( x: 0f64, y: 0f64 ),
              ( x: 0f64, y: 90f64 ),
@@ -186,7 +186,7 @@ mod centroid_test {
         ])]);
 
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&mls),
+            Centroid::default().centroid(&mls),
             Point::new(0_f64, 1_f64),
             1e-6_f64
         ));
@@ -202,7 +202,7 @@ mod centroid_test {
     fn an_empty_polygon_with_non_zero_extent_is_treated_as_a_line() {
         println!("an empty polygon with non-zero extent is treated as a line");
         assert!(in_delta_point(
-            CentroidStream::default().centroid(&polygon![
+            Centroid::default().centroid(&polygon![
             (
                 x: 1.0f64,
                 y: 1.0f64
@@ -327,7 +327,7 @@ mod centroid_test {
     #[test]
     fn the_centroid_of_a_sphere_is_ambigous() {
         println!("the centroid of a sphere is ambiguous");
-        let point: Point<f64> = CentroidStream::default().centroid(&Sphere::default());
+        let point: Point<f64> = Centroid::default().centroid(&Sphere::default());
         assert!(point.x().is_nan());
         assert!(point.y().is_nan());
     }
@@ -363,7 +363,7 @@ mod centroid_test {
             Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
             Geometry::Point(point!(x:0_f64, y: 0_f64)),
         ]);
-        let centroid: Point<f64> = CentroidStream::default().centroid(&data_object);
+        let centroid: Point<f64> = Centroid::default().centroid(&data_object);
         assert!(in_delta_point(centroid, (179.5_f64, 0_f64).into(), 1e-6));
     }
 

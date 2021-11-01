@@ -24,7 +24,7 @@ use geo::Coordinate;
 pub mod area;
 /// Vector arithmatic operations on 3-D vectors.
 pub mod cartesian;
-/// Stream end point: calculation of centroid point.
+/// Stream end point: calculates centroid point for a given object.
 pub mod centroid;
 /// Related to the injection of circles into a stream.
 pub mod circle;
