@@ -269,6 +269,7 @@ mod mercator_tests {
         let pb = pb
             .rotate(&[0_f64, 95_f64, 0_f64])
             .fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
+        assert_eq!(pb.get_rotate(), [0_f64, 95_f64, 0_f64]);
         assert_eq!(pb.get_scale(), 35781690.650920525_f64);
         assert!(in_delta_coordinate(
             &pb.get_translate(),
