@@ -6,7 +6,7 @@ mod reflect_tests {
 
     use geo::Coordinate;
     use pretty_assertions::assert_eq;
-    use rust_d3_geo::clip::circle::line::Line;
+
     use rust_d3_geo::clip::circle::pv::PV;
     use rust_d3_geo::in_delta::in_delta;
     use rust_d3_geo::projection::builder::Builder;
@@ -28,7 +28,6 @@ mod reflect_tests {
 
         let builder: Builder<
             StreamDrainStub<f64>,
-            Line<f64>,
             Gnomic<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
@@ -79,7 +78,6 @@ mod reflect_tests {
         println!("projection.reflectX(…) mirrors x after projecting");
         let mut builder: Builder<
             StreamDrainStub<f64>,
-            Line<f64>,
             Gnomic<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
@@ -167,7 +165,7 @@ mod reflect_tests {
     #[test]
     fn reflect_x_works_with_projection_angle() {
         println!("projection.reflectX(…) works with projection.angle()");
-        let builder: MercatorBuilder<StreamDrainStub<f32>, _, _, _, _> = Mercator::builder()
+        let builder: MercatorBuilder<StreamDrainStub<f32>, _, _, _> = Mercator::builder()
             .scale(1_f32)
             .translate(&Coordinate {
                 x: 10_f32,

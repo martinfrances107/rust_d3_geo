@@ -3,7 +3,6 @@
 mod stereographic_tests {
     use geo::Coordinate;
 
-    use rust_d3_geo::clip::circle::line::Line;
     use rust_d3_geo::clip::circle::pv::PV;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
@@ -17,7 +16,6 @@ mod stereographic_tests {
     fn test_stereographic() {
         let stereo: Projection<
             StreamDrainStub<f64>,
-            Line<f64>,
             Stereographic<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,

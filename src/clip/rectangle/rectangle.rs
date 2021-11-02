@@ -12,8 +12,8 @@ use num_traits::Zero;
 
 use crate::clip::buffer::Buffer as ClipBuffer;
 use crate::clip::intersection::Intersection;
-use crate::clip::line::line as clip_line;
 use crate::clip::line_elem::LineElem;
+use crate::clip::line_fn::line as clip_line;
 use crate::clip::rejoin::rejoin as clip_rejoin;
 use crate::clip::rejoin::CompareIntersectionsFn;
 use crate::clip::InterpolateFn;

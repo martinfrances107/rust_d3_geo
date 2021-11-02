@@ -12,7 +12,7 @@ use crate::stream::Stream;
 pub enum PostClipNode<SINK, T>
 where
     SINK: Stream<T = T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     /// Default pass thru.
     I(StreamNode<Identity, SINK, T>),
@@ -23,7 +23,7 @@ where
 impl<'a, SINK, T> Stream for PostClipNode<SINK, T>
 where
     SINK: Stream<T = T>,
-    T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 

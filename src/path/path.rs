@@ -8,7 +8,6 @@ use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::data_object::DataObject;
 use crate::path::area::Area;
@@ -24,22 +23,20 @@ use super::ResultEnum;
 
 /// Projection and context stream applied to a DataObject.
 #[derive(Debug)]
-pub struct Path<L, PR, PV, T>
+pub struct Path<PR, PV, T>
 where
     PR: ProjectionRaw<T>,
-    L: Line,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
 {
     context_stream: Rc<RefCell<ContextStream<T>>>,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
-    projection: Rc<Projection<ContextStream<T>, L, PR, PV, T>>,
+    projection: Rc<Projection<ContextStream<T>, PR, PV, T>>,
 }
 
-impl<L, PR, PV, T> Path<L, PR, PV, T>
+impl<PR, PV, T> Path<PR, PV, T>
 where
-    L: Line,
     PR: ProjectionRaw<T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
@@ -47,7 +44,7 @@ where
     /// Constructor.
     pub fn new(
         context_stream: Rc<RefCell<ContextStream<T>>>,
-        projection: Rc<Projection<ContextStream<T>, L, PR, PV, T>>,
+        projection: Rc<Projection<ContextStream<T>, PR, PV, T>>,
     ) -> Self {
         Self {
             context_stream,

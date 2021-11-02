@@ -2,6 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use geo::CoordFloat;
+use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
@@ -17,7 +18,7 @@ use crate::stream::Stream;
 pub struct StreamNode<RAW, SINK, T>
 where
     SINK: Stream<T = T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     /// The proto node, that is the struct without reference to the sink.
     pub raw: RAW,

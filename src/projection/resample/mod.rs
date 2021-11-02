@@ -4,6 +4,7 @@ pub mod stream_node_resample_factory;
 
 use std::fmt::Debug;
 
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -21,7 +22,7 @@ pub enum ResampleNode<PR, SINK, T>
 where
     PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     RN(StreamNode<None<PR, T>, SINK, T>),
     R(StreamNode<Resample<PR, T>, SINK, T>),
@@ -31,7 +32,7 @@ impl<'a, PR, SINK, T> Stream for ResampleNode<PR, SINK, T>
 where
     PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 

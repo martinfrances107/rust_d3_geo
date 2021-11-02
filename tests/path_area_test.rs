@@ -18,7 +18,6 @@ mod path_area_test {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::data_object::DataObject;
@@ -32,8 +31,7 @@ mod path_area_test {
     use rust_d3_geo::projection::Scale;
 
     #[inline]
-    fn equirectangular<DRAIN, T>(
-    ) -> Rc<Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
+    fn equirectangular<DRAIN, T>() -> Rc<Projection<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
     where
         DRAIN: Stream<T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -48,9 +46,7 @@ mod path_area_test {
 
     #[inline]
     fn test_area<'a, DRAIN, T>(
-        projection: Rc<
-            Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
-        >,
+        projection: Rc<Projection<ContextStream<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>,
         object: DataObject<T>,
     ) -> T
     where

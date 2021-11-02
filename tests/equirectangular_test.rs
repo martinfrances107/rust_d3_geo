@@ -6,7 +6,6 @@ mod equirectangular_test {
     use geo::Coordinate;
 
     use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
-    use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::projection::builder::Builder;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
@@ -23,7 +22,6 @@ mod equirectangular_test {
         println!("equirectangular(point) returns the expected result");
         let equirectangular: Projection<
             StreamDrainStub<f64>,
-            Line<f64>,
             EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
@@ -129,7 +127,6 @@ mod equirectangular_test {
         println!("equirectangular(point) returns the expected result");
         let equirectangular: Projection<
             StreamDrainStub<f64>,
-            Line<f64>,
             EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
@@ -243,7 +240,6 @@ mod equirectangular_test {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
         let equirectangular: Projection<
             StreamDrainStub<f64>,
-            Line<f64>,
             EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
@@ -354,7 +350,6 @@ mod equirectangular_test {
         println!("equirectangular.rotate([0, 0, 30])(point) returns the expected result");
         let equirectangular: Projection<
             StreamDrainStub<f64>,
-            Line<f64>,
             EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
@@ -458,7 +453,6 @@ mod equirectangular_test {
         println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
         let equirectangular: Projection<
             StreamDrainStub<f64>,
-            Line<f64>,
             EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,

@@ -6,7 +6,6 @@ mod angle_test {
     use geo::Coordinate;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::clip::circle::line::Line;
     use rust_d3_geo::clip::circle::pv::PV;
     use rust_d3_geo::in_delta::in_delta;
     use rust_d3_geo::projection::builder::Builder;
@@ -21,15 +20,10 @@ mod angle_test {
     #[test]
     fn test_angle_defaults_to_zero() {
         println!("projection.angle(…) defaults to zero");
-        let pb: Builder<
-            StreamDrainStub<f64>,
-            Line<f64>,
-            Gnomic<StreamDrainStub<f64>, f64>,
-            PV<f64>,
-            f64,
-        > = Gnomic::builder()
-            .scale(1_f64)
-            .translate(&Coordinate { x: 0_f64, y: 0_f64 });
+        let pb: Builder<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, PV<f64>, f64> =
+            Gnomic::builder()
+                .scale(1_f64)
+                .translate(&Coordinate { x: 0_f64, y: 0_f64 });
         assert_eq!(pb.get_angle(), 0_f64);
         let projection = pb.build();
 
@@ -146,16 +140,11 @@ mod angle_test {
     #[test]
     fn test_angle_rotates_by_plus_30() {
         println!("projection.angle(…) defaults to zero");
-        let pb: Builder<
-            StreamDrainStub<f64>,
-            Line<f64>,
-            Gnomic<StreamDrainStub<f64>, f64>,
-            PV<f64>,
-            f64,
-        > = Gnomic::builder()
-            .scale(1_f64)
-            .translate(&Coordinate { x: 0_f64, y: 0_f64 })
-            .angle(30_f64);
+        let pb: Builder<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, PV<f64>, f64> =
+            Gnomic::builder()
+                .scale(1_f64)
+                .translate(&Coordinate { x: 0_f64, y: 0_f64 })
+                .angle(30_f64);
 
         // this rounds to 29.9999999 not 30!!
         // assert_eq!(pb.get_angle(), 30_f64);
@@ -276,16 +265,11 @@ mod angle_test {
     #[test]
     fn test_angle_rotates_by_minus_30() {
         println!("projection.angle(…) defaults to zero");
-        let pb: Builder<
-            StreamDrainStub<f64>,
-            Line<f64>,
-            Gnomic<StreamDrainStub<f64>, f64>,
-            PV<f64>,
-            f64,
-        > = Gnomic::builder()
-            .scale(1_f64)
-            .translate(&Coordinate { x: 0_f64, y: 0_f64 })
-            .angle(-30_f64);
+        let pb: Builder<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, PV<f64>, f64> =
+            Gnomic::builder()
+                .scale(1_f64)
+                .translate(&Coordinate { x: 0_f64, y: 0_f64 })
+                .angle(-30_f64);
 
         // this rounds to 29.9999999 not 30!!
         assert!(in_delta(pb.get_angle(), -30_f64, 1e-6));
@@ -405,16 +389,11 @@ mod angle_test {
     #[test]
     fn tests_wraps_360() {
         println!("projection.angle(…) wraps around 360°");
-        let pb: Builder<
-            StreamDrainStub<f64>,
-            Line<f64>,
-            Gnomic<StreamDrainStub<f64>, f64>,
-            PV<f64>,
-            f64,
-        > = Gnomic::builder()
-            .scale(1_f64)
-            .translate(&Coordinate { x: 0_f64, y: 0_f64 })
-            .angle(360_f64);
+        let pb: Builder<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, PV<f64>, f64> =
+            Gnomic::builder()
+                .scale(1_f64)
+                .translate(&Coordinate { x: 0_f64, y: 0_f64 })
+                .angle(360_f64);
 
         assert!(in_delta(pb.get_angle(), 0_f64, 1e-6));
     }

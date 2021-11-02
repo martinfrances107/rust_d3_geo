@@ -98,6 +98,7 @@ pub fn rejoin<SINK, T>(
             clip.push(o2);
         }
     }
+
     if subject.is_empty() {
         return;
     }

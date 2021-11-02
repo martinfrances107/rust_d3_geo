@@ -5,22 +5,24 @@ pub mod line;
 /// Holds the clip circle point visible function.
 pub mod pv;
 
-mod intersect;
+/// Intersects the great circle between a and b with the clip circle.
+pub mod intersect;
 
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::line::Line;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 
 use interpolate::generate as generate_interpolate;
-use line::Line;
+use line::Line as LineCircle;
 use pv::PV;
 
 pub(crate) fn gen_clip_factory_circle<PR, SINK, T>(
     radius: T,
-) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
+) -> StreamNodeClipFactory<PR, PV<T>, SINK, T>
 where
     PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
@@ -28,7 +30,7 @@ where
 {
     StreamNodeClipFactory::new(
         generate_interpolate(radius),
-        Line::new(radius),
+        Line::C(LineCircle::new(radius)),
         PV::new(radius),
     )
 }

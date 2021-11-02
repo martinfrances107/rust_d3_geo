@@ -10,32 +10,38 @@ pub mod circle;
 pub mod clip;
 /// Helper function.
 pub mod compare_intersection;
+mod intersection;
+/// Wrapper for line primitives.
+pub mod line;
 /// The state of the line segments??
 pub mod line_elem;
+/// Rectangle helper function.
+mod line_fn;
+mod line_node;
 /// A Stream pipeline stage.
 pub mod post_clip;
 /// A stream pipeline stage.
 pub mod post_clip_node;
 pub(crate) mod rectangle;
+/// Clipping break line into segments which can lasted be reconnected together.
+pub(crate) mod rejoin;
 /// Factory takes in complex definition and output a stream pipeline node element.
 pub mod stream_node_clip_factory;
+/// Generate line stream node.
+pub mod stream_node_line_factory;
 /// Generate post clip stream node.
 pub mod stream_node_post_clip_factory;
 
-mod intersection;
-/// Rectangle helper function.
-mod line;
-/// Clipping break line into segments which can lasted be reconnected together.
-pub(crate) mod rejoin;
-
 use std::cell::RefCell;
+use std::fmt::Debug;
 use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::circle::line::Line as LineCircle;
 use crate::stream::Stream;
-use crate::Debug;
 
 /// Takes a line and cuts into visible segments. Return values used for polygon
 /// clipPing: 0 - there were intersections or the line was empty; 1 - no

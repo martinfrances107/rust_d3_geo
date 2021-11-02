@@ -5,9 +5,11 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
-use crate::clip::circle::line::Line;
+use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV;
+use crate::clip::line::Line;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
+
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -46,7 +48,7 @@ where
     DRAIN: Stream<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, Line<T>, Gnomic<DRAIN, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, Gnomic<DRAIN, T>, PV<T>, T>;
     type T = T;
 
     fn builder() -> Self::Builder
@@ -54,7 +56,11 @@ where
         DRAIN: Stream<T = T>,
     {
         Builder::new(
-            StreamNodeClipFactory::new(gen_interpolate(), Line::<T>::default(), PV::<T>::default()),
+            StreamNodeClipFactory::new(
+                gen_interpolate(),
+                Line::C(LineCircle::<T>::default()),
+                PV::<T>::default(),
+            ),
             Gnomic::default(),
         )
         .scale(T::from(144.049_f64).unwrap())

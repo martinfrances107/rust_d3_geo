@@ -31,7 +31,6 @@ mod fit_test {
         let d_object = DataObject::Sphere(Sphere::default());
         let projection: ProjectionBuilder<
             Bounds<f64>,
-            _,
             EquirectangularRaw<Bounds<f64>, f64>,
             _,
             f64,

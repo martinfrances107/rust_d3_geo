@@ -31,10 +31,8 @@
 
 //     use rust_d3_geo::data_object::DataObject;
 //     use rust_d3_geo::path::builder::Builder as PathBuilder;
-//     use rust_d3_geo::path::path::Path;
 //     use rust_d3_geo::path::ResultEnum;
 //     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
-//     use rust_d3_geo::projection::projection::Projection;
 //     use rust_d3_geo::projection::Raw;
 //     use rust_d3_geo::projection::Rotate;
 //     use rust_d3_geo::projection::Translate;
@@ -52,14 +50,14 @@
 //         let projection = Rc::new(
 //             AzimuthalEqualArea::builder()
 //                 .translate(&Coordinate { x: 0.5, y: 0.5 })
-//                 .rotate([0., -90., 0.])
+//                 .rotate(&[0_f64, -90_f64, 0_f64])
 //                 .clip_angle(170_f64)
 //                 .build(),
 //         );
 
 //         let path_builder = PathBuilder::context_pathstring();
 
-//         match path_builder.build(projection).object(d) {
+//         match path_builder.build(projection).object(&d) {
 //             Some(p) => match p {
 //                 ResultEnum::String(s) => {
 //                     println!("string  {:#?}", s);

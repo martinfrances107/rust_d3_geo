@@ -8,23 +8,23 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use super::buffer::Buffer;
-use super::compare_intersection::gen_compare_intersection;
-use super::line_elem::LineElem;
-use super::rejoin::rejoin;
-use super::InterpolateFn;
-use super::Line;
-use super::PointVisible;
-
+use crate::clip::Clean;
 use crate::path::Result;
 use crate::path::ResultEnum;
 use crate::polygon_contains::polygon_contains;
 use crate::projection::stream_node::StreamNode;
-use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::NodeFactory;
 use crate::stream::Stream;
 
+use super::buffer::Buffer;
+use super::compare_intersection::gen_compare_intersection;
+use super::line_elem::LineElem;
+use super::line_node::LineNode;
+use super::rejoin::rejoin;
+use super::stream_node_line_factory::StreamNodeLineFactory;
 use super::CleanState;
+use super::InterpolateFn;
+use super::PointVisible;
 
 #[derive(Clone, Debug)]
 enum PointFn {
@@ -48,14 +48,13 @@ enum LineEndFn {
 /// State for a clipping node.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Clip<L, PV, SINK, T>
+pub struct Clip<PV, SINK, T>
 where
-    L: Line,
     PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
-    line_node: StreamNode<L, SINK, T>,
+    line_node: LineNode<SINK, T>,
     #[derivative(Debug = "ignore")]
     interpolate_fn: InterpolateFn<SINK, T>,
 
@@ -66,33 +65,32 @@ where
     polygon_started: bool,
     polygon: Vec<Vec<LineElem<T>>>,
     ring: Vec<LineElem<T>>,
-    ring_sink_node: StreamNode<L, Buffer<T>, T>,
+    ring_sink_node: LineNode<Buffer<T>, T>,
     segments: VecDeque<Vec<Vec<LineElem<T>>>>,
     point_fn: PointFn,
     line_start_fn: LineStartFn,
     line_end_fn: LineEndFn,
 }
 
-impl<L, PV, SINK, T> Clip<L, PV, SINK, T>
+impl<PV, SINK, T> Clip<PV, SINK, T>
 where
-    L: Line,
     PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     pub(super) fn new(
         pv: PV,
-        line_raw: L,
+        stream_node_line_factory: StreamNodeLineFactory<SINK, T>,
         interpolate_fn: InterpolateFn<SINK, T>,
         ring_buffer: Rc<RefCell<Buffer<T>>>,
-        ring_sink_node: StreamNode<L, Buffer<T>, T>,
+        ring_sink_node: LineNode<Buffer<T>, T>,
         sink: Rc<RefCell<SINK>>,
         start: LineElem<T>,
-    ) -> Clip<L, PV, SINK, T> {
-        let line_sink_factory: StreamNodeFactory<L, SINK, T> = StreamNodeFactory::new(line_raw);
+    ) -> Clip<PV, SINK, T> {
+        // let line_sink_factory = StreamNodeFactory::new(line_raw);
         Clip {
             pv,
-            line_node: line_sink_factory.generate(sink),
+            line_node: stream_node_line_factory.generate(sink),
             interpolate_fn,
             start,
 
@@ -111,12 +109,11 @@ where
     }
 }
 
-impl<L, PV, SINK, T> StreamNode<Clip<L, PV, SINK, T>, SINK, T>
+impl<PV, SINK, T> StreamNode<Clip<PV, SINK, T>, SINK, T>
 where
-    L: Line,
     PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     #[inline]
     pub(super) fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -127,30 +124,30 @@ where
 
     #[inline]
     fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        self.raw.line_node.sink.borrow_mut().point(p, m);
+        self.raw.line_node.point(p, m);
     }
 
     #[inline]
     fn line_start_default(&mut self) {
         self.raw.point_fn = PointFn::Line;
-        self.raw.line_node.sink.borrow_mut().line_start();
+        self.raw.line_node.line_start();
     }
 
     #[inline]
     fn line_end_default(&mut self) {
         self.raw.point_fn = PointFn::Default;
-        self.raw.line_node.sink.borrow_mut().line_end();
+        self.raw.line_node.line_end();
     }
 
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         self.raw.ring.push(LineElem { p: *p, m });
-        self.raw.ring_sink_node.sink.borrow_mut().point(p, m);
+        self.raw.ring_sink_node.point(p, m);
     }
 
     #[inline]
     fn ring_start(&mut self) {
-        self.raw.ring_sink_node.sink.borrow_mut().line_start();
+        self.raw.ring_sink_node.line_start();
         self.raw.ring.clear();
     }
 
@@ -158,11 +155,20 @@ where
         let le = self.raw.ring[0];
         // javascript version drops m here.
         self.point_ring(&le.p, None);
-        self.raw.ring_sink_node.sink.borrow_mut().line_end();
+        self.raw.ring_sink_node.line_end();
 
-        let clean = self.raw.ring_sink_node.raw.clean();
+        // let clean = self.raw.ring_sink_node.clean();
+        let clean = match &self.raw.ring_sink_node {
+            LineNode::A(l) => l.raw.clean(),
+            LineNode::C(l) => l.raw.clean(),
+        };
 
-        let mut ring_segments = match self.raw.ring_sink_node.sink.borrow_mut().result() {
+        let ring_segments_result_o = match &self.raw.ring_sink_node {
+            LineNode::A(l) => l.sink.borrow_mut().result(),
+            LineNode::C(l) => l.sink.borrow_mut().result(),
+        };
+
+        let mut ring_segments = match ring_segments_result_o {
             Some(ResultEnum::BufferOutput(result)) => {
                 // Can I find a way of doing this with the expense of dynamic conversion.
                 result
@@ -236,9 +242,8 @@ where
     }
 }
 
-impl<L, PV, SINK, T> Stream for StreamNode<Clip<L, PV, SINK, T>, SINK, T>
+impl<PV, SINK, T> Stream for StreamNode<Clip<PV, SINK, T>, SINK, T>
 where
-    L: Line,
     PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -291,7 +296,6 @@ where
             if !self.raw.polygon_started {
                 self.raw.polygon_started = true;
             }
-
             rejoin(
                 &segments_inner,
                 gen_compare_intersection(),
@@ -317,7 +321,7 @@ where
 
     fn sphere(&mut self) {
         self.sink.borrow_mut().polygon_start();
-        self.raw.line_node.sink.borrow_mut().line_start();
+        self.sink.borrow_mut().line_start();
         (self.raw.interpolate_fn)(None, None, T::one(), self.sink.clone());
         self.sink.borrow_mut().line_end();
         self.sink.borrow_mut().polygon_end();

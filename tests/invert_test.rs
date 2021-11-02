@@ -4,9 +4,7 @@ mod invert_test {
 
     use geo::Coordinate;
 
-    use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
-    use rust_d3_geo::clip::circle::line::Line as LineCircle;
     use rust_d3_geo::clip::circle::pv::PV as PVCircle;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
@@ -56,7 +54,6 @@ mod invert_test {
     fn test_equirectangular() {
         let e: Projection<
             StreamDrainStub<f64>,
-            Line<f64>,
             EquirectangularRaw<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
@@ -68,7 +65,6 @@ mod invert_test {
     fn test_gnomic() {
         let g: Projection<
             StreamDrainStub<f64>,
-            LineCircle<f64>,
             Gnomic<StreamDrainStub<f64>, f64>,
             PVCircle<f64>,
             f64,
@@ -80,7 +76,6 @@ mod invert_test {
     fn test_orthographic() {
         let o: Projection<
             StreamDrainStub<f64>,
-            LineCircle<f64>,
             Orthographic<StreamDrainStub<f64>, f64>,
             PVCircle<f64>,
             f64,
@@ -90,13 +85,8 @@ mod invert_test {
 
     #[test]
     fn test_mercator() {
-        let m: Projection<
-            StreamDrainStub<f64>,
-            Line<f64>,
-            Mercator<StreamDrainStub<f64>, f64>,
-            PV<f64>,
-            f64,
-        > = Mercator::<StreamDrainStub<f64>, f64>::builder().build();
+        let m: Projection<StreamDrainStub<f64>, Mercator<StreamDrainStub<f64>, f64>, PV<f64>, f64> =
+            Mercator::<StreamDrainStub<f64>, f64>::builder().build();
         symetric_invert(m);
     }
 
@@ -104,7 +94,6 @@ mod invert_test {
     fn test_stereographic() {
         let s: Projection<
             StreamDrainStub<f64>,
-            LineCircle<f64>,
             Stereographic<StreamDrainStub<f64>, f64>,
             PVCircle<f64>,
             f64,

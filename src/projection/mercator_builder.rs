@@ -10,8 +10,9 @@ use num_traits::FloatConst;
 use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::clip::line::Line;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
-use crate::clip::Line;
+// use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::rotation::rotate_radians;
 use crate::stream::Stream;
@@ -38,23 +39,22 @@ use crate::projection::Rotate;
 /// A wrapper for Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct MercatorBuilder<DRAIN, L, PR, PV, T>
+pub struct MercatorBuilder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
-    L: Line,
     PV: PointVisible<T = T>,
     PR: ProjectionRaw<T>, // TODO limit this to only certain types of PR
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     pr: PR,
-    base: ProjectionBuilder<DRAIN, L, PR, PV, T>,
+    base: ProjectionBuilder<DRAIN, PR, PV, T>,
     x0: Option<T>,
     y0: Option<T>,
     x1: Option<T>,
     y1: Option<T>, // post-clip extent
 }
 
-impl<DRAIN, PR, T> MercatorBuilder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T>
+impl<DRAIN, PR, T> MercatorBuilder<DRAIN, PR, PVAntimeridian<T>, T>
 where
     DRAIN: Stream<T = T> + Default,
     PR: ProjectionRaw<T>,
@@ -62,15 +62,14 @@ where
 {
     /// Wrap a default projector and provides mercator specific overrides.
     pub fn new(pr: PR) -> Self {
-        let base: ProjectionBuilder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> =
-            ProjectionBuilder::new(
-                StreamNodeClipFactory::new(
-                    gen_interpolate(),
-                    LineAntimeridian::<T>::default(),
-                    PVAntimeridian::default(),
-                ),
-                pr.clone(),
-            );
+        let base: ProjectionBuilder<DRAIN, PR, PVAntimeridian<T>, T> = ProjectionBuilder::new(
+            StreamNodeClipFactory::new(
+                gen_interpolate(),
+                Line::A(LineAntimeridian::<T>::default()),
+                PVAntimeridian::default(),
+            ),
+            pr.clone(),
+        );
         Self {
             pr,
             base,
@@ -83,7 +82,7 @@ where
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> Projection<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> {
+    pub fn build(&self) -> Projection<DRAIN, PR, PVAntimeridian<T>, T> {
         Projection {
             postclip_factory: self.base.postclip_factory.clone(),
             preclip_factory: self.base.preclip_factory.clone(),
@@ -97,10 +96,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> MercatorBuilder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> MercatorBuilder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
-    L: Line,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -137,10 +135,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Center for MercatorBuilder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Center for MercatorBuilder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
-    L: Line,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -158,10 +155,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Scale for MercatorBuilder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Scale for MercatorBuilder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
-    L: Line,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -179,10 +175,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Translate for MercatorBuilder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Translate for MercatorBuilder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
-    L: Line,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -200,10 +195,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Precision for MercatorBuilder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Precision for MercatorBuilder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -220,9 +214,8 @@ where
     }
 }
 
-impl<L, PR, PV, T> Fit for MercatorBuilder<Bounds<T>, L, PR, PV, T>
+impl<PR, PV, T> Fit for MercatorBuilder<Bounds<T>, PR, PV, T>
 where
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -248,10 +241,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> ClipExtent for MercatorBuilder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> ClipExtent for MercatorBuilder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
-    L: Line,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -288,10 +280,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Angle for MercatorBuilder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Angle for MercatorBuilder<DRAIN, PR, PV, T>
 where
     DRAIN: Default + Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -310,10 +301,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Rotate for MercatorBuilder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Rotate for MercatorBuilder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -332,10 +322,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Reflect for MercatorBuilder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Reflect for MercatorBuilder<DRAIN, PR, PV, T>
 where
     DRAIN: Default + Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static

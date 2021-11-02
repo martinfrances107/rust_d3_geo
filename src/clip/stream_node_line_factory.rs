@@ -2,16 +2,14 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use core::marker::PhantomData;
-use derivative::*;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use super::post_clip_node::PostClipNode;
+use super::line::Line;
+use super::line_node::LineNode;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::NodeFactory;
 use crate::stream::Stream;
-
-use super::post_clip::PostClip;
 
 /// Used in the construct of a Projection stream pipeline.
 ///
@@ -21,30 +19,31 @@ use super::post_clip::PostClip;
 ///
 /// Inside Projection::stream() NodeFactory::generate() will be called to
 /// construct the pipeline.
-#[derive(Clone, Derivative)]
-#[derivative(Debug)]
-pub struct StreamNodePostClipFactory<SINK, T>
+#[derive(Clone, Debug)]
+pub struct StreamNodeLineFactory<SINK, T>
 where
     T: CoordFloat + FloatConst,
+    SINK: Stream<T = T>,
 {
     phantom_sink: PhantomData<SINK>,
-    post_clip: PostClip<T>,
+    line: Line<T>,
 }
 
-impl<SINK, T> StreamNodePostClipFactory<SINK, T>
+impl<SINK, T> StreamNodeLineFactory<SINK, T>
 where
     T: CoordFloat + FloatConst,
+    SINK: Stream<T = T>,
 {
     /// Given a PostClip construct a StreamNode.
-    pub fn new(post_clip: PostClip<T>) -> StreamNodePostClipFactory<SINK, T> {
-        StreamNodePostClipFactory {
+    pub fn new(line: Line<T>) -> StreamNodeLineFactory<SINK, T> {
+        StreamNodeLineFactory {
             phantom_sink: PhantomData::<SINK>,
-            post_clip,
+            line,
         }
     }
 }
 
-impl<SINK, T> NodeFactory for StreamNodePostClipFactory<SINK, T>
+impl<SINK, T> NodeFactory for StreamNodeLineFactory<SINK, T>
 where
     SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,
@@ -52,17 +51,11 @@ where
     type Sink = SINK;
     // type Node = PostClipNode<SINK, T>;
     type T = T;
-    type Node = PostClipNode<SINK, Self::T>;
+    type Node = LineNode<SINK, Self::T>;
     fn generate(&self, sink: Rc<RefCell<SINK>>) -> Self::Node {
-        match &self.post_clip {
-            PostClip::I(i) => PostClipNode::I(StreamNode {
-                raw: i.clone(),
-                sink,
-            }),
-            PostClip::R(r) => PostClipNode::R(StreamNode {
-                raw: r.clone(),
-                sink,
-            }),
+        match &self.line {
+            Line::A(l) => LineNode::A(StreamNode { raw: *l, sink }),
+            Line::C(l) => LineNode::C(StreamNode { raw: *l, sink }),
         }
     }
 }

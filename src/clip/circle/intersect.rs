@@ -13,9 +13,12 @@ use crate::math::EPSILON;
 /// IntersectReturn none, one or two 2d floats.
 #[derive(Debug)]
 pub enum IntersectReturn<T: CoordFloat> {
+    /// One Point.
     One(Option<LineElem<T>>),
+    /// Two polar points
     Two([Coordinate<T>; 2]),
     False,
+    /// No Intersection.
     None,
 }
 

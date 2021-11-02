@@ -7,24 +7,29 @@ pub mod pv;
 
 mod intersect;
 
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::line::Line;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
-
 use interpolate::generate as gen_interpolate;
-use line::Line;
+use line::Line as LineAntimeridian;
+
 use pv::PV;
 
 /// Returns a clip factory setup for antimeridian clipping.
-pub fn gen_clip_factory_antimeridian<PR, SINK, T>(
-) -> StreamNodeClipFactory<Line<T>, PR, PV<T>, SINK, T>
+pub fn gen_clip_factory_antimeridian<PR, SINK, T>() -> StreamNodeClipFactory<PR, PV<T>, SINK, T>
 where
     PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    StreamNodeClipFactory::new(gen_interpolate::<SINK, T>(), Line::default(), PV::default())
+    StreamNodeClipFactory::new(
+        gen_interpolate::<SINK, T>(),
+        Line::A(LineAntimeridian::default()),
+        PV::default(),
+    )
 }

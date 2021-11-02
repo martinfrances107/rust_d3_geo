@@ -1,5 +1,6 @@
 use std::marker::PhantomData;
 
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 
@@ -9,14 +10,14 @@ use crate::clip::PointVisible;
 #[derive(Clone, Debug)]
 pub struct PV<T>
 where
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat,
 {
     pd: PhantomData<T>,
 }
 
 impl<T> Default for PV<T>
 where
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat,
 {
     #[inline]
     fn default() -> PV<T> {
@@ -27,7 +28,7 @@ where
 }
 impl<T> PointVisible for PV<T>
 where
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat,
 {
     type T = T;
 

@@ -9,7 +9,6 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
 
-use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::projection::projection::Projection;
 use crate::projection::Raw as ProjectionRaw;
@@ -22,28 +21,26 @@ use super::PointRadiusTrait;
 
 /// Path builder.
 #[derive(Debug)]
-pub struct Builder<L, PR, PV, T>
+pub struct Builder<PR, PV, T>
 where
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + Display + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     pr: Option<T>,
     context: Option<Rc<CanvasRenderingContext2d>>,
     context_stream: Rc<RefCell<ContextStream<T>>>,
-    projection: Option<Projection<ContextStream<T>, L, PR, PV, T>>,
+    projection: Option<Projection<ContextStream<T>, PR, PV, T>>,
 }
 
-impl<L, PR, PV, T> Builder<L, PR, PV, T>
+impl<PR, PV, T> Builder<PR, PV, T>
 where
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AbsDiffEq<Epsilon=T> + CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
-    pub fn new(context_stream: Rc<RefCell<ContextStream<T>>>) -> Builder<L, PR, PV, T> {
+    pub fn new(context_stream: Rc<RefCell<ContextStream<T>>>) -> Builder<PR, PV, T> {
         Self {
             context: None,
             context_stream,
@@ -54,12 +51,11 @@ where
 }
 
 /// Context related methods.
-impl<L, PR, PV, T> Builder<L, PR, PV, T>
+impl<PR, PV, T> Builder<PR, PV, T>
 where
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AbsDiffEq<Epsilon=T> + CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the state within the builder.
     pub fn get_context(&self) {
@@ -67,7 +63,7 @@ where
     }
 
     /// Programe the builder with the context.
-    pub fn context(self, context: CanvasRenderingContext2d) -> Builder<L, PR, PV, T> {
+    pub fn context(self, context: CanvasRenderingContext2d) -> Builder<PR, PV, T> {
         let context = Rc::new(context);
         Builder {
             pr: self.pr,
@@ -87,7 +83,7 @@ where
     }
 
     /// Returns a Builder from default values.
-    pub fn context_pathstring() -> Builder<L, PR, PV, T> {
+    pub fn context_pathstring() -> Builder<PR, PV, T> {
         let context_stream: Rc<RefCell<ContextStream<T>>> =
             Rc::new(RefCell::new(ContextStream::S(PathString::default())));
 
@@ -96,19 +92,15 @@ where
 }
 
 /// Projection related methods.
-impl<L, PR, PV, T> Builder<L, PR, PV, T>
+impl<PR, PV, T> Builder<PR, PV, T>
 where
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AbsDiffEq<Epsilon=T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// From the progammed state generate a new projection.
     #[inline]
-    pub fn build(
-        self,
-        projection: Rc<Projection<ContextStream<T>, L, PR, PV, T>>,
-    ) -> Path<L, PR, PV, T>
+    pub fn build(self, projection: Rc<Projection<ContextStream<T>, PR, PV, T>>) -> Path<PR, PV, T>
     where
         PR: ProjectionRaw<T>,
     {

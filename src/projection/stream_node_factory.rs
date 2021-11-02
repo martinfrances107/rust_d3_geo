@@ -3,6 +3,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use geo::CoordFloat;
+use num_traits::FloatConst;
 
 use crate::stream::Stream;
 
@@ -52,7 +53,7 @@ impl<RAW, SINK, T> NodeFactory for StreamNodeFactory<RAW, SINK, T>
 where
     RAW: Clone,
     SINK: Stream<T = T>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     type Sink = SINK;
     type T = T;

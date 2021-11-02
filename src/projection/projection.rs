@@ -11,9 +11,7 @@ use crate::clip::clip::Clip;
 use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::stream_node_post_clip_factory::StreamNodePostClipFactory;
-use crate::clip::Line;
 use crate::clip::PointVisible;
-// use crate::clip::PostClipFn;
 use crate::compose::Compose;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
@@ -34,12 +32,12 @@ use super::StreamNode;
 //     SP(Box<dyn Stream<T=T>>),
 // }
 
-type TransformRadiansFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
+type TransformRadiansFactory<DRAIN, PR, PV, T> = StreamNodeFactory<
     StreamTransformRadians,
     StreamNode<
         RotateRadians<T>,
         StreamNode<
-            Clip<L, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+            Clip<PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
             ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
             T,
         >,
@@ -51,12 +49,12 @@ type TransformRadiansFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
 /// Output of projection.stream().
 ///
 /// use by GeoPath.
-pub type ProjectionStreamOutput<DRAIN, L, PR, PV, T> = StreamNode<
+pub type ProjectionStreamOutput<DRAIN, PR, PV, T> = StreamNode<
     StreamTransformRadians,
     StreamNode<
         RotateRadians<T>,
         StreamNode<
-            Clip<L, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+            Clip<PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
             ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
             T,
         >,
@@ -71,10 +69,9 @@ pub type ProjectionStreamOutput<DRAIN, L, PR, PV, T> = StreamNode<
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct Projection<DRAIN, L, PR, PV, T>
+pub struct Projection<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -84,21 +81,20 @@ where
     pub(crate) resample_factory: StreamNodeResampleFactory<PR, PostClipNode<DRAIN, T>, T>,
 
     pub(crate) preclip_factory:
-        StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+        StreamNodeClipFactory<PR, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
 
-    pub(crate) rotate_factory: RotateFactory<DRAIN, L, PR, PV, T>,
+    pub(crate) rotate_factory: RotateFactory<DRAIN, PR, PV, T>,
     /// Used exclusively by Transform( not stream releated).
     pub rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
-    pub(crate) rotate_transform_factory: RotateTransformFactory<DRAIN, L, PR, PV, T>,
+    pub(crate) rotate_transform_factory: RotateTransformFactory<DRAIN, PR, PV, T>,
 
-    pub(crate) transform_radians_factory: TransformRadiansFactory<DRAIN, L, PR, PV, T>,
+    pub(crate) transform_radians_factory: TransformRadiansFactory<DRAIN, PR, PV, T>,
 }
 
-impl<'a, DRAIN, L, PR, PV, T> Projection<DRAIN, L, PR, PV, T>
+impl<'a, DRAIN, PR, PV, T> Projection<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -112,7 +108,7 @@ where
     ///
     /// In javascript stream is used as a property to be removed from the object.
     /// In rust that is a closure.
-    pub fn stream(&self, drain: Rc<RefCell<DRAIN>>) -> ProjectionStreamOutput<DRAIN, L, PR, PV, T> {
+    pub fn stream(&self, drain: Rc<RefCell<DRAIN>>) -> ProjectionStreamOutput<DRAIN, PR, PV, T> {
         // let postclip = (self.postclip)(drain);
         let postclip_node = Rc::new(RefCell::new(self.postclip_factory.generate(drain)));
 
@@ -127,10 +123,9 @@ where
     }
 }
 
-impl<'a, DRAIN, L, PR, PV, T> Transform for Projection<DRAIN, L, PR, PV, T>
+impl<'a, DRAIN, PR, PV, T> Transform for Projection<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

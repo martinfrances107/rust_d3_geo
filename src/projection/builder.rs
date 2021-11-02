@@ -6,17 +6,14 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_factory_antimeridian;
-use crate::clip::antimeridian::line::Line as AntimeridainLine;
 use crate::clip::antimeridian::pv::PV as AntimeridianPV;
 use crate::clip::circle::gen_clip_factory_circle;
-use crate::clip::circle::line::Line as CircleLine;
 use crate::clip::circle::pv::PV as CirclePV;
 use crate::clip::post_clip::PostClip;
 use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::rectangle::rectangle::Rectangle as ClipRectangle;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::stream_node_post_clip_factory::StreamNodePostClipFactory;
-use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::identity::Identity;
@@ -54,10 +51,9 @@ use super::Translate;
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Builder<DRAIN, L, PR, PV, T>
+pub struct Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -99,19 +95,18 @@ where
     pub postclip_factory: StreamNodePostClipFactory<DRAIN, T>,
     /// Projection pipeline stage.
     pub preclip_factory:
-        StreamNodeClipFactory<L, PR, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+        StreamNodeClipFactory<PR, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
     /// Projection pipeline stage.
-    pub rotate_factory: RotateFactory<DRAIN, L, PR, PV, T>,
+    pub rotate_factory: RotateFactory<DRAIN, PR, PV, T>,
     /// Projection pipeline stage
     pub resample_factory: StreamNodeResampleFactory<PR, PostClipNode<DRAIN, T>, T>,
     /// Projection pipeline stage
-    pub rotate_transform_factory: RotateTransformFactory<DRAIN, L, PR, PV, T>,
+    pub rotate_transform_factory: RotateTransformFactory<DRAIN, PR, PV, T>,
 }
 
-impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -120,7 +115,6 @@ where
     /// Projection builder.
     pub fn new(
         preclip_factory: StreamNodeClipFactory<
-            L,
             PR,
             PV,
             ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
@@ -196,7 +190,7 @@ where
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> Projection<DRAIN, L, PR, PV, T> {
+    pub fn build(&self) -> Projection<DRAIN, PR, PV, T> {
         Projection {
             postclip_factory: self.postclip_factory.clone(),
             preclip_factory: self.preclip_factory.clone(),
@@ -211,11 +205,11 @@ where
 
     /// Set the internal clip angle (theta) to null and return a builder
     /// which uses the antimeridian clipping stratergy.
-    pub fn clip_angle_reset(self) -> Builder<DRAIN, AntimeridainLine<T>, PR, AntimeridianPV<T>, T> {
+    pub fn clip_angle_reset(self) -> Builder<DRAIN, PR, AntimeridianPV<T>, T> {
         let preclip_factory = gen_clip_factory_antimeridian();
 
         // update only theta and preclip_factory.
-        let out: Builder<DRAIN, AntimeridainLine<T>, PR, AntimeridianPV<T>, T> = Builder {
+        let out: Builder<DRAIN, PR, AntimeridianPV<T>, T> = Builder {
             projection_raw: self.projection_raw,
 
             /// Internal state.
@@ -258,7 +252,7 @@ where
 
     /// Given an angle in degrees. Sets the internal clip angle and returns a builder
     /// which uses the clip circle stratergy.
-    pub fn clip_angle(self, angle: T) -> Builder<DRAIN, CircleLine<T>, PR, CirclePV<T>, T> {
+    pub fn clip_angle(self, angle: T) -> Builder<DRAIN, PR, CirclePV<T>, T> {
         if angle == T::zero() {
             panic!("must call clip_angle_reset() instead");
         }
@@ -269,7 +263,7 @@ where
         // out.theta = Some(theta);
 
         // update only theta and preclip_factory.
-        let out: Builder<DRAIN, CircleLine<T>, PR, CirclePV<T>, T> = Builder {
+        let out: Builder<DRAIN, PR, CirclePV<T>, T> = Builder {
             projection_raw: self.projection_raw,
 
             /// Internal state.
@@ -312,13 +306,13 @@ where
         out.reset()
     }
 
-    fn reset(self) -> Builder<DRAIN, L, PR, PV, T> {
+    fn reset(self) -> Builder<DRAIN, PR, PV, T> {
         // self.cache_stream = None;
         // self.cache = None;
         self
     }
 
-    fn recenter(mut self) -> Builder<DRAIN, L, PR, PV, T> {
+    fn recenter(mut self) -> Builder<DRAIN, PR, PV, T> {
         let center = generate_str(
             &self.k,
             &T::zero(),
@@ -355,10 +349,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Translate for Builder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Translate for Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -380,10 +373,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Center for Builder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Center for Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -405,9 +397,8 @@ where
     }
 }
 
-impl<L, PR, PV, T> Fit for Builder<Bounds<T>, L, PR, PV, T>
+impl<PR, PV, T> Fit for Builder<Bounds<T>, PR, PV, T>
 where
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -431,10 +422,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Angle for Builder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Angle for Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -458,10 +448,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Scale for Builder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Scale for Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -479,10 +468,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> ClipExtent for Builder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> ClipExtent for Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -523,10 +511,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Precision for Builder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Precision for Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -559,10 +546,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Rotate for Builder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Rotate for Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -584,7 +570,7 @@ where
     }
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate(mut self, angles: &[T; 3]) -> Builder<DRAIN, L, PR, PV, T> {
+    fn rotate(mut self, angles: &[T; 3]) -> Builder<DRAIN, PR, PV, T> {
         let [delta_lambda, delta_phi, delta_gamma] = *angles;
         let f360 = T::from(360_f64).unwrap();
         self.delta_lambda = (delta_lambda % f360).to_radians();
@@ -594,10 +580,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Reflect for Builder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Reflect for Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T>,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -638,10 +623,9 @@ where
     }
 }
 
-impl<DRAIN, L, PR, PV, T> Builder<DRAIN, L, PR, PV, T>
+impl<DRAIN, PR, PV, T> Builder<DRAIN, PR, PV, T>
 where
     DRAIN: Stream<T = T> + Default,
-    L: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,

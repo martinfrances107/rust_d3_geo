@@ -6,7 +6,6 @@ use std::marker::PhantomData;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-use crate::clip::antimeridian::line::Line;
 use crate::clip::antimeridian::pv::PV;
 use crate::stream::Stream;
 use crate::Transform;
@@ -74,7 +73,7 @@ where
     DRAIN: Stream<T = T> + Default,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-    type Builder = MercatorBuilder<DRAIN, Line<T>, Mercator<DRAIN, T>, PV<T>, T>;
+    type Builder = MercatorBuilder<DRAIN, Mercator<DRAIN, T>, PV<T>, T>;
     type T = T;
 
     fn builder() -> Self::Builder {

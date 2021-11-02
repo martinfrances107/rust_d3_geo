@@ -6,8 +6,9 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use crate::clip::circle::interpolate::generate as gen_interpolate;
-use crate::clip::circle::line::Line;
+use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV;
+use crate::clip::line::Line;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::builder::Builder;
 use crate::projection::Raw;
@@ -37,7 +38,7 @@ where
     DRAIN: Stream<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, Line<T>, AzimuthalEqualArea<DRAIN, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, AzimuthalEqualArea<DRAIN, T>, PV<T>, T>;
     type T = T;
 
     #[inline]
@@ -45,7 +46,7 @@ where
         Builder::new(
             StreamNodeClipFactory::new(
                 gen_interpolate(T::one()),
-                Line::<T>::default(),
+                Line::C(LineCircle::<T>::default()),
                 PV::default(),
             ),
             AzimuthalEqualArea::default(),

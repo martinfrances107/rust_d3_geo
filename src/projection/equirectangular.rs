@@ -6,8 +6,9 @@ use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::interpolate::generate as generate_interpolate;
-use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV;
+use crate::clip::line::Line;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::stream::Stream;
 use crate::Transform;
@@ -46,16 +47,20 @@ where
     DRAIN: Stream<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>;
     type T = T;
 
     #[inline]
-    fn builder() -> Builder<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>
+    fn builder() -> Builder<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>
     where
         DRAIN: Stream<T = T>,
     {
         Builder::new(
-            StreamNodeClipFactory::new(generate_interpolate(), Line::default(), PV::default()),
+            StreamNodeClipFactory::new(
+                generate_interpolate(),
+                Line::A(LineAntimeridian::default()),
+                PV::default(),
+            ),
             EquirectangularRaw::default(),
         )
         .scale(T::from(152.63_f64).unwrap())

@@ -12,7 +12,6 @@ use num_traits::FloatConst;
 
 use crate::clip::clip::Clip;
 use crate::clip::post_clip_node::PostClipNode;
-use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::data_object::DataObject;
@@ -68,10 +67,10 @@ mod fit;
 mod resample;
 
 /// Projection type.
-pub type PostClipFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
+pub type PostClipFactory<DRAIN, PR, PV, T> = StreamNodeFactory<
     PostClipNode<DRAIN, T>,
     StreamNode<
-        Clip<L, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+        Clip<PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
         ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
         T,
     >,
@@ -79,10 +78,10 @@ pub type PostClipFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
 >;
 
 /// Projection type.
-pub type RotateFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
+pub type RotateFactory<DRAIN, PR, PV, T> = StreamNodeFactory<
     RotateRadians<T>,
     StreamNode<
-        Clip<L, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+        Clip<PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
         ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
         T,
     >,
@@ -90,10 +89,10 @@ pub type RotateFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
 >;
 
 /// Projection type.
-pub type RotateTransformFactory<DRAIN, L, PR, PV, T> = StreamNodeFactory<
+pub type RotateTransformFactory<DRAIN, PR, PV, T> = StreamNodeFactory<
     Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
     StreamNode<
-        Clip<L, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+        Clip<PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
         ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
         T,
     >,
@@ -140,17 +139,15 @@ where
 trait Builder
 where
     <Self as Builder>::Drain: Stream<T = <Self as Builder>::T>,
-    <Self as Builder>::L: Line,
     <Self as Builder>::PR: Raw<Self::T>,
     <Self as Builder>::PV: PointVisible<T = Self::T>,
     <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;
-    type L;
     type PR;
     type PV;
     type T;
-    fn build(s: Self::PR) -> Projection<Self::Drain, Self::L, Self::PR, Self::PV, Self::T>;
+    fn build(s: Self::PR) -> Projection<Self::Drain, Self::PR, Self::PV, Self::T>;
 }
 
 /// Controls the projections center point.

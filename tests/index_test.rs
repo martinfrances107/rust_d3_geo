@@ -6,8 +6,6 @@ mod index_test {
 
     use geo::Coordinate;
     use geo::LineString;
-    use geo::MultiPoint;
-    use geo::Point;
     use geo::Polygon;
     use pretty_assertions::assert_eq;
     use std::f64::consts::PI;
@@ -30,15 +28,9 @@ mod index_test {
     use rust_d3_geo::projection::Scale;
 
     #[inline]
-    fn equirectangular() -> Rc<
-        Projection<
-            ContextStream<f64>,
-            Line<f64>,
-            EquirectangularRaw<ContextStream<f64>, f64>,
-            PV<f64>,
-            f64,
-        >,
-    > {
+    fn equirectangular(
+    ) -> Rc<Projection<ContextStream<f64>, EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64>>
+    {
         Rc::new(
             ProjectionBuilder::new(
                 gen_clip_factory_antimeridian(),
@@ -55,7 +47,6 @@ mod index_test {
         projection: Rc<
             Projection<
                 ContextStream<f64>,
-                Line<f64>,
                 EquirectangularRaw<ContextStream<f64>, f64>,
                 PV<f64>,
                 f64,
@@ -63,7 +54,7 @@ mod index_test {
         >,
         object: DataObject<f64>,
     ) -> String {
-        let pb: PathBuilder<Line<f64>, EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
+        let pb: PathBuilder<EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
             PathBuilder::context_pathstring();
         match pb.build(projection).object(&object) {
             Some(r) => match r {

@@ -1,6 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use approx::AbsDiffEq;
 use core::marker::PhantomData;
 use derivative::*;
 use geo::CoordFloat;
@@ -59,7 +60,7 @@ impl<PR, SINK, T> NodeFactory for StreamNodeResampleFactory<PR, SINK, T>
 where
     PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type Sink = SINK;
     type T = T;
