@@ -3,11 +3,10 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use super::line::Line;
-use super::{Clean, CleanState};
 use crate::clip::LineAntimeridian;
 use crate::clip::LineCircle;
-use crate::{projection::stream_node::StreamNode, stream::Stream};
+use crate::projection::stream_node::StreamNode;
+use crate::stream::Stream;
 
 #[derive(Clone, Debug)]
 pub enum LineNode<SINK, T>

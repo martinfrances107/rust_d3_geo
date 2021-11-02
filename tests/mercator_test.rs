@@ -25,31 +25,31 @@ mod mercator_tests {
     use rust_d3_geo::projection::Scale;
     use rust_d3_geo::projection::Translate;
 
-    // #[test]
-    // fn test_clip_extent_defaults_to_automatic() {
-    //     println!("mercator.clipExtent(null) sets the default automatic clip extent");
-    //     let projection_builder = Mercator::builder()
-    //         .translate(&Coordinate { x: 0_f64, y: 0_f64 })
-    //         .scale(1_f64)
-    //         .clip_extent_clear()
-    //         .precision(&0_f64);
+    #[test]
+    fn test_clip_extent_defaults_to_automatic() {
+        println!("mercator.clipExtent(null) sets the default automatic clip extent");
+        let projection_builder = Mercator::builder()
+            .translate(&Coordinate { x: 0_f64, y: 0_f64 })
+            .scale(1_f64)
+            .clip_extent_clear()
+            .precision(&0_f64);
 
-    //     let projection = Rc::new(projection_builder.build());
-    //     let path_builder = PathBuilder::context_pathstring();
+        let projection = Rc::new(projection_builder.build());
+        let path_builder = PathBuilder::context_pathstring();
 
-    //     let object = DataObject::Sphere(Sphere::default());
+        let object = DataObject::Sphere(Sphere::default());
 
-    //     match path_builder.build(projection).object(&object) {
-    //         Some(r) => match r {
-    //             ResultEnum::String(s) => {
-    //                 // assert_eq!(s, "M3.141592653589793,-3.141592653589793L3.141592653589793,0L3.141592653589793,3.141592653589793L3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,0L-3.141592653589793,-3.141592653589793L-3.141592653589793,-3.141592653589793L3.141592653589793,-3.141592653589793Z");
-    //             }
-    //             _ => assert!(false, "Incorrect result "),
-    //         },
-    //         None => assert!(false, "Expecting an string."),
-    //     }
-    //     assert_eq!(projection_builder.get_clip_extent(), None);
-    // }
+        match path_builder.build(projection).object(&object) {
+            Some(r) => match r {
+                ResultEnum::String(s) => {
+                    // assert_eq!(s, "M3.141592653589793,-3.141592653589793L3.141592653589793,0L3.141592653589793,3.141592653589793L3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,0L-3.141592653589793,-3.141592653589793L-3.141592653589793,-3.141592653589793L3.141592653589793,-3.141592653589793Z");
+                }
+                _ => assert!(false, "Incorrect result "),
+            },
+            None => assert!(false, "Expecting an string."),
+        }
+        assert_eq!(projection_builder.get_clip_extent(), None);
+    }
 
     // #[test]
     // fn center_set_correct_automatic() {

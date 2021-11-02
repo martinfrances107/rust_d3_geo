@@ -15,7 +15,6 @@ mod path_string_test {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::builder::Builder as PathBuilder;

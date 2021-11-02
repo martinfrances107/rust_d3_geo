@@ -15,7 +15,6 @@ mod index_test {
     use geo::Geometry;
 
     use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
-    use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
