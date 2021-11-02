@@ -78,7 +78,7 @@ impl<T> Graticule<T>
 where
     T: 'static + CoordFloat,
 {
-    fn generated_lines(self) -> Vec<(T)> {
+    fn generated_lines(self) -> Vec<T> {
         let mut a = range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX);
         a.extend(range(
             T::ceil(self.Y0 / self.DY) * self.DY,
