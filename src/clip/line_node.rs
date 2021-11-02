@@ -19,18 +19,6 @@ where
     A(StreamNode<LineAntimeridian<T>, SINK, T>),
 }
 
-impl<T> Clean for Line<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn clean(&self) -> CleanState {
-        match self {
-            Line::C(l) => l.clean(),
-            Line::A(l) => l.clean(),
-        }
-    }
-}
-
 impl<SINK, T> Stream for LineNode<SINK, T>
 where
     SINK: Stream<T = T>,
