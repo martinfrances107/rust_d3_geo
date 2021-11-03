@@ -13,8 +13,9 @@ use crate::stream::Stream;
 pub fn generate<STREAM, T>() -> InterpolateFn<STREAM, T>
 where
     STREAM: Stream<T = T>,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
+    let epsilon = T::from(EPSILON).unwrap();
     let out: InterpolateFn<STREAM, T> = Rc::new(
         move |to: Option<Coordinate<T>>,
               from: Option<Coordinate<T>>,
@@ -22,7 +23,6 @@ where
               stream_in: Rc<RefCell<STREAM>>| {
             let phi: T;
             let mut s = stream_in.borrow_mut();
-            let epsilon = T::from(EPSILON).unwrap();
             match from {
                 None => {
                     phi = direction * T::FRAC_PI_2();

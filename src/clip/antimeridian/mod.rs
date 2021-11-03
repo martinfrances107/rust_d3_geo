@@ -25,7 +25,7 @@ pub fn gen_clip_factory_antimeridian<PR, SINK, T>() -> StreamNodeClipFactory<PR,
 where
     PR: ProjectionRaw<T>,
     SINK: Stream<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     StreamNodeClipFactory::new(
         gen_interpolate::<SINK, T>(),
