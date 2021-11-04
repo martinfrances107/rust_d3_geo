@@ -23,7 +23,7 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
     polygon: &[Vec<Coordinate<T>>],
     point: &Coordinate<T>,
 ) -> bool {
-    let lambda = longitude(&point);
+    let lambda = longitude(point);
     let mut phi = point.y;
     let sin_phi = phi.sin();
     let normal = [lambda.sin(), -lambda.cos(), T::zero()];
@@ -53,7 +53,7 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
 
         for point1 in ring.iter().take(m) {
             // let point1 = ring[j];
-            let lambda1 = longitude(&point1);
+            let lambda1 = longitude(point1);
             let phi1 = point1.y / T::from(2).unwrap() + T::FRAC_PI_4();
             let sin_phi1 = phi1.sin();
             let cos_phi1 = phi1.cos();
@@ -76,7 +76,7 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
             // if antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda {
             // if (antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda) {
             if antimeridian ^ (lambda0 >= lambda) ^ (lambda1 >= lambda) {
-                let mut arc = cross(&cartesian(&point0), &cartesian(&point1));
+                let mut arc = cross(&cartesian(&point0), &cartesian(point1));
                 normalize_in_place(&mut arc);
                 let mut intersection = cross(&normal, &arc);
                 normalize_in_place(&mut intersection);
