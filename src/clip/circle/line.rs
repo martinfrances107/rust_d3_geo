@@ -72,16 +72,18 @@ where
     }
 }
 
+static CODE_NONE: u8 = 0;
+static CODE_LEFT: u8 = 1;
+static CODE_RIGHT: u8 = 2;
+static CODE_BELOW: u8 = 4;
+static CODE_ABOVE: u8 = 8;
+
 /// Generates a 4-bit vector representing the location of a point relative to
 /// the small circle's bounding box.
 impl<T> Line<T>
 where
     T: CoordFloat + FloatConst,
 {
-    const CODE_LEFT: u8 = 1;
-    const CODE_RIGHT: u8 = 2;
-    const CODE_BELOW: u8 = 4;
-    const CODE_ABOVE: u8 = 8;
     fn code(&self, p: &Coordinate<T>) -> u8 {
         let lambda = p.x;
         let phi = p.y;
@@ -89,16 +91,16 @@ where
             true => self.radius,
             false => T::PI() - self.radius,
         };
-        let mut code = 0;
+        let mut code = CODE_NONE;
         if lambda < -r {
-            code |= Self::CODE_LEFT;
+            code |= CODE_LEFT;
         } else if lambda > r {
-            code |= Self::CODE_RIGHT;
+            code |= CODE_RIGHT;
         }
         if phi < -r {
-            code |= Self::CODE_BELOW;
+            code |= CODE_BELOW;
         } else if phi > r {
-            code |= Self::CODE_ABOVE;
+            code |= CODE_ABOVE;
         }
 
         code
@@ -144,7 +146,7 @@ where
 
         let c = match self.raw.small_radius {
             true => match v {
-                true => 0_u8,
+                true => CODE_NONE,
                 false => self.raw.code(p),
             },
             false => match v {
@@ -158,7 +160,7 @@ where
                         y: p.y,
                     })
                 }
-                false => 0_u8,
+                false => CODE_NONE,
             },
         };
         let mut s = self.sink.borrow_mut();
