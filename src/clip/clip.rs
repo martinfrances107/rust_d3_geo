@@ -78,6 +78,7 @@ where
     SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
+    /// Takes a line and cuts into visible segments. Return values used for polygon
     pub(super) fn new(
         pv: PV,
         stream_node_line_factory: StreamNodeLineFactory<SINK, T>,
@@ -87,7 +88,6 @@ where
         sink: Rc<RefCell<SINK>>,
         start: LineElem<T>,
     ) -> Clip<PV, SINK, T> {
-        // let line_sink_factory = StreamNodeFactory::new(line_raw);
         Clip {
             pv,
             line_node: stream_node_line_factory.generate(sink),
@@ -157,7 +157,6 @@ where
         self.point_ring(&le.p, None);
         self.raw.ring_sink_node.line_end();
 
-        // let clean = self.raw.ring_sink_node.clean();
         let clean = match &self.raw.ring_sink_node {
             LineNode::A(l) => l.raw.clean(),
             LineNode::C(l) => l.raw.clean(),
@@ -169,10 +168,7 @@ where
         };
 
         let mut ring_segments = match ring_segments_result_o {
-            Some(ResultEnum::BufferOutput(result)) => {
-                // Can I find a way of doing this with the expense of dynamic conversion.
-                result
-            }
+            Some(ResultEnum::BufferOutput(result)) => result,
             Some(_) => {
                 panic!("None buffer ");
             }
@@ -193,6 +189,7 @@ where
             return;
         }
 
+        dbg!(&clean);
         // No intersections.
         match clean {
             CleanState::NoIntersections => {

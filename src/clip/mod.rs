@@ -43,19 +43,19 @@ use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::stream::Stream;
 
-/// Takes a line and cuts into visible segments. Return values used for polygon
-/// clipPing: 0 - there were intersections or the line was empty; 1 - no
-/// intersections 2 - there were intersections, and the first and last segments
-/// should be rejoined.
+/// Internal clip state.
+///
+/// As the clip state machine enters ring_end() This state is used to direct
+/// the clean up.
 #[derive(Debug, Clone, Copy)]
-pub enum CleanState {
+pub(super) enum CleanState {
     /// Initial state.
     Undefined,
     /// There were not intersections or the line was empty.
     IntersectionsOrEmpty,
     /// There were no intersections and the first and last segments should be rejoined.
     NoIntersections,
-    /// Intesections Rejoin.
+    /// There were intersections, and the first and last segments should be rejoined.
     IntersectionsRejoin,
 }
 
@@ -70,7 +70,7 @@ impl Default for CleanState {
 /// A clip trait.
 /// Rejoin first and last segments if there were intersections and the first
 /// and last points were visible.
-pub trait Clean {
+pub(super) trait Clean {
     /// Returns the clean state.
     fn clean(&self) -> CleanState;
 }
@@ -99,7 +99,7 @@ pub(crate) type InterpolateFn<STREAM, T> =
     Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, Rc<RefCell<STREAM>>)>;
 
 /// Part of the clipping definition.
-pub trait Line: Clean + Clone + Debug {}
+trait Line: Clean + Clone + Debug {}
 
 /// Line, part of the clipping function.
 pub(crate) trait LineFactory {}
