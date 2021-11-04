@@ -66,7 +66,7 @@ where
     polygon: Vec<Vec<LineElem<T>>>,
     ring: Vec<LineElem<T>>,
     ring_sink_node: LineNode<Buffer<T>, T>,
-    segments: VecDeque<Vec<Vec<LineElem<T>>>>,
+    segments: VecDeque<VecDeque<Vec<LineElem<T>>>>,
     point_fn: PointFn,
     line_start_fn: LineStartFn,
     line_end_fn: LineEndFn,
@@ -231,11 +231,9 @@ where
             }
         }
 
-        let filtered: Vec<Vec<LineElem<T>>> = ring_segments
-            .into_iter()
-            .filter(|segment| segment.len() > 1)
-            .collect();
-        self.raw.segments.push_back(filtered);
+        ring_segments.retain(|segment| segment.len() > 1);
+
+        self.raw.segments.push_back(ring_segments);
     }
 }
 
