@@ -7,12 +7,8 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::gen_clip_factory_antimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::line::Line;
-use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
-// use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::rotation::rotate_radians;
 use crate::stream::Stream;
@@ -62,14 +58,8 @@ where
 {
     /// Wrap a default projector and provides mercator specific overrides.
     pub fn new(pr: PR) -> Self {
-        let base: ProjectionBuilder<DRAIN, PR, PVAntimeridian<T>, T> = ProjectionBuilder::new(
-            StreamNodeClipFactory::new(
-                gen_interpolate(),
-                Line::A(LineAntimeridian::<T>::default()),
-                PVAntimeridian::default(),
-            ),
-            pr.clone(),
-        );
+        let base: ProjectionBuilder<DRAIN, PR, PVAntimeridian<T>, T> =
+            ProjectionBuilder::new(gen_clip_factory_antimeridian(), pr.clone());
         Self {
             pr,
             base,

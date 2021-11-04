@@ -7,28 +7,24 @@ mod polygon_contains_test {
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::circle::generator::Generator as CircleGenerator;
-    use rust_d3_geo::clip::line_elem::LineElem;
     use rust_d3_geo::polygon_contains::polygon_contains as contains;
 
     fn polygon_contains<T>(polygon_p: &Vec<Vec<Coordinate<f64>>>, point: &Coordinate<f64>) -> bool {
-        let point_radians = |p: Coordinate<f64>| LineElem {
-            p: Coordinate {
-                x: p.x.to_radians(),
-                y: p.y.to_radians(),
-            },
-            m: None,
+        let point_radians = |p: Coordinate<f64>| Coordinate {
+            x: p.x.to_radians(),
+            y: p.y.to_radians(),
         };
         let ring_radians = |ring: Vec<_>| {
             let mut rr = ring
                 .into_iter()
                 .map(point_radians)
-                .collect::<Vec<LineElem<f64>>>();
+                .collect::<Vec<Coordinate<f64>>>();
             rr.pop();
             return rr;
         };
 
         let polygon = polygon_p.clone();
-        let polygon_radians: Vec<Vec<LineElem<f64>>> =
+        let polygon_radians: Vec<Vec<Coordinate<f64>>> =
             polygon.into_iter().map(ring_radians).collect();
         return contains(&polygon_radians, &point_radians((*point).clone()));
     }

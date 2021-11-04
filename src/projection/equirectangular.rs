@@ -5,11 +5,8 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
 
-use crate::clip::antimeridian::interpolate::generate as generate_interpolate;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::gen_clip_factory_antimeridian;
 use crate::clip::antimeridian::pv::PV;
-use crate::clip::line::Line;
-use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -56,11 +53,7 @@ where
         DRAIN: Stream<T = T>,
     {
         Builder::new(
-            StreamNodeClipFactory::new(
-                generate_interpolate(),
-                Line::A(LineAntimeridian::default()),
-                PV::default(),
-            ),
+            gen_clip_factory_antimeridian(),
             EquirectangularRaw::default(),
         )
         .scale(T::from(152.63_f64).unwrap())

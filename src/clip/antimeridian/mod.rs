@@ -28,8 +28,9 @@ where
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     StreamNodeClipFactory::new(
-        gen_interpolate::<SINK, T>(),
-        Line::A(LineAntimeridian::default()),
         PV::default(),
+        Line::A(LineAntimeridian::default()),
+        gen_interpolate::<SINK, T>(),
+        [-T::PI(), -T::FRAC_PI_2()].into(),
     )
 }

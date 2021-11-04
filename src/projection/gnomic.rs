@@ -4,11 +4,8 @@ use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-use crate::clip::antimeridian::interpolate::generate as gen_interpolate;
-use crate::clip::circle::line::Line as LineCircle;
+use crate::clip::antimeridian::gen_clip_factory_antimeridian;
 use crate::clip::circle::pv::PV;
-use crate::clip::line::Line;
-use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 
 use crate::stream::Stream;
 use crate::Transform;
@@ -55,16 +52,9 @@ where
     where
         DRAIN: Stream<T = T>,
     {
-        Builder::new(
-            StreamNodeClipFactory::new(
-                gen_interpolate(),
-                Line::C(LineCircle::<T>::default()),
-                PV::<T>::default(),
-            ),
-            Gnomic::default(),
-        )
-        .scale(T::from(144.049_f64).unwrap())
-        .clip_angle(T::from(60_f64).unwrap())
+        Builder::new(gen_clip_factory_antimeridian(), Gnomic::default())
+            .scale(T::from(144.049_f64).unwrap())
+            .clip_angle(T::from(60_f64).unwrap())
     }
 }
 

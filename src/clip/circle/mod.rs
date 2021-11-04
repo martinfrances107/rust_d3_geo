@@ -28,9 +28,17 @@ where
     SINK: Stream<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
+    let cr = radius.cos();
+    let small_radius = cr > T::zero();
+    let start = if small_radius {
+        [T::zero(), -radius]
+    } else {
+        [-T::PI(), radius - T::PI()]
+    };
     StreamNodeClipFactory::new(
-        generate_interpolate(radius),
-        Line::C(LineCircle::new(radius)),
         PV::new(radius),
+        Line::C(LineCircle::new(radius)),
+        generate_interpolate(radius),
+        start.into(),
     )
 }

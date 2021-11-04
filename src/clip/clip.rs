@@ -61,10 +61,10 @@ where
     /// A pipeline source node.
     pub ring_buffer: Rc<RefCell<Buffer<T>>>,
     pv: PV,
-    start: LineElem<T>,
+    start: Coordinate<T>,
     polygon_started: bool,
-    polygon: Vec<Vec<LineElem<T>>>,
-    ring: Vec<LineElem<T>>,
+    polygon: Vec<Vec<Coordinate<T>>>,
+    ring: Vec<Coordinate<T>>,
     ring_sink_node: LineNode<Buffer<T>, T>,
     segments: VecDeque<VecDeque<Vec<LineElem<T>>>>,
     point_fn: PointFn,
@@ -86,7 +86,7 @@ where
         ring_buffer: Rc<RefCell<Buffer<T>>>,
         ring_sink_node: LineNode<Buffer<T>, T>,
         sink: Rc<RefCell<SINK>>,
-        start: LineElem<T>,
+        start: Coordinate<T>,
     ) -> Clip<PV, SINK, T> {
         Clip {
             pv,
@@ -140,9 +140,9 @@ where
     }
 
     #[inline]
-    fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        self.raw.ring.push(LineElem { p: *p, m });
-        self.raw.ring_sink_node.point(p, m);
+    fn point_ring(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+        self.raw.ring.push(*p);
+        self.raw.ring_sink_node.point(p, _m);
     }
 
     #[inline]
@@ -154,7 +154,7 @@ where
     fn ring_end(&mut self) {
         let le = self.raw.ring[0];
         // javascript version drops m here.
-        self.point_ring(&le.p, None);
+        self.point_ring(&le, None);
         self.raw.ring_sink_node.line_end();
 
         let clean = match &self.raw.ring_sink_node {
@@ -285,7 +285,12 @@ where
 
         let segments_inner: Vec<Vec<LineElem<T>>> =
             self.raw.segments.clone().into_iter().flatten().collect();
+        dbg!("segments inner");
+        dbg!(&self.raw.start);
+        dbg!(&self.raw.polygon);
+        dbg!(&segments_inner);
         let start_inside = polygon_contains(&self.raw.polygon, &self.raw.start);
+        dbg!(start_inside);
 
         if !segments_inner.is_empty() {
             if !self.raw.polygon_started {

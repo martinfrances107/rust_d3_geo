@@ -16,7 +16,6 @@ use crate::stream::Stream;
 use super::buffer::Buffer;
 use super::clip::Clip;
 use super::line::Line;
-use super::line_elem::LineElem;
 use super::line_node::LineNode;
 use super::stream_node_line_factory::StreamNodeLineFactory;
 use super::InterpolateFn;
@@ -40,7 +39,7 @@ where
 {
     phantom_pr: PhantomData<PR>,
 
-    // Passed to ::generate()
+    start: Coordinate<T>,
     pv: PV,
     #[derivative(Debug = "ignore")]
     interpolate_fn: InterpolateFn<SINK, T>,
@@ -59,9 +58,10 @@ where
 {
     /// Constructor.
     pub fn new(
-        interpolate_fn: InterpolateFn<SINK, T>,
-        line: Line<T>,
         pv: PV,
+        line: Line<T>,
+        interpolate_fn: InterpolateFn<SINK, T>,
+        start: Coordinate<T>,
     ) -> StreamNodeClipFactory<PR, PV, SINK, T> {
         let line_node_factory = StreamNodeLineFactory::new(line.clone());
 
@@ -78,6 +78,7 @@ where
             line_node_factory,
             phantom_pr: PhantomData::<PR>,
             pv,
+            start,
         }
     }
 }
@@ -91,17 +92,9 @@ where
 {
     type Sink = SINK;
     type T = T;
-
     type Node = StreamNode<Clip<PV, SINK, T>, Self::Sink, Self::T>;
-    fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
-        let start = LineElem {
-            p: Coordinate {
-                x: -T::PI(),
-                y: -T::PI() / T::from(2_u8).unwrap(),
-            },
-            m: None,
-        };
 
+    fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
         let clip = Clip::new(
             self.pv.clone(),
             self.line_node_factory.clone(),
@@ -109,7 +102,7 @@ where
             self.ring_buffer.clone(),
             self.ring_sink_node.clone(),
             sink.clone(),
-            start,
+            self.start,
         );
         StreamNodeFactory::new(clip).generate(sink)
     }

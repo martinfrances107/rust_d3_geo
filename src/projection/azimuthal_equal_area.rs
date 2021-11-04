@@ -5,11 +5,8 @@ use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-use crate::clip::circle::interpolate::generate as gen_interpolate;
-use crate::clip::circle::line::Line as LineCircle;
+use crate::clip::antimeridian::gen_clip_factory_antimeridian;
 use crate::clip::circle::pv::PV;
-use crate::clip::line::Line;
-use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::builder::Builder;
 use crate::projection::Raw;
 use crate::projection::Scale;
@@ -44,11 +41,7 @@ where
     #[inline]
     fn builder() -> Self::Builder {
         Builder::new(
-            StreamNodeClipFactory::new(
-                gen_interpolate(T::one()),
-                Line::C(LineCircle::<T>::default()),
-                PV::default(),
-            ),
+            gen_clip_factory_antimeridian(),
             AzimuthalEqualArea::default(),
         )
         .scale(T::from(124.75_f64).unwrap())
