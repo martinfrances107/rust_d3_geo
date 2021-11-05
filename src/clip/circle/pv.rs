@@ -12,15 +12,6 @@ where
     cr: T,
 }
 
-impl<T> Default for PV<T>
-where
-    T: CoordFloat,
-{
-    fn default() -> Self {
-        PV::new(T::one())
-    }
-}
-
 impl<T> PV<T>
 where
     T: CoordFloat,
