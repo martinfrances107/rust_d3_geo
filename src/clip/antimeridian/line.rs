@@ -54,7 +54,6 @@ where
             CleanState::IntersectionsOrEmpty => CleanState::IntersectionsRejoin,
             CleanState::NoIntersections => CleanState::NoIntersections,
             CleanState::IntersectionsRejoin => CleanState::IntersectionsOrEmpty,
-            CleanState::Undefined => panic!("Undefined should not be cleaned."),
         }
     }
 }

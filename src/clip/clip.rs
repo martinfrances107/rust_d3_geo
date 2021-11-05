@@ -225,9 +225,6 @@ where
             CleanState::IntersectionsOrEmpty => {
                 // No-op
             }
-            CleanState::Undefined => {
-                panic!("must be defined by now.")
-            }
         }
 
         ring_segments.retain(|segment| segment.len() > 1);

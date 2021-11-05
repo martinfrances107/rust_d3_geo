@@ -49,20 +49,12 @@ use crate::stream::Stream;
 /// the clean up.
 #[derive(Debug, Clone, Copy)]
 pub(super) enum CleanState {
-    /// Initial state.
-    Undefined,
     /// There were not intersections or the line was empty.
     IntersectionsOrEmpty,
     /// There were no intersections and the first and last segments should be rejoined.
     NoIntersections,
     /// There were intersections, and the first and last segments should be rejoined.
     IntersectionsRejoin,
-}
-
-impl Default for CleanState {
-    fn default() -> CleanState {
-        CleanState::Undefined
-    }
 }
 
 /// Clean
