@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use derivative::Derivative;
+use derivative::*;
 use geo::CoordFloat;
 use num_traits::{Float, FloatConst};
 
@@ -25,17 +25,6 @@ where
     #[derivative(Debug = "ignore")]
     pub p: Option<Rc<RefCell<Intersection<T>>>>, // previous
 }
-
-impl<T> PartialEq for Intersection<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    /// Ignore potentially circular elements o, n, p
-    fn eq(&self, other: &Self) -> bool {
-        self.x == other.x && self.z == other.z && self.e == other.e && self.v == other.v
-    }
-}
-impl<T> Eq for Intersection<T> where T: CoordFloat + FloatConst {}
 
 impl<T: Float> Intersection<T>
 where
