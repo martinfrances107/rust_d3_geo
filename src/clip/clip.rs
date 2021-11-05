@@ -189,7 +189,6 @@ where
             return;
         }
 
-        dbg!(&clean);
         // No intersections.
         match clean {
             CleanState::NoIntersections => {
@@ -285,14 +284,11 @@ where
 
         let segments_inner: Vec<Vec<LineElem<T>>> =
             self.raw.segments.clone().into_iter().flatten().collect();
-        dbg!("segments inner");
-        dbg!(&self.raw.start);
-        dbg!(&self.raw.polygon);
-        dbg!(&segments_inner);
+
         let start_inside = polygon_contains(&self.raw.polygon, &self.raw.start);
-        dbg!(start_inside);
 
         if !segments_inner.is_empty() {
+            self.sink.borrow_mut().polygon_start();
             if !self.raw.polygon_started {
                 self.raw.polygon_started = true;
             }
@@ -305,6 +301,7 @@ where
             );
         } else if start_inside {
             if !self.raw.polygon_started {
+                self.sink.borrow_mut().polygon_start();
                 self.raw.polygon_started = true;
             }
             self.sink.borrow_mut().line_start();

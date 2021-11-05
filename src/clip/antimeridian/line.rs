@@ -49,7 +49,6 @@ where
 {
     #[inline]
     fn clean(&self) -> CleanState {
-        // println!("line(A) clean  initial value{:?}", self.clean);
         match self.clean {
             // if intersections, rejoin first and last segments
             CleanState::IntersectionsOrEmpty => CleanState::IntersectionsRejoin,
@@ -68,7 +67,6 @@ where
     type T = T;
 
     fn line_start(&mut self) {
-        // println!("line(a) line_start()");
         self.sink.borrow_mut().line_start();
         self.raw.clean = CleanState::NoIntersections;
     }

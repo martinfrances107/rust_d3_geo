@@ -1,12 +1,14 @@
 use std::fmt::Display;
 use std::string::String as S;
 
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 
 use crate::stream::Stream;
 
 use super::PointRadiusTrait;
-use super::{Result, ResultEnum};
+use super::Result;
+use super::ResultEnum;
 
 #[derive(Clone, Debug)]
 enum PointState {
@@ -17,7 +19,7 @@ enum PointState {
 
 #[derive(Clone, Debug)]
 enum LineState {
-    Init,
+    Stopped,
     Started,
 }
 
@@ -56,7 +58,7 @@ where
     fn default() -> Self {
         Self {
             circle: Some(circle(T::from(4.5_f64).unwrap())),
-            line: LineState::Init,
+            line: LineState::Stopped,
             point: PointState::LineNotInProgress,
             radius: T::from(4.5).unwrap(),
             string: Vec::new(),
@@ -69,6 +71,7 @@ where
     T: CoordFloat,
 {
     type PrtT = Option<T>;
+
     fn point_radius(&mut self, d: Self::PrtT) {
         if let Some(d) = d {
             if self.radius != d {
@@ -109,7 +112,7 @@ where
 
     #[inline]
     fn polygon_end(&mut self) {
-        self.line = LineState::Init;
+        self.line = LineState::Stopped;
     }
 
     #[inline]

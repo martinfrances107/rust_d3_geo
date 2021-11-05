@@ -3,18 +3,17 @@ Rust 2021 Edition.
 
 This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into a RUST library crate/package. It is in a very early development phase.
 
-* Phase One is about code correctness.
-* Phase Two is about performance
+We are currently in phase two (Performance testing.)
+
+* Phase One was code correctness.[Complete November 2021.]
+* Phase Two is about performance.
 * Phase Three sweeping up infrequently used code and making the library complete.
 
-Currently we have 73% code coverage ( as reported by cargo tarpaulin )
+Currently we have 80.3% code coverage ( as reported by cargo tarpaulin )
 
-Early indications show that the performace is only three times better than the original javascript [ I think a eight times speedup is a good long term target].
+## Phase One ( Code Corectness ) completed.
 
-## Phase One
-
-Early draft port -  sub module by submodule. Sub module porting means the test have also been ported.
-No API stability guarentees.
+The bulk of the code has been ported over and has been verified by porting over the test code.
 
 ## Phase Two
 
@@ -25,22 +24,15 @@ A) Initial code profing shows that much of the time is spent in mem-copy.
   - The observed  constant resizing delays can be reduced if the initial capacity is set.
   - Maybe the hashing algorithm can be improved.
 
-
 B) API finialization. There maybe optimisation in the area of generics. So the API only gets locked down in phase 2.
  The code will be profiled and bottlenecks identified.
-
-Modules, passing test ready for phase 2 evaluation :-
-
-* rotation
-* projection [ stream() does not yet cache the return value ].
-* The code in stream_dst.rs may need to be simplified.
 
 ## Phase Three
 
 D3 geo uses TopoJson is in testing. We need to integrate with  [topojson](https://docs.rs/topojson/0.5.0/topojson/) to complete code coverage.
 
 
-A list of all projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 6 have been ported so far.
+A list of all ported projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 6 have been ported so far.
 
 * AziumuthalEqualArea
 * Equirectangular
