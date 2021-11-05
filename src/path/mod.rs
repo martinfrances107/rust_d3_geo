@@ -69,6 +69,7 @@ pub enum PointRadiusEnum<T> {
     F(Box<dyn Fn() -> T>),
 }
 
+#[cfg(not(tarpaulin_include))]
 impl<T> Debug for PointRadiusEnum<T>
 where
     T: CoordFloat,
