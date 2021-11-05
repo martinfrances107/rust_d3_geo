@@ -306,13 +306,13 @@ where
         out.reset()
     }
 
-    fn reset(self) -> Builder<DRAIN, PR, PV, T> {
+    fn reset(self) -> Self {
         // self.cache_stream = None;
         // self.cache = None;
         self
     }
 
-    fn recenter(mut self) -> Builder<DRAIN, PR, PV, T> {
+    fn recenter(mut self) -> Self {
         let center = generate_str(
             &self.k,
             &T::zero(),
@@ -570,7 +570,7 @@ where
     }
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate(mut self, angles: &[T; 3]) -> Builder<DRAIN, PR, PV, T> {
+    fn rotate(mut self, angles: &[T; 3]) -> Self {
         let [delta_lambda, delta_phi, delta_gamma] = *angles;
         let f360 = T::from(360_f64).unwrap();
         self.delta_lambda = (delta_lambda % f360).to_radians();
