@@ -79,8 +79,9 @@ where
 {
     /// f64 or f32.
     type T;
+
     /// Is the point visible after clipping?
-    fn point_visible(&self, p: &Coordinate<Self::T>, z: Option<u8>) -> bool;
+    fn point_visible(&self, p: &Coordinate<Self::T>) -> bool;
 }
 
 // /// A stage in the projector pipeline.

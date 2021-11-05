@@ -17,6 +17,7 @@ where
     T: CoordFloat,
 {
     /// Given a radius construct the clip circles point visible function.
+    #[inline]
     pub fn new(radius: T) -> Self {
         Self { cr: radius.cos() }
     }
@@ -27,8 +28,9 @@ where
     T: CoordFloat,
 {
     type T = T;
+
     #[inline]
-    fn point_visible(&self, p: &Coordinate<T>, _m: Option<u8>) -> bool {
+    fn point_visible(&self, p: &Coordinate<T>) -> bool {
         p.x.cos() * p.y.cos() > self.cr
     }
 }

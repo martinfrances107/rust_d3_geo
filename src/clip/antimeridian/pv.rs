@@ -33,7 +33,7 @@ where
     type T = T;
 
     #[inline]
-    fn point_visible(&self, _p: &Coordinate<T>, _z: Option<u8>) -> bool {
+    fn point_visible(&self, _p: &Coordinate<T>) -> bool {
         true
     }
 }

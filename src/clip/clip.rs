@@ -117,7 +117,7 @@ where
 {
     #[inline]
     pub(super) fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        if self.raw.pv.point_visible(p, None) {
+        if self.raw.pv.point_visible(p) {
             self.sink.borrow_mut().point(p, m);
         }
     }
