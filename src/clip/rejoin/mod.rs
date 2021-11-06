@@ -39,6 +39,8 @@ pub fn rejoin<SINK, T>(
     // limt scope of stream_b to just the segement for loop.
     {
         let mut stream_b = stream.borrow_mut();
+        let epsilon = T::from(EPSILON).unwrap();
+        let two_epsilon = T::from(2.0 * EPSILON).unwrap();
         for segment in segments.iter() {
             let (n, has_overflown) = segment.len().overflowing_sub(1_usize);
             if n == 0 || has_overflown {
@@ -49,7 +51,7 @@ pub fn rejoin<SINK, T>(
             let mut p1: LineElem<T> = segment[n];
 
             // if point_equal(p0.p, p1.p) {
-            if p0.p.abs_diff_eq(&p1.p, T::from(EPSILON).unwrap()) {
+            if p0.p.abs_diff_eq(&p1.p, epsilon) {
                 if p0.m.is_none() && p1.m.is_none() {
                     stream_b.line_start();
                     // for i in 0..n {
@@ -61,7 +63,7 @@ pub fn rejoin<SINK, T>(
                     return;
                 }
                 // handle degenerate cases by moving the point
-                p1.p.x = p1.p.x + T::from(2.0 * EPSILON).unwrap();
+                p1.p.x = p1.p.x + two_epsilon;
             }
 
             let x1 = Rc::new(RefCell::new(Intersection::new(

@@ -5,19 +5,20 @@ use std::rc::Rc;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use super::intersection::Intersection;
 use crate::clip::rejoin::CompareIntersectionsFn;
 use crate::math::EPSILON;
+
+use super::intersection::Intersection;
 
 /// Intersections are sorted along the clip edge. For both antimeridian cutting
 /// and circle clipping, the same comparison is used.
 pub fn gen_compare_intersection<T>() -> CompareIntersectionsFn<T>
 where
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
+    let epsilon = T::from(EPSILON).unwrap();
     Box::new(
-        |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| -> Ordering {
-            let epsilon = T::from(EPSILON).unwrap();
+        move |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| -> Ordering {
             let ax = a.borrow().x;
             let part1 = match ax.p.x < T::zero() {
                 true => ax.p.y - T::FRAC_PI_2() - epsilon,

@@ -237,7 +237,7 @@ impl<PV, SINK, T> Stream for StreamNode<Clip<PV, SINK, T>, SINK, T>
 where
     PV: PointVisible<T = T>,
     SINK: Stream<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 

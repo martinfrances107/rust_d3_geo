@@ -37,6 +37,8 @@ pub struct Centroid<T: CoordFloat> {
     line_start_fn: fn(&mut Self),
     #[derivative(Debug = "ignore")]
     line_end_fn: fn(&mut Self),
+    epsilon: T,
+    epsilon2: T,
 }
 
 /// The use is nan.
@@ -65,6 +67,8 @@ impl<T: AddAssign + CoordFloat + FloatConst> Default for Centroid<T> {
             point_fn: Self::centroid_point,
             line_start_fn: Self::centroid_line_start,
             line_end_fn: Self::centroid_line_end,
+            epsilon: T::from(EPSILON).unwrap(),
+            epsilon2: T::from(EPSILON2).unwrap(),
         }
     }
 }
@@ -211,12 +215,12 @@ where
         let mut z = self.Z2;
         let mut m = (x * x + y * y + z * z).sqrt();
         // If the area-weighted ccentroid is undefined, fall back to length-weighted ccentroid.
-        if m < T::from(EPSILON2).unwrap() {
+        if m < self.epsilon2 {
             x = self.X1;
             y = self.Y1;
             z = self.Z1;
             // If the feature has zero length, fall back to arithmetic mean of point vectors.
-            if self.W1 < T::from(EPSILON).unwrap() {
+            if self.W1 < self.epsilon {
                 x = self.X0;
                 y = self.Y0;
                 z = self.Z0;
@@ -224,7 +228,7 @@ where
             m = (x * x + y * y + z * z).sqrt();
 
             // If the feature still has an undefined centroid, then return.
-            if m < T::from(EPSILON2).unwrap() {
+            if m < self.epsilon2 {
                 return Point::new(T::nan(), T::nan());
             }
         }
