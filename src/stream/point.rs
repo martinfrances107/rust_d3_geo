@@ -11,13 +11,6 @@ where
     type T = T;
     #[inline]
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
-        // TODO there must be a better way to cast a Point to Coordinate.
-        stream.point(
-            &Coordinate {
-                x: self.x(),
-                y: self.y(),
-            },
-            None,
-        );
+        stream.point(&self.0, None);
     }
 }
