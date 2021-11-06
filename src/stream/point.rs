@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::{Coordinate, Point};
+use geo::Point;
 
 use super::Stream;
 use super::Streamable;

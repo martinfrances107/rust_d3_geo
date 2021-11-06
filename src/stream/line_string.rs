@@ -1,5 +1,5 @@
+use geo::CoordFloat;
 use geo::LineString;
-use geo::{coords_iter::CoordsIter, CoordFloat, Coordinate};
 
 use crate::stream::Stream;
 
@@ -9,8 +9,8 @@ use super::Streamable;
 impl<T: CoordFloat> Streamable for LineString<T> {
     type T = T;
 
+    #[inline]
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
-        let points: Vec<Coordinate<T>> = self.coords_iter().collect();
-        stream_line(&points, stream, 0);
+        stream_line(&self.0, stream, 0);
     }
 }
