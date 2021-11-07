@@ -1,6 +1,6 @@
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
-mod bounds_test {
+mod path_bounds_test {
 
     use std::cell::RefCell;
     use std::f64::consts::PI;
