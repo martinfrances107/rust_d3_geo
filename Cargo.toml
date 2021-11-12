@@ -13,11 +13,16 @@ num-traits="0.2.14"
 geo={git = "https://github.com/martinfrances107/geo.git", branch="cyclic_match", features=["use-approx"] }
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 rust_d3_array = { git = "https://github.com/martinfrances107/rust_d3_array.git" }
+rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git" }
+
+serde_json = "1.0"
+futures = "0.3.17"
 
 [dev-dependencies]
 pretty_assertions = "1.0.0"
 lazy_static = "1.4.0"
 regex="1.5.4"
+topojson = "*"
 
 [dependencies.web-sys]
 version = "0.3.47"
