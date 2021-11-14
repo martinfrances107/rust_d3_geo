@@ -11,7 +11,10 @@ where
     type T = T;
 
     #[inline]
-    fn to_stream<SD: Stream<T = T>>(&self, _stream: &mut SD) {
-        todo!("line start line end?");
+    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
+        stream.line_start();
+        stream.point(&self.start, None);
+        stream.point(&self.end, None);
+        stream.line_end();
     }
 }
