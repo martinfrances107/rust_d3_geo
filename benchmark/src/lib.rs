@@ -18,6 +18,7 @@ extern crate web_sys;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use geo::Coordinate;
 use rust_topojson_client::feature::Builder as FeatureBuilder;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -27,12 +28,14 @@ use web_sys::*;
 
 use rust_d3_geo::clip::circle::pv::PV;
 use rust_d3_geo::data_object::DataObject;
-
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::path::context_stream::ContextStream;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Raw;
+use rust_d3_geo::projection::Scale;
+use rust_d3_geo::projection::Translate;
+
 use rust_d3_geo::projection::Rotate;
 
 use topojson::Topology;
@@ -114,11 +117,11 @@ pub async fn start() -> Result<(), JsValue> {
 
     let context = Rc::new(context_raw);
 
-    let width = canvas.width().into();
-    let height = canvas.height().into();
-    context.set_fill_style(&"black".into());
-    context.set_stroke_style(&"black".into());
-    context.fill_rect(0.0, 0.0, width, height);
+    let width: f64 = canvas.width().into();
+    let height: f64 = canvas.height().into();
+    // context.set_fill_style(&"black".into());
+    // context.set_stroke_style(&"black".into());
+    // context.fill_rect(0.0, 0.0, width, height);
 
     let land = FeatureBuilder::<f64>::generate_from_name(&topology, &"land")
         .expect("Did not extract geometry");
@@ -146,7 +149,22 @@ pub async fn start() -> Result<(), JsValue> {
         PathBuilder::new(Rc::new(RefCell::new(cs)));
 
     let ortho_builder = Orthographic::<ContextStream<f64>, f64>::builder();
-    let ortho = Rc::new(ortho_builder.rotate(&[0_f64, 0_f64, 0_f64]).build());
+
+    // var projection = d3.geoOrthographic()
+    // .scale(width / 1.3 / Math.PI)
+    // .translate([width / 2, height / 2])
+
+    // ortho_builder.scale();
+    let ortho = Rc::new(
+        ortho_builder
+            .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
+            .translate(&Coordinate {
+                x: width / 2_f64,
+                y: height / 2_f64,
+            })
+            .rotate(&[0_f64, 0_f64, 0_f64])
+            .build(),
+    );
 
     // let pb_cps: PathBuilder<Orthographic<ContextStream<f64>, f64>, PV<f64>, f64> =
     //     PathBuilder::context_pathstring();
@@ -164,8 +182,8 @@ pub async fn start() -> Result<(), JsValue> {
 
     let mut path = pb.build(ortho.clone());
     context.begin_path();
-    context.set_fill_style(&"white".into());
-    context.set_stroke_style(&"red".into());
+    context.set_fill_style(&"#999".into());
+    context.set_stroke_style(&"#69b3a2".into());
     path.object(&DataObject::Geometry(land));
 
     context.fill();
