@@ -32,19 +32,21 @@ pub fn generate<T>() -> Graticule<T>
 where
     T: 'static + CoordFloat,
 {
+    let epsilon = T::from(EPSILON).unwrap();
+
     Graticule::default()
         .extent_major([
-            [T::from(-180).unwrap(), T::from(-90_f64 + EPSILON).unwrap()],
+            [T::from(-180).unwrap(), T::from(-90_f64).unwrap() + epsilon],
             [
                 T::from(180_f64).unwrap(),
-                T::from(90_f64 - EPSILON).unwrap(),
+                T::from(90_f64).unwrap() - epsilon,
             ],
         ])
         .extent_minor([
-            [T::from(-180).unwrap(), T::from(-80_f64 - EPSILON).unwrap()],
+            [T::from(-180).unwrap(), T::from(-80_f64).unwrap() - epsilon],
             [
                 T::from(180_f64).unwrap(),
-                T::from(80_f64 + EPSILON).unwrap(),
+                T::from(80_f64).unwrap() + epsilon,
             ],
         ])
 }
