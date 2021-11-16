@@ -7,6 +7,9 @@
 mod graticule_test {
     extern crate pretty_assertions;
 
+    use std::io::BufRead;
+
+    use geo::Coordinate;
     use geo::LineString;
     use geo::Polygon;
     use pretty_assertions::assert_eq;
@@ -212,6 +215,556 @@ mod graticule_test {
     //   });
     // });
 
+    #[test]
+    fn graticule_lines() {
+        println!("graticule.lines() returns an array of LineStrings");
+        let lines = generate::<f64>()
+            .extent([[-90_f64, -45_f64], [90_f64, 45_f64]])
+            .step([45_f64, 45_f64])
+            .precision(&3_f64)
+            .lines();
+
+        assert_eq!(
+            lines[0],
+            LineString(vec![
+                Coordinate {
+                    x: -90_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -90_f64,
+                    y: 45_f64
+                }
+            ])
+        );
+        assert_eq!(
+            lines[1],
+            LineString(vec![
+                Coordinate {
+                    x: -45_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -45_f64,
+                    y: 45_f64
+                }
+            ])
+        );
+        assert_eq!(
+            lines[2],
+            LineString(vec![
+                Coordinate {
+                    x: 0_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 0_f64,
+                    y: 45_f64
+                }
+            ])
+        );
+
+        assert_eq!(
+            lines[3],
+            LineString(vec![
+                Coordinate {
+                    x: 45_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 45_f64,
+                    y: 45_f64
+                }
+            ])
+        );
+
+        assert_eq!(
+            lines[4],
+            LineString(vec![
+                Coordinate {
+                    x: -90_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -87_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -84_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -81_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -78_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -75_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -72_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -69_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -66_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -63_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -60_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -57_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -54_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -51_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -48_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -45_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -42_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -39_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -36_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -33_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -30_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -27_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -24_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -21_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -18_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -15_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -12_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -9_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -6_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: -3_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 0_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 3_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 6_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 9_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 12_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 15_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 18_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 21_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 24_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 27_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 30_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 33_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 36_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 39_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 42_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 45_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 48_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 51_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 54_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 57_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 60_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 63_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 66_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 69_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 72_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 75_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 78_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 81_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 84_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 87_f64,
+                    y: -45_f64
+                },
+                Coordinate {
+                    x: 90_f64,
+                    y: -45_f64
+                }
+            ])
+        );
+        assert_eq!(
+            lines[5],
+            LineString(vec![
+                Coordinate {
+                    x: -90_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -87_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -84_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -81_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -78_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -75_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -72_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -69_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -66_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -63_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -60_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -57_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -54_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -51_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -48_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -45_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -42_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -39_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -36_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -33_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -30_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -27_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -24_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -21_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -18_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -15_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -12_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -9_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -6_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: -3_f64,
+                    y: 0_f64
+                },
+                Coordinate { x: 0_f64, y: 0_f64 },
+                Coordinate { x: 3_f64, y: 0_f64 },
+                Coordinate { x: 6_f64, y: 0_f64 },
+                Coordinate { x: 9_f64, y: 0_f64 },
+                Coordinate {
+                    x: 12_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 15_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 18_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 21_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 24_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 27_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 30_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 33_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 36_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 39_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 42_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 45_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 48_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 51_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 54_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 57_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 60_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 63_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 66_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 69_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 72_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 75_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 78_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 81_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 84_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 87_f64,
+                    y: 0_f64
+                },
+                Coordinate {
+                    x: 90_f64,
+                    y: 0_f64
+                }
+            ])
+        );
+    }
     // it("graticule.lines() returns an array of LineStrings", () => {
     //   assert.deepStrictEqual(geoGraticule()
     //       .extent([[-90, -45], [90, 45]])

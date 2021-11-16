@@ -1,9 +1,11 @@
+use derivative::*;
+use std::iter::Map;
 use std::mem::swap;
 
-use derivative::*;
-
 use geo::CoordFloat;
+use geo::Coordinate;
 use geo::LineString;
+use geo::MultiLineString;
 use geo::Polygon;
 
 use crate::math::EPSILON;
@@ -78,32 +80,39 @@ impl<T> Graticule<T>
 where
     T: 'static + CoordFloat,
 {
-    fn generated_lines(self) -> Vec<T> {
-        let mut a = range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX);
-        a.extend(range(
-            T::ceil(self.Y0 / self.DY) * self.DY,
-            self.Y1,
-            self.DY,
-        ));
-        a.extend(
-            range(T::ceil(self.x0 / self.dx) * self.dx, self.x1, self.dx)
-                .iter()
-                .filter(|x| T::abs(**x % self.DX) > self.epsilon),
-        );
-        a.extend(
-            range(T::ceil(self.y0 / self.dy) * self.dy, self.y1, self.dy)
-                .iter()
-                .filter(|y| T::abs(**y % self.DY) > self.epsilon),
-        );
-        a
-    }
-
-    // pub fn lines(self) {
-    //     self.generated_lines()
-    //         .iter()
-    //         .map(|coordinates| LineString::from(coordinates))
-    //         .collect::<(T, T)>()
+    // fn graticule() -> MultiLineString<T>{
+    //     MultiLineString{
+    //         vec![]
+    //     }
     // }
+
+    pub fn generated_lines(self) -> Vec<Vec<Coordinate<T>>> {
+        let range1 = range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX)
+            .into_iter()
+            .map(self.X);
+
+        let range2 = range(T::ceil(self.Y0 / self.DY) * self.DY, self.Y1, self.DY)
+            .into_iter()
+            .map(self.Y);
+
+        let range3 = range(T::ceil(self.x0 / self.dx) * self.dx, self.x1, self.dx)
+            .into_iter()
+            .filter(|x| (*x % self.DX).abs() > self.epsilon)
+            .map(self.x);
+
+        let range4 = range(T::ceil(self.y0 / self.dy) * self.dy, self.y1, self.dy)
+            .into_iter()
+            .filter(|y| (*y % self.DY).abs() > self.epsilon)
+            .map(self.y);
+
+        range1.chain(range2).chain(range3).chain(range4).collect()
+    }
+    pub fn lines(self) -> Vec<LineString<T>> {
+        self.generated_lines()
+            .drain(..)
+            .map(|coordinates| LineString(coordinates))
+            .collect()
+    }
 
     pub fn outline(self) -> Polygon<T> {
         let mut c = (self.X)(self.X0);
