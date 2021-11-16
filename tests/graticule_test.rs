@@ -7,8 +7,6 @@
 mod graticule_test {
     extern crate pretty_assertions;
 
-    use std::io::BufRead;
-
     use geo::Coordinate;
     use geo::LineString;
     use geo::Polygon;

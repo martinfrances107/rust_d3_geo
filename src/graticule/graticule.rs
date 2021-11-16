@@ -1,16 +1,14 @@
 use derivative::*;
-use std::iter::Map;
 use std::mem::swap;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use geo::LineString;
-use geo::MultiLineString;
 use geo::Polygon;
 
-use crate::math::EPSILON;
-
 use rust_d3_array::range::range;
+
+use crate::math::EPSILON;
 
 use super::graticule_x;
 use super::graticule_y;
@@ -76,6 +74,7 @@ where
     }
 }
 
+use core::iter::Iterator;
 impl<T> Graticule<T>
 where
     T: 'static + CoordFloat,
@@ -108,10 +107,7 @@ where
         range1.chain(range2).chain(range3).chain(range4).collect()
     }
     pub fn lines(self) -> Vec<LineString<T>> {
-        self.generated_lines()
-            .drain(..)
-            .map(|coordinates| LineString(coordinates))
-            .collect()
+        self.generated_lines().drain(..).map(LineString).collect()
     }
 
     pub fn outline(self) -> Polygon<T> {
