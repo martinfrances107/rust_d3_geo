@@ -13,7 +13,7 @@ where
     #[inline]
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
         for ls in self {
-            stream_line(&ls, stream, 0);
+            stream_line(ls, stream, 0);
         }
     }
 }

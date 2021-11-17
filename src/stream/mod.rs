@@ -84,16 +84,6 @@ where
     fn polygon_end(&mut self) {}
 }
 
-/// Ci CompareIntersections param type
-/// See StreamClip.
-#[derive(Clone, Debug, Default)]
-pub struct CompareIntersection<T>
-where
-    T: CoordFloat,
-{
-    x: Coordinate<T>,
-}
-
 /// TODO Generics - Need to come back and refactor to take LineElem<T>
 /// or Coordinates. As the JS allow for.
 fn stream_line<T, S>(ls: &LineString<T>, stream: &mut S, closed: usize)

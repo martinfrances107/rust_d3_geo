@@ -11,6 +11,6 @@ impl<T: CoordFloat> Streamable for LineString<T> {
 
     #[inline]
     fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
-        stream_line(&self, stream, 0);
+        stream_line(self, stream, 0);
     }
 }
