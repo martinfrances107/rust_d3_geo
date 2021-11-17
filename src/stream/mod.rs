@@ -9,13 +9,15 @@ mod multi_polygon;
 mod point;
 mod polygon;
 mod rect;
-mod stream_line;
 mod triangle;
 
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
+use geo::LineString;
+use geo::Polygon;
 
 /// Applies to DataObjects
 pub trait Streamable {
@@ -25,7 +27,8 @@ pub trait Streamable {
     fn to_stream<SD: Stream<T = Self::T>>(&self, stream: &mut SD);
 }
 
-///
+/// Stub is useful only the transform portion of a projection is needed.
+/// TODO must add example to doc.
 #[derive(Clone, Copy, Debug)]
 pub struct StreamDrainStub<T>
 where
@@ -89,4 +92,32 @@ where
     T: CoordFloat,
 {
     x: Coordinate<T>,
+}
+
+/// TODO Generics - Need to come back and refactor to take LineElem<T>
+/// or Coordinates. As the JS allow for.
+fn stream_line<T, S>(ls: &LineString<T>, stream: &mut S, closed: usize)
+where
+    S: Stream<T = T>,
+    T: CoordFloat,
+{
+    let n = ls.0.len() - closed;
+    stream.line_start();
+    for c in &ls.0[0..n] {
+        stream.point(c, None);
+    }
+    stream.line_end();
+}
+
+fn stream_polygon<S, T>(polygon: &Polygon<T>, stream: &mut S)
+where
+    S: Stream<T = T>,
+    T: CoordFloat,
+{
+    stream.polygon_start();
+    stream_line(polygon.exterior(), stream, 1);
+    for p in polygon.interiors() {
+        stream_line(p, stream, 1);
+    }
+    stream.polygon_end();
 }
