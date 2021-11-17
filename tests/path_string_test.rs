@@ -8,9 +8,12 @@ mod path_string_test {
     use std::rc::Rc;
 
     use approx::AbsDiffEq;
+    use geo::line_string;
     use geo::point;
     use geo::CoordFloat;
     use geo::Geometry;
+    use geo::GeometryCollection;
+    use geo::Polygon;
     use num_traits::AsPrimitive;
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
@@ -65,7 +68,7 @@ mod path_string_test {
     }
 
     #[test]
-    fn test_point_renders_a_point() {
+    fn point_renders_a_point() {
         println!("geoPath.point(…) renders a point");
         let object = DataObject::Geometry(Geometry::Point(point!(x: -63_f64, y:18_f64)));
         let eq = equirectangular::<ContextStream<f64>, f64>();
@@ -76,7 +79,7 @@ mod path_string_test {
     }
 
     #[test]
-    fn test_point_renders_a_point_of_given_radius() {
+    fn point_renders_a_point_of_given_radius() {
         println!("geoPath.point(…) renders a point of a given radius");
 
         let builder: PathBuilder<EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
@@ -101,7 +104,7 @@ mod path_string_test {
     }
 
     #[test]
-    fn test_renders_multipoint() {
+    fn renders_multipoint() {
         println!("geoPath(MultiPoint) renders a point");
         let object = DataObject::Geometry(Geometry::MultiPoint(
             vec![
@@ -114,5 +117,64 @@ mod path_string_test {
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert_eq!(test_path(eq, object),
 			"M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,165m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z");
+    }
+
+    #[test]
+    fn renders_a_string() {
+        let object = DataObject::Geometry(Geometry::LineString(line_string![
+            (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
+        ]));
+        let eq = equirectangular::<ContextStream<f64>, f64>();
+        assert_eq!(test_path(eq, object), "M165,160L170,160L170,165");
+    }
+
+    #[test]
+    fn renders_a_polygon() {
+        let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+            line_string![
+                (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
+            ],
+            vec![],
+        )));
+        let eq = equirectangular::<ContextStream<f64>, f64>();
+        assert_eq!(test_path(eq, object), "M165,160L170,160L170,165Z");
+    }
+
+    #[test]
+    fn renders_a_geometry_collection() {
+        let object = DataObject::Geometry(Geometry::GeometryCollection(GeometryCollection(vec![
+            Geometry::Polygon(Polygon::new(
+                line_string![
+                    (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
+                ],
+                vec![],
+            )),
+        ])));
+        let eq = equirectangular::<ContextStream<f64>, f64>();
+        assert_eq!(test_path(eq, object), "M165,160L170,160L170,165Z");
+    }
+
+    // Missing Feature, FeatureCollection test.
+
+    #[test]
+    fn line_string_then_point() {
+        println!(
+            "geoPath(LineString) then geoPath(Point) does not treat the point as part of a line"
+        );
+        let line_object = DataObject::Geometry(Geometry::LineString(line_string![
+            (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
+        ]));
+        let point_object = DataObject::Geometry(Geometry::Point(point!(x: -63_f64, y:18_f64)));
+        let eq = equirectangular::<ContextStream<f64>, f64>();
+
+        assert_eq!(
+            test_path(eq.clone(), line_object),
+            "M165,160L170,160L170,165"
+        );
+
+        assert_eq!(
+            test_path(eq, point_object),
+            "M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z"
+        );
     }
 }
