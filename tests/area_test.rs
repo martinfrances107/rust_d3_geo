@@ -9,6 +9,7 @@ mod area_test {
     use geo::Geometry;
     use geo::LineString;
     use geo::MultiLineString;
+    use geo::MultiPolygon;
     use geo::Point;
     use geo::Polygon;
 
@@ -17,6 +18,7 @@ mod area_test {
     use rust_d3_array::range::range;
     use rust_d3_geo::area::Area;
     use rust_d3_geo::data_object::sphere::Sphere;
+    use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::graticule::generate as generate_graticule;
     use rust_d3_geo::in_delta::in_delta;
 
@@ -294,8 +296,38 @@ mod area_test {
     }
 
     #[test]
+    fn two_hemispheres() {
+        println!("area: MultiPolygon two hemispheres");
+        let mp = MultiPolygon(vec![
+            Polygon::new(
+                line_string![
+                    (x: 0_f64, y:0_f64),
+                     (x:-90_f64, y:0_f64),
+                      (x: 180_f64, y: 0_f64),
+                       (x:90_f64, y:0_f64),
+                        (x:0_f64, y:0_f64)
+                ],
+                vec![],
+            ),
+            Polygon::new(
+                line_string![
+                    (x: 0_f64, y:0_f64),
+                    (x:90_f64, y:0_f64),
+                     (x: 180_f64, y: 0_f64),
+                      (x:-90_f64, y:0_f64),
+                       (x:0_f64, y:0_f64)
+                ],
+                vec![],
+            ),
+        ]);
+        let data_o = DataObject::Geometry(Geometry::MultiPolygon(mp));
+        let area = Area::<f64>::calc(&data_o);
+        assert!(in_delta(area, 4_f64 * std::f64::consts::PI, 1e-6));
+    }
+
+    #[test]
     fn sphere() {
-        println!("area: Polygon - hemispheres south");
+        println!("area: Sphere");
 
         let g = Sphere::default();
 
