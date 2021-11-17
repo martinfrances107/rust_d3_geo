@@ -65,7 +65,7 @@ impl<T> PointRadiusTrait for ContextStream<T>
 where
     T: CoordFloat,
 {
-    type PrtT = Option<T>;
+    type PrtT = T;
     fn point_radius(&mut self, val: Self::PrtT) {
         match self {
             ContextStream::A(_a) => todo!("how to handle this?"),

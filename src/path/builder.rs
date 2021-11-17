@@ -27,7 +27,7 @@ where
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
-    pr: Option<T>,
+    pr: T,
     context: Option<Rc<CanvasRenderingContext2d>>,
     context_stream: Rc<RefCell<ContextStream<T>>>,
     projection: Option<Projection<ContextStream<T>, PR, PV, T>>,
@@ -44,7 +44,7 @@ where
         Self {
             context: None,
             context_stream,
-            pr: Some(T::from(4.5_f64).unwrap()),
+            pr: T::from(4.5_f64).unwrap(),
             projection: None,
         }
     }
@@ -76,7 +76,7 @@ where
     }
 
     /// Sets the radius of the displayed point, None implies no point to is drawn.
-    pub fn point_radius(mut self, radius: Option<T>) -> Self {
+    pub fn point_radius(mut self, radius: T) -> Self {
         self.pr = radius;
         self.context_stream.borrow_mut().point_radius(self.pr);
         self

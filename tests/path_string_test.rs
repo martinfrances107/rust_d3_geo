@@ -80,7 +80,7 @@ mod path_string_test {
         println!("geoPath.point(…) renders a point of a given radius");
 
         let builder: PathBuilder<EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
-            PathBuilder::context_pathstring().point_radius(Some(10_f64));
+            PathBuilder::context_pathstring().point_radius(10_f64);
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         let mut path = builder.build(eq);

@@ -54,16 +54,9 @@ impl<T> PointRadiusTrait for Context<T>
 where
     T: CoordFloat,
 {
-    type PrtT = Option<T>;
+    type PrtT = T;
     fn point_radius(&mut self, val: Self::PrtT) {
-        match val {
-            Some(val) => {
-                self.radius = val;
-            }
-            None => {
-                panic!("Calling None here is not defined in the JS version.")
-            }
-        }
+        self.radius = val;
     }
 }
 

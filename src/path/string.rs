@@ -70,14 +70,12 @@ impl<T> PointRadiusTrait for String<T>
 where
     T: CoordFloat,
 {
-    type PrtT = Option<T>;
+    type PrtT = T;
 
     fn point_radius(&mut self, d: Self::PrtT) {
-        if let Some(d) = d {
-            if self.radius != d {
-                self.radius = d;
-                self.circle = None;
-            }
+        if self.radius != d {
+            self.radius = d;
+            self.circle = None;
         }
     }
 }
