@@ -153,17 +153,16 @@ where
             } else {
                 self.raw.code(p)
             }
+        } else if v {
+            let inc = if p.x < T::zero() { T::PI() } else { -T::PI() };
+            self.raw.code(&Coordinate {
+                x: p.x + inc,
+                y: p.y,
+            })
         } else {
-            if v {
-                let inc = if p.x < T::zero() { T::PI() } else { -T::PI() };
-                self.raw.code(&Coordinate {
-                    x: p.x + inc,
-                    y: p.y,
-                })
-            } else {
-                CODE_NONE
-            }
+            CODE_NONE
         };
+
         let mut s = self.sink.borrow_mut();
         if self.raw.point0.is_none() {
             self.raw.v00 = v;
