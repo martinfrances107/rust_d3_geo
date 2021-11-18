@@ -144,24 +144,22 @@ where
         let mut point2: Option<LineElem<T>>;
         let v = self.raw.visible(p);
 
-        let c = match self.raw.small_radius {
-            true => match v {
-                true => CODE_NONE,
-                false => self.raw.code(p),
-            },
-            false => match v {
-                true => {
-                    let inc = match p.x < T::zero() {
-                        true => T::PI(),
-                        false => -T::PI(),
-                    };
-                    self.raw.code(&Coordinate {
-                        x: p.x + inc,
-                        y: p.y,
-                    })
-                }
-                false => CODE_NONE,
-            },
+        let c = if self.raw.small_radius {
+            if v {
+                CODE_NONE
+            } else {
+                self.raw.code(p)
+            }
+        } else {
+            if v {
+                let inc = if p.x < T::zero() { T::PI() } else { -T::PI() };
+                self.raw.code(&Coordinate {
+                    x: p.x + inc,
+                    y: p.y,
+                })
+            } else {
+                CODE_NONE
+            }
         };
         let mut s = self.sink.borrow_mut();
         if self.raw.point0.is_none() {
