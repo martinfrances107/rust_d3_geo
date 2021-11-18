@@ -130,7 +130,8 @@ pub fn intersect<T: CoordFloat + FloatConst>(
         condition = (delta > T::PI()) ^ (lambda0 <= q.x && q.x <= lambda1);
     }
 
-    // No javascript test uses this code block!!!!
+    // The only test to implement this is snapshot: gnomic
+    // so as yet this is untested.
     if condition {
         let mut q1 = scale(&u, (-w + t) / uu);
         add_in_place(&mut q1, &A);
