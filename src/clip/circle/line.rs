@@ -143,7 +143,7 @@ where
     }
 
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        let point1 = Some(LineElem { p: *p, m: None });
+        let mut point1 = Some(LineElem { p: *p, m: None });
         let mut point2: Option<LineElem<T>>;
         let v = self.raw.visible(p);
 
@@ -171,6 +171,7 @@ where
                 s.line_start();
             }
         }
+
         if v != self.raw.v0 {
             point2 = match intersect(
                 &self.raw.point0.unwrap(),
@@ -201,7 +202,14 @@ where
                     .abs_diff_eq(&point2.unwrap().p, epsilon)
                 || point1.unwrap().p.abs_diff_eq(&point2.unwrap().p, epsilon)
             {
-                point1.unwrap().m = Some(1_u8);
+                match point1 {
+                    Some(p) => {
+                        point1 = Some(LineElem { p: p.p, m: Some(1) });
+                    }
+                    None => {
+                        panic!("Trying to set m on a blank.");
+                    }
+                }
             }
         }
 
