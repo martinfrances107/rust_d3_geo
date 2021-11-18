@@ -87,9 +87,10 @@ where
     fn code(&self, p: &Coordinate<T>) -> u8 {
         let lambda = p.x;
         let phi = p.y;
-        let r = match self.small_radius {
-            true => self.radius,
-            false => T::PI() - self.radius,
+        let r = if self.small_radius {
+            self.radius
+        } else {
+            T::PI() - self.radius
         };
         let mut code = CODE_NONE;
         if lambda < -r {
@@ -106,9 +107,6 @@ where
         code
     }
 }
-
-/// TODO: T is overcontrained.
-// impl<T> LineTrait for Line<T> where T: AsPrimitive<T> + CoordFloat + Display + FloatConst {}
 
 impl<T> Clean for Line<T>
 where
