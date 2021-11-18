@@ -1,4 +1,5 @@
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
@@ -10,7 +11,14 @@ use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 use crate::Transform;
 
-const MAXDEPTH: u8 = 16_u8; // maximum depth of subdivision
+static MAXDEPTH: u8 = 16_u8; // maximum depth of subdivision
+
+#[derive(Clone, Copy, Debug)]
+enum PointState {
+    Default,
+    Line,
+    Ring,
+}
 
 #[derive(Clone, Copy, Debug)]
 pub struct Resample<PR, T>
@@ -39,10 +47,16 @@ where
 
     pub cos_min_distance: T,
 
-    pub use_line_point: bool,
-    pub use_line_start: bool,
-    pub use_line_end: bool,
+    point_state: PointState,
+    use_line_start: bool,
+    use_line_end: bool,
+
+    // generic constants<T>
     epsilon: T,
+    four: T,
+    frac_1_2: T,
+    frac_1_3: T,
+    two: T,
 }
 
 impl<'a, PR, T> Resample<PR, T>
@@ -76,10 +90,16 @@ where
 
             // cos(minimium angular distance)
             cos_min_distance: T::from(30_f64).unwrap().to_radians().cos(),
-            use_line_point: false,
-            use_line_start: false,
-            use_line_end: false,
+            point_state: PointState::Default,
+            use_line_start: true,
+            use_line_end: true,
+
+            // Generic constants.
             epsilon: T::from(EPSILON).unwrap(),
+            four: T::from(4_f64).unwrap(),
+            frac_1_2: T::from(0.5_f64).unwrap(),
+            frac_1_3: T::from(1_f64 / 3_f64).unwrap(),
+            two: T::from(2_f64).unwrap(),
         }
     }
 }
@@ -90,11 +110,25 @@ where
     SINK: Stream<T = T>,
     T: CoordFloat + FloatConst,
 {
-    #[inline]
+    fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        let pt = self.raw.projection_transform.transform(p);
+        self.sink.borrow_mut().point(&pt, m);
+    }
+
+    fn line_start_default(&mut self) {
+        self.raw.x0 = T::nan();
+        self.raw.point_state = PointState::Line;
+        self.sink.borrow_mut().line_start();
+    }
+
+    fn line_end_default(&mut self) {
+        self.raw.point_state = PointState::Default;
+        self.sink.borrow_mut().line_end();
+    }
 
     fn ring_start(&mut self) {
         self.sink.borrow_mut().line_start();
-        self.raw.use_line_point = false;
+        self.raw.point_state = PointState::Ring;
         self.raw.use_line_end = false;
     }
 
@@ -109,7 +143,7 @@ where
         self.raw.a00 = self.raw.a0;
         self.raw.b00 = self.raw.b0;
         self.raw.c00 = self.raw.c0;
-        self.raw.use_line_point = true;
+        self.raw.point_state = PointState::Line;
     }
 
     fn ring_end(&mut self) {
@@ -190,7 +224,7 @@ where
         let dy = y1 - y0;
         let d2 = dx * dx + dy * dy;
 
-        if d2 > T::from(4_f64).unwrap() * self.raw.delta2 {
+        if d2 > self.raw.four * self.raw.delta2 {
             depth -= 1_u8;
             if depth > 0_u8 {
                 let mut a = a0 + a1;
@@ -199,18 +233,15 @@ where
                 let m = (a * a + b * b + c * c).sqrt();
                 c = c / m;
                 let phi2 = c.asin();
-                let lambda2;
-                if (c.abs() - T::one()).abs() < self.raw.epsilon
+                let lambda2 = if (c.abs() - T::one()).abs() < self.raw.epsilon
                     || (lambda0 - lambda1).abs() < self.raw.epsilon
                 {
-                    lambda2 = (lambda0 + lambda1) / T::from(2).unwrap();
+                    (lambda0 + lambda1) * self.raw.frac_1_2
                 } else {
-                    lambda2 = b.atan2(a);
+                    b.atan2(a)
                 };
 
-                let project_ptr = &self.raw.projection_transform;
-                let project = project_ptr;
-                let p = project.transform(&Coordinate {
+                let p = self.raw.projection_transform.transform(&Coordinate {
                     x: lambda2,
                     y: phi2,
                 });
@@ -225,8 +256,7 @@ where
                 // midpoint close to an end
                 // angular distance
                 if dz * dz / d2 > self.raw.delta2
-                    || ((dx * dx2 + dy * dy2) / d2 - T::from(0.5).unwrap()).abs()
-                        > T::from(0.3).unwrap()
+                    || ((dx * dx2 + dy * dy2) / d2 - self.raw.frac_1_2).abs() > self.raw.frac_1_3
                     || a0 * a1 + b0 * b1 + c0 * c1 < self.raw.cos_min_distance
                 {
                     a = a / m;
@@ -261,40 +291,43 @@ where
     }
     fn polygon_start(&mut self) {
         self.sink.borrow_mut().polygon_start();
+        self.raw.use_line_start = false;
     }
     fn polygon_end(&mut self) {
         self.sink.borrow_mut().polygon_end();
+        self.raw.use_line_start = true;
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        if self.raw.use_line_point {
-            self.line_point(p);
-        } else {
-            self.ring_point(p);
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        match self.raw.point_state {
+            PointState::Default => {
+                self.point_default(p, m);
+            }
+            PointState::Line => {
+                self.line_point(p);
+            }
+            PointState::Ring => {
+                self.ring_point(p);
+            }
         }
     }
 
+    #[inline]
     fn line_start(&mut self) {
         if self.raw.use_line_start {
-            self.raw.x0 = T::nan();
-            self.raw.use_line_point = true;
-            self.sink.borrow_mut().line_start();
+            self.line_start_default();
         } else {
             self.ring_start();
         }
     }
 
+    #[inline]
     fn line_end(&mut self) {
-        match self.raw.use_line_end {
-            true => {
-                self.raw.use_line_point = false;
-                self.sink.borrow_mut().line_end();
-            }
-
-            false => {
-                self.ring_end();
-            }
+        if self.raw.use_line_end {
+            self.line_end_default();
+        } else {
+            self.ring_end();
         }
     }
 }
