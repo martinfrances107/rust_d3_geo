@@ -72,10 +72,15 @@ where
     }
 }
 
+/// Initial value, point is not visible or the small circle is not defined.
 static CODE_NONE: u8 = 0;
+/// Left of the bounding box.
 static CODE_LEFT: u8 = 1;
+/// Right of the bounding box.
 static CODE_RIGHT: u8 = 2;
+/// Below  the bounding box.
 static CODE_BELOW: u8 = 4;
+/// Above the bounding box.
 static CODE_ABOVE: u8 = 8;
 
 /// Generates a 4-bit vector representing the location of a point relative to
@@ -248,7 +253,7 @@ where
         {
             // If the codes for two points are different, or are both zero,
             // and there this segment intersects with the small circle.
-            if self.raw.c0 != c || c == 0 {
+            if self.raw.c0 != c || c == CODE_NONE {
                 let t = intersect(
                     &point1.unwrap(),
                     &self.raw.point0.unwrap(),
