@@ -19,6 +19,7 @@ mod centroid_test {
 
     #[test]
     fn the_centroid_of_a_point_is_itself() {
+        println!("the centroid of a point is itself");
         assert!(in_delta_point(
             Centroid::default().centroid(&Point::new(0f64, 0f64)),
             Point::new(0f64, 0f64),
