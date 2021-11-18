@@ -47,7 +47,7 @@ where
 fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
     if p.x.abs() > T::PI() {
         Coordinate {
-            x: p.x + (-p.x / T::TAU()).round() * T::TAU(),
+            x: p.x - (p.x / T::TAU()).round() * T::TAU(),
             y: p.y,
         }
     } else {
