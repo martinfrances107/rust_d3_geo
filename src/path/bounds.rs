@@ -40,6 +40,8 @@ where
     T: CoordFloat,
 {
     type Out = Option<ResultEnum<T>>;
+
+    /// Return the result, reseting the Bounds.
     fn result(&mut self) -> Option<ResultEnum<T>> {
         let bounds = [self.p0, self.p1];
         *self = Self::default();

@@ -4,6 +4,8 @@ pub mod area;
 pub mod bounds;
 /// Path builder
 pub mod builder;
+/// Path centroid;
+pub mod centroid;
 /// Path context.
 pub mod context;
 /// A collection of Path endpoints.
@@ -28,20 +30,20 @@ pub enum ResultEnum<T>
 where
     T: CoordFloat,
 {
-    /// The result of the Path endpoint.
-    Path(Vec<Vec<Coordinate<T>>>),
-    /// The buffered output of the path buffer endpoint.
-    BufferOutput(VecDeque<Vec<LineElem<T>>>),
-    /// The result of the String endpoint.
-    String(String),
     /// The result of the Area endpoint.
     Area(T),
-    /// The result of the Measure endpoint.
-    Measure(T),
     /// The bounding box  of the Bounds endpoint.
     Bounds([Coordinate<T>; 2]),
+    /// The buffered output of the path buffer endpoint.
+    BufferOutput(VecDeque<Vec<LineElem<T>>>),
     /// The centroid of the centroid endpoint.
-    Centroid(T),
+    Centroid(Coordinate<T>),
+    /// The result of the Measure endpoint.
+    Measure(T),
+    /// The result of the Path endpoint.
+    Path(Vec<Vec<Coordinate<T>>>),
+    /// The result of the String endpoint.
+    String(String),
 }
 
 /// Path Result.

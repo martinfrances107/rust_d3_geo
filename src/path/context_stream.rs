@@ -1,14 +1,16 @@
-use crate::path::PointRadiusTrait;
 use std::fmt::Display;
+use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::path::PointRadiusTrait;
 use crate::stream::Stream;
 
 use super::area::Area;
 use super::bounds::Bounds;
+use super::centroid::Centroid;
 use super::context::Context;
 use super::string::String as PathString;
 use super::Result;
@@ -26,7 +28,9 @@ where
     /// Bounds endpoint.
     B(Bounds<T>),
     /// Path context endpoint.
-    C(Context<T>),
+    Context(Context<T>),
+    /// Path centroid endpoint.
+    Centroid(Centroid<T>),
     /// Path string endpoint.
     S(PathString<T>),
     /// Uninitialised state.
@@ -46,7 +50,7 @@ where
 
 impl<T> Result for ContextStream<T>
 where
-    T: CoordFloat,
+    T: AddAssign<T> + CoordFloat,
 {
     type Out = Option<ResultEnum<T>>;
     fn result(&mut self) -> Self::Out {
@@ -54,7 +58,8 @@ where
             // ContextStream::A(a) => a.result(),
             ContextStream::A(pc) => pc.result(),
             ContextStream::B(pc) => pc.result(),
-            ContextStream::C(pc) => pc.result(),
+            ContextStream::Centroid(pc) => pc.result(),
+            ContextStream::Context(pc) => pc.result(),
             ContextStream::S(ps) => ps.result(),
             ContextStream::UNDEFINED => panic!("Result of undefined."),
         }
@@ -70,7 +75,8 @@ where
         match self {
             ContextStream::A(_a) => todo!("how to handle this?"),
             ContextStream::B(_b) => todo!("how to handle this?"),
-            ContextStream::C(c) => c.point_radius(val),
+            ContextStream::Centroid(_c) => todo!("how to handle this?"),
+            ContextStream::Context(c) => c.point_radius(val),
             ContextStream::S(s) => s.point_radius(val),
             ContextStream::UNDEFINED => panic!("radius of undefined."),
         }
@@ -79,7 +85,7 @@ where
 
 impl<T> Stream for ContextStream<T>
 where
-    T: CoordFloat + Display + FloatConst,
+    T: AddAssign<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
 
@@ -87,7 +93,8 @@ where
         match self {
             ContextStream::A(a) => a.point(p, m),
             ContextStream::B(b) => b.point(p, m),
-            ContextStream::C(c) => c.point(p, m),
+            ContextStream::Centroid(c) => c.point(p, m),
+            ContextStream::Context(c) => c.point(p, m),
             ContextStream::S(s) => s.point(p, m),
             ContextStream::UNDEFINED => panic!("point of undefined."),
         }
@@ -96,7 +103,8 @@ where
         match self {
             ContextStream::A(a) => a.sphere(),
             ContextStream::B(b) => b.sphere(),
-            ContextStream::C(c) => c.sphere(),
+            ContextStream::Centroid(c) => c.sphere(),
+            ContextStream::Context(c) => c.sphere(),
             ContextStream::S(s) => s.sphere(),
             ContextStream::UNDEFINED => panic!("sphere of undefined."),
         }
@@ -105,7 +113,8 @@ where
         match self {
             ContextStream::A(a) => a.line_start(),
             ContextStream::B(b) => b.line_start(),
-            ContextStream::C(c) => c.line_start(),
+            ContextStream::Centroid(c) => c.line_end(),
+            ContextStream::Context(c) => c.line_start(),
             ContextStream::S(s) => s.line_start(),
             ContextStream::UNDEFINED => panic!("line_start of undefined."),
         }
@@ -114,7 +123,8 @@ where
         match self {
             ContextStream::A(a) => a.line_end(),
             ContextStream::B(b) => b.line_end(),
-            ContextStream::C(c) => c.line_end(),
+            ContextStream::Centroid(c) => c.line_end(),
+            ContextStream::Context(c) => c.line_end(),
             ContextStream::S(s) => s.line_end(),
             ContextStream::UNDEFINED => panic!("line_end of undefined."),
         }
@@ -123,7 +133,8 @@ where
         match self {
             ContextStream::A(a) => a.polygon_start(),
             ContextStream::B(b) => b.polygon_start(),
-            ContextStream::C(c) => c.polygon_start(),
+            ContextStream::Centroid(c) => c.polygon_start(),
+            ContextStream::Context(c) => c.polygon_start(),
             ContextStream::S(s) => s.polygon_start(),
             ContextStream::UNDEFINED => panic!("polygon start of undefined."),
         }
@@ -132,7 +143,8 @@ where
         match self {
             ContextStream::A(a) => a.polygon_end(),
             ContextStream::B(b) => b.polygon_end(),
-            ContextStream::C(c) => c.polygon_end(),
+            ContextStream::Centroid(c) => c.polygon_end(),
+            ContextStream::Context(c) => c.polygon_end(),
             ContextStream::S(s) => s.polygon_end(),
             ContextStream::UNDEFINED => panic!("polygon_end of undefined."),
         }

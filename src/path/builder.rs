@@ -25,7 +25,7 @@ pub struct Builder<PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    T: 'static + AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     pr: T,
     context: Option<Rc<CanvasRenderingContext2d>>,
@@ -37,7 +37,7 @@ impl<PR, PV, T> Builder<PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
     pub fn new(context_stream: Rc<RefCell<ContextStream<T>>>) -> Builder<PR, PV, T> {
@@ -55,7 +55,7 @@ impl<PR, PV, T> Builder<PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the state within the builder.
     pub fn get_context(&self) {
@@ -68,7 +68,7 @@ where
         Builder {
             pr: self.pr,
             context: Some(context.clone()),
-            context_stream: Rc::new(RefCell::new(ContextStream::C(PathContext::<T>::new(
+            context_stream: Rc::new(RefCell::new(ContextStream::Context(PathContext::<T>::new(
                 context,
             )))),
             projection: self.projection,

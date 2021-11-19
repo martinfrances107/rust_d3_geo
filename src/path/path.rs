@@ -12,6 +12,7 @@ use crate::clip::PointVisible;
 use crate::data_object::DataObject;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
+use crate::path::centroid::Centroid;
 use crate::path::context_stream::ContextStream;
 use crate::path::Result;
 use crate::projection::projection::Projection;
@@ -60,7 +61,6 @@ where
         self.context_stream.borrow_mut().result()
     }
 
-    #[inline]
     /// Returns the area of the Path
     /// This operation consumes the  Path.
     pub fn area(self, object: &DataObject<T>) -> Option<ResultEnum<T>>
@@ -75,7 +75,7 @@ where
         x
     }
 
-    /// Returns the area of the Path.
+    /// Returns the bounds of the object
     ///
     /// This operation consumes the  Path.
     pub fn bounds(self, object: &DataObject<T>) -> Option<ResultEnum<T>>
@@ -86,8 +86,21 @@ where
         let mut stream_in = self.projection.stream(stream_dst.clone());
         object.to_stream(&mut stream_in);
 
-        let x = stream_dst.borrow_mut().result();
-        x
+        let b = stream_dst.borrow_mut().result();
+        b
+    }
+
+    /// Returns the centroid of the object.
+    pub fn centroid(self, object: &DataObject<T>) -> Option<ResultEnum<T>>
+    where
+        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    {
+        let stream_dst = Rc::new(RefCell::new(ContextStream::Centroid(Centroid::default())));
+        let mut stream_in = self.projection.stream(stream_dst.clone());
+        object.to_stream(&mut stream_in);
+
+        let c = stream_dst.borrow_mut().result();
+        c
     }
 
     /// Sets the context stream.
