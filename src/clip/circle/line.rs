@@ -32,15 +32,6 @@ where
 
 impl<T> LineTrait for Line<T> where T: CoordFloat {}
 
-impl<T> Default for Line<T>
-where
-    T: CoordFloat,
-{
-    fn default() -> Self {
-        Line::new(T::one())
-    }
-}
-
 impl<T> Line<T>
 where
     T: CoordFloat,

@@ -8,8 +8,6 @@ mod multi_point;
 mod multi_polygon;
 mod point;
 mod polygon;
-mod rect;
-mod triangle;
 
 use std::fmt::Debug;
 use std::marker::PhantomData;
