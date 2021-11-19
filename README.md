@@ -9,7 +9,7 @@ We are currently in phase two (Performance testing.)
 * Phase Two is about performance.
 * Phase Three sweeping up infrequently used code and making the library complete.
 
-Currently we have 80.3% code coverage ( as reported by cargo tarpaulin )
+Currently we have 83% code coverage ( as reported by cargo tarpaulin )
 
 ## Phase One ( Code Corectness ) completed.
 
