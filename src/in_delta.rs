@@ -9,7 +9,13 @@ pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bo
         "in_delta() expected {:?} actual {:?} delta {:?}",
         expected, actual, delta
     );
-    let is_ok = (actual - expected).abs() <= delta;
+
+    let is_ok = if actual.is_nan() && expected.is_nan() {
+        true
+    } else {
+        (actual - expected).abs() <= delta
+    };
+
     if !is_ok {
         println!(
             "in_delta() FAIL: expected delta {}  - actual delta {}",
