@@ -15,9 +15,13 @@ mod path_centroid_test {
     use geo::CoordFloat;
     use geo::Coordinate;
     use geo::LineString;
+    use geo::MultiLineString;
+    use geo::MultiPoint;
     use geo::Point;
     use geo::Polygon;
+
     use num_traits::AsPrimitive;
+    use num_traits::Float;
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
     use rust_d3_geo::path::path::Path;
@@ -88,7 +92,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn a_set_of_line_strings_is_the_spherical_average_of_its_great_arc_segments() {
+    fn centroid_of_a_point() {
         println!("geoPath.centroid(…) of a point");
         let point = DataObject::Geometry(Geometry::Point(Point(Coordinate { x: 0_f64, y: 0_f64 })));
 
@@ -96,6 +100,51 @@ mod path_centroid_test {
         assert!(in_delta_point(
             test_centroid(eq, &point),
             Point::new(480_f64, 250_f64),
+            1e-6_f64
+        ));
+    }
+
+    #[test]
+    fn centroid_of_a_empty_multipoint() {
+        println!("geoPath.centroid(…) of an empty multipoint");
+        let mp = DataObject::Geometry(Geometry::MultiPoint(MultiPoint(vec![])));
+
+        let eq = equirectangular::<ContextStream<f64>, f64>();
+        assert!(in_delta_point(
+            test_centroid(eq, &mp),
+            Point::new(f64::nan(), f64::nan()),
+            1e-6_f64
+        ));
+    }
+
+    #[test]
+    fn centroid_of_a_singleton_multipoint() {
+        println!("geoPath.centroid(…) of an singleton  multipoint");
+        let mp: DataObject<f64> =
+            DataObject::Geometry(Geometry::MultiPoint(MultiPoint(vec![Point::new(
+                0_f64, 0_f64,
+            )])));
+
+        let eq = equirectangular::<ContextStream<f64>, f64>();
+        assert!(in_delta_point(
+            test_centroid(eq, &mp),
+            Point::new(480_f64, 250_f64),
+            1e-6_f64
+        ));
+    }
+
+    #[test]
+    fn centroid_of_a_two_points() {
+        println!("geoPath.centroid(…) of an singleton  multipoint");
+        let mp = DataObject::Geometry(Geometry::MultiPoint(MultiPoint(vec![
+            Point::new(-122_f64, 37_f64),
+            Point::new(-74_f64, 40_f64),
+        ])));
+
+        let eq = equirectangular::<ContextStream<f64>, f64>();
+        assert!(in_delta_point(
+            test_centroid(eq, &mp),
+            Point::new(-10_f64, 57.5_f64),
             1e-6_f64
         ));
     }
