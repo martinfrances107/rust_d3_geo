@@ -113,7 +113,7 @@ where
         match self {
             ContextStream::A(a) => a.line_start(),
             ContextStream::B(b) => b.line_start(),
-            ContextStream::Centroid(c) => c.line_end(),
+            ContextStream::Centroid(c) => c.line_start(),
             ContextStream::Context(c) => c.line_start(),
             ContextStream::S(s) => s.line_start(),
             ContextStream::UNDEFINED => panic!("line_start of undefined."),

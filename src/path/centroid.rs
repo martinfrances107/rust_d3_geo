@@ -95,16 +95,13 @@ where
         self.point_fn = Self::centroid_point_line;
         self.x0 = p.x;
         self.y0 = p.y;
-        self.centroid_point(&Coordinate {
-            x: self.x0,
-            y: self.y0,
-        });
+        self.centroid_point(p);
     }
 
     fn centroid_point_line(&mut self, p: &Coordinate<T>) {
         let dx = p.x - self.x0;
         let dy = p.y - self.y0;
-        let z = (dx * dx + dy + dy).sqrt();
+        let z = (dx * dx + dy * dy).sqrt();
 
         self.X1 += z * (self.x0 + p.x) * self.frac_1_2;
         self.Y1 += z * (self.y0 + p.y) * self.frac_1_2;
@@ -139,8 +136,8 @@ where
         self.point_fn = Self::centroid_point_ring;
         self.x00 = p.x;
         self.x0 = p.x;
-        self.y00 = p.x;
-        self.y0 = p.x;
+        self.y00 = p.y;
+        self.y0 = p.y;
 
         self.centroid_point(p);
     }
