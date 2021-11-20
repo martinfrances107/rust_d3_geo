@@ -43,7 +43,7 @@ mod centroid_test {
     }
 
     #[test]
-    fn centroid_sphereical_average() {
+    fn centroid_spherical_average() {
         println!(
             "the centroid of a set of points is the (spherical) average of its constituent members"
         );
