@@ -67,11 +67,11 @@ mod resample;
 /// Projection type.
 pub type PostClipFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
     EP,
-    PostClipNode<DRAIN, EP, T>,
+    PostClipNode<EP, DRAIN, T>,
     StreamNode<
         EP,
-        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>, T>,
-        ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>,
+        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
+        ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>,
         T,
     >,
     T,
@@ -83,8 +83,8 @@ pub type RotateFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
     RotateRadians<T>,
     StreamNode<
         EP,
-        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>, T>,
-        ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>,
+        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
+        ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>,
         T,
     >,
     T,
@@ -96,8 +96,8 @@ pub type RotateTransformFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
     Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
     StreamNode<
         EP,
-        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>, T>,
-        ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>,
+        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
+        ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>,
         T,
     >,
     T,
@@ -142,18 +142,16 @@ where
 
 trait Builder
 where
-    <Self as Builder>::Drain: Stream<EP = Self::EP, T = Self::T>,
-    <Self as Builder>::EP: Clone + Debug + Stream<EP = Self::EP, T = <Self as Builder>::T>,
+    <Self as Builder>::Drain: Stream<EP = Self::Drain, T = Self::T>,
     <Self as Builder>::PR: Raw<Self::T>,
     <Self as Builder>::PV: PointVisible<T = Self::T>,
     <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;
-    type EP;
     type PR;
     type PV;
     type T;
-    fn build(s: Self::PR) -> Projection<Self::Drain, Self::EP, Self::PR, Self::PV, Self::T>;
+    fn build(s: Self::PR) -> Projection<Self::Drain, Self::PR, Self::PV, Self::T>;
 }
 
 /// Controls the projections center point.

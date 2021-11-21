@@ -40,10 +40,9 @@ where
     }
 }
 
-impl<DRAIN, EP, T> TransformExtent<T> for Mercator<DRAIN, T>
+impl<DRAIN, T> TransformExtent<T> for Mercator<DRAIN, T>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    DRAIN: Stream<EP = EP, T = T> + Default,
+    DRAIN: Stream<EP = DRAIN, T = T> + Default,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
@@ -71,13 +70,12 @@ where
     }
 }
 
-impl<DRAIN, EP, T> Raw<T> for Mercator<DRAIN, T>
+impl<DRAIN, T> Raw<T> for Mercator<DRAIN, T>
 where
-    DRAIN: Stream<EP = EP, T = T> + Default,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T> + Default,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-    type Builder = MercatorBuilder<DRAIN, EP, Mercator<DRAIN, T>, PV<T>, T>;
+    type Builder = MercatorBuilder<DRAIN, Mercator<DRAIN, T>, PV<T>, T>;
     type T = T;
 
     fn builder() -> Self::Builder {

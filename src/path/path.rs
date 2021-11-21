@@ -32,7 +32,7 @@ where
     context_stream: ContextStream<T>,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
-    projection: Rc<Projection<ContextStream<T>, ContextStream<T>, PR, PV, T>>,
+    projection: Rc<Projection<ContextStream<T>, PR, PV, T>>,
 }
 
 impl<PR, PV, T> Path<PR, PV, T>
@@ -44,7 +44,7 @@ where
     /// Constructor.
     pub fn new(
         context_stream: ContextStream<T>,
-        projection: Rc<Projection<ContextStream<T>, ContextStream<T>, PR, PV, T>>,
+        projection: Rc<Projection<ContextStream<T>, PR, PV, T>>,
     ) -> Self {
         Self {
             context_stream,

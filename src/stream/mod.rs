@@ -22,7 +22,13 @@ pub trait Streamable {
     /// f32 or f64.
     type T: CoordFloat;
     /// Injects the object to a stream.
-    fn to_stream<SD: Stream<T = Self::T>>(&self, stream: &mut SD);
+    fn to_stream<
+        EP: Clone + Debug + Stream<EP = EP, T = Self::T>,
+        SD: Stream<EP = EP, T = Self::T>,
+    >(
+        &self,
+        stream: &mut SD,
+    );
 }
 
 /// Stub is useful only the transform portion of a projection is needed.

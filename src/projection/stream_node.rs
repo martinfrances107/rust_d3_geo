@@ -33,7 +33,7 @@ where
     T: CoordFloat + FloatConst,
 {
     #[inline]
-    fn get_endpoint(self) -> EP {
+    pub fn get_endpoint(self) -> EP {
         self.sink.get_endpoint()
     }
 }

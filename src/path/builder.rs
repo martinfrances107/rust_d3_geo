@@ -29,7 +29,7 @@ where
     pr: T,
     context: Option<Rc<CanvasRenderingContext2d>>,
     context_stream: ContextStream<T>,
-    projection: Option<Projection<ContextStream<T>, ContextStream<T>, PR, PV, T>>,
+    projection: Option<Projection<ContextStream<T>, PR, PV, T>>,
 }
 
 impl<PR, PV, T> Builder<PR, PV, T>
@@ -96,10 +96,7 @@ where
 {
     /// From the progammed state generate a new projection.
     #[inline]
-    pub fn build(
-        self,
-        projection: Rc<Projection<ContextStream<T>, ContextStream<T>, PR, PV, T>>,
-    ) -> Path<PR, PV, T>
+    pub fn build(self, projection: Rc<Projection<ContextStream<T>, PR, PV, T>>) -> Path<PR, PV, T>
     where
         PR: ProjectionRaw<T>,
     {

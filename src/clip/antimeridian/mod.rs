@@ -34,7 +34,7 @@ where
     StreamNodeClipFactory::new(
         PV::default(),
         Line::A(LineAntimeridian::default()),
-        gen_interpolate::<SINK, T>(),
+        gen_interpolate::<EP, SINK, T>(),
         [-T::PI(), -T::FRAC_PI_2()].into(),
     )
 }

@@ -2,8 +2,8 @@
 #[cfg(test)]
 mod path_area_test {
 
-    use rust_d3_geo::stream::Stream;
     use std::f64::consts::PI;
+    use std::fmt::Debug;
     use std::fmt::Display;
     use std::ops::AddAssign;
     use std::rc::Rc;
@@ -29,13 +29,12 @@ mod path_area_test {
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Raw;
     use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::stream::Stream;
 
     #[inline]
-    fn equirectangular<EP, DRAIN, T>(
-    ) -> Rc<Projection<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
+    fn equirectangular<DRAIN, T>() -> Rc<Projection<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
     where
-        EP: Clone + Debug + Stream<EP = EP, T = T>,
-        DRAIN: Stream<EP = EP, T = T> + Default,
+        DRAIN: Stream<EP = DRAIN, T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         Rc::new(
@@ -47,13 +46,12 @@ mod path_area_test {
     }
 
     #[inline]
-    fn test_area<'a, DRAIN, EP, T>(
+    fn test_area<'a, DRAIN, T>(
         projection: Rc<Projection<ContextStream<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>,
         object: DataObject<T>,
     ) -> T
     where
-        EP: Clone + Debug + Stream<EP = EP, T = T>,
-        DRAIN: Stream<EP = EP, T = T>,
+        DRAIN: Stream<EP = DRAIN, T = T>,
         T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         let builder = PathBuilder::context_pathstring();

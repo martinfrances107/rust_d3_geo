@@ -21,40 +21,40 @@ use super::Scale;
 /// Root transform.
 /// Used to define a projection builder.
 #[derive(Clone, Debug)]
-pub struct Gnomic<DRAIN, EP, T>
+pub struct Gnomic<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
     p_drain: PhantomData<DRAIN>,
-    p_ep: PhantomData<EP>,
+    // p_ep: PhantomData<EP>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, EP, T> Default for Gnomic<DRAIN, EP, T>
+impl<DRAIN, T> Default for Gnomic<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Gnomic {
             p_drain: PhantomData::<DRAIN>,
-            p_ep: PhantomData::<EP>,
+            // p_ep: PhantomData::<EP>,
             p_t: PhantomData::<T>,
         }
     }
 }
 
-impl<DRAIN, EP, T> Raw<T> for Gnomic<DRAIN, EP, T>
+impl<DRAIN, T> Raw<T> for Gnomic<DRAIN, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
+    // EP: Clone + Debug + Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, EP, Gnomic<DRAIN, EP, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, Gnomic<DRAIN, T>, PV<T>, T>;
     type T = T;
 
     fn builder() -> Self::Builder
     where
-        DRAIN: Stream<EP = EP, T = T>,
+        DRAIN: Stream<EP = DRAIN, T = T>,
     {
         Builder::new(gen_clip_factory_antimeridian(), Gnomic::default())
             .scale(T::from(144.049_f64).unwrap())
@@ -62,7 +62,7 @@ where
     }
 }
 
-impl<DRAIN, EP, T> Gnomic<DRAIN, EP, T>
+impl<DRAIN, T> Gnomic<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -76,7 +76,7 @@ where
     }
 }
 
-impl<DRAIN, EP, T> Transform for Gnomic<DRAIN, EP, T>
+impl<DRAIN, EP, T> Transform for Gnomic<DRAIN, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
     DRAIN: Stream<EP = EP, T = T>,

@@ -53,10 +53,10 @@ use super::Translate;
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Builder<DRAIN, EP, PR, PV, T>
+pub struct Builder<DRAIN, PR, PV, T>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    DRAIN: Stream<EP = EP, T = T>,
+    // EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: ProjectionRaw<T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -97,20 +97,24 @@ where
     /// Projection pipeline stage.
     pub postclip_factory: StreamNodePostClipFactory<DRAIN, T>,
     /// Projection pipeline stage.
-    pub preclip_factory:
-        StreamNodeClipFactory<EP, PR, PV, ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>, T>,
+    pub preclip_factory: StreamNodeClipFactory<
+        DRAIN,
+        PR,
+        PV,
+        ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>,
+        T,
+    >,
     /// Projection pipeline stage.
-    pub rotate_factory: RotateFactory<DRAIN, EP, PR, PV, T>,
+    pub rotate_factory: RotateFactory<DRAIN, DRAIN, PR, PV, T>,
     /// Projection pipeline stage
-    pub resample_factory: StreamNodeResampleFactory<PR, PostClipNode<DRAIN, EP, T>, T>,
+    pub resample_factory: StreamNodeResampleFactory<PR, PostClipNode<DRAIN, DRAIN, T>, T>,
     /// Projection pipeline stage
-    pub rotate_transform_factory: RotateTransformFactory<DRAIN, EP, PR, PV, T>,
+    pub rotate_transform_factory: RotateTransformFactory<DRAIN, DRAIN, PR, PV, T>,
 }
 
-impl<DRAIN, EP, PR, PV, T> Builder<DRAIN, EP, PR, PV, T>
+impl<DRAIN, PR, PV, T> Builder<DRAIN, PR, PV, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -119,10 +123,10 @@ where
     /// Projection builder.
     pub fn new(
         preclip_factory: StreamNodeClipFactory<
-            EP,
+            DRAIN,
             PR,
             PV,
-            ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>,
+            ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>,
             T,
         >,
         projection_raw: PR,
@@ -195,7 +199,7 @@ where
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> Projection<DRAIN, EP, PR, PV, T> {
+    pub fn build(&self) -> Projection<DRAIN, PR, PV, T> {
         Projection {
             postclip_factory: self.postclip_factory.clone(),
             preclip_factory: self.preclip_factory.clone(),
@@ -210,7 +214,7 @@ where
 
     /// Set the internal clip angle (theta) to null and return a builder
     /// which uses the antimeridian clipping stratergy.
-    pub fn clip_angle_reset(self) -> Builder<DRAIN, EP, PR, AntimeridianPV<T>, T> {
+    pub fn clip_angle_reset(self) -> Builder<DRAIN, PR, AntimeridianPV<T>, T> {
         let preclip_factory = gen_clip_factory_antimeridian();
 
         // update only theta and preclip_factory.
@@ -257,7 +261,7 @@ where
 
     /// Given an angle in degrees. Sets the internal clip angle and returns a builder
     /// which uses the clip circle stratergy.
-    pub fn clip_angle(self, angle: T) -> Builder<DRAIN, EP, PR, CirclePV<T>, T> {
+    pub fn clip_angle(self, angle: T) -> Builder<DRAIN, PR, CirclePV<T>, T> {
         if angle == T::zero() {
             panic!("must call clip_angle_reset() instead");
         }
@@ -354,10 +358,9 @@ where
     }
 }
 
-impl<DRAIN, EP, PR, PV, T> Translate for Builder<DRAIN, EP, PR, PV, T>
+impl<DRAIN, PR, PV, T> Translate for Builder<DRAIN, PR, PV, T>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    DRAIN: Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -379,10 +382,9 @@ where
     }
 }
 
-impl<DRAIN, EP, PR, PV, T> Center for Builder<DRAIN, EP, PR, PV, T>
+impl<DRAIN, PR, PV, T> Center for Builder<DRAIN, PR, PV, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -404,7 +406,7 @@ where
     }
 }
 
-impl<PR, PV, T> Fit for Builder<Bounds<T>, Bounds<T>, PR, PV, T>
+impl<PR, PV, T> Fit for Builder<Bounds<T>, PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -429,10 +431,10 @@ where
     }
 }
 
-impl<DRAIN, EP, PR, PV, T> Angle for Builder<DRAIN, EP, PR, PV, T>
+impl<DRAIN, PR, PV, T> Angle for Builder<DRAIN, PR, PV, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
+
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -456,10 +458,9 @@ where
     }
 }
 
-impl<DRAIN, EP, PR, PV, T> Scale for Builder<DRAIN, EP, PR, PV, T>
+impl<DRAIN, PR, PV, T> Scale for Builder<DRAIN, PR, PV, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -477,10 +478,9 @@ where
     }
 }
 
-impl<DRAIN, EP, PR, PV, T> ClipExtent for Builder<DRAIN, EP, PR, PV, T>
+impl<DRAIN, PR, PV, T> ClipExtent for Builder<DRAIN, PR, PV, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -521,10 +521,9 @@ where
     }
 }
 
-impl<DRAIN, EP, PR, PV, T> Precision for Builder<DRAIN, EP, PR, PV, T>
+impl<DRAIN, PR, PV, T> Precision for Builder<DRAIN, PR, PV, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -557,10 +556,9 @@ where
     }
 }
 
-impl<DRAIN, EP, PR, PV, T> Rotate for Builder<DRAIN, EP, PR, PV, T>
+impl<DRAIN, PR, PV, T> Rotate for Builder<DRAIN, PR, PV, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -592,10 +590,9 @@ where
     }
 }
 
-impl<DRAIN, EP, PR, PV, T> Reflect for Builder<DRAIN, EP, PR, PV, T>
+impl<DRAIN, PR, PV, T> Reflect for Builder<DRAIN, PR, PV, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -636,10 +633,9 @@ where
     }
 }
 
-impl<DRAIN, EP, PR, PV, T> Builder<DRAIN, EP, PR, PV, T>
+impl<DRAIN, PR, PV, T> Builder<DRAIN, PR, PV, T>
 where
-    DRAIN: Stream<EP = EP, T = T> + Default,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T> + Default,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,

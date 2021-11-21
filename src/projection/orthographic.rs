@@ -20,49 +20,46 @@ use super::Scale;
 /// Root transform.
 /// Used to define a projection builder.
 #[derive(Clone, Copy, Debug)]
-pub struct Orthographic<DRAIN, EP, T>
+pub struct Orthographic<DRAIN, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     T: CoordFloat + FloatConst,
 {
     p_drain: PhantomData<DRAIN>,
-    p_ep: PhantomData<EP>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, EP, T> Default for Orthographic<DRAIN, EP, T>
+impl<DRAIN, T> Default for Orthographic<DRAIN, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Orthographic {
             p_drain: PhantomData::<DRAIN>,
-            p_ep: PhantomData::<EP>,
             p_t: PhantomData::<T>,
         }
     }
 }
 
-impl<DRAIN, EP, T> Raw<T> for Orthographic<DRAIN, EP, T>
+impl<DRAIN, T> Raw<T> for Orthographic<DRAIN, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, EP, Orthographic<DRAIN, EP, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, Orthographic<DRAIN, T>, PV<T>, T>;
     type T = T;
     #[inline]
-    fn builder() -> Builder<DRAIN, EP, Orthographic<DRAIN, EP, T>, PV<T>, T> {
+    fn builder() -> Builder<DRAIN, Orthographic<DRAIN, T>, PV<T>, T> {
         Builder::new(gen_clip_factory_antimeridian(), Orthographic::default())
             .scale(T::from(249.5_f64).unwrap())
             .clip_angle(T::from(90_f64 + EPSILON).unwrap())
     }
 }
 
-impl<DRAIN, EP, T> Orthographic<DRAIN, EP, T>
+impl<DRAIN, T> Orthographic<DRAIN, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     T: CoordFloat + FloatConst,
 {
     #[inline]
@@ -85,10 +82,9 @@ where
     }
 }
 
-impl<DRAIN, EP, T> Transform for Orthographic<DRAIN, EP, T>
+impl<DRAIN, T> Transform for Orthographic<DRAIN, T>
 where
-    DRAIN: Stream<EP = EP, T = T>,
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;

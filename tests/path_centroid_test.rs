@@ -41,11 +41,9 @@ mod path_centroid_test {
     use rust_d3_geo::stream::Stream;
 
     #[inline]
-    fn equirectangular<DRAIN, EP, T>(
-    ) -> Rc<Projection<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
+    fn equirectangular<DRAIN, T>() -> Rc<Projection<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
     where
-        EP: Clone + Debug + Stream<EP = EP, T = T>,
-        DRAIN: Stream<EP = EP, T = T> + Default,
+        DRAIN: Stream<EP = DRAIN, T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         Rc::new(
@@ -60,13 +58,12 @@ mod path_centroid_test {
     }
 
     #[inline]
-    fn test_centroid<'a, DRAIN, EP, T>(
+    fn test_centroid<'a, DRAIN, T>(
         projection: Rc<Projection<ContextStream<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>,
         object: &DataObject<T>,
     ) -> Point<T>
     where
-        EP: Clone + Debug + Stream<EP = EP, T = T>,
-        DRAIN: Stream<EP = EP, T = T>,
+        DRAIN: Stream<EP = DRAIN, T = T>,
         T: AddAssign<T>
             + AbsDiffEq<Epsilon = T>
             + AsPrimitive<T>

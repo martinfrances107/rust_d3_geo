@@ -18,15 +18,14 @@ use super::Raw as ProjectionRaw;
 use super::Scale;
 use super::Translate;
 
-type FitBounds<DRAIN, EP, PR, PV, T> = Box<
-    dyn FnOnce([Coordinate<T>; 2], Builder<DRAIN, EP, PR, PV, T>) -> Builder<DRAIN, EP, PR, PV, T>,
->;
+type FitBounds<DRAIN, PR, PV, T> =
+    Box<dyn FnOnce([Coordinate<T>; 2], Builder<DRAIN, PR, PV, T>) -> Builder<DRAIN, PR, PV, T>>;
 
 fn fit<PR, PV, T>(
-    builder: Builder<Bounds<T>, Bounds<T>, PR, PV, T>,
-    fit_bounds: FitBounds<Bounds<T>, Bounds<T>, PR, PV, T>,
+    builder: Builder<Bounds<T>, PR, PV, T>,
+    fit_bounds: FitBounds<Bounds<T>, PR, PV, T>,
     object: &DataObject<T>,
-) -> Builder<Bounds<T>, Bounds<T>, PR, PV, T>
+) -> Builder<Bounds<T>, PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -64,10 +63,10 @@ where
 }
 
 pub(super) fn fit_extent<PR, PV, T>(
-    builder: Builder<Bounds<T>, Bounds<T>, PR, PV, T>,
+    builder: Builder<Bounds<T>, PR, PV, T>,
     extent: [[T; 2]; 2],
     object: &DataObject<T>,
-) -> Builder<Bounds<T>, Bounds<T>, PR, PV, T>
+) -> Builder<Bounds<T>, PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -94,10 +93,10 @@ where
 }
 
 pub(super) fn fit_size<PR, PV, T>(
-    builder: Builder<Bounds<T>, Bounds<T>, PR, PV, T>,
+    builder: Builder<Bounds<T>, PR, PV, T>,
     size: [T; 2],
     object: &DataObject<T>,
-) -> Builder<Bounds<T>, Bounds<T>, PR, PV, T>
+) -> Builder<Bounds<T>, PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
