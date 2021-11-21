@@ -84,7 +84,7 @@ where
 
 /// TODO Generics - Need to come back and refactor to take LineElem<T>
 /// or Coordinates. As the JS allow for.
-fn stream_line<T, S>(ls: &LineString<T>, stream: &mut S, closed: usize)
+fn stream_line<S, T>(ls: &LineString<T>, stream: &mut S, closed: usize)
 where
     S: Stream<T = T>,
     T: CoordFloat,
