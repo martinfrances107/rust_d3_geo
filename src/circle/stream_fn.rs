@@ -16,8 +16,8 @@ use crate::Transform;
 use super::calc_radius::calc_radius;
 
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
-pub fn stream_fn<STREAM, T>(
-    stream: Rc<RefCell<STREAM>>,
+pub fn stream_fn<EP, STREAM, T>(
+    mut stream: STREAM,
     radius: T,
     delta: T,
     direction: T,
@@ -25,7 +25,7 @@ pub fn stream_fn<STREAM, T>(
     t1_in: Option<Coordinate<T>>,
 ) where
     T: CoordFloat + FloatConst,
-    STREAM: Stream<T = T>,
+    STREAM: Stream<EP = EP, T = T>,
 {
     if delta.is_zero() {
         return;
@@ -56,10 +56,9 @@ pub fn stream_fn<STREAM, T>(
     let mut point: Coordinate<T>;
     let mut t = t0;
     let mut cond = true;
-    let mut stream_b = stream.borrow_mut();
     while cond {
         point = spherical_r(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
-        stream_b.point(&point, None);
+        stream.point(&point, None);
 
         t = t - step;
         cond = match direction.is_sign_positive() {

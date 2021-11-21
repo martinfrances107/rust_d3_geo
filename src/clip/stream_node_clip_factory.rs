@@ -1,6 +1,5 @@
 use core::marker::PhantomData;
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::fmt::Debug;
 
 use derivative::*;
 use geo::CoordFloat;
@@ -31,10 +30,11 @@ use super::PointVisible;
 /// construct the pipeline.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct StreamNodeClipFactory<PR, PV, SINK, T>
+pub struct StreamNodeClipFactory<EP, PR, PV, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     phantom_pr: PhantomData<PR>,
@@ -43,17 +43,18 @@ where
     pv: PV,
     #[derivative(Debug = "ignore")]
     interpolate_fn: InterpolateFn<SINK, T>,
-    line_node_factory: StreamNodeLineFactory<SINK, T>,
+    line_node_factory: StreamNodeLineFactory<EP, SINK, T>,
 
     // Precomputed pair.
-    ring_buffer: Rc<RefCell<Buffer<T>>>,
-    ring_sink_node: LineNode<Buffer<T>, T>,
+    ring_buffer: Buffer<T>,
+    ring_sink_node: LineNode<Buffer<T>, Buffer<T>, T>,
 }
 
-impl<PR, PV, SINK, T> StreamNodeClipFactory<PR, PV, SINK, T>
+impl<EP, PR, PV, SINK, T> StreamNodeClipFactory<EP, PR, PV, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
@@ -62,12 +63,12 @@ where
         line: Line<T>,
         interpolate_fn: InterpolateFn<SINK, T>,
         start: Coordinate<T>,
-    ) -> StreamNodeClipFactory<PR, PV, SINK, T> {
+    ) -> StreamNodeClipFactory<EP, PR, PV, SINK, T> {
         let line_node_factory = StreamNodeLineFactory::new(line.clone());
 
         // ring_buffer needs the Rc<RefCell<>> wrapper because it is a pipeline source
         // [internal to the clip node].
-        let ring_buffer: Rc<RefCell<Buffer<T>>> = Rc::new(RefCell::new(Buffer::default()));
+        let ring_buffer: Buffer<T> = Buffer::default();
         let line_node_buffer_factory = StreamNodeLineFactory::new(line);
         let ring_sink_node = line_node_buffer_factory.generate(ring_buffer.clone());
 
@@ -83,18 +84,19 @@ where
     }
 }
 
-impl<PR, PV, SINK, T> NodeFactory for StreamNodeClipFactory<PR, PV, SINK, T>
+impl<EP, PR, PV, SINK, T> NodeFactory for StreamNodeClipFactory<EP, PR, PV, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type Sink = SINK;
     type T = T;
-    type Node = StreamNode<Clip<PV, SINK, T>, Self::Sink, Self::T>;
+    type Node = StreamNode<EP, Clip<EP, PV, SINK, T>, Self::Sink, Self::T>;
 
-    fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
+    fn generate(&self, sink: Self::Sink) -> Self::Node {
         let clip = Clip::new(
             self.pv.clone(),
             self.line_node_factory.clone(),

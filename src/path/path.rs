@@ -1,4 +1,3 @@
-use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
@@ -30,10 +29,10 @@ where
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
 {
-    context_stream: Rc<RefCell<ContextStream<T>>>,
+    context_stream: ContextStream<T>,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
-    projection: Rc<Projection<ContextStream<T>, PR, PV, T>>,
+    projection: Rc<Projection<ContextStream<T>, ContextStream<T>, PR, PV, T>>,
 }
 
 impl<PR, PV, T> Path<PR, PV, T>
@@ -44,8 +43,8 @@ where
 {
     /// Constructor.
     pub fn new(
-        context_stream: Rc<RefCell<ContextStream<T>>>,
-        projection: Rc<Projection<ContextStream<T>, PR, PV, T>>,
+        context_stream: ContextStream<T>,
+        projection: Rc<Projection<ContextStream<T>, ContextStream<T>, PR, PV, T>>,
     ) -> Self {
         Self {
             context_stream,
@@ -58,7 +57,7 @@ where
     pub fn object(&mut self, object: &DataObject<T>) -> Option<ResultEnum<T>> {
         let mut stream_in = self.projection.stream(self.context_stream.clone());
         object.to_stream(&mut stream_in);
-        self.context_stream.borrow_mut().result()
+        self.context_stream.result()
     }
 
     /// Returns the area of the Path
@@ -67,11 +66,11 @@ where
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = Rc::new(RefCell::new(ContextStream::A(Area::default())));
-        let mut stream_in = self.projection.stream(stream_dst.clone());
+        let mut stream_dst = ContextStream::A(Area::default());
+        let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
 
-        let x = stream_dst.borrow_mut().result();
+        let x = stream_in.sink.get_endpoint().result();
         x
     }
 
@@ -82,11 +81,11 @@ where
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = Rc::new(RefCell::new(ContextStream::B(Bounds::default())));
+        let mut stream_dst = ContextStream::B(Bounds::default());
         let mut stream_in = self.projection.stream(stream_dst.clone());
         object.to_stream(&mut stream_in);
 
-        let b = stream_dst.borrow_mut().result();
+        let b = stream_dst.result();
         b
     }
 
@@ -95,16 +94,16 @@ where
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = Rc::new(RefCell::new(ContextStream::Centroid(Centroid::default())));
+        let mut stream_dst = ContextStream::Centroid(Centroid::default());
         let mut stream_in = self.projection.stream(stream_dst.clone());
         object.to_stream(&mut stream_in);
 
-        let c = stream_dst.borrow_mut().result();
+        let c = stream_dst.result();
         c
     }
 
     /// Sets the context stream.
-    pub fn context(mut self, context_stream: Rc<RefCell<ContextStream<T>>>) -> Self
+    pub fn context(mut self, context_stream: ContextStream<T>) -> Self
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {

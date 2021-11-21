@@ -18,23 +18,34 @@ use none::None;
 use resample::Resample;
 
 #[derive(Debug, Clone)]
-pub enum ResampleNode<PR, SINK, T>
+pub enum ResampleNode<EP, PR, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    RN(StreamNode<None<PR, T>, SINK, T>),
-    R(StreamNode<Resample<PR, T>, SINK, T>),
+    RN(StreamNode<EP, None<PR, T>, SINK, T>),
+    R(StreamNode<EP, Resample<PR, T>, SINK, T>),
 }
 
-impl<'a, PR, SINK, T> Stream for ResampleNode<PR, SINK, T>
+impl<'a, EP, PR, SINK, T> Stream for ResampleNode<EP, PR, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
+    type EP = EP;
     type T = T;
+
+    #[inline]
+    fn get_endpoint(self) -> Self::EP {
+        match self {
+            ResampleNode::RN(n) => n.get_endpoint(),
+            ResampleNode::R(r) => r.get_endpoint(),
+        }
+    }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

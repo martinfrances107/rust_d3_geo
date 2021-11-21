@@ -1,4 +1,3 @@
-use std::cell::RefCell;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -10,9 +9,9 @@ use crate::math::EPSILON;
 use crate::stream::Stream;
 
 /// Antimerdian interpolate function.
-pub fn generate<STREAM, T>() -> InterpolateFn<STREAM, T>
+pub fn generate<EP, STREAM, T>() -> InterpolateFn<STREAM, T>
 where
-    STREAM: Stream<T = T>,
+    STREAM: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     let epsilon = T::from(EPSILON).unwrap();
@@ -20,9 +19,9 @@ where
         move |to: Option<Coordinate<T>>,
               from: Option<Coordinate<T>>,
               direction: T,
-              stream_in: Rc<RefCell<STREAM>>| {
+              stream_in: STREAM| {
             let phi: T;
-            let mut s = stream_in.borrow_mut();
+            let mut s = stream_in;
             match from {
                 None => {
                     phi = direction * T::FRAC_PI_2();

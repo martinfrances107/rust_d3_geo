@@ -1,4 +1,3 @@
-use std::cell::RefCell;
 use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
@@ -29,8 +28,8 @@ where
 {
     pr: T,
     context: Option<Rc<CanvasRenderingContext2d>>,
-    context_stream: Rc<RefCell<ContextStream<T>>>,
-    projection: Option<Projection<ContextStream<T>, PR, PV, T>>,
+    context_stream: ContextStream<T>,
+    projection: Option<Projection<ContextStream<T>, ContextStream<T>, PR, PV, T>>,
 }
 
 impl<PR, PV, T> Builder<PR, PV, T>
@@ -40,7 +39,7 @@ where
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
-    pub fn new(context_stream: Rc<RefCell<ContextStream<T>>>) -> Builder<PR, PV, T> {
+    pub fn new(context_stream: ContextStream<T>) -> Builder<PR, PV, T> {
         Self {
             context: None,
             context_stream,
@@ -68,9 +67,7 @@ where
         Builder {
             pr: self.pr,
             context: Some(context.clone()),
-            context_stream: Rc::new(RefCell::new(ContextStream::Context(PathContext::<T>::new(
-                context,
-            )))),
+            context_stream: ContextStream::Context(PathContext::<T>::new(context)),
             projection: self.projection,
         }
     }
@@ -78,14 +75,13 @@ where
     /// Sets the radius of the displayed point, None implies no point to is drawn.
     pub fn point_radius(mut self, radius: T) -> Self {
         self.pr = radius;
-        self.context_stream.borrow_mut().point_radius(self.pr);
+        self.context_stream.point_radius(self.pr);
         self
     }
 
     /// Returns a Builder from default values.
     pub fn context_pathstring() -> Builder<PR, PV, T> {
-        let context_stream: Rc<RefCell<ContextStream<T>>> =
-            Rc::new(RefCell::new(ContextStream::S(PathString::default())));
+        let context_stream: ContextStream<T> = ContextStream::S(PathString::default());
 
         Builder::new(context_stream)
     }
@@ -100,7 +96,10 @@ where
 {
     /// From the progammed state generate a new projection.
     #[inline]
-    pub fn build(self, projection: Rc<Projection<ContextStream<T>, PR, PV, T>>) -> Path<PR, PV, T>
+    pub fn build(
+        self,
+        projection: Rc<Projection<ContextStream<T>, ContextStream<T>, PR, PV, T>>,
+    ) -> Path<PR, PV, T>
     where
         PR: ProjectionRaw<T>,
     {

@@ -99,38 +99,47 @@ where
     }
 }
 
-impl<SINK, T> Stream for StreamNode<RotateRadians<T>, SINK, T>
+impl<EP, SINK, T> Stream for StreamNode<EP, RotateRadians<T>, SINK, T>
 where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
+    type EP = EP;
     type T = T;
+
+    #[inline]
+    fn get_endpoint(self) -> Self::EP {
+        self.sink.get_endpoint()
+    }
+
+    #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        self.sink.borrow_mut().point(&self.raw.transform(p), m);
+        self.sink.point(&self.raw.transform(p), m);
     }
 
     #[inline]
     fn sphere(&mut self) {
-        self.sink.borrow_mut().sphere();
+        self.sink.sphere();
     }
 
     #[inline]
     fn line_start(&mut self) {
-        self.sink.borrow_mut().line_start();
+        self.sink.line_start();
     }
 
     #[inline]
     fn line_end(&mut self) {
-        self.sink.borrow_mut().line_end();
+        self.sink.line_end();
     }
 
     #[inline]
     fn polygon_start(&mut self) {
-        self.sink.borrow_mut().polygon_start()
+        self.sink.polygon_start()
     }
 
     #[inline]
     fn polygon_end(&mut self) {
-        self.sink.borrow_mut().polygon_end();
+        self.sink.polygon_end();
     }
 }

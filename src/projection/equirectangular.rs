@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -19,17 +20,19 @@ use super::Scale;
 /// Root transform.
 /// Used to define a projection builder.
 #[derive(Clone, Copy, Debug)]
-pub struct EquirectangularRaw<DRAIN, T>
+pub struct EquirectangularRaw<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
+    // p_ep: PhantomData<EP>,
     p_drain: PhantomData<DRAIN>,
 }
 
-impl<DRAIN, T> Default for EquirectangularRaw<DRAIN, T>
+impl<DRAIN, EP, T> Default for EquirectangularRaw<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     fn default() -> Self {
@@ -39,18 +42,19 @@ where
     }
 }
 
-impl<DRAIN, T> Raw<T> for EquirectangularRaw<DRAIN, T>
+impl<DRAIN, EP, T> Raw<T> for EquirectangularRaw<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, EP, EquirectangularRaw<DRAIN, EP, T>, PV<T>, T>;
     type T = T;
 
     #[inline]
-    fn builder() -> Builder<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>
+    fn builder() -> Builder<DRAIN, EP, EquirectangularRaw<DRAIN, EP, T>, PV<T>, T>
     where
-        DRAIN: Stream<T = T>,
+        DRAIN: Stream<EP = EP, T = T>,
     {
         Builder::new(
             gen_clip_factory_antimeridian(),
@@ -60,16 +64,18 @@ where
     }
 }
 
-impl<DRAIN, T> EquirectangularRaw<DRAIN, T>
+impl<DRAIN, EP, T> EquirectangularRaw<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
 }
 
-impl<DRAIN, T> Transform for EquirectangularRaw<DRAIN, T>
+impl<DRAIN, EP, T> Transform for EquirectangularRaw<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type T = T;

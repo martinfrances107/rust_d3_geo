@@ -1,6 +1,5 @@
 use core::marker::PhantomData;
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::fmt::Debug;
 
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -21,10 +20,10 @@ use super::StreamNode;
 /// Inside Projection::stream() NodeFactory::generate() will be called to
 /// construct the pipeline.
 #[derive(Copy, Clone, Debug)]
-pub struct StreamNodeFactory<RAW, SINK, T>
+pub struct StreamNodeFactory<EP, RAW, SINK, T>
 where
     RAW: Clone,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     phantom_t: PhantomData<T>,
@@ -32,13 +31,14 @@ where
     raw: RAW,
 }
 
-impl<RAW, SINK, T> StreamNodeFactory<RAW, SINK, T>
+impl<EP, RAW, SINK, T> StreamNodeFactory<EP, RAW, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     RAW: Clone,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
-    pub(crate) fn new(raw: RAW) -> StreamNodeFactory<RAW, SINK, T> {
+    pub(crate) fn new(raw: RAW) -> StreamNodeFactory<EP, RAW, SINK, T> {
         StreamNodeFactory {
             phantom_t: PhantomData::<T>,
             phantom_sink: PhantomData::<SINK>,
@@ -49,16 +49,17 @@ where
 
 // /// RAW here can be projection_raw or line_raw,
 /// as used by link_sink_factory.
-impl<RAW, SINK, T> NodeFactory for StreamNodeFactory<RAW, SINK, T>
+impl<EP, RAW, SINK, T> NodeFactory for StreamNodeFactory<EP, RAW, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     RAW: Clone,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type Sink = SINK;
     type T = T;
-    type Node = StreamNode<RAW, Self::Sink, Self::T>;
-    fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
+    type Node = StreamNode<EP, RAW, Self::Sink, Self::T>;
+    fn generate(&self, sink: Self::Sink) -> Self::Node {
         StreamNode {
             raw: self.raw.clone(),
             sink,

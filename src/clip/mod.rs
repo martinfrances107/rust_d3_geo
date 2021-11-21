@@ -32,7 +32,6 @@ pub mod stream_node_line_factory;
 /// Generate post clip stream node.
 pub mod stream_node_post_clip_factory;
 
-use std::cell::RefCell;
 use std::fmt::Debug;
 use std::rc::Rc;
 
@@ -89,7 +88,7 @@ where
 
 /// Resample Stream Node - helper function.
 pub(crate) type InterpolateFn<STREAM, T> =
-    Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, Rc<RefCell<STREAM>>)>;
+    Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, STREAM)>;
 
 /// Part of the clipping definition.
 trait Line: Clean + Clone + Debug {}

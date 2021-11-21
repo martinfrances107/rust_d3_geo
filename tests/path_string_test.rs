@@ -33,7 +33,7 @@ mod path_string_test {
     #[inline]
     fn equirectangular<DRAIN, T>() -> Rc<Projection<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
     where
-        DRAIN: Stream<T = T> + Default,
+        DRAIN: Stream<EP = EP, T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         Rc::new(
@@ -45,12 +45,13 @@ mod path_string_test {
     }
 
     #[inline]
-    fn test_path<'a, DRAIN, T>(
+    fn test_path<'a, DRAIN, EP, T>(
         projection: Rc<Projection<ContextStream<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>,
         object: DataObject<T>,
     ) -> String
     where
-        DRAIN: Stream<T = T>,
+        EP: Clone + Debug + Stream<EP = EP, T = T>,
+        DRAIN: Stream<EP = EP, T = T>,
         T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         // let stream_dst = Rc::new(RefCell::new(ContextStream::S(PathString::default())));

@@ -1,6 +1,7 @@
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::VecDeque;
+use std::fmt::Debug;
 use std::rc::Rc;
 
 use approx::AbsDiffEq;
@@ -30,7 +31,7 @@ where
     // PR: Raw<T>,
     T: CoordFloat,
 {
-    buffer_stream: Rc<RefCell<ClipBuffer<T>>>,
+    buffer_stream: ClipBuffer<T>,
     clean: bool,
     clip_min: T,
     clip_max: T,
@@ -66,7 +67,7 @@ where
     #[inline]
     pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<T> {
         Self {
-            buffer_stream: Rc::new(RefCell::new(ClipBuffer::<T>::default())),
+            buffer_stream: ClipBuffer::<T>::default(),
             first: false,
             clean: false,
             clip_max: T::from(1e9).unwrap(),
@@ -196,18 +197,19 @@ where
     }
 }
 
-impl<SINK, T> StreamNode<Rectangle<T>, SINK, T>
+impl<EP, SINK, T> StreamNode<EP, Rectangle<T>, SINK, T>
 where
-    SINK: Stream<T = T>,
-    T: 'static + CoordFloat + FloatConst,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     #[inline]
     fn default_point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         if self.raw.visible(p) {
             if self.raw.use_buffer_stream {
-                self.raw.buffer_stream.borrow_mut().point(p, m);
+                self.raw.buffer_stream.point(p, m);
             } else {
-                self.sink.borrow_mut().point(p, m);
+                self.sink.point(p, m);
             }
         }
     }
@@ -232,20 +234,18 @@ where
             self.raw.first = false;
             if v {
                 if self.raw.use_buffer_stream {
-                    let mut as_b = self.raw.buffer_stream.borrow_mut();
-                    as_b.line_start();
-                    as_b.point(&p, None);
+                    self.raw.buffer_stream.line_start();
+                    self.raw.buffer_stream.point(&p, None);
                 } else {
-                    let mut sink_b = self.sink.borrow_mut();
-                    sink_b.line_start();
-                    sink_b.point(&p, None);
+                    self.sink.line_start();
+                    self.sink.point(&p, None);
                 };
             }
         } else if v && self.raw.v_ {
             if self.raw.use_buffer_stream {
-                self.raw.buffer_stream.borrow_mut().point(&p, m);
+                self.raw.buffer_stream.point(&p, m);
             } else {
-                self.sink.borrow_mut().point(&p, m);
+                self.sink.point(&p, m);
             }
         } else {
             self.raw.x_ = Float::max(
@@ -271,42 +271,37 @@ where
             ) {
                 if !self.raw.v_ {
                     if self.raw.use_buffer_stream {
-                        let mut bs_b = self.raw.buffer_stream.borrow_mut();
-                        bs_b.line_start();
-                        bs_b.point(&Coordinate { x: a[0], y: a[1] }, None);
+                        self.raw.buffer_stream.line_start();
+                        self.raw
+                            .buffer_stream
+                            .point(&Coordinate { x: a[0], y: a[1] }, None);
                     } else {
-                        let mut sink_b = self.sink.borrow_mut();
-                        sink_b.line_start();
-                        sink_b.point(&Coordinate { x: a[0], y: a[1] }, None);
+                        self.sink.line_start();
+                        self.sink.point(&Coordinate { x: a[0], y: a[1] }, None);
                     }
                 }
                 if self.raw.use_buffer_stream {
                     self.raw
                         .buffer_stream
-                        .borrow_mut()
                         .point(&Coordinate { x: b[0], y: b[1] }, None);
                 } else {
-                    self.sink
-                        .borrow_mut()
-                        .point(&Coordinate { x: b[0], y: b[1] }, None);
+                    self.sink.point(&Coordinate { x: b[0], y: b[1] }, None);
                 }
                 if !v {
                     if self.raw.use_buffer_stream {
-                        self.raw.buffer_stream.borrow_mut().line_end();
+                        self.raw.buffer_stream.line_end();
                     } else {
-                        self.sink.borrow_mut().line_end();
+                        self.sink.line_end();
                     }
                     self.raw.clean = false;
                 }
             } else if v {
                 if self.raw.use_buffer_stream {
-                    let mut as_b = self.raw.buffer_stream.borrow_mut();
-                    as_b.line_start();
-                    as_b.point(&p, None);
+                    self.raw.buffer_stream.line_start();
+                    self.raw.buffer_stream.point(&p, None);
                 } else {
-                    let mut sink_b = self.sink.borrow_mut();
-                    sink_b.line_start();
-                    sink_b.point(&p, None);
+                    self.sink.line_start();
+                    self.sink.point(&p, None);
                 }
                 self.raw.clean = false;
             }
@@ -330,7 +325,7 @@ where
             move |from: Option<Coordinate<T>>,
                   to: Option<Coordinate<T>>,
                   direction: T,
-                  stream: Rc<RefCell<SINK>>| {
+                  mut stream: SINK| {
                 let mut a;
                 let a1;
                 let direction_i8: i8 = T::to_i8(&direction).unwrap();
@@ -338,7 +333,7 @@ where
                     (Some(to), Some(from)) => {
                         a = corner(&from, &direction);
                         a1 = corner(&to, &direction);
-                        let mut s_mut = stream.borrow_mut();
+                        let mut s_mut = stream;
                         let cp = compare_point(&from, &to) < Ordering::Less;
                         let is_direction = direction > T::zero();
                         // logical exor: cp ^^ is_direction
@@ -358,7 +353,7 @@ where
                         }
                     }
                     (Some(to), None) => {
-                        stream.borrow_mut().point(&to, None);
+                        stream.point(&to, None);
                     }
                     _ => {
                         panic!("did not expect only from and no to .. or Nothing at all Does the JS version get here?");
@@ -369,12 +364,19 @@ where
     }
 }
 
-impl<SINK, T> Stream for StreamNode<Rectangle<T>, SINK, T>
+impl<EP, SINK, T> Stream for StreamNode<EP, Rectangle<T>, SINK, T>
 where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
+    type EP = EP;
+
+    #[inline]
+    fn get_endpoint(self) -> Self::EP {
+        self.sink.get_endpoint()
+    }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -415,16 +417,15 @@ where
 
         if clean_inside || visible {
             {
-                let mut sb = self.sink.borrow_mut();
-                sb.polygon_start();
+                self.sink.polygon_start();
             }
 
             let interpolate_fn: InterpolateFn<SINK, T> = self.gen_interpolate();
             if clean_inside {
-                let mut sb = self.sink.borrow_mut();
-                sb.line_start();
+                // let mut sb = self;
+                self.sink.line_start();
                 interpolate_fn(None, None, T::one(), self.sink.clone());
-                sb.line_end();
+                self.sink.line_end();
             }
 
             let compare_point = self.raw.gen_compare_point();
@@ -446,8 +447,7 @@ where
                 );
             }
 
-            let mut sb = self.sink.borrow_mut();
-            sb.polygon_end();
+            self.sink.polygon_end();
         }
     }
 
@@ -473,21 +473,19 @@ where
                 None,
             );
             if self.raw.v__ && self.raw.v_ {
-                self.raw.buffer_stream.borrow_mut().rejoin();
+                self.raw.buffer_stream.rejoin();
             }
 
-            if let Some(ResultEnum::BufferOutput(result)) =
-                self.raw.buffer_stream.borrow_mut().result()
-            {
+            if let Some(ResultEnum::BufferOutput(result)) = self.raw.buffer_stream.result() {
                 self.raw.segments.as_mut().unwrap().push_back(result);
             }
         }
         self.raw.use_line_point = false;
         if self.raw.v_ {
             if self.raw.use_buffer_stream {
-                self.raw.buffer_stream.borrow_mut().line_end();
+                self.raw.buffer_stream.line_end();
             } else {
-                self.sink.borrow_mut().line_end();
+                self.sink.line_end();
             }
         }
     }

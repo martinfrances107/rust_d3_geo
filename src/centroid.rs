@@ -242,6 +242,11 @@ where
     T: AddAssign + CoordFloat + FloatConst,
 {
     type T = T;
+    type EP = Self;
+
+    fn get_endpoint(self) -> Self {
+        self
+    }
 
     #[inline]
     fn line_end(&mut self) {

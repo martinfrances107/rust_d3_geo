@@ -1,5 +1,4 @@
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::fmt::Debug;
 
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -15,13 +14,26 @@ use crate::stream::Stream;
 ///
 /// T is required because SINK: Stream<T=T>
 #[derive(Clone, Debug)]
-pub struct StreamNode<RAW, SINK, T>
+pub struct StreamNode<EP, RAW, SINK, T>
 where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     /// The proto node, that is the struct without reference to the sink.
     pub raw: RAW,
     /// The downstream node.
-    pub sink: Rc<RefCell<SINK>>,
+    pub sink: SINK,
+}
+
+impl<EP, RAW, SINK, T> StreamNode<EP, RAW, SINK, T>
+where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
+    T: CoordFloat + FloatConst,
+{
+    #[inline]
+    fn get_endpoint(self) -> EP {
+        self.sink.get_endpoint()
+    }
 }

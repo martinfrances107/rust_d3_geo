@@ -1,4 +1,5 @@
 use std::default::Default;
+use std::fmt::Debug;
 
 use geo::{CoordFloat, Coordinate};
 
@@ -58,15 +59,22 @@ where
     }
 }
 
-impl<SINK, T> Stream for StreamNode<Line<T>, SINK, T>
+impl<EP, SINK, T> Stream for StreamNode<EP, Line<T>, SINK, T>
 where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
+    type EP = EP;
+
+    #[inline]
+    fn get_endpoint(self) -> Self::EP {
+        self.sink.get_endpoint()
+    }
 
     fn line_start(&mut self) {
-        self.sink.borrow_mut().line_start();
+        self.sink.line_start();
         self.raw.clean = CleanState::NoIntersections;
     }
 
@@ -80,7 +88,7 @@ where
         };
         let delta = (lambda1 - self.raw.lambda0).abs();
 
-        let mut s = self.sink.borrow_mut();
+        // let mut s = self.sink;
         if (delta - T::PI()).abs() < self.raw.epsilon {
             // Line crosses a pole.
             let f_2 = T::from(2_f64).unwrap();
@@ -89,30 +97,30 @@ where
             } else {
                 -T::FRAC_PI_2()
             };
-            s.point(
+            self.sink.point(
                 &Coordinate {
                     x: self.raw.lambda0,
                     y: self.raw.phi0,
                 },
                 None,
             );
-            s.point(
+            self.sink.point(
                 &Coordinate {
                     x: self.raw.sign0,
                     y: self.raw.phi0,
                 },
                 None,
             );
-            s.line_end();
-            s.line_start();
-            s.point(
+            self.sink.line_end();
+            self.sink.line_start();
+            self.sink.point(
                 &Coordinate {
                     x: sign1,
                     y: self.raw.phi0,
                 },
                 None,
             );
-            s.point(
+            self.sink.point(
                 &Coordinate {
                     x: lambda1,
                     y: self.raw.phi0,
@@ -130,16 +138,16 @@ where
                 lambda1 = lambda1 - sign1 * self.raw.epsilon;
             }
             self.raw.phi0 = intersect(self.raw.lambda0, self.raw.phi0, lambda1, phi1);
-            s.point(
+            self.sink.point(
                 &Coordinate {
                     x: self.raw.sign0,
                     y: self.raw.phi0,
                 },
                 None,
             );
-            s.line_end();
-            s.line_start();
-            s.point(
+            self.sink.line_end();
+            self.sink.line_start();
+            self.sink.point(
                 &Coordinate {
                     x: sign1,
                     y: self.raw.phi0,
@@ -151,7 +159,7 @@ where
 
         self.raw.lambda0 = lambda1;
         self.raw.phi0 = phi1;
-        s.point(
+        self.sink.point(
             &Coordinate {
                 x: self.raw.lambda0,
                 y: self.raw.phi0,
@@ -162,7 +170,7 @@ where
     }
 
     fn line_end(&mut self) {
-        self.sink.borrow_mut().line_end();
+        self.sink.line_end();
         self.raw.lambda0 = T::nan();
         self.raw.phi0 = T::nan();
     }

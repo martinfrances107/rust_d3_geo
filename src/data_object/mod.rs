@@ -1,6 +1,8 @@
 /// Related to the unit sphere.
 pub mod sphere;
 
+use std::fmt::Debug;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Geometry;
@@ -88,7 +90,12 @@ where
     T: CoordFloat + FloatConst,
 {
     type T = T;
-    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
+
+    fn to_stream<EP, SD>(&self, stream: &mut SD)
+    where
+        EP: Clone + Debug + Stream<EP = EP, T = T>,
+        SD: Stream<EP = EP, T = T>,
+    {
         match self {
             DataObject::Collection(Collection::Feature { feature: _ }) => {
                 todo!("fixme");

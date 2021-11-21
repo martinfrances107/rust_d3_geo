@@ -2,6 +2,7 @@ pub mod link;
 
 use std::cell::RefCell;
 use std::cmp::Ordering;
+use std::fmt::Debug;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -23,14 +24,15 @@ pub(crate) type CompareIntersectionsFn<T> =
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
-pub fn rejoin<SINK, T>(
+pub fn rejoin<EP, SINK, T>(
     segments: &[Vec<LineElem<T>>],
     compare_intersection: CompareIntersectionsFn<T>,
     start_inside: bool,
     interpolate_fn: InterpolateFn<SINK, T>,
-    stream: Rc<RefCell<SINK>>,
+    mut stream: SINK,
 ) where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     let mut start_inside = start_inside;
@@ -38,7 +40,6 @@ pub fn rejoin<SINK, T>(
     let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
     // limt scope of stream_b to just the segement for loop.
     {
-        let mut stream_b = stream.borrow_mut();
         let epsilon = T::from(EPSILON).unwrap();
         let two_epsilon = T::from(2.0 * EPSILON).unwrap();
         for segment in segments.iter() {
@@ -53,13 +54,13 @@ pub fn rejoin<SINK, T>(
             // if point_equal(p0.p, p1.p) {
             if p0.p.abs_diff_eq(&p1.p, epsilon) {
                 if p0.m.is_none() && p1.m.is_none() {
-                    stream_b.line_start();
+                    stream.line_start();
                     // for i in 0..n {
                     for elem in segment.iter().take(n) {
                         p0 = *elem;
-                        stream_b.point(&p0.p, None);
+                        stream.point(&p0.p, None);
                     }
-                    stream_b.line_end();
+                    stream.line_end();
                     return;
                 }
                 // handle degenerate cases by moving the point
@@ -134,7 +135,7 @@ pub fn rejoin<SINK, T>(
 
         let mut points = current.borrow().z.clone();
 
-        stream.borrow_mut().line_start();
+        stream.line_start();
 
         loop {
             current.borrow().o.clone().unwrap().borrow_mut().v = true;
@@ -145,7 +146,7 @@ pub fn rejoin<SINK, T>(
                         Some(points) => {
                             for p in points {
                                 point = p;
-                                stream.borrow_mut().point(&point.p, point.m);
+                                stream.point(&point.p, point.m);
                             }
                         }
                         None => {
@@ -167,10 +168,9 @@ pub fn rejoin<SINK, T>(
                         .borrow()
                         .z
                         .clone();
-                    let mut stream_b = stream.borrow_mut();
                     for i in (1..points.clone().unwrap().len()).rev() {
                         point = points.clone().unwrap()[i];
-                        stream_b.point(&point.p, None);
+                        stream.point(&point.p, None);
                     }
                 } else {
                     interpolate_fn(
@@ -197,6 +197,6 @@ pub fn rejoin<SINK, T>(
                 break;
             }
         }
-        stream.borrow_mut().line_end();
+        stream.line_end();
     }
 }

@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use geo::CoordFloat;
 use geo::LineString;
 
@@ -10,7 +12,11 @@ impl<T: CoordFloat> Streamable for LineString<T> {
     type T = T;
 
     #[inline]
-    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
+    fn to_stream<EP, SD>(&self, stream: &mut SD)
+    where
+        EP: Clone + Debug + Stream<EP = EP, T = T>,
+        SD: Stream<EP = EP, T = T>,
+    {
         stream_line(self, stream, 0);
     }
 }

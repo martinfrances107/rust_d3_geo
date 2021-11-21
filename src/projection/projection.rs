@@ -1,6 +1,4 @@
-use crate::projection::RotateTransformFactory;
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::fmt::Debug;
 
 use approx::AbsDiffEq;
 use derivative::*;
@@ -13,6 +11,7 @@ use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::stream_node_post_clip_factory::StreamNodePostClipFactory;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
+use crate::projection::RotateTransformFactory;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
@@ -32,13 +31,16 @@ use super::StreamNode;
 //     SP(Box<dyn Stream<T=T>>),
 // }
 
-type TransformRadiansFactory<DRAIN, PR, PV, T> = StreamNodeFactory<
+type TransformRadiansFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
+    EP,
     StreamTransformRadians,
     StreamNode<
+        EP,
         RotateRadians<T>,
         StreamNode<
-            Clip<PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
-            ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+            EP,
+            Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>, T>,
+            ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>,
             T,
         >,
         T,
@@ -49,13 +51,16 @@ type TransformRadiansFactory<DRAIN, PR, PV, T> = StreamNodeFactory<
 /// Output of projection.stream().
 ///
 /// use by GeoPath.
-pub type ProjectionStreamOutput<DRAIN, PR, PV, T> = StreamNode<
+pub type ProjectionStreamOutput<DRAIN, EP, PR, PV, T> = StreamNode<
+    EP,
     StreamTransformRadians,
     StreamNode<
+        EP,
         RotateRadians<T>,
         StreamNode<
-            Clip<PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
-            ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+            EP,
+            Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>, T>,
+            ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>,
             T,
         >,
         T,
@@ -69,32 +74,34 @@ pub type ProjectionStreamOutput<DRAIN, PR, PV, T> = StreamNode<
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct Projection<DRAIN, PR, PV, T>
+pub struct Projection<DRAIN, EP, PR, PV, T>
 where
-    DRAIN: Stream<T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     pub(crate) postclip_factory: StreamNodePostClipFactory<DRAIN, T>,
 
-    pub(crate) resample_factory: StreamNodeResampleFactory<PR, PostClipNode<DRAIN, T>, T>,
+    pub(crate) resample_factory: StreamNodeResampleFactory<PR, PostClipNode<DRAIN, EP, T>, T>,
 
     pub(crate) preclip_factory:
-        StreamNodeClipFactory<PR, PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
+        StreamNodeClipFactory<EP, PR, PV, ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>, T>,
 
-    pub(crate) rotate_factory: RotateFactory<DRAIN, PR, PV, T>,
+    pub(crate) rotate_factory: RotateFactory<DRAIN, EP, PR, PV, T>,
     /// Used exclusively by Transform( not stream releated).
     pub rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
-    pub(crate) rotate_transform_factory: RotateTransformFactory<DRAIN, PR, PV, T>,
+    pub(crate) rotate_transform_factory: RotateTransformFactory<DRAIN, EP, PR, PV, T>,
 
-    pub(crate) transform_radians_factory: TransformRadiansFactory<DRAIN, PR, PV, T>,
+    pub(crate) transform_radians_factory: TransformRadiansFactory<DRAIN, EP, PR, PV, T>,
 }
 
-impl<'a, DRAIN, PR, PV, T> Projection<DRAIN, PR, PV, T>
+impl<'a, DRAIN, EP, PR, PV, T> Projection<DRAIN, EP, PR, PV, T>
 where
-    DRAIN: Stream<T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -108,24 +115,25 @@ where
     ///
     /// In javascript stream is used as a property to be removed from the object.
     /// In rust that is a closure.
-    pub fn stream(&self, drain: Rc<RefCell<DRAIN>>) -> ProjectionStreamOutput<DRAIN, PR, PV, T> {
+    pub fn stream(&self, drain: DRAIN) -> ProjectionStreamOutput<DRAIN, EP, PR, PV, T> {
         // let postclip = (self.postclip)(drain);
-        let postclip_node = Rc::new(RefCell::new(self.postclip_factory.generate(drain)));
+        let postclip_node = self.postclip_factory.generate(drain);
 
-        let resample_node = Rc::new(RefCell::new(self.resample_factory.generate(postclip_node)));
+        let resample_node = self.resample_factory.generate(postclip_node);
 
-        let preclip_node = Rc::new(RefCell::new(self.preclip_factory.generate(resample_node)));
+        let preclip_node = self.preclip_factory.generate(resample_node);
 
-        let rotate_node = Rc::new(RefCell::new(self.rotate_factory.generate(preclip_node)));
+        let rotate_node = self.rotate_factory.generate(preclip_node);
 
         // Output stage is a transform_radians node.
         self.transform_radians_factory.generate(rotate_node)
     }
 }
 
-impl<'a, DRAIN, PR, PV, T> Transform for Projection<DRAIN, PR, PV, T>
+impl<'a, DRAIN, EP, PR, PV, T> Transform for Projection<DRAIN, EP, PR, PV, T>
 where
-    DRAIN: Stream<T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

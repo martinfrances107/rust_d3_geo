@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -20,37 +21,40 @@ use super::Scale;
 /// Root transform.
 /// Used to define a projection builder.
 #[derive(Clone, Debug)]
-pub struct Gnomic<DRAIN, T>
+pub struct Gnomic<DRAIN, EP, T>
 where
     T: CoordFloat + FloatConst,
 {
     p_drain: PhantomData<DRAIN>,
+    p_ep: PhantomData<EP>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Default for Gnomic<DRAIN, T>
+impl<DRAIN, EP, T> Default for Gnomic<DRAIN, EP, T>
 where
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Gnomic {
             p_drain: PhantomData::<DRAIN>,
+            p_ep: PhantomData::<EP>,
             p_t: PhantomData::<T>,
         }
     }
 }
 
-impl<DRAIN, T> Raw<T> for Gnomic<DRAIN, T>
+impl<DRAIN, EP, T> Raw<T> for Gnomic<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, Gnomic<DRAIN, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, EP, Gnomic<DRAIN, EP, T>, PV<T>, T>;
     type T = T;
 
     fn builder() -> Self::Builder
     where
-        DRAIN: Stream<T = T>,
+        DRAIN: Stream<EP = EP, T = T>,
     {
         Builder::new(gen_clip_factory_antimeridian(), Gnomic::default())
             .scale(T::from(144.049_f64).unwrap())
@@ -58,7 +62,7 @@ where
     }
 }
 
-impl<DRAIN, T> Gnomic<DRAIN, T>
+impl<DRAIN, EP, T> Gnomic<DRAIN, EP, T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -72,9 +76,10 @@ where
     }
 }
 
-impl<DRAIN, T> Transform for Gnomic<DRAIN, T>
+impl<DRAIN, EP, T> Transform for Gnomic<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;

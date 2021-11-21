@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -120,12 +122,19 @@ where
     }
 }
 
-impl<SINK, T> Stream for StreamNode<Line<T>, SINK, T>
+impl<EP, SINK, T> Stream for StreamNode<EP, Line<T>, SINK, T>
 where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP=EP, T=T>,
+    SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
+    type EP = EP;
+
+    #[inline]
+    fn get_endpoint(self) -> Self::EP {
+        self.sink.get_endpoint()
+    }
 
     fn line_start(&mut self) {
         self.raw.v00 = false;
@@ -154,12 +163,12 @@ where
             CODE_NONE
         };
 
-        let mut s = self.sink.borrow_mut();
+        // let mut s = self.sink;
         if self.raw.point0.is_none() {
             self.raw.v00 = v;
             self.raw.v0 = v;
             if v {
-                s.line_start();
+                self.sink.line_start();
             }
         }
 
@@ -208,7 +217,7 @@ where
             self.raw.clean = CleanState::IntersectionsOrEmpty;
             if v {
                 // outside going in
-                s.line_start();
+                self.sink.line_start();
                 point2 = match intersect(
                     &point1.unwrap(),
                     &self.raw.point0.unwrap(),
@@ -224,7 +233,7 @@ where
                         todo!("must cover this case.");
                     }
                 };
-                s.point(&point2.unwrap().p, None)
+                self.sink.point(&point2.unwrap().p, None)
             } else {
                 // Inside going out.
                 point2 = match intersect(
@@ -243,8 +252,8 @@ where
                     }
                 };
 
-                s.point(&point2.unwrap().p, Some(2));
-                s.line_end();
+                self.sink.point(&point2.unwrap().p, Some(2));
+                self.sink.line_end();
             }
             self.raw.point0 = point2;
         } else if self.raw.not_hemisphere && self.raw.point0.is_some() && self.raw.small_radius ^ v
@@ -271,15 +280,15 @@ where
                     IntersectReturn::Two(t) => {
                         self.raw.clean = CleanState::IntersectionsOrEmpty;
                         if self.raw.small_radius {
-                            s.line_start();
-                            s.point(&t[0], None);
-                            s.point(&t[1], None);
-                            s.line_end();
+                            self.sink.line_start();
+                            self.sink.point(&t[0], None);
+                            self.sink.point(&t[1], None);
+                            self.sink.line_end();
                         } else {
-                            s.point(&t[1], None);
-                            s.line_end();
-                            s.line_start();
-                            s.point(&t[0], Some(3_u8));
+                            self.sink.point(&t[1], None);
+                            self.sink.line_end();
+                            self.sink.line_start();
+                            self.sink.point(&t[0], Some(3_u8));
                         }
                     }
                 }
@@ -293,7 +302,7 @@ where
                 .p
                 .abs_diff_eq(&point1.unwrap().p, T::from(EPSILON).unwrap()))
         {
-            s.point(&point1.unwrap().p, None);
+            self.sink.point(&point1.unwrap().p, None);
         }
         self.raw.point0 = point1;
         self.raw.v0 = v;
@@ -301,7 +310,7 @@ where
     }
     fn line_end(&mut self) {
         if self.raw.v0 {
-            self.sink.borrow_mut().line_end();
+            self.sink.line_end();
         }
         self.raw.point0 = None;
     }

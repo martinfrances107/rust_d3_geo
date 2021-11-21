@@ -102,6 +102,12 @@ where
     T: CoordFloat + Display,
 {
     type T = T;
+    type EP = Self;
+
+    #[inline]
+    fn get_endpoint(self) -> Self {
+        self
+    }
 
     #[inline]
     fn polygon_start(&mut self) {

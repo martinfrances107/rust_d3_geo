@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use geo::CoordFloat;
 use geo::Geometry;
 use num_traits::FloatConst;
@@ -12,7 +14,11 @@ where
     type T = T;
 
     #[inline]
-    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
+    fn to_stream<EP, SD>(&self, stream: &mut SD)
+    where
+        EP: Clone + Debug + Stream<EP = EP, T = T>,
+        SD: Stream<EP = EP, T = T>,
+    {
         match self {
             Geometry::Point(p) => p.to_stream(stream),
 

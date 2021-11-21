@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
@@ -34,42 +35,48 @@ where
     }
 }
 
-impl<PR, SINK, T> Stream for StreamNode<None<PR, T>, SINK, T>
+impl<EP, PR, SINK, T> Stream for StreamNode<EP, None<PR, T>, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
+    type EP = EP;
     type T = T;
 
     #[inline]
+    fn get_endpoint(self) -> Self::EP {
+        self.sink.get_endpoint()
+    }
+
+    #[inline]
     fn sphere(&mut self) {
-        self.sink.borrow_mut().sphere();
+        self.sink.sphere();
     }
 
     #[inline]
     fn line_start(&mut self) {
-        self.sink.borrow_mut().line_start();
+        self.sink.line_start();
     }
 
     #[inline]
     fn line_end(&mut self) {
-        self.sink.borrow_mut().line_end();
+        self.sink.line_end();
     }
 
     #[inline]
     fn polygon_start(&mut self) {
-        self.sink.borrow_mut().polygon_start();
+        self.sink.polygon_start();
     }
 
     #[inline]
     fn polygon_end(&mut self) {
-        self.sink.borrow_mut().polygon_end();
+        self.sink.polygon_end();
     }
 
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         let t = &self.raw.projection_transform.transform(p);
-        let mut s = self.sink.borrow_mut();
-        s.point(t, m);
+        self.sink.point(t, m);
     }
 }

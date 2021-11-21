@@ -40,6 +40,12 @@ where
     T: CoordFloat,
 {
     type T = T;
+    type EP = Self;
+
+    #[inline]
+    fn get_endpoint(self) -> Self {
+        self
+    }
     fn point(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {}
     fn sphere(&mut self) {}
     fn line_start(&mut self) {}
@@ -67,7 +73,8 @@ where
 {
     /// f32 or f64.
     type T;
-
+    /// The End point.
+    type EP;
     /// Declare a point.
     fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}
     /// Declare a sphere object.
@@ -80,13 +87,16 @@ where
     fn polygon_start(&mut self) {}
     /// Declare the end of a polygon.
     fn polygon_end(&mut self) {}
+
+    /// Returns the end point of the stream.
+    fn get_endpoint(self) -> Self::EP;
 }
 
 /// TODO Generics - Need to come back and refactor to take LineElem<T>
 /// or Coordinates. As the JS allow for.
-fn stream_line<S, T>(ls: &LineString<T>, stream: &mut S, closed: usize)
+fn stream_line<EP, S, T>(ls: &LineString<T>, stream: &mut S, closed: usize)
 where
-    S: Stream<T = T>,
+    S: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     let n = ls.0.len() - closed;
@@ -97,9 +107,9 @@ where
     stream.line_end();
 }
 
-fn stream_polygon<S, T>(polygon: &Polygon<T>, stream: &mut S)
+fn stream_polygon<EP, S, T>(polygon: &Polygon<T>, stream: &mut S)
 where
-    S: Stream<T = T>,
+    S: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     stream.polygon_start();

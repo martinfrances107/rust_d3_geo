@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -104,30 +106,31 @@ where
     }
 }
 
-impl<'a, PR, SINK, T> StreamNode<Resample<PR, T>, SINK, T>
+impl<'a, EP, PR, SINK, T> StreamNode<EP, Resample<PR, T>, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         let pt = self.raw.projection_transform.transform(p);
-        self.sink.borrow_mut().point(&pt, m);
+        self.sink.point(&pt, m);
     }
 
     fn line_start_default(&mut self) {
         self.raw.x0 = T::nan();
         self.raw.point_state = PointState::Line;
-        self.sink.borrow_mut().line_start();
+        self.sink.line_start();
     }
 
     fn line_end_default(&mut self) {
         self.raw.point_state = PointState::Default;
-        self.sink.borrow_mut().line_end();
+        self.sink.line_end();
     }
 
     fn ring_start(&mut self) {
-        self.sink.borrow_mut().line_start();
+        self.sink.line_start();
         self.raw.point_state = PointState::Ring;
         self.raw.use_line_end = false;
     }
@@ -166,7 +169,7 @@ where
         }
         self.raw.use_line_end = true;
 
-        self.sink.borrow_mut().line_end();
+        self.sink.line_end();
     }
 
     fn line_point(&mut self, p: &Coordinate<T>) {
@@ -193,7 +196,7 @@ where
         self.raw.a0 = c[0];
         self.raw.b0 = c[1];
         self.raw.c0 = c[2];
-        self.sink.borrow_mut().point(
+        self.sink.point(
             &Coordinate {
                 x: self.raw.x0,
                 y: self.raw.y0,
@@ -265,9 +268,7 @@ where
                         x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth,
                     );
 
-                    self.sink
-                        .borrow_mut()
-                        .point(&Coordinate { x: x2, y: y2 }, None);
+                    self.sink.point(&Coordinate { x: x2, y: y2 }, None);
 
                     self.resample_line_to(
                         x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth,
@@ -278,23 +279,29 @@ where
     }
 }
 
-impl<'a, PR, SINK, T> Stream for StreamNode<Resample<PR, T>, SINK, T>
+impl<'a, EP, PR, SINK, T> Stream for StreamNode<EP, Resample<PR, T>, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
+    type EP = EP;
     type T = T;
 
+    #[inline]
+    fn get_endpoint(self) -> Self::EP {
+        self.sink.get_endpoint()
+    }
     fn sphere(&mut self) {
-        self.sink.borrow_mut().sphere();
+        self.sink.sphere();
     }
     fn polygon_start(&mut self) {
-        self.sink.borrow_mut().polygon_start();
+        self.sink.polygon_start();
         self.raw.use_line_start = false;
     }
     fn polygon_end(&mut self) {
-        self.sink.borrow_mut().polygon_end();
+        self.sink.polygon_end();
         self.raw.use_line_start = true;
     }
 

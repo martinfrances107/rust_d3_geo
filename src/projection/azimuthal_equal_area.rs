@@ -21,21 +21,23 @@ use super::azimuthal::azimuthal_raw;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Copy, Clone, Debug)]
-pub struct AzimuthalEqualArea<DRAIN, T>
+pub struct AzimuthalEqualArea<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Raw<T> for AzimuthalEqualArea<DRAIN, T>
+impl<DRAIN, EP, T> Raw<T> for AzimuthalEqualArea<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, AzimuthalEqualArea<DRAIN, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, EP, AzimuthalEqualArea<DRAIN, EP, T>, PV<T>, T>;
     type T = T;
 
     #[inline]
@@ -49,9 +51,10 @@ where
     }
 }
 
-impl<DRAIN, T> Default for AzimuthalEqualArea<DRAIN, T>
+impl<DRAIN, EP, T> Default for AzimuthalEqualArea<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
@@ -62,9 +65,10 @@ where
     }
 }
 
-impl<DRAIN, T> AzimuthalEqualArea<DRAIN, T>
+impl<DRAIN, EP, T> AzimuthalEqualArea<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     #[inline]
@@ -79,9 +83,10 @@ where
     }
 }
 
-impl<DRAIN, T> Transform for AzimuthalEqualArea<DRAIN, T>
+impl<DRAIN, EP, T> Transform for AzimuthalEqualArea<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;

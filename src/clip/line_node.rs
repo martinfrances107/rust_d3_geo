@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -9,21 +11,32 @@ use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
 #[derive(Clone, Debug)]
-pub enum LineNode<SINK, T>
+pub enum LineNode<EP, SINK, T>
 where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
-    C(StreamNode<LineCircle<T>, SINK, T>),
-    A(StreamNode<LineAntimeridian<T>, SINK, T>),
+    C(StreamNode<EP, LineCircle<T>, SINK, T>),
+    A(StreamNode<EP, LineAntimeridian<T>, SINK, T>),
 }
 
-impl<SINK, T> Stream for LineNode<SINK, T>
+impl<EP, SINK, T> Stream for LineNode<EP, SINK, T>
 where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
+    type EP = EP;
+
+    #[inline]
+    fn get_endpoint(self) -> Self::EP {
+        match self {
+            LineNode::C(l) => l.get_endpoint(),
+            LineNode::A(l) => l.get_endpoint(),
+        }
+    }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<Self::T>, m: Option<u8>) {

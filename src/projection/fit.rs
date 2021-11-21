@@ -1,13 +1,8 @@
 use approx::AbsDiffEq;
-// use crate::projection::builder::Builder;
-use num_traits::AsPrimitive;
-use num_traits::Float;
-
-use std::cell::RefCell;
-use std::rc::Rc;
-
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
+use num_traits::Float;
 use num_traits::FloatConst;
 
 use crate::data_object::DataObject;
@@ -23,14 +18,15 @@ use super::Raw as ProjectionRaw;
 use super::Scale;
 use super::Translate;
 
-type FitBounds<DRAIN, PR, PV, T> =
-    Box<dyn FnOnce([Coordinate<T>; 2], Builder<DRAIN, PR, PV, T>) -> Builder<DRAIN, PR, PV, T>>;
+type FitBounds<DRAIN, EP, PR, PV, T> = Box<
+    dyn FnOnce([Coordinate<T>; 2], Builder<DRAIN, EP, PR, PV, T>) -> Builder<DRAIN, EP, PR, PV, T>,
+>;
 
 fn fit<PR, PV, T>(
-    builder: Builder<Bounds<T>, PR, PV, T>,
-    fit_bounds: FitBounds<Bounds<T>, PR, PV, T>,
+    builder: Builder<Bounds<T>, Bounds<T>, PR, PV, T>,
+    fit_bounds: FitBounds<Bounds<T>, Bounds<T>, PR, PV, T>,
     object: &DataObject<T>,
-) -> Builder<Bounds<T>, PR, PV, T>
+) -> Builder<Bounds<T>, Bounds<T>, PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -49,11 +45,11 @@ where
         None => builder1,
     };
 
-    let bounds_stream = Rc::new(RefCell::new(Bounds::default()));
+    let mut bounds_stream = Bounds::default();
     let mut stream_in = builder2.build().stream(bounds_stream.clone());
 
     object.to_stream(&mut stream_in);
-    let result = bounds_stream.borrow_mut().result();
+    let result = bounds_stream.result();
     let bounds = match result {
         Some(ResultEnum::Bounds(bounds)) => bounds,
         _ => {
@@ -68,10 +64,10 @@ where
 }
 
 pub(super) fn fit_extent<PR, PV, T>(
-    builder: Builder<Bounds<T>, PR, PV, T>,
+    builder: Builder<Bounds<T>, Bounds<T>, PR, PV, T>,
     extent: [[T; 2]; 2],
     object: &DataObject<T>,
-) -> Builder<Bounds<T>, PR, PV, T>
+) -> Builder<Bounds<T>, Bounds<T>, PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -98,10 +94,10 @@ where
 }
 
 pub(super) fn fit_size<PR, PV, T>(
-    builder: Builder<Bounds<T>, PR, PV, T>,
+    builder: Builder<Bounds<T>, Bounds<T>, PR, PV, T>,
     size: [T; 2],
     object: &DataObject<T>,
-) -> Builder<Bounds<T>, PR, PV, T>
+) -> Builder<Bounds<T>, Bounds<T>, PR, PV, T>
 where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,

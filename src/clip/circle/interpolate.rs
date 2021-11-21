@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::fmt::Debug;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -10,9 +10,10 @@ use crate::clip::InterpolateFn;
 use crate::stream::Stream;
 
 /// Sets up a clip circle interpolate function, for a given radius.
-pub fn generate<STREAM, T>(radius: T) -> InterpolateFn<STREAM, T>
+pub fn generate<EP, STREAM, T>(radius: T) -> InterpolateFn<STREAM, T>
 where
-    STREAM: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    STREAM: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     // let cr = radius.cos();
@@ -24,9 +25,7 @@ where
         move |from: Option<Coordinate<T>>,
               to: Option<Coordinate<T>>,
               direction: T,
-              stream: Rc<RefCell<STREAM>>| {
-            stream_fn(stream, radius, delta, direction, from, to)
-        },
+              stream: STREAM| { stream_fn(stream, radius, delta, direction, from, to) },
     );
 
     out

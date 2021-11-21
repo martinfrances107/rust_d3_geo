@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -19,40 +20,44 @@ use super::Scale;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Copy, Clone, Debug)]
-pub struct Stereographic<DRAIN, T>
+pub struct Stereographic<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     p_drain: PhantomData<DRAIN>,
+    p_ep: PhantomData<EP>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Default for Stereographic<DRAIN, T>
+impl<DRAIN, EP, T> Default for Stereographic<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Stereographic {
             p_drain: PhantomData::<DRAIN>,
+            p_ep: PhantomData::<EP>,
             p_t: PhantomData::<T>,
         }
     }
 }
 
-impl<DRAIN, T> Raw<T> for Stereographic<DRAIN, T>
+impl<DRAIN, EP, T> Raw<T> for Stereographic<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, Stereographic<DRAIN, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, EP, Stereographic<DRAIN, EP, T>, PV<T>, T>;
     type T = T;
 
     #[inline]
     fn builder() -> Self::Builder
     where
-        DRAIN: Stream<T = T>,
+        DRAIN: Stream<EP = EP, T = T>,
     {
         Builder::new(gen_clip_factory_antimeridian(), Stereographic::default())
             .scale(T::from(250_f64).unwrap())
@@ -60,9 +65,10 @@ where
     }
 }
 
-impl<DRAIN, T> Stereographic<DRAIN, T>
+impl<DRAIN, EP, T> Stereographic<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     #[inline]
@@ -75,9 +81,10 @@ where
     }
 }
 
-impl<DRAIN, T> Transform for Stereographic<DRAIN, T>
+impl<DRAIN, EP, T> Transform for Stereographic<DRAIN, EP, T>
 where
-    DRAIN: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    DRAIN: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     type T = T;

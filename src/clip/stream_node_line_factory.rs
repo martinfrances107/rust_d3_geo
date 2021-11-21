@@ -1,7 +1,6 @@
-use std::cell::RefCell;
-use std::rc::Rc;
-
 use core::marker::PhantomData;
+use std::fmt::Debug;
+
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -20,22 +19,22 @@ use crate::stream::Stream;
 /// Inside Projection::stream() NodeFactory::generate() will be called to
 /// construct the pipeline.
 #[derive(Clone, Debug)]
-pub struct StreamNodeLineFactory<SINK, T>
+pub struct StreamNodeLineFactory<EP, SINK, T>
 where
     T: CoordFloat + FloatConst,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
 {
     phantom_sink: PhantomData<SINK>,
     line: Line<T>,
 }
 
-impl<SINK, T> StreamNodeLineFactory<SINK, T>
+impl<EP, SINK, T> StreamNodeLineFactory<EP, SINK, T>
 where
     T: CoordFloat + FloatConst,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
 {
     /// Given a PostClip construct a StreamNode.
-    pub fn new(line: Line<T>) -> StreamNodeLineFactory<SINK, T> {
+    pub fn new(line: Line<T>) -> StreamNodeLineFactory<EP, SINK, T> {
         StreamNodeLineFactory {
             phantom_sink: PhantomData::<SINK>,
             line,
@@ -43,16 +42,17 @@ where
     }
 }
 
-impl<SINK, T> NodeFactory for StreamNodeLineFactory<SINK, T>
+impl<EP, SINK, T> NodeFactory for StreamNodeLineFactory<EP, SINK, T>
 where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type Sink = SINK;
     // type Node = PostClipNode<SINK, T>;
     type T = T;
-    type Node = LineNode<SINK, Self::T>;
-    fn generate(&self, sink: Rc<RefCell<SINK>>) -> Self::Node {
+    type Node = LineNode<EP, SINK, Self::T>;
+    fn generate(&self, sink: SINK) -> Self::Node {
         match &self.line {
             Line::A(l) => LineNode::A(StreamNode { raw: *l, sink }),
             Line::C(l) => LineNode::C(StreamNode { raw: *l, sink }),

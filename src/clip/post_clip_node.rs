@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
@@ -9,23 +11,34 @@ use crate::stream::Stream;
 
 /// A Stream pipeline stage.
 #[derive(Clone, Debug)]
-pub enum PostClipNode<SINK, T>
+pub enum PostClipNode<EP, SINK, T>
 where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     /// Default pass thru.
-    I(StreamNode<Identity, SINK, T>),
+    I(StreamNode<EP, Identity, SINK, T>),
     /// Clipping rectangle.
-    R(StreamNode<Rectangle<T>, SINK, T>),
+    R(StreamNode<EP, Rectangle<T>, SINK, T>),
 }
 
-impl<'a, SINK, T> Stream for PostClipNode<SINK, T>
+impl<'a, EP, SINK, T> Stream for PostClipNode<EP, SINK, T>
 where
-    SINK: Stream<T = T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
+    type EP = EP;
+
+    #[inline]
+    fn get_endpoint(self) -> Self::EP {
+        match self {
+            PostClipNode::I(i) => i.get_endpoint(),
+            PostClipNode::R(r) => r.get_endpoint(),
+        }
+    }
 
     fn sphere(&mut self) {
         match self {

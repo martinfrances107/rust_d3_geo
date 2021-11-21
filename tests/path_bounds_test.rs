@@ -2,7 +2,6 @@
 #[cfg(test)]
 mod path_bounds_test {
 
-    use std::cell::RefCell;
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
@@ -58,7 +57,7 @@ mod path_bounds_test {
             + AddAssign
             + Default,
     {
-        let cs = Rc::new(RefCell::new(ContextStream::default()));
+        let cs = ContextStream::default();
         match Builder::new(cs).build(projection).bounds(object) {
             Some(p) => match p {
                 ResultEnum::Bounds(b) => return b,

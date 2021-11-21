@@ -1,8 +1,6 @@
-use std::cell::RefCell;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
-use std::rc::Rc;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
@@ -67,33 +65,39 @@ mod fit;
 mod resample;
 
 /// Projection type.
-pub type PostClipFactory<DRAIN, PR, PV, T> = StreamNodeFactory<
-    PostClipNode<DRAIN, T>,
+pub type PostClipFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
+    EP,
+    PostClipNode<DRAIN, EP, T>,
     StreamNode<
-        Clip<PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
-        ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+        EP,
+        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>, T>,
+        ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>,
         T,
     >,
     T,
 >;
 
 /// Projection type.
-pub type RotateFactory<DRAIN, PR, PV, T> = StreamNodeFactory<
+pub type RotateFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
+    EP,
     RotateRadians<T>,
     StreamNode<
-        Clip<PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
-        ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+        EP,
+        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>, T>,
+        ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>,
         T,
     >,
     T,
 >;
 
 /// Projection type.
-pub type RotateTransformFactory<DRAIN, PR, PV, T> = StreamNodeFactory<
+pub type RotateTransformFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
+    EP,
     Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
     StreamNode<
-        Clip<PV, ResampleNode<PR, PostClipNode<DRAIN, T>, T>, T>,
-        ResampleNode<PR, PostClipNode<DRAIN, T>, T>,
+        EP,
+        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>, T>,
+        ResampleNode<EP, PR, PostClipNode<DRAIN, EP, T>, T>,
         T,
     >,
     T,
@@ -138,16 +142,18 @@ where
 
 trait Builder
 where
-    <Self as Builder>::Drain: Stream<T = <Self as Builder>::T>,
+    <Self as Builder>::Drain: Stream<EP = Self::EP, T = Self::T>,
+    <Self as Builder>::EP: Clone + Debug + Stream<EP = Self::EP, T = <Self as Builder>::T>,
     <Self as Builder>::PR: Raw<Self::T>,
     <Self as Builder>::PV: PointVisible<T = Self::T>,
     <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;
+    type EP;
     type PR;
     type PV;
     type T;
-    fn build(s: Self::PR) -> Projection<Self::Drain, Self::PR, Self::PV, Self::T>;
+    fn build(s: Self::PR) -> Projection<Self::Drain, Self::EP, Self::PR, Self::PV, Self::T>;
 }
 
 /// Controls the projections center point.
@@ -288,7 +294,7 @@ where
     type T;
 
     /// Combine the sink with the proto-node and output a StreamNode.
-    fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node;
+    fn generate(&self, sink: Self::Sink) -> Self::Node;
 }
 
 /// Resampling getter and setters.

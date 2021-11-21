@@ -4,7 +4,6 @@ mod path_centroid_test {
 
     extern crate pretty_assertions;
 
-    use std::cell::RefCell;
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
@@ -18,6 +17,7 @@ mod path_centroid_test {
     use geo::LineString;
     use geo::MultiLineString;
     use geo::MultiPoint;
+    use geo::MultiPolygon;
     use geo::Point;
     use geo::Polygon;
     use num_traits::AsPrimitive;
@@ -41,9 +41,11 @@ mod path_centroid_test {
     use rust_d3_geo::stream::Stream;
 
     #[inline]
-    fn equirectangular<DRAIN, T>() -> Rc<Projection<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
+    fn equirectangular<DRAIN, EP, T>(
+    ) -> Rc<Projection<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
     where
-        DRAIN: Stream<T = T> + Default,
+        EP: Clone + Debug + Stream<EP = EP, T = T>,
+        DRAIN: Stream<EP = EP, T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         Rc::new(
@@ -58,12 +60,13 @@ mod path_centroid_test {
     }
 
     #[inline]
-    fn test_centroid<'a, DRAIN, T>(
+    fn test_centroid<'a, DRAIN, EP, T>(
         projection: Rc<Projection<ContextStream<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>,
         object: &DataObject<T>,
     ) -> Point<T>
     where
-        DRAIN: Stream<T = T>,
+        EP: Clone + Debug + Stream<EP = EP, T = T>,
+        DRAIN: Stream<EP = EP, T = T>,
         T: AddAssign<T>
             + AbsDiffEq<Epsilon = T>
             + AsPrimitive<T>
@@ -71,7 +74,7 @@ mod path_centroid_test {
             + Display
             + FloatConst,
     {
-        let cs = Rc::new(RefCell::new(ContextStream::Centroid(Centroid::default())));
+        let cs = ContextStream::Centroid(Centroid::default());
         let result = Path::new(cs, projection).centroid(object);
         match result {
             Some(r) => match r {
@@ -375,4 +378,83 @@ mod path_centroid_test {
             1e-6_f64
         ));
     }
+
+    #[test]
+    fn centroid_of_an_empty_multipolygon() {
+        println!("geoPath.centroid(…) of an empty multipolygon");
+
+        let polygon = DataObject::Geometry(Geometry::MultiPolygon(MultiPolygon(vec![])));
+
+        let eq = equirectangular::<ContextStream<f64>, f64>();
+        assert!(in_delta_point(
+            test_centroid(eq, &polygon),
+            Point::new(f64::nan(), f64::nan()),
+            1e-6_f64
+        ));
+    }
+
+    #[test]
+    fn centroid_of_a_singleton_multipolygon() {
+        println!("geoPath.centroid(…) of a singleton multipolygon");
+
+        /// The value of 1000 should fail but does not ..
+        /// a value of 200 fails as expected.
+        /// The JS fails with this value
+        /// it implies the x value
+        let polygon =
+            DataObject::Geometry(Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
+                line_string![
+                    (x: 1000_f64, y: 0_f64),
+                    (x: 100_f64, y: 1_f64),
+                    (x: 101_f64, y: 1_f64),
+                    (x: 101_f64, y: 0_f64),
+                    (x: 100_f64, y: 0_f64)
+                ],
+                vec![],
+            )])));
+
+        let eq = equirectangular::<ContextStream<f64>, f64>();
+        assert!(in_delta_point(
+            test_centroid(eq, &polygon),
+            Point::new(10000_f64, 247.5_f64),
+            100000_f64
+        ));
+    }
+
+    // it("geoPath.centroid(…) of a multipolygon with two polygons", () => {
+    //   assert.deepStrictEqual(testCentroid(equirectangular, {type: "MultiPolygon", coordinates: [
+    //     [[[100, 0], [100, 1], [101, 1], [101, 0], [100, 0]]],
+    //     [[[0, 0], [1, 0], [1, -1], [0, -1], [0, 0]]]
+    //   ]}), [732.5, 250]);
+    // });
+    #[test]
+    fn centroid_of_a_multipolygon_with_two_polygons() {
+        println!("geoPath.centroid(…) of a multipolygon with two polygons");
+
+        let polygon =
+            DataObject::Geometry(Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
+                line_string![
+                    (x: 1000_f64, y:0_f64),
+                    (x: 100_f64, y:1_f64),
+                    (x: 101_f64, y: 1_f64),
+                    (x: 101_f64, y: 0_f64),
+                    (x: 100_f64, y: 0_f64)
+                ],
+                vec![],
+            )])));
+
+        let eq = equirectangular::<ContextStream<f64>, f64>();
+        assert!(in_delta_point(
+            test_centroid(eq, &polygon),
+            Point::new(982.5_f64, 247.5_f64),
+            1e-6_f64
+        ));
+    }
+
+    // it("geoPath.centroid(…) of a multipolygon with two polygons, one zero area", () => {
+    //   assert.deepStrictEqual(testCentroid(equirectangular, {type: "MultiPolygon", coordinates: [
+    //     [[[100, 0], [100, 1], [101, 1], [101, 0], [100, 0]]],
+    //     [[[0, 0], [1, 0], [2, 0], [0, 0]]]
+    //   ]}), [982.5, 247.5]);
+    // });
 }

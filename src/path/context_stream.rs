@@ -88,6 +88,12 @@ where
     T: AddAssign<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
+    type EP = Self;
+
+    #[inline]
+    fn get_endpoint(self) -> Self {
+        self
+    }
 
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         match self {

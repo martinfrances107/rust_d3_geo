@@ -1,5 +1,4 @@
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::fmt::Debug;
 
 use approx::AbsDiffEq;
 use core::marker::PhantomData;
@@ -56,18 +55,19 @@ where
     }
 }
 
-impl<PR, SINK, T> NodeFactory for StreamNodeResampleFactory<PR, SINK, T>
+impl<EP, PR, SINK, T> NodeFactory for StreamNodeResampleFactory<PR, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type Sink = SINK;
     type T = T;
-    type Node = ResampleNode<PR, Self::Sink, Self::T>;
+    type Node = ResampleNode<EP, PR, Self::Sink, Self::T>;
 
     #[inline]
-    fn generate(&self, sink: Rc<RefCell<Self::Sink>>) -> Self::Node {
+    fn generate(&self, sink: Self::Sink) -> Self::Node {
         match self.delta2.is_zero() {
             true => ResampleNode::RN(StreamNode {
                 raw: ResampleNone::new(self.projection_transform.clone()),

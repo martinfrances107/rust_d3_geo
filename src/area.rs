@@ -138,6 +138,11 @@ where
     T: CoordFloat + FloatConst,
 {
     type T = T;
+    type EP = Self;
+
+    fn get_endpoint(self) -> Self {
+        self
+    }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {

@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
@@ -29,8 +30,13 @@ where
     T: CoordFloat,
 {
     type T = T;
+    // type EP = Sphere<T>;
+
     #[inline]
-    fn to_stream<SD: Stream<T = T>>(&self, stream: &mut SD) {
+    fn to_stream<EP, SD: Stream<EP = EP, T = T>>(&self, stream: &mut SD)
+    where
+        EP: Clone + Debug + Stream<EP = EP, T = T>,
+    {
         stream.sphere();
     }
 }

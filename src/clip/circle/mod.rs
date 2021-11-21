@@ -8,6 +8,8 @@ pub mod pv;
 /// Intersects the great circle between a and b with the clip circle.
 pub mod intersect;
 
+use std::fmt::Debug;
+
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -20,12 +22,13 @@ use interpolate::generate as generate_interpolate;
 use line::Line as LineCircle;
 use pv::PV;
 
-pub(crate) fn gen_clip_factory_circle<PR, SINK, T>(
+pub(crate) fn gen_clip_factory_circle<EP, PR, SINK, T>(
     radius: T,
-) -> StreamNodeClipFactory<PR, PV<T>, SINK, T>
+) -> StreamNodeClipFactory<EP, PR, PV<T>, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     let cr = radius.cos();

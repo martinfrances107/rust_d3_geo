@@ -7,6 +7,8 @@ pub mod pv;
 
 mod intersect;
 
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -21,10 +23,12 @@ use line::Line as LineAntimeridian;
 use pv::PV;
 
 /// Returns a clip factory setup for antimeridian clipping.
-pub fn gen_clip_factory_antimeridian<PR, SINK, T>() -> StreamNodeClipFactory<PR, PV<T>, SINK, T>
+pub fn gen_clip_factory_antimeridian<EP, PR, SINK, T>(
+) -> StreamNodeClipFactory<EP, PR, PV<T>, SINK, T>
 where
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
-    SINK: Stream<T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     StreamNodeClipFactory::new(

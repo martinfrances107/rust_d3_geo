@@ -65,6 +65,12 @@ where
     T: CoordFloat,
 {
     type T = T;
+    type EP = Self;
+
+    fn get_endpoint(self) -> Self::EP {
+        self
+    }
+
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         match self.lines.back_mut() {

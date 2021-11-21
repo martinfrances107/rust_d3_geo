@@ -24,7 +24,7 @@ where
     center: Coordinate<T>,
     radius: T,
     precision: T,
-    stream: Rc<RefCell<Stream<T>>>,
+    stream: Stream<T>,
 }
 
 impl<T> Default for Generator<T>
@@ -40,7 +40,7 @@ where
             },
             radius: T::from(90_f64).unwrap(),
             precision: T::from(6).unwrap(),
-            stream: Rc::new(RefCell::new(Stream::default())),
+            stream: Stream::default(),
         }
     }
 }
@@ -50,13 +50,12 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Injects the previously defined circle into the stream.
-    pub fn circle(&self) -> Vec<Vec<Coordinate<T>>> {
+    pub fn circle(&mut self) -> Vec<Vec<Coordinate<T>>> {
         let c = self.center;
         let r = self.radius.to_radians();
         let p = self.precision.to_radians();
 
-        self.stream.borrow_mut().rotate =
-            rotate_radians([-c.x.to_radians(), -c.y.to_radians(), T::zero()]);
+        self.stream.rotate = rotate_radians([-c.x.to_radians(), -c.y.to_radians(), T::zero()]);
 
         // let mut cs = Rc::new(RefCell::new(CircleStream {
         //     ring: Vec::new(),
@@ -67,11 +66,10 @@ where
 
         stream_fn(self.stream.clone(), r, p, T::one(), None, None);
 
-        let coordinates = vec![self.stream.borrow().ring.clone()];
+        let coordinates = vec![self.stream.ring.clone()];
 
-        let mut stream_b = self.stream.borrow_mut();
-        stream_b.ring.clear();
-        stream_b.rotate = RotateRadians::I(RotationIdentity::default());
+        self.stream.ring.clear();
+        self.stream.rotate = RotateRadians::I(RotationIdentity::default());
 
         coordinates
     }
