@@ -325,7 +325,7 @@ where
             move |from: Option<Coordinate<T>>,
                   to: Option<Coordinate<T>>,
                   direction: T,
-                  mut stream: SINK| {
+                  stream: &mut SINK| {
                 let mut a;
                 let a1;
                 let direction_i8: i8 = T::to_i8(&direction).unwrap();
@@ -424,7 +424,7 @@ where
             if clean_inside {
                 // let mut sb = self;
                 self.sink.line_start();
-                interpolate_fn(None, None, T::one(), self.sink.clone());
+                interpolate_fn(None, None, T::one(), &mut self.sink);
                 self.sink.line_end();
             }
 
@@ -443,7 +443,7 @@ where
                     compare_intersection,
                     start_inside,
                     interpolate_fn,
-                    self.sink.clone(),
+                    &mut self.sink,
                 );
             }
 

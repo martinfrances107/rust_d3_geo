@@ -88,7 +88,7 @@ where
 
 /// Resample Stream Node - helper function.
 pub(crate) type InterpolateFn<STREAM, T> =
-    Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, STREAM)>;
+    Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut STREAM)>;
 
 /// Part of the clipping definition.
 trait Line: Clean + Clone + Debug {}

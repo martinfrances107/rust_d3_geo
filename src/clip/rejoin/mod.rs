@@ -29,7 +29,7 @@ pub fn rejoin<EP, SINK, T>(
     compare_intersection: CompareIntersectionsFn<T>,
     start_inside: bool,
     interpolate_fn: InterpolateFn<SINK, T>,
-    mut stream: SINK,
+    stream: &mut SINK,
 ) where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
     SINK: Stream<EP = EP, T = T>,
@@ -158,7 +158,7 @@ pub fn rejoin<EP, SINK, T>(
                         Some((current.clone()).borrow().x.p),
                         Some((current.clone()).borrow().n.as_ref().unwrap().borrow().x.p),
                         T::one(),
-                        stream.clone(),
+                        stream,
                     );
                 }
                 current = current.clone().borrow().n.clone().unwrap();
@@ -182,7 +182,7 @@ pub fn rejoin<EP, SINK, T>(
                                 .p,
                         ),
                         -T::one(),
-                        stream.clone(),
+                        stream,
                     );
                 }
                 current = current.clone().borrow().p.clone().unwrap();

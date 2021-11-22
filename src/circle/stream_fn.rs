@@ -17,7 +17,7 @@ use super::calc_radius::calc_radius;
 
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
 pub fn stream_fn<EP, STREAM, T>(
-    mut stream: STREAM,
+    stream: &mut STREAM,
     radius: T,
     delta: T,
     direction: T,

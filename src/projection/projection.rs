@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use derivative::*;
 use geo::{CoordFloat, Coordinate};

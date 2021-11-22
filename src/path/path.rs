@@ -66,7 +66,7 @@ where
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let mut stream_dst = ContextStream::A(Area::default());
+        let stream_dst = ContextStream::A(Area::default());
         let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
 

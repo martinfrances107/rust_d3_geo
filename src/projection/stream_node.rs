@@ -32,6 +32,7 @@ where
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
+    /// Returns the end of the stream pipeline, the dain.
     #[inline]
     pub fn get_endpoint(self) -> EP {
         self.sink.get_endpoint()

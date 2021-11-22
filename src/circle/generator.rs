@@ -64,7 +64,7 @@ where
         //     coordinates: vec![vec![]],
         // }));
 
-        stream_fn(self.stream.clone(), r, p, T::one(), None, None);
+        stream_fn(&mut self.stream, r, p, T::one(), None, None);
 
         let coordinates = vec![self.stream.ring.clone()];
 

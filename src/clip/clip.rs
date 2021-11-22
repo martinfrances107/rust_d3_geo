@@ -59,7 +59,7 @@ where
     interpolate_fn: InterpolateFn<SINK, T>,
 
     /// A pipeline source node.
-    pub ring_buffer: Buffer<T>,
+    // pub ring_buffer: Buffer<T>,
     pv: PV,
     start: Coordinate<T>,
     polygon_started: bool,
@@ -84,7 +84,7 @@ where
         pv: PV,
         stream_node_line_factory: StreamNodeLineFactory<EP, SINK, T>,
         interpolate_fn: InterpolateFn<SINK, T>,
-        ring_buffer: Buffer<T>,
+        // ring_buffer: Buffer<T>,
         ring_sink_node: LineNode<Buffer<T>, Buffer<T>, T>,
         sink: SINK,
         start: Coordinate<T>,
@@ -99,7 +99,7 @@ where
             polygon: Vec::new(),
             ring: Vec::new(),
             ring_sink_node,
-            ring_buffer,
+            // ring_buffer,
             segments: VecDeque::new(),
 
             // Cannot use 'point_fn' what is the default value?
@@ -303,7 +303,7 @@ where
                 gen_compare_intersection(),
                 start_inside,
                 self.raw.interpolate_fn.clone(),
-                self.sink.clone(),
+                &mut self.sink,
             );
         } else if start_inside {
             if !self.raw.polygon_started {
@@ -311,7 +311,7 @@ where
                 self.raw.polygon_started = true;
             }
             self.sink.line_start();
-            (self.raw.interpolate_fn)(None, None, T::one(), self.sink.clone());
+            (self.raw.interpolate_fn)(None, None, T::one(), &mut self.sink);
             self.sink.line_end();
         };
         if self.raw.polygon_started {
@@ -325,7 +325,7 @@ where
     fn sphere(&mut self) {
         self.sink.polygon_start();
         self.sink.line_start();
-        (self.raw.interpolate_fn)(None, None, T::one(), self.sink.clone());
+        (self.raw.interpolate_fn)(None, None, T::one(), &mut self.sink);
         self.sink.line_end();
         self.sink.polygon_end();
     }

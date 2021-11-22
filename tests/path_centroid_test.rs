@@ -394,10 +394,10 @@ mod path_centroid_test {
     fn centroid_of_a_singleton_multipolygon() {
         println!("geoPath.centroid(…) of a singleton multipolygon");
 
-        /// The value of 1000 should fail but does not ..
-        /// a value of 200 fails as expected.
-        /// The JS fails with this value
-        /// it implies the x value
+        // The value of 1000 should fail but does not ..
+        // a value of 200 fails as expected.
+        // The JS fails with this value
+        // it implies the x value
         let polygon =
             DataObject::Geometry(Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
                 line_string![

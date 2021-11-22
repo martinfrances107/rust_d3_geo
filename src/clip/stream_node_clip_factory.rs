@@ -46,7 +46,7 @@ where
     line_node_factory: StreamNodeLineFactory<EP, SINK, T>,
 
     // Precomputed pair.
-    ring_buffer: Buffer<T>,
+    // ring_buffer: Buffer<T>,
     ring_sink_node: LineNode<Buffer<T>, Buffer<T>, T>,
 }
 
@@ -70,10 +70,10 @@ where
         // [internal to the clip node].
         let ring_buffer: Buffer<T> = Buffer::default();
         let line_node_buffer_factory = StreamNodeLineFactory::new(line);
-        let ring_sink_node = line_node_buffer_factory.generate(ring_buffer.clone());
+        let ring_sink_node = line_node_buffer_factory.generate(ring_buffer);
 
         StreamNodeClipFactory {
-            ring_buffer,
+            // ring_buffer,
             ring_sink_node,
             interpolate_fn,
             line_node_factory,
@@ -101,9 +101,9 @@ where
             self.pv.clone(),
             self.line_node_factory.clone(),
             self.interpolate_fn.clone(),
-            self.ring_buffer.clone(),
+            // self.ring_buffer.clone(),
             self.ring_sink_node.clone(),
-            sink.clone(),
+            // sink,
             self.start,
         );
         StreamNodeFactory::new(clip).generate(sink)

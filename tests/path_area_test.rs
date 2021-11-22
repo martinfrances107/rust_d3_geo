@@ -3,7 +3,6 @@
 mod path_area_test {
 
     use std::f64::consts::PI;
-    use std::fmt::Debug;
     use std::fmt::Display;
     use std::ops::AddAssign;
     use std::rc::Rc;

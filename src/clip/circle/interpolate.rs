@@ -25,7 +25,9 @@ where
         move |from: Option<Coordinate<T>>,
               to: Option<Coordinate<T>>,
               direction: T,
-              stream: STREAM| { stream_fn(stream, radius, delta, direction, from, to) },
+              stream: &mut STREAM| {
+            stream_fn(stream, radius, delta, direction, from, to)
+        },
     );
 
     out

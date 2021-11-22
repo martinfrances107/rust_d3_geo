@@ -19,7 +19,7 @@ where
         move |to: Option<Coordinate<T>>,
               from: Option<Coordinate<T>>,
               direction: T,
-              stream_in: STREAM| {
+              stream_in: &mut STREAM| {
             let phi: T;
             let mut s = stream_in;
             match from {

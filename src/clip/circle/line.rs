@@ -124,7 +124,7 @@ where
 
 impl<EP, SINK, T> Stream for StreamNode<EP, Line<T>, SINK, T>
 where
-    EP: Clone + Debug + Stream<EP=EP, T=T>,
+    EP: Clone + Debug + Stream<EP = EP, T = T>,
     SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
