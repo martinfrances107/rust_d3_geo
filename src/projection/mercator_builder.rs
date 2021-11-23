@@ -8,13 +8,19 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_factory_antimeridian;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::clip::buffer::Buffer;
+use crate::clip::post_clip_node::PostClipNode;
+use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::rotation::rotate_radians;
 use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder::Builder as ProjectionBuilder;
+use super::resample::ResampleNode;
+use super::stream_node::StreamNode;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::Angle;
@@ -35,22 +41,26 @@ use crate::projection::Rotate;
 /// A wrapper for Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct MercatorBuilder<DRAIN, PR, PV, T>
+pub struct MercatorBuilder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PV: PointVisible<T = T>,
     PR: ProjectionRaw<T>, // TODO limit this to only certain types of PR
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     pr: PR,
-    base: ProjectionBuilder<DRAIN, PR, PV, T>,
+    base: ProjectionBuilder<DRAIN, LINE, PR, PV, T>,
     x0: Option<T>,
     y0: Option<T>,
     x1: Option<T>,
     y1: Option<T>, // post-clip extent
 }
 
-impl<DRAIN, PR, T> MercatorBuilder<DRAIN, PR, PVAntimeridian<T>, T>
+impl<DRAIN, PR, T> MercatorBuilder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default,
     PR: ProjectionRaw<T>,
@@ -58,7 +68,7 @@ where
 {
     /// Wrap a default projector and provides mercator specific overrides.
     pub fn new(pr: PR) -> Self {
-        let base: ProjectionBuilder<DRAIN, PR, PVAntimeridian<T>, T> =
+        let base: ProjectionBuilder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> =
             ProjectionBuilder::new(gen_clip_factory_antimeridian(), pr.clone());
         Self {
             pr,
@@ -72,7 +82,7 @@ where
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> Projection<DRAIN, PR, PVAntimeridian<T>, T> {
+    pub fn build(&self) -> Projection<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> {
         Projection {
             postclip_factory: self.base.postclip_factory.clone(),
             preclip_factory: self.base.preclip_factory.clone(),
@@ -86,9 +96,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> MercatorBuilder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> MercatorBuilder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -125,9 +139,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Center for MercatorBuilder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Center for MercatorBuilder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -145,9 +163,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Scale for MercatorBuilder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Scale for MercatorBuilder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -165,9 +187,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Translate for MercatorBuilder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Translate for MercatorBuilder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -185,9 +211,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Precision for MercatorBuilder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Precision for MercatorBuilder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -204,8 +234,16 @@ where
     }
 }
 
-impl<PR, PV, T> Fit for MercatorBuilder<Bounds<T>, PR, PV, T>
+impl<LINE, PR, PV, T> Fit for MercatorBuilder<Bounds<T>, LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        Bounds<T>,
+        LINE,
+        ResampleNode<Bounds<T>, PR, PostClipNode<Bounds<T>, Bounds<T>, T>, T>,
+        T,
+    >: Stream<EP = Bounds<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -231,9 +269,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> ClipExtent for MercatorBuilder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> ClipExtent for MercatorBuilder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: TransformExtent<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -270,9 +312,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Angle for MercatorBuilder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Angle for MercatorBuilder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Default + Stream<EP = DRAIN, T = T>,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -291,9 +337,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Rotate for MercatorBuilder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Rotate for MercatorBuilder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -312,9 +362,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Reflect for MercatorBuilder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Reflect for MercatorBuilder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Default + Stream<EP = DRAIN, T = T>,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static

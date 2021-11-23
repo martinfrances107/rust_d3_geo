@@ -6,7 +6,11 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_factory_antimeridian;
-use crate::clip::circle::pv::PV;
+use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::pv::PV;
+use crate::clip::circle::gen_clip_factory_circle;
+use crate::clip::circle::line::Line as LineCircle;
+use crate::clip::circle::pv::PV as PVCircle;
 use crate::math::EPSILON;
 use crate::stream::Stream;
 use crate::Transform;
@@ -42,20 +46,20 @@ where
     }
 }
 
-impl<DRAIN, T> Raw<T> for Orthographic<DRAIN, T>
-where
-    DRAIN: Stream<EP = DRAIN, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-{
-    type Builder = Builder<DRAIN, Orthographic<DRAIN, T>, PV<T>, T>;
-    type T = T;
-    #[inline]
-    fn builder() -> Builder<DRAIN, Orthographic<DRAIN, T>, PV<T>, T> {
-        Builder::new(gen_clip_factory_antimeridian(), Orthographic::default())
-            .scale(T::from(249.5_f64).unwrap())
-            .clip_angle(T::from(90_f64 + EPSILON).unwrap())
-    }
-}
+// impl<DRAIN, T> Raw<T> for Orthographic<DRAIN, T>
+// where
+//     DRAIN: Stream<EP = DRAIN, T = T>,
+//     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+// {
+//     type Builder = Builder<DRAIN, LineCircle<T>, Orthographic<DRAIN, T>, PVCircle<T>, T>;
+//     type T = T;
+//     #[inline]
+//     fn builder() -> Builder<DRAIN, LineCircle<T>, Orthographic<DRAIN, T>, PVCircle<T>, T> {
+//         Builder::new(gen_clip_factory_antimeridian(), Orthographic::default())
+//             .scale(T::from(249.5_f64).unwrap())
+//             .clip_angle(T::from(90_f64 + EPSILON).unwrap())
+//     }
+// }
 
 impl<DRAIN, T> Orthographic<DRAIN, T>
 where

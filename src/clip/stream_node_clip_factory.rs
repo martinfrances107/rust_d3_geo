@@ -6,6 +6,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::clip::Line;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::NodeFactory;
@@ -13,10 +14,9 @@ use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 
 use super::buffer::Buffer;
-use super::clip::Clip;
-use super::line::Line;
-use super::line_node::LineNode;
-use super::stream_node_line_factory::StreamNodeLineFactory;
+use super::clip_node::ClipNode;
+// use super::line::Line;
+// use super::stream_node_line_factory::StreamNodeLineFactory;
 use super::InterpolateFn;
 use super::PointVisible;
 
@@ -30,9 +30,10 @@ use super::PointVisible;
 /// construct the pipeline.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct StreamNodeClipFactory<EP, PR, PV, SINK, T>
+pub struct StreamNodeClipFactory<EP, LINE, PR, PV, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
+    LINE: Line,
     PR: ProjectionRaw<T>,
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
@@ -43,16 +44,17 @@ where
     pv: PV,
     #[derivative(Debug = "ignore")]
     interpolate_fn: InterpolateFn<SINK, T>,
-    line_node_factory: StreamNodeLineFactory<EP, SINK, T>,
+    line_node_factory: StreamNodeFactory<EP, LINE, SINK, T>,
 
     // Precomputed pair.
     // ring_buffer: Buffer<T>,
-    ring_sink_node: LineNode<Buffer<T>, Buffer<T>, T>,
+    ring_sink_node: StreamNode<Buffer<T>, LINE, Buffer<T>, T>,
 }
 
-impl<EP, PR, PV, SINK, T> StreamNodeClipFactory<EP, PR, PV, SINK, T>
+impl<EP, LINE, PR, PV, SINK, T> StreamNodeClipFactory<EP, LINE, PR, PV, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
+    LINE: Line,
     PR: ProjectionRaw<T>,
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
@@ -60,16 +62,16 @@ where
     /// Constructor.
     pub fn new(
         pv: PV,
-        line: Line<T>,
+        line: LINE,
         interpolate_fn: InterpolateFn<SINK, T>,
         start: Coordinate<T>,
-    ) -> StreamNodeClipFactory<EP, PR, PV, SINK, T> {
-        let line_node_factory = StreamNodeLineFactory::new(line.clone());
+    ) -> StreamNodeClipFactory<EP, LINE, PR, PV, SINK, T> {
+        let line_node_factory = StreamNodeFactory::new(line.clone());
 
         // ring_buffer needs the Rc<RefCell<>> wrapper because it is a pipeline source
         // [internal to the clip node].
         let ring_buffer: Buffer<T> = Buffer::default();
-        let line_node_buffer_factory = StreamNodeLineFactory::new(line);
+        let line_node_buffer_factory = StreamNodeFactory::new(line);
         let ring_sink_node = line_node_buffer_factory.generate(ring_buffer);
 
         StreamNodeClipFactory {
@@ -84,9 +86,12 @@ where
     }
 }
 
-impl<EP, PR, PV, SINK, T> NodeFactory for StreamNodeClipFactory<EP, PR, PV, SINK, T>
+impl<EP, LINE, PR, PV, SINK, T> NodeFactory for StreamNodeClipFactory<EP, LINE, PR, PV, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
+    LINE: Line,
+    StreamNode<EP, LINE, SINK, T>: Stream<EP = EP, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     SINK: Stream<EP = EP, T = T>,
@@ -94,18 +99,18 @@ where
 {
     type Sink = SINK;
     type T = T;
-    type Node = StreamNode<EP, Clip<EP, PV, SINK, T>, Self::Sink, Self::T>;
+    type Node = ClipNode<EP, LINE, PV, SINK, T>;
 
-    fn generate(&self, sink: Self::Sink) -> Self::Node {
-        let clip = Clip::new(
+    fn generate(&self, sink: Self::Sink) -> ClipNode<EP, LINE, PV, SINK, T> {
+        ClipNode::new(
             self.pv.clone(),
             self.line_node_factory.clone(),
             self.interpolate_fn.clone(),
             // self.ring_buffer.clone(),
             self.ring_sink_node.clone(),
-            // sink,
+            sink,
             self.start,
-        );
-        StreamNodeFactory::new(clip).generate(sink)
+        )
+        // StreamNodeFactory::new(clip).generate(sink)
     }
 }

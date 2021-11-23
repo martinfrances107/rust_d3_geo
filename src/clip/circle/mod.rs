@@ -13,7 +13,7 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::line::Line;
+// use crate::clip::line::Line;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
@@ -24,7 +24,7 @@ use pv::PV;
 
 pub(crate) fn gen_clip_factory_circle<EP, PR, SINK, T>(
     radius: T,
-) -> StreamNodeClipFactory<EP, PR, PV<T>, SINK, T>
+) -> StreamNodeClipFactory<EP, LineCircle<T>, PR, PV<T>, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
@@ -40,7 +40,7 @@ where
     };
     StreamNodeClipFactory::new(
         PV::new(radius),
-        Line::C(LineCircle::new(radius)),
+        LineCircle::new(radius),
         generate_interpolate(radius),
         start.into(),
     )

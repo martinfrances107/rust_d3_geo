@@ -5,28 +5,46 @@ use num_traits::AsPrimitive;
 use num_traits::Float;
 use num_traits::FloatConst;
 
+use crate::clip::buffer::Buffer;
+use crate::clip::post_clip_node::PostClipNode;
+use crate::clip::Line;
 use crate::data_object::DataObject;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::path::ResultEnum;
+use crate::stream::Stream;
 use crate::stream::Streamable;
 
 use super::builder::Builder;
+use super::resample::ResampleNode;
+use super::stream_node::StreamNode;
 use super::ClipExtent;
 use super::PointVisible;
 use super::Raw as ProjectionRaw;
 use super::Scale;
 use super::Translate;
 
-type FitBounds<DRAIN, PR, PV, T> =
-    Box<dyn FnOnce([Coordinate<T>; 2], Builder<DRAIN, PR, PV, T>) -> Builder<DRAIN, PR, PV, T>>;
+type FitBounds<DRAIN, LINE, PR, PV, T> = Box<
+    dyn FnOnce(
+        [Coordinate<T>; 2],
+        Builder<DRAIN, LINE, PR, PV, T>,
+    ) -> Builder<DRAIN, LINE, PR, PV, T>,
+>;
 
-fn fit<PR, PV, T>(
-    builder: Builder<Bounds<T>, PR, PV, T>,
-    fit_bounds: FitBounds<Bounds<T>, PR, PV, T>,
+fn fit<LINE, PR, PV, T>(
+    builder: Builder<Bounds<T>, LINE, PR, PV, T>,
+    fit_bounds: FitBounds<Bounds<T>, LINE, PR, PV, T>,
     object: &DataObject<T>,
-) -> Builder<Bounds<T>, PR, PV, T>
+) -> Builder<Bounds<T>, LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        Bounds<T>,
+        LINE,
+        ResampleNode<Bounds<T>, PR, PostClipNode<Bounds<T>, Bounds<T>, T>, T>,
+        T,
+    >: Stream<EP = Bounds<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -44,11 +62,11 @@ where
         None => builder1,
     };
 
-    let mut bounds_stream = Bounds::default();
-    let mut stream_in = builder2.build().stream(bounds_stream.clone());
+    let bounds_stream = Bounds::default();
+    let mut stream_in = builder2.build().stream(bounds_stream);
 
     object.to_stream(&mut stream_in);
-    let result = bounds_stream.result();
+    let result = stream_in.get_endpoint().result();
     let bounds = match result {
         Some(ResultEnum::Bounds(bounds)) => bounds,
         _ => {
@@ -62,12 +80,20 @@ where
     }
 }
 
-pub(super) fn fit_extent<PR, PV, T>(
-    builder: Builder<Bounds<T>, PR, PV, T>,
+pub(super) fn fit_extent<LINE, PR, PV, T>(
+    builder: Builder<Bounds<T>, LINE, PR, PV, T>,
     extent: [[T; 2]; 2],
     object: &DataObject<T>,
-) -> Builder<Bounds<T>, PR, PV, T>
+) -> Builder<Bounds<T>, LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        Bounds<T>,
+        LINE,
+        ResampleNode<Bounds<T>, PR, PostClipNode<Bounds<T>, Bounds<T>, T>, T>,
+        T,
+    >: Stream<EP = Bounds<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -76,7 +102,7 @@ where
     fit(
         builder,
         Box::new(
-            move |b: [Coordinate<T>; 2], builder: Builder<Bounds<T>, PR, PV, T>| {
+            move |b: [Coordinate<T>; 2], builder: Builder<Bounds<T>, LINE, PR, PV, T>| {
                 let w = extent[1][0] - extent[0][0];
                 let h = extent[1][1] - extent[0][1];
                 let k = Float::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
@@ -92,12 +118,20 @@ where
     )
 }
 
-pub(super) fn fit_size<PR, PV, T>(
-    builder: Builder<Bounds<T>, PR, PV, T>,
+pub(super) fn fit_size<LINE, PR, PV, T>(
+    builder: Builder<Bounds<T>, LINE, PR, PV, T>,
     size: [T; 2],
     object: &DataObject<T>,
-) -> Builder<Bounds<T>, PR, PV, T>
+) -> Builder<Bounds<T>, LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        Bounds<T>,
+        LINE,
+        ResampleNode<Bounds<T>, PR, PostClipNode<Bounds<T>, Bounds<T>, T>, T>,
+        T,
+    >: Stream<EP = Bounds<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,

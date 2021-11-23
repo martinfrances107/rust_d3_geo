@@ -13,7 +13,7 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::line::Line;
+// use crate::clip::line::Line;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
@@ -24,7 +24,7 @@ use pv::PV;
 
 /// Returns a clip factory setup for antimeridian clipping.
 pub fn gen_clip_factory_antimeridian<EP, PR, SINK, T>(
-) -> StreamNodeClipFactory<EP, PR, PV<T>, SINK, T>
+) -> StreamNodeClipFactory<EP, LineAntimeridian<T>, PR, PV<T>, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
@@ -33,7 +33,7 @@ where
 {
     StreamNodeClipFactory::new(
         PV::default(),
-        Line::A(LineAntimeridian::default()),
+        LineAntimeridian::default(),
         gen_interpolate::<EP, SINK, T>(),
         [-T::PI(), -T::FRAC_PI_2()].into(),
     )

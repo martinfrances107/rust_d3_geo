@@ -18,6 +18,7 @@ mod path_string_test {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
+    use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
@@ -31,7 +32,8 @@ mod path_string_test {
     use rust_d3_geo::stream::Stream;
 
     #[inline]
-    fn equirectangular<DRAIN, T>() -> Rc<Projection<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
+    fn equirectangular<DRAIN, T>(
+    ) -> Rc<Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
     where
         DRAIN: Stream<EP = DRAIN, T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -46,7 +48,9 @@ mod path_string_test {
 
     #[inline]
     fn test_path<'a, DRAIN, T>(
-        projection: Rc<Projection<ContextStream<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>,
+        projection: Rc<
+            Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
+        >,
         object: DataObject<T>,
     ) -> String
     where
@@ -82,8 +86,12 @@ mod path_string_test {
     fn point_renders_a_point_of_given_radius() {
         println!("geoPath.point(…) renders a point of a given radius");
 
-        let builder: PathBuilder<EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
-            PathBuilder::context_pathstring().point_radius(10_f64);
+        let builder: PathBuilder<
+            Line<f64>,
+            EquirectangularRaw<ContextStream<f64>, f64>,
+            PV<f64>,
+            f64,
+        > = PathBuilder::context_pathstring().point_radius(10_f64);
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         let mut path = builder.build(eq);

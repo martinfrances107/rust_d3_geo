@@ -6,14 +6,18 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_factory_antimeridian;
-use crate::clip::antimeridian::pv::PV as AntimeridianPV;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::clip::buffer::Buffer;
 use crate::clip::circle::gen_clip_factory_circle;
+use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as CirclePV;
 use crate::clip::post_clip::PostClip;
 use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::rectangle::rectangle::Rectangle as ClipRectangle;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::stream_node_post_clip_factory::StreamNodePostClipFactory;
+use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::identity::Identity;
@@ -29,6 +33,7 @@ use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
 use super::str::generate as generate_str;
 use super::str::scale_translate_rotate::ScaleTranslateRotate;
+use super::stream_node::StreamNode;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::Angle;
@@ -51,10 +56,14 @@ use super::Translate;
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Builder<DRAIN, PR, PV, T>
+pub struct Builder<DRAIN, LINE, PR, PV, T>
 where
     // EP: Clone + Debug + Stream<EP = EP, T = T>,
     DRAIN: Stream<EP = DRAIN, T = T>,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T> + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -97,22 +106,28 @@ where
     /// Projection pipeline stage.
     pub preclip_factory: StreamNodeClipFactory<
         DRAIN,
+        LINE,
         PR,
         PV,
         ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>,
         T,
     >,
     /// Projection pipeline stage.
-    pub rotate_factory: RotateFactory<DRAIN, DRAIN, PR, PV, T>,
+    pub rotate_factory: RotateFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
+
     /// Projection pipeline stage
     pub resample_factory: StreamNodeResampleFactory<PR, PostClipNode<DRAIN, DRAIN, T>, T>,
     /// Projection pipeline stage
-    pub rotate_transform_factory: RotateTransformFactory<DRAIN, DRAIN, PR, PV, T>,
+    pub rotate_transform_factory: RotateTransformFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
 }
 
-impl<DRAIN, PR, PV, T> Builder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -122,6 +137,7 @@ where
     pub fn new(
         preclip_factory: StreamNodeClipFactory<
             DRAIN,
+            LINE,
             PR,
             PV,
             ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>,
@@ -197,7 +213,7 @@ where
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> Projection<DRAIN, PR, PV, T> {
+    pub fn build(&self) -> Projection<DRAIN, LINE, PR, PV, T> {
         Projection {
             postclip_factory: self.postclip_factory.clone(),
             preclip_factory: self.preclip_factory.clone(),
@@ -210,108 +226,106 @@ where
         }
     }
 
-    /// Set the internal clip angle (theta) to null and return a builder
-    /// which uses the antimeridian clipping stratergy.
-    pub fn clip_angle_reset(self) -> Builder<DRAIN, PR, AntimeridianPV<T>, T> {
-        let preclip_factory = gen_clip_factory_antimeridian();
+    // /// Set the internal clip angle (theta) to null and return a builder
+    // /// which uses the antimeridian clipping stratergy.
+    // pub fn clip_angle_reset(self) -> Builder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> {
+    //     let preclip_factory: StreamNodeClipFactory<DRAIN, _, _, _, _, T> =
+    //         gen_clip_factory_antimeridian();
+    //     let preclip_factory = gen_clip_factory_antimeridian();
 
-        // update only theta and preclip_factory.
-        let out: Builder<DRAIN, PR, AntimeridianPV<T>, T> = Builder {
-            projection_raw: self.projection_raw,
+    //     // update only theta and preclip_factory.
+    //     let out: Builder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> = Builder {
+    //         // projection_raw: self.projection_raw,
+    //         /// Internal state.
+    //         // delta_lambda: self.delta_lambda,
+    //         // delta_phi: self.delta_phi,
+    //         // delta_gamma: self.delta_gamma,
 
-            /// Internal state.
-            delta_lambda: self.delta_lambda,
-            delta_phi: self.delta_phi,
-            delta_gamma: self.delta_gamma,
+    //         // x: self.x,
+    //         // y: self.y,
 
-            x: self.x,
-            y: self.y,
+    //         // x0: self.x0,
+    //         // y0: self.y0,
+    //         // x1: self.x1,
+    //         // y1: self.y1,
+    //         // delta2: self.delta2,
+    //         // lambda: self.lambda,
+    //         // phi: self.phi,
 
-            x0: self.x0,
-            y0: self.y0,
-            x1: self.x1,
-            y1: self.y1,
+    //         // alpha: self.alpha,
+    //         // k: self.k,
+    //         // theta: None,
+    //         // sx: self.sx,
+    //         // sy: self.sy,
+    //         // rotate: self.rotate.clone(),
+    //         // project_transform: self.project_transform,
+    //         // project_rotate_transform: self.project_rotate_transform.clone(),
+    //         // postclip_factory: self.postclip_factory,
+    //         preclip_factory,
+    //         // resample_factory: self.resample_factory,
 
-            delta2: self.delta2,
-            lambda: self.lambda,
-            phi: self.phi,
+    //         // rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
+    //         // rotate_factory: StreamNodeFactory::new(self.rotate),
+    //     };
+    //     out
+    //     // out.reset()
+    // }
 
-            alpha: self.alpha,
-            k: self.k,
-            theta: None,
-            sx: self.sx,
-            sy: self.sy,
+    // // Given an angle in degrees. Sets the internal clip angle and returns a builder
+    // // which uses the clip circle stratergy.
+    // pub fn clip_angle(self, angle: T) -> Builder<DRAIN, LineCircle<T>, PR, CirclePV<T>, T> {
+    //     if angle == T::zero() {
+    //         panic!("must call clip_angle_reset() instead");
+    //     }
 
-            rotate: self.rotate.clone(),
-            project_transform: self.project_transform,
-            project_rotate_transform: self.project_rotate_transform.clone(),
-            postclip_factory: self.postclip_factory,
-            preclip_factory,
+    //     let theta = angle.to_radians();
+    //     let preclip_factory = gen_clip_factory_circle(theta);
+    //     // let mut out = Builder::new(preclip_factory, self.projection_raw);
+    //     // out.theta = Some(theta);
 
-            resample_factory: self.resample_factory,
+    //     // update only theta and preclip_factory.
+    //     let out: Builder<DRAIN, LineCircle<T>, PR, CirclePV<T>, T> = Builder {
+    //         projection_raw: self.projection_raw,
 
-            rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
-            rotate_factory: StreamNodeFactory::new(self.rotate),
-        };
+    //         /// Internal state.
+    //         delta_lambda: self.delta_lambda,
+    //         delta_phi: self.delta_phi,
+    //         delta_gamma: self.delta_gamma,
 
-        out.reset()
-    }
+    //         x: self.x,
+    //         y: self.y,
 
-    /// Given an angle in degrees. Sets the internal clip angle and returns a builder
-    /// which uses the clip circle stratergy.
-    pub fn clip_angle(self, angle: T) -> Builder<DRAIN, PR, CirclePV<T>, T> {
-        if angle == T::zero() {
-            panic!("must call clip_angle_reset() instead");
-        }
+    //         x0: self.x0,
+    //         y0: self.y0,
+    //         x1: self.x1,
+    //         y1: self.y1,
 
-        let theta = angle.to_radians();
-        let preclip_factory = gen_clip_factory_circle(theta);
-        // let mut out = Builder::new(preclip_factory, self.projection_raw);
-        // out.theta = Some(theta);
+    //         delta2: self.delta2,
+    //         lambda: self.lambda,
+    //         phi: self.phi,
 
-        // update only theta and preclip_factory.
-        let out: Builder<DRAIN, PR, CirclePV<T>, T> = Builder {
-            projection_raw: self.projection_raw,
+    //         alpha: self.alpha,
+    //         k: self.k,
 
-            /// Internal state.
-            delta_lambda: self.delta_lambda,
-            delta_phi: self.delta_phi,
-            delta_gamma: self.delta_gamma,
+    //         theta: Some(theta),
 
-            x: self.x,
-            y: self.y,
+    //         sx: self.sx,
+    //         sy: self.sy,
 
-            x0: self.x0,
-            y0: self.y0,
-            x1: self.x1,
-            y1: self.y1,
+    //         rotate: self.rotate.clone(),
+    //         project_transform: self.project_transform,
+    //         project_rotate_transform: self.project_rotate_transform.clone(),
+    //         postclip_factory: self.postclip_factory,
+    //         preclip_factory,
 
-            delta2: self.delta2,
-            lambda: self.lambda,
-            phi: self.phi,
+    //         resample_factory: self.resample_factory,
 
-            alpha: self.alpha,
-            k: self.k,
+    //         rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
+    //         rotate_factory: StreamNodeFactory::new(self.rotate),
+    //     };
 
-            theta: Some(theta),
-
-            sx: self.sx,
-            sy: self.sy,
-
-            rotate: self.rotate.clone(),
-            project_transform: self.project_transform,
-            project_rotate_transform: self.project_rotate_transform.clone(),
-            postclip_factory: self.postclip_factory,
-            preclip_factory,
-
-            resample_factory: self.resample_factory,
-
-            rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
-            rotate_factory: StreamNodeFactory::new(self.rotate),
-        };
-
-        out.reset()
-    }
+    //     out
+    // }
 
     fn reset(self) -> Self {
         // self.cache_stream = None;
@@ -356,9 +370,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Translate for Builder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Translate for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    LINE: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -380,9 +398,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Center for Builder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Center for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -404,8 +426,16 @@ where
     }
 }
 
-impl<PR, PV, T> Fit for Builder<Bounds<T>, PR, PV, T>
+impl<LINE, PR, PV, T> Fit for Builder<Bounds<T>, LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        Bounds<T>,
+        LINE,
+        ResampleNode<Bounds<T>, PR, PostClipNode<Bounds<T>, Bounds<T>, T>, T>,
+        T,
+    >: Stream<EP = Bounds<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -429,10 +459,14 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Angle for Builder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Angle for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
+    LINE: Line,
 
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -456,9 +490,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Scale for Builder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Scale for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -476,9 +514,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> ClipExtent for Builder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> ClipExtent for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -519,9 +561,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Precision for Builder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Precision for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -554,9 +600,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Rotate for Builder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Rotate for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -588,9 +638,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Reflect for Builder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Reflect for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -631,9 +685,13 @@ where
     }
 }
 
-impl<DRAIN, PR, PV, T> Builder<DRAIN, PR, PV, T>
+impl<DRAIN, LINE, PR, PV, T> Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    LINE: Line,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,

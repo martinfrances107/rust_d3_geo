@@ -8,8 +8,10 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::clip::Clip;
+use crate::clip::buffer::Buffer;
+use crate::clip::clip_node::ClipNode;
 use crate::clip::post_clip_node::PostClipNode;
+use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::data_object::DataObject;
@@ -59,31 +61,28 @@ pub mod stream_node_factory;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
 
+pub mod resample;
+
 /// Helper functions found measuring the extent, width or height.
 mod fit;
 
-mod resample;
-
 /// Projection type.
-pub type PostClipFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
+pub type PostClipFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
     EP,
     PostClipNode<EP, DRAIN, T>,
-    StreamNode<
-        EP,
-        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
-        ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>,
-        T,
-    >,
+    ClipNode<EP, LINE, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
     T,
 >;
 
 /// Projection type.
-pub type RotateFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
+pub type RotateFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
     EP,
     RotateRadians<T>,
-    StreamNode<
+    ClipNode<
         EP,
-        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
+        LINE,
+        PV,
+        // Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
         ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>,
         T,
     >,
@@ -91,15 +90,10 @@ pub type RotateFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
 >;
 
 /// Projection type.
-pub type RotateTransformFactory<DRAIN, EP, PR, PV, T> = StreamNodeFactory<
+pub type RotateTransformFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
     EP,
     Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
-    StreamNode<
-        EP,
-        Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
-        ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>,
-        T,
-    >,
+    ClipNode<EP, LINE, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
     T,
 >;
 
@@ -143,15 +137,33 @@ where
 trait Builder
 where
     <Self as Builder>::Drain: Stream<EP = Self::Drain, T = Self::T>,
+    <Self as Builder>::Line: Line,
+
+    StreamNode<
+        Self::Drain,
+        Self::Line,
+        ResampleNode<
+            Self::Drain,
+            Self::PR,
+            PostClipNode<Self::Drain, Self::Drain, Self::T>,
+            Self::T,
+        >,
+        Self::T,
+    >: Stream<EP = Self::Drain, T = Self::T>,
+
+    StreamNode<Buffer<Self::T>, Self::Line, Buffer<Self::T>, Self::T>:
+        Stream<EP = Buffer<Self::T>, T = Self::T>,
+
     <Self as Builder>::PR: Raw<Self::T>,
     <Self as Builder>::PV: PointVisible<T = Self::T>,
-    <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
+    <Self as Builder>::T: 'static + AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;
+    type Line;
     type PR;
     type PV;
     type T;
-    fn build(s: Self::PR) -> Projection<Self::Drain, Self::PR, Self::PV, Self::T>;
+    fn build(s: Self::PR) -> Projection<Self::Drain, Self::Line, Self::PR, Self::PV, Self::T>;
 }
 
 /// Controls the projections center point.

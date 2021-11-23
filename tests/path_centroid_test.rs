@@ -26,6 +26,7 @@ mod path_centroid_test {
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
+    use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::in_delta::in_delta_point;
@@ -41,7 +42,8 @@ mod path_centroid_test {
     use rust_d3_geo::stream::Stream;
 
     #[inline]
-    fn equirectangular<DRAIN, T>() -> Rc<Projection<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
+    fn equirectangular<DRAIN, T>(
+    ) -> Rc<Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
     where
         DRAIN: Stream<EP = DRAIN, T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -59,7 +61,9 @@ mod path_centroid_test {
 
     #[inline]
     fn test_centroid<'a, DRAIN, T>(
-        projection: Rc<Projection<ContextStream<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>,
+        projection: Rc<
+            Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
+        >,
         object: &DataObject<T>,
     ) -> Point<T>
     where

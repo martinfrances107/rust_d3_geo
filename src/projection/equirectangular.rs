@@ -7,6 +7,7 @@ use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_factory_antimeridian;
+use crate::clip::antimeridian::line::Line;
 use crate::clip::antimeridian::pv::PV;
 use crate::stream::Stream;
 use crate::Transform;
@@ -48,11 +49,11 @@ where
     // EP: Clone + Debug + Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>;
     type T = T;
 
     #[inline]
-    fn builder() -> Builder<DRAIN, EquirectangularRaw<DRAIN, T>, PV<T>, T>
+    fn builder() -> Builder<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>
     where
         DRAIN: Stream<EP = DRAIN, T = T>,
     {

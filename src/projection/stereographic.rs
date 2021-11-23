@@ -6,7 +6,11 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_factory_antimeridian;
-use crate::clip::circle::pv::PV;
+// use crate::clip::antimeridian::line::Line as LineAntimeridian;
+// use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::clip::circle::line::Line as LineCircle;
+use crate::clip::circle::pv::PV as PVCircle;
+
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -42,24 +46,24 @@ where
     }
 }
 
-impl<DRAIN, T> Raw<T> for Stereographic<DRAIN, T>
-where
-    DRAIN: Stream<EP = DRAIN, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-{
-    type Builder = Builder<DRAIN, Stereographic<DRAIN, T>, PV<T>, T>;
-    type T = T;
+// impl<DRAIN, T> Raw<T> for Stereographic<DRAIN, T>
+// where
+//     DRAIN: Stream<EP = DRAIN, T = T>,
+//     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+// {
+//     type Builder = Builder<DRAIN, LineCircle<T>, Stereographic<DRAIN, T>, PVCircle<T>, T>;
+//     type T = T;
 
-    #[inline]
-    fn builder() -> Self::Builder
-    where
-        DRAIN: Stream<EP = DRAIN, T = T>,
-    {
-        Builder::new(gen_clip_factory_antimeridian(), Stereographic::default())
-            .scale(T::from(250_f64).unwrap())
-            .clip_angle(T::from(142_f64).unwrap())
-    }
-}
+//     #[inline]
+//     fn builder() -> Self::Builder
+//     where
+//         DRAIN: Stream<EP = DRAIN, T = T>,
+//     {
+//         Builder::new(gen_clip_factory_antimeridian(), Stereographic::default())
+//             .scale(T::from(250_f64).unwrap())
+//             .clip_angle(T::from(142_f64).unwrap())
+//     }
+// }
 
 impl<DRAIN, T> Stereographic<DRAIN, T>
 where

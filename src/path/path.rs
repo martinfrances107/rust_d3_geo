@@ -7,6 +7,11 @@ use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use super::PointRadiusEnum;
+use super::ResultEnum;
+use crate::clip::buffer::Buffer;
+use crate::clip::post_clip_node::PostClipNode;
+use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::data_object::DataObject;
 use crate::path::area::Area;
@@ -15,16 +20,24 @@ use crate::path::centroid::Centroid;
 use crate::path::context_stream::ContextStream;
 use crate::path::Result;
 use crate::projection::projection::Projection;
+use crate::projection::resample::ResampleNode;
+use crate::projection::stream_node::StreamNode;
 use crate::projection::Raw as ProjectionRaw;
+use crate::stream::Stream;
 use crate::stream::Streamable;
-
-use super::PointRadiusEnum;
-use super::ResultEnum;
 
 /// Projection and context stream applied to a DataObject.
 #[derive(Debug)]
-pub struct Path<PR, PV, T>
+pub struct Path<LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        ContextStream<T>,
+        LINE,
+        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
+        T,
+    >: Stream<EP = ContextStream<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
@@ -32,11 +45,19 @@ where
     context_stream: ContextStream<T>,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
-    projection: Rc<Projection<ContextStream<T>, PR, PV, T>>,
+    projection: Rc<Projection<ContextStream<T>, LINE, PR, PV, T>>,
 }
 
-impl<PR, PV, T> Path<PR, PV, T>
+impl<LINE, PR, PV, T> Path<LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        ContextStream<T>,
+        LINE,
+        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
+        T,
+    >: Stream<EP = ContextStream<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
@@ -44,7 +65,7 @@ where
     /// Constructor.
     pub fn new(
         context_stream: ContextStream<T>,
-        projection: Rc<Projection<ContextStream<T>, PR, PV, T>>,
+        projection: Rc<Projection<ContextStream<T>, LINE, PR, PV, T>>,
     ) -> Self {
         Self {
             context_stream,
@@ -57,7 +78,7 @@ where
     pub fn object(&mut self, object: &DataObject<T>) -> Option<ResultEnum<T>> {
         let mut stream_in = self.projection.stream(self.context_stream.clone());
         object.to_stream(&mut stream_in);
-        self.context_stream.result()
+        stream_in.get_endpoint().result()
     }
 
     /// Returns the area of the Path
@@ -70,8 +91,7 @@ where
         let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
 
-        let x = stream_in.sink.get_endpoint().result();
-        x
+        stream_in.sink.get_endpoint().result()
     }
 
     /// Returns the bounds of the object
@@ -81,12 +101,11 @@ where
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let mut stream_dst = ContextStream::B(Bounds::default());
-        let mut stream_in = self.projection.stream(stream_dst.clone());
+        let stream_dst = ContextStream::B(Bounds::default());
+        let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
 
-        let b = stream_dst.result();
-        b
+        stream_in.get_endpoint().result()
     }
 
     /// Returns the centroid of the object.
@@ -94,12 +113,11 @@ where
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let mut stream_dst = ContextStream::Centroid(Centroid::default());
-        let mut stream_in = self.projection.stream(stream_dst.clone());
+        let stream_dst = ContextStream::Centroid(Centroid::default());
+        let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
 
-        let c = stream_dst.result();
-        c
+        stream_in.get_endpoint().result()
     }
 
     /// Sets the context stream.

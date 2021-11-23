@@ -8,19 +8,20 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::Clean;
+use crate::clip::Line;
 use crate::path::Result;
 use crate::path::ResultEnum;
 use crate::polygon_contains::polygon_contains;
 use crate::projection::stream_node::StreamNode;
+use crate::projection::stream_node_factory::StreamNodeFactory;
 use crate::projection::NodeFactory;
 use crate::stream::Stream;
 
 use super::buffer::Buffer;
 use super::compare_intersection::gen_compare_intersection;
 use super::line_elem::LineElem;
-use super::line_node::LineNode;
 use super::rejoin::rejoin;
-use super::stream_node_line_factory::StreamNodeLineFactory;
+// use super::stream_node_line_factory::StreamNodeLineFactory;
 use super::CleanState;
 use super::InterpolateFn;
 use super::PointVisible;
@@ -44,17 +45,22 @@ enum LineEndFn {
     Ring,
 }
 
-/// State for a clipping node.
+/// ClipNode is a special case of StreamNode
+/// because of the way stream in held internally in
+/// within a line node.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Clip<EP, PV, SINK, T>
+pub struct ClipNode<EP, LINE, PV, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
+    LINE: Line,
+    StreamNode<EP, LINE, SINK, T>: Stream<EP = EP, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PV: PointVisible<T = T>,
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
-    line_node: LineNode<EP, SINK, T>,
+    line_node: StreamNode<EP, LINE, SINK, T>,
     #[derivative(Debug = "ignore")]
     interpolate_fn: InterpolateFn<SINK, T>,
 
@@ -65,16 +71,19 @@ where
     polygon_started: bool,
     polygon: Vec<Vec<Coordinate<T>>>,
     ring: Vec<Coordinate<T>>,
-    ring_sink_node: LineNode<Buffer<T>, Buffer<T>, T>,
+    ring_sink_node: StreamNode<Buffer<T>, LINE, Buffer<T>, T>,
     segments: VecDeque<VecDeque<Vec<LineElem<T>>>>,
     point_fn: PointFn,
     line_start_fn: LineStartFn,
     line_end_fn: LineEndFn,
 }
 
-impl<EP, PV, SINK, T> Clip<EP, PV, SINK, T>
+impl<EP, LINE, PV, SINK, T> ClipNode<EP, LINE, PV, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
+    LINE: Line,
+    StreamNode<EP, LINE, SINK, T>: Stream<EP = EP, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PV: PointVisible<T = T>,
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
@@ -82,14 +91,13 @@ where
     /// Takes a line and cuts into visible segments. Return values used for polygon
     pub(super) fn new(
         pv: PV,
-        stream_node_line_factory: StreamNodeLineFactory<EP, SINK, T>,
+        stream_node_line_factory: StreamNodeFactory<EP, LINE, SINK, T>,
         interpolate_fn: InterpolateFn<SINK, T>,
-        // ring_buffer: Buffer<T>,
-        ring_sink_node: LineNode<Buffer<T>, Buffer<T>, T>,
+        ring_sink_node: StreamNode<Buffer<T>, LINE, Buffer<T>, T>,
         sink: SINK,
         start: Coordinate<T>,
-    ) -> Clip<EP, PV, SINK, T> {
-        Clip {
+    ) -> ClipNode<EP, LINE, PV, SINK, T> {
+        ClipNode {
             pv,
             line_node: stream_node_line_factory.generate(sink),
             interpolate_fn,
@@ -110,64 +118,69 @@ where
     }
 }
 
-impl<EP, PV, SINK, T> StreamNode<EP, Clip<EP, PV, SINK, T>, SINK, T>
+impl<EP, LINE, PV, SINK, T> ClipNode<EP, LINE, PV, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
+    LINE: Line,
+    StreamNode<EP, LINE, SINK, T>: Stream<EP = EP, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PV: PointVisible<T = T>,
     SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     #[inline]
     pub(super) fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        if self.raw.pv.point_visible(p) {
-            self.sink.point(p, m);
+        if self.pv.point_visible(p) {
+            self.line_node.sink.point(p, m);
         }
     }
 
     #[inline]
     fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        self.raw.line_node.point(p, m);
+        self.line_node.point(p, m);
     }
 
     #[inline]
     fn line_start_default(&mut self) {
-        self.raw.point_fn = PointFn::Line;
-        self.raw.line_node.line_start();
+        self.point_fn = PointFn::Line;
+        self.line_node.line_start();
     }
 
     #[inline]
     fn line_end_default(&mut self) {
-        self.raw.point_fn = PointFn::Default;
-        self.raw.line_node.line_end();
+        self.point_fn = PointFn::Default;
+        self.line_node.line_end();
     }
 
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        self.raw.ring.push(*p);
-        self.raw.ring_sink_node.point(p, _m);
+        self.ring.push(*p);
+        self.ring_sink_node.point(p, _m);
     }
 
     #[inline]
     fn ring_start(&mut self) {
-        self.raw.ring_sink_node.line_start();
-        self.raw.ring.clear();
+        self.ring_sink_node.line_start();
+        self.ring.clear();
     }
 
     fn ring_end(&mut self) {
-        let le = self.raw.ring[0];
+        let le = self.ring[0];
         // javascript version drops m here.
         self.point_ring(&le, None);
-        self.raw.ring_sink_node.line_end();
+        self.ring_sink_node.line_end();
 
-        let clean = match &self.raw.ring_sink_node {
-            LineNode::A(l) => l.raw.clean(),
-            LineNode::C(l) => l.raw.clean(),
-        };
+        // let clean = match &self.raw.ring_sink_node {
+        //     LineNode::A(l) => l.raw.clean(),
+        //     LineNode::C(l) => l.raw.clean(),
+        // };
+        let clean = self.ring_sink_node.raw.clean();
 
-        let ring_segments_result_o = match &mut self.raw.ring_sink_node {
-            LineNode::A(l) => l.sink.result(),
-            LineNode::C(l) => l.sink.result(),
-        };
+        // let ring_segments_result_o = match &mut self.raw.ring_sink_node {
+        //     LineNode::A(l) => l.sink.result(),
+        //     LineNode::C(l) => l.sink.result(),
+        // };
+        let ring_segments_result_o = self.ring_sink_node.sink.result();
 
         let mut ring_segments = match ring_segments_result_o {
             Some(ResultEnum::BufferOutput(result)) => result,
@@ -180,12 +193,12 @@ where
         let n = ring_segments.len();
         let m;
 
-        self.raw.ring.pop();
-        self.raw.polygon.push(self.raw.ring.clone());
+        self.ring.pop();
+        self.polygon.push(self.ring.clone());
         // in this javascript version this value is set to NULL
         // is my assumption that this is valid true?
         // self.ring = None;
-        self.raw.ring.clear();
+        self.ring.clear();
 
         if n == 0 {
             return;
@@ -199,16 +212,16 @@ where
                     .expect("We have previously checked that the .len() is >0 ( n ) ");
                 m = segment.len() - 1;
                 if m > 0 {
-                    if !self.raw.polygon_started {
-                        self.sink.polygon_start();
-                        self.raw.polygon_started = true;
+                    if !self.polygon_started {
+                        self.line_node.sink.polygon_start();
+                        self.polygon_started = true;
                     }
-                    self.sink.line_start();
+                    self.line_node.sink.line_start();
                     for s in segment.iter().take(m) {
                         let point = s.p;
-                        self.sink.point(&point, None);
+                        self.line_node.sink.point(&point, None);
                     }
-                    self.sink.line_end();
+                    self.line_node.sink.line_end();
                 }
                 return;
             }
@@ -231,13 +244,16 @@ where
 
         ring_segments.retain(|segment| segment.len() > 1);
 
-        self.raw.segments.push_back(ring_segments);
+        self.segments.push_back(ring_segments);
     }
 }
 
-impl<EP, PV, SINK, T> Stream for StreamNode<EP, Clip<EP, PV, SINK, T>, SINK, T>
+impl<EP, LINE, PV, SINK, T> Stream for ClipNode<EP, LINE, PV, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
+    LINE: Line,
+    StreamNode<EP, LINE, SINK, T>: Stream<EP = EP, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PV: PointVisible<T = T>,
     SINK: Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -247,12 +263,12 @@ where
 
     #[inline]
     fn get_endpoint(self) -> Self::EP {
-        self.sink.get_endpoint()
+        self.line_node.sink.get_endpoint()
     }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        match self.raw.point_fn {
+        match self.point_fn {
             PointFn::Default => self.point_default(p, m),
             PointFn::Line => self.point_line(p, m),
             PointFn::Ring => self.point_ring(p, m),
@@ -261,7 +277,7 @@ where
 
     #[inline]
     fn line_start(&mut self) {
-        match self.raw.line_start_fn {
+        match self.line_start_fn {
             LineStartFn::Ring => self.ring_start(),
             LineStartFn::Line => self.line_start_default(),
         }
@@ -269,64 +285,64 @@ where
 
     #[inline]
     fn line_end(&mut self) {
-        match self.raw.line_end_fn {
+        match self.line_end_fn {
             LineEndFn::Ring => self.ring_end(),
             LineEndFn::Line => self.line_end_default(),
         }
     }
 
     fn polygon_start(&mut self) {
-        self.raw.point_fn = PointFn::Ring;
-        self.raw.line_start_fn = LineStartFn::Ring;
-        self.raw.line_end_fn = LineEndFn::Ring;
-        self.raw.segments = VecDeque::new();
-        self.raw.polygon = Vec::new();
+        self.point_fn = PointFn::Ring;
+        self.line_start_fn = LineStartFn::Ring;
+        self.line_end_fn = LineEndFn::Ring;
+        self.segments = VecDeque::new();
+        self.polygon = Vec::new();
     }
 
     fn polygon_end(&mut self) {
-        self.raw.point_fn = PointFn::Default;
-        self.raw.line_start_fn = LineStartFn::Line;
-        self.raw.line_end_fn = LineEndFn::Line;
+        self.point_fn = PointFn::Default;
+        self.line_start_fn = LineStartFn::Line;
+        self.line_end_fn = LineEndFn::Line;
 
         let segments_inner: Vec<Vec<LineElem<T>>> =
-            self.raw.segments.clone().into_iter().flatten().collect();
+            self.segments.clone().into_iter().flatten().collect();
 
-        let start_inside = polygon_contains(&self.raw.polygon, &self.raw.start);
+        let start_inside = polygon_contains(&self.polygon, &self.start);
 
         if !segments_inner.is_empty() {
-            self.sink.polygon_start();
-            if !self.raw.polygon_started {
-                self.raw.polygon_started = true;
+            self.line_node.sink.polygon_start();
+            if !self.polygon_started {
+                self.polygon_started = true;
             }
             rejoin(
                 &segments_inner,
                 gen_compare_intersection(),
                 start_inside,
-                self.raw.interpolate_fn.clone(),
-                &mut self.sink,
+                self.interpolate_fn.clone(),
+                &mut self.line_node.sink,
             );
         } else if start_inside {
-            if !self.raw.polygon_started {
-                self.sink.polygon_start();
-                self.raw.polygon_started = true;
+            if !self.polygon_started {
+                self.line_node.sink.polygon_start();
+                self.polygon_started = true;
             }
-            self.sink.line_start();
-            (self.raw.interpolate_fn)(None, None, T::one(), &mut self.sink);
-            self.sink.line_end();
+            self.line_node.sink.line_start();
+            (self.interpolate_fn)(None, None, T::one(), &mut self.line_node.sink);
+            self.line_node.sink.line_end();
         };
-        if self.raw.polygon_started {
-            self.sink.polygon_end();
-            self.raw.polygon_started = false;
+        if self.polygon_started {
+            self.line_node.sink.polygon_end();
+            self.polygon_started = false;
         }
-        self.raw.segments.clear();
-        self.raw.polygon.clear();
+        self.segments.clear();
+        self.polygon.clear();
     }
 
     fn sphere(&mut self) {
-        self.sink.polygon_start();
-        self.sink.line_start();
-        (self.raw.interpolate_fn)(None, None, T::one(), &mut self.sink);
-        self.sink.line_end();
-        self.sink.polygon_end();
+        self.line_node.sink.polygon_start();
+        self.line_node.sink.line_start();
+        (self.interpolate_fn)(None, None, T::one(), &mut self.line_node.sink);
+        self.line_node.sink.line_end();
+        self.line_node.sink.polygon_end();
     }
 }

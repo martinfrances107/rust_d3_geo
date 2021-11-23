@@ -8,9 +8,15 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
 
+use crate::clip::buffer::Buffer;
+use crate::clip::post_clip_node::PostClipNode;
+use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::projection::projection::Projection;
+use crate::projection::resample::ResampleNode;
+use crate::projection::stream_node::StreamNode;
 use crate::projection::Raw as ProjectionRaw;
+use crate::stream::Stream;
 
 use super::context::Context as PathContext;
 use super::context_stream::ContextStream;
@@ -20,8 +26,16 @@ use super::PointRadiusTrait;
 
 /// Path builder.
 #[derive(Debug)]
-pub struct Builder<PR, PV, T>
+pub struct Builder<LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        ContextStream<T>,
+        LINE,
+        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
+        T,
+    >: Stream<EP = ContextStream<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
@@ -29,17 +43,25 @@ where
     pr: T,
     context: Option<Rc<CanvasRenderingContext2d>>,
     context_stream: ContextStream<T>,
-    projection: Option<Projection<ContextStream<T>, PR, PV, T>>,
+    projection: Option<Projection<ContextStream<T>, LINE, PR, PV, T>>,
 }
 
-impl<PR, PV, T> Builder<PR, PV, T>
+impl<LINE, PR, PV, T> Builder<LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        ContextStream<T>,
+        LINE,
+        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
+        T,
+    >: Stream<EP = ContextStream<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
-    pub fn new(context_stream: ContextStream<T>) -> Builder<PR, PV, T> {
+    pub fn new(context_stream: ContextStream<T>) -> Builder<LINE, PR, PV, T> {
         Self {
             context: None,
             context_stream,
@@ -50,8 +72,16 @@ where
 }
 
 /// Context related methods.
-impl<PR, PV, T> Builder<PR, PV, T>
+impl<LINE, PR, PV, T> Builder<LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        ContextStream<T>,
+        LINE,
+        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
+        T,
+    >: Stream<EP = ContextStream<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
@@ -62,7 +92,7 @@ where
     }
 
     /// Programe the builder with the context.
-    pub fn context(self, context: CanvasRenderingContext2d) -> Builder<PR, PV, T> {
+    pub fn context(self, context: CanvasRenderingContext2d) -> Builder<LINE, PR, PV, T> {
         let context = Rc::new(context);
         Builder {
             pr: self.pr,
@@ -80,7 +110,7 @@ where
     }
 
     /// Returns a Builder from default values.
-    pub fn context_pathstring() -> Builder<PR, PV, T> {
+    pub fn context_pathstring() -> Builder<LINE, PR, PV, T> {
         let context_stream: ContextStream<T> = ContextStream::S(PathString::default());
 
         Builder::new(context_stream)
@@ -88,15 +118,26 @@ where
 }
 
 /// Projection related methods.
-impl<PR, PV, T> Builder<PR, PV, T>
+impl<LINE, PR, PV, T> Builder<LINE, PR, PV, T>
 where
+    LINE: Line,
+    StreamNode<
+        ContextStream<T>,
+        LINE,
+        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
+        T,
+    >: Stream<EP = ContextStream<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// From the progammed state generate a new projection.
     #[inline]
-    pub fn build(self, projection: Rc<Projection<ContextStream<T>, PR, PV, T>>) -> Path<PR, PV, T>
+    pub fn build(
+        self,
+        projection: Rc<Projection<ContextStream<T>, LINE, PR, PV, T>>,
+    ) -> Path<LINE, PR, PV, T>
     where
         PR: ProjectionRaw<T>,
     {

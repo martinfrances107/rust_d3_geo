@@ -7,7 +7,7 @@ pub mod buffer;
 /// Related the specifics of circle clipping.
 pub mod circle;
 /// Holds the clip struct.
-pub mod clip;
+pub mod clip_node;
 /// Helper function.
 pub mod compare_intersection;
 mod intersection;
@@ -38,8 +38,6 @@ use std::rc::Rc;
 use geo::CoordFloat;
 use geo::Coordinate;
 
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::circle::line::Line as LineCircle;
 use crate::stream::Stream;
 
 /// Internal clip state.
@@ -47,7 +45,7 @@ use crate::stream::Stream;
 /// As the clip state machine enters ring_end() This state is used to direct
 /// the clean up.
 #[derive(Debug, Clone, Copy)]
-pub(super) enum CleanState {
+pub enum CleanState {
     /// There were not intersections or the line was empty.
     IntersectionsOrEmpty,
     /// There were no intersections and the first and last segments should be rejoined.
@@ -61,7 +59,7 @@ pub(super) enum CleanState {
 /// A clip trait.
 /// Rejoin first and last segments if there were intersections and the first
 /// and last points were visible.
-pub(super) trait Clean {
+pub trait Clean {
     /// Returns the clean state.
     fn clean(&self) -> CleanState;
 }
@@ -91,7 +89,7 @@ pub(crate) type InterpolateFn<STREAM, T> =
     Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut STREAM)>;
 
 /// Part of the clipping definition.
-trait Line: Clean + Clone + Debug {}
+pub trait Line: Clean + Clone + Debug {}
 
 /// Line, part of the clipping function.
 pub(crate) trait LineFactory {}

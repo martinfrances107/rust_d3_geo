@@ -15,6 +15,7 @@ mod index_test {
     use geo::Geometry;
 
     use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
+    use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
@@ -27,9 +28,15 @@ mod index_test {
     use rust_d3_geo::projection::Scale;
 
     #[inline]
-    fn equirectangular(
-    ) -> Rc<Projection<ContextStream<f64>, EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64>>
-    {
+    fn equirectangular() -> Rc<
+        Projection<
+            ContextStream<f64>,
+            Line<f64>,
+            EquirectangularRaw<ContextStream<f64>, f64>,
+            PV<f64>,
+            f64,
+        >,
+    > {
         Rc::new(
             ProjectionBuilder::new(
                 gen_clip_factory_antimeridian(),
@@ -46,6 +53,7 @@ mod index_test {
         projection: Rc<
             Projection<
                 ContextStream<f64>,
+                Line<f64>,
                 EquirectangularRaw<ContextStream<f64>, f64>,
                 PV<f64>,
                 f64,
@@ -53,7 +61,7 @@ mod index_test {
         >,
         object: DataObject<f64>,
     ) -> String {
-        let pb: PathBuilder<EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
+        let pb: PathBuilder<Line<f64>, EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
             PathBuilder::context_pathstring();
         match pb.build(projection).object(&object) {
             Some(r) => match r {

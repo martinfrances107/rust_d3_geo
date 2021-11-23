@@ -6,6 +6,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_factory_antimeridian;
+use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV;
 use crate::projection::builder::Builder;
 use crate::projection::Raw;
@@ -31,25 +32,25 @@ where
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Raw<T> for AzimuthalEqualArea<DRAIN, T>
-where
-    // EP: Clone + Debug + Stream<EP = EP, T = T>,
-    DRAIN: Stream<EP = DRAIN, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-{
-    type Builder = Builder<DRAIN, AzimuthalEqualArea<DRAIN, T>, PV<T>, T>;
-    type T = T;
+// impl<DRAIN, T> Raw<T> for AzimuthalEqualArea<DRAIN, T>
+// where
+//     // EP: Clone + Debug + Stream<EP = EP, T = T>,
+//     DRAIN: Stream<EP = DRAIN, T = T>,
+//     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+// {
+//     type Builder = Builder<DRAIN, LineCircle<T>, AzimuthalEqualArea<DRAIN, T>, PV<T>, T>;
+//     type T = T;
 
-    #[inline]
-    fn builder() -> Self::Builder {
-        Builder::new(
-            gen_clip_factory_antimeridian(),
-            AzimuthalEqualArea::default(),
-        )
-        .scale(T::from(124.75_f64).unwrap())
-        .clip_angle(T::from(180_f64 - 1e-3).unwrap())
-    }
-}
+//     #[inline]
+//     fn builder() -> Self::Builder {
+//         Builder::new(
+//             gen_clip_factory_antimeridian(),
+//             AzimuthalEqualArea::default(),
+//         )
+//         .scale(T::from(124.75_f64).unwrap())
+//         .clip_angle(T::from(180_f64 - 1e-3).unwrap())
+//     }
+// }
 
 impl<DRAIN, T> Default for AzimuthalEqualArea<DRAIN, T>
 where
