@@ -20,11 +20,11 @@ use crate::stream::Stream;
 use interpolate::generate as gen_interpolate;
 use line::Line as LineAntimeridian;
 
-use pv::PV;
+use pv::PV as PVAntimeridian;
 
 /// Returns a clip factory setup for antimeridian clipping.
 pub fn gen_clip_factory_antimeridian<EP, PR, SINK, T>(
-) -> StreamNodeClipFactory<EP, LineAntimeridian<T>, PR, PV<T>, SINK, T>
+) -> StreamNodeClipFactory<EP, LineAntimeridian<T>, PR, PVAntimeridian<T>, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
@@ -32,7 +32,7 @@ where
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     StreamNodeClipFactory::new(
-        PV::default(),
+        PVAntimeridian::default(),
         LineAntimeridian::default(),
         gen_interpolate::<EP, SINK, T>(),
         [-T::PI(), -T::FRAC_PI_2()].into(),

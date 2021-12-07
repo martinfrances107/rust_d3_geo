@@ -11,7 +11,7 @@ use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
 use crate::clip::circle::gen_clip_factory_circle;
 use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as CirclePV;
+use crate::clip::circle::pv::PV as PVCircle;
 use crate::clip::post_clip::PostClip;
 use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::rectangle::rectangle::Rectangle as ClipRectangle;
@@ -39,6 +39,7 @@ use super::stream_transform_radians::StreamTransformRadians;
 use super::Angle;
 use super::Bounds;
 use super::Center;
+use super::ClipAngle;
 use super::ClipExtent;
 use super::DataObject;
 use super::Fit;
@@ -226,107 +227,6 @@ where
         }
     }
 
-    // /// Set the internal clip angle (theta) to null and return a builder
-    // /// which uses the antimeridian clipping stratergy.
-    // pub fn clip_angle_reset(self) -> Builder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> {
-    //     let preclip_factory: StreamNodeClipFactory<DRAIN, _, _, _, _, T> =
-    //         gen_clip_factory_antimeridian();
-    //     let preclip_factory = gen_clip_factory_antimeridian();
-
-    //     // update only theta and preclip_factory.
-    //     let out: Builder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> = Builder {
-    //         // projection_raw: self.projection_raw,
-    //         /// Internal state.
-    //         // delta_lambda: self.delta_lambda,
-    //         // delta_phi: self.delta_phi,
-    //         // delta_gamma: self.delta_gamma,
-
-    //         // x: self.x,
-    //         // y: self.y,
-
-    //         // x0: self.x0,
-    //         // y0: self.y0,
-    //         // x1: self.x1,
-    //         // y1: self.y1,
-    //         // delta2: self.delta2,
-    //         // lambda: self.lambda,
-    //         // phi: self.phi,
-
-    //         // alpha: self.alpha,
-    //         // k: self.k,
-    //         // theta: None,
-    //         // sx: self.sx,
-    //         // sy: self.sy,
-    //         // rotate: self.rotate.clone(),
-    //         // project_transform: self.project_transform,
-    //         // project_rotate_transform: self.project_rotate_transform.clone(),
-    //         // postclip_factory: self.postclip_factory,
-    //         preclip_factory,
-    //         // resample_factory: self.resample_factory,
-
-    //         // rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
-    //         // rotate_factory: StreamNodeFactory::new(self.rotate),
-    //     };
-    //     out
-    //     // out.reset()
-    // }
-
-    // // Given an angle in degrees. Sets the internal clip angle and returns a builder
-    // // which uses the clip circle stratergy.
-    // pub fn clip_angle(self, angle: T) -> Builder<DRAIN, LineCircle<T>, PR, CirclePV<T>, T> {
-    //     if angle == T::zero() {
-    //         panic!("must call clip_angle_reset() instead");
-    //     }
-
-    //     let theta = angle.to_radians();
-    //     let preclip_factory = gen_clip_factory_circle(theta);
-    //     // let mut out = Builder::new(preclip_factory, self.projection_raw);
-    //     // out.theta = Some(theta);
-
-    //     // update only theta and preclip_factory.
-    //     let out: Builder<DRAIN, LineCircle<T>, PR, CirclePV<T>, T> = Builder {
-    //         projection_raw: self.projection_raw,
-
-    //         /// Internal state.
-    //         delta_lambda: self.delta_lambda,
-    //         delta_phi: self.delta_phi,
-    //         delta_gamma: self.delta_gamma,
-
-    //         x: self.x,
-    //         y: self.y,
-
-    //         x0: self.x0,
-    //         y0: self.y0,
-    //         x1: self.x1,
-    //         y1: self.y1,
-
-    //         delta2: self.delta2,
-    //         lambda: self.lambda,
-    //         phi: self.phi,
-
-    //         alpha: self.alpha,
-    //         k: self.k,
-
-    //         theta: Some(theta),
-
-    //         sx: self.sx,
-    //         sy: self.sy,
-
-    //         rotate: self.rotate.clone(),
-    //         project_transform: self.project_transform,
-    //         project_rotate_transform: self.project_rotate_transform.clone(),
-    //         postclip_factory: self.postclip_factory,
-    //         preclip_factory,
-
-    //         resample_factory: self.resample_factory,
-
-    //         rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
-    //         rotate_factory: StreamNodeFactory::new(self.rotate),
-    //     };
-
-    //     out
-    // }
-
     fn reset(self) -> Self {
         // self.cache_stream = None;
         // self.cache = None;
@@ -367,6 +267,130 @@ where
             StreamNodeFactory::new(self.project_rotate_transform.clone());
 
         self.reset()
+    }
+}
+
+impl<DRAIN, LINE, PR, PV, T> ClipAngle for Builder<DRAIN, LINE, PR, PV, T>
+where
+    DRAIN: Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+        Stream<EP = DRAIN, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    LINE: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+{
+    type T = T;
+    type Drain = DRAIN;
+    type PR = PR;
+
+    // Set the internal clip angle (theta) to null and return a builder
+    // which uses the antimeridian clipping stratergy.
+    // fn clip_angle_reset(self) -> Builder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> {
+    //     let preclip_factory: StreamNodeClipFactory<
+    //         DRAIN,
+    //         LineAntimeridian<T>,
+    //         PR,
+    //         PVAntimeridian<T>,
+    //         DRAIN,
+    //         T,
+    //     > = gen_clip_factory_antimeridian();
+    //     // let preclip_factory = gen_clip_factory_antimeridian();
+
+    //     let out = Builder::new(preclip_factory, self.projection_raw);
+    //     // update only theta and preclip_factory.
+    //     // let out: Builder<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> = Builder {
+    //     //     // projection_raw: self.projection_raw,
+    //     //     /// Internal state.
+    //     //     // delta_lambda: self.delta_lambda,
+    //     //     // delta_phi: self.delta_phi,
+    //     //     // delta_gamma: self.delta_gamma,
+
+    //     //     // x: self.x,
+    //     //     // y: self.y,
+
+    //     //     // x0: self.x0,
+    //     //     // y0: self.y0,
+    //     //     // x1: self.x1,
+    //     //     // y1: self.y1,
+    //     //     // delta2: self.delta2,
+    //     //     // lambda: self.lambda,
+    //     //     // phi: self.phi,
+
+    //     //     // alpha: self.alpha,
+    //     //     // k: self.k,
+    //     //     // theta: None,
+    //     //     // sx: self.sx,
+    //     //     // sy: self.sy,
+    //     //     // rotate: self.rotate.clone(),
+    //     //     // project_transform: self.project_transform,
+    //     //     // project_rotate_transform: self.project_rotate_transform.clone(),
+    //     //     // postclip_factory: self.postclip_factory,
+    //     //     preclip_factory,
+    //     //     // resample_factory: self.resample_factory,
+
+    //     //     // rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
+    //     //     // rotate_factory: StreamNodeFactory::new(self.rotate),
+    //     // };
+    //     out
+    //     // out.reset()
+    // }
+
+    // Given an angle in degrees. Sets the internal clip angle and returns a builder
+    // which uses the clip circle stratergy.
+    fn clip_angle(self, angle: T) -> Builder<DRAIN, LineCircle<T>, PR, PVCircle<T>, T> {
+        if angle == T::zero() {
+            panic!("must call clip_angle_reset() instead");
+        }
+
+        let theta = angle.to_radians();
+
+        let cf: StreamNodeClipFactory<DRAIN, LineCircle<T>, PR, PVCircle<T>, _, T> =
+            gen_clip_factory_circle(theta);
+        let out: Builder<DRAIN, LineCircle<T>, PR, PVCircle<T>, T> =
+            Builder::<DRAIN, LineCircle<T>, PR, PVCircle<T>, T>::new(cf, self.projection_raw);
+
+        // Update only theta and preclip_factory.
+        let out = Builder::<DRAIN, LineCircle<T>, PR, PVCircle<T>, T> {
+            // projection_raw: self.projection_raw,
+            // /// Internal state.
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+            x: self.x,
+            y: self.y,
+
+            x0: self.x0,
+            y0: self.y0,
+            x1: self.x1,
+            y1: self.y1,
+
+            delta2: self.delta2,
+            lambda: self.lambda,
+            phi: self.phi,
+
+            alpha: self.alpha,
+            k: self.k,
+
+            theta: Some(theta),
+
+            sx: self.sx,
+            sy: self.sy,
+
+            rotate: self.rotate.clone(),
+            project_transform: self.project_transform,
+            project_rotate_transform: self.project_rotate_transform,
+            postclip_factory: self.postclip_factory,
+
+            resample_factory: self.resample_factory,
+            // TODO do I need this line.
+            // rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
+            rotate_factory: StreamNodeFactory::new(self.rotate),
+            ..out
+        };
+
+        out
     }
 }
 

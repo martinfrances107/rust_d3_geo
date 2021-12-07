@@ -9,12 +9,13 @@ use num_traits::FloatConst;
 use crate::Transform;
 
 use super::Center;
+use super::ClipAngle;
 use super::ClipExtent;
 use super::Scale;
 use super::Translate;
 
 /// Projection builder Trait.
-pub trait BuilderTrait: Center + ClipExtent + Scale + Translate
+pub trait BuilderTrait: Center + ClipAngle + ClipExtent + Scale + Translate
 where
     <Self as BuilderTrait>::PR: Transform<T = <Self as BuilderTrait>::T>,
     <Self as BuilderTrait>::T: AddAssign + AsPrimitive<<Self as BuilderTrait>::T> + CoordFloat,
@@ -61,24 +62,6 @@ where
     //  * Post-clipPIng operates on planar coordinates, in PIxels.
     //  */
     // fn postclip(&mut self, postclip: StreamProcessor<T>);
-
-    ///
-    ///  Switches to antimeridian cutting rather than small-circle clipPIng.
-    ///  See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
-    ///
-    ///  @param angle Set to null to switch to antimeridian cutting.
-    ///
-    fn clip_angle(self, angle: <Self as BuilderTrait>::T) -> Self;
-
-    // /**
-    //  * Sets the projection’s clipPIng circle radius to the specified angle in degrees and returns the projection.
-    //  * Small-circle clipPIng is independent of viewport clipPIng via projection.clipExtent.
-    //  *
-    //  * See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
-    //  *
-    //  * @param angle Angle in degrees.
-    //  */
-    // clipAngle(angle: number): this;
 
     // /**
     //  * Returns the current viewport clip extent which defaults to null.

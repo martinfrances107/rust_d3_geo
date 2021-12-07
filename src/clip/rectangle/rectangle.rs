@@ -333,7 +333,6 @@ where
                     (Some(to), Some(from)) => {
                         a = corner(&from, &direction);
                         a1 = corner(&to, &direction);
-                        let mut s_mut = stream;
                         let cp = compare_point(&from, &to) < Ordering::Less;
                         let is_direction = direction > T::zero();
                         // logical exor: cp ^^ is_direction
@@ -343,7 +342,7 @@ where
                                     x: if a == 0 || a == 3 { x0 } else { x1 },
                                     y: if a > 1 { y1 } else { y0 },
                                 };
-                                s_mut.point(&p, None);
+                                stream.point(&p, None);
 
                                 a = (a + direction_i8 + 4) % 4;
                                 if a == a1 {

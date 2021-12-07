@@ -12,6 +12,8 @@ use crate::stream::Stream;
 use crate::Transform;
 
 /// Resample None.
+///
+/// A pass-through module, when no resampling is required.
 #[derive(Clone, Copy, Debug)]
 pub struct None<PR, T>
 where

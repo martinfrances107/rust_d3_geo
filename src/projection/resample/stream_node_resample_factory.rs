@@ -42,6 +42,10 @@ where
     PR: ProjectionRaw<T>,
     T: CoordFloat + FloatConst,
 {
+    /// Given a transform and precision return the appropiate
+    /// resample factory.
+    ///
+    /// delta2 is the square of the sampling precision.
     #[inline]
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,

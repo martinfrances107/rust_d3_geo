@@ -20,11 +20,12 @@ use crate::stream::Stream;
 
 use interpolate::generate as generate_interpolate;
 use line::Line as LineCircle;
-use pv::PV;
+use pv::PV as PVCircle;
+// use pv::PV;
 
 pub(crate) fn gen_clip_factory_circle<EP, PR, SINK, T>(
     radius: T,
-) -> StreamNodeClipFactory<EP, LineCircle<T>, PR, PV<T>, SINK, T>
+) -> StreamNodeClipFactory<EP, LineCircle<T>, PR, PVCircle<T>, SINK, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
     PR: ProjectionRaw<T>,
@@ -39,7 +40,7 @@ where
         [-T::PI(), radius - T::PI()]
     };
     StreamNodeClipFactory::new(
-        PV::new(radius),
+        PVCircle::new(radius),
         LineCircle::new(radius),
         generate_interpolate(radius),
         start.into(),
