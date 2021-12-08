@@ -31,13 +31,11 @@ mod clipcircle_test {
         }
         let poly = polygon![(x: -120., y:-30.),(x:0., y:-30.),(x:0., y:-90.),(x:0., y:-30.),(x:120., y:-30.),(x:-120., y:-30.)];
         let d: DataObject<f64> = DataObject::Geometry(Geometry::Polygon(poly));
-        let projection = Rc::new(
-            AzimuthalEqualArea::builder()
-                .translate(&Coordinate { x: 0.5, y: 0.5 })
-                .rotate(&[0_f64, -90_f64, 0_f64])
-                .clip_angle(170_f64)
-                .build(),
-        );
+        let projection = AzimuthalEqualArea::builder()
+            .translate(&Coordinate { x: 0.5, y: 0.5 })
+            .rotate(&[0_f64, -90_f64, 0_f64])
+            .clip_angle(170_f64)
+            .build();
 
         let path_builder = PathBuilder::context_pathstring();
 

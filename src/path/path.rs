@@ -45,7 +45,7 @@ where
     context_stream: ContextStream<T>,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
-    projection: Rc<Projection<ContextStream<T>, LINE, PR, PV, T>>,
+    projection: Projection<ContextStream<T>, LINE, PR, PV, T>,
 }
 
 impl<LINE, PR, PV, T> Path<LINE, PR, PV, T>
@@ -65,7 +65,7 @@ where
     /// Constructor.
     pub fn new(
         context_stream: ContextStream<T>,
-        projection: Rc<Projection<ContextStream<T>, LINE, PR, PV, T>>,
+        projection: Projection<ContextStream<T>, LINE, PR, PV, T>,
     ) -> Self {
         Self {
             context_stream,
@@ -83,7 +83,7 @@ where
 
     /// Returns the area of the Path
     /// This operation consumes the  Path.
-    pub fn area(self, object: &DataObject<T>) -> Option<ResultEnum<T>>
+    pub fn area(mut self, object: &DataObject<T>) -> Option<ResultEnum<T>>
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
@@ -97,7 +97,7 @@ where
     /// Returns the bounds of the object
     ///
     /// This operation consumes the  Path.
-    pub fn bounds(self, object: &DataObject<T>) -> Option<ResultEnum<T>>
+    pub fn bounds(mut self, object: &DataObject<T>) -> Option<ResultEnum<T>>
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
@@ -109,7 +109,7 @@ where
     }
 
     /// Returns the centroid of the object.
-    pub fn centroid(self, object: &DataObject<T>) -> Option<ResultEnum<T>>
+    pub fn centroid(mut self, object: &DataObject<T>) -> Option<ResultEnum<T>>
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {

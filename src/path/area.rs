@@ -28,6 +28,19 @@ where
     line_end_fn: fn(&mut Self),
 }
 
+// When comparing do not care about which function is active.
+impl<T> PartialEq for Area<T>
+where
+    T: CoordFloat,
+{
+    fn eq(&self, other: &Self) -> bool {
+        self.area_sum == other.area_sum
+            && self.area_ring_sum == other.area_ring_sum
+            && self.p00 == other.p00
+            && self.p0 == other.p0
+    }
+}
+
 impl<T> Default for Area<T>
 where
     T: CoordFloat,

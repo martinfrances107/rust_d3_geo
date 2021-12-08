@@ -136,7 +136,7 @@ where
     #[inline]
     pub fn build(
         self,
-        projection: Rc<Projection<ContextStream<T>, LINE, PR, PV, T>>,
+        projection: Projection<ContextStream<T>, LINE, PR, PV, T>,
     ) -> Path<LINE, PR, PV, T>
     where
         PR: ProjectionRaw<T>,

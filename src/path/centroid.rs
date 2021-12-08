@@ -45,6 +45,28 @@ where
     three: T,
 }
 
+// When comparing do not care about which function is active.
+impl<T> PartialEq for Centroid<T>
+where
+    T: CoordFloat,
+{
+    fn eq(&self, other: &Self) -> bool {
+        self.X0 == other.X0
+            && self.Y0 == other.Y0
+            && self.Z0 == other.Z0
+            && self.X1 == other.X1
+            && self.Y1 == other.Y1
+            && self.Z1 == other.Z1
+            && self.X2 == other.X2
+            && self.Y2 == other.Y2
+            && self.Z2 == other.Z2
+            && self.x00 == other.x00
+            && self.y00 == other.y00
+            && self.x0 == other.x0
+            && self.y0 == other.y0
+    }
+}
+
 impl<T> Default for Centroid<T>
 where
     T: AddAssign<T> + CoordFloat,

@@ -7,7 +7,7 @@ use super::Result;
 use super::ResultEnum;
 
 /// A stream node endpoint for computing a bounding box.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Bounds<T>
 where
     T: CoordFloat,

@@ -34,7 +34,7 @@ mod mercator_tests {
             .clip_extent_clear()
             .precision(&0_f64);
 
-        let projection = Rc::new(projection_builder.build());
+        let projection = projection_builder.build();
         let path_builder = PathBuilder::context_pathstring();
 
         let object = DataObject::Sphere(Sphere::default());
@@ -101,7 +101,7 @@ mod mercator_tests {
             .scale(1_f64)
             .precision(&0_f64);
 
-        let projection = Rc::new(projection_builder.build());
+        let projection = projection_builder.build();
 
         let path_builder = PathBuilder::context_pathstring();
 
@@ -154,7 +154,7 @@ mod mercator_tests {
             ])
             .scale(1_f64)
             .precision(&0_f64);
-        let projection = Rc::new(projection_builder.build());
+        let projection = projection_builder.build();
 
         let path_builder = PathBuilder::context_pathstring();
 
@@ -208,7 +208,7 @@ mod mercator_tests {
             .translate(&Coordinate { x: 0_f64, y: 0_f64 })
             .precision(&0_f64);
 
-        let projection = Rc::new(projection_builder.build());
+        let projection = projection_builder.build();
         let path_builder = PathBuilder::context_pathstring();
 
         let object = DataObject::Sphere(Sphere::default());

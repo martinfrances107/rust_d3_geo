@@ -9,21 +9,21 @@ use super::PointRadiusTrait;
 use super::Result;
 use super::ResultEnum;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 enum PointState {
     Init,
     LineStart,
     Next,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 enum LineState {
     Init,
     PolygonStarted,
 }
 
 /// Path Context.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Context<T>
 where
     T: CoordFloat,

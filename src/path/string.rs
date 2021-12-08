@@ -10,14 +10,14 @@ use super::PointRadiusTrait;
 use super::Result;
 use super::ResultEnum;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 enum PointState {
     LineAtStart,
     LineInProgress,
     LineNotInProgress,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 enum LineState {
     Stopped,
     Started,
@@ -38,7 +38,7 @@ where
 }
 
 /// PathString.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct String<T>
 where
     T: CoordFloat,

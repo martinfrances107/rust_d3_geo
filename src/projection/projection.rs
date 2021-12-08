@@ -96,11 +96,13 @@ where
     pub(crate) rotate_transform_factory: RotateTransformFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
 
     pub(crate) transform_radians_factory: TransformRadiansFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
+
+    pub(crate) cache: Option<(DRAIN, ProjectionStreamOutput<DRAIN, LINE, PR, PV, T>)>,
 }
 
 impl<'a, DRAIN, LINE, PR, PV, T> Projection<DRAIN, LINE, PR, PV, T>
 where
-    DRAIN: Stream<EP = DRAIN, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T> + PartialEq<DRAIN>,
     LINE: Line,
     StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
         Stream<EP = DRAIN, T = T>,
@@ -116,12 +118,15 @@ where
     ///
     /// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
     ///
-    ///
-    /// In javascript stream is used as a property to be removed from the object.
-    /// In rust that is a closure.
-    pub fn stream(&self, drain: DRAIN) -> ProjectionStreamOutput<DRAIN, LINE, PR, PV, T> {
-        // let postclip = (self.postclip)(drain);
-        let postclip_node = self.postclip_factory.generate(drain);
+    pub fn stream(&mut self, drain: DRAIN) -> ProjectionStreamOutput<DRAIN, LINE, PR, PV, T> {
+        if let Some((cache_drain, output)) = &self.cache {
+            if *cache_drain == drain {
+                return (*output).clone();
+            }
+        }
+
+        // Build cache.
+        let postclip_node = self.postclip_factory.generate(drain.clone());
 
         let resample_node = self.resample_factory.generate(postclip_node);
 
@@ -129,8 +134,13 @@ where
 
         let rotate_node = self.rotate_factory.generate(preclip_node);
 
+        let out = self.transform_radians_factory.generate(rotate_node);
+
+        // Populate cache.
+        self.cache = Some((drain, out.clone()));
+
         // Output stage is a transform_radians node.
-        self.transform_radians_factory.generate(rotate_node)
+        out
     }
 }
 

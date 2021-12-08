@@ -84,6 +84,7 @@ where
     #[inline]
     pub fn build(&self) -> Projection<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> {
         Projection {
+            cache: None,
             postclip_factory: self.base.postclip_factory.clone(),
             preclip_factory: self.base.preclip_factory.clone(),
             resample_factory: self.base.resample_factory.clone(),

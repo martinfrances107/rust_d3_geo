@@ -33,24 +33,20 @@ mod path_area_test {
 
     #[inline]
     fn equirectangular<DRAIN, T>(
-    ) -> Rc<Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>>
+    ) -> Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>
     where
         DRAIN: Stream<EP = DRAIN, T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        Rc::new(
-            EquirectangularRaw::builder()
-                .scale(T::from(900f64 / PI).unwrap())
-                .precision(&T::zero())
-                .build(),
-        )
+        EquirectangularRaw::builder()
+            .scale(T::from(900f64 / PI).unwrap())
+            .precision(&T::zero())
+            .build()
     }
 
     #[inline]
     fn test_area<'a, DRAIN, T>(
-        projection: Rc<
-            Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
-        >,
+        projection: Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
         object: DataObject<T>,
     ) -> T
     where

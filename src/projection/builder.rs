@@ -216,6 +216,7 @@ where
     #[inline]
     pub fn build(&self) -> Projection<DRAIN, LINE, PR, PV, T> {
         Projection {
+            cache: None,
             postclip_factory: self.postclip_factory.clone(),
             preclip_factory: self.preclip_factory.clone(),
             resample_factory: self.resample_factory.clone(),

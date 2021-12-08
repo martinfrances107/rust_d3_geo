@@ -18,7 +18,7 @@ use super::ResultEnum;
 
 /// Context Stream which stream endpoint is being considered.
 /// TODO can I optimise this away.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum ContextStream<T>
 where
     T: CoordFloat,

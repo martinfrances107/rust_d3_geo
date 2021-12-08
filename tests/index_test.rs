@@ -28,36 +28,30 @@ mod index_test {
     use rust_d3_geo::projection::Scale;
 
     #[inline]
-    fn equirectangular() -> Rc<
-        Projection<
+    fn equirectangular() -> Projection<
+        ContextStream<f64>,
+        Line<f64>,
+        EquirectangularRaw<ContextStream<f64>, f64>,
+        PV<f64>,
+        f64,
+    > {
+        ProjectionBuilder::new(
+            gen_clip_factory_antimeridian(),
+            EquirectangularRaw::default(),
+        )
+        .scale(900_f64 / PI)
+        .precision(&0_f64)
+        .build()
+    }
+
+    #[inline]
+    fn test_path<'a>(
+        projection: Projection<
             ContextStream<f64>,
             Line<f64>,
             EquirectangularRaw<ContextStream<f64>, f64>,
             PV<f64>,
             f64,
-        >,
-    > {
-        Rc::new(
-            ProjectionBuilder::new(
-                gen_clip_factory_antimeridian(),
-                EquirectangularRaw::default(),
-            )
-            .scale(900_f64 / PI)
-            .precision(&0_f64)
-            .build(),
-        )
-    }
-
-    #[inline]
-    fn test_path<'a>(
-        projection: Rc<
-            Projection<
-                ContextStream<f64>,
-                Line<f64>,
-                EquirectangularRaw<ContextStream<f64>, f64>,
-                PV<f64>,
-                f64,
-            >,
         >,
         object: DataObject<f64>,
     ) -> String {
