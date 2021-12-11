@@ -7,14 +7,12 @@ mod path_centroid_test {
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
-    use std::rc::Rc;
 
     use approx::AbsDiffEq;
     use geo::line_string;
     use geo::CoordFloat;
     use geo::Coordinate;
     use geo::Geometry;
-    use geo::LineString;
     use geo::MultiLineString;
     use geo::MultiPoint;
     use geo::MultiPolygon;
@@ -23,7 +21,6 @@ mod path_centroid_test {
     use num_traits::AsPrimitive;
     use num_traits::Float;
     use num_traits::FloatConst;
-    use pretty_assertions::assert_eq;
 
     use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
     use rust_d3_geo::clip::antimeridian::line::Line;

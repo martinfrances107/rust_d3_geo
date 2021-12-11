@@ -8,9 +8,6 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use self::str::scale_translate_rotate::ScaleTranslateRotate;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
@@ -25,11 +22,14 @@ use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::rotation::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
+
 use projection::Projection;
 use resample::ResampleNode;
 use stream_node::StreamNode;
 use stream_node_factory::StreamNodeFactory;
 use Raw as ProjectionRaw;
+
+use self::str::scale_translate_rotate::ScaleTranslateRotate;
 
 /// The raw projection.
 pub mod azimuthal_equal_area;
@@ -66,6 +66,7 @@ pub mod stream_node_factory;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
 
+/// Resample based on a given precision.
 pub mod resample;
 
 /// Helper functions found measuring the extent, width or height.
@@ -290,11 +291,11 @@ where
     //     Self::T,
     // >;
 
-    //  Switches to antimeridian cutting rather than small-circle clipPIng.
-    //  See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
-    //
-    //  @param angle Set to null to switch to antimeridian cutting.
-    //
+    ///  Switches to antimeridian cutting rather than small-circle clipPIng.
+    ///  See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
+    ///
+    ///  @param angle Set to null to switch to antimeridian cutting.
+    ///
     fn clip_angle(
         self,
         angle: Self::T,

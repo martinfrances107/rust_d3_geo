@@ -5,9 +5,6 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_factory_antimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
 use crate::clip::circle::gen_clip_factory_circle;
 use crate::clip::circle::line::Line as LineCircle;
@@ -353,7 +350,7 @@ where
             Builder::<DRAIN, LineCircle<T>, PR, PVCircle<T>, T>::new(cf, self.projection_raw);
 
         // Update only theta and preclip_factory.
-        let out = Builder::<DRAIN, LineCircle<T>, PR, PVCircle<T>, T> {
+        Builder::<DRAIN, LineCircle<T>, PR, PVCircle<T>, T> {
             // projection_raw: self.projection_raw,
             // /// Internal state.
             delta_lambda: self.delta_lambda,
@@ -389,9 +386,7 @@ where
             // rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
             rotate_factory: StreamNodeFactory::new(self.rotate),
             ..out
-        };
-
-        out
+        }
     }
 }
 

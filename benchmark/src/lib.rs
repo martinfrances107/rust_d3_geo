@@ -15,7 +15,6 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
-use std::cell::RefCell;
 use std::rc::Rc;
 
 use geo::Coordinate;
@@ -26,6 +25,7 @@ use wasm_bindgen_futures::JsFuture;
 use web_sys::Document;
 use web_sys::*;
 
+use rust_d3_geo::clip::circle::line::Line;
 use rust_d3_geo::clip::circle::pv::PV;
 use rust_d3_geo::data_object::DataObject;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
@@ -35,7 +35,6 @@ use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Raw;
 use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
-use rust_d3_geo::clip::circle::line::Line;
 
 use rust_d3_geo::projection::Rotate;
 
@@ -158,16 +157,14 @@ pub async fn start() -> Result<(), JsValue> {
     // .translate([width / 2, height / 2])
 
     // ortho_builder.scale();
-    let ortho =
-        ortho_builder
-            .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-            .translate(&Coordinate {
-                x: width / 2_f64,
-                y: height / 2_f64,
-            })
-            .rotate(&[0_f64, 0_f64, 0_f64])
-            .build();
-
+    let ortho = ortho_builder
+        .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
+        .translate(&Coordinate {
+            x: width / 2_f64,
+            y: height / 2_f64,
+        })
+        .rotate(&[0_f64, 0_f64, 0_f64])
+        .build();
 
     // let pb_cps: PathBuilder<Orthographic<ContextStream<f64>, f64>, PV<f64>, f64> =
     //     PathBuilder::context_pathstring();
@@ -183,7 +180,7 @@ pub async fn start() -> Result<(), JsValue> {
     //     }
     // }
 
-    let mut path = pb.build(ortho.clone());
+    let mut path = pb.build(ortho);
     context.begin_path();
     context.set_fill_style(&"#999".into());
     context.set_stroke_style(&"#69b3a2".into());

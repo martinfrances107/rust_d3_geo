@@ -5,7 +5,6 @@ mod path_bounds_test {
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
-    use std::rc::Rc;
 
     use approx::AbsDiffEq;
     use geo::CoordFloat;

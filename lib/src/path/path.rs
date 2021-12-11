@@ -1,6 +1,5 @@
 use std::fmt::Display;
 use std::ops::AddAssign;
-use std::rc::Rc;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;

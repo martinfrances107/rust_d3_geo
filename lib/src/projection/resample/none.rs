@@ -29,6 +29,7 @@ where
     T: CoordFloat + FloatConst,
     PR: ProjectionRaw<T>,
 {
+    /// Contructor: Resample None.
     pub fn new(projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>) -> None<PR, T> {
         Self {
             pt: PhantomData::<T>,

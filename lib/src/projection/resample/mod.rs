@@ -1,5 +1,9 @@
+/// Resample None.
 pub mod none;
+/// Resamples
 pub mod resample;
+
+/// Factory Method.
 pub mod stream_node_resample_factory;
 
 use std::fmt::Debug;
@@ -17,6 +21,8 @@ use super::Raw as ProjectionRaw;
 use none::None;
 use resample::Resample;
 
+/// A return type which contains the
+/// generated resample node.
 #[derive(Debug, Clone)]
 pub enum ResampleNode<EP, PR, SINK, T>
 where
@@ -25,7 +31,9 @@ where
     SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
+    /// Resample None.
     RN(StreamNode<EP, None<PR, T>, SINK, T>),
+    /// A Resample Node.
     R(StreamNode<EP, Resample<PR, T>, SINK, T>),
 }
 

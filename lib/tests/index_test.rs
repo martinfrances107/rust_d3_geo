@@ -4,15 +4,14 @@ mod index_test {
 
     extern crate pretty_assertions;
 
+    use std::f64::consts::PI;
+
+    use geo::line_string;
     use geo::Coordinate;
+    use geo::Geometry;
     use geo::LineString;
     use geo::Polygon;
     use pretty_assertions::assert_eq;
-    use std::f64::consts::PI;
-    use std::rc::Rc;
-
-    use geo::line_string;
-    use geo::Geometry;
 
     use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
     use rust_d3_geo::clip::antimeridian::line::Line;

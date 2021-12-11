@@ -23,31 +23,32 @@ enum PointState {
 }
 
 #[derive(Clone, Copy, Debug)]
+/// Resample the stream base on a given precision.
 pub struct Resample<PR, T>
 where
     T: CoordFloat + FloatConst,
     PR: ProjectionRaw<T>,
 {
-    pub projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-    pub delta2: T,
+    projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+    delta2: T,
 
     // first point
-    pub lambda00: T,
-    pub x00: T,
-    pub y00: T,
-    pub a00: T,
-    pub b00: T,
-    pub c00: T,
+    lambda00: T,
+    x00: T,
+    y00: T,
+    a00: T,
+    b00: T,
+    c00: T,
 
     // previous point
-    pub lambda0: T,
-    pub x0: T,
-    pub y0: T,
-    pub a0: T,
-    pub b0: T,
-    pub c0: T,
+    lambda0: T,
+    x0: T,
+    y0: T,
+    a0: T,
+    b0: T,
+    c0: T,
 
-    pub cos_min_distance: T,
+    cos_min_distance: T,
 
     point_state: PointState,
     use_line_start: bool,
@@ -66,6 +67,7 @@ where
     PR: ProjectionRaw<T>,
     T: CoordFloat + FloatConst,
 {
+    /// Returns a Resample for a given precision
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
         delta2: T,

@@ -7,7 +7,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::Clean;
 use crate::clip::Line;
 use crate::path::Result;
 use crate::path::ResultEnum;

@@ -1,10 +1,12 @@
+/// Generates great circles.
 pub mod graticule;
 
-use crate::math::EPSILON;
 use geo::CoordFloat;
 use geo::Coordinate;
+
 use graticule::Graticule;
 
+use crate::math::EPSILON;
 use rust_d3_array::range::range;
 
 type CoordFn<T> = Box<dyn Fn(T) -> Vec<Coordinate<T>>>;

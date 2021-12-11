@@ -6,17 +6,14 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_factory_antimeridian;
-use crate::clip::antimeridian::line::Line;
-use crate::clip::antimeridian::pv::PV;
-use crate::clip::circle::gen_clip_factory_circle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
 use crate::math::EPSILON;
-use crate::projection::ClipAngle;
 use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder::Builder;
+use super::ClipAngle;
 use super::Raw;
 use super::Scale;
 

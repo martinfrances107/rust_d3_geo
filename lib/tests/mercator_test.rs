@@ -3,11 +3,8 @@
 mod mercator_tests {
     extern crate pretty_assertions;
 
-    use std::rc::Rc;
-
     use geo::Coordinate;
     use geo::Geometry;
-
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::data_object::sphere::Sphere;
