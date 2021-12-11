@@ -1,6 +1,6 @@
 [package]
 name = "benchmark"
-description="rust_d3_geo_voronoi benchmark wasm app"
+description="rust_d3_geo benchmark wasm app"
 license = "MIT"
 version = "0.1.0"
 authors = ["martin <martinfrances107@hotmail.com>"]
@@ -8,11 +8,6 @@ edition = "2018"
 [lib]
 crate-type = ["cdylib"]
 
-[profile.release]
-# This makes the compiled code faster and smaller, but it makes compiling slower,
-# so it's only enabled in release mode.
-lto = true
-debug = true
 
 [features]
 # If you uncomment this line, it will enable `wee_alloc`:
@@ -23,7 +18,7 @@ js-sys = "0.3.55"
 geo={git = "https://github.com/martinfrances107/geo.git", branch="cyclic_match" }
 getrandom = { version = "0.2.3", features = ["js"] }
 rand = { version = "0.8.4"}
-rust_d3_geo = {path="../"}
+rust_d3_geo = {path="../lib"}
 rust_topojson_client = { git="https://github.com/martinfrances107/rust_topojson_client.git", branch="main"}
 serde = { version = "1.0", features = ["derive"] }
 topojson = "0.5.0"
@@ -41,8 +36,8 @@ wee_alloc = { version = "0.4.5", optional = true }
 # logging them with `console.error`. This is great for development, but requires
 # all the `std::fmt` and `std::panicking` infrastructure, so it's only enabled
 # in debug mode.
-[target."cfg(debug_assertions)".dependencies]
-console_error_panic_hook = "0.1.5"
+#[target."cfg(debug_assertions)".dependencies]
+#console_error_panic_hook = "0.1.5"
 
 
 # These crates are used for running unit tests.
