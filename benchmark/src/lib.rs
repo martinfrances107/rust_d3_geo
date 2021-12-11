@@ -35,6 +35,7 @@ use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Raw;
 use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
+use rust_d3_geo::clip::circle::line::Line;
 
 use rust_d3_geo::projection::Rotate;
 
@@ -88,11 +89,12 @@ pub async fn start() -> Result<(), JsValue> {
     opts.method("GET");
     opts.mode(RequestMode::Cors);
 
-    let request = Request::new_with_str_and_init(&"/world-atlas/world/50m.json", &opts)?;
+    // let request = Request::new_with_str_and_init(&"/world-atlas/world/50m.json", &opts)?;
+    let request = Request::new_with_str_and_init(&"/world-atlas/africa.json", &opts)?;
 
     request.headers().set("Accept", "application/json")?;
 
-    let window = web_sys::window().expect("Faile to get window");
+    let window = web_sys::window().expect("Failed to get window");
     let resp_value = JsFuture::from(window.fetch_with_request(&request)).await?;
 
     // `resp_value` is a `Response` object.
@@ -123,7 +125,8 @@ pub async fn start() -> Result<(), JsValue> {
     // context.set_stroke_style(&"black".into());
     // context.fill_rect(0.0, 0.0, width, height);
 
-    let land = FeatureBuilder::<f64>::generate_from_name(&topology, &"land")
+    // let land = FeatureBuilder::<f64>::generate_from_name(&topology, &"land")
+    let land = FeatureBuilder::<f64>::generate_from_name(&topology, &"countries")
         .expect("Did not extract geometry");
 
     // match FeatureBuilder::<f64>::generate_from_name(&topology, &"land") {
@@ -144,9 +147,9 @@ pub async fn start() -> Result<(), JsValue> {
     //     }
     // };
 
-    let cs: ContextStream<f64> = ContextStream::C(Context::new(context.clone()));
-    let pb: PathBuilder<Orthographic<ContextStream<f64>, f64>, PV<f64>, f64> =
-        PathBuilder::new(Rc::new(RefCell::new(cs)));
+    let cs: ContextStream<f64> = ContextStream::Context(Context::new(context.clone()));
+    let pb: PathBuilder<Line<f64>, Orthographic<ContextStream<f64>, f64>, PV<f64>, f64> =
+        PathBuilder::new(cs);
 
     let ortho_builder = Orthographic::<ContextStream<f64>, f64>::builder();
 
@@ -155,7 +158,7 @@ pub async fn start() -> Result<(), JsValue> {
     // .translate([width / 2, height / 2])
 
     // ortho_builder.scale();
-    let ortho = Rc::new(
+    let ortho =
         ortho_builder
             .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
             .translate(&Coordinate {
@@ -163,8 +166,8 @@ pub async fn start() -> Result<(), JsValue> {
                 y: height / 2_f64,
             })
             .rotate(&[0_f64, 0_f64, 0_f64])
-            .build(),
-    );
+            .build();
+
 
     // let pb_cps: PathBuilder<Orthographic<ContextStream<f64>, f64>, PV<f64>, f64> =
     //     PathBuilder::context_pathstring();
