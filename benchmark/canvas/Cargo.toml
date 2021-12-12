@@ -1,5 +1,5 @@
 [package]
-name = "benchmark"
+name = "rust_d3_geo_benchmark_canvas"
 description="rust_d3_geo benchmark wasm app"
 license = "MIT"
 version = "0.1.0"
@@ -18,7 +18,7 @@ js-sys = "0.3.55"
 geo={git = "https://github.com/martinfrances107/geo.git", branch="cyclic_match" }
 getrandom = { version = "0.2.3", features = ["js"] }
 rand = { version = "0.8.4"}
-rust_d3_geo = {path="../lib"}
+rust_d3_geo = {path="../../lib"}
 rust_topojson_client = { git="https://github.com/martinfrances107/rust_topojson_client.git", branch="main"}
 serde = { version = "1.0", features = ["derive"] }
 topojson = "0.5.0"

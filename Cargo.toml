@@ -1,7 +1,8 @@
 [workspace]
 members = [
     "./lib",
-    "./benchmark",
+    "./benchmark/canvas",
+    "./benchmark/svg",
     "./examples/graticule"
 ]
 
