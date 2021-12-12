@@ -59,6 +59,8 @@ features = [
     "Headers",
     "EventTarget",
     "SvgsvgElement",
+    "SvgAnimatedLength",
+    "SvgLength",
     "SvgPathElement",
     "HtmlElement",
     "HtmlInputElement",
