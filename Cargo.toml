@@ -1,8 +1,8 @@
 [workspace]
-# "./examples/graticule"
 members = [
     "./lib",
     "./benchmark",
+    "./examples/graticule"
 ]
 
 [profile.release]

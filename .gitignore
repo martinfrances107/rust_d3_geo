@@ -1,6 +1,7 @@
 benchmark/target
 benchmark/node_modules/
 examples/graticule/target/
+examples/graticule/node_modules/
 /target
 clip_ops_macro_derive/target/
 Cargo.lock
