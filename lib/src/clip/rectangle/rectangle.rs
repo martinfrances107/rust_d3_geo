@@ -28,7 +28,6 @@ use crate::stream::Stream;
 #[derive(Clone, Debug)]
 pub struct Rectangle<T>
 where
-    // PR: Raw<T>,
     T: CoordFloat,
 {
     buffer_stream: ClipBuffer<T>,
@@ -61,7 +60,6 @@ where
 
 impl<T> Rectangle<T>
 where
-    // PR: Raw<T>,
     T: 'static + CoordFloat + FloatConst,
 {
     #[inline]
@@ -388,7 +386,6 @@ where
 
     // Buffer geometry within a polygon and then clip it en masse.
     fn polygon_start(&mut self) {
-        // activeStream = bufferStream,
         self.raw.use_buffer_stream = true;
 
         self.raw.segments = Some(VecDeque::new());
@@ -421,7 +418,6 @@ where
 
             let interpolate_fn: InterpolateFn<SINK, T> = self.gen_interpolate();
             if clean_inside {
-                // let mut sb = self;
                 self.sink.line_start();
                 interpolate_fn(None, None, T::one(), &mut self.sink);
                 self.sink.line_end();

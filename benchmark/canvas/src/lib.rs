@@ -89,7 +89,7 @@ pub async fn start() -> Result<(), JsValue> {
     opts.mode(RequestMode::Cors);
 
     // let request = Request::new_with_str_and_init(&"/world-atlas/world/50m.json", &opts)?;
-    let request = Request::new_with_str_and_init(&"/world-atlas/africa.json", &opts)?;
+    let request = Request::new_with_str_and_init("/world-atlas/africa.json", &opts)?;
 
     request.headers().set("Accept", "application/json")?;
 
@@ -125,7 +125,7 @@ pub async fn start() -> Result<(), JsValue> {
     // context.fill_rect(0.0, 0.0, width, height);
 
     // let land = FeatureBuilder::<f64>::generate_from_name(&topology, &"land")
-    let land = FeatureBuilder::<f64>::generate_from_name(&topology, &"countries")
+    let land = FeatureBuilder::<f64>::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
     // match FeatureBuilder::<f64>::generate_from_name(&topology, &"land") {

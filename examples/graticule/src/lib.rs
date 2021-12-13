@@ -123,7 +123,7 @@ fn update_canvas(document: &Document) -> Result<()> {
         .clip_angle(90_f64 + 1e-6)
         .build();
 
-    let mut path = pb.build(ortho.clone());
+    let mut path = pb.build(ortho);
 
     let lines = generate_graticule().lines();
 
