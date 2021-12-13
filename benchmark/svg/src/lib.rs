@@ -82,7 +82,7 @@ pub async fn start() -> Result<(), JsValue> {
     let height = svg.height().base_val().value()? as f64;
 
     // let land = FeatureBuilder::<f64>::generate_from_name(&topology, &"land")
-    let land = FeatureBuilder::<f64>::generate_from_name(&topology, "countries")
+    let land = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
     let object = DataObject::Geometry(land);

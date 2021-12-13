@@ -125,7 +125,7 @@ pub async fn start() -> Result<(), JsValue> {
     // context.fill_rect(0.0, 0.0, width, height);
 
     // let land = FeatureBuilder::<f64>::generate_from_name(&topology, &"land")
-    let land = FeatureBuilder::<f64>::generate_from_name(&topology, "countries")
+    let land = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
     // match FeatureBuilder::<f64>::generate_from_name(&topology, &"land") {
