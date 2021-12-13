@@ -57,13 +57,6 @@ where
 
         self.stream.rotate = rotate_radians([-c.x.to_radians(), -c.y.to_radians(), T::zero()]);
 
-        // let mut cs = Rc::new(RefCell::new(CircleStream {
-        //     ring: Vec::new(),
-        //     rotate,
-        //     stream_type: StreamType::Polygon,
-        //     coordinates: vec![vec![]],
-        // }));
-
         stream_fn(&mut self.stream, r, p, T::one(), None, None);
 
         let coordinates = vec![self.stream.ring.clone()];
@@ -79,7 +72,7 @@ impl<T> Generator<T>
 where
     T: CoordFloat + FloatConst,
 {
-    /// center is use to programe the generator.
+    /// Center is used to programe the generator.
     pub fn center(mut self, center: &Coordinate<T>) -> Generator<T> {
         self.center = *center;
         self
@@ -91,7 +84,7 @@ where
         self.center
     }
 
-    /// radius used to programe the generator.
+    /// Sets the radius on the generator.
     pub fn radius(mut self, radius: T) -> Self {
         self.radius = radius;
         self

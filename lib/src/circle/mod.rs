@@ -40,12 +40,3 @@ use num_traits::FloatConst;
 // pub enum StreamType {
 //     Polygon,
 // }
-
-// pub trait CircleTrait<T: CoordFloat + FloatConst> {
-//     fn center<'a>(self, center: Coordinate<T>) -> Self;
-//     fn get_center(&self) -> Coordinate<T>;
-//     fn radius(self, radius: T) -> Self;
-//     fn get_radius(&self) -> T;
-//     fn precision(self, precision: T) -> Self;
-//     fn get_precision(&self) -> T;
-// }

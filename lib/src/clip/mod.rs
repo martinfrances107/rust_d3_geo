@@ -17,7 +17,6 @@ pub mod line;
 pub mod line_elem;
 /// Rectangle helper function.
 mod line_fn;
-mod line_node;
 /// A Stream pipeline stage.
 pub mod post_clip;
 /// A stream pipeline stage.
