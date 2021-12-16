@@ -99,7 +99,7 @@ where
     }
 
     fn line_end(&mut self) {
-        if let LineState::PolygonStarted = self.line {
+        if LineState::PolygonStarted == self.line {
             self.context.close_path();
         }
 
