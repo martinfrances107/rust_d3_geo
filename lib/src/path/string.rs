@@ -125,7 +125,7 @@ where
     }
 
     fn line_end(&mut self) {
-        if let LineState::Started = self.line {
+        if self.line == LineState::Started {
             self.string.push(S::from("Z"));
         }
         self.point = PointState::LineNotInProgress;

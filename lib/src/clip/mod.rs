@@ -26,8 +26,6 @@ pub(crate) mod rectangle;
 pub(crate) mod rejoin;
 /// Factory takes in complex definition and output a stream pipeline node element.
 pub mod stream_node_clip_factory;
-/// Generate line stream node.
-pub mod stream_node_line_factory;
 /// Generate post clip stream node.
 pub mod stream_node_post_clip_factory;
 
