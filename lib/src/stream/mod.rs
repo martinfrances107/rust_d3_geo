@@ -51,12 +51,6 @@ where
     fn get_endpoint(self) -> Self {
         self
     }
-    fn point(&mut self, _p: &Coordinate<T>, _m: Option<u8>) {}
-    fn sphere(&mut self) {}
-    fn line_start(&mut self) {}
-    fn line_end(&mut self) {}
-    fn polygon_start(&mut self) {}
-    fn polygon_end(&mut self) {}
 }
 
 impl<T> Default for StreamDrainStub<T>
@@ -70,7 +64,7 @@ where
     }
 }
 
-/// Is a node in the stream pipeline.
+/// Stream pipeline API
 /// Default implmentation is a no-op.
 pub trait Stream: Clone + Debug
 where
@@ -80,6 +74,10 @@ where
     type T;
     /// The End point.
     type EP;
+
+    /// Returns the end point of the stream.
+    fn get_endpoint(self) -> Self::EP;
+
     /// Declare a point.
     fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}
     /// Declare a sphere object.
@@ -92,9 +90,6 @@ where
     fn polygon_start(&mut self) {}
     /// Declare the end of a polygon.
     fn polygon_end(&mut self) {}
-
-    /// Returns the end point of the stream.
-    fn get_endpoint(self) -> Self::EP;
 }
 
 /// TODO Generics - Need to come back and refactor to take LineElem<T>
