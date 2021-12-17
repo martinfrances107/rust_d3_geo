@@ -11,8 +11,6 @@ pub mod clip_node;
 /// Helper function.
 pub mod compare_intersection;
 mod intersection;
-/// Wrapper for line primitives.
-pub mod line;
 /// The state of the line segments??
 pub mod line_elem;
 /// Rectangle helper function.
