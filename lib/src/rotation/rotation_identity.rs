@@ -5,7 +5,7 @@ use num_traits::FloatConst;
 
 use crate::Transform;
 
-/// One of the  3-axis rotation transforms.
+/// One of the 3-axis rotation transforms.
 #[derive(Clone, Copy, Debug)]
 pub struct RotationIdentity<T>
 where

@@ -1,7 +1,6 @@
 mod feature_collection;
 mod geometry;
 mod geometry_collection;
-mod line;
 mod line_string;
 mod multi_line_string;
 mod multi_point;

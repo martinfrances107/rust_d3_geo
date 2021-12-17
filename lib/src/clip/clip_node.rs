@@ -25,12 +25,12 @@ use super::CleanState;
 use super::InterpolateFn;
 use super::PointVisible;
 
-#[derive(Clone, Debug)]
-enum PointFn {
-    Default,
-    Line,
-    Ring,
-}
+// #[derive(Clone, Debug)]
+// enum PointFn {
+//     Default,
+//     Line,
+//     Ring,
+// }
 
 #[derive(Clone, Debug)]
 enum LineStartFn {
@@ -57,14 +57,11 @@ where
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PV: PointVisible<T = T>,
     SINK: Stream<EP = EP, T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     line_node: StreamNode<EP, LINE, SINK, T>,
     #[derivative(Debug = "ignore")]
     interpolate_fn: InterpolateFn<SINK, T>,
-
-    /// A pipeline source node.
-    // pub ring_buffer: Buffer<T>,
     pv: PV,
     start: Coordinate<T>,
     polygon_started: bool,
@@ -72,7 +69,9 @@ where
     ring: Vec<Coordinate<T>>,
     ring_sink_node: StreamNode<Buffer<T>, LINE, Buffer<T>, T>,
     segments: VecDeque<VecDeque<Vec<LineElem<T>>>>,
-    point_fn: PointFn,
+    // point_fn: PointFn,
+    #[derivative(Debug = "ignore")]
+    point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
     line_start_fn: LineStartFn,
     line_end_fn: LineEndFn,
 }
@@ -85,7 +84,7 @@ where
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PV: PointVisible<T = T>,
     SINK: Stream<EP = EP, T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Takes a line and cuts into visible segments. Return values used for polygon
     pub(super) fn new(
@@ -110,7 +109,7 @@ where
             segments: VecDeque::new(),
 
             // Cannot use 'point_fn' what is the default value?
-            point_fn: PointFn::Default,
+            point_fn: Self::point_default,
             line_start_fn: LineStartFn::Line,
             line_end_fn: LineEndFn::Line,
         }
@@ -141,13 +140,13 @@ where
 
     #[inline]
     fn line_start_default(&mut self) {
-        self.point_fn = PointFn::Line;
+        self.point_fn = Self::point_line;
         self.line_node.line_start();
     }
 
     #[inline]
     fn line_end_default(&mut self) {
-        self.point_fn = PointFn::Default;
+        self.point_fn = Self::point_default;
         self.line_node.line_end();
     }
 
@@ -169,16 +168,7 @@ where
         self.point_ring(&le, None);
         self.ring_sink_node.line_end();
 
-        // let clean = match &self.raw.ring_sink_node {
-        //     LineNode::A(l) => l.raw.clean(),
-        //     LineNode::C(l) => l.raw.clean(),
-        // };
         let clean = self.ring_sink_node.raw.clean();
-
-        // let ring_segments_result_o = match &mut self.raw.ring_sink_node {
-        //     LineNode::A(l) => l.sink.result(),
-        //     LineNode::C(l) => l.sink.result(),
-        // };
         let ring_segments_result_o = self.ring_sink_node.sink.result();
 
         let mut ring_segments = match ring_segments_result_o {
@@ -267,11 +257,7 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        match self.point_fn {
-            PointFn::Default => self.point_default(p, m),
-            PointFn::Line => self.point_line(p, m),
-            PointFn::Ring => self.point_ring(p, m),
-        }
+        (self.point_fn)(self, p, m);
     }
 
     #[inline]
@@ -291,7 +277,7 @@ where
     }
 
     fn polygon_start(&mut self) {
-        self.point_fn = PointFn::Ring;
+        self.point_fn = Self::point_ring;
         self.line_start_fn = LineStartFn::Ring;
         self.line_end_fn = LineEndFn::Ring;
         self.segments = VecDeque::new();
@@ -299,7 +285,7 @@ where
     }
 
     fn polygon_end(&mut self) {
-        self.point_fn = PointFn::Default;
+        self.point_fn = Self::point_default;
         self.line_start_fn = LineStartFn::Line;
         self.line_end_fn = LineEndFn::Line;
 

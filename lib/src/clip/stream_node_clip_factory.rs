@@ -1,6 +1,7 @@
 use core::marker::PhantomData;
 use std::fmt::Debug;
 
+use approx::AbsDiffEq;
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -95,7 +96,7 @@ where
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     SINK: Stream<EP = EP, T = T>,
-    T: CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type Sink = SINK;
     type T = T;

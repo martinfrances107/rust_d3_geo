@@ -34,7 +34,7 @@ where
             }
             // Geometry::Line(l) => l.to_stream(stream),
             _ => {
-                todo!("Covers Line, Rect and Triangle, The javascript original does not implement theese")
+                todo!("Covers Line, Rect and Triangle, The javascript original does not implement these")
             }
         }
     }
