@@ -10,7 +10,19 @@
 <body>
   <h1>Example: Graticule</h1>
   <h2>Rust d3 geo</h2>
+  <p>Example graticules render to both a Canvas and SVG element</p>
+  <p>Canvas</p>
   <canvas id="c" width="500" height="600"></canvas>
+  <p>SVG</p>
+  <svg id="s" width="500" height="600">
+    <style>
+      path {
+        fill: None;
+        stroke: maroon;
+        stroke-width: 2px;
+      }
+    </style>
+  </svg>
 
   <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
   <script src="./index.js"></script>

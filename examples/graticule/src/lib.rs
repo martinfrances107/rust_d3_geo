@@ -14,12 +14,14 @@ use std::rc::Rc;
 use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
+use rust_d3_geo::path::ResultEnum;
 use rust_d3_geo::projection::ClipAngle;
 use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys::Document;
+use web_sys::Element;
 
 use rust_d3_geo::clip::circle::line::Line;
 use rust_d3_geo::clip::circle::pv::PV;
@@ -31,6 +33,8 @@ use rust_d3_geo::path::context_stream::ContextStream;
 use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Raw;
+use rust_d3_geo::projection::Rotate;
+use web_sys::SvgsvgElement;
 
 mod dom_macros;
 
@@ -77,7 +81,7 @@ fn get_document() -> Result<Document> {
 pub fn run() -> Result<()> {
     let document = get_document()?;
     update_canvas(&document)?;
-
+    update_svg(&document)?;
     Ok(())
 }
 
@@ -116,6 +120,7 @@ fn update_canvas(document: &Document) -> Result<()> {
 
     let ortho = ortho_builder
         .scale(240_f64)
+        .rotate(&[0_f64, -20_f64, 0_f64])
         .translate(&Coordinate {
             x: width / 2_f64,
             y: height / 2_f64,
@@ -134,6 +139,84 @@ fn update_canvas(document: &Document) -> Result<()> {
     path.object(&mls);
 
     context.stroke();
+
+    Ok(())
+}
+
+#[cfg(not(tarpaulin_include))]
+fn get_path_node(class_name: &str) -> Result<Element> {
+    let document = get_document()?;
+    // let class_name = format!("id-{}", i);
+    let class_list = document.get_elements_by_class_name(&class_name);
+
+    assert!(class_list.length() < 2);
+    console_log!("assert passed.");
+    let ret = match class_list.item(0) {
+        Some(element) => element,
+        None => {
+            // keep.
+            match document.create_element_ns(Some("http://www.w3.org/2000/svg"), "path") {
+                Ok(element) => element,
+                Err(_) => {
+                    console_log!("failed to create node.");
+                    panic!("failed");
+                }
+            }
+        }
+    };
+    Ok(ret)
+}
+
+fn update_svg(document: &Document) -> Result<()> {
+    // Grab canvas.
+    let svg: SvgsvgElement = document
+        .get_element_by_id("s")
+        .unwrap()
+        .dyn_into::<web_sys::SvgsvgElement>()?;
+
+    let width = svg.width().base_val().value()? as f64;
+    let height = svg.height().base_val().value()? as f64;
+
+    let ortho_builder = Orthographic::<ContextStream<f64>, f64>::builder()
+        .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
+        .translate(&Coordinate {
+            x: width / 2_f64,
+            y: height / 2_f64,
+        });
+
+    let stroke: [&str; 7] = [
+        "stroke: red",
+        "stroke: orange",
+        "stroke: yellow",
+        "stroke: green",
+        "stroke: blue",
+        "stroke: indigo",
+        "stroke: black",
+    ];
+    console_log!("Have builder");
+    // for angle in 0 {
+    // TODO Code small ortho_builder.clone() can reuse this object as expected.
+    let ortho = ortho_builder
+        .scale(240_f64)
+        .rotate(&[0_f64, -20_f64, 0_f64])
+        .build();
+    let mut pb = PathBuilder::context_pathstring().build(ortho);
+
+    let lines = generate_graticule::<f64>().lines();
+
+    let mls = DataObject::Geometry(Geometry::MultiLineString(MultiLineString(lines)));
+
+    match pb.object(&mls) {
+        Some(ResultEnum::String(s)) => {
+            let i = 1;
+            let class_name = format!("id-{}", i);
+            let path = get_path_node(&class_name)?;
+            path.set_attribute_ns(None, "d", &s)?;
+            path.set_attribute_ns(None, "style", stroke[i])?;
+            svg.append_child(&path)?;
+        }
+        _ => console_log!("was expecting a string "),
+    }
 
     Ok(())
 }

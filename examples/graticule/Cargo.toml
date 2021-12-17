@@ -54,12 +54,17 @@ features = [
     "Event",
     "EventTarget",
     "HtmlCanvasElement",
+    "HtmlCollection",
     "HtmlElement",
     "HtmlInputElement",
     "Node",
     "Performance",
     "PerformanceTiming",
     "PerformanceMeasure",
+    "SvgsvgElement",
+    "SvgAnimatedLength",
+    "SvgLength",
+    "SvgPathElement",
     "Text",
     "Window"
 ]
