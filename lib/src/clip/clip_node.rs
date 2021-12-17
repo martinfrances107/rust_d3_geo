@@ -25,25 +25,6 @@ use super::CleanState;
 use super::InterpolateFn;
 use super::PointVisible;
 
-// #[derive(Clone, Debug)]
-// enum PointFn {
-//     Default,
-//     Line,
-//     Ring,
-// }
-
-#[derive(Clone, Debug)]
-enum LineStartFn {
-    Line,
-    Ring,
-}
-
-#[derive(Clone, Debug)]
-enum LineEndFn {
-    Line,
-    Ring,
-}
-
 /// ClipNode is a special case of StreamNode
 /// because of the way stream in held internally in
 /// within a line node.
@@ -72,8 +53,10 @@ where
     // point_fn: PointFn,
     #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
-    line_start_fn: LineStartFn,
-    line_end_fn: LineEndFn,
+    #[derivative(Debug = "ignore")]
+    line_start_fn: fn(&mut Self),
+    #[derivative(Debug = "ignore")]
+    line_end_fn: fn(&mut Self),
 }
 
 impl<EP, LINE, PV, SINK, T> ClipNode<EP, LINE, PV, SINK, T>
@@ -105,13 +88,11 @@ where
             polygon: Vec::new(),
             ring: Vec::new(),
             ring_sink_node,
-            // ring_buffer,
             segments: VecDeque::new(),
 
-            // Cannot use 'point_fn' what is the default value?
             point_fn: Self::point_default,
-            line_start_fn: LineStartFn::Line,
-            line_end_fn: LineEndFn::Line,
+            line_start_fn: Self::line_start_default,
+            line_end_fn: Self::line_end_default,
         }
     }
 }
@@ -262,32 +243,26 @@ where
 
     #[inline]
     fn line_start(&mut self) {
-        match self.line_start_fn {
-            LineStartFn::Ring => self.ring_start(),
-            LineStartFn::Line => self.line_start_default(),
-        }
+        (self.line_start_fn)(self);
     }
 
     #[inline]
     fn line_end(&mut self) {
-        match self.line_end_fn {
-            LineEndFn::Ring => self.ring_end(),
-            LineEndFn::Line => self.line_end_default(),
-        }
+        (self.line_end_fn)(self);
     }
 
     fn polygon_start(&mut self) {
         self.point_fn = Self::point_ring;
-        self.line_start_fn = LineStartFn::Ring;
-        self.line_end_fn = LineEndFn::Ring;
+        self.line_start_fn = Self::ring_start;
+        self.line_end_fn = Self::ring_end;
         self.segments = VecDeque::new();
         self.polygon = Vec::new();
     }
 
     fn polygon_end(&mut self) {
         self.point_fn = Self::point_default;
-        self.line_start_fn = LineStartFn::Line;
-        self.line_end_fn = LineEndFn::Line;
+        self.line_start_fn = Self::line_start_default;
+        self.line_end_fn = Self::line_end_default;
 
         let segments_inner: Vec<Vec<LineElem<T>>> =
             self.segments.clone().into_iter().flatten().collect();
