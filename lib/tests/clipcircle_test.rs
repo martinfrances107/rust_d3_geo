@@ -10,7 +10,6 @@ mod clipcircle_test {
     use geo::Coordinate;
     use geo::Geometry;
 
-    use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
@@ -28,7 +27,7 @@ mod clipcircle_test {
             static ref ROUND_DOWN: Regex = Regex::new(r"\.\d+").unwrap();
         }
         let poly = polygon![(x: -120., y:-30.),(x:0., y:-30.),(x:0., y:-90.),(x:0., y:-30.),(x:120., y:-30.),(x:-120., y:-30.)];
-        let d: DataObject<f64> = DataObject::Geometry(Geometry::Polygon(poly));
+        let d = Geometry::Polygon(poly);
         let projection = AzimuthalEqualArea::builder()
             .translate(&Coordinate { x: 0.5, y: 0.5 })
             .rotate(&[0_f64, -90_f64, 0_f64])

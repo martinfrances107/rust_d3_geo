@@ -16,7 +16,6 @@ mod index_test {
     use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
-    use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::context_stream::ContextStream;
     use rust_d3_geo::path::ResultEnum;
@@ -25,6 +24,7 @@ mod index_test {
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::stream::Streamable;
 
     #[inline]
     fn equirectangular() -> Projection<
@@ -52,7 +52,7 @@ mod index_test {
             PV<f64>,
             f64,
         >,
-        object: DataObject<f64>,
+        object: impl Streamable<T = f64>,
     ) -> String {
         let pb: PathBuilder<Line<f64>, EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
             PathBuilder::context_pathstring();
@@ -148,8 +148,8 @@ mod index_test {
     #[test]
     fn test_render_line_string() {
         println!("geoPath(LineString) renders a line string");
-        let object = DataObject::Geometry(Geometry::LineString(line_string![
-			(x: -63_f64, y: 18_f64),(x: -62_f64, y: 18_f64), (x: -62_f64, y:17_f64) ]));
+        let object = Geometry::LineString(line_string![
+			(x: -63_f64, y: 18_f64),(x: -62_f64, y: 18_f64), (x: -62_f64, y:17_f64) ]);
 
         assert_eq!(
             test_path(equirectangular(), object),
@@ -175,7 +175,7 @@ mod index_test {
             },
         ]);
         let interiors = vec![];
-        let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(exterior, interiors)));
+        let object = Geometry::Polygon(Polygon::new(exterior, interiors));
         assert_eq!(
             test_path(equirectangular(), object),
             ["M165,160", "L170,160", "L170,165", "Z"].join("")

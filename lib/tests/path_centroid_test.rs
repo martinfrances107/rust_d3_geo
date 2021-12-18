@@ -25,7 +25,6 @@ mod path_centroid_test {
     use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
-    use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::in_delta::in_delta_point;
     use rust_d3_geo::path::centroid::Centroid;
     use rust_d3_geo::path::context_stream::ContextStream;
@@ -37,6 +36,7 @@ mod path_centroid_test {
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Scale;
     use rust_d3_geo::stream::Stream;
+    use rust_d3_geo::stream::Streamable;
 
     #[inline]
     fn equirectangular<DRAIN, T>(
@@ -58,7 +58,7 @@ mod path_centroid_test {
     fn test_centroid<'a, DRAIN, T>(
         projection: Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
 
-        object: &DataObject<T>,
+        object: &impl Streamable<T = T>,
     ) -> Point<T>
     where
         DRAIN: Stream<EP = DRAIN, T = T>,
@@ -87,7 +87,7 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_point() {
         println!("geoPath.centroid(…) of a point");
-        let point = DataObject::Geometry(Geometry::Point(Point(Coordinate { x: 0_f64, y: 0_f64 })));
+        let point = Geometry::Point(Point(Coordinate { x: 0_f64, y: 0_f64 }));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -100,7 +100,7 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_empty_multipoint() {
         println!("geoPath.centroid(…) of an empty multipoint");
-        let mp = DataObject::Geometry(Geometry::MultiPoint(MultiPoint(vec![])));
+        let mp = Geometry::MultiPoint(MultiPoint(vec![]));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -113,10 +113,7 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_singleton_multipoint() {
         println!("geoPath.centroid(…) of an singleton  multipoint");
-        let mp: DataObject<f64> =
-            DataObject::Geometry(Geometry::MultiPoint(MultiPoint(vec![Point::new(
-                0_f64, 0_f64,
-            )])));
+        let mp = Geometry::MultiPoint(MultiPoint(vec![Point::new(0_f64, 0_f64)]));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -129,10 +126,10 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_two_points() {
         println!("geoPath.centroid(…) of an singleton  multipoint");
-        let mp = DataObject::Geometry(Geometry::MultiPoint(MultiPoint(vec![
+        let mp = Geometry::MultiPoint(MultiPoint(vec![
             Point::new(-122_f64, 37_f64),
             Point::new(-74_f64, 40_f64),
-        ])));
+        ]));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -145,7 +142,7 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_an_empty_linestring() {
         println!("geoPath.centroid(…) of an empty linestring");
-        let ls = DataObject::Geometry(Geometry::LineString(line_string![]));
+        let ls = Geometry::LineString(line_string![]);
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -158,10 +155,10 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_linestring_with_two_points() {
         println!("geoPath.centroid(…) of an empty linestring");
-        let ls1 = DataObject::Geometry(Geometry::LineString(line_string![
+        let ls1 = Geometry::LineString(line_string![
             (x: 100_f64, y:0_f64),
             (x: 0_f64, y:0_f64)
-        ]));
+        ]);
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -170,11 +167,11 @@ mod path_centroid_test {
             1e-6_f64
         ));
 
-        let ls2 = DataObject::Geometry(Geometry::LineString(line_string![
+        let ls2 = Geometry::LineString(line_string![
             (x: 0_f64, y:0_f64),
             (x: 100_f64, y:0_f64),
             (x: 101_f64, y: 0_f64)
-        ]));
+        ]);
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -187,10 +184,10 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_linestring_with_two_points_one_unique() {
         println!("geoPath.centroid(…) of a linestring with two points, one unique");
-        let ls1 = DataObject::Geometry(Geometry::LineString(line_string![
+        let ls1 = Geometry::LineString(line_string![
             (x: -122_f64, y:37_f64),
             (x: -122_f64, y:37_f64),
-        ]));
+        ]);
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -199,10 +196,10 @@ mod path_centroid_test {
             1e-6_f64
         ));
 
-        let ls2 = DataObject::Geometry(Geometry::LineString(line_string![
+        let ls2 = Geometry::LineString(line_string![
             (x: -74_f64, y: 40_f64),
             (x: -74_f64, y: 40_f64)
-        ]));
+        ]);
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -215,11 +212,11 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_linestring_with_three_points_two_unique() {
         println!("geoPath.centroid(…) of a linestring with three points; two unique");
-        let ls = DataObject::Geometry(Geometry::LineString(line_string![
+        let ls = Geometry::LineString(line_string![
             (x: -122_f64, y:37_f64),
             (x: -74_f64, y:40_f64),
             (x: -74_f64, y:40_f64),
-        ]));
+        ]);
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -253,7 +250,7 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_multiline_string() {
         println!("geoPath.centroid(…) of a multilinestring");
-        let mls = DataObject::Geometry(Geometry::MultiLineString(MultiLineString(vec![
+        let mls = Geometry::MultiLineString(MultiLineString(vec![
             line_string![
                 (x: 100_f64, y:0_f64),
                 (x: 0_f64, y:0_f64),
@@ -262,7 +259,7 @@ mod path_centroid_test {
                 (x: -10_f64, y:0_f64),
                 (x: 0_f64, y:0_f64),
             ],
-        ])));
+        ]));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -275,7 +272,7 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_single_ring_polygon() {
         println!("geoPath.centroid(…) of a single-ring polygon");
-        let p = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+        let p = Geometry::Polygon(Polygon::new(
             line_string![
                 (x: 100_f64, y:0_f64),
                 (x: 100_f64, y:1_f64),
@@ -284,7 +281,7 @@ mod path_centroid_test {
                 (x: 100_f64, y:0_f64)
             ],
             vec![],
-        )));
+        ));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -297,7 +294,7 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_zero_area_polygon() {
         println!("geoPath.centroid(…) of a zero-area polygon");
-        let p = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+        let p = Geometry::Polygon(Polygon::new(
             line_string![
                 (x: 1_f64, y:0_f64),
                 (x: 2_f64, y:0_f64),
@@ -305,7 +302,7 @@ mod path_centroid_test {
                 (x: 1_f64, y:0_f64),
             ],
             vec![],
-        )));
+        ));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -318,7 +315,7 @@ mod path_centroid_test {
     #[test]
     fn centroid_of_a_polygon_with_two_rings_one_zero_area() {
         println!("geoPath.centroid(…) of a polygon with two rings, one with zero area");
-        let p = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+        let p = Geometry::Polygon(Polygon::new(
             line_string![
                 (x: 100_f64, y:0_f64),
                 (x: 100_f64, y:1_f64),
@@ -332,7 +329,7 @@ mod path_centroid_test {
                 (x: 100.3_f64, y:0_f64),
                 (x: 101.1_f64, y:0_f64),
             ]],
-        )));
+        ));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -355,7 +352,7 @@ mod path_centroid_test {
             (-2_f64, -2_f64),
         ];
         ext_vec.reverse();
-        let polygon = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+        let polygon = Geometry::Polygon(Polygon::new(
             ext_vec.into(),
             vec![line_string![
                 (x: 0_f64, y:-1_f64),
@@ -364,7 +361,7 @@ mod path_centroid_test {
                 (x: 0_f64, y:1_f64),
                 (x: 0_f64, y:-1_f64),
             ]],
-        )));
+        ));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -378,7 +375,7 @@ mod path_centroid_test {
     fn centroid_of_an_empty_multipolygon() {
         println!("geoPath.centroid(…) of an empty multipolygon");
 
-        let polygon = DataObject::Geometry(Geometry::MultiPolygon(MultiPolygon(vec![])));
+        let polygon = Geometry::MultiPolygon(MultiPolygon(vec![]));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -396,17 +393,16 @@ mod path_centroid_test {
         // a value of 200 fails as expected.
         // The JS fails with this value
         // it implies the x value
-        let polygon =
-            DataObject::Geometry(Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
-                line_string![
-                    (x: 1000_f64, y: 0_f64),
-                    (x: 100_f64, y: 1_f64),
-                    (x: 101_f64, y: 1_f64),
-                    (x: 101_f64, y: 0_f64),
-                    (x: 100_f64, y: 0_f64)
-                ],
-                vec![],
-            )])));
+        let polygon = Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
+            line_string![
+                (x: 1000_f64, y: 0_f64),
+                (x: 100_f64, y: 1_f64),
+                (x: 101_f64, y: 1_f64),
+                (x: 101_f64, y: 0_f64),
+                (x: 100_f64, y: 0_f64)
+            ],
+            vec![],
+        )]));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(
@@ -426,17 +422,16 @@ mod path_centroid_test {
     fn centroid_of_a_multipolygon_with_two_polygons() {
         println!("geoPath.centroid(…) of a multipolygon with two polygons");
 
-        let polygon =
-            DataObject::Geometry(Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
-                line_string![
-                    (x: 1000_f64, y:0_f64),
-                    (x: 100_f64, y:1_f64),
-                    (x: 101_f64, y: 1_f64),
-                    (x: 101_f64, y: 0_f64),
-                    (x: 100_f64, y: 0_f64)
-                ],
-                vec![],
-            )])));
+        let polygon = Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
+            line_string![
+                (x: 1000_f64, y:0_f64),
+                (x: 100_f64, y:1_f64),
+                (x: 101_f64, y: 1_f64),
+                (x: 101_f64, y: 0_f64),
+                (x: 100_f64, y: 0_f64)
+            ],
+            vec![],
+        )]));
 
         let eq = equirectangular::<ContextStream<f64>, f64>();
         assert!(in_delta_point(

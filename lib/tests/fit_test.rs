@@ -15,7 +15,6 @@ mod fit_test {
     use topojson::Topology;
 
     use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::in_delta::in_delta;
     use rust_d3_geo::in_delta::in_delta_coordinate;
     use rust_d3_geo::path::bounds::Bounds;
@@ -33,7 +32,7 @@ mod fit_test {
     #[test]
     fn test_fit_extent_sphere_equirectangular() {
         println!("projection.fitExtent(…) sphere equirectangular");
-        let d_object = DataObject::Sphere(Sphere::default());
+        let d_object = Sphere::default();
         let projection: ProjectionBuilder<
             Bounds<f64>,
             _,
@@ -306,13 +305,13 @@ mod fit_test {
     #[test]
     fn fit_size_resampling() {
         println!("projection.fitSize(…) resampling - world mercator");
-        let box_object = DataObject::Geometry(Geometry::Polygon(polygon![
+        let box_object = Geometry::Polygon(polygon![
             (x: -135f64, y: 45f64 ),
             (x: -45f64, y: 45f64 ),
             (x: -45f64, y: -45f64 ),
             (x: -135f64, y: -45f64 ),
             (x: -135f64, y: 45f64 )
-        ]));
+        ]);
         let p1 = Mercator::builder()
             .precision(&0.1_f64)
             .fit_size([1000_f64, 1000_f64], &box_object);

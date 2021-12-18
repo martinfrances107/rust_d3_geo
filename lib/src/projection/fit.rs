@@ -8,7 +8,6 @@ use num_traits::FloatConst;
 use crate::clip::buffer::Buffer;
 use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::Line;
-use crate::data_object::DataObject;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::path::ResultEnum;
@@ -34,7 +33,7 @@ type FitBounds<DRAIN, LINE, PR, PV, T> = Box<
 fn fit<LINE, PR, PV, T>(
     builder: Builder<Bounds<T>, LINE, PR, PV, T>,
     fit_bounds: FitBounds<Bounds<T>, LINE, PR, PV, T>,
-    object: &DataObject<T>,
+    object: &impl Streamable<T = T>,
 ) -> Builder<Bounds<T>, LINE, PR, PV, T>
 where
     LINE: Line,
@@ -83,7 +82,7 @@ where
 pub(super) fn fit_extent<LINE, PR, PV, T>(
     builder: Builder<Bounds<T>, LINE, PR, PV, T>,
     extent: [[T; 2]; 2],
-    object: &DataObject<T>,
+    object: &impl Streamable<T = T>,
 ) -> Builder<Bounds<T>, LINE, PR, PV, T>
 where
     LINE: Line,
@@ -121,7 +120,7 @@ where
 pub(super) fn fit_size<LINE, PR, PV, T>(
     builder: Builder<Bounds<T>, LINE, PR, PV, T>,
     size: [T; 2],
-    object: &DataObject<T>,
+    object: &impl Streamable<T = T>,
 ) -> Builder<Bounds<T>, LINE, PR, PV, T>
 where
     LINE: Line,

@@ -18,7 +18,6 @@ mod area_test {
     use rust_d3_array::range::range;
     use rust_d3_geo::area::Area;
     use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::graticule::generate as generate_graticule;
     use rust_d3_geo::in_delta::in_delta;
 
@@ -320,7 +319,7 @@ mod area_test {
                 vec![],
             ),
         ]);
-        let data_o = DataObject::Geometry(Geometry::MultiPolygon(mp));
+        let data_o = Geometry::MultiPolygon(mp);
         let area = Area::<f64>::calc(&data_o);
         assert!(in_delta(area, 4_f64 * std::f64::consts::PI, 1e-6));
     }

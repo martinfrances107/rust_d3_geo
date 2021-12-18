@@ -16,6 +16,7 @@ use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::rotation::rotate_radians;
 use crate::stream::Stream;
+use crate::stream::Streamable;
 use crate::Transform;
 
 use super::builder::Builder as ProjectionBuilder;
@@ -27,7 +28,6 @@ use super::Angle;
 use super::Bounds;
 use super::Center;
 use super::ClipExtent;
-use super::DataObject;
 use super::Fit;
 use super::Precision;
 use super::Projection;
@@ -252,7 +252,7 @@ where
     type T = T;
 
     #[inline]
-    fn fit_extent(mut self, extent: [[T; 2]; 2], object: &DataObject<Self::T>) -> Self
+    fn fit_extent(mut self, extent: [[T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {
@@ -261,7 +261,7 @@ where
     }
 
     #[inline]
-    fn fit_size(mut self, size: [T; 2], object: &DataObject<T>) -> Self
+    fn fit_size(mut self, size: [T; 2], object: &impl Streamable<T = T>) -> Self
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {

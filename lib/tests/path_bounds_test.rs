@@ -19,7 +19,6 @@ mod path_bounds_test {
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::path::builder::Builder;
     use rust_d3_geo::path::context_stream::ContextStream;
     use rust_d3_geo::path::ResultEnum;
@@ -28,6 +27,7 @@ mod path_bounds_test {
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Raw as ProjectionRaw;
     use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::stream::Streamable;
 
     #[inline]
     fn equirectangular<
@@ -50,7 +50,7 @@ mod path_bounds_test {
             T,
         >,
 
-        object: &DataObject<T>,
+        object: &impl Streamable<T = T>,
     ) -> [Coordinate<T>; 2]
     where
         T: AbsDiffEq<Epsilon = T>
@@ -76,7 +76,7 @@ mod path_bounds_test {
     #[test]
     fn test_polygon_with_no_holes() {
         println!("geoPath.area(…) of a polygon with no holes");
-        let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+        let object = Geometry::Polygon(Polygon::new(
             LineString::from(vec![
                 Coordinate { x: 100., y: 0. },
                 Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
@@ -85,7 +85,7 @@ mod path_bounds_test {
                 Coordinate { x: 100., y: 0. },
             ]),
             vec![],
-        )));
+        ));
         let eq = equirectangular::<f64>();
         assert_eq!(
             test_bounds(eq, &object),
@@ -105,7 +105,7 @@ mod path_bounds_test {
     #[test]
     fn test_polygon_with_holes() {
         println!("geoPath.area(…) of a polygon with holes");
-        let object = DataObject::Geometry(Geometry::Polygon(Polygon::new(
+        let object = Geometry::Polygon(Polygon::new(
             LineString::from(vec![
                 Coordinate { x: 100., y: 0. },
                 Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
@@ -123,7 +123,7 @@ mod path_bounds_test {
                     Coordinate { x: 100.2, y: 0.2 },
                 ]),
             ],
-        )));
+        ));
         let eq = equirectangular::<f64>();
         assert_eq!(
             test_bounds(eq, &object),
@@ -144,7 +144,7 @@ mod path_bounds_test {
     fn test_area_of_a_sphere() {
         println!("geoPath.area(…) of a sphere");
         let eq = equirectangular::<f64>();
-        let object = DataObject::Sphere(Sphere::default());
+        let object = Sphere::default();
         assert_eq!(
             test_bounds(eq, &object),
             [

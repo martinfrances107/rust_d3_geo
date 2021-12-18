@@ -12,7 +12,6 @@ use crate::clip::buffer::Buffer;
 use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::Line;
 use crate::clip::PointVisible;
-use crate::data_object::DataObject;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
@@ -25,7 +24,7 @@ use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
-/// Projection and context stream applied to a DataObject.
+/// Projection and context stream applied to a Streamable.
 #[derive(Debug)]
 pub struct Path<LINE, PR, PV, T>
 where
@@ -74,7 +73,7 @@ where
     }
 
     /// Combines projection, context stream and object.
-    pub fn object(&mut self, object: &DataObject<T>) -> Option<ResultEnum<T>> {
+    pub fn object(&mut self, object: &impl Streamable<T = T>) -> Option<ResultEnum<T>> {
         let mut stream_in = self.projection.stream(self.context_stream.clone());
         object.to_stream(&mut stream_in);
         stream_in.get_endpoint().result()
@@ -82,7 +81,7 @@ where
 
     /// Returns the area of the Path
     /// This operation consumes the  Path.
-    pub fn area(mut self, object: &DataObject<T>) -> Option<ResultEnum<T>>
+    pub fn area(mut self, object: &impl Streamable<T = T>) -> Option<ResultEnum<T>>
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
@@ -96,7 +95,7 @@ where
     /// Returns the bounds of the object
     ///
     /// This operation consumes the  Path.
-    pub fn bounds(mut self, object: &DataObject<T>) -> Option<ResultEnum<T>>
+    pub fn bounds(mut self, object: &impl Streamable<T = T>) -> Option<ResultEnum<T>>
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
@@ -108,7 +107,7 @@ where
     }
 
     /// Returns the centroid of the object.
-    pub fn centroid(mut self, object: &DataObject<T>) -> Option<ResultEnum<T>>
+    pub fn centroid(mut self, object: &impl Streamable<T=T>) -> Option<ResultEnum<T>>
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {

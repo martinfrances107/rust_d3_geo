@@ -70,38 +70,3 @@ where
         feature: Feature<T>,
     },
 }
-
-/// Related to D3 data objects.
-#[derive(Clone, Debug)]
-pub enum DataObject<T>
-where
-    T: CoordFloat,
-{
-    /// D3 sphere
-    Sphere(Sphere<T>),
-    /// D3 geometry
-    Geometry(Geometry<T>),
-    /// A D3 geometry collect.
-    Collection(Collection<T>),
-}
-
-impl<T> Streamable for DataObject<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    type T = T;
-
-    fn to_stream<EP, SD>(&self, stream: &mut SD)
-    where
-        EP: Clone + Debug + Stream<EP = EP, T = T>,
-        SD: Stream<EP = EP, T = T>,
-    {
-        match self {
-            DataObject::Collection(Collection::Feature { feature: _ }) => {
-                todo!("fixme");
-            }
-            DataObject::Geometry(g) => g.to_stream(stream),
-            DataObject::Sphere(s) => s.to_stream(stream),
-        }
-    }
-}

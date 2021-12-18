@@ -8,7 +8,6 @@ mod mercator_tests {
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::data_object::DataObject;
     use rust_d3_geo::in_delta::in_delta_coordinate;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::ResultEnum;
@@ -34,7 +33,7 @@ mod mercator_tests {
         let projection = projection_builder.build();
         let path_builder = PathBuilder::context_pathstring();
 
-        let object = DataObject::Sphere(Sphere::default());
+        let object = Sphere::default();
 
         match path_builder.build(projection).object(&object) {
             Some(r) => match r {
@@ -102,7 +101,7 @@ mod mercator_tests {
 
         let path_builder = PathBuilder::context_pathstring();
 
-        let object = DataObject::Sphere(Sphere::default());
+        let object = Sphere::default();
 
         // There is a bodge associated with this test
         // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
@@ -155,7 +154,7 @@ mod mercator_tests {
 
         let path_builder = PathBuilder::context_pathstring();
 
-        let object = DataObject::Sphere(Sphere::default());
+        let object = Sphere::default();
 
         // There is a bodge associated with this test
         // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
@@ -208,7 +207,7 @@ mod mercator_tests {
         let projection = projection_builder.build();
         let path_builder = PathBuilder::context_pathstring();
 
-        let object = DataObject::Sphere(Sphere::default());
+        let object = Sphere::default();
 
         // There is a bodge associated with this test
         // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
@@ -244,7 +243,7 @@ mod mercator_tests {
 
         let pb = Mercator::builder();
 
-        let object = DataObject::Geometry(Geometry::MultiPoint(
+        let object = Geometry::MultiPoint(
             vec![
                 (-82.35024908550241, 29.649391549778745),
                 (-82.35014449996858, 29.65075946917633),
@@ -252,7 +251,7 @@ mod mercator_tests {
                 (-82.3492653331286, 29.64933474064504),
             ]
             .into(),
-        ));
+        );
         let pb = pb.fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
         assert_eq!(pb.get_scale(), 20969742.365692537_f64);
         assert_eq!(
