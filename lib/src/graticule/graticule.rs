@@ -79,13 +79,7 @@ impl<T> Graticule<T>
 where
     T: 'static + CoordFloat,
 {
-    // fn graticule() -> MultiLineString<T>{
-    //     MultiLineString{
-    //         vec![]
-    //     }
-    // }
-
-    pub fn generated_lines(self) -> Vec<Vec<Coordinate<T>>> {
+    fn generated_lines(self) -> Vec<Vec<Coordinate<T>>> {
         let range1 = range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX)
             .into_iter()
             .map(self.X);
@@ -106,10 +100,13 @@ where
 
         range1.chain(range2).chain(range3).chain(range4).collect()
     }
+
+    /// Lines are a vector of Line strings.
     pub fn lines(self) -> Vec<LineString<T>> {
         self.generated_lines().drain(..).map(LineString).collect()
     }
 
+    /// Generates the outline.
     pub fn outline(self) -> Polygon<T> {
         let mut c = (self.X)(self.X0);
         c.append(&mut (self.Y)(self.Y1).split_off(1));
@@ -217,7 +214,6 @@ where
         self
     }
 
-    /// Returns the precision.
     #[inline]
     pub fn get_precision(&self) -> T {
         self.precision

@@ -99,11 +99,6 @@ mod graticule_test {
     //   assert.strictEqual(e[1][1], +45);
     // });
 
-    // it("graticule.step(…) sets the minor and major step", () => {
-    //   const g = geoGraticule().step([22.5, 22.5]);
-    //   assert.deepStrictEqual(g.stepMinor(), [22.5, 22.5]);
-    //   assert.deepStrictEqual(g.stepMajor(), [22.5, 22.5]);
-    // });
     #[test]
     fn sets_minor_and_major_step() {
         println!("graticule.step(…) sets the minor and major step");

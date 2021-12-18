@@ -16,7 +16,7 @@ use geo::Coordinate;
 use geo::LineString;
 use geo::Polygon;
 
-/// Applies to DataObjects
+/// to_stream()
 pub trait Streamable {
     /// f32 or f64.
     type T: CoordFloat;

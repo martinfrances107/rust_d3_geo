@@ -6,11 +6,6 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Geometry;
-use num_traits::FloatConst;
-
-use crate::stream::{Stream, Streamable};
-
-use sphere::Sphere;
 
 /// Specifies a valie feature property.
 #[derive(Clone, Debug)]
