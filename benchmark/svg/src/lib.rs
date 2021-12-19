@@ -25,7 +25,6 @@ use web_sys::Document;
 use web_sys::SvgsvgElement;
 use web_sys::*;
 
-use rust_d3_geo::data_object::DataObject;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context_stream::ContextStream;
 use rust_d3_geo::path::ResultEnum;
@@ -85,7 +84,6 @@ pub async fn start() -> Result<(), JsValue> {
     let land = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
-    let object = DataObject::Geometry(land);
     let ortho_builder = Orthographic::<ContextStream<f64>, f64>::builder();
 
     let ortho = ortho_builder
@@ -99,7 +97,7 @@ pub async fn start() -> Result<(), JsValue> {
 
     let builder = PathBuilder::context_pathstring();
 
-    if let Some(ResultEnum::String(path_d)) = builder.build(ortho).object(&object) {
+    if let Some(ResultEnum::String(path_d)) = builder.build(ortho).object(&land) {
         log_1(&JsValue::from(path_d.clone()));
         if let Ok(path) = document.create_element_ns(Some("http://www.w3.org/2000/svg"), "path") {
             path.set_attribute_ns(None, "d", &path_d)?;
