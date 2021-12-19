@@ -209,11 +209,12 @@ mod graticule_test {
     #[test]
     fn graticule_lines() {
         println!("graticule.lines() returns an array of LineStrings");
-        let lines = generate::<f64>()
+        let lines: Vec<LineString<f64>> = generate::<f64>()
             .extent([[-90_f64, -45_f64], [90_f64, 45_f64]])
             .step([45_f64, 45_f64])
             .precision(&3_f64)
-            .lines();
+            .lines()
+            .collect();
 
         assert_eq!(
             lines[0],

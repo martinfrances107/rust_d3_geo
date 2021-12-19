@@ -1,3 +1,4 @@
+use core::iter::Iterator;
 use derivative::*;
 use std::mem::swap;
 
@@ -74,12 +75,11 @@ where
     }
 }
 
-use core::iter::Iterator;
 impl<T> Graticule<T>
 where
     T: 'static + CoordFloat,
 {
-    fn generated_lines(self) -> Vec<Vec<Coordinate<T>>> {
+    fn generated_lines(self) -> impl Iterator<Item = Vec<Coordinate<T>>> {
         let range1 = range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX)
             .into_iter()
             .map(self.X);
@@ -90,20 +90,20 @@ where
 
         let range3 = range(T::ceil(self.x0 / self.dx) * self.dx, self.x1, self.dx)
             .into_iter()
-            .filter(|x| (*x % self.DX).abs() > self.epsilon)
+            .filter(move |x| (*x % self.DX).abs() > self.epsilon)
             .map(self.x);
 
         let range4 = range(T::ceil(self.y0 / self.dy) * self.dy, self.y1, self.dy)
             .into_iter()
-            .filter(|y| (*y % self.DY).abs() > self.epsilon)
+            .filter(move |y| (*y % self.DY).abs() > self.epsilon)
             .map(self.y);
 
-        range1.chain(range2).chain(range3).chain(range4).collect()
+        range1.chain(range2).chain(range3).chain(range4)
     }
 
     /// Lines are a vector of Line strings.
-    pub fn lines(self) -> Vec<LineString<T>> {
-        self.generated_lines().drain(..).map(LineString).collect()
+    pub fn lines(self) -> impl Iterator<Item = LineString<T>> {
+        self.generated_lines().map(LineString)
     }
 
     /// Generates the outline.
