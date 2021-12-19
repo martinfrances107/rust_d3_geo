@@ -27,7 +27,6 @@ use web_sys::*;
 
 use rust_d3_geo::clip::circle::line::Line;
 use rust_d3_geo::clip::circle::pv::PV;
-use rust_d3_geo::data_object::DataObject;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::path::context_stream::ContextStream;
@@ -184,7 +183,7 @@ pub async fn start() -> Result<(), JsValue> {
     context.begin_path();
     context.set_fill_style(&"#999".into());
     context.set_stroke_style(&"#69b3a2".into());
-    path.object(&DataObject::Geometry(land));
+    path.object(&land);
 
     context.fill();
     context.stroke();

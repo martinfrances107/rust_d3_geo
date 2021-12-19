@@ -25,7 +25,6 @@ use web_sys::Element;
 
 use rust_d3_geo::clip::circle::line::Line;
 use rust_d3_geo::clip::circle::pv::PV;
-use rust_d3_geo::data_object::DataObject;
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
@@ -132,7 +131,7 @@ fn update_canvas(document: &Document) -> Result<()> {
 
     let lines = generate_graticule().lines();
 
-    let mls = DataObject::Geometry(Geometry::MultiLineString(MultiLineString(lines)));
+    let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
     context.begin_path();
     context.set_fill_style(&"#999".into());
     context.set_stroke_style(&"#69b3a2".into());
@@ -202,9 +201,9 @@ fn update_svg(document: &Document) -> Result<()> {
         .build();
     let mut pb = PathBuilder::context_pathstring().build(ortho);
 
-    let lines = generate_graticule::<f64>().lines();
+    let lines = generate_graticule::<f64>().lines().collect();
 
-    let mls = DataObject::Geometry(Geometry::MultiLineString(MultiLineString(lines)));
+    let mls = Geometry::MultiLineString(MultiLineString(lines));
 
     match pb.object(&mls) {
         Some(ResultEnum::String(s)) => {
