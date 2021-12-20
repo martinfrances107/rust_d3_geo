@@ -50,9 +50,9 @@ where
     T: CoordFloat + FloatConst,
 {
     type Sink = SINK;
-    // type Node = PostClipNode<SINK, T>;
     type T = T;
     type Node = PostClipNode<EP, SINK, Self::T>;
+
     fn generate(&self, sink: SINK) -> Self::Node {
         match &self.post_clip {
             PostClip::I(i) => PostClipNode::I(StreamNode {

@@ -4,7 +4,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 
 use crate::path::Result;
-use crate::path::ResultEnum;
 use crate::stream::Stream;
 
 use super::line_elem::LineElem;
@@ -36,13 +35,12 @@ impl<T> Result for Buffer<T>
 where
     T: CoordFloat,
 {
-    // type Out = Option<ResultEnum<T>>;
-    type T = T;
+    type Out = VecDeque<Vec<LineElem<T>>>;
 
-    fn result(&mut self) -> ResultEnum<T> {
+    fn result(&mut self) -> Self::Out {
         let result = self.lines.clone();
         self.lines.clear();
-        ResultEnum::BufferOutput(result)
+        result
     }
 }
 

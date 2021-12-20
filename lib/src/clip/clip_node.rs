@@ -9,7 +9,6 @@ use num_traits::FloatConst;
 
 use crate::clip::Line;
 use crate::path::Result;
-use crate::path::ResultEnum;
 use crate::polygon_contains::polygon_contains;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::stream_node_factory::StreamNodeFactory;
@@ -150,16 +149,7 @@ where
         self.ring_sink_node.line_end();
 
         let clean = self.ring_sink_node.raw.clean();
-        let ring_segments_result_o = self.ring_sink_node.sink.result();
-
-        let mut ring_segments = match ring_segments_result_o {
-            ResultEnum::BufferOutput(result) => result,
-            // Some(_) => {
-            //     panic!("None buffer ");
-            // }
-            _ => panic!("was expecting BufferOuput."),
-        };
-
+        let mut ring_segments = self.ring_sink_node.sink.result();
         let n = ring_segments.len();
         let m;
 

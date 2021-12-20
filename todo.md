@@ -15,8 +15,6 @@ TODO:-
 
 * Refactor trait names ending in Trait.
 
-* PointRadiusTrait<PrtT = T>, make the conventional T=T
-
 * Enum names ending in Enum
 
 * Draw outline om graticule test.

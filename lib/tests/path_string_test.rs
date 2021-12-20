@@ -22,7 +22,6 @@ mod path_string_test {
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::path::PointRadiusTrait;
-    use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::Precision;
@@ -52,17 +51,9 @@ mod path_string_test {
         DRAIN: Stream<EP = DRAIN, T = T>,
         T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let builder = PathBuilder::context_pathstring();
-        let string = builder.build(projection).object(&object);
-        match string {
-            Some(p) => match p {
-                ResultEnum::String(s) => return s,
-                _ => panic!("Expecting a string."),
-            },
-            None => {
-                panic!("Expecting an string result.");
-            }
-        }
+        PathBuilder::context_pathstring()
+            .build(projection)
+            .object(&object)
     }
 
     #[test]
@@ -94,18 +85,10 @@ mod path_string_test {
         let mut path = builder.build(eq);
         let object = Geometry::Point(point!(x: -63_f64, y:18_f64));
 
-        let result = path.object(&object);
-        match result {
-            Some(ResultEnum::String(result)) => {
-                assert_eq!(result, "M165,160m0,10a10,10 0 1,1 0,-20a10,10 0 1,1 0,20z");
-            }
-            Some(_) => {
-                panic!("was expecting a String result")
-            }
-            None => {
-                panic!("was expecting a result");
-            }
-        };
+        assert_eq!(
+            path.object(&object),
+            "M165,160m0,10a10,10 0 1,1 0,-20a10,10 0 1,1 0,20z"
+        );
     }
 
     #[test]

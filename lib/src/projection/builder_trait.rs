@@ -24,7 +24,6 @@ where
     type PR;
     /// f64 or f32.
     type T;
-    // type DRAIN;
 
     /// Returns the projection’s current resampling precision which defaults to square root of 0.5.
     /// This value corresponds to the Douglas–Peucker distance.

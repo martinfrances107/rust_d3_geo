@@ -3,11 +3,11 @@ use std::ops::AddAssign;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use super::PointRadiusEnum;
-use super::ResultEnum;
 use crate::clip::buffer::Buffer;
 use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::Line;
@@ -27,7 +27,7 @@ use crate::stream::Streamable;
 #[derive(Debug)]
 pub struct Path<CS, LINE, PR, PV, T>
 where
-    CS: Stream<EP = CS, T = T> + Result<T = T> + PartialEq,
+    CS: Stream<EP = CS, T = T> + Result + PartialEq,
     LINE: Line,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
@@ -44,7 +44,7 @@ where
 
 impl<CS, LINE, PR, PV, T> Path<CS, LINE, PR, PV, T>
 where
-    CS: Stream<EP = CS, T = T> + Result<T = T> + PartialEq,
+    CS: Stream<EP = CS, T = T> + Result + PartialEq,
     LINE: Line,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
@@ -63,10 +63,10 @@ where
     }
 
     /// Combines projection, context stream and object.
-    pub fn object(&mut self, object: &impl Streamable<T = T>) -> Option<ResultEnum<T>> {
+    pub fn object(&mut self, object: &impl Streamable<T = T>) -> <CS as Result>::Out {
         let mut stream_in = self.projection.stream(self.context_stream.clone());
         object.to_stream(&mut stream_in);
-        Some(stream_in.get_endpoint().result())
+        stream_in.get_endpoint().result()
     }
 }
 
@@ -82,7 +82,7 @@ where
 {
     /// Returns the area of the Path
     /// This operation consumes the  Path.
-    pub fn area(mut self, object: &impl Streamable<T = T>) -> ResultEnum<T>
+    pub fn area(mut self, object: &impl Streamable<T = T>) -> T
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
@@ -111,7 +111,7 @@ where
     /// Returns the bounds of the object
     ///
     /// This operation consumes the  Path.
-    pub fn bounds(mut self, object: &impl Streamable<T = T>) -> Option<ResultEnum<T>>
+    pub fn bounds(mut self, object: &impl Streamable<T = T>) -> [Coordinate<T>; 2]
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
@@ -119,7 +119,7 @@ where
         let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
 
-        Some(stream_in.get_endpoint().result())
+        stream_in.get_endpoint().result()
     }
 }
 
@@ -139,7 +139,7 @@ where
     PV: PointVisible<T = T>,
 {
     /// Returns the centroid of the object.
-    pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Option<ResultEnum<T>>
+    pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coordinate<T>
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
@@ -147,13 +147,13 @@ where
         let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
 
-        Some(stream_in.get_endpoint().result())
+        stream_in.get_endpoint().result()
     }
 }
 
 impl<CS, LINE, PR, PV, T> Path<CS, LINE, PR, PV, T>
 where
-    CS: Stream<EP = CS, T = T> + Result<T = T> + PartialEq,
+    CS: Stream<EP = CS, T = T> + Result + PartialEq,
     LINE: Line,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,

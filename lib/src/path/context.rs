@@ -7,7 +7,6 @@ use crate::stream::Stream;
 
 use super::PointRadiusTrait;
 use super::Result;
-use super::ResultEnum;
 
 #[derive(Clone, Debug, PartialEq)]
 enum PointState {
@@ -64,11 +63,9 @@ impl<T> Result for Context<T>
 where
     T: CoordFloat,
 {
-    type T = T;
+    type Out = ();
     #[inline]
-    fn result(&mut self) -> ResultEnum<T> {
-        ResultEnum::Context
-    }
+    fn result(&mut self) {}
 }
 
 impl<T> Stream for Context<T>

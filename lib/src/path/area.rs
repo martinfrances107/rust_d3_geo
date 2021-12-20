@@ -11,7 +11,6 @@ use num_traits::FloatConst;
 use crate::stream::Stream;
 
 use super::Result;
-use super::ResultEnum;
 
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -107,11 +106,12 @@ impl<T> Result for Area<T>
 where
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type T = T;
-    fn result(&mut self) -> ResultEnum<T> {
+    type Out = T;
+
+    fn result(&mut self) -> Self::Out {
         let area = self.area_sum / T::from(2).unwrap();
         self.area_sum = T::zero();
-        ResultEnum::Area(area)
+        area
     }
 }
 

@@ -10,9 +10,11 @@ mod mercator_tests {
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::in_delta::in_delta_coordinate;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::path::ResultEnum;
+    use rust_d3_geo::path::string::String as PathString;
+
     use rust_d3_geo::projection::mercator::Mercator;
-    use rust_d3_geo::projection::Center;
+
+    use rust_d3_geo::projection::mercator_builder::MercatorBuilder;
     use rust_d3_geo::projection::ClipExtent;
     use rust_d3_geo::projection::Fit;
     use rust_d3_geo::projection::Precision;
@@ -35,15 +37,8 @@ mod mercator_tests {
 
         let object = Sphere::default();
 
-        match path_builder.build(projection).object(&object) {
-            Some(r) => match r {
-                ResultEnum::String(s) => {
-                    // assert_eq!(s, "M3.141592653589793,-3.141592653589793L3.141592653589793,0L3.141592653589793,3.141592653589793L3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,0L-3.141592653589793,-3.141592653589793L-3.141592653589793,-3.141592653589793L3.141592653589793,-3.141592653589793Z");
-                }
-                _ => assert!(false, "Incorrect result "),
-            },
-            None => assert!(false, "Expecting an string."),
-        }
+        let s: String = path_builder.build(projection).object(&object);
+        // assert_eq!(s, "M3.141592653589793,-3.141592653589793L3.141592653589793,0L3.141592653589793,3.141592653589793L3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,3.141592653589793L-3.141592653589793,0L-3.141592653589793,-3.141592653589793L-3.141592653589793,-3.141592653589793L3.141592653589793,-3.141592653589793Z");
         assert_eq!(projection_builder.get_clip_extent(), None);
     }
 
@@ -106,16 +101,8 @@ mod mercator_tests {
         // There is a bodge associated with this test
         // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
         // See MercatorRaw::transform for an expanation of the issue.
-        match path_builder.build(projection).object(&object) {
-            Some(r) => match r {
-                ResultEnum::String(s) => {
-                    assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
-                }
-                _ => assert!(false, "Incorrect Result"),
-            },
-            None => assert!(false, "Expecting an string."),
-        }
-
+        let s = path_builder.build(projection).object(&object);
+        assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
         assert_eq!(
             projection_builder.get_clip_extent(),
             Some([
@@ -159,16 +146,8 @@ mod mercator_tests {
         // There is a bodge associated with this test
         // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
         // See MercatorRaw::transform for an expanation of the issue.
-        match path_builder.build(projection).object(&object) {
-            Some(r) => match r {
-                ResultEnum::String(s) => {
-                    assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
-                }
-                _ => assert!(false, "Incorrect result"),
-            },
-            None => assert!(false, "Expecting an string."),
-        }
-
+        let s = path_builder.build(projection).object(&object);
+        assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
         assert_eq!(
             projection_builder.get_clip_extent(),
             Some([
@@ -212,16 +191,8 @@ mod mercator_tests {
         // There is a bodge associated with this test
         // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
         // See MercatorRaw::transform for an expanation of the issue.
-        match path_builder.build(projection).object(&object) {
-            Some(r) => match r {
-                ResultEnum::String(s) => {
-                    assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
-                }
-                _ => assert!(false, "Incorrect Result"),
-            },
-            None => assert!(false, "Expecting an string."),
-        }
-
+        let s = path_builder.build(projection).object(&object);
+        assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
         assert_eq!(
             projection_builder.get_clip_extent(),
             Some([

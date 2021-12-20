@@ -20,7 +20,6 @@ use crate::clip::rejoin::CompareIntersectionsFn;
 use crate::clip::InterpolateFn;
 use crate::math::EPSILON;
 use crate::path::Result;
-use crate::path::ResultEnum;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;
 
@@ -471,9 +470,11 @@ where
                 self.raw.buffer_stream.rejoin();
             }
 
-            if let ResultEnum::BufferOutput(result) = self.raw.buffer_stream.result() {
-                self.raw.segments.as_mut().unwrap().push_back(result);
-            }
+            self.raw
+                .segments
+                .as_mut()
+                .unwrap()
+                .push_back(self.raw.buffer_stream.result());
         }
         self.raw.use_line_point = false;
         if self.raw.v_ {

@@ -8,7 +8,6 @@ use num_traits::FloatConst;
 use crate::stream::Stream;
 
 use super::Result;
-use super::ResultEnum;
 
 #[allow(non_snake_case)]
 #[derive(Derivative)]
@@ -199,11 +198,10 @@ impl<T> Result for Centroid<T>
 where
     T: AddAssign<T> + CoordFloat,
 {
-    // type Out = Option<ResultEnum<T>>;
-    type T = T;
+    type Out = Coordinate<T>;
 
     /// Return the result, resetting the Centroid.
-    fn result(&mut self) -> ResultEnum<T> {
+    fn result(&mut self) -> Self::Out {
         let centroid = if !self.Z2.is_zero() {
             Coordinate {
                 x: self.X2 / self.Z2,
@@ -227,7 +225,7 @@ where
         };
 
         *self = Centroid::default();
-        ResultEnum::Centroid(centroid)
+        centroid
     }
 }
 

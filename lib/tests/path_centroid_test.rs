@@ -28,7 +28,6 @@ mod path_centroid_test {
     use rust_d3_geo::in_delta::in_delta_point;
     use rust_d3_geo::path::centroid::Centroid;
     use rust_d3_geo::path::path::Path;
-    use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
@@ -75,17 +74,7 @@ mod path_centroid_test {
     {
         let cs = Centroid::default();
         let result = Path::new(cs, projection).centroid(object);
-        match result {
-            Some(r) => match r {
-                ResultEnum::Centroid(c) => Point(c),
-                _ => {
-                    panic!("Failed to return a centroid");
-                }
-            },
-            None => {
-                panic!("Failed to return a result.");
-            }
-        }
+        Point(result)
     }
 
     #[test]

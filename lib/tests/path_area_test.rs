@@ -22,14 +22,11 @@ mod path_area_test {
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::path::area::Area;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::path::string::String as PathString;
-    use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Raw;
     use rust_d3_geo::projection::Scale;
-    use rust_d3_geo::stream::Stream;
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
@@ -53,18 +50,7 @@ mod path_area_test {
         T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         let builder = PathBuilder::new(Area::default());
-        let area = builder.build(projection).area(&object);
-        match area {
-            ResultEnum::Area(a) => return a,
-            _ => {
-                assert!(false, "Expecting an area.");
-                T::nan()
-            } // },
-              // None => {
-              //     assert!(false, "Expecting an area result.");
-              //     T::nan()
-              // }
-        }
+        builder.build(projection).area(&object)
     }
 
     #[test]

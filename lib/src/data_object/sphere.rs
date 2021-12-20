@@ -30,7 +30,6 @@ where
     T: CoordFloat,
 {
     type T = T;
-    // type EP = Sphere<T>;
 
     #[inline]
     fn to_stream<EP, SD: Stream<EP = EP, T = T>>(&self, stream: &mut SD)

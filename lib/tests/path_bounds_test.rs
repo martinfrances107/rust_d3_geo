@@ -21,7 +21,6 @@ mod path_bounds_test {
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::path::builder::Builder;
-    use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::Precision;
@@ -55,15 +54,7 @@ mod path_bounds_test {
             + Default,
     {
         let cs = Bounds::default();
-        match Builder::new(cs).build(projection).bounds(object) {
-            Some(p) => match p {
-                ResultEnum::Bounds(b) => return b,
-                _ => panic!("Expecting an area."),
-            },
-            None => {
-                panic!("Expecting an area result.");
-            }
-        }
+        Builder::new(cs).build(projection).bounds(object)
     }
 
     #[test]

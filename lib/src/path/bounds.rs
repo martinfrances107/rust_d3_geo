@@ -4,7 +4,7 @@ use geo::Coordinate;
 use crate::stream::Stream;
 
 use super::Result;
-use super::ResultEnum;
+// use super::ResultEnum;
 
 /// A stream node endpoint for computing a bounding box.
 #[derive(Clone, Debug, PartialEq)]
@@ -39,14 +39,13 @@ impl<T> Result for Bounds<T>
 where
     T: CoordFloat,
 {
-    // type Out = Option<ResultEnum<T>>;
-    type T = T;
+    type Out = [Coordinate<T>; 2];
 
     /// Return the result, reseting the Bounds.
-    fn result(&mut self) -> ResultEnum<T> {
+    fn result(&mut self) -> Self::Out {
         let bounds = [self.p0, self.p1];
         *self = Self::default();
-        ResultEnum::Bounds(bounds)
+        bounds
     }
 }
 

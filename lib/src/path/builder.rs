@@ -153,7 +153,7 @@ where
 
 impl<CS, LINE, PR, PV, T> PointRadiusTrait for Builder<CS, LINE, PR, PV, T>
 where
-    CS: Stream<EP = CS, T = T> + PointRadiusTrait<T = T> + Result<T = T> + PartialEq,
+    CS: Stream<EP = CS, T = T> + PointRadiusTrait<T = T> + Result + PartialEq,
     LINE: Line,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
@@ -175,7 +175,7 @@ where
 /// Projection related methods.
 impl<CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
 where
-    CS: Stream<EP = CS, T = T> + Result<T = T> + PartialEq,
+    CS: Stream<EP = CS, T = T> + Result + PartialEq,
     LINE: Line,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,

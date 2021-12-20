@@ -10,7 +10,6 @@ use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::Line;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
-use crate::path::ResultEnum;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
@@ -65,13 +64,7 @@ where
     let mut stream_in = builder2.build().stream(bounds_stream);
 
     object.to_stream(&mut stream_in);
-    let result = stream_in.get_endpoint().result();
-    let bounds = match result {
-        ResultEnum::Bounds(bounds) => bounds,
-        _ => {
-            panic!("Expecting only a bounds result from a Bounds stream.");
-        }
-    };
+    let bounds = stream_in.get_endpoint().result();
     let builder3 = fit_bounds(bounds, builder2);
     match clip {
         Some(extent) => builder3.clip_extent(&extent),

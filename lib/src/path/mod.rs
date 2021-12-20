@@ -13,47 +13,18 @@ pub mod path;
 /// Path String.
 pub mod string;
 
-use std::collections::VecDeque;
 use std::fmt;
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
-
-use crate::clip::line_elem::LineElem;
-
-/// The result of the related path endpoint.
-#[derive(Clone, Debug)]
-pub enum ResultEnum<T>
-where
-    T: CoordFloat,
-{
-    /// The result of the Area endpoint.
-    Area(T),
-    /// The bounding box  of the Bounds endpoint.
-    Bounds([Coordinate<T>; 2]),
-    /// The buffered output of the path buffer endpoint.
-    BufferOutput(VecDeque<Vec<LineElem<T>>>),
-    /// Empty Value.
-    Context,
-    /// The centroid of the centroid endpoint.
-    Centroid(Coordinate<T>),
-    /// The result of the Measure endpoint.
-    Measure(T),
-    /// The result of the Path endpoint.
-    Path(Vec<Vec<Coordinate<T>>>),
-    /// The result of the String endpoint.
-    String(String),
-}
 
 /// Path Result.
 pub trait Result {
-    /// f64 or f32
-    type T;
+    /// Output type for Result.
+    type Out;
+
     /// Returns current the end points calculation.
-    fn result(&mut self) -> ResultEnum<Self::T>
-    where
-        <Self as Result>::T: CoordFloat + Debug;
+    fn result(&mut self) -> Self::Out;
 }
 
 /// Point Radius Trait.

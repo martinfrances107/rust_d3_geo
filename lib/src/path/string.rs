@@ -8,7 +8,6 @@ use crate::stream::Stream;
 
 use super::PointRadiusTrait;
 use super::Result;
-use super::ResultEnum;
 
 #[derive(Clone, Debug, PartialEq)]
 enum PointState {
@@ -84,16 +83,16 @@ impl<T> Result for String<T>
 where
     T: CoordFloat,
 {
-    // type Out = Option<ResultEnum<T>>;
-    type T = T;
+    type Out = S;
+
     #[inline]
-    fn result(&mut self) -> ResultEnum<T> {
+    fn result(&mut self) -> Self::Out {
         if self.string.is_empty() {
-            ResultEnum::String(S::from(""))
+            S::from("")
         } else {
             let result = self.string.join("");
             self.string = Vec::new();
-            ResultEnum::String(result)
+            result
         }
     }
 }

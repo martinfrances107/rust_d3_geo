@@ -8,7 +8,6 @@ extern crate js_sys;
 extern crate rand;
 extern crate web_sys;
 
-use std::iter::repeat_with;
 use std::rc::Rc;
 
 use geo::Coordinate;
@@ -17,7 +16,6 @@ use geo::LineString;
 use geo::MultiLineString;
 use geo::MultiPolygon;
 use geo::Polygon;
-use rust_d3_geo::path::ResultEnum;
 use rust_d3_geo::projection::ClipAngle;
 use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
@@ -213,14 +211,13 @@ fn update_svg_mls(document: &Document) -> Result<()> {
 
     let mls = Geometry::MultiLineString(MultiLineString(lines));
 
-    if let Some(ResultEnum::String(s)) = pb.object(&mls) {
-        let i = 1;
-        let class_name = format!("id-{}", i);
-        let path = get_path_node(&class_name)?;
-        path.set_attribute_ns(None, "d", &s)?;
-        path.set_attribute_ns(None, "style", stroke[i])?;
-        svg.append_child(&path)?;
-    }
+    let s = pb.object(&mls);
+    let i = 1;
+    let class_name = format!("id-{}", i);
+    let path = get_path_node(&class_name)?;
+    path.set_attribute_ns(None, "d", &s)?;
+    path.set_attribute_ns(None, "style", stroke[i])?;
+    svg.append_child(&path)?;
 
     Ok(())
 }
@@ -261,20 +258,17 @@ fn update_svg_polygon(document: &Document) -> Result<()> {
     for (i, l) in lines.enumerate() {
         let pdo = Geometry::Polygon(Polygon::new(l.clone(), vec![]));
 
-        match pb.object(&pdo) {
-            Some(ResultEnum::String(s)) => {
-                if s == "EMPTY" {
-                    // TODO differs from MultiLineString?
-                    // console_log!("polygon dropping {}", i);
-                } else {
-                    let class_name = format!("s2-id-{}", i);
-                    let path = get_path_node(&class_name)?;
-                    path.set_attribute_ns(None, "d", &s)?;
-                    path.set_attribute_ns(None, "style", stroke[i % 7])?;
-                    svg.append_child(&path)?;
-                }
-            }
-            _ => console_log!("was expecting a string "),
+        let s = pb.object(&pdo);
+
+        if s == "EMPTY" {
+            // TODO differs from MultiLineString?
+            // console_log!("polygon dropping {}", i);
+        } else {
+            let class_name = format!("s2-id-{}", i);
+            let path = get_path_node(&class_name)?;
+            path.set_attribute_ns(None, "d", &s)?;
+            path.set_attribute_ns(None, "style", stroke[i % 7])?;
+            svg.append_child(&path)?;
         }
     }
 
@@ -322,21 +316,17 @@ fn update_svg_multipolygon(document: &Document) -> Result<()> {
 
     let pdo = Geometry::MultiPolygon(MultiPolygon(polygon_vec));
 
-    match pb.object(&pdo) {
-        Some(ResultEnum::String(s)) => {
-            if s == "EMPTY" {
-                // TODO differs from MultiLineString?
-                console_log!("polygon dropping {}", 0);
-            } else {
-                console_log!("pass");
-                let class_name = format!("s2-id-{}", 0);
-                let path = get_path_node(&class_name)?;
-                path.set_attribute_ns(None, "d", &s)?;
-                path.set_attribute_ns(None, "style", stroke[0 % 7])?;
-                svg.append_child(&path)?;
-            }
-        }
-        _ => console_log!("was expecting a string "),
+    let s = pb.object(&pdo);
+    if s == "EMPTY" {
+        // TODO differs from MultiLineString?
+        console_log!("polygon dropping {}", 0);
+    } else {
+        console_log!("pass");
+        let class_name = format!("s2-id-{}", 0);
+        let path = get_path_node(&class_name)?;
+        path.set_attribute_ns(None, "d", &s)?;
+        path.set_attribute_ns(None, "style", stroke[0 % 7])?;
+        svg.append_child(&path)?;
     }
 
     Ok(())

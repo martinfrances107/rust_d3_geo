@@ -18,7 +18,6 @@ mod index_test {
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
-    use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
@@ -57,15 +56,8 @@ mod index_test {
             PV<f64>,
             f64,
         > = PathBuilder::context_pathstring();
-        match pb.build(projection).object(&object) {
-            Some(r) => match r {
-                ResultEnum::String(s) => s,
-                _ => todo!("must handle "),
-            },
-            None => {
-                panic!("Expecting an area.");
-            }
-        }
+
+        pb.build(projection).object(&object)
     }
 
     // function testPath(projection, object) {
