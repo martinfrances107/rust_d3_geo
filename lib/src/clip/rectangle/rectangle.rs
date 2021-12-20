@@ -471,7 +471,7 @@ where
                 self.raw.buffer_stream.rejoin();
             }
 
-            if let Some(ResultEnum::BufferOutput(result)) = self.raw.buffer_stream.result() {
+            if let ResultEnum::BufferOutput(result) = self.raw.buffer_stream.result() {
                 self.raw.segments.as_mut().unwrap().push_back(result);
             }
         }

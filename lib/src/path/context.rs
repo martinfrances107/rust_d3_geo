@@ -64,10 +64,10 @@ impl<T> Result for Context<T>
 where
     T: CoordFloat,
 {
-    type Out = Option<ResultEnum<T>>;
+    type T = T;
     #[inline]
-    fn result(&mut self) -> Option<ResultEnum<T>> {
-        None
+    fn result(&mut self) -> ResultEnum<T> {
+        ResultEnum::Context
     }
 }
 

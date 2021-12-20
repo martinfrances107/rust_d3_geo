@@ -15,7 +15,6 @@ use crate::clip::PointVisible;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
-use crate::path::context_stream::ContextStream;
 use crate::path::Result;
 use crate::projection::projection::Projection;
 use crate::projection::resample::ResampleNode;
@@ -26,45 +25,36 @@ use crate::stream::Streamable;
 
 /// Projection and context stream applied to a Streamable.
 #[derive(Debug)]
-pub struct Path<LINE, PR, PV, T>
+pub struct Path<CS, LINE, PR, PV, T>
 where
+    CS: Stream<EP = CS, T = T> + Result<T = T> + PartialEq,
     LINE: Line,
-    StreamNode<
-        ContextStream<T>,
-        LINE,
-        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
-        T,
-    >: Stream<EP = ContextStream<T>, T = T>,
+    StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
+        Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
 {
-    context_stream: ContextStream<T>,
+    context_stream: CS,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
-    projection: Projection<ContextStream<T>, LINE, PR, PV, T>,
+    projection: Projection<CS, LINE, PR, PV, T>,
 }
 
-impl<LINE, PR, PV, T> Path<LINE, PR, PV, T>
+impl<CS, LINE, PR, PV, T> Path<CS, LINE, PR, PV, T>
 where
+    CS: Stream<EP = CS, T = T> + Result<T = T> + PartialEq,
     LINE: Line,
-    StreamNode<
-        ContextStream<T>,
-        LINE,
-        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
-        T,
-    >: Stream<EP = ContextStream<T>, T = T>,
+    StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
+        Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
 {
     /// Constructor.
-    pub fn new(
-        context_stream: ContextStream<T>,
-        projection: Projection<ContextStream<T>, LINE, PR, PV, T>,
-    ) -> Self {
+    pub fn new(context_stream: CS, projection: Projection<CS, LINE, PR, PV, T>) -> Self {
         Self {
             context_stream,
             point_radius: PointRadiusEnum::Val(T::from(4.5_f64).unwrap()),
@@ -76,22 +66,48 @@ where
     pub fn object(&mut self, object: &impl Streamable<T = T>) -> Option<ResultEnum<T>> {
         let mut stream_in = self.projection.stream(self.context_stream.clone());
         object.to_stream(&mut stream_in);
-        stream_in.get_endpoint().result()
+        Some(stream_in.get_endpoint().result())
     }
+}
 
+impl<LINE, PR, PV, T> Path<Area<T>, LINE, PR, PV, T>
+where
+    LINE: Line,
+    StreamNode<Area<T>, LINE, ResampleNode<Area<T>, PR, PostClipNode<Area<T>, Area<T>, T>, T>, T>:
+        Stream<EP = Area<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    PR: ProjectionRaw<T>,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    PV: PointVisible<T = T>,
+{
     /// Returns the area of the Path
     /// This operation consumes the  Path.
-    pub fn area(mut self, object: &impl Streamable<T = T>) -> Option<ResultEnum<T>>
+    pub fn area(mut self, object: &impl Streamable<T = T>) -> ResultEnum<T>
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = ContextStream::A(Area::default());
+        let stream_dst = Area::default();
         let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
 
         stream_in.sink.get_endpoint().result()
     }
+}
 
+impl<LINE, PR, PV, T> Path<Bounds<T>, LINE, PR, PV, T>
+where
+    LINE: Line,
+    StreamNode<
+        Bounds<T>,
+        LINE,
+        ResampleNode<Bounds<T>, PR, PostClipNode<Bounds<T>, Bounds<T>, T>, T>,
+        T,
+    >: Stream<EP = Bounds<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    PR: ProjectionRaw<T>,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    PV: PointVisible<T = T>,
+{
     /// Returns the bounds of the object
     ///
     /// This operation consumes the  Path.
@@ -99,27 +115,55 @@ where
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = ContextStream::B(Bounds::default());
+        let stream_dst = Bounds::default();
         let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
 
-        stream_in.get_endpoint().result()
+        Some(stream_in.get_endpoint().result())
     }
+}
 
+impl<LINE, PR, PV, T> Path<Centroid<T>, LINE, PR, PV, T>
+where
+    // CS: Stream<EP = CS, T = T> + Result<T = T> + PartialEq,
+    LINE: Line,
+    StreamNode<
+        Centroid<T>,
+        LINE,
+        ResampleNode<Centroid<T>, PR, PostClipNode<Centroid<T>, Centroid<T>, T>, T>,
+        T,
+    >: Stream<EP = Centroid<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    PR: ProjectionRaw<T>,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    PV: PointVisible<T = T>,
+{
     /// Returns the centroid of the object.
-    pub fn centroid(mut self, object: &impl Streamable<T=T>) -> Option<ResultEnum<T>>
+    pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Option<ResultEnum<T>>
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = ContextStream::Centroid(Centroid::default());
+        let stream_dst = Centroid::default();
         let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
 
-        stream_in.get_endpoint().result()
+        Some(stream_in.get_endpoint().result())
     }
+}
 
+impl<CS, LINE, PR, PV, T> Path<CS, LINE, PR, PV, T>
+where
+    CS: Stream<EP = CS, T = T> + Result<T = T> + PartialEq,
+    LINE: Line,
+    StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
+        Stream<EP = CS, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    PR: ProjectionRaw<T>,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    PV: PointVisible<T = T>,
+{
     /// Sets the context stream.
-    pub fn context(mut self, context_stream: ContextStream<T>) -> Self
+    pub fn context(mut self, context_stream: CS) -> Self
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {

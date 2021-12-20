@@ -36,12 +36,13 @@ impl<T> Result for Buffer<T>
 where
     T: CoordFloat,
 {
-    type Out = Option<ResultEnum<T>>;
+    // type Out = Option<ResultEnum<T>>;
+    type T = T;
 
-    fn result(&mut self) -> Option<ResultEnum<T>> {
+    fn result(&mut self) -> ResultEnum<T> {
         let result = self.lines.clone();
         self.lines.clear();
-        Some(ResultEnum::BufferOutput(result))
+        ResultEnum::BufferOutput(result)
     }
 }
 

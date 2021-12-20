@@ -14,7 +14,12 @@ use super::ResultEnum;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
+/// Stream Endpoint: Compute the centroid of the input fed into the pipeline.
+///
 /// TODO Enforce positive area for exterior, negative area for interior?
+///
+/// DISAMBIGUATION: lot sof code in common with src/centroid.rs
+/// but this is true of the javascript.
 pub struct Centroid<T>
 where
     T: CoordFloat,
@@ -194,10 +199,11 @@ impl<T> Result for Centroid<T>
 where
     T: AddAssign<T> + CoordFloat,
 {
-    type Out = Option<ResultEnum<T>>;
+    // type Out = Option<ResultEnum<T>>;
+    type T = T;
 
     /// Return the result, resetting the Centroid.
-    fn result(&mut self) -> Option<ResultEnum<T>> {
+    fn result(&mut self) -> ResultEnum<T> {
         let centroid = if !self.Z2.is_zero() {
             Coordinate {
                 x: self.X2 / self.Z2,
@@ -221,7 +227,7 @@ where
         };
 
         *self = Centroid::default();
-        Some(ResultEnum::Centroid(centroid))
+        ResultEnum::Centroid(centroid)
     }
 }
 

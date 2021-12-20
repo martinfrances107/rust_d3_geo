@@ -5,8 +5,11 @@ use num_traits::FloatConst;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
-/// GeoArea distinct from PathArea.
-#[derive(Debug, Clone)]
+/// Area - from a streamable object.
+///
+/// DISAMBIGUATION: Lots of code in common with path/area.rs
+/// but this is true of the Javascript.
+#[derive(Debug, Clone, PartialEq)]
 pub struct Area<T>
 where
     T: CoordFloat,
@@ -25,19 +28,19 @@ where
     line_start_fn: LineStartFn,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 enum PointFn {
     Noop,
     AreaFirst,
     Area,
 }
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 enum LineStartFn {
     Noop,
     AreaRingStart,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 enum LineEndFn {
     Noop,
     AreaRingEnd,

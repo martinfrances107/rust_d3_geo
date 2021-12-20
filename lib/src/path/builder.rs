@@ -12,6 +12,8 @@ use crate::clip::buffer::Buffer;
 use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::Line;
 use crate::clip::PointVisible;
+use crate::path::context::Context;
+use crate::path::Result;
 use crate::projection::projection::Projection;
 use crate::projection::resample::ResampleNode;
 use crate::projection::stream_node::StreamNode;
@@ -19,49 +21,44 @@ use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 
 use super::context::Context as PathContext;
-use super::context_stream::ContextStream;
 use super::path::Path;
-use super::string::String as PathString;
+use super::string::String;
 use super::PointRadiusTrait;
 
 /// Path builder.
 #[derive(Debug)]
-pub struct Builder<LINE, PR, PV, T>
+pub struct Builder<CS, LINE, PR, PV, T>
 where
+    CS: Stream<EP = CS, T = T>,
     LINE: Line,
-    StreamNode<
-        ContextStream<T>,
-        LINE,
-        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
-        T,
-    >: Stream<EP = ContextStream<T>, T = T>,
-    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: 'static + AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
+    StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
+        Stream<EP = CS, T = T>,
 {
     pr: T,
     context: Option<Rc<CanvasRenderingContext2d>>,
-    context_stream: ContextStream<T>,
-    projection: Option<Projection<ContextStream<T>, LINE, PR, PV, T>>,
+    context_stream: CS,
+    projection: Option<Projection<CS, LINE, PR, PV, T>>,
 }
 
-impl<LINE, PR, PV, T> Builder<LINE, PR, PV, T>
+impl<CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
 where
+    CS: Stream<EP = CS, T = T>,
     LINE: Line,
-    StreamNode<
-        ContextStream<T>,
-        LINE,
-        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
-        T,
-    >: Stream<EP = ContextStream<T>, T = T>,
+    StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
+        Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
 {
     /// Constructor.
-    pub fn new(context_stream: ContextStream<T>) -> Builder<LINE, PR, PV, T> {
+    pub fn new(context_stream: CS) -> Builder<CS, LINE, PR, PV, T> {
         Self {
             context: None,
             context_stream,
@@ -72,72 +69,125 @@ where
 }
 
 /// Context related methods.
-impl<LINE, PR, PV, T> Builder<LINE, PR, PV, T>
+impl<LINE, PR, PV, T> Builder<Context<T>, LINE, PR, PV, T>
 where
     LINE: Line,
-    StreamNode<
-        ContextStream<T>,
-        LINE,
-        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
-        T,
-    >: Stream<EP = ContextStream<T>, T = T>,
+
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    StreamNode<String<T>, LINE, String<T>, T>: Stream<EP = String<T>, T = T>,
+
+    StreamNode<String<T>, LINE, String<T>, T>: Stream<T = T>,
+    StreamNode<
+        String<T>,
+        LINE,
+        ResampleNode<String<T>, PR, PostClipNode<String<T>, String<T>, T>, T>,
+        T,
+    >: Stream<EP = String<T>, T = T>,
+    StreamNode<Context<T>, LINE, Context<T>, T>: Stream<EP = Context<T>, T = T>,
+    StreamNode<
+        Context<T>,
+        LINE,
+        ResampleNode<Context<T>, PR, PostClipNode<Context<T>, Context<T>, T>, T>,
+        T,
+    >: Stream<EP = Context<T>, T = T>,
 {
     /// Returns the state within the builder.
-    pub fn get_context(&self) {
-        todo!("must implement");
-    }
+    // pub fn get_context(&self) {
+    //     todo!("must implement");
+    // }
 
     /// Programe the builder with the context.
-    pub fn context(self, context: CanvasRenderingContext2d) -> Builder<LINE, PR, PV, T> {
+    pub fn context(
+        self,
+        context: CanvasRenderingContext2d,
+    ) -> Builder<Context<T>, LINE, PR, PV, T> {
         let context = Rc::new(context);
         Builder {
             pr: self.pr,
             context: Some(context.clone()),
-            context_stream: ContextStream::Context(PathContext::<T>::new(context)),
+            context_stream: PathContext::<T>::new(context),
             projection: self.projection,
         }
     }
+}
 
-    /// Sets the radius of the displayed point, None implies no point to is drawn.
-    pub fn point_radius(mut self, radius: T) -> Self {
-        self.pr = radius;
-        self.context_stream.point_radius(self.pr);
-        self
-    }
+/// Context related methods.
+impl<CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
+where
+    CS: Stream<EP = CS, T = T> + PointRadiusTrait<PrtT = T>,
+    LINE: Line,
+    StreamNode<
+        PathContext<T>,
+        LINE,
+        ResampleNode<PathContext<T>, PR, PostClipNode<PathContext<T>, PathContext<T>, T>, T>,
+        T,
+    >: Stream<EP = CS, T = T>,
+    StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
+        Stream<EP = CS, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    StreamNode<String<T>, LINE, String<T>, T>: Stream<EP = String<T>, T = T>,
+    StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
 
+    StreamNode<String<T>, LINE, String<T>, T>: Stream<T = T>,
+    StreamNode<
+        String<T>,
+        LINE,
+        ResampleNode<String<T>, PR, PostClipNode<String<T>, String<T>, T>, T>,
+        T,
+    >: Stream<EP = String<T>, T = T>,
+    StreamNode<Context<T>, LINE, Context<T>, T>: Stream<EP = Context<T>, T = T>,
+{
     /// Returns a Builder from default values.
-    pub fn context_pathstring() -> Builder<LINE, PR, PV, T> {
-        let context_stream: ContextStream<T> = ContextStream::S(PathString::default());
+    pub fn context_pathstring() -> Builder<String<T>, LINE, PR, PV, T> {
+        let context_stream = String::default();
 
         Builder::new(context_stream)
     }
 }
 
-/// Projection related methods.
-impl<LINE, PR, PV, T> Builder<LINE, PR, PV, T>
+impl<CS, LINE, PR, PV, T> PointRadiusTrait for Builder<CS, LINE, PR, PV, T>
 where
+    CS: Stream<EP = CS, T = T> + PointRadiusTrait<PrtT = T> + Result<T = T> + PartialEq,
     LINE: Line,
-    StreamNode<
-        ContextStream<T>,
-        LINE,
-        ResampleNode<ContextStream<T>, PR, PostClipNode<ContextStream<T>, ContextStream<T>, T>, T>,
-        T,
-    >: Stream<EP = ContextStream<T>, T = T>,
+    StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
+        Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
+{
+    type PrtT = T;
+    /// From the progammed state generate a new projection.
+    #[inline]
+    fn point_radius(&mut self, radius: T) {
+        self.pr = radius;
+        self.context_stream.point_radius(self.pr);
+    }
+}
+
+/// Projection related methods.
+impl<CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
+where
+    CS: Stream<EP = CS, T = T> + Result<T = T> + PartialEq,
+    LINE: Line,
+    StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
+        Stream<EP = CS, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
 {
     /// From the progammed state generate a new projection.
     #[inline]
-    pub fn build(
-        self,
-        projection: Projection<ContextStream<T>, LINE, PR, PV, T>,
-    ) -> Path<LINE, PR, PV, T>
+    pub fn build(self, projection: Projection<CS, LINE, PR, PV, T>) -> Path<CS, LINE, PR, PV, T>
     where
         PR: ProjectionRaw<T>,
     {

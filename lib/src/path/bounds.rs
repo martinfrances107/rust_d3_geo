@@ -39,13 +39,14 @@ impl<T> Result for Bounds<T>
 where
     T: CoordFloat,
 {
-    type Out = Option<ResultEnum<T>>;
+    // type Out = Option<ResultEnum<T>>;
+    type T = T;
 
     /// Return the result, reseting the Bounds.
-    fn result(&mut self) -> Option<ResultEnum<T>> {
+    fn result(&mut self) -> ResultEnum<T> {
         let bounds = [self.p0, self.p1];
         *self = Self::default();
-        Some(ResultEnum::Bounds(bounds))
+        ResultEnum::Bounds(bounds)
     }
 }
 

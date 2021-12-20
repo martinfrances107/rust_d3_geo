@@ -16,11 +16,13 @@ mod path_area_test {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
+    // use rust_d3_geo::area::Area;
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::sphere::Sphere;
+    use rust_d3_geo::path::area::Area;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::path::context_stream::ContextStream;
+    use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
@@ -31,10 +33,9 @@ mod path_area_test {
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
-    fn equirectangular<DRAIN, T>(
-    ) -> Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>
+    fn equirectangular<T>() -> Projection<Area<T>, Line<T>, EquirectangularRaw<Area<T>, T>, PV<T>, T>
     where
-        DRAIN: Stream<EP = DRAIN, T = T> + Default,
+        // DRAIN: Stream<EP = DRAIN, T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         EquirectangularRaw::builder()
@@ -44,24 +45,25 @@ mod path_area_test {
     }
 
     #[inline]
-    fn test_area<'a, DRAIN, T>(
-        projection: Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
+    fn test_area<'a, T>(
+        projection: Projection<Area<T>, Line<T>, EquirectangularRaw<Area<T>, T>, PV<T>, T>,
         object: impl Streamable<T = T>,
     ) -> T
     where
-        DRAIN: Stream<EP = DRAIN, T = T>,
         T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let builder = PathBuilder::context_pathstring();
+        let builder = PathBuilder::new(Area::default());
         let area = builder.build(projection).area(&object);
         match area {
-            Some(p) => match p {
-                ResultEnum::Area(a) => return a,
-                _ => panic!("Expecting an area."),
-            },
-            None => {
-                panic!("Expecting an area result.");
-            }
+            ResultEnum::Area(a) => return a,
+            _ => {
+                assert!(false, "Expecting an area.");
+                T::nan()
+            } // },
+              // None => {
+              //     assert!(false, "Expecting an area result.");
+              //     T::nan()
+              // }
         }
     }
 
@@ -78,7 +80,7 @@ mod path_area_test {
             ]),
             vec![],
         ));
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert_eq!(test_area(eq, object), 25.0);
     }
 
@@ -104,14 +106,14 @@ mod path_area_test {
                 ]),
             ],
         ));
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert_eq!(test_area(eq, object), 16.0);
     }
 
     #[test]
     fn test_area_of_a_sphere() {
         println!("geoPath.area(…) of a sphere");
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         let object = Sphere::default();
         assert_eq!(test_area(eq, object), 1620000.0);
     }

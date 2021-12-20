@@ -1,6 +1,11 @@
+use std::fmt::Display;
+use std::ops::AddAssign;
+
+use approx::AbsDiffEq;
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
@@ -11,7 +16,7 @@ use super::ResultEnum;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-/// Area is a pipeline terminating object ( a drain object ).
+/// Stream Endpoint: Compute the area of the objects fed into the pipeline.
 pub struct Area<T>
 where
     T: CoordFloat,
@@ -28,7 +33,7 @@ where
     line_end_fn: fn(&mut Self),
 }
 
-// When comparing do not care about which function is active.
+// Ignore the state machine functions.
 impl<T> PartialEq for Area<T>
 where
     T: CoordFloat,
@@ -100,13 +105,13 @@ where
 
 impl<T> Result for Area<T>
 where
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    type Out = Option<ResultEnum<T>>;
-    fn result(&mut self) -> Option<ResultEnum<T>> {
+    type T = T;
+    fn result(&mut self) -> ResultEnum<T> {
         let area = self.area_sum / T::from(2).unwrap();
         self.area_sum = T::zero();
-        Some(ResultEnum::Area(area))
+        ResultEnum::Area(area)
     }
 }
 

@@ -14,6 +14,10 @@ use crate::stream::Streamable;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone, Copy)]
+/// Centroid: Point from a streamable object.
+///
+/// DISAMBIGUATION: Lots of code in common with path/centroid.rs
+/// but this is true of the Javascript.
 pub struct Centroid<T: CoordFloat> {
     W0: T,
     W1: T,

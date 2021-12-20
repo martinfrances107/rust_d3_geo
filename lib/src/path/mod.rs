@@ -8,8 +8,6 @@ pub mod builder;
 pub mod centroid;
 /// Path context.
 pub mod context;
-/// A collection of Path endpoints.
-pub mod context_stream;
 /// Output of a Path builer.
 pub mod path;
 /// Path String.
@@ -36,6 +34,8 @@ where
     Bounds([Coordinate<T>; 2]),
     /// The buffered output of the path buffer endpoint.
     BufferOutput(VecDeque<Vec<LineElem<T>>>),
+    /// Empty Value.
+    Context,
     /// The centroid of the centroid endpoint.
     Centroid(Coordinate<T>),
     /// The result of the Measure endpoint.
@@ -48,17 +48,21 @@ where
 
 /// Path Result.
 pub trait Result {
-    /// The output type.
-    type Out;
+    /// f64 or f32
+    type T;
     /// Returns current the end points calculation.
-    fn result(&mut self) -> Self::Out;
+    fn result(&mut self) -> ResultEnum<Self::T>
+    where
+        <Self as Result>::T: CoordFloat + Debug;
 }
 
-trait PointRadiusTrait {
+/// Point Radius Trait.
+pub trait PointRadiusTrait {
+    /// f64 or f32
     type PrtT;
     // TODO must add getter here.
     // There are complication about the mix return type here.
-    // Context or PathString .. wrapped in a ContextStream!
+    // Context or PathString
     // fn get_point_radius...
     fn point_radius(&mut self, val: Self::PrtT);
 }

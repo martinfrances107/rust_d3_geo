@@ -27,7 +27,6 @@ mod path_centroid_test {
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::in_delta::in_delta_point;
     use rust_d3_geo::path::centroid::Centroid;
-    use rust_d3_geo::path::context_stream::ContextStream;
     use rust_d3_geo::path::path::Path;
     use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
@@ -39,11 +38,16 @@ mod path_centroid_test {
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
-    fn equirectangular<DRAIN, T>(
-    ) -> Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>
+    fn equirectangular<T>(
+    ) -> Projection<Centroid<T>, Line<T>, EquirectangularRaw<Centroid<T>, T>, PV<T>, T>
     where
-        DRAIN: Stream<EP = DRAIN, T = T> + Default,
-        T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        // DRAIN: Stream<EP = DRAIN, T = T> + Default,
+        T: AbsDiffEq<Epsilon = T>
+            + AddAssign<T>
+            + AsPrimitive<T>
+            + CoordFloat
+            + Display
+            + FloatConst,
     {
         ProjectionBuilder::new(
             gen_clip_factory_antimeridian(),
@@ -56,7 +60,7 @@ mod path_centroid_test {
 
     #[inline]
     fn test_centroid<'a, DRAIN, T>(
-        projection: Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
+        projection: Projection<Centroid<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
 
         object: &impl Streamable<T = T>,
     ) -> Point<T>
@@ -69,7 +73,7 @@ mod path_centroid_test {
             + Display
             + FloatConst,
     {
-        let cs = ContextStream::Centroid(Centroid::default());
+        let cs = Centroid::default();
         let result = Path::new(cs, projection).centroid(object);
         match result {
             Some(r) => match r {
@@ -89,7 +93,7 @@ mod path_centroid_test {
         println!("geoPath.centroid(…) of a point");
         let point = Geometry::Point(Point(Coordinate { x: 0_f64, y: 0_f64 }));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &point),
             Point::new(480_f64, 250_f64),
@@ -102,7 +106,7 @@ mod path_centroid_test {
         println!("geoPath.centroid(…) of an empty multipoint");
         let mp = Geometry::MultiPoint(MultiPoint(vec![]));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &mp),
             Point::new(f64::nan(), f64::nan()),
@@ -115,7 +119,7 @@ mod path_centroid_test {
         println!("geoPath.centroid(…) of an singleton  multipoint");
         let mp = Geometry::MultiPoint(MultiPoint(vec![Point::new(0_f64, 0_f64)]));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &mp),
             Point::new(480_f64, 250_f64),
@@ -131,7 +135,7 @@ mod path_centroid_test {
             Point::new(-74_f64, 40_f64),
         ]));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &mp),
             Point::new(-10_f64, 57.5_f64),
@@ -144,7 +148,7 @@ mod path_centroid_test {
         println!("geoPath.centroid(…) of an empty linestring");
         let ls = Geometry::LineString(line_string![]);
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &ls),
             Point::new(f64::nan(), f64::nan()),
@@ -160,7 +164,7 @@ mod path_centroid_test {
             (x: 0_f64, y:0_f64)
         ]);
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &ls1),
             Point::new(730_f64, 250_f64),
@@ -173,7 +177,7 @@ mod path_centroid_test {
             (x: 101_f64, y: 0_f64)
         ]);
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &ls2),
             Point::new(732.5_f64, 250_f64),
@@ -189,7 +193,7 @@ mod path_centroid_test {
             (x: -122_f64, y:37_f64),
         ]);
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &ls1),
             Point::new(-130_f64, 65_f64),
@@ -201,7 +205,7 @@ mod path_centroid_test {
             (x: -74_f64, y: 40_f64)
         ]);
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &ls2),
             Point::new(110_f64, 50_f64),
@@ -218,7 +222,7 @@ mod path_centroid_test {
             (x: -74_f64, y:40_f64),
         ]);
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &ls),
             Point::new(-10_f64, 57.5_f64),
@@ -261,7 +265,7 @@ mod path_centroid_test {
             ],
         ]));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &mls),
             Point::new(705_f64, 250_f64),
@@ -283,7 +287,7 @@ mod path_centroid_test {
             vec![],
         ));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &p),
             Point::new(982.5_f64, 247.5_f64),
@@ -304,7 +308,7 @@ mod path_centroid_test {
             vec![],
         ));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &p),
             Point::new(490_f64, 250_f64),
@@ -331,7 +335,7 @@ mod path_centroid_test {
             ]],
         ));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &p),
             Point::new(982.5_f64, 247.5_f64),
@@ -363,7 +367,7 @@ mod path_centroid_test {
             ]],
         ));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &polygon),
             Point::new(479.642857_f64, 250_f64),
@@ -377,7 +381,7 @@ mod path_centroid_test {
 
         let polygon = Geometry::MultiPolygon(MultiPolygon(vec![]));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &polygon),
             Point::new(f64::nan(), f64::nan()),
@@ -404,7 +408,7 @@ mod path_centroid_test {
             vec![],
         )]));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &polygon),
             Point::new(10000_f64, 247.5_f64),
@@ -433,7 +437,7 @@ mod path_centroid_test {
             vec![],
         )]));
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &polygon),
             Point::new(982.5_f64, 247.5_f64),

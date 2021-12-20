@@ -1,12 +1,11 @@
 TODO:-
 
-* implement path/centroid_test.rs
-
-* Draw outline om graticule test.
 
 * Debug rendering of land from 50m.json
 
 * Check on failing area test in view of recent major bug fix. ( Still broken )
+
+* implement path/centroid_test.rs
 
 * Performance is not showing the expected gains over javascript ..
 	I am not caching projection::stream()
@@ -16,8 +15,11 @@ TODO:-
 
 * Refactor trait names ending in Trait.
 
+* PointRadiusTrait<PrtT = T>, make the conventional T=T
+
 * Enum names ending in Enum
 
+* Draw outline om graticule test.
 
 # Short Term Goals
 

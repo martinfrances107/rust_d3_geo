@@ -20,7 +20,8 @@ mod path_string_test {
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::path::context_stream::ContextStream;
+    use rust_d3_geo::path::string::String as PathString;
+    use rust_d3_geo::path::PointRadiusTrait;
     use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
@@ -31,10 +32,9 @@ mod path_string_test {
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
-    fn equirectangular<DRAIN, T>(
-    ) -> Projection<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>
+    fn equirectangular<T>(
+    ) -> Projection<PathString<T>, Line<T>, EquirectangularRaw<PathString<T>, T>, PV<T>, T>
     where
-        DRAIN: Stream<EP = DRAIN, T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         EquirectangularRaw::builder()
@@ -45,14 +45,13 @@ mod path_string_test {
 
     #[inline]
     fn test_path<'a, DRAIN, T>(
-        projection: Projection<ContextStream<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
+        projection: Projection<PathString<T>, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>,
         object: impl Streamable<T = T>,
     ) -> String
     where
         DRAIN: Stream<EP = DRAIN, T = T>,
         T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        // let stream_dst = Rc::new(RefCell::new(ContextStream::S(PathString::default())));
         let builder = PathBuilder::context_pathstring();
         let string = builder.build(projection).object(&object);
         match string {
@@ -70,7 +69,7 @@ mod path_string_test {
     fn point_renders_a_point() {
         println!("geoPath.point(…) renders a point");
         let object = Geometry::Point(point!(x: -63_f64, y:18_f64));
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert_eq!(
             test_path(eq, object),
             "M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z"
@@ -81,14 +80,17 @@ mod path_string_test {
     fn point_renders_a_point_of_given_radius() {
         println!("geoPath.point(…) renders a point of a given radius");
 
-        let builder: PathBuilder<
+        let mut builder: PathBuilder<
+            PathString<f64>,
             Line<f64>,
-            EquirectangularRaw<ContextStream<f64>, f64>,
+            EquirectangularRaw<PathString<f64>, f64>,
             PV<f64>,
             f64,
-        > = PathBuilder::context_pathstring().point_radius(10_f64);
+        > = PathBuilder::context_pathstring();
 
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        builder.point_radius(10_f64);
+
+        let eq = equirectangular::<f64>();
         let mut path = builder.build(eq);
         let object = Geometry::Point(point!(x: -63_f64, y:18_f64));
 
@@ -117,7 +119,7 @@ mod path_string_test {
             ]
             .into(),
         );
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert_eq!(test_path(eq, object),
 			"M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,165m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z");
     }
@@ -127,7 +129,7 @@ mod path_string_test {
         let object = Geometry::LineString(line_string![
             (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
         ]);
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert_eq!(test_path(eq, object), "M165,160L170,160L170,165");
     }
 
@@ -139,7 +141,7 @@ mod path_string_test {
             ],
             vec![],
         ));
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert_eq!(test_path(eq, object), "M165,160L170,160L170,165Z");
     }
 
@@ -153,7 +155,7 @@ mod path_string_test {
                 vec![],
             ),
         )]));
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
         assert_eq!(test_path(eq, object), "M165,160L170,160L170,165Z");
     }
 
@@ -168,7 +170,7 @@ mod path_string_test {
             (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
         ]);
         let point_object = Geometry::Point(point!(x: -63_f64, y:18_f64));
-        let eq = equirectangular::<ContextStream<f64>, f64>();
+        let eq = equirectangular::<f64>();
 
         assert_eq!(
             test_path(eq.clone(), line_object),

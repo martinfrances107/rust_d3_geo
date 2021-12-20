@@ -153,11 +153,11 @@ where
         let ring_segments_result_o = self.ring_sink_node.sink.result();
 
         let mut ring_segments = match ring_segments_result_o {
-            Some(ResultEnum::BufferOutput(result)) => result,
-            Some(_) => {
-                panic!("None buffer ");
-            }
-            None => panic!("was expecting something."),
+            ResultEnum::BufferOutput(result) => result,
+            // Some(_) => {
+            //     panic!("None buffer ");
+            // }
+            _ => panic!("was expecting BufferOuput."),
         };
 
         let n = ring_segments.len();

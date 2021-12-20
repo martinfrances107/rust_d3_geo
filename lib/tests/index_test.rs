@@ -17,23 +17,19 @@ mod index_test {
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::path::context_stream::ContextStream;
+    use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::path::ResultEnum;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::stream::Stream;
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
-    fn equirectangular() -> Projection<
-        ContextStream<f64>,
-        Line<f64>,
-        EquirectangularRaw<ContextStream<f64>, f64>,
-        PV<f64>,
-        f64,
-    > {
+    fn equirectangular<CS: Stream<EP = CS, T = f64>>(
+    ) -> Projection<CS, Line<f64>, EquirectangularRaw<CS, f64>, PV<f64>, f64> {
         ProjectionBuilder::new(
             gen_clip_factory_antimeridian(),
             EquirectangularRaw::default(),
@@ -46,16 +42,21 @@ mod index_test {
     #[inline]
     fn test_path<'a>(
         projection: Projection<
-            ContextStream<f64>,
+            PathString<f64>,
             Line<f64>,
-            EquirectangularRaw<ContextStream<f64>, f64>,
+            EquirectangularRaw<PathString<f64>, f64>,
             PV<f64>,
             f64,
         >,
         object: impl Streamable<T = f64>,
     ) -> String {
-        let pb: PathBuilder<Line<f64>, EquirectangularRaw<ContextStream<f64>, f64>, PV<f64>, f64> =
-            PathBuilder::context_pathstring();
+        let pb: PathBuilder<
+            PathString<f64>,
+            Line<f64>,
+            EquirectangularRaw<PathString<f64>, f64>,
+            PV<f64>,
+            f64,
+        > = PathBuilder::context_pathstring();
         match pb.build(projection).object(&object) {
             Some(r) => match r {
                 ResultEnum::String(s) => s,

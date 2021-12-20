@@ -84,15 +84,16 @@ impl<T> Result for String<T>
 where
     T: CoordFloat,
 {
-    type Out = Option<ResultEnum<T>>;
+    // type Out = Option<ResultEnum<T>>;
+    type T = T;
     #[inline]
-    fn result(&mut self) -> Option<ResultEnum<T>> {
+    fn result(&mut self) -> ResultEnum<T> {
         if self.string.is_empty() {
-            None
+            ResultEnum::String(S::from(""))
         } else {
             let result = self.string.join("");
             self.string = Vec::new();
-            Some(ResultEnum::String(result))
+            ResultEnum::String(result)
         }
     }
 }

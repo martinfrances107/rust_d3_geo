@@ -29,7 +29,6 @@ use rust_d3_geo::clip::circle::line::Line;
 use rust_d3_geo::clip::circle::pv::PV;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
-use rust_d3_geo::path::context_stream::ContextStream;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Raw;
 use rust_d3_geo::projection::Scale;
@@ -42,6 +41,7 @@ use topojson::Topology;
 mod dom_macros;
 
 #[wasm_bindgen]
+#[cfg(not(tarpaulin_include))]
 extern "C" {
     // Use `js_namespace` here to bind `console.log(..)` instead of just
     // `log(..)`
@@ -72,6 +72,7 @@ macro_rules! console_log {
     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
 }
 
+#[cfg(not(tarpaulin_include))]
 fn get_document() -> Result<Document, JsValue> {
     let window = web_sys::window().unwrap();
     Ok(window.document().unwrap())
@@ -79,6 +80,7 @@ fn get_document() -> Result<Document, JsValue> {
 
 /// Entry point
 #[wasm_bindgen(start)]
+#[cfg(not(tarpaulin_include))]
 pub async fn start() -> Result<(), JsValue> {
     console_log!("run() - wasm entry point");
     let document = get_document()?;
@@ -87,8 +89,8 @@ pub async fn start() -> Result<(), JsValue> {
     opts.method("GET");
     opts.mode(RequestMode::Cors);
 
-    // let request = Request::new_with_str_and_init(&"/world-atlas/world/50m.json", &opts)?;
-    let request = Request::new_with_str_and_init("/world-atlas/africa.json", &opts)?;
+    let request = Request::new_with_str_and_init(&"/world-atlas/world/50m.json", &opts)?;
+    // let request = Request::new_with_str_and_init("/world-atlas/africa.json", &opts)?;
 
     request.headers().set("Accept", "application/json")?;
 
@@ -145,11 +147,11 @@ pub async fn start() -> Result<(), JsValue> {
     //     }
     // };
 
-    let cs: ContextStream<f64> = ContextStream::Context(Context::new(context.clone()));
-    let pb: PathBuilder<Line<f64>, Orthographic<ContextStream<f64>, f64>, PV<f64>, f64> =
+    let cs: Context<f64> = Context::new(context.clone());
+    let pb: PathBuilder<Context<f64>, Line<f64>, Orthographic<Context<f64>, f64>, PV<f64>, f64> =
         PathBuilder::new(cs);
 
-    let ortho_builder = Orthographic::<ContextStream<f64>, f64>::builder();
+    let ortho_builder = Orthographic::<Context<f64>, f64>::builder();
 
     // var projection = d3.geoOrthographic()
     // .scale(width / 1.3 / Math.PI)
@@ -162,7 +164,7 @@ pub async fn start() -> Result<(), JsValue> {
             x: width / 2_f64,
             y: height / 2_f64,
         })
-        .rotate(&[0_f64, 0_f64, 0_f64])
+        .rotate(&[120_f64, -45_f64, 30_f64])
         .build();
 
     // let pb_cps: PathBuilder<Orthographic<ContextStream<f64>, f64>, PV<f64>, f64> =

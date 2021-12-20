@@ -67,7 +67,7 @@ where
     object.to_stream(&mut stream_in);
     let result = stream_in.get_endpoint().result();
     let bounds = match result {
-        Some(ResultEnum::Bounds(bounds)) => bounds,
+        ResultEnum::Bounds(bounds) => bounds,
         _ => {
             panic!("Expecting only a bounds result from a Bounds stream.");
         }
