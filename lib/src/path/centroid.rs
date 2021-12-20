@@ -224,7 +224,15 @@ where
             }
         };
 
-        *self = Centroid::default();
+        self.X0 = T::zero();
+        self.Y0 = T::zero();
+        self.Z0 = T::zero();
+        self.X1 = T::zero();
+        self.Y1 = T::zero();
+        self.Z1 = T::zero();
+        self.X2 = T::zero();
+        self.Y2 = T::zero();
+        self.Z2 = T::zero();
         centroid
     }
 }
