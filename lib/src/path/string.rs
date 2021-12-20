@@ -70,9 +70,9 @@ impl<T> PointRadiusTrait for String<T>
 where
     T: CoordFloat,
 {
-    type PrtT = T;
+    type T = T;
 
-    fn point_radius(&mut self, d: Self::PrtT) {
+    fn point_radius(&mut self, d: Self::T) {
         if self.radius != d {
             self.radius = d;
             self.circle = None;

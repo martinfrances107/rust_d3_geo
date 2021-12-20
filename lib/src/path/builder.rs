@@ -117,7 +117,7 @@ where
 /// Context related methods.
 impl<CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
 where
-    CS: Stream<EP = CS, T = T> + PointRadiusTrait<PrtT = T>,
+    CS: Stream<EP = CS, T = T> + PointRadiusTrait<T = T>,
     LINE: Line,
     StreamNode<
         PathContext<T>,
@@ -153,7 +153,7 @@ where
 
 impl<CS, LINE, PR, PV, T> PointRadiusTrait for Builder<CS, LINE, PR, PV, T>
 where
-    CS: Stream<EP = CS, T = T> + PointRadiusTrait<PrtT = T> + Result<T = T> + PartialEq,
+    CS: Stream<EP = CS, T = T> + PointRadiusTrait<T = T> + Result<T = T> + PartialEq,
     LINE: Line,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
@@ -163,7 +163,7 @@ where
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
 {
-    type PrtT = T;
+    type T = T;
     /// From the progammed state generate a new projection.
     #[inline]
     fn point_radius(&mut self, radius: T) {

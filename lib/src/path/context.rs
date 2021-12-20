@@ -54,8 +54,8 @@ impl<T> PointRadiusTrait for Context<T>
 where
     T: CoordFloat,
 {
-    type PrtT = T;
-    fn point_radius(&mut self, val: Self::PrtT) {
+    type T = T;
+    fn point_radius(&mut self, val: Self::T) {
         self.radius = val;
     }
 }

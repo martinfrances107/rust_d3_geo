@@ -59,12 +59,12 @@ pub trait Result {
 /// Point Radius Trait.
 pub trait PointRadiusTrait {
     /// f64 or f32
-    type PrtT;
+    type T;
     // TODO must add getter here.
     // There are complication about the mix return type here.
     // Context or PathString
     // fn get_point_radius...
-    fn point_radius(&mut self, val: Self::PrtT);
+    fn point_radius(&mut self, val: Self::T);
 }
 
 /// Can be a scalar or a function that outputs a scalar.
