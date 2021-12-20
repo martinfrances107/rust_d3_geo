@@ -59,7 +59,6 @@ where
     four: T,
     frac_1_2: T,
     frac_1_3: T,
-    two: T,
 }
 
 impl<'a, PR, T> Resample<PR, T>
@@ -103,7 +102,6 @@ where
             four: T::from(4_f64).unwrap(),
             frac_1_2: T::from(0.5_f64).unwrap(),
             frac_1_3: T::from(1_f64 / 3_f64).unwrap(),
-            two: T::from(2_f64).unwrap(),
         }
     }
 }

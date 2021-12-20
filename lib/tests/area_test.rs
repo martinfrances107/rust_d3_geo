@@ -271,8 +271,8 @@ mod area_test {
     }
 
     #[test]
-    fn stripes_minus_45_minus_45() {
-        println!("area: Polygon - stripes 45°, -45°");
+    fn stripes_minus_45_plus_45() {
+        println!("area: Polygon - stripes 45°, 45°");
         let stripes = stripes(-45_f64, 45_f64);
         let area = Area::<f64>::calc(&stripes);
         assert!(in_delta(
