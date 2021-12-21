@@ -108,7 +108,7 @@ mod path_string_test {
     }
 
     #[test]
-    fn renders_a_string() {
+    fn renders_a_line_string() {
         let object = Geometry::LineString(line_string![
             (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
         ]);

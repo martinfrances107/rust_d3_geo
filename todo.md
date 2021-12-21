@@ -11,7 +11,7 @@ TODO:-
 	I am not caching projection::stream()
 	I think there is lots of copying of data going on where pass by reference is needed this needs review.
 	I am using the default HashMap .. which the docs say by default using a secure version which always completes
-	in a resonable time ( prvents DOS attacks).. but is also unperformant.
+	in a resonable time ( prevents DOS attacks).. but is also unperformant.
 
 * Refactor trait names ending in Trait.
 

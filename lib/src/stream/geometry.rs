@@ -24,9 +24,9 @@ where
 
             Geometry::LineString(ls) => ls.to_stream(stream),
             Geometry::Polygon(p) => p.to_stream(stream),
-            Geometry::MultiPoint(mp) => mp.to_stream(stream),
+            Geometry::MultiPoint(multi_point) => multi_point.to_stream(stream),
             Geometry::MultiLineString(mls) => mls.to_stream(stream),
-            Geometry::MultiPolygon(mp) => mp.to_stream(stream),
+            Geometry::MultiPolygon(multi_polygon) => multi_polygon.to_stream(stream),
             Geometry::GeometryCollection(gc) => {
                 for g in gc {
                     g.to_stream(stream);
