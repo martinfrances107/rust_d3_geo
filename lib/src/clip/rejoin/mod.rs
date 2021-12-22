@@ -51,11 +51,9 @@ pub fn rejoin<EP, SINK, T>(
             let mut p0: LineElem<T> = segment[0];
             let mut p1: LineElem<T> = segment[n];
 
-            // if point_equal(p0.p, p1.p) {
             if p0.p.abs_diff_eq(&p1.p, epsilon) {
                 if p0.m.is_none() && p1.m.is_none() {
                     stream.line_start();
-                    // for i in 0..n {
                     for elem in segment.iter().take(n) {
                         p0 = *elem;
                         stream.point(&p0.p, None);
@@ -69,7 +67,7 @@ pub fn rejoin<EP, SINK, T>(
 
             let x1 = Rc::new(RefCell::new(Intersection::new(
                 p0,
-                Some(segment.clone()),
+                Some(&segment),
                 None,
                 true,
             )));
@@ -86,7 +84,7 @@ pub fn rejoin<EP, SINK, T>(
 
             let x2 = Rc::new(RefCell::new(Intersection::new(
                 p1,
-                Some(segment.clone()),
+                Some(&segment),
                 None,
                 false,
             )));
@@ -133,7 +131,7 @@ pub fn rejoin<EP, SINK, T>(
             }
         }
 
-        let mut points = current.borrow().z.clone();
+        let mut points = current.borrow().z;
 
         stream.line_start();
 
@@ -166,10 +164,9 @@ pub fn rejoin<EP, SINK, T>(
                 if is_subject {
                     points = (*(*current.clone()).borrow().p.as_ref().unwrap())
                         .borrow()
-                        .z
-                        .clone();
+                        .z;
                     for le in points.unwrap().iter().rev() {
-                        point = *le;
+                        point = le;
                         stream.point(&point.p, None);
                     }
                 } else {
@@ -189,7 +186,7 @@ pub fn rejoin<EP, SINK, T>(
             }
 
             current = current.clone().borrow().o.clone().unwrap();
-            points = current.clone().borrow().z.clone();
+            points = current.clone().borrow().z;
 
             is_subject = !is_subject;
 

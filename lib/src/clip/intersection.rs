@@ -10,37 +10,37 @@ use crate::clip::line_elem::LineElem;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct Intersection<T>
+pub struct Intersection<'a, T>
 where
     T: CoordFloat + FloatConst,
 {
     pub x: LineElem<T>,
-    pub z: Option<Vec<LineElem<T>>>,
+    pub z: Option<&'a Vec<LineElem<T>>>,
     #[derivative(Debug = "ignore")]
     /// Another intersection.
-    pub o: Option<Rc<RefCell<Intersection<T>>>>,
+    pub o: Option<Rc<RefCell<Intersection<'a, T>>>>,
     /// is any entry?
     pub e: bool,
     /// visited.
     pub v: bool,
     #[derivative(Debug = "ignore")]
     /// Next.
-    pub n: Option<Rc<RefCell<Intersection<T>>>>,
+    pub n: Option<Rc<RefCell<Intersection<'a, T>>>>,
     #[derivative(Debug = "ignore")]
     /// Previous.
-    pub p: Option<Rc<RefCell<Intersection<T>>>>,
+    pub p: Option<Rc<RefCell<Intersection<'a, T>>>>,
 }
 
-impl<T: Float> Intersection<T>
+impl<'a, T: Float> Intersection<'a, T>
 where
     T: CoordFloat + FloatConst,
 {
     pub fn new(
         point: LineElem<T>,
-        points: Option<Vec<LineElem<T>>>,
-        other: Option<Rc<RefCell<Intersection<T>>>>,
+        points: Option<&'a Vec<LineElem<T>>>,
+        other: Option<Rc<RefCell<Intersection<'a, T>>>>,
         entry: bool,
-    ) -> Intersection<T> {
+    ) -> Intersection<'a, T> {
         Self {
             x: point,
             z: points,

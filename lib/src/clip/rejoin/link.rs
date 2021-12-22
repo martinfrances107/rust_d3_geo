@@ -18,7 +18,6 @@ where
         return;
     };
     let n = array.len();
-
     let mut a = array[0].clone();
     let mut b: Rc<RefCell<Intersection<T>>>;
     // for i in 1..n
