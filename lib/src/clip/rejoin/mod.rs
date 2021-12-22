@@ -146,7 +146,7 @@ pub fn rejoin<EP, SINK, T>(
                         Some(points) => {
                             for p in points {
                                 point = p;
-                                stream.point(&point.p, point.m);
+                                stream.point(&point.p, None);
                             }
                         }
                         None => {
@@ -168,8 +168,8 @@ pub fn rejoin<EP, SINK, T>(
                         .borrow()
                         .z
                         .clone();
-                    for i in (1..points.clone().unwrap().len()).rev() {
-                        point = points.clone().unwrap()[i];
+                    for le in points.unwrap().iter().rev() {
+                        point = *le;
                         stream.point(&point.p, None);
                     }
                 } else {
