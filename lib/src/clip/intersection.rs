@@ -17,13 +17,18 @@ where
     pub x: LineElem<T>,
     pub z: Option<Vec<LineElem<T>>>,
     #[derivative(Debug = "ignore")]
-    pub o: Option<Rc<RefCell<Intersection<T>>>>, // another intersection,
-    pub e: bool, // is any entry?
+    /// Another intersection.
+    pub o: Option<Rc<RefCell<Intersection<T>>>>,
+    /// is any entry?
+    pub e: bool,
+    /// visited.
     pub v: bool,
     #[derivative(Debug = "ignore")]
-    pub n: Option<Rc<RefCell<Intersection<T>>>>, // next
+    /// Next.
+    pub n: Option<Rc<RefCell<Intersection<T>>>>,
     #[derivative(Debug = "ignore")]
-    pub p: Option<Rc<RefCell<Intersection<T>>>>, // previous
+    /// Previous.
+    pub p: Option<Rc<RefCell<Intersection<T>>>>,
 }
 
 impl<T: Float> Intersection<T>
