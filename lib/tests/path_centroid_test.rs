@@ -401,26 +401,66 @@ mod path_centroid_test {
         ));
     }
 
-    // it("geoPath.centroid(…) of a multipolygon with two polygons", () => {
-    //   assert.deepStrictEqual(testCentroid(equirectangular, {type: "MultiPolygon", coordinates: [
-    //     [[[100, 0], [100, 1], [101, 1], [101, 0], [100, 0]]],
-    //     [[[0, 0], [1, 0], [1, -1], [0, -1], [0, 0]]]
-    //   ]}), [732.5, 250]);
-    // });
     #[test]
     fn centroid_of_a_multipolygon_with_two_polygons() {
         println!("geoPath.centroid(…) of a multipolygon with two polygons");
 
-        let polygon = Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
-            line_string![
-                (x: 1000_f64, y:0_f64),
-                (x: 100_f64, y:1_f64),
-                (x: 101_f64, y: 1_f64),
-                (x: 101_f64, y: 0_f64),
-                (x: 100_f64, y: 0_f64)
-            ],
-            vec![],
-        )]));
+        let polygon = Geometry::MultiPolygon(MultiPolygon(vec![
+            Polygon::new(
+                line_string![
+                    (x: 100_f64, y:0_f64),
+                    (x: 100_f64, y:1_f64),
+                    (x: 101_f64, y: 1_f64),
+                    (x: 101_f64, y: 0_f64),
+                    (x: 100_f64, y: 0_f64)
+                ],
+                vec![],
+            ),
+            Polygon::new(
+                line_string![
+                    (x: 0_f64, y:0_f64),
+                    (x: 1_f64, y:0_f64),
+                    (x: 1_f64, y: -1_f64),
+                    (x: 0_f64, y: -1_f64),
+                    (x: 0_f64, y: 0_f64)
+                ],
+                vec![],
+            ),
+        ]));
+
+        let eq = equirectangular::<f64>();
+        assert!(in_delta_point(
+            test_centroid(eq, &polygon),
+            Point::new(732.5_f64, 250_f64),
+            1e-6_f64
+        ));
+    }
+
+    #[test]
+    fn centroid_of_a_multipolygon_with_two_polygons_one_zero_area() {
+        println!("geoPath.centroid(…) of a multipolygon with two polygons");
+
+        let polygon = Geometry::MultiPolygon(MultiPolygon(vec![
+            Polygon::new(
+                line_string![
+                    (x: 100_f64, y:0_f64),
+                    (x: 100_f64, y:1_f64),
+                    (x: 101_f64, y: 1_f64),
+                    (x: 101_f64, y: 0_f64),
+                    (x: 100_f64, y: 0_f64)
+                ],
+                vec![],
+            ),
+            Polygon::new(
+                line_string![
+                    (x: 0_f64, y:0_f64),
+                    (x: 1_f64, y:0_f64),
+                    (x: 2_f64, y: 0_f64),
+                    (x: 0_f64, y: 0_f64)
+                ],
+                vec![],
+            ),
+        ]));
 
         let eq = equirectangular::<f64>();
         assert!(in_delta_point(
@@ -429,11 +469,4 @@ mod path_centroid_test {
             1e-6_f64
         ));
     }
-
-    // it("geoPath.centroid(…) of a multipolygon with two polygons, one zero area", () => {
-    //   assert.deepStrictEqual(testCentroid(equirectangular, {type: "MultiPolygon", coordinates: [
-    //     [[[100, 0], [100, 1], [101, 1], [101, 0], [100, 0]]],
-    //     [[[0, 0], [1, 0], [2, 0], [0, 0]]]
-    //   ]}), [982.5, 247.5]);
-    // });
 }
