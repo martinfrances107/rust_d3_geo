@@ -219,26 +219,23 @@ mod path_centroid_test {
         ));
     }
 
-    // #[test]
-    // fn centroid_of_a_linestring_with_three_points() {
-    //     println!("geoPath.centroid(…) of a linestring with three points");
-    //     let ls = DataObject::Geometry(Geometry::LineString(line_string![
-    //         (x: -122_f32, y:37_f32),
-    //         (x: -74_f32, y:40_f32),
-    //         (x: -100_f32, y:0_f32),
-    //     ]));
+    #[test]
+    fn centroid_of_a_linestring_with_three_points() {
+        println!("geoPath.centroid(…) of a linestring with three points");
+        let ls = Geometry::LineString(line_string![
+            (x: -122_f64, y:37_f64),
+            (x: -74_f64, y:40_f64),
+            (x: -100_f64, y:0_f64),
+        ]);
 
-    //     let eq = equirectangular::<ContextStream<f32>, f32>();
+        let eq = equirectangular::<f64>();
 
-    //     // TODO test fail!!! computed x = 17.389109 (delta 2e-6)
-    //     // MUST work out why!!!
-    //     // Note the drop to f32
-    //     assert!(in_delta_point(
-    //         test_centroid(eq, &ls),
-    //         Point::new(17.389135_f32, 103.563545_f32),
-    //         1e-6_f32
-    //     ));
-    // }
+        assert!(in_delta_point(
+            test_centroid(eq, &ls),
+            Point::new(17.389135_f64, 103.563545_f64),
+            1e-6_f64
+        ));
+    }
 
     #[test]
     fn centroid_of_a_multiline_string() {
