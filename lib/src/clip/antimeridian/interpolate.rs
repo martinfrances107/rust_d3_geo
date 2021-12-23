@@ -16,12 +16,11 @@ where
 {
     let epsilon = T::from(EPSILON).unwrap();
     let out: InterpolateFn<STREAM, T> = Rc::new(
-        move |to: Option<Coordinate<T>>,
-              from: Option<Coordinate<T>>,
+        move |from: Option<Coordinate<T>>,
+              to: Option<Coordinate<T>>,
               direction: T,
               stream_in: &mut STREAM| {
             let phi: T;
-            // let mut s = stream_in;
             match from {
                 None => {
                     phi = direction * T::FRAC_PI_2();

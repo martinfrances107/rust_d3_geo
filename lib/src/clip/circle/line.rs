@@ -48,6 +48,7 @@ where
         Self {
             c0: 0,
             clean: CleanState::IntersectionsOrEmpty,
+            // JS TODO optimise for this common case
             not_hemisphere: cr.abs() > epsilon,
             point0: None,
             cr,

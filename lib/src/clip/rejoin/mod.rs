@@ -125,7 +125,7 @@ pub fn rejoin<EP, SINK, T>(
         while current.borrow().v {
             current = current.clone().borrow().n.clone().unwrap();
             // The javascrtip as this point does === on two objects.
-            // This is the smae a comparison of raw points.
+            // This is the same a comparison of raw points.
             if current.as_ptr() == (*start).as_ptr() {
                 return;
             }

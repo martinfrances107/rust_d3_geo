@@ -382,13 +382,9 @@ mod path_centroid_test {
     fn centroid_of_a_singleton_multipolygon() {
         println!("geoPath.centroid(…) of a singleton multipolygon");
 
-        // The value of 1000 should fail but does not ..
-        // a value of 200 fails as expected.
-        // The JS fails with this value
-        // it implies the x value
         let polygon = Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
             line_string![
-                (x: 1000_f64, y: 0_f64),
+                (x: 100_f64, y: 0_f64),
                 (x: 100_f64, y: 1_f64),
                 (x: 101_f64, y: 1_f64),
                 (x: 101_f64, y: 0_f64),
@@ -400,8 +396,8 @@ mod path_centroid_test {
         let eq = equirectangular::<f64>();
         assert!(in_delta_point(
             test_centroid(eq, &polygon),
-            Point::new(10000_f64, 247.5_f64),
-            100000_f64
+            Point::new(982.5_f64, 247.5_f64),
+            1e-6_f64
         ));
     }
 

@@ -92,8 +92,6 @@ where
     fn polygon_end(&mut self) {}
 }
 
-/// TODO Generics - Need to come back and refactor to take LineElem<T>
-/// or Coordinates. As the JS allow for.
 fn stream_line<EP, S, T>(ls: &LineString<T>, stream: &mut S, closed: usize)
 where
     S: Stream<EP = EP, T = T>,
@@ -101,7 +99,7 @@ where
 {
     let n = ls.0.len() - closed;
     stream.line_start();
-    for c in &ls.0[0..n] {
+    for c in ls.0.iter().take(n) {
         stream.point(c, None);
     }
     stream.line_end();
