@@ -32,12 +32,12 @@ where
 
             let diff = part1 - part2;
             if diff > T::zero() {
-                return Ordering::Greater;
+                Ordering::Greater
+            } else if diff < T::zero() {
+                Ordering::Less
+            } else {
+                Ordering::Equal
             }
-            if diff < T::zero() {
-                return Ordering::Less;
-            }
-            Ordering::Equal
         },
     )
 }
