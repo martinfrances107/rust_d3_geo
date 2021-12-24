@@ -164,7 +164,7 @@ pub async fn start() -> Result<(), JsValue> {
             x: width / 2_f64,
             y: height / 2_f64,
         })
-        .rotate(&[120_f64, -45_f64, 30_f64])
+        .rotate(&[0_f64, -90_f64, 30_f64])
         .build();
 
     // let pb_cps: PathBuilder<Orthographic<ContextStream<f64>, f64>, PV<f64>, f64> =

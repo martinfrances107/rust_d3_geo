@@ -463,7 +463,7 @@ where
     type T = T;
 
     #[inline]
-    fn fit_extent(self, extent: [[T; 2]; 2], object: &impl Streamable<T=Self::T>) -> Self
+    fn fit_extent(self, extent: [[T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {
