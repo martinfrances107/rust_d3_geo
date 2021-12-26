@@ -10,6 +10,7 @@ use num_traits::FloatConst;
 
 use approx::AbsDiffEq;
 
+use crate::abs_diff_eq;
 use crate::clip::intersection::Intersection;
 use crate::clip::rejoin::link::link;
 use crate::clip::InterpolateFn;
@@ -40,7 +41,6 @@ pub fn rejoin<EP, SINK, T>(
     let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
     // limt scope of stream_b to just the segement for loop.
     {
-        let epsilon = T::from(EPSILON).unwrap();
         let two_epsilon = T::from(2.0 * EPSILON).unwrap();
         for segment in segments.iter() {
             let (n, has_overflown) = segment.len().overflowing_sub(1_usize);
@@ -51,7 +51,7 @@ pub fn rejoin<EP, SINK, T>(
             let mut p0: LineElem<T> = segment[0];
             let mut p1: LineElem<T> = segment[n];
 
-            if p0.p.abs_diff_eq(&p1.p, epsilon) {
+            if abs_diff_eq(&p0.p, &p1.p) {
                 if p0.m.is_none() && p1.m.is_none() {
                     stream.line_start();
                     for elem in segment.iter().take(n) {

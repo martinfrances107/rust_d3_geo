@@ -7,6 +7,7 @@ use num_traits::FloatConst;
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
 
+use crate::abs_diff_eq;
 use crate::clip::line_elem::LineElem;
 use crate::clip::Clean;
 use crate::clip::CleanState;
@@ -193,15 +194,10 @@ where
                     panic!("Requested One or None found Two as !!");
                 }
             };
-            let epsilon = T::from(EPSILON).unwrap();
+
             if point2.is_some()
-                || self
-                    .raw
-                    .point0
-                    .unwrap()
-                    .p
-                    .abs_diff_eq(&point2.unwrap().p, epsilon)
-                || point1.unwrap().p.abs_diff_eq(&point2.unwrap().p, epsilon)
+                || abs_diff_eq(&self.raw.point0.unwrap().p, &point2.unwrap().p)
+                || abs_diff_eq(&point1.unwrap().p, &point2.unwrap().p)
             {
                 match point1 {
                     Some(p) => {
@@ -296,12 +292,7 @@ where
             }
         }
         if v && (self.raw.point0.is_none()
-            || !self
-                .raw
-                .point0
-                .unwrap()
-                .p
-                .abs_diff_eq(&point1.unwrap().p, T::from(EPSILON).unwrap()))
+            || !abs_diff_eq(&self.raw.point0.unwrap().p, &point1.unwrap().p))
         {
             self.sink.point(&point1.unwrap().p, None);
         }

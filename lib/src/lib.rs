@@ -19,6 +19,7 @@ use std::fmt::Debug;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use math::EPSILON;
 
 /// GeoArea Stream.
 pub mod area;
@@ -72,4 +73,13 @@ where
     fn transform(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;
     /// Reversed the transform.
     fn invert(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;
+}
+
+// The implementation used to be available on Coordinate<T>
+// but geo has since been refactored into workspaces. where the packages geo and geo-types are separate.
+// abs_diff_eq() is private to the geo-types package. And Coordinate is accessed through the geo package
+// Sp I have had to transplant this here.
+pub(crate) fn abs_diff_eq<T: CoordFloat>(a: &Coordinate<T>, b: &Coordinate<T>) -> bool {
+    let e = T::from(EPSILON).unwrap();
+    (a.x - b.x).abs() < e && (a.y - b.y).abs() < e
 }
