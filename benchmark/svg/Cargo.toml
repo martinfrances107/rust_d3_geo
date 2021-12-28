@@ -15,7 +15,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 js-sys = "0.3.55"
-geo={git = "https://github.com/martinfrances107/geo.git", branch="cyclic_match" }
+geo={ version= "0.18.0", features=["use-serde"]}
 getrandom = { version = "0.2.3", features = ["js"] }
 rand = { version = "0.8.4"}
 rust_d3_geo = {path="../../lib"}

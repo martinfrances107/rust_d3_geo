@@ -15,10 +15,14 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
+use geo::polygon;
+use wasm_bindgen::prelude::*;
+
 use geo::Coordinate;
 use geo::Geometry;
 use geo::GeometryCollection;
 use geo::MultiPolygon;
+use geo::Polygon;
 use rust_topojson_client::feature::Builder as FeatureBuilder;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -103,10 +107,39 @@ fn get_path_node(class_name: &str) -> Result<Element, JsValue> {
     };
     Ok(ret)
 }
+
 /// Entry point.
-#[wasm_bindgen(start)]
-pub async fn start() -> Result<(), JsValue> {
-    console_log!("run() - wasm entry point");
+#[wasm_bindgen]
+pub async fn start(p_vec_in: JsValue, mp_vec_in: JsValue) -> Result<(), JsValue> {
+    let p_vec: Vec<Polygon<f64>>;
+    match p_vec_in.into_serde::<Vec<Polygon<f64>>>() {
+        Ok(v) => {
+            console_log!("polygon - ok {}", v.len());
+            // console_log!("{:?}", v);
+            p_vec = v;
+        }
+        Err(e) => {
+            console_log!("fail to decode {}", e);
+            // console_log!("{:?}", p_vec_in);
+            return Ok(());
+        }
+    }
+
+    let mp_vec: Vec<Polygon<f64>>;
+    match mp_vec_in.into_serde::<Vec<Polygon<f64>>>() {
+        Ok(v) => {
+            console_log!("polygon - ok {}", v.len());
+            // console_log!("{:?}", v);
+            mp_vec = v;
+        }
+        Err(e) => {
+            console_log!("fail to decode {}", e);
+            console_log!("{:?}", mp_vec_in);
+            return Ok(());
+        }
+    }
+
+    // console_log!("run() - wasm entry point");
     let document = get_document()?;
 
     let mut opts = RequestInit::new();
@@ -116,16 +149,18 @@ pub async fn start() -> Result<(), JsValue> {
     let request = Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
     // let request = Request::new_with_str_and_init("/world-atlas/africa.json", &opts)?;
 
-    request.headers().set("Accept", "application/json")?;
+    // request.headers().set("Accept", "application/json")?;
 
     let window = web_sys::window().expect("Failed to get window");
     let resp_value = JsFuture::from(window.fetch_with_request(&request)).await?;
 
     // `resp_value` is a `Response` object.
-    assert!(resp_value.is_instance_of::<Response>());
+    // assert!(resp_value.is_instance_of::<Response>());
     let resp: Response = resp_value.dyn_into().unwrap();
 
     let json = JsFuture::from(resp.json()?).await?;
+
+    // for f in data.values("features").iter() {}
 
     let topology: Topology = json.into_serde().expect("could not parse as Topology");
     console_log!("Have topology");
@@ -148,24 +183,23 @@ pub async fn start() -> Result<(), JsValue> {
             x: width / 2_f64,
             y: height / 2_f64,
         })
-        .rotate(&[0_f64, 0_f64, 0_f64]);
+        .rotate(&[0_f64, 00_f64, 0_f64]);
 
     let ortho = ortho_builder.build();
 
-    let builder = PathBuilder::context_pathstring();
+    // let builder = PathBuilder::context_pathstring();
 
-    let path_d = builder.build(ortho.clone()).object(&countries);
+    // let path_d = builder.build(ortho.clone()).object(&countries);
     // TODO Code small ortho_builder.clone() can reuse this object as expected.
-    console_log!("{:?}", &JsValue::from(path_d.clone()));
-    if let Ok(path) = document.create_element_ns(Some("http://www.w3.org/2000/svg"), "path") {
-        path.set_attribute_ns(None, "d", &path_d)?;
-        svg.append_child(&path)?;
-    };
+    // console_log!("{:?}", &JsValue::from(path_d.clone()));
+    // if let Ok(path) = document.create_element_ns(Some("http://www.w3.org/2000/svg"), "path") {
+    //     path.set_attribute_ns(None, "d", &path_d)?;
+    //     svg.append_child(&path)?;
+    // };
 
-    let stroke: [&str; 7] = [
+    let stroke: [&str; 6] = [
         "stroke: red",
         "stroke: orange",
-        "stroke: yellow",
         "stroke: green",
         "stroke: blue",
         "stroke: indigo",
@@ -175,8 +209,37 @@ pub async fn start() -> Result<(), JsValue> {
 
     let mut builder = PathBuilder::context_pathstring().build(ortho);
     let mut i = 0;
+    // for p in p_vec {
+    //     // console_log!("p {:?}", p);
+    //     let s = builder.object(&p);
+    //     let class_name = format!("id-{}", i);
+    //     let path = get_path_node(&class_name)?;
+    //     path.set_attribute_ns(None, "d", &s)?;
+    //     // console_log!("setting  (p) attr1");
+    //     path.set_attribute_ns(None, "style", stroke[i % 5])?;
+    //     // console_log!("setting (p) attr2");
+    //     svg.append_child(&path)?;
+    //     // console_log!("setting (p) attr3");
+    //     i = i + 1;
+    // }
+
+    // for mp in mp_vec {
+    //     // console_log!("p {:?}", p);
+    //     let s = builder.object(&mp);
+    //     let class_name = format!("id-{}", i);
+    //     let path = get_path_node(&class_name)?;
+    //     path.set_attribute_ns(None, "d", &s)?;
+    //     // console_log!("setting  (p) attr1");
+    //     path.set_attribute_ns(None, "style", stroke[i % 5])?;
+    //     // console_log!("setting (p) attr2");
+    //     svg.append_child(&path)?;
+    //     // console_log!("setting (p) attr3");
+    //     i = i + 1
+    // }
+
     match &countries {
         Geometry::GeometryCollection(GeometryCollection(g_vec)) => {
+            console_log!("{}", g_vec.len());
             for g in g_vec {
                 match &g {
                     Geometry::MultiPolygon(mp) => {
@@ -196,11 +259,11 @@ pub async fn start() -> Result<(), JsValue> {
                             // console_log!("setting attr1");
                             path.set_attribute_ns(None, "class", &class_name)?;
                             // console_log!("setting attr2");
-                            path.set_attribute_ns(None, "style", stroke[i])?;
+                            path.set_attribute_ns(None, "style", stroke[i % 6])?;
                             // console_log!("setting attr3");
                             svg.append_child(&path)?;
                             // console_log!("svg udpated");
-                            i = (i + 1) % 6;
+                            i = i + 1
                         }
                     }
                     Geometry::Polygon(p) => {
@@ -215,11 +278,11 @@ pub async fn start() -> Result<(), JsValue> {
                         let path = get_path_node(&class_name)?;
                         path.set_attribute_ns(None, "d", &s)?;
                         // console_log!("setting  (p) attr1");
-                        path.set_attribute_ns(None, "style", stroke[i])?;
+                        path.set_attribute_ns(None, "style", stroke[i % 6])?;
                         // console_log!("setting (p) attr2");
                         svg.append_child(&path)?;
                         // console_log!("setting (p) attr3");
-                        i = (i + 1) % 6;
+                        i = i + 1
                     }
 
                     _ => {
