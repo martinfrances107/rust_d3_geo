@@ -112,10 +112,7 @@ where
     /// Returns the bounds of the object
     ///
     /// This operation consumes the  Path.
-    pub fn bounds(mut self, object: &impl Streamable<T = T>) -> [Coordinate<T>; 2]
-    where
-        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    {
+    pub fn bounds(mut self, object: &impl Streamable<T = T>) -> [Coordinate<T>; 2] {
         let stream_dst = Bounds::default();
         let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
@@ -139,10 +136,7 @@ where
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the centroid of the object.
-    pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coordinate<T>
-    where
-        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    {
+    pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coordinate<T> {
         let stream_dst = Centroid::default();
         let mut stream_in = self.projection.stream(stream_dst);
         object.to_stream(&mut stream_in);
@@ -163,10 +157,7 @@ where
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Sets the context stream.
-    pub fn context(mut self, context_stream: CS) -> Self
-    where
-        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    {
+    pub fn context(mut self, context_stream: CS) -> Self {
         self.context_stream = context_stream;
         self
     }
