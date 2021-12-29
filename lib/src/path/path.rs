@@ -7,7 +7,6 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use super::PointRadiusEnum;
 use crate::clip::buffer::Buffer;
 use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::Line;
@@ -23,18 +22,20 @@ use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
+use super::PointRadiusEnum;
+
 /// Projection and context stream applied to a Streamable.
 #[derive(Debug)]
 pub struct Path<CS, LINE, PR, PV, T>
 where
     CS: Stream<EP = CS, T = T> + Result + PartialEq,
     LINE: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    PV: PointVisible<T = T>,
 {
     context_stream: CS,
     point_radius: PointRadiusEnum<T>,
@@ -46,12 +47,12 @@ impl<CS, LINE, PR, PV, T> Path<CS, LINE, PR, PV, T>
 where
     CS: Stream<EP = CS, T = T> + Result + PartialEq,
     LINE: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    PV: PointVisible<T = T>,
 {
     /// Constructor.
     pub fn new(context_stream: CS, projection: Projection<CS, LINE, PR, PV, T>) -> Self {
@@ -73,12 +74,12 @@ where
 impl<LINE, PR, PV, T> Path<Area<T>, LINE, PR, PV, T>
 where
     LINE: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
     StreamNode<Area<T>, LINE, ResampleNode<Area<T>, PR, PostClipNode<Area<T>, Area<T>, T>, T>, T>:
         Stream<EP = Area<T>, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    PV: PointVisible<T = T>,
 {
     /// Returns the area of the Path
     /// This operation consumes the  Path.
@@ -97,6 +98,8 @@ where
 impl<LINE, PR, PV, T> Path<Bounds<T>, LINE, PR, PV, T>
 where
     LINE: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
     StreamNode<
         Bounds<T>,
         LINE,
@@ -104,9 +107,7 @@ where
         T,
     >: Stream<EP = Bounds<T>, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    PV: PointVisible<T = T>,
 {
     /// Returns the bounds of the object
     ///
@@ -125,8 +126,9 @@ where
 
 impl<LINE, PR, PV, T> Path<Centroid<T>, LINE, PR, PV, T>
 where
-    // CS: Stream<EP = CS, T = T> + Result<T = T> + PartialEq,
     LINE: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
     StreamNode<
         Centroid<T>,
         LINE,
@@ -134,9 +136,7 @@ where
         T,
     >: Stream<EP = Centroid<T>, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
-    PV: PointVisible<T = T>,
 {
     /// Returns the centroid of the object.
     pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coordinate<T>
@@ -159,8 +159,8 @@ where
         Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     PV: PointVisible<T = T>,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Sets the context stream.
     pub fn context(mut self, context_stream: CS) -> Self

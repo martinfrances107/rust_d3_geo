@@ -4,7 +4,7 @@ pub mod area;
 pub mod bounds;
 /// Path builder
 pub mod builder;
-/// Path centroid;
+/// Path centroid.
 pub mod centroid;
 /// Path context.
 pub mod context;
