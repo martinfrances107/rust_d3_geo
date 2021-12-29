@@ -5,6 +5,7 @@ use geo::MultiPolygon;
 
 use crate::stream::Stream;
 
+use super::stream_polygon;
 use super::Streamable;
 
 impl<T> Streamable for MultiPolygon<T>
@@ -20,7 +21,7 @@ where
         SD: Stream<EP = EP, T = T>,
     {
         for p in self.iter() {
-            p.to_stream(stream);
+            stream_polygon(p, stream);
         }
     }
 }
