@@ -8,7 +8,7 @@ pub mod builder;
 pub mod centroid;
 /// Path context.
 pub mod context;
-/// Output of a Path builer.
+/// Output of a Path builder.
 pub mod path;
 /// Path String.
 pub mod string;
