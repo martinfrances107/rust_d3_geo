@@ -4,7 +4,7 @@ description="rust_d3_geo benchmark wasm app"
 license = "MIT"
 version = "0.1.0"
 authors = ["martin <martinfrances107@hotmail.com>"]
-edition = "2018"
+edition = "2021"
 [lib]
 crate-type = ["cdylib"]
 
@@ -15,7 +15,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 js-sys = "0.3.55"
-geo={git = "https://github.com/martinfrances107/geo.git", branch="cyclic_match" }
+geo="0.18.0"
 getrandom = { version = "0.2.3", features = ["js"] }
 rand = { version = "0.8.4"}
 rust_d3_geo = {path="../../lib"}
