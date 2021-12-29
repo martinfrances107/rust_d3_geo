@@ -33,11 +33,11 @@ where
     LINE: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: 'static + AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
+    T: 'static + AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     pr: T,
     context: Option<Rc<CanvasRenderingContext2d>>,
@@ -49,13 +49,13 @@ impl<CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
 where
     CS: Stream<EP = CS, T = T>,
     LINE: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
-    PV: PointVisible<T = T>,
-    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
     StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
+    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
     pub fn new(context_stream: CS) -> Builder<CS, LINE, PR, PV, T> {
@@ -72,13 +72,10 @@ where
 impl<LINE, PR, PV, T> Builder<Context<T>, LINE, PR, PV, T>
 where
     LINE: Line,
-
-    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
-    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     StreamNode<String<T>, LINE, String<T>, T>: Stream<EP = String<T>, T = T>,
-
     StreamNode<String<T>, LINE, String<T>, T>: Stream<T = T>,
     StreamNode<
         String<T>,
@@ -93,6 +90,7 @@ where
         ResampleNode<Context<T>, PR, PostClipNode<Context<T>, Context<T>, T>, T>,
         T,
     >: Stream<EP = Context<T>, T = T>,
+    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the state within the builder.
     // pub fn get_context(&self) {
@@ -119,6 +117,8 @@ impl<CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
 where
     CS: Stream<EP = CS, T = T> + PointRadiusTrait<T = T>,
     LINE: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
     StreamNode<
         PathContext<T>,
         LINE,
@@ -128,12 +128,8 @@ where
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
-    PV: PointVisible<T = T>,
-    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
     StreamNode<String<T>, LINE, String<T>, T>: Stream<EP = String<T>, T = T>,
     StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
-
     StreamNode<String<T>, LINE, String<T>, T>: Stream<T = T>,
     StreamNode<
         String<T>,
@@ -142,6 +138,7 @@ where
         T,
     >: Stream<EP = String<T>, T = T>,
     StreamNode<Context<T>, LINE, Context<T>, T>: Stream<EP = Context<T>, T = T>,
+    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
     pub fn context_pathstring() -> Builder<String<T>, LINE, PR, PV, T> {
@@ -155,13 +152,13 @@ impl<CS, LINE, PR, PV, T> PointRadiusTrait for Builder<CS, LINE, PR, PV, T>
 where
     CS: Stream<EP = CS, T = T> + PointRadiusTrait<T = T> + Result + PartialEq,
     LINE: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
-    PV: PointVisible<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     type T = T;
     /// From the progammed state generate a new projection.
@@ -177,13 +174,13 @@ impl<CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
 where
     CS: Stream<EP = CS, T = T> + Result + PartialEq,
     LINE: Line,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:
         Stream<EP = CS, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
-    PV: PointVisible<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
+    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// From the progammed state generate a new projection.
     #[inline]
