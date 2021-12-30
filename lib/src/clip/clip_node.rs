@@ -190,8 +190,12 @@ where
                 // TODO reuse ringBuffer.rejoin()?
                 if n > 1 {
                     let pb = [
-                        ring_segments.pop_back().unwrap_or(Vec::with_capacity(0)),
-                        ring_segments.pop_front().unwrap_or(Vec::with_capacity(0)),
+                        ring_segments
+                            .pop_back()
+                            .unwrap_or_else(|| Vec::with_capacity(0)),
+                        ring_segments
+                            .pop_front()
+                            .unwrap_or_else(|| Vec::with_capacity(0)),
                     ]
                     .concat();
                     ring_segments.push_back(pb);

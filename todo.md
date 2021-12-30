@@ -50,7 +50,7 @@ centroid_test - Needs lots of work.
 
 clip_circle_test - Needs regex development.. Path::API has changed since this last compiled.
 
-contains_test - sec and test not implmented.
+contains_test - src and test not implmented.
 
 distance_test - Complete.
 

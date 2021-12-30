@@ -79,20 +79,47 @@ mod centroid_test {
         ));
     }
 
-    //     // tape("the centroid of a set of points and their antipodes is ambiguous", function(test) {
-    //     //   test.ok(d3.geoCentroid({type: "MultiPoint", coordinates: [[0, 0], [180, 0]]}).every(isNaN));
-    //     //   test.ok(d3.geoCentroid({type: "MultiPoint", coordinates: [[0, 0], [90, 0], [180, 0], [-90, 0]]}).every(isNaN));
-    //     //   test.ok(d3.geoCentroid({type: "MultiPoint", coordinates: [[0, 0], [0, 90], [180, 0], [0, -90]]}).every(isNaN));
-    //     //   test.end();
-    //     // });
+    #[test]
+    fn centrdoi_of_a_set_of_points_and_their_antipodes() {
+        println!("the centroid of a set of points and their antipodes is ambiguous");
+        let p1: Point<f64> = Centroid::default().centroid(&MultiPoint(vec![
+            Point::new(0_f64, 0_f64),
+            Point::new(180_f64, 0_f64),
+        ]));
+        assert!(p1.x().is_nan());
+        assert!(p1.y().is_nan());
 
-    //     // tape("the centroid of the empty set of points is ambiguous", function(test) {
-    //     //   test.ok(d3.geoCentroid({type: "MultiPoint", coordinates: []}).every(isNaN));
-    //     //   test.end();
-    //     // });
+        // let p2: Point<f64> = Centroid::default().centroid(&MultiPoint(vec![]));
+        let p2: Point<f64> = Centroid::default().centroid(&MultiPoint(vec![
+            Point::new(0_f64, 0_f64),
+            Point::new(90_f64, 0_f64),
+            Point::new(180_f64, 0_f64),
+            Point::new(-90_f64, 0_f64),
+        ]));
+        assert!(p2.x().is_nan());
+        assert!(p2.y().is_nan());
+
+        let p3: Point<f64> = Centroid::default().centroid(&MultiPoint(vec![
+            Point::new(0_f64, 0_f64),
+            Point::new(0_f64, 90_f64),
+            Point::new(180_f64, 0_f64),
+            Point::new(0_f64, -90_f64),
+        ]));
+        assert!(p3.x().is_nan());
+        assert!(p3.y().is_nan());
+    }
 
     #[test]
-    fn line_string_great_arc_segments() {
+    fn centroid_of_the_empty_set_of_points() {
+        println!("the centroid of the empty set of points is ambiguous");
+        let p: Point<f64> = Centroid::default().centroid(&MultiPoint(vec![]));
+
+        assert!(p.x().is_nan());
+        assert!(p.y().is_nan());
+    }
+
+    #[test]
+    fn line_string_is_the_spherical_everage() {
         println!("the centroid of a line string is the (spherical) average of its constituent great arc segments");
         assert!(in_delta_point(
             Centroid::default().centroid(&line_string![(
@@ -172,11 +199,26 @@ mod centroid_test {
         ));
     }
 
-    //     // tape("the centroid of a great arc from a point to its antipode is ambiguous", function(test) {
-    //     //   test.ok(d3.geoCentroid({type: "LineString", coordinates: [[180, 0], [0, 0]]}).every(isNaN));
-    //     //   test.ok(d3.geoCentroid({type: "MultiLineString", coordinates: [[[0, -90], [0, 90]]]}).every(isNaN));
-    //     //   test.end();
-    //     // });
+    #[test]
+    fn line_string_great_arc_segments() {
+        println!("the centroid of a great arc from a point to its antipode is ambiguous");
+
+        let p = Centroid::default().centroid(&line_string![(
+            x: 180.0f64,
+            y: 0.0f64
+        ), (
+            x: 0.0f64,
+            y: 0.0f64
+        )]);
+        assert!(p.x().is_nan());
+        assert!(p.y().is_nan());
+
+        let p = Centroid::default().centroid(&MultiLineString(vec![
+            line_string![(x: 0_f64, y: -90_f64), (x: 0_f64, y: 90_f64)],
+        ]));
+        assert!(p.x().is_nan());
+        assert!(p.y().is_nan());
+    }
 
     #[test]
     fn a_set_of_line_strings_is_the_spherical_average_of_its_great_arc_segments() {
@@ -198,6 +240,34 @@ mod centroid_test {
     //     //   test.inDelta(d3.geoCentroid({type: "GeometryCollection", geometries: [{type: "Point", coordinates: [0, 0]}, {type: "LineString", coordinates: [[1, 2], [1, 2]]}]}), [0.666534, 1.333408], 1e-6);
     //     //   test.end();
     //     // });
+    #[test]
+    fn a_line_of_zero_length_is_treated_as_points() {
+        println!("a line of zero length is treated as points");
+        let ls = LineString(vec![
+            Coordinate { x: 1_f64, y: 1_f64 },
+            Coordinate { x: 1_f64, y: 1_f64 },
+        ]);
+
+        assert!(in_delta_point(
+            Centroid::default().centroid(&ls),
+            Point::new(1_f64, 1_f64),
+            1e-6_f64
+        ));
+
+        let gc = GeometryCollection(vec![
+            Geometry::Point(Point::new(0_f64, 0_f64)),
+            Geometry::LineString(LineString(vec![
+                Coordinate { x: 1_f64, y: 2_f64 },
+                Coordinate { x: 1_f64, y: 2_f64 },
+            ])),
+        ]);
+
+        assert!(in_delta_point(
+            Centroid::default().centroid(&gc),
+            Point::new(0.666534_f64, 1.333408_f64),
+            1e-6_f64
+        ));
+    }
 
     #[test]
     fn an_empty_polygon_with_non_zero_extent_is_treated_as_a_line() {
@@ -347,13 +417,6 @@ mod centroid_test {
     //     //   test.end();
     //     // });
 
-    //     // tape("the centroid of a non-empty line string and a point only considers the line string", function(test) {
-    //     //   test.inDelta(d3.geoCentroid({type: "GeometryCollection", geometries: [
-    //     //     {type: "LineString", coordinates: [[179, 0], [180, 0]]},
-    //     //     {type: "Point", coordinates: [0, 0]}
-    //     //   ]}), [179.5, 0], 1e-6);
-    //     //   test.end();
-    //     // });
     #[test]
     fn geometry_collection_non_empty_line_string_and_point() {
         println!(

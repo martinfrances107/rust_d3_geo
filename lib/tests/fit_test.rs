@@ -99,9 +99,9 @@ mod fit_test {
     //     let topology: Topology =
     //         serde_json::from_reader(file).expect("File should be parse as JSON.");
 
-    //     match Builder::<f64>::generate_from_name(&topology, &"land") {
+    //     match Builder::generate_from_name(&topology, &"land") {
     //         Some(g) => {
-    //             let d_object = DataObject::Geometry(g);
+    //             let d_object = g;
     //             let projection: ProjectionBuilder<
     //                 Bounds<f64>,
     //                 _,
@@ -111,16 +111,16 @@ mod fit_test {
     //             > = AzimuthalEqualArea::builder()
     //                 .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &d_object);
     //             // This faile 225 ves 228
-    //             // assert!(in_delta(projection.get_scale(), 228.357229, 1e-6));
+    //             assert!(in_delta(projection.get_scale(), 228.357229, 1e-6));
     //             // TODO: This fails .. the y component is computed as 496 vs 479
-    //             // assert!(in_delta_coordinate(
-    //             //     &projection.get_translate(),
-    //             //     &Coordinate {
-    //             //         x: 496.353618_f64,
-    //             //         y: 479.684353_f64
-    //             //     },
-    //             //     1e-6
-    //             // ));
+    //             assert!(in_delta_coordinate(
+    //                 &projection.get_translate(),
+    //                 &Coordinate {
+    //                     x: 496.353618_f64,
+    //                     y: 479.684353_f64
+    //                 },
+    //                 1e-6
+    //             ));
     //         }
     //         _ => {
     //             assert!(false, "Failed to extract a GeometryCollection.");
