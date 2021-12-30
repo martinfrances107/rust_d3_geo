@@ -96,11 +96,13 @@ where
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let two = T::from(2).unwrap();
         // Divergence between f64 and f32
-        // when p.y  = 1.5707963267948966
-        // f64 outputs the correct result -37.33185619326892
-        // The f32 value is junk... at least different from JS
-        // tan(pi/2) is undefined. The value returned
-        //from tan(pi_f64/2_f64) happens to be the same
+        // when p.y  = 1.5707963267948966  (PI/2)
+        // f64 outputs -37.33185619326892 which is consistent
+        // with JS.
+        // The f32 is different from JS. Technically
+        // tan(PI/2) is NAN. and so log(NAN) is NAN.
+        // The value returned
+        // from tan(PI_f64/2_f64) happens to be the same
         // large number in both the JS and RUST.
         Coordinate {
             x: p.x,
