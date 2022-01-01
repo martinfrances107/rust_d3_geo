@@ -100,8 +100,7 @@ mod area_test {
         assert!(in_delta(area, 4.890516e-13, 1e-13));
     }
 
-    // This test is too brittle to copy over.
-    // and I don't think the extra coverage it provides is useful.
+    // This is only works with f32s
     //
     // Looking at src/area.rs
     //
@@ -113,23 +112,23 @@ mod area_test {
     //
     // Given the tightly specified floats in the polygon.
     // The test is designed to make 'self.area_ring' equal exactly zero.
-    // In rust the round errors make the sum slightly negative
+    // In rust and with f64s the round errors make the sum slightly negative
     // ... so the test fails because TAU has been added.
     //
-    // #[test]
-    // fn polygon_zero_area() {
-    //     println!("area: Polygon - zero area");
+    #[test]
+    fn polygon_zero_area() {
+        println!("area: Polygon - zero area");
 
-    //     let g = polygon![
-    //     (x: 96.79142432523281, y:5.262704519048153),
-    //     (x: 96.81065389253769, y:5.272455576551362),
-    //     (x: 96.82988345984256, y:5.272455576551362),
-    //     (x: 96.81065389253769, y:5.272455576551362),
-    //     (x: 96.79142432523281, y:5.262704519048153)
-    //         ];
-    //     let area = Area::<f64>::calc(&g);
-    //     assert_eq!(area, 0_f64);
-    // }
+        let g = polygon![
+        (x: 96.79142432523281, y:5.262704519048153),
+        (x: 96.81065389253769, y:5.272455576551362),
+        (x: 96.82988345984256, y:5.272455576551362),
+        (x: 96.81065389253769, y:5.272455576551362),
+        (x: 96.79142432523281, y:5.262704519048153)
+            ];
+        let area = Area::<f32>::calc(&g);
+        assert_eq!(area, 0_f32);
+    }
 
     #[test]
     fn polygon_semilune() {
