@@ -5,6 +5,7 @@ use approx::AbsDiffEq;
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
+use geo::LineString;
 use num_traits::FloatConst;
 
 use crate::clip::Line;
@@ -45,8 +46,8 @@ where
     pv: PV,
     start: Coordinate<T>,
     polygon_started: bool,
-    polygon: Vec<Vec<Coordinate<T>>>,
-    ring: Vec<Coordinate<T>>,
+    polygon: Vec<LineString<T>>,
+    ring: LineString<T>,
     ring_sink_node: StreamNode<Buffer<T>, LINE, Buffer<T>, T>,
     segments: VecDeque<VecDeque<Vec<LineElem<T>>>>,
     // point_fn: PointFn,
@@ -85,7 +86,7 @@ where
 
             polygon_started: false,
             polygon: Vec::new(),
-            ring: Vec::new(),
+            ring: LineString(Vec::new()),
             ring_sink_node,
             segments: VecDeque::new(),
 
@@ -132,14 +133,14 @@ where
 
     #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        self.ring.push(*p);
+        self.ring.0.push(*p);
         self.ring_sink_node.point(p, _m);
     }
 
     #[inline]
     fn ring_start(&mut self) {
         self.ring_sink_node.line_start();
-        self.ring.clear();
+        self.ring.0.clear();
     }
 
     fn ring_end(&mut self) {
@@ -153,12 +154,12 @@ where
         let n = ring_segments.len();
         let m;
 
-        self.ring.pop();
+        self.ring.0.pop();
         self.polygon.push(self.ring.clone());
         // in this javascript version this value is set to NULL
         // is my assumption that this is valid true?
         // self.ring = None;
-        self.ring.clear();
+        self.ring.0.clear();
 
         if n == 0 {
             return;
@@ -257,7 +258,6 @@ where
         self.point_fn = Self::point_default;
         self.line_start_fn = Self::line_start_default;
         self.line_end_fn = Self::line_end_default;
-
         let segments_inner: Vec<Vec<LineElem<T>>> =
             self.segments.clone().into_iter().flatten().collect();
 
