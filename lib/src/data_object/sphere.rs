@@ -3,7 +3,8 @@ use std::marker::PhantomData;
 
 use geo::CoordFloat;
 
-use crate::stream::{Stream, Streamable};
+use crate::stream::Stream;
+use crate::stream::Streamable;
 
 /// Unit sphere.
 #[derive(Clone, Debug)]

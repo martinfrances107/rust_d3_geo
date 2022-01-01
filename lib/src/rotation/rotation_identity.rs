@@ -30,6 +30,7 @@ impl<T> Transform for RotationIdentity<T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// f64 or f32.
     type T = T;
 
     #[inline]

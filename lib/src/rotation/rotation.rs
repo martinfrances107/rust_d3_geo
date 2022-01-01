@@ -37,6 +37,7 @@ impl<T> Transform for Rotation<T>
 where
     T: CoordFloat + FloatConst,
 {
+    ///f64 or f32.
     type T = T;
     fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.transform(&Coordinate {

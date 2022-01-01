@@ -10,7 +10,6 @@ pub mod circle;
 pub mod clip_node;
 /// Helper function.
 pub mod compare_intersection;
-mod intersection;
 /// The state of the line segments??
 pub mod line_elem;
 /// Rectangle helper function.
@@ -26,6 +25,8 @@ pub(crate) mod rejoin;
 pub mod stream_node_clip_factory;
 /// Generate post clip stream node.
 pub mod stream_node_post_clip_factory;
+
+mod intersection;
 
 use std::fmt::Debug;
 use std::rc::Rc;

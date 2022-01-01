@@ -26,7 +26,7 @@ fn forward_rotation_lambda<T: CoordFloat + FloatConst>(
 }
 
 impl<'a, T: CoordFloat + FloatConst> RotationLambda<T> {
-    /// Contructor.
+    /// Constructor.
     #[inline]
     pub fn new(delta_lambda: T) -> RotationLambda<T> {
         Self { delta_lambda }
@@ -37,6 +37,7 @@ impl<T> Transform for RotationLambda<T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// f64 or f32.
     type T = T;
 
     #[inline]

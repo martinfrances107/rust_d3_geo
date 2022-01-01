@@ -29,7 +29,7 @@ pub trait Result {
 
 /// Point Radius Trait.
 pub trait PointRadiusTrait {
-    /// f64 or f32
+    /// f64 or f32.
     type T;
     // TODO must add getter here.
     // There are complication about the mix return type here.

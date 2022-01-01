@@ -108,7 +108,7 @@ pub trait TransformExtent<T>: Raw<T>
 where
     <Self as Transform>::T: CoordFloat,
 {
-    /// f64 or f32
+    /// f64 or f32.
     type T;
 
     /// Transform the extent stored in MercatorBuilder before

@@ -69,7 +69,9 @@ impl<T> Stream for Buffer<T>
 where
     T: CoordFloat,
 {
+    /// f64 or f32.
     type T = T;
+    /// Endpoint.
     type EP = Self;
 
     fn get_endpoint(self) -> Self::EP {

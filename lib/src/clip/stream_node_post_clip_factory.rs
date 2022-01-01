@@ -35,6 +35,7 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Given a PostClip construct a StreamNode.
+    #[inline]
     pub fn new(post_clip: PostClip<T>) -> StreamNodePostClipFactory<SINK, T> {
         StreamNodePostClipFactory {
             phantom_sink: PhantomData::<SINK>,
@@ -50,9 +51,11 @@ where
     T: CoordFloat + FloatConst,
 {
     type Sink = SINK;
+    /// f32 or f64.
     type T = T;
     type Node = PostClipNode<EP, SINK, Self::T>;
 
+    #[inline]
     fn generate(&self, sink: SINK) -> Self::Node {
         match &self.post_clip {
             PostClip::I(i) => PostClipNode::I(StreamNode {

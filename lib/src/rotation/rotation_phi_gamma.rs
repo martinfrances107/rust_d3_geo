@@ -32,6 +32,7 @@ impl<T> Transform for RotationPhiGamma<T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// f64 or f32.
     type T = T;
 
     #[allow(clippy::many_single_char_names)]

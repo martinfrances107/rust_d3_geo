@@ -20,6 +20,7 @@ enum PointState {
 enum LineState {
     Stopped,
     Started,
+    Undefined,
 }
 
 #[inline]

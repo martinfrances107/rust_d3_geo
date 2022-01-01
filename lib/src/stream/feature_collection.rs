@@ -12,7 +12,9 @@ impl<T> Streamable for FeatureCollection<T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// f64 or f32.
     type T = T;
+
     fn to_stream<EP, SD>(&self, stream: &mut SD)
     where
         EP: Clone + Debug + Stream<EP = EP, T = T>,
