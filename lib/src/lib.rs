@@ -33,7 +33,7 @@ pub mod circle;
 pub mod clip;
 /// Combines transforms into one.
 mod compose;
-/// Streamable Data obejcts. ( D3 objects ).
+/// Streamable Data obejcts.
 pub mod data_object;
 /// Stream end point: calculation of distances on a surface.
 pub mod distance;

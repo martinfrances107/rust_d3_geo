@@ -6,7 +6,7 @@ use crate::cartesian::cartesian;
 use crate::cartesian::cross;
 use crate::cartesian::dot;
 use crate::cartesian::scale;
-use crate::cartesian::spherical_r;
+use crate::cartesian::spherical_radians;
 use crate::clip::line_elem::LineElem;
 use crate::math::EPSILON;
 
@@ -73,7 +73,7 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     let mut q = scale(&u, (-w - t) / uu);
     add_in_place(&mut q, &A);
     // Javascript has implicit cast q of from [F;3] to a Point here.
-    let q: Coordinate<T> = spherical_r(&q);
+    let q: Coordinate<T> = spherical_radians(&q);
 
     if !two {
         return IntersectReturn::One(Some(LineElem { p: q, m: None }));
@@ -135,7 +135,7 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     if condition {
         let mut q1 = scale(&u, (-w + t) / uu);
         add_in_place(&mut q1, &A);
-        return IntersectReturn::Two([q, spherical_r(&q1)]);
+        return IntersectReturn::Two([q, spherical_radians(&q1)]);
     }
 
     IntersectReturn::One(None)

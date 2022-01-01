@@ -44,9 +44,6 @@ pub mod orthographic;
 /// The raw projection.
 pub mod stereographic;
 
-/// Sub Traits.
-pub mod builder_trait;
-
 /// Helper functions.
 pub mod azimuthal;
 /// The default projection builder.

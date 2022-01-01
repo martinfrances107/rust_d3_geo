@@ -3,13 +3,14 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
 use crate::cartesian::normalize_in_place;
-use crate::cartesian::spherical_r;
+use crate::cartesian::spherical_radians;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -57,7 +58,7 @@ pub fn stream_fn<EP, STREAM, T>(
     let mut t = t0;
     let mut cond = true;
     while cond {
-        point = spherical_r(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
+        point = spherical_radians(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
         stream.point(&point, None);
 
         t = t - step;

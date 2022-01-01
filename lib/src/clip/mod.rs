@@ -33,8 +33,6 @@ use std::rc::Rc;
 use geo::CoordFloat;
 use geo::Coordinate;
 
-use crate::stream::Stream;
-
 /// Internal clip state.
 ///
 /// As the clip state machine enters ring_end() This state is used to direct
@@ -58,11 +56,6 @@ pub trait Clean {
     /// Returns the clean state.
     fn clean(&self) -> CleanState;
 }
-
-/// ClipTrait
-///
-///  Related to a stream node pipeline stage.
-pub trait ClipTrait: PointVisible + Stream {}
 
 /// Clip Stream Node - helper function.
 pub trait PointVisible: Clone + Debug

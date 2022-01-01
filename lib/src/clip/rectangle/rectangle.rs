@@ -33,7 +33,6 @@ where
     clean: bool,
     clip_min: T,
     clip_max: T,
-    epsilon: T,
     first: bool,
 
     x0: T,
@@ -69,7 +68,6 @@ where
             clean: false,
             clip_max: T::from(1e9).unwrap(),
             clip_min: -T::from(1e9).unwrap(),
-            epsilon: T::from(EPSILON).unwrap(),
 
             x0,
             y0,
