@@ -1,3 +1,5 @@
+use geo::coords_iter::CoordsIter;
+use geo::LineString;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -18,7 +20,7 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
 
 /// Determines wheather a point is inside the polygon.
 pub fn polygon_contains<T: CoordFloat + FloatConst>(
-    polygon: &[Vec<Coordinate<T>>],
+    polygon: &[LineString<T>],
     point: &Coordinate<T>,
 ) -> bool {
     let lambda = longitude(point);
@@ -38,18 +40,18 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
 
     for polygon_i in polygon {
         let ring = polygon_i;
-        let m = ring.len();
-        if ring.is_empty() {
+        let m = ring.coords_count();
+        if m == 0 {
             continue;
         };
 
-        let mut point0 = *ring.last().unwrap();
+        let mut point0 = *ring.0.last().unwrap();
         let mut lambda0 = longitude(&point0);
         let phi0 = point0.y / T::from(2).unwrap() + T::FRAC_PI_4();
         let mut sin_phi0 = phi0.sin();
         let mut cos_phi0 = phi0.cos();
 
-        for point1 in ring.iter().take(m) {
+        for point1 in ring.0.iter().take(m) {
             // let point1 = ring[j];
             let lambda1 = longitude(point1);
             let phi1 = point1.y / T::from(2).unwrap() + T::FRAC_PI_4();

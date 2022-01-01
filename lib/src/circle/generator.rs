@@ -4,6 +4,9 @@ use std::fmt::Display;
 use std::ops::AddAssign;
 use std::rc::Rc;
 
+use geo::line_string;
+use geo::LineString;
+use geo::Polygon;
 use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -50,7 +53,7 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Injects the previously defined circle into the stream.
-    pub fn circle(&mut self) -> Vec<Vec<Coordinate<T>>> {
+    pub fn circle(&mut self) -> Polygon<T> {
         let c = self.center;
         let r = self.radius.to_radians();
         let p = self.precision.to_radians();
@@ -59,12 +62,13 @@ where
 
         stream_fn(&mut self.stream, r, p, T::one(), None, None);
 
-        let coordinates = vec![self.stream.ring.clone()];
+        let coordinates = self.stream.ring.clone();
+        let c = Polygon::new(LineString(coordinates), vec![]);
 
         self.stream.ring.clear();
         self.stream.rotate = RotateRadians::I(RotationIdentity::default());
 
-        coordinates
+        c
     }
 }
 
@@ -96,13 +100,15 @@ where
         self.radius
     }
 
-    fn precision(mut self, precision: T) -> Self {
+    /// Sets the precision.
+    pub fn precision(mut self, precision: T) -> Self {
         self.precision = precision;
         self
     }
 
+    /// Returns the precision.
     #[inline]
-    fn get_precision(&self) -> T {
+    pub fn get_precision(&self) -> T {
         self.precision
     }
 }
