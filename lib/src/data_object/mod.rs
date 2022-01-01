@@ -49,7 +49,7 @@ pub struct Feature<T: CoordFloat> {
 pub struct Features<T: CoordFloat> {
     /// A collection of feature properties.
     pub properties: Vec<FeatureProperty<T>>,
-    /// A collections of assocated geometries.
+    /// A collections of associated geometries.
     pub geometry: Vec<Geometry<T>>,
 }
 

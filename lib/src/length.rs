@@ -46,7 +46,7 @@ impl<T> Stream<T>
 where
     T: CoordFloat,
 {
-    /// Calculate the objects assocated length.
+    /// Calculate the objects associated length.
     pub fn calc(object: &impl Streamable<T = T>) -> T {
         let mut ls = Stream::default();
         object.to_stream(&mut ls);

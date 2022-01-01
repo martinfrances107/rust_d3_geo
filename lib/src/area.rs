@@ -72,7 +72,7 @@ impl<T> Area<T>
 where
     T: CoordFloat + FloatConst,
 {
-    /// Calculate the objects assocated area.
+    /// Calculate the objects associated area.
     pub fn calc(object: &impl Streamable<T = T>) -> T {
         let mut a = Area::default();
         object.to_stream(&mut a);
