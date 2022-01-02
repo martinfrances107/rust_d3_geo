@@ -1,6 +1,6 @@
 use geo::CoordFloat;
 
-use crate::clip::rectangle::rectangle::Rectangle;
+use crate::clip::rectangle::Rectangle;
 use crate::identity::Identity;
 
 /// A proto element for a stream pipeline stage.

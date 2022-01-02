@@ -4,7 +4,7 @@ use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::clip::rectangle::rectangle::Rectangle;
+use crate::clip::rectangle::Rectangle;
 use crate::identity::Identity;
 use crate::projection::stream_node::StreamNode;
 use crate::stream::Stream;

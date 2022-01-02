@@ -11,7 +11,7 @@ use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
 use crate::clip::post_clip::PostClip;
 use crate::clip::post_clip_node::PostClipNode;
-use crate::clip::rectangle::rectangle::Rectangle as ClipRectangle;
+use crate::clip::rectangle::Rectangle as ClipRectangle;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::clip::stream_node_post_clip_factory::StreamNodePostClipFactory;
 use crate::clip::Line;
