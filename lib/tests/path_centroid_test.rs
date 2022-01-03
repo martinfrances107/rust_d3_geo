@@ -1,3 +1,5 @@
+use geo::{Geometry, GeometryCollection, Point};
+
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod path_centroid_test {
@@ -13,6 +15,7 @@ mod path_centroid_test {
     use geo::CoordFloat;
     use geo::Coordinate;
     use geo::Geometry;
+    use geo::GeometryCollection;
     use geo::MultiLineString;
     use geo::MultiPoint;
     use geo::MultiPolygon;
@@ -78,7 +81,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_point() {
+    fn of_a_point() {
         println!("geoPath.centroid(…) of a point");
         let point = Geometry::Point(Point(Coordinate { x: 0_f64, y: 0_f64 }));
 
@@ -91,7 +94,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_empty_multipoint() {
+    fn of_a_empty_multipoint() {
         println!("geoPath.centroid(…) of an empty multipoint");
         let mp = Geometry::MultiPoint(MultiPoint(vec![]));
 
@@ -104,7 +107,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_singleton_multipoint() {
+    fn of_a_singleton_multipoint() {
         println!("geoPath.centroid(…) of an singleton  multipoint");
         let mp = Geometry::MultiPoint(MultiPoint(vec![Point::new(0_f64, 0_f64)]));
 
@@ -117,7 +120,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_two_points() {
+    fn of_a_two_points() {
         println!("geoPath.centroid(…) of an singleton  multipoint");
         let mp = Geometry::MultiPoint(MultiPoint(vec![
             Point::new(-122_f64, 37_f64),
@@ -133,7 +136,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_an_empty_linestring() {
+    fn of_an_empty_linestring() {
         println!("geoPath.centroid(…) of an empty linestring");
         let ls = Geometry::LineString(line_string![]);
 
@@ -146,7 +149,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_linestring_with_two_points() {
+    fn of_a_linestring_with_two_points() {
         println!("geoPath.centroid(…) of an empty linestring");
         let ls1 = Geometry::LineString(line_string![
             (x: 100_f64, y:0_f64),
@@ -175,7 +178,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_linestring_with_two_points_one_unique() {
+    fn of_a_linestring_with_two_points_one_unique() {
         println!("geoPath.centroid(…) of a linestring with two points, one unique");
         let ls1 = Geometry::LineString(line_string![
             (x: -122_f64, y:37_f64),
@@ -203,7 +206,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_linestring_with_three_points_two_unique() {
+    fn of_a_linestring_with_three_points_two_unique() {
         println!("geoPath.centroid(…) of a linestring with three points; two unique");
         let ls = Geometry::LineString(line_string![
             (x: -122_f64, y:37_f64),
@@ -220,7 +223,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_linestring_with_three_points() {
+    fn of_a_linestring_with_three_points() {
         println!("geoPath.centroid(…) of a linestring with three points");
         let ls = Geometry::LineString(line_string![
             (x: -122_f64, y:37_f64),
@@ -238,7 +241,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_multiline_string() {
+    fn of_a_multiline_string() {
         println!("geoPath.centroid(…) of a multilinestring");
         let mls = Geometry::MultiLineString(MultiLineString(vec![
             line_string![
@@ -260,7 +263,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_single_ring_polygon() {
+    fn of_a_single_ring_polygon() {
         println!("geoPath.centroid(…) of a single-ring polygon");
         let p = Geometry::Polygon(Polygon::new(
             line_string![
@@ -282,7 +285,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_zero_area_polygon() {
+    fn of_a_zero_area_polygon() {
         println!("geoPath.centroid(…) of a zero-area polygon");
         let p = Geometry::Polygon(Polygon::new(
             line_string![
@@ -303,7 +306,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_polygon_with_two_rings_one_zero_area() {
+    fn of_a_polygon_with_two_rings_one_zero_area() {
         println!("geoPath.centroid(…) of a polygon with two rings, one with zero area");
         let p = Geometry::Polygon(Polygon::new(
             line_string![
@@ -330,7 +333,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_polygon_with_clockwise_exterior_and_anticlockwise_interior() {
+    fn of_a_polygon_with_clockwise_exterior_and_anticlockwise_interior() {
         println!(
             "geoPath.centroid(…) of a polygon with clockwise exterior and anticlockwise interior"
         );
@@ -362,7 +365,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_an_empty_multipolygon() {
+    fn of_an_empty_multipolygon() {
         println!("geoPath.centroid(…) of an empty multipolygon");
 
         let polygon = Geometry::MultiPolygon(MultiPolygon(vec![]));
@@ -376,7 +379,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_singleton_multipolygon() {
+    fn of_a_singleton_multipolygon() {
         println!("geoPath.centroid(…) of a singleton multipolygon");
 
         let polygon = Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
@@ -399,7 +402,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_multipolygon_with_two_polygons() {
+    fn of_a_multipolygon_with_two_polygons() {
         println!("geoPath.centroid(…) of a multipolygon with two polygons");
 
         let polygon = Geometry::MultiPolygon(MultiPolygon(vec![
@@ -434,7 +437,7 @@ mod path_centroid_test {
     }
 
     #[test]
-    fn centroid_of_a_multipolygon_with_two_polygons_one_zero_area() {
+    fn of_a_multipolygon_with_two_polygons_one_zero_area() {
         println!("geoPath.centroid(…) of a multipolygon with two polygons");
 
         let polygon = Geometry::MultiPolygon(MultiPolygon(vec![
@@ -466,4 +469,89 @@ mod path_centroid_test {
             1e-6_f64
         ));
     }
+
+    #[test]
+    fn of_a_geometry_collection_with_a_single_point() {
+        println!("geoPath.centroid(…) of a geometry collection with a single point");
+
+        let gc = Geometry::GeometryCollection(GeometryCollection(vec![Geometry::Point(
+            Point::new(0_f64, 0_f64),
+        )]));
+
+        let eq = equirectangular::<f64>();
+        assert!(in_delta_point(
+            test_centroid(eq, &gc),
+            Point::new(480_f64, 250_f64),
+            1e-6_f64
+        ));
+    }
+
+    #[test]
+    fn of_a_geometry_collection_with_a_point_and_a_linestring() {
+        println!("geoPath.centroid(…) of a geometry collection with a point and a linestring");
+
+        let gc = Geometry::GeometryCollection(GeometryCollection(vec![
+            Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
+            Geometry::Point(Point::new(0_f64, 0_f64)),
+        ]));
+
+        let eq = equirectangular::<f64>();
+        assert!(in_delta_point(
+            test_centroid(eq, &gc),
+            Point::new(1377.5_f64, 250_f64),
+            1e-6_f64
+        ));
+    }
+
+    #[test]
+    fn of_a_geometry_collection_with_a_point_and_a_linestring_and_a_polygon() {
+        println!(
+            "geoPath.centroid(…) of a geometry collection with a point, linestring and polygon"
+        );
+
+        let gc = Geometry::GeometryCollection(GeometryCollection(vec![
+            Geometry::Polygon(Polygon::new(
+                line_string![
+                    (x: -180_f64, y:0_f64),
+                    (x: -180_f64, y:1_f64),
+                    (x: -179_f64, y: 1_f64),
+                    (x: -179_f64, y: 0_f64),
+                    (x: -180_f64, y: 0_f64),
+                ],
+                vec![],
+            )),
+            Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
+            Geometry::Point(Point::new(0_f64, 0_f64)),
+        ]));
+
+        let eq = equirectangular::<f64>();
+        assert!(in_delta_point(
+            test_centroid(eq, &gc),
+            Point::new(-417.5_f64, 247.5_f64),
+            1e-6_f64
+        ));
+    }
+
+    //   it("geoPath.centroid(…) of a feature collection with a point", () => {
+    //     assert.deepStrictEqual(testCentroid(equirectangular, {type: "FeatureCollection", features: [{type: "Feature", geometry: {type: "Point", coordinates: [0, 0]}}]}), [480, 250]);
+    //   });
+
+    //   it("geoPath.centroid(…) of a feature collection with a point and a line string", () => {
+    //     assert.deepStrictEqual(testCentroid(equirectangular, {type: "FeatureCollection", features: [
+    //       {type: "Feature", geometry: {type: "LineString", coordinates: [[179, 0], [180, 0]]}},
+    //       {type: "Feature", geometry: {type: "Point", coordinates: [0, 0]}}
+    //     ]}), [1377.5, 250]);
+    //   });
+
+    //   it("geoPath.centroid(…) of a feature collection with a point, line string and polygon", () => {
+    //     assert.deepStrictEqual(testCentroid(equirectangular, {type: "FeatureCollection", features: [
+    //       {type: "Feature", geometry: {type: "Polygon", coordinates: [[[-180, 0], [-180, 1], [-179, 1], [-179, 0], [-180, 0]]]}},
+    //       {type: "Feature", geometry: {type: "LineString", coordinates: [[179, 0], [180, 0]]}},
+    //       {type: "Feature", geometry: {type: "Point", coordinates: [0, 0]}}
+    //     ]}), [-417.5, 247.5]);
+    //   });
+
+    //   it("geoPath.centroid(…) of a sphere", () => {
+    //     assert.deepStrictEqual(testCentroid(equirectangular, {type: "Sphere"}), [480, 250]);
+    //   });
 }
