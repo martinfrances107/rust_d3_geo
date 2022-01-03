@@ -130,14 +130,12 @@ where
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     StreamNode<String<T>, LINE, String<T>, T>: Stream<EP = String<T>, T = T>,
     StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
-    StreamNode<String<T>, LINE, String<T>, T>: Stream<T = T>,
     StreamNode<
         String<T>,
         LINE,
         ResampleNode<String<T>, PR, PostClipNode<String<T>, String<T>, T>, T>,
         T,
     >: Stream<EP = String<T>, T = T>,
-    StreamNode<Context<T>, LINE, Context<T>, T>: Stream<EP = Context<T>, T = T>,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
