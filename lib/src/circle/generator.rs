@@ -19,7 +19,7 @@ use super::stream::Stream;
 use super::stream_fn::stream_fn;
 
 /// Allow for circle to be defined and then input to a stream.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Generator<T>
 where
     T: CoordFloat + FloatConst,
