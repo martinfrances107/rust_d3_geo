@@ -1,9 +1,10 @@
 [workspace]
 members = [
     "./lib",
-    "./benchmark/canvas",
-    "./benchmark/svg",
-    "./examples/graticule"
+    "./examples/globe/canvas",
+    "./examples/globe/svg",
+    "./examples/graticule",
+    "./examples/ring"
 ]
 
 [profile.release]

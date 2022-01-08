@@ -144,22 +144,45 @@ pub async fn start() -> Result<(), JsValue> {
 
     let mut builder = PathBuilder::context_pathstring().build(ortho);
     let mut i = 0;
+    // match &countries {
+    //     Geometry::GeometryCollection(gc) => {
+    //         let s = builder.object(gc);
+    //         let class_name = format!("id-{}", i);
+    //         let path = get_path_node(&class_name)?;
+    //         path.set_attribute_ns(None, "d", &s)?;
+    //         path.set_attribute_ns(None, "class", &class_name)?;
+    //         path.set_attribute_ns(None, "style", stroke[i % 6])?;
+    //         svg.append_child(&path)?;
+    //     }
+    //     _ => {
+    //         console_log!("was expecting a GC.");
+    //     }
+    // }
+
     match &countries {
         Geometry::GeometryCollection(GeometryCollection(g_vec)) => {
             console_log!("{}", g_vec.len());
             for g in g_vec {
                 match &g {
                     Geometry::MultiPolygon(mp) => {
-                        for p in &mp.0 {
-                            let s = builder.object(&Geometry::Polygon(p.clone()));
-                            let class_name = format!("id-{}", i);
-                            let path = get_path_node(&class_name)?;
-                            path.set_attribute_ns(None, "d", &s)?;
-                            path.set_attribute_ns(None, "class", &class_name)?;
-                            path.set_attribute_ns(None, "style", stroke[i % 6])?;
-                            svg.append_child(&path)?;
-                            i += 1
-                        }
+                        let s = builder.object(&Geometry::MultiPolygon(mp.clone()));
+                        let class_name = format!("id-{}", i);
+                        let path = get_path_node(&class_name)?;
+                        path.set_attribute_ns(None, "d", &s)?;
+                        path.set_attribute_ns(None, "class", &class_name)?;
+                        path.set_attribute_ns(None, "style", stroke[i % 6])?;
+                        svg.append_child(&path)?;
+                        i += 1
+                        // for p in &mp.0 {
+                        //     let s = builder.object(&Geometry::Polygon(p.clone()));
+                        //     let class_name = format!("id-{}", i);
+                        //     let path = get_path_node(&class_name)?;
+                        //     path.set_attribute_ns(None, "d", &s)?;
+                        //     path.set_attribute_ns(None, "class", &class_name)?;
+                        //     path.set_attribute_ns(None, "style", stroke[i % 6])?;
+                        //     svg.append_child(&path)?;
+                        //     i += 1
+                        // }
                     }
                     Geometry::Polygon(p) => {
                         let s = builder.object(&Geometry::Polygon(p.clone()));

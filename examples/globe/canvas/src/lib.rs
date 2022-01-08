@@ -164,7 +164,7 @@ pub async fn start() -> Result<(), JsValue> {
             x: width / 2_f64,
             y: height / 2_f64,
         })
-        .rotate(&[0_f64, -90_f64, 30_f64])
+        .rotate(&[0_f64, 0_f64, 0_f64])
         .build();
 
     // let pb_cps: PathBuilder<Orthographic<ContextStream<f64>, f64>, PV<f64>, f64> =
@@ -183,11 +183,11 @@ pub async fn start() -> Result<(), JsValue> {
 
     let mut path = pb.build(ortho);
     context.begin_path();
-    context.set_fill_style(&"#999".into());
+    // context.set_fill_style(&"#999".into());
     context.set_stroke_style(&"#69b3a2".into());
     path.object(&land);
 
-    context.fill();
+    // context.fill();
     context.stroke();
 
     Ok(())

@@ -1,5 +1,5 @@
 [package]
-name = "rust_d3_geo_example_graticule"
+name = "rust_d3_geo_example_ring"
 description="rust_d3_geo wasm app"
 license = "MIT"
 version = "0.1.0"

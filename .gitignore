@@ -1,9 +1,11 @@
-benchmark/canvas/target/
-benchmark/canvas/node_modules/
-benchmark/svg/target/
-benchmark/svg/node_modules/
+examples/globe/canvas/target/
+examples/globe/canvas/node_modules/
+examples/globe/svg/target/
+examples/globe/svg/node_modules/
 examples/graticule/target/
 examples/graticule/node_modules/
+examples/ring/node_modules/
+examples/ring/target/
 /target/
 clip_ops_macro_derive/target/
 Cargo.lock
