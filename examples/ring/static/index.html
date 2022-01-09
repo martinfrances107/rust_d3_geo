@@ -56,24 +56,20 @@
     let gc_outer = geoCircle().radius(10);
     let gc_inner = geoCircle().radius(5);
 
-    // coordinates: [
-    //   circle.center([0, 0])().coordinates[0].reverse(),
-    //   circle.center([0, 90])().coordinates[0].reverse()
-    // ]
-
-
-
     let coordinates = [];
-    for (let lat = -30; lat <= 30; lat += 10) {
-      for (let long = -180; long < 180; long += 30) {
+    for (let lat = -30; lat <= 30; lat += 30) {
+      for (let long = -180; long < 180; long += 40) {
+        poly = [
+          gc_outer.center([long, lat])().coordinates[0],
+          gc_inner.center([long, lat])().coordinates[0].reverse()
+        ];
+
         coordinates.push(
-          gc_outer.center([long, lat])().coordinates
+          poly
         );
-        lat = lat + 1;
       }
     }
 
-    console.log(coordinates);
     let object = {
       type: "MultiPolygon",
       coordinates: coordinates
@@ -82,11 +78,6 @@
     let d = geoPath()
       .projection(ortho).pointRadius(10)(object);
 
-    console.log(d);
-
-
-
-    console.log(d);
     var element = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     element.setAttributeNS(null, "d", d);
     svg.appendChild(element);
