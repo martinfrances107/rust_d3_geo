@@ -13,7 +13,7 @@
   <p>Example rings SVG </p>
   <p>SVG</p>
   <canvas id="c"></canvas>
-  <svg id="rust" width="500" height="600">
+  <svg id="rust">
     <style>
       path {
         fill: None;
@@ -23,7 +23,7 @@
     </style>
   </svg>
 
-  <svg id="ring_js" width="500" height="600">
+  <svg id="ring_js" width="100%" height="600">
     <style>
       path {
         fill: black;
@@ -39,49 +39,55 @@
 
   <script>
 
-    const svg = document.getElementById("ring_js");
-    width = svg.width.baseVal.value;
-    height = svg.height.baseVal.value;
-    console.log(width);
-    console.log(height);
+    function draw() {
+      console.log("draw()");
+      const svg = document.getElementById("ring_js");
+      svg.querySelector("path")?.remove();
+      width = svg.width.baseVal.value;
+      height = svg.height.baseVal.value;
 
-    const geoCircle = d3.geoCircle;
-    const geoPath = d3.geoPath;
+      const geoCircle = d3.geoCircle;
+      const geoPath = d3.geoPath;
 
-    const ortho = d3.geoOrthographic()
-      .scale(240)
-      .translate([width / 2, height / 2])
-      .rotate([0, 0, 0]);
+      const ortho = d3.geoOrthographic()
+        .scale(240)
+        .translate([width / 2, height / 2])
+        .rotate([0, 0, 0]);
 
-    let gc_outer = geoCircle().radius(10);
-    let gc_inner = geoCircle().radius(5);
+      let gc_outer = geoCircle().radius(10);
+      let gc_inner = geoCircle().radius(5);
 
-    let coordinates = [];
-    for (let lat = -30; lat <= 30; lat += 30) {
-      for (let long = -180; long < 180; long += 40) {
-        poly = [
-          gc_outer.center([long, lat])().coordinates[0],
-          gc_inner.center([long, lat])().coordinates[0].reverse()
-        ];
+      let coordinates = [];
+      for (let lat = -30; lat <= 30; lat += 30) {
+        for (let long = -180; long < 180; long += 40) {
+          poly = [
+            gc_outer.center([long, lat])().coordinates[0],
+            gc_inner.center([long, lat])().coordinates[0].reverse()
+          ];
 
-        coordinates.push(
-          poly
-        );
+          coordinates.push(
+            poly
+          );
+        }
       }
+
+      let object = {
+        type: "MultiPolygon",
+        coordinates: coordinates
+      };
+
+      let d = geoPath()
+        .projection(ortho)(object);
+
+      var element = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      element.setAttributeNS(null, "d", d);
+      svg.appendChild(element);
     }
 
-    let object = {
-      type: "MultiPolygon",
-      coordinates: coordinates
-    };
-
-    let d = geoPath()
-      .projection(ortho).pointRadius(10)(object);
-
-    var element = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    element.setAttributeNS(null, "d", d);
-    svg.appendChild(element);
-
+    draw()
+    window.addEventListener('resize', (event) => {
+      draw()
+    });
 
   </script>
 </body>
