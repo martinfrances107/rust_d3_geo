@@ -40,7 +40,7 @@ pub fn stream_fn<EP, STREAM, T>(
         (Some(p0), Some(p1)) => {
             t0 = calc_radius(cos_radius, &p0);
             t1 = calc_radius(cos_radius, &p1);
-            let check = match direction.is_sign_positive() {
+            let check = match direction > T::zero() {
                 true => t0 < t1,
                 false => t0 > t1,
             };
@@ -57,12 +57,13 @@ pub fn stream_fn<EP, STREAM, T>(
     let mut point: Coordinate<T>;
     let mut t = t0;
     let mut cond = true;
+    let i = 0;
     while cond {
         point = spherical_radians(&[cos_radius, -sin_radius * t.cos(), -sin_radius * t.sin()]);
         stream.point(&point, None);
 
         t = t - step;
-        cond = match direction.is_sign_positive() {
+        cond = match direction > T::zero() {
             true => t > t1,
             false => t < t1,
         };
