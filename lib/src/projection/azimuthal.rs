@@ -1,4 +1,7 @@
 use geo::{CoordFloat, Coordinate};
+use num_traits::FloatConst;
+
+use crate::math::asin;
 
 pub(super) fn azimuthal_raw<T>(p: &Coordinate<T>, scale: fn(T) -> T) -> Coordinate<T>
 where
@@ -21,7 +24,7 @@ where
 
 pub(super) fn azimuthal_invert<T>(p: &Coordinate<T>, angle: fn(z: T) -> T) -> Coordinate<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     let z = (p.x * p.x + p.y * p.y).sqrt();
     let c = angle(z);
@@ -35,7 +38,7 @@ where
     } else {
         y_out = p.y * sc / z;
     }
-    let ret_y = y_out.asin();
+    let ret_y = asin(y_out);
 
     Coordinate { x: ret_x, y: ret_y }
 }

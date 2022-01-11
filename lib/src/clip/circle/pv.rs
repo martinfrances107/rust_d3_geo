@@ -3,7 +3,7 @@ use geo::Coordinate;
 
 use crate::clip::PointVisible;
 
-/// Circle PV (Point Visible ).
+/// Circle PV - Point Visible.
 #[derive(Clone, Debug)]
 pub struct PV<T>
 where

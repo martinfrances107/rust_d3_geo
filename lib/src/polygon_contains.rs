@@ -6,8 +6,8 @@ use num_traits::FloatConst;
 use crate::cartesian::cartesian;
 use crate::cartesian::cross;
 use crate::cartesian::normalize_in_place;
-use crate::math::EPSILON;
 use crate::math::EPSILON2;
+use crate::math::{asin, EPSILON};
 
 #[inline]
 fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
@@ -82,9 +82,9 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
                 normalize_in_place(&mut intersection);
                 let phi_arc: T;
                 if antimeridian ^ (delta >= T::zero()) {
-                    phi_arc = -(intersection[2].asin());
+                    phi_arc = -asin(intersection[2]);
                 } else {
-                    phi_arc = intersection[2].asin();
+                    phi_arc = asin(intersection[2]);
                 }
 
                 if phi > phi_arc || phi == phi_arc && (arc[0] != T::zero() || arc[1] != T::zero()) {

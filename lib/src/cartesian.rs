@@ -1,21 +1,28 @@
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::FloatConst;
+
+use crate::math::asin;
 
 /// Converts 3D Cartesian to spherical coordinates (degrees).
 #[inline]
-pub fn spherical<T: CoordFloat>(cartesian: &[T; 3]) -> Coordinate<T> {
+pub fn spherical<T: CoordFloat + FloatConst>(cartesian: &[T; 3]) -> Coordinate<T> {
     Coordinate {
         x: cartesian[1].atan2(cartesian[0]).to_degrees(),
-        y: cartesian[2].asin().to_degrees(),
+        y: asin(cartesian[2]).to_degrees(),
     }
 }
 
 /// Converts 3D Cartesian to spherical coordinates (radians).
 #[inline]
-pub fn spherical_radians<T: CoordFloat>(cartesian: &[T; 3]) -> Coordinate<T> {
+pub fn spherical_radians<T>(cartesian: &[T; 3]) -> Coordinate<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    dbg!(cartesian[2]);
     Coordinate {
         x: cartesian[1].atan2(cartesian[0]),
-        y: cartesian[2].asin(),
+        y: asin(cartesian[2]),
     }
 }
 

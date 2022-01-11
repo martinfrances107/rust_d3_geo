@@ -8,6 +8,7 @@ use num_traits::float::FloatConst;
 use crate::clip::antimeridian::gen_clip_factory_antimeridian;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV;
+use crate::math::asin;
 use crate::projection::builder::Builder;
 use crate::projection::ClipAngle;
 use crate::projection::Raw;
@@ -79,7 +80,7 @@ where
     #[inline]
     fn z(z: T) -> T {
         let two = T::from(2.0).unwrap();
-        two * (z / two).asin()
+        two * asin(z / two)
     }
 }
 

@@ -1,6 +1,7 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
+use crate::math::asin;
 use crate::Transform;
 
 /// A rotation is two directions.
@@ -49,7 +50,7 @@ where
         Coordinate {
             x: (y * self.cos_delta_gamma - k * self.sin_delta_gamma)
                 .atan2(x * self.cos_delta_phi - z * self.sin_delta_phi),
-            y: (k * self.cos_delta_gamma + y * self.sin_delta_gamma).asin(),
+            y: asin(k * self.cos_delta_gamma + y * self.sin_delta_gamma),
         }
     }
 
@@ -67,7 +68,7 @@ where
         Coordinate {
             x: (y * self.cos_delta_gamma + z * self.sin_delta_gamma)
                 .atan2(x * self.cos_delta_phi + k * self.sin_delta_phi),
-            y: (k * self.cos_delta_phi - x * self.sin_delta_phi).asin(),
+            y: asin(k * self.cos_delta_phi - x * self.sin_delta_phi),
         }
     }
 }
