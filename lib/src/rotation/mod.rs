@@ -28,21 +28,37 @@ where
     let delta_phi = delta[1];
     let delta_gamma = delta[2];
     // Should I rotate by lambda, phi or gamma.
-    let by_lambda = !delta_lambda.is_zero();
-    let by_phi = !delta[1].is_zero();
-    let by_gamma = !delta[2].is_zero();
-    match (by_lambda, by_gamma, by_phi) {
-        (true, true, true) | (true, true, false) | (true, false, true) => {
+    // let by_lambda = !delta_lambda.is_zero();
+    // let by_phi = !delta[1].is_zero();
+    // let by_gamma = !delta[2].is_zero();
+    // match (by_lambda, by_gamma, by_phi) {
+    //     (true, true, true) | (true, true, false) | (true, false, true) => {
+    //         RotateRadians::C(Box::new(Compose::new(
+    //             RotationLambda::new(delta_lambda),
+    //             RotationPhiGamma::new(&delta_phi, &delta_gamma),
+    //         )))
+    //     }
+    //     (true, false, false) => RotateRadians::RL(RotationLambda::new(delta_lambda)),
+    //     (false, true, true) | (false, true, false) | (false, false, true) => {
+    //         RotateRadians::RPG(RotationPhiGamma::new(&delta_phi, &delta_gamma))
+    //     }
+    //     (false, false, false) => RotateRadians::I(RotationIdentity::default()),
+    // }
+    if delta_lambda != T::zero() {
+        if delta_phi != T::zero() || delta_gamma != T::zero() {
             RotateRadians::C(Box::new(Compose::new(
                 RotationLambda::new(delta_lambda),
                 RotationPhiGamma::new(&delta_phi, &delta_gamma),
             )))
+        } else {
+            RotateRadians::RL(RotationLambda::new(delta_lambda))
         }
-        (true, false, false) => RotateRadians::RL(RotationLambda::new(delta_lambda)),
-        (false, true, true) | (false, true, false) | (false, false, true) => {
+    } else {
+        if delta_phi != T::zero() || delta_gamma != T::zero() {
             RotateRadians::RPG(RotationPhiGamma::new(&delta_phi, &delta_gamma))
+        } else {
+            RotateRadians::I(RotationIdentity::default())
         }
-        (false, false, false) => RotateRadians::I(RotationIdentity::default()),
     }
 }
 
