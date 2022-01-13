@@ -65,34 +65,31 @@
   </svg>
   <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
   <script src="./index.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
 
-  <script>
+  <script type="module">
+    import { geoCircle, geoGraticule, geoOrthographic, geoPath } from "https://cdn.skypack.dev/d3-geo@3";
     const svg = document.getElementById("s_multipolygon_js");
-    width = svg.width.baseVal.value;
-    height = svg.height.baseVal.value;
-    console.log(width);
-    console.log(height);
-    const ortho = d3.geoOrthographic()
+    const width = svg.width.baseVal.value;
+    const height = svg.height.baseVal.value;
+    const ortho = geoOrthographic()
       .scale(240)
       .translate([width / 2, height / 2])
       .rotate([0, -20, 0]);
 
-    const geoGenerator = d3.geoPath().projection(ortho);
+    const geoGenerator = geoPath().projection(ortho);
 
     console.log("building g");
-    const graticule = d3.geoGraticule();
+    const graticule = geoGraticule();
     const coords = graticule();
     // console.log(graticule);
 
-    const polygons = [];
+    const polygon = [];
     for (const c in coords) {
       polygon.push(
         { type: 'polygon', coordinates: c }
       );
     }
 
-    debugger;
     const d = geoGenerator(graticule());
 
     var element = document.createElementNS('http://www.w3.org/2000/svg', 'path');
