@@ -1,9 +1,13 @@
-examples/globe/canvas/target/
+examples/globe/canvas/package-lock.json
 examples/globe/canvas/node_modules/
-examples/globe/svg/target/
+examples/globe/canvas/target/
+examples/globe/svg/package-lock.json
 examples/globe/svg/node_modules/
+examples/globe/svg/target/
+examples/graticule/package-lock.json
 examples/graticule/target/
 examples/graticule/node_modules/
+examples/ring/package-lock.json
 examples/ring/node_modules/
 examples/ring/target/
 /target/

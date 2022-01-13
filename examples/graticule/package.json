@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "rimraf dist pkg && RUST_LOG=info webpack",
-    "start": "rimraf dist pkg && RUST_LOG=info webpack-dev-server --open -d",
+    "start": "rimraf dist pkg && RUST_LOG=info webpack-dev-server --open ",
     "test": "cargo test && wasm-pack test --headless"
   },
   "repository": {
@@ -28,14 +28,16 @@
   },
   "homepage": "https://github.com/rustwasm/create-wasm-app#readme",
   "dependencies": {
-    "benchmark": "file:../pkg"
+    "benchmark": "file:../pkg",
+    "package.json": "^2.0.1",
+    "request": "^2.79.0"
   },
   "devDependencies": {
-    "@wasm-tool/wasm-pack-plugin": "1.0.1",
-    "copy-webpack-plugin": "^5.0.3",
-    "webpack": "^4.42.0",
-    "webpack-dev-server": "^3.7.1",
-    "webpack-cli": "^3.3.3",
-    "rimraf": "^3.0.0"
+    "@wasm-tool/wasm-pack-plugin": "1.6.0",
+    "copy-webpack-plugin": "^9.0.1",
+    "rimraf": "^3.0.0",
+    "webpack": "^5.66.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.3"
   }
 }
