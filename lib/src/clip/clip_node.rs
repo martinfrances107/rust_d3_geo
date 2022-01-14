@@ -21,7 +21,6 @@ use super::compare_intersection::gen_compare_intersection;
 use super::line_elem::LineElem;
 use super::rejoin::rejoin;
 // use super::stream_node_line_factory::StreamNodeLineFactory;
-use super::CleanState;
 use super::InterpolateFn;
 use super::PointVisible;
 
@@ -154,6 +153,8 @@ where
         let n = ring_segments.len();
         let m;
 
+        // dbg!(clean);
+        // dbg!(&ring_segments);
         self.ring.0.pop();
         self.polygon.push(self.ring.clone());
         // in this javascript version this value is set to NULL
@@ -164,47 +165,43 @@ where
         if n == 0 {
             return;
         }
-
+        // dbg!("clean ", clean);
         // No intersections.
-        match clean {
-            CleanState::NoIntersections => {
-                let segment = ring_segments
+        if clean & 1 != 0 {
+            // dbg!("no intersections");
+            let segment = ring_segments
+                .pop_front()
+                .expect("We have previously checked that the .len() is >0 ( n ) ");
+            m = segment.len() - 1;
+            if m > 0 {
+                if !self.polygon_started {
+                    self.line_node.sink.polygon_start();
+                    self.polygon_started = true;
+                }
+                self.line_node.sink.line_start();
+                for s in segment.iter().take(m) {
+                    let point = s.p;
+                    self.line_node.sink.point(&point, None);
+                }
+                self.line_node.sink.line_end();
+            }
+            return;
+        }
+
+        // dbg!("intersections rejoin");
+        // Rejoin connected segments.
+        // TODO reuse ringBuffer.rejoin()?
+        if n > 1 {
+            let pb = [
+                ring_segments
+                    .pop_back()
+                    .unwrap_or_else(|| Vec::with_capacity(0)),
+                ring_segments
                     .pop_front()
-                    .expect("We have previously checked that the .len() is >0 ( n ) ");
-                m = segment.len() - 1;
-                if m > 0 {
-                    if !self.polygon_started {
-                        self.line_node.sink.polygon_start();
-                        self.polygon_started = true;
-                    }
-                    self.line_node.sink.line_start();
-                    for s in segment.iter().take(m) {
-                        let point = s.p;
-                        self.line_node.sink.point(&point, None);
-                    }
-                    self.line_node.sink.line_end();
-                }
-                return;
-            }
-            CleanState::IntersectionsRejoin => {
-                // Rejoin connected segments.
-                // TODO reuse ringBuffer.rejoin()?
-                if n > 1 {
-                    let pb = [
-                        ring_segments
-                            .pop_back()
-                            .unwrap_or_else(|| Vec::with_capacity(0)),
-                        ring_segments
-                            .pop_front()
-                            .unwrap_or_else(|| Vec::with_capacity(0)),
-                    ]
-                    .concat();
-                    ring_segments.push_back(pb);
-                }
-            }
-            CleanState::IntersectionsOrEmpty => {
-                // No-op
-            }
+                    .unwrap_or_else(|| Vec::with_capacity(0)),
+            ]
+            .concat();
+            ring_segments.push_back(pb);
         }
 
         ring_segments.retain(|segment| segment.len() > 1);

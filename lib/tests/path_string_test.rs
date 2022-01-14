@@ -10,23 +10,28 @@ mod path_string_test {
     use geo::line_string;
     use geo::point;
     use geo::CoordFloat;
+    use geo::Coordinate;
     use geo::Geometry;
     use geo::GeometryCollection;
+    use geo::MultiPolygon;
     use geo::Polygon;
     use num_traits::AsPrimitive;
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
+    use rust_d3_geo::circle::generator::Generator as CircleGenerator;
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::path::PointRadiusTrait;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
+    use rust_d3_geo::projection::orthographic::Orthographic;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Raw;
     use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::projection::Translate;
     use rust_d3_geo::stream::Stream;
     use rust_d3_geo::stream::Streamable;
 
@@ -127,6 +132,68 @@ mod path_string_test {
         let eq = equirectangular::<f64>();
         assert_eq!(test_path(eq, object), "M165,160L170,160L170,165Z");
     }
+
+    #[test]
+    // This has no equivalent in JS testing, looking down the js functions, it is a hole in the test stratergy.
+    // the values for everythig after the first z where copied from a modified javascript test.
+    fn renders_a_multipolygon() {
+        println!("");
+        let object = Geometry::MultiPolygon(MultiPolygon(vec![
+            Polygon::new(
+                line_string![
+                    (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
+                ],
+                vec![],
+            ),
+            Polygon::new(
+                line_string![
+                    (x:0_f64, y:0_f64), (x:0_f64, y:1_f64), (x:1_f64, y:1_f64), (x:0_f64, y:1_f64),(x:0_f64, y:0_f64)
+                ],
+                vec![],
+            ),
+        ]));
+
+        let eq = equirectangular::<f64>();
+        assert_eq!(
+            test_path(eq, object),
+            "M165,160L170,160L170,165ZM480,250L480,245L485,245L480,245Z"
+        );
+    }
+
+    // #[test]
+    // fn render_a_multi_polygon_with_hidden() {
+    //     let gc = CircleGenerator::default().radius(10_f64).precision(80_f64);
+
+    //     let mut p_vec = vec![];
+
+    //     let lat = 0;
+    //     for long in (0..=40).step_by(40) {
+    //         let poly = gc
+    //             .clone()
+    //             .center(&Coordinate {
+    //                 x: long as f64,
+    //                 y: lat as f64,
+    //             })
+    //             .circle();
+    //         p_vec.push(poly);
+    //     }
+    //     let object = Geometry::MultiPolygon(MultiPolygon(p_vec));
+
+    //     let ortho = Orthographic::<PathString<f64>, f64>::builder()
+    //         .scale(240_f64)
+    //         // .precision(&0_f32)
+    //         .translate(&Coordinate {
+    //             x: 300_f64,
+    //             y: 300_f64,
+    //         })
+    //         .build();
+
+    //     let s = PathBuilder::context_pathstring()
+    //         .build(ortho)
+    //         .object(&object);
+
+    //     assert_eq!(s, "");
+    // }
 
     #[test]
     fn renders_a_geometry_collection() {

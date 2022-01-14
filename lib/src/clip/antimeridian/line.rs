@@ -6,7 +6,7 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::clip::Clean;
-use crate::clip::CleanState;
+
 use crate::clip::Line as LineTrait;
 use crate::math::EPSILON;
 use crate::projection::stream_node::StreamNode;
@@ -23,7 +23,7 @@ where
     lambda0: T,
     phi0: T,
     sign0: T,
-    clean: CleanState,
+    clean: u8,
     epsilon: T,
 }
 
@@ -38,7 +38,7 @@ where
             lambda0: T::nan(),
             phi0: T::nan(),
             sign0: T::nan(),
-            clean: CleanState::NoIntersections,
+            clean: 0,
             epsilon: T::from(EPSILON).unwrap(),
         }
     }
@@ -49,13 +49,8 @@ where
     T: CoordFloat,
 {
     #[inline]
-    fn clean(&self) -> CleanState {
-        match self.clean {
-            // if intersections, rejoin first and last segments
-            CleanState::IntersectionsOrEmpty => CleanState::IntersectionsRejoin,
-            CleanState::NoIntersections => CleanState::NoIntersections,
-            CleanState::IntersectionsRejoin => CleanState::IntersectionsOrEmpty,
-        }
+    fn clean(&self) -> u8 {
+        2 - self.clean
     }
 }
 
@@ -75,7 +70,7 @@ where
 
     fn line_start(&mut self) {
         self.sink.line_start();
-        self.raw.clean = CleanState::NoIntersections;
+        self.raw.clean = 1;
     }
 
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
@@ -127,7 +122,7 @@ where
                 },
                 None,
             );
-            self.raw.clean = CleanState::IntersectionsOrEmpty;
+            self.raw.clean = 0;
         } else if self.raw.sign0 != sign1 && delta >= T::PI() {
             // Line crosses antimeridian.
             if (self.raw.lambda0 - self.raw.sign0).abs() < self.raw.epsilon {
@@ -154,7 +149,7 @@ where
                 },
                 None,
             );
-            self.raw.clean = CleanState::IntersectionsOrEmpty;
+            self.raw.clean = 0;
         }
 
         self.raw.lambda0 = lambda1;

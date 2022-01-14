@@ -19,7 +19,6 @@ pub fn spherical_radians<T>(cartesian: &[T; 3]) -> Coordinate<T>
 where
     T: CoordFloat + FloatConst,
 {
-    dbg!(cartesian[2]);
     Coordinate {
         x: cartesian[1].atan2(cartesian[0]),
         y: asin(cartesian[2]),

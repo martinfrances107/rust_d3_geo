@@ -34,20 +34,6 @@ use std::rc::Rc;
 use geo::CoordFloat;
 use geo::Coordinate;
 
-/// Internal clip state.
-///
-/// As the clip state machine enters ring_end() This state is used to direct
-/// the clean up.
-#[derive(Debug, Clone, Copy)]
-pub enum CleanState {
-    /// There were not intersections or the line was empty.
-    IntersectionsOrEmpty,
-    /// There were no intersections and the first and last segments should be rejoined.
-    NoIntersections,
-    /// There were intersections, and the first and last segments should be rejoined.
-    IntersectionsRejoin,
-}
-
 /// Clean
 ///
 /// A clip trait.
@@ -55,7 +41,7 @@ pub enum CleanState {
 /// and last points were visible.
 pub trait Clean {
     /// Returns the clean state.
-    fn clean(&self) -> CleanState;
+    fn clean(&self) -> u8;
 }
 
 /// Clip Stream Node - helper function.

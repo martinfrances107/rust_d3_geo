@@ -59,16 +59,14 @@ where
         let p = self.precision.to_radians();
 
         self.stream.rotate = rotate_radians([-c.x.to_radians(), -c.y.to_radians(), T::zero()]);
-
         stream_fn(&mut self.stream, r, p, T::one(), None, None);
-
         let coordinates = self.stream.ring.clone();
-        let c = Polygon::new(LineString(coordinates), vec![]);
+
+        let polygon = Polygon::new(LineString(coordinates), vec![]);
 
         self.stream.ring.clear();
         self.stream.rotate = RotateRadians::I(RotationIdentity::default());
-
-        c
+        polygon
     }
 }
 

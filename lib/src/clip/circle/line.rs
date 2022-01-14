@@ -10,7 +10,6 @@ use super::intersect::IntersectReturn;
 use crate::abs_diff_eq;
 use crate::clip::line_elem::LineElem;
 use crate::clip::Clean;
-use crate::clip::CleanState;
 use crate::clip::Line as LineTrait;
 use crate::math::EPSILON;
 use crate::projection::stream_node::StreamNode;
@@ -22,15 +21,19 @@ pub struct Line<T>
 where
     T: CoordFloat,
 {
-    c0: u8,            // code for previous point
-    clean: CleanState, // no intersections
+    /// Code for previous point.
+    c0: u8,
+    clean: u8, // no intersections
     radius: T,
     cr: T,
     not_hemisphere: bool,
-    point0: Option<LineElem<T>>, // previous point
+    /// previous point.
+    point0: Option<LineElem<T>>,
     small_radius: bool,
-    v0: bool,  // visibility of previous point
-    v00: bool, // visibility of first point
+    /// Visibility of previous point.
+    v0: bool,
+    /// Visibility of first point
+    v00: bool,
 }
 
 impl<T> LineTrait for Line<T> where T: CoordFloat {}
@@ -48,7 +51,7 @@ where
         let epsilon = T::from(EPSILON).unwrap();
         Self {
             c0: 0,
-            clean: CleanState::IntersectionsOrEmpty,
+            clean: 0,
             // JS TODO optimise for this common case
             not_hemisphere: cr.abs() > epsilon,
             point0: None,
@@ -115,12 +118,9 @@ where
     /// Rejoin first and last segments if there were intersections and the first
     /// and last points were visible.
     #[inline]
-    fn clean(&self) -> CleanState {
-        if self.v00 && self.v0 {
-            CleanState::IntersectionsRejoin
-        } else {
-            self.clean
-        }
+    fn clean(&self) -> u8 {
+        let b: u8 = ((self.v00 && self.v0) as u8) << 1;
+        self.clean | b
     }
 }
 
@@ -141,7 +141,7 @@ where
     fn line_start(&mut self) {
         self.raw.v00 = false;
         self.raw.v0 = false;
-        self.raw.clean = CleanState::NoIntersections;
+        self.raw.clean = 1;
     }
 
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
@@ -211,7 +211,7 @@ where
         }
 
         if v != self.raw.v0 {
-            self.raw.clean = CleanState::IntersectionsOrEmpty;
+            self.raw.clean = 0;
             if v {
                 // outside going in
                 self.sink.line_start();
@@ -275,7 +275,7 @@ where
                         panic!("Requeted two received one or none.");
                     }
                     IntersectReturn::Two(t) => {
-                        self.raw.clean = CleanState::IntersectionsOrEmpty;
+                        self.raw.clean = 0;
                         if self.raw.small_radius {
                             self.sink.line_start();
                             self.sink.point(&t[0], None);
