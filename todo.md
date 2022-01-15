@@ -1,5 +1,7 @@
 TODO:-
 
+* move benchmark into examples where appropiate.
+  move JS equivalent into rust directory.
 
 * Debug rendering of land from 50m.json
 

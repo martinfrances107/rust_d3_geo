@@ -12,6 +12,7 @@ impl<T> Streamable for MultiPolygon<T>
 where
     T: CoordFloat,
 {
+    /// f64 or f32
     type T = T;
 
     #[inline]

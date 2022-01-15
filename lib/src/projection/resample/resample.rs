@@ -131,7 +131,7 @@ where
     }
 
     fn ring_start(&mut self) {
-        self.sink.line_start();
+        self.line_start_default();
         self.raw.point_state = PointState::Ring;
         self.raw.use_line_end = false;
     }
@@ -227,7 +227,6 @@ where
         let dx = x1 - x0;
         let dy = y1 - y0;
         let d2 = dx * dx + dy * dy;
-
         if d2 > self.raw.four * self.raw.delta2 {
             depth -= 1_u8;
             if depth > 0_u8 {

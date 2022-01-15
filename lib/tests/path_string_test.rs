@@ -160,40 +160,40 @@ mod path_string_test {
         );
     }
 
-    // #[test]
-    // fn render_a_multi_polygon_with_hidden() {
-    //     let gc = CircleGenerator::default().radius(10_f64).precision(80_f64);
+    #[test]
+    fn render_a_simple_multi_polygon() {
+        let gc = CircleGenerator::default().radius(10_f64).precision(80_f64);
 
-    //     let mut p_vec = vec![];
+        let mut p_vec = vec![];
 
-    //     let lat = 0;
-    //     for long in (0..=40).step_by(40) {
-    //         let poly = gc
-    //             .clone()
-    //             .center(&Coordinate {
-    //                 x: long as f64,
-    //                 y: lat as f64,
-    //             })
-    //             .circle();
-    //         p_vec.push(poly);
-    //     }
-    //     let object = Geometry::MultiPolygon(MultiPolygon(p_vec));
+        let lat = 0;
+        for long in (0..=40).step_by(40) {
+            let poly = gc
+                .clone()
+                .center(&Coordinate {
+                    x: long as f64,
+                    y: lat as f64,
+                })
+                .circle();
+            p_vec.push(poly);
+        }
+        let object = Geometry::MultiPolygon(MultiPolygon(p_vec));
 
-    //     let ortho = Orthographic::<PathString<f64>, f64>::builder()
-    //         .scale(240_f64)
-    //         // .precision(&0_f32)
-    //         .translate(&Coordinate {
-    //             x: 300_f64,
-    //             y: 300_f64,
-    //         })
-    //         .build();
+        let ortho = Orthographic::<PathString<f64>, f64>::builder()
+            .scale(240_f64)
+            // .precision(&0_f32)
+            .translate(&Coordinate {
+                x: 300_f64,
+                y: 300_f64,
+            })
+            .build();
 
-    //     let s = PathBuilder::context_pathstring()
-    //         .build(ortho)
-    //         .object(&object);
+        let s = PathBuilder::context_pathstring()
+            .build(ortho)
+            .object(&object);
 
-    //     assert_eq!(s, "");
-    // }
+        assert_eq!(s, "M258.95758280091974,307.23688550569096L285.7461180926677,260.83778132003164L336.0920959633045,279.16221867996836L326.7885352917479,331.9253331742774L273.21146470825204,331.92533317427734ZM420.4850175467511,307.23688550569096L431.56777751410493,283.93695684484305L441.0062261462913,260.83778132003164L479.5734827274837,279.16221867996836L477.116799820893,305.57863634335655L472.44654177381744,331.9253331742774L431.40412457473724,331.92533317427734Z");
+    }
 
     #[test]
     fn renders_a_geometry_collection() {

@@ -153,8 +153,6 @@ where
         let n = ring_segments.len();
         let m;
 
-        // dbg!(clean);
-        // dbg!(&ring_segments);
         self.ring.0.pop();
         self.polygon.push(self.ring.clone());
         // in this javascript version this value is set to NULL
@@ -165,10 +163,9 @@ where
         if n == 0 {
             return;
         }
-        // dbg!("clean ", clean);
+
         // No intersections.
         if clean & 1 != 0 {
-            // dbg!("no intersections");
             let segment = ring_segments
                 .pop_front()
                 .expect("We have previously checked that the .len() is >0 ( n ) ");
@@ -188,7 +185,6 @@ where
             return;
         }
 
-        // dbg!("intersections rejoin");
         // Rejoin connected segments.
         // TODO reuse ringBuffer.rejoin()?
         if n > 1 {

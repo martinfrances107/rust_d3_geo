@@ -251,11 +251,12 @@ where
                 self.raw.clip_min,
                 Float::min(self.raw.clip_max, self.raw.y_),
             );
-
             let mut a = [self.raw.x_, self.raw.y_];
+
             p.x = T::max(self.raw.clip_min, T::min(self.raw.clip_max, p.x));
             p.y = T::max(self.raw.clip_min, T::min(self.raw.clip_max, p.y));
             let mut b = [p.x, p.y];
+
             if clip_line(
                 &mut a,
                 &mut b,
@@ -393,7 +394,6 @@ where
     fn polygon_end(&mut self) {
         let start_inside = self.raw.polygon_inside();
         let clean_inside = self.raw.clean && start_inside;
-
         // Performance if all lengths are known. Can I flatern into a
         // array of arrays or something that implies a contigious block of memory.
         let merged_segments = self
