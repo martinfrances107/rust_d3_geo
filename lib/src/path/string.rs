@@ -20,7 +20,6 @@ enum PointState {
 enum LineState {
     Stopped,
     Started,
-    Undefined,
 }
 
 #[inline]
@@ -102,6 +101,7 @@ impl<T> Stream for String<T>
 where
     T: CoordFloat + Display,
 {
+    /// f64 or f32.
     type T = T;
     type EP = Self;
 

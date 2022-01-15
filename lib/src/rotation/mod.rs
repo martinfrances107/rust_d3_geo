@@ -53,12 +53,10 @@ where
         } else {
             RotateRadians::RL(RotationLambda::new(delta_lambda))
         }
+    } else if delta_phi != T::zero() || delta_gamma != T::zero() {
+        RotateRadians::RPG(RotationPhiGamma::new(&delta_phi, &delta_gamma))
     } else {
-        if delta_phi != T::zero() || delta_gamma != T::zero() {
-            RotateRadians::RPG(RotationPhiGamma::new(&delta_phi, &delta_gamma))
-        } else {
-            RotateRadians::I(RotationIdentity::default())
-        }
+        RotateRadians::I(RotationIdentity::default())
     }
 }
 
