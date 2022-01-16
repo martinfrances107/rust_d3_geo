@@ -445,9 +445,8 @@ where
 
     fn line_start(&mut self) {
         self.raw.use_line_point = true;
-        match &mut self.raw.polygon {
-            Some(polygon) => polygon.push(Vec::new()),
-            None => {}
+        if let Some(polygon) = &mut self.raw.polygon {
+            polygon.push(Vec::new());
         }
         self.raw.first = true;
         self.raw.v_ = false;
