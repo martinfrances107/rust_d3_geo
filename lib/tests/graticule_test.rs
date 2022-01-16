@@ -1,7 +1,3 @@
-// import assert from "assert";
-// import {extent} from "d3-array";
-// import {geoGraticule} from "../src/index.js";
-
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod graticule_test {

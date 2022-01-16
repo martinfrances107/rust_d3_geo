@@ -1,15 +1,15 @@
 # Rust D3 Geo
 Rust 2021 Edition.
 
-This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into RUST. The vast bulk of the libray has been ported along with the associated tests.
+This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into RUST. The majority of the libray has been ported along with the associated tests.
 
 The current focus is now on benchmarking and making the library multithreaded.
 
 The API is not stabalised. If perfomance issues arise then the API will change.
 
-Finally, the infrequently used projection need be implemented to make the library complete.
+Finally, the infrequently used projections and other minor items need be implemented to make the library complete.
 
-Currently we have 83% code coverage ( as reported by cargo tarpaulin )
+Currently we have 84% code coverage ( as reported by cargo tarpaulin )
 
 
 ## Notes on performance

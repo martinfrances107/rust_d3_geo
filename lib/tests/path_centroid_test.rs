@@ -1,5 +1,3 @@
-use geo::{Geometry, GeometryCollection, Point};
-
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod path_centroid_test {

@@ -59,7 +59,6 @@ mod stream_multipolygon_test {
         println!(
             "geoStream(MultiPolygon) -> (polygonStart, lineStart, point, lineEnd, polygonEnd)*"
         );
-        // geoStream({type: "MultiPolygon", coordinates: [[[[1, 2, 3], [4, 5, 6], [1, 2, 3]]], [[[7, 8, 9], [10, 11, 12], [7, 8, 9]]]]}, {
 
         let mut stream = MultiPolygonStream::default();
         let mp = MultiPolygon(vec![

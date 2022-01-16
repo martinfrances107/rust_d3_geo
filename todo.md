@@ -1,29 +1,34 @@
 TODO:-
 
-* move benchmark into examples where appropiate.
-  move JS equivalent into rust directory.
+* Don't unwrap worldmap
 
-* Debug rendering of land from 50m.json
+* Implement remaining fit_tests --- gives a minor bump in code coverage.
 
-* Check on failing area test in view of recent major bug fix. ( Still broken )
+* develop styling for world maps graticules on bottom, overlayed by land.
+
+* Map rings much smaller and have many more.
+
+* Check on performance of real world test ... ortho projection of 50m.json altas
+ with graticules showing africa or South pacific.
+
+* Put images of ring and world map on homepage. Plus add a gallery homepage for the examples
+with links to the more detailed mini-apps.
+
+* update readme.md
 
 * implement path/centroid_test.rs
-
-* Performance is not showing the expected gains over javascript ..
-	I am not caching projection::stream()
-	I think there is lots of copying of data going on where pass by reference is needed this needs review.
-	I am using the default HashMap .. which the docs say by default using a secure version which always completes
-	in a resonable time ( prevents DOS attacks).. but is also unperformant.
 
 * Refactor trait names ending in Trait.
 
 * Enum names ending in Enum
 
-* Draw outline om graticule test.
+* Detail why Feature and Feactue collection is complicated.
+
+* Detail to development of mocks for RenderingContext2d
+
 
 # Short Term Goals
 
-* Test ClipRectangle.
 * Justify whey PathResult is not implemented for LengthStream? is cal() a deviation from the interface.
 * Same arguement for CicleStream.
 
@@ -41,6 +46,8 @@ TODO:-
 * src/projection/natualEarth.js
 
 # The State of Testing
+
+snapshot tests are missing.
 
 src/rotation
 
