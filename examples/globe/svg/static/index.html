@@ -11,17 +11,25 @@
 
   <h1>Example: Globe(SVG)</h1>
   <h2>Rust d3 geo </h2>
+  <p>
+    The SVG version of the globe is different from the canvas example.
+  </p>
+  <p>
+    It demonstrates the complex decoding of the world map into distinct "path" elements so as to assign a
+    different color of each polygon.
+  </p>
+  <p>
+    The canvas version is build for performance.
+  </p>
   <svg id="s" width="1800" height="1200">
     <style>
       path {
         fill: None;
-        stroke: #7f7f7f;
+        stroke: black;
         stroke-width: 1px;
       }
     </style>
   </svg>
-  <h2>Suggestion:</h2>
-  <p>Enable the browsers FPS meter.</p>
 
   <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
   <script src="./index.js"></script>

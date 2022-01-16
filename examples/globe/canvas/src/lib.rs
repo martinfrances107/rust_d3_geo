@@ -56,11 +56,6 @@ extern "C" {
     fn alert(s: &str);
 }
 
-// Next let's define a macro that's like `println!`, only it works for
-// `console.log`. Note that `println!` doesn't actually work on the wasm target
-// because the standard library currently just eats all output. To get
-// `println!`-like behavior in your app you'll likely want a macro like this.
-
 macro_rules! console_log {
     // Note that this is using the `log` function imported above during
     // `bare_bones`
@@ -77,8 +72,6 @@ fn get_document() -> Result<Document, JsValue> {
 #[wasm_bindgen(start)]
 #[cfg(not(tarpaulin_include))]
 pub async fn start() -> Result<(), JsValue> {
-    use geo::{Geometry, GeometryCollection};
-
     console_log!("run() - wasm entry point");
     let document = get_document()?;
 
@@ -100,7 +93,7 @@ pub async fn start() -> Result<(), JsValue> {
     // Convert this other `Promise` into a rust `Future`.
     let json = JsFuture::from(resp.json()?).await?;
 
-    let topology: Topology = json.into_serde().expect("could not parse as Topology");
+    let topology: Topology = json.into_serde().expect("Could not parse as Topology");
 
     // Grab canvas.
     let canvas = document
@@ -121,24 +114,6 @@ pub async fn start() -> Result<(), JsValue> {
     let land = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
-    // match FeatureBuilder::<f64>::generate_from_name(&topology, &"land") {
-    //     Some(Geometry::GeometryCollection(GeometryCollection(v_geometry))) => {
-    //         assert_eq!(v_geometry.len(), 1);
-    //         match &v_geometry[0] {
-    //             Geometry::MultiPolygon(mp) => {
-    //                 assert_eq!(mp.0.len(), 1428_usize);
-    //                 let v_polygon = mp.0;
-    //             }
-    //             _ => {
-    //                 assert!(false, "Failed to decode Multipoloygon")
-    //             }
-    //         }
-    //     }
-    //     _ => {
-    //         assert!(false, "failed to extract a vector of geometries");
-    //     }
-    // };
-
     let cs: Context<f64> = Context::new(context.clone());
     let pb: PathBuilder<Context<f64>, Line<f64>, Orthographic<Context<f64>, f64>, PV<f64>, f64> =
         PathBuilder::new(cs);
@@ -156,16 +131,8 @@ pub async fn start() -> Result<(), JsValue> {
 
     let mut path = pb.build(ortho);
     context.set_stroke_style(&"#69b3a2".into());
-    match land {
-        Geometry::GeometryCollection(GeometryCollection(g_vec)) => {
-            context.begin_path();
-            for g in g_vec {
-                path.object(&g);
-                context.stroke();
-            }
-        }
-        _ => panic!("was expecing a gc."),
-    };
+    path.object(&land);
+    context.stroke();
 
     Ok(())
 }

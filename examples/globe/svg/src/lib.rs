@@ -128,36 +128,22 @@ pub async fn start() -> Result<(), JsValue> {
             x: width / 2_f64,
             y: height / 2_f64,
         })
-        .rotate(&[270_f64, 00_f64, 0_f64]);
+        .rotate(&[270_f64, 0_f64, 0_f64]);
 
     let ortho = ortho_builder.build();
 
-    let stroke: [&str; 6] = [
-        "stroke: red",
-        "stroke: orange",
-        "stroke: green",
-        "stroke: blue",
-        "stroke: indigo",
-        "stroke: black",
+    let fill: [&str; 7] = [
+        "fill: red",
+        "fill: orange",
+        "fill: olive",
+        "fill: blue",
+        "fill: indigo",
+        "fill: brown",
+        "fill: silver",
     ];
-    console_log!("Have builder");
 
     let mut builder = PathBuilder::context_pathstring().build(ortho);
     let mut i = 0;
-    // match &countries {
-    //     Geometry::GeometryCollection(gc) => {
-    //         let s = builder.object(gc);
-    //         let class_name = format!("id-{}", i);
-    //         let path = get_path_node(&class_name)?;
-    //         path.set_attribute_ns(None, "d", &s)?;
-    //         path.set_attribute_ns(None, "class", &class_name)?;
-    //         path.set_attribute_ns(None, "style", stroke[i % 6])?;
-    //         svg.append_child(&path)?;
-    //     }
-    //     _ => {
-    //         console_log!("was expecting a GC.");
-    //     }
-    // }
 
     match &countries {
         Geometry::GeometryCollection(GeometryCollection(g_vec)) => {
@@ -165,24 +151,17 @@ pub async fn start() -> Result<(), JsValue> {
             for g in g_vec {
                 match &g {
                     Geometry::MultiPolygon(mp) => {
-                        let s = builder.object(&Geometry::MultiPolygon(mp.clone()));
-                        let class_name = format!("id-{}", i);
-                        let path = get_path_node(&class_name)?;
-                        path.set_attribute_ns(None, "d", &s)?;
-                        path.set_attribute_ns(None, "class", &class_name)?;
-                        path.set_attribute_ns(None, "style", stroke[i % 6])?;
-                        svg.append_child(&path)?;
-                        i += 1
-                        // for p in &mp.0 {
-                        //     let s = builder.object(&Geometry::Polygon(p.clone()));
-                        //     let class_name = format!("id-{}", i);
-                        //     let path = get_path_node(&class_name)?;
-                        //     path.set_attribute_ns(None, "d", &s)?;
-                        //     path.set_attribute_ns(None, "class", &class_name)?;
-                        //     path.set_attribute_ns(None, "style", stroke[i % 6])?;
-                        //     svg.append_child(&path)?;
-                        //     i += 1
-                        // }
+                        i += 1;
+                        for p in &mp.0 {
+                            let s = builder.object(&Geometry::Polygon(p.clone()));
+                            let class_name = format!("id-{}", i);
+                            let path = get_path_node(&class_name)?;
+                            path.set_attribute_ns(None, "d", &s)?;
+                            path.set_attribute_ns(None, "class", &class_name)?;
+                            path.set_attribute_ns(None, "style", fill[i % 7])?;
+                            svg.append_child(&path)?;
+                            i += 1
+                        }
                     }
                     Geometry::Polygon(p) => {
                         let s = builder.object(&Geometry::Polygon(p.clone()));
@@ -190,7 +169,7 @@ pub async fn start() -> Result<(), JsValue> {
                         let class_name = format!("id-{}", i);
                         let path = get_path_node(&class_name)?;
                         path.set_attribute_ns(None, "d", &s)?;
-                        path.set_attribute_ns(None, "style", stroke[i % 6])?;
+                        path.set_attribute_ns(None, "style", fill[i % 7])?;
                         svg.append_child(&path)?;
                         i += 1
                     }
