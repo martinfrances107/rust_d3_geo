@@ -16,7 +16,6 @@ mod path_area_test {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
-    // use rust_d3_geo::area::Area;
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::data_object::sphere::Sphere;
@@ -32,7 +31,6 @@ mod path_area_test {
     #[inline]
     fn equirectangular<T>() -> Projection<Area<T>, Line<T>, EquirectangularRaw<Area<T>, T>, PV<T>, T>
     where
-        // DRAIN: Stream<EP = DRAIN, T = T> + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         EquirectangularRaw::builder()
