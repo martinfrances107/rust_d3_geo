@@ -215,10 +215,12 @@ where
     }
 
     #[inline]
+    /// Returns the current precision.
     pub fn get_precision(&self) -> T {
         self.precision
     }
 
+    /// Sets the precision for this graticule, in degrees.(Default: 2.5°)
     pub fn precision(mut self, precision: &T) -> Self {
         self.precision = *precision;
         self.x = graticule_x(self.y0, self.y1, T::from(90_f64).unwrap());
