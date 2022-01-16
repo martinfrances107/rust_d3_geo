@@ -1,7 +1,5 @@
 TODO:-
 
-* Don't unwrap worldmap
-
 * Implement remaining fit_tests --- gives a minor bump in code coverage.
 
 * develop styling for world maps graticules on bottom, overlayed by land.
