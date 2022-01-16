@@ -13,7 +13,6 @@ use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::path::context::Context;
-use crate::path::Result;
 use crate::projection::projection::Projection;
 use crate::projection::resample::ResampleNode;
 use crate::projection::stream_node::StreamNode;
@@ -24,6 +23,7 @@ use super::context::Context as PathContext;
 use super::path::Path;
 use super::string::String;
 use super::PointRadiusTrait;
+use super::Result;
 
 /// Path builder.
 #[derive(Debug)]
@@ -40,7 +40,6 @@ where
     T: 'static + AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     pr: T,
-    context: Option<Rc<CanvasRenderingContext2d>>,
     context_stream: CS,
     projection: Option<Projection<CS, LINE, PR, PV, T>>,
 }
@@ -60,7 +59,6 @@ where
     /// Constructor.
     pub fn new(context_stream: CS) -> Builder<CS, LINE, PR, PV, T> {
         Self {
-            context: None,
             context_stream,
             pr: T::from(4.5_f64).unwrap(),
             projection: None,
@@ -76,7 +74,6 @@ where
     PV: PointVisible<T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     StreamNode<String<T>, LINE, String<T>, T>: Stream<EP = String<T>, T = T>,
-    StreamNode<String<T>, LINE, String<T>, T>: Stream<T = T>,
     StreamNode<
         String<T>,
         LINE,
@@ -105,7 +102,6 @@ where
         let context = Rc::new(context);
         Builder {
             pr: self.pr,
-            context: Some(context.clone()),
             context_stream: PathContext::<T>::new(context),
             projection: self.projection,
         }
@@ -158,7 +154,9 @@ where
     StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
+    /// f64 or f32
     type T = T;
+
     /// From the progammed state generate a new projection.
     #[inline]
     fn point_radius(&mut self, radius: T) {
