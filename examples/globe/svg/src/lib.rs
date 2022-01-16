@@ -74,7 +74,7 @@ fn get_document() -> Result<Document, JsValue> {
 #[cfg(not(tarpaulin_include))]
 fn get_path_node(class_name: &str) -> Result<Element, JsValue> {
     let document = get_document()?;
-    let class_list = document.get_elements_by_class_name(&class_name);
+    let class_list = document.get_elements_by_class_name(class_name);
 
     assert!(class_list.length() < 2);
     let ret = match class_list.item(0) {

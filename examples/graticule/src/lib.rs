@@ -148,7 +148,7 @@ fn update_canvas(document: &Document) -> Result<()> {
 fn get_path_node(class_name: &str) -> Result<Element> {
     let document = get_document()?;
     // let class_name = format!("id-{}", i);
-    let class_list = document.get_elements_by_class_name(&class_name);
+    let class_list = document.get_elements_by_class_name(class_name);
 
     assert!(class_list.length() < 2);
     // console_log!("assert passed.");

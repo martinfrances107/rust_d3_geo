@@ -30,8 +30,7 @@ mod area_test {
         let mut exterior: Vec<(T, T)> = Vec::new();
         let mut interior: Vec<(T, T)> = Vec::new();
         for (i, d) in [a, b].iter().enumerate() {
-            let mut stripe: Vec<(T, T)> = Vec::new();
-            stripe = range(
+            let mut stripe: Vec<(T, T)> = range(
                 T::from(-180_f64).unwrap(),
                 T::from(180_f64).unwrap(),
                 T::from(0.1_f64).unwrap(),

@@ -9,35 +9,38 @@
 
 <body>
   <h1>Example: Rings</h1>
-  <h2>Rust d3 geo</h2>
-  <p>Example rings SVG </p>
-  <p>SVG</p>
-  <canvas id="c"></canvas>
-  <svg id="rust">
-    <style>
-      path {
-        fill: None;
-        stroke: maroon;
-        stroke-width: 2px;
-      }
-    </style>
-  </svg>
 
-  <svg id="ring_js" width="600" height="600">
-    <style>
-      path {
-        fill: black;
-        stroke: maroon;
-        stroke-width: 2px;
-      }
-    </style>
-  </svg>
+  <h2>Example of the rust_d3_geo library generating a path string from a complex MultiPolygon. </h2>
 
-  <noscript>This page contains webassembly and javascript content, please enable javascript in your
-    browser.</noscript>
+  <style>
+    svg#ring_rust {
+      fill: green;
+    }
+
+    svg#ring_js {
+      fill: blue;
+    }
+  </style>
+  <div>
+    <p> RUST is used to draw the rings in green.</p>
+    <svg id="ring_rust" width="600" height="600"></svg>
+  </div>
+  <div>
+    <p> JAVASCRIPT is used to draw the rings in blue.</p>
+    <svg id="ring_js" width="600" height="600"></svg>
+
+  </div>
+
+  <noscript>This page contains webassembly and javascript content,
+    please enable javascript in your browser.</noscript>
   <script src=" ./index.js"></script>
-  <script type="module">
-    import { geoCircle, geoOrthographic, geoPath } from "https://cdn.skypack.dev/d3-geo@3";
+  <script type="module">import {
+      geoCircle,
+      geoOrthographic,
+      geoPath
+    }
+
+      from "https://cdn.skypack.dev/d3-geo@3";
 
     function draw() {
       console.log("draw()");
@@ -45,45 +48,42 @@
       svg.querySelector("path")?.remove();
       const width = svg.width.baseVal.value;
       const height = svg.height.baseVal.value;
-      const ortho = geoOrthographic()
-        .scale(240)
-        .translate([width / 2, height / 2])
-        .rotate([0, 0, 0]);
+      const ortho = geoOrthographic().scale(240).translate([width / 2, height / 2]).rotate([0, 0, 0]);
 
       let cg_outer = geoCircle().radius(10).precision(10);
       let cg_inner = geoCircle().radius(5).precision(5);
 
       let coordinates = [];
+
       for (let lat = -30; lat <= 30; lat += 30) {
         for (let long = -180; long < 180; long += 40) {
-          const poly = [
-            cg_outer.center([long, lat])().coordinates[0],
-            cg_inner.center([long, lat])().coordinates[0].reverse()
-          ];
+          const poly = [cg_outer.center([long, lat])().coordinates[0],
+          cg_inner.center([long, lat])().coordinates[0].reverse()];
 
-          coordinates.push(
-            poly
-          );
+          coordinates.push(poly);
         }
       }
 
       let object = {
         type: "MultiPolygon",
         coordinates: coordinates
-      };
+      }
 
-      let d = geoPath()
-        .projection(ortho)(object);
+        ;
+
+      let d = geoPath().projection(ortho)(object);
 
       var element = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       element.setAttributeNS(null, "d", d);
       svg.appendChild(element);
     }
 
-    draw()
+    draw();
     window.addEventListener('resize', (event) => {
       draw()
-    });
+    }
+
+    );
 
   </script>
 </body>

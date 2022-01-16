@@ -67,7 +67,7 @@ pub fn rejoin<EP, SINK, T>(
 
             let x1 = Rc::new(RefCell::new(Intersection::new(
                 p0,
-                Some(&segment),
+                Some(segment),
                 None,
                 true,
             )));
@@ -84,7 +84,7 @@ pub fn rejoin<EP, SINK, T>(
 
             let x2 = Rc::new(RefCell::new(Intersection::new(
                 p1,
-                Some(&segment),
+                Some(segment),
                 None,
                 false,
             )));
