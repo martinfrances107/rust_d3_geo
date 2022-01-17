@@ -64,20 +64,6 @@ where
     }
 }
 
-impl<DRAIN, T> Gnomic<DRAIN, T>
-where
-    T: CoordFloat + FloatConst,
-{
-    #[inline]
-    fn atan(z: T) -> T
-    where
-        T: CoordFloat + FloatConst,
-    {
-        // Find a way to optimize this ... need a static of type T with value 2.
-        z.atan()
-    }
-}
-
 impl<DRAIN, EP, T> Transform for Gnomic<DRAIN, T>
 where
     EP: Clone + Debug + Stream<EP = EP, T = T>,
@@ -96,6 +82,6 @@ where
 
     #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        azimuthal_invert(p, Self::atan)
+        azimuthal_invert(p, T::atan)
     }
 }
