@@ -25,7 +25,7 @@ mod fit_test {
     use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
-    use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
+    use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::mercator::Mercator;
     use rust_d3_geo::projection::Fit;
     use rust_d3_geo::projection::Precision;
@@ -55,10 +55,10 @@ mod fit_test {
         let projection: ProjectionBuilder<
             Bounds<f64>,
             _,
-            EquirectangularRaw<Bounds<f64>, f64>,
+            Equirectangular<Bounds<f64>, f64>,
             _,
             f64,
-        > = EquirectangularRaw::builder();
+        > = Equirectangular::builder();
 
         let projection =
             projection.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &d_object);
@@ -82,10 +82,10 @@ mod fit_test {
         let projection: ProjectionBuilder<
             Bounds<f64>,
             _,
-            EquirectangularRaw<Bounds<f64>, f64>,
+            Equirectangular<Bounds<f64>, f64>,
             _,
             f64,
-        > = EquirectangularRaw::builder()
+        > = Equirectangular::builder()
             .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
         assert!(in_delta(projection.get_scale(), 143.239449, 1e-6));
         assert!(in_delta_coordinate(

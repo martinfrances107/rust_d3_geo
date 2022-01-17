@@ -16,23 +16,19 @@ use super::builder::Builder;
 use super::Raw;
 use super::Scale;
 
-/// EquirectangularRaw
-///
-/// Root transform.
+/// Equirectangular
 /// Used to define a projection builder.
 #[derive(Clone, Copy, Debug)]
-pub struct EquirectangularRaw<DRAIN, T>
+pub struct Equirectangular<DRAIN, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     T: CoordFloat,
 {
-    // p_ep: PhantomData<EP>,
     p_drain: PhantomData<DRAIN>,
 }
 
-impl<DRAIN, T> Default for EquirectangularRaw<DRAIN, T>
+impl<DRAIN, T> Default for Equirectangular<DRAIN, T>
 where
-    // EP: Clone + Debug + Stream<EP = EP, T = T>,
     DRAIN: Stream<EP = DRAIN, T = T>,
     T: CoordFloat,
 {
@@ -43,36 +39,35 @@ where
     }
 }
 
-impl<DRAIN, T> Raw<T> for EquirectangularRaw<DRAIN, T>
+impl<DRAIN, T> Raw<T> for Equirectangular<DRAIN, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
-    // EP: Clone + Debug + Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>;
+    type Builder = Builder<DRAIN, Line<T>, Equirectangular<DRAIN, T>, PV<T>, T>;
     type T = T;
 
     #[inline]
-    fn builder() -> Builder<DRAIN, Line<T>, EquirectangularRaw<DRAIN, T>, PV<T>, T>
+    fn builder() -> Builder<DRAIN, Line<T>, Equirectangular<DRAIN, T>, PV<T>, T>
     where
         DRAIN: Stream<EP = DRAIN, T = T>,
     {
         Builder::new(
             gen_clip_factory_antimeridian(),
-            EquirectangularRaw::default(),
+            Equirectangular::default(),
         )
         .scale(T::from(152.63_f64).unwrap())
     }
 }
 
-impl<DRAIN, T> EquirectangularRaw<DRAIN, T>
+impl<DRAIN, T> Equirectangular<DRAIN, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     T: CoordFloat + FloatConst,
 {
 }
 
-impl<DRAIN, T> Transform for EquirectangularRaw<DRAIN, T>
+impl<DRAIN, T> Transform for Equirectangular<DRAIN, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     T: CoordFloat,

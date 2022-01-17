@@ -10,7 +10,7 @@ mod invert_test {
     use rust_d3_geo::clip::circle::pv::PV as PVCircle;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
-    use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
+    use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mercator::Mercator;
     use rust_d3_geo::projection::orthographic::Orthographic;
@@ -64,10 +64,10 @@ mod invert_test {
         let e: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<StreamDrainStub<f64>, f64>,
+            Equirectangular<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
-        > = EquirectangularRaw::<StreamDrainStub<f64>, f64>::builder().build();
+        > = Equirectangular::<StreamDrainStub<f64>, f64>::builder().build();
         symetric_invert(e);
     }
 

@@ -21,7 +21,7 @@ mod path_area_test {
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::path::area::Area;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
+    use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Raw;
@@ -29,11 +29,11 @@ mod path_area_test {
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
-    fn equirectangular<T>() -> Projection<Area<T>, Line<T>, EquirectangularRaw<Area<T>, T>, PV<T>, T>
+    fn equirectangular<T>() -> Projection<Area<T>, Line<T>, Equirectangular<Area<T>, T>, PV<T>, T>
     where
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        EquirectangularRaw::builder()
+        Equirectangular::builder()
             .scale(T::from(900f64 / PI).unwrap())
             .precision(&T::zero())
             .build()
@@ -41,7 +41,7 @@ mod path_area_test {
 
     #[inline]
     fn test_area<'a, T>(
-        projection: Projection<Area<T>, Line<T>, EquirectangularRaw<Area<T>, T>, PV<T>, T>,
+        projection: Projection<Area<T>, Line<T>, Equirectangular<Area<T>, T>, PV<T>, T>,
         object: impl Streamable<T = T>,
     ) -> T
     where

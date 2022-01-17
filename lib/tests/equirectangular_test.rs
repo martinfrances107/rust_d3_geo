@@ -9,7 +9,7 @@ mod equirectangular_test {
     use rust_d3_geo::clip::antimeridian::line::Line;
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::projection::builder::Builder;
-    use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
+    use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::Raw;
@@ -24,12 +24,12 @@ mod equirectangular_test {
         let equirectangular: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<StreamDrainStub<f64>, f64>,
+            Equirectangular<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
         > = Builder::new(
             gen_clip_factory_antimeridian(),
-            EquirectangularRaw::default(),
+            Equirectangular::default(),
         )
         .translate(&Coordinate { x: 0f64, y: 0f64 })
         .scale(1_f64)
@@ -130,12 +130,12 @@ mod equirectangular_test {
         let equirectangular: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<StreamDrainStub<f64>, f64>,
+            Equirectangular<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
         > = Builder::new(
             gen_clip_factory_antimeridian(),
-            EquirectangularRaw::default(),
+            Equirectangular::default(),
         )
         .rotate(&[30f64, 0f64, 0f64])
         .translate(&Coordinate { x: 0f64, y: 0f64 })
@@ -244,10 +244,10 @@ mod equirectangular_test {
         let equirectangular: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<StreamDrainStub<f64>, f64>,
+            Equirectangular<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
-        > = EquirectangularRaw::builder()
+        > = Equirectangular::builder()
             .rotate(&[30f64, 30f64, 0f64])
             .translate(&Coordinate { x: 0f64, y: 0f64 })
             .scale(1_f64)
@@ -355,10 +355,10 @@ mod equirectangular_test {
         let equirectangular: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<StreamDrainStub<f64>, f64>,
+            Equirectangular<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
-        > = EquirectangularRaw::builder()
+        > = Equirectangular::builder()
             .rotate(&[0f64, 0f64, 30f64])
             .translate(&Coordinate { x: 0f64, y: 0f64 })
             .scale(1f64)
@@ -459,10 +459,10 @@ mod equirectangular_test {
         let equirectangular: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
-            EquirectangularRaw<StreamDrainStub<f64>, f64>,
+            Equirectangular<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
-        > = EquirectangularRaw::builder()
+        > = Equirectangular::builder()
             .rotate(&[30f64, 30f64, 30f64])
             .translate(&Coordinate { x: 0f64, y: 0f64 })
             .scale(1f64)

@@ -2,11 +2,11 @@
 
 * Implement remaining fit_tests --- gives a minor bump in code coverage.
 
+* write example/index.html -- a guide to building rust projects.
+
 * Develop styling for world maps graticules on bottom, overlayed by land.
 
-* Map rings much smaller and have many more.
-
-* Add examples landing page.
+* Add examples landing page. - showing images of the each projection.
 
 * Check on performance of real world test ... ortho projection of 50m.json altas
  with graticules showing africa or South pacific.
@@ -16,9 +16,7 @@ with links to the more detailed mini-apps.
 
 * review  path/centroid_test.rs
 
-* Refactor trait names ending in Trait.
-
-* Enum names ending in Enum
+* Refactor trait names ending in Trait. LineTrait, StreamTrait, PointRadiusTrait.
 
 * Detail why Feature and Feactue collection is complicated.
 
@@ -30,10 +28,15 @@ with links to the more detailed mini-apps.
 
 ## Not Yet Implemented
 
-* sr/interpolate.js
-* src/projection/conic.js
 * src/projection/albers.js
 * src/projection/albersUsa.js
+* src/projection/conic.js
+* src/projection/conicConformal
+* src/projection/conicEqualArea
+* src/projection/conicEquidistant
+* src/projection/cylindricalEqualArea
+* src/projection/equalEarth
+* src/interpolate.js
 * src/projection/natualEarth.js
 
 ## The State of Testing
