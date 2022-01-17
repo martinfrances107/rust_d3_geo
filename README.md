@@ -3,6 +3,13 @@ Rust 2021 Edition.
 
 This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into RUST. The majority of the libray has been ported along with the associated tests.
 
+In addtion some demonstration applications have been provided in the example directory to help developers convert their javascript to rust.
+
+examples/globe/canvas - Show how to load/parse/display  a complex topojson file to a CANVAS element.
+examples/globe/svg  - Show how to load/parse/display the globe as indivdual SVG PATH elements.
+examples/graticule - Show various ways of rendering latitide and longitude lines.
+examples/ring - Renders a complex multipolygon.
+
 The current focus is now on benchmarking and making the library multithreaded.
 
 The API is not stabalised. If perfomance issues arise then the API will change.
@@ -49,4 +56,4 @@ A complete list of all ported projections can be found in invert-test.rs. Out of
   * path/measure and measure-test.js
   * Identity.js and Identity-test.js
 
-
+todo.md contains a more detailed todo list.

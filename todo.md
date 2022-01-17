@@ -1,10 +1,12 @@
-TODO:-
+## TODO
 
 * Implement remaining fit_tests --- gives a minor bump in code coverage.
 
-* develop styling for world maps graticules on bottom, overlayed by land.
+* Develop styling for world maps graticules on bottom, overlayed by land.
 
 * Map rings much smaller and have many more.
+
+* Add examples landing page.
 
 * Check on performance of real world test ... ortho projection of 50m.json altas
  with graticules showing africa or South pacific.
@@ -12,9 +14,7 @@ TODO:-
 * Put images of ring and world map on homepage. Plus add a gallery homepage for the examples
 with links to the more detailed mini-apps.
 
-* update readme.md
-
-* implement path/centroid_test.rs
+* review  path/centroid_test.rs
 
 * Refactor trait names ending in Trait.
 
@@ -24,26 +24,19 @@ with links to the more detailed mini-apps.
 
 * Detail to development of mocks for RenderingContext2d
 
-
-# Short Term Goals
-
 * Justify whey PathResult is not implemented for LengthStream? is cal() a deviation from the interface.
+
 * Same arguement for CicleStream.
 
-# Not Yet Implemented
+## Not Yet Implemented
 
-* src/contains.js
-* src/bounds.js
-* src/centroid.js
 * sr/interpolate.js
-* src/graticule.js
-* src/path/area.js
 * src/projection/conic.js
 * src/projection/albers.js
 * src/projection/albersUsa.js
 * src/projection/natualEarth.js
 
-# The State of Testing
+## The State of Testing
 
 snapshot tests are missing.
 
