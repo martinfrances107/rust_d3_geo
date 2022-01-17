@@ -9,6 +9,7 @@ mod invert_test {
     use rust_d3_geo::clip::circle::line::Line as LineCircle;
     use rust_d3_geo::clip::circle::pv::PV as PVCircle;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
+    use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
     use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mercator::Mercator;
@@ -47,13 +48,19 @@ mod invert_test {
     }
 
     #[test]
-    fn test_azimuthal_equal_area() {
+    fn azimuthal_equal_area() {
         let a = AzimuthalEqualArea::<StreamDrainStub<f64>, f64>::builder().build();
         symetric_invert(a);
     }
 
     #[test]
-    fn test_equirectangular() {
+    fn azimuthal_equidistant() {
+        let a = AzimuthalEquiDistant::<StreamDrainStub<f64>, f64>::builder().build();
+        symetric_invert(a);
+    }
+
+    #[test]
+    fn equirectangular() {
         let e: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
@@ -65,7 +72,7 @@ mod invert_test {
     }
 
     #[test]
-    fn test_gnomic() {
+    fn gnomic() {
         let g: Projection<
             StreamDrainStub<f64>,
             LineCircle<f64>,
@@ -77,7 +84,7 @@ mod invert_test {
     }
 
     #[test]
-    fn test_orthographic() {
+    fn orthographic() {
         let o: Projection<
             StreamDrainStub<f64>,
             LineCircle<f64>,
@@ -89,7 +96,7 @@ mod invert_test {
     }
 
     #[test]
-    fn test_mercator() {
+    fn mercator() {
         let m: Projection<
             StreamDrainStub<f64>,
             Line<f64>,
@@ -101,7 +108,7 @@ mod invert_test {
     }
 
     #[test]
-    fn test_stereographic() {
+    fn stereographic() {
         let s: Projection<
             StreamDrainStub<f64>,
             LineCircle<f64>,

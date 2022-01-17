@@ -165,7 +165,6 @@ where
             CODE_NONE
         };
 
-        // let mut s = self.sink;
         if self.raw.point0.is_none() {
             self.raw.v00 = v;
             self.raw.v0 = v;
@@ -175,6 +174,7 @@ where
         }
 
         if v != self.raw.v0 {
+            dbg!("about to test point2");
             point2 = match intersect(
                 &self.raw.point0.unwrap(),
                 &point1.unwrap(),
@@ -185,7 +185,7 @@ where
                 IntersectReturn::None => None,
                 IntersectReturn::False => {
                     todo!("This case is not handled by test");
-                    // I think I should set point2 to None here buy must test.
+                    // I think I should set point2 to None here but must test.
                 }
                 IntersectReturn::Two(_t) => {
                     // There is a subtle bug in the javascript here two points is handles

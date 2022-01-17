@@ -34,10 +34,12 @@ use self::str::scale_translate_rotate::ScaleTranslateRotate;
 /// The raw projection.
 pub mod azimuthal_equal_area;
 /// The raw projection.
+pub mod azimuthal_equidistant;
+/// The raw projection.
 pub mod equirectangular;
 /// The raw projection.
 pub mod gnomic;
-/// The raw projection.
+/// The raw projection.alArea
 pub mod mercator;
 /// The raw projection.
 pub mod orthographic;
@@ -85,7 +87,6 @@ pub type RotateFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
         EP,
         LINE,
         PV,
-        // Clip<EP, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
         ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>,
         T,
     >,
@@ -241,6 +242,10 @@ pub trait Fit {
     fn fit_size(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
+
+    fn fit_width(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self
+        where
+            Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
 
 /// Gets or sets the post-projection planar rotation angle.

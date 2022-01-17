@@ -30,6 +30,7 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     cr: T,
     two: bool,
 ) -> IntersectReturn<T> {
+    dbg!(a, b, cr, two);
     let pa = cartesian(&a.p);
     let pb = cartesian(&b.p);
 

@@ -2,13 +2,13 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_factory_antimeridian;
 use crate::clip::circle::line::Line;
 use crate::clip::circle::pv::PV;
-
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -18,17 +18,13 @@ use super::ClipAngle;
 use super::Raw;
 use super::Scale;
 
-/// GnomicRaw
-///
-/// Root transform.
-/// Used to define a projection builder.
+/// Gnomic
 #[derive(Clone, Debug)]
 pub struct Gnomic<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
     p_drain: PhantomData<DRAIN>,
-    // p_ep: PhantomData<EP>,
     p_t: PhantomData<T>,
 }
 
@@ -39,7 +35,6 @@ where
     fn default() -> Self {
         Gnomic {
             p_drain: PhantomData::<DRAIN>,
-            // p_ep: PhantomData::<EP>,
             p_t: PhantomData::<T>,
         }
     }
@@ -48,10 +43,11 @@ where
 impl<DRAIN, T> Raw<T> for Gnomic<DRAIN, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
-    // EP: Clone + Debug + Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type Builder = Builder<DRAIN, Line<T>, Gnomic<DRAIN, T>, PV<T>, T>;
+
+    /// f64 or f32.
     type T = T;
 
     fn builder() -> Self::Builder
@@ -70,7 +66,9 @@ where
     DRAIN: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
+    /// f64 or f32.
     type T = T;
+
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let cy = p.y.cos();
         let k = p.x.cos() * cy;

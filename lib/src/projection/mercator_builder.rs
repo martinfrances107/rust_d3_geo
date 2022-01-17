@@ -268,6 +268,15 @@ where
         self.base = self.base.fit_size(size, object);
         self
     }
+
+    #[inline]
+    fn fit_width(mut self, w: T, object: &impl Streamable<T = T>) -> Self
+    where
+        Self::T: AsPrimitive<T> + CoordFloat,
+    {
+        self.base = self.base.fit_width(w, object);
+        self
+    }
 }
 
 impl<DRAIN, LINE, PR, PV, T> ClipExtent for MercatorBuilder<DRAIN, LINE, PR, PV, T>

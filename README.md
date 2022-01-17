@@ -30,13 +30,14 @@ I am trying to get a program of mine to run faster, but I want this to eventuall
 
 Here is a list of the currently supported projections.
 * AziumuthalEqualArea
+* AzimuthalEquiDistant
 * Equirectangular
 * Gnomic
 * Mercator
 * Orthographic
 * Stereographic
 
-A complete list of all ported projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 6 have been ported so far.
+A complete list of all ported projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 7 have been ported so far.
 
 ## Other To-do's
 

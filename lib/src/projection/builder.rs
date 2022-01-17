@@ -27,6 +27,7 @@ use crate::Transform;
 
 use super::fit::fit_extent;
 use super::fit::fit_size;
+use super::fit::fit_width;
 use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
 use super::str::generate as generate_str;
@@ -462,6 +463,16 @@ where
 {
     type T = T;
 
+    /// Sets the projection’s scale and translate to fit the specified GeoJSON
+    /// object in the center of the given extent.
+    ///
+    /// The extent is specified as an array [[x₀, y₀], [x₁, y₁]],
+    /// where x₀ is the left side of the bounding box, y₀ is the top, x₁ is
+    /// the right and y₁ is the bottom. Returns the projection.
+    ///
+    /// For example, to scale and translate the New Jersey State Plane
+    /// projection to fit a GeoJSON object nj in the center of a 960×500
+    /// bounding box with 20 pixels of padding on each side:
     #[inline]
     fn fit_extent(self, extent: [[T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self
     where
@@ -470,6 +481,7 @@ where
         fit_extent(self, extent, object)
     }
 
+    /// Similar to fitExtent where the top-left corner of the extent is [0, 0].
     #[inline]
     fn fit_size(self, size: [T; 2], object: &impl Streamable<T = T>) -> Self
     where
@@ -477,6 +489,17 @@ where
     {
         fit_size(self, size, object)
     }
+
+    /// Similar to fit_size where the height is automatically chosen from
+    /// the aspect ratio of object and the given constraint on width.
+    #[inline]
+    fn fit_width(self, w: T, object: &impl Streamable<T = T>) -> Self
+    where
+        Self::T: AsPrimitive<T> + CoordFloat,
+    {
+        fit_width(self, w, object)
+    }
+
 }
 
 impl<DRAIN, LINE, PR, PV, T> Angle for Builder<DRAIN, LINE, PR, PV, T>
