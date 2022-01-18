@@ -139,7 +139,7 @@ mod index_test {
     // }
 
     #[test]
-    fn test_render_line_string() {
+    fn render_line_string() {
         println!("geoPath(LineString) renders a line string");
         let object = Geometry::LineString(line_string![
 			(x: -63_f64, y: 18_f64),(x: -62_f64, y: 18_f64), (x: -62_f64, y:17_f64) ]);
@@ -151,7 +151,7 @@ mod index_test {
     }
 
     #[test]
-    fn test_render_a_polygon() {
+    fn render_a_polygon() {
         println!("geoPath(Polygon) renders a polygon");
         let exterior: LineString<f64> = LineString(vec![
             Coordinate {

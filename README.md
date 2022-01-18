@@ -33,6 +33,9 @@ I have made extensive use of iterators when porting the code and rayon support t
 
 ## Unimplemented sections of the library.
 
+Support for a custom projection is not yet supported.
+For an example of this see the test labelled "projection.fitExtent(…) custom projection"
+
 I am trying to get a program of mine to run faster, but I want this to eventually be a true library port. So feel free to add suggestions to my todo list.
 
 Here is a list of the currently supported projections.

@@ -14,7 +14,7 @@
 * Put images of ring and world map on homepage. Plus add a gallery homepage for the examples
 with links to the more detailed mini-apps.
 
-* review  path/centroid_test.rs
+* Review  path/centroid_test.rs
 
 * Refactor trait names ending in Trait. LineTrait, StreamTrait, PointRadiusTrait.
 

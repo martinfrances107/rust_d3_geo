@@ -19,7 +19,7 @@ mod equirectangular_test {
     use rust_d3_geo::stream::StreamDrainStub;
 
     #[test]
-    fn test_return_expected_result() {
+    fn return_expected_result() {
         println!("equirectangular(point) returns the expected result");
         let equirectangular: Projection<
             StreamDrainStub<f64>,
@@ -125,7 +125,7 @@ mod equirectangular_test {
     }
 
     #[test]
-    fn test_rotate_30_0() {
+    fn rotate_30_0() {
         println!("equirectangular(point) returns the expected result");
         let equirectangular: Projection<
             StreamDrainStub<f64>,
@@ -239,7 +239,7 @@ mod equirectangular_test {
         ));
     }
     #[test]
-    fn test_rotate_30_30() {
+    fn rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
         let equirectangular: Projection<
             StreamDrainStub<f64>,
@@ -350,7 +350,7 @@ mod equirectangular_test {
     }
 
     #[test]
-    fn test_rotate_0_0_30() {
+    fn rotate_0_0_30() {
         println!("equirectangular.rotate([0, 0, 30])(point) returns the expected result");
         let equirectangular: Projection<
             StreamDrainStub<f64>,
@@ -454,7 +454,7 @@ mod equirectangular_test {
     }
 
     #[test]
-    fn test_rotate_30_30_30() {
+    fn rotate_30_30_30() {
         println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
         let equirectangular: Projection<
             StreamDrainStub<f64>,

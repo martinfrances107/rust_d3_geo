@@ -405,17 +405,17 @@ mod fit_test {
     //     let projection: ProjectionBuilder<
     //         Bounds<f64>,
     //         _,
-    //         EquirectangularRaw<Bounds<f64>, f64>,
+    //         Equirectangular<Bounds<f64>, f64>,
     //         _,
     //         f64,
-    //     > = EquirectangularRaw::builder()
+    //     > = Equirectangular::builder()
     //         .fit_width(900f64, &world);
     //     assert!(in_delta(projection.get_scale(), 143.239449_f64, 1e-6));
     //     assert!(in_delta_coordinate(
     //         &projection.get_translate(),
     //         &Coordinate {
     //             x: 450_f64,
-    //             y: 208_999023_f64
+    //             y: 1208_999023_f64
     //         },
     //         1e-6
     //     ));
@@ -444,6 +444,30 @@ mod fit_test {
     // // //   test.inDelta(projection.translate(), [933.187199, 433.411585], 1e-6);
     // // //   test.end();
     // // // });
+
+    // #[test]
+    // fn fit_height_world_equirectangular() {
+    //     println!("projection.fitHeight(…) world equirectangular");
+
+    //     let world = world();
+    //     let projection: ProjectionBuilder<
+    //         Bounds<f64>,
+    //         _,
+    //         Equirectangular<Bounds<f64>, f64>,
+    //         _,
+    //         f64,
+    //     > = Equirectangular::builder()
+    //         .fit_height(900f64, &world);
+    //     assert!(in_delta(projection.get_scale(), 297.042711_f64, 1e-6));
+    //     assert!(in_delta_coordinate(
+    //         &projection.get_translate(),
+    //         &Coordinate {
+    //             x: 933.187199_f64,
+    //             y: 433.411585_f64
+    //         },
+    //         1e-6
+    //     ));
+    // }
 
     // // // tape("projection.fitHeight(…) world transverseMercator", function(test) {
     // // //   var projection = d3.geoTransverseMercator();

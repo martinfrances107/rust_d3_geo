@@ -19,7 +19,7 @@ mod angle_test {
     use rust_d3_geo::stream::StreamDrainStub;
 
     #[test]
-    fn test_angle_defaults_to_zero() {
+    fn angle_defaults_to_zero() {
         println!("projection.angle(…) defaults to zero");
         let pb: Builder<
             StreamDrainStub<f64>,
@@ -144,7 +144,7 @@ mod angle_test {
     }
 
     #[test]
-    fn test_angle_rotates_by_plus_30() {
+    fn angle_rotates_by_plus_30() {
         println!("projection.angle(…) defaults to zero");
         let pb: Builder<
             StreamDrainStub<f64>,
@@ -274,7 +274,7 @@ mod angle_test {
     }
 
     #[test]
-    fn test_angle_rotates_by_minus_30() {
+    fn angle_rotates_by_minus_30() {
         println!("projection.angle(…) defaults to zero");
         let pb: Builder<
             StreamDrainStub<f64>,
@@ -403,7 +403,7 @@ mod angle_test {
     }
 
     #[test]
-    fn tests_wraps_360() {
+    fn wraps_360() {
         println!("projection.angle(…) wraps around 360°");
         let pb: Builder<
             StreamDrainStub<f64>,

@@ -58,7 +58,7 @@ mod path_bounds_test {
     }
 
     #[test]
-    fn test_polygon_with_no_holes() {
+    fn polygon_with_no_holes() {
         println!("geoPath.area(…) of a polygon with no holes");
         let object = Geometry::Polygon(Polygon::new(
             LineString::from(vec![
@@ -87,7 +87,7 @@ mod path_bounds_test {
     }
 
     #[test]
-    fn test_polygon_with_holes() {
+    fn polygon_with_holes() {
         println!("geoPath.area(…) of a polygon with holes");
         let object = Geometry::Polygon(Polygon::new(
             LineString::from(vec![
@@ -125,7 +125,7 @@ mod path_bounds_test {
     }
 
     #[test]
-    fn test_area_of_a_sphere() {
+    fn area_of_a_sphere() {
         println!("geoPath.area(…) of a sphere");
         let eq = equirectangular::<f64>();
         let object = Sphere::default();
