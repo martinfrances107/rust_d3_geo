@@ -4,6 +4,7 @@ members = [
     "./examples/globe/canvas",
     "./examples/globe/svg",
     "./examples/graticule",
+    "./examples/projections",
     "./examples/ring"
 ]
 

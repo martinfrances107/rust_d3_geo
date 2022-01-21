@@ -7,6 +7,9 @@ examples/globe/svg/target/
 examples/graticule/package-lock.json
 examples/graticule/target/
 examples/graticule/node_modules/
+examples/projections/package-lock.json
+examples/projections/target/
+examples/projections/node_modules/
 examples/ring/package-lock.json
 examples/ring/node_modules/
 examples/ring/target/

@@ -1,8 +1,18 @@
 ## TODO
 
+* examples/projections Investigiate by mercator and gnomic projections fail.
+
+* examples/projections It looks like azimthal projections have scaling issues.
+
+* Port graticule10().
+
+* Examples projections CSS styling needs work.
+
 * Implement remaining fit_tests --- gives a minor bump in code coverage.
 
-* write example/index.html -- a guide to building rust projects.
+* write examples/index.html -- a guide to building rust projects.
+
+* convert examples/rings to typescript.
 
 * Develop styling for world maps graticules on bottom, overlayed by land.
 
