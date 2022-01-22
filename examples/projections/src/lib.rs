@@ -19,20 +19,20 @@ use web_sys::*;
 
 use topojson::Topology;
 
-mod dom_macros;
 mod azimuthal_equal_area;
 mod azimuthal_equidistant;
+mod dom_macros;
 mod equirectangular;
-mod orthographic;
-mod mercator;
 mod gnomic;
+mod mercator;
+mod orthographic;
 mod stereographic;
 
-use azimuthal_equidistant::draw_azimuthal_equidistant;
 use azimuthal_equal_area::draw_azimuthal_equal_area;
-use orthographic::draw_orthographic;
-use mercator::draw_mercator;
+use azimuthal_equidistant::draw_azimuthal_equidistant;
 use gnomic::draw_gnomic;
+use mercator::draw_mercator;
+use orthographic::draw_orthographic;
 use stereographic::draw_sterographic;
 
 #[wasm_bindgen]
@@ -87,7 +87,6 @@ pub async fn start() -> Result<(), JsValue> {
     let window = web_sys::window().expect("Failed to get window");
     let resp_value = JsFuture::from(window.fetch_with_request(&request)).await?;
 
-
     // `resp_value` is a `Response` object.
     assert!(resp_value.is_instance_of::<Response>());
     let resp: Response = resp_value.dyn_into().unwrap();
@@ -100,12 +99,12 @@ pub async fn start() -> Result<(), JsValue> {
     let land = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
-        draw_azimuthal_equal_area(&land)?;
-        draw_azimuthal_equidistant(&land)?;
-        draw_orthographic(&land)?;
-        draw_mercator(&land)?;
-        draw_sterographic(&land)?;
-        draw_equirectangular(&land)?;
-        draw_gnomic(&land)?;
+    draw_azimuthal_equal_area(&land)?;
+    draw_azimuthal_equidistant(&land)?;
+    draw_orthographic(&land)?;
+    draw_mercator(&land)?;
+    draw_sterographic(&land)?;
+    draw_equirectangular(&land)?;
+    draw_gnomic(&land)?;
     Ok(())
 }

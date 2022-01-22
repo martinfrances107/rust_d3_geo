@@ -2,12 +2,13 @@ use std::rc::Rc;
 
 use geo::Coordinate;
 use geo::Geometry;
-
+use geo::MultiLineString;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
 use rust_d3_geo::clip::circle::line::Line;
 use rust_d3_geo::clip::circle::pv::PV;
+use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::orthographic::Orthographic;
@@ -17,9 +18,8 @@ use rust_d3_geo::projection::Translate;
 
 use crate::get_document;
 
-pub fn draw_orthographic(land: &Geometry<f64>)-> Result<(), JsValue>{
-
-	let document = get_document()?;
+pub fn draw_orthographic(land: &Geometry<f64>) -> Result<(), JsValue> {
+    let document = get_document()?;
     // Grab canvas.
     let canvas = document
         .get_element_by_id("orthographic-rust")
@@ -52,10 +52,17 @@ pub fn draw_orthographic(land: &Geometry<f64>)-> Result<(), JsValue>{
 
     let mut path = pb.build(ortho);
     context.set_stroke_style(&"#69b3a2".into());
+    context.set_fill_style(&"#2a2a2a".into());
     path.object(land);
     context.stroke();
 
-	// let graticule10 = Graticule10::new();
+    let lines = generate_graticule().lines();
+    let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
+    context.begin_path();
+    context.set_fill_style(&"#999".into());
+    context.set_stroke_style(&"#69b3a2".into());
+    path.object(&mls);
+    context.stroke();
 
-	Ok(())
+    Ok(())
 }

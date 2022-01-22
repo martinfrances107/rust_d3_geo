@@ -9,127 +9,141 @@
 </head>
 
 <style>
+  :root {
+    --projection-side-length: 410px;
+  }
+
   .grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
     background-color: #2196F3;
-    padding: 10px;
+    padding: 20px;
+    margin: 0;
+  }
+
+  .projection {
+    background-color: rgba(255, 255, 255, 0.8);
+    width: var(--projection-side-length);
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+  }
+
+  .projection h1 {
+    margin: 0;
+    margin-block-end: 0;
+    padding: 0;
   }
 
   .projection p {
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    font-size: 30px;
-    text-align: center;
+    padding: 0;
+    margin-block-end: 0;
+    margin: 0;
   }
 
   .projection canvas {
     background-color: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    width: 410px;
-    height: 410px;
+    padding: 0;
+    width: var(--projection-side-length);
+    height: var(--projection-side-length)
   }
 </style>
 
 <body>
 
-  <h1>Example: Globe(Canvas)</h1>
+  <h1>Example: Projections</h1>
   <h2>Rust d3 geo</h2>
 
   <p>
-    The canvas version of the globe is different from the svg example.
+    A display of supported projections. Rendered using javascript and rust.
   </p>
-  <p>
-    The canvas version is build for performance.
-  </p>
-  <p>
-    The SVG version demonstrates the complex decoding of the world map to retain the sematic meaning of the polygons.
-  </p>
-
 
   <div class="grid-container">
     <div class="projection">
-      <canvas id="orthographic-js" ></canvas>
-      <h1> orthographic  </h1>
-      <p>  javascript </p>
-    </div>
-
-    <div class="projection">
-      <canvas id="orthographic-rust" ></canvas>
-      <h1> orthographic  </h1>
-      <p> rust </p>
-    </div>
-
-    <div class="projection">
-      <canvas id="mercator-js" ></canvas>
-      <h1> mercator  </h1>
+      <canvas id="orthographic-js"></canvas>
+      <h1> orthographic </h1>
       <p> javascript </p>
     </div>
 
     <div class="projection">
-      <canvas id="mercator-rust" ></canvas>
-      <h1> mercator </h1>
-      <p>  rust</p>
+      <canvas id="orthographic-rust"></canvas>
+      <h1> orthographic </h1>
+      <p> rust </p>
     </div>
 
     <div class="projection">
-      <canvas id="gnomic-js" ></canvas>
+      <canvas id="mercator-js"></canvas>
+      <h1> mercator </h1>
+      <p> javascript </p>
+    </div>
+
+    <div class="projection">
+      <canvas id="mercator-rust"></canvas>
+      <h1> mercator </h1>
+      <p> rust</p>
+    </div>
+
+    <div class="projection">
+      <canvas id="gnomic-js"></canvas>
       <h1> gnomic </h1>
       <p> javascript</p>
     </div>
 
     <div class="projection">
-      <canvas id="gnomic-rust" ></canvas>
+      <canvas id="gnomic-rust"></canvas>
       <h1> gnomic </h1>
       <p> rust</p>
     </div>
 
     <div class="projection">
-      <canvas id="equirectangular-js" ></canvas>
+      <canvas id="equirectangular-js"></canvas>
       <h1> equirectangular</h1>
       <p> javascript</p>
     </div>
 
     <div class="projection">
-      <canvas id="equirectangular-rust" ></canvas>
+      <canvas id="equirectangular-rust"></canvas>
       <h1>equirectangular</h1>
       <p> rust</p>
     </div>
 
     <div class="projection">
-      <canvas id="stereographic-js" ></canvas>
-      <h1>sterographic </h1>
-      <p> javascripts</p>
+      <canvas id="stereographic-js"></canvas>
+      <h1>stereographic </h1>
+      <p> javascript</p>
     </div>
 
     <div class="projection">
-      <canvas id="stereographic-rust" ></canvas>
-      <h1> sterographic </h1>
+      <canvas id="stereographic-rust"></canvas>
+      <h1> stereographic </h1>
       <p> rust</p>
     </div>
 
     <div class="projection">
-      <canvas id="azimuthal-equal-area-js" ></canvas>
+      <canvas id="azimuthal-equal-area-js"></canvas>
       <h1> azimuthal equal area javascript</h1>
       <p> javascript</p>
     </div>
 
     <div class="projection">
-      <canvas id="azimuthal-equal-area-rust"  ></canvas>
+      <canvas id="azimuthal-equal-area-rust"></canvas>
       <h1> azimuthal equal area</h1>
       <p> rust</p>
     </div>
 
     <div class="projection">
-      <canvas id="azimuthal-equidistant-js" ></canvas>
+      <canvas id="azimuthal-equidistant-js"></canvas>
       <h1> azimuthal-equidistant</h1>
       <p> javascript </p>
     </div>
 
     <div class="projection">
-      <canvas id="azimuthal-equidistant-rust" ></canvas>
+      <canvas id="azimuthal-equidistant-rust"></canvas>
       <h1> azimuthal-equidistant</h1>
       <p> rust</p>
     </div>

@@ -26,12 +26,12 @@ import stereographic from './stereographic';
 fetch("../world-atlas/world/50m.json").then(response => response.json())
   .then(_worldTopo => {
     const worldTopo = _worldTopo as Topology;
-    const world = feature(worldTopo, worldTopo.objects.land);
+    const world = feature(worldTopo, worldTopo.objects.countries);
+    stereographic(world);
+    orthographic(world);
+    equirectangular(world);
     azimuthalEqualArea(world);
     azimuthalEquidistant(world);
-    equirectangular(world);
     gnomic(world);
-    orthographic(world);
     mercator(world);
-    stereographic(world);
   });

@@ -2,7 +2,6 @@ use std::rc::Rc;
 
 use geo::Coordinate;
 use geo::Geometry;
-
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -10,7 +9,6 @@ use rust_d3_geo::clip::antimeridian::line::Line;
 use rust_d3_geo::clip::antimeridian::pv::PV;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
-// use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::mercator::Mercator;
 use rust_d3_geo::projection::Raw;
 use rust_d3_geo::projection::Scale;
@@ -18,9 +16,8 @@ use rust_d3_geo::projection::Translate;
 
 use crate::get_document;
 
-pub fn draw_mercator(land: &Geometry<f64>)-> Result<(), JsValue>{
-
-	let document = get_document()?;
+pub fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
+    let document = get_document()?;
     // Grab canvas.
     let canvas = document
         .get_element_by_id("mercator-rust")
@@ -56,7 +53,7 @@ pub fn draw_mercator(land: &Geometry<f64>)-> Result<(), JsValue>{
     // path.object(land);
     // context.stroke();
 
-	// let graticule10 = Graticule10::new();
+    // let graticule10 = Graticule10::new();
 
-	Ok(())
+    Ok(())
 }

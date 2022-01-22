@@ -3,8 +3,6 @@
 	  "outDir": "./dist/",
 	  "noImplicitAny": true,
 	  "module": "es2020",
-	  "resolveJsonModule": true,
-	  "esModuleInterop": true,
 	  "target": "es5",
 	  "jsx": "react",
 	  "allowJs": true,
