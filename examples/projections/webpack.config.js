@@ -34,7 +34,7 @@ module.exports = {
     // HACK: the .wasm file is too big it should be chunked.
     // but I think atm I need to use asyncWebAssembley for that
     // TODO must resolve.
-    maxAssetSize: 2097152
+    maxAssetSize: 3 * 1024 * 1024
   },
   experiments: { syncWebAssembly: true, },
   plugins: [
