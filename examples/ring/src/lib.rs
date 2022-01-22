@@ -130,7 +130,7 @@ fn draw() -> Result<()> {
     let object = MultiPolygon(p_vec);
 
     let mut path = PathBuilder::context_pathstring().build(ortho);
-    console_log!("{:?}", object);
+    // console_log!("{:?}", object);
     let s = path.object(&object);
 
     let class_name = format!("s2-id-{}", 0);
