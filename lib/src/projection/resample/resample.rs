@@ -206,6 +206,7 @@ where
         );
     }
 
+    #[allow(clippy::too_many_arguments)]
     #[allow(clippy::many_single_char_names)]
     fn resample_line_to(
         &mut self,

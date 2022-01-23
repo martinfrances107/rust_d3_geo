@@ -174,7 +174,7 @@ where
         }
 
         if v != self.raw.v0 {
-            dbg!("about to test point2");
+            // dbg!("about to test point2");
             point2 = match intersect(
                 &self.raw.point0.unwrap(),
                 &point1.unwrap(),

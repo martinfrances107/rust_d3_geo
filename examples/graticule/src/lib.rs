@@ -178,12 +178,7 @@ fn update_svg_mls(document: &Document) -> Result<()> {
     let width = svg.width().base_val().value()? as f64;
     let height = svg.height().base_val().value()? as f64;
 
-    let ortho_builder = Orthographic::<_, f64>::builder()
-        .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-        .translate(&Coordinate {
-            x: width / 2_f64,
-            y: height / 2_f64,
-        });
+    let ortho_builder = Orthographic::<_, f64>::builder();
 
     let stroke: [&str; 7] = [
         "stroke: red",

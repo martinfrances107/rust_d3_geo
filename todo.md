@@ -6,6 +6,15 @@
 * examples/projections Investigiate by mercator and gnomic projections fail.
   -- mercator has differences between f64 and f32.
 
+* examples/graticule - does this example need to exist?
+when projection displays graticules.
+styling of globe should include graticules?
+
+IF I am keeping it .. then
+- Convert to typescriprt
+- Stop using cdn as source of d3 module.
+- draw a clear distinction between what is JS and what is rust.
+
 * Write examples/index.html -- a guide to building rust projects.
 
 * Develop styling for world maps graticules on bottom, overlayed by land.
