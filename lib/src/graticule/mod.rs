@@ -1,13 +1,14 @@
 /// Generates great circles.
-pub mod graticule;
+pub mod builder;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 
-use graticule::Builder as GraticuleBuilder;
+use rust_d3_array::range::range;
 
 use crate::math::EPSILON;
-use rust_d3_array::range::range;
+
+use builder::Builder as GraticuleBuilder;
 
 type CoordFn<T> = Box<dyn Fn(T) -> Vec<Coordinate<T>>>;
 
