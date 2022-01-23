@@ -22,11 +22,13 @@ Finally, the infrequently used projections and other minor items need be impleme
 Currently we have 84% code coverage ( as reported by cargo tarpaulin )
 
 
-## Notes on performance
+## Benchmarking
 
-This code performs only slighty better than the JS version. So I am looking into making this library multi threaded.
+rust_d3_geo_voronoi uses this library, and it contains a benchmark which contains an exact port of a benchmark committed in its counterpart javascript library [ d3-geo-voronoi library ]. Based on this comparitive benchmark rust is only about 5-10% faster.
 
-* I am about to implement benchmarking.
+We have two benchmarks, based on the ring and graticule examples ( see above. )
+
+As this code performs only slighty better than the JS version I am looking into making this library multi threaded.
 
 * [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
 I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.

@@ -11,7 +11,7 @@ use rust_d3_geo::projection::Rotate;
 use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
 
-/// This benchmark is base on examples/graticule
+/// This benchmark is based on examples/graticule
 ///
 /// It uses orthographic projection to generated a SVG path
 /// for a complex MultiLineString

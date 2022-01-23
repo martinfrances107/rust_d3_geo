@@ -34,3 +34,7 @@ features = [
 [[bench]]
 name = "graticule"
 harness= false
+
+[[bench]]
+name = "rings"
+harness= false
