@@ -4,8 +4,9 @@
 * Implement remaining fit_tests --- gives a minor bump in code coverage.
 
 * examples/projections Investigiate by mercator and gnomic projections fail.
+  -- mercator has differences between f64 and f32.
 
-* write examples/index.html -- a guide to building rust projects.
+* Write examples/index.html -- a guide to building rust projects.
 
 * Develop styling for world maps graticules on bottom, overlayed by land.
 
@@ -21,8 +22,6 @@ with links to the more detailed mini-apps.
 
 * Refactor trait names ending in Trait. LineTrait, StreamTrait, PointRadiusTrait.
 
-* Detail why Feature and Feactue collection is complicated.
-
 * Detail to development of mocks for RenderingContext2d
 
 * Examples projections CSS styling needs minor adjustment font sizes of text
@@ -30,6 +29,8 @@ with links to the more detailed mini-apps.
   ( eg.  Boilerplate, material-ui)
 
 ##  Before API lock-down
+
+* Detail why Feature and Feactue collection is complicated.
 
 * Define graticule10 as an alias for Graticule::default().
  -- the code in examples looks scrappy.
@@ -55,13 +56,13 @@ with links to the more detailed mini-apps.
 
 snapshot tests are missing.
 
-src/rotation
+src/rotation ?
 
 area_test - Some tests not yet implemented. Exposes bug, also not complete.
 
 bounds_test - src or test not yet implemented.
 
-centroid_test - Needs lots of work.
+centroid_test - Needs minor additions
 
 clip_circle_test - Needs regex development.. Path::API has changed since this last compiled.
 

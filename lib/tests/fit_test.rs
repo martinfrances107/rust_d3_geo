@@ -12,11 +12,11 @@ mod fit_test {
     use geo::Coordinate;
     use geo::Geometry;
     use pretty_assertions::assert_eq;
-    use rust_d3_geo::projection::ClipAngle;
     use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::orthographic::Orthographic;
     use rust_d3_geo::projection::stereographic::Stereographic;
+    use rust_d3_geo::projection::ClipAngle;
     use topojson::Topology;
 
     use rust_d3_geo::data_object::sphere::Sphere;
@@ -208,14 +208,9 @@ mod fit_test {
         println!("projection.fitExtent(…) world orthographic");
 
         let world = world();
-        let projection: ProjectionBuilder<
-            Bounds<f64>,
-            _,
-            Orthographic<Bounds<f64>, f64>,
-            _,
-            f64,
-        > = Orthographic::builder()
-            .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
+        let projection: ProjectionBuilder<Bounds<f64>, _, Orthographic<Bounds<f64>, f64>, _, f64> =
+            Orthographic::builder()
+                .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
         assert!(in_delta(projection.get_scale(), 451.406773, 1e-6));
         assert!(in_delta_coordinate(
             &projection.get_translate(),
@@ -232,14 +227,8 @@ mod fit_test {
         println!("projection.fitSize(…) world orthographic");
 
         let world = world();
-        let projection: ProjectionBuilder<
-            Bounds<f64>,
-            _,
-            Orthographic<Bounds<f64>, f64>,
-            _,
-            f64,
-        > = Orthographic::builder()
-            .fit_size([900.0_f64, 900.0_f64], &world);
+        let projection: ProjectionBuilder<Bounds<f64>, _, Orthographic<Bounds<f64>, f64>, _, f64> =
+            Orthographic::builder().fit_size([900.0_f64, 900.0_f64], &world);
         assert!(in_delta(projection.get_scale(), 451.406773, 1e-6));
         assert!(in_delta_coordinate(
             &projection.get_translate(),
@@ -409,7 +398,7 @@ mod fit_test {
     //         _,
     //         f64,
     //     > = Equirectangular::builder()
-    //         .fit_width(900f64, &world);
+    //         .fit_width(900_f64, &world);
     //     assert!(in_delta(projection.get_scale(), 143.239449_f64, 1e-6));
     //     assert!(in_delta_coordinate(
     //         &projection.get_translate(),

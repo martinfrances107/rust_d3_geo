@@ -277,6 +277,17 @@ where
         self.base = self.base.fit_width(w, object);
         self
     }
+
+    /// Similar to fit_size where the width is automatically chosen from
+    /// the aspect ratio of object and the given constraint on height.
+    #[inline]
+    fn fit_height(mut self, h: T, object: &impl Streamable<T = T>) -> Self
+    where
+        Self::T: AsPrimitive<T> + CoordFloat,
+    {
+        self.base = self.base.fit_height(h, object);
+        self
+    }
 }
 
 impl<DRAIN, LINE, PR, PV, T> ClipExtent for MercatorBuilder<DRAIN, LINE, PR, PV, T>

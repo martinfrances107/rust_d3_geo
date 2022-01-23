@@ -26,6 +26,7 @@ use crate::stream::Streamable;
 use crate::Transform;
 
 use super::fit::fit_extent;
+use super::fit::fit_height;
 use super::fit::fit_size;
 use super::fit::fit_width;
 use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
@@ -500,6 +501,15 @@ where
         fit_width(self, w, object)
     }
 
+    /// Similar to fit_size where the width is automatically chosen from
+    /// the aspect ratio of object and the given constraint on height.
+    #[inline]
+    fn fit_height(self, h: T, object: &impl Streamable<T = T>) -> Self
+    where
+        Self::T: AsPrimitive<T> + CoordFloat,
+    {
+        fit_height(self, h, object)
+    }
 }
 
 impl<DRAIN, LINE, PR, PV, T> Angle for Builder<DRAIN, LINE, PR, PV, T>

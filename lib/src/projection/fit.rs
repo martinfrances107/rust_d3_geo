@@ -23,10 +23,7 @@ use super::Scale;
 use super::Translate;
 
 type FitBounds<DRAIN, LINE, PR, PV, T> = Box<
-    dyn FnOnce(
-        [Coordinate<T>; 2],
-        Builder<DRAIN, LINE, PR, PV, T>,
-    ) -> Builder<DRAIN, LINE, PR, PV, T>,
+    dyn Fn([Coordinate<T>; 2], Builder<DRAIN, LINE, PR, PV, T>) -> Builder<DRAIN, LINE, PR, PV, T>,
 >;
 
 fn fit<LINE, PR, PV, T>(
@@ -91,6 +88,7 @@ where
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let two = T::from(2.0).unwrap();
+    let one_five_zero = T::from(150_f64).unwrap();
     fit(
         builder,
         Box::new(
@@ -102,7 +100,7 @@ where
                 let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
 
                 builder
-                    .scale(T::from(150.0).unwrap() * k)
+                    .scale(one_five_zero * k)
                     .translate(&Coordinate { x, y })
             },
         ),
@@ -137,31 +135,72 @@ pub(super) fn fit_width<LINE, PR, PV, T>(
     object: &impl Streamable<T = T>,
 ) -> Builder<Bounds<T>, LINE, PR, PV, T>
 where
-LINE: Line,
-StreamNode<
-    Bounds<T>,
-    LINE,
-    ResampleNode<Bounds<T>, PR, PostClipNode<Bounds<T>, Bounds<T>, T>, T>,
-    T,
->: Stream<EP = Bounds<T>, T = T>,
-StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-PR: ProjectionRaw<T>,
-PV: PointVisible<T = T>,
-T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    LINE: Line,
+    StreamNode<
+        Bounds<T>,
+        LINE,
+        ResampleNode<Bounds<T>, PR, PostClipNode<Bounds<T>, Bounds<T>, T>, T>,
+        T,
+    >: Stream<EP = Bounds<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let two = T::from(2.0).unwrap();
-    fit(builder,
+    let one_five_zero = T::from(150).unwrap();
+    fit(
+        builder,
         Box::new(
             move |b: [Coordinate<T>; 2], builder: Builder<Bounds<T>, LINE, PR, PV, T>| {
-                dbg!(b);
                 let k = w / (b[1].x - b[0].x);
-                let x = w - k * (b[1].x - b[0].x) / two;
+                dbg!(b, k, w);
+                let x = (w - k * (b[1].x - b[0].x)) / two;
                 let y = -k * b[0].y;
 
                 builder
-                    .scale(T::from(150.0).unwrap() * k)
+                    .scale(one_five_zero * k)
                     .translate(&Coordinate { x, y })
             },
         ),
-        object)
+        object,
+    )
+}
+
+pub(super) fn fit_height<LINE, PR, PV, T>(
+    builder: Builder<Bounds<T>, LINE, PR, PV, T>,
+    h: T,
+    object: &impl Streamable<T = T>,
+) -> Builder<Bounds<T>, LINE, PR, PV, T>
+where
+    LINE: Line,
+    StreamNode<
+        Bounds<T>,
+        LINE,
+        ResampleNode<Bounds<T>, PR, PostClipNode<Bounds<T>, Bounds<T>, T>, T>,
+        T,
+    >: Stream<EP = Bounds<T>, T = T>,
+    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
+    PR: ProjectionRaw<T>,
+    PV: PointVisible<T = T>,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+    let two = T::from(2.0).unwrap();
+    let one_five_zero = T::from(150).unwrap();
+    fit(
+        builder,
+        Box::new(
+            move |b: [Coordinate<T>; 2], builder: Builder<Bounds<T>, LINE, PR, PV, T>| {
+                let k = h / (b[1].y - b[0].y);
+                // dbg!(b, k, h);
+                let x = -k * b[0].x;
+                let y = (h - k * (b[1].y - b[0].y)) / two;
+
+                builder
+                    .scale(one_five_zero * k)
+                    .translate(&Coordinate { x, y })
+            },
+        ),
+        object,
+    )
 }

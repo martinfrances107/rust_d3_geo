@@ -246,6 +246,10 @@ pub trait Fit {
     fn fit_width(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self
         where
             Self::T: AsPrimitive<Self::T> + CoordFloat;
+
+    fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self
+        where
+            Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
 
 /// Gets or sets the post-projection planar rotation angle.
@@ -293,10 +297,8 @@ where
     //     Self::T,
     // >;
 
-    ///  Switches to antimeridian cutting rather than small-circle clipPIng.
+    ///  Switches from antimeridian to circle based clipping.
     ///  See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
-    ///
-    ///  @param angle Set to null to switch to antimeridian cutting.
     ///
     fn clip_angle(
         self,
