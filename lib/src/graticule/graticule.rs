@@ -19,7 +19,7 @@ use super::CoordFn;
 #[derivative(Debug)]
 #[allow(non_snake_case)]
 /// A graticule is a network of lines used for plotting, scaling.
-pub struct Graticule<T>
+pub struct Builder<T>
 where
     T: CoordFloat,
 {
@@ -47,7 +47,7 @@ where
     epsilon: T,
 }
 
-impl<T> Default for Graticule<T>
+impl<T> Default for Builder<T>
 where
     T: 'static + CoordFloat,
 {
@@ -75,7 +75,7 @@ where
     }
 }
 
-impl<T> Graticule<T>
+impl<T> Builder<T>
 where
     T: 'static + CoordFloat,
 {

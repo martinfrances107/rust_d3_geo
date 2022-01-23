@@ -4,7 +4,7 @@ pub mod graticule;
 use geo::CoordFloat;
 use geo::Coordinate;
 
-use graticule::Graticule;
+use graticule::Builder as GraticuleBuilder;
 
 use crate::math::EPSILON;
 use rust_d3_array::range::range;
@@ -31,13 +31,13 @@ where
 }
 
 /// Returns the default graticule.
-pub fn generate<T>() -> Graticule<T>
+pub fn generate<T>() -> GraticuleBuilder<T>
 where
     T: 'static + CoordFloat,
 {
     let epsilon = T::from(EPSILON).unwrap();
 
-    Graticule::default()
+    GraticuleBuilder::default()
         .extent_major([
             [T::from(-180).unwrap(), T::from(-90_f64).unwrap() + epsilon],
             [
