@@ -1,18 +1,11 @@
 ## TODO
 
-* examples/projections Investigiate by mercator and gnomic projections fail.
-
-* examples/projections It looks like azimthal projections have scaling issues.
-
-* Port graticule10().
-
-* Examples projections CSS styling needs work.
 
 * Implement remaining fit_tests --- gives a minor bump in code coverage.
 
-* write examples/index.html -- a guide to building rust projects.
+* examples/projections Investigiate by mercator and gnomic projections fail.
 
-* convert examples/rings to typescript.
+* write examples/index.html -- a guide to building rust projects.
 
 * Develop styling for world maps graticules on bottom, overlayed by land.
 
@@ -31,6 +24,15 @@ with links to the more detailed mini-apps.
 * Detail why Feature and Feactue collection is complicated.
 
 * Detail to development of mocks for RenderingContext2d
+
+* Examples projections CSS styling needs minor adjustment font sizes of text
+   looks off ..select/apply a simple responsive css template.
+  ( eg.  Boilerplate, material-ui)
+
+##  Before API lock-down
+
+* Define graticule10 as an alias for Graticule::default().
+ -- the code in examples looks scrappy.
 
 * Justify whey PathResult is not implemented for LengthStream? is cal() a deviation from the interface.
 

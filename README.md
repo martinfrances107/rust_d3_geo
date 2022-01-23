@@ -5,11 +5,13 @@ This is a port of the [d3-geo](https://github.com/d3/d3-geo) library into RUST. 
 
 In addtion some demonstration applications have been provided in the example directory to help developers convert their existing javascript to rust.
 
-* examples/globe/canvas - Shows how to load/parse/display  a complex topojson file to a CANVAS element.
-* examples/globe/svg  - Shows how to load/parse/display the globe as indivdual SVG PATH elements. Useful when the semantic meaing of the data needs to be preserved.
-* examples/projections - Shows a side by side comparison of the all the projections rendered by both javascript and rust.
-* examples/graticule - Show various ways of rendering latitide and longitude lines.
-* examples/ring - Renders a complex multipolygon.
+| Name | Description|
+--- | ---|
+| examples/globe/canvas | Shows how to load/parse/display  a complex topojson file to a CANVAS element.|
+| examples/globe/svg  | Shows how to load/parse/display the globe as indivdual SVG PATH elements. Useful when the semantic meaing of the data needs to be preserved.|
+| examples/projections | Shows a side by side comparison of the all the projections rendered by both javascript and rust.|
+| examples/graticule | Show various ways of rendering latitide and longitude lines.|
+| examples/ring | Renders a complex multipolygon.|
 
 The current focus is now on benchmarking and making the library multithreaded.
 
