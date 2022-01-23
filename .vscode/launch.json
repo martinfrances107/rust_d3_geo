@@ -125,6 +125,7 @@
       "cargo": {
         "args": [
           "test",
+          "fit_width_world_equirectangular",
           "--no-run",
           "--test=fit_test",
           "--package=rust_d3_geo"
@@ -135,7 +136,7 @@
         }
       },
       "args": [],
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}/lib"
     },
     {
       "type": "lldb",
