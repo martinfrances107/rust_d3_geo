@@ -60,19 +60,14 @@ where
     }
 }
 
-impl<DRAIN, T> Equirectangular<DRAIN, T>
-where
-    DRAIN: Stream<EP = DRAIN, T = T>,
-    T: CoordFloat + FloatConst,
-{
-}
-
 impl<DRAIN, T> Transform for Equirectangular<DRAIN, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     T: CoordFloat,
 {
+    /// f64 or f32.
     type T = T;
+
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         *p
     }
