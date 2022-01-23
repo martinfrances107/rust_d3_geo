@@ -4,7 +4,6 @@ use geo::Coordinate;
 use crate::stream::Stream;
 
 use super::Result;
-// use super::ResultEnum;
 
 /// A stream node endpoint for computing a bounding box.
 #[derive(Clone, Debug, PartialEq)]
