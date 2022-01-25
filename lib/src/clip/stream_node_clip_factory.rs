@@ -100,7 +100,6 @@ where
             self.pv.clone(),
             self.line_node_factory.clone(),
             self.interpolate_fn.clone(),
-            // self.ring_buffer.clone(),
             self.ring_sink_node.clone(),
             sink,
             self.start,

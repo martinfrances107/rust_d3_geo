@@ -9,8 +9,6 @@ use crate::stream::Stream;
 use super::NodeFactory;
 use super::StreamNode;
 
-// use super::stream_node::StreamNode;
-
 /// Used in the construct of a Projection stream pipeline.
 ///
 /// RAW is the proto-node. ( The node without the link to other node's up the chain)
@@ -63,7 +61,6 @@ where
         StreamNode {
             raw: self.raw.clone(),
             sink,
-            // pd: PhantomData::<T>,
         }
     }
 }

@@ -166,18 +166,7 @@ where
     fn point_radius(mut self, input: PointRadiusEnum<T>) -> Self {
         self.point_radius = match input {
             PointRadiusEnum::F(ref _input_fn) => input,
-            PointRadiusEnum::Val(_input_value) => {
-                // match &mut self.context_stream {
-                // 	PathContextStream::S(s) => {
-                // 		s.point_radius(Some(input_value));
-                // 	}
-                // 	PathContextStream::C(c) => {
-                // 		c.point_radius(Some(input_value));
-                // 	}
-                // }
-                // self.context_stream.point_radius(Some(input_value));
-                input
-            }
+            PointRadiusEnum::Val(_input_value) => input,
         };
         self
     }

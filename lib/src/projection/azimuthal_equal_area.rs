@@ -35,7 +35,6 @@ where
 
 impl<DRAIN, T> Raw<T> for AzimuthalEqualArea<DRAIN, T>
 where
-    // EP: Clone + Debug + Stream<EP = EP, T = T>,
     DRAIN: Stream<EP = DRAIN, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

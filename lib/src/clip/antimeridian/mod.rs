@@ -13,13 +13,12 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-// use crate::clip::line::Line;
 use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
+
 use interpolate::generate as gen_interpolate;
 use line::Line as LineAntimeridian;
-
 use pv::PV as PVAntimeridian;
 
 /// Returns a clip factory setup for antimeridian clipping.

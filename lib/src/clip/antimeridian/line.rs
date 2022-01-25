@@ -83,7 +83,6 @@ where
         };
         let delta = (lambda1 - self.raw.lambda0).abs();
 
-        // let mut s = self.sink;
         if (delta - T::PI()).abs() < self.raw.epsilon {
             // Line crosses a pole.
             let f_2 = T::from(2_f64).unwrap();

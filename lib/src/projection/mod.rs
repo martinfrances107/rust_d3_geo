@@ -83,13 +83,7 @@ pub type PostClipFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
 pub type RotateFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
     EP,
     RotateRadians<T>,
-    ClipNode<
-        EP,
-        LINE,
-        PV,
-        ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>,
-        T,
-    >,
+    ClipNode<EP, LINE, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
     T,
 >;
 
@@ -244,18 +238,18 @@ pub trait Fit {
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     fn fit_width(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self
-        where
-            Self::T: AsPrimitive<Self::T> + CoordFloat;
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self
-        where
-            Self::T: AsPrimitive<Self::T> + CoordFloat;
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
 
 /// Gets or sets the post-projection planar rotation angle.
 /// A projection builder sub trait.
 pub trait Angle {
-    /// f64 or f32
+    /// f64 or f32.
     type T;
 
     /// Returns the projection’s post-projection planar rotation angle.

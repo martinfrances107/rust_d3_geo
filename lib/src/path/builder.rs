@@ -154,7 +154,7 @@ where
     StreamNode<CS, LINE, CS, T>: Stream<EP = CS, T = T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
-    /// f64 or f32
+    /// f64 or f32.
     type T = T;
 
     /// From the progammed state generate a new projection.

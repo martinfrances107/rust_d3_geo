@@ -58,7 +58,6 @@ use super::Translate;
 #[derivative(Debug)]
 pub struct Builder<DRAIN, LINE, PR, PV, T>
 where
-    // EP: Clone + Debug + Stream<EP = EP, T = T>,
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
     StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
@@ -178,7 +177,6 @@ where
             delta_lambda,
             delta_phi,
             delta_gamma,
-            // postclip: Rc::new(|x| x),
             x,
             y,
 
@@ -353,7 +351,6 @@ where
 
         // Update only theta and preclip_factory.
         Builder::<DRAIN, LineCircle<T>, PR, PVCircle<T>, T> {
-            // projection_raw: self.projection_raw,
             // /// Internal state.
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,

@@ -49,7 +49,6 @@ where
     ring: LineString<T>,
     ring_sink_node: StreamNode<Buffer<T>, LINE, Buffer<T>, T>,
     segments: VecDeque<VecDeque<Vec<LineElem<T>>>>,
-    // point_fn: PointFn,
     #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, p: &Coordinate<T>, m: Option<u8>),
     #[derivative(Debug = "ignore")]

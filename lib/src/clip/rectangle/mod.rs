@@ -74,7 +74,6 @@ where
             x1,
             y1,
 
-            // pr_pd: PhantomData::new(),
             polygon: None,
             segments: None,
 

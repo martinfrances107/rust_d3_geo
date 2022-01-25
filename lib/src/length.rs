@@ -10,7 +10,6 @@ use super::stream::Stream as StreamTrait;
 #[derive(Clone)]
 /// Length Stream.
 pub struct Stream<T: CoordFloat> {
-    // sphere_fn: fn(&mut Self, f64, f64),
     #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, &Coordinate<T>),
     #[derivative(Debug = "ignore")]
@@ -30,7 +29,6 @@ where
     #[inline]
     fn default() -> Self {
         Self {
-            // sphere_fn: Self::noop,
             point_fn: Self::point_noop,
             line_start_fn: Self::length_line_start,
             line_end_fn: Self::line_end_noop,

@@ -53,7 +53,6 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
         let mut cos_phi0 = phi0.cos();
 
         for point1 in ring.0.iter().take(m) {
-            // let point1 = ring[j];
             let lambda1 = longitude(point1);
             let phi1 = point1.y / two + T::FRAC_PI_4();
             let sin_phi1 = phi1.sin();

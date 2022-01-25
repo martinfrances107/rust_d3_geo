@@ -104,16 +104,6 @@ pub fn intersect<T: CoordFloat + FloatConst>(
         phi1 = z
     };
 
-    // if (meridian
-    //     ? polar
-    //       ? phi0 + phi1 > 0 ^ q[1] < (abs(q[0] - lambda0) < epsilon ? phi0 : phi1)
-    //       : phi0 <= q[1] && q[1] <= phi1
-    //     : delta > PI ^ (lambda0 <= q[0] && q[0] <= lambda1)) {
-    //   var q1 = cartesianScale(u, (-w + t) / uu);
-    //   cartesianAddInPlace(q1, A);
-    //   return [q, spherical(q1)];
-    // }
-
     // Check that the first point is between a and b.
     let condition: bool;
     if meridian {

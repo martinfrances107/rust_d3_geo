@@ -13,30 +13,3 @@ pub mod stream_fn;
 
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
-
-// function accepts a F value or a Function that outputs a F or maybe nothing.
-// pub enum FnValMaybe<T> {
-//     // None,
-//     FloatValue(T),
-//     FloatFn(Box<dyn Fn(&InArg) -> T>),
-// }
-
-// pub enum FnValMaybe2D<T>
-// where
-//     T: CoordFloat + FloatConst,
-// {
-//     // None,
-//     // FloatValue(Coordinate<T>),
-//     FloatFn(Box<dyn Fn(&InArg) -> Coordinate<T>>),
-// }
-
-// #[derive(Debug)]
-// pub enum InArg {
-//     None,
-//     Arg(),
-// }
-
-// #[derive(Clone, Debug)]
-// pub enum StreamType {
-//     Polygon,
-// }
