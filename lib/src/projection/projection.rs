@@ -112,7 +112,7 @@ where
     PV: PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    /// Connects a DRAIN to projection.
+    /// Connects a DRAIN to the projection.
     ///
     /// The Projection Stream Pipeline :-
     ///
