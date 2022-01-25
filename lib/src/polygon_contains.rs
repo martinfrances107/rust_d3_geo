@@ -38,6 +38,7 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
         phi = -T::FRAC_PI_2() - T::from(EPSILON).unwrap();
     }
 
+    let two = T::from(2).unwrap();
     for polygon_i in polygon {
         let ring = polygon_i;
         let m = ring.coords_count();
@@ -47,14 +48,14 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
 
         let mut point0 = *ring.0.last().unwrap();
         let mut lambda0 = longitude(&point0);
-        let phi0 = point0.y / T::from(2).unwrap() + T::FRAC_PI_4();
+        let phi0 = point0.y / two + T::FRAC_PI_4();
         let mut sin_phi0 = phi0.sin();
         let mut cos_phi0 = phi0.cos();
 
         for point1 in ring.0.iter().take(m) {
             // let point1 = ring[j];
             let lambda1 = longitude(point1);
-            let phi1 = point1.y / T::from(2).unwrap() + T::FRAC_PI_4();
+            let phi1 = point1.y / two + T::FRAC_PI_4();
             let sin_phi1 = phi1.sin();
             let cos_phi1 = phi1.cos();
             let delta = lambda1 - lambda0;
