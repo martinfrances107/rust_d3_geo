@@ -3,12 +3,14 @@
 
 mod clipcircle_test {
 
-    use lazy_static::lazy_static;
-    use regex::Regex;
+    extern crate pretty_assertions;
 
     use geo::polygon;
     use geo::Coordinate;
     use geo::Geometry;
+    use lazy_static::lazy_static;
+    use pretty_assertions::assert_eq;
+    use regex::Regex;
 
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;

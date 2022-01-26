@@ -1,8 +1,10 @@
 #[macro_use]
 extern crate criterion;
+extern crate pretty_assertions;
 
 use criterion::Criterion;
 use geo::{Coordinate, Geometry, LineString, MultiLineString};
+use pretty_assertions::assert_eq;
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;

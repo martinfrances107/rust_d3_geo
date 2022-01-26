@@ -1,9 +1,12 @@
 #[macro_use]
 extern crate criterion;
+extern crate pretty_assertions;
 
 use criterion::Criterion;
 use geo::{Coordinate, LineString};
 use geo::{MultiPolygon, Polygon};
+use pretty_assertions::assert_eq;
+
 use rust_d3_geo::circle::generator::Generator as CircleGenerator;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
