@@ -2,7 +2,7 @@
 #![warn(missing_docs)]
 #![warn(missing_debug_implementations)]
 #![allow(clippy::many_single_char_names)]
-//! A port of [d3/d3-array](<https://github.com/d3/d3-geo>).
+//! A port of [d3/d3-geo](<https://github.com/d3/d3-geo>).
 //!
 //! Geographic projections, spherical shapes and spherical trigonometry.
 //!
