@@ -265,15 +265,9 @@ where
                     true,
                 );
                 match t {
-                    IntersectReturn::False => {
-                        // None found
-                    }
-                    IntersectReturn::None => {
-                        // do nothing.
-                    }
-                    IntersectReturn::One(_) => {
-                        panic!("Requeted two received one or none.");
-                    }
+                    // Request two received one!!
+                    // This copies the behaviour of the javascript original.
+                    IntersectReturn::False | IntersectReturn::None | IntersectReturn::One(_) => {}
                     IntersectReturn::Two(t) => {
                         self.raw.clean = 0;
                         if self.raw.small_radius {

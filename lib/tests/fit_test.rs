@@ -240,29 +240,24 @@ mod fit_test {
         ));
     }
 
-    // #[test]
-    // fn fit_extent_world_stereographic() {
-    //     println!("projection.fitExtent(…) world stereographic");
+    #[test]
+    fn fit_extent_world_stereographic() {
+        println!("projection.fitExtent(…) world stereographic");
 
-    //     let world = world();
-    //     let projection: ProjectionBuilder<
-    //         Bounds<f64>,
-    //         _,
-    //         Stereographic<Bounds<f64>, f64>,
-    //         _,
-    //         f64,
-    //     > = Stereographic::builder()
-    //         .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-    //     assert!(in_delta(projection.get_scale(), 162.934379_f64, 1e-6));
-    //     assert!(in_delta_coordinate(
-    //         &projection.get_translate(),
-    //         &Coordinate {
-    //             x: 478.546293_f64,
-    //             y: 432.922534_f64
-    //         },
-    //         1e-6
-    //     ));
-    // }
+        let world = world();
+        let projection: ProjectionBuilder<Bounds<f64>, _, Stereographic<Bounds<f64>, f64>, _, f64> =
+            Stereographic::builder()
+                .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
+        assert!(in_delta(projection.get_scale(), 162.934379_f64, 1e-6));
+        assert!(in_delta_coordinate(
+            &projection.get_translate(),
+            &Coordinate {
+                x: 478.546293_f64,
+                y: 432.922534_f64
+            },
+            1e-6
+        ));
+    }
 
     // // // tape("projection.fitExtent(…) world transverseMercator", function(test) {
     // // //   var projection = d3.geoTransverseMercator();

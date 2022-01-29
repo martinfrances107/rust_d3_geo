@@ -2,9 +2,11 @@ use std::rc::Rc;
 
 use geo::Coordinate;
 use geo::Geometry;
+use geo::MultiLineString;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
+use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::gnomic::Gnomic;
@@ -54,7 +56,12 @@ pub fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
     path.object(land);
     context.stroke();
 
-    // let graticule10 = Graticule10::new();
-
+    let lines = generate_graticule().lines();
+    let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
+    context.begin_path();
+    context.set_fill_style(&"#999".into());
+    context.set_stroke_style(&"#69b3a2".into());
+    path.object(&mls);
+    context.stroke();
     Ok(())
 }

@@ -62,13 +62,13 @@ pub fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsValue> {
     path.object(land);
     context.stroke();
 
-    // let lines = generate_graticule().lines();
-    // let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
-    // context.begin_path();
-    // context.set_fill_style(&"#999".into());
-    // context.set_stroke_style(&"#69b3a2".into());
-    // path.object(&mls);
-    // context.stroke();
+    let lines = generate_graticule().lines();
+    let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
+    context.begin_path();
+    context.set_fill_style(&"#999".into());
+    context.set_stroke_style(&"#69b3a2".into());
+    path.object(&mls);
+    context.stroke();
 
     Ok(())
 }

@@ -1,9 +1,11 @@
 ## TODO
 
-
 * Implement remaining fit_tests --- gives a minor bump in code coverage.
 
-* examples/projections Investigiate by mercator and gnomic projections fail.
+* examples/projections
+* examples/rings
+
+ Investigiate why mercator fails.
   -- mercator has differences between f64 and f32.
 
 * examples/graticule - does this example need to exist?
@@ -11,7 +13,7 @@ when projection displays graticules.
 styling of globe should include graticules?
 
 IF I am keeping it .. then
-- Convert to typescriprt
+- Convert to typescript
 - Stop using cdn as source of d3 module.
 - draw a clear distinction between what is JS and what is rust.
 
