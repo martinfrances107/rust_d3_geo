@@ -14,13 +14,13 @@ use crate::clip::buffer::Buffer;
 use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::Line;
 use crate::clip::PointVisible;
-use crate::rotation::rotate_radians;
+use crate::rot::rotate_radians;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
 
 use super::builder::Builder as ProjectionBuilder;
-use super::resample::ResampleNode;
+use super::resampler::ResampleNode;
 use super::stream_node::StreamNode;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;

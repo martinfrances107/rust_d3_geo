@@ -18,13 +18,13 @@ use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::path::bounds::Bounds;
 use crate::projection::builder::Builder as ProjectionBuilder;
-use crate::rotation::rotate_radians::RotateRadians;
+use crate::rot::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
 
 use projection::Projection;
-use resample::ResampleNode;
+use resampler::ResampleNode;
 use stream_node::StreamNode;
 use stream_node_factory::StreamNodeFactory;
 use Raw as ProjectionRaw;
@@ -66,7 +66,7 @@ pub mod stream_transform_radians;
 pub mod transform;
 
 /// Resample based on a given precision.
-pub mod resample;
+pub mod resampler;
 
 /// Helper functions found measuring the extent, width or height.
 mod fit;

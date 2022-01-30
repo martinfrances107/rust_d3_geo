@@ -30,7 +30,7 @@ use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
 use crate::projection::projection::Projection;
-use crate::projection::resample::ResampleNode;
+use crate::projection::resampler::ResampleNode;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;

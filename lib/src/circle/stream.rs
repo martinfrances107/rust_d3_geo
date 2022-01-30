@@ -6,8 +6,8 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::rotation::rotate_radians::RotateRadians;
-use crate::rotation::rotation_identity::RotationIdentity;
+use crate::rot::rotate_radians::RotateRadians;
+use crate::rot::rotation_identity::RotationIdentity;
 use crate::stream::Stream as StreamTrait;
 use crate::Transform;
 

@@ -51,7 +51,7 @@ pub mod polygon_contains;
 /// Holds proctions and associated builders.
 pub mod projection;
 /// Rotation transforms.
-pub mod rotation;
+pub mod rot;
 /// Stream related helper functions.
 pub mod stream;
 

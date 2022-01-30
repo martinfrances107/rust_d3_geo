@@ -14,7 +14,7 @@ use crate::stream::Stream;
 use crate::stream::Streamable;
 
 use super::builder::Builder;
-use super::resample::ResampleNode;
+use super::resampler::ResampleNode;
 use super::stream_node::StreamNode;
 use super::ClipExtent;
 use super::PointVisible;

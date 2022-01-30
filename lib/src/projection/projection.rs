@@ -12,12 +12,12 @@ use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::projection::RotateTransformFactory;
-use crate::rotation::rotate_radians::RotateRadians;
+use crate::rot::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
-use super::resample::ResampleNode;
+use super::resampler::stream_node_resample_factory::StreamNodeResampleFactory;
+use super::resampler::ResampleNode;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;

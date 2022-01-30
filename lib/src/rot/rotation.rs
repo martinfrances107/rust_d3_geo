@@ -1,7 +1,7 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::rotation::rotate_radians::RotateRadians;
+use crate::rot::rotate_radians::RotateRadians;
 use crate::Transform;
 
 use super::rotate_radians;

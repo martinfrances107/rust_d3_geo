@@ -14,7 +14,7 @@ use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::path::context::Context;
 use crate::projection::projection::Projection;
-use crate::projection::resample::ResampleNode;
+use crate::projection::resampler::ResampleNode;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;

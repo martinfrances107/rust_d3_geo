@@ -7,7 +7,7 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-use crate::projection::resample::Resample;
+use crate::projection::resampler::Resample;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::projection::NodeFactory;
