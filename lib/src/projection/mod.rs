@@ -237,10 +237,14 @@ pub trait Fit {
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
+    /// Similar to fit_size where the height is automatically chosen from
+    /// the aspect ratio of object and the given constraint on width.
     fn fit_width(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
+    /// Similar to fit_size where the width is automatically chosen from
+    /// the aspect ratio of object and the given constraint on height.
     fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;

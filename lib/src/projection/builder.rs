@@ -488,8 +488,6 @@ where
         fit_size(self, size, object)
     }
 
-    /// Similar to fit_size where the height is automatically chosen from
-    /// the aspect ratio of object and the given constraint on width.
     #[inline]
     fn fit_width(self, w: T, object: &impl Streamable<T = T>) -> Self
     where
@@ -498,8 +496,6 @@ where
         fit_width(self, w, object)
     }
 
-    /// Similar to fit_size where the width is automatically chosen from
-    /// the aspect ratio of object and the given constraint on height.
     #[inline]
     fn fit_height(self, h: T, object: &impl Streamable<T = T>) -> Self
     where
