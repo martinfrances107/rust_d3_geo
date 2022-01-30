@@ -1,33 +1,22 @@
 #![allow(clippy::pedantic)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
-//! # rust d3 geo
+//! # rust d3 geo rings
 //!
 //! See the README.md.
 extern crate js_sys;
 extern crate rand;
 extern crate web_sys;
+mod dom_macros;
+mod orthographic;
+mod stereographic;
 
-use geo::Coordinate;
-use geo::LineString;
-use geo::MultiPolygon;
-use geo::Polygon;
-
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
 use web_sys::Document;
 use web_sys::Element;
 
-use rust_d3_geo::circle::generator::Generator as CircleGenerator;
-
-use rust_d3_geo::path::builder::Builder as PathBuilder;
-use rust_d3_geo::projection::orthographic::Orthographic;
-use rust_d3_geo::projection::Raw;
-use web_sys::SvgsvgElement;
-
-mod dom_macros;
+use orthographic::draw_orthographic;
+use stereographic::draw_sterographic;
 
 type Result<T> = std::result::Result<T, JsValue>;
 
@@ -70,74 +59,8 @@ fn get_document() -> Result<Document> {
 /// Entry point.
 #[wasm_bindgen]
 pub fn run() -> Result<()> {
-    draw()
-}
-
-fn draw() -> Result<()> {
-    let svg: SvgsvgElement = get_document()?
-        .get_element_by_id("ring_rust")
-        .unwrap()
-        .dyn_into::<web_sys::SvgsvgElement>()?;
-
-    let width = svg.width().base_val().value()? as f64;
-    let height = svg.height().base_val().value()? as f64;
-
-    let ortho_builder = Orthographic::<_, f64>::builder()
-        .scale(240_f64)
-        .translate(&Coordinate {
-            x: width / 2_f64,
-            y: height / 2_f64,
-        });
-
-    let ortho = ortho_builder.build();
-
-    let cg_outer = CircleGenerator::default().radius(10_f64).precision(10_f64);
-    let cg_inner = CircleGenerator::default().radius(5_f64).precision(5_f64);
-
-    let mut p_vec: Vec<Polygon<f64>> = vec![];
-    for lat in (-30..=30).step_by(30) {
-        for long in (-180..=180).step_by(40) {
-            let mut inner = cg_inner
-                .clone()
-                .center(&Coordinate {
-                    x: long as f64,
-                    y: lat as f64,
-                })
-                .circle()
-                .exterior()
-                .0
-                .clone();
-            inner.reverse();
-            let inner_ring: LineString<f64> = inner.into();
-
-            let poly = Polygon::new(
-                cg_outer
-                    .clone()
-                    .center(&Coordinate {
-                        x: long as f64,
-                        y: lat as f64,
-                    })
-                    .circle()
-                    .exterior()
-                    .clone(),
-                vec![inner_ring],
-            );
-
-            p_vec.push(poly);
-        }
-    }
-
-    let object = MultiPolygon(p_vec);
-
-    let mut path = PathBuilder::context_pathstring().build(ortho);
-    // console_log!("{:?}", object);
-    let s = path.object(&object);
-
-    let class_name = format!("s2-id-{}", 0);
-    let path = get_path_node(&class_name)?;
-    path.set_attribute_ns(None, "d", &s)?;
-    svg.append_child(&path)?;
-
+    draw_orthographic()?;
+    draw_sterographic()?;
     Ok(())
 }
 

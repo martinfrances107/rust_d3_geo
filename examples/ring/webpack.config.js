@@ -2,6 +2,7 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
+
 const dist = path.resolve(__dirname, "dist");
 
 module.exports = {
@@ -34,8 +35,8 @@ module.exports = {
     // HACK: the .wasm file is too big it should be chunked.
     // but I think atm I need to use asyncWebAssembley for that
     // TODO must resolve.
-    // 3MB
-    maxAssetSize: 3 * 1024 * 1024
+    // 4MB
+    maxAssetSize: 4 * 1024 * 1024
   },
   experiments: { syncWebAssembly: true, },
   plugins: [

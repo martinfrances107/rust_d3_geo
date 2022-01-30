@@ -18,11 +18,13 @@
     text-align: center;
   }
 
-  svg#ring_rust {
+  svg#ring_orthographic_rust,
+  svg#ring_stereographic_rust {
     fill: green;
   }
 
-  svg#ring_js {
+  svg#ring_orthographic_js,
+  svg#ring_stereographic_js {
     fill: blue;
   }
 </style>
@@ -39,12 +41,20 @@
 
   <div class="wrapper">
     <div class="pannel">
-      <svg id="ring_rust" width="600" height="600"></svg>
-      <h1> RUST</h1>
+      <svg id="ring_orthographic_rust" width="600" height="600"></svg>
+      <h1> Orthographic RUST</h1>
     </div>
     <div class="pannel">
-      <svg id="ring_js" width="600" height="600"></svg>
-      <h1>Javascript</h1>
+      <svg id="ring_orthographic_js" width="600" height="600"></svg>
+      <h1>Orthographic Javascript</h1>
+    </div>
+    <div class="pannel">
+      <svg id="ring_stereographic_rust" width="600" height="600"></svg>
+      <h1>Stereographic RUST</h1>
+    </div>
+    <div class="pannel">
+      <svg id="ring_stereographic_js" width="600" height="600"></svg>
+      <h1>Stereographic RUST</h1>
     </div>
   </div>
   <noscript>This page contains webassembly and javascript content,

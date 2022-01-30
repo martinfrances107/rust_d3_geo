@@ -14,27 +14,26 @@ import { GeoProjection } from "d3";
 import { MultiPolygon } from 'geojson';
 import {
   geoCircle,
-  geoOrthographic,
-  geoPath
+  geoStereographic,
+  geoPath,
+  geoOrthographic
 } from "d3-geo";
 
-function draw() {
+function drawOrthographic() {
   console.log("draw()");
-  var svg: SVGSVGElement = document.getElementsByTagName("svg")[1];
+  const svg: SVGSVGElement = document.getElementsByTagName("svg")[1];
 
   const width = svg.clientHeight;
   const height = svg.clientWidth;
   svg.querySelector("path")?.remove();
 
   const ortho: GeoProjection = geoOrthographic()
-    .scale(240)
     .translate([width / 2, height / 2])
     .rotate([0, 0, 0]);
 
-  let cg_outer = geoCircle().radius(10).precision(10);
-  let cg_inner = geoCircle().radius(5).precision(5);
-
-  let coordinates = [];
+  const cg_outer = geoCircle().radius(10).precision(10);
+  const cg_inner = geoCircle().radius(5).precision(5);
+  const coordinates = [];
 
   for (let lat = -30;lat <= 30;lat += 30) {
     for (let long = -180;long < 180;long += 40) {
@@ -45,24 +44,67 @@ function draw() {
     }
   }
 
-  let object: MultiPolygon = {
+  const object: MultiPolygon = {
     type: "MultiPolygon",
     coordinates: coordinates
   };
 
-  let d = geoPath().projection(ortho)(object);
+  const d = geoPath().projection(ortho)(object);
+  if (d !== null) {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 
-
-  var path: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttributeNS(null, "d", d);
-
-  const a = svg.appendChild(path);
+    path.setAttributeNS(null, "d", d);
+    svg.appendChild(path);
+  }
 
 }
 
-draw();
-window.addEventListener('resize', (event) => {
-  draw()
+function drawStereographic() {
+  console.log("draw()");
+  const svg: SVGSVGElement = document.getElementsByTagName("svg")[3];
+
+  const width = svg.clientHeight;
+  const height = svg.clientWidth;
+  svg.querySelector("path")?.remove();
+
+  const ortho: GeoProjection = geoStereographic()
+    // .scale(240)
+    .translate([width / 2, height / 2])
+    .rotate([0, 0, 0]);
+
+  const cg_outer = geoCircle().radius(10).precision(10);
+  const cg_inner = geoCircle().radius(5).precision(5);
+  const coordinates = [];
+
+  for (let lat = -30;lat <= 30;lat += 30) {
+    for (let long = -180;long < 180;long += 40) {
+      const poly = [cg_outer.center([long, lat])().coordinates[0],
+      cg_inner.center([long, lat])().coordinates[0].reverse()];
+
+      coordinates.push(poly);
+    }
+  }
+
+  const object: MultiPolygon = {
+    type: "MultiPolygon",
+    coordinates: coordinates
+  };
+
+  const d = geoPath().projection(ortho)(object);
+
+  if (d !== null) {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttributeNS(null, "d", d);
+    svg.appendChild(path);
+  }
+
+}
+
+drawOrthographic();
+drawStereographic();
+window.addEventListener('resize', () => {
+  drawOrthographic();
+  drawStereographic();
 }
 
 );
