@@ -19,7 +19,7 @@ import {
   geoOrthographic
 } from "d3-geo";
 
-function drawOrthographic() {
+async function drawOrthographic() {
   console.log("draw()");
   const svg: SVGSVGElement = document.getElementsByTagName("svg")[1];
 
@@ -59,7 +59,7 @@ function drawOrthographic() {
 
 }
 
-function drawStereographic() {
+async function drawStereographic() {
   console.log("draw()");
   const svg: SVGSVGElement = document.getElementsByTagName("svg")[3];
 
@@ -100,11 +100,17 @@ function drawStereographic() {
 
 }
 
-drawOrthographic();
-drawStereographic();
-window.addEventListener('resize', () => {
-  drawOrthographic();
-  drawStereographic();
+Promise.all(
+  [
+    drawOrthographic(),
+    drawStereographic(),
+  ]
+)
+window.addEventListener('resize', async () => {
+  Promise.all([
+    drawOrthographic(),
+    drawStereographic()
+  ]);
 }
 
 );
