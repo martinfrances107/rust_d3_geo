@@ -20,8 +20,8 @@ use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 
 use super::context::Context as PathContext;
-use super::path::Path;
 use super::string::String;
+use super::Path;
 use super::PointRadiusTrait;
 use super::Result;
 

@@ -28,7 +28,7 @@ mod path_centroid_test {
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::in_delta::in_delta_point;
     use rust_d3_geo::path::centroid::Centroid;
-    use rust_d3_geo::path::path::Path;
+    use rust_d3_geo::path::Path;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projection::Projection;
@@ -49,13 +49,10 @@ mod path_centroid_test {
             + Display
             + FloatConst,
     {
-        ProjectionBuilder::new(
-            gen_clip_factory_antimeridian(),
-            Equirectangular::default(),
-        )
-        .scale(T::from(900f64 / PI).unwrap())
-        .precision(&T::zero())
-        .build()
+        ProjectionBuilder::new(gen_clip_factory_antimeridian(), Equirectangular::default())
+            .scale(T::from(900f64 / PI).unwrap())
+            .precision(&T::zero())
+            .build()
     }
 
     #[inline]
