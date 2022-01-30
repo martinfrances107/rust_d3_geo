@@ -7,8 +7,6 @@ use rust_d3_geo::projection::Precision;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-use rust_d3_geo::clip::circle::line::Line;
-use rust_d3_geo::clip::circle::pv::PV;
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
