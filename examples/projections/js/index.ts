@@ -11,7 +11,7 @@ rust
   })
   .catch(console.error);
 
-import {feature} from "topojson-client";
+import { feature } from "topojson-client";
 import { Topology } from "topojson-specification";
 import azimuthalEqualArea from './azimuthalEqualArea';
 import azimuthalEquidistant from './azimuthalEquidistant';
@@ -21,17 +21,19 @@ import orthographic from './orthographic';
 import mercator from './mercator';
 import stereographic from './stereographic';
 
-// import * as data from '../static/world-atlas/world/50m.json';
-// console.log(data);
 fetch("../world-atlas/world/50m.json").then(response => response.json())
   .then(_worldTopo => {
     const worldTopo = _worldTopo as Topology;
     const world = feature(worldTopo, worldTopo.objects.countries);
-    stereographic(world);
-    orthographic(world);
-    equirectangular(world);
-    azimuthalEqualArea(world);
-    azimuthalEquidistant(world);
-    gnomic(world);
-    mercator(world);
+    Promise.all(
+      [
+        stereographic(world),
+        orthographic(world),
+        equirectangular(world),
+        azimuthalEqualArea(world),
+        azimuthalEquidistant(world),
+        gnomic(world),
+        mercator(world)
+      ]
+    )
   });

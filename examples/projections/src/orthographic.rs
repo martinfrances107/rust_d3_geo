@@ -6,8 +6,6 @@ use geo::MultiLineString;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-use rust_d3_geo::clip::circle::line::Line;
-use rust_d3_geo::clip::circle::pv::PV;
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
@@ -37,8 +35,7 @@ pub fn draw_orthographic(land: &Geometry<f64>) -> Result<(), JsValue> {
     let height: f64 = canvas.height().into();
 
     let cs: Context<f64> = Context::new(context.clone());
-    let pb: PathBuilder<Context<f64>, Line<f64>, Orthographic<Context<f64>, f64>, PV<f64>, f64> =
-        PathBuilder::new(cs);
+    let pb = PathBuilder::new(cs);
 
     let ortho_builder = Orthographic::<Context<f64>, f64>::builder();
 

@@ -37,8 +37,7 @@ pub fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
     let height: f64 = canvas.height().into();
 
     let cs: Context<f64> = Context::new(context.clone());
-    let pb: PathBuilder<Context<f64>, _, Equirectangular<Context<f64>, f64>, _, f64> =
-        PathBuilder::new(cs);
+    let pb = PathBuilder::new(cs);
 
     let equirectangular_builder = Equirectangular::<Context<f64>, f64>::builder();
 

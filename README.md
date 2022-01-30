@@ -19,7 +19,7 @@ The API is not stabalised. If perfomance issues arise then the API will change.
 
 Finally, the infrequently used projections and other minor items need be implemented to make the library complete.
 
-Currently we have 84% code coverage ( as reported by cargo tarpaulin )
+Currently we have 85% code coverage ( as reported by cargo tarpaulin )
 
 
 ## Benchmarking

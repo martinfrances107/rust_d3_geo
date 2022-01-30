@@ -39,13 +39,7 @@ pub fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsValue> {
     let height: f64 = canvas.height().into();
 
     let cs: Context<f64> = Context::new(context.clone());
-    let pb: PathBuilder<
-        Context<f64>,
-        Line<f64>,
-        AzimuthalEquiDistant<Context<f64>, f64>,
-        PV<f64>,
-        f64,
-    > = PathBuilder::new(cs);
+    let pb = PathBuilder::new(cs);
 
     let ortho_builder = AzimuthalEquiDistant::<Context<f64>, f64>::builder();
 

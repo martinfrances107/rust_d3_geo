@@ -37,7 +37,7 @@ pub fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
     let height: f64 = canvas.height().into();
 
     let cs: Context<f64> = Context::new(context.clone());
-    let pb: PathBuilder<Context<f64>, _, Gnomic<Context<f64>, f64>, _, f64> = PathBuilder::new(cs);
+    let pb = PathBuilder::new(cs);
 
     let gnomic_builder = Gnomic::<Context<f64>, f64>::builder();
 

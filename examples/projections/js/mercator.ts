@@ -1,13 +1,13 @@
 import { geoPath, geoMercator, geoGraticule10, GeoPermissibleObjects } from "d3-geo";
 
-export default function mercator(world: GeoPermissibleObjects) {
+export default async function mercator(world: GeoPermissibleObjects) {
 
   const canvas: HTMLCanvasElement = document.querySelector('#mercator-js');
 
   const context = canvas.getContext("2d");
 
   const width = canvas.width;
-  const height = canvas.height;
+  let height = canvas.height;
 
   var projection = geoMercator()
     .scale(width / 1.3 / 3.14)
