@@ -18,9 +18,9 @@ use crate::Transform;
 
 use super::resample::stream_node_resample_factory::StreamNodeResampleFactory;
 use super::resample::ResampleNode;
-use super::str::scale_translate_rotate::ScaleTranslateRotate;
 use super::stream_node_factory::StreamNodeFactory;
 use super::stream_transform_radians::StreamTransformRadians;
+use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 use super::NodeFactory;
 use super::Raw as ProjectionRaw;
 use super::RotateFactory;

@@ -154,7 +154,6 @@ where
         Box::new(
             move |b: [Coordinate<T>; 2], builder: Builder<Bounds<T>, LINE, PR, PV, T>| {
                 let k = w / (b[1].x - b[0].x);
-                dbg!(b, k, w);
                 let x = (w - k * (b[1].x - b[0].x)) / two;
                 let y = -k * b[0].y;
 
@@ -194,7 +193,6 @@ where
                 let k = h / (b[1].y - b[0].y);
                 let x = -k * b[0].x;
                 let y = (h - k * (b[1].y - b[0].y)) / two;
-
                 builder
                     .scale(one_five_zero * k)
                     .translate(&Coordinate { x, y })

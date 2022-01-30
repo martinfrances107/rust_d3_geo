@@ -5,8 +5,8 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-use crate::projection::str::scale_translate_rotate::ScaleTranslateRotate;
 use crate::projection::stream_node::StreamNode;
+use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::projection::Raw as ProjectionRaw;
 use crate::stream::Stream;
 use crate::Transform;

@@ -29,7 +29,7 @@ use stream_node::StreamNode;
 use stream_node_factory::StreamNodeFactory;
 use Raw as ProjectionRaw;
 
-use self::str::scale_translate_rotate::ScaleTranslateRotate;
+use self::transform::scale_translate_rotate::ScaleTranslateRotate;
 
 /// The raw projection.
 pub mod azimuthal_equal_area;
@@ -56,14 +56,14 @@ pub mod mercator_builder;
 pub mod projection;
 /// Debug and test helper function.
 pub mod projection_equal;
-/// Scale translate and rotate.
-pub mod str;
 /// Stream node pipeline stage.
 pub mod stream_node;
 /// Generates stream node objects.
 pub mod stream_node_factory;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
+/// Scale translate and rotate.
+pub mod transform;
 
 /// Resample based on a given precision.
 pub mod resample;
