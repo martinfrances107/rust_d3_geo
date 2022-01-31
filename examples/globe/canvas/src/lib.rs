@@ -72,25 +72,16 @@ fn get_document() -> Result<Document, JsValue> {
 #[wasm_bindgen(start)]
 #[cfg(not(tarpaulin_include))]
 pub async fn start() -> Result<(), JsValue> {
-    console_log!("run() - wasm entry point");
     let document = get_document()?;
+    let window = web_sys::window().expect("Failed to get window");
 
+    // Get data from world map.
     let mut opts = RequestInit::new();
     opts.method("GET");
     opts.mode(RequestMode::Cors);
-
     let request = Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
-
-    request.headers().set("Accept", "application/json")?;
-
-    let window = web_sys::window().expect("Failed to get window");
     let resp_value = JsFuture::from(window.fetch_with_request(&request)).await?;
-
-    // `resp_value` is a `Response` object.
-    assert!(resp_value.is_instance_of::<Response>());
     let resp: Response = resp_value.dyn_into().unwrap();
-
-    // Convert this other `Promise` into a rust `Future`.
     let json = JsFuture::from(resp.json()?).await?;
 
     let topology: Topology = json.into_serde().expect("Could not parse as Topology");
