@@ -26,7 +26,7 @@ use super::PointRadiusTrait;
 use super::Result;
 
 /// Path builder.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Builder<CS, LINE, PR, PV, T>
 where
     CS: Stream<EP = CS, T = T>,
