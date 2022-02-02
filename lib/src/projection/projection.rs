@@ -28,7 +28,11 @@ use super::StreamNode;
 
 type Cache<DRAIN, LINE, PR, PV, T> = (DRAIN, ProjectionStreamOutput<DRAIN, LINE, PR, PV, T>);
 
+// Post Clip Node.
 type Pcn<DRAIN, T> = PostClipNode<DRAIN, DRAIN, T>;
+
+// Resample node.
+type Rn<DRAIN, PR, T> = ResampleNode<DRAIN, PR, Pcn<DRAIN, T>, T>;
 
 type TransformRadiansFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
     EP,
@@ -67,8 +71,7 @@ pub struct Projection<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, Pcn<DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, Rn<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
 
     PR: ProjectionRaw<T>,
@@ -79,8 +82,7 @@ where
 
     pub(crate) resample_factory: StreamNodeResampleFactory<PR, Pcn<DRAIN, T>, T>,
 
-    pub(crate) preclip_factory:
-        StreamNodeClipFactory<DRAIN, LINE, PR, PV, ResampleNode<DRAIN, PR, Pcn<DRAIN, T>, T>, T>,
+    pub(crate) preclip_factory: StreamNodeClipFactory<DRAIN, LINE, PR, PV, Rn<DRAIN, PR, T>, T>,
 
     pub(crate) rotate_factory: RotateFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
     /// Used exclusively by Transform( not stream releated).
@@ -97,8 +99,7 @@ impl<'a, DRAIN, LINE, PR, PV, T> Projection<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + PartialEq<DRAIN>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, Pcn<DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, Rn<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     ProjectionStreamOutput<DRAIN, LINE, PR, PV, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
@@ -141,8 +142,7 @@ impl<'a, DRAIN, LINE, PR, PV, T> Transform for Projection<DRAIN, LINE, PR, PV, T
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, Pcn<DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, Rn<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
