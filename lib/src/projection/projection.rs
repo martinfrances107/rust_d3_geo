@@ -26,10 +26,9 @@ use super::RotateFactory;
 use super::RotateTransformFactory;
 use super::StreamNode;
 
-// pub enum StreamOrValueMaybe<T: CoordFloat> {
-//     Value(T),
-//     SP(Box<dyn Stream<T=T>>),
-// }
+type Cache<DRAIN, LINE, PR, PV, T> = (DRAIN, ProjectionStreamOutput<DRAIN, LINE, PR, PV, T>);
+
+type Pcn<DRAIN, T> = PostClipNode<DRAIN, DRAIN, T>;
 
 type TransformRadiansFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
     EP,
@@ -68,7 +67,7 @@ pub struct Projection<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, Pcn<DRAIN, T>, T>, T>:
         Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
 
@@ -78,16 +77,10 @@ where
 {
     pub(crate) postclip_factory: StreamNodePostClipFactory<DRAIN, T>,
 
-    pub(crate) resample_factory: StreamNodeResampleFactory<PR, PostClipNode<DRAIN, DRAIN, T>, T>,
+    pub(crate) resample_factory: StreamNodeResampleFactory<PR, Pcn<DRAIN, T>, T>,
 
-    pub(crate) preclip_factory: StreamNodeClipFactory<
-        DRAIN,
-        LINE,
-        PR,
-        PV,
-        ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>,
-        T,
-    >,
+    pub(crate) preclip_factory:
+        StreamNodeClipFactory<DRAIN, LINE, PR, PV, ResampleNode<DRAIN, PR, Pcn<DRAIN, T>, T>, T>,
 
     pub(crate) rotate_factory: RotateFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
     /// Used exclusively by Transform( not stream releated).
@@ -97,14 +90,14 @@ where
 
     pub(crate) transform_radians_factory: TransformRadiansFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
 
-    pub(crate) cache: Option<(DRAIN, ProjectionStreamOutput<DRAIN, LINE, PR, PV, T>)>,
+    pub(crate) cache: Option<Cache<DRAIN, LINE, PR, PV, T>>,
 }
 
 impl<'a, DRAIN, LINE, PR, PV, T> Projection<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + PartialEq<DRAIN>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, Pcn<DRAIN, T>, T>, T>:
         Stream<EP = DRAIN, T = T>,
     ProjectionStreamOutput<DRAIN, LINE, PR, PV, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
@@ -148,7 +141,7 @@ impl<'a, DRAIN, LINE, PR, PV, T> Transform for Projection<DRAIN, LINE, PR, PV, T
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
+    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, Pcn<DRAIN, T>, T>, T>:
         Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
