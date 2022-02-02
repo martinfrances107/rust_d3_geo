@@ -381,8 +381,6 @@ where
             postclip_factory: self.postclip_factory,
 
             resample_factory: self.resample_factory,
-            // TODO do I need this line.
-            // rotate_transform_factory: StreamNodeFactory::new(self.project_rotate_transform),
             rotate_factory: StreamNodeFactory::new(self.rotate),
             ..out
         }

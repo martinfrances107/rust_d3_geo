@@ -11,7 +11,6 @@ use crate::clip::stream_node_post_clip_factory::StreamNodePostClipFactory;
 use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
-use crate::projection::RotateTransformFactory;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::stream::Stream;
 use crate::Transform;
@@ -24,6 +23,7 @@ use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 use super::NodeFactory;
 use super::Raw as ProjectionRaw;
 use super::RotateFactory;
+use super::RotateTransformFactory;
 use super::StreamNode;
 
 // pub enum StreamOrValueMaybe<T: CoordFloat> {
