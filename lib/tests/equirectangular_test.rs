@@ -10,8 +10,8 @@ mod equirectangular_test {
     use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::projection::builder::Builder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
+    use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::Raw;
     use rust_d3_geo::projection::Rotate;
     use rust_d3_geo::projection::Scale;
@@ -21,19 +21,16 @@ mod equirectangular_test {
     #[test]
     fn return_expected_result() {
         println!("equirectangular(point) returns the expected result");
-        let equirectangular: Projection<
+        let equirectangular: Projector<
             StreamDrainStub<f64>,
             Line<f64>,
             Equirectangular<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
-        > = Builder::new(
-            gen_clip_factory_antimeridian(),
-            Equirectangular::default(),
-        )
-        .translate(&Coordinate { x: 0f64, y: 0f64 })
-        .scale(1_f64)
-        .build();
+        > = Builder::new(gen_clip_factory_antimeridian(), Equirectangular::default())
+            .translate(&Coordinate { x: 0f64, y: 0f64 })
+            .scale(1_f64)
+            .build();
 
         let pi = std::f64::consts::PI;
 
@@ -127,20 +124,17 @@ mod equirectangular_test {
     #[test]
     fn rotate_30_0() {
         println!("equirectangular(point) returns the expected result");
-        let equirectangular: Projection<
+        let equirectangular: Projector<
             StreamDrainStub<f64>,
             Line<f64>,
             Equirectangular<StreamDrainStub<f64>, f64>,
             PV<f64>,
             f64,
-        > = Builder::new(
-            gen_clip_factory_antimeridian(),
-            Equirectangular::default(),
-        )
-        .rotate(&[30f64, 0f64, 0f64])
-        .translate(&Coordinate { x: 0f64, y: 0f64 })
-        .scale(1_f64)
-        .build();
+        > = Builder::new(gen_clip_factory_antimeridian(), Equirectangular::default())
+            .rotate(&[30f64, 0f64, 0f64])
+            .translate(&Coordinate { x: 0f64, y: 0f64 })
+            .scale(1_f64)
+            .build();
 
         let pi = std::f64::consts::PI;
 
@@ -241,7 +235,7 @@ mod equirectangular_test {
     #[test]
     fn rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
-        let equirectangular: Projection<
+        let equirectangular: Projector<
             StreamDrainStub<f64>,
             Line<f64>,
             Equirectangular<StreamDrainStub<f64>, f64>,
@@ -352,7 +346,7 @@ mod equirectangular_test {
     #[test]
     fn rotate_0_0_30() {
         println!("equirectangular.rotate([0, 0, 30])(point) returns the expected result");
-        let equirectangular: Projection<
+        let equirectangular: Projector<
             StreamDrainStub<f64>,
             Line<f64>,
             Equirectangular<StreamDrainStub<f64>, f64>,
@@ -456,7 +450,7 @@ mod equirectangular_test {
     #[test]
     fn rotate_30_30_30() {
         println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
-        let equirectangular: Projection<
+        let equirectangular: Projector<
             StreamDrainStub<f64>,
             Line<f64>,
             Equirectangular<StreamDrainStub<f64>, f64>,

@@ -23,7 +23,7 @@ use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
 
-use projection::Projection;
+use projector::Projector;
 use resampler::ResampleNode;
 use stream_node::StreamNode;
 use stream_node_factory::StreamNodeFactory;
@@ -52,10 +52,10 @@ pub mod azimuthal;
 pub mod builder;
 /// A specalised builder wrapping the default mecator.
 pub mod mercator_builder;
-/// Projection object.
-pub mod projection;
 /// Debug and test helper function.
 pub mod projection_equal;
+/// Projection object.
+pub mod projector;
 /// Stream node pipeline stage.
 pub mod stream_node;
 /// Generates stream node objects.
@@ -161,7 +161,7 @@ where
     type PR;
     type PV;
     type T;
-    fn build(s: Self::PR) -> Projection<Self::Drain, Self::Line, Self::PR, Self::PV, Self::T>;
+    fn build(s: Self::PR) -> Projector<Self::Drain, Self::Line, Self::PR, Self::PV, Self::T>;
 }
 
 /// Controls the projections center point.

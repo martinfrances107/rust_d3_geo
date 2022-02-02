@@ -14,8 +14,8 @@ mod invert_test {
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mercator::Mercator;
     use rust_d3_geo::projection::orthographic::Orthographic;
-    use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
+    use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::stereographic::Stereographic;
     use rust_d3_geo::projection::Raw;
     use rust_d3_geo::stream::StreamDrainStub;
@@ -61,7 +61,7 @@ mod invert_test {
 
     #[test]
     fn equirectangular() {
-        let e: Projection<
+        let e: Projector<
             StreamDrainStub<f64>,
             Line<f64>,
             Equirectangular<StreamDrainStub<f64>, f64>,
@@ -73,7 +73,7 @@ mod invert_test {
 
     #[test]
     fn gnomic() {
-        let g: Projection<
+        let g: Projector<
             StreamDrainStub<f64>,
             LineCircle<f64>,
             Gnomic<StreamDrainStub<f64>, f64>,
@@ -85,7 +85,7 @@ mod invert_test {
 
     #[test]
     fn orthographic() {
-        let o: Projection<
+        let o: Projector<
             StreamDrainStub<f64>,
             LineCircle<f64>,
             Orthographic<StreamDrainStub<f64>, f64>,
@@ -97,7 +97,7 @@ mod invert_test {
 
     #[test]
     fn mercator() {
-        let m: Projection<
+        let m: Projector<
             StreamDrainStub<f64>,
             Line<f64>,
             Mercator<StreamDrainStub<f64>, f64>,
@@ -109,7 +109,7 @@ mod invert_test {
 
     #[test]
     fn stereographic() {
-        let s: Projection<
+        let s: Projector<
             StreamDrainStub<f64>,
             LineCircle<f64>,
             Stereographic<StreamDrainStub<f64>, f64>,

@@ -61,13 +61,13 @@ pub type ProjectionStreamOutput<DRAIN, LINE, PR, PV, T> = StreamNode<
     T,
 >;
 
-/// Projection output struct of Builder.
+/// Projection output of projection/Builder.
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct Projection<DRAIN, LINE, PR, PV, T>
+pub struct Projector<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
@@ -95,7 +95,7 @@ where
     pub(crate) cache: Option<Cache<DRAIN, LINE, PR, PV, T>>,
 }
 
-impl<'a, DRAIN, LINE, PR, PV, T> Projection<DRAIN, LINE, PR, PV, T>
+impl<'a, DRAIN, LINE, PR, PV, T> Projector<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + PartialEq<DRAIN>,
     LINE: Line,
@@ -138,7 +138,7 @@ where
     }
 }
 
-impl<'a, DRAIN, LINE, PR, PV, T> Transform for Projection<DRAIN, LINE, PR, PV, T>
+impl<'a, DRAIN, LINE, PR, PV, T> Transform for Projector<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,

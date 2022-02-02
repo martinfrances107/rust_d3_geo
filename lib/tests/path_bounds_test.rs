@@ -22,7 +22,7 @@ mod path_bounds_test {
     use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::path::builder::Builder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::projection::Projection;
+    use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Raw as ProjectionRaw;
     use rust_d3_geo::projection::Scale;
@@ -31,7 +31,7 @@ mod path_bounds_test {
     #[inline]
     fn equirectangular<
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst,
-    >() -> Projection<Bounds<T>, Line<T>, Equirectangular<Bounds<T>, T>, PV<T>, T> {
+    >() -> Projector<Bounds<T>, Line<T>, Equirectangular<Bounds<T>, T>, PV<T>, T> {
         Equirectangular::builder()
             .scale(T::from(900f64 / PI).unwrap())
             .precision(&T::zero())
@@ -40,7 +40,7 @@ mod path_bounds_test {
 
     #[inline]
     fn test_bounds<'a, T>(
-        projection: Projection<Bounds<T>, Line<T>, Equirectangular<Bounds<T>, T>, PV<T>, T>,
+        projection: Projector<Bounds<T>, Line<T>, Equirectangular<Bounds<T>, T>, PV<T>, T>,
 
         object: &impl Streamable<T = T>,
     ) -> [Coordinate<T>; 2]

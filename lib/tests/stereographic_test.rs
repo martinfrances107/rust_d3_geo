@@ -5,8 +5,8 @@ mod stereographic_tests {
 
     use rust_d3_geo::clip::circle::line::Line;
     use rust_d3_geo::clip::circle::pv::PV;
-    use rust_d3_geo::projection::projection::Projection;
     use rust_d3_geo::projection::projection_equal::projection_equal;
+    use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::stereographic::Stereographic;
     use rust_d3_geo::projection::Raw;
     use rust_d3_geo::projection::Scale;
@@ -15,7 +15,7 @@ mod stereographic_tests {
 
     #[test]
     fn test_stereographic() {
-        let stereo: Projection<
+        let stereo: Projector<
             StreamDrainStub<f64>,
             Line<f64>,
             Stereographic<StreamDrainStub<f64>, f64>,

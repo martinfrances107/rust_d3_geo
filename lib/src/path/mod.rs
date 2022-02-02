@@ -29,7 +29,7 @@ use crate::clip::PointVisible;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
-use crate::projection::projection::Projection;
+use crate::projection::projector::Projector;
 use crate::projection::resampler::ResampleNode;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::Raw as ProjectionRaw;
@@ -90,7 +90,7 @@ where
     context_stream: CS,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
-    projection: Projection<CS, LINE, PR, PV, T>,
+    projection: Projector<CS, LINE, PR, PV, T>,
 }
 
 impl<CS, LINE, PR, PV, T> Path<CS, LINE, PR, PV, T>
@@ -105,7 +105,7 @@ where
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
-    pub fn new(context_stream: CS, projection: Projection<CS, LINE, PR, PV, T>) -> Self {
+    pub fn new(context_stream: CS, projection: Projector<CS, LINE, PR, PV, T>) -> Self {
         Self {
             context_stream,
             point_radius: PointRadiusEnum::Val(T::from(4.5_f64).unwrap()),

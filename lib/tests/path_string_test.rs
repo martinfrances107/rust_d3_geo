@@ -27,7 +27,7 @@ mod path_string_test {
     use rust_d3_geo::path::PointRadiusTrait;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::orthographic::Orthographic;
-    use rust_d3_geo::projection::projection::Projection;
+    use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Raw;
     use rust_d3_geo::projection::Scale;
@@ -37,7 +37,7 @@ mod path_string_test {
 
     #[inline]
     fn equirectangular<T>(
-    ) -> Projection<PathString<T>, Line<T>, Equirectangular<PathString<T>, T>, PV<T>, T>
+    ) -> Projector<PathString<T>, Line<T>, Equirectangular<PathString<T>, T>, PV<T>, T>
     where
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
@@ -49,7 +49,7 @@ mod path_string_test {
 
     #[inline]
     fn test_path<'a, DRAIN, T>(
-        projection: Projection<PathString<T>, Line<T>, Equirectangular<DRAIN, T>, PV<T>, T>,
+        projection: Projector<PathString<T>, Line<T>, Equirectangular<DRAIN, T>, PV<T>, T>,
         object: impl Streamable<T = T>,
     ) -> String
     where

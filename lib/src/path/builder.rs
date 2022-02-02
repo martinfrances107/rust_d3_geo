@@ -13,7 +13,7 @@ use crate::clip::post_clip_node::PostClipNode;
 use crate::clip::Line;
 use crate::clip::PointVisible;
 use crate::path::context::Context;
-use crate::projection::projection::Projection;
+use crate::projection::projector::Projector;
 use crate::projection::resampler::ResampleNode;
 use crate::projection::stream_node::StreamNode;
 use crate::projection::Raw as ProjectionRaw;
@@ -41,7 +41,7 @@ where
 {
     pr: T,
     context_stream: CS,
-    projection: Option<Projection<CS, LINE, PR, PV, T>>,
+    projection: Option<Projector<CS, LINE, PR, PV, T>>,
 }
 
 impl<CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
@@ -180,7 +180,7 @@ where
 {
     /// From the progammed state generate a new projection.
     #[inline]
-    pub fn build(self, projection: Projection<CS, LINE, PR, PV, T>) -> Path<CS, LINE, PR, PV, T>
+    pub fn build(self, projection: Projector<CS, LINE, PR, PV, T>) -> Path<CS, LINE, PR, PV, T>
     where
         PR: ProjectionRaw<T>,
     {

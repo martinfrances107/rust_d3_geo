@@ -42,7 +42,7 @@ use super::Center;
 use super::ClipAngle;
 use super::ClipExtent;
 use super::Fit;
-use super::Projection;
+use super::Projector;
 use super::Raw as ProjectionRaw;
 use super::Reflect;
 use super::Rotate;
@@ -197,8 +197,8 @@ where
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> Projection<DRAIN, LINE, PR, PV, T> {
-        Projection {
+    pub fn build(&self) -> Projector<DRAIN, LINE, PR, PV, T> {
+        Projector {
             cache: None,
             postclip_factory: self.postclip_factory.clone(),
             preclip_factory: self.preclip_factory.clone(),

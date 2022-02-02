@@ -31,7 +31,7 @@ mod path_centroid_test {
     use rust_d3_geo::path::Path;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::projection::Projection;
+    use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Scale;
     use rust_d3_geo::stream::Stream;
@@ -39,7 +39,7 @@ mod path_centroid_test {
 
     #[inline]
     fn equirectangular<T>(
-    ) -> Projection<Centroid<T>, Line<T>, Equirectangular<Centroid<T>, T>, PV<T>, T>
+    ) -> Projector<Centroid<T>, Line<T>, Equirectangular<Centroid<T>, T>, PV<T>, T>
     where
         // DRAIN: Stream<EP = DRAIN, T = T> + Default,
         T: AbsDiffEq<Epsilon = T>
@@ -57,7 +57,7 @@ mod path_centroid_test {
 
     #[inline]
     fn test_centroid<'a, DRAIN, T>(
-        projection: Projection<Centroid<T>, Line<T>, Equirectangular<DRAIN, T>, PV<T>, T>,
+        projection: Projector<Centroid<T>, Line<T>, Equirectangular<DRAIN, T>, PV<T>, T>,
 
         object: &impl Streamable<T = T>,
     ) -> Point<T>

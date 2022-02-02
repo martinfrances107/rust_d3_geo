@@ -30,7 +30,7 @@ use super::Center;
 use super::ClipExtent;
 use super::Fit;
 use super::Precision;
-use super::Projection;
+use super::Projector;
 use super::Raw as ProjectionRaw;
 use super::Reflect;
 use super::Scale;
@@ -82,8 +82,8 @@ where
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> Projection<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> {
-        Projection {
+    pub fn build(&self) -> Projector<DRAIN, LineAntimeridian<T>, PR, PVAntimeridian<T>, T> {
+        Projector {
             cache: None,
             postclip_factory: self.base.postclip_factory.clone(),
             preclip_factory: self.base.preclip_factory.clone(),

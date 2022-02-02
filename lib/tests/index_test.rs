@@ -20,7 +20,7 @@ mod index_test {
     use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::projection::Projection;
+    use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Scale;
     use rust_d3_geo::stream::Stream;
@@ -28,19 +28,16 @@ mod index_test {
 
     #[inline]
     fn equirectangular<CS: Stream<EP = CS, T = f64>>(
-    ) -> Projection<CS, Line<f64>, Equirectangular<CS, f64>, PV<f64>, f64> {
-        ProjectionBuilder::new(
-            gen_clip_factory_antimeridian(),
-            Equirectangular::default(),
-        )
-        .scale(900_f64 / PI)
-        .precision(&0_f64)
-        .build()
+    ) -> Projector<CS, Line<f64>, Equirectangular<CS, f64>, PV<f64>, f64> {
+        ProjectionBuilder::new(gen_clip_factory_antimeridian(), Equirectangular::default())
+            .scale(900_f64 / PI)
+            .precision(&0_f64)
+            .build()
     }
 
     #[inline]
     fn test_path<'a>(
-        projection: Projection<
+        projection: Projector<
             PathString<f64>,
             Line<f64>,
             Equirectangular<PathString<f64>, f64>,
