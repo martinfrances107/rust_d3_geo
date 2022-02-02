@@ -51,6 +51,8 @@ use super::RotateTransformFactory;
 use super::Scale;
 use super::Translate;
 
+type RN<DRAIN, PR, T> = ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>;
+
 /// Projection builder.
 ///
 /// Holds State related to the construction of the a projection.
@@ -60,8 +62,7 @@ pub struct Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T> + Transform<T = T>,
     PV: PointVisible<T = T>,
@@ -103,14 +104,7 @@ where
     /// Projection pipeline stage.
     pub postclip_factory: StreamNodePostClipFactory<DRAIN, T>,
     /// Projection pipeline stage.
-    pub preclip_factory: StreamNodeClipFactory<
-        DRAIN,
-        LINE,
-        PR,
-        PV,
-        ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>,
-        T,
-    >,
+    pub preclip_factory: StreamNodeClipFactory<DRAIN, LINE, PR, PV, RN<DRAIN, PR, T>, T>,
     /// Projection pipeline stage.
     pub rotate_factory: RotateFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
 
@@ -124,8 +118,7 @@ impl<DRAIN, LINE, PR, PV, T> Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -134,14 +127,7 @@ where
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
     pub fn new(
-        preclip_factory: StreamNodeClipFactory<
-            DRAIN,
-            LINE,
-            PR,
-            PV,
-            ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>,
-            T,
-        >,
+        preclip_factory: StreamNodeClipFactory<DRAIN, LINE, PR, PV, RN<DRAIN, PR, T>, T>,
         projection_raw: PR,
     ) -> Self {
         let x = T::from(480_f64).unwrap();
@@ -271,8 +257,7 @@ where
 impl<DRAIN, LINE, PR, PV, T> ClipAngle for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     LINE: Line,
     PR: ProjectionRaw<T>,
@@ -390,8 +375,7 @@ where
 impl<DRAIN, LINE, PR, PV, T> Translate for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     LINE: Line,
     PR: ProjectionRaw<T>,
@@ -419,8 +403,7 @@ impl<DRAIN, LINE, PR, PV, T> Center for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -508,8 +491,7 @@ where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
 
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -538,8 +520,7 @@ impl<DRAIN, LINE, PR, PV, T> Scale for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -562,8 +543,7 @@ impl<DRAIN, LINE, PR, PV, T> ClipExtent for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -609,8 +589,7 @@ impl<DRAIN, LINE, PR, PV, T> Precision for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -648,8 +627,7 @@ impl<DRAIN, LINE, PR, PV, T> Rotate for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
@@ -686,8 +664,7 @@ impl<DRAIN, LINE, PR, PV, T> Reflect for Builder<DRAIN, LINE, PR, PV, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     LINE: Line,
-    StreamNode<DRAIN, LINE, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>:
-        Stream<EP = DRAIN, T = T>,
+    StreamNode<DRAIN, LINE, RN<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
     StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
