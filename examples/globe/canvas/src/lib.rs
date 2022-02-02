@@ -13,7 +13,6 @@ extern crate web_sys;
 use std::rc::Rc;
 
 use geo::Coordinate;
-use rust_topojson_client::feature::Builder as FeatureBuilder;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
@@ -26,10 +25,10 @@ use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Raw;
+use rust_d3_geo::projection::Rotate;
 use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
-
-use rust_d3_geo::projection::Rotate;
+use rust_topojson_client::feature::Builder as FeatureBuilder;
 
 use topojson::Topology;
 
@@ -102,7 +101,7 @@ pub async fn start() -> Result<(), JsValue> {
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
 
-    let land = FeatureBuilder::generate_from_name(&topology, "countries")
+    let countries = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
     let cs: Context<f64> = Context::new(context.clone());
@@ -122,7 +121,7 @@ pub async fn start() -> Result<(), JsValue> {
 
     let mut path = pb.build(ortho);
     context.set_stroke_style(&"#69b3a2".into());
-    path.object(&land);
+    path.object(&countries);
     context.stroke();
 
     Ok(())
