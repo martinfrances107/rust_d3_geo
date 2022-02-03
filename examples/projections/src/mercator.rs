@@ -8,13 +8,14 @@ use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::mercator::Mercator;
+use rust_d3_geo::projection::ClipAngle;
 use rust_d3_geo::projection::Raw;
 use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
 
 use crate::get_document;
 
-pub fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
+pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
     let document = get_document()?;
     // Grab canvas.
     let canvas = document
@@ -41,6 +42,8 @@ pub fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
             x: width / 2_f64,
             y: height / 2_f64,
         })
+        .clip_angle(90_f64)
+        .precision(90)
         .build();
 
     let mut path = pb.build(ortho);

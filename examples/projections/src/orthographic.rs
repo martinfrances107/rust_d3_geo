@@ -14,7 +14,7 @@ use rust_d3_geo::projection::Translate;
 
 use crate::get_document;
 
-pub fn draw_orthographic(land: &Geometry<f64>) -> Result<(), JsValue> {
+pub async fn draw_orthographic(land: &Geometry<f64>) -> Result<(), JsValue> {
     let document = get_document()?;
     // Grab canvas.
     let canvas = document

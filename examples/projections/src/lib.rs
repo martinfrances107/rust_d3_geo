@@ -72,6 +72,8 @@ fn get_document() -> Result<Document, JsValue> {
 #[wasm_bindgen(start)]
 #[cfg(not(tarpaulin_include))]
 pub async fn start() -> Result<(), JsValue> {
+    use futures::join;
+
     use crate::equirectangular::draw_equirectangular;
 
     console_log!("run() - wasm entry point");
@@ -99,12 +101,23 @@ pub async fn start() -> Result<(), JsValue> {
     let land = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
-    draw_azimuthal_equal_area(&land)?;
-    draw_azimuthal_equidistant(&land)?;
-    draw_orthographic(&land)?;
-    draw_mercator(&land)?;
-    draw_sterographic(&land)?;
-    draw_equirectangular(&land)?;
-    draw_gnomic(&land)?;
+    let aea = draw_azimuthal_equal_area(&land);
+    let ae = draw_azimuthal_equidistant(&land);
+    let orthographic = draw_orthographic(&land);
+    let mercator = draw_mercator(&land);
+    let sterographic = draw_sterographic(&land);
+    let equirectangular = draw_equirectangular(&land);
+    let gnomic = draw_gnomic(&land);
+
+    join!(
+        aea,
+        ae,
+        orthographic,
+        mercator,
+        sterographic,
+        equirectangular,
+        gnomic,
+    );
+
     Ok(())
 }
