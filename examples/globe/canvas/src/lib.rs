@@ -10,8 +10,6 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
-use std::rc::Rc;
-
 use geo::Coordinate;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -96,17 +94,15 @@ pub async fn start() -> Result<(), JsValue> {
         .unwrap()
         .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
 
-    let context = Rc::new(context_raw);
-
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
 
     let countries = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
-    let cs: Context<f64> = Context::new(context.clone());
+    let context = Context::new(&context_raw);
     let pb: PathBuilder<Context<f64>, Line<f64>, Orthographic<Context<f64>, f64>, PV<f64>, f64> =
-        PathBuilder::new(cs);
+        PathBuilder::new(context);
 
     let ortho_builder = Orthographic::<Context<f64>, f64>::builder();
 
@@ -120,9 +116,9 @@ pub async fn start() -> Result<(), JsValue> {
         .build();
 
     let mut path = pb.build(ortho);
-    context.set_stroke_style(&"#69b3a2".into());
+    context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(&countries);
-    context.stroke();
+    context_raw.stroke();
 
     Ok(())
 }

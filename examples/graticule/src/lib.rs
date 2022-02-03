@@ -8,8 +8,6 @@ extern crate js_sys;
 extern crate rand;
 extern crate web_sys;
 
-use std::rc::Rc;
-
 use geo::Coordinate;
 use geo::Geometry;
 use geo::LineString;
@@ -99,17 +97,15 @@ fn update_canvas(document: &Document) -> Result<()> {
         .unwrap()
         .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
 
-    let context = Rc::new(context_raw);
-
     let width = canvas.width().into();
     let height = canvas.height().into();
-    context.set_fill_style(&"black".into());
-    context.set_stroke_style(&"black".into());
-    context.fill_rect(0.0, 0.0, width, height);
+    context_raw.set_fill_style(&"black".into());
+    context_raw.set_stroke_style(&"black".into());
+    context_raw.fill_rect(0.0, 0.0, width, height);
 
-    let cs: Context<f64> = Context::new(context.clone());
+    let context = Context::new(&context_raw);
     let pb: PathBuilder<Context<f64>, Line<f64>, Orthographic<Context<f64>, f64>, PV<f64>, f64> =
-        PathBuilder::new(cs);
+        PathBuilder::new(context);
 
     let ortho_builder: ProjectionBuilder<
         Context<f64>,
@@ -134,12 +130,12 @@ fn update_canvas(document: &Document) -> Result<()> {
     let lines = generate_graticule().lines();
 
     let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
-    context.begin_path();
-    context.set_fill_style(&"#999".into());
-    context.set_stroke_style(&"#69b3a2".into());
+    context_raw.begin_path();
+    context_raw.set_fill_style(&"#999".into());
+    context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(&mls);
 
-    context.stroke();
+    context_raw.stroke();
 
     Ok(())
 }

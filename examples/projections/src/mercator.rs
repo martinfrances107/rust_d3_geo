@@ -1,17 +1,16 @@
-use std::rc::Rc;
-
-// use geo::Coordinate;
+use geo::Coordinate;
 use geo::Geometry;
-use rust_d3_geo::projection::Raw;
+use geo::MultiLineString;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
+use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::mercator::Mercator;
-// use rust_d3_geo::projection::Raw;
-// use rust_d3_geo::projection::Scale;
-// use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::Raw;
+use rust_d3_geo::projection::Scale;
+use rust_d3_geo::projection::Translate;
 
 use crate::get_document;
 
@@ -28,30 +27,34 @@ pub fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
         .unwrap()
         .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
 
-    let context = Rc::new(context_raw);
-
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
 
-    let cs: Context<f64> = Context::new(context.clone());
-    // let pb = PathBuilder::new(cs);
+    let context = Context::new(&context_raw);
+    let pb = PathBuilder::new(context);
 
-    // let mercator_builder = Mercator::<Context<f64>, f64>::builder();
+    let mercator_builder = Mercator::<Context<f64>, f64>::builder();
 
-    // let ortho = mercator_builder
-    // .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-    // .translate(&Coordinate {
-    //     x: width / 2_f64,
-    //     y: height / 2_f64,
-    // })
-    // .build();
+    let ortho = mercator_builder
+        .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
+        .translate(&Coordinate {
+            x: width / 2_f64,
+            y: height / 2_f64,
+        })
+        .build();
 
-    // let mut path = pb.build(ortho);
-    // context.set_stroke_style(&"#69b3a2".into());
-    // path.object(land);
-    // context.stroke();
+    let mut path = pb.build(ortho);
+    context_raw.set_stroke_style(&"#69b3a2".into());
+    path.object(land);
+    context_raw.stroke();
 
-    // let graticule10 = Graticule10::new();
+    let lines = generate_graticule().lines();
+    let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
+    context_raw.begin_path();
+    context_raw.set_fill_style(&"#999".into());
+    context_raw.set_stroke_style(&"#69b3a2".into());
+    path.object(&mls);
+    context_raw.stroke();
 
     Ok(())
 }

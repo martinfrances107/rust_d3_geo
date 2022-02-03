@@ -1,6 +1,5 @@
 use std::fmt::Display;
 use std::ops::AddAssign;
-use std::rc::Rc;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
@@ -67,7 +66,7 @@ where
 }
 
 /// Context related methods.
-impl<LINE, PR, PV, T> Builder<Context<T>, LINE, PR, PV, T>
+impl<'a, LINE, PR, PV, T> Builder<Context<'a, T>, LINE, PR, PV, T>
 where
     LINE: Line,
     PR: ProjectionRaw<T>,
@@ -80,13 +79,13 @@ where
         ResampleNode<String<T>, PR, PostClipNode<String<T>, String<T>, T>, T>,
         T,
     >: Stream<EP = String<T>, T = T>,
-    StreamNode<Context<T>, LINE, Context<T>, T>: Stream<EP = Context<T>, T = T>,
+    StreamNode<Context<'a, T>, LINE, Context<'a, T>, T>: Stream<EP = Context<'a, T>, T = T>,
     StreamNode<
-        Context<T>,
+        Context<'a, T>,
         LINE,
-        ResampleNode<Context<T>, PR, PostClipNode<Context<T>, Context<T>, T>, T>,
+        ResampleNode<Context<'a, T>, PR, PostClipNode<Context<'a, T>, Context<'a, T>, T>, T>,
         T,
-    >: Stream<EP = Context<T>, T = T>,
+    >: Stream<EP = Context<'a, T>, T = T>,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the state within the builder.
@@ -97,9 +96,8 @@ where
     /// Programe the builder with the context.
     pub fn context(
         self,
-        context: CanvasRenderingContext2d,
-    ) -> Builder<Context<T>, LINE, PR, PV, T> {
-        let context = Rc::new(context);
+        context: &'a CanvasRenderingContext2d,
+    ) -> Builder<Context<'a, T>, LINE, PR, PV, T> {
         Builder {
             pr: self.pr,
             context_stream: PathContext::<T>::new(context),
@@ -109,16 +107,21 @@ where
 }
 
 /// Context related methods.
-impl<CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
+impl<'a, CS, LINE, PR, PV, T> Builder<CS, LINE, PR, PV, T>
 where
     CS: Stream<EP = CS, T = T> + PointRadiusTrait<T = T>,
     LINE: Line,
     PR: ProjectionRaw<T>,
     PV: PointVisible<T = T>,
     StreamNode<
-        PathContext<T>,
+        PathContext<'a, T>,
         LINE,
-        ResampleNode<PathContext<T>, PR, PostClipNode<PathContext<T>, PathContext<T>, T>, T>,
+        ResampleNode<
+            PathContext<'a, T>,
+            PR,
+            PostClipNode<PathContext<'a, T>, PathContext<'a, T>, T>,
+            T,
+        >,
         T,
     >: Stream<EP = CS, T = T>,
     StreamNode<CS, LINE, ResampleNode<CS, PR, PostClipNode<CS, CS, T>, T>, T>:

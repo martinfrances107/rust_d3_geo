@@ -31,13 +31,13 @@ pub fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
         .unwrap()
         .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
 
-    let context = Rc::new(context_raw);
+    let context = Rc::new(&context_raw);
 
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
 
-    let cs: Context<f64> = Context::new(context.clone());
-    let pb = PathBuilder::new(cs);
+    let context = Context::new(&context);
+    let pb = PathBuilder::new(context);
 
     let equirectangular_builder = Equirectangular::<Context<f64>, f64>::builder();
 
@@ -52,17 +52,17 @@ pub fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
         .build();
 
     let mut path = pb.build(equirectangular);
-    context.set_stroke_style(&"#69b3a2".into());
+    context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
-    context.stroke();
+    context_raw.stroke();
 
     let lines = generate_graticule().lines();
     let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
-    context.begin_path();
-    context.set_fill_style(&"#999".into());
-    context.set_stroke_style(&"#69b3a2".into());
+    context_raw.begin_path();
+    context_raw.set_fill_style(&"#999".into());
+    context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(&mls);
-    context.stroke();
+    context_raw.stroke();
 
     Ok(())
 }

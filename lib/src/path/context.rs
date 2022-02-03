@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use geo::{CoordFloat, Coordinate};
 use web_sys::CanvasRenderingContext2d;
 
@@ -23,25 +21,38 @@ enum LineState {
 
 /// Path Context.
 #[derive(Clone, Debug, PartialEq)]
-pub struct Context<T>
+pub struct Context<'a, T>
 where
     T: CoordFloat,
 {
     line: LineState,
     point: PointState,
     radius: T,
-    context: Rc<CanvasRenderingContext2d>,
+    context: Option<&'a CanvasRenderingContext2d>,
 }
 
-impl<T> Context<T>
+impl<'a, T> Default for Context<'a, T>
+where
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            line: LineState::Init,
+            point: PointState::Init,
+            radius: T::from(4.5).unwrap(),
+            context: None,
+        }
+    }
+}
+impl<'a, T> Context<'a, T>
 where
     T: CoordFloat,
 {
     /// Contructor.
     #[inline]
-    pub fn new(context: Rc<CanvasRenderingContext2d>) -> Self {
+    pub fn new(context: &'a CanvasRenderingContext2d) -> Self {
         Self {
-            context,
+            context: Some(context),
             line: LineState::Init,
             point: PointState::Init,
             radius: T::from(4.5).unwrap(),
@@ -49,7 +60,7 @@ where
     }
 }
 
-impl<T> PointRadiusTrait for Context<T>
+impl<'a, T> PointRadiusTrait for Context<'a, T>
 where
     T: CoordFloat,
 {
@@ -59,7 +70,7 @@ where
     }
 }
 
-impl<T> Result for Context<T>
+impl<'a, T> Result for Context<'a, T>
 where
     T: CoordFloat,
 {
@@ -68,7 +79,7 @@ where
     fn result(&mut self) {}
 }
 
-impl<T> Stream for Context<T>
+impl<'a, T> Stream for Context<'a, T>
 where
     T: CoordFloat,
 {
@@ -97,7 +108,9 @@ where
 
     fn line_end(&mut self) {
         if LineState::PolygonStarted == self.line {
-            self.context.close_path();
+            if let Some(c) = &self.context {
+                c.close_path();
+            }
         }
 
         self.point = PointState::Init;
@@ -108,21 +121,23 @@ where
         println!("context point {:?}", self.point);
         match self.point {
             PointState::LineStart => {
-                self.context
-                    .move_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
+                if let Some(c) = &self.context {
+                    c.move_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
+                }
                 self.point = PointState::Next;
             }
             PointState::Next => {
-                self.context
-                    .line_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
+                if let Some(c) = &self.context {
+                    c.line_to(p.x.to_f64().unwrap(), p.y.to_f64().unwrap());
+                }
             }
             PointState::Init => {
-                self.context.move_to(
-                    p.x.to_f64().unwrap() + self.radius.to_f64().unwrap(),
-                    p.y.to_f64().unwrap(),
-                );
-                self.context
-                    .arc(
+                if let Some(c) = &self.context {
+                    c.move_to(
+                        p.x.to_f64().unwrap() + self.radius.to_f64().unwrap(),
+                        p.y.to_f64().unwrap(),
+                    );
+                    c.arc(
                         p.x.to_f64().unwrap(),
                         p.y.to_f64().unwrap(),
                         self.radius.to_f64().unwrap(),
@@ -130,6 +145,7 @@ where
                         std::f64::consts::TAU,
                     )
                     .expect("error writing arc to context");
+                }
             }
         }
     }
