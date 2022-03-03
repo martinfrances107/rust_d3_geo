@@ -42,8 +42,8 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
             x: width / 2_f64,
             y: height / 2_f64,
         })
-        .clip_angle(90_f64)
-        .precision(90)
+        // .clip_angle(90_f64)
+        // .precision(90)
         .build();
 
     let mut path = pb.build(ortho);
