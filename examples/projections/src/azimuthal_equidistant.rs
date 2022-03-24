@@ -1,18 +1,16 @@
 use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
-use rust_d3_geo::projection::ClipAngleAdjust;
-use rust_d3_geo::projection::PrecisionAdjust;
-use rust_d3_geo::projection::ProjectionRawBase;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
+use rust_d3_geo::projection::ClipAngleAdjust;
+use rust_d3_geo::projection::PrecisionAdjust;
+use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
-use rust_d3_geo::projection::ClipAngleSet;
-use rust_d3_geo::projection::PrecisionSet;
 use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
 

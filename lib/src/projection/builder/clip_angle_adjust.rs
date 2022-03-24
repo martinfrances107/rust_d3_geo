@@ -10,8 +10,6 @@ use crate::clip::circle::interpolate::Interpolate;
 use crate::clip::circle::line::Line;
 use crate::clip::circle::pv::PV;
 use crate::clip::clip::Clip;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipAngleAdjust;
 use crate::stream::Connectable;
 use crate::stream::Connected;

@@ -24,66 +24,60 @@ mod path_centroid_test {
     use num_traits::FloatConst;
 
     use rust_d3_geo::clip::antimeridian::gen_clip_antimeridian;
-    // use rust_d3_geo::clip::antimeridian::line::Line;
-    // use rust_d3_geo::clip::antimeridian::pv::PV;
+    use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+    use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
+    use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
+    use rust_d3_geo::clip::buffer::Buffer;
     use rust_d3_geo::clip::clip::Clip;
+    use rust_d3_geo::identity::Identity;
     use rust_d3_geo::in_delta::in_delta_point;
     use rust_d3_geo::path::centroid::Centroid;
     use rust_d3_geo::path::Path;
-	use rust_d3_geo::projection::PrecisionBypass;
-use rust_d3_geo::projection::PrecisionSet;
-use rust_d3_geo::projection::builder::template::NoClipC;
-use rust_d3_geo::projection::builder::template::NoClipU;
-// use rust_d3_geo::projection::builder::template::ResampleClipC;
-	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
-	use rust_d3_geo::projection::builder::template::ResampleNoClipU;
-	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
-	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
+    use rust_d3_geo::projection::builder::template::NoClipC;
+    use rust_d3_geo::projection::builder::template::NoClipU;
+    use rust_d3_geo::projection::builder::template::ResampleNoClipC;
+    use rust_d3_geo::projection::builder::template::ResampleNoClipU;
+    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
+    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
-	use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-	use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
-	use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
-	use rust_d3_geo::stream::Connected;
-	use rust_d3_geo::stream::Unconnected;
     use rust_d3_geo::projection::projector::Projector;
+    use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::Scale;
-	use rust_d3_geo::clip::buffer::Buffer;
-	use rust_d3_geo::identity::Identity;
-    // use rust_d3_geo::stream::Stream;
+    use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
+    use rust_d3_geo::stream::Unconnected;
 
     #[inline]
-    fn equirectangular<T>(
-    ) -> Projector<
-		Centroid<T>,
-		InterpolateAntimeridian<
-			Centroid<T>,
-			ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-			T,
-		>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			Centroid<T>,
-			ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-			Connected<ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>>,
-			T,
-		>,
-		LineAntimeridian<
-			Centroid<T>,
-			ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-			Unconnected,
-			T,
-		>,
-		Identity<Centroid<T>, Centroid<T>, Centroid<T>, Connected<Centroid<T>>, T>,
-		Identity<Centroid<T>, Centroid<T>, Centroid<T>, Unconnected, T>,
-		Equirectangular<Centroid<T>, T>,
-		PVAntimeridian<T>,
-		ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-		ResampleNoneNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-		T>
+    fn equirectangular<T>() -> Projector<
+        Centroid<T>,
+        InterpolateAntimeridian<
+            Centroid<T>,
+            ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+            T,
+        >,
+        LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+        LineAntimeridian<
+            Centroid<T>,
+            ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+            Connected<ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>>,
+            T,
+        >,
+        LineAntimeridian<
+            Centroid<T>,
+            ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+            Unconnected,
+            T,
+        >,
+        Identity<Centroid<T>, Centroid<T>, Centroid<T>, Connected<Centroid<T>>, T>,
+        Identity<Centroid<T>, Centroid<T>, Centroid<T>, Unconnected, T>,
+        Equirectangular<Centroid<T>, T>,
+        PVAntimeridian<T>,
+        ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+        ResampleNoneNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+        T,
+    >
     where
-        // DRAIN: Stream<EP = DRAIN, T = T> + Default,
         T: AbsDiffEq<Epsilon = T>
             + AddAssign<T>
             + AsPrimitive<T>
@@ -92,36 +86,40 @@ use rust_d3_geo::projection::builder::template::NoClipU;
             + FloatConst,
     {
         let clip: Clip<
-			Centroid<T>,
-			InterpolateAntimeridian<Centroid<T>, ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>, T>,
-			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<
-				Centroid<T>,
-				ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-				Connected<ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>>,
-				T,
-			>,
-			LineAntimeridian<
-				Centroid<T>,
-				ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-				Unconnected,
-				T,
-			>,
-			Equirectangular<Centroid<T>, T>,
-			PVAntimeridian<T>,
-			ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-			ResampleNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-			Unconnected,
-			T,
-		> = gen_clip_antimeridian::<
-			Centroid<T>,
-			NoClipC<Centroid<T>, T>,
-			NoClipU<Centroid<T>, T>,
-			Equirectangular<Centroid<T>, T>,
-			ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-			ResampleNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-			T,
-		>();
+            Centroid<T>,
+            InterpolateAntimeridian<
+                Centroid<T>,
+                ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+                T,
+            >,
+            LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+            LineAntimeridian<
+                Centroid<T>,
+                ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+                Connected<ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>>,
+                T,
+            >,
+            LineAntimeridian<
+                Centroid<T>,
+                ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+                Unconnected,
+                T,
+            >,
+            Equirectangular<Centroid<T>, T>,
+            PVAntimeridian<T>,
+            ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+            ResampleNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+            Unconnected,
+            T,
+        > = gen_clip_antimeridian::<
+            Centroid<T>,
+            NoClipC<Centroid<T>, T>,
+            NoClipU<Centroid<T>, T>,
+            Equirectangular<Centroid<T>, T>,
+            ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+            ResampleNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
+            T,
+        >();
 
         ProjectionBuilder::new(clip, Equirectangular::default())
             .scale(T::from(900f64 / PI).unwrap())
@@ -131,7 +129,7 @@ use rust_d3_geo::projection::builder::template::NoClipU;
 
     #[inline]
     fn test_centroid<'a, T>(
-        projection:Projector<
+        projection: Projector<
             Centroid<T>,
             InterpolateAntimeridian<
                 Centroid<T>,
@@ -157,7 +155,8 @@ use rust_d3_geo::projection::builder::template::NoClipU;
             PVAntimeridian<T>,
             ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
             ResampleNoneNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-            T>,
+            T,
+        >,
 
         object: &impl Streamable<T = T>,
     ) -> Point<T>

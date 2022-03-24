@@ -1,13 +1,3 @@
-use crate::clip::buffer::Buffer;
-use crate::clip::clip::Clip;
-use crate::identity::Identity;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
-use crate::projection::builder::template::ResampleNoneNoClipC;
-use crate::projection::builder::template::ResampleNoneNoClipU;
-// use crate::projection::resampler::none::None;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -16,28 +6,30 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::math::acos;
-
-// use crate::projection::builder::template::ResampleNoClipC;
-// use crate::projection::builder::template::ResampleNoClipU;
-use crate::projection::builder::Builder;
-use crate::projection::ClipAngleSet;
-use crate::projection::ProjectionRawBase;
-use crate::stream::Stream;
-use crate::Transform;
-
+use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
+use crate::clip::clip::Clip;
+use crate::identity::Identity;
+use crate::math::acos;
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
+use crate::projection::builder::Builder;
+use crate::projection::ClipAngleSet;
+use crate::projection::ProjectionRawBase;
+use crate::stream::Connected;
+use crate::stream::Stream;
+use crate::stream::Unconnected;
+use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-// use super::ProjectionRawCommon;
 use super::Scale;
 
 /// Why the Phantom Data is required here...

@@ -11,7 +11,6 @@ pub mod context;
 /// Path String.
 pub mod string;
 
-use crate::Transform;
 use std::fmt;
 use std::fmt::Debug;
 use std::fmt::Display;
@@ -27,20 +26,15 @@ use crate::clip::buffer::Buffer;
 use crate::clip::Bufferable;
 use crate::clip::Interpolator;
 use crate::clip::LineConnected;
-// use crate::clip::LineUnconnected;
 use crate::clip::PointVisible;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
-// use crate::projection::builder::PostClipNode;
 use crate::projection::projector::Projector;
-// use crate::projection::resampler::Resampler;
-// use crate::projection::ProjectionRawBase;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Streamable;
-
-
+use crate::Transform;
 
 /// Path Result.
 pub trait Result {
@@ -85,17 +79,6 @@ where
 #[allow(dead_code)]
 pub struct Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    // CS: Stream<EP = CS, T = T> + Result + PartialEq + Default,
-    // I: Interpolator<EP = CS, Stream = RC, T = T>,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = RC> + Stream<EP = CS, T = T>,
-    // LU: LineUnconnected<SU = RU>
-    //     + Bufferable<Output = LB, T = T>
-    //     + Connectable<Output = LC, SC = RC>,
-    // PCNC: PostClipNode + Stream<EP = CS, T = T>,
-    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = CS>,
-    // RC: Resampler + Stream<EP = CS, T = T>,
-    // RU: Resampler + Connectable<Output = RC, SC = PCNC>,
     CS: Clone,
     I: Clone,
     LC: Clone,
@@ -117,9 +100,6 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    // CS: Stream<EP = CS, T = T> + Result + PartialEq + Default,
-
-    // I: Interpolator<EP = CS, Stream = RC, T = T>,
     CS: Clone,
     I: Clone,
     LC: Clone,
@@ -127,20 +107,10 @@ where
     LU: Clone,
     RC: Clone,
     RU: Clone,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = RC> + Stream<EP = CS, T = T>,
-    // LU: LineUnconnected<SU = RU>
-    //     + Bufferable<Output = LB, T = T>
-    //     + Connectable<Output = LC, SC = RC>,
-    // PCNC: PostClipNode + Stream<EP = CS, T = T>,
-    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = CS>,
-    // PR: ProjectionRawBase<T>,
     PR: Clone + Transform<T = T>,
     PV: Clone,
     PCNU: Clone,
-    // PV: PointVisible<T = T>,
-    // RC: Resampler + Stream<EP = CS, T = T>,
-    // RU: Resampler + Connectable<Output = RC, SC = PCNC>,
+
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
@@ -159,7 +129,6 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    // CS: Clone + Default + PartialEq + Result,
     I: Clone,
     LB: Clone,
     LC: Clone,
@@ -170,19 +139,11 @@ where
     PV: Clone,
     PR: Transform<T = T>,
     CS: Stream<EP = CS, T = T> + Result + PartialEq + Default,
-
-    // I: Interpolator<EP = CS, Stream = RC, T = T>,
     I: Interpolator<EP = CS, Stream = RC, T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = RC> + Stream<EP = CS, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = CS, T = T>,
-    // LU: LineUnconnected<SU = RU>
-    // PCNC: PostClipNode + Stream<EP = CS, T = T>,
     PCNU: Connectable<Output = PCNC, SC = CS>,
-    // PR: ProjectionRawBase<T>,
     PV: PointVisible<T = T>,
-    // RC: Resampler + Stream<EP = CS, T = T>,
-    // RU: Resampler + Connectable<Output = RC, SC = PCNC>,
     RU: Connectable<Output = RC, SC = PCNC>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -200,23 +161,10 @@ where
     I: Interpolator<EP = Area<T>, Stream = RC, T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = Area<T>, T = T>,
-    //     LU: LineUnconnected<SU = RU>
-    //         + Bufferable<Output = LB, T = T>
-    //         + Connectable<Output = LC, SC = RC>,
-    //     PCNC: PostClipNode + Stream<EP = Area<T>, T = T>,
-    //     PCNU: PostClipNode + Connectable<Output = PCNC, SC = Area<T>>,
-    //     PR: ProjectionRawBase<T>,
-    //     PV: PointVisible<T = T>,
-    //     RC: Resampler + Stream<EP = Area<T>, T = T>,
-    //     RU: Resampler + Connectable<Output = RC, SC = PCNC>,
-    // LC: Clone,
-    // LC: LineConnected<SC = RC> + Stream<EP = Area<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
     RC: Clone + Stream<EP = Area<T>, T = T>,
     RU: Clone + Debug + Connectable<Output = RC, SC = PCNC>,
     PCNU: Connectable<Output = PCNC, SC = Area<T>>,
-    // PCNU: Clone,
-    // PR: Transform<T = T>,
     PV: Clone + PointVisible<T = T>,
     I: Clone,
     LC: Clone,
@@ -225,7 +173,6 @@ where
     RC: Clone,
     RU: Clone,
     PCNU: Clone,
-
     PR: Transform<T = T>,
     PV: Clone,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -248,28 +195,16 @@ impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<Bounds<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     I: Interpolator<EP = Bounds<T>, Stream = RC, T = T>,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    // LU: LineUnconnected<SU = RU>
-    //     + Bufferable<Output = LB, T = T>
-    //     + Connectable<Output = LC, SC = RC>,
-    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = Bounds<T>>,
-    // PCNC: PostClipNode + Stream<EP = Bounds<T>, T = T>,
-    // PR: ProjectionRawBase<T>,
-    // PV: PointVisible<T = T>,
-    // RC: Resampler + Stream<EP = Bounds<T>, T = T>,
-    // RU: Resampler + Connectable<Output = RC, SC = PCNC>,
-    // I: Clone,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
     LU: Clone,
-    RU:Clone,
+    RU: Clone,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Debug + Connectable<Output = RC, SC = PCNC>,
     PCNU: Connectable<Output = PCNC, SC = Bounds<T>>,
     PCNU: Clone,
-    PR: Transform<T=T>,
+    PR: Transform<T = T>,
     PV: Clone + PointVisible<T = T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -291,24 +226,19 @@ where
     I: Interpolator<EP = Centroid<T>, Stream = RC, T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = Centroid<T>, T = T>,
-    LU:
-     Bufferable<Output = LB, T = T>
-    + Connectable<Output=LC, SC=RC>
-        + Connectable<Output = LC, SC = RC> + Clone + Debug,
-    PCNC:  Stream<EP = Centroid<T>, T = T>,
-    PCNU:  Connectable<Output = PCNC, SC = Centroid<T>>,
-    // PR: ProjectionRawBase<T>,
+    LU: Bufferable<Output = LB, T = T>
+        + Connectable<Output = LC, SC = RC>
+        + Connectable<Output = LC, SC = RC>
+        + Clone
+        + Debug,
+    PCNC: Stream<EP = Centroid<T>, T = T>,
+    PCNU: Connectable<Output = PCNC, SC = Centroid<T>>,
     PV: PointVisible<T = T>,
     RU: Connectable<Output = RC, SC = PCNC>,
     RC: Clone + Stream<EP = Centroid<T>, T = T>,
-    // I: Clone,
-    // LB: Clone,
-    // LC: Clone,
-    // LU: Clone,
-    // RC: Clone,
     RU: Clone + Debug,
     PCNU: Clone,
-    PR: Transform<T=T>,
+    PR: Transform<T = T>,
     PV: Clone,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
@@ -325,27 +255,14 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    // CS: Stream<EP = CS, T = T> + Result + PartialEq + Default,
     CS: Clone,
     I: Clone,
-    // I: Interpolator<EP = CS, Stream = RC, T = T>,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LB: Clone,
     LC: Clone,
     LU: Clone,
     RC: Clone,
     RU: Clone,
     PV: Clone,
-    // LC: LineConnected<SC = RC> + Stream<EP = CS, T = T>,
-    // LU: LineUnconnected<SU = RU>
-    //     + Bufferable<Output = LB, T = T>
-    //     + Connectable<Output = LC, SC = RC>,
-    // PCNC: PostClipNode + Stream<EP = CS, T = T>,
-    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = CS>,
-    // PR: ProjectionRawBase<T>,
-    // PV: PointVisible<T = T>,
-    // RC: Resampler + Stream<EP = CS, T = T>,
-    // RU: Resampler + Connectable<Output = RC, SC = PCNC>,
     PR: Clone + Transform<T = T>,
     PCNU: Clone,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,

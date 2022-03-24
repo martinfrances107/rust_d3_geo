@@ -4,80 +4,52 @@
 mod equirectangular_test {
 
 	use geo::Coordinate;
-	use rust_d3_geo::clip::antimeridian::gen_clip_antimeridian;
-	use rust_d3_geo::projection::builder::template::NoClipC;
-	use rust_d3_geo::projection::builder::template::NoClipU;
-	use rust_d3_geo::projection::ProjectionRawBase;
 
-	// use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
-	// use rust_d3_geo::clip::antimeridian::line::Line;
-	// use rust_d3_geo::clip::antimeridian::pv::PV;
-	use rust_d3_geo::identity::Identity;
-	// use rust_d3_geo::projection::builder::template::NoClipC;
-	// use rust_d3_geo::projection::builder::template::NoClipU;
-	use rust_d3_geo::projection::builder::Builder;
-	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
-use rust_d3_geo::projection::builder::template::ResampleNoClipU;
-use rust_d3_geo::projection::equirectangular::Equirectangular;
-	use rust_d3_geo::projection::projection_equal::projection_equal;
-	// use rust_d3_geo::projection::projector::Projector;
-	use rust_d3_geo::projection::resampler::none::None;
-	// use crate::clip::clip::Connected as ConnectedClip;
+	use rust_d3_geo::clip::antimeridian::gen_clip_antimeridian;
 	use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 	use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
 	use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
-
-	// use rust_d3_geo::clip::circle::interpolate::Interpolate as InterpolateCircle;
-	// use rust_d3_geo::clip::circle::line::Line as LineCircle;
-	// use rust_d3_geo::clip::circle::pv::PV as PVCircle;
-
 	use rust_d3_geo::clip::buffer::Buffer;
 	use rust_d3_geo::clip::clip::Clip;
-	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
-	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
-	use rust_d3_geo::stream::Connected;
-	use rust_d3_geo::stream::Unconnected;
-	// use rust_d3_geo::projection::Raw;
+	use rust_d3_geo::identity::Identity;
+	use rust_d3_geo::projection::builder::template::NoClipC;
+	use rust_d3_geo::projection::builder::template::NoClipU;
+	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
+	use rust_d3_geo::projection::builder::template::ResampleNoClipU;
+	use rust_d3_geo::projection::builder::Builder;
+	use rust_d3_geo::projection::equirectangular::Equirectangular;
+	use rust_d3_geo::projection::projection_equal::projection_equal;
+	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::Rotate;
 	use rust_d3_geo::projection::Scale;
 	use rust_d3_geo::projection::Translate;
+	use rust_d3_geo::stream::Connected;
 	use rust_d3_geo::stream::StreamDrainStub;
+	use rust_d3_geo::stream::Unconnected;
 
 	type B = Builder<
 		StreamDrainStub<f64>,
 		InterpolateAntimeridian<
 			StreamDrainStub<f64>,
-			ResampleNoClipC<
-				StreamDrainStub<f64>,
-				Equirectangular<StreamDrainStub<f64>, f64>,
-				f64,
-			>,
+			ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 			f64,
 		>,
 		LineAntimeridian<Buffer<f64>, Buffer<f64>, Connected<Buffer<f64>>, f64>,
 		LineAntimeridian<
 			StreamDrainStub<f64>,
-			ResampleNoClipC<
-				StreamDrainStub<f64>,
-				Equirectangular<StreamDrainStub<f64>, f64>,
-				f64,
-			>,
+			ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 			Connected<
 				ResampleNoClipC<
-				StreamDrainStub<f64>,
-				Equirectangular<StreamDrainStub<f64>, f64>,
-				f64,
-			>,
+					StreamDrainStub<f64>,
+					Equirectangular<StreamDrainStub<f64>, f64>,
+					f64,
+				>,
 			>,
 			f64,
 		>,
 		LineAntimeridian<
 			StreamDrainStub<f64>,
-			ResampleNoClipC<
-				StreamDrainStub<f64>,
-				Equirectangular<StreamDrainStub<f64>, f64>,
-				f64,
-			>,
+			ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 			Unconnected,
 			f64,
 		>,
@@ -97,16 +69,8 @@ use rust_d3_geo::projection::equirectangular::Equirectangular;
 		>,
 		Equirectangular<StreamDrainStub<f64>, f64>,
 		PVAntimeridian<f64>,
-		ResampleNoClipC<
-				StreamDrainStub<f64>,
-				Equirectangular<StreamDrainStub<f64>, f64>,
-				f64,
-			>,
-			ResampleNoClipU<
-				StreamDrainStub<f64>,
-				Equirectangular<StreamDrainStub<f64>, f64>,
-				f64,
-			>,
+		ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+		ResampleNoClipU<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 		f64,
 	>;
 
@@ -251,16 +215,8 @@ use rust_d3_geo::projection::equirectangular::Equirectangular;
 			>,
 			Equirectangular<StreamDrainStub<f64>, f64>,
 			PVAntimeridian<f64>,
-			ResampleNoClipC<
-				StreamDrainStub<f64>,
-				Equirectangular<StreamDrainStub<f64>, f64>,
-				f64,
-			>,
-			ResampleNoClipU<
-				StreamDrainStub<f64>,
-				Equirectangular<StreamDrainStub<f64>, f64>,
-				f64,
-			>,
+			ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+			ResampleNoClipU<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 			Unconnected,
 			f64,
 		> = gen_clip_antimeridian::<
@@ -268,16 +224,8 @@ use rust_d3_geo::projection::equirectangular::Equirectangular;
 			NoClipC<StreamDrainStub<f64>, f64>,
 			NoClipU<StreamDrainStub<f64>, f64>,
 			Equirectangular<StreamDrainStub<f64>, f64>,
-			ResampleNoClipC<
-				StreamDrainStub<f64>,
-				Equirectangular<StreamDrainStub<f64>, f64>,
-				f64,
-			>,
-			ResampleNoClipU<
-				StreamDrainStub<f64>,
-				Equirectangular<StreamDrainStub<f64>, f64>,
-				f64,
-			>,
+			ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+			ResampleNoClipU<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 			f64,
 		>();
 		let equirectangular = Builder::new(clip, Equirectangular::default())

@@ -1,5 +1,4 @@
 use crate::clip::buffer::Buffer;
-use crate::identity::Identity;
 use crate::projection::builder::Clip;
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -12,17 +11,11 @@ use num_traits::FloatConst;
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-
-// use crate::clip::Interpolate;
-// use crate::clip::PointVisible;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::PrecisionBypass;
-// use crate::projection::ProjectionRawBase;
-// use crate::stream::Connectable;
 use crate::stream::Connected;
-// use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -43,20 +36,8 @@ impl<DRAIN,  PR, PCNC, PCNU, T> PrecisionBypass
 		Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T>  where
-	// I: Interpolate<T = T>,
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	// PR: ProjectionRawBase<T>,
-	// PV: PointVisible<T = T>,
-	// PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
-	// PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-	// DRAIN: Clone + Debug,
-	PCNU: Clone + Debug,
+		PCNU: Clone + Debug,
 	PCNC: Clone + Debug,
-	// LB: Clone,
-	// LC: Clone + Debug,
-	// LU: Clone + Debug,
-	// PV: Clone + Debug,
-	// PCNC: Clone,
 	DRAIN: Clone + Debug,
 	PR: Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

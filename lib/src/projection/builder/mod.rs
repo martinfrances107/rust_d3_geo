@@ -13,24 +13,15 @@ use num_traits::FloatConst;
 
 use crate::clip::buffer::Buffer;
 use crate::clip::clip::Clip;
-// use crate::clip::Bufferable;
-// use crate::clip::Interpolator;
-// use crate::clip::LineConnected;
-// use crate::clip::LineUnconnected;
-// use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::identity::Identity;
-use crate::projection::resampler::none::None;
 use crate::rot::rotate_radians;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
-// use crate::stream::Connectable;r
 use crate::stream::Connected;
-// use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-// use self::template::ClipU;
 
 use self::template::ResampleNoClipC;
 use self::template::ResampleNoClipU;
@@ -38,21 +29,13 @@ use self::template::ResampleNoClipU;
 use super::resampler::none::None as ResampleNone;
 use super::resampler::resample::Connected as ConnectedResample;
 use super::resampler::resample::Resample;
-// use super::resampler::Resampler;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 use super::Angle;
-// use super::ClipExtentBounded;
-// use super::ClipExtentSet;
-// use super::Fit;
 use super::ProjectionRawBase;
 use super::Projector;
-// use super::RotateTransform;
 
-// use template::Default as DefaultBuilder;
-use template::ResampleNoneNoClipC;
-use template::ResampleNoneNoClipU;
 
 mod angle;
 mod angle_mercator;
@@ -84,17 +67,11 @@ pub trait PostClipNode: Clone + Debug {}
 #[derive(Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    // I: Interpolator<EP = DRAIN, Stream = RC, T = T>,
-    // PCNC: PostClipNode,
-    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-    // RU: Resampler,
     DRAIN: Clone + Debug,
     LU: Clone + Debug,
     PCNU: Clone + Debug,
     I: Clone,
-
     LB: Clone,
-    LU: Debug,
     LC: Clone + Debug,
     PV: Clone + Debug,
     PR: Clone + Debug + Transform<T = T>,
@@ -139,13 +116,10 @@ where
 
     /// Projection pipeline stage.
     pub postclip: PCNU,
-    /// Projection pipeline stage.
-    // pub rotate: RotateRadians<DRAIN, DRAIN, LINE, PR, PV, T>,
 
     /// Projection pipeline stage
     pub resample: RU,
-    // Projection pipeline stage
-    // pub rotate_transform: RotateTransform<PR, T>,
+
 }
 
 impl<DRAIN, PR, PV, T>
@@ -169,18 +143,9 @@ impl<DRAIN, PR, PV, T>
         T,
     >
 where
-    // DRAIN: Stream<EP = DRAIN, T = T> + Default,
-
-    // I: Interpolator<EP = DRAIN, Stream = ResampleNoneNoClipC<DRAIN, PR, T>, T = T>,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = ResampleNoneNoClipC<DRAIN, PR, T>> + Stream<EP = DRAIN, T = T>,
-    // LU: LineUnconnected<SU = ResampleNoneNoClipU<DRAIN, PR, T>>
-    //     + Connectable<Output = LC, SC = ResampleNoneNoClipC<DRAIN, PR, T>>
-    //     + Bufferable<Output = LB, T = T>,
     DRAIN: Clone + Debug,
     PV: Clone + Debug,
     PR: ProjectionRawBase<T>,
-    // PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Given a Raw Projection and a clipping defintion create the associated
@@ -236,17 +201,9 @@ where
             clip,
             p_pcnc,
             p_lb: PhantomData::<Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
-            // p_lc: PhantomData::<
-            //     Line<
-            //         DRAIN,
-            //         ResampleNoneNoClipC<DRAIN, PR, T>,
-            //         Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
-            //         T,
-            //     >,
-            // >,
             /// Input passing onto Projection.
             projection_raw,
-            // p_pcnc,
+
             /// Internal state.
             delta_lambda,
             delta_phi,
@@ -289,22 +246,9 @@ where
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    // DRAIN: Stream<EP = DRAIN, T = T> + Default,
     DRAIN: Debug,
-    // I: Interpolator<EP = DRAIN, Stream = RC, T = T>,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
-    // LU: LineUnconnected<SU = RU>
-    //     + Bufferable<Output = LB, T = T>
-    //     + Connectable<Output = LC, SC = RC>,
-    // PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
-    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-    // PR: ProjectionRawBase<T>,
     PCNU: Clone + Debug,
     PR: Transform<T = T>,
-    // PV: PointVisible<T = T>,
-    // RC: Resampler + Stream<EP = DRAIN, T = T>,
-    // RU: Resampler + Connectable<Output = RC, SC = PCNC>,
     I: Clone,
     LB: Clone,
     LC: Debug,
@@ -320,12 +264,10 @@ where
     /// Using the currently programmed state output a new projection.
     #[inline]
     pub fn build(&self) -> Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> {
-        // let p_pcnc = PhantomData::<PCNC>;
         Projector {
             p_lb: PhantomData::<LB>,
             p_lc: PhantomData::<LC>,
             p_pcnc: PhantomData::<PCNC>,
-            // p_pcnc,
             cache: None,
             postclip: self.postclip.clone(),
             clip: self.clip.clone(),
@@ -457,21 +399,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
         T,
     >
 where
-    // DRAIN: Stream<EP = DRAIN, T = T> + Default,
-
-    // I: Interpolator<
-    //     EP = DRAIN,
-    //     Stream = ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-    //     T = T,
-    // >,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>
-    //     + Stream<EP = DRAIN, T = T>,
-    // LU: LineUnconnected<SU = ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>>
-    //     + Bufferable<Output = LB, T = T>
-    //     + Connectable<Output = LC, SC = ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>,
-    // PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
-    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
     LB: Clone,
     PR: Clone + Transform<T = T>,
     PV: Clone + Debug,
@@ -481,8 +408,6 @@ where
     LC: Clone + Debug,
     I: Clone,
     LU: Clone,
-
-    // PV: PointVisible<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {
@@ -522,7 +447,6 @@ where
         let out: Self = Builder {
             p_pcnc: PhantomData::<PCNC>,
             p_lb: PhantomData::<LB>,
-            // p_lc: PhantomData::<LC>,
             projection_raw: self.projection_raw,
             clip: self.clip,
             phi: self.phi,
@@ -545,13 +469,11 @@ where
             rotate,
             rotator,
             postclip: self.postclip,
-            // rotate_transform: self.rotate_transform,
             resample,
             project_transform,
             project_rotate_transform,
         };
 
         out.reset()
-        // out
     }
 }

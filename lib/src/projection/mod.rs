@@ -8,21 +8,13 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-// use crate::clip::Interpolator;
-// use crate::clip::LineConnected;
-// use crate::clip::LineUnconnected;
-// use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::rot::rotate_radians::RotateRadians;
-// use crate::stream::Connectable;
-// use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
 
 use projector::Projector;
 
-// use self::builder::PostClipNode;
-// use self::resampler::Resampler;
 use self::transform::scale_translate_rotate::ScaleTranslateRotate;
 
 /// The raw projection.
@@ -137,14 +129,6 @@ where
 
 trait Builder
 where
-    // <Self as Builder>::Drain: Stream<EP = Self::Drain, T = Self::T> + Default,
-    // <Self as Builder>::I: Interpolator<EP = Self::Drain, Stream = Self::RC, T = Self::T>,
-    // <Self as Builder>::LU: LineUnconnected<SU = Self::RU> + Stream<EP = Self::Drain, T = Self::T>,
-    // // LC: LineConnected<SC = RC> + Stream<EP = CS, T = T>,
-    // <Self as Builder>::LC: LineConnected<SC = Self::RC> + Stream<EP = Self::Drain, T = Self::T>,
-    // <Self as Builder>::PCNC: PostClipNode,
-    // <Self as Builder>::PCNU: PostClipNode + Connectable<Output = Self::PCNC, SC = Self::Drain>,
-    // <Self as Builder>::PR: ProjectionRawBase<Self::T>,
     <Self as Builder>::Drain: Clone,
     <Self as Builder>::I: Clone,
     <Self as Builder>::LB: Clone,
@@ -155,9 +139,6 @@ where
     <Self as Builder>::RC: Clone,
     <Self as Builder>::RU: Clone,
     <Self as Builder>::PR: Transform<T = Self::T>,
-    // <Self as Builder>::PV: PointVisible<T = Self::T>,
-    // <Self as Builder>::RU: Resampler,
-    // <Self as Builder>::RC: Resampler + Stream<EP = Self::Drain, T = Self::T>,
     <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;
@@ -517,7 +498,6 @@ pub trait PrecisionBypass {
     type Output;
     fn precision_bypass(self) -> Self::Output;
 }
-
 
 /// Give a resampling precision consume the object and return one that resamples.
 ///

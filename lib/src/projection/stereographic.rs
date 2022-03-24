@@ -5,32 +5,22 @@ use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-// use crate::identity::Identity;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
-// use crate::projection::resampler::none::None;
-// use crate::clip::clip::Connected as ConnectedClip;
+use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-
+use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-
-use crate::clip::buffer::Buffer;
 use crate::clip::clip::Clip;
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
-// use crate::projection::builder::template::ResampleNoneNoClipC;
-// use crate::projection::builder::template::ResampleNoneNoClipU;
 use crate::stream::Connected;
-use crate::stream::Unconnected;
-// use crate::projection::builder::template::DefaultAntimeridian;
-use crate::clip::antimeridian::gen_clip_antimeridian;
-// use crate::projection::builder::template::Default as DefaultBase;
-// use crate::projection::builder::template::DefaultCircle;
 use crate::stream::Stream;
+use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
@@ -105,11 +95,7 @@ where
     fn builder() -> Self::Builder {
         let clip: Clip<
             DRAIN,
-            InterpolateAntimeridian<
-                DRAIN,
-                ResampleNoClipC<DRAIN, Stereographic<DRAIN, T>, T>,
-                T,
-            >,
+            InterpolateAntimeridian<DRAIN, ResampleNoClipC<DRAIN, Stereographic<DRAIN, T>, T>, T>,
             LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
             LineAntimeridian<
                 DRAIN,
@@ -141,11 +127,7 @@ where
 
         let out_a: Builder<
             DRAIN,
-            InterpolateAntimeridian<
-                DRAIN,
-                ResampleNoClipC<DRAIN, Stereographic<DRAIN, T>, T>,
-                T,
-            >,
+            InterpolateAntimeridian<DRAIN, ResampleNoClipC<DRAIN, Stereographic<DRAIN, T>, T>, T>,
             LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
             LineAntimeridian<
                 DRAIN,

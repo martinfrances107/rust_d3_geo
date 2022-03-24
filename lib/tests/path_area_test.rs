@@ -2,24 +2,6 @@
 #[cfg(test)]
 mod path_area_test {
 
-	use rust_d3_geo::clip::buffer::Buffer;
-	use rust_d3_geo::identity::Identity;
-	use rust_d3_geo::projection::PrecisionBypass;
-use rust_d3_geo::projection::builder::template::ResampleClipC;
-	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
-	use rust_d3_geo::projection::builder::template::ResampleNoClipU;
-	// use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
-	// use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
-	use rust_d3_geo::projection::builder::Builder;
-	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
-use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
-use rust_d3_geo::projection::resampler::resample::Resample;
-	use rust_d3_geo::projection::ProjectionRawBase;
-
-	use rust_d3_geo::stream::Connected;
-	use rust_d3_geo::stream::Unconnected;
-	use rust_d3_geo::projection::resampler::none::None;
-
 	use std::f64::consts::PI;
 	use std::fmt::Display;
 	use std::ops::AddAssign;
@@ -37,17 +19,24 @@ use rust_d3_geo::projection::resampler::resample::Resample;
 	use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 	use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
 	use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
+	use rust_d3_geo::clip::buffer::Buffer;
 	use rust_d3_geo::data_object::sphere::Sphere;
+	use rust_d3_geo::identity::Identity;
 	use rust_d3_geo::path::area::Area;
 	use rust_d3_geo::path::builder::Builder as PathBuilder;
+	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
+	use rust_d3_geo::projection::builder::template::ResampleNoClipU;
+	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
+	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
+	use rust_d3_geo::projection::builder::Builder;
 	use rust_d3_geo::projection::equirectangular::Equirectangular;
 	use rust_d3_geo::projection::projector::Projector;
-	// use rust_d3_geo::projection::Precision;
-	// use rust_d3_geo::projection::Raw;
+	use rust_d3_geo::projection::PrecisionBypass;
+	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::Scale;
+	use rust_d3_geo::stream::Connected;
 	use rust_d3_geo::stream::Streamable;
-
-	use rust_d3_geo::projection::PrecisionSet;
+	use rust_d3_geo::stream::Unconnected;
 
 	#[inline]
 	fn equirectangular<T>() -> Projector<
@@ -81,21 +70,34 @@ use rust_d3_geo::projection::resampler::resample::Resample;
 	where
 		T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 	{
-		let ba:  Builder<
+		let ba: Builder<
 			Area<T>,
-			InterpolateAntimeridian<Area<T>, ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>, T>,
+			InterpolateAntimeridian<
+				Area<T>,
+				ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
+				T,
+			>,
 			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<Area<T>, ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>, Connected<ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>>, T>,
-			LineAntimeridian<Area<T>, ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>, Unconnected, T>,
+			LineAntimeridian<
+				Area<T>,
+				ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
+				Connected<ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>>,
+				T,
+			>,
+			LineAntimeridian<
+				Area<T>,
+				ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
+				Unconnected,
+				T,
+			>,
 			Identity<Area<T>, Area<T>, Area<T>, Connected<Area<T>>, T>,
 			Identity<Area<T>, Area<T>, Area<T>, Unconnected, T>,
 			Equirectangular<Area<T>, T>,
 			rust_d3_geo::clip::antimeridian::pv::PV<T>,
 			ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
 			ResampleNoClipU<Area<T>, Equirectangular<Area<T>, T>, T>,
-			T>
-		= Equirectangular::<Area<T>, T>::builder().scale(T::from(900f64 / PI).unwrap());
-
+			T,
+		> = Equirectangular::<Area<T>, T>::builder().scale(T::from(900f64 / PI).unwrap());
 
 		let builder = ba.precision_bypass();
 		let out = builder.build();

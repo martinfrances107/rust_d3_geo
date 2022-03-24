@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use crate::projection::builder::Clip;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -14,10 +13,7 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-// use crate::projection::builder::template::ResampleNoneNoClipC;
-// use crate::projection::builder::template::ResampleNoneNoClipU;
-
-// use crate::projection::resampler::Resampler;
+use crate::projection::builder::Clip;
 use crate::projection::ClipAngleReset;
 use crate::stream::Connectable;
 use crate::stream::Connected;

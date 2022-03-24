@@ -16,20 +16,14 @@ mod index_test {
     use geo::LineString;
     use geo::Polygon;
     use num_traits::AsPrimitive;
-    use num_traits::Float;
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
-    // use rust_d3_geo::clip::antimeridian::gen_clip_factory_antimeridian;
-    use rust_d3_geo::clip::antimeridian::line::Line;
-    use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::clip::buffer::Buffer;
     use rust_d3_geo::identity::Identity;
-    use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::projection::ProjectionRawBase;
-    use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
 	use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 	use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;

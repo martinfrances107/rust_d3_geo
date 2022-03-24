@@ -1,13 +1,3 @@
-use crate::clip::clip::Clip;
-use crate::identity::Identity;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
-// use crate::projection::builder::template::ResampleNoClipC;
-// use crate::projection::builder::template::ResampleNoClipU;
-use crate::projection::builder::template::ResampleNoneNoClipU;
-use crate::projection::resampler::none::None;
-use crate::projection::ClipAngleSet;
-use crate::projection::Scale;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -17,31 +7,29 @@ use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-// use crate::projection::builder::template::DefaultCircle;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
-
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-
 use crate::clip::buffer::Buffer;
-// use crate::clip::clip::Clip;
-use crate::projection::builder::template::ResampleNoneNoClipC;
-// use crate::projection::builder::template::ResampleNoneNoClipU;
+use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
+use crate::clip::circle::line::Line as LineCircle;
+use crate::clip::circle::pv::PV as PVCircle;
+use crate::clip::clip::Clip;
+use crate::identity::Identity;
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
+use crate::projection::ClipAngleSet;
+use crate::projection::Scale;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
-use super::builder::Builder;
-// use super::ProjectionRawCommon;
-
-use super::ProjectionRawBase;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
+use super::builder::Builder;
+use super::ProjectionRawBase;
 
 /// Gnomic
 #[derive(Clone, Debug)]
@@ -80,18 +68,12 @@ where
 {
 	type Builder = Builder<
 		DRAIN,
-		InterpolateCircle<
-			DRAIN,
-			ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
-			T,
-		>,
+		InterpolateCircle<DRAIN, ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>, T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<
 			DRAIN,
 			ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
-			Connected<
-				ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
-			>,
+			Connected<ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>>,
 			T,
 		>,
 		LineCircle<DRAIN, ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>, Unconnected, T>,
@@ -121,12 +103,7 @@ where
 				Connected<ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>>,
 				T,
 			>,
-			LineAntimeridian<
-				DRAIN,
-				ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
-				Unconnected,
-				T,
-			>,
+			LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>, Unconnected, T>,
 			Gnomic<DRAIN, T>,
 			PVAntimeridian<T>,
 			ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,

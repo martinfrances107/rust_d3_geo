@@ -1,13 +1,3 @@
-// use crate::projection::builder::template::NoClipC;
-// use crate::projection::builder::template::NoClipU;
-// use crate::projection::resampler::none::None;
-use crate::clip::Buffer;
-use crate::clip::Clean;
-use crate::clip::LineConnected;
-use crate::path::Result;
-use crate::polygon_contains::polygon_contains;
-use crate::stream::Stream;
-use crate::Transform;
 use std::collections::VecDeque;
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -19,21 +9,16 @@ use geo::Coordinate;
 use geo::LineString;
 use num_traits::FloatConst;
 
-// use crate::stream::Connected as ConnectedCommon;
-// use crate::clip::LineConnected;
-// use crate::clip::LineUnconnected;
-// use crate::path::Result;
-// use crate::projection::builder::template::ResampleNoneNoClipC;
-// use crate::projection::builder::template::ResampleNoneNoClipU;
-// use crate::projection::resampler::Resampler;
-// use crate::projection::ProjectionRawBase;
-
+use crate::clip::Buffer;
+use crate::clip::Clean;
+use crate::clip::LineConnected;
+use crate::path::Result;
+use crate::polygon_contains::polygon_contains;
+use crate::stream::Stream;
+use crate::Transform;
 use crate::stream::Connectable;
-// use crate::stream::ConnectedState;
-// use crate::stream::Stream;
 use crate::stream::Unconnected;
 
-// use super::buffer::Buffer;
 use super::compare_intersection::gen_compare_intersection;
 use super::line_elem::LineElem;
 use super::rejoin::rejoin;
@@ -65,74 +50,28 @@ enum LineEndFn{
 #[derivative(Debug)]
 pub struct Connected<EP, LB, LC, LU, SC, SU, T>
 where
-    // LC: LineConnected<SC = SC>,
-    // SC: Stream<EP = EP, T = T>,
     LB: Clone,
     T: CoordFloat,
 {
-    // sink: SC,
     p_ep: PhantomData<EP>,
     p_sc: PhantomData<SC>,
     p_su: PhantomData<SU>,
     line_node: LC,
     p_lu: PhantomData<LU>,
-    // ring_buffer: Buffer<T>,
     polygon_started: bool,
     polygon: Vec<LineString<T>>,
     ring: LineString<T>,
     ring_sink: LB,
     segments: VecDeque<VecDeque<Vec<LineElem<T>>>>,
-    // use_point_default: bool,
     point_fn: PointFn,
     line_start_fn: LineStartFn,
     line_end_fn: LineEndFn,
-    // use_line_start_default: bool,
-    // use_line_end_default: bool,
-    // p_i: PhantomData::<I>,
-    // point_fn: <Clip<EP, I, LB, LC, LU, PV, SC, SU, clip::clip::Connected<EP, I, LB, LC, LINE, LU, PV, SC, SU, T>, T> as Trait>::point_defaultTrait>::point_defaultTrait>::point_defaultTrait>::point_default,
-    // line_start_fn:
-    //     <Clip<EP, I, LB, LC, LU, PV, SC, SU, clip::clip::Connected<EP, I, LB, LC, LINE, LU, PV, SC, SU, T>, T> as Trait>::line_start_default,
-    // line_end_fn:
-    //     <Clip<EP, I, LB, LC, LU, PV, SC, SU, clip::clip::Connected<EP, I, LB, LC, LINE, LU, PV, SC, SU, T>, T> as Trait>::line_end_defaultit>::line_end_default,
 }
-
-// impl<EP, LINE, SINK, T> ConnectionState for Connected<EP, LINE, SINK, T> where
-//     LINE: Clone + Debug
-//     //     EP: Stream<EP = EP, T = T> + Default
-//     //     SINK: Stream<EP = EP, T = T>,
-//     //     T: CoordFloat,
-// {
-// }
-
-// impl<EP, LB, LC, LU, SC, SU, T> ConnectedState for Connected<EP, LB, LC, LU, SC, SU, T>
-// where
-//     EP: Stream<EP = EP, T = T> + Default,
-//     LB: LineConnected<SC = Buffer<T>>,
-//     SC: Stream<EP = EP, T = T>,
-//     SU: Stream<EP = EP, T = T>,
-//     LU: LineUnconnected + Bufferable,
-//     LC: LineConnected<SC = SC> + Stream<EP = EP, T = T>,
-//     T: CoordFloat,
-// {
-//     type Sink = SC;
-//     // type T = T;
-//     fn get_sink(&mut self) -> &mut Self::Sink {
-//         self.line.sink()
-//     }
-// }
 
 impl<EP, LB, LC, LU, SC, SU, T> Connected<EP, LB, LC, LU, SC, SU, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LU: LineUnconnected<SU = SU>
-    //     + Connectable<Output = LC, SC = SC>
-    //     + Bufferable<Output = LB, T = T>,
-    // LC: LineConnected<SC = SC>,
-    // SC: Stream<EP = EP, T = T>,
     LB: Clone,
     LU: Clone + Connectable<Output = LC, SC = SC> + Bufferable<Output = LB, T = T>,
-    // PR: Clone,
     T: CoordFloat,
 {
     fn new(sink: SC, clip_line: LU) -> Self {
@@ -169,18 +108,8 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Connectable
     for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
-    // I: Interpolator<EP = EP, Stream = RC, T = T>,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     LB: Clone,
     LU: Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    // PV: PointVisible<T = T>,
-    // RC: Resampler + Stream<EP = EP, T = T>,
-    // RU: Resampler,
-    // LU: Connectable<Output = LC, SC = RC>
-    //     + Connectable<Output = LC, SC = RC>
-    //     + Bufferable<Output = LB, T = T>,
     PR: Clone,
     LU: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -210,9 +139,6 @@ pub struct Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, STATE, T>
 where
     T: CoordFloat,
     LB: Clone,
-    // LU: Bufferable<Output = LB> + Connectable<Output = LC>,
-    // I: Interpolator<EP = EP, Stream = RC, T = T>,
-    // RU: Resampler,
 {
     state: STATE,
     p_ep: PhantomData<EP>,
@@ -226,25 +152,7 @@ where
     pub interpolator: I,
     pub pv: PV,
     pub start: Coordinate<T>,
-    // use_point_default: bool,
-    // use_line_start_default: bool,
-    // use_line_end_default: bool,
 }
-
-// impl<EP, I, LU, PR, PV, RC, RU, STATE, T> Debug for Clip<EP, I, LU, PR, PV, RC, RU, STATE, T>
-// where
-//     //STATE: ConnectionState,
-//     I: Interpolator<EP = EP, Stream = RC, T = T>,
-//     RU: Resampler,
-//     T: CoordFloat,
-// {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         f.debug_struct("Point")
-//             // .field("x", &self.x)
-//             // .field("y", &self.y)
-//             .finish()
-//     }
-// }
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
     Clip<
@@ -255,23 +163,13 @@ impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
         LU,
         PR,
         PV,
-        // None<EP, PR, PCNC, PCNU, ConnectedCommon<PCNC>, T>,
-        // None<EP, PR, PCNC, PCNU, Unconnected, T>,
         RC,
         RU,
         Unconnected,
         T,
     >
 where
-    // EP: Stream<EP = EP, T = T> + Default,
-    // I: Interpolator<EP = EP, Stream = ResampleNoneNoClipC<EP, PR, T>, T = T>,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = ResampleNoneNoClipC<EP, PR, T>> + Stream<EP = EP, T = T>,
-    // LU: LineUnconnected<SU = ResampleNoneNoClipU<EP, PR, T>>
     LB: Clone,
-    // LU: Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    // PV: PointVisible<T = T>,
-    // PR: ProjectionRawBase<T>,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -285,8 +183,6 @@ where
             p_lb: PhantomData::<LB>,
             p_lc: PhantomData::<LC>,
             p_pr: PhantomData::<PR>,
-            // p_rc: PhantomData::<None<EP, PR, PCNC, PCNU, ConnectedCommon<PCNC>, T>>,
-            // p_ru: PhantomData::<None<EP, PR, PCNC, PCNU, Unconnected, T>>,
             p_rc: PhantomData::<RC>,
             p_ru: PhantomData::<RU>,
             state: Unconnected,
@@ -294,9 +190,6 @@ where
             interpolator,
             pv,
             start,
-            // use_point_default: true,
-            // use_line_start_default: true,
-            // use_line_end_default: true,
         }
     }
 }
@@ -304,50 +197,23 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
     Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, RU, T>, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
-
-    // I: Interpolator<EP = EP, Stream = RC, T = T>,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // RC: Resampler + Stream<EP = EP, T = T>,
-    // RU: Resampler,
     PV: PointVisible<T = T>,
-
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-
-    // EP: Stream<EP = EP, T = T> + Default,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
-    // LU: LineUnconnected<SU = RU>
-    // LU: Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    // PR: ProjectionRawBase<T>,
-    // PV: PointVisible<T = T>,
-    // RC: Resampler + Stream<EP = EP, T = T>,
-    // RU: Resampler,
     EP: Clone + Debug,
     I: Interpolator<EP = EP, Stream = RC, T = T>,
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     LU: Clone + Debug + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     LC: LineConnected<SC = RC>,
-    PR: Clone + Debug,
-    RC: Clone + Debug + Stream<EP = EP, T = T>,
-    RU: Clone + Debug,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 
+    RC: Clone + Debug + Stream<EP = EP, T = T>,
     EP: Clone + Debug,
     I: Interpolator<EP = EP, Stream = RC, T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     LU: Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    // PR: ProjectionRawBase<T>,
-    // PV: PointVisible<T = T>,
-    // RC: Resampler + Stream<EP = EP, T = T>,
-    // RU: Resampler,
     I: Interpolator<EP = EP, Stream = RC, T = T>,
     LC: Clone + Debug,
     LB: Clone + Debug + Stream<EP = Buffer<T>, T = T>,
-    LU: Clone + Debug,
     PR: Clone + Debug,
     PV: Clone + Debug,
     RC: Clone + Debug + Stream<EP = EP, T = T>,

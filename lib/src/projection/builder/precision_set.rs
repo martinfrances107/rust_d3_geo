@@ -1,6 +1,3 @@
-use crate::clip::buffer::Buffer;
-use crate::identity::Identity;
-use crate::projection::builder::Clip;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -8,33 +5,32 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-
-// use crate::clip::Interpolate;
-// use crate::clip::PointVisible;
+use crate::clip::buffer::Buffer;
+use crate::projection::builder::Clip;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::PrecisionSet;
-// use crate::projection::ProjectionRawBase;
-// use crate::stream::Connectable;
 use crate::stream::Connected;
-// use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
-// use super::PostClipNode;
 
-impl<DRAIN,  PR, PCNC, PCNU, T> PrecisionSet
+impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	for Builder<
 		DRAIN,
 		InterpolateAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, Connected<None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>, T>,
+		LineAntimeridian<
+			DRAIN,
+			None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
+			Connected<None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>,
+			T,
+		>,
 		LineAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, Unconnected, T>,
 		PCNC,
 		PCNU,
@@ -42,21 +38,10 @@ impl<DRAIN,  PR, PCNC, PCNU, T> PrecisionSet
 		PVAntimeridian<T>,
 		None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
 		None<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-		T>  where
-	// I: Interpolate<T = T>,
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	// PR: ProjectionRawBase<T>,
-	// PV: PointVisible<T = T>,
-	// PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
-	// PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-	// DRAIN: Clone + Debug,
+		T,
+	> where
 	PCNU: Clone + Debug,
 	PCNC: Clone + Debug,
-	// LB: Clone,
-	// LC: Clone + Debug,
-	// LU: Clone + Debug,
-	// PV: Clone + Debug,
-	// PCNC: Clone,
 	DRAIN: Clone + Debug,
 	PR: Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -64,10 +49,24 @@ impl<DRAIN,  PR, PCNC, PCNU, T> PrecisionSet
 	type T = T;
 	type Output = Builder<
 		DRAIN,
-		InterpolateAntimeridian<DRAIN,Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>, T>,
+		InterpolateAntimeridian<
+			DRAIN,
+			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+			T,
+		>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<DRAIN, Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>, Connected<Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>, T>,
-		LineAntimeridian<DRAIN, Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
+		LineAntimeridian<
+			DRAIN,
+			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+			Connected<Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>,
+			T,
+		>,
+		LineAntimeridian<
+			DRAIN,
+			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+			Unconnected,
+			T,
+		>,
 		PCNC,
 		PCNU,
 		PR,
@@ -81,31 +80,45 @@ impl<DRAIN,  PR, PCNC, PCNU, T> PrecisionSet
 	/// delta is related to clip angle.
 	fn precision(self, delta: &T) -> Self::Output {
 		let pv = PVAntimeridian::default();
-		let interpolator: InterpolateAntimeridian::<DRAIN, Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>, T> = InterpolateAntimeridian::default();
+		let interpolator: InterpolateAntimeridian<
+			DRAIN,
+			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+			T,
+		> = InterpolateAntimeridian::default();
 		let line = LineAntimeridian::default();
 		let delta2 = *delta * *delta;
-		let resample: Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T> = Resample::new(self.project_transform.clone(), delta2);
+		let resample: Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T> =
+			Resample::new(self.project_transform.clone(), delta2);
 		// Architecture Discussion:
 		// CLIP is generic over <.. RC, RU,..>,
 		// So a change in the resample type causes rebuilding of clip.
 		let clip: Clip<
 			DRAIN,
-			InterpolateAntimeridian<DRAIN, Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>, T>,
+			InterpolateAntimeridian<
+				DRAIN,
+				Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+				T,
+			>,
 			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<DRAIN, Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>, Connected<Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>, T>,
-			LineAntimeridian<DRAIN, Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
+			LineAntimeridian<
+				DRAIN,
+				Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+				Connected<Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>,
+				T,
+			>,
+			LineAntimeridian<
+				DRAIN,
+				Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+				Unconnected,
+				T,
+			>,
 			PR,
 			PVAntimeridian<T>,
 			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
 			Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 			Unconnected,
 			T,
-		> = Clip::new(
-			interpolator,
-			line,
-			pv,
-			self.clip.start
-		);
+		> = Clip::new(interpolator, line, pv, self.clip.start);
 
 		// Copy - Mutate.
 		let out = Self::Output {
@@ -125,7 +138,6 @@ impl<DRAIN,  PR, PCNC, PCNU, T> PrecisionSet
 			project_transform: self.project_transform,
 			project_rotate_transform: self.project_rotate_transform,
 			postclip: self.postclip,
-			// rotate_transform: self.rotate_transform,
 			alpha: self.alpha,
 			lambda: self.lambda,
 			phi: self.phi,

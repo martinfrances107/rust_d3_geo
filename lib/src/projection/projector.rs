@@ -1,11 +1,12 @@
+use std::fmt::Debug;
+use std::marker::PhantomData;
+
 use approx::AbsDiffEq;
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use crate::clip::buffer::Buffer;
 use crate::clip::clip::Clip;
@@ -13,7 +14,6 @@ use crate::clip::clip::Connected as ConnectedClip;
 use crate::clip::Bufferable;
 use crate::clip::Interpolator;
 use crate::clip::LineConnected;
-// use crate::clip::LineUnconnected;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::rot::rotate_radians::RotateRadians;
@@ -24,11 +24,8 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-// use super::builder::PostClipNode;
-// use super::resampler::Resampler;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
-// use super::ProjectionRawBase;
 
 /// Projection output of projection/Builder.
 ///
@@ -38,14 +35,6 @@ use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 #[derive(Clone)]
 pub struct Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    // PCNC: PostClipNode,
-    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-    // RC: Resampler + Stream<EP = DRAIN, T = T>,
-    // RU: Resampler,
-    // LU: LineUnconnected<SU = RU>,
-    // LC: LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
-    // I: Interpolator<EP = DRAIN, Stream = RC, T = T>,
-    // CS: Clone,
     DRAIN: Clone,
     I: Clone,
     LB: Clone,
@@ -56,7 +45,6 @@ where
     PV: Clone,
     RC: Clone,
     RU: Clone,
-    // DRAIN: Stream<EP = DRAIN, T = T> + Default,
     T: CoordFloat + FloatConst,
 {
     /// Must be public as there is a implicit copy.
@@ -75,7 +63,7 @@ where
     // pub rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
     pub project_rotate_transform:
         Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
-    // pub(crate) rotate_transform: RotateTransform<DRAIN, DRAIN, LINE, PR, PV, T>,
+
     pub(crate) transform_radians: StreamTransformRadians<Unconnected>,
     pub(crate) cache: Option<(
         DRAIN,
@@ -112,15 +100,6 @@ where
     I: Interpolator<EP = DRAIN, Stream = RC, T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
-    // LU: LineUnconnected<SU = RU>
-    //     + Bufferable<Output = LB, T = T>
-    //     + Connectable<Output = LC, SC = RC>,
-    // RC: Resampler + Stream<EP = DRAIN, T = T>,
-    // RU: Resampler + Connectable<Output = RC, SC = PCNC> + Stream<EP = DRAIN, T = T>,
-    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-    // PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
-    // PR: ProjectionRawBase<T>,
-    // DRAIN: Clone + Default + PartialEq,
     I: Clone,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
     PV: Clone + PointVisible<T = T>,
@@ -200,20 +179,6 @@ where
 impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Transform
     for Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    // DRAIN: Stream<EP = DRAIN, T = T> + Default,
-
-    // I: Interpolator<EP = DRAIN, Stream = RC, T = T>,
-    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
-    // LU: LineUnconnected<SU = RU>
-    //     + Bufferable<Output = LB, T = T>
-    //     + Connectable<Output = LC, SC = RC>,
-    // PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
-    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-    // PR: ProjectionRawBase<T>,
-    // PV: PointVisible<T = T>,
-    // RC: Resampler + Stream<EP = DRAIN, T = T>,
-    // RU: Resampler + Connectable<Output = RC, SC = PCNC>,
     LB: Clone + Debug,
     LC: Clone + Debug,
     LU: Clone + Debug,

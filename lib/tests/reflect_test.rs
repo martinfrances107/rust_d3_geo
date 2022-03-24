@@ -6,37 +6,24 @@ mod reflect_tests {
 
 	use geo::Coordinate;
 	use pretty_assertions::assert_eq;
-	use rust_d3_geo::identity::Identity;
-	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
-use rust_d3_geo::projection::builder::template::ResampleNoClipU;
-use rust_d3_geo::projection::resampler::none::None;
 
-	// use rust_d3_geo::clip::circle::line::Line;
-	// use rust_d3_geo::clip::circle::pv::PV;
-	// use rust_d3_geo::in_delta::in_delta;
-	use rust_d3_geo::projection::builder::Builder;
-	use rust_d3_geo::projection::gnomic::Gnomic;
-	// use rust_d3_geo::projection::mercator::Mercator;
-	// use rust_d3_geo::projection::mercator_builder::MercatorBuilder;
+	use rust_d3_geo::clip::buffer::Buffer;
 	use rust_d3_geo::clip::circle::interpolate::Interpolate as InterpolateCircle;
 	use rust_d3_geo::clip::circle::line::Line as LineCircle;
 	use rust_d3_geo::clip::circle::pv::PV as PVCircle;
+	use rust_d3_geo::identity::Identity;
+	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
+	use rust_d3_geo::projection::builder::template::ResampleNoClipU;
+	use rust_d3_geo::projection::builder::Builder;
+	use rust_d3_geo::projection::gnomic::Gnomic;
 	use rust_d3_geo::projection::projection_equal::projection_equal;
-	// use rust_d3_geo::projection::Angle;
 	use rust_d3_geo::projection::ProjectionRawBase;
-
-	use rust_d3_geo::clip::buffer::Buffer;
-	// use rust_d3_geo::clip::clip::Clip;
-	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
-	// use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
 	use rust_d3_geo::projection::Reflect;
 	use rust_d3_geo::projection::Scale;
 	use rust_d3_geo::projection::Translate;
 	use rust_d3_geo::stream::Connected;
-	// use rust_d3_geo::stream::Stream;
 	use rust_d3_geo::stream::StreamDrainStub;
 	use rust_d3_geo::stream::Unconnected;
-	// use rust_d3_geo::Transform;
 
 	type GB = Builder<
 		StreamDrainStub<f64>,
