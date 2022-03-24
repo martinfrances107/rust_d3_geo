@@ -1,37 +1,124 @@
-use std::rc::Rc;
+use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::InterpolateFn;
+// use crate::clip::InterpolateFn;
+use crate::clip::Interpolator;
 use crate::math::EPSILON;
 use crate::stream::Stream;
 
-/// Antimerdian interpolate function.
-pub fn generate<EP, STREAM, T>() -> InterpolateFn<STREAM, T>
+/// State for Antimeridian Interpolator.
+#[derive(Clone, Debug)]
+pub struct Interpolate<EP, STREAM, T> {
+    p_ep: PhantomData<EP>,
+    p_stream: PhantomData<STREAM>,
+    epsilon: T,
+}
+
+impl<EP, STREAM, T> Default for Interpolate<EP, STREAM, T>
 where
+    T: CoordFloat + FloatConst,
+{
+    fn default() -> Self {
+        Self {
+            p_ep: PhantomData::<EP>,
+            p_stream: PhantomData::<STREAM>,
+            epsilon: T::from(EPSILON).unwrap(),
+        }
+    }
+}
+/// Antimerdian interpolate function.
+impl<EP, STREAM, T> Interpolator for Interpolate<EP, STREAM, T>
+where
+    EP: Stream<EP = EP, T = T>,
     STREAM: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
-    let epsilon = T::from(EPSILON).unwrap();
-    let out: InterpolateFn<STREAM, T> = Rc::new(
-        move |from: Option<Coordinate<T>>,
-              to: Option<Coordinate<T>>,
-              direction: T,
-              stream_in: &mut STREAM| {
-            let phi: T;
-            match from {
-                None => {
-                    phi = direction * T::FRAC_PI_2();
+    type T = T;
+    type EP = EP;
+    type Stream = STREAM;
+    fn interpolate(
+        &mut self,
+        from: Option<Coordinate<T>>,
+        to: Option<Coordinate<T>>,
+        direction: T,
+        stream_in: &mut STREAM,
+    ) where
+        STREAM: Stream<EP = EP, T = T>,
+    {
+        let phi: T;
+        match from {
+            None => {
+                phi = direction * T::FRAC_PI_2();
 
-                    stream_in.point(
-                        &Coordinate {
-                            x: -T::PI(),
-                            y: phi,
-                        },
-                        None,
-                    );
+                stream_in.point(
+                    &Coordinate {
+                        x: -T::PI(),
+                        y: phi,
+                    },
+                    None,
+                );
+                stream_in.point(
+                    &Coordinate {
+                        x: T::zero(),
+                        y: phi,
+                    },
+                    None,
+                );
+                stream_in.point(&Coordinate { x: T::PI(), y: phi }, None);
+
+                stream_in.point(
+                    &Coordinate {
+                        x: T::PI(),
+                        y: T::zero(),
+                    },
+                    None,
+                );
+                stream_in.point(
+                    &Coordinate {
+                        x: T::PI(),
+                        y: -phi,
+                    },
+                    None,
+                );
+                stream_in.point(
+                    &Coordinate {
+                        x: T::zero(),
+                        y: -phi,
+                    },
+                    None,
+                );
+                stream_in.point(
+                    &Coordinate {
+                        x: -T::PI(),
+                        y: -phi,
+                    },
+                    None,
+                );
+                stream_in.point(
+                    &Coordinate {
+                        x: -T::PI(),
+                        y: T::zero(),
+                    },
+                    None,
+                );
+                stream_in.point(
+                    &Coordinate {
+                        x: -T::PI(),
+                        y: phi,
+                    },
+                    None,
+                );
+            }
+            Some(from) => {
+                let to = to.unwrap();
+                if (from.x - to.x).abs() > self.epsilon {
+                    let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
+
+                    phi = direction * lambda / T::from(2).unwrap();
+                    stream_in.point(&Coordinate { x: -lambda, y: phi }, None);
                     stream_in.point(
                         &Coordinate {
                             x: T::zero(),
@@ -39,73 +126,11 @@ where
                         },
                         None,
                     );
-                    stream_in.point(&Coordinate { x: T::PI(), y: phi }, None);
-
-                    stream_in.point(
-                        &Coordinate {
-                            x: T::PI(),
-                            y: T::zero(),
-                        },
-                        None,
-                    );
-                    stream_in.point(
-                        &Coordinate {
-                            x: T::PI(),
-                            y: -phi,
-                        },
-                        None,
-                    );
-                    stream_in.point(
-                        &Coordinate {
-                            x: T::zero(),
-                            y: -phi,
-                        },
-                        None,
-                    );
-                    stream_in.point(
-                        &Coordinate {
-                            x: -T::PI(),
-                            y: -phi,
-                        },
-                        None,
-                    );
-                    stream_in.point(
-                        &Coordinate {
-                            x: -T::PI(),
-                            y: T::zero(),
-                        },
-                        None,
-                    );
-                    stream_in.point(
-                        &Coordinate {
-                            x: -T::PI(),
-                            y: phi,
-                        },
-                        None,
-                    );
-                }
-                Some(from) => {
-                    let to = to.unwrap();
-                    if (from.x - to.x).abs() > epsilon {
-                        let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
-
-                        phi = direction * lambda / T::from(2).unwrap();
-                        stream_in.point(&Coordinate { x: -lambda, y: phi }, None);
-                        stream_in.point(
-                            &Coordinate {
-                                x: T::zero(),
-                                y: phi,
-                            },
-                            None,
-                        );
-                        stream_in.point(&Coordinate { x: lambda, y: phi }, None);
-                    } else {
-                        stream_in.point(&to, None);
-                    }
+                    stream_in.point(&Coordinate { x: lambda, y: phi }, None);
+                } else {
+                    stream_in.point(&to, None);
                 }
             }
-        },
-    );
-
-    out
+        }
+    }
 }

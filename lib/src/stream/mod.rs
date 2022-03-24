@@ -16,26 +16,83 @@ use geo::Coordinate;
 use geo::LineString;
 use geo::Polygon;
 
+/// State -- Unconnected.
+///
+/// A Stream Pipeline stages blank.
+/// The state before connection.
+#[derive(Clone, Default, Debug)]
+pub struct Unconnected;
+// impl ConnectionState for Unconnected {}
+
+/// State -- Default Connected.
+///
+/// Common to many pipeline stages
+/// Overriden when the state need to contain more variables.
+/// see Resample and Clip.
+#[derive(Clone, Debug)]
+pub struct Connected<SINK> {
+    pub sink: SINK,
+}
+
+// impl<SINK> ConnectionState for Connected<SINK> where SINK: Clone + Debug {}
+impl<SINK> ConnectedState for Connected<SINK>
+where
+    SINK: Clone + Debug,
+    //     SINK: Stream<EP = EP, T = T>,
+{
+    // type EP = EP;
+    type Sink = SINK;
+    // type T = T;
+    #[inline]
+    fn get_sink(&mut self) -> &mut Self::Sink {
+        &mut self.sink
+    }
+}
+
+/// Can make connections to a stream pipeline.
+pub trait Connectable {
+    /// Represents to final connected state.
+    type Output;
+
+    /// The type passed to the function connect().
+    type SC;
+    /// Connects to previous pipeline stage.
+    fn connect(self, sink: Self::SC) -> Self::Output;
+}
+
+// Base for Unconnected or Connected State.
+// pub trait ConnectionState: Debug + Clone {}
+
+// Marker trait.
+/// Things the implement stream need to assert that
+/// Whatever specific state they are in,  it is to the exclusion
+/// on the unconnected state.
+pub trait ConnectedState: Clone + Debug {
+    // type EP;
+    type Sink;
+    // type T;
+    fn get_sink(&mut self) -> &mut Self::Sink;
+    // where
+    //     Self::Sink: Stream<EP = Self::EP, T = Self::T>;
+}
+
 /// to_stream()
 pub trait Streamable {
     /// f32 or f64.
     type T: CoordFloat;
     /// Injects the object to a stream.
-    fn to_stream<
-        EP: Clone + Debug + Stream<EP = EP, T = Self::T>,
-        SD: Stream<EP = EP, T = Self::T>,
-    >(
-        &self,
-        stream: &mut SD,
-    );
+    fn to_stream<EP, SINK>(&self, stream: &mut SINK)
+    where
+        EP: Stream<EP = EP, T = Self::T> + Default,
+        SINK: Stream<EP = EP, T = Self::T>;
 }
 
 /// Stub is useful only the transform portion of a projection is needed.
 /// TODO must add example to doc.
 #[derive(Clone, Copy, Debug)]
 pub struct StreamDrainStub<T>
-where
-    T: CoordFloat,
+// where
+//     T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }
@@ -48,7 +105,7 @@ where
     type EP = Self;
 
     #[inline]
-    fn get_endpoint(self) -> Self {
+    fn get_endpoint(&mut self) -> &mut Self {
         self
     }
 }
@@ -76,7 +133,7 @@ where
     type EP;
 
     /// Returns the end point of the stream.
-    fn get_endpoint(self) -> Self::EP;
+    fn get_endpoint<'a>(&'a mut self) -> &'a mut Self::EP;
 
     /// Declare a point.
     fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}

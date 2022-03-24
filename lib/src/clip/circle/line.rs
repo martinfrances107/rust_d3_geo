@@ -1,26 +1,47 @@
+// use crate::projection::builder::template::NoClipC;
+// use crate::projection::builder::template::NoClipU;
+// use crate::projection::resampler::none::None;
+// use crate::Transform;
 use std::fmt::Debug;
+use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
+use crate::abs_diff_eq;
+use crate::clip::buffer::Buffer;
+use crate::clip::line_elem::LineElem;
+use crate::clip::Bufferable;
+use crate::clip::Clean;
+use crate::clip::LineConnected;
+use crate::clip::LineUnconnected;
+use crate::math::EPSILON;
+// use crate::projection::builder::template::ResampleNoneNoClipC;
+use crate::stream::Connectable;
+use crate::stream::Connected;
+use crate::stream::ConnectedState;
+use crate::stream::Stream;
+use crate::stream::Unconnected;
+
 use super::intersect::intersect;
 use super::intersect::IntersectReturn;
 
-use crate::abs_diff_eq;
-use crate::clip::line_elem::LineElem;
-use crate::clip::Clean;
-use crate::clip::Line as LineTrait;
-use crate::math::EPSILON;
-use crate::projection::stream_node::StreamNode;
-use crate::stream::Stream;
-
 /// Circle Line.
-#[derive(Copy, Clone, Debug)]
-pub struct Line<T>
+#[derive(Clone, Debug)]
+pub struct Line<EP, SC, STATE, T>
 where
+    EP: Clone + Debug,
+    SC: Clone + Debug,
+    STATE: Clone + Debug,
     T: CoordFloat,
 {
+    /// Connection State.
+    state: STATE,
+    p_ep: PhantomData<EP>,
+    /// PhantomData here soley to allow SINK to be defined in the Connecteable.
+    p_sc: PhantomData<SC>,
+    // p_su: PhantomData<SU>,
     /// Code for previous point.
     c0: u8,
     clean: u8, // no intersections
@@ -35,11 +56,128 @@ where
     /// Visibility of first point
     v00: bool,
 }
+// Note Default is ONLY implenented for the unconnected state
+// Added when I found it was useful for type corercion.
 
-impl<T> LineTrait for Line<T> where T: CoordFloat {}
-
-impl<T> Line<T>
+impl<EP, RC, T> Default for Line<EP, RC, Unconnected, T>
 where
+    // EP: Stream<EP = EP, T = T> + Default,
+    EP: Clone + Debug,
+    RC: Clone + Debug,
+    // PR: Transform<T = T>,
+    T: CoordFloat + FloatConst,
+{
+    fn default() -> Self {
+        Self {
+            state: Unconnected,
+            p_ep: PhantomData::<EP>,
+
+            p_sc: PhantomData::<RC>,
+
+            c0: 0,
+            clean: 0,
+            radius: T::nan(),
+            cr: T::nan(),
+            not_hemisphere: false,
+
+            point0: None,
+            small_radius: false,
+
+            v0: false,
+
+            v00: false,
+        }
+    }
+}
+
+impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T>
+where
+    // EP: Stream<EP = EP, T = T> + Default,
+    EP: Clone + Debug,
+    SINK: Stream<EP = EP, T = T>,
+    T: CoordFloat,
+{
+    type SU = SINK;
+}
+
+impl<EP, SINK, T> LineConnected for Line<EP, SINK, Connected<SINK>, T>
+where
+    // EP: Stream<EP = EP, T = T> + Default,
+    EP: Clone + Debug,
+    // SINK: Stream<EP = EP, T = T>,
+    SINK: Clone + Debug,
+    T: CoordFloat,
+{
+    type SC = SINK;
+
+    // #[inline]
+    fn get_sink(&mut self) -> &mut Self::SC {
+        &mut self.state.sink
+    }
+}
+
+impl<EP, SC, T> Bufferable for Line<EP, SC, Unconnected, T>
+where
+    EP: Clone + Debug,
+    SC: Clone + Debug,
+    T: CoordFloat,
+{
+    type T = T;
+    type Output = Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
+    fn buffer(self, buffer: Buffer<T>) -> Self::Output {
+        Line {
+            state: Connected { sink: buffer },
+            p_ep: PhantomData::<Buffer<T>>,
+            p_sc: PhantomData::<Buffer<T>>,
+            // p_su: PhantomData::<Buffer<T>>,
+            cr: self.cr,
+            not_hemisphere: self.not_hemisphere,
+            point0: self.point0,
+            small_radius: self.small_radius,
+            v0: self.v0,
+            v00: self.v00,
+            clean: self.clean,
+            radius: self.radius,
+            c0: self.c0,
+        }
+    }
+}
+
+impl<EP, SC, T> Connectable for Line<EP, SC, Unconnected, T>
+where
+    // SC: Stream<EP = EP, T = T>,
+    EP: Clone + Debug,
+    SC: Clone + Debug,
+    T: CoordFloat,
+{
+    type SC = SC;
+    type Output = Line<EP, SC, Connected<SC>, T>;
+
+    #[inline]
+    fn connect(self, sink: SC) -> Line<EP, SC, Connected<SC>, T> {
+        // Copy Mutate.
+        Line {
+            state: Connected { sink },
+            p_ep: PhantomData::<EP>,
+            p_sc: PhantomData::<SC>,
+            // p_su: PhantomData::<SU>,
+            cr: self.cr,
+            not_hemisphere: self.not_hemisphere,
+            point0: self.point0,
+            small_radius: self.small_radius,
+            v0: self.v0,
+            v00: self.v00,
+            clean: self.clean,
+            radius: self.radius,
+            c0: self.c0,
+        }
+    }
+}
+
+impl<EP, SC, T> Line<EP, SC, Unconnected, T>
+where
+    EP: Clone + Debug,
+    SC: Clone + Debug,
     T: CoordFloat,
 {
     /// Constructor.
@@ -50,6 +188,10 @@ where
         let small_radius = cr.is_sign_positive();
         let epsilon = T::from(EPSILON).unwrap();
         Self {
+            state: Unconnected,
+            p_ep: PhantomData::<EP>,
+            p_sc: PhantomData::<SC>,
+            // p_su: PhantomData::<SU>,
             c0: 0,
             clean: 0,
             // JS TODO optimise for this common case
@@ -62,7 +204,15 @@ where
             v00: false,
         }
     }
+}
 
+impl<EP, SINK, T> Line<EP, SINK, Connected<SINK>, T>
+where
+    // //STATE: ConnectionState,
+    EP: Clone + Debug,
+    SINK: Clone + Debug,
+    T: CoordFloat,
+{
     // todo remove this duplicate.
     #[inline]
     fn visible(&self, p: &Coordinate<T>) -> bool {
@@ -83,9 +233,15 @@ static CODE_ABOVE: u8 = 8;
 
 /// Generates a 4-bit vector representing the location of a point relative to
 /// the small circle's bounding box.
-impl<T> Line<T>
+///
+/// TODO :-
+/// code is only available of from connected state.
+impl<EP, SINK, T> Line<EP, SINK, Connected<SINK>, T>
 where
+    EP: Clone + Debug,
+    // //STATE: ConnectionState,
     T: CoordFloat + FloatConst,
+    SINK: Clone + Debug,
 {
     fn code(&self, p: &Coordinate<T>) -> u8 {
         let lambda = p.x;
@@ -111,8 +267,12 @@ where
     }
 }
 
-impl<T> Clean for Line<T>
+/// API clean only availble once connected.
+impl<EP, SINK, T> Clean for Line<EP, SINK, Connected<SINK>, T>
 where
+    EP: Clone + Debug,
+    // //STATE: ConnectionState,
+    SINK: Clone + Debug,
     T: CoordFloat,
 {
     /// Rejoin first and last segments if there were intersections and the first
@@ -124,40 +284,44 @@ where
     }
 }
 
-impl<EP, SINK, T> Stream for StreamNode<EP, Line<T>, SINK, T>
+impl<EP, SINK, T> Stream for Line<EP, SINK, Connected<SINK>, T>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    SINK: Stream<EP = EP, T = T>,
+    // EP: Stream<EP = EP, T = T> + Default,
+    EP: Clone + Debug,
+    // SINK: Stream<EP = EP, T = T>,
+    SINK: Clone + Debug + Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
     type EP = EP;
 
     #[inline]
-    fn get_endpoint(self) -> Self::EP {
-        self.sink.get_endpoint()
+    fn get_endpoint(&mut self) -> &mut Self::EP {
+        self.state.get_sink().get_endpoint()
     }
 
     fn line_start(&mut self) {
-        self.raw.v00 = false;
-        self.raw.v0 = false;
-        self.raw.clean = 1;
+        self.v00 = false;
+        self.v0 = false;
+        self.clean = 1;
     }
 
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+        // let state = self.state;
+        // let sink = state.get_sink();
         let mut point1 = Some(LineElem { p: *p, m: None });
         let mut point2: Option<LineElem<T>>;
-        let v = self.raw.visible(p);
+        let v = self.visible(p);
 
-        let c = if self.raw.small_radius {
+        let c = if self.small_radius {
             if v {
                 CODE_NONE
             } else {
-                self.raw.code(p)
+                self.code(p)
             }
         } else if v {
             let inc = if p.x < T::zero() { T::PI() } else { -T::PI() };
-            self.raw.code(&Coordinate {
+            self.code(&Coordinate {
                 x: p.x + inc,
                 y: p.y,
             })
@@ -165,20 +329,20 @@ where
             CODE_NONE
         };
 
-        if self.raw.point0.is_none() {
-            self.raw.v00 = v;
-            self.raw.v0 = v;
+        if self.point0.is_none() {
+            self.v00 = v;
+            self.v0 = v;
             if v {
-                self.sink.line_start();
+                self.state.sink.line_start();
             }
         }
 
-        if v != self.raw.v0 {
+        if v != self.v0 {
             // dbg!("about to test point2");
             point2 = match intersect(
-                &self.raw.point0.unwrap(),
+                &self.point0.unwrap(),
                 &point1.unwrap(),
-                self.raw.radius.cos(),
+                self.radius.cos(),
                 false,
             ) {
                 IntersectReturn::One(p_return) => p_return,
@@ -196,7 +360,7 @@ where
             };
 
             if point2.is_some()
-                || abs_diff_eq(&self.raw.point0.unwrap().p, &point2.unwrap().p)
+                || abs_diff_eq(&self.point0.unwrap().p, &point2.unwrap().p)
                 || abs_diff_eq(&point1.unwrap().p, &point2.unwrap().p)
             {
                 match point1 {
@@ -210,17 +374,12 @@ where
             }
         }
 
-        if v != self.raw.v0 {
-            self.raw.clean = 0;
+        if v != self.v0 {
+            self.clean = 0;
             if v {
                 // outside going in
-                self.sink.line_start();
-                point2 = match intersect(
-                    &point1.unwrap(),
-                    &self.raw.point0.unwrap(),
-                    self.raw.cr,
-                    false,
-                ) {
+                self.state.sink.line_start();
+                point2 = match intersect(&point1.unwrap(), &self.point0.unwrap(), self.cr, false) {
                     IntersectReturn::One(le) => le,
                     IntersectReturn::Two([_p, _m]) => {
                         panic!("Silently dropping second point.");
@@ -230,15 +389,10 @@ where
                         todo!("must cover this case.");
                     }
                 };
-                self.sink.point(&point2.unwrap().p, None)
+                self.state.sink.point(&point2.unwrap().p, None)
             } else {
                 // Inside going out.
-                point2 = match intersect(
-                    &self.raw.point0.unwrap(),
-                    &point1.unwrap(),
-                    self.raw.cr,
-                    false,
-                ) {
+                point2 = match intersect(&self.point0.unwrap(), &point1.unwrap(), self.cr, false) {
                     IntersectReturn::One(le) => le,
                     IntersectReturn::Two([_, _]) => {
                         panic!("Silently dropping second point.");
@@ -249,55 +403,48 @@ where
                     }
                 };
 
-                self.sink.point(&point2.unwrap().p, Some(2));
-                self.sink.line_end();
+                self.state.sink.point(&point2.unwrap().p, Some(2));
+                self.state.sink.line_end();
             }
-            self.raw.point0 = point2;
-        } else if self.raw.not_hemisphere && self.raw.point0.is_some() && self.raw.small_radius ^ v
-        {
+            self.point0 = point2;
+        } else if self.not_hemisphere && self.point0.is_some() && self.small_radius ^ v {
             // If the codes for two points are different, or are both zero,
             // and there this segment intersects with the small circle.
-            if self.raw.c0 != c || c == CODE_NONE {
-                let t = intersect(
-                    &point1.unwrap(),
-                    &self.raw.point0.unwrap(),
-                    self.raw.cr,
-                    true,
-                );
+            if self.c0 != c || c == CODE_NONE {
+                let t = intersect(&point1.unwrap(), &self.point0.unwrap(), self.cr, true);
                 match t {
                     // Request two received one!!
                     // This copies the behaviour of the javascript original.
                     IntersectReturn::False | IntersectReturn::None | IntersectReturn::One(_) => {}
                     IntersectReturn::Two(t) => {
-                        self.raw.clean = 0;
-                        if self.raw.small_radius {
-                            self.sink.line_start();
-                            self.sink.point(&t[0], None);
-                            self.sink.point(&t[1], None);
-                            self.sink.line_end();
+                        self.clean = 0;
+                        if self.small_radius {
+                            self.state.sink.line_start();
+                            self.state.sink.point(&t[0], None);
+                            self.state.sink.point(&t[1], None);
+                            self.state.sink.line_end();
                         } else {
-                            self.sink.point(&t[1], None);
-                            self.sink.line_end();
-                            self.sink.line_start();
-                            self.sink.point(&t[0], Some(3_u8));
+                            self.state.sink.point(&t[1], None);
+                            self.state.sink.line_end();
+                            self.state.sink.line_start();
+                            self.state.sink.point(&t[0], Some(3_u8));
                         }
                     }
                 }
             }
         }
-        if v && (self.raw.point0.is_none()
-            || !abs_diff_eq(&self.raw.point0.unwrap().p, &point1.unwrap().p))
+        if v && (self.point0.is_none() || !abs_diff_eq(&self.point0.unwrap().p, &point1.unwrap().p))
         {
-            self.sink.point(&point1.unwrap().p, None);
+            self.state.sink.point(&point1.unwrap().p, None);
         }
-        self.raw.point0 = point1;
-        self.raw.v0 = v;
-        self.raw.c0 = c;
+        self.point0 = point1;
+        self.v0 = v;
+        self.c0 = c;
     }
     fn line_end(&mut self) {
-        if self.raw.v0 {
-            self.sink.line_end();
+        if self.v0 {
+            self.state.get_sink().line_end();
         }
-        self.raw.point0 = None;
+        self.point0 = None;
     }
 }

@@ -7,50 +7,25 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-use crate::projection::stream_node::StreamNode;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::rotation_identity::RotationIdentity;
 use super::rotation_lambda::RotationLambda;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
-/// A 3-axis rotation transform.
+/// Container for a 3-axis rotation transform.
 pub enum RotateRadians<T>
 where
     T: CoordFloat + FloatConst,
 {
     /// A combination of rotations.
-    C(Box<Compose<T, RotationLambda<T>, RotationPhiGamma<T>>>),
+    C(Box<Compose<T,RotationLambda<T>, RotationPhiGamma<T>>>),
     /// Just roation in one direction.
     RL(RotationLambda<T>),
     /// Rotate, Phi and Gamma.
     RPG(RotationPhiGamma<T>),
     /// No rotation.
     I(RotationIdentity<T>),
-}
-
-impl<T> Default for RotateRadians<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn default() -> Self {
-        RotateRadians::I(RotationIdentity::default())
-    }
-}
-
-impl<T> Clone for RotateRadians<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn clone(&self) -> Self {
-        match self {
-            RotateRadians::C(c) => RotateRadians::C(Box::new(*c.clone())),
-            RotateRadians::RL(rl) => RotateRadians::RL(*rl),
-            RotateRadians::RPG(rpg) => RotateRadians::RPG(*rpg),
-            RotateRadians::I(i) => RotateRadians::I(*i),
-        }
-    }
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -70,6 +45,20 @@ where
                 .field("0", rpg)
                 .finish(),
             RotateRadians::I(i) => f.debug_struct("RotateRadians::I").field("0", i).finish(),
+        }
+    }
+}
+
+impl<T> Clone for RotateRadians<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    fn clone(&self) -> Self {
+        match self {
+            RotateRadians::C(c) => RotateRadians::C(Box::new(*c.clone())),
+            RotateRadians::RL(rl) => RotateRadians::RL(*rl),
+            RotateRadians::RPG(rpg) => RotateRadians::RPG(*rpg),
+            RotateRadians::I(i) => RotateRadians::I(*i),
         }
     }
 }
@@ -96,50 +85,5 @@ where
             RotateRadians::RPG(rpg) => rpg.invert(p),
             RotateRadians::I(i) => i.invert(p),
         }
-    }
-}
-
-impl<EP, SINK, T> Stream for StreamNode<EP, RotateRadians<T>, SINK, T>
-where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    SINK: Stream<EP = EP, T = T>,
-    T: CoordFloat + FloatConst,
-{
-    type EP = EP;
-    type T = T;
-
-    #[inline]
-    fn get_endpoint(self) -> Self::EP {
-        self.sink.get_endpoint()
-    }
-
-    #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        self.sink.point(&self.raw.transform(p), m);
-    }
-
-    #[inline]
-    fn sphere(&mut self) {
-        self.sink.sphere();
-    }
-
-    #[inline]
-    fn line_start(&mut self) {
-        self.sink.line_start();
-    }
-
-    #[inline]
-    fn line_end(&mut self) {
-        self.sink.line_end();
-    }
-
-    #[inline]
-    fn polygon_start(&mut self) {
-        self.sink.polygon_start()
-    }
-
-    #[inline]
-    fn polygon_end(&mut self) {
-        self.sink.polygon_end();
     }
 }

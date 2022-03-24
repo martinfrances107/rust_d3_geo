@@ -19,41 +19,105 @@ mod path_string_test {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
+	use rust_d3_geo::clip::buffer::Buffer;
+	use rust_d3_geo::identity::Identity;
+	use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+	use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
+	use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
+    use rust_d3_geo::projection::PrecisionBypass;
+    use rust_d3_geo::projection::PrecisionSet;
+    use rust_d3_geo::projection::ProjectionRawBase;
+	// use rust_d3_geo::projection::builder::template::ResampleNoClipC;
+    // use rust_d3_geo::projection::builder::template::ResampleNoClipU;
+    use rust_d3_geo::projection::builder::template::ResampleNoneClipC;
+    use rust_d3_geo::projection::builder::template::ResampleNoneClipU;
+    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
+	use rust_d3_geo::stream::Connected;
+	use rust_d3_geo::stream::Unconnected;
+	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
     use rust_d3_geo::circle::generator::Generator as CircleGenerator;
-    use rust_d3_geo::clip::antimeridian::line::Line;
-    use rust_d3_geo::clip::antimeridian::pv::PV;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::path::PointRadiusTrait;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::orthographic::Orthographic;
     use rust_d3_geo::projection::projector::Projector;
-    use rust_d3_geo::projection::Precision;
-    use rust_d3_geo::projection::Raw;
+    // use rust_d3_geo::projection::Precision;
     use rust_d3_geo::projection::Scale;
     use rust_d3_geo::projection::Translate;
-    use rust_d3_geo::stream::Stream;
+    // use rust_d3_geo::stream::Stream;
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
     fn equirectangular<T>(
-    ) -> Projector<PathString<T>, Line<T>, Equirectangular<PathString<T>, T>, PV<T>, T>
+    ) -> Projector<
+		PathString<T>,
+		InterpolateAntimeridian<
+		PathString<T>,
+			ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
+			T,
+		>,
+		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<
+			PathString<T>,
+			ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
+			Connected<ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>>,
+			T,
+		>,
+		LineAntimeridian<
+			PathString<T>,
+			ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
+			Unconnected,
+			T,
+		>,
+		Identity<PathString<T>, PathString<T>, PathString<T>, Connected<PathString<T>>, T>,
+		Identity<PathString<T>, PathString<T>, PathString<T>, Unconnected, T>,
+		Equirectangular<PathString<T>, T>,
+		PVAntimeridian<T>,
+		ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
+		ResampleNoneNoClipU<PathString<T>, Equirectangular<PathString<T>, T>, T>,
+		T>
     where
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         Equirectangular::builder()
             .scale(T::from(900f64 / PI).unwrap())
-            .precision(&T::zero())
+            .precision_bypass()
             .build()
     }
 
     #[inline]
-    fn test_path<'a, DRAIN, T>(
-        projection: Projector<PathString<T>, Line<T>, Equirectangular<DRAIN, T>, PV<T>, T>,
+    fn test_path<'a,  T>(
+        projection: Projector<PathString<T>,
+		InterpolateAntimeridian<
+			PathString<T>,
+				ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
+				T,
+			>,
+			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+			LineAntimeridian<
+				PathString<T>,
+				ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
+				Connected<ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>>,
+				T,
+			>,
+			LineAntimeridian<
+				PathString<T>,
+				ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
+				Unconnected,
+				T,
+			>,
+			Identity<PathString<T>, PathString<T>, PathString<T>, Connected<PathString<T>>, T>,
+			Identity<PathString<T>, PathString<T>, PathString<T>, Unconnected, T>,
+			Equirectangular<PathString<T>, T>,
+			PVAntimeridian<T>,
+			ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
+			ResampleNoneNoClipU<PathString<T>, Equirectangular<PathString<T>, T>, T>,
+			T>,
         object: impl Streamable<T = T>,
     ) -> String
     where
-        DRAIN: Stream<EP = DRAIN, T = T>,
+        // DRAIN: Stream<EP = DRAIN, T = T>,
         T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         PathBuilder::context_pathstring()
@@ -77,12 +141,33 @@ mod path_string_test {
         println!("geoPath.point(…) renders a point of a given radius");
 
         let mut builder: PathBuilder<
-            PathString<f64>,
-            Line<f64>,
-            Equirectangular<PathString<f64>, f64>,
-            PV<f64>,
-            f64,
-        > = PathBuilder::context_pathstring();
+			PathString<f64>,
+			InterpolateAntimeridian<
+				PathString<f64>,
+				ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
+				f64,
+			>,
+			LineAntimeridian<Buffer<f64>, Buffer<f64>, Connected<Buffer<f64>>, f64>,
+			LineAntimeridian<
+				PathString<f64>,
+				ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
+				Connected<ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>>,
+				f64,
+			>,
+			LineAntimeridian<
+				PathString<f64>,
+				ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
+				Unconnected,
+				f64,
+			>,
+			Identity<PathString<f64>, PathString<f64>, PathString<f64>, Connected<PathString<f64>>, f64>,
+			Identity<PathString<f64>, PathString<f64>, PathString<f64>, Unconnected, f64>,
+			Equirectangular<PathString<f64>, f64>,
+			PVAntimeridian<f64>,
+			ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
+			ResampleNoneNoClipU<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
+			f64,
+		> = PathBuilder::context_pathstring();
 
         builder.point_radius(10_f64);
 
@@ -192,6 +277,7 @@ mod path_string_test {
             .object(&object);
 
         assert_eq!(s, "M258.95758280091974,307.23688550569096L285.7461180926677,260.83778132003164L336.0920959633045,279.16221867996836L326.7885352917479,331.9253331742774L273.21146470825204,331.92533317427734ZM420.4850175467511,307.23688550569096L431.56777751410493,283.93695684484305L441.0062261462913,260.83778132003164L479.5734827274837,279.16221867996836L477.116799820893,305.57863634335655L472.44654177381744,331.9253331742774L431.40412457473724,331.92533317427734Z");
+
     }
 
     #[test]

@@ -8,8 +8,8 @@ use crate::Transform;
 /// Covers both translate and rotate.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Str<T: CoordFloat>
-where
-    T: CoordFloat + FloatConst,
+// where
+//     T: CoordFloat + FloatConst,
 {
     a: T,
     b: T,

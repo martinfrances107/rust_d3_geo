@@ -12,7 +12,7 @@ use crate::clip::line_elem::LineElem;
 #[derive(Clone)]
 pub struct Intersection<'a, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     pub x: LineElem<T>,
     pub z: Option<&'a Vec<LineElem<T>>>,

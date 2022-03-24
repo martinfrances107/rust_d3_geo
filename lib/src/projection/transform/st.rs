@@ -7,8 +7,8 @@ use crate::Transform;
 /// Simplification when only  translate is needed.
 #[derive(Clone, Copy, Debug)]
 pub struct St<T>
-where
-    T: CoordFloat,
+// where
+//     T: CoordFloat,
 {
     k: T,
     dx: T,

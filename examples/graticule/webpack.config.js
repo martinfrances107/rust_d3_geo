@@ -36,7 +36,7 @@ module.exports = {
       crateDirectory: __dirname,
       args: '--log-level warn',
       extraArgs: '',
-      // forceMode: 'development'
+      forceMode: 'development'
     }),
   ]
 };

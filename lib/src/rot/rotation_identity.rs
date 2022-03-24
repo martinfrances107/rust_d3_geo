@@ -8,8 +8,8 @@ use crate::Transform;
 /// One of the 3-axis rotation transforms.
 #[derive(Clone, Copy, Debug)]
 pub struct RotationIdentity<T>
-where
-    T: CoordFloat,
+// where
+//     T: CoordFloat,
 {
     phantom: PhantomData<T>,
 }

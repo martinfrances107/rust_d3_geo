@@ -39,8 +39,8 @@ where
 /// PathString.
 #[derive(Debug, Clone, PartialEq)]
 pub struct String<T>
-where
-    T: CoordFloat,
+// where
+//     T: CoordFloat,
 {
     circle: Option<S>,
     line: LineState,
@@ -106,7 +106,7 @@ where
     type EP = Self;
 
     #[inline]
-    fn get_endpoint(self) -> Self {
+    fn get_endpoint(&mut self) -> &mut Self {
         self
     }
 

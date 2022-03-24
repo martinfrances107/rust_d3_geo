@@ -9,8 +9,8 @@ use crate::stream::Streamable;
 /// Unit sphere.
 #[derive(Clone, Debug)]
 pub struct Sphere<T>
-where
-    T: CoordFloat,
+// where
+//     T: CoordFloat,
 {
     pd: PhantomData<T>,
 }
@@ -35,7 +35,7 @@ where
     #[inline]
     fn to_stream<EP, SD: Stream<EP = EP, T = T>>(&self, stream: &mut SD)
     where
-        EP: Clone + Debug + Stream<EP = EP, T = T>,
+        EP: Stream<EP = EP, T = T> + Default,
     {
         stream.sphere();
     }

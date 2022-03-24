@@ -1,5 +1,3 @@
-/// Output type for a 3-axis rotation.
-pub mod rotate_radians;
 /// The rotation transform (in degrees).
 pub mod rotation;
 /// An Inner type for the 3-axis rotation.
@@ -8,12 +6,15 @@ pub mod rotation_identity;
 pub mod rotation_lambda;
 /// An Inner type for the 3-axis rotation.
 pub mod rotation_phi_gamma;
+/// Output type for a 3-axis rotation.
+pub mod rotator_radians;
+/// 3-axis rotation transform.
+pub mod rotate_radians;
 
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-
 use rotate_radians::RotateRadians;
 use rotation_identity::RotationIdentity;
 use rotation_lambda::RotationLambda;

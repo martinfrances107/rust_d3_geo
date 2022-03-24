@@ -1,65 +1,34 @@
 use approx::AbsDiffEq;
 use derivative::*;
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
+use std::fmt::Debug;
+use std::marker::PhantomData;
 
 use crate::clip::buffer::Buffer;
-use crate::clip::clip_node::ClipNode;
-use crate::clip::post_clip_node::PostClipNode;
-use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
-use crate::clip::stream_node_post_clip_factory::StreamNodePostClipFactory;
-use crate::clip::Line;
+use crate::clip::clip::Clip;
+use crate::clip::clip::Connected as ConnectedClip;
+use crate::clip::Bufferable;
+use crate::clip::Interpolator;
+use crate::clip::LineConnected;
+// use crate::clip::LineUnconnected;
 use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::rot::rotate_radians::RotateRadians;
+use crate::rot::rotator_radians::RotatorRadians;
+use crate::stream::Connectable;
+use crate::stream::Connected;
 use crate::stream::Stream;
+use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::resampler::stream_node_resample_factory::StreamNodeResampleFactory;
-use super::resampler::ResampleNode;
-use super::stream_node_factory::StreamNodeFactory;
+// use super::builder::PostClipNode;
+// use super::resampler::Resampler;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
-use super::NodeFactory;
-use super::Raw as ProjectionRaw;
-use super::RotateFactory;
-use super::RotateTransformFactory;
-use super::StreamNode;
-
-type Cache<DRAIN, LINE, PR, PV, T> = (DRAIN, ProjectionStreamOutput<DRAIN, LINE, PR, PV, T>);
-
-// Post Clip Node.
-type Pcn<DRAIN, T> = PostClipNode<DRAIN, DRAIN, T>;
-
-// Resample node.
-type Rn<DRAIN, PR, T> = ResampleNode<DRAIN, PR, Pcn<DRAIN, T>, T>;
-
-type TransformRadiansFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
-    EP,
-    StreamTransformRadians,
-    StreamNode<
-        EP,
-        RotateRadians<T>,
-        ClipNode<EP, LINE, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
-        T,
-    >,
-    T,
->;
-
-/// Output of projection.stream().
-///
-/// use by GeoPath.
-pub type ProjectionStreamOutput<DRAIN, LINE, PR, PV, T> = StreamNode<
-    DRAIN,
-    StreamTransformRadians,
-    StreamNode<
-        DRAIN,
-        RotateRadians<T>,
-        ClipNode<DRAIN, LINE, PV, ResampleNode<DRAIN, PR, PostClipNode<DRAIN, DRAIN, T>, T>, T>,
-        T,
-    >,
-    T,
->;
+// use super::ProjectionRawBase;
 
 /// Projection output of projection/Builder.
 ///
@@ -67,44 +36,99 @@ pub type ProjectionStreamOutput<DRAIN, LINE, PR, PV, T> = StreamNode<
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct Projector<DRAIN, LINE, PR, PV, T>
+pub struct Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Stream<EP = DRAIN, T = T>,
-    LINE: Line,
-    StreamNode<DRAIN, LINE, Rn<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
-    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-
-    PR: ProjectionRaw<T>,
-    PV: PointVisible<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    // PCNC: PostClipNode,
+    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
+    // RC: Resampler + Stream<EP = DRAIN, T = T>,
+    // RU: Resampler,
+    // LU: LineUnconnected<SU = RU>,
+    // LC: LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
+    // I: Interpolator<EP = DRAIN, Stream = RC, T = T>,
+    // CS: Clone,
+    DRAIN: Clone,
+    I: Clone,
+    LB: Clone,
+    LC: Clone,
+    LU: Clone,
+    PCNU: Clone,
+    PR: Clone + Transform<T = T>,
+    PV: Clone,
+    RC: Clone,
+    RU: Clone,
+    // DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    T: CoordFloat + FloatConst,
 {
-    pub(crate) postclip_factory: StreamNodePostClipFactory<DRAIN, T>,
+    /// Must be public as there is a implicit copy.
+    pub p_pcnc: PhantomData<PCNC>,
+    pub p_lb: PhantomData<LB>,
+    pub p_lc: PhantomData<LC>,
+    pub(crate) postclip: PCNU,
 
-    pub(crate) resample_factory: StreamNodeResampleFactory<PR, Pcn<DRAIN, T>, T>,
+    pub(crate) resample: RU,
 
-    pub(crate) preclip_factory: StreamNodeClipFactory<DRAIN, LINE, PR, PV, Rn<DRAIN, PR, T>, T>,
+    pub(crate) clip: Clip<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>,
 
-    pub(crate) rotate_factory: RotateFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
+    pub(crate) rotator: RotatorRadians<Unconnected, T>,
+
     /// Used exclusively by Transform( not stream releated).
-    pub rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
-
-    pub(crate) rotate_transform_factory: RotateTransformFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
-
-    pub(crate) transform_radians_factory: TransformRadiansFactory<DRAIN, DRAIN, LINE, PR, PV, T>,
-
-    pub(crate) cache: Option<Cache<DRAIN, LINE, PR, PV, T>>,
+    // pub rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+    pub project_rotate_transform:
+        Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+    // pub(crate) rotate_transform: RotateTransform<DRAIN, DRAIN, LINE, PR, PV, T>,
+    pub(crate) transform_radians: StreamTransformRadians<Unconnected>,
+    pub(crate) cache: Option<(
+        DRAIN,
+        StreamTransformRadians<
+            Connected<
+                RotatorRadians<
+                    Connected<
+                        Clip<
+                            DRAIN,
+                            I,
+                            LB,
+                            LC,
+                            LU,
+                            PR,
+                            PV,
+                            RC,
+                            RU,
+                            ConnectedClip<DRAIN, LB, LC, LU, RC, RU, T>,
+                            T,
+                        >,
+                    >,
+                    T,
+                >,
+            >,
+        >,
+    )>,
 }
 
-impl<'a, DRAIN, LINE, PR, PV, T> Projector<DRAIN, LINE, PR, PV, T>
+impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+    Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Stream<EP = DRAIN, T = T> + PartialEq<DRAIN>,
-    LINE: Line,
-    StreamNode<DRAIN, LINE, Rn<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
-    ProjectionStreamOutput<DRAIN, LINE, PR, PV, T>: Stream<EP = DRAIN, T = T>,
-    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
-    PV: PointVisible<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    DRAIN: Stream<EP = DRAIN, T = T> + Default + PartialEq,
+
+    I: Interpolator<EP = DRAIN, Stream = RC, T = T>,
+    LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
+    // LU: LineUnconnected<SU = RU>
+    //     + Bufferable<Output = LB, T = T>
+    //     + Connectable<Output = LC, SC = RC>,
+    // RC: Resampler + Stream<EP = DRAIN, T = T>,
+    // RU: Resampler + Connectable<Output = RC, SC = PCNC> + Stream<EP = DRAIN, T = T>,
+    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
+    // PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
+    // PR: ProjectionRawBase<T>,
+    // DRAIN: Clone + Default + PartialEq,
+    I: Clone,
+    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+    PV: Clone + PointVisible<T = T>,
+    PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
+    RU: Clone + Connectable<SC = PCNC, Output = RC> + Debug,
+    RC: Clone + Stream<EP = DRAIN, T = T>,
+    PR: Transform<T = T>,
+    T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to the projection.
     ///
@@ -112,23 +136,58 @@ where
     ///
     /// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
     ///
-    pub fn stream(&mut self, drain: DRAIN) -> ProjectionStreamOutput<DRAIN, LINE, PR, PV, T> {
+    pub fn stream(
+        &mut self,
+        drain: DRAIN,
+    ) -> StreamTransformRadians<
+        Connected<
+            RotatorRadians<
+                Connected<
+                    Clip<
+                        DRAIN,
+                        I,
+                        LB,
+                        LC,
+                        LU,
+                        PR,
+                        PV,
+                        RC,
+                        RU,
+                        ConnectedClip<DRAIN, LB, LC, LU, RC, RU, T>,
+                        T,
+                    >,
+                >,
+                T,
+            >,
+        >,
+    > {
         if let Some((cache_drain, output)) = &self.cache {
             if *cache_drain == drain {
                 return (*output).clone();
             }
         }
-
         // Build cache.
-        let postclip_node = self.postclip_factory.generate(drain.clone());
+        let postclip_node: PCNC = self.postclip.clone().connect(drain.clone());
 
-        let resample_node = self.resample_factory.generate(postclip_node);
+        let resample_node: RC = self.resample.clone().connect(postclip_node);
 
-        let preclip_node = self.preclip_factory.generate(resample_node);
+        let preclip_node: Clip<
+            DRAIN,
+            I,
+            LB,
+            LC,
+            LU,
+            PR,
+            PV,
+            RC,
+            RU,
+            ConnectedClip<DRAIN, LB, LC, LU, RC, RU, T>,
+            T,
+        > = self.clip.clone().connect(resample_node);
 
-        let rotate_node = self.rotate_factory.generate(preclip_node);
+        let rotate_node = self.rotator.clone().connect(preclip_node);
 
-        let out = self.transform_radians_factory.generate(rotate_node);
+        let out = self.transform_radians.clone().connect(rotate_node);
 
         // Populate cache.
         self.cache = Some((drain, out.clone()));
@@ -138,14 +197,36 @@ where
     }
 }
 
-impl<'a, DRAIN, LINE, PR, PV, T> Transform for Projector<DRAIN, LINE, PR, PV, T>
+impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Transform
+    for Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Stream<EP = DRAIN, T = T>,
-    LINE: Line,
-    StreamNode<DRAIN, LINE, Rn<DRAIN, PR, T>, T>: Stream<EP = DRAIN, T = T>,
-    StreamNode<Buffer<T>, LINE, Buffer<T>, T>: Stream<EP = Buffer<T>, T = T>,
-    PR: ProjectionRaw<T>,
-    PV: PointVisible<T = T>,
+    // DRAIN: Stream<EP = DRAIN, T = T> + Default,
+
+    // I: Interpolator<EP = DRAIN, Stream = RC, T = T>,
+    // LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    // LC: LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
+    // LU: LineUnconnected<SU = RU>
+    //     + Bufferable<Output = LB, T = T>
+    //     + Connectable<Output = LC, SC = RC>,
+    // PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
+    // PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
+    // PR: ProjectionRawBase<T>,
+    // PV: PointVisible<T = T>,
+    // RC: Resampler + Stream<EP = DRAIN, T = T>,
+    // RU: Resampler + Connectable<Output = RC, SC = PCNC>,
+    LB: Clone + Debug,
+    LC: Clone + Debug,
+    LU: Clone + Debug,
+    PCNU: Clone + Debug,
+    PCNC: Clone + Debug,
+    PR: Clone + Debug,
+    PV: Clone + Debug,
+    RC: Clone + Debug,
+    RU: Clone + Debug,
+    I: Clone + Debug,
+    I: Clone + Debug,
+    DRAIN: Clone + Debug,
+    PR: Clone + Debug + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
@@ -155,10 +236,10 @@ where
             x: p.x.to_radians(),
             y: p.y.to_radians(),
         };
-        self.rotate_transform.transform(&r)
+        self.project_rotate_transform.transform(&r)
     }
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let d = self.rotate_transform.invert(p);
+        let d = self.project_rotate_transform.invert(p);
         Coordinate {
             x: d.x.to_degrees(),
             y: d.y.to_degrees(),

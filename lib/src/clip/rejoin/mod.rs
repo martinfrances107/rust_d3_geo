@@ -2,7 +2,6 @@ pub mod link;
 
 use std::cell::RefCell;
 use std::cmp::Ordering;
-use std::fmt::Debug;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -13,7 +12,8 @@ use approx::AbsDiffEq;
 use crate::abs_diff_eq;
 use crate::clip::intersection::Intersection;
 use crate::clip::rejoin::link::link;
-use crate::clip::InterpolateFn;
+// use crate::clip::InterpolateFn;
+use crate::clip::Interpolator;
 use crate::math::EPSILON;
 use crate::stream::Stream;
 
@@ -25,16 +25,17 @@ pub(crate) type CompareIntersectionsFn<T> =
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
-pub fn rejoin<EP, SINK, T>(
+pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
     segments: &[Vec<LineElem<T>>],
     compare_intersection: CompareIntersectionsFn<T>,
     start_inside: bool,
-    interpolate_fn: InterpolateFn<SINK, T>,
+    interpolator: &mut INTERPOLATOR,
     stream: &mut SINK,
 ) where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    // EP: Stream<EP = EP, T = T> + Default,
     SINK: Stream<EP = EP, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    INTERPOLATOR: Interpolator<EP = EP, Stream = SINK, T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     let mut start_inside = start_inside;
     let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();
@@ -152,7 +153,7 @@ pub fn rejoin<EP, SINK, T>(
                         }
                     }
                 } else {
-                    interpolate_fn(
+                    interpolator.interpolate(
                         Some((current.clone()).borrow().x.p),
                         Some((current.clone()).borrow().n.as_ref().unwrap().borrow().x.p),
                         T::one(),
@@ -170,7 +171,7 @@ pub fn rejoin<EP, SINK, T>(
                         stream.point(&point.p, None);
                     }
                 } else {
-                    interpolate_fn(
+                    interpolator.interpolate(
                         Some((*current.clone()).borrow().x.p),
                         Some(
                             ((current.clone()).borrow().p.as_ref().unwrap())

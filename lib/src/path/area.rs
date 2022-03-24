@@ -123,7 +123,7 @@ where
     type EP = Self;
 
     #[inline]
-    fn get_endpoint(self) -> Self {
+    fn get_endpoint(&mut self) -> &mut Self {
         self
     }
 

@@ -31,9 +31,10 @@ mod stereographic;
 use azimuthal_equal_area::draw_azimuthal_equal_area;
 use azimuthal_equidistant::draw_azimuthal_equidistant;
 use gnomic::draw_gnomic;
-use mercator::draw_mercator;
+// use mercator::draw_mercator;
 use orthographic::draw_orthographic;
 use stereographic::draw_sterographic;
+use equirectangular::draw_equirectangular;
 
 #[wasm_bindgen]
 #[cfg(not(tarpaulin_include))]
@@ -74,8 +75,7 @@ fn get_document() -> Result<Document, JsValue> {
 pub async fn start() -> Result<(), JsValue> {
     use futures::join;
 
-    use crate::equirectangular::draw_equirectangular;
-
+use geo::Geometry;
     console_log!("run() - wasm entry point");
 
     let mut opts = RequestInit::new();
@@ -98,13 +98,13 @@ pub async fn start() -> Result<(), JsValue> {
 
     let topology: Topology = json.into_serde().expect("Could not parse as Topology");
 
-    let land = FeatureBuilder::generate_from_name(&topology, "countries")
+    let land:Geometry::<f64> = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
     let aea = draw_azimuthal_equal_area(&land);
     let ae = draw_azimuthal_equidistant(&land);
     let orthographic = draw_orthographic(&land);
-    let mercator = draw_mercator(&land);
+    // let mercator = draw_mercator(&land);
     let sterographic = draw_sterographic(&land);
     let equirectangular = draw_equirectangular(&land);
     let gnomic = draw_gnomic(&land);
@@ -113,7 +113,7 @@ pub async fn start() -> Result<(), JsValue> {
         aea,
         ae,
         orthographic,
-        mercator,
+        // mercator,
         sterographic,
         equirectangular,
         gnomic,

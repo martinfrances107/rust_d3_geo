@@ -1,5 +1,16 @@
 ## TODO
 
+TODDAY
+
+index_test
+invert_test
+mercator test ( mostly reinstated.)
+snapshot test
+fit_test -- needs works.
+path_bounds_test
+projection_rotate_test -- did it ever work?
+snapshot
+
 * Implement remaining fit_tests --- gives a minor bump in code coverage.
 
 * examples/projections

@@ -19,7 +19,10 @@ use crate::stream::Streamable;
 ///
 /// DISAMBIGUATION: Lots of code in common with path/centroid.rs
 /// but this is true of the Javascript.
-pub struct Centroid<T: CoordFloat> {
+pub struct Centroid<T>
+where
+    T: CoordFloat,
+{
     W0: T,
     W1: T,
     X0: T,
@@ -165,12 +168,12 @@ where
         let cz = self.x0 * y - self.y0 * x;
         let m = (cx * cx + cy * cy + cz * cz).sqrt();
         let w = asin(m); // line weight = angle
-        let v;
-        if m == T::zero() {
-            v = T::zero();
+
+        let v: T = if m == T::zero() {
+            T::zero()
         } else {
-            v = -w / m;
-        } // area weight multiplier
+             -w / m
+        }; // area weight multiplier
 
         self.X2 += v * cx;
         self.Y2 += v * cy;
@@ -249,7 +252,7 @@ where
     type T = T;
     type EP = Self;
 
-    fn get_endpoint(self) -> Self {
+    fn get_endpoint(&mut self) -> &mut Self {
         self
     }
 

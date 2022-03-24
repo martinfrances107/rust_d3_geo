@@ -12,7 +12,7 @@ where
     let k = scale(cx * cy);
     if k.is_infinite() {
         return Coordinate {
-            x: T::from(2.0).unwrap(),
+            x: T::from(2.0_f64).unwrap(),
             y: T::zero(),
         };
     }
@@ -32,12 +32,11 @@ where
     let cc = c.cos();
 
     let ret_x = (p.x * sc).atan2(z * cc);
-    let y_out;
-    if z == T::zero() {
-        y_out = z;
+    let y_out: T =  if z == T::zero() {
+        z
     } else {
-        y_out = p.y * sc / z;
-    }
+         p.y * sc / z
+    };
     let ret_y = asin(y_out);
 
     Coordinate { x: ret_x, y: ret_y }

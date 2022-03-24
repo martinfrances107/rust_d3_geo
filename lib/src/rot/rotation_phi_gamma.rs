@@ -7,8 +7,8 @@ use crate::Transform;
 /// A rotation is two directions.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct RotationPhiGamma<T>
-where
-    T: CoordFloat,
+// where
+//     T: CoordFloat,
 {
     cos_delta_phi: T,
     sin_delta_phi: T,

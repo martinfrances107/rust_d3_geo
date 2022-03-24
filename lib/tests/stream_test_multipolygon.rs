@@ -18,7 +18,7 @@ mod stream_multipolygon_test {
     impl Stream for MultiPolygonStream {
         type T = f64;
         type EP = MultiPolygonStream;
-        fn get_endpoint(self) -> Self::EP {
+        fn get_endpoint<'a>(&'a mut self) -> &'a mut Self::EP{
             self
         }
 

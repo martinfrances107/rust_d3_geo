@@ -6,13 +6,14 @@ use geo::Coordinate;
 use geo::LineString;
 use geo::MultiPolygon;
 use geo::Polygon;
+use rust_d3_geo::projection::ProjectionRawBase;
 use wasm_bindgen::JsCast;
 use web_sys::SvgsvgElement;
 
 use rust_d3_geo::circle::generator::Generator as CircleGenerator;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::stereographic::Stereographic;
-use rust_d3_geo::projection::Raw;
+// use rust_d3_geo::projection::Raw;
 use rust_d3_geo::projection::Translate;
 
 use super::get_document;

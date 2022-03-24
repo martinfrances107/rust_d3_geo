@@ -107,7 +107,7 @@ where
     T: AddAssign<T> + CoordFloat,
 {
     fn centroid_point(&mut self, p: &Coordinate<T>) {
-        dbg!("centroid_point", p);
+        // dbg!("centroid_point", p);
         self.X0 += p.x;
         self.Y0 += p.y;
         self.Z0 += T::one();
@@ -119,7 +119,7 @@ where
     }
 
     fn centroid_point_first_line(&mut self, p: &Coordinate<T>) {
-        dbg!("centroid_point first line", p);
+        // dbg!("centroid_point first line", p);
         self.point_fn = Self::centroid_point_line;
         self.x0 = p.x;
         self.y0 = p.y;
@@ -127,7 +127,7 @@ where
     }
 
     fn centroid_point_line(&mut self, p: &Coordinate<T>) {
-        dbg!("centroid_point line", p);
+        // dbg!("centroid_point line", p);
         let dx = p.x - self.x0;
         let dy = p.y - self.y0;
         let z = (dx * dx + dy * dy).sqrt();
@@ -162,7 +162,7 @@ where
 
     #[inline]
     fn centroid_point_first_ring(&mut self, p: &Coordinate<T>) {
-        dbg!("centroid_point_first_ring", p);
+        // dbg!("centroid_point_first_ring", p);
         self.point_fn = Self::centroid_point_ring;
         self.x00 = p.x;
         self.x0 = p.x;
@@ -174,7 +174,7 @@ where
 
     #[inline]
     fn centroid_point_ring(&mut self, p: &Coordinate<T>) {
-        dbg!("centroid_point_ring", p);
+        // dbg!("centroid_point_ring", p);
         let dx = p.x - self.x0;
         let dy = p.y - self.y0;
         let z = (dx * dx + dy * dy).sqrt();
@@ -245,7 +245,7 @@ where
     type EP = Self;
 
     #[inline]
-    fn get_endpoint(self) -> Self {
+    fn get_endpoint(&mut self) -> &mut Self {
         self
     }
 

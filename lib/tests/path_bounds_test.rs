@@ -16,31 +16,95 @@ mod path_bounds_test {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::clip::antimeridian::line::Line;
-    use rust_d3_geo::clip::antimeridian::pv::PV;
+    // use rust_d3_geo::clip::antimeridian::line::Line;
+    // use rust_d3_geo::clip::antimeridian::pv::PV;
+    use rust_d3_geo::clip::buffer::Buffer;
     use rust_d3_geo::data_object::sphere::Sphere;
+    use rust_d3_geo::identity::Identity;
     use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::path::builder::Builder;
+    use rust_d3_geo::projection::PrecisionBypass;
+    use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projector::Projector;
-    use rust_d3_geo::projection::Precision;
-    use rust_d3_geo::projection::Raw as ProjectionRaw;
+	// use rust_d3_geo::projection::builder::template::ResampleNoClipC;
+	// use rust_d3_geo::projection::builder::template::ResampleNoClipU;
+	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
+	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
+	use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+	use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
+	use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
+
     use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
+    use rust_d3_geo::stream::Unconnected;
 
     #[inline]
     fn equirectangular<
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst,
-    >() -> Projector<Bounds<T>, Line<T>, Equirectangular<Bounds<T>, T>, PV<T>, T> {
+    >() -> Projector<
+		Bounds<T>,
+		InterpolateAntimeridian<
+			Bounds<T>,
+			ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
+			T,
+		>,
+		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<
+			Bounds<T>,
+			ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
+			Connected<ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>>,
+			T,
+		>,
+		LineAntimeridian<
+			Bounds<T>,
+			ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
+			Unconnected,
+			T,
+		>,
+		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
+		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Unconnected, T>,
+		Equirectangular<Bounds<T>, T>,
+		PVAntimeridian<T>,
+		ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
+		ResampleNoneNoClipU<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
+		T> {
         Equirectangular::builder()
             .scale(T::from(900f64 / PI).unwrap())
-            .precision(&T::zero())
+            .precision_bypass()
             .build()
     }
 
     #[inline]
     fn test_bounds<'a, T>(
-        projection: Projector<Bounds<T>, Line<T>, Equirectangular<Bounds<T>, T>, PV<T>, T>,
+        projection: Projector<
+            Bounds<T>,
+            InterpolateAntimeridian<
+                Bounds<T>,
+                ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
+                T,
+            >,
+            LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+            LineAntimeridian<
+                Bounds<T>,
+                ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
+                Connected<ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>>,
+                T,
+            >,
+            LineAntimeridian<
+                Bounds<T>,
+                ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
+                Unconnected,
+                T,
+            >,
+            Identity<Bounds<T>, Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
+            Identity<Bounds<T>, Bounds<T>, Bounds<T>, Unconnected, T>,
+            Equirectangular<Bounds<T>, T>,
+            PVAntimeridian<T>,
+            ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
+            ResampleNoneNoClipU<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
+            T>,
 
         object: &impl Streamable<T = T>,
     ) -> [Coordinate<T>; 2]

@@ -8,27 +8,21 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::buffer::Buffer;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
-use crate::clip::clip_node::ClipNode;
-use crate::clip::post_clip_node::PostClipNode;
-use crate::clip::Line;
-use crate::clip::PointVisible;
+// use crate::clip::Interpolator;
+// use crate::clip::LineConnected;
+// use crate::clip::LineUnconnected;
+// use crate::clip::PointVisible;
 use crate::compose::Compose;
-use crate::path::bounds::Bounds;
-use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::rot::rotate_radians::RotateRadians;
-use crate::stream::Stream;
+// use crate::stream::Connectable;
+// use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
 
 use projector::Projector;
-use resampler::ResampleNode;
-use stream_node::StreamNode;
-use stream_node_factory::StreamNodeFactory;
-use Raw as ProjectionRaw;
 
+// use self::builder::PostClipNode;
+// use self::resampler::Resampler;
 use self::transform::scale_translate_rotate::ScaleTranslateRotate;
 
 /// The raw projection.
@@ -59,7 +53,7 @@ pub mod projector;
 /// Stream node pipeline stage.
 pub mod stream_node;
 /// Generates stream node objects.
-pub mod stream_node_factory;
+// pub mod stream_node_factory;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
 /// Scale translate and rotate.
@@ -72,34 +66,25 @@ pub mod resampler;
 mod fit;
 
 /// Projection type.
-pub type PostClipFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
-    EP,
-    PostClipNode<EP, DRAIN, T>,
-    ClipNode<EP, LINE, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
-    T,
->;
+// pub type PostClipFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
+//     EP,
+//     PostClipNode<EP, DRAIN, T>,
+//     Clip<CS, EP, LINE, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
+//     T,
+// >;
 
 /// Projection type.
-pub type RotateFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
-    EP,
-    RotateRadians<T>,
-    ClipNode<EP, LINE, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
-    T,
->;
+// pub type Rotate<DRAIN, EP, LINE, PR, PV, T> = RotateRadians<T>;
 
 /// Projection type.
-pub type RotateTransformFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
-    EP,
-    Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
-    ClipNode<EP, LINE, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
-    T,
->;
+pub type RotateTransform<PR, T> =
+    Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>;
 
 /// Provides specialization over 'Projection Raw'
 ///
 /// Mercator projections [MercatorTransverseRaw and MercatorRaw]
 /// have a extent_transform() for their individual needs.
-pub trait TransformExtent<T>: Raw<T>
+pub trait TransformExtent<T>: ProjectionRawBase<T>
 where
     <Self as Transform>::T: CoordFloat,
 {
@@ -119,8 +104,11 @@ where
     ) -> [Coordinate<T>; 2];
 }
 
-/// Projection Raw.
-pub trait Raw<T>: Clone + Debug + Default + Transform<T = T>
+/// Serves as a abstract trait both
+/// things that follow the common family of raw projections.
+/// and alternatively the less common mercator family of raw projections.
+// pub trait ProjectionRawBase<T>: Clone + Debug + Default + Transform<T = T>
+pub trait ProjectionRawBase<T>: Transform<T = T>
 where
     <Self as Transform>::T: CoordFloat,
 {
@@ -132,36 +120,74 @@ where
     fn builder() -> Self::Builder;
 }
 
+/// Marker trait -  for family of raw projections.
+/// used to identify thing that ARE NOT the  mercator family of projections.
+pub trait ProjectionRawCommon<T>: ProjectionRawBase<T>
+where
+    T: CoordFloat,
+{
+}
+/// Marker trait identifies trait that need a highly specialised set of
+/// overreides. The mercator family.
+pub trait ProjectionRawMercator<T>: ProjectionRawBase<T>
+where
+    T: CoordFloat,
+{
+}
+
 trait Builder
 where
-    <Self as Builder>::Drain: Stream<EP = Self::Drain, T = Self::T>,
-    <Self as Builder>::Line: Line,
-
-    StreamNode<
-        Self::Drain,
-        Self::Line,
-        ResampleNode<
-            Self::Drain,
-            Self::PR,
-            PostClipNode<Self::Drain, Self::Drain, Self::T>,
-            Self::T,
-        >,
-        Self::T,
-    >: Stream<EP = Self::Drain, T = Self::T>,
-
-    StreamNode<Buffer<Self::T>, Self::Line, Buffer<Self::T>, Self::T>:
-        Stream<EP = Buffer<Self::T>, T = Self::T>,
-
-    <Self as Builder>::PR: Raw<Self::T>,
-    <Self as Builder>::PV: PointVisible<T = Self::T>,
-    <Self as Builder>::T: 'static + AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
+    // <Self as Builder>::Drain: Stream<EP = Self::Drain, T = Self::T> + Default,
+    // <Self as Builder>::I: Interpolator<EP = Self::Drain, Stream = Self::RC, T = Self::T>,
+    // <Self as Builder>::LU: LineUnconnected<SU = Self::RU> + Stream<EP = Self::Drain, T = Self::T>,
+    // // LC: LineConnected<SC = RC> + Stream<EP = CS, T = T>,
+    // <Self as Builder>::LC: LineConnected<SC = Self::RC> + Stream<EP = Self::Drain, T = Self::T>,
+    // <Self as Builder>::PCNC: PostClipNode,
+    // <Self as Builder>::PCNU: PostClipNode + Connectable<Output = Self::PCNC, SC = Self::Drain>,
+    // <Self as Builder>::PR: ProjectionRawBase<Self::T>,
+    <Self as Builder>::Drain: Clone,
+    <Self as Builder>::I: Clone,
+    <Self as Builder>::LB: Clone,
+    <Self as Builder>::LC: Clone,
+    <Self as Builder>::LU: Clone,
+    <Self as Builder>::PCNU: Clone,
+    <Self as Builder>::PV: Clone,
+    <Self as Builder>::RC: Clone,
+    <Self as Builder>::RU: Clone,
+    <Self as Builder>::PR: Transform<T = Self::T>,
+    // <Self as Builder>::PV: PointVisible<T = Self::T>,
+    // <Self as Builder>::RU: Resampler,
+    // <Self as Builder>::RC: Resampler + Stream<EP = Self::Drain, T = Self::T>,
+    <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;
-    type Line;
+    type I;
+    type LB;
+    type LC;
+    type LU;
+    type PCNC;
+    type PCNU;
     type PR;
     type PV;
+    type RC;
+    type RU;
     type T;
-    fn build(s: Self::PR) -> Projector<Self::Drain, Self::Line, Self::PR, Self::PV, Self::T>;
+    fn build(
+        s: Self::PR,
+    ) -> Projector<
+        Self::Drain,
+        Self::I,
+        Self::LB,
+        Self::LC,
+        Self::LU,
+        Self::PCNC,
+        Self::PCNU,
+        Self::PR,
+        Self::PV,
+        Self::RC,
+        Self::RU,
+        Self::T,
+    >;
 }
 
 /// Controls the projections center point.
@@ -187,11 +213,13 @@ pub trait Center {
         Self::T: CoordFloat;
 }
 
-/// Returns or sets the bounding box.
+/// Methods to clear or return bounding box.
 /// A projection builder sub trait.
-pub trait ClipExtent {
+pub trait ClipExtentBounded {
     /// f64 or f32
     type T;
+
+    type OutputClear;
 
     /// Returns a bounding box.
     fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]>
@@ -199,12 +227,21 @@ pub trait ClipExtent {
         Self::T: CoordFloat;
 
     /// clears the bounding box.
-    fn clip_extent_clear(self) -> Self
+    fn clip_extent_clear(self) -> Self::OutputClear
     where
         Self::T: CoordFloat;
+}
+
+/// Sets the bounding box.
+/// A projection builder sub trait.
+pub trait ClipExtentSet {
+    /// f64 or f32
+    type T;
+
+    type OutputBounded;
 
     /// Sets the bounding box.
-    fn clip_extent(self, extent: &[Coordinate<Self::T>; 2]) -> Self
+    fn clip_extent(self, extent: &[Coordinate<Self::T>; 2]) -> Self::OutputBounded
     where
         Self::T: CoordFloat;
 }
@@ -212,17 +249,35 @@ pub trait ClipExtent {
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
 pub trait Fit {
+    type Output;
     /// f64 or f32.
     type T;
 
-    ///   Sets the projection’s scale and translate to fit the specified geographic feature in the center of the given extent.
-    ///   Returns the projection.
+    /// Sets the projection’s scale and translate to fit the specified
+    /// geographic feature in the center of the given extent.
     ///
-    ///   Any clip extent is ignored when determining the new scale and translate. The precision used to compute the bounding box of the given object is computed at an effective scale of 150.
+    /// Returns the projection.
     ///
-    ///   @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom.
-    ///   @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-    fn fit_extent(self, extent: [[Self::T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self
+    /// For example, to scale and translate the New Jersey State Plane
+    /// projection to fit a GeoJSON object nj in the center of a 960×500
+    /// bounding box with 20 pixels of padding on each side:
+    ///
+    /// Any clip extent is ignored when determining the new scale and
+    /// translate.
+    ///
+    /// The precision used to compute the bounding box of the given object is
+    /// computed at an effective scale of 150.
+    ///
+    /// @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]],
+    ///  where x₀ is the left side of the bounding box, y₀ is the top,
+    ///  x₁ is the right and y₁ is the bottom.
+    /// @param object A geographic feature supported by d3-geo
+    ///   (An extension of GeoJSON feature).
+    fn fit_extent(
+        self,
+        extent: [[Self::T; 2]; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self::Output
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
@@ -233,19 +288,77 @@ pub trait Fit {
     ///
     ///  @param size The size of the extent, specified as an array [width, height].
     ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-    fn fit_size(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self
-    where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
-
-    /// Similar to fit_size where the height is automatically chosen from
-    /// the aspect ratio of object and the given constraint on width.
-    fn fit_width(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_size(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self::Output
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
+}
+
+/// Returns or sets the extent of the projection.
+/// A projection builder sub trait.
+pub trait FitConvert {
+    type Output;
+    /// f64 or f32.
+    type T;
+
+    /// Sets the projection’s scale and translate to fit the specified
+    /// geographic feature in the center of the given extent.
+    ///
+    /// Returns the projection.
+    ///
+    /// For example, to scale and translate the New Jersey State Plane
+    /// projection to fit a GeoJSON object nj in the center of a 960×500
+    /// bounding box with 20 pixels of padding on each side:
+    ///
+    /// Any clip extent is ignored when determining the new scale and
+    /// translate.
+    ///
+    /// The precision used to compute the bounding box of the given object is
+    /// computed at an effective scale of 150.
+    ///
+    /// @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]],
+    ///  where x₀ is the left side of the bounding box, y₀ is the top,
+    ///  x₁ is the right and y₁ is the bottom.
+    /// @param object A geographic feature supported by d3-geo
+    ///   (An extension of GeoJSON feature).
+
+    fn fit_extent_convert(
+        self,
+        extent: [[Self::T; 2]; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self::Output
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
+
+    ///  Sets the projection’s scale and translate to fit the specified geographic feature in the center of an extent with the given size and top-left corner of [0, 0].
+    ///  Returns the projection.
+    ///
+    ///  Any clip extent is ignored when determining the new scale and translate. The precision used to compute the bounding box of the given object is computed at an effective scale of 150.
+    ///
+    ///  @param size The size of the extent, specified as an array [width, height].
+    ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
+    fn fit_size_convert(
+        self,
+        size: [Self::T; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self::Output
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
+
+    /// Similar to fit_size where the height is automatically chosen from
+    /// the aspect ratio of object and the given constraint on width.
+    fn fit_width_convert(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
+
+    /// Similar to fit_size where the width is automatically chosen from
+    /// the aspect ratio of object and the given constraint on height.
+    fn fit_height_convert(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
@@ -266,43 +379,76 @@ pub trait Angle {
     fn angle(self, angle: Self::T) -> Self;
 }
 
-/// Selects the clipping strategy
-pub trait ClipAngle
+pub trait ClipAngleReset
 where
-    <Self as ClipAngle>::Drain: Stream<EP = Self::Drain, T = Self::T>,
-    <Self as ClipAngle>::PR: ProjectionRaw<Self::T>,
-    <Self as ClipAngle>::T: AbsDiffEq<Epsilon = Self::T>
+    // <Self as ClipAngle>::Drain: Stream<EP = Self::Drain, T = Self::T> + Default,
+    // <Self as ClipAngle>::PR: ProjectionRaw<Self::T>,
+    // <Self as ClipAngle>::RC: Resampler, RU: Resampler,
+    <Self as ClipAngleReset>::T: AbsDiffEq<Epsilon = Self::T>
         // + AsPrimitive<<Self as ClipAngle>::T>
         + CoordFloat
         + Debug
-        // + Display
+        + FloatConst,
+{
+    /// The Drain.
+    // type Drain;
+    type Output;
+    // type Resampler;
+    /// Projection Raw.
+    // type PR;
+
+    ///f64 or f32
+    type T;
+    fn clip_angle_reset(self) -> Self::Output;
+}
+
+pub trait ClipAngleGet
+where
+    // <Self as ClipAngle>::Drain: Stream<EP = Self::Drain, T = Self::T> + Default,
+    // <Self as ClipAngle>::PR: ProjectionRaw<Self::T>,
+    // <Self as ClipAngle>::RC: Resampler, RU: Resampler,
+    <Self as ClipAngleGet>::T: AbsDiffEq<Epsilon = Self::T>
+        // + AsPrimitive<<Self as ClipAngle>::T>
+        + CoordFloat
+        + Debug
         + FloatConst,
 {
     ///f64 or f32
     type T;
-    /// The Drain.
-    type Drain;
-    /// Projection Raw.
-    type PR;
 
-    // fn clip_angle_reset(
-    //     self,
-    // ) -> ProjectionBuilder<
-    //     Self::Drain,
-    //     LineAntimeridian<Self::T>,
-    //     Self::PR,
-    //     PVAntimeridian<Self::T>,
-    //     Self::T,
-    // >;
-
-    ///  Switches from antimeridian to circle based clipping.
-    ///  See also projection.preclip, d3.geoClipAntimeridian, d3.geoClipCircle.
-    ///
-    fn clip_angle(
-        self,
-        angle: Self::T,
-    ) -> ProjectionBuilder<Self::Drain, LineCircle<Self::T>, Self::PR, PVCircle<Self::T>, Self::T>;
+    fn clip_angle_get(&self) -> Self::T;
 }
+
+/// Selects the clipping strategy
+/// A projection builder sub trait.
+pub trait ClipAngleSet
+// where
+//     <Self as ClipAngleSet>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + Debug + FloatConst,
+{
+    type Output;
+
+    ///f64 or f32
+    type T;
+
+    ///  Switches the projection builder from antimeridian to circle based clipping.
+    fn clip_angle(self, angle: Self::T) -> Self::Output;
+}
+
+/// Alters the clip angle on a projector builder previously configured to use
+///  circle based clipping.
+/// A projection builder sub trait.
+pub trait ClipAngleAdjust
+where
+    <Self as ClipAngleAdjust>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + Debug + FloatConst,
+{
+    ///f64 or f32
+    type T;
+
+    /// Given the angle, adjust the projection builder
+    /// Must already be set for  cicle based clipping.
+    fn clip_angle_adjust(self, angle: Self::T) -> Self;
+}
+
 /// Returns or sets the x or y reflection.
 /// A projection builder sub trait.
 pub trait Reflect {
@@ -338,37 +484,56 @@ pub trait Reflect {
             + FloatConst;
 }
 
-/// Generates elements of the projection stream pipeline.
-pub trait NodeFactory
-where
-    <Self as NodeFactory>::T: CoordFloat,
-{
-    /// The resultant node type.
-    type Node;
-    /// The downstream node.
-    type Sink;
-    /// f32 or f64.
-    type T;
-
-    /// Combine the sink with the proto-node and output a StreamNode.
-    fn generate(&self, sink: Self::Sink) -> Self::Node;
-}
-
-/// Resampling getter and setters.
-pub trait Precision {
+/// Given the builder is already set to resample, adjust the precision setting.
+/// A projection builder sub trait.
+pub trait PrecisionAdjust {
     /// f64 or f32.
     type T;
+    ///  Sets the threshold for the projection’s adaptive resampling to the specified value in Pixels and returns the projection.
+    ///  This value corresponds to the Douglas–Peucker distance.
+    fn precision_adjust(self, delta: &Self::T) -> Self;
+}
+
+/// Resampling Getter.
+///
+/// Applies only to projections where the resampling precision has been set.
+/// A projection builder sub trait.
+pub trait PrecisionGet {
+    /// f64 or f32.
+    type T;
+    type Output;
 
     ///  Returns the projection’s current resampling precision which defaults to square root of 0.5.
     ///  This value corresponds to the Douglas–Peucker distance.
     fn get_precision(&self) -> Self::T;
+}
 
+/// Switch to no resampling.
+///
+/// A projection builder sub trait.
+pub trait PrecisionBypass {
+    /// f64 or f32.
+    type T;
+    type Output;
+    fn precision_bypass(self) -> Self::Output;
+}
+
+
+/// Give a resampling precision consume the object and return one that resamples.
+///
+/// Similar to ResampleAdjust but with conversion.
+/// A projection builder sub trait.
+pub trait PrecisionSet {
+    /// f64 or f32.
+    type T;
+    type Output;
     ///  Sets the threshold for the projection’s adaptive resampling to the specified value in Pixels and returns the projection.
     ///  This value corresponds to the Douglas–Peucker distance.
-    fn precision(self, delta: &Self::T) -> Self;
+    fn precision(self, delta: &Self::T) -> Self::Output;
 }
 
 /// Rotation getter and setters.
+/// A projection builder sub trait.
 pub trait Rotate {
     /// f64 or f32.
     type T;

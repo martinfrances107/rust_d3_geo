@@ -1,31 +1,78 @@
 use std::fmt::Debug;
-use std::rc::Rc;
+use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::circle::stream_fn::stream_fn;
-use crate::clip::InterpolateFn;
+// use crate::clip::InterpolateFn;
+use crate::clip::Interpolator;
+// use crate::clip::InterpolatorBuilder;
 use crate::stream::Stream;
+// use crate::stream::Unconnected;
 
-/// Sets up a clip circle interpolate function, for a given radius.
-pub fn generate<EP, STREAM, T>(radius: T) -> InterpolateFn<STREAM, T>
+// struct Builder<T> {
+// 	radius: T,
+// 	delta: T,
+// }
+
+/// Interpolate Circle.
+#[derive(Clone, Debug)]
+pub struct Interpolate<EP, STREAM, T> {
+	p_ep: PhantomData<EP>,
+	p_stream: PhantomData<STREAM>,
+	radius: T,
+	delta: T,
+}
+
+impl<EP, STREAM, T> Interpolate<EP, STREAM, T>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    STREAM: Stream<EP = EP, T = T>,
-    T: 'static + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
-    let delta = T::from(6_f64).unwrap().to_radians();
+	pub fn new(radius: T) -> Self {
+		Self {
+			p_ep: PhantomData::<EP>,
+			p_stream: PhantomData::<STREAM>,
+			radius,
+			delta: T::from(6_f64).unwrap().to_radians(),
+		}
+	}
+}
 
-    let out: InterpolateFn<STREAM, T> = Rc::new(
-        move |from: Option<Coordinate<T>>,
-              to: Option<Coordinate<T>>,
-              direction: T,
-              stream: &mut STREAM| {
-            stream_fn(stream, radius, delta, direction, from, to)
-        },
-    );
+// impl<T> InterpolatorBuilder for Builder<T> {
+// 	/// Sets up a clip circle interpolate function, for a given radius.
+// 	fn build<EP, STREAM>(&self, stream: STREAM) -> Interpolate<EP, STREAM, T>
+// 	where
+// 		EP: Stream<EP = EP, T = T> + Default,
+// 		STREAM: Stream<EP = EP, T = T>,
+// 		T: 'static + CoordFloat + FloatConst,
+// 	{
+// 		Interpolate {
+// 			p_ep: PhantomData::<EP>,
+// 			p_stream: PhantomData::<STREAM>,
+// 			radius: self.radius,
+// 			delta: self.delta,
+// 		}
+// 	}
+// }
 
-    out
+impl<EP, STREAM, T> Interpolator for Interpolate<EP, STREAM, T>
+where
+	EP: Clone + Debug,
+	STREAM: Clone + Debug + Stream<EP = EP, T = T>,
+	T: CoordFloat + FloatConst,
+{
+	type EP = EP;
+	type Stream = STREAM;
+	type T = T;
+	fn interpolate(
+		&mut self,
+		from: Option<Coordinate<T>>,
+		to: Option<Coordinate<T>>,
+		direction: T,
+		stream: &mut STREAM,
+	) {
+		stream_fn(stream, self.radius, self.delta, direction, from, to);
+	}
 }

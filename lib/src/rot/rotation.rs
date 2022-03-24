@@ -1,10 +1,10 @@
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
-use crate::rot::rotate_radians::RotateRadians;
 use crate::Transform;
 
 use super::rotate_radians;
+use super::rotate_radians::RotateRadians;
 
 /// Transform converting degree to radians.
 ///

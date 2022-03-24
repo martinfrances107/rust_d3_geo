@@ -17,14 +17,16 @@ use wasm_bindgen_futures::JsFuture;
 use web_sys::Document;
 use web_sys::*;
 
-use rust_d3_geo::clip::circle::line::Line;
-use rust_d3_geo::clip::circle::pv::PV;
+// use rust_d3_geo::clip::circle::line::Line;
+// use rust_d3_geo::clip::circle::pv::PV;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::orthographic::Orthographic;
-use rust_d3_geo::projection::Raw;
+use rust_d3_geo::projection::ProjectionRawBase;
+
 use rust_d3_geo::projection::Rotate;
 use rust_d3_geo::projection::Scale;
+
 use rust_d3_geo::projection::Translate;
 use rust_topojson_client::feature::Builder as FeatureBuilder;
 
@@ -53,11 +55,11 @@ extern "C" {
     fn alert(s: &str);
 }
 
-macro_rules! console_log {
-    // Note that this is using the `log` function imported above during
-    // `bare_bones`
-    ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
-}
+// macro_rules! console_log {
+//     // Note that this is using the `log` function imported above during
+//     // `bare_bones`
+//     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
+// }
 
 #[cfg(not(tarpaulin_include))]
 fn get_document() -> Result<Document, JsValue> {
@@ -101,8 +103,7 @@ pub async fn start() -> Result<(), JsValue> {
         .expect("Did not extract geometry");
 
     let context = Context::new(&context_raw);
-    let pb: PathBuilder<Context<f64>, Line<f64>, Orthographic<Context<f64>, f64>, PV<f64>, f64> =
-        PathBuilder::new(context);
+    let pb = PathBuilder::new(context);
 
     let ortho_builder = Orthographic::<Context<f64>, f64>::builder();
 

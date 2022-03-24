@@ -1,4 +1,5 @@
 use std::fmt::Debug;
+use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -8,11 +9,16 @@ use crate::cartesian::cartesian;
 use crate::compose::Compose;
 use crate::math::asin;
 use crate::math::EPSILON;
-use crate::projection::stream_node::StreamNode;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
-use crate::projection::Raw as ProjectionRaw;
+use crate::projection::ProjectionRawBase;
+use crate::stream::Connectable;
+use crate::stream::ConnectedState;
+//use crate::stream::ConnectionState;
 use crate::stream::Stream;
+use crate::stream::Unconnected;
 use crate::Transform;
+
+use super::Resampler;
 
 static MAXDEPTH: u8 = 16_u8; // maximum depth of subdivision
 
@@ -23,16 +29,9 @@ enum PointState {
     Ring,
 }
 
-#[derive(Clone, Copy, Debug)]
-/// Resample the stream base on a given precision.
-pub struct Resample<PR, T>
-where
-    T: CoordFloat + FloatConst,
-    PR: ProjectionRaw<T>,
-{
-    projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-    delta2: T,
-
+#[derive(Clone, Debug)]
+pub struct Connected<SINK, T> {
+    sink: SINK,
     // first point
     lambda00: T,
     x00: T,
@@ -62,20 +61,71 @@ where
     frac_1_3: T,
 }
 
-impl<'a, PR, T> Resample<PR, T>
+// impl<EP, SINK, T> ConnectionState for Connected<SINK, T>
+// where
+//     T: Clone + Debug,
+//     EP: Stream<EP = EP, T = T> + Default,
+//     SINK: Stream<EP = EP, T = T>,
+// {
+// }
+impl< SINK, T> ConnectedState for Connected<SINK, T>
 where
-    PR: ProjectionRaw<T>,
+    T: Clone + Debug,
+    // EP: Stream<EP = EP, T = T> + Default,
+    // SINK: Stream<EP = EP, T = T>,
+    SINK: Clone + Debug,
+{
+    // type EP = EP;
+    type Sink = SINK;
+    // type T = T;
+    #[inline]
+    fn get_sink(&mut self) -> &mut Self::Sink {
+        &mut self.sink
+    }
+}
+
+/// Resample the stream base on a given precision.
+#[derive(Clone,  Debug)]
+pub struct Resample<EP, PR, SC, SU, STATE, T>
+where
+    //STATE: ConnectionState,
+    STATE: Clone + Debug,
+    PR: Clone + Transform<T=T>,
     T: CoordFloat + FloatConst,
 {
-    /// Returns a Resample for a given precision
-    pub fn new(
-        projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-        delta2: T,
-    ) -> Resample<PR, T> {
-        Self {
-            projection_transform,
-            delta2,
+    delta2: T,
+    p_ep: PhantomData<EP>,
+    p_sc: PhantomData<SC>,
+    p_su: PhantomData<SU>,
+    projection_transform: Compose<T,PR, ScaleTranslateRotate<T>>,
+    state: STATE,
+}
 
+impl<EP, PR, SC, SU, STATE, T> Resampler for Resample<EP, PR, SC, SU, STATE, T>
+where
+    EP: Clone + Debug,
+    PR: Clone + Debug + Transform<T=T>,
+    SU: Clone + Debug,
+    SC: Clone + Debug,
+    //STATE: ConnectionState,
+    STATE: Clone + Debug,
+    T: CoordFloat + FloatConst,
+{
+}
+
+impl<EP, PR, SC, SU, T> Connectable for Resample<EP, PR, SC, SU, Unconnected, T>
+where
+    EP: Default + Stream<EP = EP, T = T>,
+    SU: Clone + Debug,
+    SC: Stream<EP = EP, T = T>,
+    PR: ProjectionRawBase<T>,
+    T: CoordFloat + FloatConst,
+{
+    type Output = Resample<EP, PR, SC, SU, Connected<SC, T>, T>;
+    type SC = SC;
+    fn connect(self, sink: SC) -> Resample<EP, PR, SC, SU, Connected<SC, T>, T> {
+        let state = Connected {
+            sink,
             // first point
             lambda00: T::nan(),
             x00: T::nan(),
@@ -103,86 +153,120 @@ where
             four: T::from(4_f64).unwrap(),
             frac_1_2: T::from(0.5_f64).unwrap(),
             frac_1_3: T::from(1_f64 / 3_f64).unwrap(),
+        };
+        Resample {
+            delta2: self.delta2,
+            p_ep: self.p_ep,
+            p_sc: self.p_sc,
+            p_su: self.p_su,
+            projection_transform: self.projection_transform,
+            state,
+        }
+    }
+}
+impl<'a, EP, PR, SC, SU, T> Resample<EP, PR, SC, SU, Unconnected, T>
+where
+PR: Clone + Transform<T=T>,
+    T: CoordFloat + FloatConst,
+{
+    /// Returns a Resample for a given precision
+    pub fn new(
+        projection_transform: Compose<T,PR, ScaleTranslateRotate<T>>,
+        delta2: T,
+    ) -> Resample<EP, PR, SC, SU, Unconnected, T> {
+        Self {
+            delta2,
+            p_ep: PhantomData::<EP>,
+            p_sc: PhantomData::<SC>,
+            p_su: PhantomData::<SU>,
+            projection_transform,
+            state: Unconnected,
         }
     }
 }
 
-impl<'a, EP, PR, SINK, T> StreamNode<EP, Resample<PR, T>, SINK, T>
+impl<'a, EP, PR, SC, SU, T> Resample<EP, PR, SC, SU, Connected<SC, T>, T>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    PR: ProjectionRaw<T>,
-    SINK: Stream<EP = EP, T = T>,
+    EP: Stream<EP = EP, T = T> + Default,
+    PR: ProjectionRawBase<T>,
+    SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        let pt = self.raw.projection_transform.transform(p);
-        self.sink.point(&pt, m);
+        let pt = self.projection_transform.transform(p);
+        self.state.sink.point(&pt, m);
     }
 
     fn line_start_default(&mut self) {
-        self.raw.x0 = T::nan();
-        self.raw.point_state = PointState::Line;
-        self.sink.line_start();
+        // let state = self.state;
+        self.state.x0 = T::nan();
+        self.state.point_state = PointState::Line;
+        self.state.sink.line_start();
     }
 
     fn line_end_default(&mut self) {
-        self.raw.point_state = PointState::Default;
-        self.sink.line_end();
+        // let state = self.state;
+        self.state.point_state = PointState::Default;
+        self.state.sink.line_end();
     }
 
     fn ring_start(&mut self) {
+        // let state = self.state;
         self.line_start_default();
-        self.raw.point_state = PointState::Ring;
-        self.raw.use_line_end = false;
+        self.state.point_state = PointState::Ring;
+        self.state.use_line_end = false;
     }
 
     fn ring_point(&mut self, p: &Coordinate<T>) {
-        self.raw.lambda00 = p.x;
+        // let state = self.state;
+        self.state.lambda00 = p.x;
         self.line_point(&Coordinate {
-            x: self.raw.lambda00,
+            x: self.state.lambda00,
             y: p.y,
         });
-        self.raw.x00 = self.raw.x0;
-        self.raw.y00 = self.raw.y0;
-        self.raw.a00 = self.raw.a0;
-        self.raw.b00 = self.raw.b0;
-        self.raw.c00 = self.raw.c0;
-        self.raw.point_state = PointState::Line;
+        self.state.x00 = self.state.x0;
+        self.state.y00 = self.state.y0;
+        self.state.a00 = self.state.a0;
+        self.state.b00 = self.state.b0;
+        self.state.c00 = self.state.c0;
+        self.state.point_state = PointState::Line;
     }
 
     fn ring_end(&mut self) {
-        {
-            self.resample_line_to(
-                self.raw.x0,
-                self.raw.y0,
-                self.raw.lambda0,
-                self.raw.a0,
-                self.raw.b0,
-                self.raw.c0,
-                self.raw.x00,
-                self.raw.y00,
-                self.raw.lambda00,
-                self.raw.a00,
-                self.raw.b00,
-                self.raw.c00,
-                MAXDEPTH,
-            );
-        }
-        self.raw.use_line_end = true;
+        // let state = self.state;
 
-        self.sink.line_end();
+        self.resample_line_to(
+            self.state.x0,
+            self.state.y0,
+            self.state.lambda0,
+            self.state.a0,
+            self.state.b0,
+            self.state.c0,
+            self.state.x00,
+            self.state.y00,
+            self.state.lambda00,
+            self.state.a00,
+            self.state.b00,
+            self.state.c00,
+            MAXDEPTH,
+        );
+
+        self.state.use_line_end = true;
+
+        self.state.sink.line_end();
     }
 
     fn line_point(&mut self, p: &Coordinate<T>) {
+        // let state = self.state;
         let c = cartesian(p);
-        let p_transformed = self.raw.projection_transform.transform(p);
+        let p_transformed = self.projection_transform.transform(p);
         self.resample_line_to(
-            self.raw.x0,
-            self.raw.y0,
-            self.raw.lambda0,
-            self.raw.a0,
-            self.raw.b0,
-            self.raw.c0,
+            self.state.x0,
+            self.state.y0,
+            self.state.lambda0,
+            self.state.a0,
+            self.state.b0,
+            self.state.c0,
             p_transformed.x,
             p_transformed.y,
             p.x,
@@ -191,16 +275,16 @@ where
             c[2],
             MAXDEPTH,
         );
-        self.raw.x0 = p_transformed.x;
-        self.raw.y0 = p_transformed.y;
-        self.raw.lambda0 = p.x;
-        self.raw.a0 = c[0];
-        self.raw.b0 = c[1];
-        self.raw.c0 = c[2];
-        self.sink.point(
+        self.state.x0 = p_transformed.x;
+        self.state.y0 = p_transformed.y;
+        self.state.lambda0 = p.x;
+        self.state.a0 = c[0];
+        self.state.b0 = c[1];
+        self.state.c0 = c[2];
+        self.state.sink.point(
             &Coordinate {
-                x: self.raw.x0,
-                y: self.raw.y0,
+                x: self.state.x0,
+                y: self.state.y0,
             },
             None,
         );
@@ -224,11 +308,12 @@ where
         c1: T,
         depth_p: u8,
     ) {
+        // let state = self.state;
         let mut depth = depth_p;
         let dx = x1 - x0;
         let dy = y1 - y0;
         let d2 = dx * dx + dy * dy;
-        if d2 > self.raw.four * self.raw.delta2 {
+        if d2 > self.state.four * self.delta2 {
             depth -= 1_u8;
             if depth > 0_u8 {
                 let mut a = a0 + a1;
@@ -237,15 +322,15 @@ where
                 let m = (a * a + b * b + c * c).sqrt();
                 c = c / m;
                 let phi2 = asin(c);
-                let lambda2 = if (c.abs() - T::one()).abs() < self.raw.epsilon
-                    || (lambda0 - lambda1).abs() < self.raw.epsilon
+                let lambda2 = if (c.abs() - T::one()).abs() < self.state.epsilon
+                    || (lambda0 - lambda1).abs() < self.state.epsilon
                 {
-                    (lambda0 + lambda1) * self.raw.frac_1_2
+                    (lambda0 + lambda1) * self.state.frac_1_2
                 } else {
                     b.atan2(a)
                 };
 
-                let p = self.raw.projection_transform.transform(&Coordinate {
+                let p = self.projection_transform.transform(&Coordinate {
                     x: lambda2,
                     y: phi2,
                 });
@@ -259,17 +344,17 @@ where
                 // perpendicular projected distance
                 // midpoint close to an end
                 // angular distance
-                if dz * dz / d2 > self.raw.delta2
-                    || ((dx * dx2 + dy * dy2) / d2 - self.raw.frac_1_2).abs() > self.raw.frac_1_3
-                    || a0 * a1 + b0 * b1 + c0 * c1 < self.raw.cos_min_distance
+                if dz * dz / d2 > self.delta2
+                    || ((dx * dx2 + dy * dy2) / d2 - self.state.frac_1_2).abs()
+                        > self.state.frac_1_3
+                    || a0 * a1 + b0 * b1 + c0 * c1 < self.state.cos_min_distance
                 {
                     a = a / m;
                     b = b / m;
                     self.resample_line_to(
                         x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth,
                     );
-
-                    self.sink.point(&Coordinate { x: x2, y: y2 }, None);
+                    self.state.sink.point(&Coordinate { x: x2, y: y2 }, None);
 
                     self.resample_line_to(
                         x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth,
@@ -280,35 +365,38 @@ where
     }
 }
 
-impl<'a, EP, PR, SINK, T> Stream for StreamNode<EP, Resample<PR, T>, SINK, T>
+impl<'a, EP, PR, SC, SU, T> Stream for Resample<EP, PR, SC, SU, Connected<SC, T>, T>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    PR: ProjectionRaw<T>,
-    SINK: Stream<EP = EP, T = T>,
+    EP: Stream<EP = EP, T = T> + Default,
+    PR: ProjectionRawBase<T>,
+    SU: Clone + Debug,
+    SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type EP = EP;
     type T = T;
 
     #[inline]
-    fn get_endpoint(self) -> Self::EP {
-        self.sink.get_endpoint()
+    fn get_endpoint(&mut self) -> &mut Self::EP {
+        self.state.sink.get_endpoint()
     }
     fn sphere(&mut self) {
-        self.sink.sphere();
+        self.state.sink.sphere();
     }
     fn polygon_start(&mut self) {
-        self.sink.polygon_start();
-        self.raw.use_line_start = false;
+        // let state = self.state;
+        self.state.sink.polygon_start();
+        self.state.use_line_start = false;
     }
     fn polygon_end(&mut self) {
-        self.sink.polygon_end();
-        self.raw.use_line_start = true;
+        // let state = self.state;
+        self.state.sink.polygon_end();
+        self.state.use_line_start = true;
     }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        match self.raw.point_state {
+        match self.state.point_state {
             PointState::Default => {
                 self.point_default(p, m);
             }
@@ -323,7 +411,8 @@ where
 
     #[inline]
     fn line_start(&mut self) {
-        if self.raw.use_line_start {
+        // let state = self.state;
+        if self.state.use_line_start {
             self.line_start_default();
         } else {
             self.ring_start();
@@ -332,7 +421,8 @@ where
 
     #[inline]
     fn line_end(&mut self) {
-        if self.raw.use_line_end {
+        // let state = self.state;
+        if self.state.use_line_end {
             self.line_end_default();
         } else {
             self.ring_end();

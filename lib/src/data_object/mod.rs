@@ -37,7 +37,10 @@ pub struct FeatureCollection<T: CoordFloat>(pub Vec<Features<T>>);
 
 /// Signular version of the struct.
 #[derive(Clone, Debug)]
-pub struct Feature<T: CoordFloat> {
+pub struct Feature<T>
+where
+    T: CoordFloat,
+{
     /// A collection of feature properties.
     pub properties: Vec<FeatureProperty<T>>,
     /// The associated gemetry function.
@@ -46,7 +49,10 @@ pub struct Feature<T: CoordFloat> {
 
 /// Pluralization of the struct,
 #[derive(Clone, Debug)]
-pub struct Features<T: CoordFloat> {
+pub struct Features<T>
+where
+    T: CoordFloat,
+{
     /// A collection of feature properties.
     pub properties: Vec<FeatureProperty<T>>,
     /// A collections of associated geometries.

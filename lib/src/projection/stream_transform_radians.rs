@@ -4,17 +4,35 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::stream::Connected;
 use crate::stream::Stream;
-
-use super::StreamNode;
+use crate::stream::Unconnected;
 
 /// TODO: Can this be optimised away?
-#[derive(Clone, Default, Debug)]
-pub struct StreamTransformRadians {}
+#[derive(Clone, Debug)]
+pub struct StreamTransformRadians<STATE: Clone>(pub STATE);
 
-impl<EP, T, SINK> Stream for StreamNode<EP, StreamTransformRadians, SINK, T>
+impl StreamTransformRadians<Unconnected> {
+    pub fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
+    where
+        EP: Stream<EP = EP, T = T> + Default,
+        SINK: Clone + Stream<EP = EP, T = T>,
+        // SINK: Clone,
+    {
+        StreamTransformRadians(Connected { sink })
+    }
+}
+/// Not auto deriving here - it does not makes sense to provide
+/// a default for the connected state.
+impl Default for StreamTransformRadians<Unconnected> {
+    fn default() -> Self {
+        Self(Unconnected)
+    }
+}
+
+impl<EP, T, SINK> Stream for StreamTransformRadians<Connected<SINK>>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
+    // EP: Stream<EP = EP, T = T> + Default,
     SINK: Stream<EP = EP, T = T>,
     T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -22,13 +40,13 @@ where
     type T = T;
 
     #[inline]
-    fn get_endpoint(self) -> Self::EP {
-        self.sink.get_endpoint()
+    fn get_endpoint(&mut self) -> &mut Self::EP {
+        self.0.sink.get_endpoint()
     }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        self.sink.point(
+        self.0.sink.point(
             &Coordinate {
                 x: p.x.to_radians(),
                 y: p.y.to_radians(),
@@ -39,24 +57,24 @@ where
 
     #[inline]
     fn sphere(&mut self) {
-        self.sink.sphere();
+        self.0.sink.sphere();
     }
 
     #[inline]
     fn line_start(&mut self) {
-        self.sink.line_start();
+        self.0.sink.line_start();
     }
 
     #[inline]
     fn line_end(&mut self) {
-        self.sink.line_end();
+        self.0.sink.line_end();
     }
     #[inline]
     fn polygon_start(&mut self) {
-        self.sink.polygon_start()
+        self.0.sink.polygon_start()
     }
     #[inline]
     fn polygon_end(&mut self) {
-        self.sink.polygon_end();
+        self.0.sink.polygon_end();
     }
 }

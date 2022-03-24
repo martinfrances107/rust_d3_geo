@@ -24,7 +24,7 @@
   "author": "Martin Frances <martinfrances107@hotmail.com>",
   "license": "(MIT OR Apache-2.0)",
   "bugs": {
-    "url": "https://github.com/martinfrances107/rust_d3_geo/issues",
+    "url": "https://github.com/martinfrances107/rust_d3_geo/issues"
   },
   "homepage": "https://github.com/martinfrances107/rust_d3_geo/#readme",
   "dependencies": {

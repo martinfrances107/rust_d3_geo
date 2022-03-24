@@ -5,81 +5,137 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-use crate::projection::stream_node::StreamNode;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
-use crate::projection::Raw as ProjectionRaw;
+use crate::projection::ProjectionRawBase;
+use crate::stream::Connectable;
+use crate::stream::Connected;
+//use crate::stream::ConnectionState;
 use crate::stream::Stream;
+use crate::stream::Unconnected;
 use crate::Transform;
+
+use super::Resampler;
 
 /// Resample None.
 ///
 /// A pass-through module, when no resampling is required.
-#[derive(Clone, Copy, Debug)]
-pub struct None<PR, T>
+#[derive(Clone, Debug)]
+pub struct None<EP, PR, SC, SU, STATE, T>
 where
-    PR: ProjectionRaw<T>,
     T: CoordFloat + FloatConst,
+    PR: Clone + Transform<T = T>,
+    //STATE: ConnectionState,
 {
-    pt: PhantomData<T>,
+    state: STATE,
+    p_ep: PhantomData<EP>,
+    p_sc: PhantomData<SC>,
+    p_su: PhantomData<SU>,
+    p_t: PhantomData<T>,
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
 }
 
-impl<PR, T> None<PR, T>
+impl<EP, PR, SC, SU, T> None<EP, PR, SC, SU, Unconnected, T>
 where
+    // EP: Stream<EP = EP, T = T> + Default,
     T: CoordFloat + FloatConst,
-    PR: ProjectionRaw<T>,
+    // PR: ProjectionRawBase<T>,
+    PR: Clone + Transform<T = T>,
+    // SC: Stream<EP = EP, T = T>,
 {
     /// Constructor: Resample None.
-    pub fn new(projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>) -> None<PR, T> {
+    pub fn new(
+        projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+    ) -> None<EP, PR, SC, SU, Unconnected, T> {
         Self {
-            pt: PhantomData::<T>,
+            state: Unconnected,
+            p_ep: PhantomData::<EP>,
+            p_sc: PhantomData::<SC>,
+            p_su: PhantomData::<SU>,
+            p_t: PhantomData::<T>,
             projection_transform,
         }
     }
 }
 
-impl<EP, PR, SINK, T> Stream for StreamNode<EP, None<PR, T>, SINK, T>
+impl<EP, PR, SC, SU, STATE, T> Resampler for None<EP, PR, SC, SU, STATE, T>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    PR: ProjectionRaw<T>,
-    SINK: Stream<EP = EP, T = T>,
+    EP: Clone + Debug,
+    PR: Clone + Debug,
+    SC: Clone + Debug,
+    SU: Clone + Debug,
+    //STATE: ConnectionState,
+    STATE: Clone + Debug,
+    PR: Transform<T = T>,
+    T: CoordFloat + FloatConst,
+{
+}
+
+impl<EP, PR, SC, SU, T> Connectable for None<EP, PR, SC, SU, Unconnected, T>
+where
+    // EP: Stream<EP = EP, T = T> + Default,
+    // PR: ProjectionRawBase<T>,
+    // SC: Stream<EP = EP, T = T>,
+    PR: Clone + Transform<T = T>,
+    T: CoordFloat + FloatConst,
+{
+    type Output = None<EP, PR, SC, SU, Connected<SC>, T>;
+    type SC = SC;
+    fn connect(self, sink: SC) -> Self::Output {
+        None::<EP, PR, SC, SU, Connected<SC>, T> {
+            state: Connected { sink },
+            p_ep: PhantomData::<EP>,
+            p_sc: PhantomData::<SC>,
+            p_su: PhantomData::<SU>,
+            p_t: self.p_t,
+
+            projection_transform: self.projection_transform,
+        }
+    }
+}
+
+impl<EP, PR, SC, SU, T> Stream for None<EP, PR, SC, SU, Connected<SC>, T>
+where
+    EP: Stream<EP = EP, T = T> + Default,
+    PR: ProjectionRawBase<T>,
+    SU: Clone + Debug,
+    SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type EP = EP;
     type T = T;
 
     #[inline]
-    fn get_endpoint(self) -> Self::EP {
-        self.sink.get_endpoint()
+    fn get_endpoint(&mut self) -> &mut Self::EP {
+        self.state.sink.get_endpoint()
     }
 
     #[inline]
     fn sphere(&mut self) {
-        self.sink.sphere();
+        self.state.sink.sphere();
     }
 
     #[inline]
     fn line_start(&mut self) {
-        self.sink.line_start();
+        self.state.sink.line_start();
     }
 
     #[inline]
     fn line_end(&mut self) {
-        self.sink.line_end();
+        self.state.sink.line_end();
     }
 
     #[inline]
     fn polygon_start(&mut self) {
-        self.sink.polygon_start();
+        self.state.sink.polygon_start();
     }
 
     #[inline]
     fn polygon_end(&mut self) {
-        self.sink.polygon_end();
+        self.state.sink.polygon_end();
     }
 
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        let t = &self.raw.projection_transform.transform(p);
-        self.sink.point(t, m);
+        let t = &self.projection_transform.transform(p);
+        self.state.sink.point(t, m);
     }
 }

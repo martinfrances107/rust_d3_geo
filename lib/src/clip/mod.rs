@@ -7,9 +7,16 @@ pub mod buffer;
 /// Related the specifics of circle clipping.
 pub mod circle;
 /// Holds the clip struct.
-pub mod clip_node;
+pub mod clip;
+/// Factory method for generating a line from a given sink.
+mod clip_line;
 /// Helper function.
 pub mod compare_intersection;
+/// Factory takes in complex definition and output a stream pipeline node element.
+// pub mod stream_node_clip_factory;
+/// Generate post clip stream node.
+// pub mod stream_node_post_clip_factory;
+mod intersection;
 /// The state of the line segments??
 pub mod line_elem;
 /// Rectangle helper function.
@@ -18,21 +25,20 @@ mod line_fn;
 pub mod post_clip;
 /// A stream pipeline stage.
 pub mod post_clip_node;
+
 pub(crate) mod rectangle;
 /// Clipping break line into segments which can lasted be reconnected together.
 pub(crate) mod rejoin;
-/// Factory takes in complex definition and output a stream pipeline node element.
-pub mod stream_node_clip_factory;
-/// Generate post clip stream node.
-pub mod stream_node_post_clip_factory;
-
-mod intersection;
 
 use std::fmt::Debug;
-use std::rc::Rc;
+
 
 use geo::CoordFloat;
 use geo::Coordinate;
+// use num_traits::FloatConst;
+// use crate::stream::Stream;
+
+use self::buffer::Buffer;
 
 /// Clean
 ///
@@ -42,6 +48,19 @@ use geo::Coordinate;
 pub trait Clean {
     /// Returns the clean state.
     fn clean(&self) -> u8;
+}
+
+/// Can make stream connections to a specfic EP.
+/// A buffer.
+pub trait Bufferable {
+    /// f64 or f32
+    type T;
+    /// Line type: Antimeridian or Clip.
+    type Output;
+    /// conected buffer as the next pipeline stage.
+    fn buffer(self, buffer: Buffer<Self::T>) -> Self::Output
+    where
+        Self::T: CoordFloat;
 }
 
 /// Clip Stream Node - helper function.
@@ -60,11 +79,38 @@ where
 // pub(crate) type PostClipFn<DRAIN> = Rc<dyn Fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>>;
 
 /// Resample Stream Node - helper function.
-pub(crate) type InterpolateFn<STREAM, T> =
-    Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut STREAM)>;
+// pub(crate) type InterpolateFn<STREAM, T> =
+//     Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut STREAM)>;
+
+/// Antimeridian or Circle interpolator.
+pub trait Interpolator: Clone + Debug {
+    /// Final pipeline stage.
+    type EP;
+    /// Next stage of pipeline.
+    type Stream;
+    /// f64 or f32.
+    type T;
+    /// Stream modifier.
+    fn interpolate(
+        &mut self,
+        to: Option<Coordinate<Self::T>>,
+        from: Option<Coordinate<Self::T>>,
+        direction: Self::T,
+        stream: &mut Self::Stream,
+    ) where
+        Self::T: CoordFloat;
+}
 
 /// Part of the clipping definition.
-pub trait Line: Clean + Clone + Debug {}
+pub trait LineUnconnected: Clone + Debug {
+    /// Sink -- When Unconnected.
+    type SU;
+}
 
-/// Line, part of the clipping function.
-pub(crate) trait LineFactory {}
+/// When connected a line can return a mutable sink.
+pub trait LineConnected: Clean + Clone + Debug {
+    /// Sink -- When Connected.
+    type SC;
+    /// Connects the next object in the pipeline.
+    fn get_sink(&mut self) -> &mut Self::SC;
+}

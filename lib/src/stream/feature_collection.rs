@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -17,7 +15,7 @@ where
 
     fn to_stream<EP, SD>(&self, stream: &mut SD)
     where
-        EP: Clone + Debug + Stream<EP = EP, T = T>,
+        EP: Stream<EP = EP, T = T> + Default,
         SD: Stream<EP = EP, T = T>,
     {
         for f in &self.0 {

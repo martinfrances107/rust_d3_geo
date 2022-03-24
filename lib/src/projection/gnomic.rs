@@ -1,3 +1,13 @@
+use crate::clip::clip::Clip;
+use crate::identity::Identity;
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
+// use crate::projection::builder::template::ResampleNoClipC;
+// use crate::projection::builder::template::ResampleNoClipU;
+use crate::projection::builder::template::ResampleNoneNoClipU;
+use crate::projection::resampler::none::None;
+use crate::projection::ClipAngleSet;
+use crate::projection::Scale;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -6,80 +16,158 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_factory_antimeridian;
-use crate::clip::circle::line::Line;
-use crate::clip::circle::pv::PV;
+use crate::clip::antimeridian::gen_clip_antimeridian;
+// use crate::projection::builder::template::DefaultCircle;
+use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
+use crate::clip::circle::line::Line as LineCircle;
+use crate::clip::circle::pv::PV as PVCircle;
+
+use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+
+use crate::clip::buffer::Buffer;
+// use crate::clip::clip::Clip;
+use crate::projection::builder::template::ResampleNoneNoClipC;
+// use crate::projection::builder::template::ResampleNoneNoClipU;
+use crate::stream::Connected;
 use crate::stream::Stream;
+use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
 use super::builder::Builder;
-use super::ClipAngle;
-use super::Raw;
-use super::Scale;
+// use super::ProjectionRawCommon;
+
+use super::ProjectionRawBase;
+use super::builder::template::ResampleNoClipC;
+use super::builder::template::ResampleNoClipU;
 
 /// Gnomic
 #[derive(Clone, Debug)]
 pub struct Gnomic<DRAIN, T>
-where
-    T: CoordFloat + FloatConst,
+// where
+//     T: CoordFloat + FloatConst,
 {
-    p_drain: PhantomData<DRAIN>,
-    p_t: PhantomData<T>,
+	p_drain: PhantomData<DRAIN>,
+	p_t: PhantomData<T>,
 }
 
 impl<DRAIN, T> Default for Gnomic<DRAIN, T>
-where
-    T: CoordFloat + FloatConst,
+// where
+//     T: CoordFloat + FloatConst,
 {
-    fn default() -> Self {
-        Gnomic {
-            p_drain: PhantomData::<DRAIN>,
-            p_t: PhantomData::<T>,
-        }
-    }
+	fn default() -> Self {
+		Gnomic {
+			p_drain: PhantomData::<DRAIN>,
+			p_t: PhantomData::<T>,
+		}
+	}
 }
 
-impl<DRAIN, T> Raw<T> for Gnomic<DRAIN, T>
+// impl<DRAIN, T> ProjectionRawCommon<T> for Gnomic<DRAIN, T>
+// where
+//     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+//     // RESAMPLER: Resampler,
+//     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+// {
+// }
+
+impl<DRAIN, T> ProjectionRawBase<T> for Gnomic<DRAIN, T>
 where
-    DRAIN: Stream<EP = DRAIN, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Builder = Builder<DRAIN, Line<T>, Gnomic<DRAIN, T>, PV<T>, T>;
+	type Builder = Builder<
+		DRAIN,
+		InterpolateCircle<
+			DRAIN,
+			ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
+			T,
+		>,
+		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineCircle<
+			DRAIN,
+			ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
+			Connected<
+				ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
+			>,
+			T,
+		>,
+		LineCircle<DRAIN, ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>, Unconnected, T>,
+		Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>,
+		Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>,
+		Gnomic<DRAIN, T>,
+		PVCircle<T>,
+		ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
+		ResampleNoClipU<DRAIN, Gnomic<DRAIN, T>, T>,
+		T,
+	>;
 
-    /// f64 or f32.
-    type T = T;
+	/// f64 or f32.
+	type T = T;
 
-    fn builder() -> Self::Builder
-    where
-        DRAIN: Stream<EP = DRAIN, T = T>,
-    {
-        Builder::new(gen_clip_factory_antimeridian(), Gnomic::default())
-            .scale(T::from(144.049_f64).unwrap())
-            .clip_angle(T::from(60_f64).unwrap())
-    }
+	fn builder() -> Self::Builder
+	where
+		DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	{
+		let clip: Clip<
+			DRAIN,
+			InterpolateAntimeridian<DRAIN, ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>, T>,
+			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+			LineAntimeridian<
+				DRAIN,
+				ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
+				Connected<ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>>,
+				T,
+			>,
+			LineAntimeridian<
+				DRAIN,
+				ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
+				Unconnected,
+				T,
+			>,
+			Gnomic<DRAIN, T>,
+			PVAntimeridian<T>,
+			ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
+			ResampleNoClipU<DRAIN, Gnomic<DRAIN, T>, T>,
+			Unconnected,
+			T,
+		> = gen_clip_antimeridian::<
+			DRAIN,
+			NoClipC<DRAIN, T>,
+			NoClipU<DRAIN, T>,
+			Gnomic<DRAIN, T>,
+			ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
+			ResampleNoClipU<DRAIN, Gnomic<DRAIN, T>, T>,
+			T,
+		>();
+		Builder::new(clip, Gnomic::default())
+			.scale(T::from(144.049_f64).unwrap())
+			.clip_angle(T::from(60_f64).unwrap())
+	}
 }
 
 impl<DRAIN, EP, T> Transform for Gnomic<DRAIN, T>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    DRAIN: Stream<EP = EP, T = T>,
-    T: CoordFloat + FloatConst,
+	DRAIN: Stream<EP = EP, T = T>,
+	EP: Stream<EP = EP, T = T> + Default,
+	T: CoordFloat + FloatConst,
 {
-    /// f64 or f32.
-    type T = T;
+	/// f64 or f32.
+	type T = T;
 
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let cy = p.y.cos();
-        let k = p.x.cos() * cy;
-        Coordinate {
-            x: cy * p.x.sin() / k,
-            y: p.y.sin() / k,
-        }
-    }
+	fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+		let cy = p.y.cos();
+		let k = p.x.cos() * cy;
+		Coordinate {
+			x: cy * p.x.sin() / k,
+			y: p.y.sin() / k,
+		}
+	}
 
-    #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        azimuthal_invert(p, T::atan)
-    }
+	#[inline]
+	fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+		azimuthal_invert(p, T::atan)
+	}
 }

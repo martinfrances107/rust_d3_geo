@@ -15,7 +15,7 @@ where
 {
     if x > T::one() {
         T::zero()
-    } else if x < T::from(-1).unwrap() {
+    } else if x < T::from(-1_f64).unwrap() {
         T::PI()
     } else {
         x.acos()
@@ -31,7 +31,7 @@ where
 {
     if x > T::one() {
         T::FRAC_PI_2()
-    } else if x < T::from(-1).unwrap() {
+    } else if x < T::from(-1_f64).unwrap() {
         -T::FRAC_PI_2()
     } else {
         x.asin()

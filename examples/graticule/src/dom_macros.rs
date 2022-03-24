@@ -11,10 +11,10 @@
 
 // #[macro_export]
 // macro_rules! append_text_child {
-//     ($document:ident, $el:ident, $text:expr ) => {
-//         let text = $document.create_text_node($text);
-//         $el.append_child(&text)?;
-//     };
+// 	($document:ident, $el:ident, $text:expr ) => {
+// 		let text = $document.create_text_node($text);
+// 		$el.append_child(&text)?;
+// 	};
 // }
 
 // #[macro_export]

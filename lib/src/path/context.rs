@@ -22,8 +22,8 @@ enum LineState {
 /// Path Context.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Context<'a, T>
-where
-    T: CoordFloat,
+// where
+//     T: CoordFloat,
 {
     line: LineState,
     point: PointState,
@@ -87,7 +87,7 @@ where
     type EP = Self;
 
     #[inline]
-    fn get_endpoint(self) -> Self {
+    fn get_endpoint(&mut self) -> &mut Self {
         self
     }
 

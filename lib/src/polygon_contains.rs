@@ -80,12 +80,12 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
                 normalize_in_place(&mut arc);
                 let mut intersection = cross(&normal, &arc);
                 normalize_in_place(&mut intersection);
-                let phi_arc: T;
-                if antimeridian ^ (delta >= T::zero()) {
-                    phi_arc = -asin(intersection[2]);
+                // let phi_arc: T;
+                let phi_arc: T = if antimeridian ^ (delta >= T::zero()) {
+                    -asin(intersection[2])
                 } else {
-                    phi_arc = asin(intersection[2]);
-                }
+                     asin(intersection[2])
+                };
 
                 if phi > phi_arc || phi == phi_arc && (arc[0] != T::zero() || arc[1] != T::zero()) {
                     match antimeridian ^ (delta >= T::zero()) {
@@ -113,12 +113,11 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
     // Second, count the (signed) number of times a segment crosses a lambda
     // from the point to the South pole.  If it is zero, then the point is the
     // same side as the South pole.
-    let is_winding_odd;
-    if winding & 1 == 1 {
-        is_winding_odd = true;
+    let is_winding_odd =   if winding & 1 == 1 {
+         true
     } else {
-        is_winding_odd = false;
-    }
+         false
+    };
 
     let epsilon = T::from(EPSILON).unwrap();
     let epsilon2 = T::from(EPSILON2).unwrap();

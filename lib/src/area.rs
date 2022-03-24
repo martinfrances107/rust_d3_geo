@@ -11,8 +11,8 @@ use crate::stream::Streamable;
 /// but this is true of the Javascript.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Area<T>
-where
-    T: CoordFloat,
+// where
+//     T: CoordFloat,
 {
     lambda00: T,
     phi00: T,
@@ -143,34 +143,34 @@ where
     type T = T;
     type EP = Self;
 
-    fn get_endpoint(self) -> Self {
+    fn get_endpoint<'a>(&mut self) -> &mut Self {
         self
     }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         match self.point_fn {
-            PointFn::Noop => {}
             PointFn::AreaFirst => {
                 self.area_point_first(p, m);
             }
             PointFn::Area => self.area_point(p, m),
+            PointFn::Noop => {}
         }
     }
 
     #[inline]
     fn line_start(&mut self) {
         match self.line_start_fn {
-            LineStartFn::Noop => {}
             LineStartFn::AreaRingStart => self.area_ring_start(),
+            LineStartFn::Noop => {}
         }
     }
 
     #[inline]
     fn line_end(&mut self) {
         match self.line_end_fn {
-            LineEndFn::Noop => {}
             LineEndFn::AreaRingEnd => self.area_ring_end(),
+            LineEndFn::Noop => {}
         }
     }
     fn polygon_start(&mut self) {

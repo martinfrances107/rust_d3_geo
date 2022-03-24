@@ -9,8 +9,8 @@ use crate::clip::PointVisible;
 /// Antimeridian PV ( Point Visible).
 #[derive(Clone, Debug)]
 pub struct PV<T>
-where
-    T: AbsDiffEq<Epsilon = T> + CoordFloat,
+// where
+//     T: AbsDiffEq<Epsilon = T> + CoordFloat,
 {
     pd: PhantomData<T>,
 }

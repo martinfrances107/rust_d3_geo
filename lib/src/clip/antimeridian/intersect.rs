@@ -15,3 +15,4 @@ pub fn intersect<T: CoordFloat>(lambda0: T, phi0: T, lambda1: T, phi1: T) -> T {
         false => (phi0 + phi1) / T::from(2).unwrap(),
     }
 }
+

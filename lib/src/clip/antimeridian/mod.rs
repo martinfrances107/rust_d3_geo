@@ -6,34 +6,65 @@ pub mod line;
 pub mod pv;
 
 mod intersect;
-
-use std::fmt::Debug;
-
+// mod template;
+use crate::clip::Buffer;
+use crate::stream::Connected;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::stream_node_clip_factory::StreamNodeClipFactory;
-use crate::projection::Raw as ProjectionRaw;
-use crate::stream::Stream;
 
-use interpolate::generate as gen_interpolate;
-use line::Line as LineAntimeridian;
-use pv::PV as PVAntimeridian;
+use crate::projection::ProjectionRawBase;
+use crate::stream::Unconnected;
+use line::Line;
+use pv::PV;
 
-/// Returns a clip factory setup for antimeridian clipping.
-pub fn gen_clip_factory_antimeridian<EP, PR, SINK, T>(
-) -> StreamNodeClipFactory<EP, LineAntimeridian<T>, PR, PVAntimeridian<T>, SINK, T>
+use super::clip::Clip;
+use interpolate::Interpolate;
+// // use template::Default;
+
+// None<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Connected<NoClipC<DRAIN, T>>, T>
+
+/// Returns a clip setup for antimeridian clipping.
+pub fn gen_clip_antimeridian<DRAIN, PCNC, PCNU, PR, RC, RU, T>() -> Clip<
+    DRAIN,
+    Interpolate<DRAIN, RC, T>,
+    Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+    Line<DRAIN, RC, Connected<RC>, T>,
+    Line<DRAIN, RC, Unconnected, T>,
+    PR,
+    PV<T>,
+    RC,
+    RU,
+    Unconnected,
+    T,
+>
 where
-    EP: Clone + Debug + Stream<EP = EP, T = T>,
-    PR: ProjectionRaw<T>,
-    SINK: Stream<EP = EP, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    // DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    PR: ProjectionRawBase<T>,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    StreamNodeClipFactory::new(
-        PVAntimeridian::default(),
-        LineAntimeridian::default(),
-        gen_interpolate::<EP, SINK, T>(),
+    let interpolate = Interpolate::default();
+    let clip_line: Line<DRAIN, RC, Unconnected, T> = Line::default();
+    let pv = PV::default();
+    let out: Clip<
+        DRAIN,
+        Interpolate<DRAIN, RC, T>,
+        Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+        Line<DRAIN, RC, Connected<RC>, T>,
+        Line<DRAIN, RC, Unconnected, T>,
+        PR,
+        PV<T>,
+        RC,
+        RU,
+        Unconnected,
+        T,
+    > = Clip::new(
+        interpolate,
+        clip_line,
+        pv,
         [-T::PI(), -T::FRAC_PI_2()].into(),
-    )
+    );
+
+    out
 }
