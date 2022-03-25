@@ -22,7 +22,6 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-
 use self::template::ResampleNoClipC;
 use self::template::ResampleNoClipU;
 
@@ -35,7 +34,6 @@ use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 use super::Angle;
 use super::ProjectionRawBase;
 use super::Projector;
-
 
 mod angle;
 mod angle_mercator;
@@ -64,7 +62,7 @@ pub trait PostClipNode: Clone + Debug {}
 /// Projection builder.
 ///
 /// Holds State related to the construction of the a projection.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     DRAIN: Clone + Debug,
@@ -119,7 +117,6 @@ where
 
     /// Projection pipeline stage
     pub resample: RU,
-
 }
 
 impl<DRAIN, PR, PV, T>
@@ -127,13 +124,8 @@ impl<DRAIN, PR, PV, T>
         DRAIN,
         Interpolate<DRAIN, ResampleNoClipC<DRAIN, PR, T>, T>,
         Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-        Line<
-        DRAIN,
-            ResampleNoClipC<DRAIN, PR, T>,
-            Connected<ResampleNoClipC<DRAIN, PR, T>>,
-            T,
-        >,
-    Line<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
+        Line<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
+        Line<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
         NoClipC<DRAIN, T>,
         NoClipU<DRAIN, T>,
         PR,
@@ -155,12 +147,7 @@ where
             DRAIN,
             Interpolate<DRAIN, ResampleNoClipC<DRAIN, PR, T>, T>,
             Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-            Line<
-                DRAIN,
-                ResampleNoClipC<DRAIN, PR, T>,
-                Connected<ResampleNoClipC<DRAIN, PR, T>>,
-                T,
-            >,
+            Line<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
             Line<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
             PR,
             PV,
@@ -182,7 +169,7 @@ where
         let delta_lambda = T::zero();
         let delta_phi = T::zero();
         let delta_gamma = T::zero();
-        let delta2 =  T::from(0.5_f64).unwrap();
+        let delta2 = T::from(0.5_f64).unwrap();
         let center = generate_str(&k, &T::zero(), &T::zero(), &sx, &sy, &alpha)
             .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
         let str = generate_str(&k, &(x - center.x), &(y - center.y), &sx, &sy, &alpha);
