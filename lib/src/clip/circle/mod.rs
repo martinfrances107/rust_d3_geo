@@ -44,9 +44,9 @@ where
 	DRAIN: Clone + Debug,
 	PCNC: Clone + Debug,
 	PCNU: Clone + Debug,
+	PR: Clone,
 	RC: Clone + Debug,
 	RU: Clone + Debug,
-	PR: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	let cr = radius.cos();

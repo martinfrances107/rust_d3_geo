@@ -7,7 +7,6 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
@@ -22,21 +21,36 @@ use crate::Transform;
 use super::Builder;
 // use super::PostClipNode;
 
-impl<DRAIN,  PR, PCNC, PCNU, T> PrecisionBypass
+impl<DRAIN, PR, PCNC, PCNU, T> PrecisionBypass
 	for Builder<
 		DRAIN,
-		InterpolateAntimeridian<DRAIN, Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC,T>, T>, T>,
+		InterpolateAntimeridian<
+			DRAIN,
+			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+			T,
+		>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<DRAIN, Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>, Connected<Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>, T>,
-		LineAntimeridian<DRAIN, Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
+		LineAntimeridian<
+			DRAIN,
+			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+			Connected<Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>,
+			T,
+		>,
+		LineAntimeridian<
+			DRAIN,
+			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+			Unconnected,
+			T,
+		>,
 		PCNC,
 		PCNU,
 		PR,
 		PVAntimeridian<T>,
 		Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-		T>  where
-		PCNU: Clone + Debug,
+		T,
+	> where
+	PCNU: Clone + Debug,
 	PCNC: Clone + Debug,
 	DRAIN: Clone + Debug,
 	PR: Transform<T = T>,
@@ -45,9 +59,14 @@ impl<DRAIN,  PR, PCNC, PCNU, T> PrecisionBypass
 	type T = T;
 	type Output = Builder<
 		DRAIN,
-		InterpolateAntimeridian<DRAIN,None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, T>,
+		InterpolateAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, Connected<None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>, T>,
+		LineAntimeridian<
+			DRAIN,
+			None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
+			Connected<None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>,
+			T,
+		>,
 		LineAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, Unconnected, T>,
 		PCNC,
 		PCNU,
@@ -62,30 +81,13 @@ impl<DRAIN,  PR, PCNC, PCNU, T> PrecisionBypass
 	/// delta is related to clip angle.
 	fn precision_bypass(self) -> Self::Output {
 		let pv = PVAntimeridian::default();
-		let interpolator: InterpolateAntimeridian::<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, T> = InterpolateAntimeridian::default();
+		let interpolator = InterpolateAntimeridian::default();
 		let line = LineAntimeridian::default();
 		let resample = None::new(self.project_transform.clone());
 		// Architecture Discussion:
 		// CLIP is generic over <.. RC, RU,..>,
 		// So a change in the resample type causes rebuilding of clip.
-		let clip: Clip<
-			DRAIN,
-			InterpolateAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, T>,
-			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, Connected<None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>, T>,
-			LineAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, Unconnected, T>,
-			PR,
-			PVAntimeridian<T>,
-			None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-			None<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-			Unconnected,
-			T,
-		> = Clip::new(
-			interpolator,
-			line,
-			pv,
-			self.clip.start
-		);
+		let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
 		// Copy - Mutate.
 		let out = Self::Output {

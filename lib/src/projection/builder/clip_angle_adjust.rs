@@ -9,7 +9,6 @@ use crate::clip::circle::gen_clip_circle;
 use crate::clip::circle::interpolate::Interpolate;
 use crate::clip::circle::line::Line;
 use crate::clip::circle::pv::PV;
-use crate::clip::clip::Clip;
 use crate::projection::ClipAngleAdjust;
 use crate::stream::Connectable;
 use crate::stream::Connected;
@@ -25,12 +24,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 		DRAIN,
 		Interpolate<DRAIN, RC, T>,
 		Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		Line<
-			DRAIN,
-			RC,
-			Connected<RC>,
-			T,
-		>,
+		Line<DRAIN, RC, Connected<RC>, T>,
 		Line<DRAIN, RC, Unconnected, T>,
 		PCNC,
 		PCNU,
@@ -46,37 +40,16 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 	PR: ProjectionRawBase<T>,
 	RC: Clone + Debug,
 	RU: Clone + Debug,
-
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 
-	fn clip_angle_adjust( mut self, angle: T) -> Self {
+	fn clip_angle_adjust(mut self, angle: T) -> Self {
 		if angle == T::zero() {
 			panic!("must call clip_angle_reset() instead");
 		}
 		let theta = angle.to_radians();
-		let clip : Clip<
-			DRAIN,
-			Interpolate<DRAIN, RC, T>,
-			Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			Line<DRAIN, RC, Connected<RC>, T>,
-			Line<DRAIN, RC, Unconnected, T>,
-			PR,
-			PV<T>,
-			RC,
-			RU,
-			Unconnected,
-			T,
-		> = gen_clip_circle::<
-			DRAIN,
-			PCNC,
-			PCNU,
-			PR,
-			RC,
-			RU,
-			T,
-		>(theta);
+		let clip = gen_clip_circle::<DRAIN, PCNC, PCNU, PR, RC, RU, T>(theta);
 
 		self.clip = clip;
 		self.theta = Some(angle);

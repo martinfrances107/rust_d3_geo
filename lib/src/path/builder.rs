@@ -12,7 +12,6 @@ use web_sys::CanvasRenderingContext2d;
 use crate::path::context::Context;
 use crate::projection::projector::Projector;
 use crate::projection::ProjectionRawBase;
-use crate::Transform;
 
 use super::context::Context as PathContext;
 use super::string::String;
@@ -28,16 +27,15 @@ where
     LU: Clone,
     CS: Clone,
     LB: Clone,
-    RC: Clone,
-    PR: Clone + Transform<T = T>,
-    RU: Clone,
+    PR: Clone,
     PCNU: Clone,
+    RC: Clone,
+    RU: Clone,
     PV: Clone,
     T: CoordFloat + FloatConst,
 {
     pr: T,
     p_i: PhantomData<I>,
-
     p_lb: PhantomData<LB>,
     p_lc: PhantomData<LC>,
     p_lu: PhantomData<LU>,
@@ -47,7 +45,6 @@ where
     p_pr: PhantomData<PR>,
     p_rc: PhantomData<RC>,
     p_ru: PhantomData<RU>,
-    // p_t: PhantomData<T>,
     context_stream: CS,
     projection: Option<Projector<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>>,
 }
@@ -60,15 +57,15 @@ where
     LU: Clone,
     CS: Clone,
     LB: Clone,
-    RC: Clone,
-    PR: Clone + Transform<T = T>,
-    RU: Clone,
     PCNU: Clone,
+    PR: Clone,
     PV: Clone,
+    RC: Clone,
+    RU: Clone,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
-    pub fn new(context_stream: CS) -> Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> {
+    pub fn new(context_stream: CS) -> Self {
         Self {
             context_stream,
             p_i: PhantomData::<I>,
@@ -95,13 +92,11 @@ where
     LC: Clone,
     LU: Clone,
     LB: Clone,
-    RC: Clone,
-    PR: Clone + Transform<T = T>,
-    RU: Clone,
     PCNU: Clone,
+    PR: Clone,
     PV: Clone,
-    LB: Clone,
-    PR: Clone + Transform<T = T>,
+    RC: Clone,
+    RU: Clone,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the state within the builder.
@@ -110,10 +105,7 @@ where
     // }
 
     /// Programe the builder with the context.
-    pub fn context(
-        self,
-        context: &'a CanvasRenderingContext2d,
-    ) -> Builder<Context<'a, T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> {
+    pub fn context(self, context: &'a CanvasRenderingContext2d) -> Self {
         Builder {
             pr: self.pr,
             p_i: PhantomData::<I>,
@@ -140,18 +132,15 @@ where
     LC: Clone,
     LU: Clone,
     LB: Clone,
-    RC: Clone,
-    PR: Clone + Transform<T = T>,
-    RU: Clone,
     PCNU: Clone,
+    PR: Clone,
+    RC: Clone,
+    RU: Clone,
     PV: Clone,
-    LB: Clone,
-    PR: Clone + Transform<T = T>,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
-    pub fn context_pathstring() -> Builder<String<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    {
+    pub fn context_pathstring() -> Self {
         let context_stream = String::default();
 
         Builder::new(context_stream)
@@ -161,19 +150,16 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> PointRadiusTrait
     for Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    CS: PointRadiusTrait<T = T>,
+    CS: Clone + PointRadiusTrait<T = T>,
     I: Clone,
     LC: Clone,
     LU: Clone,
-    CS: Clone,
     LB: Clone,
-    RC: Clone,
-    PR: Clone + Transform<T = T>,
-    RU: Clone,
     PCNU: Clone,
+    PR: Clone,
     PV: Clone,
-    LB: Clone,
-    PR: Clone + Transform<T = T>,
+    RC: Clone,
+    RU: Clone,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// f64 or f32.
@@ -191,18 +177,16 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
+    CS: Clone,
     I: Clone,
     LC: Clone,
     LU: Clone,
-    CS: Clone,
     LB: Clone,
-    RC: Clone,
-    PR: Clone + Transform<T = T>,
-    RU: Clone,
     PCNU: Clone,
+    PR: Clone,
     PV: Clone,
-    LB: Clone,
-    PR: Clone + Transform<T = T>,
+    RC: Clone,
+    RU: Clone,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// From the progammed state generate a new projection.

@@ -28,8 +28,6 @@ use std::fmt::Debug;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-// use num_traits::FloatConst;
-// use crate::stream::Stream;
 
 use self::buffer::Buffer;
 

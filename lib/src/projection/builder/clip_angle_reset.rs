@@ -13,7 +13,6 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::projection::builder::Clip;
 use crate::projection::ClipAngleReset;
 use crate::stream::Connectable;
 use crate::stream::Connected;
@@ -66,19 +65,7 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 	// Set the internal clip angle (theta) to null and return a builder
 	// which uses the antimeridian clipping stratergy.
 	fn clip_angle_reset(self) -> Self::Output {
-		let clip: Clip<
-			DRAIN,
-			InterpolateAntimeridian<DRAIN, RC, T>,
-			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<DRAIN, RC, Connected<RC>, T>,
-			LineAntimeridian<DRAIN, RC, Unconnected, T>,
-			PR,
-			PVAntimeridian<T>,
-			RC,
-			RU,
-			Unconnected,
-			T,
-		> = gen_clip_antimeridian::<DRAIN, PCNC, PCNU, PR, RC, RU, T>();
+		let clip = gen_clip_antimeridian::<DRAIN, PCNC, PCNU, PR, RC, RU, T>();
 
 		// update only theta and preclip_factory.
 		let out = Self::Output {

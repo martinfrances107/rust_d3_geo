@@ -13,7 +13,6 @@ use crate::clip::circle::gen_clip_circle;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::projection::builder::Clip;
 use crate::projection::ClipAngleSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
@@ -118,19 +117,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		}
 
 		let theta = angle.to_radians();
-		let clip: Clip<
-			DRAIN,
-			InterpolateCircle<DRAIN, RC, T>,
-			LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineCircle<DRAIN, RC, Connected<RC>, T>,
-			LineCircle<DRAIN, RC, Unconnected, T>,
-			PR,
-			PVCircle<T>,
-			RC,
-			RU,
-			Unconnected,
-			T,
-		> = gen_clip_circle::<DRAIN, PCNC, PCNU, PR, RC, RU, T>(theta);
+		let clip = gen_clip_circle::<DRAIN, PCNC, PCNU, PR, RC, RU, T>(theta);
 		// Copy, Mutate - updating only theta and preclip_factory.
 		let out = Self::Output {
 			p_lb: PhantomData::<LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
