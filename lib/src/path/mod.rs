@@ -87,7 +87,7 @@ where
     RC: Clone,
     RU: Clone,
     PCNU: Clone,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     PV: Clone,
     T: CoordFloat + FloatConst,
 {

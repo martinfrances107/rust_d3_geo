@@ -151,7 +151,7 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
     LB: Clone,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Takes a line and cuts into visible segments. Return values used for polygon

@@ -41,7 +41,7 @@ where
     LC: Clone,
     LU: Clone,
     PCNU: Clone,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     PV: Clone,
     RC: Clone,
     RU: Clone,
