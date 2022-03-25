@@ -7,14 +7,10 @@ use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::clip::clip::Clip;
 use crate::identity::Identity;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;

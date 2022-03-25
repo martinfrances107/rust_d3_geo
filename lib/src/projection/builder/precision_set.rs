@@ -87,33 +87,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		// Architecture Discussion:
 		// CLIP is generic over <.. RC, RU,..>,
 		// So a change in the resample type causes rebuilding of clip.
-		let clip: Clip<
-			DRAIN,
-			InterpolateAntimeridian<
-				DRAIN,
-				Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-				T,
-			>,
-			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<
-				DRAIN,
-				Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-				Connected<Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>,
-				T,
-			>,
-			LineAntimeridian<
-				DRAIN,
-				Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-				Unconnected,
-				T,
-			>,
-			PR,
-			PVAntimeridian<T>,
-			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-			Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-			Unconnected,
-			T,
-		> = Clip::new(interpolator, line, pv, self.clip.start);
+		let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
 		// Copy - Mutate.
 		let out = Self::Output {

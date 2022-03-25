@@ -102,7 +102,6 @@ where
     PV: Clone,
     LB: Clone,
     PR: Clone + Transform<T = T>,
-    // PV: PointVisible<T = T>,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the state within the builder.

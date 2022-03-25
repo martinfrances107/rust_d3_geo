@@ -11,7 +11,6 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
-use crate::clip::clip::Clip;
 use crate::identity::Identity;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;

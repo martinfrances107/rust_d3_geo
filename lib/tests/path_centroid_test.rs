@@ -28,7 +28,6 @@ mod path_centroid_test {
     use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
     use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
     use rust_d3_geo::clip::buffer::Buffer;
-    use rust_d3_geo::clip::clip::Clip;
     use rust_d3_geo::identity::Identity;
     use rust_d3_geo::in_delta::in_delta_point;
     use rust_d3_geo::path::centroid::Centroid;
