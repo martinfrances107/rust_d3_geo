@@ -10,8 +10,8 @@ use pretty_assertions::assert_eq;
 use rust_d3_geo::circle::generator::Generator as CircleGenerator;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
-// use rust_d3_geo::projection::Raw;
-use rust_d3_geo::projection::{Scale, ProjectionRawBase};
+use rust_d3_geo::projection::ProjectionRawBase;
+use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
 
 // /// This benchmark is based on examples/rings

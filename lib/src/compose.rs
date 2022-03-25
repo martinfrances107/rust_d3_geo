@@ -10,8 +10,6 @@ use crate::Transform;
 pub struct Compose<T, TA, TB>
 where
     T: CoordFloat,
-    // TA: Transform<T = T>,
-    // TB: Transform<T = T>,
 {
     p_t: PhantomData<T>,
     pub a: TA,
@@ -21,8 +19,6 @@ where
 impl<T, TA, TB> Compose<T, TA, TB>
 where
     T: CoordFloat,
-    TA: Transform<T = T>,
-    TB: Transform<T = T>,
 {
     #[inline]
     pub fn new(a: TA, b: TB) -> Compose<T, TA, TB> {

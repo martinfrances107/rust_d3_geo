@@ -8,8 +8,6 @@ pub mod buffer;
 pub mod circle;
 /// Holds the clip struct.
 pub mod clip;
-/// Factory method for generating a line from a given sink.
-mod clip_line;
 /// Helper function.
 pub mod compare_intersection;
 /// Factory takes in complex definition and output a stream pipeline node element.
@@ -31,7 +29,6 @@ pub(crate) mod rectangle;
 pub(crate) mod rejoin;
 
 use std::fmt::Debug;
-
 
 use geo::CoordFloat;
 use geo::Coordinate;
