@@ -1,16 +1,13 @@
-use crate::clip::antimeridian::interpolate::Interpolate;
-use crate::clip::antimeridian::line::Line;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
-// use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::interpolate::Interpolate;
+use crate::clip::antimeridian::line::Line;
 use crate::clip::buffer::Buffer;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
@@ -25,6 +22,9 @@ use crate::Transform;
 use self::template::ResampleNoClipC;
 use self::template::ResampleNoClipU;
 
+use super::builder::template::NoClipC;
+use super::builder::template::NoClipU;
+use super::projector::Projector;
 use super::resampler::none::None as ResampleNone;
 use super::resampler::resample::Connected as ConnectedResample;
 use super::resampler::resample::Resample;
@@ -33,7 +33,6 @@ use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 use super::Angle;
 use super::ProjectionRawBase;
-use super::Projector;
 
 mod angle;
 mod angle_mercator;

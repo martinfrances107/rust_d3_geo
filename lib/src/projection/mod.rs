@@ -9,13 +9,11 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
+use crate::projection::projector::Projector;
+use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::stream::Streamable;
 use crate::Transform;
-
-use projector::Projector;
-
-use self::transform::scale_translate_rotate::ScaleTranslateRotate;
 
 /// The raw projection.
 pub mod azimuthal_equal_area;
@@ -44,8 +42,6 @@ pub mod projection_equal;
 pub mod projector;
 /// Stream node pipeline stage.
 pub mod stream_node;
-/// Generates stream node objects.
-// pub mod stream_node_factory;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
 /// Scale translate and rotate.
@@ -56,17 +52,6 @@ pub mod resampler;
 
 /// Helper functions found measuring the extent, width or height.
 mod fit;
-
-/// Projection type.
-// pub type PostClipFactory<DRAIN, EP, LINE, PR, PV, T> = StreamNodeFactory<
-//     EP,
-//     PostClipNode<EP, DRAIN, T>,
-//     Clip<CS, EP, LINE, PV, ResampleNode<EP, PR, PostClipNode<EP, DRAIN, T>, T>, T>,
-//     T,
-// >;
-
-/// Projection type.
-// pub type Rotate<DRAIN, EP, LINE, PR, PV, T> = RotateRadians<T>;
 
 /// Projection type.
 pub type RotateTransform<PR, T> =
@@ -362,21 +347,9 @@ pub trait Angle {
 
 pub trait ClipAngleReset
 where
-    // <Self as ClipAngle>::Drain: Stream<EP = Self::Drain, T = Self::T> + Default,
-    // <Self as ClipAngle>::PR: ProjectionRaw<Self::T>,
-    // <Self as ClipAngle>::RC: Resampler, RU: Resampler,
-    <Self as ClipAngleReset>::T: AbsDiffEq<Epsilon = Self::T>
-        // + AsPrimitive<<Self as ClipAngle>::T>
-        + CoordFloat
-        + Debug
-        + FloatConst,
+    <Self as ClipAngleReset>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + Debug + FloatConst,
 {
-    /// The Drain.
-    // type Drain;
     type Output;
-    // type Resampler;
-    /// Projection Raw.
-    // type PR;
 
     ///f64 or f32
     type T;
@@ -385,14 +358,7 @@ where
 
 pub trait ClipAngleGet
 where
-    // <Self as ClipAngle>::Drain: Stream<EP = Self::Drain, T = Self::T> + Default,
-    // <Self as ClipAngle>::PR: ProjectionRaw<Self::T>,
-    // <Self as ClipAngle>::RC: Resampler, RU: Resampler,
-    <Self as ClipAngleGet>::T: AbsDiffEq<Epsilon = Self::T>
-        // + AsPrimitive<<Self as ClipAngle>::T>
-        + CoordFloat
-        + Debug
-        + FloatConst,
+    <Self as ClipAngleGet>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + Debug + FloatConst,
 {
     ///f64 or f32
     type T;
@@ -402,10 +368,7 @@ where
 
 /// Selects the clipping strategy
 /// A projection builder sub trait.
-pub trait ClipAngleSet
-// where
-//     <Self as ClipAngleSet>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + Debug + FloatConst,
-{
+pub trait ClipAngleSet {
     type Output;
 
     ///f64 or f32
@@ -422,7 +385,7 @@ pub trait ClipAngleAdjust
 where
     <Self as ClipAngleAdjust>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + Debug + FloatConst,
 {
-    ///f64 or f32
+    /// f64 or f32
     type T;
 
     /// Given the angle, adjust the projection builder

@@ -1,4 +1,3 @@
-// use crate::projection::builder::Buffer;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -7,30 +6,15 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-// use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-// use crate::clip::antimeridian::line::Line as LineAntimeridian;
-// use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::identity::Identity;
 use crate::projection::ClipExtentBounded;
 use crate::Transform;
-
-// use crate::clip::rectangle::Rectangle;
-// use crate::clip::Interpolate;
-// use crate::clip::PointVisible;
-use crate::identity::Identity;
-// use crate::projection::resampler::Resampler;
-// use crate::stream::Connectable;
-// use crate::stream::Connected;
-// use crate::stream::Stream;
-// use crate::stream::Unconnected;
-
-use super::Builder;
-// use super::ClipExtentBounded;
 
 use super::template::ClipC;
 use super::template::ClipU;
 use super::template::NoClipC;
 use super::template::NoClipU;
-// use super::ProjectionRawBase;
+use super::Builder;
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentBounded
 	for Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
@@ -42,12 +26,6 @@ where
 	LU: Clone + Debug,
 	PR: Transform<T = T>,
 	PV: Clone + Debug,
-	// I: Interpolate<T = T>,
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	// PR: ProjectionRawBase<T>,
-	// PV: PointVisible<T = T>,
-	// RC: Resampler + Stream<EP = DRAIN, T = T>,
-	// RU: Resampler + Connectable<Output = RC, SC = Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -64,10 +42,7 @@ where
 	}
 
 	fn clip_extent_clear(self) -> Self::OutputClear {
-		// let p_pcnc = PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>;
 		let out = Self::OutputClear {
-			// p_pcnc,
-			// p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_lb: PhantomData::<LB>,
 			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
@@ -89,7 +64,6 @@ where
 			project_transform: self.project_transform,
 			project_rotate_transform: self.project_rotate_transform,
 			resample: self.resample,
-			// rotate_transform: self.rotate_transform,
 			rotator: self.rotator,
 
 			// Mutate stage

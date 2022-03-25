@@ -150,19 +150,7 @@ where
 
         let resample_node: RC = self.resample.clone().connect(postclip_node);
 
-        let preclip_node: Clip<
-            DRAIN,
-            I,
-            LB,
-            LC,
-            LU,
-            PR,
-            PV,
-            RC,
-            RU,
-            ConnectedClip<DRAIN, LB, LC, LU, RC, RU, T>,
-            T,
-        > = self.clip.clone().connect(resample_node);
+        let preclip_node = self.clip.clone().connect(resample_node);
 
         let rotate_node = self.rotator.clone().connect(preclip_node);
 

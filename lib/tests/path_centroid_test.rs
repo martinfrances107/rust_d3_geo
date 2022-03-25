@@ -85,33 +85,7 @@ mod path_centroid_test {
             + Display
             + FloatConst,
     {
-        let clip: Clip<
-            Centroid<T>,
-            InterpolateAntimeridian<
-                Centroid<T>,
-                ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-                T,
-            >,
-            LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-            LineAntimeridian<
-                Centroid<T>,
-                ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-                Connected<ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>>,
-                T,
-            >,
-            LineAntimeridian<
-                Centroid<T>,
-                ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-                Unconnected,
-                T,
-            >,
-            Equirectangular<Centroid<T>, T>,
-            PVAntimeridian<T>,
-            ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-            ResampleNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-            Unconnected,
-            T,
-        > = gen_clip_antimeridian::<
+        let clip = gen_clip_antimeridian::<
             Centroid<T>,
             NoClipC<Centroid<T>, T>,
             NoClipU<Centroid<T>, T>,

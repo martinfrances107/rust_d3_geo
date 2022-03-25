@@ -175,51 +175,7 @@ mod equirectangular_test {
 	#[test]
 	fn rotate_30_0() {
 		println!("equirectangular(point) returns the expected result");
-		let clip: Clip<
-			StreamDrainStub<f64>,
-			InterpolateAntimeridian<
-				StreamDrainStub<f64>,
-				ResampleNoClipC<
-					StreamDrainStub<f64>,
-					Equirectangular<StreamDrainStub<f64>, f64>,
-					f64,
-				>,
-				f64,
-			>,
-			LineAntimeridian<Buffer<f64>, Buffer<f64>, Connected<Buffer<f64>>, f64>,
-			LineAntimeridian<
-				StreamDrainStub<f64>,
-				ResampleNoClipC<
-					StreamDrainStub<f64>,
-					Equirectangular<StreamDrainStub<f64>, f64>,
-					f64,
-				>,
-				Connected<
-					ResampleNoClipC<
-						StreamDrainStub<f64>,
-						Equirectangular<StreamDrainStub<f64>, f64>,
-						f64,
-					>,
-				>,
-				f64,
-			>,
-			LineAntimeridian<
-				StreamDrainStub<f64>,
-				ResampleNoClipC<
-					StreamDrainStub<f64>,
-					Equirectangular<StreamDrainStub<f64>, f64>,
-					f64,
-				>,
-				Unconnected,
-				f64,
-			>,
-			Equirectangular<StreamDrainStub<f64>, f64>,
-			PVAntimeridian<f64>,
-			ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
-			ResampleNoClipU<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
-			Unconnected,
-			f64,
-		> = gen_clip_antimeridian::<
+		let clip = gen_clip_antimeridian::<
 			StreamDrainStub<f64>,
 			NoClipC<StreamDrainStub<f64>, f64>,
 			NoClipU<StreamDrainStub<f64>, f64>,

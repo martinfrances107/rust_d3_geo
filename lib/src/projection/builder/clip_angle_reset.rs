@@ -44,8 +44,6 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 	PR: ProjectionRawBase<T>,
 	PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
 	PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-	// RC: Resampler + Stream<EP = DRAIN, T = T>,
-	// RU: Resampler + Connectable<Output = RC, SC = PCNC>,
 	RC: Clone + Debug,
 	RU: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

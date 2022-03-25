@@ -75,7 +75,6 @@ fn get_document() -> Result<Document> {
 }
 
 /// Entry point.
-#[wasm_bindgen]
 pub fn run() -> Result<()> {
 	let document = get_document()?;
 	update_canvas(&document)?;
@@ -113,7 +112,8 @@ fn update_canvas(document: &Document) -> Result<()> {
 		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
-		}).clip_angle_adjust(90_f64 + 1e-6);
+		})
+		.clip_angle_adjust(90_f64 + 1e-6);
 
 	let ortho = ortho_builder.build();
 

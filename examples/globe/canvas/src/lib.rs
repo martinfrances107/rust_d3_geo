@@ -61,7 +61,6 @@ extern "C" {
 //     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
 // }
 
-#[cfg(not(tarpaulin_include))]
 fn get_document() -> Result<Document, JsValue> {
     let window = web_sys::window().unwrap();
     Ok(window.document().unwrap())
@@ -69,7 +68,6 @@ fn get_document() -> Result<Document, JsValue> {
 
 /// Entry point
 #[wasm_bindgen(start)]
-#[cfg(not(tarpaulin_include))]
 pub async fn start() -> Result<(), JsValue> {
     let document = get_document()?;
     let window = web_sys::window().expect("Failed to get window");

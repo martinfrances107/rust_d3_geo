@@ -2,7 +2,6 @@ use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
 use rust_d3_geo::projection::ClipAngleAdjust;
-use rust_d3_geo::projection::ClipAngleSet;
 use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::Scale;

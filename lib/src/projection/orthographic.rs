@@ -93,29 +93,7 @@ where
 	type T = T;
 	#[inline]
 	fn builder() -> Self::Builder {
-		let clip: Clip<
-			DRAIN,
-			InterpolateAntimeridian<DRAIN, ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>, T>,
-			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<
-				DRAIN,
-				ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>,
-				Connected<ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>>,
-				T,
-			>,
-			LineAntimeridian<
-				DRAIN,
-				ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>,
-				Unconnected,
-				T,
-			>,
-			Orthographic<DRAIN, T>,
-			PVAntimeridian<T>,
-			ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>,
-			ResampleNoClipU<DRAIN, Orthographic<DRAIN, T>, T>,
-			Unconnected,
-			T,
-		> = gen_clip_antimeridian::<
+		let clip = gen_clip_antimeridian::<
 			DRAIN,
 			NoClipC<DRAIN, T>,
 			NoClipU<DRAIN, T>,

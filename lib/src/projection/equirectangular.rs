@@ -90,29 +90,7 @@ where
 	where
 		DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	{
-		let clip: Clip<
-			DRAIN,
-			InterpolateAntimeridian<DRAIN, ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>, T>,
-			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<
-				DRAIN,
-				ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>,
-				Connected<ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>>,
-				T,
-			>,
-			LineAntimeridian<
-				DRAIN,
-				ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>,
-				Unconnected,
-				T,
-			>,
-			Equirectangular<DRAIN, T>,
-			PVAntimeridian<T>,
-			ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>,
-			ResampleNoClipU<DRAIN, Equirectangular<DRAIN, T>, T>,
-			Unconnected,
-			T,
-		> = gen_clip_antimeridian::<
+		let clip = gen_clip_antimeridian::<
 			DRAIN,
 			NoClipC<DRAIN, T>,
 			NoClipU<DRAIN, T>,

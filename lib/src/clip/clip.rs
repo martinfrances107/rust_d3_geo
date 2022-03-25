@@ -14,10 +14,10 @@ use crate::clip::Clean;
 use crate::clip::LineConnected;
 use crate::path::Result;
 use crate::polygon_contains::polygon_contains;
-use crate::stream::Stream;
-use crate::Transform;
 use crate::stream::Connectable;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
+use crate::Transform;
 
 use super::compare_intersection::gen_compare_intersection;
 use super::line_elem::LineElem;
@@ -27,22 +27,22 @@ use super::Interpolator;
 use super::PointVisible;
 
 #[derive(Clone, Debug)]
-enum PointFn{
+enum PointFn {
     Default,
     Line,
     Ring,
 }
 
 #[derive(Clone, Debug)]
-enum LineStartFn{
+enum LineStartFn {
     Default,
     Ring,
 }
 
 #[derive(Clone, Debug)]
-enum LineEndFn{
+enum LineEndFn {
     Default,
-    Ring
+    Ring,
 }
 
 /// Clip specific state of connection.
@@ -85,23 +85,17 @@ where
             p_sc: PhantomData::<SC>,
             polygon_started: false,
             polygon: Vec::new(),
-            // ring_buffer,
             ring_sink,
             ring: LineString(Vec::new()),
             segments: VecDeque::new(),
-            // sink,
             line_node,
             point_fn: PointFn::Default,
             line_start_fn: LineStartFn::Default,
             line_end_fn: LineEndFn::Default,
-            // use_point_default: true,
-            // use_line_start_default: true,
-            // use_line_end_default: true,
         }
     }
 }
 
-// pub struct Clip<EP, INTERPOLTATE, LINE, PV, SINK, STATE, T>
 /// Takes the unconnected line temple stored in clip_line
 /// and then modifies the ClipState to one than reflects
 /// the connected sink.
@@ -154,20 +148,7 @@ where
     pub start: Coordinate<T>,
 }
 
-impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
-    Clip<
-        EP,
-        I,
-        LB,
-        LC,
-        LU,
-        PR,
-        PV,
-        RC,
-        RU,
-        Unconnected,
-        T,
-    >
+impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
     LB: Clone,
     PR: Clone + Transform<T = T>,
@@ -323,16 +304,12 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Stream
     for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, RU, T>, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     EP: Clone + Debug,
     I: Interpolator<EP = EP, Stream = RC, T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     LU: Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    // PR: ProjectionRawBase<T>,
     PV: PointVisible<T = T>,
-    // RC: Resampler + Stream<EP = EP, T = T>,
-    // RU: Resampler,
     I: Interpolator<EP = EP, Stream = RC, T = T>,
     LC: Clone + Debug,
     LB: Clone + Debug + Stream<EP = Buffer<T>, T = T>,
@@ -353,26 +330,25 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        match self.state.point_fn{
+        match self.state.point_fn {
             PointFn::Default => {
                 self.point_default(p, m);
             }
-            PointFn::Line =>{
-                self.point_line(p,m);
+            PointFn::Line => {
+                self.point_line(p, m);
             }
             PointFn::Ring => {
-                self.point_ring(p,m);
+                self.point_ring(p, m);
             }
         }
-
     }
 
     #[inline]
     fn line_start(&mut self) {
-        match self.state.line_start_fn{
+        match self.state.line_start_fn {
             LineStartFn::Default => {
                 self.line_start_default();
-            },
+            }
             LineStartFn::Ring => {
                 self.ring_start();
             }
@@ -384,10 +360,10 @@ where
         match self.state.line_end_fn {
             LineEndFn::Default => {
                 self.line_end_default();
-            },
+            }
             LineEndFn::Ring => {
                 self.ring_end();
-            },
+            }
         }
     }
 

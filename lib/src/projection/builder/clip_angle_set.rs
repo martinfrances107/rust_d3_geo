@@ -1,6 +1,3 @@
-use crate::projection::builder::Clip;
-// use crate::projection::resampler::resample::Resample;
-
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -13,23 +10,17 @@ use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
 use crate::clip::circle::gen_clip_circle;
-// use crate::projection::resampler::resample::Connected as ResampleConnected;
-use crate::Transform;
-// use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-// use crate::projection::resampler::Resampler;
+use crate::projection::builder::Clip;
 use crate::projection::ClipAngleSet;
-
-// use crate::stream::Connectable;
 use crate::stream::Connected;
-// use crate::stream::Stream;
+use crate::Transform;
+
 use crate::stream::Unconnected;
 
 use super::Builder;
-// use super::PostClipNode;
-// use super::ProjectionRawBase;
 
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 	for Builder<
@@ -46,12 +37,6 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		RU,
 		T,
 	> where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	// PR: ProjectionRawBase<T>,
-	// PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
-	// PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-	// RC: Resampler + Stream<EP = DRAIN, T = T>,
-	// RU: Resampler + Connectable<Output = RC, SC = PCNC>,
 	DRAIN: Clone + Debug,
 	PCNC: Clone + Debug,
 	PCNU: Clone + Debug,
@@ -135,12 +120,6 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		}
 
 		let theta = angle.to_radians();
-
-		// let out = Builder::new(LineCircle::new(theta), self.projection_raw);
-		// let p_pcnc = PhantomData::<PCNC>;
-
-		// Clip<DRAIN, I, LU, PR, PV, RC, RU, Unconnected, T>
-
 		let clip: Clip<
 			DRAIN,
 			InterpolateCircle<DRAIN, RC, T>,
@@ -156,13 +135,10 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		> = gen_clip_circle::<DRAIN, PCNC, PCNU, PR, RC, RU, T>(theta);
 		// Copy, Mutate - updating only theta and preclip_factory.
 		let out = Self::Output {
-			// p_pcnc,
 			p_lb: PhantomData::<LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_pcnc: PhantomData::<PCNC>,
 			projection_raw: self.projection_raw,
-			// rotate_transform: self.rotate_transform,
 			clip,
-			// /// Internal state.
 			delta_lambda: self.delta_lambda,
 			delta_phi: self.delta_phi,
 			delta_gamma: self.delta_gamma,
@@ -192,7 +168,6 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 			postclip: self.postclip,
 
 			resample: self.resample,
-			// rotate: self.rotate,
 			rotator: self.rotator,
 		};
 

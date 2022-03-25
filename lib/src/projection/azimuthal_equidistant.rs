@@ -82,33 +82,7 @@ where
 
 	#[inline]
 	fn builder() -> Self::Builder {
-		let clip: Clip<
-			DRAIN,
-			InterpolateAntimeridian<
-				DRAIN,
-				ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-				T,
-			>,
-			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<
-				DRAIN,
-				ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-				Connected<ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>>,
-				T,
-			>,
-			LineAntimeridian<
-				DRAIN,
-				ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-				Unconnected,
-				T,
-			>,
-			AzimuthalEquiDistant<DRAIN, T>,
-			PVAntimeridian<T>,
-			ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-			ResampleNoClipU<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-			Unconnected,
-			T,
-		> = gen_clip_antimeridian::<
+		let clip = gen_clip_antimeridian::<
 			DRAIN,
 			NoClipC<DRAIN, T>,
 			NoClipU<DRAIN, T>,

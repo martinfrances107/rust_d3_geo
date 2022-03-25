@@ -80,15 +80,10 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	/// delta is related to clip angle.
 	fn precision(self, delta: &T) -> Self::Output {
 		let pv = PVAntimeridian::default();
-		let interpolator: InterpolateAntimeridian<
-			DRAIN,
-			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-			T,
-		> = InterpolateAntimeridian::default();
+		let interpolator = InterpolateAntimeridian::default();
 		let line = LineAntimeridian::default();
 		let delta2 = *delta * *delta;
-		let resample: Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T> =
-			Resample::new(self.project_transform.clone(), delta2);
+		let resample = Resample::new(self.project_transform.clone(), delta2);
 		// Architecture Discussion:
 		// CLIP is generic over <.. RC, RU,..>,
 		// So a change in the resample type causes rebuilding of clip.
