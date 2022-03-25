@@ -32,7 +32,6 @@ impl Default for StreamTransformRadians<Unconnected> {
 
 impl<EP, T, SINK> Stream for StreamTransformRadians<Connected<SINK>>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     SINK: Stream<EP = EP, T = T>,
     T: AsPrimitive<T> + CoordFloat + FloatConst,
 {

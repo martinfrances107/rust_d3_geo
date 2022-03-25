@@ -112,7 +112,6 @@ mod path_string_test {
         object: impl Streamable<T = T>,
     ) -> String
     where
-        // DRAIN: Stream<EP = DRAIN, T = T>,
         T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         PathBuilder::context_pathstring()

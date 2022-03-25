@@ -13,7 +13,6 @@ use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::projection::ProjectionRawBase;
 use crate::stream::Connectable;
 use crate::stream::ConnectedState;
-//use crate::stream::ConnectionState;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
@@ -68,11 +67,9 @@ pub struct Connected<SINK, T> {
 //     SINK: Stream<EP = EP, T = T>,
 // {
 // }
-impl< SINK, T> ConnectedState for Connected<SINK, T>
+impl<SINK, T> ConnectedState for Connected<SINK, T>
 where
     T: Clone + Debug,
-    // EP: Stream<EP = EP, T = T> + Default,
-    // SINK: Stream<EP = EP, T = T>,
     SINK: Clone + Debug,
 {
     // type EP = EP;
@@ -85,26 +82,26 @@ where
 }
 
 /// Resample the stream base on a given precision.
-#[derive(Clone,  Debug)]
+#[derive(Clone, Debug)]
 pub struct Resample<EP, PR, SC, SU, STATE, T>
 where
     //STATE: ConnectionState,
     STATE: Clone + Debug,
-    PR: Clone + Transform<T=T>,
+    PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     delta2: T,
     p_ep: PhantomData<EP>,
     p_sc: PhantomData<SC>,
     p_su: PhantomData<SU>,
-    projection_transform: Compose<T,PR, ScaleTranslateRotate<T>>,
+    projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
     state: STATE,
 }
 
 impl<EP, PR, SC, SU, STATE, T> Resampler for Resample<EP, PR, SC, SU, STATE, T>
 where
     EP: Clone + Debug,
-    PR: Clone + Debug + Transform<T=T>,
+    PR: Clone + Debug + Transform<T = T>,
     SU: Clone + Debug,
     SC: Clone + Debug,
     //STATE: ConnectionState,
@@ -166,12 +163,12 @@ where
 }
 impl<'a, EP, PR, SC, SU, T> Resample<EP, PR, SC, SU, Unconnected, T>
 where
-PR: Clone + Transform<T=T>,
+    PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     /// Returns a Resample for a given precision
     pub fn new(
-        projection_transform: Compose<T,PR, ScaleTranslateRotate<T>>,
+        projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
         delta2: T,
     ) -> Resample<EP, PR, SC, SU, Unconnected, T> {
         Self {

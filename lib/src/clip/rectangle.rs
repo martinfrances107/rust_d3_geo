@@ -18,19 +18,14 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::line_fn::line as clip_line;
 use crate::clip::rejoin::rejoin as clip_rejoin;
 use crate::clip::rejoin::CompareIntersectionsFn;
-// use crate::clip::InterpolateFn;
 use crate::math::EPSILON;
-// use crate::path::Result;
-
 use crate::path::Result;
 use crate::projection::builder::PostClipNode;
 use crate::stream::Connectable;
 use crate::stream::Connected;
-// //use crate::stream::ConnectionState;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 
-// use super::InterpolateFn;
 use super::Interpolator as InterpolatorTrait;
 
 ///A primitive type used to for a PostClipNode pipeline stage.
@@ -121,7 +116,6 @@ where
 }
 impl<EP, SINK, T> Rectangle<EP, SINK, Connected<SINK>, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     SINK: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -254,7 +248,6 @@ where
 
 impl<EP, SINK, T> Rectangle<EP, SINK, Connected<SINK>, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     SINK: Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -422,7 +415,6 @@ where
 
 impl<EP, SC, T> Connectable for Rectangle<EP, SC, Unconnected, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -458,7 +450,6 @@ where
 
             use_line_point: self.use_line_point,
             use_buffer_stream: self.use_buffer_stream,
-            // epsilon: T::from(EPSILON).unwrap(),
         }
     }
 }

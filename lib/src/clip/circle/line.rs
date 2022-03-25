@@ -1,7 +1,3 @@
-// use crate::projection::builder::template::NoClipC;
-// use crate::projection::builder::template::NoClipU;
-// use crate::projection::resampler::none::None;
-// use crate::Transform;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -17,7 +13,6 @@ use crate::clip::Clean;
 use crate::clip::LineConnected;
 use crate::clip::LineUnconnected;
 use crate::math::EPSILON;
-// use crate::projection::builder::template::ResampleNoneNoClipC;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::ConnectedState;
@@ -61,10 +56,8 @@ where
 
 impl<EP, RC, T> Default for Line<EP, RC, Unconnected, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     EP: Clone + Debug,
     RC: Clone + Debug,
-    // PR: Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
@@ -92,7 +85,6 @@ where
 
 impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     EP: Clone + Debug,
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat,
@@ -102,9 +94,7 @@ where
 
 impl<EP, SINK, T> LineConnected for Line<EP, SINK, Connected<SINK>, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     EP: Clone + Debug,
-    // SINK: Stream<EP = EP, T = T>,
     SINK: Clone + Debug,
     T: CoordFloat,
 {
@@ -191,7 +181,6 @@ where
             state: Unconnected,
             p_ep: PhantomData::<EP>,
             p_sc: PhantomData::<SC>,
-            // p_su: PhantomData::<SU>,
             c0: 0,
             clean: 0,
             // JS TODO optimise for this common case
@@ -271,7 +260,6 @@ where
 impl<EP, SINK, T> Clean for Line<EP, SINK, Connected<SINK>, T>
 where
     EP: Clone + Debug,
-    // //STATE: ConnectionState,
     SINK: Clone + Debug,
     T: CoordFloat,
 {
@@ -286,9 +274,7 @@ where
 
 impl<EP, SINK, T> Stream for Line<EP, SINK, Connected<SINK>, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     EP: Clone + Debug,
-    // SINK: Stream<EP = EP, T = T>,
     SINK: Clone + Debug + Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

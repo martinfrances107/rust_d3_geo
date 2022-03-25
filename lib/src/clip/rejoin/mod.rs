@@ -32,7 +32,6 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
     interpolator: &mut INTERPOLATOR,
     stream: &mut SINK,
 ) where
-    // EP: Stream<EP = EP, T = T> + Default,
     SINK: Stream<EP = EP, T = T>,
     INTERPOLATOR: Interpolator<EP = EP, Stream = SINK, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

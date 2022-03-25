@@ -5,7 +5,6 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::stream::Connected;
-//use crate::stream::ConnectionState;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
@@ -41,11 +40,7 @@ impl<T> RotatorRadians<Unconnected, T>
 where
     T: CoordFloat + FloatConst,
 {
-    pub fn connect<SINK>(self, sink: SINK) -> RotatorRadians<Connected<SINK>, T>
-// where
-        // EP: Stream<EP = EP, T = T> + Default,
-        // SINK: Stream<EP = EP, T = T>,
-    {
+    pub fn connect<SINK>(self, sink: SINK) -> RotatorRadians<Connected<SINK>, T> {
         RotatorRadians {
             state: Connected { sink },
             rotate: self.rotate,

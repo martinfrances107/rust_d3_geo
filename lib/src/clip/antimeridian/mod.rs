@@ -13,7 +13,6 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-
 use crate::projection::ProjectionRawBase;
 use crate::stream::Unconnected;
 use line::Line;
@@ -40,7 +39,6 @@ pub fn gen_clip_antimeridian<DRAIN, PCNC, PCNU, PR, RC, RU, T>() -> Clip<
     T,
 >
 where
-    // DRAIN: Stream<EP = DRAIN, T = T> + Default,
     PR: ProjectionRawBase<T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

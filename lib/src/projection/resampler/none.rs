@@ -24,7 +24,6 @@ pub struct None<EP, PR, SC, SU, STATE, T>
 where
     T: CoordFloat + FloatConst,
     PR: Clone + Transform<T = T>,
-    //STATE: ConnectionState,
 {
     state: STATE,
     p_ep: PhantomData<EP>,
@@ -36,11 +35,8 @@ where
 
 impl<EP, PR, SC, SU, T> None<EP, PR, SC, SU, Unconnected, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     T: CoordFloat + FloatConst,
-    // PR: ProjectionRawBase<T>,
     PR: Clone + Transform<T = T>,
-    // SC: Stream<EP = EP, T = T>,
 {
     /// Constructor: Resample None.
     pub fn new(
@@ -72,9 +68,6 @@ where
 
 impl<EP, PR, SC, SU, T> Connectable for None<EP, PR, SC, SU, Unconnected, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
-    // PR: ProjectionRawBase<T>,
-    // SC: Stream<EP = EP, T = T>,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

@@ -1,5 +1,3 @@
-// use crate::projection::builder::template::ResampleNoneNoClipC;
-// use crate::Transform;
 use std::default::Default;
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -14,8 +12,6 @@ use crate::clip::Clean;
 use crate::clip::LineConnected;
 use crate::clip::LineUnconnected;
 use crate::math::EPSILON;
-// use crate::projection::builder::template::ResampleNoneNoClipC;
-// use crate::projection::builder::template::ResampleNoneNoClipU;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::ConnectedState;
@@ -28,7 +24,6 @@ use super::intersect::intersect;
 #[derive(Debug, Copy, Clone)]
 pub struct Line<EP, SC, STATE, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     T: CoordFloat,
 {
     state: STATE,
@@ -44,8 +39,6 @@ where
 // Added when I found it was useful for type corercion.
 impl<EP, RC, T> Default for Line<EP, RC, Unconnected, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
-    // PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     #[inline]
@@ -65,7 +58,6 @@ where
 
 impl<EP, SC, T> Bufferable for Line<EP, SC, Unconnected, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     EP: Clone + Debug,
     T: CoordFloat,
 {
@@ -87,7 +79,6 @@ where
 
 impl<EP, SC, T> Connectable for Line<EP, SC, Unconnected, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     T: CoordFloat,
 {
     type Output = Line<EP, SC, Connected<SC>, T>;
@@ -111,8 +102,6 @@ impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T>
 where
     EP: Clone + Debug,
     SINK: Clone + Debug,
-    // EP: Stream<EP = EP, T = T> + Default,
-    // SINK: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type SU = SINK;
@@ -122,8 +111,6 @@ impl<EP, SINK, T> LineConnected for Line<EP, SINK, Connected<SINK>, T>
 where
     EP: Clone + Debug,
     SINK: Clone + Debug,
-    // EP: Stream<EP = EP, T = T> + Default,
-    // SINK: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type SC = SINK;
@@ -135,7 +122,6 @@ where
 
 impl<EP, SINK, T> Clean for Line<EP, SINK, Connected<SINK>, T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
     T: CoordFloat,
 {
     #[inline]
