@@ -1,27 +1,19 @@
 use std::fmt::Debug;
 
-use crate::Transform;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-// use crate::clip::Bufferable;
-// use crate::clip::Interpolate;
-// use crate::clip::LineUnconnected;
-// use crate::clip::PointVisible;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
-// use crate::projection::ProjectionRawBase;
 use crate::projection::Reflect;
-// use crate::stream::Connectable;
 use crate::stream::Connected;
-// use crate::stream::Stream;
 use crate::stream::Unconnected;
+use crate::Transform;
 
 use super::Builder;
-// use super::PostClipNode;
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 	for Builder<
@@ -47,6 +39,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 	PCNC: Clone + Debug,
 	PCNU: Clone + Debug,
 	PR: Transform<T = T>,
+	PR: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

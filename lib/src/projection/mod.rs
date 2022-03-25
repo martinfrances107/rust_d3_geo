@@ -40,8 +40,7 @@ pub mod mercator_builder;
 pub mod projection_equal;
 /// Projection object.
 pub mod projector;
-/// Stream node pipeline stage.
-pub mod stream_node;
+
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
 /// Scale translate and rotate.
