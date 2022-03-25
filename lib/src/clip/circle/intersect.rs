@@ -17,7 +17,7 @@ pub enum IntersectReturn<T: CoordFloat> {
     One(Option<LineElem<T>>),
     /// Two polar points
     Two([Coordinate<T>; 2]),
-/// TODO can I remove,
+    /// TODO can I remove,
     False,
     /// No Intersection.
     None,
@@ -31,7 +31,6 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     cr: T,
     two: bool,
 ) -> IntersectReturn<T> {
-    // dbg!(a, b, cr, two);
     let pa = cartesian(&a.p);
     let pb = cartesian(&b.p);
 
@@ -80,7 +79,6 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     if !two {
         return IntersectReturn::One(Some(LineElem { p: q, m: None }));
     };
-
 
     // Two intersection points.
     let mut lambda0 = a.p.x;

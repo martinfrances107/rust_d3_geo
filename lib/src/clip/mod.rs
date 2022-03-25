@@ -19,10 +19,6 @@ mod intersection;
 pub mod line_elem;
 /// Rectangle helper function.
 mod line_fn;
-/// A Stream pipeline stage.
-pub mod post_clip;
-/// A stream pipeline stage.
-pub mod post_clip_node;
 
 pub(crate) mod rectangle;
 /// Clipping break line into segments which can lasted be reconnected together.

@@ -324,7 +324,6 @@ where
         }
 
         if v != self.v0 {
-            // dbg!("about to test point2");
             point2 = match intersect(
                 &self.point0.unwrap(),
                 &point1.unwrap(),
