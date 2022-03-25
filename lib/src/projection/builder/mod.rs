@@ -234,7 +234,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     DRAIN: Debug,
     PCNU: Clone + Debug,
-    PR: Transform<T = T>,
+    PR: Clone,
     I: Clone,
     LB: Clone,
     LC: Debug,

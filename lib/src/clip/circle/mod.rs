@@ -11,16 +11,15 @@ pub mod template;
 
 use std::fmt::Debug;
 
-use crate::clip::Buffer;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
-use crate::Transform;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use interpolate::Interpolate;
 use line::Line;
 use num_traits::FloatConst;
+
+use crate::clip::Buffer;
+use crate::stream::Connected;
+use crate::stream::Unconnected;
 use pv::PV;
 
 use super::clip::Clip;

@@ -59,9 +59,7 @@ where
     PR: Clone + Debug,
     SC: Clone + Debug,
     SU: Clone + Debug,
-    //STATE: ConnectionState,
     STATE: Clone + Debug,
-    PR: Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
 }

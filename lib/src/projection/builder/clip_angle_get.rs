@@ -4,7 +4,6 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::Transform;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipAngleGet;
@@ -35,7 +34,8 @@ where
     LU: Clone + Debug,
     PCNC: Clone + Debug,
     PCNU: Clone + Debug,
-    PR: Transform<T = T>,
+    // PR: Transform<T = T>,
+    PR: Clone + Debug,
     PV: Clone + Debug,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

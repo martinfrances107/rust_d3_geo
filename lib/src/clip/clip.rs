@@ -17,7 +17,6 @@ use crate::polygon_contains::polygon_contains;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
-use crate::Transform;
 
 use super::compare_intersection::gen_compare_intersection;
 use super::line_elem::LineElem;

@@ -16,8 +16,6 @@ use crate::clip::circle::pv::PV as PVCircle;
 use crate::projection::builder::Clip;
 use crate::projection::ClipAngleSet;
 use crate::stream::Connected;
-use crate::Transform;
-
 use crate::stream::Unconnected;
 
 use super::Builder;

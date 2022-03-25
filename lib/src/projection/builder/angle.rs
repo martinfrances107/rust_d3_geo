@@ -39,6 +39,7 @@ where
     PCNU: Clone + Debug,
     PCNC: Clone + Debug,
     PR: Transform<T = T>,
+    PR: Clone + Debug,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// f64 or f32.
