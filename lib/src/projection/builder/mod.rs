@@ -71,7 +71,7 @@ where
     LB: Clone,
     LC: Clone + Debug,
     PV: Clone + Debug,
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Debug,
     T: CoordFloat + FloatConst,
 {
     p_pcnc: PhantomData<PCNC>,

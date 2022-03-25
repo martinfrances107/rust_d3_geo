@@ -40,7 +40,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 	DRAIN: Clone + Debug,
 	PCNC: Clone + Debug,
 	PCNU: Clone + Debug,
-	PR: Transform<T = T>,
+	PR: Clone + Debug,
 	RC: Clone + Debug,
 	RU: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

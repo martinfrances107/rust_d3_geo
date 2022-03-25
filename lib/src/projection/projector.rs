@@ -106,7 +106,7 @@ where
     PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
     RU: Clone + Connectable<SC = PCNC, Output = RC> + Debug,
     RC: Clone + Stream<EP = DRAIN, T = T>,
-    PR: Transform<T = T>,
+    PR: Clone + Debug,
     T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to the projection.

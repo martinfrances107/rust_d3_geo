@@ -23,7 +23,7 @@ use super::Resampler;
 pub struct None<EP, PR, SC, SU, STATE, T>
 where
     T: CoordFloat + FloatConst,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
 {
     state: STATE,
     p_ep: PhantomData<EP>,

@@ -123,7 +123,7 @@ where
     <Self as Builder>::PV: Clone,
     <Self as Builder>::RC: Clone,
     <Self as Builder>::RU: Clone,
-    <Self as Builder>::PR: Transform<T = Self::T>,
+    <Self as Builder>::PR: Clone,
     <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;

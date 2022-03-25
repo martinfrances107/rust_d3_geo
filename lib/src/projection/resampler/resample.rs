@@ -85,9 +85,8 @@ where
 #[derive(Clone, Debug)]
 pub struct Resample<EP, PR, SC, SU, STATE, T>
 where
-    //STATE: ConnectionState,
     STATE: Clone + Debug,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     T: CoordFloat + FloatConst,
 {
     delta2: T,

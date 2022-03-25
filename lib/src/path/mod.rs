@@ -137,7 +137,7 @@ where
     RU: Clone + Debug,
     PCNU: Clone,
     PV: Clone,
-    PR: Transform<T = T>,
+    PR: Clone + Debug,
     CS: Stream<EP = CS, T = T> + Result + PartialEq + Default,
     I: Interpolator<EP = CS, Stream = RC, T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
