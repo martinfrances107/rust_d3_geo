@@ -4,13 +4,13 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::Transform;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::Scale;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
+use crate::Transform;
 
 use super::Builder;
 
@@ -32,7 +32,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Scale
 where
     DRAIN: Clone + Debug,
     I: Clone + Debug,
-    LB: Clone,
+    LB: Clone + Debug,
     LC: Clone + Debug,
     LU: Clone + Debug,
     PV: Clone + Debug,
@@ -73,11 +73,11 @@ where
     I: Clone,
     DRAIN: Clone + Debug,
     PCNU: Clone + Debug,
-    LB: Clone,
+    LB: Clone + Debug,
     LC: Clone + Debug,
     LU: Clone + Debug,
     PV: Clone + Debug,
-    PR: Clone + Transform<T = T>,
+    PR: Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
