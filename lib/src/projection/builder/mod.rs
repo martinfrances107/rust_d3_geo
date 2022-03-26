@@ -19,11 +19,10 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use self::template::ResampleNoClipC;
-use self::template::ResampleNoClipU;
-
 use super::builder::template::NoClipC;
 use super::builder::template::NoClipU;
+use super::builder::template::ResampleNoClipC;
+use super::builder::template::ResampleNoClipU;
 use super::projector::Projector;
 use super::resampler::none::None as ResampleNone;
 use super::resampler::resample::Connected as ConnectedResample;
@@ -44,6 +43,7 @@ mod clip_angle_set;
 mod clip_bounded;
 mod clip_extent_set;
 mod fit;
+mod fit_adjust;
 mod precision_adjust;
 mod precision_bypass;
 mod precision_get;
@@ -76,25 +76,25 @@ where
 {
     p_pcnc: PhantomData<PCNC>,
     p_lb: PhantomData<LB>,
-    projection_raw: PR,
-    clip: Clip<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>,
-    lambda: T,
-    phi: T,
-    alpha: T, // post-rotate angle
-    k: T,     // scale
-    sx: T,    // reflectX
-    sy: T,    // reflectY
+    pub projection_raw: PR,
+    pub clip: Clip<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>,
+    pub lambda: T,
+    pub phi: T,
+    pub alpha: T, // post-rotate angle
+    pub k: T,     // scale
+    pub sx: T,    // reflectX
+    pub sy: T,    // reflectY
 
-    x: T,
-    y: T, // translate
+    pub x: T,
+    pub y: T, // translate
 
-    delta_lambda: T,
-    delta_phi: T,
-    delta_gamma: T,
+    pub delta_lambda: T,
+    pub delta_phi: T,
+    pub delta_gamma: T,
 
-    delta2: T, // precision
+    pub delta2: T, // precision
 
-    theta: Option<T>,
+    pub theta: Option<T>,
 
     x0: Option<T>,
     y0: Option<T>,
