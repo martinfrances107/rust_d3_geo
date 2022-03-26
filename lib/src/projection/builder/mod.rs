@@ -65,19 +65,17 @@ pub trait PostClipNode: Clone + Debug {}
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     DRAIN: Clone + Debug,
-    LU: Clone + Debug,
-    PCNU: Clone + Debug,
     I: Clone,
+    LU: Clone + Debug,
     LB: Clone,
     LC: Clone + Debug,
+    PCNU: Clone + Debug,
     PV: Clone + Debug,
     PR: Clone + Debug,
     T: CoordFloat + FloatConst,
 {
     p_pcnc: PhantomData<PCNC>,
-    // TODO: I think I can remove LC.
     p_lb: PhantomData<LB>,
-    // p_lc: PhantomData<LC>,
     projection_raw: PR,
     clip: Clip<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>,
     lambda: T,
@@ -232,18 +230,15 @@ where
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Debug,
-    PCNU: Clone + Debug,
-    PR: Clone,
+    DRAIN: Clone + Debug,
     I: Clone,
     LB: Clone,
-    LC: Debug,
+    LC: Clone + Debug,
     LU: Clone + Debug,
+    PCNU: Clone + Debug,
     PR: Clone + Debug,
-    RC: Clone + Debug,
     PV: Clone + Debug,
-    DRAIN: Clone,
-    LC: Clone,
+    RC: Clone + Debug,
     RU: Clone,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -292,9 +287,9 @@ where
     LB: Clone,
     LU: Clone + Debug,
     LC: Clone + Debug,
-    PV: Clone + Debug,
     PCNC: Clone + Debug,
     PCNU: Clone + Debug,
+    PV: Clone + Debug,
     PR: Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -385,15 +380,14 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
         T,
     >
 where
+    DRAIN: Clone + Debug,
+    I: Clone,
     LB: Clone,
+    LC: Clone + Debug,
+    LU: Clone + Debug,
     PR: Clone + Transform<T = T>,
     PV: Clone + Debug,
-    DRAIN: Clone + Debug,
     PCNU: Clone + Debug,
-    LU: Clone + Debug,
-    LC: Clone + Debug,
-    I: Clone,
-    LU: Clone,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {
