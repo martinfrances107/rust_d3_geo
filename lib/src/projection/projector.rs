@@ -96,17 +96,15 @@ impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Default + PartialEq,
-
     I: Interpolator<EP = DRAIN, Stream = RC, T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
-    I: Clone,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-    PV: Clone + PointVisible<T = T>,
     PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
+    PR: Clone + Debug,
+    PV: Clone + PointVisible<T = T>,
     RU: Clone + Connectable<SC = PCNC, Output = RC> + Debug,
     RC: Clone + Stream<EP = DRAIN, T = T>,
-    PR: Clone + Debug,
     T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to the projection.
@@ -167,21 +165,20 @@ where
 impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Transform
     for Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
+    DRAIN: Clone + Debug,
+    I: Clone + Debug,
     LB: Clone + Debug,
     LC: Clone + Debug,
     LU: Clone + Debug,
     PCNU: Clone + Debug,
     PCNC: Clone + Debug,
-    PR: Clone + Debug,
+    PR: Clone + Debug + Transform<T = T>,
     PV: Clone + Debug,
     RC: Clone + Debug,
     RU: Clone + Debug,
-    I: Clone + Debug,
-    I: Clone + Debug,
-    DRAIN: Clone + Debug,
-    PR: Clone + Debug + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
+    /// f32 or f64
     type T = T;
 
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
