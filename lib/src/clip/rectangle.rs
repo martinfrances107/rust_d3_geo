@@ -12,12 +12,6 @@ use num_traits::Float;
 use num_traits::FloatConst;
 use num_traits::Zero;
 
-use crate::clip::buffer::Buffer as ClipBuffer;
-use crate::clip::intersection::Intersection;
-use crate::clip::line_elem::LineElem;
-use crate::clip::line_fn::line as clip_line;
-use crate::clip::rejoin::rejoin as clip_rejoin;
-use crate::clip::rejoin::CompareIntersectionsFn;
 use crate::math::EPSILON;
 use crate::path::Result;
 use crate::projection::builder::PostClipNode;
@@ -26,13 +20,18 @@ use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 
+use super::buffer::Buffer as ClipBuffer;
+use super::intersection::Intersection;
+use super::line_elem::LineElem;
+use super::line_fn::line as clip_line;
+use super::rejoin::rejoin as clip_rejoin;
+use super::rejoin::CompareIntersectionsFn;
 use super::Interpolator as InterpolatorTrait;
 
 ///A primitive type used to for a PostClipNode pipeline stage.
 #[derive(Clone, Debug)]
 pub struct Rectangle<EP, SINK, STATE, T>
 where
-    //STATE: ConnectionState,
     T: CoordFloat,
 {
     state: STATE,
@@ -263,7 +262,6 @@ where
     }
 
     fn line_point(&mut self, p_in: &Coordinate<T>, m: Option<u8>) {
-        // let state = self.state;
         let mut p = *p_in;
         let v = self.visible(&p);
 
@@ -415,7 +413,7 @@ where
 
 impl<EP, SC, T> Connectable for Rectangle<EP, SC, Unconnected, T>
 where
-    SC: Stream<EP = EP, T = T>,
+    // SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type Output = Rectangle<EP, SC, Connected<SC>, T>;
@@ -488,7 +486,6 @@ where
     }
 
     fn polygon_end(&mut self) {
-        // let state = self.state;
         let start_inside = self.polygon_inside();
         let clean_inside = self.clean && start_inside;
         // Performance if all lengths are known. Can I flatern into a
