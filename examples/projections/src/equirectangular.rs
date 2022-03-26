@@ -12,8 +12,7 @@ use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::equirectangular::Equirectangular;
 use rust_d3_geo::projection::Center;
-// use rust_d3_geo::projection::Raw;
-use rust_d3_geo::projection::Rotate;
+use rust_d3_geo::projection::RotateSet;
 use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
 

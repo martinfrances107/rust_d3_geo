@@ -17,14 +17,12 @@ use wasm_bindgen_futures::JsFuture;
 use web_sys::Document;
 use web_sys::*;
 
-// use rust_d3_geo::clip::circle::line::Line;
-// use rust_d3_geo::clip::circle::pv::PV;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::ProjectionRawBase;
 
-use rust_d3_geo::projection::Rotate;
+use rust_d3_geo::projection::RotateSet;
 use rust_d3_geo::projection::Scale;
 
 use rust_d3_geo::projection::Translate;

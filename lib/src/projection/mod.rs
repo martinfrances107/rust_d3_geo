@@ -259,6 +259,12 @@ pub trait Fit {
 
     /// Similar to fit_size where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
+    fn fit_width(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
+
+    /// Similar to fit_size where the height is automatically chosen from
+    /// the aspect ratio of object and the given constraint on height.
     fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
@@ -266,8 +272,7 @@ pub trait Fit {
 
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
-pub trait FitConvert {
-    type Output;
+pub trait FitAdjust {
     /// f64 or f32.
     type T;
 
@@ -292,11 +297,11 @@ pub trait FitConvert {
     /// @param object A geographic feature supported by d3-geo
     ///   (An extension of GeoJSON feature).
 
-    fn fit_extent_convert(
+    fn fit_extent_adjust(
         self,
         extent: [[Self::T; 2]; 2],
         object: &impl Streamable<T = Self::T>,
-    ) -> Self::Output
+    ) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
@@ -307,23 +312,19 @@ pub trait FitConvert {
     ///
     ///  @param size The size of the extent, specified as an array [width, height].
     ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-    fn fit_size_convert(
-        self,
-        size: [Self::T; 2],
-        object: &impl Streamable<T = Self::T>,
-    ) -> Self::Output
+    fn fit_size_adjust(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on width.
-    fn fit_width_convert(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    fn fit_width_adjust(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_height_convert(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    fn fit_height_adjust(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
@@ -476,12 +477,19 @@ pub trait PrecisionSet {
 
 /// Rotation getter and setters.
 /// A projection builder sub trait.
-pub trait Rotate {
+pub trait RotateGet {
     /// f64 or f32.
     type T;
 
     /// Returns the three-axis rotaation.
     fn get_rotate(&self) -> [Self::T; 3];
+}
+
+/// Rotation getter and setters.
+/// A projection builder sub trait.
+pub trait RotateSet {
+    /// f64 or f32.
+    type T;
 
     ///  Sets the projection’s three-axis rotation to the specified angles, which must be a three-element array of numbers.
     ///

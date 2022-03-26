@@ -13,12 +13,11 @@ mod clipcircle_test {
     use regex::Regex;
 
     use rust_d3_geo::path::builder::Builder as PathBuilder;
+    use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::ClipAngleAdjust;
     use rust_d3_geo::projection::ProjectionRawBase;
-    use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
-    use rust_d3_geo::projection::Rotate;
+    use rust_d3_geo::projection::RotateSet;
     use rust_d3_geo::projection::Translate;
-
 
     #[test]
     fn test_projection_clip_angle_degenerate_polygons() {
@@ -31,11 +30,11 @@ mod clipcircle_test {
         let poly = polygon![(x: -120., y:-30.),(x:0., y:-30.),(x:0., y:-90.),(x:0., y:-30.),(x:120., y:-30.),(x:-120., y:-30.)];
         let d = Geometry::Polygon(poly);
 
-
-		let projector=  AzimuthalEqualArea::builder()
+        let projector = AzimuthalEqualArea::builder()
             .translate(&Coordinate { x: 0.5, y: 0.5 })
             .rotate(&[0_f64, -90_f64, 0_f64])
-			.clip_angle_adjust(170_f64).build();
+            .clip_angle_adjust(170_f64)
+            .build();
 
         let path_builder = PathBuilder::context_pathstring();
 

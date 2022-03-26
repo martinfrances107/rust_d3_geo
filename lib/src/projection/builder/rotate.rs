@@ -7,14 +7,41 @@ use num_traits::FloatConst;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
-use crate::projection::Rotate;
+use crate::projection::RotateGet;
+use crate::projection::RotateSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Rotate
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> RotateGet
+    for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+where
+    DRAIN: Clone + Debug,
+    I: Clone + Debug,
+    LB: Clone,
+    LC: Clone + Debug,
+    LU: Clone + Debug,
+    PCNC: Clone + Debug,
+    PCNU: Clone + Debug,
+    PR: Transform<T = T>,
+    PV: Clone + Debug,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+{
+    type T = T;
+
+    #[inline]
+    fn get_rotate(&self) -> [T; 3] {
+        [
+            self.delta_lambda.to_degrees(),
+            self.delta_phi.to_degrees(),
+            self.delta_lambda.to_degrees(),
+        ]
+    }
+}
+
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> RotateSet
     for Builder<
         DRAIN,
         I,
@@ -35,7 +62,6 @@ where
     LB: Clone,
     LC: Clone + Debug,
     LU: Clone + Debug,
-
     PCNC: Clone + Debug,
     PCNU: Clone + Debug,
     PR: Transform<T = T>,
@@ -43,15 +69,6 @@ where
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
-
-    #[inline]
-    fn get_rotate(&self) -> [T; 3] {
-        [
-            self.delta_lambda.to_degrees(),
-            self.delta_phi.to_degrees(),
-            self.delta_lambda.to_degrees(),
-        ]
-    }
 
     /// Sets the rotation angles as measured in degrees.
     fn rotate(mut self, angles: &[T; 3]) -> Self {
@@ -64,7 +81,7 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Rotate
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> RotateSet
     for Builder<
         DRAIN,
         I,
@@ -92,15 +109,6 @@ where
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
-
-    #[inline]
-    fn get_rotate(&self) -> [T; 3] {
-        [
-            self.delta_lambda.to_degrees(),
-            self.delta_phi.to_degrees(),
-            self.delta_lambda.to_degrees(),
-        ]
-    }
 
     /// Sets the rotation angles as measured in degrees.
     fn rotate(mut self, angles: &[T; 3]) -> Self {

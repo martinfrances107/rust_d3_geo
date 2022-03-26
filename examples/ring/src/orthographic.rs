@@ -9,11 +9,11 @@ use geo::Polygon;
 use wasm_bindgen::JsCast;
 use web_sys::SvgsvgElement;
 
-use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Rotate;
 use rust_d3_geo::circle::generator::Generator as CircleGenerator;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
+use rust_d3_geo::projection::ProjectionRawBase;
+use rust_d3_geo::projection::RotateSet;
 use rust_d3_geo::projection::Translate;
 
 use super::get_document;
@@ -33,7 +33,8 @@ pub fn draw_orthographic() -> Result<()> {
         .translate(&Coordinate {
             x: width / 2_f64,
             y: height / 2_f64,
-        }).rotate(&[0_f64,0_f64,0_f64]);
+        })
+        .rotate(&[0_f64, 0_f64, 0_f64]);
 
     let ortho = ortho_builder.build();
 

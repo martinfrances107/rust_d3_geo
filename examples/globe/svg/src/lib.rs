@@ -25,9 +25,8 @@ mod dom_macros;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::string::String as PathString;
 use rust_d3_geo::projection::orthographic::Orthographic;
-// use rust_d3_geo::projection::Raw;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Rotate;
+use rust_d3_geo::projection::RotateSet;
 
 use rust_d3_geo::projection::Scale;
 use rust_d3_geo::projection::Translate;
