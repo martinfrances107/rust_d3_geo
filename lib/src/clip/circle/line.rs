@@ -293,8 +293,6 @@ where
     }
 
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        // let state = self.state;
-        // let sink = state.get_sink();
         let mut point1 = Some(LineElem { p: *p, m: None });
         let mut point2: Option<LineElem<T>>;
         let v = self.visible(p);

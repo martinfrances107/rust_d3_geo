@@ -158,8 +158,6 @@ where
             -T::PI()
         };
         let delta = (lambda1 - self.lambda0).abs();
-        // let state = self.state;
-        // let sink = self.state.get_sink();
         if (delta - T::PI()).abs() < self.epsilon {
             // Line crosses a pole.
             let f_2 = T::from(2_f64).unwrap();
