@@ -26,7 +26,7 @@ use crate::stream::Unconnected;
 pub type NoClipC<DRAIN, T> = Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>;
 pub type NoClipU<DRAIN, T> = Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>;
 
-pub type ClipC<DRAIN, T> = Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>;
+pub type ClipC<DRAIN, T> = Rectangle<DRAIN, DRAIN, ConnectedResample<DRAIN, T>, T>;
 pub type ClipU<DRAIN, T> = Rectangle<DRAIN, DRAIN, Unconnected, T>;
 
 pub type ResampleClipC<DRAIN, PR, T> =
