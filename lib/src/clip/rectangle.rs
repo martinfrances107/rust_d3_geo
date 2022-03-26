@@ -63,48 +63,48 @@ where
 
     use_line_point: bool,
     use_buffer_stream: bool,
-    // epsilon: T,
+    epsilon: T,
 }
 
-// impl<EP, SINK, T> Rectangle<EP, SINK, Unconnected, T>
-// where
-//     T: 'static + CoordFloat + FloatConst,
-// {
-//     #[inline]
-//     pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<EP, SINK, Unconnected, T> {
-//         Self {
-//             state: Unconnected,
-//             p_ep: PhantomData::<EP>,
-//             p_sink: PhantomData::<SINK>,
-//             buffer_stream: ClipBuffer::<T>::default(),
-//             first: false,
-//             clean: false,
-//             clip_max: T::from(1e9).unwrap(),
-//             clip_min: -T::from(1e9).unwrap(),
+impl<EP, SINK, T> Rectangle<EP, SINK, Unconnected, T>
+where
+    T: 'static + CoordFloat + FloatConst,
+{
+    #[inline]
+    pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<EP, SINK, Unconnected, T> {
+        Self {
+            state: Unconnected,
+            p_ep: PhantomData::<EP>,
+            p_sink: PhantomData::<SINK>,
+            buffer_stream: ClipBuffer::<T>::default(),
+            first: false,
+            clean: false,
+            clip_max: T::from(1e9_f64).unwrap(),
+            clip_min: -T::from(1e9_f64).unwrap(),
 
-//             x0,
-//             y0,
-//             x1,
-//             y1,
+            x0,
+            y0,
+            x1,
+            y1,
 
-//             polygon: None,
-//             segments: None,
+            polygon: None,
+            segments: None,
 
-//             // first point.
-//             x__: T::nan(),
-//             y__: T::nan(),
-//             v__: false,
+            // first point.
+            x__: T::nan(),
+            y__: T::nan(),
+            v__: false,
 
-//             // previous point.
-//             x_: T::nan(),
-//             y_: T::nan(),
-//             v_: false,
-//             use_line_point: false,
-//             use_buffer_stream: false,
-//             epsilon: T::from(EPSILON).unwrap(),
-//         }
-//     }
-// }
+            // previous point.
+            x_: T::nan(),
+            y_: T::nan(),
+            v_: false,
+            use_line_point: false,
+            use_buffer_stream: false,
+            epsilon: T::from(EPSILON).unwrap(),
+        }
+    }
+}
 
 impl<EP, SINK, STATE, T> PostClipNode for Rectangle<EP, SINK, STATE, T>
 where
@@ -450,6 +450,7 @@ where
 
             use_line_point: self.use_line_point,
             use_buffer_stream: self.use_buffer_stream,
+            epsilon: T::from(EPSILON).unwrap(),
         }
     }
 }

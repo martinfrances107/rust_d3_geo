@@ -36,7 +36,7 @@ where
 impl<EP, PR, SC, SU, T> None<EP, PR, SC, SU, Unconnected, T>
 where
     T: CoordFloat + FloatConst,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
 {
     /// Constructor: Resample None.
     pub fn new(
