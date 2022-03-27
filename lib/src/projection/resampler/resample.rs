@@ -160,6 +160,7 @@ where
         }
     }
 }
+
 impl<'a, EP, PR, SC, SU, T> Resample<EP, PR, SC, SU, Unconnected, T>
 where
     PR: Clone + Transform<T = T>,
@@ -194,27 +195,23 @@ where
     }
 
     fn line_start_default(&mut self) {
-        // let state = self.state;
         self.state.x0 = T::nan();
         self.state.point_state = PointState::Line;
         self.state.sink.line_start();
     }
 
     fn line_end_default(&mut self) {
-        // let state = self.state;
         self.state.point_state = PointState::Default;
         self.state.sink.line_end();
     }
 
     fn ring_start(&mut self) {
-        // let state = self.state;
         self.line_start_default();
         self.state.point_state = PointState::Ring;
         self.state.use_line_end = false;
     }
 
     fn ring_point(&mut self, p: &Coordinate<T>) {
-        // let state = self.state;
         self.state.lambda00 = p.x;
         self.line_point(&Coordinate {
             x: self.state.lambda00,
@@ -229,8 +226,6 @@ where
     }
 
     fn ring_end(&mut self) {
-        // let state = self.state;
-
         self.resample_line_to(
             self.state.x0,
             self.state.y0,
@@ -253,7 +248,6 @@ where
     }
 
     fn line_point(&mut self, p: &Coordinate<T>) {
-        // let state = self.state;
         let c = cartesian(p);
         let p_transformed = self.projection_transform.transform(p);
         self.resample_line_to(
@@ -304,7 +298,6 @@ where
         c1: T,
         depth_p: u8,
     ) {
-        // let state = self.state;
         let mut depth = depth_p;
         let dx = x1 - x0;
         let dy = y1 - y0;
@@ -380,12 +373,10 @@ where
         self.state.sink.sphere();
     }
     fn polygon_start(&mut self) {
-        // let state = self.state;
         self.state.sink.polygon_start();
         self.state.use_line_start = false;
     }
     fn polygon_end(&mut self) {
-        // let state = self.state;
         self.state.sink.polygon_end();
         self.state.use_line_start = true;
     }
@@ -407,7 +398,6 @@ where
 
     #[inline]
     fn line_start(&mut self) {
-        // let state = self.state;
         if self.state.use_line_start {
             self.line_start_default();
         } else {
@@ -417,7 +407,6 @@ where
 
     #[inline]
     fn line_end(&mut self) {
-        // let state = self.state;
         if self.state.use_line_end {
             self.line_end_default();
         } else {

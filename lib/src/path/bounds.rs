@@ -52,6 +52,7 @@ impl<T> Stream for Bounds<T>
 where
     T: CoordFloat,
 {
+    /// f632 or f64
     type T = T;
     type EP = Self;
 
