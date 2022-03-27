@@ -26,9 +26,6 @@ use super::intersect::IntersectReturn;
 #[derive(Clone, Debug)]
 pub struct Line<EP, SC, STATE, T>
 where
-    EP: Clone + Debug,
-    SC: Clone + Debug,
-    STATE: Clone + Debug,
     T: CoordFloat,
 {
     /// Connection State.
@@ -56,8 +53,6 @@ where
 
 impl<EP, RC, T> Default for Line<EP, RC, Unconnected, T>
 where
-    EP: Clone + Debug,
-    RC: Clone + Debug,
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
@@ -85,8 +80,6 @@ where
 
 impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T>
 where
-    EP: Clone + Debug,
-    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type SU = SINK;
@@ -94,8 +87,6 @@ where
 
 impl<EP, SINK, T> LineConnected for Line<EP, SINK, Connected<SINK>, T>
 where
-    EP: Clone + Debug,
-    SINK: Clone + Debug,
     T: CoordFloat,
 {
     type SC = SINK;
@@ -108,8 +99,6 @@ where
 
 impl<EP, SC, T> Bufferable for Line<EP, SC, Unconnected, T>
 where
-    EP: Clone + Debug,
-    SC: Clone + Debug,
     T: CoordFloat,
 {
     type T = T;
@@ -135,9 +124,6 @@ where
 
 impl<EP, SC, T> Connectable for Line<EP, SC, Unconnected, T>
 where
-    // SC: Stream<EP = EP, T = T>,
-    EP: Clone + Debug,
-    SC: Clone + Debug,
     T: CoordFloat,
 {
     type SC = SC;
@@ -166,8 +152,6 @@ where
 
 impl<EP, SC, T> Line<EP, SC, Unconnected, T>
 where
-    EP: Clone + Debug,
-    SC: Clone + Debug,
     T: CoordFloat,
 {
     /// Constructor.
@@ -197,9 +181,6 @@ where
 
 impl<EP, SINK, T> Line<EP, SINK, Connected<SINK>, T>
 where
-    // //STATE: ConnectionState,
-    EP: Clone + Debug,
-    SINK: Clone + Debug,
     T: CoordFloat,
 {
     // todo remove this duplicate.
@@ -227,10 +208,7 @@ static CODE_ABOVE: u8 = 8;
 /// code is only available of from connected state.
 impl<EP, SINK, T> Line<EP, SINK, Connected<SINK>, T>
 where
-    EP: Clone + Debug,
-    // //STATE: ConnectionState,
     T: CoordFloat + FloatConst,
-    SINK: Clone + Debug,
 {
     fn code(&self, p: &Coordinate<T>) -> u8 {
         let lambda = p.x;
@@ -259,8 +237,6 @@ where
 /// API clean only availble once connected.
 impl<EP, SINK, T> Clean for Line<EP, SINK, Connected<SINK>, T>
 where
-    EP: Clone + Debug,
-    SINK: Clone + Debug,
     T: CoordFloat,
 {
     /// Rejoin first and last segments if there were intersections and the first
@@ -274,8 +250,7 @@ where
 
 impl<EP, SINK, T> Stream for Line<EP, SINK, Connected<SINK>, T>
 where
-    EP: Clone + Debug,
-    SINK: Clone + Debug + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;

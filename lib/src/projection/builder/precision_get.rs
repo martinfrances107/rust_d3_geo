@@ -9,7 +9,6 @@ use crate::clip::PointVisible;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::PrecisionGet;
-use crate::projection::ProjectionRawBase;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
@@ -44,7 +43,7 @@ where
     LU: Clone + Debug,
     PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
     PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-    PR: ProjectionRawBase<T>,
+    PR: Clone,
     PV: PointVisible<T = T>,
 
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -31,15 +29,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Center
         T,
     >
 where
-    DRAIN: Clone + Debug,
-    I: Clone + Debug,
-    LB: Clone,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PV: Clone + Debug,
-    PCNC: Clone + Debug,
-    PCNU: Clone + Debug,
-    PR: Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
@@ -75,14 +65,6 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Center
         T,
     >
 where
-    INTERPOLATE: Clone,
-    DRAIN: Clone + Debug,
-    PV: Clone,
-    PCNU: Clone + Debug,
-    LB: Clone,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PV: Clone + Debug,
     PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

@@ -9,8 +9,8 @@ use super::str::Str;
 /// a faster variant, just scale translate.
 #[derive(Clone, Copy, Debug)]
 pub enum ScaleTranslateRotate<T>
-where
-    T: CoordFloat + FloatConst,
+// where
+//     T: Copy,
 {
     /// Scale Translate.
     ST(St<T>),

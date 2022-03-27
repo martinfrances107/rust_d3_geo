@@ -17,7 +17,6 @@ use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::Builder;
 use crate::projection::ProjectionRawBase;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -37,7 +36,7 @@ use super::Scale;
 #[derive(Copy, Clone, Debug)]
 pub struct AzimuthalEqualArea<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat + FloatConst,
 {
 	p_drain: PhantomData<DRAIN>,
@@ -53,7 +52,8 @@ where
 
 impl<DRAIN, T> ProjectionRawBase<T> for AzimuthalEqualArea<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<
@@ -151,7 +151,7 @@ where
 
 impl<DRAIN, T> Default for AzimuthalEqualArea<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat + FloatConst,
 {
 	fn default() -> Self {
@@ -164,7 +164,7 @@ where
 
 impl<DRAIN, T> AzimuthalEqualArea<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	// RESAMPLER: Resampler<State = Connected<PCN>, T = T>,
 	T: CoordFloat + FloatConst,
 {
@@ -182,7 +182,7 @@ where
 
 impl<DRAIN, T> Transform for AzimuthalEqualArea<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;

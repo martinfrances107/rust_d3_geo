@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -17,7 +15,6 @@ use crate::stream::Unconnected;
 
 use super::Builder;
 use super::PostClipNode;
-use super::ProjectionRawBase;
 
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 	for Builder<
@@ -37,9 +34,9 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 	DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
 	PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-	PR: ProjectionRawBase<T>,
-	RC: Clone + Debug,
-	RU: Clone + Debug,
+	PR: Clone,
+	// RC: Clone + Debug,
+	// RU: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

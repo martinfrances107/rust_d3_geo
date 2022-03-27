@@ -84,7 +84,7 @@ where
     LU: Clone + Debug,
     PCNU: Clone + Debug,
     PV: Clone + Debug,
-    PR: Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// f64 or f32.

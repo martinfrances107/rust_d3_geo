@@ -9,8 +9,6 @@ pub mod pv;
 /// Type for default clip.
 pub mod template;
 
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use interpolate::Interpolate;
@@ -41,12 +39,6 @@ pub fn gen_clip_circle<DRAIN, PCNC, PCNU, PR, RC, RU, T>(
 	T,
 >
 where
-	DRAIN: Clone + Debug,
-	PCNC: Clone + Debug,
-	PCNU: Clone + Debug,
-	PR: Clone,
-	RC: Clone + Debug,
-	RU: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	let cr = radius.cos();

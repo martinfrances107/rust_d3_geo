@@ -85,8 +85,8 @@ where
 #[derive(Clone, Debug)]
 pub struct Resample<EP, PR, SC, SU, STATE, T>
 where
-    STATE: Clone + Debug,
-    PR: Clone,
+    // STATE: Clone + Debug,
+    // PR
     T: CoordFloat + FloatConst,
 {
     delta2: T,
@@ -100,7 +100,7 @@ where
 impl<EP, PR, SC, SU, STATE, T> Resampler for Resample<EP, PR, SC, SU, STATE, T>
 where
     EP: Clone + Debug,
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Debug,
     SU: Clone + Debug,
     SC: Clone + Debug,
     //STATE: ConnectionState,
@@ -163,7 +163,7 @@ where
 
 impl<'a, EP, PR, SC, SU, T> Resample<EP, PR, SC, SU, Unconnected, T>
 where
-    PR: Clone + Transform<T = T>,
+    // PR: Clone,
     T: CoordFloat + FloatConst,
 {
     /// Returns a Resample for a given precision
@@ -185,7 +185,7 @@ where
 impl<'a, EP, PR, SC, SU, T> Resample<EP, PR, SC, SU, Connected<SC, T>, T>
 where
     EP: Stream<EP = EP, T = T> + Default,
-    PR: ProjectionRawBase<T>,
+    PR: Transform<T = T>,
     SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -357,7 +357,7 @@ where
 impl<'a, EP, PR, SC, SU, T> Stream for Resample<EP, PR, SC, SU, Connected<SC, T>, T>
 where
     EP: Stream<EP = EP, T = T> + Default,
-    PR: ProjectionRawBase<T>,
+    PR: Clone + Debug + Transform<T = T>,
     SU: Clone + Debug,
     SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,

@@ -59,7 +59,7 @@ impl<DRAIN, T> Default for Gnomic<DRAIN, T>
 
 impl<DRAIN, T> ProjectionRawBase<T> for Gnomic<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Clone + Stream<EP = DRAIN, T = T> + Default,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<

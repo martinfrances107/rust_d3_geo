@@ -15,7 +15,6 @@ use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::ClipAngleSet;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -47,7 +46,8 @@ where
 
 impl<DRAIN, T> ProjectionRawBase<T> for Mercator<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<
@@ -73,8 +73,7 @@ where
 
 	#[inline]
 	fn builder() -> Self::Builder
-	where
-		DRAIN: Stream<EP = DRAIN, T = T> + Default,
+// 	DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	{
 		let clip = gen_clip_antimeridian::<
 			DRAIN,
@@ -128,9 +127,9 @@ where
 //     }
 // }
 
-impl<DRAIN, EP, T> Transform for Mercator<DRAIN, T>
+impl<DRAIN, T> Transform for Mercator<DRAIN, T>
 where
-	DRAIN: Stream<EP = EP, T = T>,
+	// DRAIN: Stream<EP = EP, T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;

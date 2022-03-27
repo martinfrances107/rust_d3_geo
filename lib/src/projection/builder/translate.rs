@@ -8,10 +8,10 @@ use num_traits::FloatConst;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
-use crate::Transform;
 use crate::projection::Translate;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
+use crate::Transform;
 
 use super::Builder;
 
@@ -39,7 +39,7 @@ where
     LB: Clone,
     LC: Clone + Debug,
     LU: Clone + Debug,
-    PR: Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;

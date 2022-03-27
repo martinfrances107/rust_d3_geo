@@ -17,7 +17,6 @@ use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::ClipAngleSet;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -43,7 +42,7 @@ pub struct Orthographic<DRAIN, T>
 
 impl<DRAIN, T> Default for Orthographic<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat + FloatConst,
 {
 	fn default() -> Self {
@@ -63,7 +62,8 @@ where
 
 impl<DRAIN, T> ProjectionRawBase<T> for Orthographic<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<
@@ -106,7 +106,7 @@ where
 
 impl<DRAIN, T> Orthographic<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat + FloatConst,
 {
 	#[inline]
@@ -131,8 +131,7 @@ where
 
 impl<DRAIN, T> Transform for Orthographic<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
-
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;

@@ -16,7 +16,6 @@ use super::rotate_radians::RotateRadians;
 #[derive(Debug, Clone)]
 pub struct RotatorRadians<STATE, T>
 where
-    //STATE: ConnectionState,
     T: CoordFloat + FloatConst,
 {
     state: STATE,

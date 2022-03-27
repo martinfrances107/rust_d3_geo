@@ -59,8 +59,7 @@ where
 
 impl<EP, STREAM, T> Interpolator for Interpolate<EP, STREAM, T>
 where
-	EP: Clone + Debug,
-	STREAM: Clone + Debug + Stream<EP = EP, T = T>,
+	STREAM: Stream<EP = EP, T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type EP = EP;

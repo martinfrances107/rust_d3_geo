@@ -33,10 +33,7 @@ where
     type T = T;
 
     #[inline]
-    fn to_stream<EP, SD: Stream<EP = EP, T = T>>(&self, stream: &mut SD)
-    where
-        EP: Stream<EP = EP, T = T> + Default,
-    {
+    fn to_stream<EP, SD: Stream<EP = EP, T = T>>(&self, stream: &mut SD) {
         stream.sphere();
     }
 }

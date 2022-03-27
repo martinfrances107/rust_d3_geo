@@ -21,7 +21,6 @@ use crate::stream::Unconnected;
 
 use super::Builder;
 use super::PostClipNode;
-use super::ProjectionRawBase;
 
 impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 	for Builder<
@@ -40,7 +39,7 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 	> where
 	DRAIN: Stream<EP = DRAIN, T = T> + Default,
 
-	PR: ProjectionRawBase<T>,
+	PR: Clone,
 	PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
 	PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
 	RC: Clone + Debug,

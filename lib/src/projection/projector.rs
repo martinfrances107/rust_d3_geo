@@ -2,7 +2,6 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
-use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
@@ -30,9 +29,7 @@ use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 /// Projection output of projection/Builder.
 ///
 /// Commnon functionality for all raw projection structs.
-#[derive(Derivative)]
-#[derivative(Debug)]
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     DRAIN: Clone,
@@ -40,7 +37,6 @@ where
     LB: Clone,
     LC: Clone,
     LU: Clone,
-    PCNU: Clone,
     PR: Clone,
     PV: Clone,
     RC: Clone,
@@ -95,15 +91,16 @@ where
 impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Stream<EP = DRAIN, T = T> + Default + PartialEq,
-    I: Interpolator<EP = DRAIN, Stream = RC, T = T>,
-    LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+    // DRAIN: Stream<EP = DRAIN, T = T> + Default + PartialEq,
+    DRAIN: Clone + PartialEq + Stream<EP = DRAIN, T = T>,
+    I: Clone + Interpolator<EP = DRAIN, Stream = RC, T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: Clone + LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
+    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
-    PR: Clone + Debug,
+    PR: Clone,
     PV: Clone + PointVisible<T = T>,
-    RU: Clone + Connectable<SC = PCNC, Output = RC> + Debug,
+    RU: Clone + Connectable<SC = PCNC, Output = RC>,
     RC: Clone + Stream<EP = DRAIN, T = T>,
     T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -152,7 +149,10 @@ where
 
         let rotate_node = self.rotator.clone().connect(preclip_node);
 
-        let out = self.transform_radians.clone().connect(rotate_node);
+        let out = self
+            .transform_radians
+            .clone()
+            .connect::<DRAIN, _, T>(rotate_node);
 
         // Populate cache.
         self.cache = Some((drain, out.clone()));
@@ -165,17 +165,15 @@ where
 impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Transform
     for Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Clone + Debug,
-    I: Clone + Debug,
-    LB: Clone + Debug,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PCNU: Clone + Debug,
-    PCNC: Clone + Debug,
-    PR: Clone + Debug + Transform<T = T>,
-    PV: Clone + Debug,
-    RC: Clone + Debug,
-    RU: Clone + Debug,
+    DRAIN: Clone,
+    I: Clone,
+    LB: Clone,
+    LC: Clone,
+    LU: Clone,
+    PR: Clone + Transform<T = T>,
+    PV: Clone,
+    RC: Clone,
+    RU: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// f32 or f64

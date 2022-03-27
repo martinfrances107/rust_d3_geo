@@ -5,12 +5,13 @@ mod index_test {
     extern crate pretty_assertions;
 
     use std::f64::consts::PI;
+    use std::fmt::Debug;
+    use std::fmt::Display;
     use std::ops::AddAssign;
-	use std::fmt::Display;
 
     use approx::AbsDiffEq;
-    use geo::CoordFloat;
     use geo::line_string;
+    use geo::CoordFloat;
     use geo::Coordinate;
     use geo::Geometry;
     use geo::LineString;
@@ -19,19 +20,19 @@ mod index_test {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
+    use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+    use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
+    use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
     use rust_d3_geo::clip::buffer::Buffer;
     use rust_d3_geo::identity::Identity;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
-    use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
-	use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-	use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
-	use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::PrecisionBypass;
+    use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::Scale;
     use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Stream;
@@ -40,35 +41,27 @@ mod index_test {
 
     #[inline]
     fn equirectangular<
-		EP: Stream<EP=EP, T=T> + Default,
+        EP: Clone + Stream<EP = EP, T = T> + Debug + Default,
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst,
     >() -> Projector<
-		EP,
-		InterpolateAntimeridian<
-			EP,
-			ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>,
-			T,
-		>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			EP,
-			ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>,
-			Connected<ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>>,
-			T,
-		>,
-		LineAntimeridian<
-			EP,
-			ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>,
-			Unconnected,
-			T,
-		>,
-		Identity<EP, EP, EP, Connected<EP>, T>,
-		Identity<EP, EP, EP, Unconnected, T>,
-		Equirectangular<EP, T>,
-		PVAntimeridian<T>,
-		ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>,
-		ResampleNoneNoClipU<EP, Equirectangular<EP, T>, T>,
-		T> {
+        EP,
+        InterpolateAntimeridian<EP, ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>, T>,
+        LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+        LineAntimeridian<
+            EP,
+            ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>,
+            Connected<ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>>,
+            T,
+        >,
+        LineAntimeridian<EP, ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>, Unconnected, T>,
+        Identity<EP, EP, EP, Connected<EP>, T>,
+        Identity<EP, EP, EP, Unconnected, T>,
+        Equirectangular<EP, T>,
+        PVAntimeridian<T>,
+        ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>,
+        ResampleNoneNoClipU<EP, Equirectangular<EP, T>, T>,
+        T,
+    > {
         Equirectangular::builder()
             .scale(T::from(900f64 / PI).unwrap())
             .precision_bypass()
@@ -76,7 +69,10 @@ mod index_test {
     }
 
     #[inline]
-    fn test_path<'a, T: AsPrimitive<T> + AddAssign + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst  + Display>(
+    fn test_path<
+        'a,
+        T: AsPrimitive<T> + AddAssign + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst + Display,
+    >(
         projection: Projector<
             PathString<T>,
             InterpolateAntimeridian<
@@ -103,7 +99,8 @@ mod index_test {
             PVAntimeridian<T>,
             ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
             ResampleNoneNoClipU<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-            T>,
+            T,
+        >,
         object: impl Streamable<T = T>,
     ) -> String {
         let pb = PathBuilder::context_pathstring();

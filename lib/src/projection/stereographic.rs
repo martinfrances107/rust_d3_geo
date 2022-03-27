@@ -11,7 +11,6 @@ use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -38,7 +37,7 @@ pub struct Stereographic<DRAIN, T> {
 
 impl<DRAIN, T> ProjectionRawCommon<T> for Stereographic<DRAIN, T>
 where
-    DRAIN: Stream<EP = DRAIN, T = T> + Default,
+    DRAIN: Clone,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 }
@@ -57,7 +56,7 @@ where
 
 impl<DRAIN, T> ProjectionRawBase<T> for Stereographic<DRAIN, T>
 where
-    DRAIN: Clone + Debug,
+    DRAIN: Clone,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
@@ -114,7 +113,6 @@ where
 
 impl<DRAIN, T> Transform for Stereographic<DRAIN, T>
 where
-    DRAIN: Clone + Debug,
     T: CoordFloat + FloatConst,
 {
     type T = T;

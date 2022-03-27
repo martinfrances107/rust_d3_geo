@@ -24,8 +24,6 @@ pub(crate) mod rectangle;
 /// Clipping break line into segments which can lasted be reconnected together.
 pub(crate) mod rejoin;
 
-use std::fmt::Debug;
-
 use geo::CoordFloat;
 use geo::Coordinate;
 
@@ -55,7 +53,7 @@ pub trait Bufferable {
 }
 
 /// Clip Stream Node - helper function.
-pub trait PointVisible: Clone + Debug
+pub trait PointVisible
 where
     <Self as PointVisible>::T: CoordFloat,
 {
@@ -74,7 +72,7 @@ where
 //     Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut STREAM)>;
 
 /// Antimeridian or Circle interpolator.
-pub trait Interpolator: Clone + Debug {
+pub trait Interpolator {
     /// Final pipeline stage.
     type EP;
     /// Next stage of pipeline.
@@ -93,13 +91,13 @@ pub trait Interpolator: Clone + Debug {
 }
 
 /// Part of the clipping definition.
-pub trait LineUnconnected: Clone + Debug {
+pub trait LineUnconnected {
     /// Sink -- When Unconnected.
     type SU;
 }
 
 /// When connected a line can return a mutable sink.
-pub trait LineConnected: Clean + Clone + Debug {
+pub trait LineConnected: Clean {
     /// Sink -- When Connected.
     type SC;
     /// Connects the next object in the pipeline.

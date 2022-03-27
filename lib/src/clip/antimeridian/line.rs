@@ -23,8 +23,8 @@ use super::intersect::intersect;
 /// Antimeridian Line.
 #[derive(Debug, Copy, Clone)]
 pub struct Line<EP, SC, STATE, T>
-where
-    T: CoordFloat,
+// where
+//     T: CoordFloat,
 {
     state: STATE,
     p_ep: PhantomData<EP>,
@@ -39,7 +39,7 @@ where
 // Added when I found it was useful for type corercion.
 impl<EP, RC, T> Default for Line<EP, RC, Unconnected, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     #[inline]
     fn default() -> Line<EP, RC, Unconnected, T> {
@@ -58,7 +58,6 @@ where
 
 impl<EP, SC, T> Bufferable for Line<EP, SC, Unconnected, T>
 where
-    EP: Clone + Debug,
     T: CoordFloat,
 {
     type T = T;
@@ -100,8 +99,6 @@ where
 
 impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T>
 where
-    EP: Clone + Debug,
-    SINK: Clone + Debug,
     T: CoordFloat,
 {
     type SU = SINK;
@@ -109,8 +106,6 @@ where
 
 impl<EP, SINK, T> LineConnected for Line<EP, SINK, Connected<SINK>, T>
 where
-    EP: Clone + Debug,
-    SINK: Clone + Debug,
     T: CoordFloat,
 {
     type SC = SINK;
@@ -132,7 +127,6 @@ where
 
 impl<EP, SINK, T> Stream for Line<EP, SINK, Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T> + Default,
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {

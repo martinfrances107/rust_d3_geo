@@ -105,14 +105,7 @@ where
     }
 }
 
-impl<EP, SINK, STATE, T> PostClipNode for Rectangle<EP, SINK, STATE, T>
-where
-    EP: Clone + Debug,
-    SINK: Clone + Debug,
-    STATE: Clone + Debug,
-    T: CoordFloat,
-{
-}
+impl<EP, SINK, STATE, T> PostClipNode for Rectangle<EP, SINK, STATE, T> where T: CoordFloat {}
 impl<EP, SINK, T> Rectangle<EP, SINK, Connected<SINK>, T>
 where
     SINK: Stream<EP = EP, T = T>,

@@ -8,8 +8,8 @@ use crate::Transform;
 /// Combines transform together.
 #[derive(Clone, Copy, Debug)]
 pub struct Compose<T, TA, TB>
-where
-    T: CoordFloat,
+// where
+//     T: Copy,
 {
     p_t: PhantomData<T>,
     pub a: TA,
@@ -17,8 +17,8 @@ where
 }
 
 impl<T, TA, TB> Compose<T, TA, TB>
-where
-    T: CoordFloat,
+// where
+//     T: CoordFloat,
 {
     #[inline]
     pub fn new(a: TA, b: TB) -> Compose<T, TA, TB> {

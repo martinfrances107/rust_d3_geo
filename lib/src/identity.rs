@@ -35,15 +35,7 @@ impl<EP, SC, SU, T> Default for Identity<EP, SC, SU, Unconnected, T> {
     }
 }
 
-impl<EP, SC, SU, STATE, T> PostClipNode for Identity<EP, SC, SU, STATE, T>
-where
-    EP: Clone + Debug,
-    SC: Clone + Debug,
-    SU: Clone + Debug,
-    STATE: Clone + Debug,
-    T: Clone + Debug,
-{
-}
+impl<EP, SC, SU, STATE, T> PostClipNode for Identity<EP, SC, SU, STATE, T> {}
 
 impl<EP, SC, SU, T> Identity<EP, SC, SU, Unconnected, T> {
     pub fn default() -> Identity<EP, SC, SU, Unconnected, T> {
@@ -77,8 +69,6 @@ where
 
 impl<EP, SC, SU, T> Stream for Identity<EP, SC, SU, Connected<SC>, T>
 where
-    EP: Clone + Debug,
-    SU: Clone + Debug,
     SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {

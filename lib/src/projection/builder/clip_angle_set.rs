@@ -1,4 +1,3 @@
-use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -34,12 +33,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		RU,
 		T,
 	> where
-	DRAIN: Clone + Debug,
-	PCNC: Clone + Debug,
-	PCNU: Clone + Debug,
-	PR: Clone + Debug,
-	RC: Clone + Debug,
-	RU: Clone + Debug,
+	PR: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<

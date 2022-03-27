@@ -6,10 +6,8 @@ use num_traits::FloatConst;
 
 use crate::compose::Compose;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
-use crate::projection::ProjectionRawBase;
 use crate::stream::Connectable;
 use crate::stream::Connected;
-//use crate::stream::ConnectionState;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
@@ -22,8 +20,8 @@ use super::Resampler;
 #[derive(Clone, Debug)]
 pub struct None<EP, PR, SC, SU, STATE, T>
 where
-    T: CoordFloat + FloatConst,
-    PR: Clone,
+// T: CoordFloat + FloatConst,
+// PR: Clone,
 {
     state: STATE,
     p_ep: PhantomData<EP>,
@@ -35,8 +33,8 @@ where
 
 impl<EP, PR, SC, SU, T> None<EP, PR, SC, SU, Unconnected, T>
 where
-    T: CoordFloat + FloatConst,
-    PR: Clone,
+// T: CoordFloat + FloatConst,
+// PR: Clone,
 {
     /// Constructor: Resample None.
     pub fn new(
@@ -53,20 +51,14 @@ where
     }
 }
 
-impl<EP, PR, SC, SU, STATE, T> Resampler for None<EP, PR, SC, SU, STATE, T>
-where
-    EP: Clone + Debug,
-    PR: Clone + Debug,
-    SC: Clone + Debug,
-    SU: Clone + Debug,
-    STATE: Clone + Debug,
-    T: CoordFloat + FloatConst,
+impl<EP, PR, SC, SU, STATE, T> Resampler for None<EP, PR, SC, SU, STATE, T> where
+    T: CoordFloat + FloatConst
 {
 }
 
 impl<EP, PR, SC, SU, T> Connectable for None<EP, PR, SC, SU, Unconnected, T>
 where
-    PR: Clone + Transform<T = T>,
+    PR: Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type Output = None<EP, PR, SC, SU, Connected<SC>, T>;
@@ -86,10 +78,8 @@ where
 
 impl<EP, PR, SC, SU, T> Stream for None<EP, PR, SC, SU, Connected<SC>, T>
 where
-    EP: Stream<EP = EP, T = T> + Default,
-    PR: ProjectionRawBase<T>,
-    SU: Clone + Debug,
     SC: Stream<EP = EP, T = T>,
+    PR: Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type EP = EP;

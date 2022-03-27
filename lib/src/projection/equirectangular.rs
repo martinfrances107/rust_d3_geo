@@ -15,7 +15,6 @@ use crate::identity::Identity;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -35,7 +34,7 @@ pub struct Equirectangular<DRAIN, T> {
 
 impl<DRAIN, T> Default for Equirectangular<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat,
 {
 	fn default() -> Self {
@@ -55,7 +54,8 @@ where
 
 impl<DRAIN, T> ProjectionRawBase<T> for Equirectangular<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<
@@ -86,8 +86,8 @@ where
 
 	#[inline]
 	fn builder() -> Self::Builder
-	where
-		DRAIN: Stream<EP = DRAIN, T = T> + Default,
+// where
+		// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	{
 		let clip = gen_clip_antimeridian::<
 			DRAIN,
@@ -104,7 +104,7 @@ where
 
 impl<DRAIN, T> Transform for Equirectangular<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat + FloatConst,
 {
 	/// f64 or f32.

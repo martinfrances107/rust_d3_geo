@@ -8,6 +8,7 @@ mod multi_polygon;
 mod point;
 mod polygon;
 
+// use crate::clip::Interpolator;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -37,8 +38,8 @@ pub struct Connected<SINK> {
 // impl<SINK> ConnectionState for Connected<SINK> where SINK: Clone + Debug {}
 impl<SINK> ConnectedState for Connected<SINK>
 where
-    SINK: Clone + Debug,
-    //     SINK: Stream<EP = EP, T = T>,
+// SINK: Clone,
+//     SINK: Stream<EP = EP, T = T>,
 {
     // type EP = EP;
     type Sink = SINK;
@@ -67,7 +68,7 @@ pub trait Connectable {
 /// Things the implement stream need to assert that
 /// Whatever specific state they are in,  it is to the exclusion
 /// on the unconnected state.
-pub trait ConnectedState: Clone + Debug {
+pub trait ConnectedState {
     // type EP;
     type Sink;
     // type T;
@@ -83,7 +84,7 @@ pub trait Streamable {
     /// Injects the object to a stream.
     fn to_stream<EP, SINK>(&self, stream: &mut SINK)
     where
-        EP: Stream<EP = EP, T = Self::T> + Default,
+        // EP: Stream<EP = EP, T = Self::T> + Default,
         SINK: Stream<EP = EP, T = Self::T>;
 }
 
@@ -123,8 +124,9 @@ where
 
 /// Stream pipeline API
 /// Default implmentation is a no-op.
-pub trait Stream: Clone + Debug
+pub trait Stream
 where
+    // <Self as Stream>::I: Interpolator,
     <Self as Stream>::T: CoordFloat,
 {
     /// f32 or f64.

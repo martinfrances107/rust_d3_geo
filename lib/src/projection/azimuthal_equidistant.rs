@@ -47,7 +47,7 @@ pub struct AzimuthalEquiDistant<DRAIN, T> {
 
 impl<DRAIN, T> ProjectionRawBase<T> for AzimuthalEquiDistant<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Clone + Stream<EP = DRAIN, T = T> + Default,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<

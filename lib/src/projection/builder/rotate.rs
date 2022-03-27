@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -18,15 +16,7 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> RotateGet
     for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Clone + Debug,
-    I: Clone + Debug,
-    LB: Clone,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PCNC: Clone + Debug,
-    PCNU: Clone + Debug,
-    PR: Transform<T = T>,
-    PV: Clone + Debug,
+    PR: Clone,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
@@ -57,15 +47,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> RotateSet
         T,
     >
 where
-    DRAIN: Clone + Debug,
-    I: Clone + Debug,
-    LB: Clone,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PCNC: Clone + Debug,
-    PCNU: Clone + Debug,
-    PR: Transform<T = T>,
-    PV: Clone + Debug,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
@@ -97,15 +79,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> RotateSet
         T,
     >
 where
-    DRAIN: Clone + Debug,
-    I: Clone + Debug,
-    LB: Clone,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PCNU: Clone + Debug,
-    PR: Transform<T = T>,
-    PV: Clone + Debug,
-
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;

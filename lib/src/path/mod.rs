@@ -81,12 +81,11 @@ pub struct Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     CS: Clone,
     I: Clone,
-    LC: Clone,
     LB: Clone,
+    LC: Clone,
     LU: Clone,
     RC: Clone,
     RU: Clone,
-    PCNU: Clone,
     PR: Clone,
     PV: Clone,
     T: CoordFloat + FloatConst,
@@ -107,10 +106,9 @@ where
     LU: Clone,
     RC: Clone,
     RU: Clone,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     PV: Clone,
-    PCNU: Clone,
-
+    // PCNU: Clone,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
@@ -129,22 +127,17 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Clone,
-    LB: Clone,
-    LC: Clone,
+    CS: Clone + Default + PartialEq + Result + Stream<EP = CS, T = T>,
+    I: Clone + Interpolator<EP = CS, Stream = RC, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-    RC: Clone + Stream<EP = CS, T = T>,
-    RU: Clone + Debug,
-    PCNU: Clone,
-    PV: Clone,
-    PR: Clone + Debug,
-    CS: Stream<EP = CS, T = T> + Result + PartialEq + Default,
-    I: Interpolator<EP = CS, Stream = RC, T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: LineConnected<SC = RC> + Stream<EP = CS, T = T>,
-    PCNU: Connectable<Output = PCNC, SC = CS>,
+    LC: Clone + LineConnected<SC = RC> + Stream<EP = CS, T = T>,
+    PCNU: Clone + Connectable<Output = PCNC, SC = CS>,
     PV: PointVisible<T = T>,
-    RU: Connectable<Output = RC, SC = PCNC>,
+    PR: Clone + Debug,
+    PV: Clone,
+    RC: Clone + Stream<EP = CS, T = T>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Combines projection, context stream and object.
@@ -158,23 +151,15 @@ where
 impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<Area<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Interpolator<EP = Area<T>, Stream = RC, T = T>,
-    LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: LineConnected<SC = RC> + Stream<EP = Area<T>, T = T>,
+    I: Clone + Interpolator<EP = Area<T>, Stream = RC, T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: Clone + LineConnected<SC = RC> + Stream<EP = Area<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-    RC: Clone + Stream<EP = Area<T>, T = T>,
-    RU: Clone + Debug + Connectable<Output = RC, SC = PCNC>,
-    PCNU: Connectable<Output = PCNC, SC = Area<T>>,
+    PCNU: Clone + Connectable<Output = PCNC, SC = Area<T>>,
+    PR: Clone + Debug + Transform<T = T>,
     PV: Clone + PointVisible<T = T>,
-    I: Clone,
-    LC: Clone,
-    LB: Clone,
-    LU: Clone,
-    RC: Clone,
-    RU: Clone,
-    PCNU: Clone,
-    PR: Transform<T = T>,
-    PV: Clone,
+    RC: Clone + Stream<EP = Area<T>, T = T>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the area of the Path
@@ -194,18 +179,15 @@ where
 impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<Bounds<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Interpolator<EP = Bounds<T>, Stream = RC, T = T>,
-    LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone,
-    RU: Clone,
+    I: Clone + Interpolator<EP = Bounds<T>, Stream = RC, T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-    RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Debug + Connectable<Output = RC, SC = PCNC>,
-    PCNU: Connectable<Output = PCNC, SC = Bounds<T>>,
-    PCNU: Clone,
-    PR: Transform<T = T>,
+    PCNU: Clone + Connectable<Output = PCNC, SC = Bounds<T>>,
+    PR: Clone + Debug + Transform<T = T>,
     PV: Clone + PointVisible<T = T>,
+    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the bounds of the object
@@ -223,23 +205,19 @@ where
 impl<LB, LC, LU, I, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<Centroid<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Interpolator<EP = Centroid<T>, Stream = RC, T = T>,
-    LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: LineConnected<SC = RC> + Stream<EP = Centroid<T>, T = T>,
-    LU: Bufferable<Output = LB, T = T>
+    I: Clone + Interpolator<EP = Centroid<T>, Stream = RC, T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: Clone + LineConnected<SC = RC> + Stream<EP = Centroid<T>, T = T>,
+    LU: Clone
+        + Bufferable<Output = LB, T = T>
         + Connectable<Output = LC, SC = RC>
-        + Connectable<Output = LC, SC = RC>
-        + Clone
-        + Debug,
+        + Connectable<Output = LC, SC = RC>,
     PCNC: Stream<EP = Centroid<T>, T = T>,
-    PCNU: Connectable<Output = PCNC, SC = Centroid<T>>,
-    PV: PointVisible<T = T>,
-    RU: Connectable<Output = RC, SC = PCNC>,
+    PCNU: Clone + Connectable<Output = PCNC, SC = Centroid<T>>,
+    PV: Clone + PointVisible<T = T>,
+    PR: Clone + Transform<T = T>,
     RC: Clone + Stream<EP = Centroid<T>, T = T>,
-    RU: Clone + Debug,
-    PCNU: Clone,
-    PR: Transform<T = T>,
-    PV: Clone,
+    RU: Clone + Connectable<Output = RC, SC = PCNC>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the centroid of the object.
@@ -260,11 +238,10 @@ where
     LB: Clone,
     LC: Clone,
     LU: Clone,
+    PV: Clone,
+    PR: Clone,
     RC: Clone,
     RU: Clone,
-    PV: Clone,
-    PR: Clone + Transform<T = T>,
-    PCNU: Clone,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Sets the context stream.

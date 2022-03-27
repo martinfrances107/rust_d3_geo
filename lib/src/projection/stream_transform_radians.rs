@@ -10,13 +10,13 @@ use crate::stream::Unconnected;
 
 /// TODO: Can this be optimised away?
 #[derive(Clone, Debug)]
-pub struct StreamTransformRadians<STATE: Clone>(pub STATE);
+pub struct StreamTransformRadians<STATE>(pub STATE);
 
 impl StreamTransformRadians<Unconnected> {
     pub fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
-    where
-        EP: Stream<EP = EP, T = T> + Default,
-        SINK: Clone + Stream<EP = EP, T = T>,
+where
+        // EP: Stream<EP = EP, T = T> + Default,
+        // SINK: Stream<EP = EP, T = T>,
         // SINK: Clone,
     {
         StreamTransformRadians(Connected { sink })

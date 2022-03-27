@@ -49,7 +49,7 @@ enum LineEndFn {
 #[derivative(Debug)]
 pub struct Connected<EP, LB, LC, LU, SC, SU, T>
 where
-    LB: Clone,
+    // LB: Clone,
     T: CoordFloat,
 {
     p_ep: PhantomData<EP>,
@@ -69,7 +69,7 @@ where
 
 impl<EP, LB, LC, LU, SC, SU, T> Connected<EP, LB, LC, LU, SC, SU, T>
 where
-    LB: Clone,
+    // LB: Clone,
     LU: Clone + Connectable<Output = LC, SC = SC> + Bufferable<Output = LB, T = T>,
     T: CoordFloat,
 {
@@ -101,10 +101,10 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Connectable
     for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
-    LB: Clone,
-    LU: Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    PR: Clone,
-    LU: Clone,
+    // LB: Clone,
+    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
+    // PR: Clone,
+    // LU: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type SC = RC;
@@ -131,7 +131,6 @@ where
 pub struct Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, STATE, T>
 where
     T: CoordFloat,
-    LB: Clone,
 {
     state: STATE,
     p_ep: PhantomData<EP>,
@@ -149,8 +148,8 @@ where
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
-    LB: Clone,
-    PR: Clone,
+    // LB: Clone,
+    // PR: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Takes a line and cuts into visible segments. Return values used for polygon
@@ -177,28 +176,13 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
     Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, RU, T>, T>
 where
-    PV: PointVisible<T = T>,
-    EP: Clone + Debug,
     I: Interpolator<EP = EP, Stream = RC, T = T>,
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
-    LU: Clone + Debug + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    LC: LineConnected<SC = RC>,
-
-    RC: Clone + Debug + Stream<EP = EP, T = T>,
-    EP: Clone + Debug,
-    I: Interpolator<EP = EP, Stream = RC, T = T>,
-    LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
-    LU: Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    I: Interpolator<EP = EP, Stream = RC, T = T>,
-    LC: Clone + Debug,
-    LB: Clone + Debug + Stream<EP = Buffer<T>, T = T>,
-    PR: Clone + Debug,
-    PV: Clone + Debug,
-    RC: Clone + Debug + Stream<EP = EP, T = T>,
-    RU: Clone + Debug,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    PV: PointVisible<T = T>,
+    RC: Stream<EP = EP, T = T>,
+    // T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + AbsDiffEq<Epsilon = T> + FloatConst,
 {
     #[inline]
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -303,17 +287,12 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Stream
     for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, RU, T>, T>
 where
-    EP: Clone + Debug,
     I: Interpolator<EP = EP, Stream = RC, T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
-    LU: Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Clone + Debug,
     PV: PointVisible<T = T>,
-    PR: Clone + Debug,
-    PV: Clone + Debug,
-    RC: Clone + Debug + Stream<EP = EP, T = T>,
-    RU: Clone + Debug,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    RC: Stream<EP = EP, T = T>,
+    T: 'static + CoordFloat + AbsDiffEq<Epsilon = T> + FloatConst,
 {
     type T = T;
     type EP = EP;

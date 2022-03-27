@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -30,15 +28,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Scale
         T,
     >
 where
-    DRAIN: Clone + Debug,
-    I: Clone + Debug,
-    LB: Clone + Debug,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PV: Clone + Debug,
-    PCNC: Clone + Debug,
-    PCNU: Clone + Debug,
-    PR: Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
@@ -70,14 +60,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Scale
         T,
     >
 where
-    I: Clone,
-    DRAIN: Clone + Debug,
-    PCNU: Clone + Debug,
-    LB: Clone + Debug,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PV: Clone + Debug,
-    PR: Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;

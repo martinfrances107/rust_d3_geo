@@ -15,8 +15,6 @@ extern crate derivative;
 extern crate rust_d3_array;
 extern crate web_sys;
 
-use std::fmt::Debug;
-
 use geo::CoordFloat;
 use geo::Coordinate;
 
@@ -63,7 +61,7 @@ pub mod identity;
 /// 2-D Transform common to projections and, rotations.
 ///
 /// FloatConst is required by forward_rotation_lambda().
-pub trait Transform: Clone + Debug
+pub trait Transform
 where
     <Self as Transform>::T: CoordFloat,
 {

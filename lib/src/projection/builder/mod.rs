@@ -31,7 +31,6 @@ use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 use super::Angle;
-use super::ProjectionRawBase;
 
 mod angle;
 mod angle_mercator;
@@ -56,7 +55,7 @@ pub mod template;
 mod translate;
 
 /// Marker trait for structs Identity or Rectangle
-pub trait PostClipNode: Clone + Debug {}
+pub trait PostClipNode {}
 
 /// Projection builder.
 ///
@@ -64,14 +63,14 @@ pub trait PostClipNode: Clone + Debug {}
 #[derive(Clone, Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Clone + Debug,
-    I: Clone,
-    LU: Clone + Debug,
-    LB: Clone,
-    LC: Clone + Debug,
-    PCNU: Clone + Debug,
-    PV: Clone + Debug,
-    PR: Clone + Debug,
+    // DRAIN: Clone,
+    // I: Clone,
+    // LU: Clone,
+    // LB: Clone,
+    // LC: Clone,
+    // PCNU: Clone,
+    // PV: Clone,
+    PR: Clone,
     T: CoordFloat + FloatConst,
 {
     p_pcnc: PhantomData<PCNC>,
@@ -132,9 +131,7 @@ impl<DRAIN, PR, PV, T>
         T,
     >
 where
-    DRAIN: Clone + Debug,
-    PV: Clone + Debug,
-    PR: ProjectionRawBase<T>,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Given a Raw Projection and a clipping defintion create the associated
@@ -230,15 +227,15 @@ where
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Clone + Debug,
+    DRAIN: Clone,
     I: Clone,
     LB: Clone,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PCNU: Clone + Debug,
-    PR: Clone + Debug,
-    PV: Clone + Debug,
-    RC: Clone + Debug,
+    LC: Clone,
+    LU: Clone,
+    PCNU: Clone,
+    PR: Clone,
+    PV: Clone,
+    RC: Clone,
     RU: Clone,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -282,15 +279,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
         T,
     >
 where
-    DRAIN: Clone + Debug,
-    I: Clone,
-    LB: Clone,
-    LU: Clone + Debug,
-    LC: Clone + Debug,
-    PCNC: Clone + Debug,
-    PCNU: Clone + Debug,
-    PV: Clone + Debug,
-    PR: Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {
@@ -380,14 +369,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
         T,
     >
 where
-    DRAIN: Clone + Debug,
-    I: Clone,
-    LB: Clone,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
     PR: Clone + Transform<T = T>,
-    PV: Clone + Debug,
-    PCNU: Clone + Debug,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {

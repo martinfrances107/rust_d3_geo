@@ -84,9 +84,8 @@ where
 /// things that follow the common family of raw projections.
 /// and alternatively the less common mercator family of raw projections.
 // pub trait ProjectionRawBase<T>: Clone + Debug + Default + Transform<T = T>
-pub trait ProjectionRawBase<T>: Transform<T = T>
-where
-    <Self as Transform>::T: CoordFloat,
+pub trait ProjectionRawBase<T>: Transform<T = T> // where
+//     <Self as Transform>::T: CoordFloat,
 {
     /// The default builder.
     type Builder;
@@ -98,16 +97,14 @@ where
 
 /// Marker trait -  for family of raw projections.
 /// used to identify thing that ARE NOT the  mercator family of projections.
-pub trait ProjectionRawCommon<T>: ProjectionRawBase<T>
-where
-    T: CoordFloat,
+pub trait ProjectionRawCommon<T>: ProjectionRawBase<T> // where
+//     T: CoordFloat,
 {
 }
 /// Marker trait identifies trait that need a highly specialised set of
 /// overreides. The mercator family.
-pub trait ProjectionRawMercator<T>: ProjectionRawBase<T>
-where
-    T: CoordFloat,
+pub trait ProjectionRawMercator<T>: ProjectionRawBase<T> // where
+//     T: CoordFloat,
 {
 }
 
