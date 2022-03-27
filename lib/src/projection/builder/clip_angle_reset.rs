@@ -1,4 +1,3 @@
-use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -14,13 +13,10 @@ use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
 use crate::projection::ClipAngleReset;
-use crate::stream::Connectable;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 
 use super::Builder;
-use super::PostClipNode;
 
 impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 	for Builder<
@@ -37,13 +33,6 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 		RU,
 		T,
 	> where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
-
-	PR: Clone,
-	PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
-	PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-	RC: Clone + Debug,
-	RU: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<

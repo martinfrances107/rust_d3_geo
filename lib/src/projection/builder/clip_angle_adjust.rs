@@ -8,13 +8,10 @@ use crate::clip::circle::interpolate::Interpolate;
 use crate::clip::circle::line::Line;
 use crate::clip::circle::pv::PV;
 use crate::projection::ClipAngleAdjust;
-use crate::stream::Connectable;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 
 use super::Builder;
-use super::PostClipNode;
 
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 	for Builder<
@@ -31,10 +28,6 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 		RU,
 		T,
 	> where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
-	PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
-	PR: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

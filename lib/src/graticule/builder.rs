@@ -1,7 +1,7 @@
 use core::iter::Iterator;
-use derivative::*;
 use std::mem::swap;
 
+use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
 use geo::LineString;

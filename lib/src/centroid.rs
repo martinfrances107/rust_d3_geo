@@ -169,11 +169,7 @@ where
         let m = (cx * cx + cy * cy + cz * cz).sqrt();
         let w = asin(m); // line weight = angle
 
-        let v: T = if m == T::zero() {
-            T::zero()
-        } else {
-             -w / m
-        }; // area weight multiplier
+        let v: T = if m == T::zero() { T::zero() } else { -w / m }; // area weight multiplier
 
         self.X2 += v * cx;
         self.Y2 += v * cy;

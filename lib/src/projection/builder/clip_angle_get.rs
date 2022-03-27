@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -27,16 +25,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ClipAngleGet
         T,
     >
 where
-    DRAIN: Clone + Debug,
-    I: Clone,
-    LB: Clone,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PCNC: Clone + Debug,
-    PCNU: Clone + Debug,
-    // PR: Transform<T = T>,
-    PR: Clone + Debug,
-    PV: Clone + Debug,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
