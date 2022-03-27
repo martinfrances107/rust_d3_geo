@@ -406,7 +406,6 @@ where
 
 impl<EP, SC, T> Connectable for Rectangle<EP, SC, Unconnected, T>
 where
-    // SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type Output = Rectangle<EP, SC, Connected<SC>, T>;

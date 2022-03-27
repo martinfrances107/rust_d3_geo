@@ -14,7 +14,6 @@ where
     #[inline]
     fn to_stream<EP, SD>(&self, stream: &mut SD)
     where
-        // EP: Stream<EP = EP, T = T> + Default,
         SD: Stream<EP = EP, T = T>,
     {
         match self {

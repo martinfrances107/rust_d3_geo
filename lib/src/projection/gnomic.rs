@@ -29,18 +29,12 @@ use super::ProjectionRawBase;
 
 /// Gnomic
 #[derive(Clone, Debug)]
-pub struct Gnomic<DRAIN, T>
-// where
-//     T: CoordFloat + FloatConst,
-{
+pub struct Gnomic<DRAIN, T> {
 	p_drain: PhantomData<DRAIN>,
 	p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Default for Gnomic<DRAIN, T>
-// where
-//     T: CoordFloat + FloatConst,
-{
+impl<DRAIN, T> Default for Gnomic<DRAIN, T> {
 	fn default() -> Self {
 		Gnomic {
 			p_drain: PhantomData::<DRAIN>,

@@ -15,7 +15,6 @@ where
 
     fn to_stream<EP, SD>(&self, stream: &mut SD)
     where
-        // EP: Stream<EP = EP, T = T> + Default,
         SD: Stream<EP = EP, T = T>,
     {
         for f in &self.0 {

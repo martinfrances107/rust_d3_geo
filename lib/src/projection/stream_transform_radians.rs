@@ -13,12 +13,7 @@ use crate::stream::Unconnected;
 pub struct StreamTransformRadians<STATE>(pub STATE);
 
 impl StreamTransformRadians<Unconnected> {
-    pub fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
-where
-        // EP: Stream<EP = EP, T = T> + Default,
-        // SINK: Stream<EP = EP, T = T>,
-        // SINK: Clone,
-    {
+    pub fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>> {
         StreamTransformRadians(Connected { sink })
     }
 }

@@ -46,7 +46,6 @@ where
 
 impl<DRAIN, T> ProjectionRawBase<T> for Mercator<DRAIN, T>
 where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	DRAIN: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -72,9 +71,7 @@ where
 	type T = T;
 
 	#[inline]
-	fn builder() -> Self::Builder
-// 	DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	{
+	fn builder() -> Self::Builder {
 		let clip = gen_clip_antimeridian::<
 			DRAIN,
 			NoClipC<DRAIN, T>,
@@ -129,7 +126,6 @@ where
 
 impl<DRAIN, T> Transform for Mercator<DRAIN, T>
 where
-	// DRAIN: Stream<EP = EP, T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;

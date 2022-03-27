@@ -91,7 +91,6 @@ where
 impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    // DRAIN: Stream<EP = DRAIN, T = T> + Default + PartialEq,
     DRAIN: Clone + PartialEq + Stream<EP = DRAIN, T = T>,
     I: Clone + Interpolator<EP = DRAIN, Stream = RC, T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,

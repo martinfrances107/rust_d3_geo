@@ -70,7 +70,7 @@ where
     // LC: Clone,
     // PCNU: Clone,
     // PV: Clone,
-    PR: Clone,
+    // PR: Clone,
     T: CoordFloat + FloatConst,
 {
     p_pcnc: PhantomData<PCNC>,

@@ -18,11 +18,7 @@ use super::Resampler;
 ///
 /// A pass-through module, when no resampling is required.
 #[derive(Clone, Debug)]
-pub struct None<EP, PR, SC, SU, STATE, T>
-where
-// T: CoordFloat + FloatConst,
-// PR: Clone,
-{
+pub struct None<EP, PR, SC, SU, STATE, T> {
     state: STATE,
     p_ep: PhantomData<EP>,
     p_sc: PhantomData<SC>,
@@ -31,11 +27,7 @@ where
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
 }
 
-impl<EP, PR, SC, SU, T> None<EP, PR, SC, SU, Unconnected, T>
-where
-// T: CoordFloat + FloatConst,
-// PR: Clone,
-{
+impl<EP, PR, SC, SU, T> None<EP, PR, SC, SU, Unconnected, T> {
     /// Constructor: Resample None.
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,

@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -30,16 +28,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Clone + Debug,
-	I: Clone,
-	LB: Clone,
-	LC: Clone + Debug,
-	LU: Clone + Debug,
-	PV: Clone + Debug,
-	PCNC: Clone + Debug,
-	PCNU: Clone + Debug,
-	PR: Transform<T = T>,
-	PR: Clone + Debug,
+	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -94,14 +83,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
-	PV: Clone + Debug,
-	DRAIN: Clone + Debug,
-	PCNU: Clone + Debug,
-	LB: Clone,
-	LU: Debug,
-	LC: Clone + Debug,
-	I: Clone,
-	LU: Clone,
 	T: 'static + AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

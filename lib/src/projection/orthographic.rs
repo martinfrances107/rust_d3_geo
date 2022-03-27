@@ -31,18 +31,13 @@ use super::Scale;
 /// Root transform.
 /// Used to define a projection builder.
 #[derive(Clone, Copy, Debug)]
-pub struct Orthographic<DRAIN, T>
-// where
-//     DRAIN: Stream<EP = DRAIN, T = T> + Default,
-//     T: CoordFloat + FloatConst,
-{
+pub struct Orthographic<DRAIN, T> {
 	p_drain: PhantomData<DRAIN>,
 	p_t: PhantomData<T>,
 }
 
 impl<DRAIN, T> Default for Orthographic<DRAIN, T>
 where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat + FloatConst,
 {
 	fn default() -> Self {
@@ -62,7 +57,6 @@ where
 
 impl<DRAIN, T> ProjectionRawBase<T> for Orthographic<DRAIN, T>
 where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	DRAIN: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -106,7 +100,6 @@ where
 
 impl<DRAIN, T> Orthographic<DRAIN, T>
 where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat + FloatConst,
 {
 	#[inline]
@@ -131,7 +124,6 @@ where
 
 impl<DRAIN, T> Transform for Orthographic<DRAIN, T>
 where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;
