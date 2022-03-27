@@ -109,7 +109,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionBypass
 			project_transform: self.project_transform,
 			project_rotate_transform: self.project_rotate_transform,
 			postclip: self.postclip,
-			// rotate_transform: self.rotate_transform,
 			alpha: self.alpha,
 			lambda: self.lambda,
 			phi: self.phi,
@@ -155,10 +154,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionBypass
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	PCNU: Clone + Debug,
-	PCNC: Clone + Debug,
-	DRAIN: Clone + Debug,
-	PR: Clone + Debug,
+	PR: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

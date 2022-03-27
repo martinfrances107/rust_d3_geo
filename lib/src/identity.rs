@@ -51,7 +51,6 @@ impl<EP, SC, SU, T> Identity<EP, SC, SU, Unconnected, T> {
 
 impl<EP, SC, SU, T> Connectable for Identity<EP, SC, SU, Unconnected, T>
 where
-    SU: Clone + Debug,
     T: CoordFloat + FloatConst,
 {
     type SC = SC;
@@ -70,7 +69,7 @@ where
 impl<EP, SC, SU, T> Stream for Identity<EP, SC, SU, Connected<SC>, T>
 where
     SC: Stream<EP = EP, T = T>,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type EP = EP;
     type T = T;

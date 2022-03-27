@@ -7,10 +7,7 @@ use crate::Transform;
 ///
 /// Covers both translate and rotate.
 #[derive(Clone, Copy, Debug, Default)]
-pub struct Str<T>
-// where
-//     T: CoordFloat + FloatConst,
-{
+pub struct Str<T> {
     a: T,
     b: T,
     ai: T,

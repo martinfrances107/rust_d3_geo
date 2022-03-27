@@ -36,14 +36,8 @@ pub struct Connected<SINK> {
 }
 
 // impl<SINK> ConnectionState for Connected<SINK> where SINK: Clone + Debug {}
-impl<SINK> ConnectedState for Connected<SINK>
-where
-// SINK: Clone,
-//     SINK: Stream<EP = EP, T = T>,
-{
-    // type EP = EP;
+impl<SINK> ConnectedState for Connected<SINK> {
     type Sink = SINK;
-    // type T = T;
     #[inline]
     fn get_sink(&mut self) -> &mut Self::Sink {
         &mut self.sink
@@ -69,12 +63,8 @@ pub trait Connectable {
 /// Whatever specific state they are in,  it is to the exclusion
 /// on the unconnected state.
 pub trait ConnectedState {
-    // type EP;
     type Sink;
-    // type T;
     fn get_sink(&mut self) -> &mut Self::Sink;
-    // where
-    //     Self::Sink: Stream<EP = Self::EP, T = Self::T>;
 }
 
 /// to_stream()
@@ -84,17 +74,13 @@ pub trait Streamable {
     /// Injects the object to a stream.
     fn to_stream<EP, SINK>(&self, stream: &mut SINK)
     where
-        // EP: Stream<EP = EP, T = Self::T> + Default,
         SINK: Stream<EP = EP, T = Self::T>;
 }
 
 /// Stub is useful only the transform portion of a projection is needed.
 /// TODO must add example to doc.
 #[derive(Clone, Copy, Debug)]
-pub struct StreamDrainStub<T>
-// where
-//     T: CoordFloat,
-{
+pub struct StreamDrainStub<T> {
     phantom: PhantomData<T>,
 }
 
@@ -126,7 +112,6 @@ where
 /// Default implmentation is a no-op.
 pub trait Stream
 where
-    // <Self as Stream>::I: Interpolator,
     <Self as Stream>::T: CoordFloat,
 {
     /// f32 or f64.

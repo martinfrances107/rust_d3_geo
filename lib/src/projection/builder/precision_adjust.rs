@@ -1,5 +1,4 @@
 use crate::Transform;
-use std::fmt::Debug;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
@@ -28,15 +27,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> PrecisionAdjust
         T,
     >
 where
-    DRAIN: Clone + Debug,
-    I: Clone + Debug,
-    LB: Clone,
-    LC: Clone + Debug,
-    LU: Clone + Debug,
-    PCNC: Clone + Debug,
-    PCNU: Clone + Debug,
-    PR: Clone + Debug + Transform<T = T>,
-    PV: Clone + Debug,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;

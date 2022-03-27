@@ -7,17 +7,11 @@ use crate::Transform;
 
 /// One of the 3-axis rotation transforms.
 #[derive(Clone, Copy, Debug)]
-pub struct RotationIdentity<T>
-// where
-//     T: CoordFloat,
-{
+pub struct RotationIdentity<T> {
     phantom: PhantomData<T>,
 }
 
-impl<T> Default for RotationIdentity<T>
-where
-    T: CoordFloat + FloatConst,
-{
+impl<T> Default for RotationIdentity<T> {
     #[inline]
     fn default() -> Self {
         Self {

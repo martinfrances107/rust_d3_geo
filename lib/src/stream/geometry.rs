@@ -1,13 +1,12 @@
 use geo::CoordFloat;
 use geo::Geometry;
-use num_traits::FloatConst;
 
 use super::Stream;
 use super::Streamable;
 
 impl<T> Streamable for Geometry<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
 

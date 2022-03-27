@@ -68,7 +68,6 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 
 		// update only theta and preclip_factory.
 		let out = Self::Output {
-			// projection_raw: self.projection_raw,
 			clip,
 			delta_lambda: self.delta_lambda,
 			delta_phi: self.delta_phi,
@@ -81,7 +80,6 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 			x: self.x,
 			y: self.y,
 			resample: self.resample,
-			// rotate_transform: self.rotate_transform,
 			x0: self.x0,
 			y0: self.y0,
 			x1: self.x1,
@@ -100,6 +98,7 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 			project_rotate_transform: self.project_rotate_transform,
 		};
 
+		// TODO must reinstate reset.
 		// out.reset()
 		out
 	}

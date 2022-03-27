@@ -12,7 +12,7 @@ use super::rotate_radians::RotateRadians;
 #[derive(Clone, Debug)]
 pub struct Rotation<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     rotate: RotateRadians<T>,
 }

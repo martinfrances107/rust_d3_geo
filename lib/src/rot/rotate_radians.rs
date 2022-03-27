@@ -14,12 +14,9 @@ use super::rotation_lambda::RotationLambda;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
 /// Container for a 3-axis rotation transform.
-pub enum RotateRadians<T>
-where
-    T: CoordFloat + FloatConst,
-{
+pub enum RotateRadians<T> {
     /// A combination of rotations.
-    C(Box<Compose<T,RotationLambda<T>, RotationPhiGamma<T>>>),
+    C(Box<Compose<T, RotationLambda<T>, RotationPhiGamma<T>>>),
     /// Just roation in one direction.
     RL(RotationLambda<T>),
     /// Rotate, Phi and Gamma.
@@ -31,7 +28,7 @@ where
 #[cfg(not(tarpaulin_include))]
 impl<T> Debug for RotateRadians<T>
 where
-    T: CoordFloat + FloatConst,
+    T: Debug,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
@@ -51,7 +48,7 @@ where
 
 impl<T> Clone for RotateRadians<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     fn clone(&self) -> Self {
         match self {

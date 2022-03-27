@@ -35,8 +35,6 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 	PCNC: PostClipNode + Stream<EP = DRAIN, T = T>,
 	PCNU: PostClipNode + Connectable<Output = PCNC, SC = DRAIN>,
 	PR: Clone,
-	// RC: Clone + Debug,
-	// RU: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

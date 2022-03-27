@@ -5,10 +5,7 @@ use crate::Transform;
 
 /// A single rotation.
 #[derive(Clone, Copy, Default, Debug)]
-pub struct RotationLambda<T>
-// where
-//     T: CoordFloat,
-{
+pub struct RotationLambda<T> {
     /// The change in rotation.
     pub delta_lambda: T,
 }

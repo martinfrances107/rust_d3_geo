@@ -402,7 +402,6 @@ pub trait Reflect {
     /// Set the projection builder to invert the x-coordinate.
     fn reflect_x(self, reflect: bool) -> Self
     where
-        // <Self as Reflect>::PR: Transform<T = <Self as Reflect>::T>,
         <Self as Reflect>::T: AddAssign
             + AsPrimitive<<Self as Reflect>::T>
             + CoordFloat
@@ -416,7 +415,6 @@ pub trait Reflect {
     /// Set the projection builder to invert the y-coordinate.
     fn reflect_y(self, reflect: bool) -> Self
     where
-        // <Self as Reflect>::PR: Transform<T = <Self as Reflect>::T>,
         <Self as Reflect>::T: AddAssign
             + AsPrimitive<<Self as Reflect>::T>
             + CoordFloat

@@ -39,9 +39,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		None<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	PCNU: Clone,
-	PCNC: Clone,
-	DRAIN: Clone,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

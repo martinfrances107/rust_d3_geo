@@ -32,15 +32,6 @@ use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 #[derive(Clone, Debug)]
 pub struct Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Clone,
-    I: Clone,
-    LB: Clone,
-    LC: Clone,
-    LU: Clone,
-    PR: Clone,
-    PV: Clone,
-    RC: Clone,
-    RU: Clone,
     T: CoordFloat + FloatConst,
 {
     /// Must be public as there is a implicit copy.
@@ -164,15 +155,7 @@ where
 impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Transform
     for Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    DRAIN: Clone,
-    I: Clone,
-    LB: Clone,
-    LC: Clone,
-    LU: Clone,
     PR: Clone + Transform<T = T>,
-    PV: Clone,
-    RC: Clone,
-    RU: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// f32 or f64

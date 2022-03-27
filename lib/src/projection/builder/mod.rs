@@ -63,14 +63,6 @@ pub trait PostClipNode {}
 #[derive(Clone, Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    // DRAIN: Clone,
-    // I: Clone,
-    // LU: Clone,
-    // LB: Clone,
-    // LC: Clone,
-    // PCNU: Clone,
-    // PV: Clone,
-    // PR: Clone,
     T: CoordFloat + FloatConst,
 {
     p_pcnc: PhantomData<PCNC>,
@@ -172,11 +164,8 @@ where
         let rotator = RotatorRadians::new(rotate.clone());
         let project_transform = Compose::new(projection_raw.clone(), str);
         let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
-
         let postclip = Identity::default();
-        // let resample = None::new(project_transform.clone());
         let resample = Resample::new(project_transform.clone(), delta2);
-        // let rotate_transform = project_rotate_transform.clone();
         let p_pcnc = PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>;
         let out_a: Self = Self {
             clip,
@@ -211,12 +200,8 @@ where
             rotator,
             project_transform,
             project_rotate_transform,
-            /// Pass into Projection,
             postclip,
-            // preclip_factory,
             resample,
-            // rotate,
-            // rotate_transform,
         };
 
         let out_b: Self = out_a.recenter_with_resampling();
@@ -321,7 +306,6 @@ where
         let out: Self = Builder {
             p_pcnc: self.p_pcnc,
             p_lb: PhantomData::<LB>,
-            // p_lc: PhantomData::<LC>,
             projection_raw: self.projection_raw,
             clip: self.clip,
             phi: self.phi,
@@ -344,7 +328,6 @@ where
             rotate,
             rotator,
             postclip: self.postclip,
-            // rotate_transform: self.rotate_transform,
             resample,
             project_transform,
             project_rotate_transform,

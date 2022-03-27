@@ -6,11 +6,7 @@ use crate::Transform;
 ///
 /// Simplification when only  translate is needed.
 #[derive(Clone, Copy, Debug)]
-pub struct St<T>
-where
-//     T: CoordFloat,
-// T: Copy,
-{
+pub struct St<T> {
     k: T,
     dx: T,
     dy: T,

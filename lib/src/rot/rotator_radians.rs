@@ -16,7 +16,7 @@ use super::rotate_radians::RotateRadians;
 #[derive(Debug, Clone)]
 pub struct RotatorRadians<STATE, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     state: STATE,
     rotate: RotateRadians<T>,
@@ -24,7 +24,7 @@ where
 
 impl<T> RotatorRadians<Unconnected, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Constructor.
     pub fn new(rotate: RotateRadians<T>) -> Self {

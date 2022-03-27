@@ -1,5 +1,4 @@
 use core::marker::PhantomData;
-use std::fmt::Debug;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
@@ -8,7 +7,6 @@ use num_traits::FloatConst;
 
 use crate::clip::rectangle::Rectangle;
 use crate::projection::ClipExtentSet;
-// use crate::stream::Stream;
 use crate::stream::Unconnected;
 
 use super::template::ClipC;
@@ -20,15 +18,6 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentSet
 	for Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
-	DRAIN: Clone + Debug,
-	I: Clone,
-	LB: Clone,
-	LC: Clone + Debug,
-	LU: Clone + Debug,
-	PR: Clone + Debug,
-	PV: Clone + Debug,
-	RC: Clone + Debug,
-	RU: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
