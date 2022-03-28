@@ -22,17 +22,7 @@ use super::PointRadiusTrait;
 #[derive(Debug, Clone)]
 pub struct Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Clone,
-    LC: Clone,
-    LU: Clone,
-    CS: Clone,
-    LB: Clone,
-    PR: Clone,
-    PCNU: Clone,
-    RC: Clone,
-    RU: Clone,
-    PV: Clone,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     pr: T,
     p_i: PhantomData<I>,
@@ -52,16 +42,6 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Clone,
-    LC: Clone,
-    LU: Clone,
-    CS: Clone,
-    LB: Clone,
-    PCNU: Clone,
-    PR: Clone,
-    PV: Clone,
-    RC: Clone,
-    RU: Clone,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
@@ -88,15 +68,6 @@ where
 impl<'a, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<Context<'a, T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Clone,
-    LC: Clone,
-    LU: Clone,
-    LB: Clone,
-    PCNU: Clone,
-    PR: Clone,
-    PV: Clone,
-    RC: Clone,
-    RU: Clone,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the state within the builder.
@@ -128,15 +99,6 @@ where
 impl<'a, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<String<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Clone,
-    LC: Clone,
-    LU: Clone,
-    LB: Clone,
-    PCNU: Clone,
-    PR: Clone,
-    RC: Clone,
-    RU: Clone,
-    PV: Clone,
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
@@ -150,16 +112,7 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> PointRadiusTrait
     for Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    CS: Clone + PointRadiusTrait<T = T>,
-    I: Clone,
-    LC: Clone,
-    LU: Clone,
-    LB: Clone,
-    PCNU: Clone,
-    PR: Clone,
-    PV: Clone,
-    RC: Clone,
-    RU: Clone,
+    CS: PointRadiusTrait<T = T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// f64 or f32.
@@ -177,16 +130,6 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    CS: Clone,
-    I: Clone,
-    LC: Clone,
-    LU: Clone,
-    LB: Clone,
-    PCNU: Clone,
-    PR: Clone,
-    PV: Clone,
-    RC: Clone,
-    RU: Clone,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// From the progammed state generate a new projection.

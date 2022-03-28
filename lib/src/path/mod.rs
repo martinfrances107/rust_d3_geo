@@ -79,16 +79,7 @@ where
 #[allow(dead_code)]
 pub struct Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    CS: Clone,
-    I: Clone,
-    LB: Clone,
-    LC: Clone,
-    LU: Clone,
-    RC: Clone,
-    RU: Clone,
-    PR: Clone,
-    PV: Clone,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     context_stream: CS,
     point_radius: PointRadiusEnum<T>,
@@ -99,16 +90,6 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    CS: Clone,
-    I: Clone,
-    LC: Clone,
-    LB: Clone,
-    LU: Clone,
-    RC: Clone,
-    RU: Clone,
-    PR: Clone,
-    PV: Clone,
-    // PCNU: Clone,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
@@ -233,15 +214,6 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    CS: Clone,
-    I: Clone,
-    LB: Clone,
-    LC: Clone,
-    LU: Clone,
-    PV: Clone,
-    PR: Clone,
-    RC: Clone,
-    RU: Clone,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Sets the context stream.
