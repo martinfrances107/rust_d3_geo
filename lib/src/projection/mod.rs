@@ -60,9 +60,10 @@ pub type RotateTransform<PR, T> =
 ///
 /// Mercator projections [MercatorTransverseRaw and MercatorRaw]
 /// have a extent_transform() for their individual needs.
-pub trait TransformExtent<T>: ProjectionRawBase<T>
+pub trait TransformExtent<T>
 where
-    <Self as Transform>::T: CoordFloat,
+    // Self::T: CoordFloat + Debug,
+    T: CoordFloat,
 {
     /// f64 or f32.
     type T;

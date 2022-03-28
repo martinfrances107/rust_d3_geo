@@ -73,27 +73,6 @@ where
 	y1: Option<T>, // post-clip extent
 }
 
-// impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-// 	MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-// where
-// 	// DRAIN: Clone + Debug,
-// 	// I: Clone,
-// 	// LB: Clone,
-// 	// LC: Clone + Debug,
-// 	// LU: Clone + Debug,
-// 	// PCNU: Clone + Debug,
-// 	// PR: Clone + Debug,
-// 	// PV: Clone + Debug,
-// 	T: CoordFloat + FloatConst,
-// {
-// 	#[inline]
-// 	pub fn base(
-// 		&mut self,
-// 	) -> &mut ProjectionBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> {
-// 		&mut self.base
-// 	}
-// }
-
 impl<DRAIN, PR, T>
 	MercatorBuilder<
 		DRAIN,
@@ -114,7 +93,6 @@ impl<DRAIN, PR, T>
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -151,19 +129,11 @@ where
 	LB: Clone,
 	LC: Clone,
 	LU: Clone,
-
-	// LB: Clone + Debug,
-	// LC: Clone + Debug,
-	// LU: Clone + Debug,
 	PCNU: Clone,
 	PR: Clone,
 	PV: Clone,
-	// PR: Clone + Debug,
-	// PR: Clone,
-	// RC: Clone + Debug,
 	RC: Clone,
 	RU: Clone,
-	// PV: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	/// Using the currently programmed state output a new projection.
@@ -265,7 +235,6 @@ where
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> ScaleGet
 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -292,7 +261,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleSet
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -320,7 +288,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleSet
 		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -336,17 +303,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleSet
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> TranslateGet
 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	// I: Clone + Debug,
-	// LB: Clone + Debug,
-	// LC: Clone + Debug,
-	// LU: Clone + Debug,
-	// RC: Clone + Debug,
-	// RU: Clone + Debug,
-	// PR: TransformExtent<T>,
-	// PV: PointVisible<T = T>,
-	// PCNC: Clone + Debug,
-	// PCNU: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -381,10 +337,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
 	PCNU: Clone,
 	PV: Clone,
 	PR: Clone + Transform<T = T>,
-	// PR: TransformExtent<T>,
-	// PV: PointVisible<T = T>,
-	// PCNC: Clone + Debug,
-	// PCNU: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;

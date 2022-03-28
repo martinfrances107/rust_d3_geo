@@ -1,5 +1,7 @@
 use crate::projection::ScaleSet;
+use crate::projection::TransformExtent;
 use num_traits::AsPrimitive;
+use num_traits::Float;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -13,17 +15,16 @@ use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
 use crate::identity::Identity;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
-use crate::projection::mercator_builder::MercatorBuilder;
-use crate::projection::ClipAngleSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+use super::builder::template::NoClipC;
+use super::builder::template::NoClipU;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
-// use super::builder::Builder;
+use super::mercator_builder::MercatorBuilder;
+use super::ClipAngleSet;
 use super::ProjectionRawBase;
 
 /// Defines a projection.
@@ -33,10 +34,7 @@ pub struct Mercator<DRAIN, T> {
 	p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Default for Mercator<DRAIN, T>
-where
-	T: CoordFloat + FloatConst,
-{
+impl<DRAIN, T> Default for Mercator<DRAIN, T> {
 	#[inline]
 	fn default() -> Self {
 		Mercator {
@@ -74,15 +72,6 @@ where
 
 	#[inline]
 	fn builder() -> Self::Builder {
-		let clip = gen_clip_antimeridian::<
-			DRAIN,
-			NoClipC<DRAIN, T>,
-			NoClipU<DRAIN, T>,
-			Mercator<DRAIN, T>,
-			ResampleNoClipC<DRAIN, Mercator<DRAIN, T>, T>,
-			ResampleNoClipU<DRAIN, Mercator<DRAIN, T>, T>,
-			T,
-		>();
 		MercatorBuilder::new(Mercator::default())
 			.scale(T::from(250_f64).unwrap())
 			.clip_angle(T::from(142_f64).unwrap())
@@ -96,35 +85,36 @@ where
 // {
 // }
 
-// impl<DRAIN, T> TransformExtent<T> for Mercator<DRAIN, T>
-// where
-//     DRAIN: Stream<EP = DRAIN, T = T> + Default,
-//     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-//     type T = T;
+impl<DRAIN, T> TransformExtent<T> for Mercator<DRAIN, T>
+where
+	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Clone,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	type T = T;
 
-//     #[inline]
-//     fn transform_extent(
-//         self,
-//         k: T,
-//         t: Coordinate<T>,
-//         _x0: T,
-//         y0: T,
-//         x1: T,
-//         y1: T,
-//     ) -> [Coordinate<T>; 2] {
-//         [
-//             Coordinate {
-//                 x: Float::max(t.x - k, t.y - k),
-//                 y: y0,
-//             },
-//             Coordinate {
-//                 x: Float::min(t.x + k, x1),
-//                 y: y1,
-//             },
-//         ]
-//     }
-// }
+	#[inline]
+	fn transform_extent(
+		self,
+		k: T,
+		t: Coordinate<T>,
+		_x0: T,
+		y0: T,
+		x1: T,
+		y1: T,
+	) -> [Coordinate<T>; 2] {
+		[
+			Coordinate {
+				x: Float::max(t.x - k, t.y - k),
+				y: y0,
+			},
+			Coordinate {
+				x: Float::min(t.x + k, x1),
+				y: y1,
+			},
+		]
+	}
+}
 
 impl<DRAIN, T> Transform for Mercator<DRAIN, T>
 where
