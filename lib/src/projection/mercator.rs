@@ -1,3 +1,5 @@
+use crate::projection::ScaleSet;
+use num_traits::AsPrimitive;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -13,6 +15,7 @@ use crate::clip::circle::pv::PV as PVCircle;
 use crate::identity::Identity;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
+use crate::projection::mercator_builder::MercatorBuilder;
 use crate::projection::ClipAngleSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
@@ -20,9 +23,8 @@ use crate::Transform;
 
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
-use super::builder::Builder;
+// use super::builder::Builder;
 use super::ProjectionRawBase;
-use super::Scale;
 
 /// Defines a projection.
 #[derive(Clone, Copy, Debug)]
@@ -46,10 +48,10 @@ where
 
 impl<DRAIN, T> ProjectionRawBase<T> for Mercator<DRAIN, T>
 where
-	DRAIN: Clone,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	DRAIN: Clone + Default,
+	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	type Builder = Builder<
+	type Builder = MercatorBuilder<
 		DRAIN,
 		InterpolateCircle<DRAIN, ResampleNoClipC<DRAIN, Mercator<DRAIN, T>, T>, T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
@@ -81,7 +83,7 @@ where
 			ResampleNoClipU<DRAIN, Mercator<DRAIN, T>, T>,
 			T,
 		>();
-		Builder::new(clip, Mercator::default())
+		MercatorBuilder::new(Mercator::default())
 			.scale(T::from(250_f64).unwrap())
 			.clip_angle(T::from(142_f64).unwrap())
 	}

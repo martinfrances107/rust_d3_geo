@@ -23,7 +23,7 @@ use super::builder::Builder;
 use super::ClipAngleSet;
 use super::ProjectionRawBase;
 use super::ProjectionRawCommon;
-use super::Scale;
+use super::ScaleSet;
 
 /// Why the Phantom Data is required here...
 ///

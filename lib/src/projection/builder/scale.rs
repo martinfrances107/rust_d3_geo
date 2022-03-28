@@ -5,8 +5,8 @@ use num_traits::FloatConst;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
-use crate::projection::Scale;
 use crate::projection::ScaleGet;
+use crate::projection::ScaleSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
@@ -27,7 +27,7 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Scale
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleSet
     for Builder<
         DRAIN,
         I,
@@ -54,7 +54,7 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Scale
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleSet
     for Builder<
         DRAIN,
         I,

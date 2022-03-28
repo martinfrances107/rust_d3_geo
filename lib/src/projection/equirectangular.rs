@@ -1,3 +1,4 @@
+use crate::projection::ScaleSet;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -22,7 +23,6 @@ use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;
-use super::Scale;
 
 /// Equirectangular
 /// Used to define a projection builder.

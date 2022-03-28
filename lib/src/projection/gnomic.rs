@@ -1,3 +1,4 @@
+use crate::projection::ScaleSet;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -15,7 +16,6 @@ use crate::identity::Identity;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::ClipAngleSet;
-use crate::projection::Scale;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;

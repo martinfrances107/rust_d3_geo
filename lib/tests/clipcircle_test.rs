@@ -17,7 +17,7 @@ mod clipcircle_test {
     use rust_d3_geo::projection::ClipAngleAdjust;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::RotateSet;
-    use rust_d3_geo::projection::Translate;
+    use rust_d3_geo::projection::TranslateSet;
 
     #[test]
     fn test_projection_clip_angle_degenerate_polygons() {

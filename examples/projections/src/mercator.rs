@@ -11,8 +11,8 @@ use rust_d3_geo::projection::mercator::Mercator;
 use rust_d3_geo::projection::ClipAngleAdjust;
 use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::TranslateSet;
 
 use crate::get_document;
 
@@ -37,17 +37,18 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
 
 	let mercator_builder = Mercator::<Context<f64>, f64>::builder();
 
-	let ortho = mercator_builder
+	let mercator = mercator_builder
 		.scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
 		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.clip_angle_adjust(90_f64)
-		.precision_adjust(&90_f64)
+		// TODO must reinstate.
+		// .clip_angle_adjust(90_f64)
+		// .precision_adjust(&90_f64)
 		.build();
 
-	let mut path = pb.build(ortho);
+	let mut path = pb.build(mercator);
 	context_raw.set_stroke_style(&"#69b3a2".into());
 	path.object(land);
 	context_raw.stroke();

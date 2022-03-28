@@ -33,7 +33,7 @@ mod index_test {
     use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
-    use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Stream;
     use rust_d3_geo::stream::Streamable;

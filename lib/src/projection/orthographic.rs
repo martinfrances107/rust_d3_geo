@@ -24,7 +24,7 @@ use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;
-use super::Scale;
+use super::ScaleSet;
 
 /// Orthographic
 ///

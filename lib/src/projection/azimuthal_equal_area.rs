@@ -1,3 +1,4 @@
+use crate::projection::ScaleSet;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -27,7 +28,6 @@ use super::builder::template::ResampleNoClipU;
 use super::resampler::resample::Connected as ConnectedResample;
 use super::resampler::resample::Resample;
 use super::ClipAngleSet;
-use super::Scale;
 
 /// Why the Phantom Data is required here...
 ///

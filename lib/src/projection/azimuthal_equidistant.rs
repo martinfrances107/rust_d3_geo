@@ -1,3 +1,4 @@
+use crate::projection::ScaleSet;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -26,7 +27,6 @@ use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
-use super::Scale;
 
 /// Why the Phantom Data is required here...
 ///

@@ -27,9 +27,8 @@ use rust_d3_geo::path::string::String as PathString;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::RotateSet;
-
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::TranslateSet;
 use rust_topojson_client::feature::Builder as FeatureBuilder;
 
 use topojson::Topology;

@@ -20,8 +20,8 @@ mod equirectangular_test {
 	use rust_d3_geo::projection::projection_equal::projection_equal;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::RotateSet;
-	use rust_d3_geo::projection::Scale;
-	use rust_d3_geo::projection::Translate;
+	use rust_d3_geo::projection::ScaleSet;
+	use rust_d3_geo::projection::TranslateSet;
 	use rust_d3_geo::stream::Connected;
 	use rust_d3_geo::stream::StreamDrainStub;
 	use rust_d3_geo::stream::Unconnected;

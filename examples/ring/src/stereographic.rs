@@ -13,7 +13,7 @@ use rust_d3_geo::circle::generator::Generator as CircleGenerator;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::stereographic::Stereographic;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::TranslateSet;
 
 use super::get_document;
 use super::get_path_node;

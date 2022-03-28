@@ -11,8 +11,8 @@ use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::gnomic::Gnomic;
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::TranslateSet;
 
 use crate::get_document;
 

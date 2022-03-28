@@ -13,8 +13,8 @@ use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::equirectangular::Equirectangular;
 use rust_d3_geo::projection::Center;
 use rust_d3_geo::projection::RotateSet;
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::TranslateSet;
 
 use crate::get_document;
 

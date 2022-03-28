@@ -499,7 +499,7 @@ pub trait ScaleGet {
 /// Controls the projections scaling factor.
 ///
 /// Projection builder sub trait.
-pub trait Scale {
+pub trait ScaleSet {
     /// f32 or f64.
     type T;
 
@@ -509,10 +509,11 @@ pub trait Scale {
     ///  @param scale Scale factor to be used for the projection; the default scale is projection-specific.
     fn scale(self, scale: Self::T) -> Self;
 }
+
 /// Controls the projections translation factor.
 ///
 /// Projection builder sub trait.
-pub trait Translate {
+pub trait TranslateGet {
     /// f32 or f64.
     type T;
 
@@ -520,6 +521,14 @@ pub trait Translate {
     fn get_translate(&self) -> Coordinate<Self::T>
     where
         Self::T: CoordFloat;
+}
+
+/// Controls the projections translation factor.
+///
+/// Projection builder sub trait.
+pub trait TranslateSet {
+    /// f32 or f64.
+    type T;
 
     ///  Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
     ///  The translation offset determines the PIxel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
