@@ -63,10 +63,10 @@ pub trait PostClipNode {}
 #[derive(Clone, Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
-    p_pcnc: PhantomData<PCNC>,
-    p_lb: PhantomData<LB>,
+    pub p_pcnc: PhantomData<PCNC>,
+    pub p_lb: PhantomData<LB>,
     pub projection_raw: PR,
     pub clip: Clip<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>,
     pub lambda: T,
@@ -87,10 +87,10 @@ where
 
     pub theta: Option<T>,
 
-    x0: Option<T>,
-    y0: Option<T>,
-    x1: Option<T>,
-    y1: Option<T>, // post-clip extent
+    pub x0: Option<T>,
+    pub y0: Option<T>,
+    pub x1: Option<T>,
+    pub y1: Option<T>, // post-clip extent
 
     /// Used by recenter() to build the factories.
     pub rotate: RotateRadians<T>,

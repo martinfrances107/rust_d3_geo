@@ -84,9 +84,7 @@ where
 /// things that follow the common family of raw projections.
 /// and alternatively the less common mercator family of raw projections.
 // pub trait ProjectionRawBase<T>: Clone + Debug + Default + Transform<T = T>
-pub trait ProjectionRawBase<T>: Transform<T = T> // where
-//     <Self as Transform>::T: CoordFloat,
-{
+pub trait ProjectionRawBase<T>: Transform<T = T> {
     /// The default builder.
     type Builder;
     /// f32 or f64.
@@ -97,29 +95,23 @@ pub trait ProjectionRawBase<T>: Transform<T = T> // where
 
 /// Marker trait -  for family of raw projections.
 /// used to identify thing that ARE NOT the  mercator family of projections.
-pub trait ProjectionRawCommon<T>: ProjectionRawBase<T> // where
-//     T: CoordFloat,
-{
-}
+pub trait ProjectionRawCommon<T>: ProjectionRawBase<T> {}
 /// Marker trait identifies trait that need a highly specialised set of
 /// overreides. The mercator family.
-pub trait ProjectionRawMercator<T>: ProjectionRawBase<T> // where
-//     T: CoordFloat,
-{
-}
+pub trait ProjectionRawMercator<T>: ProjectionRawBase<T> {}
 
 trait Builder
 where
-    <Self as Builder>::Drain: Clone,
-    <Self as Builder>::I: Clone,
-    <Self as Builder>::LB: Clone,
-    <Self as Builder>::LC: Clone,
-    <Self as Builder>::LU: Clone,
-    <Self as Builder>::PCNU: Clone,
-    <Self as Builder>::PV: Clone,
-    <Self as Builder>::RC: Clone,
-    <Self as Builder>::RU: Clone,
-    <Self as Builder>::PR: Clone,
+    // <Self as Builder>::Drain: Clone,
+    // <Self as Builder>::I: Clone,
+    // <Self as Builder>::LB: Clone,
+    // <Self as Builder>::LC: Clone,
+    // <Self as Builder>::LU: Clone,
+    // <Self as Builder>::PCNU: Clone,
+    // <Self as Builder>::PV: Clone,
+    // <Self as Builder>::RC: Clone,
+    // <Self as Builder>::RU: Clone,
+    // <Self as Builder>::PR: Clone,
     <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;
@@ -496,12 +488,20 @@ pub trait RotateSet {
 /// Controls the projections scaling factor.
 ///
 /// Projection builder sub trait.
-pub trait Scale {
+pub trait ScaleGet {
     /// f32 or f64.
     type T;
 
     /// Returns the programmed scaling factor.
     fn get_scale(&self) -> Self::T;
+}
+
+/// Controls the projections scaling factor.
+///
+/// Projection builder sub trait.
+pub trait Scale {
+    /// f32 or f64.
+    type T;
 
     ///  Sets the projection’s scale factor to the specified value and returns the projection.
     ///  The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
@@ -509,7 +509,6 @@ pub trait Scale {
     ///  @param scale Scale factor to be used for the projection; the default scale is projection-specific.
     fn scale(self, scale: Self::T) -> Self;
 }
-
 /// Controls the projections translation factor.
 ///
 /// Projection builder sub trait.

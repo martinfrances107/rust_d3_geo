@@ -49,7 +49,6 @@ enum LineEndFn {
 #[derivative(Debug)]
 pub struct Connected<EP, LB, LC, LU, SC, SU, T>
 where
-    // LB: Clone,
     T: CoordFloat,
 {
     p_ep: PhantomData<EP>,
@@ -69,7 +68,6 @@ where
 
 impl<EP, LB, LC, LU, SC, SU, T> Connected<EP, LB, LC, LU, SC, SU, T>
 where
-    // LB: Clone,
     LU: Clone + Connectable<Output = LC, SC = SC> + Bufferable<Output = LB, T = T>,
     T: CoordFloat,
 {
@@ -101,10 +99,7 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Connectable
     for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
-    // LB: Clone,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    // PR: Clone,
-    // LU: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type SC = RC;
@@ -148,8 +143,6 @@ where
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
-    // LB: Clone,
-    // PR: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Takes a line and cuts into visible segments. Return values used for polygon
