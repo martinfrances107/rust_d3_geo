@@ -32,7 +32,7 @@ use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 #[derive(Clone, Debug)]
 pub struct Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Must be public as there is a implicit copy.
     pub p_pcnc: PhantomData<PCNC>,
