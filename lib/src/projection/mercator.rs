@@ -23,7 +23,7 @@ use super::builder::template::NoClipC;
 use super::builder::template::NoClipU;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
-use super::mercator_builder::MercatorBuilder;
+use super::builder_mercator::builder::Builder as MercatorBuilder;
 use super::ClipAngleSet;
 use super::ProjectionRawBase;
 
@@ -87,7 +87,6 @@ where
 
 impl<DRAIN, T> TransformExtent<T> for Mercator<DRAIN, T>
 where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	DRAIN: Clone,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {

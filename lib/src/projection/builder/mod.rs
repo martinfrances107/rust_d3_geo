@@ -30,7 +30,7 @@ use super::resampler::resample::Resample;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
-use super::Angle;
+use super::AngleSet;
 
 mod angle;
 mod angle_mercator;
@@ -48,7 +48,6 @@ mod precision_bypass;
 mod precision_get;
 mod precision_set;
 mod reflect;
-mod reflect_mercator;
 mod rotate;
 mod scale;
 pub mod template;
@@ -265,7 +264,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
     >
 where
     PR: Clone + Transform<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {
         // self.cache_stream = None;
@@ -273,7 +272,7 @@ where
         self
     }
 
-    fn recenter_with_resampling(self) -> Self {
+    pub fn recenter_with_resampling(self) -> Self {
         assert!(!self.delta2.is_zero());
         let center = generate_str(
             &self.k,
@@ -353,7 +352,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
     >
 where
     PR: Clone + Transform<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {
         // self.cache_stream = None;
@@ -361,7 +360,7 @@ where
         self
     }
 
-    fn recenter_no_resampling(self) -> Self {
+    pub fn recenter_no_resampling(self) -> Self {
         let center = generate_str(
             &self.k,
             &T::zero(),

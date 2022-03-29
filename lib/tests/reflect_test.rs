@@ -6,17 +6,23 @@ mod reflect_tests {
 
 	use geo::Coordinate;
 	use pretty_assertions::assert_eq;
+	use rust_d3_geo::projection::AngleGet;
+	use rust_d3_geo::Transform;
 
 	use rust_d3_geo::clip::buffer::Buffer;
 	use rust_d3_geo::clip::circle::interpolate::Interpolate as InterpolateCircle;
 	use rust_d3_geo::clip::circle::line::Line as LineCircle;
 	use rust_d3_geo::clip::circle::pv::PV as PVCircle;
 	use rust_d3_geo::identity::Identity;
+	use rust_d3_geo::in_delta::in_delta;
 	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
 	use rust_d3_geo::projection::builder::template::ResampleNoClipU;
 	use rust_d3_geo::projection::builder::Builder;
+	use rust_d3_geo::projection::builder_mercator::builder::Builder as MercatorBuilder;
 	use rust_d3_geo::projection::gnomic::Gnomic;
+	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::projection_equal::projection_equal;
+	use rust_d3_geo::projection::AngleSet;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::Reflect;
 	use rust_d3_geo::projection::ScaleSet;
@@ -198,48 +204,48 @@ mod reflect_tests {
 		));
 	}
 
-	// TODO Must resolve mercator stuff.
-	// 	#[test]
-	// 	fn reflect_x_works_with_projection_angle() {
-	// 		println!("projection.reflectX(…) works with projection.angle()");
-	// 		let builder: MercatorBuilder<StreamDrainStub<f32>, _, _, _, _> = Mercator::builder()
-	// 			.scale(1_f32)
-	// 			.translate(&Coordinate {
-	// 				x: 10_f32,
-	// 				y: 20_f32,
-	// 			})
-	// 			.reflect_x(true)
-	// 			.angle(45_f32);
+	#[test]
+	fn reflect_x_works_with_projection_angle() {
+		println!("projection.reflectX(…) works with projection.angle()");
+		let builder: MercatorBuilder<StreamDrainStub<f32>, _, _, _, _, _, _, _, _, _, _, f32> =
+			Mercator::builder()
+				.scale(1_f32)
+				.translate(&Coordinate {
+					x: 10_f32,
+					y: 20_f32,
+				})
+				.reflect_x(true)
+				.angle(45_f32);
 
-	// 		assert_eq!(builder.get_reflect_x(), true);
-	// 		assert!(in_delta(45_f32, builder.get_angle(), 1e-6));
-	// 		let p = builder.build();
-	// 		assert_eq!(
-	// 			p.transform(&Coordinate { x: 0_f32, y: 0_f32 }),
-	// 			Coordinate {
-	// 				x: 10_f32,
-	// 				y: 20_f32
-	// 			}
-	// 		);
-	// 		assert_eq!(
-	// 			p.transform(&Coordinate {
-	// 				x: 10_f32,
-	// 				y: 0_f32
-	// 			}),
-	// 			Coordinate {
-	// 				x: 9.87658658_f32,
-	// 				y: 20.12341341_f32
-	// 			}
-	// 		);
-	// 		assert_eq!(
-	// 			p.transform(&Coordinate {
-	// 				x: 0_f32,
-	// 				y: 10_f32
-	// 			}),
-	// 			Coordinate {
-	// 				x: 9.87595521_f32,
-	// 				y: 19.87595521_f32
-	// 			}
-	// 		);
-	// 	}
+		assert_eq!(builder.get_reflect_x(), true);
+		assert!(in_delta(45_f32, builder.get_angle(), 1e-6));
+		let p = builder.build();
+		assert_eq!(
+			p.transform(&Coordinate { x: 0_f32, y: 0_f32 }),
+			Coordinate {
+				x: 10_f32,
+				y: 20_f32
+			}
+		);
+		assert_eq!(
+			p.transform(&Coordinate {
+				x: 10_f32,
+				y: 0_f32
+			}),
+			Coordinate {
+				x: 9.87658658_f32,
+				y: 20.12341341_f32
+			}
+		);
+		assert_eq!(
+			p.transform(&Coordinate {
+				x: 0_f32,
+				y: 10_f32
+			}),
+			Coordinate {
+				x: 9.87595521_f32,
+				y: 19.87595521_f32
+			}
+		);
+	}
 }

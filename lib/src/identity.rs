@@ -2,7 +2,6 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
 
 use crate::projection::builder::PostClipNode;
 use crate::stream::Connectable;
@@ -51,7 +50,7 @@ impl<EP, SC, SU, T> Identity<EP, SC, SU, Unconnected, T> {
 
 impl<EP, SC, SU, T> Connectable for Identity<EP, SC, SU, Unconnected, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type SC = SC;
     type Output = Identity<EP, SC, SU, Connected<Self::SC>, T>;

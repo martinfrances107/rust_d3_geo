@@ -35,7 +35,7 @@ pub mod azimuthal;
 /// The default projection builder.
 pub mod builder;
 /// A specalised builder wrapping the default mecator.
-pub mod mercator_builder;
+pub mod builder_mercator;
 /// Debug and test helper function.
 pub mod projection_equal;
 /// Projection object.
@@ -319,15 +319,22 @@ pub trait FitAdjust {
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
 
-/// Gets or sets the post-projection planar rotation angle.
+/// Gets the post-projection planar rotation angle.
 /// A projection builder sub trait.
-pub trait Angle {
+pub trait AngleGet {
     /// f64 or f32.
     type T;
 
     /// Returns the projection’s post-projection planar rotation angle.
     /// defaults to 0°.
     fn get_angle(&self) -> Self::T;
+}
+
+/// Sets the post-projection planar rotation angle.
+/// A projection builder sub trait.
+pub trait AngleSet {
+    /// f64 or f32.
+    type T;
 
     /// Sets the projection’s post-projection planar rotation angle to the
     /// specified angle in degrees and returns the projection.

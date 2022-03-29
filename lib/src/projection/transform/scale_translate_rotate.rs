@@ -1,10 +1,10 @@
 use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
 
 use crate::Transform;
 
 use super::st::St;
 use super::str::Str;
+
 /// The scale translate rotate transform can be optimiised into
 /// a faster variant, just scale translate.
 #[derive(Clone, Copy, Debug)]
@@ -17,7 +17,7 @@ pub enum ScaleTranslateRotate<T> {
 
 impl<T: CoordFloat> Transform for ScaleTranslateRotate<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
 

@@ -1,5 +1,4 @@
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::data_object::FeatureCollection;
 use crate::stream::Stream;
@@ -8,7 +7,7 @@ use super::Streamable;
 
 impl<T> Streamable for FeatureCollection<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// f64 or f32.
     type T = T;

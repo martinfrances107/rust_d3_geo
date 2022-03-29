@@ -1,5 +1,4 @@
 use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
 
 use crate::Transform;
 
@@ -22,7 +21,7 @@ pub struct Str<T> {
 
 impl<T> Str<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Constructor.
     pub(crate) fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: &T) -> Self {
@@ -45,7 +44,7 @@ where
 
 impl<T> Transform for Str<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {

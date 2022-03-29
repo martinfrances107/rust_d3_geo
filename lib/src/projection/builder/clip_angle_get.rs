@@ -9,21 +9,8 @@ use crate::stream::Unconnected;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ClipAngleGet
-    for Builder<
-        DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
-        PCNC,
-        PCNU,
-        PR,
-        PV,
-        Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-        T,
-    >
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> ClipAngleGet
+    for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

@@ -5,16 +5,13 @@ mod angle_test {
 
 	use geo::Coordinate;
 	use pretty_assertions::assert_eq;
-	use rust_d3_geo::projection::ProjectionRawBase;
 
-	// use rust_d3_geo::clip::circle::line::Line;
-	// use rust_d3_geo::clip::circle::pv::PV;
 	use rust_d3_geo::in_delta::in_delta;
-	// use rust_d3_geo::projection::builder::Builder;
 	use rust_d3_geo::projection::gnomic::Gnomic;
 	use rust_d3_geo::projection::projection_equal::projection_equal;
-	use rust_d3_geo::projection::Angle;
-	// use rust_d3_geo::projection::Raw;
+	use rust_d3_geo::projection::AngleGet;
+	use rust_d3_geo::projection::AngleSet;
+	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ScaleSet;
 	use rust_d3_geo::projection::TranslateSet;
 	use rust_d3_geo::stream::StreamDrainStub;

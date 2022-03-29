@@ -49,7 +49,6 @@ where
 
 impl<EP, SINK, T> Stream for RotatorRadians<Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T> + Default,
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {

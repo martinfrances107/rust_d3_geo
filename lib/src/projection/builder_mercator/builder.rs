@@ -1,16 +1,5 @@
-use crate::clip::rectangle::Rectangle;
-use crate::clip::PointVisible;
-use crate::projection::resampler::resample::Resample;
-use crate::projection::stream_transform_radians::StreamTransformRadians;
-use crate::projection::Projector;
-use crate::projection::RotateGet;
-use crate::projection::ScaleGet;
-use crate::projection::ScaleSet;
-use crate::projection::TranslateGet;
-use crate::projection::TranslateSet;
-use crate::rot::rotate_radians;
-use crate::Coordinate;
-use crate::Transform;
+use crate::projection::ClipExtentBounded;
+use crate::projection::TransformExtent;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -29,7 +18,28 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
+use crate::clip::rectangle::Rectangle;
+use crate::clip::PointVisible;
+use crate::projection::builder::template::ResampleNoClipC;
+use crate::projection::builder::template::ResampleNoClipU;
+use crate::projection::builder::Builder as ProjectionBuilder;
+use crate::projection::builder_mercator::builder::Builder as MercatorBuilder;
 use crate::projection::resampler::none::None as ResampleNone;
+use crate::projection::resampler::resample::Connected as ConnectedResample;
+use crate::projection::resampler::resample::Resample;
+use crate::projection::stream_transform_radians::StreamTransformRadians;
+use crate::projection::AngleGet;
+use crate::projection::AngleSet;
+use crate::projection::Projector;
+use crate::projection::Reflect;
+use crate::projection::RotateGet;
+use crate::projection::ScaleGet;
+use crate::projection::ScaleSet;
+use crate::projection::TranslateGet;
+use crate::projection::TranslateSet;
+use crate::rot::rotate_radians;
+use crate::Coordinate;
+use crate::Transform;
 
 // use crate::clip::PointVisible;
 use crate::identity::Identity;
@@ -41,19 +51,13 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 // use crate::Transform;
 
-use super::builder::template::ResampleNoClipC;
-use super::builder::template::ResampleNoClipU;
-use super::builder::Builder as ProjectionBuilder;
-use super::resampler::resample::Connected as ConnectedResample;
-use super::ClipAngleSet;
-use super::ClipExtentBounded;
 // use super::Fit;
 // use super::PrecisionGet;
 // use super::PrecisionSet;
 // use super::ProjectionRawBase;
 // use super::Projector;
+use crate::projection::ClipAngleSet;
 
-use super::TransformExtent;
 // use super::Translate;
 // use crate::projection::RotateGet;
 // use crate::projection::RotateSet;
@@ -61,20 +65,29 @@ use super::TransformExtent;
 /// A wrapper for Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
 	T: CoordFloat + FloatConst,
 {
-	pr: PR,
+	// pub p_drain: PhantomData<DRAIN>,
+	// pub p_i: PhantomData<I>,
+	// pub p_lb: PhantomData<LB>,
+	// pub p_lc: PhantomData<LC>,
+	// pub p_lu: PhantomData<LU>,
+	// pub p_pcnc: PhantomData<PCNC>,
+	// pub p_pcnu: PhantomData<PCNU>,
+	// pub p_rc: PhantomData<RC>,
+	// pub p_ru: PhantomData<RU>,
+	pub pr: PR,
 	pub base: ProjectionBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
-	x0: Option<T>,
-	y0: Option<T>,
-	x1: Option<T>,
-	y1: Option<T>, // post-clip extent
+	pub x0: Option<T>,
+	pub y0: Option<T>,
+	pub x1: Option<T>,
+	pub y1: Option<T>, // post-clip extent
 }
 
 impl<DRAIN, PR, T>
-	MercatorBuilder<
+	Builder<
 		DRAIN,
 		InterpolateAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
@@ -122,7 +135,7 @@ impl<DRAIN, PR, T>
 }
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-	MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+	Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
 	DRAIN: Clone,
 	I: Clone,
@@ -232,74 +245,6 @@ where
 // 	}
 // }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> ScaleGet
-	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-where
-	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	type T = T;
-
-	#[inline]
-	fn get_scale(&self) -> T {
-		self.base.get_scale()
-	}
-}
-
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleSet
-	for MercatorBuilder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		PCNC,
-		PCNU,
-		PR,
-		PV,
-		Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-		T,
-	> where
-	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	type T = T;
-
-	fn scale(mut self, scale: T) -> Self {
-		self.base = self.base.scale(scale);
-		// self.reclip()
-		self
-	}
-}
-
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleSet
-	for MercatorBuilder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		PCNC,
-		PCNU,
-		PR,
-		PV,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-		T,
-	> where
-	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	type T = T;
-
-	fn scale(mut self, scale: T) -> Self {
-		self.base = self.base.scale(scale);
-		// self.reclip()
-		self
-	}
-}
-
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> TranslateGet
 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
@@ -314,7 +259,7 @@ where
 }
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
-	for MercatorBuilder<
+	for Builder<
 		DRAIN,
 		I,
 		LB,
@@ -349,7 +294,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
 }
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
-	for MercatorBuilder<
+	for Builder<
 		DRAIN,
 		I,
 		LB,
@@ -370,12 +315,8 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
 	LU: Clone,
 	PCNC: Clone,
 	PCNU: Clone,
-	PV: Clone + Transform<T = T>,
+	PV: Clone,
 	PR: Clone + Transform<T = T>,
-	// PR: TransformExtent<T>,
-	// PV: PointVisible<T = T>,
-	// PCNC: Clone + Debug,
-	// PCNU: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -519,7 +460,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
 // }
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> ClipExtentBounded
-	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
 	DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	PR: TransformExtent<T>,
@@ -529,7 +470,7 @@ where
 {
 	/// f64 or f32.
 	type T = T;
-	type OutputClear = MercatorBuilder<
+	type OutputClear = Builder<
 		DRAIN,
 		I,
 		LB,
@@ -564,7 +505,7 @@ where
 	}
 
 	// clears the bounding box.
-	fn clip_extent_clear(mut self) -> Self::OutputClear {
+	fn clip_extent_clear(self) -> Self::OutputClear {
 		let base = self.base;
 
 		let base_out = ProjectionBuilder {
@@ -600,7 +541,7 @@ where
 			postclip: Identity::default(),
 		};
 
-		let out = MercatorBuilder {
+		let out = Builder {
 			pr: self.pr,
 			base: base_out,
 			x0: None,
@@ -621,31 +562,6 @@ where
 	// 	self.reclip()
 	// }
 }
-
-// impl<DRAIN, INTERPOLATE, LINE, PR, PV, RESAMPLER, T> Angle
-//     for MercatorBuilder<DRAIN, INTERPOLATE, LINE, PR, PV, RESAMPLER, T>
-// where
-//     DRAIN: Default + Stream<EP = DRAIN, T = T>,
-//     INTERPOLATE: Interpolate<T = T>,
-//     LB: Line, LC: Line, LU: Line,
-//     PR: ProjectionRawBase<T>,
-//     PV: PointVisible<T = T>,
-//     RC: Resampler, RU: Resampler,
-//     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-//     type T = T;
-
-//     #[inline]
-//     fn get_angle(&self) -> T {
-//         self.base.get_angle()
-//     }
-
-//     /// Sets the rotation angles as measured in degrees.
-//     fn angle(mut self, angle: T) -> Self {
-//         self.base = self.base.angle(angle);
-//         self
-//     }
-// }
 
 // impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> RotateGet
 // 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
@@ -695,96 +611,43 @@ where
 // }
 
 // impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Reflect
-//     for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+// 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 // where
-//     DRAIN: Default + Stream<EP = DRAIN, T = T>,
-//     INTERPOLATE: Interpolate<T = T>,
-//     LB: Line, LC: Line, LU: Line,
-//     PR: ProjectionRawBase<T>,
-//     PV: PointVisible<T = T>,
-//     RC: Resampler, RU: Resampler,
-//     T: 'static
-//         + AbsDiffEq<Epsilon = T>
-//         + std::ops::AddAssign
-//         + AsPrimitive<T>
-//         + CoordFloat
-//         + Display
-//         + FloatConst,
+// 	DRAIN: Default + Stream<EP = DRAIN, T = T>,
+// 	PV: PointVisible<T = T>,
+
+// 	T: 'static
+// 		+ AbsDiffEq<Epsilon = T>
+// 		+ std::ops::AddAssign
+// 		+ AsPrimitive<T>
+// 		+ CoordFloat
+// 		// + Display
+// 		+ FloatConst,
 // {
-//     type T = T;
+// 	type T = T;
 
-//     /// Is the projection builder set to invert the x-coordinate.
-//     #[inline]
-//     fn get_reflect_x(&self) -> bool {
-//         self.base.get_reflect_x()
-//     }
+// 	/// Is the projection builder set to invert the x-coordinate.
+// 	#[inline]
+// 	fn get_reflect_x(&self) -> bool {
+// 		self.base.get_reflect_x()
+// 	}
 
-//     /// Set the projection builder to invert the x-coordinate.
-//     fn reflect_x(mut self, reflect: bool) -> Self {
-//         self.base = self.base.reflect_x(reflect);
-//         self
-//     }
+// 	/// Set the projection builder to invert the x-coordinate.
+// 	fn reflect_x(mut self, reflect: bool) -> Self {
+// 		self.base = self.base.reflect_x(reflect);
+// 		self
+// 	}
 
-//     /// Is the projection builder set to invert the y-coordinate.
-//     #[inline]
-//     fn get_reflect_y(&self) -> bool {
-//         self.base.get_reflect_y()
-//     }
+// 	/// Is the projection builder set to invert the y-coordinate.
+// 	#[inline]
+// 	fn get_reflect_y(&self) -> bool {
+// 		self.base.get_reflect_y()
+// 	}
 
-//     /// Set the projection builder to invert the y-coordinate.
-//     #[inline]
-//     fn reflect_y(mut self, reflect: bool) -> Self {
-//         self.base = self.base.reflect_y(reflect);
-//         self
-//     }
+// 	/// Set the projection builder to invert the y-coordinate.
+// 	#[inline]
+// 	fn reflect_y(mut self, reflect: bool) -> Self {
+// 		self.base = self.base.reflect_y(reflect);
+// 		self
+// 	}
 // }
-
-impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
-	for MercatorBuilder<
-		DRAIN,
-		InterpolateAntimeridian<DRAIN, RC, T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<DRAIN, RC, Connected<RC>, T>,
-		LineAntimeridian<DRAIN, RC, Unconnected, T>,
-		PCNC,
-		PCNU,
-		PR,
-		PVAntimeridian<T>,
-		RC,
-		RU,
-		T,
-	> where
-	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-{
-	type Output = MercatorBuilder<
-		DRAIN,
-		InterpolateCircle<DRAIN, RC, T>,
-		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<DRAIN, RC, Connected<RC>, T>,
-		LineCircle<DRAIN, RC, Unconnected, T>,
-		PCNC,
-		PCNU,
-		PR,
-		PVCircle<T>,
-		RC,
-		RU,
-		T,
-	>;
-	/// f32 or f64.
-	type T = T;
-
-	// Given an angle in degrees. Sets the internal clip angle and returns a builder
-	// which uses the clip circle stratergy.
-	fn clip_angle(self, angle: T) -> Self::Output {
-		let base = self.base.clip_angle(angle);
-		Self::Output {
-			pr: self.pr,
-			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1,
-		}
-	}
-}

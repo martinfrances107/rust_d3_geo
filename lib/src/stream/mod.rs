@@ -97,10 +97,7 @@ where
     }
 }
 
-impl<T> Default for StreamDrainStub<T>
-where
-    T: CoordFloat,
-{
+impl<T> Default for StreamDrainStub<T> {
     fn default() -> Self {
         Self {
             phantom: PhantomData::default(),

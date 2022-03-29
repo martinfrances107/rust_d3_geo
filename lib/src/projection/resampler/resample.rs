@@ -83,7 +83,7 @@ where
 #[derive(Clone, Debug)]
 pub struct Resample<EP, PR, SC, SU, STATE, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     delta2: T,
     p_ep: PhantomData<EP>,
@@ -150,7 +150,7 @@ where
 
 impl<'a, EP, PR, SC, SU, T> Resample<EP, PR, SC, SU, Unconnected, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Returns a Resample for a given precision
     pub fn new(
