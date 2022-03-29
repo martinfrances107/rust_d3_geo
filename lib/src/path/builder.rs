@@ -25,16 +25,6 @@ where
     T: CoordFloat,
 {
     pr: T,
-    p_i: PhantomData<I>,
-    p_lb: PhantomData<LB>,
-    p_lc: PhantomData<LC>,
-    p_lu: PhantomData<LU>,
-    p_pcnc: PhantomData<PCNC>,
-    p_pcnu: PhantomData<PCNU>,
-    p_pv: PhantomData<PV>,
-    p_pr: PhantomData<PR>,
-    p_rc: PhantomData<RC>,
-    p_ru: PhantomData<RU>,
     context_stream: CS,
     projection: Option<Projector<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>>,
 }
@@ -48,16 +38,6 @@ where
     pub fn new(context_stream: CS) -> Self {
         Self {
             context_stream,
-            p_i: PhantomData::<I>,
-            p_lb: PhantomData::<LB>,
-            p_lc: PhantomData::<LC>,
-            p_lu: PhantomData::<LU>,
-            p_pcnc: PhantomData::<PCNC>,
-            p_pcnu: PhantomData::<PCNU>,
-            p_pv: PhantomData::<PV>,
-            p_pr: PhantomData::<PR>,
-            p_rc: PhantomData::<RC>,
-            p_ru: PhantomData::<RU>,
             pr: T::from(4.5_f64).unwrap(),
             projection: None,
         }
@@ -79,16 +59,6 @@ where
     pub fn context(self, context: &'a CanvasRenderingContext2d) -> Self {
         Builder {
             pr: self.pr,
-            p_i: PhantomData::<I>,
-            p_lb: PhantomData::<LB>,
-            p_lc: PhantomData::<LC>,
-            p_lu: PhantomData::<LU>,
-            p_pcnc: PhantomData::<PCNC>,
-            p_pcnu: PhantomData::<PCNU>,
-            p_pv: PhantomData::<PV>,
-            p_pr: PhantomData::<PR>,
-            p_rc: PhantomData::<RC>,
-            p_ru: PhantomData::<RU>,
             context_stream: PathContext::<T>::new(context),
             projection: self.projection,
         }
