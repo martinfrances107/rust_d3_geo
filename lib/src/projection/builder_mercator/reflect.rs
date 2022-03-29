@@ -1,19 +1,16 @@
-use crate::Transform;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::PointVisible;
 use crate::projection::builder_mercator::builder::Builder;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedRsample;
 use crate::projection::resampler::resample::Resample;
-use crate::projection::ProjectionRawBase;
 use crate::projection::Reflect;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
+use crate::Transform;
 
 impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 	for Builder<
@@ -30,11 +27,7 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	// INTERPOLATE: Interpolate<T = T>,
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	// PR: ProjectionRawBase<T>,
 	PR: Clone + Transform<T = T>,
-	// PV: PointVisible<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -105,11 +98,7 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	// INTERPOLATE: Interpolate<T = T>,
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	// PR: ProjectionRawBase<T>,
 	PR: Clone + Transform<T = T>,
-	// PV: PointVisible<T = T>,
 	T: 'static + AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

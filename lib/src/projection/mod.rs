@@ -62,7 +62,6 @@ pub type RotateTransform<PR, T> =
 /// have a extent_transform() for their individual needs.
 pub trait TransformExtent<T>
 where
-    // Self::T: CoordFloat + Debug,
     T: CoordFloat,
 {
     /// f64 or f32.
@@ -103,16 +102,6 @@ pub trait ProjectionRawMercator<T>: ProjectionRawBase<T> {}
 
 trait Builder
 where
-    // <Self as Builder>::Drain: Clone,
-    // <Self as Builder>::I: Clone,
-    // <Self as Builder>::LB: Clone,
-    // <Self as Builder>::LC: Clone,
-    // <Self as Builder>::LU: Clone,
-    // <Self as Builder>::PCNU: Clone,
-    // <Self as Builder>::PV: Clone,
-    // <Self as Builder>::RC: Clone,
-    // <Self as Builder>::RU: Clone,
-    // <Self as Builder>::PR: Clone,
     <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;

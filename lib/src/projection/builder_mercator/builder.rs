@@ -1,12 +1,8 @@
-use crate::projection::ClipExtentBounded;
-use crate::projection::TransformExtent;
-use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
 use derivative::*;
 use geo::CoordFloat;
-// use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
@@ -15,11 +11,8 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
-use crate::clip::rectangle::Rectangle;
 use crate::clip::PointVisible;
+use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::Builder as ProjectionBuilder;
@@ -28,56 +21,25 @@ use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
-use crate::projection::AngleGet;
-use crate::projection::AngleSet;
+use crate::projection::ClipExtentBounded;
 use crate::projection::Projector;
-use crate::projection::Reflect;
-use crate::projection::RotateGet;
-use crate::projection::ScaleGet;
-use crate::projection::ScaleSet;
+use crate::projection::TransformExtent;
 use crate::projection::TranslateGet;
 use crate::projection::TranslateSet;
-use crate::rot::rotate_radians;
+use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::Coordinate;
 use crate::Transform;
 
-// use crate::clip::PointVisible;
-use crate::identity::Identity;
-// use crate::path::bounds::Bounds;
-// use crate::rot::rotate_radians;
-use crate::stream::Connected;
-use crate::stream::Stream;
-// use crate::stream::Streamable;
 use crate::stream::Unconnected;
-// use crate::Transform;
-
-// use super::Fit;
-// use super::PrecisionGet;
-// use super::PrecisionSet;
-// use super::ProjectionRawBase;
-// use super::Projector;
-use crate::projection::ClipAngleSet;
-
-// use super::Translate;
-// use crate::projection::RotateGet;
-// use crate::projection::RotateSet;
 
 /// A wrapper for Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-	T: CoordFloat + FloatConst,
+	T: CoordFloat,
 {
-	// pub p_drain: PhantomData<DRAIN>,
-	// pub p_i: PhantomData<I>,
-	// pub p_lb: PhantomData<LB>,
-	// pub p_lc: PhantomData<LC>,
-	// pub p_lu: PhantomData<LU>,
-	// pub p_pcnc: PhantomData<PCNC>,
-	// pub p_pcnu: PhantomData<PCNU>,
-	// pub p_rc: PhantomData<RC>,
-	// pub p_ru: PhantomData<RU>,
 	pub pr: PR,
 	pub base: ProjectionBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
 	pub x0: Option<T>,
@@ -273,14 +235,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Clone,
-	I: Clone + Debug,
-	LB: Clone,
-	LC: Clone,
-	LU: Clone,
-	PCNC: Clone,
-	PCNU: Clone,
-	PV: Clone,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -308,14 +262,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
 		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Clone,
-	I: Clone + Debug,
-	LB: Clone,
-	LC: Clone,
-	LU: Clone,
-	PCNC: Clone,
-	PCNU: Clone,
-	PV: Clone,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {

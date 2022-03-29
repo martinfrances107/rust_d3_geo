@@ -1,15 +1,12 @@
-use crate::projection::ScaleSet;
-use crate::projection::TransformExtent;
-use num_traits::AsPrimitive;
-use num_traits::Float;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
+use num_traits::AsPrimitive;
+use num_traits::Float;
 
-use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
@@ -19,13 +16,13 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::builder::template::NoClipC;
-use super::builder::template::NoClipU;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
 use super::builder_mercator::builder::Builder as MercatorBuilder;
 use super::ClipAngleSet;
 use super::ProjectionRawBase;
+use super::ScaleSet;
+use super::TransformExtent;
 
 /// Defines a projection.
 #[derive(Clone, Copy, Debug)]

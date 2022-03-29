@@ -30,7 +30,6 @@ use super::resampler::resample::Resample;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
-use super::AngleSet;
 
 mod angle;
 mod angle_mercator;
@@ -221,7 +220,7 @@ where
     PV: Clone,
     RC: Clone,
     RU: Clone,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Using the currently programmed state output a new projection.
     #[inline]

@@ -1,6 +1,3 @@
-use crate::Transform;
-use std::marker::PhantomData;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -9,13 +6,13 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
-use crate::clip::circle::gen_clip_circle;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
 use crate::projection::ClipAngleSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
+use crate::Transform;
 
 use super::builder::Builder;
 

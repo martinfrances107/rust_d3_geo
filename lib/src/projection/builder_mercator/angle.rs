@@ -1,7 +1,3 @@
-use crate::projection::resampler::resample::Resample;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
-use crate::Transform;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -10,13 +6,17 @@ use num_traits::FloatConst;
 use crate::projection::builder_mercator::builder::Builder;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
+use crate::projection::resampler::resample::Resample;
 use crate::projection::AngleGet;
 use crate::projection::AngleSet;
+use crate::stream::Connected;
+use crate::stream::Unconnected;
+use crate::Transform;
 
 impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
 	for Builder<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type T = T;
 
@@ -81,7 +81,7 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
 	type T = T;
 
 	/// Sets the rotation angles as measured in degrees.
-	fn angle(mut self, angle: T) -> Self {
+	fn angle(self, angle: T) -> Self {
 		let base = self.base.angle(angle);
 		Self {
 			pr: self.pr,

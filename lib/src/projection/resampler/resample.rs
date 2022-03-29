@@ -93,12 +93,7 @@ where
     state: STATE,
 }
 
-impl<EP, PR, SC, SU, STATE, T> Resampler for Resample<EP, PR, SC, SU, STATE, T>
-where
-    STATE: Clone + Debug,
-    T: CoordFloat + FloatConst,
-{
-}
+impl<EP, PR, SC, SU, STATE, T> Resampler for Resample<EP, PR, SC, SU, STATE, T> where T: CoordFloat {}
 
 impl<EP, PR, SC, SU, T> Connectable for Resample<EP, PR, SC, SU, Unconnected, T>
 where
