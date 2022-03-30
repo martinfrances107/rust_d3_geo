@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -6,7 +5,6 @@ use num_traits::FloatConst;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
-use crate::projection::TranslateGet;
 use crate::projection::TranslateSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
@@ -60,7 +58,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
-    // T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 

@@ -1,7 +1,5 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::FloatConst;
 
 use crate::projection::TranslateGet;
 

@@ -4,6 +4,7 @@ pub mod center_get;
 pub mod center_set;
 pub mod clip_angle_get;
 pub mod clip_angle_set;
+pub mod clip_bounded;
 pub mod precision_get;
 pub mod precision_set;
 pub mod reflect;
@@ -24,24 +25,15 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
-use crate::clip::PointVisible;
 use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::Builder as ProjectionBuilder;
-use crate::projection::builder_mercator::Builder as MercatorBuilder;
-use crate::projection::resampler::none::None as ResampleNone;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
-use crate::projection::ClipExtentBounded;
+
 use crate::projection::Projector;
-use crate::projection::TransformExtent;
-use crate::projection::TranslateGet;
-use crate::projection::TranslateSet;
+
 use crate::stream::Connected;
-use crate::stream::Stream;
-use crate::Coordinate;
 use crate::Transform;
 
 use crate::stream::Unconnected;

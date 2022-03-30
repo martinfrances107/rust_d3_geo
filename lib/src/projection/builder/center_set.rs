@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -30,7 +29,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
     >
 where
     PR: Clone + Transform<T = T>,
-    // T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
     T: CoordFloat + FloatConst,
 {
     type T = T;
@@ -59,7 +57,6 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
     >
 where
     PR: Clone + Transform<T = T>,
-    // T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
     T: CoordFloat + FloatConst,
 {
     type T = T;

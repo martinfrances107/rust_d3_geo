@@ -1,6 +1,5 @@
 use std::fmt::Debug;
 use std::fmt::Display;
-use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use approx::AbsDiffEq;
