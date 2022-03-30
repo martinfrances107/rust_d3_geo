@@ -16,7 +16,7 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::builder::Builder;
+use super::Builder;
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	for Builder<

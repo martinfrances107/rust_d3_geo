@@ -16,7 +16,7 @@ use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::Builder as ProjectionBuilder;
-use crate::projection::builder_mercator::builder::Builder as MercatorBuilder;
+use crate::projection::builder_mercator::Builder as MercatorBuilder;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -32,102 +32,6 @@ use crate::Coordinate;
 use crate::Transform;
 
 use crate::stream::Unconnected;
-
-/// A wrapper for Projection\Builder which overrides the traits - scale translate and center.
-#[derive(Clone, Derivative)]
-#[derivative(Debug)]
-pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-where
-	T: CoordFloat,
-{
-	pub pr: PR,
-	pub base: ProjectionBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
-	pub x0: Option<T>,
-	pub y0: Option<T>,
-	pub x1: Option<T>,
-	pub y1: Option<T>, // post-clip extent
-}
-
-impl<DRAIN, PR, T>
-	Builder<
-		DRAIN,
-		InterpolateAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			DRAIN,
-			ResampleNoClipC<DRAIN, PR, T>,
-			Connected<ResampleNoClipC<DRAIN, PR, T>>,
-			T,
-		>,
-		LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>,
-		PR,
-		PVAntimeridian<T>,
-		ResampleNoClipC<DRAIN, PR, T>,
-		ResampleNoClipU<DRAIN, PR, T>,
-		T,
-	> where
-	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	/// Wrap a default projector and provides mercator specific overrides.
-	pub fn new(pr: PR) -> Self {
-		let base = ProjectionBuilder::new(
-			gen_clip_antimeridian::<
-				DRAIN,
-				Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>,
-				Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>,
-				PR,
-				ResampleNoClipC<DRAIN, PR, T>,
-				ResampleNoClipU<DRAIN, PR, T>,
-				T,
-			>(),
-			pr.clone(),
-		);
-		Self {
-			pr,
-			base,
-			x0: None,
-			y0: None,
-			x1: None,
-			y1: None,
-		}
-	}
-}
-
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-	Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-where
-	DRAIN: Clone,
-	I: Clone,
-	LB: Clone,
-	LC: Clone,
-	LU: Clone,
-	PCNU: Clone,
-	PR: Clone,
-	PV: Clone,
-	RC: Clone,
-	RU: Clone,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	/// Using the currently programmed state output a new projection.
-	#[inline]
-	pub fn build(&self) -> Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> {
-		Projector {
-			p_lb: PhantomData::<LB>,
-			p_lc: PhantomData::<LC>,
-			p_pcnc: PhantomData::<PCNC>,
-			cache: None,
-			postclip: self.base.postclip.clone(),
-			clip: self.base.clip.clone(),
-			resample: self.base.resample.clone(),
-			rotator: self.base.rotator.clone(),
-			project_rotate_transform: self.base.project_rotate_transform.clone(),
-			transform_radians: StreamTransformRadians(Unconnected),
-		}
-	}
-}
 
 // impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 // 	MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
@@ -177,102 +81,6 @@ where
 // 		self
 // 	}
 // }
-
-// impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Center
-// 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-// where
-// 	DRAIN: Stream<EP = DRAIN, T = T> + Default,
-// 	I: Clone + Debug,
-// 	LB: Clone + Debug,
-// 	LC: Clone + Debug,
-// 	LU: Clone + Debug,
-// 	PCNC: Clone + Debug,
-// 	PCNU: Clone + Debug,
-// 	PR: TransformExtent<T>,
-// 	PV: PointVisible<T = T>,
-// 	RC: Clone + Debug,
-// 	RU: Clone + Debug,
-// 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-// 	type T = T;
-
-// 	#[inline]
-// 	fn get_center(&self) -> Coordinate<T> {
-// 		self.base.get_center()
-// 	}
-
-// 	fn center(mut self, center: &Coordinate<T>) -> Self {
-// 		self.base = self.base.center(center);
-// 		self.reclip()
-// 	}
-// }
-
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> TranslateGet
-	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-where
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	type T = T;
-
-	#[inline]
-	fn get_translate(&self) -> Coordinate<T> {
-		self.base.get_translate()
-	}
-}
-
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		PCNC,
-		PCNU,
-		PR,
-		PV,
-		Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-		T,
-	> where
-	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	type T = T;
-
-	fn translate(mut self, t: &Coordinate<T>) -> Self {
-		self.base = self.base.translate(t);
-		// self.reclip()
-		self
-	}
-}
-
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		PCNC,
-		PCNU,
-		PR,
-		PV,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-		T,
-	> where
-	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	type T = T;
-
-	fn translate(mut self, t: &Coordinate<T>) -> Self {
-		self.base = self.base.translate(t);
-		// self.reclip()
-		self
-	}
-}
 
 // impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Fit
 // 	for MercatorBuilder<Bounds<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
@@ -330,109 +138,108 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
 // 	}
 // }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> ClipExtentBounded
-	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	PR: TransformExtent<T>,
-	PV: PointVisible<T = T>,
+// impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> ClipExtentBounded
+// 	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+// where
+// 	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+// 	PR: TransformExtent<T>,
+// 	PV: PointVisible<T = T>,
 
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	/// f64 or f32.
-	type T = T;
-	type OutputClear = Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>,
-		PR,
-		PV,
-		RC,
-		RU,
-		T,
-	>;
-	// type OutputBounded = MercatorBuilder<
-	// 	DRAIN,
-	// 	I,
-	// 	LB, LC, LU,
-	// 	Rectangle<DRAIN, DRAIN, Unconnected, T>,
-	// 	PR,
-	// 	PV,
-	// 	RC, RU,
-	// 	T,
-	// >;
-	// Returns a bounding box.
-	fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
-		match (self.x0, self.y0, self.x1, self.y1) {
-			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
-				Some([Coordinate { x: x0, y: y0 }, Coordinate { x: x1, y: y1 }])
-			}
-			_ => None,
-		}
-	}
+// 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+// {
+// 	/// f64 or f32.
+// 	type T = T;
+// 	type OutputClear = Builder<
+// 		DRAIN,
+// 		I,
+// 		LB,
+// 		LC,
+// 		LU,
+// 		Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>,
+// 		Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>,
+// 		PR,
+// 		PV,
+// 		RC,
+// 		RU,
+// 		T,
+// 	>;
+// 	// type OutputBounded = MercatorBuilder<
+// 	// 	DRAIN,
+// 	// 	I,
+// 	// 	LB, LC, LU,
+// 	// 	Rectangle<DRAIN, DRAIN, Unconnected, T>,
+// 	// 	PR,
+// 	// 	PV,
+// 	// 	RC, RU,
+// 	// 	T,
+// 	// >;
+// 	// Returns a bounding box.
+// 	fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
+// 		match (self.x0, self.y0, self.x1, self.y1) {
+// 			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
+// 				Some([Coordinate { x: x0, y: y0 }, Coordinate { x: x1, y: y1 }])
+// 			}
+// 			_ => None,
+// 		}
+// 	}
 
-	// clears the bounding box.
-	fn clip_extent_clear(self) -> Self::OutputClear {
-		let base = self.base;
+// 	// clears the bounding box.
+// 	fn clip_extent_clear(self) -> Self::OutputClear {
+// 		let base = self.base;
 
-		let base_out = ProjectionBuilder {
-			p_lb: PhantomData::<LB>,
-			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>,
-			projection_raw: base.projection_raw,
-			clip: base.clip,
-			phi: base.phi,
-			lambda: base.lambda,
-			alpha: base.alpha,
-			k: base.k,
-			sx: base.sx,
-			sy: base.sy,
-			x: base.x,
-			y: base.y,
-			delta_lambda: base.delta_lambda,
-			delta_phi: base.delta_phi,
-			delta_gamma: base.delta_gamma,
-			delta2: base.delta2,
-			theta: base.theta,
-			rotate: base.rotate,
-			project_transform: base.project_transform,
-			project_rotate_transform: base.project_rotate_transform,
-			resample: base.resample,
-			rotator: base.rotator,
-			// rotate_transform: base.rotate_transform,
+// 		let base_out = ProjectionBuilder {
+// 			p_lb: PhantomData::<LB>,
+// 			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>,
+// 			projection_raw: base.projection_raw,
+// 			clip: base.clip,
+// 			phi: base.phi,
+// 			lambda: base.lambda,
+// 			alpha: base.alpha,
+// 			k: base.k,
+// 			sx: base.sx,
+// 			sy: base.sy,
+// 			x: base.x,
+// 			y: base.y,
+// 			delta_lambda: base.delta_lambda,
+// 			delta_phi: base.delta_phi,
+// 			delta_gamma: base.delta_gamma,
+// 			delta2: base.delta2,
+// 			theta: base.theta,
+// 			rotate: base.rotate,
+// 			project_transform: base.project_transform,
+// 			project_rotate_transform: base.project_rotate_transform,
+// 			resample: base.resample,
+// 			rotator: base.rotator,
 
-			// Mutate stage
-			x0: None,
-			y0: None,
-			x1: None,
-			y1: None,
-			postclip: Identity::default(),
-		};
+// 			// Mutate stage
+// 			x0: None,
+// 			y0: None,
+// 			x1: None,
+// 			y1: None,
+// 			postclip: Identity::default(),
+// 		};
 
-		let out = Builder {
-			pr: self.pr,
-			base: base_out,
-			x0: None,
-			y0: None,
-			x1: None,
-			y1: None, //
-		};
-		// out.reset()
-		out
-	}
+// 		let out = Builder {
+// 			pr: self.pr,
+// 			base: base_out,
+// 			x0: None,
+// 			y0: None,
+// 			x1: None,
+// 			y1: None, //
+// 		};
+// 		// out.reset()
+// 		out
+// 	}
 
-	// Sets the bounding box.
-	// fn clip_extent(mut self, extent: &[Coordinate<Self::T>; 2]) -> Self::OutputBounded {
-	// 	self.x0 = Some(extent[0].x);
-	// 	self.y0 = Some(extent[0].y);
-	// 	self.x1 = Some(extent[1].x);
-	// 	self.y1 = Some(extent[1].y);
-	// 	self.reclip()
-	// }
-}
+// 	// Sets the bounding box.
+// 	// fn clip_extent(mut self, extent: &[Coordinate<Self::T>; 2]) -> Self::OutputBounded {
+// 	// 	self.x0 = Some(extent[0].x);
+// 	// 	self.y0 = Some(extent[0].y);
+// 	// 	self.x1 = Some(extent[1].x);
+// 	// 	self.y1 = Some(extent[1].y);
+// 	// 	self.reclip()
+// 	// }
+// }
 
 // impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> RotateGet
 // 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>

@@ -14,7 +14,7 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::builder::Builder;
+use super::Builder;
 
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 	for Builder<

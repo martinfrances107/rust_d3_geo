@@ -18,7 +18,7 @@ use crate::Transform;
 
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
-use super::builder_mercator::builder::Builder as MercatorBuilder;
+use super::builder_mercator::Builder as MercatorBuilder;
 use super::ClipAngleSet;
 use super::ProjectionRawBase;
 use super::ScaleSet;

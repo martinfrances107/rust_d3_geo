@@ -2,7 +2,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::projection::builder_mercator::builder::Builder;
+use crate::projection::builder_mercator::Builder;
 use crate::projection::CenterGet;
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> CenterGet
