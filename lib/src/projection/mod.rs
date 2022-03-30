@@ -389,31 +389,36 @@ where
 
 /// Returns or sets the x or y reflection.
 /// A projection builder sub trait.
-pub trait Reflect {
+pub trait ReflectGet {
     /// f64 or f32.
     type T;
 
     /// Is the projection builder set to invert the x-coordinate.
     fn get_reflect_x(&self) -> bool;
 
+    /// Is the projection builder set to invert the x-coordinate.
+    fn get_reflect_y(&self) -> bool;
+}
+
+pub trait ReflectSet {
+    /// f64 or f32.
+    type T;
+
     /// Set the projection builder to invert the x-coordinate.
     fn reflect_x(self, reflect: bool) -> Self
     where
-        <Self as Reflect>::T: AddAssign
-            + AsPrimitive<<Self as Reflect>::T>
+        <Self as ReflectSet>::T: AddAssign
+            + AsPrimitive<<Self as ReflectSet>::T>
             + CoordFloat
             + Debug
             + Display
             + FloatConst;
 
-    /// Is the projection builder set to invert the x-coordinate.
-    fn get_reflect_y(&self) -> bool;
-
     /// Set the projection builder to invert the y-coordinate.
     fn reflect_y(self, reflect: bool) -> Self
     where
-        <Self as Reflect>::T: AddAssign
-            + AsPrimitive<<Self as Reflect>::T>
+        <Self as ReflectSet>::T: AddAssign
+            + AsPrimitive<<Self as ReflectSet>::T>
             + CoordFloat
             + Debug
             + Display

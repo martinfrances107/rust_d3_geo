@@ -7,12 +7,12 @@ use crate::projection::builder_mercator::Builder;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedRsample;
 use crate::projection::resampler::resample::Resample;
-use crate::projection::Reflect;
+use crate::projection::ReflectSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
+impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> ReflectSet
 	for Builder<
 		DRAIN,
 		INTERPOLATE,
@@ -32,12 +32,6 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 {
 	type T = T;
 
-	/// Is the projection builder set to invert the x-coordinate.
-	#[inline]
-	fn get_reflect_x(&self) -> bool {
-		self.base.sx < T::zero()
-	}
-
 	/// Set the projection builder to invert the x-coordinate.
 	fn reflect_x(mut self, reflect: bool) -> Self {
 		if reflect {
@@ -55,12 +49,6 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 			x1: self.x1,
 			y1: self.y1, // post-clip extent
 		}
-	}
-
-	/// Is the projection builder set to invert the y-coordinate.
-	#[inline]
-	fn get_reflect_y(&self) -> bool {
-		self.base.sy < T::zero()
 	}
 
 	/// Set the projection builder to invert the y-coordinate.
@@ -83,7 +71,7 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 	}
 }
 
-impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
+impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> ReflectSet
 	for Builder<
 		DRAIN,
 		INTERPOLATE,
@@ -103,12 +91,6 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 {
 	type T = T;
 
-	/// Is the projection builder set to invert the x-coordinate.
-	#[inline]
-	fn get_reflect_x(&self) -> bool {
-		self.base.sx < T::zero()
-	}
-
 	/// Set the projection builder to invert the x-coordinate.
 	fn reflect_x(mut self, reflect: bool) -> Self {
 		if reflect {
@@ -125,12 +107,6 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Reflect
 			x1: self.x1,
 			y1: self.y1, // post-clip extent
 		}
-	}
-
-	/// Is the projection builder set to invert the y-coordinate.
-	#[inline]
-	fn get_reflect_y(&self) -> bool {
-		self.base.sy < T::zero()
 	}
 
 	/// Set the projection builder to invert the y-coordinate.

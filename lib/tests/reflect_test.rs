@@ -24,7 +24,8 @@ mod reflect_tests {
 	use rust_d3_geo::projection::projection_equal::projection_equal;
 	use rust_d3_geo::projection::AngleSet;
 	use rust_d3_geo::projection::ProjectionRawBase;
-	use rust_d3_geo::projection::Reflect;
+	use rust_d3_geo::projection::ReflectGet;
+	use rust_d3_geo::projection::ReflectSet;
 	use rust_d3_geo::projection::ScaleSet;
 	use rust_d3_geo::projection::TranslateSet;
 	use rust_d3_geo::stream::Connected;
