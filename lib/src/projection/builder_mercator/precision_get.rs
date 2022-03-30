@@ -6,7 +6,6 @@ use crate::projection::PrecisionGet;
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> PrecisionGet
 	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-	// DRAIN: Stream<EP = DRAIN, T = T> + Default,
 	T: CoordFloat,
 {
 	type T = T;

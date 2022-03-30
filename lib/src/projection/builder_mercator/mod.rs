@@ -1,5 +1,7 @@
 pub mod angle;
 pub mod builder;
+pub mod center_get;
+pub mod center_set;
 pub mod clip_angle_get;
 pub mod clip_angle_set;
 pub mod precision_get;

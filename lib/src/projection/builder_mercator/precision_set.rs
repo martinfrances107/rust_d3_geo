@@ -1,4 +1,3 @@
-use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -8,15 +7,12 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
-
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::PrecisionSet;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 

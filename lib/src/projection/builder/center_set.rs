@@ -6,14 +6,14 @@ use num_traits::FloatConst;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
-use crate::projection::Center;
+use crate::projection::CenterSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Center
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
     for Builder<
         DRAIN,
         I,
@@ -30,17 +30,10 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> Center
     >
 where
     PR: Clone + Transform<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    // T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
-
-    #[inline]
-    fn get_center(&self) -> Coordinate<T> {
-        Coordinate {
-            x: self.lambda.to_degrees(),
-            y: self.phi.to_degrees(),
-        }
-    }
 
     fn center(mut self, p: &Coordinate<T>) -> Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
@@ -49,7 +42,7 @@ where
     }
 }
 
-impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Center
+impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
     for Builder<
         DRAIN,
         INTERPOLATE,
@@ -66,17 +59,10 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> Center
     >
 where
     PR: Clone + Transform<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    // T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
-
-    #[inline]
-    fn get_center(&self) -> Coordinate<T> {
-        Coordinate {
-            x: self.lambda.to_degrees(),
-            y: self.phi.to_degrees(),
-        }
-    }
 
     fn center(mut self, p: &Coordinate<T>) -> Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();

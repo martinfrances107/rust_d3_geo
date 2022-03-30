@@ -137,7 +137,7 @@ where
 /// Controls the projections center point.
 ///
 /// Projection builder sub trait.
-pub trait Center {
+pub trait CenterGet {
     /// f64 or f32.
     type T;
 
@@ -145,6 +145,14 @@ pub trait Center {
     fn get_center(&self) -> Coordinate<Self::T>
     where
         Self::T: CoordFloat;
+}
+
+/// Controls the projections center point.
+///
+/// Projection builder sub trait.
+pub trait CenterSet {
+    /// f64 or f32.
+    type T;
 
     /// Sets the projection’s center to the specified center,
     /// a two-element array of longitude and latitude in degrees and returns the projection.

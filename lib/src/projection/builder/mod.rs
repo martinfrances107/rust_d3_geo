@@ -32,8 +32,8 @@ use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 
 mod angle;
-mod angle_mercator;
-mod center;
+mod center_get;
+mod center_set;
 mod clip_angle_adjust;
 mod clip_angle_get;
 mod clip_angle_reset;
@@ -263,7 +263,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
     >
 where
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {
         // self.cache_stream = None;
@@ -351,7 +351,8 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
     >
 where
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    // T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {
         // self.cache_stream = None;
