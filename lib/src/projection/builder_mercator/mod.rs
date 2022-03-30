@@ -9,7 +9,8 @@ pub mod precision_get;
 pub mod precision_set;
 pub mod reflect_get;
 pub mod reflect_set;
-pub mod scale;
+pub mod scale_get;
+pub mod scale_set;
 pub mod translate_get;
 pub mod translate_set;
 
