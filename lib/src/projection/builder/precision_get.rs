@@ -1,54 +1,16 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
-use crate::clip::Interpolator;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::PrecisionGet;
-
-use crate::stream::Unconnected;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> PrecisionGet
-    for Builder<
-        DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
-        PCNC,
-        PCNU,
-        PR,
-        PV,
-        Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-        T,
-    >
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> PrecisionGet
+    for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Interpolator<
-        EP = DRAIN,
-        Stream = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        T = T,
-    >,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    // T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
-    type Output = Builder<
-        DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
-        PCNC,
-        PCNU,
-        PR,
-        PV,
-        Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-        T,
-    >;
     /// /**
     ///  * Returns the projection’s current resampling precision which defaults to square root of 0.5.
     ///  * This value corresponds to the Douglas–Peucker distance.
