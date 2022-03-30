@@ -1,37 +1,37 @@
-use std::marker::PhantomData;
+// use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
-use derivative::*;
-use geo::CoordFloat;
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
+// use approx::AbsDiffEq;
+// use derivative::*;
+// use geo::CoordFloat;
+// use num_traits::AsPrimitive;
+// use num_traits::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::buffer::Buffer;
-use crate::clip::PointVisible;
-use crate::identity::Identity;
-use crate::projection::builder::template::ResampleNoClipC;
-use crate::projection::builder::template::ResampleNoClipU;
-use crate::projection::builder::Builder as ProjectionBuilder;
-use crate::projection::builder_mercator::Builder as MercatorBuilder;
-use crate::projection::resampler::none::None as ResampleNone;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
-use crate::projection::stream_transform_radians::StreamTransformRadians;
-use crate::projection::ClipExtentBounded;
-use crate::projection::Projector;
-use crate::projection::TransformExtent;
-use crate::projection::TranslateGet;
-use crate::projection::TranslateSet;
-use crate::stream::Connected;
-use crate::stream::Stream;
-use crate::Coordinate;
-use crate::Transform;
+// use crate::clip::antimeridian::gen_clip_antimeridian;
+// use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+// use crate::clip::antimeridian::line::Line as LineAntimeridian;
+// use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+// use crate::clip::buffer::Buffer;
+// use crate::clip::PointVisible;
+// use crate::identity::Identity;
+// use crate::projection::builder::template::ResampleNoClipC;
+// use crate::projection::builder::template::ResampleNoClipU;
+// use crate::projection::builder::Builder as ProjectionBuilder;
+// use crate::projection::builder_mercator::Builder as MercatorBuilder;
+// use crate::projection::resampler::none::None as ResampleNone;
+// use crate::projection::resampler::resample::Connected as ConnectedResample;
+// use crate::projection::resampler::resample::Resample;
+// use crate::projection::stream_transform_radians::StreamTransformRadians;
+// use crate::projection::ClipExtentBounded;
+// use crate::projection::Projector;
+// use crate::projection::TransformExtent;
+// use crate::projection::TranslateGet;
+// use crate::projection::TranslateSet;
+// use crate::stream::Connected;
+// use crate::stream::Stream;
+// use crate::Coordinate;
+// use crate::Transform;
 
-use crate::stream::Unconnected;
+// use crate::stream::Unconnected;
 
 // impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 // 	MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
@@ -138,29 +138,6 @@ use crate::stream::Unconnected;
 // 	}
 // }
 
-// impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> RotateGet
-// 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-// where
-// 	DRAIN: Stream<EP = DRAIN, T = T> + Default,
-// 	I: Clone + Debug,
-// 	LB: Clone + Debug,
-// 	LC: Clone + Debug,
-// 	LU: Clone + Debug,
-// 	PCNU: Clone + Debug,
-// 	PCNC: Clone + Debug,
-// 	PR: TransformExtent<T>,
-// 	PV: PointVisible<T = T>,
-// 	RC: Clone + Debug,
-// 	RU: Clone + Debug,
-// 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-// 	type T = T;
-
-// 	#[inline]
-// 	fn get_rotate(&self) -> [T; 3] {
-// 		self.base.get_rotate()
-// 	}
-// }
 // impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> RotateSet
 // 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 // where

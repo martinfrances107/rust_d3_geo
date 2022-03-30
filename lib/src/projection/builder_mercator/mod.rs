@@ -9,6 +9,8 @@ pub mod precision_get;
 pub mod precision_set;
 pub mod reflect_get;
 pub mod reflect_set;
+pub mod rotate_get;
+pub mod rotate_set;
 pub mod scale_get;
 pub mod scale_set;
 pub mod translate_get;
@@ -32,13 +34,10 @@ use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
-
 use crate::projection::Projector;
-
 use crate::stream::Connected;
-use crate::Transform;
-
 use crate::stream::Unconnected;
+use crate::Transform;
 
 /// A wrapper for Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
