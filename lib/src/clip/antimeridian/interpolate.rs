@@ -12,20 +12,15 @@ use crate::stream::Stream;
 /// State for Antimeridian Interpolator.
 #[derive(Clone, Debug)]
 pub struct Interpolate<T> {
-    // p_ep: PhantomData<EP>,
-    // p_stream: PhantomData<STREAM>,
     epsilon: T,
 }
 
 impl<T> Default for Interpolate<T>
 where
-    // STREAM: Stream<EP = EP>,
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Self {
-            // p_ep: PhantomData::<EP>,
-            // p_stream: PhantomData::<STREAM>,
             epsilon: T::from(EPSILON).unwrap(),
         }
     }
@@ -33,8 +28,6 @@ where
 /// Antimerdian interpolate function.
 impl<T> Interpolator for Interpolate<T>
 where
-    // EP: Stream<EP = EP, T = T>,
-    // STREAM: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     type T = T;

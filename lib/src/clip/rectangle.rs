@@ -578,15 +578,11 @@ struct Interpolator<T> {
     y0: T,
     x1: T,
     y1: T,
-    // p_ep: PhantomData<EP>,
-    // p_stream: PhantomData<STREAM>,
     epsilon: T,
 }
 
 impl<T> Interpolator<T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
-    // STREAM: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     fn new(x0: T, y0: T, x1: T, y1: T) -> Self {
@@ -595,8 +591,6 @@ where
             y0,
             x1,
             y1,
-            // p_stream: PhantomData::<STREAM>,
-            // p_ep: PhantomData::<EP>,
             epsilon: T::from(EPSILON).unwrap(),
         }
     }
@@ -658,13 +652,10 @@ where
 
 impl<T> InterpolatorTrait for Interpolator<T>
 where
-    // EP: Stream<EP = EP, T = T> + Default,
-    // STREAM: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
-    // type Stream = STREAM;
-    // type EP = EP;
+
     fn interpolate<EP, STREAM>(
         &mut self,
         to: Option<Coordinate<Self::T>>,
@@ -672,7 +663,6 @@ where
         direction: Self::T,
         stream: &mut STREAM,
     ) where
-        // EP: Stream<EP = EP, T = T>,
         STREAM: Stream<EP = EP, T = T>,
     {
         // let a = 0;

@@ -52,11 +52,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	type T = T;
 	type Output = Builder<
 		DRAIN,
-		InterpolateAntimeridian<
-			// DRAIN,
-			// Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-			T,
-		>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
 			DRAIN,
@@ -94,7 +90,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			// p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_pcnc: PhantomData::<PCNC>,
 			sx: self.sx,
 			sy: self.sy,
@@ -158,11 +153,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	type T = T;
 	type Output = Builder<
 		DRAIN,
-		InterpolateAntimeridian<
-			// DRAIN,
-			// Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-			T,
-		>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
 			DRAIN,

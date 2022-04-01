@@ -3,12 +3,6 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-// use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-// use crate::clip::antimeridian::line::Line as LineAntimeridian;
-// use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-// use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-// use crate::clip::circle::line::Line as LineCircle;
-// use crate::clip::circle::pv::PV as PVCircle;
 use crate::clip::Bufferable;
 use crate::clip::Interpolator;
 use crate::clip::LineConnected;
@@ -26,7 +20,6 @@ use crate::Transform;
 
 use super::Builder;
 
-//// this two line funciton is duplicated 4 times -- consider using a macro here.
 impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> ScaleSet
     for Builder<
         DRAIN,

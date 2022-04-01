@@ -1,28 +1,22 @@
-use crate::clip::Bufferable;
-use crate::clip::Clean;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
-use crate::stream::Connectable;
-use crate::stream::Stream;
 use std::fmt::Debug;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-// use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-// use crate::clip::antimeridian::line::Line as LineAntimeridian;
-// use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
-// use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-// use crate::clip::circle::line::Line as LineCircle;
-// use crate::clip::circle::pv::PV as PVCircle;
+use crate::clip::Bufferable;
+use crate::clip::Clean;
+use crate::clip::Interpolator;
+use crate::clip::LineConnected;
+use crate::clip::PointVisible;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ScaleSet;
+use crate::stream::Connectable;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 

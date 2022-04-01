@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -20,8 +19,6 @@ use crate::stream::Stream;
 /// Interpolate Circle.
 #[derive(Clone, Debug)]
 pub struct Interpolate<T> {
-	// p_ep: PhantomData<EP>,
-	// p_stream: PhantomData<STREAM>,
 	radius: T,
 	delta: T,
 }
@@ -32,8 +29,6 @@ where
 {
 	pub fn new(radius: T) -> Self {
 		Self {
-			// p_ep: PhantomData::<EP>,
-			// p_stream: PhantomData::<STREAM>,
 			radius,
 			delta: T::from(6_f64).unwrap().to_radians(),
 		}
@@ -59,11 +54,8 @@ where
 
 impl<T> Interpolator for Interpolate<T>
 where
-	// STREAM: Stream<EP = EP, T = T>,
 	T: CoordFloat + FloatConst,
 {
-	// type EP = EP;
-	// type Stream = STREAM;
 	type T = T;
 	fn interpolate<EP, STREAM>(
 		&mut self,
