@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -14,6 +15,7 @@ use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
 use crate::projection::ClipAngleReset;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 
 use super::Builder;
@@ -21,7 +23,7 @@ use super::Builder;
 impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 	for Builder<
 		DRAIN,
-		InterpolateCircle<DRAIN, RC, T>,
+		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<DRAIN, RC, Connected<RC>, T>,
 		LineCircle<DRAIN, RC, Unconnected, T>,
@@ -33,11 +35,14 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 		RU,
 		T,
 	> where
+	PCNU: Debug,
+	RC: Stream<EP = DRAIN, T = T>,
+	RU: Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
-		InterpolateAntimeridian<DRAIN, RC, T>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<DRAIN, RC, Connected<RC>, T>,
 		LineAntimeridian<DRAIN, RC, Unconnected, T>,
@@ -63,7 +68,7 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 			delta_gamma: self.delta_gamma,
 			p_pcnc: self.p_pcnc,
 			rotator: self.rotator,
-			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
+			// p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
 			projection_raw: self.projection_raw,
 			postclip: self.postclip,
 			x: self.x,

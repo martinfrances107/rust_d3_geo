@@ -3,24 +3,24 @@
 mod mercator_tests {
 	extern crate pretty_assertions;
 
-	use geo::Coordinate;
-	use geo::Geometry;
-	use pretty_assertions::assert_eq;
-	use rust_d3_geo::projection::ClipExtentSet;
-	use rust_d3_geo::projection::ProjectionRawBase;
+	// use geo::Coordinate;
+	// use geo::Geometry;
+	// use pretty_assertions::assert_eq;
+	// use rust_d3_geo::projection::ClipExtentSet;
+	// use rust_d3_geo::projection::ProjectionRawBase;
 
-	use rust_d3_geo::data_object::sphere::Sphere;
-	use rust_d3_geo::in_delta::in_delta_coordinate;
-	use rust_d3_geo::path::builder::Builder as PathBuilder;
-	// use rust_d3_geo::path::string::String as PathString;
-	use rust_d3_geo::projection::mercator::Mercator;
-	use rust_d3_geo::projection::CenterSet;
-	// use rust_d3_geo::projection::ClipExtentBounded;
-	// use rust_d3_geo::projection::Fit;
-	use rust_d3_geo::projection::PrecisionBypass;
-	// use rust_d3_geo::projection::RotateSet;
-	use rust_d3_geo::projection::ScaleSet;
-	use rust_d3_geo::projection::TranslateSet;
+	// use rust_d3_geo::data_object::sphere::Sphere;
+	// use rust_d3_geo::in_delta::in_delta_coordinate;
+	// use rust_d3_geo::path::builder::Builder as PathBuilder;
+	// // use rust_d3_geo::path::string::String as PathString;
+	// use rust_d3_geo::projection::mercator::Mercator;
+	// use rust_d3_geo::projection::CenterSet;
+	// // use rust_d3_geo::projection::ClipExtentBounded;
+	// // use rust_d3_geo::projection::Fit;
+	// use rust_d3_geo::projection::PrecisionBypass;
+	// // use rust_d3_geo::projection::RotateSet;
+	// use rust_d3_geo::projection::ScaleSet;
+	// use rust_d3_geo::projection::TranslateSet;
 
 	// #[test]
 	// fn test_clip_extent_defaults_to_automatic() {

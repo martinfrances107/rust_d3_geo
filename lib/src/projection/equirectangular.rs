@@ -1,4 +1,5 @@
 use crate::projection::ScaleSet;
+use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -46,19 +47,19 @@ where
 
 // impl<DRAIN, T> ProjectionRawCommon<T> for Equirectangular<DRAIN, T>
 // where
-//     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
 //     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 // {
 // }
 
 impl<DRAIN, T> ProjectionRawBase<T> for Equirectangular<DRAIN, T>
 where
-	DRAIN: Clone,
+	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<
 		DRAIN,
-		InterpolateAntimeridian<DRAIN, ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>, T>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
 			DRAIN,

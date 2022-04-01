@@ -27,8 +27,8 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionBypass
 	for Builder<
 		DRAIN,
 		InterpolateAntimeridian<
-			DRAIN,
-			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+			// DRAIN,
+			// Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
 			T,
 		>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
@@ -61,7 +61,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionBypass
 	type T = T;
 	type Output = Builder<
 		DRAIN,
-		InterpolateAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, T>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
 			DRAIN,
@@ -93,7 +93,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
+			// p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_pcnc: PhantomData::<PCNC>,
 			sx: self.sx,
 			sy: self.sy,
@@ -132,7 +132,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionBypass
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionBypass
 	for Builder<
 		DRAIN,
-		InterpolateCircle<DRAIN, Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>, T>,
+		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<
 			DRAIN,
@@ -154,13 +154,16 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionBypass
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	PR: Clone,
+	DRAIN: Debug,
+	PCNC: Debug,
+	PCNU: Debug,
+	PR: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 	type Output = Builder<
 		DRAIN,
-		InterpolateCircle<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, T>,
+		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<
 			DRAIN,
@@ -193,7 +196,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			p_lb: PhantomData::<LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
+			// p_lb: PhantomData::<LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_pcnc: PhantomData::<PCNC>,
 			sx: self.sx,
 			sy: self.sy,

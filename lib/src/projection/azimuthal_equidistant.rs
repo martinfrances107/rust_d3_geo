@@ -40,19 +40,19 @@ pub struct AzimuthalEquiDistant<DRAIN, T> {
 
 // impl<DRAIN, T> ProjectionRawCommon<T> for AzimuthalEquiDistant<DRAIN, T>
 // where
-//     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
 //     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 // {
 // }
 
 impl<DRAIN, T> ProjectionRawBase<T> for AzimuthalEquiDistant<DRAIN, T>
 where
-	DRAIN: Clone + Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<
 		DRAIN,
-		InterpolateCircle<DRAIN, ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>, T>,
+		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<
 			DRAIN,
@@ -95,7 +95,7 @@ where
 
 impl<DRAIN, T> Default for AzimuthalEquiDistant<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	T: CoordFloat + FloatConst,
 {
 	fn default() -> Self {
@@ -108,7 +108,7 @@ where
 
 impl<DRAIN, T> AzimuthalEquiDistant<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	T: CoordFloat + FloatConst,
 {
 	#[inline]
@@ -129,7 +129,7 @@ where
 
 impl<DRAIN, T> Transform for AzimuthalEquiDistant<DRAIN, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;

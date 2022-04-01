@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -26,7 +28,11 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	PR: Clone + Transform<T = T>,
+	DRAIN: Debug,
+	LB: Debug,
+	PCNC: Debug,
+	PCNU: Debug,
+	PR: Clone + Debug + Transform<T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;
@@ -53,7 +59,10 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
 		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	PR: Clone + Transform<T = T>,
+	DRAIN: Debug,
+	PCNC: Debug,
+	PCNU: Debug,
+	PR: Clone + Debug + Transform<T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;

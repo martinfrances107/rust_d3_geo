@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -16,6 +18,8 @@ use crate::Transform;
 impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
 	for Builder<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
+	PCNU: Debug,
+	RU: Debug,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;
@@ -41,7 +45,11 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	PR: Clone + Transform<T = T>,
+	DRAIN: Debug,
+	LB: Debug,
+	PCNC: Debug,
+	PCNU: Debug,
+	PR: Clone + Debug + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -75,7 +83,10 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
 		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	PR: Clone + Transform<T = T>,
+	DRAIN: Debug,
+	PCNC: Debug,
+	PCNU: Debug,
+	PR: Clone + Debug + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;

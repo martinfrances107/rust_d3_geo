@@ -45,7 +45,7 @@ impl<DRAIN, T> Default for Gnomic<DRAIN, T> {
 
 // impl<DRAIN, T> ProjectionRawCommon<T> for Gnomic<DRAIN, T>
 // where
-//     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
 //     // RESAMPLER: Resampler,
 //     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 // {
@@ -53,12 +53,12 @@ impl<DRAIN, T> Default for Gnomic<DRAIN, T> {
 
 impl<DRAIN, T> ProjectionRawBase<T> for Gnomic<DRAIN, T>
 where
-	DRAIN: Clone + Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<
 		DRAIN,
-		InterpolateCircle<DRAIN, ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>, T>,
+		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<
 			DRAIN,
@@ -81,7 +81,7 @@ where
 
 	fn builder() -> Self::Builder
 	where
-		DRAIN: Stream<EP = DRAIN, T = T> + Default,
+		DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
 	{
 		let clip = gen_clip_antimeridian::<
 			DRAIN,

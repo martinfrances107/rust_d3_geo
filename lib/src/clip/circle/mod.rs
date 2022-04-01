@@ -27,7 +27,7 @@ pub fn gen_clip_circle<DRAIN, PCNC, PCNU, PR, RC, RU, T>(
 	radius: T,
 ) -> Clip<
 	DRAIN,
-	Interpolate<DRAIN, RC, T>,
+	Interpolate<T>,
 	Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 	Line<DRAIN, RC, Connected<RC>, T>,
 	Line<DRAIN, RC, Unconnected, T>,

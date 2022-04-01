@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -16,7 +18,7 @@ use super::Builder;
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 	for Builder<
 		DRAIN,
-		Interpolate<DRAIN, RC, T>,
+		Interpolate<T>,
 		Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		Line<DRAIN, RC, Connected<RC>, T>,
 		Line<DRAIN, RC, Unconnected, T>,
@@ -28,6 +30,8 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 		RU,
 		T,
 	> where
+	PCNU: Debug,
+	RU: Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

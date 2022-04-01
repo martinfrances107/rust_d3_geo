@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -19,7 +21,7 @@ use super::Builder;
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 	for Builder<
 		DRAIN,
-		InterpolateAntimeridian<DRAIN, RC, T>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<DRAIN, RC, Connected<RC>, T>,
 		LineAntimeridian<DRAIN, RC, Unconnected, T>,
@@ -31,12 +33,14 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		RU,
 		T,
 	> where
+	PCNU: Debug,
+	RU: Debug,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
-		InterpolateCircle<DRAIN, RC, T>,
+		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<DRAIN, RC, Connected<RC>, T>,
 		LineCircle<DRAIN, RC, Unconnected, T>,

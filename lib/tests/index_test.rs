@@ -45,7 +45,7 @@ mod index_test {
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst,
     >() -> Projector<
         EP,
-        InterpolateAntimeridian<EP, ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>, T>,
+        InterpolateAntimeridian<T>,
         LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
         LineAntimeridian<
             EP,
@@ -75,11 +75,7 @@ mod index_test {
     >(
         projection: Projector<
             PathString<T>,
-            InterpolateAntimeridian<
-                PathString<T>,
-                ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-                T,
-            >,
+            InterpolateAntimeridian<T>,
             LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
             LineAntimeridian<
                 PathString<T>,

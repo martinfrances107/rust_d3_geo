@@ -34,11 +34,7 @@ mod reflect_tests {
 
 	type GB = Builder<
 		StreamDrainStub<f64>,
-		InterpolateCircle<
-			StreamDrainStub<f64>,
-			ResampleNoClipC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
-			f64,
-		>,
+		InterpolateCircle<f64>,
 		LineCircle<Buffer<f64>, Buffer<f64>, Connected<Buffer<f64>>, f64>,
 		LineCircle<
 			StreamDrainStub<f64>,

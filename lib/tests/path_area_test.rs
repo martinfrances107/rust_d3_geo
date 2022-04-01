@@ -41,11 +41,7 @@ mod path_area_test {
 	#[inline]
 	fn equirectangular<T>() -> Projector<
 		Area<T>,
-		InterpolateAntimeridian<
-			Area<T>,
-			ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-			T,
-		>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
 			Area<T>,
@@ -72,11 +68,7 @@ mod path_area_test {
 	{
 		let ba: Builder<
 			Area<T>,
-			InterpolateAntimeridian<
-				Area<T>,
-				ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-				T,
-			>,
+			InterpolateAntimeridian<T>,
 			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 			LineAntimeridian<
 				Area<T>,
@@ -109,11 +101,7 @@ mod path_area_test {
 	fn test_area<'a, T>(
 		projection: Projector<
 			Area<T>,
-			InterpolateAntimeridian<
-				Area<T>,
-				ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-				T,
-			>,
+			InterpolateAntimeridian<T>,
 			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 			LineAntimeridian<
 				Area<T>,
@@ -142,11 +130,7 @@ mod path_area_test {
 	{
 		let builder: PathBuilder<
 			Area<T>,
-			InterpolateAntimeridian<
-				Area<T>,
-				ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-				T,
-			>,
+			InterpolateAntimeridian<T>,
 			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 			LineAntimeridian<
 				Area<T>,

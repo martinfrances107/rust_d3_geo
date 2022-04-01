@@ -1,4 +1,4 @@
-use crate::Transform;
+use std::fmt::Debug;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
@@ -8,6 +8,7 @@ use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::PrecisionAdjust;
 use crate::stream::Unconnected;
+use crate::Transform;
 
 use super::Builder;
 
@@ -27,7 +28,11 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> PrecisionAdjust
         T,
     >
 where
-    PR: Clone + Transform<T = T>,
+    DRAIN: Debug,
+    LB: Debug,
+    PCNC: Debug,
+    PCNU: Debug,
+    PR: Clone + Debug + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;

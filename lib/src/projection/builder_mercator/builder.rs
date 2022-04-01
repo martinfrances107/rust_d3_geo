@@ -138,30 +138,6 @@
 // 	}
 // }
 
-// impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> RotateSet
-// 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-// where
-// 	DRAIN: Stream<EP = DRAIN, T = T> + Default,
-// 	I: Clone + Debug,
-// 	LB: Clone + Debug,
-// 	LC: Clone + Debug,
-// 	LU: Clone + Debug,
-// 	PCNU: Clone + Debug,
-// 	PCNC: Clone + Debug,
-// 	PR: TransformExtent<T>,
-// 	PV: PointVisible<T = T>,
-// 	RC: Clone + Debug,
-// 	RU: Clone + Debug,
-// 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-// 	type T = T;
-// 	/// Sets the rotation angles as measured in degrees.
-// 	fn rotate(mut self, angles: &[T; 3]) -> Self {
-// 		self.base = self.base.rotate(angles);
-// 		self
-// 	}
-// }
-
 // impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Reflect
 // 	for MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 // where

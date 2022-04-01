@@ -1,3 +1,4 @@
+use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -43,12 +44,12 @@ impl<DRAIN, T> Default for Mercator<DRAIN, T> {
 
 impl<DRAIN, T> ProjectionRawBase<T> for Mercator<DRAIN, T>
 where
-	DRAIN: Clone + Default,
+	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Builder = MercatorBuilder<
 		DRAIN,
-		InterpolateCircle<DRAIN, ResampleNoClipC<DRAIN, Mercator<DRAIN, T>, T>, T>,
+		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<
 			DRAIN,
@@ -77,7 +78,7 @@ where
 
 // impl<DRAIN, T> ProjectionRawMercator<T> for Mercator<DRAIN, T>
 // where
-//     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
 //     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 // {
 // }

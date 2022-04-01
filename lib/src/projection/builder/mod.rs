@@ -65,10 +65,11 @@ pub trait PostClipNode {}
 #[derive(Clone, Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
+    RU: Debug,
+    PCNU: Debug,
     T: CoordFloat,
 {
     pub p_pcnc: PhantomData<PCNC>,
-    pub p_lb: PhantomData<LB>,
     pub projection_raw: PR,
     pub clip: Clip<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>,
     pub lambda: T,
@@ -112,7 +113,7 @@ where
 impl<DRAIN, PR, PV, T>
     Builder<
         DRAIN,
-        Interpolate<DRAIN, ResampleNoClipC<DRAIN, PR, T>, T>,
+        Interpolate<T>,
         Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
         Line<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
         Line<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
@@ -125,7 +126,8 @@ impl<DRAIN, PR, PV, T>
         T,
     >
 where
-    PR: Clone + Transform<T = T>,
+    DRAIN: Debug,
+    PR: Clone + Debug + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Given a Raw Projection and a clipping defintion create the associated
@@ -133,7 +135,7 @@ where
     pub fn new(
         clip: Clip<
             DRAIN,
-            Interpolate<DRAIN, ResampleNoClipC<DRAIN, PR, T>, T>,
+            Interpolate<T>,
             Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
             Line<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
             Line<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
@@ -172,7 +174,7 @@ where
         let out_a: Self = Self {
             clip,
             p_pcnc,
-            p_lb: PhantomData::<Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
+            // p_lb: PhantomData::<Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
             /// Input passing onto Projection.
             projection_raw,
 
@@ -219,11 +221,11 @@ where
     LB: Clone,
     LC: Clone,
     LU: Clone,
-    PCNU: Clone,
+    PCNU: Clone + Debug,
     PR: Clone,
     PV: Clone,
     RC: Clone,
-    RU: Clone,
+    RU: Clone + Debug,
     T: CoordFloat,
 {
     /// Using the currently programmed state output a new projection.
@@ -266,7 +268,11 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
         T,
     >
 where
-    PR: Clone + Transform<T = T>,
+    DRAIN: Debug,
+    LB: Debug,
+    PCNC: Debug,
+    PCNU: Debug,
+    PR: Clone + Debug + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {
@@ -307,7 +313,7 @@ where
 
         let out: Self = Builder {
             p_pcnc: self.p_pcnc,
-            p_lb: PhantomData::<LB>,
+            // p_lb: PhantomData::<LB>,
             projection_raw: self.projection_raw,
             clip: self.clip,
             phi: self.phi,
@@ -354,8 +360,10 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
         T,
     >
 where
-    PR: Clone + Transform<T = T>,
-    // T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    DRAIN: Debug,
+    PCNC: Debug,
+    PCNU: Debug,
+    PR: Clone + Debug + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {
@@ -394,7 +402,7 @@ where
         let resample = ResampleNone::new(project_transform.clone());
         let out: Self = Builder {
             p_pcnc: PhantomData::<PCNC>,
-            p_lb: PhantomData::<LB>,
+            // p_lb: PhantomData::<LB>,
             projection_raw: self.projection_raw,
             clip: self.clip,
             phi: self.phi,

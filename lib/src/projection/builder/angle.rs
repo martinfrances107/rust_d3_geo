@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -16,6 +18,8 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
     for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
+    PCNU: Debug,
+    RU: Debug,
     T: CoordFloat + FloatConst,
 {
     /// f64 or f32.
@@ -45,7 +49,11 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
         T,
     >
 where
-    PR: Clone + Transform<T = T>,
+    LB: Debug,
+    DRAIN: Debug,
+    PCNC: Debug,
+    PCNU: Debug,
+    PR: Clone + Debug + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
@@ -72,7 +80,10 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
         T,
     >
 where
-    PR: Clone + Transform<T = T>,
+    DRAIN: Debug,
+    PCNC: Debug,
+    PCNU: Debug,
+    PR: Clone + Debug + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// f64 or f32.

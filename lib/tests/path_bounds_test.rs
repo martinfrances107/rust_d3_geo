@@ -45,11 +45,7 @@ mod path_bounds_test {
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst,
     >() -> Projector<
         Bounds<T>,
-        InterpolateAntimeridian<
-            Bounds<T>,
-            ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
-            T,
-        >,
+        InterpolateAntimeridian<T>,
         LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
         LineAntimeridian<
             Bounds<T>,
@@ -81,11 +77,7 @@ mod path_bounds_test {
     fn test_bounds<'a, T>(
         projection: Projector<
             Bounds<T>,
-            InterpolateAntimeridian<
-                Bounds<T>,
-                ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
-                T,
-            >,
+            InterpolateAntimeridian<T>,
             LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
             LineAntimeridian<
                 Bounds<T>,

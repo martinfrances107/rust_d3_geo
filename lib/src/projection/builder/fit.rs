@@ -10,19 +10,19 @@
 // use crate::clip::PointVisible;
 // use crate::identity::Identity;
 // use crate::path::bounds::Bounds;
-// use crate::projection::fit::fit_extent_adjust;
-// use crate::Transform;
-// // use crate::projection::fit::fit_extent;
+// // use crate::projection::fit::fit_extent_adjust;
+// // use crate::projection::fit::fit_extent_convert;
 // // use crate::projection::fit::fit_height_adjust;
-// // use crate::projection::fit::fit_height_convert;
+// use crate::projection::fit::fit_height_convert;
 // // use crate::projection::fit::fit_size_adjust;
-// // use crate::projection::fit::fit_size_convert;
+
 // // use crate::projection::fit::fit_width_adjust;
-// // use crate::projection::fit::fit_width_convert;
+// use crate::projection::fit::fit_width_convert;
 // use crate::projection::resampler::resample::Connected as ConnectedResample;
 // use crate::projection::resampler::resample::Resample;
 // use crate::projection::resampler::Resampler;
-// use crate::projection::Fit;
+// use crate::projection::FitConvert;
+// use crate::Transform;
 // // use crate::projection::Interpolate;
 // use crate::stream::Connectable;
 
@@ -34,9 +34,9 @@
 // use super::Builder;
 
 // use super::PostClipNode;
-// use super::ProjectionRawBase;
+// // use super::ProjectionRawBase;
 
-// impl<I, LB, LC, LU, PR, PV, RC, RU, T> Fit
+// impl<I, LB, LC, LU, PR, PV, RC, RU, T> FitConvert
 // 	for Builder<
 // 		Bounds<T>,
 // 		I,
@@ -57,6 +57,7 @@
 // 	LU: Clone + Debug,
 // 	PR: Transform<T = T>,
 // 	PV: Clone + Debug,
+// 	RU: Debug,
 // 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 // {
 // 	type T = T;
@@ -75,15 +76,19 @@
 // 		T,
 // 	>;
 // 	#[inline]
-// 	fn fit_extent(self, extent: [[T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self::Output
+// 	fn fit_extent_convert(
+// 		self,
+// 		extent: [[T; 2]; 2],
+// 		object: &impl Streamable<T = Self::T>,
+// 	) -> Self::Output
 // 	where
 // 		Self::T: AsPrimitive<T> + CoordFloat,
 // 	{
-// 		fit_extent(self, extent, object)
+// 		fit_extent_convert(self, extent, object)
 // 	}
 
 // 	#[inline]
-// 	fn fit_size(self, size: [T; 2], object: &impl Streamable<T = T>) -> Self::Output
+// 	fn fit_size_convert(self, size: [T; 2], object: &impl Streamable<T = T>) -> Self::Output
 // 	where
 // 		Self::T: AsPrimitive<T> + CoordFloat,
 // 	{
@@ -91,7 +96,7 @@
 // 	}
 
 // 	#[inline]
-// 	fn fit_width(self, w: T, object: &impl Streamable<T = T>) -> Self::Output
+// 	fn fit_width_convert(self, w: T, object: &impl Streamable<T = T>) -> Self::Output
 // 	where
 // 		Self::T: AsPrimitive<T> + CoordFloat,
 // 	{
@@ -99,7 +104,7 @@
 // 	}
 
 // 	#[inline]
-// 	fn fit_height(self, h: T, object: &impl Streamable<T = T>) -> Self::Output
+// 	fn fit_height_convert(self, h: T, object: &impl Streamable<T = T>) -> Self::Output
 // 	where
 // 		Self::T: AsPrimitive<T> + CoordFloat,
 // 	{

@@ -1,3 +1,4 @@
+use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -50,19 +51,19 @@ where
 
 // impl<DRAIN, T> ProjectionRawCommon<T> for Orthographic<DRAIN, T>
 // where
-//     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
 //     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 // {
 // }
 
 impl<DRAIN, T> ProjectionRawBase<T> for Orthographic<DRAIN, T>
 where
-	DRAIN: Clone,
+	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<
 		DRAIN,
-		InterpolateCircle<DRAIN, ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>, T>,
+		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<
 			DRAIN,

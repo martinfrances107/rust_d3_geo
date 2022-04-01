@@ -44,11 +44,7 @@ mod path_string_test {
     #[inline]
     fn equirectangular<T>() -> Projector<
         PathString<T>,
-        InterpolateAntimeridian<
-            PathString<T>,
-            ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-            T,
-        >,
+        InterpolateAntimeridian<T>,
         LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
         LineAntimeridian<
             PathString<T>,
@@ -83,11 +79,7 @@ mod path_string_test {
     fn test_path<'a, T>(
         projection: Projector<
             PathString<T>,
-            InterpolateAntimeridian<
-                PathString<T>,
-                ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-                T,
-            >,
+            InterpolateAntimeridian<T>,
             LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
             LineAntimeridian<
                 PathString<T>,
@@ -136,11 +128,7 @@ mod path_string_test {
 
         let mut builder: PathBuilder<
             PathString<f64>,
-            InterpolateAntimeridian<
-                PathString<f64>,
-                ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
-                f64,
-            >,
+            InterpolateAntimeridian<f64>,
             LineAntimeridian<Buffer<f64>, Buffer<f64>, Connected<Buffer<f64>>, f64>,
             LineAntimeridian<
                 PathString<f64>,

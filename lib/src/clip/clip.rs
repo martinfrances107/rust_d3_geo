@@ -169,7 +169,7 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
     Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, RU, T>, T>
 where
-    I: Interpolator<EP = EP, Stream = RC, T = T>,
+    I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     PV: PointVisible<T = T>,
@@ -280,7 +280,7 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Stream
     for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, RU, T>, T>
 where
-    I: Interpolator<EP = EP, Stream = RC, T = T>,
+    I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     PV: PointVisible<T = T>,

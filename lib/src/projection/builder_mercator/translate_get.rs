@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 
@@ -8,6 +10,8 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> TranslateGet
 	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
+	RU: Debug,
+	PCNU: Debug,
 	T: CoordFloat,
 {
 	type T = T;

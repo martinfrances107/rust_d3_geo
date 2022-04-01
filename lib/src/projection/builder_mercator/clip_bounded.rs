@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -20,10 +21,11 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> ClipExtentBounded
 	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
+	DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
+	RU: Debug,
+	PCNU: Debug,
 	PR: TransformExtent<T>,
 	PV: PointVisible<T = T>,
-
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	/// f64 or f32.
@@ -58,7 +60,6 @@ where
 		let base = self.base;
 
 		let base_out = ProjectionBuilder {
-			p_lb: PhantomData::<LB>,
 			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>,
 			projection_raw: base.projection_raw,
 			clip: base.clip,

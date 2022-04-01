@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -21,7 +22,7 @@ use super::Builder;
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 	for Builder<
 		DRAIN,
-		InterpolateAntimeridian<DRAIN, RC, T>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<DRAIN, RC, Connected<RC>, T>,
 		LineAntimeridian<DRAIN, RC, Unconnected, T>,
@@ -33,12 +34,14 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		RU,
 		T,
 	> where
+	PCNU: Debug,
 	PR: Clone,
+	RU: Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
-		InterpolateCircle<DRAIN, RC, T>,
+		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<DRAIN, RC, Connected<RC>, T>,
 		LineCircle<DRAIN, RC, Unconnected, T>,
@@ -114,7 +117,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		let clip = gen_clip_circle::<DRAIN, PCNC, PCNU, PR, RC, RU, T>(theta);
 		// Copy, Mutate - updating only theta and preclip_factory.
 		let out = Self::Output {
-			p_lb: PhantomData::<LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
+			// p_lb: PhantomData::<LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_pcnc: PhantomData::<PCNC>,
 			projection_raw: self.projection_raw,
 			clip,

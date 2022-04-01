@@ -1,4 +1,5 @@
 use crate::projection::ScaleSet;
+use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -44,30 +45,19 @@ where
 
 // impl<DRAIN, T> ProjectionRawCommon<T> for AzimuthalEqualArea<DRAIN, T>
 // where
-//     DRAIN: Stream<EP = DRAIN, T = T> + Default,
+//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
 //     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 // {
 // }
 
 impl<DRAIN, T> ProjectionRawBase<T> for AzimuthalEqualArea<DRAIN, T>
 where
-	DRAIN: Clone,
+	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<
 		DRAIN,
-		InterpolateCircle<
-			DRAIN,
-			Resample<
-				DRAIN,
-				AzimuthalEqualArea<DRAIN, T>,
-				Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>,
-				Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>,
-				ConnectedResample<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>, T>,
-				T,
-			>,
-			T,
-		>,
+		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<
 			DRAIN,

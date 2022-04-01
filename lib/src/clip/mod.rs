@@ -24,6 +24,7 @@ pub(crate) mod rectangle;
 /// Clipping break line into segments which can lasted be reconnected together.
 pub(crate) mod rejoin;
 
+use crate::stream::Stream;
 use geo::CoordFloat;
 use geo::Coordinate;
 
@@ -73,20 +74,21 @@ where
 
 /// Antimeridian or Circle interpolator.
 pub trait Interpolator {
-    /// Final pipeline stage.
-    type EP;
-    /// Next stage of pipeline.
-    type Stream;
+    // /// Final pipeline stage.
+    // type EP;
+    // /// Next stage of pipeline.
+    // type Stream;
     /// f64 or f32.
     type T;
     /// Stream modifier.
-    fn interpolate(
+    fn interpolate<EP, STREAM>(
         &mut self,
         to: Option<Coordinate<Self::T>>,
         from: Option<Coordinate<Self::T>>,
         direction: Self::T,
-        stream: &mut Self::Stream,
+        stream: &mut STREAM,
     ) where
+        STREAM: Stream<EP = EP, T = Self::T>,
         Self::T: CoordFloat;
 }
 

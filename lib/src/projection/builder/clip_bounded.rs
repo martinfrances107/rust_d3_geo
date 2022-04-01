@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
@@ -15,6 +16,8 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentBounded
 	for Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
+	DRAIN: Debug,
+	RU: Debug,
 	T: CoordFloat,
 {
 	type T = T;
@@ -32,7 +35,7 @@ where
 
 	fn clip_extent_clear(self) -> Self::OutputClear {
 		let out = Self::OutputClear {
-			p_lb: PhantomData::<LB>,
+			// p_lb: PhantomData::<LB>,
 			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip: self.clip,

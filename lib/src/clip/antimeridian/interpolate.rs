@@ -1,4 +1,4 @@
-use std::marker::PhantomData;
+// use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -11,35 +11,36 @@ use crate::stream::Stream;
 
 /// State for Antimeridian Interpolator.
 #[derive(Clone, Debug)]
-pub struct Interpolate<EP, STREAM, T> {
-    p_ep: PhantomData<EP>,
-    p_stream: PhantomData<STREAM>,
+pub struct Interpolate<T> {
+    // p_ep: PhantomData<EP>,
+    // p_stream: PhantomData<STREAM>,
     epsilon: T,
 }
 
-impl<EP, STREAM, T> Default for Interpolate<EP, STREAM, T>
+impl<T> Default for Interpolate<T>
 where
+    // STREAM: Stream<EP = EP>,
     T: CoordFloat + FloatConst,
 {
     fn default() -> Self {
         Self {
-            p_ep: PhantomData::<EP>,
-            p_stream: PhantomData::<STREAM>,
+            // p_ep: PhantomData::<EP>,
+            // p_stream: PhantomData::<STREAM>,
             epsilon: T::from(EPSILON).unwrap(),
         }
     }
 }
 /// Antimerdian interpolate function.
-impl<EP, STREAM, T> Interpolator for Interpolate<EP, STREAM, T>
+impl<T> Interpolator for Interpolate<T>
 where
-    EP: Stream<EP = EP, T = T>,
-    STREAM: Stream<EP = EP, T = T>,
+    // EP: Stream<EP = EP, T = T>,
+    // STREAM: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
-    type EP = EP;
-    type Stream = STREAM;
-    fn interpolate(
+    // type EP = EP;
+    // type Stream = STREAM;
+    fn interpolate<EP, STREAM>(
         &mut self,
         from: Option<Coordinate<T>>,
         to: Option<Coordinate<T>>,

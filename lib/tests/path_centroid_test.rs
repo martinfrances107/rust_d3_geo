@@ -50,11 +50,7 @@ mod path_centroid_test {
     #[inline]
     fn equirectangular<T>() -> Projector<
         Centroid<T>,
-        InterpolateAntimeridian<
-            Centroid<T>,
-            ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-            T,
-        >,
+        InterpolateAntimeridian<T>,
         LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
         LineAntimeridian<
             Centroid<T>,
@@ -104,11 +100,7 @@ mod path_centroid_test {
     fn test_centroid<'a, T>(
         projection: Projector<
             Centroid<T>,
-            InterpolateAntimeridian<
-                Centroid<T>,
-                ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-                T,
-            >,
+            InterpolateAntimeridian<T>,
             LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
             LineAntimeridian<
                 Centroid<T>,

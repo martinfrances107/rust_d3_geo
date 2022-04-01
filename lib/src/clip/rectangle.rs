@@ -513,7 +513,7 @@ where
                 move |a: &Rc<RefCell<Intersection<T>>>,
                       b: &Rc<RefCell<Intersection<T>>>|
                       -> Ordering {
-                    let mut interpolator_inner = Interpolator::<EP, SINK, T>::new(x0, y0, x1, y1);
+                    let mut interpolator_inner = Interpolator::<T>::new(x0, y0, x1, y1);
                     interpolator_inner.compare_point(&a.borrow().x.p, &b.borrow().x.p)
                 },
             );
@@ -573,20 +573,20 @@ where
 }
 
 #[derive(Clone, Debug)]
-struct Interpolator<EP, STREAM, T> {
+struct Interpolator<T> {
     x0: T,
     y0: T,
     x1: T,
     y1: T,
-    p_ep: PhantomData<EP>,
-    p_stream: PhantomData<STREAM>,
+    // p_ep: PhantomData<EP>,
+    // p_stream: PhantomData<STREAM>,
     epsilon: T,
 }
 
-impl<EP, STREAM, T> Interpolator<EP, STREAM, T>
+impl<T> Interpolator<T>
 where
-    EP: Stream<EP = EP, T = T> + Default,
-    STREAM: Stream<EP = EP, T = T>,
+    // EP: Stream<EP = EP, T = T> + Default,
+    // STREAM: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     fn new(x0: T, y0: T, x1: T, y1: T) -> Self {
@@ -595,8 +595,8 @@ where
             y0,
             x1,
             y1,
-            p_stream: PhantomData::<STREAM>,
-            p_ep: PhantomData::<EP>,
+            // p_stream: PhantomData::<STREAM>,
+            // p_ep: PhantomData::<EP>,
             epsilon: T::from(EPSILON).unwrap(),
         }
     }
@@ -656,22 +656,25 @@ where
     }
 }
 
-impl<EP, STREAM, T> InterpolatorTrait for Interpolator<EP, STREAM, T>
+impl<T> InterpolatorTrait for Interpolator<T>
 where
-    EP: Stream<EP = EP, T = T> + Default,
-    STREAM: Stream<EP = EP, T = T>,
+    // EP: Stream<EP = EP, T = T> + Default,
+    // STREAM: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
-    type Stream = STREAM;
-    type EP = EP;
-    fn interpolate(
+    // type Stream = STREAM;
+    // type EP = EP;
+    fn interpolate<EP, STREAM>(
         &mut self,
         to: Option<Coordinate<Self::T>>,
         from: Option<Coordinate<Self::T>>,
         direction: Self::T,
-        stream: &mut Self::Stream,
-    ) {
+        stream: &mut STREAM,
+    ) where
+        // EP: Stream<EP = EP, T = T>,
+        STREAM: Stream<EP = EP, T = T>,
+    {
         // let a = 0;
         // let a1 = 0;
         // let corner = gen_corner();

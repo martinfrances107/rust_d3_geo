@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -21,7 +23,7 @@ use super::Builder;
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	for Builder<
 		DRAIN,
-		InterpolateAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, T>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
 			DRAIN,
@@ -38,17 +40,15 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		None<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Stream<EP = DRAIN, T = T> + Default,
-	PR: Clone + Transform<T = T>,
+	DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
+	PCNC: Debug,
+	PCNU: Debug,
+	PR: Clone + Debug + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
-		InterpolateAntimeridian<
-			DRAIN,
-			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-			T,
-		>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
 			DRAIN,

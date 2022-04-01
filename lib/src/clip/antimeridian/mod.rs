@@ -7,6 +7,7 @@ pub mod pv;
 
 mod intersect;
 
+use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -23,7 +24,7 @@ use interpolate::Interpolate;
 /// Returns a clip setup for antimeridian clipping.
 pub fn gen_clip_antimeridian<DRAIN, PCNC, PCNU, PR, RC, RU, T>() -> Clip<
     DRAIN,
-    Interpolate<DRAIN, RC, T>,
+    Interpolate<T>,
     Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
     Line<DRAIN, RC, Connected<RC>, T>,
     Line<DRAIN, RC, Unconnected, T>,
@@ -36,6 +37,7 @@ pub fn gen_clip_antimeridian<DRAIN, PCNC, PCNU, PR, RC, RU, T>() -> Clip<
 >
 where
     // PR: ProjectionRawBase<T>,
+    RC: Stream<EP = DRAIN, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     let interpolate = Interpolate::default();

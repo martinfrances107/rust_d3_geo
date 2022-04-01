@@ -1,4 +1,5 @@
 use core::marker::PhantomData;
+use std::fmt::Debug;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
@@ -18,6 +19,8 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentSet
 	for Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
+	DRAIN: Debug,
+	RU: Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -27,7 +30,7 @@ where
 
 	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
 		let out = Self::OutputBounded {
-			p_lb: self.p_lb,
+			// p_lb: self.p_lb,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip: self.clip,

@@ -19,21 +19,21 @@ use crate::stream::Stream;
 
 /// Interpolate Circle.
 #[derive(Clone, Debug)]
-pub struct Interpolate<EP, STREAM, T> {
-	p_ep: PhantomData<EP>,
-	p_stream: PhantomData<STREAM>,
+pub struct Interpolate<T> {
+	// p_ep: PhantomData<EP>,
+	// p_stream: PhantomData<STREAM>,
 	radius: T,
 	delta: T,
 }
 
-impl<EP, STREAM, T> Interpolate<EP, STREAM, T>
+impl<T> Interpolate<T>
 where
 	T: CoordFloat + FloatConst,
 {
 	pub fn new(radius: T) -> Self {
 		Self {
-			p_ep: PhantomData::<EP>,
-			p_stream: PhantomData::<STREAM>,
+			// p_ep: PhantomData::<EP>,
+			// p_stream: PhantomData::<STREAM>,
 			radius,
 			delta: T::from(6_f64).unwrap().to_radians(),
 		}
@@ -57,21 +57,23 @@ where
 // 	}
 // }
 
-impl<EP, STREAM, T> Interpolator for Interpolate<EP, STREAM, T>
+impl<T> Interpolator for Interpolate<T>
 where
-	STREAM: Stream<EP = EP, T = T>,
+	// STREAM: Stream<EP = EP, T = T>,
 	T: CoordFloat + FloatConst,
 {
-	type EP = EP;
-	type Stream = STREAM;
+	// type EP = EP;
+	// type Stream = STREAM;
 	type T = T;
-	fn interpolate(
+	fn interpolate<EP, STREAM>(
 		&mut self,
 		from: Option<Coordinate<T>>,
 		to: Option<Coordinate<T>>,
 		direction: T,
 		stream: &mut STREAM,
-	) {
+	) where
+		STREAM: Stream<EP = EP, T = T>,
+	{
 		stream_fn(stream, self.radius, self.delta, direction, from, to);
 	}
 }

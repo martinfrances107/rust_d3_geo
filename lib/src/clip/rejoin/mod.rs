@@ -33,7 +33,7 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
     stream: &mut SINK,
 ) where
     SINK: Stream<EP = EP, T = T>,
-    INTERPOLATOR: Interpolator<EP = EP, Stream = SINK, T = T>,
+    INTERPOLATOR: Interpolator<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     let mut start_inside = start_inside;

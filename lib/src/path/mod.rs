@@ -109,7 +109,7 @@ impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     CS: Clone + Default + PartialEq + Result + Stream<EP = CS, T = T>,
-    I: Clone + Interpolator<EP = CS, Stream = RC, T = T>,
+    I: Clone + Interpolator<T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = CS, T = T>,
@@ -132,7 +132,7 @@ where
 impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<Area<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Clone + Interpolator<EP = Area<T>, Stream = RC, T = T>,
+    I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Area<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
@@ -160,7 +160,7 @@ where
 impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<Bounds<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Clone + Interpolator<EP = Bounds<T>, Stream = RC, T = T>,
+    I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
@@ -186,7 +186,7 @@ where
 impl<LB, LC, LU, I, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<Centroid<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    I: Clone + Interpolator<EP = Centroid<T>, Stream = RC, T = T>,
+    I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Centroid<T>, T = T>,
     LU: Clone

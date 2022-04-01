@@ -16,6 +16,7 @@ pub mod scale_set;
 pub mod translate_get;
 pub mod translate_set;
 
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -36,6 +37,7 @@ use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Projector;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -44,6 +46,8 @@ use crate::Transform;
 #[derivative(Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
+	PCNU: Debug,
+	RU: Debug,
 	T: CoordFloat,
 {
 	pub pr: PR,
@@ -57,7 +61,7 @@ where
 impl<DRAIN, PR, T>
 	Builder<
 		DRAIN,
-		InterpolateAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, T>,
+		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
 			DRAIN,
@@ -74,7 +78,8 @@ impl<DRAIN, PR, T>
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	PR: Clone + Transform<T = T>,
+	DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
+	PR: Clone + Debug + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	/// Wrap a default projector and provides mercator specific overrides.
@@ -110,11 +115,11 @@ where
 	LB: Clone,
 	LC: Clone,
 	LU: Clone,
-	PCNU: Clone,
+	PCNU: Clone + Debug,
 	PR: Clone,
 	PV: Clone,
 	RC: Clone,
-	RU: Clone,
+	RU: Debug + Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	/// Using the currently programmed state output a new projection.

@@ -200,7 +200,7 @@ pub trait ClipExtentSet {
 
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
-pub trait Fit {
+pub trait FitConvert {
     type Output;
     /// f64 or f32.
     type T;
@@ -225,7 +225,7 @@ pub trait Fit {
     ///  x₁ is the right and y₁ is the bottom.
     /// @param object A geographic feature supported by d3-geo
     ///   (An extension of GeoJSON feature).
-    fn fit_extent(
+    fn fit_extent_convert(
         self,
         extent: [[Self::T; 2]; 2],
         object: &impl Streamable<T = Self::T>,
@@ -240,19 +240,23 @@ pub trait Fit {
     ///
     ///  @param size The size of the extent, specified as an array [width, height].
     ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-    fn fit_size(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self::Output
+    fn fit_size_convert(
+        self,
+        size: [Self::T; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self::Output
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_width(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    fn fit_width_convert(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    fn fit_height_convert(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
