@@ -1,4 +1,3 @@
-use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -21,9 +20,7 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> ClipExtentBounded
 	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-	DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
-	RU: Debug,
-	PCNU: Debug,
+	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	PR: TransformExtent<T>,
 	PV: PointVisible<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,

@@ -47,8 +47,6 @@ use crate::Transform;
 #[derivative(Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-	PCNU: Debug,
-	RU: Debug,
 	T: CoordFloat,
 {
 	pub pr: PR,
@@ -79,7 +77,7 @@ impl<DRAIN, PR, T>
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
+	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Debug + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {

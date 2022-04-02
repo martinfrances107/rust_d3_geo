@@ -30,10 +30,10 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
         T,
     >
 where
-    DRAIN: Debug,
-    LB: Debug,
-    PCNC: Debug,
-    PCNU: Debug,
+    // DRAIN: Debug,
+    // LB: Debug,
+    // PCNC: Debug,
+    // PCNU: Debug,
     PR: Clone + Debug + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

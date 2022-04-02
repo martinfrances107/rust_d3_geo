@@ -65,8 +65,6 @@ pub trait PostClipNode {}
 #[derive(Clone, Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    RU: Debug,
-    PCNU: Debug,
     T: CoordFloat,
 {
     pub p_pcnc: PhantomData<PCNC>,
@@ -126,7 +124,6 @@ impl<DRAIN, PR, PV, T>
         T,
     >
 where
-    DRAIN: Debug,
     PR: Clone + Debug + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -221,11 +218,11 @@ where
     LB: Clone,
     LC: Clone,
     LU: Clone,
-    PCNU: Clone + Debug,
+    PCNU: Clone,
     PR: Clone,
     PV: Clone,
     RC: Clone,
-    RU: Clone + Debug,
+    RU: Clone,
     T: CoordFloat,
 {
     /// Using the currently programmed state output a new projection.
@@ -268,11 +265,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
         T,
     >
 where
-    DRAIN: Debug,
-    LB: Debug,
-    PCNC: Debug,
-    PCNU: Debug,
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {
@@ -360,10 +353,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
         T,
     >
 where
-    DRAIN: Debug,
-    PCNC: Debug,
-    PCNU: Debug,
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     fn reset(self) -> Self {

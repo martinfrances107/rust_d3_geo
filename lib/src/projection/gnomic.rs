@@ -81,7 +81,7 @@ where
 
 	fn builder() -> Self::Builder
 	where
-		DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
+		DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	{
 		let clip = gen_clip_antimeridian::<
 			DRAIN,

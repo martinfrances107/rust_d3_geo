@@ -15,11 +15,11 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
-	for Builder<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
+	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-	PCNU: Debug,
-	RU: Debug,
+	// PCNU: Debug,
+	// RU: Debug,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;
@@ -30,10 +30,10 @@ where
 	}
 }
 
-impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
 	for Builder<
 		DRAIN,
-		INTERPOLATE,
+		I,
 		LB,
 		LC,
 		LU,
@@ -68,10 +68,10 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
 	}
 }
 
-impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
 	for Builder<
 		DRAIN,
-		INTERPOLATE,
+		I,
 		LB,
 		LC,
 		LU,

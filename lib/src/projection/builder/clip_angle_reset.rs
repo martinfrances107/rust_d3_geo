@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -34,9 +32,7 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 		RU,
 		T,
 	> where
-	PCNU: Debug,
 	RC: Stream<EP = DRAIN, T = T>,
-	RU: Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<

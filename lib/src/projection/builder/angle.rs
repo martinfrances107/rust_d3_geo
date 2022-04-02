@@ -18,8 +18,6 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
     for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    PCNU: Debug,
-    RU: Debug,
     T: CoordFloat + FloatConst,
 {
     /// f64 or f32.
@@ -49,10 +47,10 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
         T,
     >
 where
-    LB: Debug,
-    DRAIN: Debug,
-    PCNC: Debug,
-    PCNU: Debug,
+    // LB: Debug,
+    // DRAIN: Debug,
+    // PCNC: Debug,
+    // PCNU: Debug,
     PR: Clone + Debug + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -80,9 +78,9 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
         T,
     >
 where
-    DRAIN: Debug,
-    PCNC: Debug,
-    PCNU: Debug,
+    // DRAIN: Debug,
+    // PCNC: Debug,
+    // PCNU: Debug,
     PR: Clone + Debug + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

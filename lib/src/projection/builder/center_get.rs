@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -11,9 +9,6 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> CenterGet
     for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
-    PCNU: Debug,
-    RU: Debug,
-
     T: CoordFloat + FloatConst,
 {
     type T = T;
