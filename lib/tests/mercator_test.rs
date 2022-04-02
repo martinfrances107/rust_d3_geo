@@ -1,42 +1,42 @@
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod mercator_tests {
+
 	extern crate pretty_assertions;
 
-	// use geo::Coordinate;
-	// use geo::Geometry;
-	// use pretty_assertions::assert_eq;
-	// use rust_d3_geo::projection::ClipExtentSet;
-	// use rust_d3_geo::projection::ProjectionRawBase;
+	use geo::Coordinate;
+	use geo::Geometry;
+	use pretty_assertions::assert_eq;
+	use rust_d3_geo::data_object::sphere::Sphere;
+	use rust_d3_geo::path::builder::Builder as PathBuilder;
+	use rust_d3_geo::path::string::String as PathString;
+	use rust_d3_geo::projection::CenterSet;
+	use rust_d3_geo::projection::ClipExtentBounded;
 
-	// use rust_d3_geo::data_object::sphere::Sphere;
-	// use rust_d3_geo::in_delta::in_delta_coordinate;
-	// use rust_d3_geo::path::builder::Builder as PathBuilder;
-	// // use rust_d3_geo::path::string::String as PathString;
-	// use rust_d3_geo::projection::mercator::Mercator;
-	// use rust_d3_geo::projection::CenterSet;
-	// // use rust_d3_geo::projection::ClipExtentBounded;
-	// // use rust_d3_geo::projection::Fit;
-	// use rust_d3_geo::projection::PrecisionBypass;
-	// // use rust_d3_geo::projection::RotateSet;
-	// use rust_d3_geo::projection::ScaleSet;
-	// use rust_d3_geo::projection::TranslateSet;
+	use rust_d3_geo::projection::mercator::Mercator;
+	use rust_d3_geo::projection::ProjectionRawBase;
+	// use rust_d3_geo::projection::ClipExtentBounded;
+	// use rust_d3_geo::projection::Fit;
+	use rust_d3_geo::projection::PrecisionBypass;
+	// use rust_d3_geo::projection::RotateSet;
+	use rust_d3_geo::projection::ScaleSet;
+	use rust_d3_geo::projection::TranslateSet;
 
 	// #[test]
 	// fn test_clip_extent_defaults_to_automatic() {
 	// 	println!("mercator.clipExtent(null) sets the default automatic clip extent");
-	// 	let projection_builder = Mercator::builder()
+	// 	let projection_builder = Mercator::<PathString<f32>, f32>::builder()
 	// 		.translate(&Coordinate { x: 0_f32, y: 0_f32 })
 	// 		.scale(1_f32)
-	// 		// in javascript clip_extent_clear has not effect
-	// 		// it is prevent by the state based API.
-	// 		// .clip_extent_clear()
 	// 		.precision_bypass();
+	// 	// in javascript clip_extent_clear() has not effect
+	// 	// it is prevent by the state based API.
+	// 	// .clip_extent_clear()
 
 	// 	let projection = projection_builder.build();
 	// 	let path_builder = PathBuilder::context_pathstring();
 
-	// 	let object = Sphere::default();
+	// 	let object = Sphere::<f32>::default();
 
 	// 	// The strings are very close here..
 	// 	// There is a divergence between JS and RUST here
@@ -49,31 +49,31 @@ mod mercator_tests {
 	// 	// while JS provides a large numeric value.
 	// 	let s: String = path_builder.build(projection).object(&object);
 	// 	assert_eq!(s, "M3.141593,0L3.141593,0L3.141593,3.141593L3.141593,3.141593L-3.141593,3.141593L-3.141593,3.141593L-3.141593,0L-3.141593,-3.141593L-3.141593,-3.141593L3.141593,-3.141593Z");
-	// 	assert_eq!(projection_builder.get_clip_extent(), None);
+	// 	// assert_eq!(projection_builder.get_clip_extent(), None);
 	// }
 
-	// 	#[test]
-	// 	fn center_set_correct_automatic() {
-	// 		println!("mercator.center(center) sets the correct automatic clip extent");
-	// 		let projection_builder = Mercator::builder()
-	// 			.translate(&Coordinate { x: 0_f32, y: 0_f32 })
-	// 			.center(&Coordinate {
-	// 				x: 10_f32,
-	// 				y: 10_f32,
-	// 			})
-	// 			.scale(1_f32)
-	// 			.precision_bypass();
+	// #[test]
+	// fn center_set_correct_automatic() {
+	// 	println!("mercator.center(center) sets the correct automatic clip extent");
+	// 	let projection_builder = Mercator::builder()
+	// 		.translate(&Coordinate { x: 0_f32, y: 0_f32 })
+	// 		.center(&Coordinate {
+	// 			x: 10_f32,
+	// 			y: 10_f32,
+	// 		})
+	// 		.scale(1_f32)
+	// 		.precision_bypass();
 
-	// 		let projection = projection_builder.build();
-	// 		let path_builder = PathBuilder::context_pathstring();
+	// 	let projection = projection_builder.build();
+	// 	let path_builder = PathBuilder::context_pathstring();
 
-	// 		let object = Sphere::default();
+	// 	let object = Sphere::default();
 
-	// 		let s = path_builder.build(projection).object(&object);
-	// 		assert_eq!(s, "M2.967060,-2.966167L2.967060,0.175426L2.967060,3.317018L2.967060,3.317018L-3.316126,3.317018L-3.316126,3.317019L-3.316126,0.175426L-3.316126,-2.966167L-3.316126,-2.966167L2.967060,-2.966167Z");
+	// 	let s = path_builder.build(projection).object(&object);
+	// 	assert_eq!(s, "M2.967060,-2.966167L2.967060,0.175426L2.967060,3.317018L2.967060,3.317018L-3.316126,3.317018L-3.316126,3.317019L-3.316126,0.175426L-3.316126,-2.966167L-3.316126,-2.966167L2.967060,-2.966167Z");
 
-	// 		assert_eq!(projection_builder.get_clip_extent(), None);
-	// 	}
+	// 	// assert_eq!(projection_builder.get_clip_extent(), None);
+	// }
 
 	// 	#[test]
 	// 	fn intersected_clip_extent() {

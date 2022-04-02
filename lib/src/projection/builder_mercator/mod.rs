@@ -5,6 +5,7 @@ pub mod center_set;
 pub mod clip_angle_get;
 pub mod clip_angle_set;
 pub mod clip_bounded;
+pub mod precision_bypass;
 pub mod precision_get;
 pub mod precision_set;
 pub mod reflect_get;

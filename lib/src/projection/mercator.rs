@@ -1,3 +1,5 @@
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
 use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -58,8 +60,8 @@ where
 			T,
 		>,
 		LineCircle<DRAIN, ResampleNoClipC<DRAIN, Mercator<DRAIN, T>, T>, Unconnected, T>,
-		Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
 		Mercator<DRAIN, T>,
 		PVCircle<T>,
 		ResampleNoClipC<DRAIN, Mercator<DRAIN, T>, T>,

@@ -20,6 +20,9 @@ use crate::Transform;
 
 use super::Builder;
 
+//TODO before release add more variants here
+// vary by LineClip,
+
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	for Builder<
 		DRAIN,
