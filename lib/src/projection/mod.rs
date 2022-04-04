@@ -361,7 +361,7 @@ where
     ///f64 or f32
     type T;
 
-    fn clip_angle_get(&self) -> Self::T;
+    fn get_clip_angle(&self) -> Self::T;
 }
 
 /// Selects the clipping strategy
