@@ -47,13 +47,12 @@ enum LineEndFn {
 /// Clip specific state of connection.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Connected<EP, LB, LC, LU, SC, SU, T>
+pub struct Connected<EP, LB, LC, LU, SC, T>
 where
     T: CoordFloat,
 {
     p_ep: PhantomData<EP>,
     p_sc: PhantomData<SC>,
-    p_su: PhantomData<SU>,
     line_node: LC,
     p_lu: PhantomData<LU>,
     polygon_started: bool,
@@ -66,7 +65,7 @@ where
     line_end_fn: LineEndFn,
 }
 
-impl<EP, LB, LC, LU, SC, SU, T> Connected<EP, LB, LC, LU, SC, SU, T>
+impl<EP, LB, LC, LU, SC, T> Connected<EP, LB, LC, LU, SC, T>
 where
     LU: Clone + Connectable<Output = LC, SC = SC> + Bufferable<Output = LB, T = T>,
     T: CoordFloat,
@@ -77,7 +76,6 @@ where
         let ring_sink = clip_line.buffer(ring_buffer);
         Self {
             p_lu: PhantomData::<LU>,
-            p_su: PhantomData::<SU>,
             p_ep: PhantomData::<EP>,
             p_sc: PhantomData::<SC>,
             polygon_started: false,
@@ -103,7 +101,7 @@ where
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type SC = RC;
-    type Output = Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, RU, T>, T>;
+    type Output = Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, T>, T>;
     fn connect(self, sink: RC) -> Self::Output {
         Self::Output {
             p_ep: PhantomData::<EP>,
@@ -167,7 +165,7 @@ where
 }
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
-    Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, RU, T>, T>
+    Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
@@ -278,7 +276,7 @@ where
 }
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Stream
-    for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, RU, T>, T>
+    for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
