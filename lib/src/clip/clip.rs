@@ -9,9 +9,6 @@ use geo::Coordinate;
 use geo::LineString;
 use num_traits::FloatConst;
 
-use crate::clip::Buffer;
-use crate::clip::Clean;
-use crate::clip::LineConnected;
 use crate::path::Result;
 use crate::polygon_contains::polygon_contains;
 use crate::stream::Connectable;
@@ -21,8 +18,11 @@ use crate::stream::Unconnected;
 use super::compare_intersection::gen_compare_intersection;
 use super::line_elem::LineElem;
 use super::rejoin::rejoin;
+use super::Buffer;
 use super::Bufferable;
+use super::Clean;
 use super::Interpolator;
+use super::LineConnected;
 use super::PointVisible;
 
 #[derive(Clone, Debug)]
@@ -47,12 +47,12 @@ enum LineEndFn {
 /// Clip specific state of connection.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Connected<EP, LB, LC, LU, SC, T>
+pub struct Connected<EP, LB, LC, LU, T>
 where
     T: CoordFloat,
 {
     p_ep: PhantomData<EP>,
-    p_sc: PhantomData<SC>,
+    // p_sc: PhantomData<SC>,
     line_node: LC,
     p_lu: PhantomData<LU>,
     polygon_started: bool,
@@ -65,32 +65,6 @@ where
     line_end_fn: LineEndFn,
 }
 
-impl<EP, LB, LC, LU, SC, T> Connected<EP, LB, LC, LU, SC, T>
-where
-    LU: Clone + Connectable<Output = LC, SC = SC> + Bufferable<Output = LB, T = T>,
-    T: CoordFloat,
-{
-    fn new(sink: SC, clip_line: LU) -> Self {
-        let line_node = clip_line.clone().connect(sink);
-        let ring_buffer = Buffer::<T>::default();
-        let ring_sink = clip_line.buffer(ring_buffer);
-        Self {
-            p_lu: PhantomData::<LU>,
-            p_ep: PhantomData::<EP>,
-            p_sc: PhantomData::<SC>,
-            polygon_started: false,
-            polygon: Vec::new(),
-            ring_sink,
-            ring: LineString(Vec::new()),
-            segments: VecDeque::new(),
-            line_node,
-            point_fn: PointFn::Default,
-            line_start_fn: LineStartFn::Default,
-            line_end_fn: LineEndFn::Default,
-        }
-    }
-}
-
 /// Takes the unconnected line temple stored in clip_line
 /// and then modifies the ClipState to one than reflects
 /// the connected sink.
@@ -101,8 +75,26 @@ where
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type SC = RC;
-    type Output = Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, T>, T>;
+    type Output = Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, T>, T>;
     fn connect(self, sink: RC) -> Self::Output {
+        let line_node = self.clip_line.clone().connect(sink);
+        let ring_buffer = Buffer::<T>::default();
+        let ring_sink = self.clip_line.clone().buffer(ring_buffer);
+        let state = Connected {
+            p_lu: PhantomData::<LU>,
+            p_ep: PhantomData::<EP>,
+            // p_sc: PhantomData::<RC>,
+            polygon_started: false,
+            polygon: Vec::new(),
+            ring_sink,
+            ring: LineString(Vec::new()),
+            segments: VecDeque::new(),
+            line_node,
+            point_fn: PointFn::Default,
+            line_start_fn: LineStartFn::Default,
+            line_end_fn: LineEndFn::Default,
+        };
+
         Self::Output {
             p_ep: PhantomData::<EP>,
             p_lb: PhantomData::<LB>,
@@ -110,7 +102,7 @@ where
             p_pr: PhantomData::<PR>,
             p_rc: PhantomData::<RC>,
             p_ru: PhantomData::<RU>,
-            state: Connected::new(sink, self.clip_line.clone()),
+            state,
             clip_line: self.clip_line,
             interpolator: self.interpolator,
             pv: self.pv,
@@ -165,7 +157,7 @@ where
 }
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
-    Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, T>, T>
+    Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
@@ -276,7 +268,7 @@ where
 }
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Stream
-    for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, RC, T>, T>
+    for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,

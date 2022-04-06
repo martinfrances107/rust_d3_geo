@@ -1,10 +1,11 @@
-// use std::marker::PhantomData;
+use std::fmt::Debug;
+use std::marker::PhantomData;
 
-// use approx::AbsDiffEq;
-// use derivative::*;
-// use geo::CoordFloat;
-// use num_traits::AsPrimitive;
-// use num_traits::FloatConst;
+use approx::AbsDiffEq;
+use derivative::*;
+use geo::CoordFloat;
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
 
 // use crate::clip::antimeridian::gen_clip_antimeridian;
 // use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
@@ -16,71 +17,33 @@
 // use crate::projection::builder::template::ResampleNoClipC;
 // use crate::projection::builder::template::ResampleNoClipU;
 // use crate::projection::builder::Builder as ProjectionBuilder;
-// use crate::projection::builder_mercator::Builder as MercatorBuilder;
+
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
+use crate::projection::builder_mercator::Builder as MercatorBuilder;
+use crate::projection::ClipExtentSet;
+use crate::rot::rotate_radians;
 // use crate::projection::resampler::none::None as ResampleNone;
 // use crate::projection::resampler::resample::Connected as ConnectedResample;
 // use crate::projection::resampler::resample::Resample;
 // use crate::projection::stream_transform_radians::StreamTransformRadians;
 // use crate::projection::ClipExtentBounded;
 // use crate::projection::Projector;
-// use crate::projection::TransformExtent;
+use crate::projection::TransformExtent;
 // use crate::projection::TranslateGet;
 // use crate::projection::TranslateSet;
+use crate::projection::RotateGet;
+use crate::projection::ScaleGet;
 // use crate::stream::Connected;
 // use crate::stream::Stream;
-// use crate::Coordinate;
-// use crate::Transform;
+use crate::Coordinate;
+use crate::Transform;
 
-// use crate::stream::Unconnected;
+use super::Builder;
 
-// impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-// 	MercatorBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-// where
-// 	DRAIN: Clone,
-// 	I: Clone,
-// 	LB: Clone,
-// 	LC: Clone,
-// 	LU: Clone,
-// 	PCNC: Clone,
-// 	PCNU: Clone,
-// 	PR: Clone + Transform<T = T>,
-// 	PV: Clone,
-// 	RC: Clone,
-// 	RU: Clone,
-// 	RU: Clone,
-// 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-// 	fn reclip(mut self) -> Self {
-// 		let k = T::PI() * self.get_scale();
-
-// 		let rotate_raw = self.base.get_rotate();
-// 		let t = rotate_radians(rotate_raw).invert(&Coordinate {
-// 			x: T::zero(),
-// 			y: T::zero(),
-// 		});
-// 		let t = self.base.build().transform(&t);
-// 		let ce = match (self.x0, self.y0, self.x1, self.y1) {
-// 			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
-// 				// MercatorRaw and MercatorTransverseRaw supply different
-// 				// transforms
-// 				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
-// 			}
-// 			_ => [
-// 				Coordinate {
-// 					x: t.x - k,
-// 					y: t.y - k,
-// 				},
-// 				Coordinate {
-// 					x: t.x + k,
-// 					y: t.y + k,
-// 				},
-// 			],
-// 		};
-
-// 		self.base = self.base.clip_extent(&ce);
-// 		self
-// 	}
-// }
+use crate::stream::Unconnected;
 
 // impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Fit
 // 	for MercatorBuilder<Bounds<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>

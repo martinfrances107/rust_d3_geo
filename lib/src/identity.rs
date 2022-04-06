@@ -1,4 +1,6 @@
 use std::fmt::Debug;
+use std::fmt::Formatter;
+use std::fmt::Result;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
@@ -11,13 +13,36 @@ use crate::stream::Unconnected;
 
 /// Identity is a stream pipe line stage.
 /// that acts as a pass through node.
-#[derive(Debug, Clone)]
 pub struct Identity<EP, SC, SU, STATE, T> {
     p_ep: PhantomData<EP>,
     p_sc: PhantomData<SC>,
     p_su: PhantomData<SU>,
     p_t: PhantomData<T>,
     state: STATE,
+}
+
+impl<EP, SC, SU, STATE, T> Debug for Identity<EP, SC, SU, STATE, T>
+where
+    STATE: Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("").field(&self.state).finish()
+    }
+}
+
+impl<EP, SC, SU, STATE, T> Clone for Identity<EP, SC, SU, STATE, T>
+where
+    STATE: Clone,
+{
+    fn clone(&self) -> Self {
+        Self {
+            p_ep: PhantomData::<EP>,
+            p_sc: PhantomData::<SC>,
+            p_su: PhantomData::<SU>,
+            p_t: PhantomData::<T>,
+            state: self.state.clone(),
+        }
+    }
 }
 
 /// Not auto deriving here - it does not makes sense to provide

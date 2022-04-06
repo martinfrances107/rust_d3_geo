@@ -297,7 +297,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			// p_lb: PhantomData::<LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>,
 			sx: self.sx,
 			sy: self.sy,
