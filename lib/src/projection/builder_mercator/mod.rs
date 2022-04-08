@@ -71,8 +71,8 @@ impl<DRAIN, PR, T>
 			T,
 		>,
 		LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>,
+		Identity<DRAIN, DRAIN, Connected<DRAIN>, T>,
+		Identity<DRAIN, DRAIN, Unconnected, T>,
 		PR,
 		PVAntimeridian<T>,
 		ResampleNoClipC<DRAIN, PR, T>,
@@ -88,8 +88,8 @@ impl<DRAIN, PR, T>
 		let base = ProjectionBuilder::new(
 			gen_clip_antimeridian::<
 				DRAIN,
-				Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>,
-				Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>,
+				Identity<DRAIN, DRAIN, Connected<DRAIN>, T>,
+				Identity<DRAIN, DRAIN, Unconnected, T>,
 				PR,
 				ResampleNoClipC<DRAIN, PR, T>,
 				ResampleNoClipU<DRAIN, PR, T>,

@@ -100,7 +100,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		// Copy - Mutate.
 		let out = Self::Output {
 			// p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>,
-			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>,
+			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, Connected<DRAIN>, T>>,
 			sx: self.sx,
 			sy: self.sy,
 			x: self.x,
@@ -297,7 +297,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>,
+			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, Connected<DRAIN>, T>>,
 			sx: self.sx,
 			sy: self.sy,
 			x: self.x,

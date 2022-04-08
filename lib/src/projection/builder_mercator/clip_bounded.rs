@@ -33,8 +33,8 @@ where
 		LB,
 		LC,
 		LU,
-		Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>,
+		Identity<DRAIN, DRAIN, Connected<DRAIN>, T>,
+		Identity<DRAIN, DRAIN, Unconnected, T>,
 		PR,
 		PV,
 		RC,
@@ -57,7 +57,7 @@ where
 		let base = self.base;
 
 		let base_out = ProjectionBuilder {
-			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>,
+			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, Connected<DRAIN>, T>>,
 			projection_raw: base.projection_raw,
 			clip: base.clip,
 			phi: base.phi,

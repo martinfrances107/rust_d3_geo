@@ -15,8 +15,8 @@ use crate::stream::Unconnected;
 
 use super::Builder;
 
-pub type NoClipC<DRAIN, T> = Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>;
-pub type NoClipU<DRAIN, T> = Identity<DRAIN, DRAIN, DRAIN, Unconnected, T>;
+pub type NoClipC<DRAIN, T> = Identity<DRAIN, DRAIN, Connected<DRAIN>, T>;
+pub type NoClipU<DRAIN, T> = Identity<DRAIN, DRAIN, Unconnected, T>;
 
 pub type ClipC<DRAIN, T> = Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>;
 pub type ClipU<DRAIN, T> = Rectangle<DRAIN, DRAIN, Unconnected, T>;
