@@ -80,7 +80,7 @@ where
 }
 
 /// Resample the stream base on a given precision.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Resample<EP, PR, SC, SU, STATE, T>
 where
     T: CoordFloat,
@@ -91,6 +91,16 @@ where
     p_su: PhantomData<SU>,
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
     state: STATE,
+}
+
+impl<EP, PR, SC, SU, STATE, T> Debug for Resample<EP, PR, SC, SU, STATE, T>
+where
+    STATE: Debug,
+    T: CoordFloat,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("").field(&self.state).finish()
+    }
 }
 
 impl<EP, PR, SC, SU, STATE, T> Resampler for Resample<EP, PR, SC, SU, STATE, T> where T: CoordFloat {}

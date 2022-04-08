@@ -52,7 +52,6 @@ where
     T: CoordFloat,
 {
     p_ep: PhantomData<EP>,
-    // p_sc: PhantomData<SC>,
     line_node: LC,
     p_lu: PhantomData<LU>,
     polygon_started: bool,

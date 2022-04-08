@@ -8,8 +8,14 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
+use crate::projection::builder::template::ResampleClipC;
+use crate::projection::builder::template::ResampleClipU;
+use crate::projection::builder::template::ResampleNoneClipC;
+use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::builder::template::ResampleNoneNoClipC;
 use crate::projection::builder::template::ResampleNoneNoClipU;
 use crate::projection::builder_mercator::ResampleNoClipC;
@@ -62,6 +68,58 @@ impl<DRAIN, PR, T> PrecisionBypass
 		PVCircle<T>,
 		ResampleNoneNoClipC<DRAIN, PR, T>,
 		ResampleNoneNoClipU<DRAIN, PR, T>,
+		T,
+	>;
+	fn precision_bypass(self) -> Self::Output {
+		let base = self.base.precision_bypass();
+		return Self::Output {
+			pr: self.pr,
+			base,
+			x0: self.x0,
+			y0: self.y0,
+			x1: self.x1,
+			y1: self.y1, // post-clip extent
+		};
+	}
+}
+
+impl<DRAIN, PR, T> PrecisionBypass
+	for Builder<
+		DRAIN,
+		InterpolateCircle<T>,
+		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineCircle<DRAIN, ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
+		LineCircle<DRAIN, ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
+		PR,
+		PVCircle<T>,
+		ResampleClipC<DRAIN, PR, T>,
+		ResampleClipU<DRAIN, PR, T>,
+		T,
+	> where
+	DRAIN: Clone + Debug,
+	PR: Clone + Debug,
+	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+{
+	type T = T;
+	type Output = Builder<
+		DRAIN,
+		InterpolateCircle<T>,
+		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineCircle<
+			DRAIN,
+			ResampleNoneClipC<DRAIN, PR, T>,
+			Connected<ResampleNoneClipC<DRAIN, PR, T>>,
+			T,
+		>,
+		LineCircle<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
+		PR,
+		PVCircle<T>,
+		ResampleNoneClipC<DRAIN, PR, T>,
+		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	>;
 	fn precision_bypass(self) -> Self::Output {

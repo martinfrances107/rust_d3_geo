@@ -12,6 +12,7 @@ mod mercator_tests {
 	use rust_d3_geo::path::string::String as PathString;
 	use rust_d3_geo::projection::CenterSet;
 	use rust_d3_geo::projection::ClipExtentBounded;
+	use rust_d3_geo::projection::ClipExtentSet;
 
 	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::ProjectionRawBase;
@@ -75,51 +76,51 @@ mod mercator_tests {
 	// 	// assert_eq!(projection_builder.get_clip_extent(), None);
 	// }
 
-	// 	#[test]
-	// 	fn intersected_clip_extent() {
-	// 		println!(
+	// #[test]
+	// fn intersected_clip_extent() {
+	// 	println!(
 	//             "mercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent"
 	//         );
-	// 		let projection_builder = Mercator::builder()
-	// 			.translate(&Coordinate { x: 0_f64, y: 0_f64 })
-	// 			.scale(1_f64)
-	// 			.clip_extent(&[
-	// 				Coordinate {
-	// 					x: -10_f64,
-	// 					y: -10_f64,
-	// 				},
-	// 				Coordinate {
-	// 					x: 10_f64,
-	// 					y: 10_f64,
-	// 				},
-	// 			])
-	// 			.precision_bypass();
+	// 	let projection_builder = Mercator::builder()
+	// 		.translate(&Coordinate { x: 0_f64, y: 0_f64 })
+	// 		.scale(1_f64)
+	// 		.clip_extent(&[
+	// 			Coordinate {
+	// 				x: -10_f64,
+	// 				y: -10_f64,
+	// 			},
+	// 			Coordinate {
+	// 				x: 10_f64,
+	// 				y: 10_f64,
+	// 			},
+	// 		])
+	// 		.precision_bypass();
 
-	// 		let projection = projection_builder.build();
+	// 	let projection = projection_builder.build();
 
-	// 		let path_builder = PathBuilder::context_pathstring();
+	// 	let path_builder = PathBuilder::context_pathstring();
 
-	// 		let object = Sphere::default();
+	// 	let object = Sphere::default();
 
-	// 		// There is a bodge associated with this test
-	// 		// I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
-	// 		// See MercatorRaw::transform for an expanation of the issue.user:martinfrances107
-	// 		let s = path_builder.build(projection).object(&object);
-	// 		assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
-	// 		assert_eq!(
-	// 			projection_builder.get_clip_extent(),
-	// 			Some([
-	// 				Coordinate {
-	// 					x: -10_f64,
-	// 					y: -10_f64,
-	// 				},
-	// 				Coordinate {
-	// 					x: 10_f64,
-	// 					y: 10_f64,
-	// 				},
-	// 			])
-	// 		);
-	// 	}
+	// 	// There is a bodge associated with this test
+	// 	// I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
+	// 	// See MercatorRaw::transform for an expanation of the issue.user:martinfrances107
+	// 	let s = path_builder.build(projection).object(&object);
+	// 	assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
+	// 	assert_eq!(
+	// 		projection_builder.get_clip_extent(),
+	// 		Some([
+	// 			Coordinate {
+	// 				x: -10_f64,
+	// 				y: -10_f64,
+	// 			},
+	// 			Coordinate {
+	// 				x: 10_f64,
+	// 				y: 10_f64,
+	// 			},
+	// 		])
+	// 	);
+	// }
 
 	// 	#[test]
 	// 	fn scale_updates_the_intersected_clip_extent() {

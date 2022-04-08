@@ -17,7 +17,7 @@ use super::Resampler;
 /// Resample None.
 ///
 /// A pass-through module, when no resampling is required.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct None<EP, PR, SC, SU, STATE, T> {
     state: STATE,
     p_ep: PhantomData<EP>,
@@ -25,6 +25,15 @@ pub struct None<EP, PR, SC, SU, STATE, T> {
     p_su: PhantomData<SU>,
     p_t: PhantomData<T>,
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+}
+
+impl<EP, PR, SC, SU, STATE, T> Debug for None<EP, PR, SC, SU, STATE, T>
+where
+    STATE: Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("").field(&self.state).finish()
+    }
 }
 
 impl<EP, PR, SC, SU, T> None<EP, PR, SC, SU, Unconnected, T> {
