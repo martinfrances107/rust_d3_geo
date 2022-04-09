@@ -83,7 +83,7 @@ impl<DRAIN, PR, T>
 
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	fn reclip(
+	pub fn reclip(
 		mut self,
 	) -> Builder<
 		DRAIN,
@@ -154,7 +154,7 @@ impl<DRAIN, PR, T>
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	fn reclip(
+	pub fn reclip(
 		mut self,
 	) -> Builder<
 		DRAIN,
