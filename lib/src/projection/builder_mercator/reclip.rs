@@ -93,8 +93,9 @@ impl<DRAIN, PR, T> Reclip
 			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
 				// MercatorRaw and MercatorTransverseRaw supply different
 				// transforms
-				todo!("must change transform based on PR");
-				// self.clip_extent(k, t, x0, y0, x1, y1)
+				// todo!("must change transform based on PR");
+				// but for now assume projectionMercator is being used.
+				[Coordinate{x: (t.x - k).max(x0), y: y0}, Coordinate{x: (t.x + k).min(x1),y: y1}]
 			}
 			_ => [
 				Coordinate {
@@ -164,8 +165,9 @@ impl<DRAIN, PR, T> Reclip
 			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
 				// MercatorRaw and MercatorTransverseRaw supply different
 				// transforms
-				todo!("must change transform based on PR");
-				// self.clip_extent(k, t, x0, y0, x1, y1)
+				// todo!("must change transform based on PR");
+				// but for now assume projectionMercator is being used.
+				[Coordinate{x: (t.x - k).max(x0), y: y0}, Coordinate{x: (t.x + k).min(x1),y: y1}]
 			}
 			_ => [
 				Coordinate {
@@ -239,8 +241,9 @@ impl<DRAIN, PR, T> Reclip
 			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
 				// MercatorRaw and MercatorTransverseRaw supply different
 				// transforms
-				todo!("must change transform based on PR");
-				// self.clip_extent(k, t, x0, y0, x1, y1)
+				// todo!("must change transform based on PR");
+				// but for now assume projectionMercator is being used.
+				[Coordinate{x: (t.x - k).max(x0), y: y0}, Coordinate{x: (t.x + k).min(x1),y: y1}]
 			}
 			_ => [
 				Coordinate {
