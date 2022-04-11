@@ -9,7 +9,7 @@ use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::mercator::Mercator;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::ScaleAdjust;
 use rust_d3_geo::projection::TranslateSet;
 
 use crate::get_document;
@@ -30,7 +30,7 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let width: f64 = canvas.width().into();
 	let height: f64 = canvas.height().into();
 
-	let context = Context::new(&context_raw);
+	let context = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
 	let mercator_builder = Mercator::<Context<f64>, f64>::builder();

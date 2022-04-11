@@ -45,7 +45,7 @@ where
 
 /// Context related methods.
 impl<'a, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Builder<Context<'a, T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+    Builder<Context<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
@@ -55,7 +55,7 @@ where
     // }
 
     /// Programe the builder with the context.
-    pub fn context(self, context: &'a CanvasRenderingContext2d) -> Self {
+    pub fn context(self, context: CanvasRenderingContext2d) -> Self {
         Builder {
             pr: self.pr,
             context_stream: PathContext::<T>::new(context),

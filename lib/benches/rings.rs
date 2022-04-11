@@ -11,7 +11,7 @@ use rust_d3_geo::circle::generator::Generator as CircleGenerator;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::ScaleAdjust;
 use rust_d3_geo::projection::TranslateSet;
 
 // /// This benchmark is based on examples/rings

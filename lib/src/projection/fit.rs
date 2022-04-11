@@ -1,47 +1,11 @@
-use crate::clip::buffer::Buffer;
-use crate::clip::Bufferable;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
-use crate::path::Result;
-use crate::projection::ClipExtentBounded;
-use crate::projection::ScaleSet;
-use crate::projection::TranslateSet;
-use crate::stream::Connectable;
-use crate::stream::Stream;
-use num_traits::Float;
-use std::fmt::Debug;
-
-use crate::Transform;
-use approx::AbsDiffEq;
-use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
-// use num_traits::Float;
-use num_traits::FloatConst;
-
-use crate::clip::rectangle::Rectangle;
-use crate::identity::Identity;
-use crate::path::bounds::Bounds;
-use crate::stream::Connected;
-use crate::stream::Streamable;
-use crate::stream::Unconnected;
 
 use super::builder::template::ClipC;
 use super::builder::template::ClipU;
 use super::builder::template::NoClipC;
 use super::builder::template::NoClipU;
-use super::builder::template::ResampleClipC;
-use super::builder::template::ResampleClipU;
-use super::builder::Builder;
-// use super::builder::PostClipNode;
-// use super::resampler::resample::Connected as ConnectedResample;
-// use super::resampler::resample::Resample;
-// use super::resampler::Resampler;
-// use super::ClipExtentBounded;
-// use super::ClipExtentSet;
 
-// use super::ProjectionRawBase;
+use super::builder::Builder;
 
 type FitBoundsAdjust<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> = Box<
 	dyn Fn(

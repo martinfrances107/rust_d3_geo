@@ -42,7 +42,7 @@ mod path_centroid_test {
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::PrecisionBypass;
-    use rust_d3_geo::projection::ScaleSet;
+    use rust_d3_geo::projection::ScaleAdjust;
     use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
     use rust_d3_geo::stream::Unconnected;

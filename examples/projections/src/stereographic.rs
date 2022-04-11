@@ -13,7 +13,7 @@ use rust_d3_geo::projection::stereographic::Stereographic;
 use rust_d3_geo::projection::ClipAngleAdjust;
 use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::ScaleAdjust;
 use rust_d3_geo::projection::TranslateSet;
 
 pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
@@ -32,7 +32,7 @@ pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let width: f64 = canvas.width().into();
 	let height: f64 = canvas.height().into();
 
-	let context: Context<f64> = Context::new(&context_raw);
+	let context: Context<f64> = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
 	let stereographic_builder = Stereographic::<Context<f64>, f64>::builder();

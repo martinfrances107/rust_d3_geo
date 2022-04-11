@@ -6,8 +6,7 @@ mod reflect_tests {
 
 	use geo::Coordinate;
 	use pretty_assertions::assert_eq;
-	use rust_d3_geo::projection::AngleGet;
-	use rust_d3_geo::Transform;
+	use rust_d3_geo::projection::AngleSet;
 
 	use rust_d3_geo::clip::buffer::Buffer;
 	use rust_d3_geo::clip::circle::interpolate::Interpolate as InterpolateCircle;
@@ -22,15 +21,16 @@ mod reflect_tests {
 	use rust_d3_geo::projection::gnomic::Gnomic;
 	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::projection_equal::projection_equal;
-	use rust_d3_geo::projection::AngleSet;
+	use rust_d3_geo::projection::AngleGet;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ReflectGet;
 	use rust_d3_geo::projection::ReflectSet;
-	use rust_d3_geo::projection::ScaleSet;
+	use rust_d3_geo::projection::ScaleAdjust;
 	use rust_d3_geo::projection::TranslateSet;
 	use rust_d3_geo::stream::Connected;
 	use rust_d3_geo::stream::StreamDrainStub;
 	use rust_d3_geo::stream::Unconnected;
+	use rust_d3_geo::Transform;
 
 	type GB = Builder<
 		StreamDrainStub<f64>,

@@ -10,7 +10,7 @@ use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
 use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::ScaleAdjust;
 use rust_d3_geo::projection::TranslateSet;
 
 use crate::get_document;
@@ -33,7 +33,7 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
 	let width: f64 = canvas.width().into();
 	let height: f64 = canvas.height().into();
 
-	let context = Context::new(&context_raw);
+	let context = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
 	let azimuthal_equal_area_builder = AzimuthalEqualArea::<Context<f64>, f64>::builder();

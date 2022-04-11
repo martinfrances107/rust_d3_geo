@@ -1,3 +1,4 @@
+use crate::projection::ScaleAdjust;
 use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -24,7 +25,6 @@ use super::builder::Builder;
 use super::ClipAngleSet;
 use super::ProjectionRawBase;
 use super::ProjectionRawCommon;
-use super::ScaleSet;
 
 /// Why the Phantom Data is required here...
 ///

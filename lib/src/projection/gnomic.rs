@@ -1,4 +1,3 @@
-use crate::projection::ScaleSet;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -12,10 +11,10 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::identity::Identity;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::ClipAngleSet;
+use crate::projection::ScaleAdjust;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;

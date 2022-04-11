@@ -1,5 +1,7 @@
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::ResampleClipC;
+use crate::projection::builder::template::ResampleClipU;
 use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -14,13 +16,10 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::identity::Identity;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::builder::template::ResampleNoClipC;
-use super::builder::template::ResampleNoClipU;
 use super::builder_mercator::Builder as MercatorBuilder;
 use super::ClipAngleSet;
 use super::ProjectionRawBase;
@@ -46,7 +45,7 @@ impl<DRAIN, T> Default for Mercator<DRAIN, T> {
 
 impl<DRAIN, T> ProjectionRawBase<T> for Mercator<DRAIN, T>
 where
-	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: 'static + Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Builder = MercatorBuilder<
@@ -55,17 +54,17 @@ where
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<
 			DRAIN,
-			ResampleNoClipC<DRAIN, Mercator<DRAIN, T>, T>,
-			Connected<ResampleNoClipC<DRAIN, Mercator<DRAIN, T>, T>>,
+			ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>,
+			Connected<ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>>,
 			T,
 		>,
-		LineCircle<DRAIN, ResampleNoClipC<DRAIN, Mercator<DRAIN, T>, T>, Unconnected, T>,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		LineCircle<DRAIN, ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>, Unconnected, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
 		Mercator<DRAIN, T>,
 		PVCircle<T>,
-		ResampleNoClipC<DRAIN, Mercator<DRAIN, T>, T>,
-		ResampleNoClipU<DRAIN, Mercator<DRAIN, T>, T>,
+		ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>,
+		ResampleClipU<DRAIN, Mercator<DRAIN, T>, T>,
 		T,
 	>;
 	type T = T;

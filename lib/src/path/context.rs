@@ -21,17 +21,17 @@ enum LineState {
 
 /// Path Context.
 #[derive(Clone, Debug, PartialEq)]
-pub struct Context<'a, T>
+pub struct Context<T>
 // where
 //     T: CoordFloat,
 {
     line: LineState,
     point: PointState,
     radius: T,
-    context: Option<&'a CanvasRenderingContext2d>,
+    context: Option<CanvasRenderingContext2d>,
 }
 
-impl<'a, T> Default for Context<'a, T>
+impl<T> Default for Context<T>
 where
     T: CoordFloat,
 {
@@ -44,13 +44,13 @@ where
         }
     }
 }
-impl<'a, T> Context<'a, T>
+impl<T> Context<T>
 where
     T: CoordFloat,
 {
     /// Contructor.
     #[inline]
-    pub fn new(context: &'a CanvasRenderingContext2d) -> Self {
+    pub fn new(context: CanvasRenderingContext2d) -> Self {
         Self {
             context: Some(context),
             line: LineState::Init,
@@ -60,7 +60,7 @@ where
     }
 }
 
-impl<'a, T> PointRadiusTrait for Context<'a, T>
+impl<T> PointRadiusTrait for Context<T>
 where
     T: CoordFloat,
 {
@@ -70,7 +70,7 @@ where
     }
 }
 
-impl<'a, T> Result for Context<'a, T>
+impl<'a, T> Result for Context<T>
 where
     T: CoordFloat,
 {
@@ -79,7 +79,7 @@ where
     fn result(&mut self) {}
 }
 
-impl<'a, T> Stream for Context<'a, T>
+impl<T> Stream for Context<T>
 where
     T: CoordFloat,
 {

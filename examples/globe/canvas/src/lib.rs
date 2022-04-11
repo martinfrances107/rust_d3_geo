@@ -23,7 +23,7 @@ use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::ProjectionRawBase;
 
 use rust_d3_geo::projection::RotateSet;
-use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::ScaleAdjust;
 
 use rust_d3_geo::projection::TranslateSet;
 use rust_topojson_client::feature::Builder as FeatureBuilder;
@@ -98,7 +98,7 @@ pub async fn start() -> Result<(), JsValue> {
     let countries = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
-    let context = Context::new(&context_raw);
+    let context = Context::new(context_raw.clone());
     let pb = PathBuilder::new(context);
 
     let ortho_builder = Orthographic::<Context<f64>, f64>::builder();

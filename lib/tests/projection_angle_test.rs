@@ -12,7 +12,7 @@ mod angle_test {
 	use rust_d3_geo::projection::AngleGet;
 	use rust_d3_geo::projection::AngleSet;
 	use rust_d3_geo::projection::ProjectionRawBase;
-	use rust_d3_geo::projection::ScaleSet;
+	use rust_d3_geo::projection::ScaleAdjust;
 	use rust_d3_geo::projection::TranslateSet;
 	use rust_d3_geo::stream::StreamDrainStub;
 

@@ -2,15 +2,11 @@
 #[cfg(test)]
 mod stereographic_tests {
     use geo::Coordinate;
-
-    // use rust_d3_geo::clip::circle::line::Line;
-    // use rust_d3_geo::clip::circle::pv::PV;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::stereographic::Stereographic;
-    // use rust_d3_geo::projection::ProjectionRawCommon;
     use rust_d3_geo::projection::ProjectionRawBase;
-    use rust_d3_geo::projection::ScaleSet;
+    use rust_d3_geo::projection::ScaleAdjust;
     use rust_d3_geo::projection::TranslateSet;
     use rust_d3_geo::stream::StreamDrainStub;
 

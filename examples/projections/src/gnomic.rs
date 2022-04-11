@@ -11,7 +11,7 @@ use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::gnomic::Gnomic;
-use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::ScaleAdjust;
 use rust_d3_geo::projection::TranslateSet;
 
 use crate::get_document;
@@ -32,7 +32,7 @@ pub async fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let width: f64 = canvas.width().into();
 	let height: f64 = canvas.height().into();
 
-	let context: Context<f64> = Context::new(&context_raw);
+	let context: Context<f64> = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
 	let gnomic_builder = Gnomic::<Context<f64>, f64>::builder();

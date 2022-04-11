@@ -198,6 +198,18 @@ pub trait ClipExtentSet {
         Self::T: CoordFloat;
 }
 
+/// Sets the bounding box.
+/// A projection builder sub trait.
+pub trait ClipExtentAdjust {
+    /// f64 or f32
+    type T;
+
+    /// Sets the bounding box.
+    fn clip_extent_adjust(self, extent: &[Coordinate<Self::T>; 2]) -> Self
+    where
+        Self::T: CoordFloat;
+}
+
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
 pub trait FitConvert {
@@ -511,8 +523,10 @@ pub trait ScaleGet {
 
 /// Controls the projections scaling factor.
 ///
+/// Adjust implies that the PCN - is a rectangle and it will be adjusted.
+///
 /// Projection builder sub trait.
-pub trait ScaleSet {
+pub trait ScaleAdjust {
     /// f32 or f64.
     type T;
 
@@ -521,6 +535,24 @@ pub trait ScaleSet {
     ///
     ///  @param scale Scale factor to be used for the projection; the default scale is projection-specific.
     fn scale(self, scale: Self::T) -> Self;
+}
+
+/// This trait is useful only for mercator projection.
+/// Here  centering, scaling and trasnlate all end in a reclip.
+/// That is all involve a tranformation of the PCN
+/// specifcally a Identity struct to a Rectangle struct.
+pub trait ScaleSet {
+    /// Output type where the PCN is set to Rectangle.
+    type Output;
+
+    /// f32 or f64.
+    type T;
+
+    ///  Sets the projection’s scale factor to the specified value and returns the projection.
+    ///  The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
+    ///
+    ///  @param scale Scale factor to be used for the projection; the default scale is projection-specific.
+    fn scale(self, scale: Self::T) -> Self::Output;
 }
 
 /// Controls the projections translation factor.

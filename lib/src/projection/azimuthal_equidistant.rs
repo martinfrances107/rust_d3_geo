@@ -1,4 +1,4 @@
-use crate::projection::ScaleSet;
+use crate::projection::ScaleAdjust;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 

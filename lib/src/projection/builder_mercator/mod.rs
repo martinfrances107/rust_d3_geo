@@ -5,15 +5,18 @@ pub mod center_set;
 pub mod clip_angle_get;
 pub mod clip_angle_set;
 pub mod clip_bounded;
+pub mod clip_extent_adjust;
 pub mod clip_extent_set;
 pub mod precision_bypass;
 pub mod precision_get;
 pub mod precision_set;
 pub mod reclip;
+pub mod reclip_adjust;
 pub mod reflect_get;
 pub mod reflect_set;
 pub mod rotate_get;
 pub mod rotate_set;
+pub mod scale_adjust;
 pub mod scale_get;
 pub mod scale_set;
 pub mod translate_get;
@@ -43,6 +46,15 @@ use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
+
+trait Reclip {
+	type Output;
+	fn reclip(self) -> Self::Output;
+}
+
+trait ReclipAdjust {
+	fn reclip_adjust(self) -> Self;
+}
 
 /// A wrapper for Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]

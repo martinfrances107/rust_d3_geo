@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
@@ -13,7 +11,7 @@ use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::equirectangular::Equirectangular;
 use rust_d3_geo::projection::CenterSet;
 use rust_d3_geo::projection::RotateSet;
-use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::ScaleAdjust;
 use rust_d3_geo::projection::TranslateSet;
 
 use crate::get_document;
@@ -31,12 +29,12 @@ pub async fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
 		.unwrap()
 		.dyn_into::<web_sys::CanvasRenderingContext2d>()?;
 
-	let context = Rc::new(&context_raw);
+	let context = context_raw.clone();
 
 	let width: f64 = canvas.width().into();
 	let height: f64 = canvas.height().into();
 
-	let context = Context::new(&context);
+	let context = Context::new(context);
 	let pb = PathBuilder::new(context);
 
 	let equirectangular_builder = Equirectangular::<Context<f64>, f64>::builder();

@@ -1,5 +1,3 @@
-use crate::projection::ScaleSet;
-use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -12,13 +10,15 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::identity::Identity;
 use crate::math::asin;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::Builder;
+use crate::projection::ClipAngleSet;
 use crate::projection::ProjectionRawBase;
+use crate::projection::ScaleAdjust;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -26,9 +26,6 @@ use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
-use super::resampler::resample::Connected as ConnectedResample;
-use super::resampler::resample::Resample;
-use super::ClipAngleSet;
 
 /// Why the Phantom Data is required here...
 ///

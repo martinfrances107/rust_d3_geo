@@ -11,8 +11,10 @@ mod mercator_tests {
 	use rust_d3_geo::path::builder::Builder as PathBuilder;
 	use rust_d3_geo::path::string::String as PathString;
 	use rust_d3_geo::projection::CenterSet;
+	use rust_d3_geo::projection::ClipExtentAdjust;
 	use rust_d3_geo::projection::ClipExtentBounded;
 	use rust_d3_geo::projection::ClipExtentSet;
+	use rust_d3_geo::projection::ScaleAdjust;
 
 	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::ProjectionRawBase;
@@ -84,7 +86,7 @@ mod mercator_tests {
 	// 	let projection_builder = Mercator::builder()
 	// 		.translate(&Coordinate { x: 0_f64, y: 0_f64 })
 	// 		.scale(1_f64)
-	// 		.clip_extent(&[
+	// 		.clip_extent_adjust(&[
 	// 			Coordinate {
 	// 				x: -10_f64,
 	// 				y: -10_f64,

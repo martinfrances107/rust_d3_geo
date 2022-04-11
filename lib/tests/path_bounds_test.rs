@@ -35,7 +35,7 @@ mod path_bounds_test {
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
 
-    use rust_d3_geo::projection::ScaleSet;
+    use rust_d3_geo::projection::ScaleAdjust;
     use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
     use rust_d3_geo::stream::Unconnected;

@@ -39,6 +39,7 @@ mod clip_angle_get;
 mod clip_angle_reset;
 mod clip_angle_set;
 mod clip_bounded;
+mod clip_extent_adjust;
 mod clip_extent_set;
 mod fit;
 mod fit_adjust;

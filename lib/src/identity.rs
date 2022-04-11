@@ -1,6 +1,4 @@
 use std::fmt::Debug;
-use std::fmt::Formatter;
-use std::fmt::Result;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
