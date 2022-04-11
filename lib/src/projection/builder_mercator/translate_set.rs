@@ -1,5 +1,6 @@
 use std::fmt::Debug;
 
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -8,7 +9,9 @@ use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::TranslateSet;
+use crate::projection::builder_mercator::ReclipAdjust;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -29,19 +32,19 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	LB: Debug,
-	PCNC: Debug,
-	PCNU: Debug,
+	DRAIN: 'static + Clone + Default + Debug + Stream<EP=DRAIN, T=T>,
+	I: Clone, LB: Clone + Debug, LC: Clone, LU:Clone,PCNC: Clone + Debug,
+	PCNU: Clone + Debug,
 	PR: Clone + Debug + Transform<T = T>,
-	T: CoordFloat + FloatConst,
+	PV: Clone,
+	T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
 {
 	type T = T;
 
 	fn translate(mut self, t: &Coordinate<T>) -> Self {
 		self.base = self.base.translate(t);
-		// self.reclip()
-		self
+		 self.reclip_adjust()
+
 	}
 }
 
@@ -60,17 +63,19 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> TranslateSet
 		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	PCNC: Debug,
-	PCNU: Debug,
+	DRAIN: 'static + Clone + Default + Debug + Stream<EP=DRAIN, T=T>,
+	I: Clone, LB: Clone + Debug, LC: Clone, LU:Clone,PCNC: Clone + Debug,
+	PCNU: Clone + Debug,
 	PR: Clone + Debug + Transform<T = T>,
-	T: CoordFloat + FloatConst,
+	PV: Clone,
+	T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
 {
 	type T = T;
 
 	fn translate(mut self, t: &Coordinate<T>) -> Self {
 		self.base = self.base.translate(t);
-		// self.reclip()
-		self
+		self.reclip_adjust()
+
+
 	}
 }
