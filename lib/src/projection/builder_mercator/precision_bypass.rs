@@ -8,6 +8,9 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
+use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::pv::PV as PVAntimerdian;
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::NoClipC;
@@ -25,6 +28,115 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 
 use super::Builder;
+impl<DRAIN, PR, T> PrecisionBypass
+	for Builder<
+		DRAIN,
+		InterpolateAntimeridian<T>,
+		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<
+			DRAIN,
+			ResampleNoClipC<DRAIN, PR, T>,
+			Connected<ResampleNoClipC<DRAIN, PR, T>>,
+			T,
+		>,
+		LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
+		PR,
+		PVAntimerdian<T>,
+		ResampleNoClipC<DRAIN, PR, T>,
+		ResampleNoClipU<DRAIN, PR, T>,
+		T,
+	> where
+	DRAIN: Clone + Debug,
+	PR: Clone + Debug,
+	T: 'static  + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+{
+	type T = T;
+	type Output = Builder<
+		DRAIN,
+		InterpolateAntimeridian<T>,
+		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<
+			DRAIN,
+			ResampleNoneNoClipC<DRAIN, PR, T>,
+			Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
+			T,
+		>,
+		LineAntimeridian<DRAIN, ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
+		PR,
+		PVAntimerdian<T>,
+		ResampleNoneNoClipC<DRAIN, PR, T>,
+		ResampleNoneNoClipU<DRAIN, PR, T>,
+		T,
+	>;
+	fn precision_bypass(self) -> Self::Output {
+		let base = self.base.precision_bypass();
+		return Self::Output {
+			pr: self.pr,
+			base,
+			x0: self.x0,
+			y0: self.y0,
+			x1: self.x1,
+			y1: self.y1, // post-clip extent
+		};
+	}
+}
+
+impl<DRAIN, PR, T> PrecisionBypass
+	for Builder<
+		DRAIN,
+		InterpolateAntimeridian<T>,
+		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<DRAIN, ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
+		LineAntimeridian<DRAIN, ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
+		PR,
+		PVAntimerdian<T>,
+		ResampleClipC<DRAIN, PR, T>,
+		ResampleClipU<DRAIN, PR, T>,
+		T,
+	> where
+	DRAIN: Clone + Debug,
+	PR: Clone + Debug,
+	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+{
+	type T = T;
+	type Output = Builder<
+		DRAIN,
+		InterpolateAntimeridian<T>,
+		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<
+			DRAIN,
+			ResampleNoneClipC<DRAIN, PR, T>,
+			Connected<ResampleNoneClipC<DRAIN, PR, T>>,
+			T,
+		>,
+		LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
+		PR,
+	PVAntimerdian<T>,
+		ResampleNoneClipC<DRAIN, PR, T>,
+		ResampleNoneClipU<DRAIN, PR, T>,
+		T,
+	>;
+	fn precision_bypass(self) -> Self::Output {
+		let base = self.base.precision_bypass();
+		return Self::Output {
+			pr: self.pr,
+			base,
+			x0: self.x0,
+			y0: self.y0,
+			x1: self.x1,
+			y1: self.y1, // post-clip extent
+		};
+	}
+}
+
 
 impl<DRAIN, PR, T> PrecisionBypass
 	for Builder<

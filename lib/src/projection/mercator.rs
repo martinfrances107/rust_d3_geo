@@ -13,15 +13,14 @@ use num_traits::AsPrimitive;
 use num_traits::Float;
 
 use crate::clip::buffer::Buffer;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
+use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::pv::PV as PVAntimerdian;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::builder_mercator::Builder as MercatorBuilder;
-use super::ClipAngleSet;
 use super::ProjectionRawBase;
 use super::ScaleSet;
 use super::TransformExtent;
@@ -50,19 +49,19 @@ where
 {
 	type Builder = MercatorBuilder<
 		DRAIN,
-		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<
+		InterpolateAntimeridian<T>,
+		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<
 			DRAIN,
 			ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>,
 			Connected<ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>>,
 			T,
 		>,
-		LineCircle<DRAIN, ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>, Unconnected, T>,
+		LineAntimeridian<DRAIN, ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>, Unconnected, T>,
 		ClipC<DRAIN, T>,
 		ClipU<DRAIN, T>,
 		Mercator<DRAIN, T>,
-		PVCircle<T>,
+		PVAntimerdian<T>,
 		ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>,
 		ResampleClipU<DRAIN, Mercator<DRAIN, T>, T>,
 		T,
@@ -72,8 +71,7 @@ where
 	#[inline]
 	fn builder() -> Self::Builder {
 		MercatorBuilder::new(Mercator::default())
-			.scale(T::from(250_f64).unwrap())
-			.clip_angle(T::from(142_f64).unwrap())
+			.scale(T::from(961_f64/f64::TAU()).unwrap())
 	}
 }
 

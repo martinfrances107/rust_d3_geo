@@ -163,8 +163,7 @@ where
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     PV: PointVisible<T = T>,
     RC: Stream<EP = EP, T = T>,
-    // T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-    T: 'static + CoordFloat + AbsDiffEq<Epsilon = T> + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     #[inline]
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -274,7 +273,7 @@ where
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     PV: PointVisible<T = T>,
     RC: Stream<EP = EP, T = T>,
-    T: 'static + CoordFloat + AbsDiffEq<Epsilon = T> + FloatConst,
+    T: 'static +  AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
     type EP = EP;
