@@ -153,15 +153,15 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	type T = T;
 	type Output = Builder<
 		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
+		InterpolateCircle<T>,
+		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineCircle<
 			DRAIN,
 			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
 			Connected<Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>,
 			T,
 		>,
-		LineAntimeridian<
+		LineCircle<
 			DRAIN,
 			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
 			Unconnected,
@@ -170,7 +170,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		PCNC,
 		PCNU,
 		PR,
-		PVAntimeridian<T>,
+		PVCircle<T>,
 		Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
@@ -179,9 +179,10 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	///
 	/// delta is related to clip angle.
 	fn precision(self, delta: &T) -> Self::Output {
-		let pv = PVAntimeridian::default();
-		let interpolator = InterpolateAntimeridian::default();
-		let line = LineAntimeridian::default();
+		let radius = self.clip.interpolator.radius;
+		let pv = PVCircle::new(radius);
+		let interpolator = InterpolateCircle::new(radius);
+		let line = LineCircle::default();
 		let delta2 = *delta * *delta;
 		let resample = Resample::new(self.project_transform.clone(), delta2);
 		// Architecture Discussion:
@@ -191,7 +192,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			// p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_pcnc: PhantomData::<PCNC>,
 			sx: self.sx,
 			sy: self.sy,

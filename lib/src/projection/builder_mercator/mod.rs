@@ -8,6 +8,7 @@ pub mod clip_bounded;
 pub mod clip_extent_adjust;
 pub mod clip_extent_set;
 pub mod precision_bypass;
+pub mod precision_adjust;
 pub mod precision_get;
 pub mod precision_set;
 pub mod reclip;

@@ -1,6 +1,7 @@
 use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
+use rust_d3_geo::projection::ClipAngleSet;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -10,6 +11,7 @@ use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::mercator::Mercator;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::ScaleAdjust;
+use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::TranslateSet;
 
 use crate::get_document;
@@ -41,9 +43,8 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		// TODO must reinstate.
-		// .clip_angle_adjust(90_f64)
-		// .precision_adjust(&90_f64)
+		.clip_angle(90_f64)
+		.precision_adjust(&10_f64)
 		.build();
 
 	let mut path = pb.build(mercator);

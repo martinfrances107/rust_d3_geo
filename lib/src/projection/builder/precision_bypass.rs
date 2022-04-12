@@ -285,9 +285,9 @@ impl<DRAIN, PR, T> PrecisionBypass
 	///
 	/// delta is related to clip angle.
 	fn precision_bypass(self) -> Self::Output {
-		// This is a bodge radius info in embedded in the start variable.
-		let pv = PVCircle::new(-self.clip.start.y);
-		let interpolator = InterpolateCircle::new(-self.clip.start.y);
+		let radius = self.clip.interpolator.radius;
+		let pv = PVCircle::new(radius);
+		let interpolator = InterpolateCircle::new(radius);
 		let line = LineCircle::default();
 		let resample = None::new(self.project_transform.clone());
 		// Architecture Discussion:
