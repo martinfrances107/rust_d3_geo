@@ -123,7 +123,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 			y0: Some(extent[0].y),
 			x1: Some(extent[1].x),
 			y1: Some(extent[1].y),
-			postclip: Rectangle::<DRAIN, DRAIN, Unconnected, T>::new(
+			postclip: ClipU::new(
 				extent[0].x,
 				extent[0].y,
 				extent[1].x,
@@ -221,7 +221,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 			y0: Some(extent[0].y),
 			x1: Some(extent[1].x),
 			y1: Some(extent[1].y),
-			postclip: Rectangle::<DRAIN, DRAIN, Unconnected, T>::new(
+			postclip: ClipU::new(
 				extent[0].x,
 				extent[0].y,
 				extent[1].x,
@@ -313,7 +313,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 			y0: Some(extent[0].y),
 			x1: Some(extent[1].x),
 			y1: Some(extent[1].y),
-			postclip: Rectangle::<DRAIN, DRAIN, Unconnected, T>::new(
+			postclip: ClipU::new(
 				extent[0].x,
 				extent[0].y,
 				extent[1].x,
@@ -410,7 +410,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 			y0: Some(extent[0].y),
 			x1: Some(extent[1].x),
 			y1: Some(extent[1].y),
-			postclip: Rectangle::<DRAIN, DRAIN, Unconnected, T>::new(
+			postclip: ClipU::new(
 				extent[0].x,
 				extent[0].y,
 				extent[1].x,
