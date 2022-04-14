@@ -14,21 +14,21 @@ use geo::LineString;
 use geo::MultiLineString;
 use geo::MultiPolygon;
 use geo::Polygon;
-use rust_d3_geo::projection::ClipAngleAdjust;
-use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::ScaleAdjust;
-use rust_d3_geo::projection::TranslateSet;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys::Document;
 use web_sys::Element;
+use web_sys::SvgsvgElement;
 
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::orthographic::Orthographic;
+use rust_d3_geo::projection::ClipAngleAdjust;
+use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::RotateSet;
-use web_sys::SvgsvgElement;
+use rust_d3_geo::projection::ScaleAdjust;
+use rust_d3_geo::projection::TranslateAdjust;
 
 mod dom_macros;
 
@@ -105,7 +105,7 @@ fn update_canvas(document: &Document) -> Result<()> {
 	let ortho_builder = Orthographic::builder()
 		.scale(240_f64)
 		.rotate(&[0_f64, -20_f64, 0_f64])
-		.translate(&Coordinate {
+		.translate_adjust(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
@@ -178,7 +178,7 @@ fn update_svg_mls(document: &Document) -> Result<()> {
 	// TODO Code small ortho_builder.clone() can reuse this object as expected.
 	let ortho = ortho_builder
 		.scale(240_f64)
-		.translate(&Coordinate {
+		.translate_adjust(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
@@ -225,7 +225,7 @@ fn update_svg_polygon(document: &Document) -> Result<()> {
 	// TODO Code small ortho_builder.clone() can reuse this object as expected.
 	let ortho = Orthographic::builder()
 		.scale(240_f64)
-		.translate(&Coordinate {
+		.translate_adjust(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
@@ -279,7 +279,7 @@ fn update_svg_multipolygon(document: &Document) -> Result<()> {
 	// TODO Code small ortho_builder.clone() can reuse this object as expected.
 	let ortho = Orthographic::<_, f64>::builder()
 		.scale(240_f64)
-		.translate(&Coordinate {
+		.translate_adjust(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})

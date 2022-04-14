@@ -1,3 +1,7 @@
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
 use std::fmt::Debug;
 
 use approx::AbsDiffEq;
@@ -30,12 +34,19 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 		LB,
 		LC,
 		LU,
-		PCNC,
-		PCNU,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
 		PR,
 		PV,
-		Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
+		Resample<
+			DRAIN,
+			PR,
+			ClipC<DRAIN, T>,
+			ClipU<DRAIN, T>,
+			ConnectedResample<ClipC<DRAIN, T>, T>,
+			T,
+		>,
+		Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
 		T,
 	> where
 	DRAIN: 'static + Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
@@ -65,33 +76,91 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 	}
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
+// impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
+// 	for Builder<
+// 		DRAIN,
+// 		I,
+// 		LB,
+// 		LC,
+// 		LU,
+// 		PCNC,
+// 		PCNU,
+// 		PR,
+// 		PV,
+// 		Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+// 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
+// 		T,
+// 	> where
+// 	DRAIN: 'static + Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
+// 	I: Clone + Interpolator<T = T>,
+// 	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
+// 	LC: Clone
+// 		+ LineConnected<SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>
+// 		+ Stream<EP = DRAIN, T = T>,
+// 	LU: Clone
+// 		+ Debug
+// 		+ Connectable<
+// 			Output = LC,
+// 			SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+// 		> + Bufferable<Output = LB, T = T>,
+// 	PCNC: Clone + Debug,
+// 	PCNU: Clone + Debug,
+// 	PR: Clone + Debug + Transform<T = T>,
+// 	PV: Clone + PointVisible<T = T>,
+// 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+// {
+// 	type T = T;
+
+// 	fn scale(mut self, scale: T) -> Self {
+// 		self.base = self.base.scale(scale);
+// 		self.reclip_adjust()
+// 		// self
+// 	}
+// }
+
+// TODO must vary by NoClip, Clip
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleAdjust
 	for Builder<
 		DRAIN,
 		I,
 		LB,
 		LC,
 		LU,
-		PCNC,
-		PCNU,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
 		PR,
 		PV,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
+		ResampleNone<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Connected<ClipC<DRAIN, T>>, T>,
+		ResampleNone<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
 		T,
 	> where
-	DRAIN:  'static + Clone + Default + Debug + Stream<EP=DRAIN, T=T>,
+	DRAIN: 'static + Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	I: Clone + Interpolator<T = T>,
 	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
 	LC: Clone
-		+ LineConnected<SC = ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>
-		+ Stream<EP = DRAIN, T = T>,
+		+ LineConnected<
+			SC = ResampleNone<
+				DRAIN,
+				PR,
+				ClipC<DRAIN, T>,
+				ClipU<DRAIN, T>,
+				Connected<ClipC<DRAIN, T>>,
+				T,
+			>,
+		> + Stream<EP = DRAIN, T = T>,
 	LU: Clone
 		+ Debug
-		+ Connectable<Output = LC, SC = ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>
-		+ Bufferable<Output = LB, T = T>,
-	PCNC: Clone + Debug,
-	PCNU: Clone + Debug,
+		+ Connectable<
+			Output = LC,
+			SC = ResampleNone<
+				DRAIN,
+				PR,
+				ClipC<DRAIN, T>,
+				ClipU<DRAIN, T>,
+				Connected<ClipC<DRAIN, T>>,
+				T,
+			>,
+		> + Bufferable<Output = LB, T = T>,
 	PR: Clone + Debug + Transform<T = T>,
 	PV: Clone + PointVisible<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -101,6 +170,5 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 	fn scale(mut self, scale: T) -> Self {
 		self.base = self.base.scale(scale);
 		self.reclip_adjust()
-
 	}
 }

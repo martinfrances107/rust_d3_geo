@@ -572,6 +572,7 @@ pub trait TranslateGet {
 ///
 /// Projection builder sub trait.
 pub trait TranslateSet {
+    type Output;
     /// f32 or f64.
     type T;
 
@@ -579,7 +580,23 @@ pub trait TranslateSet {
     ///  The translation offset determines the PIxel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
     ///
     ///  @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
-    fn translate(self, t: &Coordinate<Self::T>) -> Self
+    fn translate(self, t: &Coordinate<Self::T>) -> Self::Output
+    where
+        Self::T: CoordFloat;
+}
+
+/// Controls the projections translation factor.
+///
+/// Projection builder sub trait.
+pub trait TranslateAdjust {
+    /// f32 or f64.
+    type T;
+
+    ///  Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
+    ///  The translation offset determines the PIxel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
+    ///
+    ///  @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
+    fn translate_adjust(self, t: &Coordinate<Self::T>) -> Self
     where
         Self::T: CoordFloat;
 }

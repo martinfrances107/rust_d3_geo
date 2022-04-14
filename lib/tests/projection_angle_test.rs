@@ -13,7 +13,7 @@ mod angle_test {
 	use rust_d3_geo::projection::AngleSet;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ScaleAdjust;
-	use rust_d3_geo::projection::TranslateSet;
+	use rust_d3_geo::projection::TranslateAdjust;
 	use rust_d3_geo::stream::StreamDrainStub;
 
 	#[test]
@@ -21,7 +21,7 @@ mod angle_test {
 		println!("projection.angle(…) defaults to zero");
 		let pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
 			.scale(1_f64)
-			.translate(&Coordinate { x: 0_f64, y: 0_f64 });
+			.translate_adjust(&Coordinate { x: 0_f64, y: 0_f64 });
 		assert_eq!(pb.get_angle(), 0_f64);
 		let projection = pb.build();
 
@@ -140,7 +140,7 @@ mod angle_test {
 		println!("projection.angle(…) defaults to zero");
 		let pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
 			.scale(1_f64)
-			.translate(&Coordinate { x: 0_f64, y: 0_f64 })
+			.translate_adjust(&Coordinate { x: 0_f64, y: 0_f64 })
 			.angle(30_f64);
 
 		// this rounds to 29.9999999 not 30!!
@@ -264,7 +264,7 @@ mod angle_test {
 		println!("projection.angle(…) defaults to zero");
 		let pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
 			.scale(1_f64)
-			.translate(&Coordinate { x: 0_f64, y: 0_f64 })
+			.translate_adjust(&Coordinate { x: 0_f64, y: 0_f64 })
 			.angle(-30_f64);
 
 		// this rounds to 29.9999999 not 30!!
@@ -387,7 +387,7 @@ mod angle_test {
 		println!("projection.angle(…) wraps around 360°");
 		let pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
 			.scale(1_f64)
-			.translate(&Coordinate { x: 0_f64, y: 0_f64 })
+			.translate_adjust(&Coordinate { x: 0_f64, y: 0_f64 })
 			.angle(360_f64);
 
 		assert!(in_delta(pb.get_angle(), 0_f64, 1e-6));

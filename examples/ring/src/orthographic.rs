@@ -14,7 +14,7 @@ use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::RotateSet;
-use rust_d3_geo::projection::TranslateSet;
+use rust_d3_geo::projection::TranslateAdjust;
 
 use super::get_document;
 use super::get_path_node;
@@ -30,7 +30,7 @@ pub fn draw_orthographic() -> Result<()> {
     let height = svg.height().base_val().value()? as f64;
 
     let ortho_builder = Orthographic::builder()
-        .translate(&Coordinate {
+        .translate_adjust(&Coordinate {
             x: width / 2_f64,
             y: height / 2_f64,
         })

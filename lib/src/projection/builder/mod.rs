@@ -19,6 +19,9 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+use self::template::ClipC;
+use self::template::ClipU;
+
 use super::builder::template::NoClipC;
 use super::builder::template::NoClipU;
 use super::builder::template::ResampleNoClipC;
@@ -51,9 +54,11 @@ mod reflect_get;
 mod reflect_set;
 mod rotate_get;
 mod rotate_set;
+mod scale_adjust;
 mod scale_get;
 mod scale_set;
 pub mod template;
+mod translate_adjust;
 mod translate_get;
 mod translate_set;
 
@@ -250,19 +255,121 @@ where
     // }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T>
+impl<DRAIN, I, LB, LC, LU, PR, PV, T>
     Builder<
         DRAIN,
         I,
         LB,
         LC,
         LU,
-        PCNC,
-        PCNU,
+        NoClipC<DRAIN, T>,
+        NoClipU<DRAIN, T>,
         PR,
         PV,
-        Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
+        Resample<
+            DRAIN,
+            PR,
+            NoClipC<DRAIN, T>,
+            NoClipU<DRAIN, T>,
+            ConnectedResample<NoClipC<DRAIN, T>, T>,
+            T,
+        >,
+        Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Unconnected, T>,
+        T,
+    >
+where
+    PR: Clone + Transform<T = T>,
+    T: CoordFloat + FloatConst,
+{
+    fn reset(self) -> Self {
+        // self.cache_stream = None;
+        // self.cache = None;
+        self
+    }
+
+    pub fn recenter_with_resampling(self) -> Self {
+        assert!(!self.delta2.is_zero());
+        let center = generate_str(
+            &self.k,
+            &T::zero(),
+            &T::zero(),
+            &self.sx,
+            &self.sy,
+            &self.alpha,
+        )
+        .transform(&self.projection_raw.transform(&Coordinate {
+            x: self.lambda,
+            y: self.phi,
+        }));
+        let transform = generate_str(
+            &self.k,
+            &(self.x - center.x),
+            &(self.y - center.y),
+            &self.sx,
+            &self.sy,
+            &self.alpha,
+        );
+
+        let rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]);
+        let project_transform = Compose::new(self.projection_raw.clone(), transform);
+        let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
+        let rotator = RotatorRadians::new(rotate.clone());
+
+        let resample = Resample::new(project_transform.clone(), self.delta2);
+
+        let out: Self = Builder {
+            p_pcnc: self.p_pcnc,
+            // p_lb: PhantomData::<LB>,
+            projection_raw: self.projection_raw,
+            clip: self.clip,
+            phi: self.phi,
+            lambda: self.lambda,
+            alpha: self.alpha,
+            k: self.k,
+            sx: self.sx,
+            sy: self.sy,
+            x: self.x,
+            y: self.y,
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+            delta2: self.delta2,
+            theta: self.theta,
+            x0: self.x0,
+            y0: self.y0,
+            x1: self.x1,
+            y1: self.y1,
+            rotate,
+            rotator,
+            postclip: self.postclip,
+            resample,
+            project_transform,
+            project_rotate_transform,
+        };
+        out.reset()
+    }
+}
+
+impl<DRAIN, I, LB, LC, LU, PR, PV, T>
+    Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        ClipC<DRAIN, T>,
+        ClipU<DRAIN, T>,
+        PR,
+        PV,
+        Resample<
+            DRAIN,
+            PR,
+            ClipC<DRAIN, T>,
+            ClipU<DRAIN, T>,
+            ConnectedResample<ClipC<DRAIN, T>, T>,
+            T,
+        >,
+        Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
         T,
     >
 where

@@ -16,25 +16,20 @@ mod path_bounds_test {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
-    // use rust_d3_geo::clip::antimeridian::line::Line;
-    // use rust_d3_geo::clip::antimeridian::pv::PV;
+    use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+    use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
+    use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
     use rust_d3_geo::clip::buffer::Buffer;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::identity::Identity;
     use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::path::builder::Builder;
+    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
+    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
-    // use rust_d3_geo::projection::builder::template::ResampleNoClipC;
-    // use rust_d3_geo::projection::builder::template::ResampleNoClipU;
-    use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-    use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
-    use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
-    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
-    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
-
     use rust_d3_geo::projection::ScaleAdjust;
     use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;

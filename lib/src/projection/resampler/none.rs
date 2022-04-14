@@ -117,7 +117,9 @@ where
     }
 
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        // dbg!(p);
         let t = &self.projection_transform.transform(p);
+        // dbg!(t);
         self.state.sink.point(t, m);
     }
 }

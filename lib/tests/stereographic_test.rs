@@ -2,19 +2,20 @@
 #[cfg(test)]
 mod stereographic_tests {
     use geo::Coordinate;
+
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::stereographic::Stereographic;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleAdjust;
-    use rust_d3_geo::projection::TranslateSet;
+    use rust_d3_geo::projection::TranslateAdjust;
     use rust_d3_geo::stream::StreamDrainStub;
 
     #[test]
     fn test_stereographic() {
         let stereo: Projector<StreamDrainStub<f64>, _, _, _, _, _, _, _, _, _, _, _> =
             Stereographic::builder()
-                .translate(&Coordinate { x: 0f64, y: 0f64 })
+                .translate_adjust(&Coordinate { x: 0f64, y: 0f64 })
                 .scale(1f64)
                 .build();
 

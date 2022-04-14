@@ -1,4 +1,3 @@
-use crate::stream::Stream;
 use core::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -15,7 +14,6 @@ use crate::clip::circle::gen_clip_circle;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::clip::rectangle::Rectangle;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoneClipC;
@@ -28,6 +26,7 @@ use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentSet;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -123,12 +122,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 			y0: Some(extent[0].y),
 			x1: Some(extent[1].x),
 			y1: Some(extent[1].y),
-			postclip: ClipU::new(
-				extent[0].x,
-				extent[0].y,
-				extent[1].x,
-				extent[1].y,
-			),
+			postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
 		};
 
 		// out.reset()
@@ -221,12 +215,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 			y0: Some(extent[0].y),
 			x1: Some(extent[1].x),
 			y1: Some(extent[1].y),
-			postclip: ClipU::new(
-				extent[0].x,
-				extent[0].y,
-				extent[1].x,
-				extent[1].y,
-			),
+			postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
 		};
 
 		// out.reset()
@@ -313,12 +302,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 			y0: Some(extent[0].y),
 			x1: Some(extent[1].x),
 			y1: Some(extent[1].y),
-			postclip: ClipU::new(
-				extent[0].x,
-				extent[0].y,
-				extent[1].x,
-				extent[1].y,
-			),
+			postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
 		};
 
 		// out.reset()
@@ -410,12 +394,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 			y0: Some(extent[0].y),
 			x1: Some(extent[1].x),
 			y1: Some(extent[1].y),
-			postclip: ClipU::new(
-				extent[0].x,
-				extent[0].y,
-				extent[1].x,
-				extent[1].y,
-			),
+			postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
 		};
 
 		// out.reset()

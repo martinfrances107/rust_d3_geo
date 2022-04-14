@@ -1,7 +1,6 @@
 use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
-use rust_d3_geo::projection::ClipAngleSet;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -9,10 +8,11 @@ use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::mercator::Mercator;
+use rust_d3_geo::projection::ClipAngleSet;
+use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::ScaleAdjust;
-use rust_d3_geo::projection::PrecisionAdjust;
-use rust_d3_geo::projection::TranslateSet;
+use rust_d3_geo::projection::TranslateAdjust;
 
 use crate::get_document;
 
@@ -39,7 +39,7 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
 
 	let mercator = mercator_builder
 		.scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-		.translate(&Coordinate {
+		.translate_adjust(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})

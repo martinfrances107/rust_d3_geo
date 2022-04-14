@@ -120,7 +120,8 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 			resample,
 		};
 
-		out.reset()
+		// out.reset()
+		out
 	}
 }
 
@@ -222,6 +223,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 			resample,
 		};
 
-		out.reset()
+		// out.reset()
+		out
 	}
 }

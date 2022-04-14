@@ -36,7 +36,7 @@ mod path_string_test {
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleAdjust;
-    use rust_d3_geo::projection::TranslateSet;
+    use rust_d3_geo::projection::TranslateAdjust;
     use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
     use rust_d3_geo::stream::Unconnected;
@@ -254,7 +254,7 @@ mod path_string_test {
 
         let ortho = Orthographic::<PathString<f64>, f64>::builder()
             .scale(240_f64)
-            .translate(&Coordinate {
+            .translate_adjust(&Coordinate {
                 x: 300_f64,
                 y: 300_f64,
             })

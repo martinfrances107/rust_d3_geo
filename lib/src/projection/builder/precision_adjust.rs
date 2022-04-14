@@ -49,7 +49,7 @@ where
             resample,
             ..self
         };
-
-        out.reset()
+        out
+        // out.reset()
     }
 }

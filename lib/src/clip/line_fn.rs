@@ -4,6 +4,7 @@ pub(super) fn line<T>(a: &mut [T; 2], b: &mut [T; 2], x0: T, y0: T, x1: T, y1: T
 where
     T: CoordFloat,
 {
+    dbg!(&a, &b, &x0, &y0, &x1, &y1);
     let ax = a[0];
     let ay = a[1];
     let bx = b[0];
@@ -98,6 +99,7 @@ where
         }
     }
 
+dbg!("clip_line at tail abou to change", t0, dx);
     if t0 > T::zero() {
         a[0] = ax + t0 * dx;
         a[1] = ay + t0 * dy;

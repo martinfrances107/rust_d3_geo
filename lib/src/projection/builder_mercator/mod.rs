@@ -7,8 +7,8 @@ pub mod clip_angle_set;
 pub mod clip_bounded;
 pub mod clip_extent_adjust;
 pub mod clip_extent_set;
-pub mod precision_bypass;
 pub mod precision_adjust;
+pub mod precision_bypass;
 pub mod precision_get;
 pub mod precision_set;
 pub mod reclip;
@@ -20,6 +20,7 @@ pub mod rotate_set;
 pub mod scale_adjust;
 pub mod scale_get;
 pub mod scale_set;
+pub mod translate_adjust;
 pub mod translate_get;
 pub mod translate_set;
 

@@ -15,6 +15,7 @@ mod mercator_tests {
 	use rust_d3_geo::projection::ClipExtentBounded;
 	use rust_d3_geo::projection::ClipExtentSet;
 	use rust_d3_geo::projection::ScaleAdjust;
+	use rust_d3_geo::projection::TranslateAdjust;
 
 	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::ProjectionRawBase;
@@ -84,7 +85,7 @@ mod mercator_tests {
 	//             "mercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent"
 	//         );
 	// 	let projection_builder = Mercator::builder()
-	// 		.translate(&Coordinate { x: 0_f64, y: 0_f64 })
+	// 		.translate_adjust(&Coordinate { x: 0_f64, y: 0_f64 })
 	// 		.scale(1_f64)
 	// 		.clip_extent_adjust(&[
 	// 			Coordinate {

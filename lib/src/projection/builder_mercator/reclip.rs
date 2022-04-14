@@ -49,8 +49,8 @@ impl<DRAIN, PR, T> Reclip
 			T,
 		>,
 		LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		Identity<DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, Unconnected, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
 		PR,
 		PVAntimeridian<T>,
 		ResampleNoClipC<DRAIN, PR, T>,
@@ -95,7 +95,16 @@ impl<DRAIN, PR, T> Reclip
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				[Coordinate{x: (t.x - k).max(x0), y: y0}, Coordinate{x: (t.x + k).min(x1),y: y1}]
+				[
+					Coordinate {
+						x: (t.x - k).max(x0),
+						y: y0,
+					},
+					Coordinate {
+						x: (t.x + k).min(x1),
+						y: y1,
+					},
+				]
 			}
 			_ => [
 				Coordinate {
@@ -167,7 +176,16 @@ impl<DRAIN, PR, T> Reclip
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				[Coordinate{x: (t.x - k).max(x0), y: y0}, Coordinate{x: (t.x + k).min(x1),y: y1}]
+				[
+					Coordinate {
+						x: (t.x - k).max(x0),
+						y: y0,
+					},
+					Coordinate {
+						x: (t.x + k).min(x1),
+						y: y1,
+					},
+				]
 			}
 			_ => [
 				Coordinate {
@@ -243,7 +261,16 @@ impl<DRAIN, PR, T> Reclip
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				[Coordinate{x: (t.x - k).max(x0), y: y0}, Coordinate{x: (t.x + k).min(x1),y: y1}]
+				[
+					Coordinate {
+						x: (t.x - k).max(x0),
+						y: y0,
+					},
+					Coordinate {
+						x: (t.x + k).min(x1),
+						y: y1,
+					},
+				]
 			}
 			_ => [
 				Coordinate {

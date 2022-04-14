@@ -12,7 +12,9 @@ use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
 use crate::projection::ClipAngleSet;
+use crate::stream::Connectable;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -33,8 +35,10 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		RU,
 		T,
 	> where
-	PCNU: Debug,
+	PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
 	RU: Debug,
+	RC: Clone + Stream<EP = DRAIN, T = T>,
+	RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

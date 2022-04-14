@@ -11,7 +11,7 @@ use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
 use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::ScaleAdjust;
-use rust_d3_geo::projection::TranslateSet;
+use rust_d3_geo::projection::TranslateAdjust;
 
 use crate::get_document;
 
@@ -40,7 +40,7 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
 
 	let azimuthal_equal_area = azimuthal_equal_area_builder
 		.scale(width as f64 / 3_f64)
-		.translate(&Coordinate {
+		.translate_adjust(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})

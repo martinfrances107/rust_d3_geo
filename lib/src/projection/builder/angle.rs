@@ -14,6 +14,10 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
+use super::template::ClipC;
+use super::template::ClipU;
+use super::template::NoClipC;
+use super::template::NoClipU;
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
     for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
@@ -31,26 +35,49 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
+impl<DRAIN, I, LB, LC, LU,  PR, PV, T> AngleSet
     for Builder<
         DRAIN,
         I,
         LB,
         LC,
         LU,
-        PCNC,
-        PCNU,
+        NoClipC<DRAIN, T>,
+        NoClipU<DRAIN, T>,
         PR,
         PV,
-        Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
+        Resample<DRAIN, PR, NoClipC<DRAIN,T>, NoClipU<DRAIN, T>, ConnectedResample<NoClipC<DRAIN, T>, T>, T>,
+        Resample<DRAIN, PR, NoClipC<DRAIN,T>, NoClipU<DRAIN, T>, Unconnected, T>,
         T,
     >
 where
-    // LB: Debug,
-    // DRAIN: Debug,
-    // PCNC: Debug,
-    // PCNU: Debug,
+    PR: Clone + Debug + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+{
+    type T = T;
+
+    fn angle(mut self, angle: T) -> Self {
+        self.alpha = (angle % T::from(360_f64).unwrap()).to_radians();
+        self.recenter_with_resampling()
+    }
+}
+
+impl<DRAIN, I, LB, LC, LU,  PR, PV, T> AngleSet
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        ClipC<DRAIN, T>,
+        ClipU<DRAIN, T>,
+        PR,
+        PV,
+        Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, ConnectedResample<ClipC<DRAIN, T>, T>, T>,
+        Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
+        T,
+    >
+where
     PR: Clone + Debug + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -78,9 +105,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
         T,
     >
 where
-    // DRAIN: Debug,
-    // PCNC: Debug,
-    // PCNU: Debug,
     PR: Clone + Debug + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

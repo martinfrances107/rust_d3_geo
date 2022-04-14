@@ -13,27 +13,27 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
+use super::template::ClipC;
+use super::template::ClipU;
+use super::template::NoClipC;
+use super::template::NoClipU;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
+impl<DRAIN, I, LB, LC, LU,  PR, PV, T> CenterSet
     for Builder<
         DRAIN,
         I,
         LB,
         LC,
         LU,
-        PCNC,
-        PCNU,
+        ClipC<DRAIN, T>,
+        ClipU<DRAIN, T>,
         PR,
         PV,
-        Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
+        Resample<DRAIN, PR, ClipC<DRAIN, T>,  ClipU<DRAIN, T>, ConnectedResample<ClipC<DRAIN, T>, T>, T>,
+        Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
         T,
     >
 where
-    // DRAIN: Debug,
-    // LB: Debug,
-    // PCNC: Debug,
-    // PCNU: Debug,
     PR: Clone + Debug + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -46,6 +46,35 @@ where
     }
 }
 
+impl<DRAIN, I, LB, LC, LU,  PR, PV, T> CenterSet
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        NoClipC<DRAIN, T>,
+        NoClipU<DRAIN, T>,
+        PR,
+        PV,
+        Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, ConnectedResample<NoClipC<DRAIN, T>, T>, T>,
+        Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Unconnected, T>,
+        T,
+    >
+where
+    PR: Clone + Debug + Transform<T = T>,
+    T: CoordFloat + FloatConst,
+{
+    type T = T;
+
+    fn center(mut self, p: &Coordinate<T>) -> Self {
+        self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
+        self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
+        self.recenter_with_resampling()
+    }
+}
+
+// TODO must vary by Clip/NoClip.
 impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
     for Builder<
         DRAIN,

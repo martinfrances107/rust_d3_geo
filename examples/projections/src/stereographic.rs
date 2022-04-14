@@ -14,7 +14,7 @@ use rust_d3_geo::projection::ClipAngleAdjust;
 use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::ScaleAdjust;
-use rust_d3_geo::projection::TranslateSet;
+use rust_d3_geo::projection::TranslateAdjust;
 
 pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let document = get_document()?;
@@ -39,7 +39,7 @@ pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
 
 	let sterographic = stereographic_builder
 		.scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-		.translate(&Coordinate {
+		.translate_adjust(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})

@@ -13,7 +13,7 @@ use rust_d3_geo::circle::generator::Generator as CircleGenerator;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::stereographic::Stereographic;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::TranslateSet;
+use rust_d3_geo::projection::TranslateAdjust;
 
 use super::get_document;
 use super::get_path_node;
@@ -28,7 +28,7 @@ pub fn draw_sterographic() -> Result<()> {
     let width = svg.width().base_val().value()? as f64;
     let height = svg.height().base_val().value()? as f64;
 
-    let stereographic_builder = Stereographic::<_, f64>::builder().translate(&Coordinate {
+    let stereographic_builder = Stereographic::<_, f64>::builder().translate_adjust(&Coordinate {
         x: width / 2_f64,
         y: height / 2_f64,
     });

@@ -11,14 +11,14 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
 use crate::projection::ScaleAdjust;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+use super::builder::template::NoClipC;
+use super::builder::template::NoClipU;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
 use super::builder::Builder;

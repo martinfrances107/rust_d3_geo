@@ -4,6 +4,7 @@ use std::collections::VecDeque;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::rc::Rc;
+use std::fmt;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
@@ -29,7 +30,7 @@ use super::rejoin::CompareIntersectionsFn;
 use super::Interpolator as InterpolatorTrait;
 
 ///A primitive type used to for a PostClipNode pipeline stage.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Rectangle<EP, SINK, STATE, T>
 where
     T: CoordFloat,
@@ -65,12 +66,29 @@ where
     epsilon: T,
 }
 
+impl<EP, SINK, T> Debug for Rectangle<EP, SINK, Connected<EP>, T>
+where T: CoordFloat
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("PointRadiusEnum").finish()
+}
+}
+
+impl<EP, SINK, T> Debug for Rectangle<EP, SINK, Unconnected, T>
+where T: CoordFloat
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("PointRadiusEnum").finish()
+}
+}
+
 impl<EP, SINK, T> Rectangle<EP, SINK, Unconnected, T>
 where
     T: 'static + CoordFloat + FloatConst,
 {
     #[inline]
     pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<EP, SINK, Unconnected, T> {
+        dbg!("new", x0, y0, x1, y1);
         Self {
             state: Unconnected,
             p_ep: PhantomData::<EP>,
@@ -273,6 +291,7 @@ where
             self.v__ = v;
             self.first = false;
             if v {
+                dbg!("about to point 1", &p);
                 if self.use_buffer_stream {
                     self.buffer_stream.line_start();
                     self.buffer_stream.point(&p, None);
@@ -282,6 +301,7 @@ where
                 };
             }
         } else if v && self.v_ {
+            // dbg!("about to point 2", &p);
             if self.use_buffer_stream {
                 self.buffer_stream.point(&p, m);
             } else {
@@ -295,9 +315,11 @@ where
             p.x = T::max(self.clip_min, T::min(self.clip_max, p.x));
             p.y = T::max(self.clip_min, T::min(self.clip_max, p.y));
             let mut b = [p.x, p.y];
-
+// dbg!("a before", a);
             if clip_line(&mut a, &mut b, self.x0, self.y0, self.x1, self.y1) {
+                dbg!("a after ", a);
                 if !self.v_ {
+                    dbg!("about to point 3", &a);
                     if self.use_buffer_stream {
                         self.buffer_stream.line_start();
                         self.buffer_stream
@@ -309,6 +331,7 @@ where
                             .point(&Coordinate { x: a[0], y: a[1] }, None);
                     }
                 }
+                // dbg!("about to point 4", &b);
                 if self.use_buffer_stream {
                     self.buffer_stream
                         .point(&Coordinate { x: b[0], y: b[1] }, None);
@@ -326,6 +349,7 @@ where
                     self.clean = false;
                 }
             } else if v {
+                // dbg!("about to point 5", &p);
                 if self.use_buffer_stream {
                     self.buffer_stream.line_start();
                     self.buffer_stream.point(&p, None);
@@ -461,6 +485,7 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        // dbg!("rectangle point,", p);
         if self.use_line_point {
             self.line_point(p, m);
         } else {

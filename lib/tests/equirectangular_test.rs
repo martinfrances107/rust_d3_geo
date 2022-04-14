@@ -21,7 +21,7 @@ mod equirectangular_test {
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::RotateSet;
 	use rust_d3_geo::projection::ScaleAdjust;
-	use rust_d3_geo::projection::TranslateSet;
+	use rust_d3_geo::projection::TranslateAdjust;
 	use rust_d3_geo::stream::Connected;
 	use rust_d3_geo::stream::StreamDrainStub;
 	use rust_d3_geo::stream::Unconnected;
@@ -65,7 +65,7 @@ mod equirectangular_test {
 	fn return_expected_result() {
 		println!("equirectangular(point) returns the expected result");
 		let b: B = Equirectangular::builder()
-			.translate(&Coordinate { x: 0f64, y: 0f64 })
+			.translate_adjust(&Coordinate { x: 0f64, y: 0f64 })
 			.scale(1_f64);
 
 		let equirectangular = b.build();
@@ -173,7 +173,7 @@ mod equirectangular_test {
 		>();
 		let equirectangular = Builder::new(clip, Equirectangular::default())
 			.rotate(&[30f64, 0f64, 0f64])
-			.translate(&Coordinate { x: 0f64, y: 0f64 })
+			.translate_adjust(&Coordinate { x: 0f64, y: 0f64 })
 			.scale(1_f64)
 			.build();
 
@@ -278,7 +278,7 @@ mod equirectangular_test {
 		println!("equirectangular.rotate([30, 30])(point) returns the expected result");
 		let b: B = Equirectangular::builder()
 			.rotate(&[30f64, 30f64, 0f64])
-			.translate(&Coordinate { x: 0f64, y: 0f64 })
+			.translate_adjust(&Coordinate { x: 0f64, y: 0f64 })
 			.scale(1_f64);
 
 		let equirectangular = b.build();
@@ -385,7 +385,7 @@ mod equirectangular_test {
 
 		let b: B = Equirectangular::builder()
 			.rotate(&[0f64, 0f64, 30f64])
-			.translate(&Coordinate { x: 0f64, y: 0f64 })
+			.translate_adjust(&Coordinate { x: 0f64, y: 0f64 })
 			.scale(1f64);
 
 		// let equirectangular = b.build();
@@ -486,7 +486,7 @@ mod equirectangular_test {
 		println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
 		let b: B = Equirectangular::builder()
 			.rotate(&[30f64, 30f64, 30f64])
-			.translate(&Coordinate { x: 0f64, y: 0f64 })
+			.translate_adjust(&Coordinate { x: 0f64, y: 0f64 })
 			.scale(1f64);
 
 		let equirectangular = b.build();

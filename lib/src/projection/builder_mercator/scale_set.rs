@@ -10,8 +10,10 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::clip::rectangle::Rectangle;
-use crate::identity::Identity;
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder_mercator::ResampleNoClipC;
@@ -37,8 +39,8 @@ impl<DRAIN, PR, T> ScaleSet
 			T,
 		>,
 		LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		Identity<DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, Unconnected, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
 		PR,
 		PVAntimeridian<T>,
 		ResampleNoClipC<DRAIN, PR, T>,
@@ -60,8 +62,8 @@ impl<DRAIN, PR, T> ScaleSet
 			T,
 		>,
 		LineAntimeridian<DRAIN, ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
-		Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Rectangle<DRAIN, DRAIN, Unconnected, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
 		PR,
 		PVAntimeridian<T>,
 		ResampleClipC<DRAIN, PR, T>,
@@ -87,8 +89,8 @@ impl<DRAIN, PR, T> ScaleSet
 			T,
 		>,
 		LineCircle<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		Identity<DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, Unconnected, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
 		PR,
 		PVCircle<T>,
 		ResampleNoClipC<DRAIN, PR, T>,
@@ -105,8 +107,8 @@ impl<DRAIN, PR, T> ScaleSet
 		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<DRAIN, ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
 		LineCircle<DRAIN, ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
-		Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Rectangle<DRAIN, DRAIN, Unconnected, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
 		PR,
 		PVCircle<T>,
 		ResampleClipC<DRAIN, PR, T>,

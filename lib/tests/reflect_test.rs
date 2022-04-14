@@ -6,7 +6,6 @@ mod reflect_tests {
 
 	use geo::Coordinate;
 	use pretty_assertions::assert_eq;
-	use rust_d3_geo::projection::AngleSet;
 
 	use rust_d3_geo::clip::buffer::Buffer;
 	use rust_d3_geo::clip::circle::interpolate::Interpolate as InterpolateCircle;
@@ -22,11 +21,12 @@ mod reflect_tests {
 	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::projection_equal::projection_equal;
 	use rust_d3_geo::projection::AngleGet;
+	use rust_d3_geo::projection::AngleSet;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ReflectGet;
 	use rust_d3_geo::projection::ReflectSet;
 	use rust_d3_geo::projection::ScaleAdjust;
-	use rust_d3_geo::projection::TranslateSet;
+	use rust_d3_geo::projection::TranslateAdjust;
 	use rust_d3_geo::stream::Connected;
 	use rust_d3_geo::stream::StreamDrainStub;
 	use rust_d3_geo::stream::Unconnected;
@@ -65,7 +65,7 @@ mod reflect_tests {
 
 		let builder: GB = Gnomic::builder()
 			.scale(1f64)
-			.translate(&Coordinate { x: 0_f64, y: 0_f64 });
+			.translate_adjust(&Coordinate { x: 0_f64, y: 0_f64 });
 
 		assert_eq!(builder.get_reflect_x(), false);
 		assert_eq!(builder.get_reflect_y(), false);
@@ -110,7 +110,7 @@ mod reflect_tests {
 		println!("projection.reflectX(…) mirrors x after projecting");
 		let mut builder: GB = Gnomic::builder()
 			.scale(1_f64)
-			.translate(&Coordinate { x: 0_f64, y: 0_f64 })
+			.translate_adjust(&Coordinate { x: 0_f64, y: 0_f64 })
 			.reflect_x(true);
 
 		assert_eq!(builder.get_reflect_x(), true);
@@ -195,7 +195,7 @@ mod reflect_tests {
 		let builder: MercatorBuilder<StreamDrainStub<f32>, _, _, _, _, _, _, _, _, _, _, f32> =
 			Mercator::builder()
 				.scale(1_f32)
-				.translate(&Coordinate {
+				.translate_adjust(&Coordinate {
 					x: 10_f32,
 					y: 20_f32,
 				})

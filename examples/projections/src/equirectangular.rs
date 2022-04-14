@@ -1,7 +1,6 @@
 use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
-use rust_d3_geo::projection::ProjectionRawBase;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -10,9 +9,10 @@ use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::equirectangular::Equirectangular;
 use rust_d3_geo::projection::CenterSet;
+use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::RotateSet;
 use rust_d3_geo::projection::ScaleAdjust;
-use rust_d3_geo::projection::TranslateSet;
+use rust_d3_geo::projection::TranslateAdjust;
 
 use crate::get_document;
 
@@ -43,7 +43,7 @@ pub async fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
 		.scale(width as f64 / 1.5_f64 / std::f64::consts::PI)
 		.rotate(&[0_f64, 0_f64, 0_f64])
 		.center(&Coordinate { x: 0_f64, y: 0_f64 })
-		.translate(&Coordinate {
+		.translate_adjust(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
