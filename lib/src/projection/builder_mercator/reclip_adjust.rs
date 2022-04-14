@@ -1,20 +1,10 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::buffer::Buffer;
-use crate::clip::Bufferable;
-use crate::clip::Clean;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -22,7 +12,6 @@ use crate::projection::ClipExtentAdjust;
 use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
 use crate::rot::rotate_radians;
-use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
@@ -60,7 +49,6 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 	LU: Clone,
 	PR: Clone + Transform<T = T>,
 	PV: Clone,
-
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	fn reclip_adjust(self) -> Self {

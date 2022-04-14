@@ -5,39 +5,21 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::rectangle::Rectangle;
 use crate::clip::Bufferable;
-use crate::clip::Clean;
 use crate::clip::Interpolator;
 use crate::clip::LineConnected;
-use crate::clip::PointVisible;
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoneClipC;
 use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::builder::template::ResampleNoneNoClipC;
-use crate::projection::builder::template::ResampleNoneNoClipU;
 use crate::projection::builder_mercator::Buffer;
-use crate::projection::builder_mercator::Reclip;
 use crate::projection::builder_mercator::ReclipAdjust;
-use crate::projection::builder_mercator::ResampleNoClipC;
-use crate::projection::builder_mercator::ResampleNoClipU;
-use crate::projection::resampler::none::None as ResampleNone;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::TranslateAdjust;
-use crate::projection::TranslateSet;
 use crate::stream::Connectable;
-use crate::stream::Connected;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
@@ -45,15 +27,6 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PR, T> TranslateAdjust
 	for Builder<
 		DRAIN,
-		// InterpolateAntimeridian<T>,
-		// LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		// LineAntimeridian<
-		// 	DRAIN,
-		// 	ResampleNoClipC<DRAIN, PR, T>,
-		// 	Connected<ResampleClipC<DRAIN, PR, T>>,
-		// 	T,
-		// >,
-		// LineAntimeridian<DRAIN, ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
 		I,
 		LB,
 		LC,

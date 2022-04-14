@@ -1,7 +1,3 @@
-use crate::projection::builder::template::ClipC;
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
 use std::fmt::Debug;
 
 use approx::AbsDiffEq;
@@ -14,6 +10,8 @@ use crate::clip::Clean;
 use crate::clip::Interpolator;
 use crate::clip::LineConnected;
 use crate::clip::PointVisible;
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
