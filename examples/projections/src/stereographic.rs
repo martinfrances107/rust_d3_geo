@@ -39,7 +39,7 @@ pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
 
 	let sterographic = stereographic_builder
 		.scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-		.translate_adjust(&Coordinate {
+		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})

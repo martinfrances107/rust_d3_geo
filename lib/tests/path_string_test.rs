@@ -254,7 +254,7 @@ mod path_string_test {
 
         let ortho = Orthographic::<PathString<f64>, f64>::builder()
             .scale(240_f64)
-            .translate_adjust(&Coordinate {
+            .translate(&Coordinate {
                 x: 300_f64,
                 y: 300_f64,
             })

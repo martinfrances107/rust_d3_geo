@@ -57,7 +57,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 {
 	type T = T;
 
-	fn translate_adjust(mut self, t: &Coordinate<T>) -> Self {
+	fn translate(mut self, t: &Coordinate<T>) -> Self {
 		self.x = t.x;
 		self.y = t.y;
 		self.recenter_with_resampling()
@@ -97,7 +97,7 @@ impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> TranslateAdjust
 {
 	type T = T;
 
-	fn translate_adjust(mut self, t: &Coordinate<T>) -> Self {
+	fn translate(mut self, t: &Coordinate<T>) -> Self {
 		self.x = t.x;
 		self.y = t.y;
 		self.recenter_with_resampling()
@@ -127,7 +127,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 {
 	type T = T;
 
-	fn translate_adjust(mut self, t: &Coordinate<T>) -> Self {
+	fn translate(mut self, t: &Coordinate<T>) -> Self {
 		self.x = t.x;
 		self.y = t.y;
 		self.recenter_no_resampling()

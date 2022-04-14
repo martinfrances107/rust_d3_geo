@@ -43,7 +43,7 @@ pub async fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
 		.scale(width as f64 / 1.5_f64 / std::f64::consts::PI)
 		.rotate(&[0_f64, 0_f64, 0_f64])
 		.center(&Coordinate { x: 0_f64, y: 0_f64 })
-		.translate_adjust(&Coordinate {
+		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})

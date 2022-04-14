@@ -1,6 +1,3 @@
-use crate::projection::builder::template::ResampleNoneClipC;
-use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::builder_mercator::Reclip;
 use std::fmt::Debug;
 
 use approx::AbsDiffEq;
@@ -23,9 +20,12 @@ use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
+use crate::projection::builder::template::ResampleNoneClipC;
+use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::builder::template::ResampleNoneNoClipC;
 use crate::projection::builder::template::ResampleNoneNoClipU;
 use crate::projection::builder_mercator::Buffer;
+use crate::projection::builder_mercator::Reclip;
 use crate::projection::builder_mercator::ReclipAdjust;
 use crate::projection::builder_mercator::ResampleNoClipC;
 use crate::projection::builder_mercator::ResampleNoClipU;
@@ -79,10 +79,10 @@ impl<DRAIN, I, LB, LC, LU, PR, T> TranslateAdjust
 {
 	type T = T;
 
-	fn translate_adjust(mut self, t: &Coordinate<T>) -> Self {
+	fn translate(mut self, t: &Coordinate<T>) -> Self {
 		// types are changing rebuild base.
 
-		self.base = self.base.translate_adjust(t);
+		self.base = self.base.translate(t);
 		self.reclip_adjust()
 		// let out = Self::Output {
 		// 	pr: self.pr,
@@ -122,8 +122,8 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> TranslateAdjust
 {
 	type T = T;
 
-	fn translate_adjust(mut self, t: &Coordinate<T>) -> Self {
-		self.base = self.base.translate_adjust(t);
+	fn translate(mut self, t: &Coordinate<T>) -> Self {
+		self.base = self.base.translate(t);
 		self.reclip_adjust()
 	}
 }

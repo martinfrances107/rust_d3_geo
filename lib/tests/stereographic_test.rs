@@ -15,7 +15,7 @@ mod stereographic_tests {
     fn test_stereographic() {
         let stereo: Projector<StreamDrainStub<f64>, _, _, _, _, _, _, _, _, _, _, _> =
             Stereographic::builder()
-                .translate_adjust(&Coordinate { x: 0f64, y: 0f64 })
+                .translate(&Coordinate { x: 0f64, y: 0f64 })
                 .scale(1f64)
                 .build();
 

@@ -30,7 +30,7 @@ pub fn draw_orthographic() -> Result<()> {
     let height = svg.height().base_val().value()? as f64;
 
     let ortho_builder = Orthographic::builder()
-        .translate_adjust(&Coordinate {
+        .translate(&Coordinate {
             x: width / 2_f64,
             y: height / 2_f64,
         })

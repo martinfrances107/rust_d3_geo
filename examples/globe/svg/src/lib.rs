@@ -124,7 +124,7 @@ pub async fn start() -> Result<(), JsValue> {
 
     let ortho_builder = Orthographic::<PathString<f64>, f64>::builder()
         .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-        .translate_adjust(&Coordinate {
+        .translate(&Coordinate {
             x: width / 2_f64,
             y: height / 2_f64,
         })

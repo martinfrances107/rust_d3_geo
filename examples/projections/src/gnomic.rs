@@ -39,7 +39,7 @@ pub async fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
 
 	let gnomic = gnomic_builder
 		.scale(width / 6_f64)
-		.translate_adjust(&Coordinate {
+		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})

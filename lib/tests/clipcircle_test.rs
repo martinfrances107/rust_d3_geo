@@ -31,7 +31,7 @@ mod clipcircle_test {
         let d = Geometry::Polygon(poly);
 
         let projector = AzimuthalEqualArea::builder()
-            .translate_adjust(&Coordinate {
+            .translate(&Coordinate {
                 x: 0.5_f64,
                 y: 0.5_f64,
             })

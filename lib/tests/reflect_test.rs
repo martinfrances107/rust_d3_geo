@@ -65,7 +65,7 @@ mod reflect_tests {
 
 		let builder: GB = Gnomic::builder()
 			.scale(1f64)
-			.translate_adjust(&Coordinate { x: 0_f64, y: 0_f64 });
+			.translate(&Coordinate { x: 0_f64, y: 0_f64 });
 
 		assert_eq!(builder.get_reflect_x(), false);
 		assert_eq!(builder.get_reflect_y(), false);
@@ -110,7 +110,7 @@ mod reflect_tests {
 		println!("projection.reflectX(…) mirrors x after projecting");
 		let mut builder: GB = Gnomic::builder()
 			.scale(1_f64)
-			.translate_adjust(&Coordinate { x: 0_f64, y: 0_f64 })
+			.translate(&Coordinate { x: 0_f64, y: 0_f64 })
 			.reflect_x(true);
 
 		assert_eq!(builder.get_reflect_x(), true);
@@ -195,7 +195,7 @@ mod reflect_tests {
 		let builder: MercatorBuilder<StreamDrainStub<f32>, _, _, _, _, _, _, _, _, _, _, f32> =
 			Mercator::builder()
 				.scale(1_f32)
-				.translate_adjust(&Coordinate {
+				.translate(&Coordinate {
 					x: 10_f32,
 					y: 20_f32,
 				})

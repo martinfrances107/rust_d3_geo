@@ -40,7 +40,7 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
 
 	let azimuthal_equal_area = azimuthal_equal_area_builder
 		.scale(width as f64 / 3_f64)
-		.translate_adjust(&Coordinate {
+		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})

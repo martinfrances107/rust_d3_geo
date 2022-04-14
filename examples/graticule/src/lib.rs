@@ -105,7 +105,7 @@ fn update_canvas(document: &Document) -> Result<()> {
 	let ortho_builder = Orthographic::builder()
 		.scale(240_f64)
 		.rotate(&[0_f64, -20_f64, 0_f64])
-		.translate_adjust(&Coordinate {
+		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
@@ -178,7 +178,7 @@ fn update_svg_mls(document: &Document) -> Result<()> {
 	// TODO Code small ortho_builder.clone() can reuse this object as expected.
 	let ortho = ortho_builder
 		.scale(240_f64)
-		.translate_adjust(&Coordinate {
+		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
@@ -225,7 +225,7 @@ fn update_svg_polygon(document: &Document) -> Result<()> {
 	// TODO Code small ortho_builder.clone() can reuse this object as expected.
 	let ortho = Orthographic::builder()
 		.scale(240_f64)
-		.translate_adjust(&Coordinate {
+		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
@@ -279,7 +279,7 @@ fn update_svg_multipolygon(document: &Document) -> Result<()> {
 	// TODO Code small ortho_builder.clone() can reuse this object as expected.
 	let ortho = Orthographic::<_, f64>::builder()
 		.scale(240_f64)
-		.translate_adjust(&Coordinate {
+		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
