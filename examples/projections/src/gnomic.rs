@@ -43,7 +43,7 @@ pub async fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.precision_adjust(&0.3_f64)
+		.precision(&0.3_f64)
 		.clip_angle(90_f64 - 1e-3)
 		.build();
 

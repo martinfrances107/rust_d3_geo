@@ -448,7 +448,7 @@ pub trait PrecisionAdjust {
     type T;
     ///  Sets the threshold for the projection’s adaptive resampling to the specified value in Pixels and returns the projection.
     ///  This value corresponds to the Douglas–Peucker distance.
-    fn precision_adjust(self, delta: &Self::T) -> Self;
+    fn precision(self, delta: &Self::T) -> Self;
 }
 
 /// Resampling Getter.

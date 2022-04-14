@@ -44,7 +44,7 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.precision_adjust(&0.1_f64)
+		.precision(&0.1_f64)
 		.build();
 
 	let mut path = pb.build(azimuthal_equal_area);
