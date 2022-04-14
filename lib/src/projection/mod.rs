@@ -400,7 +400,7 @@ where
 
     /// Given the angle, adjust the projection builder
     /// Must already be set for  cicle based clipping.
-    fn clip_angle_adjust(self, angle: Self::T) -> Self;
+    fn clip_angle(self, angle: Self::T) -> Self;
 }
 
 /// Returns or sets the x or y reflection.

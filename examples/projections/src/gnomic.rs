@@ -44,7 +44,7 @@ pub async fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
 			y: height / 2_f64,
 		})
 		.precision_adjust(&0.3_f64)
-		.clip_angle_adjust(90_f64 - 1e-3)
+		.clip_angle(90_f64 - 1e-3)
 		.build();
 
 	let mut path = pb.build(gnomic);

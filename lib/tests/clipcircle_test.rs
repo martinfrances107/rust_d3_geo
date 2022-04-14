@@ -36,7 +36,7 @@ mod clipcircle_test {
                 y: 0.5_f64,
             })
             .rotate(&[0_f64, -90_f64, 0_f64])
-            .clip_angle_adjust(170_f64)
+            .clip_angle(170_f64)
             .build();
 
         let path_builder = PathBuilder::context_pathstring();

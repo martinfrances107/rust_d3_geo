@@ -43,7 +43,7 @@ pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsVa
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.clip_angle_adjust(90_f64)
+		.clip_angle(90_f64)
 		.precision_adjust(&10_f64)
 		.build();
 
