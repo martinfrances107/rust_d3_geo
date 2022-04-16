@@ -12,7 +12,7 @@ use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::ScaleAdjust;
-use rust_d3_geo::projection::TranslateSet;
+use rust_d3_geo::projection::TranslateAdjust;
 
 // /// This benchmark is based on examples/rings
 // ///

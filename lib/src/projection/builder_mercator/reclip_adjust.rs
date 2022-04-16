@@ -51,7 +51,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 	PV: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	fn reclip_adjust(self) -> Self {
+	fn reclip_adjust(mut self) -> Self {
 		let k = T::PI() * self.get_scale();
 
 		let rotate_raw = self.base.get_rotate();
@@ -89,7 +89,8 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 			],
 		};
 
-		self.clip_extent_adjust(&ce)
+		self.base = self.base.clip_extent_adjust(&ce);
+		self
 	}
 }
 
@@ -118,7 +119,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	fn reclip_adjust(self) -> Self {
+	fn reclip_adjust(mut self) -> Self {
 		let k = T::PI() * self.get_scale();
 
 		let rotate_raw = self.base.get_rotate();
@@ -155,7 +156,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 				},
 			],
 		};
-
-		self.clip_extent_adjust(&ce)
+		self.base = self.base.clip_extent_adjust(&ce);
+		self
 	}
 }

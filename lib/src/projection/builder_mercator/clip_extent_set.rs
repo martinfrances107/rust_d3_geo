@@ -1,6 +1,7 @@
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
@@ -29,6 +30,7 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
+use super::Reclip;
 
 // TOD must vary by ClipAntimeridian -- 2 more impl blocks
 
@@ -52,7 +54,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: 'static + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -78,25 +80,12 @@ impl<DRAIN, PR, T> ClipExtentSet
 		T,
 	>;
 
-	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		let base = self.base.clip_extent(extent);
-
-		// Architecture Discussion:
-		// CLIP is generic over <.. RC, RU,..>,
-		// So a change in the resample type causes rebuilding of clip.
-		let out = Self::OutputBounded {
-			base,
-			pr: self.pr,
-			// Mutate stage
-			x0: Some(extent[0].x),
-			y0: Some(extent[0].y),
-			x1: Some(extent[1].x),
-			y1: Some(extent[1].y),
-		};
-		// .reset();
-
-		// out.reset()
-		out
+	fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+		self.x0 = Some(extent[0].x);
+		self.y0 = Some(extent[0].y);
+		self.x1 = Some(extent[1].x);
+		self.y1 = Some(extent[1].y);
+		self.reclip()
 	}
 }
 
@@ -120,9 +109,9 @@ impl<DRAIN, PR, T> ClipExtentSet
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: 'static + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;
 
@@ -146,26 +135,12 @@ impl<DRAIN, PR, T> ClipExtentSet
 		T,
 	>;
 
-	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		let base = self.base.clip_extent(extent);
-
-		// Architecture Discussion:
-		// CLIP is generic over <.. RC, RU,..>,
-		// So a change in the resample type causes rebuilding of clip.
-		let out = Self::OutputBounded {
-			// p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
-			base,
-			pr: self.pr,
-			// Mutate stage
-			x0: Some(extent[0].x),
-			y0: Some(extent[0].y),
-			x1: Some(extent[1].x),
-			y1: Some(extent[1].y),
-		};
-		// .reset();
-
-		// out.reset()
-		out
+	fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+		self.x0 = Some(extent[0].x);
+		self.y0 = Some(extent[0].y);
+		self.x1 = Some(extent[1].x);
+		self.y1 = Some(extent[1].y);
+		self.reclip()
 	}
 }
 

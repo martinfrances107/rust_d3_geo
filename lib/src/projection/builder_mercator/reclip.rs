@@ -11,7 +11,6 @@ use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
 use crate::clip::rectangle::Rectangle;
-use crate::identity::Identity;
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::NoClipC;
@@ -37,6 +36,7 @@ use super::Builder;
 use super::Reclip;
 
 use crate::stream::Unconnected;
+
 impl<DRAIN, PR, T> Reclip
 	for Builder<
 		DRAIN,
@@ -81,7 +81,7 @@ impl<DRAIN, PR, T> Reclip
 		T,
 	>;
 	fn reclip(self) -> Self::Output {
-		let k = T::PI() * self.get_scale();
+		let k = T::PI() * self.base.get_scale();
 
 		let rotate_raw = self.base.get_rotate();
 		let t = rotate_radians(rotate_raw).invert(&Coordinate {
@@ -118,7 +118,14 @@ impl<DRAIN, PR, T> Reclip
 			],
 		};
 
-		self.clip_extent(&ce)
+		Self::Output {
+			base: self.base.clip_extent(&ce),
+			pr: self.pr,
+			x0: Some(ce[0].x),
+			y0: Some(ce[0].y),
+			x1: Some(ce[1].x),
+			y1: Some(ce[1].y),
+		}
 	}
 }
 
@@ -199,7 +206,106 @@ impl<DRAIN, PR, T> Reclip
 			],
 		};
 
-		self.clip_extent(&ce)
+		Self::Output {
+			base: self.base.clip_extent(&ce),
+			pr: self.pr,
+			x0: Some(ce[0].x),
+			y0: Some(ce[0].y),
+			x1: Some(ce[1].x),
+			y1: Some(ce[1].y),
+		}
+	}
+}
+
+impl<DRAIN, PR, T> Reclip
+	for Builder<
+		DRAIN,
+		InterpolateAntimeridian<T>,
+		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<
+			DRAIN,
+			ResampleNoneNoClipC<DRAIN, PR, T>,
+			Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
+			T,
+		>,
+		LineAntimeridian<DRAIN, ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
+		PR,
+		PVAntimeridian<T>,
+		ResampleNoneNoClipC<DRAIN, PR, T>,
+		ResampleNoneNoClipU<DRAIN, PR, T>,
+		T,
+	> where
+	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
+	PR: Clone + Transform<T = T>,
+	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	type Output = Builder<
+		DRAIN,
+		InterpolateAntimeridian<T>,
+		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<
+			DRAIN,
+			ResampleNoneClipC<DRAIN, PR, T>,
+			Connected<ResampleNoneClipC<DRAIN, PR, T>>,
+			T,
+		>,
+		LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
+		PR,
+		PVAntimeridian<T>,
+		ResampleNoneClipC<DRAIN, PR, T>,
+		ResampleNoneClipU<DRAIN, PR, T>,
+		T,
+	>;
+	fn reclip(self) -> Self::Output {
+		let k = T::PI() * self.get_scale();
+
+		let rotate_raw = self.base.get_rotate();
+		let t = rotate_radians(rotate_raw).invert(&Coordinate {
+			x: T::zero(),
+			y: T::zero(),
+		});
+		let t = self.base.build().transform(&t);
+		let ce = match (self.x0, self.y0, self.x1, self.y1) {
+			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
+				// MercatorRaw and MercatorTransverseRaw supply different
+				// transforms
+				// todo!("must change transform based on PR");
+				// but for now assume projectionMercator is being used.
+				[
+					Coordinate {
+						x: (t.x - k).max(x0),
+						y: y0,
+					},
+					Coordinate {
+						x: (t.x + k).min(x1),
+						y: y1,
+					},
+				]
+			}
+			_ => [
+				Coordinate {
+					x: t.x - k,
+					y: t.y - k,
+				},
+				Coordinate {
+					x: t.x + k,
+					y: t.y + k,
+				},
+			],
+		};
+
+		Self::Output {
+			base: self.base.clip_extent(&ce),
+			pr: self.pr,
+			x0: Some(ce[0].x),
+			y0: Some(ce[0].y),
+			x1: Some(ce[1].x),
+			y1: Some(ce[1].y),
+		}
 	}
 }
 
@@ -284,6 +390,13 @@ impl<DRAIN, PR, T> Reclip
 			],
 		};
 
-		self.clip_extent(&ce)
+		Self::Output {
+			base: self.base.clip_extent(&ce),
+			pr: self.pr,
+			x0: Some(ce[0].x),
+			y0: Some(ce[0].y),
+			x1: Some(ce[1].x),
+			y1: Some(ce[1].y),
+		}
 	}
 }

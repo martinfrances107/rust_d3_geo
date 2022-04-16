@@ -118,7 +118,6 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
-        println!("context point {:?}", self.point);
         match self.point {
             PointState::LineStart => {
                 if let Some(c) = &self.context {

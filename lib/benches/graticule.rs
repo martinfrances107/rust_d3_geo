@@ -11,7 +11,7 @@ use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::RotateSet;
 use rust_d3_geo::projection::ScaleAdjust;
-use rust_d3_geo::projection::TranslateSet;
+use rust_d3_geo::projection::TranslateAdjust;
 
 /// This benchmark is based on examples/graticule
 ///
