@@ -494,7 +494,6 @@ where
 
     #[inline]
     fn corner(&self, p: &Coordinate<T>, direction: &T) -> i8 {
-        println!("corner  {:?} {:?} {:?}", self.x0, self.y0, self.x1);
         if (p.x - self.x0).abs() < self.epsilon {
             if direction > &T::zero() {
                 0
@@ -524,7 +523,6 @@ where
     fn compare_point(&self, a: &Coordinate<T>, b: &Coordinate<T>) -> Ordering {
         let ca = self.corner(a, &T::one());
         let cb = self.corner(b, &T::one());
-        println!("compare point ca, cb {:?} {:?}{:?} {:?}", a, b, ca, cb);
         if ca != cb {
             if (ca - cb) > 0 {
                 Ordering::Greater
