@@ -673,8 +673,8 @@ where
 
     fn interpolate<EP, STREAM>(
         &self,
-        to: Option<Coordinate<Self::T>>,
         from: Option<Coordinate<Self::T>>,
+        to: Option<Coordinate<Self::T>>,
         direction: Self::T,
         stream: &mut STREAM,
     ) where
