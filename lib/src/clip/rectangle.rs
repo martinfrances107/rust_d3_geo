@@ -641,7 +641,7 @@ where
     }
 
     // Warning from JS a, b are LineElem.
-    fn compare_point(&mut self, a: &Coordinate<T>, b: &Coordinate<T>) -> Ordering {
+    fn compare_point(&self, a: &Coordinate<T>, b: &Coordinate<T>) -> Ordering {
         let ca = self.corner(a, &T::one());
         let cb = self.corner(b, &T::one());
         if ca != cb {
@@ -675,7 +675,7 @@ where
     type T = T;
 
     fn interpolate<EP, STREAM>(
-        &mut self,
+        &self,
         to: Option<Coordinate<Self::T>>,
         from: Option<Coordinate<Self::T>>,
         direction: Self::T,

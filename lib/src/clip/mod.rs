@@ -82,7 +82,7 @@ pub trait Interpolator {
     type T;
     /// Stream modifier.
     fn interpolate<EP, STREAM>(
-        &mut self,
+        &self,
         to: Option<Coordinate<Self::T>>,
         from: Option<Coordinate<Self::T>>,
         direction: Self::T,

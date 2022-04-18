@@ -34,7 +34,7 @@ where
     // type EP = EP;
     // type Stream = STREAM;
     fn interpolate<EP, STREAM>(
-        &mut self,
+        &self,
         from: Option<Coordinate<T>>,
         to: Option<Coordinate<T>>,
         direction: T,
