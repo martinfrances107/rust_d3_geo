@@ -16,6 +16,7 @@ use crate::projection::builder::template::ClipU;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::CenterSet;
+use crate::projection::TransformExtent;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
@@ -73,7 +74,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
 				T,
 			>,
 		> + Bufferable<Output = LB, T = T>,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Debug + Transform<T = T> + TransformExtent<T>,
 	PV: Clone + PointVisible<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,
 {

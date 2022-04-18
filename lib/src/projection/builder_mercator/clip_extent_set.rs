@@ -24,6 +24,7 @@ use crate::projection::builder::template::ResampleNoneNoClipU;
 use crate::projection::builder_mercator::ResampleNoClipC;
 use crate::projection::builder_mercator::ResampleNoClipU;
 use crate::projection::ClipExtentSet;
+use crate::projection::TransformExtent;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
@@ -55,7 +56,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		T,
 	> where
 	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -110,7 +111,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		T,
 	> where
 	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;

@@ -16,6 +16,7 @@ use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ScaleAdjust;
+use crate::projection::TransformExtent;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
@@ -61,7 +62,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 		> + Bufferable<Output = LB, T = T>,
 	PCNC: Clone + Debug,
 	PCNU: Clone + Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Debug + Transform<T = T> + TransformExtent<T>,
 	PV: Clone + PointVisible<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -159,7 +160,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleAdjust
 				T,
 			>,
 		> + Bufferable<Output = LB, T = T>,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Debug + Transform<T = T> + TransformExtent<T>,
 	PV: Clone + PointVisible<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

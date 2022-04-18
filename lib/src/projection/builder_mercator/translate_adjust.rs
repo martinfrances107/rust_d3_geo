@@ -17,6 +17,7 @@ use crate::projection::builder::template::ResampleNoneClipC;
 use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::builder_mercator::Buffer;
 use crate::projection::builder_mercator::ReclipAdjust;
+use crate::projection::TransformExtent;
 use crate::projection::TranslateAdjust;
 use crate::stream::Connectable;
 use crate::stream::Stream;
@@ -47,7 +48,7 @@ impl<DRAIN, I, LB, LC, LU, PR, T> TranslateAdjust
 		+ Connectable<Output = LC, SC = ResampleClipC<DRAIN, PR, T>>
 		+ Bufferable<Output = LB, T = T>
 		+ Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Debug + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -89,7 +90,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> TranslateAdjust
 	LB: Clone + Debug,
 	LC: Clone,
 	LU: Clone,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Debug + Transform<T = T> + TransformExtent<T>,
 	PV: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

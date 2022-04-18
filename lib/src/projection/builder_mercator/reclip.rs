@@ -26,6 +26,7 @@ use crate::projection::builder_mercator::ResampleNoClipU;
 use crate::projection::ClipExtentSet;
 use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
+use crate::projection::TransformExtent;
 use crate::rot::rotate_radians;
 use crate::stream::Connected;
 use crate::stream::Stream;
@@ -58,7 +59,7 @@ impl<DRAIN, PR, T> Reclip
 		T,
 	> where
 	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -95,16 +96,7 @@ impl<DRAIN, PR, T> Reclip
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				[
-					Coordinate {
-						x: (t.x - k).max(x0),
-						y: y0,
-					},
-					Coordinate {
-						x: (t.x + k).min(x1),
-						y: y1,
-					},
-				]
+				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
 			}
 			_ => [
 				Coordinate {
@@ -150,7 +142,7 @@ impl<DRAIN, PR, T> Reclip
 		T,
 	> where
 	DRAIN: Clone,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -183,16 +175,7 @@ impl<DRAIN, PR, T> Reclip
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				[
-					Coordinate {
-						x: (t.x - k).max(x0),
-						y: y0,
-					},
-					Coordinate {
-						x: (t.x + k).min(x1),
-						y: y1,
-					},
-				]
+				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
 			}
 			_ => [
 				Coordinate {
@@ -238,7 +221,7 @@ impl<DRAIN, PR, T> Reclip
 		T,
 	> where
 	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -275,16 +258,7 @@ impl<DRAIN, PR, T> Reclip
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				[
-					Coordinate {
-						x: (t.x - k).max(x0),
-						y: y0,
-					},
-					Coordinate {
-						x: (t.x + k).min(x1),
-						y: y1,
-					},
-				]
+				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
 			}
 			_ => [
 				Coordinate {
@@ -330,7 +304,7 @@ impl<DRAIN, PR, T> Reclip
 		T,
 	> where
 	DRAIN: Clone,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -367,16 +341,7 @@ impl<DRAIN, PR, T> Reclip
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				[
-					Coordinate {
-						x: (t.x - k).max(x0),
-						y: y0,
-					},
-					Coordinate {
-						x: (t.x + k).min(x1),
-						y: y1,
-					},
-				]
+				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
 			}
 			_ => [
 				Coordinate {

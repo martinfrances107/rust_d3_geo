@@ -198,63 +198,6 @@ where
         }
         !winding.is_zero()
     }
-
-    // Warning from JS a, b are LineElem.
-    // fn gen_compare_point(&self) -> Box<dyn Fn(&Coordinate<T>, &Coordinate<T>) -> Ordering> {
-    //     let corner = self.gen_corner();
-    //     Box::new(move |a: &Coordinate<T>, b: &Coordinate<T>| -> Ordering {
-    //         let ca = corner(a, &T::one());
-    //         let cb = corner(b, &T::one());
-    //         if ca != cb {
-    //             if (ca - cb) > 0 {
-    //                 Ordering::Greater
-    //             } else {
-    //                 Ordering::Less
-    //             }
-    //         } else {
-    //             let diff = match ca {
-    //                 0 => b.y - a.y,
-    //                 1 => a.x - b.x,
-    //                 2 => a.y - b.y,
-    //                 _ => b.x - a.x,
-    //             };
-    //             if diff > T::zero() {
-    //                 Ordering::Greater
-    //             } else if diff < T::zero() {
-    //                 Ordering::Less
-    //             } else {
-    //                 Ordering::Equal
-    //             }
-    //         }
-    //     })
-    // }
-
-    // Warning from JS a, b are LineElem.
-    // fn compare_point(&mut self, a: &Coordinate<T>, b: &Coordinate<T>) -> Ordering {
-    //     let ca = self.corner(a, &T::one());
-    //     let cb = self.corner(b, &T::one());
-    //     if ca != cb {
-    //         if (ca - cb) > 0 {
-    //             Ordering::Greater
-    //         } else {
-    //             Ordering::Less
-    //         }
-    //     } else {
-    //         let diff = match ca {
-    //             0 => b.y - a.y,
-    //             1 => a.x - b.x,
-    //             2 => a.y - b.y,
-    //             _ => b.x - a.x,
-    //         };
-    //         if diff > T::zero() {
-    //             Ordering::Greater
-    //         } else if diff < T::zero() {
-    //             Ordering::Less
-    //         } else {
-    //             Ordering::Equal
-    //         }
-    //     }
-    // }
 }
 
 impl<EP, SINK, T> Rectangle<EP, SINK, Connected<SINK>, T>
@@ -359,67 +302,6 @@ where
         self.y_ = p.y;
         self.v_ = v;
     }
-
-    // fn gen_interpolate(
-    //     &self,
-    // ) -> Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut SINK)> {
-    //     // Is capturing here a good thing.
-    //     let x0 = self.x0;
-    //     let y0 = self.y0;
-    //     let x1 = self.x1;
-    //     let y1 = self.y1;
-
-    //     let compare_point = self.gen_compare_point();
-    //     let corner = self.gen_corner();
-    //     Rc::new(
-    //         move |from: Option<Coordinate<T>>,
-    //               to: Option<Coordinate<T>>,
-    //               direction: T,
-    //               stream: &mut SINK| {
-    //             let mut a;
-    //             let a1;
-    //             let direction_i8: i8 = T::to_i8(&direction).unwrap();
-    //             match (to, from) {
-    //                 (Some(to), Some(from)) => {
-    //                     a = corner(&from, &direction);
-    //                     a1 = corner(&to, &direction);
-    //                     let cp = compare_point(&from, &to) < Ordering::Less;
-    //                     let is_direction = direction > T::zero();
-    //                     // logical exor: cp ^^ is_direction
-    //                     if a != a1 || (cp && !is_direction) || (!cp && is_direction) {
-    //                         loop {
-    //                             let p = Coordinate {
-    //                                 x: if a == 0 || a == 3 { x0 } else { x1 },
-    //                                 y: if a > 1 { y1 } else { y0 },
-    //                             };
-    //                             stream.point(&p, None);
-
-    //                             a = (a + direction_i8 + 4) % 4;
-    //                             if a == a1 {
-    //                                 break;
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //                 (Some(to), None) => {
-    //                     stream.point(&to, None);
-    //                 }
-    //                 _ => {
-    //                     panic!("did not expect only from and no to .. or Nothing at all Does the JS version get here?");
-    //                 }
-    //             }
-    //         },
-    //     )
-    // }
-
-    // #[inline]
-    // fn compare_intersection(
-    //     &self,
-    //     a: &Rc<RefCell<Intersection<T>>>,
-    //     b: &Rc<RefCell<Intersection<T>>>,
-    // ) -> Ordering {
-    //     self.compare_point(&a.borrow().x.p, &b.borrow().x.p)
-    // }
 }
 
 impl<EP, SC, T> Connectable for Rectangle<EP, SC, Unconnected, T>
@@ -612,6 +494,7 @@ where
 
     #[inline]
     fn corner(&self, p: &Coordinate<T>, direction: &T) -> i8 {
+        println!("corner  {:?} {:?} {:?}", self.x0, self.y0, self.x1);
         if (p.x - self.x0).abs() < self.epsilon {
             if direction > &T::zero() {
                 0
@@ -641,6 +524,7 @@ where
     fn compare_point(&self, a: &Coordinate<T>, b: &Coordinate<T>) -> Ordering {
         let ca = self.corner(a, &T::one());
         let cb = self.corner(b, &T::one());
+        println!("compare point ca, cb {:?} {:?}{:?} {:?}", a, b, ca, cb);
         if ca != cb {
             if (ca - cb) > 0 {
                 Ordering::Greater
@@ -680,9 +564,6 @@ where
     ) where
         STREAM: Stream<EP = EP, T = T>,
     {
-        // let a = 0;
-        // let a1 = 0;
-        // let corner = gen_corner();
         let direction_i8: i8 = T::to_i8(&direction).unwrap();
         match (to, from) {
             (Some(to), Some(from)) => {

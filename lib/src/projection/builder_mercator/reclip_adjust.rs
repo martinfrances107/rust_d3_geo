@@ -11,6 +11,7 @@ use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentAdjust;
 use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
+use crate::projection::TransformExtent;
 use crate::rot::rotate_radians;
 use crate::stream::Connected;
 use crate::stream::Stream;
@@ -47,7 +48,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 	LB: Clone,
 	LC: Clone,
 	LU: Clone,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	PV: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -66,16 +67,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				[
-					Coordinate {
-						x: (t.x - k).max(x0),
-						y: y0,
-					},
-					Coordinate {
-						x: (t.x + k).min(x1),
-						y: y1,
-					},
-				]
+				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
 			}
 			_ => [
 				Coordinate {
@@ -114,7 +106,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 	LB: Clone,
 	LC: Clone,
 	LU: Clone,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	PV: Clone,
 
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -134,16 +126,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				[
-					Coordinate {
-						x: (t.x - k).max(x0),
-						y: y0,
-					},
-					Coordinate {
-						x: (t.x + k).min(x1),
-						y: y1,
-					},
-				]
+				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
 			}
 			_ => [
 				Coordinate {

@@ -1,3 +1,4 @@
+use crate::projection::TransformExtent;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -48,7 +49,7 @@ impl<DRAIN, PR, T> ScaleSet
 		T,
 	> where
 	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -98,7 +99,7 @@ impl<DRAIN, PR, T> ScaleSet
 		T,
 	> where
 	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
