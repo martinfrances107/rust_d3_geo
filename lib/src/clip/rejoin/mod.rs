@@ -29,7 +29,7 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
     segments: &[Vec<LineElem<T>>],
     compare_intersection: CompareIntersectionsFn<T>,
     start_inside: bool,
-    interpolator: &mut INTERPOLATOR,
+    interpolator: &INTERPOLATOR,
     stream: &mut SINK,
 ) where
     SINK: Stream<EP = EP, T = T>,

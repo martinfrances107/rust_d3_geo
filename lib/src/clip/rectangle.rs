@@ -516,23 +516,20 @@ where
                 self.state.sink.polygon_start();
             }
 
-            let mut interpolator = Interpolator::new(self.x0, self.y0, self.x1, self.y1);
+            // TODO: Can I haz a single interpolator?
+            let interpolator = Interpolator::new(self.x0, self.y0, self.x1, self.y1);
+            let interpolator_rejoin = Interpolator::new(self.x0, self.y0, self.x1, self.y1);
             if clean_inside {
                 self.state.sink.line_start();
                 interpolator.interpolate(None, None, T::one(), &mut self.state.sink);
                 self.state.sink.line_end();
             }
 
-            let x0 = self.x0;
-            let y0 = self.y0;
-            let x1 = self.x1;
-            let y1 = self.y1;
             let compare_intersection: CompareIntersectionsFn<T> = Box::new(
                 move |a: &Rc<RefCell<Intersection<T>>>,
                       b: &Rc<RefCell<Intersection<T>>>|
                       -> Ordering {
-                    let mut interpolator_inner = Interpolator::<T>::new(x0, y0, x1, y1);
-                    interpolator_inner.compare_point(&a.borrow().x.p, &b.borrow().x.p)
+                    interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
                 },
             );
 
@@ -541,7 +538,7 @@ where
                     &merged_segments,
                     compare_intersection,
                     start_inside,
-                    &mut interpolator,
+                    &interpolator_rejoin,
                     &mut self.state.sink,
                 );
             }
