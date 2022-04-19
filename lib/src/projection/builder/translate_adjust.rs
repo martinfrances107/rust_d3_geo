@@ -1,16 +1,3 @@
-use crate::clip::Bufferable;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::projection::builder::Buffer;
-use crate::projection::builder::NoClipC;
-use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleNoClipC;
-use crate::projection::builder::ResampleNoClipU;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
-use crate::stream::Connectable;
-use crate::stream::Stream;
-use crate::stream::Unconnected;
 use std::fmt::Debug;
 
 use approx::AbsDiffEq;
@@ -18,11 +5,23 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::clip::Bufferable;
+use crate::clip::Interpolator;
+use crate::clip::LineConnected;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoneClipC;
 use crate::projection::builder::template::ResampleNoneClipU;
+use crate::projection::builder::Buffer;
+use crate::projection::builder::NoClipC;
+use crate::projection::builder::NoClipU;
+use crate::projection::builder::ResampleNoClipC;
+use crate::projection::builder::ResampleNoClipU;
+use crate::projection::resampler::resample::Connected as ConnectedResample;
+use crate::projection::resampler::resample::Resample;
 use crate::projection::TranslateAdjust;
+use crate::stream::Connectable;
+use crate::stream::Stream;
 use crate::Transform;
 
 use super::template::ClipC;
@@ -103,8 +102,6 @@ impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> TranslateAdjust
 		self.recenter_with_resampling()
 	}
 }
-
-/// no resampling below.
 
 impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 	for Builder<

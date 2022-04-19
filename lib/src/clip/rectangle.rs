@@ -125,6 +125,7 @@ where
 }
 
 impl<EP, SINK, STATE, T> PostClipNode for Rectangle<EP, SINK, STATE, T> where T: CoordFloat {}
+
 impl<EP, SINK, T> Rectangle<EP, SINK, Connected<SINK>, T>
 where
     SINK: Stream<EP = EP, T = T>,
@@ -134,38 +135,6 @@ where
     fn visible(&self, p: &Coordinate<T>) -> bool {
         self.x0 <= p.x && p.x <= self.x1 && self.y0 <= p.y && p.y <= self.y1
     }
-
-    // fn gen_corner(&self) -> Box<dyn Fn(&Coordinate<T>, &T) -> i8> {
-    //     let x0 = self.x0;
-    //     let y0 = self.y0;
-    //     let x1 = self.x1;
-    //     let epsilon = T::from(EPSILON).unwrap();
-    //     Box::new(|p: &Coordinate<T>, direction: &T| -> i8 {
-    //         if (p.x - x0).abs() < epsilon {
-    //             if direction > &T::zero() {
-    //                 0
-    //             } else {
-    //                 3
-    //             }
-    //         } else if (p.x - x1).abs() < epsilon {
-    //             if direction > &T::zero() {
-    //                 2
-    //             } else {
-    //                 1
-    //             }
-    //         } else if (p.y - y0).abs() < epsilon {
-    //             if direction > &T::zero() {
-    //                 1
-    //             } else {
-    //                 0
-    //             }
-    //         } else if direction > &T::zero() {
-    //             3
-    //         } else {
-    //             2
-    //         }
-    //     })
-    // }
 
     fn polygon_inside(&self) -> bool {
         let mut winding = 0;
