@@ -54,19 +54,8 @@ impl<DRAIN, I, LB, LC, LU, PR, T> TranslateAdjust
 	type T = T;
 
 	fn translate(mut self, t: &Coordinate<T>) -> Self {
-		// types are changing rebuild base.
-
 		self.base = self.base.translate(t);
 		self.reclip_adjust()
-		// let out = Self::Output {
-		// 	pr: self.pr,
-		// 	base,
-		// 	x0: self.x0,
-		// 	y0: self.y0,
-		// 	x1: self.x1,
-		// 	y1: self.y1, // post-clip extent
-		// };
-		// self.reclip()
 	}
 }
 

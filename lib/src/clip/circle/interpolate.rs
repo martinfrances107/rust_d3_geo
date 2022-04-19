@@ -5,16 +5,8 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::circle::stream_fn::stream_fn;
-// use crate::clip::InterpolateFn;
 use crate::clip::Interpolator;
-// use crate::clip::InterpolatorBuilder;
 use crate::stream::Stream;
-// use crate::stream::Unconnected;
-
-// struct Builder<T> {
-// 	radius: T,
-// 	delta: T,
-// }
 
 /// Interpolate Circle.
 #[derive(Clone, Debug)]
@@ -34,23 +26,6 @@ where
 		}
 	}
 }
-
-// impl<T> InterpolatorBuilder for Builder<T> {
-// 	/// Sets up a clip circle interpolate function, for a given radius.
-// 	fn build<EP, STREAM>(&self, stream: STREAM) -> Interpolate<EP, STREAM, T>
-// 	where
-// 		EP: Stream<EP = EP, T = T> + Default,
-// 		STREAM: Stream<EP = EP, T = T>,
-// 		T: 'static + CoordFloat + FloatConst,
-// 	{
-// 		Interpolate {
-// 			p_ep: PhantomData::<EP>,
-// 			p_stream: PhantomData::<STREAM>,
-// 			radius: self.radius,
-// 			delta: self.delta,
-// 		}
-// 	}
-// }
 
 impl<T> Interpolator for Interpolate<T>
 where

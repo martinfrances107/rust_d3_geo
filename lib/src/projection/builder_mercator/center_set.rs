@@ -86,37 +86,3 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
 		self.reclip_adjust()
 	}
 }
-
-// impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
-// 	for Builder<
-// 		DRAIN,
-// 		I,
-// 		LB,
-// 		LC,
-// 		LU,
-// 		PCNC,
-// 		PCNU,
-// 		PR,
-// 		PV,
-// 		ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-// 		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-// 		T,
-// 	> where
-// 	DRAIN: 'static + Clone + Default + Debug + Stream<EP=DRAIN,T=T>,
-// 	I: Clone,
-// 	LB: Clone + Debug,
-// 	LC: Clone,
-// 	LU: Clone,
-// 	PCNC: Clone + Debug,
-// 	PCNU: Clone + Debug,
-// 	PR: Clone + Debug + Transform<T = T>,
-// 	PV: Clone,
-// 	T: 'static + AbsDiffEq<Epsilon=T> + CoordFloat + FloatConst,
-// {
-// 	type T = T;
-
-// 	fn center(mut self, center: &Coordinate<T>) -> Self {
-// 		self.base = self.base.center(center);
-// 		self.reclip_adjust()
-// 	}
-// }

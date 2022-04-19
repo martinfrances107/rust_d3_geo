@@ -75,48 +75,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 	}
 }
 
-// impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
-// 	for Builder<
-// 		DRAIN,
-// 		I,
-// 		LB,
-// 		LC,
-// 		LU,
-// 		PCNC,
-// 		PCNU,
-// 		PR,
-// 		PV,
-// 		Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-// 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-// 		T,
-// 	> where
-// 	DRAIN: 'static + Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-// 	I: Clone + Interpolator<T = T>,
-// 	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
-// 	LC: Clone
-// 		+ LineConnected<SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>
-// 		+ Stream<EP = DRAIN, T = T>,
-// 	LU: Clone
-// 		+ Debug
-// 		+ Connectable<
-// 			Output = LC,
-// 			SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-// 		> + Bufferable<Output = LB, T = T>,
-// 	PCNC: Clone + Debug,
-// 	PCNU: Clone + Debug,
-// 	PR: Clone + Debug + Transform<T = T>,
-// 	PV: Clone + PointVisible<T = T>,
-// 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-// {
-// 	type T = T;
-
-// 	fn scale(mut self, scale: T) -> Self {
-// 		self.base = self.base.scale(scale);
-// 		self.reclip_adjust()
-// 		// self
-// 	}
-// }
-
 // TODO must vary by NoClip, Clip
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleAdjust
 	for Builder<
