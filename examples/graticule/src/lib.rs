@@ -71,6 +71,7 @@ fn get_document() -> Result<Document> {
 }
 
 /// Entry point.
+#[wasm_bindgen]
 pub fn run() -> Result<()> {
 	let document = get_document()?;
 	update_canvas(&document)?;
