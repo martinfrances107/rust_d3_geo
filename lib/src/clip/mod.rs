@@ -10,10 +10,9 @@ pub mod circle;
 pub mod clip;
 /// Helper function.
 pub mod compare_intersection;
-/// Factory takes in complex definition and output a stream pipeline node element.
-// pub mod stream_node_clip_factory;
-/// Generate post clip stream node.
-// pub mod stream_node_post_clip_factory;
+/// Interpolator used by Rectangle.
+pub mod interpolator;
+
 mod intersection;
 /// The state of the line segments??
 pub mod line_elem;
