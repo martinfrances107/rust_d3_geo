@@ -18,19 +18,26 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-impl<DRAIN, INTERPOLATE, LB, LC, LU,  PR, PV, T> ReflectSet
+impl<DRAIN, INTERPOLATE, LB, LC, LU, PR, PV, T> ReflectSet
 	for Builder<
 		DRAIN,
 		INTERPOLATE,
 		LB,
 		LC,
 		LU,
-        NoClipC<DRAIN, T>,
-        NoClipU<DRAIN, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
 		PR,
 		PV,
-        Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, ConnectedResample<NoClipC<DRAIN, T>, T>, T>,
-        Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Unconnected, T>,
+		Resample<
+			DRAIN,
+			PR,
+			NoClipC<DRAIN, T>,
+			NoClipU<DRAIN, T>,
+			ConnectedResample<NoClipC<DRAIN, T>, T>,
+			T,
+		>,
+		Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Unconnected, T>,
 		T,
 	> where
 	DRAIN: Debug,
@@ -50,12 +57,9 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU,  PR, PV, T> ReflectSet
 		let base = self.base.recenter_with_resampling();
 
 		Self {
+			extent: self.extent,
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1, // post-clip extent
 		}
 	}
 
@@ -69,30 +73,33 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU,  PR, PV, T> ReflectSet
 		}
 		let base = self.base.recenter_with_resampling();
 		Self {
+			extent: self.extent,
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1, // post-clip extent
 		}
 	}
 }
 
-
-impl<DRAIN, INTERPOLATE, LB, LC, LU,  PR, PV, T> ReflectSet
+impl<DRAIN, INTERPOLATE, LB, LC, LU, PR, PV, T> ReflectSet
 	for Builder<
 		DRAIN,
 		INTERPOLATE,
 		LB,
 		LC,
 		LU,
-        ClipC<DRAIN, T>,
-        ClipU<DRAIN, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
 		PR,
 		PV,
-        Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, ConnectedResample<ClipC<DRAIN, T>, T>, T>,
-        Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
+		Resample<
+			DRAIN,
+			PR,
+			ClipC<DRAIN, T>,
+			ClipU<DRAIN, T>,
+			ConnectedResample<ClipC<DRAIN, T>, T>,
+			T,
+		>,
+		Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
 		T,
 	> where
 	DRAIN: Debug,
@@ -112,12 +119,9 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU,  PR, PV, T> ReflectSet
 		let base = self.base.recenter_with_resampling();
 
 		Self {
+			extent: self.extent,
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1, // post-clip extent
 		}
 	}
 
@@ -131,12 +135,9 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU,  PR, PV, T> ReflectSet
 		}
 		let base = self.base.recenter_with_resampling();
 		Self {
+			extent: self.extent,
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1, // post-clip extent
 		}
 	}
 }
@@ -173,12 +174,9 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> ReflectSet
 		}
 		let base = self.base.recenter_no_resampling();
 		Self {
+			extent: self.extent,
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1, // post-clip extent
 		}
 	}
 
@@ -192,12 +190,9 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> ReflectSet
 		}
 		let base = self.base.recenter_no_resampling();
 		Self {
+			extent: self.extent,
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1, // post-clip extent
 		}
 	}
 }

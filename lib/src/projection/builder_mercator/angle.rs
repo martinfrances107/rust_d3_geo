@@ -32,19 +32,26 @@ where
 	}
 }
 
-impl<DRAIN, I, LB, LC, LU,  PR, PV, T> AngleSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 	for Builder<
 		DRAIN,
 		I,
 		LB,
 		LC,
 		LU,
-        NoClipC<DRAIN, T>,
-        NoClipU<DRAIN, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
 		PR,
 		PV,
-        Resample<DRAIN, PR, NoClipC<DRAIN,T>, NoClipU<DRAIN, T>, ConnectedResample<NoClipC<DRAIN, T>, T>, T>,
-        Resample<DRAIN, PR, NoClipC<DRAIN,T>, NoClipU<DRAIN, T>, Unconnected, T>,
+		Resample<
+			DRAIN,
+			PR,
+			NoClipC<DRAIN, T>,
+			NoClipU<DRAIN, T>,
+			ConnectedResample<NoClipC<DRAIN, T>, T>,
+			T,
+		>,
+		Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Unconnected, T>,
 		T,
 	> where
 	DRAIN: Debug,
@@ -58,29 +65,33 @@ impl<DRAIN, I, LB, LC, LU,  PR, PV, T> AngleSet
 	fn angle(self, angle: T) -> Self {
 		let base = self.base.angle(angle);
 		Self {
+			extent: self.extent, // post-clip extent
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1,
 		}
 	}
 }
 
-impl<DRAIN, I, LB, LC, LU,  PR, PV, T> AngleSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 	for Builder<
 		DRAIN,
 		I,
 		LB,
 		LC,
 		LU,
-        ClipC<DRAIN, T>,
-        ClipU<DRAIN, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
 		PR,
 		PV,
-        Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, ConnectedResample<ClipC<DRAIN, T>, T>, T>,
-        Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
+		Resample<
+			DRAIN,
+			PR,
+			ClipC<DRAIN, T>,
+			ClipU<DRAIN, T>,
+			ConnectedResample<ClipC<DRAIN, T>, T>,
+			T,
+		>,
+		Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
 		T,
 	> where
 	DRAIN: Debug,
@@ -94,16 +105,12 @@ impl<DRAIN, I, LB, LC, LU,  PR, PV, T> AngleSet
 	fn angle(self, angle: T) -> Self {
 		let base = self.base.angle(angle);
 		Self {
+			extent: self.extent,
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1,
 		}
 	}
 }
-
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
 	for Builder<
@@ -132,12 +139,9 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
 	fn angle(self, angle: T) -> Self {
 		let base = self.base.angle(angle);
 		Self {
+			extent: self.extent,
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1,
 		}
 	}
 }

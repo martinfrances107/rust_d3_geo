@@ -82,10 +82,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 	>;
 
 	fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		self.x0 = Some(extent[0].x);
-		self.y0 = Some(extent[0].y);
-		self.x1 = Some(extent[1].x);
-		self.y1 = Some(extent[1].y);
+		self.extent = Some(*extent);
 		self.reclip()
 	}
 }
@@ -137,10 +134,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 	>;
 
 	fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		self.x0 = Some(extent[0].x);
-		self.y0 = Some(extent[0].y);
-		self.x1 = Some(extent[1].x);
-		self.y1 = Some(extent[1].y);
+		self.extent = Some(*extent);
 		self.reclip()
 	}
 }
@@ -195,10 +189,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 			base,
 			pr: self.pr,
 			// Mutate stage
-			x0: Some(extent[0].x),
-			y0: Some(extent[0].y),
-			x1: Some(extent[1].x),
-			y1: Some(extent[1].y),
+			extent: Some(*extent),
 		};
 		// .reset();
 
@@ -263,10 +254,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 			base,
 			pr: self.pr,
 			// Mutate stage
-			x0: Some(extent[0].x),
-			y0: Some(extent[0].y),
-			x1: Some(extent[1].x),
-			y1: Some(extent[1].y),
+			extent: Some(*extent),
 		};
 		// .reset();
 

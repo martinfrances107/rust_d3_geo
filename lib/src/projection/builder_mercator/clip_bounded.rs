@@ -42,17 +42,13 @@ where
 		T,
 	>;
 
-	// Returns a bounding box.
+	/// Returns a bounding box.
+	#[inline]
 	fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
-		match (self.x0, self.y0, self.x1, self.y1) {
-			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
-				Some([Coordinate { x: x0, y: y0 }, Coordinate { x: x1, y: y1 }])
-			}
-			_ => None,
-		}
+		self.extent
 	}
 
-	// clears the bounding box.
+	/// Clears the bounding box.
 	fn clip_extent_clear(self) -> Self::OutputClear {
 		let base = self.base;
 
@@ -90,21 +86,9 @@ where
 		let out = Builder {
 			pr: self.pr,
 			base: base_out,
-			x0: None,
-			y0: None,
-			x1: None,
-			y1: None, //
+			extent: None,
 		};
 		// out.reset()
 		out
 	}
-
-	// Sets the bounding box.
-	// fn clip_extent(mut self, extent: &[Coordinate<Self::T>; 2]) -> Self::OutputBounded {
-	// 	self.x0 = Some(extent[0].x);
-	// 	self.y0 = Some(extent[0].y);
-	// 	self.x1 = Some(extent[1].x);
-	// 	self.y1 = Some(extent[1].y);
-	// 	self.reclip()
-	// }
 }

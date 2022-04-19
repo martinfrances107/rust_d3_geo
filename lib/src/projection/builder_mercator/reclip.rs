@@ -90,13 +90,20 @@ impl<DRAIN, PR, T> Reclip
 			y: T::zero(),
 		});
 		let t = self.base.build().transform(&t);
-		let ce = match (self.x0, self.y0, self.x1, self.y1) {
-			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
+		let ce = match self.extent {
+			Some(extent) => {
 				// MercatorRaw and MercatorTransverseRaw supply different
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
+				self.pr.clone().transform_extent(
+					k,
+					t,
+					extent[0].x,
+					extent[0].y,
+					extent[1].x,
+					extent[1].y,
+				)
 			}
 			_ => [
 				Coordinate {
@@ -113,10 +120,7 @@ impl<DRAIN, PR, T> Reclip
 		Self::Output {
 			base: self.base.clip_extent(&ce),
 			pr: self.pr,
-			x0: Some(ce[0].x),
-			y0: Some(ce[0].y),
-			x1: Some(ce[1].x),
-			y1: Some(ce[1].y),
+			extent: Some(ce),
 		}
 	}
 }
@@ -169,13 +173,20 @@ impl<DRAIN, PR, T> Reclip
 			y: T::zero(),
 		});
 		let t = self.base.build().transform(&t);
-		let ce = match (self.x0, self.y0, self.x1, self.y1) {
-			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
+		let ce = match self.extent {
+			Some(extent) => {
 				// MercatorRaw and MercatorTransverseRaw supply different
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
+				self.pr.clone().transform_extent(
+					k,
+					t,
+					extent[0].x,
+					extent[0].y,
+					extent[1].x,
+					extent[1].y,
+				)
 			}
 			_ => [
 				Coordinate {
@@ -192,10 +203,7 @@ impl<DRAIN, PR, T> Reclip
 		Self::Output {
 			base: self.base.clip_extent(&ce),
 			pr: self.pr,
-			x0: Some(ce[0].x),
-			y0: Some(ce[0].y),
-			x1: Some(ce[1].x),
-			y1: Some(ce[1].y),
+			extent: Some(ce),
 		}
 	}
 }
@@ -252,13 +260,20 @@ impl<DRAIN, PR, T> Reclip
 			y: T::zero(),
 		});
 		let t = self.base.build().transform(&t);
-		let ce = match (self.x0, self.y0, self.x1, self.y1) {
-			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
+		let ce = match self.extent {
+			Some(extent) => {
 				// MercatorRaw and MercatorTransverseRaw supply different
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
+				self.pr.clone().transform_extent(
+					k,
+					t,
+					extent[0].x,
+					extent[0].y,
+					extent[1].x,
+					extent[1].y,
+				)
 			}
 			_ => [
 				Coordinate {
@@ -275,10 +290,7 @@ impl<DRAIN, PR, T> Reclip
 		Self::Output {
 			base: self.base.clip_extent(&ce),
 			pr: self.pr,
-			x0: Some(ce[0].x),
-			y0: Some(ce[0].y),
-			x1: Some(ce[1].x),
-			y1: Some(ce[1].y),
+			extent: Some(ce),
 		}
 	}
 }
@@ -335,13 +347,20 @@ impl<DRAIN, PR, T> Reclip
 			y: T::zero(),
 		});
 		let t = self.base.build().transform(&t);
-		let ce = match (self.x0, self.y0, self.x1, self.y1) {
-			(Some(x0), Some(y0), Some(x1), Some(y1)) => {
+		let ce = match self.extent {
+			Some(extent) => {
 				// MercatorRaw and MercatorTransverseRaw supply different
 				// transforms
 				// todo!("must change transform based on PR");
 				// but for now assume projectionMercator is being used.
-				self.pr.clone().transform_extent(k, t, x0, y0, x1, y1)
+				self.pr.clone().transform_extent(
+					k,
+					t,
+					extent[0].x,
+					extent[0].y,
+					extent[1].x,
+					extent[1].y,
+				)
 			}
 			_ => [
 				Coordinate {
@@ -358,10 +377,7 @@ impl<DRAIN, PR, T> Reclip
 		Self::Output {
 			base: self.base.clip_extent(&ce),
 			pr: self.pr,
-			x0: Some(ce[0].x),
-			y0: Some(ce[0].y),
-			x1: Some(ce[1].x),
-			y1: Some(ce[1].y),
+			extent: Some(ce),
 		}
 	}
 }

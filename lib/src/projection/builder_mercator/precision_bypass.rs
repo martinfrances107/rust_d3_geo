@@ -4,13 +4,13 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::pv::PV as PVAntimerdian;
 use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimerdian;
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::NoClipC;
@@ -50,7 +50,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 	> where
 	DRAIN: Clone + Debug,
 	PR: Clone + Debug,
-	T: 'static  + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 	type Output = Builder<
@@ -75,12 +75,9 @@ impl<DRAIN, PR, T> PrecisionBypass
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
 		return Self::Output {
+			extent: self.extent, // post-clip extent
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1, // post-clip extent
 		};
 	}
 }
@@ -90,7 +87,12 @@ impl<DRAIN, PR, T> PrecisionBypass
 		DRAIN,
 		InterpolateAntimeridian<T>,
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<DRAIN, ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
+		LineAntimeridian<
+			DRAIN,
+			ResampleClipC<DRAIN, PR, T>,
+			Connected<ResampleClipC<DRAIN, PR, T>>,
+			T,
+		>,
 		LineAntimeridian<DRAIN, ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
 		ClipC<DRAIN, T>,
 		ClipU<DRAIN, T>,
@@ -119,7 +121,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ClipC<DRAIN, T>,
 		ClipU<DRAIN, T>,
 		PR,
-	PVAntimerdian<T>,
+		PVAntimerdian<T>,
 		ResampleNoneClipC<DRAIN, PR, T>,
 		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
@@ -127,16 +129,12 @@ impl<DRAIN, PR, T> PrecisionBypass
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
 		return Self::Output {
+			extent: self.extent, // post-clip extent
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1, // post-clip extent
 		};
 	}
 }
-
 
 impl<DRAIN, PR, T> PrecisionBypass
 	for Builder<
@@ -185,12 +183,9 @@ impl<DRAIN, PR, T> PrecisionBypass
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
 		return Self::Output {
+			extent: self.extent, // post-clip extent
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1, // post-clip extent
 		};
 	}
 }
@@ -237,12 +232,9 @@ impl<DRAIN, PR, T> PrecisionBypass
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
 		return Self::Output {
+			extent: self.extent, // post-clip extent
 			pr: self.pr,
 			base,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1, // post-clip extent
 		};
 	}
 }

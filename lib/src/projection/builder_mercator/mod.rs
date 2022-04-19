@@ -24,6 +24,7 @@ pub mod translate_adjust;
 pub mod translate_get;
 pub mod translate_set;
 
+use geo::Coordinate;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -67,10 +68,7 @@ where
 {
 	pub pr: PR,
 	pub base: ProjectionBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
-	pub x0: Option<T>,
-	pub y0: Option<T>,
-	pub x1: Option<T>,
-	pub y1: Option<T>, // post-clip extent
+	pub extent: Option<[Coordinate<T>; 2]>, // post-clip extent
 }
 
 impl<DRAIN, PR, T>
@@ -114,10 +112,7 @@ impl<DRAIN, PR, T>
 		Self {
 			pr,
 			base,
-			x0: None,
-			y0: None,
-			x1: None,
-			y1: None,
+			extent: None,
 		}
 	}
 }
