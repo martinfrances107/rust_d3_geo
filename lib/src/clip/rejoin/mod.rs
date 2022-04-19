@@ -105,10 +105,7 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
         return;
     }
 
-    dbg!(&clip);
-    dbg!("sort");
     clip.sort_by(compare_intersection);
-    dbg!(&clip);
 
     link(&mut subject);
     link(&mut clip);
