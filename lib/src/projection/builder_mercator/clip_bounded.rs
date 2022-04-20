@@ -7,12 +7,12 @@ use num_traits::FloatConst;
 
 use crate::clip::PointVisible;
 use crate::identity::Identity;
+use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::Builder as ProjectionBuilder;
+use crate::projection::builder_mercator::NoClipU;
 use crate::projection::ClipExtentBounded;
 use crate::projection::TransformExtent;
-use crate::stream::Connected;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 use crate::Coordinate;
 
 use super::Builder;
@@ -27,20 +27,8 @@ where
 {
 	/// f64 or f32.
 	type T = T;
-	type OutputClear = Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		Identity<DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, Unconnected, T>,
-		PR,
-		PV,
-		RC,
-		RU,
-		T,
-	>;
+	type OutputClear =
+		Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, PR, PV, RC, RU, T>;
 
 	/// Returns a bounding box.
 	#[inline]
@@ -53,7 +41,7 @@ where
 		let base = self.base;
 
 		let base_out = ProjectionBuilder {
-			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, Connected<DRAIN>, T>>,
+			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
 			projection_raw: base.projection_raw,
 			clip: base.clip,
 			phi: base.phi,

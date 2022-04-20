@@ -10,7 +10,6 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::clip::rectangle::Rectangle;
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::NoClipC;
@@ -73,8 +72,8 @@ impl<DRAIN, PR, T> Reclip
 			T,
 		>,
 		LineAntimeridian<DRAIN, ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
-		Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Rectangle<DRAIN, DRAIN, Unconnected, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
 		PR,
 		PVAntimeridian<T>,
 		ResampleClipC<DRAIN, PR, T>,

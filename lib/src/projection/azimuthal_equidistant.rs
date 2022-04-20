@@ -10,7 +10,6 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::identity::Identity;
 use crate::math::acos;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
@@ -66,8 +65,8 @@ where
 			Unconnected,
 			T,
 		>,
-		Identity<DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, Unconnected, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
 		AzimuthalEquiDistant<DRAIN, T>,
 		PVCircle<T>,
 		ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,

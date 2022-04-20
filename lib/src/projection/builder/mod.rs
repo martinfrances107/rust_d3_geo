@@ -173,7 +173,7 @@ where
         let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
         let postclip = Identity::default();
         let resample = Resample::new(project_transform.clone(), delta2);
-        let p_pcnc = PhantomData::<Identity<DRAIN, DRAIN, Connected<DRAIN>, T>>;
+        let p_pcnc = PhantomData::<NoClipC<DRAIN, T>>;
         let out_a: Self = Self {
             clip,
             p_pcnc,

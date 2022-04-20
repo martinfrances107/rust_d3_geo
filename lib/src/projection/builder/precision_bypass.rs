@@ -12,8 +12,6 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::clip::rectangle::Rectangle;
-use crate::identity::Identity;
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::ResampleClipC;
@@ -28,8 +26,6 @@ use crate::projection::builder::NoClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::resampler::none::None;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::PrecisionBypass;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
@@ -100,7 +96,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		// Copy - Mutate.
 		let out = Self::Output {
 			// p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>,
-			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, Connected<DRAIN>, T>>,
+			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
 			sx: self.sx,
 			sy: self.sy,
 			x: self.x,
@@ -142,14 +138,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
 			DRAIN,
-			Resample<
-				DRAIN,
-				PR,
-				Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>,
-				Rectangle<DRAIN, DRAIN, Unconnected, T>,
-				ConnectedResample<Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>, T>,
-				T,
-			>,
+			ResampleClipC<DRAIN, PR, T>,
 			Connected<ResampleClipC<DRAIN, PR, T>>,
 			T,
 		>,
@@ -201,7 +190,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			p_pcnc: PhantomData::<Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>>,
+			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			sx: self.sx,
 			sy: self.sy,
 			x: self.x,
@@ -297,7 +286,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, Connected<DRAIN>, T>>,
+			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
 			sx: self.sx,
 			sy: self.sy,
 			x: self.x,
@@ -364,8 +353,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 			T,
 		>,
 		LineCircle<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
-		Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Rectangle<DRAIN, DRAIN, Unconnected, T>,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
 		PR,
 		PVCircle<T>,
 		ResampleNoneClipC<DRAIN, PR, T>,
@@ -388,7 +377,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			p_pcnc: PhantomData::<Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>>,
+			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			sx: self.sx,
 			sy: self.sy,
 			x: self.x,

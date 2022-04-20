@@ -39,7 +39,8 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
-use crate::identity::Identity;
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::Builder as ProjectionBuilder;
@@ -83,8 +84,8 @@ impl<DRAIN, PR, T>
 			T,
 		>,
 		LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		Identity<DRAIN, DRAIN, Connected<DRAIN>, T>,
-		Identity<DRAIN, DRAIN, Unconnected, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
 		PR,
 		PVAntimeridian<T>,
 		ResampleNoClipC<DRAIN, PR, T>,
@@ -100,8 +101,8 @@ impl<DRAIN, PR, T>
 		let base = ProjectionBuilder::new(
 			gen_clip_antimeridian::<
 				DRAIN,
-				Identity<DRAIN, DRAIN, Connected<DRAIN>, T>,
-				Identity<DRAIN, DRAIN, Unconnected, T>,
+				NoClipC<DRAIN, T>,
+				NoClipU<DRAIN, T>,
 				PR,
 				ResampleNoClipC<DRAIN, PR, T>,
 				ResampleNoClipU<DRAIN, PR, T>,
