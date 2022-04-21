@@ -1,8 +1,3 @@
-use crate::projection::builder::template::ClipC;
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -12,11 +7,16 @@ use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 use num_traits::Float;
 
-use crate::clip::buffer::Buffer;
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimerdian;
+use crate::clip::buffer::Buffer;
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::ResampleClipC;
+use crate::projection::builder::template::ResampleClipU;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -70,8 +70,7 @@ where
 
 	#[inline]
 	fn builder() -> Self::Builder {
-		MercatorBuilder::new(Mercator::default())
-			.scale(T::from(961_f64/f64::TAU()).unwrap())
+		MercatorBuilder::new(Mercator::default()).scale(T::from(961_f64 / f64::TAU()).unwrap())
 	}
 }
 

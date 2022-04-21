@@ -110,15 +110,15 @@ impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     CS: Clone + Default + PartialEq + Result + Stream<EP = CS, T = T>,
     I: Clone + Interpolator<T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = CS, T = T>,
+    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     PCNU: Clone + Connectable<Output = PCNC, SC = CS>,
     PV: PointVisible<T = T>,
-    PR: Clone + Debug,
+    PR: Clone,
     PV: Clone,
     RC: Clone + Stream<EP = CS, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
+    RU: Clone + Connectable<Output = RC, SC = PCNC>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Combines projection, context stream and object.
@@ -135,12 +135,12 @@ where
     I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Area<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     PCNU: Clone + Connectable<Output = PCNC, SC = Area<T>>,
     PR: Clone + Transform<T = T>,
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Area<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
+    RU: Clone + Connectable<Output = RC, SC = PCNC>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the area of the Path

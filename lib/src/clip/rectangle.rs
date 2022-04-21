@@ -14,7 +14,6 @@ use num_traits::FloatConst;
 use num_traits::Zero;
 
 use crate::clip::interpolator::Interpolator;
-use crate::math::EPSILON;
 use crate::path::Result;
 use crate::projection::builder::PostClipNode;
 use crate::stream::Connectable;
@@ -64,7 +63,6 @@ where
 
     use_line_point: bool,
     use_buffer_stream: bool,
-    epsilon: T,
 }
 
 impl<EP, SINK, T> Debug for Rectangle<EP, SINK, Connected<EP>, T>
@@ -120,7 +118,6 @@ where
             v_: false,
             use_line_point: false,
             use_buffer_stream: false,
-            epsilon: T::from(EPSILON).unwrap(),
         }
     }
 }
@@ -310,7 +307,6 @@ where
 
             use_line_point: self.use_line_point,
             use_buffer_stream: self.use_buffer_stream,
-            epsilon: T::from(EPSILON).unwrap(),
         }
     }
 }
