@@ -9,7 +9,9 @@ use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
+use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder_mercator::Builder;
+use crate::projection::builder_mercator::ResampleNoClipU;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -51,7 +53,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 			ConnectedResample<NoClipC<DRAIN, T>, T>,
 			T,
 		>,
-		Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Unconnected, T>,
+		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
 	DRAIN: Debug,
@@ -91,7 +93,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 			ConnectedResample<ClipC<DRAIN, T>, T>,
 			T,
 		>,
-		Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
+		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
 	DRAIN: Debug,

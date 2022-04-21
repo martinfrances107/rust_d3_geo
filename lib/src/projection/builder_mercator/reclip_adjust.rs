@@ -5,6 +5,7 @@ use num_traits::FloatConst;
 
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::ResampleClipU;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -40,7 +41,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 			ConnectedResample<ClipC<DRAIN, T>, T>,
 			T,
 		>,
-		Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
+		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
 	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,

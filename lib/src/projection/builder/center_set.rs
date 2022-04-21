@@ -4,6 +4,8 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::projection::builder::template::ResampleClipU;
+use crate::projection::builder::ResampleNoClipU;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -12,13 +14,13 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::Builder;
 use super::template::ClipC;
 use super::template::ClipU;
 use super::template::NoClipC;
 use super::template::NoClipU;
+use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU,  PR, PV, T> CenterSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
     for Builder<
         DRAIN,
         I,
@@ -29,8 +31,15 @@ impl<DRAIN, I, LB, LC, LU,  PR, PV, T> CenterSet
         ClipU<DRAIN, T>,
         PR,
         PV,
-        Resample<DRAIN, PR, ClipC<DRAIN, T>,  ClipU<DRAIN, T>, ConnectedResample<ClipC<DRAIN, T>, T>, T>,
-        Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
+        Resample<
+            DRAIN,
+            PR,
+            ClipC<DRAIN, T>,
+            ClipU<DRAIN, T>,
+            ConnectedResample<ClipC<DRAIN, T>, T>,
+            T,
+        >,
+        ResampleClipU<DRAIN, PR, T>,
         T,
     >
 where
@@ -46,7 +55,7 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU,  PR, PV, T> CenterSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
     for Builder<
         DRAIN,
         I,
@@ -57,8 +66,15 @@ impl<DRAIN, I, LB, LC, LU,  PR, PV, T> CenterSet
         NoClipU<DRAIN, T>,
         PR,
         PV,
-        Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, ConnectedResample<NoClipC<DRAIN, T>, T>, T>,
-        Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Unconnected, T>,
+        Resample<
+            DRAIN,
+            PR,
+            NoClipC<DRAIN, T>,
+            NoClipU<DRAIN, T>,
+            ConnectedResample<NoClipC<DRAIN, T>, T>,
+            T,
+        >,
+        ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
 where

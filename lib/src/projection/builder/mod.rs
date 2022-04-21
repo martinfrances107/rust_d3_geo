@@ -12,6 +12,7 @@ use crate::clip::buffer::Buffer;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
 use crate::identity::Identity;
+use crate::projection::builder::template::ResampleClipU;
 use crate::rot::rotate_radians;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
@@ -274,7 +275,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T>
             ConnectedResample<NoClipC<DRAIN, T>, T>,
             T,
         >,
-        Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Unconnected, T>,
+        ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
 where
@@ -369,7 +370,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T>
             ConnectedResample<ClipC<DRAIN, T>, T>,
             T,
         >,
-        Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
+        ResampleClipU<DRAIN, PR, T>,
         T,
     >
 where

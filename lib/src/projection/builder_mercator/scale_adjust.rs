@@ -12,6 +12,7 @@ use crate::clip::LineConnected;
 use crate::clip::PointVisible;
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::ResampleClipU;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -45,7 +46,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 			ConnectedResample<ClipC<DRAIN, T>, T>,
 			T,
 		>,
-		Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
+		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
 	DRAIN: 'static + Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
