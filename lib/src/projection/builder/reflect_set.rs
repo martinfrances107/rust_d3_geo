@@ -8,8 +8,6 @@ use crate::projection::builder::ResampleClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::resampler::none::None as ResampleNone;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::ReflectSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;

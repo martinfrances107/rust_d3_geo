@@ -4,10 +4,6 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::builder::ClipC;
-use crate::projection::builder::ClipU;
-use crate::projection::builder::ResampleClipC;
-use crate::projection::builder::ResampleClipU;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::PrecisionAdjust;
