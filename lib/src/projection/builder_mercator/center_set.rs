@@ -13,9 +13,8 @@ use crate::clip::LineConnected;
 use crate::clip::PointVisible;
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::CenterSet;
 use crate::projection::TransformExtent;
 use crate::stream::Connectable;
@@ -36,44 +35,18 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
 		ClipU<DRAIN, T>,
 		PR,
 		PV,
-		Resample<
-			DRAIN,
-			PR,
-			ClipC<DRAIN, T>,
-			ClipU<DRAIN, T>,
-			ConnectedResample<ClipC<DRAIN, T>, T>,
-			T,
-		>,
+		ResampleClipC<DRAIN, PR, T>,
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
 	DRAIN: 'static + Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	I: Clone + Interpolator<T = T>,
 	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
-	LC: Clone
-		+ LineConnected<
-			SC = Resample<
-				DRAIN,
-				PR,
-				ClipC<DRAIN, T>,
-				ClipU<DRAIN, T>,
-				ConnectedResample<ClipC<DRAIN, T>, T>,
-				T,
-			>,
-		> + Stream<EP = DRAIN, T = T>,
+	LC: Clone + LineConnected<SC = ResampleClipC<DRAIN, PR, T>> + Stream<EP = DRAIN, T = T>,
 	LU: Clone
 		+ Debug
-		+ Connectable<
-			Output = LC,
-			SC = Resample<
-				DRAIN,
-				PR,
-				ClipC<DRAIN, T>,
-				ClipU<DRAIN, T>,
-				ConnectedResample<ClipC<DRAIN, T>, T>,
-				T,
-			>,
-		> + Bufferable<Output = LB, T = T>,
+		+ Connectable<Output = LC, SC = ResampleClipC<DRAIN, PR, T>>
+		+ Bufferable<Output = LB, T = T>,
 	PR: Clone + Debug + Transform<T = T> + TransformExtent<T>,
 	PV: Clone + PointVisible<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,

@@ -5,10 +5,10 @@ use num_traits::FloatConst;
 
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::resampler::none::None;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
+
 use crate::projection::ClipExtentAdjust;
 use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
@@ -33,14 +33,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 		ClipU<DRAIN, T>,
 		PR,
 		PV,
-		Resample<
-			DRAIN,
-			PR,
-			ClipC<DRAIN, T>,
-			ClipU<DRAIN, T>,
-			ConnectedResample<ClipC<DRAIN, T>, T>,
-			T,
-		>,
+		ResampleClipC<DRAIN, PR, T>,
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where

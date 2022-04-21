@@ -3,7 +3,9 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::projection::builder::ResampleClipC;
 use crate::projection::builder::ResampleClipU;
+use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
@@ -30,14 +32,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
 		NoClipU<DRAIN, T>,
 		PR,
 		PV,
-		Resample<
-			DRAIN,
-			PR,
-			NoClipC<DRAIN, T>,
-			NoClipU<DRAIN, T>,
-			ConnectedResample<NoClipC<DRAIN, T>, T>,
-			T,
-		>,
+		ResampleNoClipC<DRAIN, PR, T>,
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
@@ -81,14 +76,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
 		ClipU<DRAIN, T>,
 		PR,
 		PV,
-		Resample<
-			DRAIN,
-			PR,
-			ClipC<DRAIN, T>,
-			ClipU<DRAIN, T>,
-			ConnectedResample<ClipC<DRAIN, T>, T>,
-			T,
-		>,
+		ResampleClipC<DRAIN, PR, T>,
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where

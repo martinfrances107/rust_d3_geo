@@ -9,12 +9,12 @@ use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
+use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
+use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder_mercator::Builder;
 use crate::projection::builder_mercator::ResampleNoClipU;
 use crate::projection::resampler::none::None as ResampleNone;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::ReflectSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
@@ -31,14 +31,7 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PR, PV, T> ReflectSet
 		NoClipU<DRAIN, T>,
 		PR,
 		PV,
-		Resample<
-			DRAIN,
-			PR,
-			NoClipC<DRAIN, T>,
-			NoClipU<DRAIN, T>,
-			ConnectedResample<NoClipC<DRAIN, T>, T>,
-			T,
-		>,
+		ResampleNoClipC<DRAIN, PR, T>,
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
@@ -93,14 +86,7 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PR, PV, T> ReflectSet
 		ClipU<DRAIN, T>,
 		PR,
 		PV,
-		Resample<
-			DRAIN,
-			PR,
-			ClipC<DRAIN, T>,
-			ClipU<DRAIN, T>,
-			ConnectedResample<ClipC<DRAIN, T>, T>,
-			T,
-		>,
+		ResampleClipC<DRAIN, PR, T>,
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
