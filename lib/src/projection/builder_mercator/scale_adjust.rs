@@ -86,7 +86,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleAdjust
 		ResampleNone<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
 		T,
 	> where
-	DRAIN: 'static + Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	I: Clone + Interpolator<T = T>,
 	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
 	LC: Clone

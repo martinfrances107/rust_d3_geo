@@ -311,8 +311,8 @@ where
 
 impl<EP, SINK, T> Stream for Rectangle<EP, SINK, Connected<SINK>, T>
 where
-    EP: 'static + Stream<EP = EP, T = T> + Default,
-    SINK: 'static + Stream<EP = EP, T = T>,
+    EP: Stream<EP = EP, T = T> + Default,
+    SINK: Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;

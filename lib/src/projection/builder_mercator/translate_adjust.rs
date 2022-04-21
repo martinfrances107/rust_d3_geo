@@ -74,7 +74,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> TranslateAdjust
 		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: 'static + Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	I: Clone,
 	LB: Clone + Debug,
 	LC: Clone,

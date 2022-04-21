@@ -15,7 +15,7 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentAdjust
 	for Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
-	DRAIN: 'static + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

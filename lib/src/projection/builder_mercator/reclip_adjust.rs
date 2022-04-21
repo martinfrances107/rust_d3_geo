@@ -101,7 +101,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 		None<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
 		T,
 	> where
-	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
 	I: Clone,
 	LB: Clone,
 	LC: Clone,
