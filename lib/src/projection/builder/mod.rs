@@ -12,7 +12,6 @@ use crate::clip::buffer::Buffer;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
 use crate::identity::Identity;
-use crate::projection::builder::template::ResampleClipU;
 use crate::rot::rotate_radians;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
@@ -29,11 +28,13 @@ use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
 use super::projector::Projector;
 use super::resampler::none::None as ResampleNone;
-use super::resampler::resample::Connected as ConnectedResample;
 use super::resampler::resample::Resample;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
+
+use template::ResampleClipC;
+use template::ResampleClipU;
 
 mod angle;
 mod center_get;
@@ -267,14 +268,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T>
         NoClipU<DRAIN, T>,
         PR,
         PV,
-        Resample<
-            DRAIN,
-            PR,
-            NoClipC<DRAIN, T>,
-            NoClipU<DRAIN, T>,
-            ConnectedResample<NoClipC<DRAIN, T>, T>,
-            T,
-        >,
+        ResampleNoClipC<DRAIN, PR, T>,
         ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
@@ -362,14 +356,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T>
         ClipU<DRAIN, T>,
         PR,
         PV,
-        Resample<
-            DRAIN,
-            PR,
-            ClipC<DRAIN, T>,
-            ClipU<DRAIN, T>,
-            ConnectedResample<ClipC<DRAIN, T>, T>,
-            T,
-        >,
+        ResampleClipC<DRAIN, PR, T>,
         ResampleClipU<DRAIN, PR, T>,
         T,
     >
