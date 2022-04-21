@@ -179,7 +179,6 @@ where
         let out_a: Self = Self {
             clip,
             p_pcnc,
-            // p_lb: PhantomData::<Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
             /// Input passing onto Projection.
             projection_raw,
 
@@ -309,12 +308,10 @@ where
         let project_transform = Compose::new(self.projection_raw.clone(), transform);
         let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
         let rotator = RotatorRadians::new(rotate.clone());
-
         let resample = Resample::new(project_transform.clone(), self.delta2);
 
         let out: Self = Builder {
             p_pcnc: self.p_pcnc,
-            // p_lb: PhantomData::<LB>,
             projection_raw: self.projection_raw,
             clip: self.clip,
             phi: self.phi,
@@ -402,7 +399,6 @@ where
 
         let out: Self = Builder {
             p_pcnc: self.p_pcnc,
-            // p_lb: PhantomData::<LB>,
             projection_raw: self.projection_raw,
             clip: self.clip,
             phi: self.phi,

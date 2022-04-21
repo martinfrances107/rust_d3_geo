@@ -24,15 +24,15 @@ pub mod translate_adjust;
 pub mod translate_get;
 pub mod translate_set;
 
-use geo::Coordinate;
-use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
 use derivative::*;
 use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
+use std::fmt::Debug;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;

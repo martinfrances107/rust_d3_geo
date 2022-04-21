@@ -6,8 +6,6 @@ pub mod intersect;
 pub mod line;
 /// Holds the clip circle point visible function.
 pub mod pv;
-/// Type for default clip.
-pub mod template;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;

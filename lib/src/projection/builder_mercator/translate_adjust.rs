@@ -6,6 +6,7 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::clip::buffer::Buffer;
 use crate::clip::Bufferable;
 use crate::clip::Interpolator;
 use crate::clip::LineConnected;
@@ -15,8 +16,6 @@ use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoneClipC;
 use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::builder_mercator::Buffer;
-use crate::projection::builder_mercator::ReclipAdjust;
 use crate::projection::TransformExtent;
 use crate::projection::TranslateAdjust;
 use crate::stream::Connectable;
@@ -24,6 +23,7 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::Builder;
+use super::ReclipAdjust;
 
 impl<DRAIN, I, LB, LC, LU, PR, T> TranslateAdjust
 	for Builder<

@@ -12,13 +12,14 @@ use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoClipC;
-use crate::projection::builder_mercator::Builder;
-use crate::projection::builder_mercator::ResampleNoClipU;
+use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::ReflectSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
+
+use super::Builder;
 
 impl<DRAIN, INTERPOLATE, LB, LC, LU, PR, PV, T> ReflectSet
 	for Builder<

@@ -1,7 +1,3 @@
-use crate::projection::builder::NoClipC;
-use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleNoClipC;
-use crate::projection::builder::ResampleNoClipU;
 use std::fmt::Debug;
 
 use geo::CoordFloat;
@@ -11,11 +7,6 @@ use crate::clip::Bufferable;
 use crate::clip::Interpolator;
 use crate::clip::LineConnected;
 use crate::clip::PointVisible;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::Buffer;
-use crate::projection::builder::ClipC;
-use crate::projection::builder::ClipU;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -26,7 +17,16 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+use super::template::ResampleClipC;
+use super::template::ResampleClipU;
+use super::Buffer;
 use super::Builder;
+use super::ClipC;
+use super::ClipU;
+use super::NoClipC;
+use super::NoClipU;
+use super::ResampleNoClipC;
+use super::ResampleNoClipU;
 
 impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
     for Builder<

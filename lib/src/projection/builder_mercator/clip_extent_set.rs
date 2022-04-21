@@ -21,8 +21,6 @@ use crate::projection::builder::template::ResampleNoneClipC;
 use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::builder::template::ResampleNoneNoClipC;
 use crate::projection::builder::template::ResampleNoneNoClipU;
-use crate::projection::builder_mercator::ResampleNoClipC;
-use crate::projection::builder_mercator::ResampleNoClipU;
 use crate::projection::ClipExtentSet;
 use crate::projection::TransformExtent;
 use crate::stream::Connected;
@@ -32,6 +30,8 @@ use crate::Transform;
 
 use super::Builder;
 use super::Reclip;
+use super::ResampleNoClipC;
+use super::ResampleNoClipU;
 
 // TOD must vary by ClipAntimeridian -- 2 more impl blocks
 

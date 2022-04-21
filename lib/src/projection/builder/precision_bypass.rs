@@ -30,10 +30,6 @@ use crate::projection::PrecisionBypass;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 
-// Vary by Clipping stratergy ( Antimeridna/Circle).
-// Vary by Post Clip Node (Identity/Rectangle).
-// So 2^2 variations .. repeats of similar code.
-
 use super::Builder;
 
 impl<DRAIN, PR, T> PrecisionBypass
@@ -95,7 +91,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			// p_pcnc: PhantomData::<Identity<DRAIN, DRAIN, DRAIN, Connected<DRAIN>, T>>,
 			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
 			sx: self.sx,
 			sy: self.sy,
@@ -301,7 +296,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 			project_transform: self.project_transform,
 			project_rotate_transform: self.project_rotate_transform,
 			postclip: self.postclip,
-			// rotate_transform: self.rotate_transform,
 			alpha: self.alpha,
 			lambda: self.lambda,
 			phi: self.phi,
@@ -392,7 +386,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 			project_transform: self.project_transform,
 			project_rotate_transform: self.project_rotate_transform,
 			postclip: self.postclip,
-			// rotate_transform: self.rotate_transform,
 			alpha: self.alpha,
 			lambda: self.lambda,
 			phi: self.phi,

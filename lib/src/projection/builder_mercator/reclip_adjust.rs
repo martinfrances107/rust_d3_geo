@@ -8,7 +8,6 @@ use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::resampler::none::None;
-
 use crate::projection::ClipExtentAdjust;
 use crate::projection::RotateGet;
 use crate::projection::ScaleGet;

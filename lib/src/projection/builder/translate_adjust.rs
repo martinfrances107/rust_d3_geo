@@ -8,15 +8,6 @@ use num_traits::FloatConst;
 use crate::clip::Bufferable;
 use crate::clip::Interpolator;
 use crate::clip::LineConnected;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::template::ResampleNoneClipC;
-use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::builder::Buffer;
-use crate::projection::builder::NoClipC;
-use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleNoClipC;
-use crate::projection::builder::ResampleNoClipU;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::TranslateAdjust;
@@ -26,7 +17,16 @@ use crate::Transform;
 
 use super::template::ClipC;
 use super::template::ClipU;
+use super::template::ResampleClipC;
+use super::template::ResampleClipU;
+use super::template::ResampleNoneClipC;
+use super::template::ResampleNoneClipU;
+use super::Buffer;
 use super::Builder;
+use super::NoClipC;
+use super::NoClipU;
+use super::ResampleNoClipC;
+use super::ResampleNoClipU;
 
 impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 	for Builder<
