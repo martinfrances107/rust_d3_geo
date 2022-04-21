@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
