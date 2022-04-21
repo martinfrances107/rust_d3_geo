@@ -43,10 +43,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		None<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	PCNC: Debug,
-	PCNU: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -145,10 +142,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		None<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	PCNC: Debug,
-	PCNU: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

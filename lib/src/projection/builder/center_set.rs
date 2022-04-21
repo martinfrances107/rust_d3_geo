@@ -36,7 +36,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
         T,
     >
 where
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
@@ -64,7 +64,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
         T,
     >
 where
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
@@ -93,10 +93,7 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> CenterSet
         T,
     >
 where
-    DRAIN: Debug,
-    PCNC: Debug,
-    PCNU: Debug,
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;

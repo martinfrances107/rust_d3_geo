@@ -53,7 +53,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
         T,
     >
 where
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
@@ -80,7 +80,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
         T,
     >
 where
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
@@ -107,7 +107,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
         T,
     >
 where
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// f64 or f32.

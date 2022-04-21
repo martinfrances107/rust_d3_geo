@@ -35,9 +35,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	LB: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -63,9 +61,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	LB: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -92,11 +88,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> RotateSet
 		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	LB: Debug,
-	PCNC: Debug,
-	PCNU: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

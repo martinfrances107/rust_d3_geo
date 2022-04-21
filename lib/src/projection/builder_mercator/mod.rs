@@ -93,7 +93,7 @@ impl<DRAIN, PR, T>
 		T,
 	> where
 	DRAIN: Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	/// Wrap a default projector and provides mercator specific overrides.

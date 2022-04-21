@@ -132,7 +132,7 @@ impl<DRAIN, PR, PV, T>
         T,
     >
 where
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Given a Raw Projection and a clipping defintion create the associated
@@ -484,7 +484,6 @@ where
         let resample = ResampleNone::new(project_transform.clone());
         let out: Self = Builder {
             p_pcnc: PhantomData::<PCNC>,
-            // p_lb: PhantomData::<LB>,
             projection_raw: self.projection_raw,
             clip: self.clip,
             phi: self.phi,

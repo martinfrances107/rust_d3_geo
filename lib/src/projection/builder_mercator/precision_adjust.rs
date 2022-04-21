@@ -28,9 +28,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> PrecisionAdjust
         T,
     >
 where
-    DRAIN: Debug,
-    LB: Debug,
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;

@@ -49,9 +49,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	LB: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -82,9 +80,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	LB: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -115,10 +111,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
 		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	PCNC: Debug,
-	PCNU: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;

@@ -46,10 +46,9 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		None<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
-	PCNC: Debug,
-	PCNU: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	DRAIN: Default + Stream<EP = DRAIN, T = T>,
+
+	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -109,9 +108,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		T,
 	> where
 	DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
-	PCNC: Debug,
-	PCNU: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<

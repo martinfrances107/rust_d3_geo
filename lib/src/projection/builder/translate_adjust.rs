@@ -44,14 +44,13 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 		T,
 	> where
 	DRAIN: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	I: Interpolator<T = T>,
-	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
 	LC: Clone + LineConnected<SC = ResampleNoClipC<DRAIN, PR, T>> + Stream<EP = DRAIN, T = T>,
 	LU: Clone
 		+ Connectable<Output = LC, SC = ResampleNoClipC<DRAIN, PR, T>>
-		+ Bufferable<Output = LB, T = T>
-		+ Debug,
+		+ Bufferable<Output = LB, T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -78,10 +77,9 @@ impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> TranslateAdjust
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	I: Interpolator<T = T>,
-	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
 	LC: Clone
 		+ LineConnected<SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>
 		+ Stream<EP = DRAIN, T = T>,
@@ -89,9 +87,7 @@ impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> TranslateAdjust
 		+ Connectable<
 			Output = LC,
 			SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-		> + Bufferable<Output = LB, T = T>
-		+ Debug,
-
+		> + Bufferable<Output = LB, T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -119,7 +115,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 		T,
 	> where
 	DRAIN: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

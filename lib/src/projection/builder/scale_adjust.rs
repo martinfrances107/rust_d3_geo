@@ -46,7 +46,7 @@ impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 where
     DRAIN: Debug,
     I: Interpolator<T = T>,
-    LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone
         + LineConnected<SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>
         + Stream<EP = DRAIN, T = T>,
@@ -54,11 +54,8 @@ where
         + Connectable<
             Output = LC,
             SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        > + Bufferable<Output = LB, T = T>
-        + Debug,
-    PCNC: Debug,
-    PCNU: Debug,
-    PR: Clone + Debug + Transform<T = T>,
+        > + Bufferable<Output = LB, T = T>,
+    PR: Clone + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -88,7 +85,7 @@ impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 where
     DRAIN: Debug,
     I: Interpolator<T = T>,
-    LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone
         + LineConnected<SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>
         + Stream<EP = DRAIN, T = T>,
@@ -96,11 +93,8 @@ where
         + Connectable<
             Output = LC,
             SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        > + Bufferable<Output = LB, T = T>
-        + Debug,
-    PCNC: Debug,
-    PCNU: Debug,
-    PR: Clone + Debug + Transform<T = T>,
+        > + Bufferable<Output = LB, T = T>,
+    PR: Clone + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -136,11 +130,8 @@ where
         + Stream<EP = DRAIN, T = T>,
     LU: Clone
         + Connectable<Output = LC, SC = ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>
-        + Bufferable<Output = LB, T = T>
-        + Debug,
-    PR: Clone + Debug + Transform<T = T>,
-    PCNC: Debug,
-    PCNU: Debug,
+        + Bufferable<Output = LB, T = T>,
+    PR: Clone + Transform<T = T>,
     PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
 {

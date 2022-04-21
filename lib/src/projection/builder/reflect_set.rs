@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -34,9 +32,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	LB: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;
@@ -78,9 +74,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	LB: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;
@@ -123,10 +117,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ReflectSet
 		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	PCNC: Debug,
-	PCNU: Debug,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;
