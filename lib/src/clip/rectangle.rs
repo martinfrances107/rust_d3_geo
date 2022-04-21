@@ -140,13 +140,11 @@ where
         if let Some(polygon) = &self.polygon {
             for p in polygon.iter() {
                 let mut point = p[0];
-                let mut a0;
-                let mut a1;
                 let mut b0 = point.x;
                 let mut b1 = point.y;
                 for ring in p.iter().skip(1) {
-                    a0 = b0;
-                    a1 = b1;
+                    let a0 = b0;
+                    let a1 = b1;
                     point = *ring;
                     b0 = point.x;
                     b1 = point.y;
