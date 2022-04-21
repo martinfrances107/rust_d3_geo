@@ -10,7 +10,7 @@ use crate::clip::intersection::Intersection;
 ///
 /// Set the next and pervious entries to be the elements above and
 /// below. Connect the ends to form a circular loop.
-pub fn link<T>(array: &mut Vec<Rc<RefCell<Intersection<T>>>>)
+pub fn link<T>(array: &mut [Rc<RefCell<Intersection<T>>>])
 where
     T: CoordFloat + FloatConst,
 {

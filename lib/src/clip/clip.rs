@@ -273,7 +273,7 @@ where
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     PV: PointVisible<T = T>,
     RC: Stream<EP = EP, T = T>,
-    T: 'static +  AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
     type EP = EP;
@@ -348,7 +348,7 @@ where
                 &segments_inner,
                 gen_compare_intersection(),
                 start_inside,
-                &mut self.interpolator,
+                &self.interpolator,
                 self.state.line_node.get_sink(),
             );
         } else if start_inside {
