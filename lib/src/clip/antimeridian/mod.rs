@@ -21,8 +21,7 @@ use pv::PV;
 use super::clip::Clip;
 use interpolate::Interpolate;
 
-/// Returns a clip setup for antimeridian clipping.
-pub fn gen_clip_antimeridian<DRAIN, PCNC, PCNU, PR, RC, RU, T>() -> Clip<
+type ClipAntimeridianU<DRAIN, PR, RC, RU, T> = Clip<
     DRAIN,
     Interpolate<T>,
     Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
@@ -34,9 +33,12 @@ pub fn gen_clip_antimeridian<DRAIN, PCNC, PCNU, PR, RC, RU, T>() -> Clip<
     RU,
     Unconnected,
     T,
->
+>;
+
+/// Returns a clip setup for antimeridian clipping.
+pub fn gen_clip_antimeridian<DRAIN, PCNC, PCNU, PR, RC, RU, T>(
+) -> ClipAntimeridianU<DRAIN, PR, RC, RU, T>
 where
-    // PR: ProjectionRawBase<T>,
     RC: Stream<EP = DRAIN, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

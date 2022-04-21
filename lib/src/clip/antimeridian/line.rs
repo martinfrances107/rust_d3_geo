@@ -3,7 +3,6 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
-
 use num_traits::FloatConst;
 
 use crate::clip::buffer::Buffer;

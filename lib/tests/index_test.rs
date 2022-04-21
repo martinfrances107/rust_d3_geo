@@ -24,9 +24,10 @@ mod index_test {
     use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
     use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
     use rust_d3_geo::clip::buffer::Buffer;
-    use rust_d3_geo::identity::Identity;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
+    use rust_d3_geo::projection::builder::template::NoClipC;
+    use rust_d3_geo::projection::builder::template::NoClipU;
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
@@ -54,8 +55,8 @@ mod index_test {
             T,
         >,
         LineAntimeridian<EP, ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>, Unconnected, T>,
-        Identity<EP, EP, Connected<EP>, T>,
-        Identity<EP, EP, Unconnected, T>,
+        NoClipC<EP, T>,
+        NoClipU<EP, T>,
         Equirectangular<EP, T>,
         PVAntimeridian<T>,
         ResampleNoneNoClipC<EP, Equirectangular<EP, T>, T>,
@@ -89,8 +90,8 @@ mod index_test {
                 Unconnected,
                 T,
             >,
-            Identity<PathString<T>, PathString<T>, Connected<PathString<T>>, T>,
-            Identity<PathString<T>, PathString<T>, Unconnected, T>,
+            NoClipC<PathString<T>, T>,
+            NoClipU<PathString<T>, T>,
             Equirectangular<PathString<T>, T>,
             PVAntimeridian<T>,
             ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,

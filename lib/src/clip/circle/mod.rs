@@ -20,10 +20,7 @@ use pv::PV;
 
 use super::clip::Clip;
 
-/// Returns a clip setup for circle clipping.
-pub fn gen_clip_circle<DRAIN, PCNC, PCNU, PR, RC, RU, T>(
-	radius: T,
-) -> Clip<
+type ClipCircleU<DRAIN, PR, RC, RU, T> = Clip<
 	DRAIN,
 	Interpolate<T>,
 	Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
@@ -35,7 +32,12 @@ pub fn gen_clip_circle<DRAIN, PCNC, PCNU, PR, RC, RU, T>(
 	RU,
 	Unconnected,
 	T,
->
+>;
+
+/// Returns a clip setup for circle clipping.
+pub fn gen_clip_circle<DRAIN, PCNC, PCNU, PR, RC, RU, T>(
+	radius: T,
+) -> ClipCircleU<DRAIN, PR, RC, RU, T>
 where
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

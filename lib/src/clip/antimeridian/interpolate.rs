@@ -1,10 +1,7 @@
-// use std::marker::PhantomData;
-
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-// use crate::clip::InterpolateFn;
 use crate::clip::Interpolator;
 use crate::math::EPSILON;
 use crate::stream::Stream;
@@ -31,8 +28,6 @@ where
     T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
-    // type EP = EP;
-    // type Stream = STREAM;
     fn interpolate<EP, STREAM>(
         &self,
         from: Option<Coordinate<T>>,

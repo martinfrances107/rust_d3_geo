@@ -2,6 +2,8 @@
 #[cfg(test)]
 mod path_area_test {
 
+	use rust_d3_geo::projection::builder::template::NoClipC;
+	use rust_d3_geo::projection::builder::template::NoClipU;
 	use std::f64::consts::PI;
 	use std::fmt::Display;
 	use std::ops::AddAssign;
@@ -21,7 +23,6 @@ mod path_area_test {
 	use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
 	use rust_d3_geo::clip::buffer::Buffer;
 	use rust_d3_geo::data_object::sphere::Sphere;
-	use rust_d3_geo::identity::Identity;
 	use rust_d3_geo::path::area::Area;
 	use rust_d3_geo::path::builder::Builder as PathBuilder;
 	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
@@ -55,8 +56,8 @@ mod path_area_test {
 			Unconnected,
 			T,
 		>,
-		Identity<Area<T>, Area<T>, Connected<Area<T>>, T>,
-		Identity<Area<T>, Area<T>, Unconnected, T>,
+		NoClipC<Area<T>, T>,
+		NoClipU<Area<T>, T>,
 		Equirectangular<Area<T>, T>,
 		PVAntimeridian<T>,
 		ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
@@ -82,8 +83,8 @@ mod path_area_test {
 				Unconnected,
 				T,
 			>,
-			Identity<Area<T>, Area<T>, Connected<Area<T>>, T>,
-			Identity<Area<T>, Area<T>, Unconnected, T>,
+			NoClipC<Area<T>, T>,
+			NoClipU<Area<T>, T>,
 			Equirectangular<Area<T>, T>,
 			rust_d3_geo::clip::antimeridian::pv::PV<T>,
 			ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
@@ -115,8 +116,8 @@ mod path_area_test {
 				Unconnected,
 				T,
 			>,
-			Identity<Area<T>, Area<T>, Connected<Area<T>>, T>,
-			Identity<Area<T>, Area<T>, Unconnected, T>,
+			NoClipC<Area<T>, T>,
+			NoClipU<Area<T>, T>,
 			Equirectangular<Area<T>, T>,
 			PVAntimeridian<T>,
 			ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
@@ -144,8 +145,8 @@ mod path_area_test {
 				Unconnected,
 				T,
 			>,
-			Identity<Area<T>, Area<T>, Connected<Area<T>>, T>,
-			Identity<Area<T>, Area<T>, Unconnected, T>,
+			NoClipC<Area<T>, T>,
+			NoClipU<Area<T>, T>,
 			Equirectangular<Area<T>, T>,
 			PVAntimeridian<T>,
 			ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,

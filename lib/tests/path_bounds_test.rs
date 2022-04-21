@@ -21,9 +21,10 @@ mod path_bounds_test {
     use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
     use rust_d3_geo::clip::buffer::Buffer;
     use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::identity::Identity;
     use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::path::builder::Builder;
+    use rust_d3_geo::projection::builder::template::NoClipC;
+    use rust_d3_geo::projection::builder::template::NoClipU;
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
@@ -54,8 +55,8 @@ mod path_bounds_test {
             Unconnected,
             T,
         >,
-        Identity<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-        Identity<Bounds<T>, Bounds<T>, Unconnected, T>,
+        NoClipC<Bounds<T>, T>,
+        NoClipU<Bounds<T>, T>,
         Equirectangular<Bounds<T>, T>,
         PVAntimeridian<T>,
         ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,
@@ -86,8 +87,8 @@ mod path_bounds_test {
                 Unconnected,
                 T,
             >,
-            Identity<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-            Identity<Bounds<T>, Bounds<T>, Unconnected, T>,
+            NoClipC<Bounds<T>, T>,
+            NoClipU<Bounds<T>, T>,
             Equirectangular<Bounds<T>, T>,
             PVAntimeridian<T>,
             ResampleNoneNoClipC<Bounds<T>, Equirectangular<Bounds<T>, T>, T>,

@@ -10,7 +10,6 @@ mod equirectangular_test {
 	use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
 	use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
 	use rust_d3_geo::clip::buffer::Buffer;
-	use rust_d3_geo::identity::Identity;
 	use rust_d3_geo::projection::builder::template::NoClipC;
 	use rust_d3_geo::projection::builder::template::NoClipU;
 	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
@@ -52,8 +51,8 @@ mod equirectangular_test {
 			Unconnected,
 			f64,
 		>,
-		Identity<StreamDrainStub<f64>, StreamDrainStub<f64>, Connected<StreamDrainStub<f64>>, f64>,
-		Identity<StreamDrainStub<f64>, StreamDrainStub<f64>, Unconnected, f64>,
+		NoClipC<StreamDrainStub<f64>, f64>,
+		NoClipU<StreamDrainStub<f64>, f64>,
 		Equirectangular<StreamDrainStub<f64>, f64>,
 		PVAntimeridian<f64>,
 		ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
