@@ -102,7 +102,7 @@ where
     ///
     pub fn stream(
         &mut self,
-        drain: DRAIN,
+        drain: &DRAIN,
     ) -> StreamTransformRadians<
         Connected<
             RotatorRadians<
@@ -126,7 +126,7 @@ where
         >,
     > {
         if let Some((cache_drain, output)) = &self.cache {
-            if *cache_drain == drain {
+            if *cache_drain == *drain {
                 return (*output).clone();
             }
         }
@@ -145,7 +145,7 @@ where
             .connect::<DRAIN, _, T>(rotate_node);
 
         // Populate cache.
-        self.cache = Some((drain, out.clone()));
+        self.cache = Some((drain.clone(), out.clone()));
 
         // Output stage is a transform_radians node.
         out

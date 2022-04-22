@@ -123,7 +123,7 @@ where
 {
     /// Combines projection, context stream and object.
     pub fn object(&mut self, object: &impl Streamable<T = T>) -> <CS as Result>::Out {
-        let mut stream_in = self.projection.stream(self.context_stream.clone());
+        let mut stream_in = self.projection.stream(&self.context_stream);
         object.to_stream(&mut stream_in);
         stream_in.get_endpoint().result()
     }
@@ -150,7 +150,7 @@ where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         let stream_dst = Area::default();
-        let mut stream_in = self.projection.stream(stream_dst);
+        let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
         stream_in.0.sink.get_endpoint().result()
@@ -176,7 +176,7 @@ where
     /// This operation consumes the  Path.
     pub fn bounds(mut self, object: &impl Streamable<T = T>) -> [Coordinate<T>; 2] {
         let stream_dst = Bounds::default();
-        let mut stream_in = self.projection.stream(stream_dst);
+        let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
         stream_in.get_endpoint().result()
@@ -204,7 +204,7 @@ where
     /// Returns the centroid of the object.
     pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coordinate<T> {
         let stream_dst = Centroid::default();
-        let mut stream_in = self.projection.stream(stream_dst);
+        let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
         stream_in.get_endpoint().result()

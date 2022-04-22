@@ -5,47 +5,44 @@ mod fit_test {
 	extern crate pretty_assertions;
 	extern crate rust_topojson_client;
 
-	// use rust_d3_geo::projection::ProjectionRawBase;
-	// use std::f64::consts::PI;
-	// use std::fs::File;
+	use std::f64::consts::PI;
+	use std::fs::File;
 
-	// use geo::polygon;
-	// use geo::Coordinate;
-	// use geo::Geometry;
-	// use pretty_assertions::assert_eq;
-	// use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
-	// use rust_d3_geo::projection::gnomic::Gnomic;
-	// use rust_d3_geo::projection::orthographic::Orthographic;
-	// use rust_d3_geo::projection::stereographic::Stereographic;
-	// use rust_d3_geo::projection::ClipAngle;
-	// use topojson::Topology;
+	use geo::polygon;
+	use geo::Coordinate;
+	use geo::Geometry;
+	use pretty_assertions::assert_eq;
+	use topojson::Topology;
 
-	// use rust_d3_geo::data_object::sphere::Sphere;
-	// use rust_d3_geo::in_delta::in_delta;
-	// use rust_d3_geo::in_delta::in_delta_coordinate;
-	// use rust_d3_geo::path::bounds::Bounds;
-	// use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
-	// use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
-	// use rust_d3_geo::projection::equirectangular::Equirectangular;
-	// use rust_d3_geo::projection::mercator::Mercator;
-	// use rust_d3_geo::projection::Fit;
-	// use rust_d3_geo::projection::Scale;
-	// use rust_d3_geo::projection::Translate;
-	// use rust_topojson_client::feature::Builder;
+	use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
+	use rust_d3_geo::projection::gnomic::Gnomic;
+	use rust_d3_geo::projection::orthographic::Orthographic;
+	use rust_d3_geo::projection::stereographic::Stereographic;
+	use rust_d3_geo::projection::ProjectionRawBase;
+
+	use rust_d3_geo::data_object::sphere::Sphere;
+	use rust_d3_geo::in_delta::in_delta;
+	use rust_d3_geo::in_delta::in_delta_coordinate;
+	use rust_d3_geo::path::bounds::Bounds;
+	use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
+	use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
+	use rust_d3_geo::projection::equirectangular::Equirectangular;
+	use rust_d3_geo::projection::mercator::Mercator;
+	use rust_topojson_client::feature::Builder;
 
 	// Helper function to extract world geometry from file.
-	// fn world() -> Geometry<f64> {
-	// 	let file =
-	// 		File::open("./tests/world-atlas/world/50m.json").expect("File should open read only.");
-	// 	let topology: Topology =
-	// 		serde_json::from_reader(file).expect("File should be parse as JSON.");
+	fn world() -> Geometry<f64> {
+		let file =
+			File::open("./tests/world-atlas/world/50m.json").expect("File should open read only.");
+		let topology: Topology =
+			serde_json::from_reader(file).expect("File should be parse as JSON.");
 
-	// 	if let Some(g) = Builder::generate_from_name(&topology, &"land") {
-	// 		return g;
-	// 	} else {
-	// 		panic!("failed to file and decode from file.");
-	// 	}
-	// }
+		if let Some(g) = Builder::generate_from_name(&topology, &"land") {
+			return g;
+		} else {
+			panic!("failed to file and decode from file.");
+		}
+	}
 
 	// #[test]
 	// fn fit_extent_sphere_equirectangular() {

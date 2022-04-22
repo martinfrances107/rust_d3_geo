@@ -1,3 +1,7 @@
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
@@ -50,7 +54,12 @@ pub mod transform;
 pub mod resampler;
 
 /// Helper functions found measuring the extent, width or height.
-mod fit;
+mod fit_no_rectangle;
+mod fit_rectangle;
+
+type FitBounds<B, T> = Box<dyn Fn([Coordinate<T>; 2], B) -> B>;
+
+// type FitBoundsConvert<B, T> = Box<dyn Fn([Coordinate<T>; 2], B) -> B>;
 
 /// Projection type.
 pub type RotateTransform<PR, T> =

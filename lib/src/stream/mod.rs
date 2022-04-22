@@ -8,7 +8,6 @@ mod multi_polygon;
 mod point;
 mod polygon;
 
-// use crate::clip::Interpolator;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -16,6 +15,11 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use geo::LineString;
 use geo::Polygon;
+
+use crate::clip::clip::Clip;
+use crate::clip::clip::Connected as ConnectedClip;
+use crate::projection::stream_transform_radians::StreamTransformRadians;
+use crate::rot::rotator_radians::RotatorRadians;
 
 /// State -- Unconnected.
 ///
@@ -75,6 +79,37 @@ pub trait Streamable {
     fn to_stream<EP, SINK>(&self, stream: &mut SINK)
     where
         SINK: Stream<EP = EP, T = Self::T>;
+}
+
+pub trait Pipeline<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T>
+where
+    T: CoordFloat,
+{
+    fn stream(
+        &mut self,
+        drain: &DRAIN,
+    ) -> StreamTransformRadians<
+        Connected<
+            RotatorRadians<
+                Connected<
+                    Clip<
+                        DRAIN,
+                        I,
+                        LB,
+                        LC,
+                        LU,
+                        PR,
+                        PV,
+                        RC,
+                        RU,
+                        ConnectedClip<DRAIN, LB, LC, LU, T>,
+                        T,
+                    >,
+                >,
+                T,
+            >,
+        >,
+    >;
 }
 
 /// Stub is useful only the transform portion of a projection is needed.

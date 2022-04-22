@@ -1,4 +1,27 @@
+use crate::path::Result;
+use crate::projection::ClipExtentBounded;
+use crate::projection::ScaleAdjust;
+use crate::projection::TranslateAdjust;
+use std::fmt::Debug;
+
+use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::FloatConst;
+
+use crate::clip::buffer::Buffer;
+use crate::clip::Bufferable;
+use crate::clip::Interpolator;
+use crate::clip::LineConnected;
+use crate::clip::PointVisible;
+use crate::path::bounds::Bounds;
+use crate::projection::builder::template::ResampleClipC;
+use crate::projection::builder::template::ResampleClipU;
+use crate::projection::AbsDiffEq;
+use crate::projection::AsPrimitive;
+use crate::stream::Connectable;
+use crate::stream::Stream;
+use crate::stream::Streamable;
+use crate::Transform;
 
 use super::builder::template::ClipC;
 use super::builder::template::ClipU;
@@ -34,7 +57,7 @@ use super::builder::Builder;
 // 	>,
 // >;
 
-// fn fit_with_resampling_and_pcn<I, LB, LC, LU, PR, PV, T>(
+// fn fit<I, LB, LC, LU, PR, PV, T>(
 // 	builder: Builder<
 // 		Bounds<T>,
 // 		I,
@@ -80,14 +103,13 @@ use super::builder::Builder;
 // >
 // where
 // 	I: Clone + Interpolator<T = T>,
-// 	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+// 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
 // 	LC: Clone + LineConnected<SC = ResampleClipC<Bounds<T>, PR, T>> + Stream<EP = Bounds<T>, T = T>,
 // 	LU: Connectable<Output = LC, SC = ResampleClipC<Bounds<T>, PR, T>>
 // 		+ Bufferable<Output = LB, T = T>
-// 		+ Clone
-// 		+ Debug,
-// 	PR: Clone + Debug + Transform<T = T>,
-// 	PV: Clone + PointVisible<T = T>,
+// 		+ Clone,
+// 	PR: Transform<T = T>,
+// 	PV: PointVisible<T = T>,
 // 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 // {
 // 	match builder.get_clip_extent() {
@@ -174,121 +196,19 @@ use super::builder::Builder;
 // 	fit_bounds(bounds, builder2)
 // }
 
-// pub(super) fn fit_extent_adjust<I, LB, LC, LU, PR, PV, RC, RU, T>(
-// 	builder: Builder<
-// 		Bounds<T>,
-// 		I,
-// 		LB,
-// 		LC,
-// 		LU,
-// 		Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 		Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
-// 		PR,
-// 		PV,
-// 		RC,
-// 		RU,
-// 		T,
-// 	>,
+// pub(super) fn fit_extent<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T>(
+// 	builder: Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, PR, PV, RC, RU, T>,
 // 	extent: [[T; 2]; 2],
 // 	object: &impl Streamable<T = T>,
-// ) -> Builder<
-// 	Bounds<T>,
-// 	I,
-// 	LB,
-// 	LC,
-// 	LU,
-// 	Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 	Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
-// 	PR,
-// 	PV,
-// 	RC,
-// 	RU,
-// 	T,
-// >
+// ) -> Builder<Bounds<T>, I, LB, LC, LU, ClipC<Bounds<T>, T>, ClipU<Bounds<T>, T>, PR, PV, RC, RU, T>
 // where
 // 	I: Clone,
-// 	LB: Clone,
-// 	LC: Clone + Debug,
-// 	LU: Clone + Debug,
-// 	PR: Transform<T = T>,
+// 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+// 	LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+// 	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
 // 	PV: Clone + Debug,
-// 	RU: Debug,
-// 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-// 	let two = T::from(2.0_f64).unwrap();
-// 	let one_five_zero = T::from(150_f64).unwrap();
-// 	fit_extent_adjust(
-// 		builder,
-// 		Box::new(
-// 			move |b: [Coordinate<T>; 2],
-// 			      builder: Builder<
-// 				Bounds<T>,
-// 				I,
-// 				LB,
-// 				LC,
-// 				LU,
-// 				Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 				Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
-// 				PR,
-// 				PV,
-// 				RC,
-// 				RU,
-// 				T,
-// 			>| {
-// 				let w = extent[1][0] - extent[0][0];
-// 				let h = extent[1][1] - extent[0][1];
-// 				let k = Float::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
-// 				let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
-// 				let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
-
-// 				builder
-// 					.scale(one_five_zero * k)
-// 					.translate(&Coordinate { x, y })
-// 			},
-// 		),
-// 		object,
-// 	)
-// }
-
-// pub(super) fn fit_extent<I, LB, LC, LU, PR, PV, RC, RU, RCOut, RUOut, T>(
-// 	builder: Builder<
-// 		Bounds<T>,
-// 		I,
-// 		LB,
-// 		LC,
-// 		LU,
-// 		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Unconnected, T>,
-// 		PR,
-// 		PV,
-// 		RC,
-// 		RU,
-// 		T,
-// 	>,
-// 	extent: [[T; 2]; 2],
-// 	object: &impl Streamable<T = T>,
-// ) -> Builder<
-// 	Bounds<T>,
-// 	I,
-// 	LB,
-// 	LC,
-// 	LU,
-// 	Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 	Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
-// 	PR,
-// 	PV,
-// 	RC,
-// 	RU,
-// 	T,
-// >
-// where
-// 	I: Clone,
-// 	LB: Clone + Debug,
-// 	LC: Clone + Debug,
-// 	LU: Clone + Debug,
-// 	PV: Clone + Debug,
-// 	RC: Debug,
-// 	RU: Debug,
+// 	RC: Clone + Debug + Stream<EP = Bounds<T>, T = T>,
+// 	RU: Clone + Debug + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>> + Debug,
 // 	PR: Transform<T = T>,
 // 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 // {
@@ -296,16 +216,16 @@ use super::builder::Builder;
 // 	let one_five_zero = T::from(150_f64).unwrap();
 // 	fit_extent(
 // 		builder,
-// 		Box::new(
+// 		*Box::new(
 // 			move |b: [Coordinate<T>; 2],
 // 			      builder: Builder<
-// 				Bounds<T>,
+// 				DRAIN,
 // 				I,
 // 				LB,
 // 				LC,
 // 				LU,
-// 				Identity<Bounds<T>, Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 				Identity<Bounds<T>, Bounds<T>, Bounds<T>, Unconnected, T>,
+// 				NoClipC<DRAIN, T>,
+// 				NoClipU<DRAIN, T>,
 // 				PR,
 // 				PV,
 // 				RC,
@@ -314,7 +234,7 @@ use super::builder::Builder;
 // 			>| {
 // 				let w = extent[1][0] - extent[0][0];
 // 				let h = extent[1][1] - extent[0][1];
-// 				let k = Float::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
+// 				let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
 // 				let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
 // 				let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
 

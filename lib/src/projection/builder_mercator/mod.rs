@@ -60,7 +60,7 @@ trait ReclipAdjust {
 	fn reclip_adjust(self) -> Self;
 }
 
-/// A wrapper for Projection\Builder which overrides the traits - scale translate and center.
+/// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
