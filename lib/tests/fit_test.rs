@@ -5,7 +5,6 @@ mod fit_test {
 	extern crate pretty_assertions;
 	extern crate rust_topojson_client;
 
-	use std::f64::consts::PI;
 	use std::fs::File;
 
 	use geo::polygon;

@@ -23,7 +23,6 @@ use crate::projection::builder_mercator::Buffer;
 use crate::projection::builder_mercator::ResampleNoClipC;
 use crate::projection::builder_mercator::ResampleNoClipU;
 use crate::projection::TransformExtent;
-use crate::projection::TranslateSet;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
@@ -31,6 +30,7 @@ use crate::Transform;
 
 use super::Builder;
 use super::Reclip;
+use super::TranslateSet;
 
 impl<DRAIN, PR, T> TranslateSet
 	for Builder<

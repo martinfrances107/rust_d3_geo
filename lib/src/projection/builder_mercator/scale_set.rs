@@ -19,7 +19,6 @@ use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
-use crate::projection::ScaleSet;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
@@ -27,6 +26,7 @@ use crate::Transform;
 
 use super::Builder;
 use super::Reclip;
+use super::ScaleSet;
 
 impl<DRAIN, PR, T> ScaleSet
 	for Builder<

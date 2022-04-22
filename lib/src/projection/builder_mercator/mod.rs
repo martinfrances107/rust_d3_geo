@@ -51,6 +51,41 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+/// This trait is useful only for mercator projection.
+/// Here  centering, scaling and trasnlate all end in a reclip.
+/// That is all involve a tranformation of the PCN
+/// specifcally a Identity struct to a Rectangle struct.
+pub trait ScaleSet {
+	/// Output type where the PCN is set to Rectangle.
+	type Output;
+
+	/// f32 or f64.
+	type T;
+
+	///  Sets the projection’s scale factor to the specified value and returns the projection.
+	///  The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
+	///
+	///  @param scale Scale factor to be used for the projection; the default scale is projection-specific.
+	fn scale(self, scale: Self::T) -> Self::Output;
+}
+
+/// Controls the projections translation factor.
+///
+/// Projection builder sub trait.
+pub trait TranslateSet {
+	type Output;
+	/// f32 or f64.
+	type T;
+
+	///  Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
+	///  The translation offset determines the PIxel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
+	///
+	///  @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
+	fn translate(self, t: &Coordinate<Self::T>) -> Self::Output
+	where
+		Self::T: CoordFloat;
+}
+
 trait Reclip {
 	type Output;
 	fn reclip(self) -> Self::Output;

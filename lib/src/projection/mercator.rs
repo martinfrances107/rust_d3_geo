@@ -14,6 +14,7 @@ use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
+use crate::projection::builder_mercator::ScaleSet;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
@@ -21,7 +22,6 @@ use crate::Transform;
 
 use super::builder_mercator::Builder as MercatorBuilder;
 use super::ProjectionRawBase;
-use super::ScaleSet;
 use super::TransformExtent;
 
 /// Defines a projection.
