@@ -58,11 +58,9 @@ mod rotate_get;
 mod rotate_set;
 mod scale_adjust;
 mod scale_get;
-mod scale_set;
 pub mod template;
 mod translate_adjust;
 mod translate_get;
-mod translate_set;
 
 /// Marker trait for structs Identity or Rectangle
 pub trait PostClipNode {}

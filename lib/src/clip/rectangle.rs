@@ -9,7 +9,6 @@ use std::rc::Rc;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::Float;
 use num_traits::FloatConst;
 use num_traits::Zero;
 

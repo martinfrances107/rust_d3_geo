@@ -1,3 +1,4 @@
+use num_traits::AsPrimitive;
 use std::fmt::Debug;
 
 use approx::AbsDiffEq;
@@ -21,6 +22,7 @@ use crate::projection::builder::template::ResampleNoneNoClipU;
 use crate::projection::builder_mercator::Buffer;
 use crate::projection::builder_mercator::ResampleNoClipC;
 use crate::projection::builder_mercator::ResampleNoClipU;
+use crate::projection::TransformExtent;
 use crate::projection::TranslateSet;
 use crate::stream::Connected;
 use crate::stream::Stream;
@@ -28,6 +30,7 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
+use super::Reclip;
 
 impl<DRAIN, PR, T> TranslateSet
 	for Builder<
@@ -50,7 +53,7 @@ impl<DRAIN, PR, T> TranslateSet
 		T,
 	> where
 	DRAIN: 'static + Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Debug + Transform<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -76,16 +79,13 @@ impl<DRAIN, PR, T> TranslateSet
 
 	#[inline]
 	fn translate(mut self, t: &Coordinate<T>) -> Self::Output {
-		let base = self.base.translate(t);
-		Self::Output {
-			pr: self.pr,
-			extent: self.extent,
-			base,
-		}
+		self.base.x = t.x;
+		self.base.y = t.y;
+		self.reclip()
 	}
 }
 
-impl<DRAIN, PR, PV, T> TranslateSet
+impl<DRAIN, PR, T> TranslateSet
 	for Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
@@ -100,15 +100,14 @@ impl<DRAIN, PR, PV, T> TranslateSet
 		NoClipC<DRAIN, T>,
 		NoClipU<DRAIN, T>,
 		PR,
-		PV,
+		PVAntimeridian<T>,
 		ResampleNoneNoClipC<DRAIN, PR, T>,
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
 	> where
 	DRAIN: 'static + Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Debug + Transform<T = T>,
-	PV: Clone,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	T: 'static + AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 	type Output = Builder<
@@ -133,10 +132,8 @@ impl<DRAIN, PR, PV, T> TranslateSet
 
 	#[inline]
 	fn translate(mut self, t: &Coordinate<T>) -> Self::Output {
-		Self::Output {
-			extent: self.extent,
-			pr: self.pr,
-			base: self.base.translate(t),
-		}
+		self.base.x = t.x;
+		self.base.y = t.y;
+		self.reclip()
 	}
 }

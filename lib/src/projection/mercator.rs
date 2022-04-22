@@ -5,7 +5,6 @@ use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
-use num_traits::Float;
 
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
