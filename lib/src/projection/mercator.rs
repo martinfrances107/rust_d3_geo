@@ -100,11 +100,11 @@ where
 	) -> [Coordinate<T>; 2] {
 		[
 			Coordinate {
-				x: Float::max(t.x - k, t.y - k),
+				x: T::max(t.x - k, t.y - k),
 				y: y0,
 			},
 			Coordinate {
-				x: Float::min(t.x + k, x1),
+				x: T::min(t.x + k, x1),
 				y: y1,
 			},
 		]

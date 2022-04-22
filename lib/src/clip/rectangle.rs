@@ -215,8 +215,8 @@ where
                 self.state.sink.point(&p, m);
             }
         } else {
-            self.x_ = Float::max(self.clip_min, Float::min(self.clip_max, self.x_));
-            self.y_ = Float::max(self.clip_min, Float::min(self.clip_max, self.y_));
+            self.x_ = T::max(self.clip_min, T::min(self.clip_max, self.x_));
+            self.y_ = T::max(self.clip_min, T::min(self.clip_max, self.y_));
             let mut a = [self.x_, self.y_];
 
             p.x = T::max(self.clip_min, T::min(self.clip_max, p.x));
