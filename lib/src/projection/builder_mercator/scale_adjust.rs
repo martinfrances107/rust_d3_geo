@@ -14,6 +14,8 @@ use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
+use crate::projection::builder::template::ResampleNoneClipC;
+use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -27,6 +29,10 @@ use crate::Transform;
 
 use super::Builder;
 use super::ReclipAdjust;
+
+// TODO: Must vary by :-
+// ResampleNoClipC/U,
+// ResampleNoneNocClipC/U
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 	for Builder<
@@ -70,7 +76,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 	}
 }
 
-// TODO must vary by NoClip, Clip
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleAdjust
 	for Builder<
 		DRAIN,
@@ -82,8 +87,8 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleAdjust
 		ClipU<DRAIN, T>,
 		PR,
 		PV,
-		ResampleNone<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Connected<ClipC<DRAIN, T>>, T>,
-		ResampleNone<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
+		ResampleNoneClipC<DRAIN, PR, T>,
+		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	> where
 	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
