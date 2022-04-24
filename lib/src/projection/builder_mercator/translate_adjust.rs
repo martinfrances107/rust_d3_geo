@@ -40,7 +40,7 @@ impl<DRAIN, I, LB, LC, LU, PR, T> TranslateAdjust
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: 'static + Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	I: Clone + Interpolator<T = T>,
 	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
 	LC: Clone + LineConnected<SC = ResampleClipC<DRAIN, PR, T>> + Stream<EP = DRAIN, T = T>,

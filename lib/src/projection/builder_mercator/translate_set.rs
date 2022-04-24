@@ -52,7 +52,7 @@ impl<DRAIN, PR, T> TranslateSet
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: 'static + Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -105,7 +105,7 @@ impl<DRAIN, PR, T> TranslateSet
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: 'static + Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
