@@ -65,6 +65,7 @@ where
     T: CoordFloat,
 {
     type T = T;
+
     fn point_radius(&mut self, val: Self::T) {
         self.radius = val;
     }
@@ -83,8 +84,8 @@ impl<T> Stream for Context<T>
 where
     T: CoordFloat,
 {
-    type T = T;
     type EP = Self;
+    type T = T;
 
     #[inline]
     fn get_endpoint(&mut self) -> &mut Self {

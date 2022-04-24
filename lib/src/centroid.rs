@@ -245,8 +245,8 @@ impl<T> StreamTrait for Centroid<T>
 where
     T: AddAssign + CoordFloat + FloatConst,
 {
-    type T = T;
     type EP = Self;
+    type T = T;
 
     fn get_endpoint(&mut self) -> &mut Self {
         self

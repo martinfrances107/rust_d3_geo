@@ -236,8 +236,8 @@ impl<T> Stream for Centroid<T>
 where
     T: AddAssign<T> + CoordFloat + FloatConst,
 {
-    type T = T;
     type EP = Self;
+    type T = T;
 
     #[inline]
     fn get_endpoint(&mut self) -> &mut Self {

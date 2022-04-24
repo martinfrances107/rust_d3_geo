@@ -22,9 +22,7 @@ mod fit_test {
 	use rust_d3_geo::data_object::sphere::Sphere;
 	use rust_d3_geo::in_delta::in_delta;
 	use rust_d3_geo::in_delta::in_delta_coordinate;
-	use rust_d3_geo::path::bounds::Bounds;
 	use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
-	use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
 	use rust_d3_geo::projection::equirectangular::Equirectangular;
 	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_topojson_client::feature::Builder;
@@ -51,7 +49,11 @@ mod fit_test {
 
 	// 	let projection =
 	// 		projection.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &d_object);
-	// 	assert!(in_delta(projection.get_scale(), 900. / (2. * PI), 1e-6));
+	// 	assert!(in_delta(
+	// 		projection.get_scale(),
+	// 		900. / (2_f64 * std::f64::consts::PI),
+	// 		1e-6
+	// 	));
 	// 	let translate = projection.get_translate();
 	// 	assert!(in_delta_coordinate(
 	// 		&translate,

@@ -50,6 +50,7 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 		T,
 	>;
 	type T = T;
+
 	// Set the internal clip angle (theta) to null and return a builder
 	// which uses the antimeridian clipping stratergy.
 	fn clip_angle_reset(self) -> Self::Output {

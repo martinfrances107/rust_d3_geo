@@ -56,7 +56,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 	PR: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
@@ -76,6 +75,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
+
 	/// Set the projection builder precision
 	///
 	/// delta is related to clip angle.
@@ -150,7 +151,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 	PR: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
@@ -170,6 +170,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
 	/// Set the projection builder precision
 	///
 	/// delta is related to clip angle.
@@ -244,7 +245,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 	PR: Clone + Debug,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		DRAIN,
 		InterpolateCircle<T>,
@@ -264,6 +264,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
 
 	/// Set the projection builder precision
 	///
@@ -335,7 +336,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 	PR: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		DRAIN,
 		InterpolateCircle<T>,
@@ -355,6 +355,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
+
 	/// Set the projection builder precision
 	///
 	/// delta is related to clip angle.

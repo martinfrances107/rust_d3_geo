@@ -32,6 +32,7 @@ where
 	T: CoordFloat + FloatConst,
 {
 	type T = T;
+
 	fn interpolate<EP, STREAM>(
 		&self,
 		from: Option<Coordinate<T>>,

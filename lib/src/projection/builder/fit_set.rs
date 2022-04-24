@@ -5,42 +5,29 @@ use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-// use crate::clip::Interpolate;
-use crate::clip::PointVisible;
-
 use crate::clip::Bufferable;
 use crate::clip::LineConnected;
+use crate::clip::PointVisible;
 use crate::path::bounds::Bounds;
 use crate::projection::builder::Buffer;
-use crate::projection::fit_set::fit_extent;
-// use crate::projection::fit_set::fit_height;
-// use crate::projection::fit_set::fit_size;
-// use crate::projection::fit_set::fit_width;
-
-// use crate::projection::fit::fit_width_adjust;
 use crate::projection::builder::ClipC;
 use crate::projection::builder::ClipU;
 use crate::projection::builder::NoClipC;
 use crate::projection::builder::NoClipU;
-// use crate::projection::fit::fit_width_convert;
+use crate::projection::fit_set::fit_extent;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::resampler::Resampler;
 use crate::projection::FitAdjust;
 use crate::projection::FitSet;
-use crate::Transform;
-// use crate::projection::Interpolate;
 use crate::stream::Connectable;
-
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::stream::Unconnected;
+use crate::Transform;
 
 use super::Builder;
-
-// use super::PostClipNode;
-// // use super::ProjectionRawBase;
 
 impl<I, LB, LC, LU, PR, PV, RC, RU, T> FitSet
 	for Builder<
@@ -67,7 +54,6 @@ impl<I, LB, LC, LU, PR, PV, RC, RU, T> FitSet
 	RU: Debug + Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		Bounds<T>,
 		I,
@@ -82,6 +68,8 @@ impl<I, LB, LC, LU, PR, PV, RC, RU, T> FitSet
 		RU,
 		T,
 	>;
+	type T = T;
+
 	#[inline]
 	fn fit_extent(self, extent: [[T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self::Output
 	where

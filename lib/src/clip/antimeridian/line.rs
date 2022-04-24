@@ -59,8 +59,9 @@ impl<EP, SC, T> Bufferable for Line<EP, SC, Unconnected, T>
 where
     T: CoordFloat,
 {
-    type T = T;
     type Output = Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
+    type T = T;
+
     fn buffer(self, buffer: Buffer<T>) -> Self::Output {
         Line {
             state: Connected { sink: buffer },
@@ -129,8 +130,8 @@ where
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
-    type T = T;
     type EP = EP;
+    type T = T;
 
     #[inline]
     fn get_endpoint(&mut self) -> &mut Self::EP {

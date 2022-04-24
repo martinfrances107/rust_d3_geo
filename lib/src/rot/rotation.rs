@@ -39,6 +39,7 @@ where
 {
     ///f64 or f32.
     type T = T;
+
     fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
         let temp = self.rotate.transform(&Coordinate {
             x: coordinate.x.to_radians(),

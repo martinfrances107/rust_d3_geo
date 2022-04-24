@@ -27,10 +27,10 @@ where
 	PV: PointVisible<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	/// f64 or f32.
-	type T = T;
 	type OutputClear =
 		Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, PR, PV, RC, RU, T>;
+	/// f64 or f32.
+	type T = T;
 
 	/// Returns a bounding box.
 	#[inline]

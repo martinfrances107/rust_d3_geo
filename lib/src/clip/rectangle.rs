@@ -314,8 +314,8 @@ where
     SINK: Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type T = T;
     type EP = EP;
+    type T = T;
 
     #[inline]
     fn get_endpoint(&mut self) -> &mut Self::EP {

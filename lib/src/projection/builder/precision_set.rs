@@ -45,7 +45,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
@@ -70,6 +69,8 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	>;
+	type T = T;
+
 	/// Set the projection builder precision
 	///
 	/// delta is related to clip angle.
@@ -144,7 +145,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		DRAIN,
 		InterpolateCircle<T>,
@@ -169,6 +169,8 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	>;
+	type T = T;
+
 	/// Set the projection builder precision
 	///
 	/// delta is related to clip angle.

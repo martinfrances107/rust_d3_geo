@@ -37,6 +37,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
+
 	/// Sets the rotation angles as measured in degrees.
 	fn rotate(mut self, angles: &[T; 3]) -> Self {
 		self.base = self.base.rotate(angles);
@@ -63,6 +64,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
+
 	/// Sets the rotation angles as measured in degrees.
 	fn rotate(mut self, angles: &[T; 3]) -> Self {
 		self.base = self.base.rotate(angles);
@@ -90,6 +92,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> RotateSet
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
+
 	/// Sets the rotation angles as measured in degrees.
 	fn rotate(mut self, angles: &[T; 3]) -> Self {
 		self.base = self.base.rotate(angles);

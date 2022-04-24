@@ -47,6 +47,7 @@ where
     T: CoordFloat,
 {
     type T = T;
+
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;

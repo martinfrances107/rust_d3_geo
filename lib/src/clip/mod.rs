@@ -42,10 +42,10 @@ pub trait Clean {
 /// Can make stream connections to a specfic EP.
 /// A buffer.
 pub trait Bufferable {
-    /// f64 or f32
-    type T;
     /// Line type: Antimeridian or Clip.
     type Output;
+    /// f64 or f32
+    type T;
     /// conected buffer as the next pipeline stage.
     fn buffer(self, buffer: Buffer<Self::T>) -> Self::Output
     where

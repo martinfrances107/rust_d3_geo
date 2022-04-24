@@ -124,6 +124,7 @@ where
 	T: CoordFloat + FloatConst,
 {
 	type T = T;
+
 	#[inline]
 	fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
 		azimuthal_raw(p, Self::cxcy)

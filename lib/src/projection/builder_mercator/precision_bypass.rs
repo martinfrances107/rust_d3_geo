@@ -52,7 +52,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 	PR: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
@@ -72,6 +71,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
+
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
 		return Self::Output {
@@ -106,7 +107,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 	PR: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
@@ -126,6 +126,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
+
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
 		return Self::Output {
@@ -160,7 +162,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 	PR: Clone + Debug,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		DRAIN,
 		InterpolateCircle<T>,
@@ -180,6 +181,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
+
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
 		return Self::Output {
@@ -209,7 +212,6 @@ impl<DRAIN, PR, T> PrecisionBypass
 	PR: Clone + Debug,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
 	type Output = Builder<
 		DRAIN,
 		InterpolateCircle<T>,
@@ -229,6 +231,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
+
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
 		return Self::Output {

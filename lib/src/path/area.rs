@@ -119,8 +119,8 @@ impl<T> Stream for Area<T>
 where
     T: CoordFloat + FloatConst,
 {
-    type T = T;
     type EP = Self;
+    type T = T;
 
     #[inline]
     fn get_endpoint(&mut self) -> &mut Self {

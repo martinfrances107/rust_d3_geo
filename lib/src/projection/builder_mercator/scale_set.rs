@@ -72,6 +72,7 @@ impl<DRAIN, PR, T> ScaleSet
 		T,
 	>;
 	type T = T;
+
 	fn scale(mut self, scale: T) -> Self::Output {
 		self.base.k = scale;
 		self.reclip()
@@ -117,6 +118,7 @@ impl<DRAIN, PR, T> ScaleSet
 		T,
 	>;
 	type T = T;
+
 	fn scale(mut self, scale: T) -> Self::Output {
 		self.base.k = scale;
 		self.reclip()

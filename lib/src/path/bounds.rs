@@ -52,9 +52,9 @@ impl<T> Stream for Bounds<T>
 where
     T: CoordFloat,
 {
+    type EP = Self;
     /// f632 or f64
     type T = T;
-    type EP = Self;
 
     #[inline]
     fn get_endpoint(&mut self) -> &mut Self {

@@ -10,6 +10,7 @@ where
 	T: CoordFloat,
 {
 	type T = T;
+
 	#[inline]
 	fn get_precision(&self) -> T {
 		self.base.get_precision()

@@ -101,9 +101,9 @@ impl<T> Stream for String<T>
 where
     T: CoordFloat + Display,
 {
+    type EP = Self;
     /// f64 or f32.
     type T = T;
-    type EP = Self;
 
     #[inline]
     fn get_endpoint(&mut self) -> &mut Self {

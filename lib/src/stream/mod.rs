@@ -75,6 +75,7 @@ pub trait ConnectedState {
 pub trait Streamable {
     /// f32 or f64.
     type T: CoordFloat;
+
     /// Injects the object to a stream.
     fn to_stream<EP, SINK>(&self, stream: &mut SINK)
     where
@@ -128,8 +129,8 @@ impl<T> Stream for StreamDrainStub<T>
 where
     T: CoordFloat,
 {
-    type T = T;
     type EP = Self;
+    type T = T;
 
     #[inline]
     fn get_endpoint(&mut self) -> &mut Self {

@@ -43,8 +43,8 @@ impl<T> StreamTrait for Stream<T>
 where
     T: CoordFloat + FloatConst,
 {
-    type T = T;
     type EP = Self;
+    type T = T;
 
     fn get_endpoint(&mut self) -> &mut Self {
         self

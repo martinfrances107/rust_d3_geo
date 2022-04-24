@@ -97,8 +97,8 @@ impl<T> StreamTrait for Stream<T>
 where
     T: CoordFloat,
 {
-    type T = T;
     type EP = Self;
+    type T = T;
 
     #[inline]
     fn get_endpoint(&mut self) -> &mut Self {

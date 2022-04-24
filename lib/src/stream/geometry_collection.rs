@@ -9,6 +9,7 @@ where
     T: CoordFloat,
 {
     type T = T;
+
     #[inline]
     fn to_stream<EP, SD>(&self, stream: &mut SD)
     where

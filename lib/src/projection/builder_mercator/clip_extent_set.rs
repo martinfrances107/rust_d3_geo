@@ -59,8 +59,6 @@ impl<DRAIN, PR, T> ClipExtentSet
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
-
 	type OutputBounded = Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
@@ -80,6 +78,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
 
 	fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
 		self.extent = Some(*extent);
@@ -111,8 +110,6 @@ impl<DRAIN, PR, T> ClipExtentSet
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	type T = T;
-
 	type OutputBounded = Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
@@ -132,6 +129,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
 
 	fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
 		self.extent = Some(*extent);
@@ -162,8 +160,6 @@ impl<DRAIN, PR, T> ClipExtentSet
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
-
 	type OutputBounded = Builder<
 		DRAIN,
 		InterpolateCircle<T>,
@@ -178,6 +174,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
 
 	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
 		let base = self.base.clip_extent(extent);
@@ -221,8 +218,6 @@ impl<DRAIN, PR, T> ClipExtentSet
 	PR: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
-
 	type OutputBounded = Builder<
 		DRAIN,
 		InterpolateCircle<T>,
@@ -242,6 +237,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	>;
+	type T = T;
 
 	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
 		let base = self.base.clip_extent(extent);
