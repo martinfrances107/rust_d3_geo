@@ -7,6 +7,8 @@ use num_traits::FloatConst;
 
 use crate::clip::PointVisible;
 use crate::identity::Identity;
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::builder_mercator::NoClipU;
@@ -17,8 +19,8 @@ use crate::Coordinate;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> ClipExtentBounded
-	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentBounded
+	for Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
 	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	PR: TransformExtent<T>,

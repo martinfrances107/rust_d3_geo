@@ -32,7 +32,6 @@ where
 
 	fn clip_extent_clear(self) -> Self::OutputClear {
 		let out = Self::OutputClear {
-			// p_lb: PhantomData::<LB>,
 			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip: self.clip,

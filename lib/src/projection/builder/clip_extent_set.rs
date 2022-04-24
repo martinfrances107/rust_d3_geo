@@ -36,7 +36,9 @@ use super::template::NoClipC;
 use super::template::NoClipU;
 use super::Builder;
 
-// TODO at the moment only for CLipCircle .. must add 2 more impl for ClipAntimerdian.
+// Code Repeated 2^2 times.
+// Variantion over ClipAntimeridian/ClipCircle as Clip is rebuilt.
+// Varariantion over Resample/None as Resample is rebuilt.
 impl<DRAIN, PR, T> ClipExtentSet
 	for Builder<
 		DRAIN,
