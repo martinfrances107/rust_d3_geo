@@ -39,7 +39,6 @@ type ClipAntimeridianU<DRAIN, PR, RC, RU, T> = Clip<
 pub fn gen_clip_antimeridian<DRAIN, PCNC, PCNU, PR, RC, RU, T>(
 ) -> ClipAntimeridianU<DRAIN, PR, RC, RU, T>
 where
-    RC: Stream<EP = DRAIN, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     let interpolate = Interpolate::default();
