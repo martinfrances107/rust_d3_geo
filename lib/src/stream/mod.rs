@@ -81,6 +81,11 @@ pub trait Streamable {
         SINK: Stream<EP = EP, T = Self::T>;
 }
 
+/// Connects a DRAIN to the projection.
+///
+/// The Projection Stream Pipeline :-
+///
+/// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
 pub trait Pipeline<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T>
 where
     T: CoordFloat,

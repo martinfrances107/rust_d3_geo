@@ -1,18 +1,9 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::Bufferable;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::TranslateAdjust;
-use crate::stream::Connectable;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::template::ClipC;
@@ -21,7 +12,6 @@ use super::template::ResampleClipC;
 use super::template::ResampleClipU;
 use super::template::ResampleNoneClipC;
 use super::template::ResampleNoneClipU;
-use super::Buffer;
 use super::Builder;
 use super::NoClipC;
 use super::NoClipU;
@@ -43,15 +33,8 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
 	PR: Clone + Transform<T = T>,
-	I: Interpolator<T = T>,
-	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-	LC: Clone + LineConnected<SC = ResampleNoClipC<DRAIN, PR, T>> + Stream<EP = DRAIN, T = T>,
-	LU: Clone
-		+ Connectable<Output = LC, SC = ResampleNoClipC<DRAIN, PR, T>>
-		+ Bufferable<Output = LB, T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type T = T;
 
@@ -62,7 +45,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 	}
 }
 
-impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> TranslateAdjust
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 	for Builder<
 		DRAIN,
 		I,
@@ -78,16 +61,6 @@ impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> TranslateAdjust
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
-	I: Interpolator<T = T>,
-	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-	LC: Clone
-		+ LineConnected<SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>
-		+ Stream<EP = DRAIN, T = T>,
-	LU: Clone
-		+ Connectable<
-			Output = LC,
-			SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-		> + Bufferable<Output = LB, T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -114,9 +87,8 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
 	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type T = T;
 

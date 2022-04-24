@@ -1,25 +1,14 @@
-use std::fmt::Debug;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::Bufferable;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
 use crate::projection::resampler::none::None as ResampleNone;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::ScaleAdjust;
-use crate::stream::Connectable;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::template::ResampleClipC;
 use super::template::ResampleClipU;
-use super::Buffer;
 use super::Builder;
 use super::ClipC;
 use super::ClipU;
@@ -28,7 +17,7 @@ use super::NoClipU;
 use super::ResampleNoClipC;
 use super::ResampleNoClipU;
 
-impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> ScaleAdjust
     for Builder<
         DRAIN,
         I,
@@ -44,19 +33,7 @@ impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
         T,
     >
 where
-    DRAIN: Debug,
-    I: Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone
-        + LineConnected<SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>
-        + Stream<EP = DRAIN, T = T>,
-    LU: Clone
-        + Connectable<
-            Output = LC,
-            SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        > + Bufferable<Output = LB, T = T>,
     PR: Clone + Transform<T = T>,
-    PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
@@ -67,7 +44,7 @@ where
     }
 }
 
-impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> ScaleAdjust
     for Builder<
         DRAIN,
         I,
@@ -83,19 +60,7 @@ impl<DRAIN, I, LC, LB, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
         T,
     >
 where
-    DRAIN: Debug,
-    I: Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone
-        + LineConnected<SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>
-        + Stream<EP = DRAIN, T = T>,
-    LU: Clone
-        + Connectable<
-            Output = LC,
-            SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        > + Bufferable<Output = LB, T = T>,
     PR: Clone + Transform<T = T>,
-    PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
@@ -122,17 +87,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
         T,
     >
 where
-    DRAIN: Debug,
-    I: Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone
-        + LineConnected<SC = ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>
-        + Stream<EP = DRAIN, T = T>,
-    LU: Clone
-        + Connectable<Output = LC, SC = ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>
-        + Bufferable<Output = LB, T = T>,
     PR: Clone + Transform<T = T>,
-    PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
