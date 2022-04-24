@@ -34,7 +34,7 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
 ) where
     SINK: Stream<EP = EP, T = T>,
     INTERPOLATOR: Interpolator<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     // dbg!(&segments);
     let mut start_inside = start_inside;

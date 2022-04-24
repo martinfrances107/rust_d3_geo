@@ -109,7 +109,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	PV: Clone,
 
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	fn reclip_adjust(mut self) -> Self {
 		let k = T::PI() * self.get_scale();

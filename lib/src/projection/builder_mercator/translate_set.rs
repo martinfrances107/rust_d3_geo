@@ -54,7 +54,7 @@ impl<DRAIN, PR, T> TranslateSet
 	> where
 	DRAIN: 'static + Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
@@ -107,7 +107,7 @@ impl<DRAIN, PR, T> TranslateSet
 	> where
 	DRAIN: 'static + Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
-	T: 'static + AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 	type Output = Builder<

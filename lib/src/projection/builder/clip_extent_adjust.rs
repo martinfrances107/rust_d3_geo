@@ -17,7 +17,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentAdjust
 where
 	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 

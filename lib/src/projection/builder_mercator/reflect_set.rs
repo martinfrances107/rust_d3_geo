@@ -35,7 +35,7 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PR, PV, T> ReflectSet
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 
@@ -88,7 +88,7 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PR, PV, T> ReflectSet
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 
@@ -141,7 +141,7 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> ReflectSet
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
-	T: 'static + AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 

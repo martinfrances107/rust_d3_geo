@@ -61,7 +61,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 

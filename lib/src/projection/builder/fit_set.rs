@@ -52,7 +52,7 @@ impl<I, LB, LC, LU, PR, PV, RC, RU, T> FitSet
 	PV: Clone + Debug,
 	RC: Clone + Debug + Stream<EP = Bounds<T>, T = T>,
 	RU: Debug + Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		Bounds<T>,

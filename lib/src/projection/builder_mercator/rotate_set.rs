@@ -34,7 +34,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 
@@ -61,7 +61,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 
@@ -89,7 +89,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> RotateSet
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 

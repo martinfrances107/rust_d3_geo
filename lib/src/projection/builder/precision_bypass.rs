@@ -54,7 +54,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 	> where
 	DRAIN: Clone + Debug,
 	PR: Clone + Debug,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
@@ -149,7 +149,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 	> where
 	DRAIN: Clone + Debug,
 	PR: Clone + Debug,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
@@ -334,7 +334,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 	> where
 	DRAIN: Debug,
 	PR: Clone + Debug,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,

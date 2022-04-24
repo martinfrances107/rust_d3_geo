@@ -126,7 +126,7 @@ impl<EP, SINK, STATE, T> PostClipNode for Rectangle<EP, SINK, STATE, T> where T:
 impl<EP, SINK, T> Rectangle<EP, SINK, Connected<SINK>, T>
 where
     SINK: Stream<EP = EP, T = T>,
-    T: 'static + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     #[inline(always)]
     fn visible(&self, p: &Coordinate<T>) -> bool {
@@ -167,7 +167,7 @@ where
 impl<EP, SINK, T> Rectangle<EP, SINK, Connected<SINK>, T>
 where
     SINK: Stream<EP = EP, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     #[inline]
     fn default_point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
