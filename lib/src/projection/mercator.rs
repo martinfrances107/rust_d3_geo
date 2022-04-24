@@ -43,7 +43,7 @@ impl<DRAIN, T> Default for Mercator<DRAIN, T> {
 
 impl<DRAIN, T> ProjectionRawBase<T> for Mercator<DRAIN, T>
 where
-	DRAIN: 'static + Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Builder = MercatorBuilder<

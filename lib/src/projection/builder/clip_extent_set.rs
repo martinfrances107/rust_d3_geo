@@ -59,7 +59,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: 'static + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -152,7 +152,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: 'static + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

@@ -48,7 +48,7 @@ impl<DRAIN, PR, T> ScaleSet
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: 'static + Clone + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
