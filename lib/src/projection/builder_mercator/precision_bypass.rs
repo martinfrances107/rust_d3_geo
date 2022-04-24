@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -48,8 +46,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Debug,
-	PR: Clone + Debug,
+	DRAIN: Clone,
+	PR: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -103,8 +101,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Debug,
-	PR: Clone + Debug,
+	DRAIN: Clone,
+	PR: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -158,8 +156,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Debug,
-	PR: Clone + Debug,
+	DRAIN: Clone,
+	PR: Clone,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -208,8 +206,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Debug,
-	PR: Clone + Debug,
+	DRAIN: Clone,
+	PR: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<

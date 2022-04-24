@@ -26,7 +26,6 @@ use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentSet;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 

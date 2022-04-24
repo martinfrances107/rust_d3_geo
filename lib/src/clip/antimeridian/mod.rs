@@ -7,7 +7,6 @@ pub mod pv;
 
 mod intersect;
 
-use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;

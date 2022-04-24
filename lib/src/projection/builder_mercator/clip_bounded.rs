@@ -14,7 +14,6 @@ use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::builder_mercator::NoClipU;
 use crate::projection::ClipExtentBounded;
 use crate::projection::TransformExtent;
-use crate::stream::Stream;
 use crate::Coordinate;
 
 use super::Builder;
@@ -22,7 +21,6 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentBounded
 	for Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
-	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	PR: TransformExtent<T>,
 	PV: PointVisible<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,

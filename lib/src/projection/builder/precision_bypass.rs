@@ -1,4 +1,3 @@
-use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -52,8 +51,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Debug,
-	PR: Clone + Debug,
+	DRAIN: Clone,
+	PR: Clone,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -147,8 +146,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Debug,
-	PR: Clone + Debug,
+	DRAIN: Clone,
+	PR: Clone,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -171,6 +170,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		T,
 	>;
 	type T = T;
+
 	/// Set the projection builder precision
 	///
 	/// delta is related to clip angle.
@@ -241,8 +241,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	PR: Clone + Debug,
+	PR: Clone,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
@@ -332,8 +331,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Debug,
-	PR: Clone + Debug,
+	PR: Clone,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
