@@ -94,7 +94,6 @@ where
 
 impl<DRAIN, T> Default for AzimuthalEquiDistant<DRAIN, T>
 where
-	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	T: CoordFloat + FloatConst,
 {
 	fn default() -> Self {
@@ -107,7 +106,6 @@ where
 
 impl<DRAIN, T> AzimuthalEquiDistant<DRAIN, T>
 where
-	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	T: CoordFloat + FloatConst,
 {
 	#[inline]
@@ -128,7 +126,6 @@ where
 
 impl<DRAIN, T> Transform for AzimuthalEquiDistant<DRAIN, T>
 where
-	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;

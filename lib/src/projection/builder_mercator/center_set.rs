@@ -39,7 +39,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone,
 	I: Clone + Interpolator<T = T>,
 	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
 	LC: Clone + LineConnected<SC = ResampleClipC<DRAIN, PR, T>> + Stream<EP = DRAIN, T = T>,
