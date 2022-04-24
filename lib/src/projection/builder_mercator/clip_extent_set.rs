@@ -246,7 +246,6 @@ impl<DRAIN, PR, T> ClipExtentSet
 		// CLIP is generic over <.. RC, RU,..>,
 		// So a change in the resample type causes rebuilding of clip.
 		let out = Self::OutputBounded {
-			// p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			base,
 			pr: self.pr,
 			// Mutate stage

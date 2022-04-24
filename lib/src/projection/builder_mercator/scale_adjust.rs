@@ -24,7 +24,6 @@ use crate::projection::TransformExtent;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
