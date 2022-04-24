@@ -28,14 +28,12 @@ use crate::projection::ScaleGet;
 use crate::projection::TransformExtent;
 use crate::rot::rotate_radians;
 use crate::stream::Connected;
-use crate::stream::Stream;
+use crate::stream::Unconnected;
 use crate::Coordinate;
 use crate::Transform;
 
 use super::Builder;
 use super::Reclip;
-
-use crate::stream::Unconnected;
 
 impl<DRAIN, PR, T> Reclip
 	for Builder<
@@ -57,7 +55,6 @@ impl<DRAIN, PR, T> Reclip
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	// DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
 	DRAIN: Clone,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -228,7 +225,7 @@ impl<DRAIN, PR, T> Reclip
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {

@@ -5,7 +5,6 @@ use num_traits::FloatConst;
 
 use crate::clip::rectangle::Rectangle;
 use crate::projection::ClipExtentAdjust;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::template::ClipC;
@@ -15,7 +14,6 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentAdjust
 	for Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
-	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

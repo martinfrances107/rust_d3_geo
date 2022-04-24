@@ -14,7 +14,6 @@ use crate::projection::ScaleGet;
 use crate::projection::TransformExtent;
 use crate::rot::rotate_radians;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -36,7 +35,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone,
 	I: Clone,
 	LB: Clone,
 	LC: Clone,
@@ -101,7 +100,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 		None<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
 		T,
 	> where
-	DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone,
 	I: Clone,
 	LB: Clone,
 	LC: Clone,
