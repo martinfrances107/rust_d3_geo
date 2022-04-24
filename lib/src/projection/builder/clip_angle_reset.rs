@@ -64,7 +64,6 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 			delta_gamma: self.delta_gamma,
 			p_pcnc: self.p_pcnc,
 			rotator: self.rotator,
-			// p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
 			projection_raw: self.projection_raw,
 			postclip: self.postclip,
 			x: self.x,

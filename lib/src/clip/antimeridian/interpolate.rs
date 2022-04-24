@@ -14,7 +14,7 @@ pub struct Interpolate<T> {
 
 impl<T> Default for Interpolate<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     fn default() -> Self {
         Self {
@@ -25,7 +25,7 @@ where
 /// Antimerdian interpolate function.
 impl<T> Interpolator for Interpolate<T>
 where
-    T: 'static + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
     fn interpolate<EP, STREAM>(

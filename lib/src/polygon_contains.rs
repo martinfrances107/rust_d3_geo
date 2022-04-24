@@ -80,7 +80,6 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
                 normalize_in_place(&mut arc);
                 let mut intersection = cross(&normal, &arc);
                 normalize_in_place(&mut intersection);
-                // let phi_arc: T;
                 let phi_arc: T = if antimeridian ^ (delta >= T::zero()) {
                     -asin(intersection[2])
                 } else {

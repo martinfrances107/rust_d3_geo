@@ -10,10 +10,7 @@ use crate::stream::Streamable;
 /// DISAMBIGUATION: Lots of code in common with path/area.rs
 /// but this is true of the Javascript.
 #[derive(Debug, Clone, PartialEq)]
-pub struct Area<T>
-// where
-//     T: CoordFloat,
-{
+pub struct Area<T> {
     lambda00: T,
     phi00: T,
     lambda0: T,

@@ -28,8 +28,6 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
 		.unwrap()
 		.dyn_into::<web_sys::CanvasRenderingContext2d>()?;
 
-	// let context = context_raw;
-
 	let width: f64 = canvas.width().into();
 	let height: f64 = canvas.height().into();
 

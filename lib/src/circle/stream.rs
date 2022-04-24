@@ -15,7 +15,7 @@ use crate::Transform;
 #[derive(Clone, Debug)]
 pub struct Stream<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     coordinates: Vec<Vec<Coordinate<T>>>,
     /// The rotation used to generate the circle stream.
@@ -26,7 +26,7 @@ where
 
 impl<T> Default for Stream<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     #[inline]
     fn default() -> Self {

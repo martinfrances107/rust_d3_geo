@@ -5,10 +5,7 @@ use crate::clip::PointVisible;
 
 /// Circle PV - Point Visible.
 #[derive(Clone, Debug)]
-pub struct PV<T>
-where
-    T: CoordFloat,
-{
+pub struct PV<T> {
     cr: T,
 }
 

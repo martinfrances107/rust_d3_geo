@@ -53,7 +53,7 @@ where
 
 impl<EP, RC, T> Default for Line<EP, RC, Unconnected, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     fn default() -> Self {
         Self {

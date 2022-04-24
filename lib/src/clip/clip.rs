@@ -82,7 +82,6 @@ where
         let state = Connected {
             p_lu: PhantomData::<LU>,
             p_ep: PhantomData::<EP>,
-            // p_sc: PhantomData::<RC>,
             polygon_started: false,
             polygon: Vec::new(),
             ring_sink,

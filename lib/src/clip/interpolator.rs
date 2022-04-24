@@ -1,7 +1,6 @@
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -23,7 +22,7 @@ pub(super) struct Interpolator<T> {
 
 impl<T> Interpolator<T>
 where
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	pub(super) fn new(x0: T, y0: T, x1: T, y1: T) -> Self {
 		Self {
@@ -92,7 +91,7 @@ where
 
 impl<T> InterpolatorTrait for Interpolator<T>
 where
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type T = T;
 

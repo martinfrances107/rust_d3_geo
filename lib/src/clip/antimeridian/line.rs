@@ -21,10 +21,7 @@ use super::intersect::intersect;
 
 /// Antimeridian Line.
 #[derive(Debug, Copy, Clone)]
-pub struct Line<EP, SC, STATE, T>
-// where
-//     T: CoordFloat,
-{
+pub struct Line<EP, SC, STATE, T> {
     state: STATE,
     p_ep: PhantomData<EP>,
     p_sc: PhantomData<SC>,
@@ -97,10 +94,7 @@ where
     }
 }
 
-impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T>
-where
-    T: CoordFloat,
-{
+impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T> {
     type SU = SINK;
 }
 

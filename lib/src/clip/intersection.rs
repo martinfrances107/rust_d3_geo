@@ -31,7 +31,7 @@ where
     pub p: Option<Rc<RefCell<Intersection<'a, T>>>>,
 }
 
-impl<'a, T: Float> Intersection<'a, T>
+impl<'a, T> Intersection<'a, T>
 where
     T: CoordFloat + FloatConst,
 {
