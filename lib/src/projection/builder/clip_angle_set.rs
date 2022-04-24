@@ -41,7 +41,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 	PR: Clone + Transform<T = T>,
 	RC: Clone + Stream<EP = DRAIN, T = T>,
 	RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,

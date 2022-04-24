@@ -39,7 +39,7 @@ pub fn gen_clip_circle<DRAIN, PCNC, PCNU, PR, RC, RU, T>(
 	radius: T,
 ) -> ClipCircleU<DRAIN, PR, RC, RU, T>
 where
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	let cr = radius.cos();
 	let small_radius = cr > T::zero();

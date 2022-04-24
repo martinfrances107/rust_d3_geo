@@ -54,7 +54,7 @@ where
 impl<DRAIN, T> ProjectionRawBase<T> for Equirectangular<DRAIN, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = Builder<
 		DRAIN,

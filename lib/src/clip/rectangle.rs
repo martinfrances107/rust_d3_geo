@@ -84,7 +84,7 @@ where
 
 impl<EP, SINK, T> Rectangle<EP, SINK, Unconnected, T>
 where
-    T: 'static + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     #[inline]
     pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<EP, SINK, Unconnected, T> {

@@ -131,7 +131,7 @@ impl<DRAIN, PR, PV, T>
     >
 where
     PR: Clone + Transform<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.

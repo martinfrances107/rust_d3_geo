@@ -245,7 +245,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type OutputBounded = Builder<
 		DRAIN,
@@ -331,7 +331,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		T,
 	> where
 	PR: Clone,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 

@@ -39,7 +39,7 @@ pub struct Stereographic<DRAIN, T> {
 impl<DRAIN, T> ProjectionRawCommon<T> for Stereographic<DRAIN, T>
 where
     DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 }
 
@@ -58,7 +58,7 @@ where
 impl<DRAIN, T> ProjectionRawBase<T> for Stereographic<DRAIN, T>
 where
     DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
     type Builder = Builder<
