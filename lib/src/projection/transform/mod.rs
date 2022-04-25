@@ -6,7 +6,6 @@ pub mod st;
 pub mod str;
 
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use self::str::Str;
 use scale_translate_rotate::ScaleTranslateRotate;
@@ -16,7 +15,7 @@ use st::St;
 #[inline]
 pub fn generate<T>(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: &T) -> ScaleTranslateRotate<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     if alpha.is_zero() {
         ScaleTranslateRotate::ST(St::new(k, dx, dy, sx, sy))
