@@ -241,7 +241,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	PR: Clone + Transform<T = T>,
+	PR: Clone,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type OutputBounded = Builder<

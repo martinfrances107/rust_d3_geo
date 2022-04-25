@@ -43,16 +43,7 @@ impl<I, LB, LC, LU, PR, PV, RC, RU, T> FitSet
 		RC,
 		RU,
 		T,
-	> where
-	I: Clone,
-	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-	LC: Clone + Debug + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-	LU: Clone + Debug + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-	PR: Transform<T = T>,
-	PV: Clone + Debug,
-	RC: Clone + Debug + Stream<EP = Bounds<T>, T = T>,
-	RU: Debug + Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	>
 {
 	type Output = Builder<
 		Bounds<T>,

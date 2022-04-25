@@ -71,7 +71,7 @@ impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Connectable
     for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type SC = RC;
     type Output = Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, T>, T>;
@@ -131,7 +131,7 @@ where
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Takes a line and cuts into visible segments. Return values used for polygon
     ///
@@ -157,12 +157,11 @@ where
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
     Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, T>, T>
 where
-    I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     PV: PointVisible<T = T>,
     RC: Stream<EP = EP, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     #[inline]
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -272,7 +271,7 @@ where
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     PV: PointVisible<T = T>,
     RC: Stream<EP = EP, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
     type EP = EP;

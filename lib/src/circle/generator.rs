@@ -22,7 +22,7 @@ use super::stream_fn::stream_fn;
 #[derive(Clone, Debug)]
 pub struct Generator<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     center: Coordinate<T>,
     radius: T,
@@ -32,7 +32,7 @@ where
 
 impl<T> Default for Generator<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     #[inline]
     fn default() -> Self {
@@ -72,7 +72,7 @@ where
 
 impl<T> Generator<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Center is used to programe the generator.
     pub fn center(mut self, center: &Coordinate<T>) -> Generator<T> {

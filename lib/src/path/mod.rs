@@ -137,11 +137,11 @@ where
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Area<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     PCNU: Clone + Connectable<Output = PCNC, SC = Area<T>>,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Area<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC>,
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat,
 {
     /// Returns the area of the Path
     /// This operation consumes the  Path.
@@ -169,7 +169,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the bounds of the object
     ///
