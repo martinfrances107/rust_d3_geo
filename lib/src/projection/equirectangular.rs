@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
@@ -13,7 +12,6 @@ use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
 use crate::projection::ScaleAdjust;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -32,10 +30,7 @@ pub struct Equirectangular<DRAIN, T> {
 	p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Default for Equirectangular<DRAIN, T>
-where
-	T: CoordFloat,
-{
+impl<DRAIN, T> Default for Equirectangular<DRAIN, T> {
 	fn default() -> Self {
 		Self {
 			p_drain: PhantomData::<DRAIN>,
@@ -53,8 +48,8 @@ where
 
 impl<DRAIN, T> ProjectionRawBase<T> for Equirectangular<DRAIN, T>
 where
-	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	DRAIN: Clone,
+	T: CoordFloat + FloatConst,
 {
 	type Builder = Builder<
 		DRAIN,
