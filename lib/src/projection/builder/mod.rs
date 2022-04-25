@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;

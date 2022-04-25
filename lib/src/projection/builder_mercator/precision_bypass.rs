@@ -48,7 +48,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 	> where
 	DRAIN: Clone,
 	PR: Clone,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
@@ -103,7 +103,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 	> where
 	DRAIN: Clone,
 	PR: Clone,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
@@ -158,7 +158,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 	> where
 	DRAIN: Clone,
 	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
@@ -208,7 +208,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 	> where
 	DRAIN: Clone,
 	PR: Clone,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,

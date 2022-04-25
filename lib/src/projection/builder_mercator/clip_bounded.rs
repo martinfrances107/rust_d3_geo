@@ -23,7 +23,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentBounded
 where
 	PR: TransformExtent<T>,
 	PV: PointVisible<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type OutputClear =
 		Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, PR, PV, RC, RU, T>;

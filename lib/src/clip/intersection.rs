@@ -3,7 +3,7 @@ use std::rc::Rc;
 
 use derivative::*;
 use geo::CoordFloat;
-use num_traits::{Float, FloatConst};
+use num_traits::FloatConst;
 
 use crate::clip::line_elem::LineElem;
 

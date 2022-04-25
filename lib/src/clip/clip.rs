@@ -2,7 +2,6 @@ use std::collections::VecDeque;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;

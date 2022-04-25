@@ -1,6 +1,5 @@
 use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -53,7 +52,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 	> where
 	DRAIN: Clone,
 	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
@@ -148,7 +147,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 	> where
 	DRAIN: Clone,
 	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
@@ -242,7 +241,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		T,
 	> where
 	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,
@@ -332,7 +331,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		T,
 	> where
 	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat + FloatConst,
 {
 	type Output = Builder<
 		DRAIN,

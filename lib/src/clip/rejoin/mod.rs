@@ -7,8 +7,6 @@ use std::rc::Rc;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use approx::AbsDiffEq;
-
 use crate::abs_diff_eq;
 use crate::clip::intersection::Intersection;
 use crate::clip::rejoin::link::link;

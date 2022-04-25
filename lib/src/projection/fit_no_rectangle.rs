@@ -1,34 +1,34 @@
-use crate::path::Result;
-use crate::projection::ClipExtentBounded;
-use crate::projection::ScaleAdjust;
-use crate::projection::TranslateAdjust;
-use std::fmt::Debug;
+// use crate::path::Result;
+// use crate::projection::ClipExtentBounded;
+// use crate::projection::ScaleAdjust;
+// use crate::projection::TranslateAdjust;
+// use std::fmt::Debug;
 
-use geo::CoordFloat;
-use geo::Coordinate;
-use num_traits::FloatConst;
+// use geo::CoordFloat;
+// use geo::Coordinate;
+// use num_traits::FloatConst;
 
-use crate::clip::buffer::Buffer;
-use crate::clip::Bufferable;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
-use crate::path::bounds::Bounds;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::AbsDiffEq;
-use crate::projection::AsPrimitive;
-use crate::stream::Connectable;
-use crate::stream::Stream;
-use crate::stream::Streamable;
-use crate::Transform;
+// use crate::clip::buffer::Buffer;
+// use crate::clip::Bufferable;
+// use crate::clip::Interpolator;
+// use crate::clip::LineConnected;
+// use crate::clip::PointVisible;
+// use crate::path::bounds::Bounds;
+// use crate::projection::builder::template::ResampleClipC;
+// use crate::projection::builder::template::ResampleClipU;
+// use crate::projection::AbsDiffEq;
+// use crate::projection::AsPrimitive;
+// use crate::stream::Connectable;
+// use crate::stream::Stream;
+// use crate::stream::Streamable;
+// use crate::Transform;
 
-use super::builder::template::ClipC;
-use super::builder::template::ClipU;
-use super::builder::template::NoClipC;
-use super::builder::template::NoClipU;
+// use super::builder::template::ClipC;
+// use super::builder::template::ClipU;
+// use super::builder::template::NoClipC;
+// use super::builder::template::NoClipU;
 
-use super::builder::Builder;
+// use super::builder::Builder;
 
 // type FitBoundsAdjust<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> = Box<
 // 	dyn Fn(
