@@ -38,10 +38,7 @@ where
 
 /// PathString.
 #[derive(Debug, Clone, PartialEq)]
-pub struct String<T>
-// where
-//     T: CoordFloat,
-{
+pub struct String<T> {
     circle: Option<S>,
     line: LineState,
     point: PointState,

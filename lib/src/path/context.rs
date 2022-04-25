@@ -21,10 +21,7 @@ enum LineState {
 
 /// Path Context.
 #[derive(Clone, Debug, PartialEq)]
-pub struct Context<T>
-// where
-//     T: CoordFloat,
-{
+pub struct Context<T> {
     line: LineState,
     point: PointState,
     radius: T,
@@ -60,10 +57,7 @@ where
     }
 }
 
-impl<T> PointRadiusTrait for Context<T>
-where
-    T: CoordFloat,
-{
+impl<T> PointRadiusTrait for Context<T> {
     type T = T;
 
     fn point_radius(&mut self, val: Self::T) {

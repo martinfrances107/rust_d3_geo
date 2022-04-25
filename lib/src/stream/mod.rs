@@ -27,7 +27,6 @@ use crate::rot::rotator_radians::RotatorRadians;
 /// The state before connection.
 #[derive(Clone, Default, Debug)]
 pub struct Unconnected;
-// impl ConnectionState for Unconnected {}
 
 /// State -- Default Connected.
 ///
@@ -39,7 +38,6 @@ pub struct Connected<SINK> {
     pub sink: SINK,
 }
 
-// impl<SINK> ConnectionState for Connected<SINK> where SINK: Clone + Debug {}
 impl<SINK> ConnectedState for Connected<SINK> {
     type Sink = SINK;
     #[inline]
@@ -58,9 +56,6 @@ pub trait Connectable {
     /// Connects to previous pipeline stage.
     fn connect(self, sink: Self::SC) -> Self::Output;
 }
-
-// Base for Unconnected or Connected State.
-// pub trait ConnectionState: Debug + Clone {}
 
 // Marker trait.
 /// Things the implement stream need to assert that
