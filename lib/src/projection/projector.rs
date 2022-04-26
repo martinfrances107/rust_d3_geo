@@ -131,9 +131,9 @@ where
             }
         }
         // Build cache.
-        let postclip_node: PCNC = self.postclip.clone().connect(drain.clone());
+        let postclip_node = self.postclip.clone().connect(drain.clone());
 
-        let resample_node: RC = self.resample.clone().connect(postclip_node);
+        let resample_node = self.resample.clone().connect(postclip_node);
 
         let preclip_node = self.clip.clone().connect(resample_node);
 
