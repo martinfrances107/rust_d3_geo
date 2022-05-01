@@ -9,12 +9,12 @@ use num_traits::FloatConst;
 use web_sys::CanvasRenderingContext2d;
 
 use crate::path::context::Context;
+use crate::path::Path;
 use crate::projection::projector::Projector;
-use crate::projection::ProjectionRawBase;
+use crate::stream::Stream;
 
 use super::context::Context as PathContext;
 use super::string::String;
-use super::Path;
 use super::PointRadiusTrait;
 
 /// Path builder.
@@ -99,6 +99,7 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
+    CS: Stream<EP = CS, T = T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// From the progammed state generate a new projection.
@@ -106,10 +107,7 @@ where
     pub fn build(
         self,
         projection: Projector<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
-    ) -> Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    where
-        PR: ProjectionRawBase<T>,
-    {
+    ) -> Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> {
         Path::new(self.context_stream, projection)
     }
 }

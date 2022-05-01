@@ -35,6 +35,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		RU,
 		T,
 	> where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
 	RC: Clone + Stream<EP = DRAIN, T = T>,
 	RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,

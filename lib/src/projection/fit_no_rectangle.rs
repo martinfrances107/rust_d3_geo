@@ -1,139 +1,112 @@
-// use crate::path::Result;
-// use crate::projection::ClipExtentBounded;
-// use crate::projection::ScaleAdjust;
-// use crate::projection::TranslateAdjust;
-// use std::fmt::Debug;
+//! # fit_no_rectangle.
+//!
+//! 1) No-op: No rectange to remove.
+//! 2) Perform operations.
+//! 3) SWAP -  NoClip for Clip
+//!
+//! # Elsewhere in fit_no_rectangle.
+//!
+//! 1) Removed Post Clip Rectangle.
+//! 2) Perform operations.
+//! 3) Restore Post Clip Rectangle
+//!
 
-// use geo::CoordFloat;
-// use geo::Coordinate;
-// use num_traits::FloatConst;
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::FloatConst;
 
-// use crate::clip::buffer::Buffer;
-// use crate::clip::Bufferable;
-// use crate::clip::Interpolator;
-// use crate::clip::LineConnected;
-// use crate::clip::PointVisible;
-// use crate::path::bounds::Bounds;
-// use crate::projection::builder::template::ResampleClipC;
-// use crate::projection::builder::template::ResampleClipU;
-// use crate::projection::AbsDiffEq;
-// use crate::projection::AsPrimitive;
-// use crate::stream::Connectable;
-// use crate::stream::Stream;
-// use crate::stream::Streamable;
-// use crate::Transform;
+use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::clip::buffer::Buffer;
+use crate::projection::builder::template::ResampleNoClipC;
+use crate::projection::builder::template::ResampleNoClipU;
+use crate::projection::builder::types::BuilderAntimeridianResampleClip;
+use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
+use crate::projection::AbsDiffEq;
+use crate::projection::AsPrimitive;
+use crate::stream::Connected;
+use crate::stream::Stream;
+use crate::stream::Streamable;
+use crate::stream::Unconnected;
+use crate::Transform;
 
-// use super::builder::template::ClipC;
-// use super::builder::template::ClipU;
-// use super::builder::template::NoClipC;
-// use super::builder::template::NoClipU;
+use super::builder::template::ClipC;
+use super::builder::template::ClipU;
+use super::builder::template::NoClipC;
+use super::builder::template::NoClipU;
 
-// use super::builder::Builder;
+use super::builder::Builder;
 
-// type FitBoundsAdjust<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> = Box<
-// 	dyn Fn(
-// 		[Coordinate<T>; 2],
-// 		Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
-// 	) -> Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>,
-// >;
+type FitBoundsAdjust<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> = Box<
+	dyn Fn(
+		[Coordinate<T>; 2],
+		Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
+	) -> Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>,
+>;
 
-// type FitBoundsConvert<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RCIn, RUIn, RCOut, RUOut, T> = Box<
-// 	dyn Fn(
-// 		[Coordinate<T>; 2],
-// 		Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RCIn, RUIn, T>,
-// 	) -> Builder<
-// 		DRAIN,
-// 		I,
-// 		LB,
-// 		LC,
-// 		LU,
-// 		NoClipC<DRAIN, T>,
-// 		NoClipU<DRAIN, T>,
-// 		PR,
-// 		PV,
-// 		RCOut,
-// 		RUOut,
-// 		T,
-// 	>,
-// >;
+type FitBoundsConvert<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RCIn, RUIn, RCOut, RUOut, T> = Box<
+	dyn Fn(
+		[Coordinate<T>; 2],
+		Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RCIn, RUIn, T>,
+	) -> Builder<
+		DRAIN,
+		I,
+		LB,
+		LC,
+		LU,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
+		PR,
+		PV,
+		RCOut,
+		RUOut,
+		T,
+	>,
+>;
 
-// fn fit<I, LB, LC, LU, PR, PV, T>(
-// 	builder: Builder<
-// 		Bounds<T>,
-// 		I,
-// 		LB,
-// 		LC,
-// 		LU,
-// 		ClipC<Bounds<T>, T>,
-// 		ClipU<Bounds<T>, T>,
-// 		PR,
-// 		PV,
-// 		ResampleClipC<Bounds<T>, PR, T>,
-// 		ResampleClipU<Bounds<T>, PR, T>,
-// 		T,
-// 	>,
-// 	fit_bounds: FitBoundsAdjust<
-// 		Bounds<T>,
-// 		I,
-// 		LB,
-// 		LC,
-// 		LU,
-// 		ClipC<Bounds<T>, T>,
-// 		ClipU<Bounds<T>, T>,
-// 		PR,
-// 		PV,
-// 		ResampleClipC<Bounds<T>, PR, T>,
-// 		ResampleClipU<Bounds<T>, PR, T>,
-// 		T,
-// 	>,
-// 	object: &impl Streamable<T = T>,
-// ) -> Builder<
-// 	Bounds<T>,
-// 	I,
-// 	LB,
-// 	LC,
-// 	LU,
-// 	ClipC<Bounds<T>, T>,
-// 	ClipU<Bounds<T>, T>,
-// 	PR,
-// 	PV,
-// 	ResampleClipC<Bounds<T>, PR, T>,
-// 	ResampleClipU<Bounds<T>, PR, T>,
-// 	T,
-// >
-// where
-// 	I: Clone + Interpolator<T = T>,
-// 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-// 	LC: Clone + LineConnected<SC = ResampleClipC<Bounds<T>, PR, T>> + Stream<EP = Bounds<T>, T = T>,
-// 	LU: Connectable<Output = LC, SC = ResampleClipC<Bounds<T>, PR, T>>
-// 		+ Bufferable<Output = LB, T = T>
-// 		+ Clone,
-// 	PR: Transform<T = T>,
-// 	PV: PointVisible<T = T>,
-// 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-// 	match builder.get_clip_extent() {
-// 		Some(clip) => {
-// 			let builder = builder
-// 				.scale(T::from(150.0_f64).unwrap())
-// 				.translate(&Coordinate {
-// 					x: T::zero(),
-// 					y: T::zero(),
-// 				});
-// 			// .clip_extent_clear();
-// 			let bounds_stream = Bounds::default();
-// 			let mut stream_in = builder.build().stream(bounds_stream);
+fn fit<DRAIN, PR, T>(
+	builder: BuilderAntimeridianResampleNoClip<DRAIN, PR, T>,
+	fit_bounds: FitBoundsAdjust<
+		DRAIN,
+		InterpolateAntimeridian<T>,
+		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<
+			DRAIN,
+			ResampleNoClipC<DRAIN, PR, T>,
+			Connected<ResampleNoClipC<DRAIN, PR, T>>,
+			T,
+		>,
+		LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
+		PR,
+		PVAntimeridian<T>,
+		ResampleNoClipC<DRAIN, PR, T>,
+		ResampleNoClipU<DRAIN, PR, T>,
+		T,
+	>,
+	object: &impl Streamable<T = T>,
+) -> BuilderAntimeridianResampleClip<DRAIN, PR, T>
+where
+	DRAIN: Clone + PartialEq + Stream<EP = DRAIN, T = T>,
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	todo!();
+	// let mut builder = builder
+	// 	.scale(T::from(150.0_f64).unwrap())
+	// 	.translate(&Coordinate {
+	// 		x: T::zero(),
+	// 		y: T::zero(),
+	// 	});
+	// let bounds_stream = Bounds::default();
+	// let mut stream_in = builder.build().stream(&bounds_stream);
 
-// 			object.to_stream(&mut stream_in);
-// 			let bounds = stream_in.get_endpoint().result();
-// 			let builder = fit_bounds(bounds, builder);
-// 			// let builder = builder.clip_extent_adjust(&clip);
-// 		}
-// 		None => {}
-// 	};
-
-// 	builder
-// }
+	// object.to_stream(&mut stream_in);
+	// let bounds = stream_in.get_endpoint().result();
+	// builder = fit_bounds(bounds, builder)
+}
 
 // fn fit_convert<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, RCOut, RUOut, T>(
 // 	builder: Builder<
@@ -142,8 +115,8 @@
 // 		LB,
 // 		LC,
 // 		LU,
-// 		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Unconnected, T>,
+// 		ClipC<Bounds<T>, T>,
+// 		ClipU<Bounds<T>, T>,
 // 		PR,
 // 		PV,
 // 		RC,
@@ -152,30 +125,16 @@
 // 	>,
 // 	fit_bounds: FitBoundsConvert<Bounds<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, RC, RU, T>,
 // 	object: &impl Streamable<T = T>,
-// ) -> Builder<
-// 	Bounds<T>,
-// 	I,
-// 	LB,
-// 	LC,
-// 	LU,
-// 	Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 	Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
-// 	PR,
-// 	PV,
-// 	RC,
-// 	RU,
-// 	T,
-// >
+// ) -> Builder<Bounds<T>, I, LB, LC, LU, ClipC<Bounds<T>, T>, ClipU<Bounds<T>, T>, PR, PV, RC, RU, T>
 // where
-// 	// I: Clone,
-// 	// LB: Clone + Debug,
-// 	// LC: Clone + Debug,
-// 	// LU: Clone + Debug,
-// 	RU: Debug,
+// 	I: Clone,
+// 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+// 	LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+// 	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+// 	PV: Clone + Debug,
+// 	RC: Clone + Debug + Stream<EP = Bounds<T>, T = T>,
+// 	RU: Clone + Debug + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>> + Debug,
 // 	PR: Transform<T = T>,
-// 	// PV: Clone + Debug,
-// 	// PCNU: Clone + Debug,
-// 	PCNU: Debug,
 // 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 // {
 // 	// let clip = builder.get_clip_extent();
@@ -196,56 +155,49 @@
 // 	fit_bounds(bounds, builder2)
 // }
 
-// pub(super) fn fit_extent<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T>(
-// 	builder: Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, PR, PV, RC, RU, T>,
-// 	extent: [[T; 2]; 2],
-// 	object: &impl Streamable<T = T>,
-// ) -> Builder<Bounds<T>, I, LB, LC, LU, ClipC<Bounds<T>, T>, ClipU<Bounds<T>, T>, PR, PV, RC, RU, T>
-// where
-// 	I: Clone,
-// 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-// 	LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-// 	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-// 	PV: Clone + Debug,
-// 	RC: Clone + Debug + Stream<EP = Bounds<T>, T = T>,
-// 	RU: Clone + Debug + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>> + Debug,
-// 	PR: Transform<T = T>,
-// 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-// 	let two = T::from(2.0_f64).unwrap();
-// 	let one_five_zero = T::from(150_f64).unwrap();
-// 	fit_extent(
-// 		builder,
-// 		*Box::new(
-// 			move |b: [Coordinate<T>; 2],
-// 			      builder: Builder<
-// 				DRAIN,
-// 				I,
-// 				LB,
-// 				LC,
-// 				LU,
-// 				NoClipC<DRAIN, T>,
-// 				NoClipU<DRAIN, T>,
-// 				PR,
-// 				PV,
-// 				RC,
-// 				RU,
-// 				T,
-// 			>| {
-// 				let w = extent[1][0] - extent[0][0];
-// 				let h = extent[1][1] - extent[0][1];
-// 				let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
-// 				let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
-// 				let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
+// InterpolateAntimeridian<T>,
+// LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+// LineAntimeridian<
+// 	DRAIN,
+// 	ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>,
+// 	Connected<ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>>,
+// 	T,
+// >,
+// LineAntimeridian<DRAIN, ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>, Unconnected, T>,
 
-// 				builder
-// 					.scale(one_five_zero * k)
-// 					.translate(&Coordinate { x, y })
-// 			},
-// 		),
-// 		object,
-// 	)
-// }
+pub(super) fn fit_extent<DRAIN, PR, T>(
+	builder: BuilderAntimeridianResampleNoClip<DRAIN, PR, T>,
+	extent: [[T; 2]; 2],
+	object: &impl Streamable<T = T>,
+) -> BuilderAntimeridianResampleClip<DRAIN, PR, T>
+where
+	DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = T>,
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	let two = T::from(2.0_f64).unwrap();
+	let one_five_zero = T::from(150_f64).unwrap();
+
+	todo!();
+	// fit(
+	// 	builder,
+	// 	*Box::new(
+	// 		move |b: [Coordinate<T>; 2],
+	// 		      builder: BuilderAntimeridianResampleNoClip<DRAIN, PR, T>| {
+	// 			let w = extent[1][0] - extent[0][0];
+	// 			let h = extent[1][1] - extent[0][1];
+	// 			let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
+	// 			let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
+	// 			let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
+
+	// 			builder
+	// 				.scale(one_five_zero * k)
+	// 				.translate(&Coordinate { x, y })
+	// 		},
+	// 	),
+	// 	object,
+	// )
+}
 
 // pub(super) fn fit_size_adjust<I, LB, LC, LU, PR, PV, RC, RU, T>(
 // 	builder: Builder<
@@ -254,8 +206,8 @@
 // 		LB,
 // 		LC,
 // 		LU,
-// 		Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 		Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
+// 		ClipC<Bounds<T>, T>,
+// 		ClipU<Bounds<T>, T>,
 // 		PR,
 // 		PV,
 // 		RC,
@@ -264,20 +216,7 @@
 // 	>,
 // 	size: [T; 2],
 // 	object: &impl Streamable<T = T>,
-// ) -> Builder<
-// 	Bounds<T>,
-// 	I,
-// 	LB,
-// 	LC,
-// 	LU,
-// 	Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 	Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
-// 	PR,
-// 	PV,
-// 	RC,
-// 	RU,
-// 	T,
-// >
+// ) -> Builder<Bounds<T>, I, LB, LC, LU, ClipC<Bounds<T>, T>, ClipU<Bounds<T>, T>, PR, PV, RC, RU, T>
 // where
 // 	I: Clone,
 // 	LB: Clone,
@@ -297,8 +236,8 @@
 // 		LB,
 // 		LC,
 // 		LU,
-// 		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Unconnected, T>,
+// 		ClipC<Bounds<T>, T>,
+// 		ClipU<Bounds<T>, T>,
 // 		PR,
 // 		PV,
 // 		RC,
@@ -307,27 +246,16 @@
 // 	>,
 // 	size: [T; 2],
 // 	object: &impl Streamable<T = T>,
-// ) -> Builder<
-// 	Bounds<T>,
-// 	I,
-// 	LB,
-// 	LC,
-// 	LU,
-// 	Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 	Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
-// 	PR,
-// 	PV,
-// 	RC,
-// 	RU,
-// 	T,
-// >
+// ) -> Builder<Bounds<T>, I, LB, LC, LU, ClipC<Bounds<T>, T>, ClipU<Bounds<T>, T>, PR, PV, RC, RU, T>
 // where
 // 	I: Clone,
-// 	LB: Clone + Debug,
-// 	LC: Clone + Debug,
-// 	PR: Transform<T = T>,
+// 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+// 	LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+// 	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
 // 	PV: Clone + Debug,
-// 	LU: Clone + Debug,
+// 	RC: Clone + Debug + Stream<EP = Bounds<T>, T = T>,
+// 	RU: Clone + Debug + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>> + Debug,
+// 	PR: Transform<T = T>,
 // 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 // {
 // 	fit_extent(builder, [[T::zero(), T::zero()], size], object)
@@ -340,8 +268,8 @@
 // 		LB,
 // 		LC,
 // 		LU,
-// 		Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 		Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
+// 		ClipC<Bounds<T>, T>,
+// 		ClipU<Bounds<T>, T>,
 // 		PR,
 // 		PV,
 // 		RC,
@@ -350,20 +278,7 @@
 // 	>,
 // 	w: T,
 // 	object: &impl Streamable<T = T>,
-// ) -> Builder<
-// 	Bounds<T>,
-// 	I,
-// 	LB,
-// 	LC,
-// 	LU,
-// 	Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 	Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
-// 	PR,
-// 	PV,
-// 	RC,
-// 	RU,
-// 	T,
-// >
+// ) -> Builder<Bounds<T>, I, LB, LC, LU, ClipC<Bounds<T>, T>, ClipU<Bounds<T>, T>, PR, PV, RC, RU, T>
 // where
 // 	I: Clone,
 // 	LB: Clone,
@@ -385,8 +300,8 @@
 // 				LB,
 // 				LC,
 // 				LU,
-// 				Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 				Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
+// 				ClipC<Bounds<T>, T>,
+// 				ClipU<Bounds<T>, T>,
 // 				PR,
 // 				PV,
 // 				RC,
@@ -413,8 +328,8 @@
 // 		LB,
 // 		LC,
 // 		LU,
-// 		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Unconnected, T>,
+// 		ClipC<Bounds<T>, T>,
+// 		ClipU<Bounds<T>, T>,
 // 		PR,
 // 		PV,
 // 		RC,
@@ -423,28 +338,16 @@
 // 	>,
 // 	w: T,
 // 	object: &impl Streamable<T = T>,
-// ) -> Builder<
-// 	Bounds<T>,
-// 	I,
-// 	LB,
-// 	LC,
-// 	LU,
-// 	Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 	Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
-// 	PR,
-// 	PV,
-// 	RC,
-// 	RU,
-// 	T,
-// >
+// ) -> Builder<Bounds<T>, I, LB, LC, LU, ClipC<Bounds<T>, T>, ClipU<Bounds<T>, T>, PR, PV, RC, RU, T>
 // where
-// 	// I: Clone,
-// 	// LB: Clone + Debug,
-// 	// LC: Clone + Debug,
-// 	// LU: Clone + Debug,
-// 	RU: Debug,
-// 	PR: Transform<T = T>,
+// 	I: Clone,
+// 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+// 	LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+// 	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
 // 	PV: Clone + Debug,
+// 	RC: Clone + Debug + Stream<EP = Bounds<T>, T = T>,
+// 	RU: Clone + Debug + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>> + Debug,
+// 	PR: Transform<T = T>,
 // 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 // {
 // 	let two = T::from(2.0_f64).unwrap();
@@ -459,8 +362,8 @@
 // 				LB,
 // 				LC,
 // 				LU,
-// 				Identity<Bounds<T>, Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 				Identity<Bounds<T>, Bounds<T>, Bounds<T>, Unconnected, T>,
+// 				ClipC<Bounds<T>, T>,
+// 				ClipU<Bounds<T>, T>,
 // 				PR,
 // 				PV,
 // 				RC,
@@ -487,8 +390,8 @@
 // 		LB,
 // 		LC,
 // 		LU,
-// 		Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 		Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
+// 		ClipC<Bounds<T>, T>,
+// 		ClipU<Bounds<T>, T>,
 // 		PR,
 // 		PV,
 // 		RC,
@@ -503,8 +406,10 @@
 // 	LB,
 // 	LC,
 // 	LU,
-// 	Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 	Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
+// 	ClipC<Bounds<T>, T>,
+// 	ClipU<Bounds<T>, T>,
+// 	// ClipC<Bounds<T>, T>,
+// 	// ClipU<Bounds<T>, T>,
 // 	PR,
 // 	PV,
 // 	RC,
@@ -533,8 +438,10 @@
 // 				LB,
 // 				LC,
 // 				LU,
-// 				Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 				Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
+// 				ClipC<Bounds<T>, T>,
+// 				ClipU<Bounds<T>, T>,
+// 				// ClipC<Bounds<T>, T>,
+// 				// ClipU<Bounds<T>, T>,
 // 				PR,
 // 				PV,
 // 				RC,
@@ -560,8 +467,8 @@
 // 		LB,
 // 		LC,
 // 		LU,
-// 		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 		Identity<Bounds<T>, Bounds<T>, Bounds<T>, Unconnected, T>,
+// 		NoClipC<Bounds<T>, T>,
+// 		NoClipU<Bounds<T>, T>,
 // 		PR,
 // 		PV,
 // 		RC,
@@ -570,28 +477,16 @@
 // 	>,
 // 	h: T,
 // 	object: &impl Streamable<T = T>,
-// ) -> Builder<
-// 	Bounds<T>,
-// 	I,
-// 	LB,
-// 	LC,
-// 	LU,
-// 	Rectangle<Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 	Rectangle<Bounds<T>, Bounds<T>, Unconnected, T>,
-// 	PR,
-// 	PV,
-// 	RC,
-// 	RU,
-// 	T,
-// >
+// ) -> Builder<Bounds<T>, I, LB, LC, LU, ClipC<Bounds<T>, T>, ClipU<Bounds<T>, T>, PR, PV, RC, RU, T>
 // where
 // 	I: Clone,
-// 	LB: Clone + Debug,
-// 	LC: Clone + Debug,
-// 	LU: Clone + Debug,
-// 	PR: Transform<T = T>,
+// 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+// 	LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+// 	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
 // 	PV: Clone + Debug,
-// 	RU: Debug,
+// 	RC: Clone + Debug + Stream<EP = Bounds<T>, T = T>,
+// 	RU: Clone + Debug + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>> + Debug,
+// 	PR: Transform<T = T>,
 // 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 // {
 // 	let two = T::from(2.0_f64).unwrap();
@@ -606,8 +501,8 @@
 // 				LB,
 // 				LC,
 // 				LU,
-// 				Identity<Bounds<T>, Bounds<T>, Bounds<T>, Connected<Bounds<T>>, T>,
-// 				Identity<Bounds<T>, Bounds<T>, Bounds<T>, Unconnected, T>,
+// 				NoClipC<Bounds<T>, T>,
+// 				NoClipU<Bounds<T>, T>,
 // 				PR,
 // 				PV,
 // 				RC,

@@ -1,3 +1,5 @@
+use crate::projection::ScaleAdjust;
+use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -6,13 +8,7 @@ use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::buffer::Buffer;
-use crate::projection::ScaleAdjust;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
+use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::Transform;
 
 use super::builder::template::NoClipC;
@@ -48,33 +44,10 @@ impl<DRAIN, T> Default for Equirectangular<DRAIN, T> {
 
 impl<DRAIN, T> ProjectionRawBase<T> for Equirectangular<DRAIN, T>
 where
-	DRAIN: Clone,
+	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 	T: CoordFloat + FloatConst,
 {
-	type Builder = Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			DRAIN,
-			ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>,
-			Connected<ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>>,
-			T,
-		>,
-		LineAntimeridian<
-			DRAIN,
-			ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>,
-			Unconnected,
-			T,
-		>,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
-		Equirectangular<DRAIN, T>,
-		PVAntimeridian<T>,
-		ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>,
-		ResampleNoClipU<DRAIN, Equirectangular<DRAIN, T>, T>,
-		T,
-	>;
+	type Builder = BuilderAntimeridianResampleNoClip<DRAIN, Equirectangular<DRAIN, T>, T>;
 	type T = T;
 
 	#[inline]

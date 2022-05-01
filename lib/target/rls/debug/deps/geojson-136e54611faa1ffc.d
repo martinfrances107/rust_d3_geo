@@ -1,0 +1,12 @@
+/home/martin/build/rust_d3_geo/lib/target/rls/debug/deps/geojson-136e54611faa1ffc.rmeta: /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/lib.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/util.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/geojson.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/geometry.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/feature.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/feature_collection.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/feature_iterator.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/errors.rs
+
+/home/martin/build/rust_d3_geo/lib/target/rls/debug/deps/geojson-136e54611faa1ffc.d: /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/lib.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/util.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/geojson.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/geometry.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/feature.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/feature_collection.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/feature_iterator.rs /home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/errors.rs
+
+/home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/lib.rs:
+/home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/util.rs:
+/home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/geojson.rs:
+/home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/geometry.rs:
+/home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/feature.rs:
+/home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/feature_collection.rs:
+/home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/feature_iterator.rs:
+/home/martin/.cargo/registry/src/github.com-1ecc6299db9ec823/geojson-0.22.3/src/errors.rs:

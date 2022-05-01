@@ -32,6 +32,7 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 		RU,
 		T,
 	> where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	RC: Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

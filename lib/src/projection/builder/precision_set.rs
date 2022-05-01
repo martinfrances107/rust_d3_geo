@@ -1,3 +1,4 @@
+use crate::stream::Stream;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -42,6 +43,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		None<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -142,6 +144,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 		None<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
 		T,
 	> where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

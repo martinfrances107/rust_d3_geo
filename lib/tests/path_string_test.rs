@@ -2,6 +2,7 @@
 #[cfg(test)]
 mod path_string_test {
 
+    use rust_d3_geo::projection::TranslateAdjust;
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
@@ -28,46 +29,21 @@ mod path_string_test {
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::path::PointRadiusTrait;
-    use rust_d3_geo::projection::builder::template::NoClipC;
-    use rust_d3_geo::projection::builder::template::NoClipU;
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
     use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::orthographic::Orthographic;
-    use rust_d3_geo::projection::projector::Projector;
+    use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleAdjust;
-    use rust_d3_geo::projection::TranslateAdjust;
     use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
     use rust_d3_geo::stream::Unconnected;
 
     #[inline]
-    fn equirectangular<T>() -> Projector<
-        PathString<T>,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<
-            PathString<T>,
-            ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-            Connected<ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>>,
-            T,
-        >,
-        LineAntimeridian<
-            PathString<T>,
-            ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-            Unconnected,
-            T,
-        >,
-        NoClipC<PathString<T>, T>,
-        NoClipU<PathString<T>, T>,
-        Equirectangular<PathString<T>, T>,
-        PVAntimeridian<T>,
-        ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-        ResampleNoneNoClipU<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-        T,
-    >
+    fn equirectangular<T>(
+    ) -> ProjectorAntimeridianResampleNoneNoClip<PathString<T>, Equirectangular<PathString<T>, T>, T>
     where
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
@@ -79,30 +55,12 @@ mod path_string_test {
 
     #[inline]
     fn test_path<'a, T>(
-        projection: Projector<
+        projection: ProjectorAntimeridianResampleNoneNoClip<
             PathString<T>,
-            InterpolateAntimeridian<T>,
-            LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-            LineAntimeridian<
-                PathString<T>,
-                ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-                Connected<ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>>,
-                T,
-            >,
-            LineAntimeridian<
-                PathString<T>,
-                ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-                Unconnected,
-                T,
-            >,
-            NoClipC<PathString<T>, T>,
-            NoClipU<PathString<T>, T>,
             Equirectangular<PathString<T>, T>,
-            PVAntimeridian<T>,
-            ResampleNoneNoClipC<PathString<T>, Equirectangular<PathString<T>, T>, T>,
-            ResampleNoneNoClipU<PathString<T>, Equirectangular<PathString<T>, T>, T>,
             T,
         >,
+
         object: impl Streamable<T = T>,
     ) -> String
     where

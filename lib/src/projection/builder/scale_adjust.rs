@@ -1,38 +1,19 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::resampler::none::None as ResampleNone;
+use crate::projection::builder::types::BuilderAntimeridianResampleClip;
+use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
+use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
+use crate::projection::builder::types::BuilderAntimeridianResampleNoneNoClip;
+use crate::projection::builder::types::BuilderCircleResampleClip;
+use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ScaleAdjust;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
+use crate::stream::Stream;
 use crate::Transform;
 
-use super::template::ResampleClipC;
-use super::template::ResampleClipU;
-use super::Builder;
-use super::ClipC;
-use super::ClipU;
-use super::NoClipC;
-use super::NoClipU;
-use super::ResampleNoClipC;
-use super::ResampleNoClipU;
-
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> ScaleAdjust
-    for Builder<
-        DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
-        NoClipC<DRAIN, T>,
-        NoClipU<DRAIN, T>,
-        PR,
-        PV,
-        ResampleNoClipC<DRAIN, PR, T>,
-        ResampleNoClipU<DRAIN, PR, T>,
-        T,
-    >
+impl<DRAIN, PR, T> ScaleAdjust for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -44,22 +25,9 @@ where
     }
 }
 
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> ScaleAdjust
-    for Builder<
-        DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
-        ClipC<DRAIN, T>,
-        ClipU<DRAIN, T>,
-        PR,
-        PV,
-        ResampleClipC<DRAIN, PR, T>,
-        ResampleClipU<DRAIN, PR, T>,
-        T,
-    >
+impl<DRAIN, PR, T> ScaleAdjust for BuilderAntimeridianResampleClip<DRAIN, PR, T>
 where
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -71,22 +39,9 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
-    for Builder<
-        DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
-        PCNC,
-        PCNU,
-        PR,
-        PV,
-        ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-        ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-        T,
-    >
+impl<DRAIN, PR, T> ScaleAdjust for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -97,3 +52,73 @@ where
         self.recenter_no_resampling()
     }
 }
+
+impl<DRAIN, PR, T> ScaleAdjust for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
+where
+    DRAIN: Stream<EP = DRAIN, T = T>,
+    PR: Clone + Transform<T = T>,
+    T: CoordFloat + FloatConst,
+{
+    type T = T;
+
+    fn scale(mut self, scale: T) -> Self {
+        self.k = scale;
+        self.recenter_no_resampling()
+    }
+}
+
+impl<DRAIN, PR, T> ScaleAdjust for BuilderCircleResampleNoClip<DRAIN, PR, T>
+where
+    DRAIN: Stream<EP = DRAIN, T = T>,
+    PR: Clone + Transform<T = T>,
+    T: CoordFloat + FloatConst,
+{
+    type T = T;
+
+    fn scale(mut self, scale: T) -> Self {
+        self.k = scale;
+        self.recenter_with_resampling()
+    }
+}
+
+impl<DRAIN, PR, T> ScaleAdjust for BuilderCircleResampleClip<DRAIN, PR, T>
+where
+    DRAIN: Stream<EP = DRAIN, T = T>,
+    PR: Clone + Transform<T = T>,
+    T: CoordFloat + FloatConst,
+{
+    type T = T;
+
+    fn scale(mut self, scale: T) -> Self {
+        self.k = scale;
+        self.recenter_with_resampling()
+    }
+}
+
+// impl<DRAIN, PR, T> ScaleAdjust for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
+// where
+//     DRAIN: Stream<EP = DRAIN, T = T>,
+//     PR: Clone + Transform<T = T>,
+//     T: CoordFloat + FloatConst,
+// {
+//     type T = T;
+
+//     fn scale(mut self, scale: T) -> Self {
+//         self.k = scale;
+//         self.recenter_no_resampling()
+//     }
+// }
+
+// impl<DRAIN, PR, T> ScaleAdjust for BuilderCircleResampleNoneClip<DRAIN, PR, T>
+// where
+//     DRAIN: Stream<EP = DRAIN, T = T>,
+//     PR: Clone + Transform<T = T>,
+//     T: CoordFloat + FloatConst,
+// {
+//     type T = T;
+
+//     fn scale(mut self, scale: T) -> Self {
+//         self.k = scale;
+//         self.recenter_no_resampling()
+//     }
+// }

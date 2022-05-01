@@ -1,14 +1,13 @@
+use crate::stream::Stream;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::ResampleClipC;
 use crate::projection::builder::ResampleClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
-use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::ReflectSet;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::template::ClipC;
@@ -102,21 +101,9 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
 }
 
 // TODO must split itnto NoClip / Clip
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ReflectSet
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		PCNC,
-		PCNU,
-		PR,
-		PV,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-		T,
-	> where
+impl<DRAIN, PR, T> ReflectSet for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
+where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: CoordFloat + FloatConst,
 {

@@ -1,47 +1,25 @@
+use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::ClipC;
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::resampler::none::None;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::ClipExtentAdjust;
 use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
 use crate::projection::TransformExtent;
 use crate::rot::rotate_radians;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
+
 use crate::Transform;
 
-use super::Builder;
 use super::ReclipAdjust;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		ClipC<DRAIN, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PV,
-		ResampleClipC<DRAIN, PR, T>,
-		ResampleClipU<DRAIN, PR, T>,
-		T,
-	> where
-	DRAIN: Clone,
-	I: Clone,
-	LB: Clone,
-	LC: Clone,
-	LU: Clone,
+impl<DRAIN, PR, T> ReclipAdjust for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
+where
+	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
-	PV: Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	fn reclip_adjust(mut self) -> Self {
@@ -85,30 +63,11 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 	}
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		ClipC<DRAIN, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PV,
-		None<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Connected<ClipC<DRAIN, T>>, T>,
-		None<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>,
-		T,
-	> where
-	DRAIN: Clone,
-	I: Clone,
-	LB: Clone,
-	LC: Clone,
-	LU: Clone,
+impl<DRAIN, PR, T> ReclipAdjust for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
+where
+	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
-	PV: Clone,
-
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	fn reclip_adjust(mut self) -> Self {
 		let k = T::PI() * self.get_scale();
@@ -145,6 +104,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReclipAdjust
 				},
 			],
 		};
+
 		self.base = self.base.clip_extent_adjust(&ce);
 		self
 	}

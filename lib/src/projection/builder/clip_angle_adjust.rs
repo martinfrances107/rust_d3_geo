@@ -1,3 +1,4 @@
+use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -28,6 +29,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 		RU,
 		T,
 	> where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

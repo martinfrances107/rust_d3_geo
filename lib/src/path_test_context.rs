@@ -9,7 +9,7 @@ pub struct TestContext {
 }
 
 #[cfg(not(tarpaulin_include))]
-/// stub for web_sys rendering context.
+/// Stub for web_sys rendering context.
 pub trait RenderingContext2d<T>
 where
     T: CoordFloat,

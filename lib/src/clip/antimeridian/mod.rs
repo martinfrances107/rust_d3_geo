@@ -7,6 +7,7 @@ pub mod pv;
 
 mod intersect;
 
+use crate::stream::Stream;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -37,6 +38,7 @@ type ClipAntimeridianU<DRAIN, PR, RC, RU, T> = Clip<
 pub fn gen_clip_antimeridian<DRAIN, PCNC, PCNU, PR, RC, RU, T>(
 ) -> ClipAntimeridianU<DRAIN, PR, RC, RU, T>
 where
+    DRAIN: Stream<EP = DRAIN, T = T>,
     T: CoordFloat + FloatConst,
 {
     let interpolate = Interpolate::default();

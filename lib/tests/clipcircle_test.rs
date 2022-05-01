@@ -13,6 +13,7 @@ mod clipcircle_test {
     use regex::Regex;
 
     use rust_d3_geo::path::builder::Builder as PathBuilder;
+    use rust_d3_geo::path::string::String;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::ClipAngleAdjust;
     use rust_d3_geo::projection::ProjectionRawBase;
@@ -39,7 +40,8 @@ mod clipcircle_test {
             .clip_angle(170_f64)
             .build();
 
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder: PathBuilder<String<f64>, _, _, _, _, _, _, _, _, _, _, f64> =
+            PathBuilder::context_pathstring();
 
         let s = path_builder.build(projector).object(&d);
         let rounded = ROUND_DOWN.replace_all(&s, "");

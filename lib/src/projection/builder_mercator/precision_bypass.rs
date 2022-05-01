@@ -1,10 +1,11 @@
+use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimerdian;
+use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
@@ -21,6 +22,7 @@ use crate::projection::builder::template::ResampleNoneClipC;
 use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::builder::template::ResampleNoneNoClipC;
 use crate::projection::builder::template::ResampleNoneNoClipU;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::PrecisionBypass;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
@@ -41,12 +43,12 @@ impl<DRAIN, PR, T> PrecisionBypass
 		NoClipC<DRAIN, T>,
 		NoClipU<DRAIN, T>,
 		PR,
-		PVAntimerdian<T>,
+		PVAntimeridian<T>,
 		ResampleNoClipC<DRAIN, PR, T>,
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone,
+	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 	PR: Clone,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -64,7 +66,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		NoClipC<DRAIN, T>,
 		NoClipU<DRAIN, T>,
 		PR,
-		PVAntimerdian<T>,
+		PVAntimeridian<T>,
 		ResampleNoneNoClipC<DRAIN, PR, T>,
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
@@ -96,34 +98,16 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ClipC<DRAIN, T>,
 		ClipU<DRAIN, T>,
 		PR,
-		PVAntimerdian<T>,
+		PVAntimeridian<T>,
 		ResampleClipC<DRAIN, PR, T>,
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone,
+	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 	PR: Clone,
 	T: CoordFloat + FloatConst,
 {
-	type Output = Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			DRAIN,
-			ResampleNoneClipC<DRAIN, PR, T>,
-			Connected<ResampleNoneClipC<DRAIN, PR, T>>,
-			T,
-		>,
-		LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
-		ClipC<DRAIN, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PVAntimerdian<T>,
-		ResampleNoneClipC<DRAIN, PR, T>,
-		ResampleNoneClipU<DRAIN, PR, T>,
-		T,
-	>;
+	type Output = BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>;
 	type T = T;
 
 	fn precision_bypass(self) -> Self::Output {
@@ -156,7 +140,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone,
+	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 	PR: Clone,
 	T: CoordFloat + FloatConst,
 {
@@ -206,7 +190,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone,
+	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 	PR: Clone,
 	T: CoordFloat + FloatConst,
 {

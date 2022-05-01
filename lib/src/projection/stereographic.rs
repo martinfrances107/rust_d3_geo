@@ -6,14 +6,10 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::buffer::Buffer;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
+use crate::projection::builder::types::BuilderCircleResampleNoClip;
+use crate::projection::ClipAngleSet;
 use crate::projection::ScaleAdjust;
-use crate::stream::Connected;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
@@ -22,7 +18,6 @@ use super::builder::template::NoClipU;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
 use super::builder::Builder;
-use super::ClipAngleSet;
 use super::ProjectionRawBase;
 use super::ProjectionRawCommon;
 
@@ -61,25 +56,8 @@ where
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
-    type Builder = Builder<
-        DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<
-            DRAIN,
-            ResampleNoClipC<DRAIN, Stereographic<DRAIN, T>, T>,
-            Connected<ResampleNoClipC<DRAIN, Stereographic<DRAIN, T>, T>>,
-            T,
-        >,
-        LineCircle<DRAIN, ResampleNoClipC<DRAIN, Stereographic<DRAIN, T>, T>, Unconnected, T>,
-        NoClipC<DRAIN, T>,
-        NoClipU<DRAIN, T>,
-        Stereographic<DRAIN, T>,
-        PVCircle<T>,
-        ResampleNoClipC<DRAIN, Stereographic<DRAIN, T>, T>,
-        ResampleNoClipU<DRAIN, Stereographic<DRAIN, T>, T>,
-        T,
-    >;
+    type Builder = BuilderCircleResampleNoClip<DRAIN, Stereographic<DRAIN, T>, T>;
+
     #[inline]
     fn builder() -> Self::Builder {
         let clip = gen_clip_antimeridian::<

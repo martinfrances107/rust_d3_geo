@@ -1,3 +1,4 @@
+use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -6,10 +7,6 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::buffer::Buffer;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
 use crate::math::acos;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
@@ -17,9 +14,7 @@ use crate::projection::builder::Builder;
 use crate::projection::ClipAngleSet;
 use crate::projection::ProjectionRawBase;
 use crate::projection::ScaleAdjust;
-use crate::stream::Connected;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
@@ -49,30 +44,7 @@ where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type Builder = Builder<
-		DRAIN,
-		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<
-			DRAIN,
-			ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-			Connected<ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>>,
-			T,
-		>,
-		LineCircle<
-			DRAIN,
-			ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-			Unconnected,
-			T,
-		>,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
-		AzimuthalEquiDistant<DRAIN, T>,
-		PVCircle<T>,
-		ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-		ResampleNoClipU<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-		T,
-	>;
+	type Builder = BuilderCircleResampleNoClip<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>;
 	type T = T;
 
 	#[inline]

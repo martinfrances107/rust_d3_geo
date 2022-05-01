@@ -6,18 +6,9 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimerdian;
-use crate::clip::buffer::Buffer;
-use crate::projection::builder::template::ClipC;
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
 use crate::projection::builder_mercator::ScaleSet;
-use crate::stream::Connected;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::builder_mercator::Builder as MercatorBuilder;
@@ -46,25 +37,7 @@ where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	type Builder = MercatorBuilder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			DRAIN,
-			ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>,
-			Connected<ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>>,
-			T,
-		>,
-		LineAntimeridian<DRAIN, ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>, Unconnected, T>,
-		ClipC<DRAIN, T>,
-		ClipU<DRAIN, T>,
-		Mercator<DRAIN, T>,
-		PVAntimerdian<T>,
-		ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>,
-		ResampleClipU<DRAIN, Mercator<DRAIN, T>, T>,
-		T,
-	>;
+	type Builder = BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN, T>, T>;
 	type T = T;
 
 	#[inline]

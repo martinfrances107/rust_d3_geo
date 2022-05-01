@@ -1,3 +1,5 @@
+use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
+use crate::stream::Stream;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
@@ -50,7 +52,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone,
+	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 	PR: Clone,
 	T: CoordFloat + FloatConst,
 {
@@ -145,29 +147,11 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone,
+	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 	PR: Clone,
 	T: CoordFloat + FloatConst,
 {
-	type Output = Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			DRAIN,
-			ResampleNoneClipC<DRAIN, PR, T>,
-			Connected<ResampleNoneClipC<DRAIN, PR, T>>,
-			T,
-		>,
-		LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
-		ClipC<DRAIN, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PVAntimeridian<T>,
-		ResampleNoneClipC<DRAIN, PR, T>,
-		ResampleNoneClipU<DRAIN, PR, T>,
-		T,
-	>;
+	type Output = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
 	type T = T;
 
 	/// Set the projection builder precision
@@ -240,6 +224,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone,
 	T: CoordFloat + FloatConst,
 {
@@ -330,6 +315,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone,
 	T: CoordFloat + FloatConst,
 {

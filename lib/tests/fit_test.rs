@@ -5,47 +5,43 @@ mod fit_test {
 	extern crate pretty_assertions;
 	extern crate rust_topojson_client;
 
+	// use rust_d3_geo::projection::FitSet;
+	// use rust_d3_geo::projection::ScaleGet;
+	// use rust_d3_geo::projection::TranslateGet;
 	use std::fs::File;
 
-	use geo::polygon;
-	use geo::Coordinate;
+	// use geo::polygon;
 	use geo::Geometry;
-	use pretty_assertions::assert_eq;
 	use topojson::Topology;
 
-	use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
-	use rust_d3_geo::projection::gnomic::Gnomic;
-	use rust_d3_geo::projection::orthographic::Orthographic;
-	use rust_d3_geo::projection::stereographic::Stereographic;
-	use rust_d3_geo::projection::ProjectionRawBase;
+	// use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
 
-	use rust_d3_geo::data_object::sphere::Sphere;
-	use rust_d3_geo::in_delta::in_delta;
-	use rust_d3_geo::in_delta::in_delta_coordinate;
-	use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
-	use rust_d3_geo::projection::equirectangular::Equirectangular;
-	use rust_d3_geo::projection::mercator::Mercator;
+	// use rust_d3_geo::projection::mercator::Mercator;
 	use rust_topojson_client::feature::Builder;
 
-	// Helper function to extract world geometry from file.
-	fn world() -> Geometry<f64> {
-		let file =
-			File::open("./tests/world-atlas/world/50m.json").expect("File should open read only.");
-		let topology: Topology =
-			serde_json::from_reader(file).expect("File should be parse as JSON.");
+	//  Helper function to extract world geometry from file.
+	// fn world() -> Geometry<f64> {
+	// 	let file =
+	// 		File::open("./tests/world-atlas/world/50m.json").expect("File should open read only.");
+	// 	let topology: Topology =
+	// 		serde_json::from_reader(file).expect("File should be parse as JSON.");
 
-		if let Some(g) = Builder::generate_from_name(&topology, &"land") {
-			return g;
-		} else {
-			panic!("failed to file and decode from file.");
-		}
-	}
+	// 	if let Some(g) = Builder::generate_from_name(&topology, &"land") {
+	// 		return g;
+	// 	} else {
+	// 		panic!("failed to file and decode from file.");
+	// 	}
+	// }
 
 	// #[test]
 	// fn fit_extent_sphere_equirectangular() {
 	// 	println!("projection.fitExtent(…) sphere equirectangular");
 	// 	let d_object = Sphere::default();
-	// 	let projection = Equirectangular::builder();
+	// 	let projection: BuilderAntimeridianResampleNoClip<
+	// 		StreamDrainStub<f64>,
+	// 		Equirectangular<StreamDrainStub<f64>, f64>,
+	// 		f64,
+	// 	> = Equirectangular::builder();
 
 	// 	let projection =
 	// 		projection.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &d_object);

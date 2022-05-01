@@ -1,3 +1,16 @@
+//! # fit_rectangle.
+//!
+//! 1) Removed Post Clip Rectangle.
+//! 2) Perform operations.
+//! 3) Restore Post Clip Rectangle
+//!
+//! # Elsewhere  in fit_no_rectangle.
+//!
+//! 1) No-op: No rectange to remove.
+//! 2) Perform operations.
+//! 3) SWAP -  implies inserting PostClip Rectangle.
+//!
+
 use approx::AbsDiffEq;
 use num_traits::AsPrimitive;
 use std::fmt::Debug;
@@ -13,25 +26,17 @@ use crate::clip::PointVisible;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::NoClipC;
-use crate::projection::builder_mercator::TranslateSet;
-use crate::projection::TranslateAdjust;
-// use crate::projection::ClipC;
 use crate::projection::ClipExtentBounded;
 use crate::projection::ClipExtentSet;
-// use crate::projection::ClipU;
 use crate::projection::FitBounds;
 use crate::projection::FloatConst;
 use crate::projection::ScaleAdjust;
-// use crate::projection::ScaleSet;
+use crate::projection::TranslateAdjust;
 use crate::stream::Connectable;
 use crate::stream::Pipeline;
 use crate::stream::Stream;
 use crate::stream::Streamable;
-use crate::Transform;
 
-// 1) Removed Post Clip Rectangle.
-// 2) Perform operations.
-// 3) Restore Post Clip Rectangle
 pub(super) fn fit_rectangle<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
 	builder: B,
 	fit_bounds: FitBounds<Bint, T>,

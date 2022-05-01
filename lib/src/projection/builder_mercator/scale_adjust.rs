@@ -4,66 +4,23 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::buffer::Buffer;
-use crate::clip::Bufferable;
-use crate::clip::Clean;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
-use crate::projection::builder::template::ClipC;
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::template::ResampleNoneClipC;
-use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::resampler::none::None as ResampleNone;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::ScaleAdjust;
 use crate::projection::TransformExtent;
-use crate::stream::Connectable;
-use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::Builder;
 use super::ReclipAdjust;
 
 // TODO: Must vary by :-
 // ResampleNoClipC/U,
 // ResampleNoneNocClipC/U
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		ClipC<DRAIN, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PV,
-		ResampleClipC<DRAIN, PR, T>,
-		ResampleClipU<DRAIN, PR, T>,
-		T,
-	> where
+impl<DRAIN, PR, T> ScaleAdjust for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
+where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-	I: Clone + Interpolator<T = T>,
-	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
-	LC: Clone
-		+ LineConnected<SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>
-		+ Stream<EP = DRAIN, T = T>,
-	LU: Clone
-		+ Debug
-		+ Connectable<
-			Output = LC,
-			SC = Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-		> + Bufferable<Output = LB, T = T>,
-	PCNC: Clone + Debug,
-	PCNU: Clone + Debug,
-	PR: Clone + Debug + Transform<T = T> + TransformExtent<T>,
-	PV: Clone + PointVisible<T = T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
@@ -71,54 +28,13 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> ScaleAdjust
 	fn scale(mut self, scale: T) -> Self {
 		self.base = self.base.scale(scale);
 		self.reclip_adjust()
-		// self
 	}
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleAdjust
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		ClipC<DRAIN, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PV,
-		ResampleNoneClipC<DRAIN, PR, T>,
-		ResampleNoneClipU<DRAIN, PR, T>,
-		T,
-	> where
+impl<DRAIN, PR, T> ScaleAdjust for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
+where
 	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
-	I: Clone + Interpolator<T = T>,
-	LB: Clone + Debug + LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
-	LC: Clone
-		+ LineConnected<
-			SC = ResampleNone<
-				DRAIN,
-				PR,
-				ClipC<DRAIN, T>,
-				ClipU<DRAIN, T>,
-				Connected<ClipC<DRAIN, T>>,
-				T,
-			>,
-		> + Stream<EP = DRAIN, T = T>,
-	LU: Clone
-		+ Debug
-		+ Connectable<
-			Output = LC,
-			SC = ResampleNone<
-				DRAIN,
-				PR,
-				ClipC<DRAIN, T>,
-				ClipU<DRAIN, T>,
-				Connected<ClipC<DRAIN, T>>,
-				T,
-			>,
-		> + Bufferable<Output = LB, T = T>,
 	PR: Clone + Debug + Transform<T = T> + TransformExtent<T>,
-	PV: Clone + PointVisible<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

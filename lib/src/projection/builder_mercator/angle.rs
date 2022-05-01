@@ -1,3 +1,4 @@
+use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -9,14 +10,13 @@ use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::builder_mercator::Builder;
 use crate::projection::builder_mercator::ResampleNoClipC;
 use crate::projection::builder_mercator::ResampleNoClipU;
-use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::AngleGet;
 use crate::projection::AngleSet;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
+
 use crate::Transform;
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
@@ -94,21 +94,9 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 	}
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		PCNC,
-		PCNU,
-		PR,
-		PV,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-		T,
-	> where
+impl<DRAIN, PR, T> AngleSet for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
+where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {

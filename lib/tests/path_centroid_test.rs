@@ -4,6 +4,7 @@ mod path_centroid_test {
 
     extern crate pretty_assertions;
 
+    use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
@@ -24,10 +25,6 @@ mod path_centroid_test {
     use num_traits::FloatConst;
 
     use rust_d3_geo::clip::antimeridian::gen_clip_antimeridian;
-    use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-    use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
-    use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
-    use rust_d3_geo::clip::buffer::Buffer;
     use rust_d3_geo::in_delta::in_delta_point;
     use rust_d3_geo::path::centroid::Centroid;
     use rust_d3_geo::path::Path;
@@ -35,42 +32,15 @@ mod path_centroid_test {
     use rust_d3_geo::projection::builder::template::NoClipU;
     use rust_d3_geo::projection::builder::template::ResampleNoClipC;
     use rust_d3_geo::projection::builder::template::ResampleNoClipU;
-    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
-    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ScaleAdjust;
-    use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
-    use rust_d3_geo::stream::Unconnected;
 
     #[inline]
-    fn equirectangular<T>() -> Projector<
-        Centroid<T>,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<
-            Centroid<T>,
-            ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-            Connected<ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>>,
-            T,
-        >,
-        LineAntimeridian<
-            Centroid<T>,
-            ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-            Unconnected,
-            T,
-        >,
-        NoClipC<Centroid<T>, T>,
-        NoClipU<Centroid<T>, T>,
-        Equirectangular<Centroid<T>, T>,
-        PVAntimeridian<T>,
-        ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-        ResampleNoneNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-        T,
-    >
+    fn equirectangular<T>(
+    ) -> ProjectorAntimeridianResampleNoneNoClip<Centroid<T>, Equirectangular<Centroid<T>, T>, T>
     where
         T: AbsDiffEq<Epsilon = T>
             + AddAssign<T>
@@ -97,28 +67,9 @@ mod path_centroid_test {
 
     #[inline]
     fn test_centroid<'a, T>(
-        projection: Projector<
+        projection: ProjectorAntimeridianResampleNoneNoClip<
             Centroid<T>,
-            InterpolateAntimeridian<T>,
-            LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-            LineAntimeridian<
-                Centroid<T>,
-                ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-                Connected<ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>>,
-                T,
-            >,
-            LineAntimeridian<
-                Centroid<T>,
-                ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-                Unconnected,
-                T,
-            >,
-            NoClipC<Centroid<T>, T>,
-            NoClipU<Centroid<T>, T>,
             Equirectangular<Centroid<T>, T>,
-            PVAntimeridian<T>,
-            ResampleNoneNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-            ResampleNoneNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
             T,
         >,
 

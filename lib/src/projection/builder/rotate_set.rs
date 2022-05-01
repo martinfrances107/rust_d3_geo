@@ -1,12 +1,18 @@
+use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::pv::PV as PVAntimeridian;
+use crate::projection::builder::template::ResampleNoneClipC;
+use crate::projection::builder::template::ResampleNoneClipU;
+use crate::projection::builder::Buffer;
 use crate::projection::builder::ResampleClipC;
 use crate::projection::builder::ResampleClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
-use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::RotateSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
@@ -82,22 +88,28 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> RotateSet
+impl<DRAIN, PR, T> RotateSet
     for Builder<
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
-        PCNC,
-        PCNU,
+        InterpolateAntimeridian<T>,
+        LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+        LineAntimeridian<
+            DRAIN,
+            ResampleNoneClipC<DRAIN, PR, T>,
+            Connected<ResampleNoneClipC<DRAIN, PR, T>>,
+            T,
+        >,
+        LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
+        ClipC<DRAIN, T>,
+        ClipU<DRAIN, T>,
         PR,
-        PV,
-        ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-        ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
+        PVAntimeridian<T>,
+        ResampleNoneClipC<DRAIN, PR, T>,
+        ResampleNoneClipU<DRAIN, PR, T>,
         T,
     >
 where
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

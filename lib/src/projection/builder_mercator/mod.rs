@@ -23,10 +23,13 @@ pub mod scale_set;
 pub mod translate_adjust;
 pub mod translate_get;
 pub mod translate_set;
+pub mod types;
 
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
+
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -35,9 +38,6 @@ use num_traits::FloatConst;
 use std::fmt::Debug;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
@@ -46,7 +46,6 @@ use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Projector;
-use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
@@ -107,26 +106,8 @@ where
 	pub extent: Option<[Coordinate<T>; 2]>, // post-clip extent
 }
 
-impl<DRAIN, PR, T>
-	Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			DRAIN,
-			ResampleNoClipC<DRAIN, PR, T>,
-			Connected<ResampleNoClipC<DRAIN, PR, T>>,
-			T,
-		>,
-		LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
-		PR,
-		PVAntimeridian<T>,
-		ResampleNoClipC<DRAIN, PR, T>,
-		ResampleNoClipU<DRAIN, PR, T>,
-		T,
-	> where
+impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
+where
 	DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,

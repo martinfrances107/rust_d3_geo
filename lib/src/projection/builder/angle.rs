@@ -1,13 +1,18 @@
+use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
+use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
+use crate::projection::builder::template::ResampleNoneClipC;
+use crate::projection::builder::template::ResampleNoneClipU;
+use crate::projection::builder::Buffer;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
-use crate::projection::resampler::none::None as ResampleNone;
-use crate::projection::AngleGet;
 use crate::projection::AngleSet;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
@@ -18,22 +23,6 @@ use super::template::ClipU;
 use super::template::NoClipC;
 use super::template::NoClipU;
 use super::Builder;
-
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
-    for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-where
-    T: CoordFloat + FloatConst,
-{
-    /// f64 or f32.
-    type T = T;
-
-    /// Returns the projection’s post-projection planar rotation angle.
-    /// defaults to 0°.
-    #[inline]
-    fn get_angle(&self) -> Self::T {
-        self.alpha.to_degrees()
-    }
-}
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
     for Builder<
@@ -89,22 +78,28 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> AngleSet
+impl<DRAIN, PR, T> AngleSet
     for Builder<
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
-        PCNC,
-        PCNU,
+        InterpolateAntimeridian<T>,
+        LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+        LineAntimeridian<
+            DRAIN,
+            ResampleNoneClipC<DRAIN, PR, T>,
+            Connected<ResampleNoneClipC<DRAIN, PR, T>>,
+            T,
+        >,
+        LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
+        ClipC<DRAIN, T>,
+        ClipU<DRAIN, T>,
         PR,
-        PV,
-        ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-        ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
+        PVAntimeridian<T>,
+        ResampleNoneClipC<DRAIN, PR, T>,
+        ResampleNoneClipU<DRAIN, PR, T>,
         T,
     >
 where
+    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

@@ -1,3 +1,4 @@
+use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -11,10 +12,8 @@ use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
-use crate::projection::resampler::none::None as ResampleNone;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::ReflectSet;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
@@ -125,21 +124,9 @@ impl<DRAIN, INTERPOLATE, LB, LC, LU, PR, PV, T> ReflectSet
 	}
 }
 
-impl<DRAIN, INTERPOLATE, LB, LC, LU, PCNC, PCNU, PR, PV, T> ReflectSet
-	for Builder<
-		DRAIN,
-		INTERPOLATE,
-		LB,
-		LC,
-		LU,
-		PCNC,
-		PCNU,
-		PR,
-		PV,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
-		ResampleNone<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
-		T,
-	> where
+impl<DRAIN, PR, T> ReflectSet for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
+where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

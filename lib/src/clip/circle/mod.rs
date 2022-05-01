@@ -7,6 +7,7 @@ pub mod line;
 /// Holds the clip circle point visible function.
 pub mod pv;
 
+use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use interpolate::Interpolate;
@@ -39,6 +40,7 @@ pub fn gen_clip_circle<DRAIN, PCNC, PCNU, PR, RC, RU, T>(
 	radius: T,
 ) -> ClipCircleU<DRAIN, PR, RC, RU, T>
 where
+	DRAIN: Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	let cr = radius.cos();

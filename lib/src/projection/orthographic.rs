@@ -6,19 +6,14 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::buffer::Buffer;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
 use crate::math::asin;
 use crate::math::EPSILON;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
+use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ClipAngleSet;
 use crate::projection::ScaleAdjust;
-use crate::stream::Connected;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::builder::template::ResampleNoClipC;
@@ -60,27 +55,9 @@ where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type Builder = Builder<
-		DRAIN,
-		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<
-			DRAIN,
-			ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>,
-			Connected<ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>>,
-			T,
-		>,
-		LineCircle<DRAIN, ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>, Unconnected, T>,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
-		Orthographic<DRAIN, T>,
-		PVCircle<T>,
-		ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>,
-		ResampleNoClipU<DRAIN, Orthographic<DRAIN, T>, T>,
-		T,
-	>;
-
+	type Builder = BuilderCircleResampleNoClip<DRAIN, Orthographic<DRAIN, T>, T>;
 	type T = T;
+
 	#[inline]
 	fn builder() -> Self::Builder {
 		let clip = gen_clip_antimeridian::<

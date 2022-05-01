@@ -21,7 +21,10 @@ use super::intersect::intersect;
 
 /// Antimeridian Line.
 #[derive(Debug, Copy, Clone)]
-pub struct Line<EP, SC, STATE, T> {
+pub struct Line<EP, SC, STATE, T>
+where
+    EP: Stream<EP = EP, T = T>,
+{
     state: STATE,
     p_ep: PhantomData<EP>,
     p_sc: PhantomData<SC>,
@@ -35,6 +38,7 @@ pub struct Line<EP, SC, STATE, T> {
 // Added when I found it was useful for type corercion.
 impl<EP, RC, T> Default for Line<EP, RC, Unconnected, T>
 where
+    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     #[inline]
@@ -54,6 +58,7 @@ where
 
 impl<EP, SC, T> Bufferable for Line<EP, SC, Unconnected, T>
 where
+    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type Output = Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
@@ -75,6 +80,7 @@ where
 
 impl<EP, SC, T> Connectable for Line<EP, SC, Unconnected, T>
 where
+    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type Output = Line<EP, SC, Connected<SC>, T>;
@@ -94,12 +100,16 @@ where
     }
 }
 
-impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T> {
+impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T>
+where
+    EP: Stream<EP = EP, T = T>,
+{
     type SU = SINK;
 }
 
 impl<EP, SINK, T> LineConnected for Line<EP, SINK, Connected<SINK>, T>
 where
+    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type SC = SINK;
@@ -111,6 +121,7 @@ where
 
 impl<EP, SINK, T> Clean for Line<EP, SINK, Connected<SINK>, T>
 where
+    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     #[inline]
@@ -121,6 +132,7 @@ where
 
 impl<EP, SINK, T> Stream for Line<EP, SINK, Connected<SINK>, T>
 where
+    EP: Stream<EP = EP, T = T>,
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {

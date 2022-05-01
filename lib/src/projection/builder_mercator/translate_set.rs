@@ -15,10 +15,9 @@ use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::template::ResampleNoneClipC;
-use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::builder::template::ResampleNoneNoClipC;
 use crate::projection::builder::template::ResampleNoneNoClipU;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::builder_mercator::Buffer;
 use crate::projection::builder_mercator::ResampleNoClipC;
 use crate::projection::builder_mercator::ResampleNoClipU;
@@ -110,25 +109,7 @@ impl<DRAIN, PR, T> TranslateSet
 	T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
-	type Output = Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			DRAIN,
-			ResampleNoneClipC<DRAIN, PR, T>,
-			Connected<ResampleNoneClipC<DRAIN, PR, T>>,
-			T,
-		>,
-		LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
-		ClipC<DRAIN, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PVAntimeridian<T>,
-		ResampleNoneClipC<DRAIN, PR, T>,
-		ResampleNoneClipU<DRAIN, PR, T>,
-		T,
-	>;
+	type Output = BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>;
 
 	#[inline]
 	fn translate(mut self, t: &Coordinate<T>) -> Self::Output {

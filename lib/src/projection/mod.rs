@@ -217,7 +217,7 @@ pub trait ClipExtentAdjust {
 
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
-pub trait FitConvert {
+pub trait FitSet {
     type Output;
     /// f64 or f32.
     type T;
@@ -242,7 +242,7 @@ pub trait FitConvert {
     ///  x₁ is the right and y₁ is the bottom.
     /// @param object A geographic feature supported by d3-geo
     ///   (An extension of GeoJSON feature).
-    fn fit_extent_convert(
+    fn fit_extent(
         self,
         extent: [[Self::T; 2]; 2],
         object: &impl Streamable<T = Self::T>,
@@ -257,23 +257,19 @@ pub trait FitConvert {
     ///
     ///  @param size The size of the extent, specified as an array [width, height].
     ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-    fn fit_size_convert(
-        self,
-        size: [Self::T; 2],
-        object: &impl Streamable<T = Self::T>,
-    ) -> Self::Output
+    fn fit_size(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self::Output
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_width_convert(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    fn fit_width(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_height_convert(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
@@ -393,13 +389,14 @@ pub trait ClipAngleSet {
     fn clip_angle(self, angle: Self::T) -> Self::Output;
 }
 
-/// Alters the clip angle on a projector builder previously configured to use
-///  circle based clipping.
-/// A projection builder sub trait.
 pub trait ClipAngleAdjust
 where
     <Self as ClipAngleAdjust>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + Debug + FloatConst,
 {
+    /// Alters the clip angle on a projector builder previously configured to use
+    ///  circle based clipping.
+    /// A projection builder sub trait.
+
     /// f64 or f32
     type T;
 
@@ -408,9 +405,10 @@ where
     fn clip_angle(self, angle: Self::T) -> Self;
 }
 
-/// Returns or sets the x or y reflection.
-/// A projection builder sub trait.
 pub trait ReflectGet {
+    /// Returns or sets the x or y reflection.
+    /// A projection builder sub trait.
+
     /// f64 or f32.
     type T;
 

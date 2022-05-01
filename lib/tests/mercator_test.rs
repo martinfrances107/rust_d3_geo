@@ -8,6 +8,7 @@ mod mercator_tests {
 	use pretty_assertions::assert_eq;
 	use rust_d3_geo::data_object::sphere::Sphere;
 	use rust_d3_geo::path::builder::Builder as PathBuilder;
+	use rust_d3_geo::path::string::String as PathString;
 	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::ClipExtentAdjust;
 	use rust_d3_geo::projection::ClipExtentBounded;
@@ -91,7 +92,8 @@ mod mercator_tests {
 
 		let projection = projection_builder.build();
 
-		let path_builder = PathBuilder::context_pathstring();
+		let path_builder: PathBuilder<PathString<f64>, _, _, _, _, _, _, _, _, _, _, f64> =
+			PathBuilder::context_pathstring();
 
 		let object = Sphere::default();
 

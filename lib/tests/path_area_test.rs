@@ -2,8 +2,6 @@
 #[cfg(test)]
 mod path_area_test {
 
-	use rust_d3_geo::projection::builder::template::NoClipC;
-	use rust_d3_geo::projection::builder::template::NoClipU;
 	use std::f64::consts::PI;
 	use std::fmt::Display;
 	use std::ops::AddAssign;
@@ -25,13 +23,13 @@ mod path_area_test {
 	use rust_d3_geo::data_object::sphere::Sphere;
 	use rust_d3_geo::path::area::Area;
 	use rust_d3_geo::path::builder::Builder as PathBuilder;
-	use rust_d3_geo::projection::builder::template::ResampleNoClipC;
-	use rust_d3_geo::projection::builder::template::ResampleNoClipU;
+	use rust_d3_geo::projection::builder::template::NoClipC;
+	use rust_d3_geo::projection::builder::template::NoClipU;
 	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
 	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
-	use rust_d3_geo::projection::builder::Builder;
+	use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleNoClip;
 	use rust_d3_geo::projection::equirectangular::Equirectangular;
-	use rust_d3_geo::projection::projector::Projector;
+	use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
 	use rust_d3_geo::projection::PrecisionBypass;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ScaleAdjust;
@@ -40,57 +38,13 @@ mod path_area_test {
 	use rust_d3_geo::stream::Unconnected;
 
 	#[inline]
-	fn equirectangular<T>() -> Projector<
-		Area<T>,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			Area<T>,
-			ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-			Connected<ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>>,
-			T,
-		>,
-		LineAntimeridian<
-			Area<T>,
-			ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-			Unconnected,
-			T,
-		>,
-		NoClipC<Area<T>, T>,
-		NoClipU<Area<T>, T>,
-		Equirectangular<Area<T>, T>,
-		PVAntimeridian<T>,
-		ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-		ResampleNoneNoClipU<Area<T>, Equirectangular<Area<T>, T>, T>,
-		T,
-	>
+	fn equirectangular<T>(
+	) -> ProjectorAntimeridianResampleNoneNoClip<Area<T>, Equirectangular<Area<T>, T>, T>
 	where
 		T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 	{
-		let ba: Builder<
-			Area<T>,
-			InterpolateAntimeridian<T>,
-			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<
-				Area<T>,
-				ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-				Connected<ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>>,
-				T,
-			>,
-			LineAntimeridian<
-				Area<T>,
-				ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-				Unconnected,
-				T,
-			>,
-			NoClipC<Area<T>, T>,
-			NoClipU<Area<T>, T>,
-			Equirectangular<Area<T>, T>,
-			rust_d3_geo::clip::antimeridian::pv::PV<T>,
-			ResampleNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-			ResampleNoClipU<Area<T>, Equirectangular<Area<T>, T>, T>,
-			T,
-		> = Equirectangular::<Area<T>, T>::builder().scale(T::from(900f64 / PI).unwrap());
+		let ba: BuilderAntimeridianResampleNoClip<Area<T>, Equirectangular<Area<T>, T>, T> =
+			Equirectangular::<Area<T>, T>::builder().scale(T::from(900f64 / PI).unwrap());
 
 		let builder = ba.precision_bypass();
 		let out = builder.build();
@@ -100,28 +54,9 @@ mod path_area_test {
 
 	#[inline]
 	fn test_area<'a, T>(
-		projection: Projector<
+		projection: ProjectorAntimeridianResampleNoneNoClip<
 			Area<T>,
-			InterpolateAntimeridian<T>,
-			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-			LineAntimeridian<
-				Area<T>,
-				ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-				Connected<ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>>,
-				T,
-			>,
-			LineAntimeridian<
-				Area<T>,
-				ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-				Unconnected,
-				T,
-			>,
-			NoClipC<Area<T>, T>,
-			NoClipU<Area<T>, T>,
 			Equirectangular<Area<T>, T>,
-			PVAntimeridian<T>,
-			ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-			ResampleNoneNoClipU<Area<T>, Equirectangular<Area<T>, T>, T>,
 			T,
 		>,
 		object: impl Streamable<T = T>,
