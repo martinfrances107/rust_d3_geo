@@ -38,13 +38,17 @@ pub mod data_object;
 pub mod distance;
 /// A graticule is a network of lines used for plotting, scaling.
 pub mod graticule;
+/// A stream pipeline stage
+pub mod identity;
 /// Testing and Debug helpers.
 pub mod in_delta;
 /// Stream end point: Calculation of object lengths.
 pub mod length;
+/// Mathematical constants.
+pub mod math;
 /// Stream end point: Calculation of paths to a string or rendering context.
 pub mod path;
-/// Determins when points are located inside data objects.
+/// Determines when points are located inside data objects.
 pub mod polygon_contains;
 /// Holds proctions and associated builders.
 pub mod projection;
@@ -52,11 +56,6 @@ pub mod projection;
 pub mod rot;
 /// Stream related helper functions.
 pub mod stream;
-
-/// Mathematical constants.
-pub mod math;
-
-pub mod identity;
 
 /// 2-D Transform common to projections and, rotations.
 ///
