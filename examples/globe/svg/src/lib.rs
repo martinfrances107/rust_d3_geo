@@ -14,6 +14,8 @@ extern crate web_sys;
 use geo::Coordinate;
 use geo::Geometry;
 use geo::GeometryCollection;
+use rust_d3_geo::projection::RotateSet;
+use rust_d3_geo::projection::TranslateAdjust;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
@@ -26,9 +28,7 @@ use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::string::String as PathString;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::RotateSet;
 use rust_d3_geo::projection::ScaleAdjust;
-use rust_d3_geo::projection::TranslateAdjust;
 use rust_topojson_client::feature::Builder as FeatureBuilder;
 
 use topojson::Topology;
