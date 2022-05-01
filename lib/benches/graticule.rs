@@ -5,9 +5,14 @@ extern crate pretty_assertions;
 use criterion::Criterion;
 use geo::{Coordinate, Geometry, LineString, MultiLineString};
 use pretty_assertions::assert_eq;
+
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
+use rust_d3_geo::projection::ProjectionRawBase;
+use rust_d3_geo::projection::RotateSet;
+use rust_d3_geo::projection::ScaleAdjust;
+use rust_d3_geo::projection::TranslateAdjust;
 
 /// This benchmark is based on examples/graticule
 ///
@@ -21,12 +26,12 @@ fn graticule() {
 		y: height / 2_f64,
 	};
 
-	let ortho_builder = Orthographic::<LineString<f64>, f64>::builder();
-	let ortho = ortho_builder
+	let ortho = Orthographic::builder()
 		.scale(240_f64)
 		.translate(&center)
 		.rotate(&[0_f64, -20_f64, 0_f64])
 		.build();
+
 	let mut pb = PathBuilder::context_pathstring().build(ortho);
 
 	let lines: Vec<LineString<f64>> = generate_graticule::<f64>().lines().collect();

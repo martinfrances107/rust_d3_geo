@@ -34,9 +34,7 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
 	let context = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
-	let azimuthal_equal_area_builder = AzimuthalEqualArea::<Context<f64>, f64>::builder();
-
-	let azimuthal_equal_area = azimuthal_equal_area_builder
+	let azimuthal_equal_area = AzimuthalEqualArea::builder()
 		.scale(width as f64 / 3_f64)
 		.translate(&Coordinate {
 			x: width / 2_f64,

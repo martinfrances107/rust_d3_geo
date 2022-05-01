@@ -33,9 +33,7 @@ pub async fn draw_orthographic(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let context = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
-	let ortho_builder = Orthographic::<Context<f64>, f64>::builder();
-
-	let ortho = ortho_builder
+	let ortho = Orthographic::builder()
 		.scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
 		.translate(&Coordinate {
 			x: width / 2_f64,

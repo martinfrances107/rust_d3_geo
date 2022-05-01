@@ -25,7 +25,6 @@ use web_sys::*;
 mod dom_macros;
 
 use rust_d3_geo::path::builder::Builder as PathBuilder;
-use rust_d3_geo::path::string::String as PathString;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::ScaleAdjust;
@@ -122,15 +121,14 @@ pub async fn start() -> Result<(), JsValue> {
     let countries = FeatureBuilder::generate_from_name(&topology, "countries")
         .expect("Did not extract geometry");
 
-    let ortho_builder = Orthographic::<PathString<f64>, f64>::builder()
+    let ortho = Orthographic::builder()
         .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
         .translate(&Coordinate {
             x: width / 2_f64,
             y: height / 2_f64,
         })
-        .rotate(&[270_f64, 0_f64, 0_f64]);
-
-    let ortho = ortho_builder.build();
+        .rotate(&[270_f64, 0_f64, 0_f64])
+        .build();
 
     let fill: [&str; 7] = [
         "fill: red",

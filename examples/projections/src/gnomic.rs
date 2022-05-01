@@ -35,9 +35,7 @@ pub async fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let context: Context<f64> = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
-	let gnomic_builder = Gnomic::<Context<f64>, f64>::builder();
-
-	let gnomic = gnomic_builder
+	let gnomic = Gnomic::builder()
 		.scale(width / 6_f64)
 		.translate(&Coordinate {
 			x: width / 2_f64,

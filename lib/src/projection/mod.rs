@@ -15,37 +15,38 @@ use crate::rot::rotate_radians::RotateRadians;
 use crate::stream::Streamable;
 use crate::Transform;
 
-/// Helper functions.
-pub mod azimuthal;
 /// The raw projection.
 pub mod azimuthal_equal_area;
 /// The raw projection.
 pub mod azimuthal_equidistant;
-/// The default projection builder.
-pub mod builder;
-/// A specalised builder wrapping the default mecator.
-pub mod builder_mercator;
 /// The raw projection.
 pub mod equirectangular;
 /// The raw projection.
 pub mod gnomic;
-/// The raw projection.alArea
+/// The raw projection.
 pub mod mercator;
 /// The raw projection.
 pub mod orthographic;
+/// The raw projection.
+pub mod stereographic;
+
+/// The default projection builder.
+pub mod builder;
+/// A specalised builder wrapping the default mecator.
+pub mod builder_mercator;
 /// Debug and test helper function.
 pub mod projection_equal;
 /// Projection object.
 pub mod projector;
 /// Resample based on a given precision.
 pub mod resampler;
-/// The raw projection.
-pub mod stereographic;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
 /// Scale translate and rotate.
 pub mod transform;
 
+/// Helper functions.
+mod azimuthal;
 /// Helper functions found measuring the extent, width or height.
 mod fit_no_rectangle;
 mod fit_rectangle;

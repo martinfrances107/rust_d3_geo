@@ -35,9 +35,7 @@ pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let context: Context<f64> = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
-	let stereographic_builder = Stereographic::<Context<f64>, f64>::builder();
-
-	let sterographic = stereographic_builder
+	let stereographic = Stereographic::builder()
 		.scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
 		.translate(&Coordinate {
 			x: width / 2_f64,
@@ -47,7 +45,7 @@ pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
 		.precision(&10_f64)
 		.build();
 
-	let mut path = pb.build(sterographic);
+	let mut path = pb.build(stereographic);
 	context_raw.set_stroke_style(&"#69b3a2".into());
 	path.object(land);
 	context_raw.stroke();

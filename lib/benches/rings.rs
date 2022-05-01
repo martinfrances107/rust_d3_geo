@@ -22,14 +22,13 @@ fn rings() {
 	let width = 1000_f64;
 	let height = 1000_f64;
 
-	let ortho_builder = Orthographic::<_, f64>::builder()
+	let ortho = Orthographic::<_, f64>::builder()
 		.scale(240_f64)
 		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
-		});
-
-	let ortho = ortho_builder.build();
+		})
+		.build();
 
 	let cg_outer = CircleGenerator::default().radius(10_f64).precision(10_f64);
 	let cg_inner = CircleGenerator::default().radius(5_f64).precision(5_f64);

@@ -28,12 +28,12 @@ pub fn draw_sterographic() -> Result<()> {
     let width = svg.width().base_val().value()? as f64;
     let height = svg.height().base_val().value()? as f64;
 
-    let stereographic_builder = Stereographic::<_, f64>::builder().translate(&Coordinate {
-        x: width / 2_f64,
-        y: height / 2_f64,
-    });
-
-    let sterographic = stereographic_builder.build();
+    let stereographic = Stereographic::<_, f64>::builder()
+        .translate(&Coordinate {
+            x: width / 2_f64,
+            y: height / 2_f64,
+        })
+        .build();
 
     let cg_outer = CircleGenerator::default().radius(10_f64).precision(10_f64);
     let cg_inner = CircleGenerator::default().radius(5_f64).precision(5_f64);
@@ -73,7 +73,7 @@ pub fn draw_sterographic() -> Result<()> {
 
     let object = MultiPolygon(p_vec);
 
-    let mut path = PathBuilder::context_pathstring().build(sterographic);
+    let mut path = PathBuilder::context_pathstring().build(stereographic);
     let s = path.object(&object);
 
     let class_name = format!("s2-id-{}", 0);

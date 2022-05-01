@@ -35,9 +35,7 @@ pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsVa
 	let context: Context<f64> = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
-	let ortho_builder = AzimuthalEquiDistant::<Context<f64>, f64>::builder();
-
-	let azimuthal_equidistant = ortho_builder
+	let projector = AzimuthalEquiDistant::<Context<f64>, f64>::builder()
 		.scale(width as f64 / 3_f64)
 		.translate(&Coordinate {
 			x: width / 2_f64,
@@ -47,7 +45,7 @@ pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsVa
 		.precision(&10_f64)
 		.build();
 
-	let mut path = pb.build(azimuthal_equidistant);
+	let mut path = pb.build(projector);
 	context_raw.set_stroke_style(&"#69b3a2".into());
 	path.object(land);
 	context_raw.stroke();

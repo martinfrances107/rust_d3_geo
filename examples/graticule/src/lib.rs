@@ -103,16 +103,15 @@ fn update_canvas(document: &Document) -> Result<()> {
 	let context: Context<f64> = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
-	let ortho_builder = Orthographic::builder()
+	let ortho = Orthographic::builder()
 		.scale(240_f64)
 		.rotate(&[0_f64, -20_f64, 0_f64])
 		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.clip_angle(90_f64 + 1e-6);
-
-	let ortho = ortho_builder.build();
+		.clip_angle(90_f64 + 1e-6)
+		.build();
 
 	let mut path = pb.build(ortho);
 
@@ -163,8 +162,6 @@ fn update_svg_mls(document: &Document) -> Result<()> {
 	let width = svg.width().base_val().value()? as f64;
 	let height = svg.height().base_val().value()? as f64;
 
-	let ortho_builder = Orthographic::builder();
-
 	let stroke: [&str; 7] = [
 		"stroke: red",
 		"stroke: orange",
@@ -175,9 +172,7 @@ fn update_svg_mls(document: &Document) -> Result<()> {
 		"stroke: black",
 	];
 	console_log!("Have builder");
-	// for angle in 0 {
-	// TODO Code small ortho_builder.clone() can reuse this object as expected.
-	let ortho = ortho_builder
+	let ortho = Orthographic::builder()
 		.scale(240_f64)
 		.translate(&Coordinate {
 			x: width / 2_f64,
@@ -185,6 +180,7 @@ fn update_svg_mls(document: &Document) -> Result<()> {
 		})
 		.rotate(&[0_f64, -20_f64, 0_f64])
 		.build();
+
 	let mut pb = PathBuilder::context_pathstring().build(ortho);
 
 	let lines: Vec<LineString<f64>> = generate_graticule::<f64>().lines().collect();
@@ -222,8 +218,6 @@ fn update_svg_polygon(document: &Document) -> Result<()> {
 		"stroke: black",
 	];
 	console_log!("Have builder");
-	// for angle in 0 {
-	// TODO Code small ortho_builder.clone() can reuse this object as expected.
 	let ortho = Orthographic::builder()
 		.scale(240_f64)
 		.translate(&Coordinate {
@@ -276,9 +270,7 @@ fn update_svg_multipolygon(document: &Document) -> Result<()> {
 		"stroke: black",
 	];
 	console_log!("Have builder");
-	// for angle in 0 {
-	// TODO Code small ortho_builder.clone() can reuse this object as expected.
-	let ortho = Orthographic::<_, f64>::builder()
+	let ortho = Orthographic::builder()
 		.scale(240_f64)
 		.translate(&Coordinate {
 			x: width / 2_f64,

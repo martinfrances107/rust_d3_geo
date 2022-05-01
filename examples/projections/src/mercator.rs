@@ -35,9 +35,7 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let context = Context::new(context_raw.clone());
 	let pb = PathBuilder::new(context);
 
-	let mercator_builder = Mercator::<Context<f64>, f64>::builder();
-
-	let mercator = mercator_builder
+	let mercator = Mercator::builder()
 		.scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
 		.translate(&Coordinate {
 			x: width / 2_f64,

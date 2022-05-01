@@ -37,9 +37,7 @@ pub async fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let context = Context::new(context);
 	let pb = PathBuilder::new(context);
 
-	let equirectangular_builder = Equirectangular::<Context<f64>, f64>::builder();
-
-	let equirectangular = equirectangular_builder
+	let equirectangular = Equirectangular::builder()
 		.scale(width as f64 / 1.5_f64 / std::f64::consts::PI)
 		.rotate(&[0_f64, 0_f64, 0_f64])
 		.center(&Coordinate { x: 0_f64, y: 0_f64 })

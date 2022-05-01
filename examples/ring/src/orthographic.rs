@@ -29,14 +29,13 @@ pub fn draw_orthographic() -> Result<()> {
 	let width = svg.width().base_val().value()? as f64;
 	let height = svg.height().base_val().value()? as f64;
 
-	let ortho_builder = Orthographic::builder()
+	let ortho = Orthographic::builder()
 		.translate(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.rotate(&[0_f64, 0_f64, 0_f64]);
-
-	let ortho = ortho_builder.build();
+		.rotate(&[0_f64, 0_f64, 0_f64])
+		.build();
 
 	let cg_outer = CircleGenerator::default().radius(10_f64).precision(10_f64);
 	let cg_inner = CircleGenerator::default().radius(5_f64).precision(5_f64);
