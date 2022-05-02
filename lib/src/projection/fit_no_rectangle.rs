@@ -11,101 +11,80 @@
 //! 3) Restore Post Clip Rectangle
 //!
 
-use geo::CoordFloat;
-use geo::Coordinate;
-use num_traits::FloatConst;
-
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::buffer::Buffer;
-use crate::projection::builder::template::ResampleNoClipC;
-use crate::projection::builder::template::ResampleNoClipU;
+use crate::path::bounds::Bounds;
+use crate::path::Result;
 use crate::projection::builder::types::BuilderAntimeridianResampleClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
-use crate::projection::AbsDiffEq;
-use crate::projection::AsPrimitive;
-use crate::stream::Connected;
+use approx::AbsDiffEq;
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::AsPrimitive;
+use num_traits::FloatConst;
+
+use crate::projection::ClipExtentSet;
+use crate::projection::ScaleAdjust;
+use crate::projection::TranslateAdjust;
 use crate::stream::Stream;
 use crate::stream::Streamable;
-use crate::stream::Unconnected;
 use crate::Transform;
-
-use super::builder::template::ClipC;
-use super::builder::template::ClipU;
-use super::builder::template::NoClipC;
-use super::builder::template::NoClipU;
 
 use super::builder::Builder;
 
-type FitBoundsAdjust<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> = Box<
-	dyn Fn(
-		[Coordinate<T>; 2],
-		Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
-	) -> Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>,
->;
+// type FitBoundsAdjust<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> = Box<
+// 	dyn Fn(
+// 		[Coordinate<T>; 2],
+// 		Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>,
+// 	) -> Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>,
+// >;
 
-type FitBoundsConvert<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RCIn, RUIn, RCOut, RUOut, T> = Box<
-	dyn Fn(
-		[Coordinate<T>; 2],
-		Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RCIn, RUIn, T>,
-	) -> Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
-		PR,
-		PV,
-		RCOut,
-		RUOut,
-		T,
-	>,
->;
+// type FitBoundsConvert<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RCIn, RUIn, RCOut, RUOut, T> = Box<
+// 	dyn Fn(
+// 		[Coordinate<T>; 2],
+// 		Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RCIn, RUIn, T>,
+// 	) -> Builder<
+// 		DRAIN,
+// 		I,
+// 		LB,
+// 		LC,
+// 		LU,
+// 		NoClipC<DRAIN, T>,
+// 		NoClipU<DRAIN, T>,
+// 		PR,
+// 		PV,
+// 		RCOut,
+// 		RUOut,
+// 		T,
+// 	>,
+// >;
 
-fn fit<DRAIN, PR, T>(
-	builder: BuilderAntimeridianResampleNoClip<DRAIN, PR, T>,
-	fit_bounds: FitBoundsAdjust<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			DRAIN,
-			ResampleNoClipC<DRAIN, PR, T>,
-			Connected<ResampleNoClipC<DRAIN, PR, T>>,
-			T,
-		>,
-		LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
-		PR,
-		PVAntimeridian<T>,
-		ResampleNoClipC<DRAIN, PR, T>,
-		ResampleNoClipU<DRAIN, PR, T>,
-		T,
+fn fit<PR, T>(
+	builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
+	fit_bounds: Box<
+		dyn Fn(
+			[Coordinate<T>; 2],
+			BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
+		) -> BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
 	>,
 	object: &impl Streamable<T = T>,
-) -> BuilderAntimeridianResampleClip<DRAIN, PR, T>
+) -> BuilderAntimeridianResampleClip<Bounds<T>, PR, T>
 where
-	DRAIN: Clone + PartialEq + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	todo!();
-	// let mut builder = builder
-	// 	.scale(T::from(150.0_f64).unwrap())
-	// 	.translate(&Coordinate {
-	// 		x: T::zero(),
-	// 		y: T::zero(),
-	// 	});
-	// let bounds_stream = Bounds::default();
-	// let mut stream_in = builder.build().stream(&bounds_stream);
+	let builder = builder
+		.scale(T::from(150.0_f64).unwrap())
+		.translate(&Coordinate {
+			x: T::zero(),
+			y: T::zero(),
+		});
+	let bounds_stream = Bounds::<T>::default();
+	let mut stream_in = builder.build().stream(&bounds_stream);
 
-	// object.to_stream(&mut stream_in);
-	// let bounds = stream_in.get_endpoint().result();
-	// builder = fit_bounds(bounds, builder)
+	object.to_stream(&mut stream_in);
+	let bounds = stream_in.get_endpoint().result();
+	let builder = fit_bounds(bounds, builder);
+
+	builder.clip_extent(&bounds)
 }
 
 // fn fit_convert<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, RCOut, RUOut, T>(
@@ -165,38 +144,37 @@ where
 // >,
 // LineAntimeridian<DRAIN, ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>, Unconnected, T>,
 
-pub(super) fn fit_extent<DRAIN, PR, T>(
-	builder: BuilderAntimeridianResampleNoClip<DRAIN, PR, T>,
+pub(super) fn fit_extent<PR, T>(
+	builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
 	extent: [[T; 2]; 2],
 	object: &impl Streamable<T = T>,
-) -> BuilderAntimeridianResampleClip<DRAIN, PR, T>
+) -> BuilderAntimeridianResampleClip<Bounds<T>, PR, T>
 where
-	DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = T>,
+	// DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	let two = T::from(2.0_f64).unwrap();
 	let one_five_zero = T::from(150_f64).unwrap();
 
-	todo!();
-	// fit(
-	// 	builder,
-	// 	*Box::new(
-	// 		move |b: [Coordinate<T>; 2],
-	// 		      builder: BuilderAntimeridianResampleNoClip<DRAIN, PR, T>| {
-	// 			let w = extent[1][0] - extent[0][0];
-	// 			let h = extent[1][1] - extent[0][1];
-	// 			let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
-	// 			let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
-	// 			let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
+	fit(
+		builder,
+		Box::new(
+			move |b: [Coordinate<T>; 2],
+			      builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>| {
+				let w = extent[1][0] - extent[0][0];
+				let h = extent[1][1] - extent[0][1];
+				let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
+				let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
+				let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
 
-	// 			builder
-	// 				.scale(one_five_zero * k)
-	// 				.translate(&Coordinate { x, y })
-	// 		},
-	// 	),
-	// 	object,
-	// )
+				builder
+					.scale(one_five_zero * k)
+					.translate(&Coordinate { x, y })
+			},
+		),
+		object,
+	)
 }
 
 // pub(super) fn fit_size_adjust<I, LB, LC, LU, PR, PV, RC, RU, T>(

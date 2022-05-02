@@ -11,9 +11,6 @@ use crate::clip::buffer::Buffer;
 use crate::clip::clip::Clip;
 use crate::clip::clip::Connected as ConnectedClip;
 use crate::clip::Bufferable;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
 use crate::compose::Compose;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
@@ -85,15 +82,21 @@ impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     DRAIN: Clone + PartialEq + Stream<EP = DRAIN, T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
+    // I: Clone + Interpolator<T = T>,
+    I: Clone,
+    LB: Clone,
+    LC: Clone,
+    // LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    // LC: Clone + LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
     PR: Clone,
-    PV: Clone + PointVisible<T = T>,
+    // PV: Clone + PointVisible<T = T>,
+    PV: Clone,
     RU: Clone + Connectable<SC = PCNC, Output = RC>,
-    RC: Clone + Stream<EP = DRAIN, T = T>,
+    // RC: Clone + Stream<EP = DRAIN, T = T>,
+    RC: Clone,
+    PCNU: Clone,
     T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to the projection.

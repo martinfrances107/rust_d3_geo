@@ -5,9 +5,18 @@ mod fit_test {
 	extern crate pretty_assertions;
 	extern crate rust_topojson_client;
 
-	// use rust_d3_geo::projection::FitSet;
-	// use rust_d3_geo::projection::ScaleGet;
-	// use rust_d3_geo::projection::TranslateGet;
+	use geo::Coordinate;
+	use rust_d3_geo::data_object::sphere::Sphere;
+	use rust_d3_geo::in_delta::in_delta;
+	use rust_d3_geo::in_delta::in_delta_coordinate;
+	use rust_d3_geo::path::bounds::Bounds;
+	use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleNoClip;
+	use rust_d3_geo::projection::equirectangular::Equirectangular;
+	use rust_d3_geo::projection::FitSet;
+	use rust_d3_geo::projection::ProjectionRawBase;
+	use rust_d3_geo::projection::ScaleGet;
+	use rust_d3_geo::projection::TranslateGet;
+	use rust_d3_geo::stream::StreamDrainStub;
 	use std::fs::File;
 
 	// use geo::polygon;
@@ -33,33 +42,33 @@ mod fit_test {
 	// 	}
 	// }
 
-	// #[test]
-	// fn fit_extent_sphere_equirectangular() {
-	// 	println!("projection.fitExtent(…) sphere equirectangular");
-	// 	let d_object = Sphere::default();
-	// 	let projection: BuilderAntimeridianResampleNoClip<
-	// 		StreamDrainStub<f64>,
-	// 		Equirectangular<StreamDrainStub<f64>, f64>,
-	// 		f64,
-	// 	> = Equirectangular::builder();
+	#[test]
+	fn fit_extent_sphere_equirectangular() {
+		println!("projection.fitExtent(…) sphere equirectangular");
+		let d_object = Sphere::default();
+		let projection: BuilderAntimeridianResampleNoClip<
+			Bounds<f64>,
+			Equirectangular<Bounds<f64>, f64>,
+			f64,
+		> = Equirectangular::builder();
 
-	// 	let projection =
-	// 		projection.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &d_object);
-	// 	assert!(in_delta(
-	// 		projection.get_scale(),
-	// 		900. / (2_f64 * std::f64::consts::PI),
-	// 		1e-6
-	// 	));
-	// 	let translate = projection.get_translate();
-	// 	assert!(in_delta_coordinate(
-	// 		&translate,
-	// 		&Coordinate {
-	// 			x: 500_f64,
-	// 			y: 500_f64
-	// 		},
-	// 		1e-6
-	// 	));
-	// }
+		let projection =
+			projection.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &d_object);
+		assert!(in_delta(
+			projection.get_scale(),
+			900. / (2_f64 * std::f64::consts::PI),
+			1e-6
+		));
+		let translate = projection.get_translate();
+		assert!(in_delta_coordinate(
+			&translate,
+			&Coordinate {
+				x: 500_f64,
+				y: 500_f64
+			},
+			1e-6
+		));
+	}
 
 	// 	// 	#[test]
 	// 	// 	fn fit_extent_world_equirectangular() {
@@ -73,6 +82,7 @@ mod fit_test {
 	// 	// 			&projection.get_translate(),
 	// 	// 			&Coordinate {
 	// 	// 				x: 500_f64,
+
 	// 	// 				y: 492.000762_f64
 	// 	// 			},
 	// 	// 			1e-6

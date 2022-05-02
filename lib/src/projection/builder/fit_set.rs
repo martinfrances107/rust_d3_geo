@@ -1,28 +1,16 @@
-use std::fmt::Debug;
+use crate::path::bounds::Bounds;
+use crate::projection::builder::BuilderAntimeridianResampleClip;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::buffer::Buffer;
 use crate::projection::builder::BuilderAntimeridianResampleNoClip;
-use crate::projection::builder::ClipC;
-use crate::projection::builder::ClipU;
-use crate::projection::builder::ResampleClipC;
-use crate::projection::builder::ResampleClipU;
 use crate::projection::fit_no_rectangle::fit_extent;
 use crate::projection::FitSet;
-use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Streamable;
-use crate::stream::Unconnected;
 use crate::Transform;
-
-use super::Builder;
 
 // impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> FitSet
 // 	for Builder<
@@ -105,31 +93,13 @@ use super::Builder;
 // 	T,
 // >,
 
-impl<DRAIN, PR, T> FitSet for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<PR, T> FitSet for BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>
 where
-	DRAIN: Clone + Debug + Default + PartialEq + Stream<EP = DRAIN, T = T>,
+	// DRAIN: Clone + Debug + Default + PartialEq + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	type Output = Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			DRAIN,
-			ResampleClipC<DRAIN, PR, T>,
-			Connected<ResampleClipC<DRAIN, PR, T>>,
-			T,
-		>,
-		LineAntimeridian<DRAIN, ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
-		ClipC<DRAIN, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PVAntimeridian<T>,
-		ResampleClipC<DRAIN, PR, T>,
-		ResampleClipU<DRAIN, PR, T>,
-		T,
-	>;
+	type Output = BuilderAntimeridianResampleClip<Bounds<T>, PR, T>;
 	type T = T;
 
 	#[inline]
