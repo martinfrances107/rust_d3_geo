@@ -53,8 +53,6 @@ mod fit_rectangle;
 
 type FitBounds<B, T> = Box<dyn Fn([Coordinate<T>; 2], B) -> B>;
 
-// type FitBoundsConvert<B, T> = Box<dyn Fn([Coordinate<T>; 2], B) -> B>;
-
 /// Projection type.
 pub type RotateTransform<PR, T> =
     Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>;

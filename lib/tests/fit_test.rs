@@ -11,6 +11,7 @@ mod fit_test {
 	use rust_d3_geo::in_delta::in_delta_coordinate;
 	use rust_d3_geo::path::bounds::Bounds;
 	use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
+	use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
 	use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleNoClip;
 	use rust_d3_geo::projection::builder::types::BuilderCircleResampleNoClip;
 	use rust_d3_geo::projection::equirectangular::Equirectangular;
@@ -109,23 +110,23 @@ mod fit_test {
 		));
 	}
 
-	// #[test]
-	// fn fit_extent_world_azimuthal_equidistant() {
-	// 	println!("projection.fitExtent(…) world azimuthalEquidistant");
+	#[test]
+	fn fit_extent_world_azimuthal_equidistant() {
+		println!("projection.fitExtent(…) world azimuthalEquidistant");
 
-	// 	let world = world();
-	// 	let projection = AzimuthalEquiDistant::builder()
-	// 		.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-	// 	assert!(in_delta(projection.get_scale(), 153.559317, 1e-6));
-	// 	assert!(in_delta_coordinate(
-	// 		&projection.get_translate(),
-	// 		&Coordinate {
-	// 			x: 485.272493_f64,
-	// 			y: 452.093375_f64
-	// 		},
-	// 		1e-6
-	// 	));
-	// }
+		let world = world();
+		let projection = AzimuthalEquiDistant::builder()
+			.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
+		assert!(in_delta(projection.get_scale(), 153.559317, 1e-6));
+		assert!(in_delta_coordinate(
+			&projection.get_translate(),
+			&Coordinate {
+				x: 485.272493_f64,
+				y: 452.093375_f64
+			},
+			1e-6
+		));
+	}
 
 	// 	// 	// // // tape("projection.fitExtent(…) world conicConformal", function(test) {
 	// 	// 	// // //   var projection = d3.geoConicConformal().clipAngle(30).parallels([30, 60]).rotate([0, -45]);

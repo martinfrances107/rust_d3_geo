@@ -61,7 +61,7 @@ use super::builder::Builder;
 // 	>,
 // >;
 
-fn fitAntimeridian<PR, T>(
+fn fit_antimeridian<PR, T>(
 	builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
 	fit_bounds: Box<
 		dyn Fn(
@@ -91,7 +91,7 @@ where
 	builder.clip_extent(&bounds)
 }
 
-fn fitCircleResampleNoneNoClip<PR, T>(
+fn fit_circle_resample_none_no_clip<PR, T>(
 	builder: BuilderCircleResampleNoneNoClip<Bounds<T>, PR, T>,
 	fit_bounds: Box<
 		dyn Fn(
@@ -121,7 +121,7 @@ where
 	builder.clip_extent(&bounds)
 }
 
-fn fitCircleResampleNoClip<PR, T>(
+fn fit_circle_resample_no_clip<PR, T>(
 	builder: BuilderCircleResampleNoClip<Bounds<T>, PR, T>,
 	fit_bounds: Box<
 		dyn Fn(
@@ -221,7 +221,7 @@ where
 	let two = T::from(2.0_f64).unwrap();
 	let one_five_zero = T::from(150_f64).unwrap();
 
-	fitAntimeridian(
+	fit_antimeridian(
 		builder,
 		Box::new(
 			move |b: [Coordinate<T>; 2],
@@ -254,7 +254,7 @@ where
 	let two = T::from(2.0_f64).unwrap();
 	let one_five_zero = T::from(150_f64).unwrap();
 
-	fitCircleResampleNoClip(
+	fit_circle_resample_no_clip(
 		builder,
 		Box::new(
 			move |b: [Coordinate<T>; 2], builder: BuilderCircleResampleNoClip<Bounds<T>, PR, T>| {
@@ -286,7 +286,7 @@ where
 	let two = T::from(2.0_f64).unwrap();
 	let one_five_zero = T::from(150_f64).unwrap();
 
-	fitCircleResampleNoneNoClip(
+	fit_circle_resample_none_no_clip(
 		builder,
 		Box::new(
 			move |b: [Coordinate<T>; 2],
