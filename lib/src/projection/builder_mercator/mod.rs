@@ -7,6 +7,7 @@ pub mod clip_angle_set;
 pub mod clip_bounded;
 pub mod clip_extent_adjust;
 pub mod clip_extent_set;
+pub mod fit_adjust;
 pub mod precision_adjust;
 pub mod precision_bypass;
 pub mod precision_get;
@@ -25,17 +26,15 @@ pub mod translate_get;
 pub mod translate_set;
 pub mod types;
 
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
-
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use std::fmt::Debug;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::clip::buffer::Buffer;
@@ -44,6 +43,7 @@ use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::Builder as ProjectionBuilder;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Projector;
 use crate::stream::Stream;

@@ -68,6 +68,7 @@ impl<EP, SINK, STATE, T> Debug for Rectangle<EP, SINK, STATE, T>
 where
     T: CoordFloat,
 {
+    #[inline]
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("PointRadiusEnum").finish()
     }

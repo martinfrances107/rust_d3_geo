@@ -1,4 +1,3 @@
-use crate::stream::Stream;
 use std::fmt::Debug;
 
 use approx::AbsDiffEq;
@@ -10,6 +9,7 @@ use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResam
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::TransformExtent;
 use crate::projection::TranslateAdjust;
+use crate::stream::Stream;
 use crate::Transform;
 
 use super::ReclipAdjust;
