@@ -1,19 +1,19 @@
-use crate::path::bounds::Bounds;
-use crate::projection::builder::types::BuilderCircleResampleClip;
-use crate::projection::builder::types::BuilderCircleResampleNoneClip;
-use crate::projection::builder::BuilderAntimeridianResampleClip;
-use crate::projection::builder::BuilderCircleResampleNoClip;
-use crate::projection::builder::BuilderCircleResampleNoneNoClip;
-use crate::projection::fit_no_rectangle::fit_extent_antimerdian;
-use crate::projection::fit_no_rectangle::fit_extent_circle_none_no_clip;
-use crate::projection::fit_no_rectangle::fit_extent_circle_resample_no_clip;
-
+use crate::projection::fit_no_rectangle::fit_size_circle_resample_no_clip;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::path::bounds::Bounds;
+use crate::projection::builder::types::BuilderCircleResampleClip;
+use crate::projection::builder::types::BuilderCircleResampleNoneClip;
+use crate::projection::builder::BuilderAntimeridianResampleClip;
 use crate::projection::builder::BuilderAntimeridianResampleNoClip;
+use crate::projection::builder::BuilderCircleResampleNoClip;
+use crate::projection::builder::BuilderCircleResampleNoneNoClip;
+use crate::projection::fit_no_rectangle::fit_extent_antimerdian;
+use crate::projection::fit_no_rectangle::fit_extent_circle_none_no_clip;
+use crate::projection::fit_no_rectangle::fit_extent_circle_resample_no_clip;
 use crate::projection::FitSet;
 use crate::stream::Streamable;
 use crate::Transform;
@@ -136,8 +136,7 @@ where
 	where
 		Self::T: AsPrimitive<T> + CoordFloat,
 	{
-		todo!();
-		// fit_size(self, size, object)
+		fit_size_circle_resample_no_clip(self, size, object)
 	}
 
 	#[inline]

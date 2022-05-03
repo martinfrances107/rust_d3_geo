@@ -207,22 +207,22 @@ mod fit_test {
 		));
 	}
 
-	// #[test]
-	// fn fit_size_world_orthographic() {
-	// 	println!("projection.fitSize(…) world orthographic");
+	#[test]
+	fn fit_size_world_orthographic() {
+		println!("projection.fitSize(…) world orthographic");
 
-	// 	let world = world();
-	// 	let projection = Orthographic::builder().fit_size([900.0_f64, 900.0_f64], &world);
-	// 	assert!(in_delta(projection.get_scale(), 451.406773, 1e-6));
-	// 	assert!(in_delta_coordinate(
-	// 		&projection.get_translate(),
-	// 		&Coordinate {
-	// 			x: 453.769179_f64,
-	// 			y: 448.593227_f64
-	// 		},
-	// 		1e-6
-	// 	));
-	// }
+		let world = world();
+		let projection = Orthographic::builder().fit_size([900.0_f64, 900.0_f64], &world);
+		assert!(in_delta(projection.get_scale(), 451.406773, 1e-6));
+		assert!(in_delta_coordinate(
+			&projection.get_translate(),
+			&Coordinate {
+				x: 453.769179_f64,
+				y: 448.593227_f64
+			},
+			1e-6
+		));
+	}
 
 	#[test]
 	fn fit_extent_world_stereographic() {

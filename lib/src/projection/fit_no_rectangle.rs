@@ -336,37 +336,17 @@ where
 // 	fit_extent_adjust(builder, [[T::zero(), T::zero()], size], object)
 // }
 
-// pub(super) fn fit_size_convert<I, LB, LC, LU, PR, PV, RC, RU, T>(
-// 	builder: Builder<
-// 		Bounds<T>,
-// 		I,
-// 		LB,
-// 		LC,
-// 		LU,
-// 		ClipC<Bounds<T>, T>,
-// 		ClipU<Bounds<T>, T>,
-// 		PR,
-// 		PV,
-// 		RC,
-// 		RU,
-// 		T,
-// 	>,
-// 	size: [T; 2],
-// 	object: &impl Streamable<T = T>,
-// ) -> Builder<Bounds<T>, I, LB, LC, LU, ClipC<Bounds<T>, T>, ClipU<Bounds<T>, T>, PR, PV, RC, RU, T>
-// where
-// 	I: Clone,
-// 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-// 	LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-// 	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-// 	PV: Clone + Debug,
-// 	RC: Clone + Debug + Stream<EP = Bounds<T>, T = T>,
-// 	RU: Clone + Debug + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>> + Debug,
-// 	PR: Transform<T = T>,
-// 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-// 	fit_extent(builder, [[T::zero(), T::zero()], size], object)
-// }
+pub(super) fn fit_size_circle_resample_no_clip<PR, T>(
+	builder: BuilderCircleResampleNoClip<Bounds<T>, PR, T>,
+	size: [T; 2],
+	object: &impl Streamable<T = T>,
+) -> BuilderCircleResampleClip<Bounds<T>, PR, T>
+where
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	fit_extent_circle_resample_no_clip(builder, [[T::zero(), T::zero()], size], object)
+}
 
 // pub(super) fn fit_width_adjust<I, LB, LC, LU, PR, PV, RC, RU, T>(
 // 	builder: Builder<
