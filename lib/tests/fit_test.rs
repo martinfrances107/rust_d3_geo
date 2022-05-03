@@ -15,14 +15,18 @@ mod fit_test {
 	use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleNoClip;
 	use rust_d3_geo::projection::builder::types::BuilderCircleResampleNoClip;
 	use rust_d3_geo::projection::equirectangular::Equirectangular;
+	use rust_d3_geo::projection::mercator::Mercator;
+	use rust_d3_geo::projection::orthographic::Orthographic;
+	use rust_d3_geo::projection::stereographic::Stereographic;
 	use rust_d3_geo::projection::FitSet;
+	use rust_d3_geo::projection::PrecisionAdjust;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ScaleGet;
 	use rust_d3_geo::projection::TranslateGet;
 	use rust_d3_geo::stream::StreamDrainStub;
 	use std::fs::File;
 
-	// use geo::polygon;
+	use geo::polygon;
 	use geo::Geometry;
 	use topojson::Topology;
 
@@ -185,58 +189,58 @@ mod fit_test {
 	// 	// 	// // //   test.end();
 	// 	// 	// // // });
 
-	// 	// 	#[test]
-	// 	// 	fn fit_extent_world_orthographic() {
-	// 	// 		println!("projection.fitExtent(…) world orthographic");
+	#[test]
+	fn fit_extent_world_orthographic() {
+		println!("projection.fitExtent(…) world orthographic");
 
-	// 	// 		let world = world();
-	// 	// 		let projection = Orthographic::builder()
-	// 	// 			.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-	// 	// 		assert!((projection.get_scale(), 451.406773, 1e-6));
-	// 	// 		assert!(in_delta_coordinate(
-	// 	// 			&projection.get_translate(),
-	// 	// 			&Coordinate {
-	// 	// 				x: 503.769179_f64,
-	// 	// 				y: 498.593227_f64
-	// 	// 			},
-	// 	// 			1e-6
-	// 	// 		));
-	// 	// 	}
+		let world = world();
+		let projection = Orthographic::builder()
+			.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
+		assert!((in_delta(projection.get_scale(), 451.406773, 1e-6)));
+		assert!(in_delta_coordinate(
+			&projection.get_translate(),
+			&Coordinate {
+				x: 503.769179_f64,
+				y: 498.593227_f64
+			},
+			1e-6
+		));
+	}
 
-	// 	// 	#[test]
-	// 	// 	fn fit_size_world_orthographic() {
-	// 	// 		println!("projection.fitSize(…) world orthographic");
+	// #[test]
+	// fn fit_size_world_orthographic() {
+	// 	println!("projection.fitSize(…) world orthographic");
 
-	// 	// 		let world = world();
-	// 	// 		let projection = Orthographic::builder().fit_size([900.0_f64, 900.0_f64], &world);
-	// 	// 		assert!(in_delta(projection.get_scale(), 451.406773, 1e-6));
-	// 	// 		assert!(in_delta_coordinate(
-	// 	// 			&projection.get_translate(),
-	// 	// 			&Coordinate {
-	// 	// 				x: 453.769179_f64,
-	// 	// 				y: 448.593227_f64
-	// 	// 			},
-	// 	// 			1e-6
-	// 	// 		));
-	// 	// 	}
+	// 	let world = world();
+	// 	let projection = Orthographic::builder().fit_size([900.0_f64, 900.0_f64], &world);
+	// 	assert!(in_delta(projection.get_scale(), 451.406773, 1e-6));
+	// 	assert!(in_delta_coordinate(
+	// 		&projection.get_translate(),
+	// 		&Coordinate {
+	// 			x: 453.769179_f64,
+	// 			y: 448.593227_f64
+	// 		},
+	// 		1e-6
+	// 	));
+	// }
 
-	// 	// 	#[test]
-	// 	// 	fn fit_extent_world_stereographic() {
-	// 	// 		println!("projection.fitExtent(…) world stereographic");
+	#[test]
+	fn fit_extent_world_stereographic() {
+		println!("projection.fitExtent(…) world stereographic");
 
-	// 	// 		let world = world();
-	// 	// 		let projection = Stereographic::builder()
-	// 	// 			.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-	// 	// 		assert!(in_delta(projection.get_scale(), 162.934379_f64, 1e-6));
-	// 	// 		assert!(in_delta_coordinate(
-	// 	// 			&projection.get_translate(),
-	// 	// 			&Coordinate {
-	// 	// 				x: 478.546293_f64,
-	// 	// 				y: 432.922534_f64
-	// 	// 			},
-	// 	// 			1e-6
-	// 	// 		));
-	// 	// 	}
+		let world = world();
+		let projection = Stereographic::builder()
+			.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
+		assert!(in_delta(projection.get_scale(), 162.934379_f64, 1e-6));
+		assert!(in_delta_coordinate(
+			&projection.get_translate(),
+			&Coordinate {
+				x: 478.546293_f64,
+				y: 432.922534_f64
+			},
+			1e-6
+		));
+	}
 
 	// 	// 	// // // tape("projection.fitExtent(…) world transverseMercator", function(test) {
 	// 	// 	// // //   var projection = d3.geoTransverseMercator();
@@ -324,33 +328,34 @@ mod fit_test {
 	// 	// 	// // //   test.inDelta(projection.translate(), [473.829551, 500], 1e-6);
 	// 	// 	// // //   test.end();
 	// 	// 	// // // });
-	// 	// 	#[test]
-	// 	// 	fn fit_size_resampling() {
-	// 	// 		println!("projection.fitSize(…) resampling - world mercator");
-	// 	// 		let box_object = Geometry::Polygon(polygon![
-	// 	// 			(x: -135f64, y: 45f64 ),
-	// 	// 			(x: -45f64, y: 45f64 ),
-	// 	// 			(x: -45f64, y: -45f64 ),
-	// 	// 			(x: -135f64, y: -45f64 ),
-	// 	// 			(x: -135f64, y: 45f64 )
-	// 	// 		]);
-	// 	// 		let p1 = Mercator::builder()
-	// 	// 			.precision(&0.1_f64)
-	// 	// 			.fit_size([1000_f64, 1000_f64], &box_object);
-	// 	// 		let p2 = Mercator::builder()
-	// 	// 			.precision(&0.0_f64)
-	// 	// 			.fit_size([1000_f64, 1000_f64], &box_object);
-	// 	// 		let t1 = p1.get_translate();
-	// 	// 		let t2 = p2.get_translate();
-	// 	// 		assert_eq!(p1.get_precision(), 0.1_f64);
-	// 	// 		assert_eq!(p2.get_precision(), 0_f64);
-	// 	// 		assert!(in_delta(p1.get_scale(), 436.218018, 1e-6));
-	// 	// 		assert!(in_delta(p2.get_scale(), 567.296328, 1e-6));
-	// 	// 		assert!(in_delta(t1.x, 1185.209661_f64, 1e-6));
-	// 	// 		assert!(in_delta(t2.x, 1391.106989_f64, 1e-6));
-	// 	// 		assert!(in_delta(t1.y, 500_f64, 1e-6));
-	// 	// 		assert!(in_delta(t1.y, t2.y, 1e-6));
-	// 	// 	}
+
+	// #[test]
+	// fn fit_size_resampling() {
+	// 	println!("projection.fitSize(…) resampling - world mercator");
+	// 	let box_object = Geometry::Polygon(polygon![
+	// 		(x: -135f64, y: 45f64 ),
+	// 		(x: -45f64, y: 45f64 ),
+	// 		(x: -45f64, y: -45f64 ),
+	// 		(x: -135f64, y: -45f64 ),
+	// 		(x: -135f64, y: 45f64 )
+	// 	]);
+	// 	let p1 = Mercator::builder()
+	// 		.precision(&0.1_f64)
+	// 		.fit_size([1000_f64, 1000_f64], &box_object);
+	// 	let p2 = Mercator::builder()
+	// 		.precision(&0.0_f64)
+	// 		.fit_size([1000_f64, 1000_f64], &box_object);
+	// 	let t1 = p1.get_translate();
+	// 	let t2 = p2.get_translate();
+	// 	assert_eq!(p1.get_precision(), 0.1_f64);
+	// 	assert_eq!(p2.get_precision(), 0_f64);
+	// 	assert!(in_delta(p1.get_scale(), 436.218018, 1e-6));
+	// 	assert!(in_delta(p2.get_scale(), 567.296328, 1e-6));
+	// 	assert!(in_delta(t1.x, 1185.209661_f64, 1e-6));
+	// 	assert!(in_delta(t2.x, 1391.106989_f64, 1e-6));
+	// 	assert!(in_delta(t1.y, 500_f64, 1e-6));
+	// 	assert!(in_delta(t1.y, t2.y, 1e-6));
+	// }
 
 	// 	// 	// // // tape("projection.fitWidth(…) world equirectangular", function(test) {
 	// 	// 	// // //   var projection = d3.geoEquirectangular();
