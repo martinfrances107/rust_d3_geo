@@ -64,16 +64,7 @@ where
     use_buffer_stream: bool,
 }
 
-impl<EP, SINK, T> Debug for Rectangle<EP, SINK, Connected<EP>, T>
-where
-    T: CoordFloat,
-{
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("PointRadiusEnum").finish()
-    }
-}
-
-impl<EP, SINK, T> Debug for Rectangle<EP, SINK, Unconnected, T>
+impl<EP, SINK, STATE, T> Debug for Rectangle<EP, SINK, STATE, T>
 where
     T: CoordFloat,
 {
