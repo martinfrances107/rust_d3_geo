@@ -1,3 +1,4 @@
+use crate::projection::builder::BuilderCircleResampleNoneNoClip;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -95,19 +96,19 @@ where
     }
 }
 
-// impl<DRAIN, PR, T> ScaleAdjust for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
-// where
-//     DRAIN: Stream<EP = DRAIN, T = T>,
-//     PR: Clone + Transform<T = T>,
-//     T: CoordFloat + FloatConst,
-// {
-//     type T = T;
+impl<DRAIN, PR, T> ScaleAdjust for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
+where
+    DRAIN: Stream<EP = DRAIN, T = T>,
+    PR: Clone + Transform<T = T>,
+    T: CoordFloat + FloatConst,
+{
+    type T = T;
 
-//     fn scale(mut self, scale: T) -> Self {
-//         self.k = scale;
-//         self.recenter_no_resampling()
-//     }
-// }
+    fn scale(mut self, scale: T) -> Self {
+        self.k = scale;
+        self.recenter_no_resampling()
+    }
+}
 
 // impl<DRAIN, PR, T> ScaleAdjust for BuilderCircleResampleNoneClip<DRAIN, PR, T>
 // where

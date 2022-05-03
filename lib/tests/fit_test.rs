@@ -10,7 +10,9 @@ mod fit_test {
 	use rust_d3_geo::in_delta::in_delta;
 	use rust_d3_geo::in_delta::in_delta_coordinate;
 	use rust_d3_geo::path::bounds::Bounds;
+	use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
 	use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleNoClip;
+	use rust_d3_geo::projection::builder::types::BuilderCircleResampleNoClip;
 	use rust_d3_geo::projection::equirectangular::Equirectangular;
 	use rust_d3_geo::projection::FitSet;
 	use rust_d3_geo::projection::ProjectionRawBase;
@@ -28,19 +30,19 @@ mod fit_test {
 	// use rust_d3_geo::projection::mercator::Mercator;
 	use rust_topojson_client::feature::Builder;
 
-	//  Helper function to extract world geometry from file.
-	// fn world() -> Geometry<f64> {
-	// 	let file =
-	// 		File::open("./tests/world-atlas/world/50m.json").expect("File should open read only.");
-	// 	let topology: Topology =
-	// 		serde_json::from_reader(file).expect("File should be parse as JSON.");
+	///  Helper function to extract world geometry from file.
+	fn world() -> Geometry<f64> {
+		let file =
+			File::open("./tests/world-atlas/world/50m.json").expect("File should open read only.");
+		let topology: Topology =
+			serde_json::from_reader(file).expect("File should be parse as JSON.");
 
-	// 	if let Some(g) = Builder::generate_from_name(&topology, &"land") {
-	// 		return g;
-	// 	} else {
-	// 		panic!("failed to file and decode from file.");
-	// 	}
-	// }
+		if let Some(g) = Builder::generate_from_name(&topology, &"land") {
+			return g;
+		} else {
+			panic!("failed to file and decode from file.");
+		}
+	}
 
 	#[test]
 	fn fit_extent_sphere_equirectangular() {
@@ -70,60 +72,60 @@ mod fit_test {
 		));
 	}
 
-	// 	// 	#[test]
-	// 	// 	fn fit_extent_world_equirectangular() {
-	// 	// 		println!("projection.fitExtent(…) world equirectangular");
-	// 	// 		let world = world();
+	#[test]
+	fn fit_extent_world_equirectangular() {
+		println!("projection.fitExtent(…) world equirectangular");
+		let world = world();
 
-	// 	// 		let projection = Equirectangular::builder()
-	// 	// 			.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-	// 	// 		assert!(in_delta(projection.get_scale(), 143.239449, 1e-6));
-	// 	// 		assert!(in_delta_coordinate(
-	// 	// 			&projection.get_translate(),
-	// 	// 			&Coordinate {
-	// 	// 				x: 500_f64,
+		let projection = Equirectangular::builder()
+			.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
+		assert!(in_delta(projection.get_scale(), 143.239449, 1e-6));
+		assert!(in_delta_coordinate(
+			&projection.get_translate(),
+			&Coordinate {
+				x: 500_f64,
 
-	// 	// 				y: 492.000762_f64
-	// 	// 			},
-	// 	// 			1e-6
-	// 	// 		));
-	// 	// 	}
+				y: 492.000762_f64
+			},
+			1e-6
+		));
+	}
 
-	// 	// 	#[test]
-	// 	// 	fn fit_extent_world_azimuthal_equal_area() {
-	// 	// 		println!("projection.fitExtent(…) world azimuthalEqualArea");
+	#[test]
+	fn fit_extent_world_azimuthal_equal_area() {
+		println!("projection.fitExtent(…) world azimuthalEqualArea");
 
-	// 	// 		let world = world();
-	// 	// 		let projection = AzimuthalEqualArea::builder()
-	// 	// 			.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-	// 	// 		assert!(in_delta(projection.get_scale(), 228.357229, 1e-6));
-	// 	// 		assert!(in_delta_coordinate(
-	// 	// 			&projection.get_translate(),
-	// 	// 			&Coordinate {
-	// 	// 				x: 496.353618_f64,
-	// 	// 				y: 479.684353_f64
-	// 	// 			},
-	// 	// 			1e-6
-	// 	// 		));
-	// 	// 	}
+		let world = world();
+		let projection = AzimuthalEqualArea::builder()
+			.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
+		assert!(in_delta(projection.get_scale(), 228.357229, 1e-6));
+		assert!(in_delta_coordinate(
+			&projection.get_translate(),
+			&Coordinate {
+				x: 496.353618_f64,
+				y: 479.684353_f64
+			},
+			1e-6
+		));
+	}
 
-	// 	// 	#[test]
-	// 	// 	fn fit_extent_world_azimuthal_equidistant() {
-	// 	// 		println!("projection.fitExtent(…) world azimuthalEquidistant");
+	// #[test]
+	// fn fit_extent_world_azimuthal_equidistant() {
+	// 	println!("projection.fitExtent(…) world azimuthalEquidistant");
 
-	// 	// 		let world = world();
-	// 	// 		let projection = AzimuthalEquiDistant::builder()
-	// 	// 			.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-	// 	// 		assert!(in_delta(projection.get_scale(), 153.559317, 1e-6));
-	// 	// 		assert!(in_delta_coordinate(
-	// 	// 			&projection.get_translate(),
-	// 	// 			&Coordinate {
-	// 	// 				x: 485.272493_f64,
-	// 	// 				y: 452.093375_f64
-	// 	// 			},
-	// 	// 			1e-6
-	// 	// 		));
-	// 	// 	}
+	// 	let world = world();
+	// 	let projection = AzimuthalEquiDistant::builder()
+	// 		.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
+	// 	assert!(in_delta(projection.get_scale(), 153.559317, 1e-6));
+	// 	assert!(in_delta_coordinate(
+	// 		&projection.get_translate(),
+	// 		&Coordinate {
+	// 			x: 485.272493_f64,
+	// 			y: 452.093375_f64
+	// 		},
+	// 		1e-6
+	// 	));
+	// }
 
 	// 	// 	// // // tape("projection.fitExtent(…) world conicConformal", function(test) {
 	// 	// 	// // //   var projection = d3.geoConicConformal().clipAngle(30).parallels([30, 60]).rotate([0, -45]);

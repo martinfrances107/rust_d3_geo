@@ -15,6 +15,10 @@ use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::types::BuilderAntimeridianResampleClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
+use crate::projection::builder::types::BuilderCircleResampleClip;
+use crate::projection::builder::types::BuilderCircleResampleNoClip;
+use crate::projection::builder::types::BuilderCircleResampleNoneClip;
+use crate::projection::builder::types::BuilderCircleResampleNoneNoClip;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -57,7 +61,7 @@ use super::builder::Builder;
 // 	>,
 // >;
 
-fn fit<PR, T>(
+fn fitAntimeridian<PR, T>(
 	builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
 	fit_bounds: Box<
 		dyn Fn(
@@ -67,6 +71,66 @@ fn fit<PR, T>(
 	>,
 	object: &impl Streamable<T = T>,
 ) -> BuilderAntimeridianResampleClip<Bounds<T>, PR, T>
+where
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	let builder = builder
+		.scale(T::from(150.0_f64).unwrap())
+		.translate(&Coordinate {
+			x: T::zero(),
+			y: T::zero(),
+		});
+	let bounds_stream = Bounds::<T>::default();
+	let mut stream_in = builder.build().stream(&bounds_stream);
+
+	object.to_stream(&mut stream_in);
+	let bounds = stream_in.get_endpoint().result();
+	let builder = fit_bounds(bounds, builder);
+
+	builder.clip_extent(&bounds)
+}
+
+fn fitCircleResampleNoneNoClip<PR, T>(
+	builder: BuilderCircleResampleNoneNoClip<Bounds<T>, PR, T>,
+	fit_bounds: Box<
+		dyn Fn(
+			[Coordinate<T>; 2],
+			BuilderCircleResampleNoneNoClip<Bounds<T>, PR, T>,
+		) -> BuilderCircleResampleNoneNoClip<Bounds<T>, PR, T>,
+	>,
+	object: &impl Streamable<T = T>,
+) -> BuilderCircleResampleNoneClip<Bounds<T>, PR, T>
+where
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	let builder = builder
+		.scale(T::from(150.0_f64).unwrap())
+		.translate(&Coordinate {
+			x: T::zero(),
+			y: T::zero(),
+		});
+	let bounds_stream = Bounds::<T>::default();
+	let mut stream_in = builder.build().stream(&bounds_stream);
+
+	object.to_stream(&mut stream_in);
+	let bounds = stream_in.get_endpoint().result();
+	let builder = fit_bounds(bounds, builder);
+
+	builder.clip_extent(&bounds)
+}
+
+fn fitCircleResampleNoClip<PR, T>(
+	builder: BuilderCircleResampleNoClip<Bounds<T>, PR, T>,
+	fit_bounds: Box<
+		dyn Fn(
+			[Coordinate<T>; 2],
+			BuilderCircleResampleNoClip<Bounds<T>, PR, T>,
+		) -> BuilderCircleResampleNoClip<Bounds<T>, PR, T>,
+	>,
+	object: &impl Streamable<T = T>,
+) -> BuilderCircleResampleClip<Bounds<T>, PR, T>
 where
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
@@ -144,7 +208,7 @@ where
 // >,
 // LineAntimeridian<DRAIN, ResampleClipC<DRAIN, Mercator<DRAIN, T>, T>, Unconnected, T>,
 
-pub(super) fn fit_extent<PR, T>(
+pub(super) fn fit_extent_antimerdian<PR, T>(
 	builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
 	extent: [[T; 2]; 2],
 	object: &impl Streamable<T = T>,
@@ -157,11 +221,76 @@ where
 	let two = T::from(2.0_f64).unwrap();
 	let one_five_zero = T::from(150_f64).unwrap();
 
-	fit(
+	fitAntimeridian(
 		builder,
 		Box::new(
 			move |b: [Coordinate<T>; 2],
 			      builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>| {
+				let w = extent[1][0] - extent[0][0];
+				let h = extent[1][1] - extent[0][1];
+				let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
+				let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
+				let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
+
+				builder
+					.scale(one_five_zero * k)
+					.translate(&Coordinate { x, y })
+			},
+		),
+		object,
+	)
+}
+
+pub(super) fn fit_extent_circle_resample_no_clip<PR, T>(
+	builder: BuilderCircleResampleNoClip<Bounds<T>, PR, T>,
+	extent: [[T; 2]; 2],
+	object: &impl Streamable<T = T>,
+) -> BuilderCircleResampleClip<Bounds<T>, PR, T>
+where
+	// DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = T>,
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	let two = T::from(2.0_f64).unwrap();
+	let one_five_zero = T::from(150_f64).unwrap();
+
+	fitCircleResampleNoClip(
+		builder,
+		Box::new(
+			move |b: [Coordinate<T>; 2], builder: BuilderCircleResampleNoClip<Bounds<T>, PR, T>| {
+				let w = extent[1][0] - extent[0][0];
+				let h = extent[1][1] - extent[0][1];
+				let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
+				let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
+				let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
+
+				builder
+					.scale(one_five_zero * k)
+					.translate(&Coordinate { x, y })
+			},
+		),
+		object,
+	)
+}
+
+pub(super) fn fit_extent_circle_none_no_clip<PR, T>(
+	builder: BuilderCircleResampleNoneNoClip<Bounds<T>, PR, T>,
+	extent: [[T; 2]; 2],
+	object: &impl Streamable<T = T>,
+) -> BuilderCircleResampleNoneClip<Bounds<T>, PR, T>
+where
+	// DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = T>,
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	let two = T::from(2.0_f64).unwrap();
+	let one_five_zero = T::from(150_f64).unwrap();
+
+	fitCircleResampleNoneNoClip(
+		builder,
+		Box::new(
+			move |b: [Coordinate<T>; 2],
+			      builder: BuilderCircleResampleNoneNoClip<Bounds<T>, PR, T>| {
 				let w = extent[1][0] - extent[0][0];
 				let h = extent[1][1] - extent[0][1];
 				let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));

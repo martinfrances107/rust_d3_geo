@@ -1,3 +1,4 @@
+use crate::projection::builder::BuilderCircleResampleNoneNoClip;
 use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
@@ -73,6 +74,21 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 }
 
 impl<DRAIN, PR, T> TranslateAdjust for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
+where
+	DRAIN: Stream<EP = DRAIN, T = T>,
+	PR: Clone + Transform<T = T>,
+	T: CoordFloat + FloatConst,
+{
+	type T = T;
+
+	fn translate(mut self, t: &Coordinate<T>) -> Self {
+		self.x = t.x;
+		self.y = t.y;
+		self.recenter_no_resampling()
+	}
+}
+
+impl<DRAIN, PR, T> TranslateAdjust for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
 where
 	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
