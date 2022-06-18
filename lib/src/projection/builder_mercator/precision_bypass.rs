@@ -24,11 +24,11 @@ where
 
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
-		return Self::Output {
+		Self::Output {
 			extent: self.extent, // post-clip extent
 			pr: self.pr,
 			base,
-		};
+		}
 	}
 }
 
@@ -43,11 +43,11 @@ where
 
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
-		return Self::Output {
+		Self::Output {
 			extent: self.extent, // post-clip extent
 			pr: self.pr,
 			base,
-		};
+		}
 	}
 }
 
@@ -62,11 +62,11 @@ where
 
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
-		return Self::Output {
+		Self::Output {
 			extent: self.extent, // post-clip extent
 			pr: self.pr,
 			base,
-		};
+		}
 	}
 }
 
@@ -81,10 +81,10 @@ where
 
 	fn precision_bypass(self) -> Self::Output {
 		let base = self.base.precision_bypass();
-		return Self::Output {
+		Self::Output {
 			extent: self.extent, // post-clip extent
 			pr: self.pr,
 			base,
-		};
+		}
 	}
 }
