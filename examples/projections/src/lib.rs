@@ -73,8 +73,6 @@ fn get_document() -> Result<Document, JsValue> {
 #[wasm_bindgen(start)]
 #[cfg(not(tarpaulin_include))]
 pub async fn start() -> Result<(), JsValue> {
-    use futures::join;
-
     use geo::Geometry;
     console_log!("run() - wasm entry point");
 
@@ -109,15 +107,13 @@ pub async fn start() -> Result<(), JsValue> {
     let equirectangular = draw_equirectangular(&land);
     let gnomic = draw_gnomic(&land);
 
-    join!(
-        aea,
-        ae,
-        orthographic,
-        mercator,
-        sterographic,
-        equirectangular,
-        gnomic,
-    );
+    aea.await?;
+    ae.await?;
+    orthographic.await?;
+    mercator.await?;
+    sterographic.await?;
+    equirectangular.await?;
+    gnomic.await?;
 
     Ok(())
 }
