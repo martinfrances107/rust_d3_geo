@@ -10,7 +10,7 @@ repository="https://github.com/martinfrances107/rust_d3_geo"
 approx="0.5.0"
 derivative = "2.2.0"
 num-traits="0.2.14"
-geo ="0.18.0"
+geo ="0.22.0"
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 rust_d3_array = { git = "https://github.com/martinfrances107/rust_d3_array.git" }
 rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git" }
