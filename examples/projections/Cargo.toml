@@ -15,7 +15,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 js-sys = "0.3.55"
-geo="0.18.0"
+geo="0.21.0"
 getrandom = { version = "0.2.3", features = ["js"] }
 rand = { version = "0.8.4"}
 rust_d3_geo = {path="../../lib"}

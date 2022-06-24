@@ -37,7 +37,6 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::buffer::Buffer;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleNoClipC;
