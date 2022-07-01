@@ -214,7 +214,6 @@ pub(super) fn fit_extent_antimerdian<PR, T>(
 	object: &impl Streamable<T = T>,
 ) -> BuilderAntimeridianResampleClip<Bounds<T>, PR, T>
 where
-	// DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -247,7 +246,6 @@ pub(super) fn fit_extent_circle_resample_no_clip<PR, T>(
 	object: &impl Streamable<T = T>,
 ) -> BuilderCircleResampleClip<Bounds<T>, PR, T>
 where
-	// DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
@@ -279,7 +277,6 @@ pub(super) fn fit_extent_circle_none_no_clip<PR, T>(
 	object: &impl Streamable<T = T>,
 ) -> BuilderCircleResampleNoneClip<Bounds<T>, PR, T>
 where
-	// DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
