@@ -406,6 +406,36 @@ where
 	)
 }
 
+pub(super) fn fit_height_antimerdian_resample_no_clip<PR, T>(
+	builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
+	height: T,
+	object: &impl Streamable<T = T>,
+) -> BuilderAntimeridianResampleClip<Bounds<T>, PR, T>
+where
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	let two = T::from(2.0_f64).unwrap();
+	let one_five_zero = T::from(150_f64).unwrap();
+
+	fit_antimeridian_resample_no_clip(
+		builder,
+		Box::new(
+			move |b: [Coordinate<T>; 2],
+			      builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>| {
+				let h = height;
+				let k = h / (b[1].y - b[0].y);
+				let x = -k * b[0].x;
+				let y = (h - k * (b[1].y + b[0].y)) / two;
+
+				builder
+					.scale(one_five_zero * k)
+					.translate(&Coordinate { x, y })
+			},
+		),
+		object,
+	)
+}
 // pub(super) fn fit_width_adjust<I, LB, LC, LU, PR, PV, RC, RU, T>(
 // 	builder: Builder<
 // 		Bounds<T>,
