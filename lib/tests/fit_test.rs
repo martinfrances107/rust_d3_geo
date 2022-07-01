@@ -91,7 +91,6 @@ mod fit_test {
 			&projection.get_translate(),
 			&Coordinate {
 				x: 500_f64,
-
 				y: 492.000762_f64
 			},
 			1e-6
@@ -157,13 +156,6 @@ mod fit_test {
 	// 	// 	// // //   test.inDelta(projection.translate(), [500, 498.598401], 1e-6);
 	// 	// 	// // //   test.end();
 	// 	// 	// // // });
-
-	// it("projection.fitExtent(…) world equirectangular", () => {
-	// 	const projection = geoEquirectangular();
-	// 	projection.fitExtent([[50, 50], [950, 950]], world);
-	// 	assertInDelta(projection.scale(), 143.239449, 1e-6);
-	// 	assertInDelta(projection.translate(), [500, 492.000762], 1e-6);
-	//   });
 
 	//   it("projection.fitSize(…) world equirectangular", () => {
 	// 	const projection = geoEquirectangular();
@@ -368,14 +360,6 @@ mod fit_test {
 	// 	assert!(in_delta(t1.y, t2.y, 1e-6));
 	// }
 
-	// 	// 	// // // tape("projection.fitWidth(…) world equirectangular", function(test) {
-	// 	// 	// // //   var projection = d3.geoEquirectangular();
-	// 	// 	// // //   projection.fitWidth(900, world);
-	// 	// 	// // //   test.inDelta(projection.scale(), 143.239449, 1e-6);
-	// 	// 	// // //   test.inDelta(projection.translate(), [450, 208.999023], 1e-6);
-	// 	// 	// // //   test.end();
-	// 	// 	// // // });
-
 	#[test]
 	fn fit_width_world_equirectangular() {
 		println!("projection.fitWidth(…) world equirectangular");
@@ -406,14 +390,6 @@ mod fit_test {
 	// 	// 	// // //   projection.fitWidth(900, us);
 	// 	// 	// // //   test.inDelta(projection.scale(), 1152.889035, 1e-6);
 	// 	// 	// // //   test.inDelta(projection.translate(), [483.52541, 257.736905], 1e-6);
-	// 	// 	// // //   test.end();
-	// 	// 	// // // });
-
-	// 	// 	// // // tape("projection.fitHeight(…) world equirectangular", function(test) {
-	// 	// 	// // //   var projection = d3.geoEquirectangular();
-	// 	// 	// // //   projection.fitHeight(900, world);
-	// 	// 	// // //   test.inDelta(projection.scale(), 297.042711, 1e-6);
-	// 	// 	// // //   test.inDelta(projection.translate(), [933.187199, 433.411585], 1e-6);
 	// 	// 	// // //   test.end();
 	// 	// 	// // // });
 
