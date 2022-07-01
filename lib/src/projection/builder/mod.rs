@@ -80,6 +80,20 @@ mod translate_adjust;
 mod translate_get;
 pub mod types;
 
+/// Design Review
+///
+/// fn build() varies by 3 independant variables.
+///
+/// 1) Clip stratergy
+/// 2) Resample Stratergy
+/// 3) Bounding stratergy
+///
+/// NB only 6/16 of the required are implemented.
+/// 16 seems crazy.
+///
+/// TODO Is there a neater way forward here.
+/// With macros or refactor?
+
 /// Marker trait for structs Identity or Rectangle
 pub trait PostClipNode {}
 
