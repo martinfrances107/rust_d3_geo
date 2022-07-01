@@ -11,7 +11,6 @@
 //! 3) SWAP -  implies inserting PostClip Rectangle.
 //!
 
-use crate::projection::FitBounds;
 use approx::AbsDiffEq;
 use num_traits::AsPrimitive;
 use std::fmt::Debug;
@@ -29,6 +28,7 @@ use crate::path::Result;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::ClipExtentBounded;
 use crate::projection::ClipExtentSet;
+use crate::projection::FitBounds;
 use crate::projection::FloatConst;
 use crate::projection::ScaleAdjust;
 use crate::projection::TranslateAdjust;
