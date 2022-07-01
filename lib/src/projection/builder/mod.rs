@@ -45,8 +45,8 @@ use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 
-use self::template::ClipC;
-use self::template::ClipU;
+use template::ClipC;
+use template::ClipU;
 use template::ResampleClipC;
 use template::ResampleClipU;
 

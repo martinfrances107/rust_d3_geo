@@ -27,7 +27,7 @@ use crate::stream::Stream;
 use geo::CoordFloat;
 use geo::Coordinate;
 
-use self::buffer::Buffer;
+use buffer::Buffer;
 
 /// Clean
 ///
