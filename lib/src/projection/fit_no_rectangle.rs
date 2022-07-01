@@ -406,6 +406,18 @@ where
 	)
 }
 
+pub(super) fn fit_size_antimeridian_resample_no_clip<PR, T>(
+	builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
+	size: [T; 2],
+	object: &impl Streamable<T = T>,
+) -> BuilderAntimeridianResampleClip<Bounds<T>, PR, T>
+where
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	fit_extent_antimerdian(builder, [[T::zero(), T::zero()], size], object)
+}
+
 pub(super) fn fit_height_antimerdian_resample_no_clip<PR, T>(
 	builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
 	height: T,

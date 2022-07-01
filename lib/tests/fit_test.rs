@@ -163,6 +163,22 @@ mod fit_test {
 	// 	assertInDelta(projection.scale(), 143.239449, 1e-6);
 	// 	assertInDelta(projection.translate(), [450, 442.000762], 1e-6);
 	//   });
+	#[test]
+	fn fit_size_world_equirectangular() {
+		println!("projection.fitExtent(…) world gnomonic");
+
+		let world = world();
+		let projection = Equirectangular::builder().fit_size([900_f64, 900_f64], &world);
+		assert!(in_delta(projection.get_scale(), 143.239449, 1e-6));
+		assert!(in_delta_coordinate(
+			&projection.get_translate(),
+			&Coordinate {
+				x: 450_f64,
+				y: 442.000762_f64
+			},
+			1e-6
+		));
+	}
 
 	#[test]
 	fn fit_extent_world_gnomic() {

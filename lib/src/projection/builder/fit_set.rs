@@ -1,4 +1,5 @@
 use crate::projection::fit_no_rectangle::fit_height_antimerdian_resample_no_clip;
+use crate::projection::fit_no_rectangle::fit_size_antimeridian_resample_no_clip;
 use crate::projection::fit_no_rectangle::fit_size_circle_resample_no_clip;
 use crate::projection::fit_no_rectangle::fit_width_antimerdian_resample_no_clip;
 use approx::AbsDiffEq;
@@ -49,8 +50,7 @@ where
 	where
 		Self::T: AsPrimitive<T> + CoordFloat,
 	{
-		todo!();
-		// fit_size(self, size, object)
+		fit_size_antimeridian_resample_no_clip(self, size, object)
 	}
 
 	#[inline]
