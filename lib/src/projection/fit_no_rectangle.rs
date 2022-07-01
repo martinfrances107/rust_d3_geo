@@ -151,6 +151,36 @@ where
 	builder.clip_extent(&bounds)
 }
 
+fn fit_antimeridian_resample_no_clip<PR, T>(
+	builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
+	fit_bounds: Box<
+		dyn Fn(
+			[Coordinate<T>; 2],
+			BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
+		) -> BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
+	>,
+	object: &impl Streamable<T = T>,
+) -> BuilderAntimeridianResampleClip<Bounds<T>, PR, T>
+where
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	let builder = builder
+		.scale(T::from(150.0_f64).unwrap())
+		.translate(&Coordinate {
+			x: T::zero(),
+			y: T::zero(),
+		});
+	let bounds_stream = Bounds::<T>::default();
+	let mut stream_in = builder.build().stream(&bounds_stream);
+
+	object.to_stream(&mut stream_in);
+	let bounds = stream_in.get_endpoint().result();
+	let builder = fit_bounds(bounds, builder);
+
+	builder.clip_extent(&bounds)
+}
+
 // fn fit_convert<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, RCOut, RUOut, T>(
 // 	builder: Builder<
 // 		Bounds<T>,
@@ -343,6 +373,37 @@ where
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	fit_extent_circle_resample_no_clip(builder, [[T::zero(), T::zero()], size], object)
+}
+
+pub(super) fn fit_width_antimerdian_resample_no_clip<PR, T>(
+	builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>,
+	width: T,
+	object: &impl Streamable<T = T>,
+) -> BuilderAntimeridianResampleClip<Bounds<T>, PR, T>
+where
+	PR: Clone + Transform<T = T>,
+	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+	let two = T::from(2.0_f64).unwrap();
+	let one_five_zero = T::from(150_f64).unwrap();
+
+	fit_antimeridian_resample_no_clip(
+		builder,
+		Box::new(
+			move |b: [Coordinate<T>; 2],
+			      builder: BuilderAntimeridianResampleNoClip<Bounds<T>, PR, T>| {
+				let w = width;
+				let k = w / (b[1].x - b[0].x);
+				let x = (w - k * (b[1].x + b[0].x)) / two;
+				let y = -k * b[0].y;
+
+				builder
+					.scale(one_five_zero * k)
+					.translate(&Coordinate { x, y })
+			},
+		),
+		object,
+	)
 }
 
 // pub(super) fn fit_width_adjust<I, LB, LC, LU, PR, PV, RC, RU, T>(
