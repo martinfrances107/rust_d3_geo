@@ -11,6 +11,7 @@ mod angle_test {
 	use rust_d3_geo::projection::gnomic::Gnomic;
 	use rust_d3_geo::projection::projection_equal::projection_equal;
 	use rust_d3_geo::projection::AngleGet;
+	use rust_d3_geo::projection::Build;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ScaleAdjust;
 	use rust_d3_geo::projection::TranslateAdjust;

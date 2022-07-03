@@ -19,6 +19,7 @@ use crate::projection::builder::types::BuilderCircleResampleClip;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::types::BuilderCircleResampleNoneClip;
 use crate::projection::builder::types::BuilderCircleResampleNoneNoClip;
+use crate::projection::Build;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;

@@ -1,3 +1,4 @@
+use crate::projection::Build;
 use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;

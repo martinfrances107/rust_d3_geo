@@ -101,9 +101,9 @@ pub trait ProjectionRawCommon<T>: ProjectionRawBase<T> {}
 /// overreides. The mercator family.
 pub trait ProjectionRawMercator<T>: ProjectionRawBase<T> {}
 
-trait Builder
+pub trait Build
 where
-    <Self as Builder>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
+    <Self as Build>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
 {
     type Drain;
     type I;
@@ -118,7 +118,7 @@ where
     type RU;
     type T;
     fn build(
-        s: Self::PR,
+        &self,
     ) -> Projector<
         Self::Drain,
         Self::I,

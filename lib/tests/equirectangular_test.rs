@@ -17,6 +17,7 @@ mod equirectangular_test {
 	use rust_d3_geo::projection::builder::Builder;
 	use rust_d3_geo::projection::equirectangular::Equirectangular;
 	use rust_d3_geo::projection::projection_equal::projection_equal;
+	use rust_d3_geo::projection::Build;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::RotateSet;
 	use rust_d3_geo::projection::ScaleAdjust;

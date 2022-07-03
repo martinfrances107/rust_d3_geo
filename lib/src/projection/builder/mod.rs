@@ -1,3 +1,7 @@
+use crate::projection::builder::template::ResampleNoneClipU;
+use crate::projection::builder::template::ResampleNoneNoClipU;
+use crate::projection::Build;
+use approx::AbsDiffEq;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -9,7 +13,9 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
+use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
+use crate::clip::circle::pv::PV as PVCircle;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
 use crate::identity::Identity;
@@ -239,15 +245,32 @@ where
     }
 }
 
-impl<DRAIN, PR, T> BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Build for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
 where
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
     PR: Clone,
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
+    type Drain = DRAIN;
+    type I = InterpolateAntimeridian<T>;
+    type LB = LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
+    type LC = LineAntimeridian<
+        DRAIN,
+        ResampleNoneClipC<DRAIN, PR, T>,
+        Connected<ResampleNoneClipC<DRAIN, PR, T>>,
+        T,
+    >;
+    type LU = LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>;
+    type PCNC = ClipC<DRAIN, T>;
+    type PCNU = ClipU<DRAIN, T>;
+    type PR = PR;
+    type PV = PVAntimeridian<T>;
+    type RC = ResampleNoneClipC<DRAIN, PR, T>;
+    type RU = ResampleNoneClipU<DRAIN, PR, T>;
+    type T = T;
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> ProjectorAntimeridianResampleNoneClip<DRAIN, PR, T> {
+    fn build(&self) -> ProjectorAntimeridianResampleNoneClip<DRAIN, PR, T> {
         Projector {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
             p_lc: PhantomData::<
@@ -276,15 +299,32 @@ where
     // }
 }
 
-impl<DRAIN, PR, T> BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Build for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
     PR: Clone,
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
+    type Drain = DRAIN;
+    type I = InterpolateAntimeridian<T>;
+    type LB = LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
+    type LC = LineAntimeridian<
+        DRAIN,
+        ResampleNoneNoClipC<DRAIN, PR, T>,
+        Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
+        T,
+    >;
+    type LU = LineAntimeridian<DRAIN, ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>;
+    type PCNC = NoClipC<DRAIN, T>;
+    type PCNU = NoClipU<DRAIN, T>;
+    type PR = PR;
+    type PV = PVAntimeridian<T>;
+    type RC = ResampleNoneNoClipC<DRAIN, PR, T>;
+    type RU = ResampleNoneNoClipU<DRAIN, PR, T>;
+    type T = T;
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> ProjectorAntimeridianResampleNoneNoClip<DRAIN, PR, T> {
+    fn build(&self) -> ProjectorAntimeridianResampleNoneNoClip<DRAIN, PR, T> {
         Projector {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
             p_lc: PhantomData::<
@@ -313,15 +353,33 @@ where
     // }
 }
 
-impl<DRAIN, PR, T> BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Build for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T> + Clone,
     PR: Clone,
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
+    type Drain = DRAIN;
+    type I = InterpolateAntimeridian<T>;
+    type LB = LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
+    type LC = LineAntimeridian<
+        DRAIN,
+        ResampleNoClipC<DRAIN, PR, T>,
+        Connected<ResampleNoClipC<DRAIN, PR, T>>,
+        T,
+    >;
+    type LU = LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>;
+    type PCNC = NoClipC<DRAIN, T>;
+    type PCNU = NoClipU<DRAIN, T>;
+    type PR = PR;
+    type PV = PVAntimeridian<T>;
+    type RC = ResampleNoClipC<DRAIN, PR, T>;
+    type RU = ResampleNoClipU<DRAIN, PR, T>;
+    type T = T;
+
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> ProjectorAntimeridianResampleNoClip<DRAIN, PR, T> {
+    fn build(&self) -> ProjectorAntimeridianResampleNoClip<DRAIN, PR, T> {
         Projector {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
             p_lc: PhantomData::<
@@ -350,15 +408,32 @@ where
     // }
 }
 
-impl<DRAIN, PR, T> BuilderAntimeridianResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Build for BuilderAntimeridianResampleClip<DRAIN, PR, T>
 where
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
     PR: Clone,
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
+    type Drain = DRAIN;
+    type I = InterpolateAntimeridian<T>;
+    type LB = LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
+    type LC = LineAntimeridian<
+        DRAIN,
+        ResampleClipC<DRAIN, PR, T>,
+        Connected<ResampleClipC<DRAIN, PR, T>>,
+        T,
+    >;
+    type LU = LineAntimeridian<DRAIN, ResampleClipC<DRAIN, PR, T>, Unconnected, T>;
+    type PCNC = ClipC<DRAIN, T>;
+    type PCNU = ClipU<DRAIN, T>;
+    type PR = PR;
+    type PV = PVAntimeridian<T>;
+    type RC = ResampleClipC<DRAIN, PR, T>;
+    type RU = ResampleClipU<DRAIN, PR, T>;
+    type T = T;
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> ProjectorAntimeridianResampleClip<DRAIN, PR, T> {
+    fn build(&self) -> ProjectorAntimeridianResampleClip<DRAIN, PR, T> {
         Projector {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
             p_lc: PhantomData::<
@@ -387,15 +462,32 @@ where
     // }
 }
 
-impl<DRAIN, PR, T> BuilderCircleResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Build for BuilderCircleResampleNoClip<DRAIN, PR, T>
 where
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
     PR: Clone,
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
+    type Drain = DRAIN;
+    type I = InterpolateCircle<T>;
+    type LB = LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
+    type LC = LineCircle<
+        DRAIN,
+        ResampleNoClipC<DRAIN, PR, T>,
+        Connected<ResampleNoClipC<DRAIN, PR, T>>,
+        T,
+    >;
+    type LU = LineCircle<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>;
+    type PCNC = NoClipC<DRAIN, T>;
+    type PCNU = NoClipU<DRAIN, T>;
+    type PR = PR;
+    type PV = PVCircle<T>;
+    type RC = ResampleNoClipC<DRAIN, PR, T>;
+    type RU = ResampleNoClipU<DRAIN, PR, T>;
+    type T = T;
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> ProjectorCircleResampleNoClip<DRAIN, PR, T> {
+    fn build(&self) -> ProjectorCircleResampleNoClip<DRAIN, PR, T> {
         Projector {
             p_lb: PhantomData::<LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
             p_lc: PhantomData::<

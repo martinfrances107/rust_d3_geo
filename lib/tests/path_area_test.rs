@@ -30,6 +30,7 @@ mod path_area_test {
 	use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleNoClip;
 	use rust_d3_geo::projection::equirectangular::Equirectangular;
 	use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
+	use rust_d3_geo::projection::Build;
 	use rust_d3_geo::projection::PrecisionBypass;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ScaleAdjust;

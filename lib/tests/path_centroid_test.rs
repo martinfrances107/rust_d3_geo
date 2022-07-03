@@ -34,6 +34,7 @@ mod path_centroid_test {
     use rust_d3_geo::projection::builder::template::ResampleNoClipU;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
+    use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ScaleAdjust;
     use rust_d3_geo::stream::Streamable;

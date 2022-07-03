@@ -7,6 +7,7 @@ mod stereographic_tests {
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::projector::types::ProjectorCircleResampleNoClip;
     use rust_d3_geo::projection::stereographic::Stereographic;
+    use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::TranslateAdjust;
     use rust_d3_geo::stream::StreamDrainStub;
