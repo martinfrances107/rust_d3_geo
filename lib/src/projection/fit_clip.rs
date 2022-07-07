@@ -30,14 +30,12 @@ use crate::clip::LineConnected;
 use crate::clip::PointVisible;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
-use crate::projection::builder::template::NoClipC;
 use crate::projection::ClipExtentSet;
 use crate::projection::FitBounds;
 use crate::projection::FloatConst;
 use crate::projection::Scale;
 use crate::projection::Translate;
 use crate::stream::Connectable;
-use crate::stream::Pipeline;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
@@ -76,7 +74,7 @@ where
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Debug + FloatConst,
 {
 	let clip = builder.get_clip_extent();
-	let mut b_no_clip = builder
+	let b_no_clip = builder
 		.scale(T::from(150_f64).unwrap())
 		.translate(&Coordinate {
 			x: T::zero(),

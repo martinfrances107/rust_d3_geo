@@ -31,7 +31,6 @@ use crate::projection::Debug;
 use crate::projection::Scale;
 use crate::projection::Translate;
 use crate::stream::Connectable;
-use crate::stream::Pipeline;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
@@ -70,7 +69,7 @@ where
 	RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>> + Debug,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	let builder_out = builder
+	let builder = builder
 		.clone()
 		.scale(T::from(150.0_f64).unwrap())
 		.translate(&Coordinate {
@@ -78,12 +77,12 @@ where
 			y: T::zero(),
 		});
 	let bounds_stream = Bounds::<T>::default();
-	let mut stream_in = builder_out.build().stream(&bounds_stream);
+	let mut stream_in = builder.build().stream(&bounds_stream);
 
 	object.to_stream(&mut stream_in);
 	let bounds = stream_in.get_endpoint().result();
 	let builder = fit_bounds(bounds, builder);
-	builder_out
+	builder
 }
 
 pub(super) fn fit_extent_no_clip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
