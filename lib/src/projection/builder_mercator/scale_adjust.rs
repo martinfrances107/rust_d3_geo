@@ -6,7 +6,7 @@ use num_traits::FloatConst;
 
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
-use crate::projection::ScaleAdjust;
+use crate::projection::Scale;
 use crate::projection::TransformExtent;
 use crate::stream::Stream;
 use crate::Transform;
@@ -17,7 +17,7 @@ use super::ReclipAdjust;
 // ResampleNoClipC/U,
 // ResampleNoneNocClipC/U
 
-impl<DRAIN, PR, T> ScaleAdjust for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Scale for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
@@ -31,7 +31,7 @@ where
 	}
 }
 
-impl<DRAIN, PR, T> ScaleAdjust for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Scale for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Debug + Transform<T = T> + TransformExtent<T>,

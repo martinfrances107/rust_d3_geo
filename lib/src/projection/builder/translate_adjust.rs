@@ -5,7 +5,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::projection::TranslateAdjust;
+use crate::projection::Translate;
 use crate::Transform;
 
 use super::template::ClipC;
@@ -19,7 +19,7 @@ use super::ResampleNoClipC;
 use super::ResampleNoClipU;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
 	for Builder<
 		DRAIN,
 		I,
@@ -46,7 +46,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 	}
 }
 
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
 	for Builder<
 		DRAIN,
 		I,
@@ -73,7 +73,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateAdjust
 	}
 }
 
-impl<DRAIN, PR, T> TranslateAdjust for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Translate for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
 where
 	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
@@ -88,7 +88,7 @@ where
 	}
 }
 
-impl<DRAIN, PR, T> TranslateAdjust for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Translate for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
 where
 	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,

@@ -11,6 +11,11 @@
 //! 3) SWAP -  implies inserting PostClip Rectangle.
 //!
 
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
+use crate::projection::Build;
+use crate::projection::ClipExtentBounded;
+use crate::Transform;
 use approx::AbsDiffEq;
 use num_traits::AsPrimitive;
 use std::fmt::Debug;
@@ -26,33 +31,48 @@ use crate::clip::PointVisible;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::NoClipC;
-use crate::projection::ClipExtentBounded;
 use crate::projection::ClipExtentSet;
 use crate::projection::FitBounds;
 use crate::projection::FloatConst;
-use crate::projection::ScaleAdjust;
-use crate::projection::TranslateAdjust;
+use crate::projection::Scale;
+use crate::projection::Translate;
 use crate::stream::Connectable;
 use crate::stream::Pipeline;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
-pub(super) fn fit_rectangle<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
 	builder: B,
 	fit_bounds: FitBounds<Bint, T>,
 	object: &impl Streamable<T = T>,
 ) -> B
 where
-	B: ClipExtentBounded<OutputClear = Bint, T = T> + ScaleAdjust<T = T> + TranslateAdjust<T = T>,
-	Bint: ClipExtentSet<OutputBounded = B, T = T>
-		+ Pipeline<Bounds<T>, I, LB, LC, LU, PR, PV, RC, RU, T>,
+	B: ClipExtentBounded<OutputClear = Bint, T = T> + Scale<T = T> + Translate<T = T>,
+	Bint: Build<
+			Drain = Bounds<T>,
+			I = I,
+			LB = LB,
+			LC = LC,
+			LU = LU,
+			PCNC = ClipC<Bounds<T>, T>,
+			PCNU = ClipU<Bounds<T>, T>,
+			PR = PR,
+			PV = PV,
+			RC = RC,
+			RU = RU,
+			T = T,
+		> + ClipExtentSet<OutputBounded = B, T = T>,
+
+	// NB constraints below relate to Bint only not B.
+	// They assume no NoClip...
 	I: Clone + Interpolator<T = T>,
 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
 	LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-	PV: PointVisible<T = T>,
+	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+	PR: Clone + Transform<T = T>,
+	PV: Clone + PointVisible<T = T>,
+	RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>> + Debug,
 	RC: Clone + Stream<EP = Bounds<T>, T = T>,
-	RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>> + Debug,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Debug + FloatConst,
 {
 	let clip = builder.get_clip_extent();
@@ -64,35 +84,49 @@ where
 		})
 		.clip_extent_clear();
 
+	let mut stripped_projector = b_no_clip.build();
 	let mut bounds_stream = Bounds::default();
-	let mut stream_in = b_no_clip.stream(&bounds_stream);
+	let mut stream_in = stripped_projector.stream(&bounds_stream);
 	object.to_stream(&mut stream_in);
 	let b_result = fit_bounds(bounds_stream.result(), b_no_clip);
 
 	b_result.clip_extent(&clip.unwrap())
 }
 
-pub(super) fn fit_extent_adjust<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_extent_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
 	builder: B,
 	extent: [[T; 2]; 2],
 	object: &impl Streamable<T = T>,
 ) -> B
 where
-	B: ClipExtentBounded<OutputClear = Bint, T = T> + ScaleAdjust<T = T> + TranslateAdjust<T = T>,
-	Bint: ClipExtentSet<OutputBounded = B, T = T>
-		+ Pipeline<Bounds<T>, I, LB, LC, LU, PR, PV, RC, RU, T>
-		+ ScaleAdjust<T = T>
-		+ TranslateAdjust<T = T>,
+	B: ClipExtentBounded<OutputClear = Bint, T = T> + Scale<T = T> + Translate<T = T>,
+	Bint: Build<
+			Drain = Bounds<T>,
+			I = I,
+			LB = LB,
+			LC = LC,
+			LU = LU,
+			PCNC = ClipC<Bounds<T>, T>,
+			PCNU = ClipU<Bounds<T>, T>,
+			PR = PR,
+			PV = PV,
+			RC = RC,
+			RU = RU,
+			T = T,
+		> + ClipExtentSet<OutputBounded = B, T = T>
+		+ Scale<T = T>
+		+ Translate<T = T>,
 	I: Clone + Interpolator<T = T>,
 	LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
 	LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-	PV: PointVisible<T = T>,
+	LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+	PR: Clone + Transform<T = T>,
+	PV: Clone + PointVisible<T = T>,
 	RC: Clone + Stream<EP = Bounds<T>, T = T>,
-	RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>, T>> + Debug,
+	RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>> + Debug,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Debug + FloatConst,
 {
-	fit_rectangle(
+	fit_clip(
 		builder,
 		Box::new(move |b: [Coordinate<T>; 2], builder: Bint| -> Bint {
 			let two = T::from(2.0_f64).unwrap();

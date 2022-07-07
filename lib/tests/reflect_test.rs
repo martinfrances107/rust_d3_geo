@@ -26,8 +26,8 @@ mod reflect_tests {
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ReflectGet;
 	use rust_d3_geo::projection::ReflectSet;
-	use rust_d3_geo::projection::ScaleAdjust;
-	use rust_d3_geo::projection::TranslateAdjust;
+	use rust_d3_geo::projection::Scale;
+	use rust_d3_geo::projection::Translate;
 	use rust_d3_geo::stream::Connected;
 	use rust_d3_geo::stream::StreamDrainStub;
 	use rust_d3_geo::stream::Unconnected;

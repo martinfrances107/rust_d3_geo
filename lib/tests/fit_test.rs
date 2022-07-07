@@ -20,7 +20,7 @@ mod fit_test {
 	use rust_d3_geo::projection::orthographic::Orthographic;
 	use rust_d3_geo::projection::stereographic::Stereographic;
 	use rust_d3_geo::projection::ClipAngleAdjust;
-	use rust_d3_geo::projection::FitSet;
+	use rust_d3_geo::projection::Fit;
 	use rust_d3_geo::projection::PrecisionAdjust;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ScaleGet;

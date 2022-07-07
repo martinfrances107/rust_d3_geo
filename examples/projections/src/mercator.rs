@@ -11,8 +11,8 @@ use rust_d3_geo::projection::mercator::Mercator;
 use rust_d3_geo::projection::ClipAngleSet;
 use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::ScaleAdjust;
-use rust_d3_geo::projection::TranslateAdjust;
+use rust_d3_geo::projection::Scale;
+use rust_d3_geo::projection::Translate;
 
 use crate::get_document;
 

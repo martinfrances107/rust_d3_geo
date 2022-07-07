@@ -8,11 +8,11 @@ use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneNoClip;
 use crate::projection::builder::types::BuilderCircleResampleClip;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
-use crate::projection::ScaleAdjust;
+use crate::projection::Scale;
 use crate::stream::Stream;
 use crate::Transform;
 
-impl<DRAIN, PR, T> ScaleAdjust for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Scale for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
@@ -26,7 +26,7 @@ where
     }
 }
 
-impl<DRAIN, PR, T> ScaleAdjust for BuilderAntimeridianResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Scale for BuilderAntimeridianResampleClip<DRAIN, PR, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
@@ -40,7 +40,7 @@ where
     }
 }
 
-impl<DRAIN, PR, T> ScaleAdjust for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Scale for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
@@ -54,7 +54,7 @@ where
     }
 }
 
-impl<DRAIN, PR, T> ScaleAdjust for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Scale for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
@@ -68,7 +68,7 @@ where
     }
 }
 
-impl<DRAIN, PR, T> ScaleAdjust for BuilderCircleResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Scale for BuilderCircleResampleNoClip<DRAIN, PR, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
@@ -82,7 +82,7 @@ where
     }
 }
 
-impl<DRAIN, PR, T> ScaleAdjust for BuilderCircleResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Scale for BuilderCircleResampleClip<DRAIN, PR, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
@@ -96,7 +96,7 @@ where
     }
 }
 
-impl<DRAIN, PR, T> ScaleAdjust for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Scale for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,

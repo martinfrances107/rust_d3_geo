@@ -516,15 +516,32 @@ where
     // }
 }
 
-impl<DRAIN, PR, T> BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Build for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
 where
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
     PR: Clone,
-    T: CoordFloat,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
+    type Drain = DRAIN;
+    type I = InterpolateCircle<T>;
+    type LB = LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
+    type LC = LineCircle<
+        DRAIN,
+        ResampleNoneNoClipC<DRAIN, PR, T>,
+        Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
+        T,
+    >;
+    type LU = LineCircle<DRAIN, ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>;
+    type PCNC = NoClipC<DRAIN, T>;
+    type PCNU = NoClipU<DRAIN, T>;
+    type PR = PR;
+    type PV = PVCircle<T>;
+    type RC = ResampleNoneNoClipC<DRAIN, PR, T>;
+    type RU = ResampleNoneNoClipU<DRAIN, PR, T>;
+    type T = T;
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build(&self) -> ProjectorCircleResampleNoneNoClip<DRAIN, PR, T> {
+    fn build(&self) -> ProjectorCircleResampleNoneNoClip<DRAIN, PR, T> {
         Projector {
             p_lb: PhantomData::<LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
             p_lc: PhantomData::<

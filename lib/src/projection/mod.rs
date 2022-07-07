@@ -48,8 +48,8 @@ pub mod transform;
 /// Helper functions.
 mod azimuthal;
 /// Helper functions found measuring the extent, width or height.
-mod fit_no_rectangle;
-mod fit_rectangle;
+mod fit_clip;
+mod fit_no_clip;
 
 type FitBounds<B, T> = Box<dyn Fn([Coordinate<T>; 2], B) -> B>;
 
@@ -213,66 +213,7 @@ pub trait ClipExtentAdjust {
 
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
-pub trait FitSet {
-    type Output;
-    /// f64 or f32.
-    type T;
-
-    /// Sets the projection’s scale and translate to fit the specified
-    /// geographic feature in the center of the given extent.
-    ///
-    /// Returns the projection.
-    ///
-    /// For example, to scale and translate the New Jersey State Plane
-    /// projection to fit a GeoJSON object nj in the center of a 960×500
-    /// bounding box with 20 pixels of padding on each side:
-    ///
-    /// Any clip extent is ignored when determining the new scale and
-    /// translate.
-    ///
-    /// The precision used to compute the bounding box of the given object is
-    /// computed at an effective scale of 150.
-    ///
-    /// @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]],
-    ///  where x₀ is the left side of the bounding box, y₀ is the top,
-    ///  x₁ is the right and y₁ is the bottom.
-    /// @param object A geographic feature supported by d3-geo
-    ///   (An extension of GeoJSON feature).
-    fn fit_extent(
-        self,
-        extent: [[Self::T; 2]; 2],
-        object: &impl Streamable<T = Self::T>,
-    ) -> Self::Output
-    where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
-
-    ///  Sets the projection’s scale and translate to fit the specified geographic feature in the center of an extent with the given size and top-left corner of [0, 0].
-    ///  Returns the projection.
-    ///
-    ///  Any clip extent is ignored when determining the new scale and translate. The precision used to compute the bounding box of the given object is computed at an effective scale of 150.
-    ///
-    ///  @param size The size of the extent, specified as an array [width, height].
-    ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-    fn fit_size(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self::Output
-    where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
-
-    /// Similar to fit_size where the width is automatically chosen from
-    /// the aspect ratio of object and the given constraint on height.
-    fn fit_width(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
-    where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
-
-    /// Similar to fit_size where the height is automatically chosen from
-    /// the aspect ratio of object and the given constraint on height.
-    fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
-    where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
-}
-
-/// Returns or sets the extent of the projection.
-/// A projection builder sub trait.
-pub trait FitAdjust {
+pub trait Fit {
     /// f64 or f32.
     type T;
 
@@ -297,11 +238,7 @@ pub trait FitAdjust {
     /// @param object A geographic feature supported by d3-geo
     ///   (An extension of GeoJSON feature).
 
-    fn fit_extent_adjust(
-        self,
-        extent: [[Self::T; 2]; 2],
-        object: &impl Streamable<T = Self::T>,
-    ) -> Self
+    fn fit_extent(self, extent: [[Self::T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
@@ -312,19 +249,19 @@ pub trait FitAdjust {
     ///
     ///  @param size The size of the extent, specified as an array [width, height].
     ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-    fn fit_size_adjust(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_size(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on width.
-    fn fit_width_adjust(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_width(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_height_adjust(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
@@ -525,7 +462,7 @@ pub trait ScaleGet {
 /// Adjust implies that the PCN - is a rectangle and it will be adjusted.
 ///
 /// Projection builder sub trait.
-pub trait ScaleAdjust {
+pub trait Scale {
     /// f32 or f64.
     type T;
 
@@ -552,7 +489,7 @@ pub trait TranslateGet {
 /// Controls the projections translation factor.
 ///
 /// Projection builder sub trait.
-pub trait TranslateAdjust {
+pub trait Translate {
     /// f32 or f64.
     type T;
 

@@ -23,8 +23,8 @@ use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::RotateSet;
-use rust_d3_geo::projection::ScaleAdjust;
-use rust_d3_geo::projection::TranslateAdjust;
+use rust_d3_geo::projection::Scale;
+use rust_d3_geo::projection::Translate;
 use rust_topojson_client::feature::Builder as FeatureBuilder;
 
 use topojson::Topology;

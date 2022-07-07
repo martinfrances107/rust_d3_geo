@@ -12,7 +12,7 @@ use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ClipAngleSet;
-use crate::projection::ScaleAdjust;
+use crate::projection::Scale;
 use crate::stream::Stream;
 use crate::Transform;
 

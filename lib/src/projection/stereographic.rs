@@ -8,7 +8,7 @@ use num_traits::float::FloatConst;
 use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ClipAngleSet;
-use crate::projection::ScaleAdjust;
+use crate::projection::Scale;
 use crate::stream::Stream;
 use crate::Transform;
 
