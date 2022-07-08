@@ -16,8 +16,6 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
-use super::builder::template::ResampleNoClipC;
-use super::builder::template::ResampleNoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;
 
@@ -37,14 +35,6 @@ impl<DRAIN, T> Default for Gnomic<DRAIN, T> {
 	}
 }
 
-// impl<DRAIN, T> ProjectionRawCommon<T> for Gnomic<DRAIN, T>
-// where
-//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
-//     // RESAMPLER: Resampler,
-//     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-// {
-// }
-
 impl<DRAIN, T> ProjectionRawBase<T> for Gnomic<DRAIN, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
@@ -59,15 +49,7 @@ where
 	where
 		DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	{
-		let clip = gen_clip_antimeridian::<
-			DRAIN,
-			NoClipC<DRAIN, T>,
-			NoClipU<DRAIN, T>,
-			Gnomic<DRAIN, T>,
-			ResampleNoClipC<DRAIN, Gnomic<DRAIN, T>, T>,
-			ResampleNoClipU<DRAIN, Gnomic<DRAIN, T>, T>,
-			T,
-		>();
+		let clip = gen_clip_antimeridian::<_, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, _, _, _, _>();
 		Builder::new(clip, Gnomic::default())
 			.scale(T::from(144.049_f64).unwrap())
 			.clip_angle(T::from(60_f64).unwrap())

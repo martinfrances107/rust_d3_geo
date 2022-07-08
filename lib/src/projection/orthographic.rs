@@ -16,8 +16,6 @@ use crate::projection::Scale;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::builder::template::ResampleNoClipC;
-use super::builder::template::ResampleNoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;
 
@@ -43,13 +41,6 @@ where
 	}
 }
 
-// impl<DRAIN, T> ProjectionRawCommon<T> for Orthographic<DRAIN, T>
-// where
-//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
-//     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-// {
-// }
-
 impl<DRAIN, T> ProjectionRawBase<T> for Orthographic<DRAIN, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
@@ -60,15 +51,7 @@ where
 
 	#[inline]
 	fn builder() -> Self::Builder {
-		let clip = gen_clip_antimeridian::<
-			DRAIN,
-			NoClipC<DRAIN, T>,
-			NoClipU<DRAIN, T>,
-			Orthographic<DRAIN, T>,
-			ResampleNoClipC<DRAIN, Orthographic<DRAIN, T>, T>,
-			ResampleNoClipU<DRAIN, Orthographic<DRAIN, T>, T>,
-			T,
-		>();
+		let clip = gen_clip_antimeridian::<_, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, _, _, _, _>();
 		Builder::new(clip, Orthographic::default())
 			.scale(T::from(249.5_f64).unwrap())
 			.clip_angle(T::from(90_f64 + EPSILON).unwrap())

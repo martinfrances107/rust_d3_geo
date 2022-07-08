@@ -15,8 +15,6 @@ use crate::Transform;
 use super::azimuthal::azimuthal_invert;
 use super::builder::template::NoClipC;
 use super::builder::template::NoClipU;
-use super::builder::template::ResampleNoClipC;
-use super::builder::template::ResampleNoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;
 use super::ProjectionRawCommon;
@@ -60,15 +58,7 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        let clip = gen_clip_antimeridian::<
-            DRAIN,
-            NoClipC<DRAIN, T>,
-            NoClipU<DRAIN, T>,
-            Stereographic<DRAIN, T>,
-            ResampleNoClipC<DRAIN, Stereographic<DRAIN, T>, T>,
-            ResampleNoClipU<DRAIN, Stereographic<DRAIN, T>, T>,
-            T,
-        >();
+        let clip = gen_clip_antimeridian::<_, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, _, _, _, _>();
 
         Builder::new(clip, Stereographic::default())
             .scale(T::from(250_f64).unwrap())

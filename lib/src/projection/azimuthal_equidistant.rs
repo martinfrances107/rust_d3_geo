@@ -19,8 +19,6 @@ use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
-use super::builder::template::ResampleNoClipC;
-use super::builder::template::ResampleNoClipU;
 
 /// Why the Phantom Data is required here...
 ///
@@ -32,13 +30,6 @@ pub struct AzimuthalEquiDistant<DRAIN, T> {
 	p_t: PhantomData<T>,
 }
 
-// impl<DRAIN, T> ProjectionRawCommon<T> for AzimuthalEquiDistant<DRAIN, T>
-// where
-//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
-//     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-// {
-// }
-
 impl<DRAIN, T> ProjectionRawBase<T> for AzimuthalEquiDistant<DRAIN, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
@@ -49,15 +40,7 @@ where
 
 	#[inline]
 	fn builder() -> Self::Builder {
-		let clip = gen_clip_antimeridian::<
-			DRAIN,
-			NoClipC<DRAIN, T>,
-			NoClipU<DRAIN, T>,
-			AzimuthalEquiDistant<DRAIN, T>,
-			ResampleNoClipC<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-			ResampleNoClipU<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>,
-			T,
-		>();
+		let clip = gen_clip_antimeridian::<_, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, _, _, _, _>();
 		Builder::new(clip, AzimuthalEquiDistant::default())
 			.scale(T::from(79.4188_f64).unwrap())
 			.clip_angle(T::from(180_f64 - 1e-3).unwrap())

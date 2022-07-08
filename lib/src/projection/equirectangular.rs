@@ -35,13 +35,6 @@ impl<DRAIN, T> Default for Equirectangular<DRAIN, T> {
 	}
 }
 
-// impl<DRAIN, T> ProjectionRawCommon<T> for Equirectangular<DRAIN, T>
-// where
-//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
-//     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-// {
-// }
-
 impl<DRAIN, T> ProjectionRawBase<T> for Equirectangular<DRAIN, T>
 where
 	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
@@ -52,15 +45,7 @@ where
 
 	#[inline]
 	fn builder() -> Self::Builder {
-		let clip = gen_clip_antimeridian::<
-			DRAIN,
-			NoClipC<DRAIN, T>,
-			NoClipU<DRAIN, T>,
-			Equirectangular<DRAIN, T>,
-			ResampleNoClipC<DRAIN, Equirectangular<DRAIN, T>, T>,
-			ResampleNoClipU<DRAIN, Equirectangular<DRAIN, T>, T>,
-			T,
-		>();
+		let clip = gen_clip_antimeridian::<_, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, _, _, _, _>();
 		Builder::new(clip, Equirectangular::default()).scale(T::from(152.63_f64).unwrap())
 	}
 }
