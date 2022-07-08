@@ -101,32 +101,32 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
 }
 
 // TODO must split itnto NoClip / Clip
-impl<DRAIN, PR, T> ReflectSet for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
-where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
-	T: CoordFloat + FloatConst,
-{
-	type T = T;
+// impl<DRAIN, PR, T> ReflectSet for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
+// where
+// 	DRAIN: Stream<EP = DRAIN, T = T>,
+// 	PR: Clone + Transform<T = T>,
+// 	T: CoordFloat + FloatConst,
+// {
+// 	type T = T;
 
-	/// Set the projection builder to invert the x-coordinate.
-	fn reflect_x(mut self, reflect: bool) -> Self {
-		if reflect {
-			self.sx = T::from(-1.0_f64).unwrap();
-		} else {
-			self.sx = T::one();
-		}
-		self.recenter_no_resampling()
-	}
+// 	/// Set the projection builder to invert the x-coordinate.
+// 	fn reflect_x(mut self, reflect: bool) -> Self {
+// 		if reflect {
+// 			self.sx = T::from(-1.0_f64).unwrap();
+// 		} else {
+// 			self.sx = T::one();
+// 		}
+// 		self.recenter_no_resampling()
+// 	}
 
-	/// Set the projection builder to invert the y-coordinate.
-	#[inline]
-	fn reflect_y(mut self, reflect: bool) -> Self {
-		if reflect {
-			self.sy = T::from(-1.0_f64).unwrap();
-		} else {
-			self.sy = T::one();
-		}
-		self.recenter_no_resampling()
-	}
-}
+// 	/// Set the projection builder to invert the y-coordinate.
+// 	#[inline]
+// 	fn reflect_y(mut self, reflect: bool) -> Self {
+// 		if reflect {
+// 			self.sy = T::from(-1.0_f64).unwrap();
+// 		} else {
+// 			self.sy = T::one();
+// 		}
+// 		self.recenter_no_resampling()
+// 	}
+// }

@@ -10,9 +10,7 @@ use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::RotateSet;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::Builder;
@@ -59,22 +57,6 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	> where
-	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-{
-	type T = T;
-
-	/// Sets the rotation angles as measured in degrees.
-	fn rotate(mut self, angles: &[T; 3]) -> Self {
-		self.base = self.base.rotate(angles);
-		self
-	}
-}
-
-// TODO must vary by ClipC/NoClipC
-impl<DRAIN, PR, T> RotateSet for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
-where
-	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

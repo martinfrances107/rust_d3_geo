@@ -93,22 +93,3 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 		}
 	}
 }
-
-impl<DRAIN, PR, T> AngleSet for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
-where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	type T = T;
-
-	/// Sets the rotation angles as measured in degrees.
-	fn angle(self, angle: T) -> Self {
-		let base = self.base.angle(angle);
-		Self {
-			extent: self.extent,
-			pr: self.pr,
-			base,
-		}
-	}
-}

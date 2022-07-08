@@ -81,36 +81,36 @@ where
 }
 
 // TODO must vary by Clip/NoClip.
-impl<DRAIN, PR, T> CenterSet
-    for Builder<
-        DRAIN,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<
-            DRAIN,
-            ResampleNoneClipC<DRAIN, PR, T>,
-            Connected<ResampleNoneClipC<DRAIN, PR, T>>,
-            T,
-        >,
-        LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
-        ClipC<DRAIN, T>,
-        ClipU<DRAIN, T>,
-        PR,
-        PVAntimeridian<T>,
-        ResampleNoneClipC<DRAIN, PR, T>,
-        ResampleNoneClipU<DRAIN, PR, T>,
-        T,
-    >
-where
-    DRAIN: Stream<EP = DRAIN, T = T>,
-    PR: Clone + Transform<T = T>,
-    T: CoordFloat + FloatConst,
-{
-    type T = T;
+// impl<DRAIN, PR, T> CenterSet
+//     for Builder<
+//         DRAIN,
+//         InterpolateAntimeridian<T>,
+//         LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+//         LineAntimeridian<
+//             DRAIN,
+//             ResampleNoneClipC<DRAIN, PR, T>,
+//             Connected<ResampleNoneClipC<DRAIN, PR, T>>,
+//             T,
+//         >,
+//         LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
+//         ClipC<DRAIN, T>,
+//         ClipU<DRAIN, T>,
+//         PR,
+//         PVAntimeridian<T>,
+//         ResampleNoneClipC<DRAIN, PR, T>,
+//         ResampleNoneClipU<DRAIN, PR, T>,
+//         T,
+//     >
+// where
+//     DRAIN: Stream<EP = DRAIN, T = T>,
+//     PR: Clone + Transform<T = T>,
+//     T: CoordFloat + FloatConst,
+// {
+//     type T = T;
 
-    fn center(mut self, p: &Coordinate<T>) -> Self {
-        self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
-        self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
-        self.recenter_no_resampling()
-    }
-}
+//     fn center(mut self, p: &Coordinate<T>) -> Self {
+//         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
+//         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
+//         self.recenter_no_resampling()
+//     }
+// }

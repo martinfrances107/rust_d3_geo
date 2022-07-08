@@ -1,3 +1,8 @@
+use crate::projection::builder::BuilderAntimeridianResampleNoClip;
+use crate::projection::builder::ResampleNoneClipC;
+use crate::projection::builder::ResampleNoneClipU;
+use crate::projection::builder::ResampleNoneNoClipC;
+use crate::projection::builder::ResampleNoneNoClipU;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -17,7 +22,6 @@ use super::NoClipC;
 use super::NoClipU;
 use super::ResampleNoClipC;
 use super::ResampleNoClipU;
-use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 
 impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
 	for Builder<
@@ -73,8 +77,21 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
 	}
 }
 
-impl<DRAIN, PR, T> Translate for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
-where
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
+	for Builder<
+		DRAIN,
+		I,
+		LB,
+		LC,
+		LU,
+		NoClipC<DRAIN, T>,
+		NoClipU<DRAIN, T>,
+		PR,
+		PV,
+		ResampleNoneNoClipC<DRAIN, PR, T>,
+		ResampleNoneNoClipU<DRAIN, PR, T>,
+		T,
+	> where
 	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
 	T: CoordFloat + FloatConst,
@@ -88,11 +105,24 @@ where
 	}
 }
 
-impl<DRAIN, PR, T> Translate for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
-where
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
+	for Builder<
+		DRAIN,
+		I,
+		LB,
+		LC,
+		LU,
+		ClipC<DRAIN, T>,
+		ClipU<DRAIN, T>,
+		PR,
+		PV,
+		ResampleNoneClipC<DRAIN, PR, T>,
+		ResampleNoneClipU<DRAIN, PR, T>,
+		T,
+	> where
 	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
-	T: CoordFloat + FloatConst,
+	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;
 
