@@ -2,7 +2,6 @@
 #[cfg(test)]
 mod path_string_test {
 
-    use rust_d3_geo::projection::Translate;
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
@@ -38,6 +37,7 @@ mod path_string_test {
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::projection::Translate;
     use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
     use rust_d3_geo::stream::Unconnected;

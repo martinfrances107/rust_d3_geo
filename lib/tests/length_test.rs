@@ -7,16 +7,14 @@ mod length_test {
 
     use geo::line_string;
     use geo::polygon;
-    use pretty_assertions::assert_eq;
-    // use geo::Geometry;
     use geo::LineString;
     use geo::MultiLineString;
     use geo::MultiPoint;
     use geo::MultiPolygon;
     use geo::Point;
     use geo::Polygon;
-    // use rust_d3_geo::data_object::FeatureCollection;
-    // use rust_d3_geo::data_object::FeaturesStruct;
+    use pretty_assertions::assert_eq;
+
     use rust_d3_geo::in_delta::in_delta;
     use rust_d3_geo::length::Stream as LengthStream;
 

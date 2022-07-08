@@ -4,7 +4,6 @@ mod index_test {
 
     extern crate pretty_assertions;
 
-    use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
     use std::f64::consts::PI;
     use std::fmt::Debug;
     use std::fmt::Display;
@@ -24,6 +23,7 @@ mod index_test {
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
+    use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
