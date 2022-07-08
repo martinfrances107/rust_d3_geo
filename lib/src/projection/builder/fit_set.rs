@@ -75,8 +75,7 @@ where
 	where
 		Self::T: AsPrimitive<T> + CoordFloat,
 	{
-		todo!();
-		// fit_height(self, h, object)
+		fit_height_no_clip(self, h, object)
 	}
 
 	#[inline]
@@ -84,8 +83,7 @@ where
 	where
 		Self::T: AsPrimitive<T> + CoordFloat,
 	{
-		todo!();
-		// fit_size(self, size, object)
+		fit_size_no_clip(self, size, object)
 	}
 
 	#[inline]
@@ -93,8 +91,7 @@ where
 	where
 		Self::T: AsPrimitive<T> + CoordFloat,
 	{
-		todo!();
-		// fit_width(self, w, object)
+		fit_width_no_clip(self, w, object)
 	}
 }
 
@@ -118,8 +115,7 @@ where
 	where
 		Self::T: AsPrimitive<T> + CoordFloat,
 	{
-		todo!();
-		// fit_height(self, h, object)
+		fit_height_no_clip(self, h, object)
 	}
 
 	#[inline]
@@ -135,7 +131,6 @@ where
 	where
 		Self::T: AsPrimitive<T> + CoordFloat,
 	{
-		todo!();
-		// fit_width(self, w, object)
+		fit_width_no_clip(self, w, object)
 	}
 }
