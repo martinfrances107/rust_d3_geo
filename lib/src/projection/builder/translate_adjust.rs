@@ -1,11 +1,11 @@
-use crate::projection::builder::BuilderCircleResampleNoneNoClip;
-use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::projection::builder::BuilderCircleResampleNoneNoClip;
 use crate::projection::Translate;
+use crate::stream::Stream;
 use crate::Transform;
 
 use super::template::ClipC;

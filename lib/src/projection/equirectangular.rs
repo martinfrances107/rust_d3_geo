@@ -1,5 +1,3 @@
-use crate::projection::Scale;
-use crate::stream::Stream;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -9,6 +7,8 @@ use num_traits::float::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
+use crate::projection::Scale;
+use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder::template::NoClipC;

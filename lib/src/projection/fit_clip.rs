@@ -11,17 +11,12 @@
 //! 3) SWAP -  implies inserting PostClip Rectangle.
 //!
 
-use crate::projection::builder::template::ClipC;
-use crate::projection::builder::template::ClipU;
-use crate::projection::Build;
-use crate::projection::ClipExtentBounded;
-use crate::Transform;
-use approx::AbsDiffEq;
-use num_traits::AsPrimitive;
 use std::fmt::Debug;
 
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::AsPrimitive;
 
 use crate::clip::buffer::Buffer;
 use crate::clip::Bufferable;
@@ -30,6 +25,10 @@ use crate::clip::LineConnected;
 use crate::clip::PointVisible;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
+use crate::projection::builder::template::ClipC;
+use crate::projection::builder::template::ClipU;
+use crate::projection::Build;
+use crate::projection::ClipExtentBounded;
 use crate::projection::ClipExtentSet;
 use crate::projection::FitBounds;
 use crate::projection::FloatConst;
@@ -38,6 +37,7 @@ use crate::projection::Translate;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Streamable;
+use crate::Transform;
 
 pub(super) fn fit_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
 	builder: B,

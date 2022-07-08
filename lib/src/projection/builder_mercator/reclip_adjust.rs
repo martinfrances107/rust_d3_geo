@@ -1,5 +1,3 @@
-use crate::projection::Build;
-use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -7,11 +5,13 @@ use num_traits::FloatConst;
 
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
+use crate::projection::Build;
 use crate::projection::ClipExtentAdjust;
 use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
 use crate::projection::TransformExtent;
 use crate::rot::rotate_radians;
+use crate::stream::Stream;
 
 use crate::Transform;
 

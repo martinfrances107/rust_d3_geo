@@ -2,7 +2,6 @@ pub mod angle;
 pub mod builder;
 pub mod center_get;
 pub mod center_set;
-pub mod clip_angle_get;
 pub mod clip_angle_set;
 pub mod clip_bounded;
 pub mod clip_extent_adjust;
@@ -26,7 +25,6 @@ pub mod translate_get;
 pub mod translate_set;
 pub mod types;
 
-use crate::stream::Streamable;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -47,6 +45,7 @@ use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResam
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Projector;
 use crate::stream::Stream;
+use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
 

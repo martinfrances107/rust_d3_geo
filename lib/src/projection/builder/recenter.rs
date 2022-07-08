@@ -1,5 +1,3 @@
-use crate::projection::builder::BuilderCircleResampleNoneNoClip;
-use crate::stream::Stream;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
@@ -11,6 +9,7 @@ use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneNoClip;
+use crate::projection::builder::BuilderCircleResampleNoneNoClip;
 use crate::projection::builder::ClipC;
 use crate::projection::builder::ClipU;
 use crate::projection::builder::NoClipC;
@@ -22,6 +21,7 @@ use crate::projection::resampler::resample::Resample;
 use crate::projection::transform::generate as generate_str;
 use crate::rot::rotate_radians;
 use crate::rot::rotator_radians::RotatorRadians;
+use crate::stream::Stream;
 use crate::Transform;
 
 use super::Builder;

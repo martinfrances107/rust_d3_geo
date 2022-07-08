@@ -11,8 +11,6 @@
 //! 3) Restore Post Clip Rectangle
 //!
 
-use crate::path::Result;
-use crate::projection::builder::template::NoClipU;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -25,7 +23,9 @@ use crate::clip::Interpolator;
 use crate::clip::LineConnected;
 use crate::clip::PointVisible;
 use crate::path::bounds::Bounds;
+use crate::path::Result;
 use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
 use crate::projection::Build;
 use crate::projection::Debug;
 use crate::projection::Scale;

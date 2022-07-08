@@ -216,46 +216,46 @@ mod mercator_tests {
 		);
 	}
 
-	// 	#[test]
-	// 	fn rotate_does_not_affect_automatic_clip_extent() {
-	// 		println!("mercator.rotate(…) does not affect the automatic clip extent");
+	// #[test]
+	// fn rotate_does_not_affect_automatic_clip_extent() {
+	// 	println!("mercator.rotate(…) does not affect the automatic clip extent");
 
-	// 		let object: Geometry<f64> = Geometry::MultiPoint(
-	// 			vec![
-	// 				(-82.35024908550241, 29.649391549778745),
-	// 				(-82.35014449996858, 29.65075946917633),
-	// 				(-82.34916073446641, 29.65070265688781),
-	// 				(-82.3492653331286, 29.64933474064504),
-	// 			]
-	// 			.into(),
-	// 		);
+	// 	let object: Geometry<f64> = Geometry::MultiPoint(
+	// 		vec![
+	// 			(-82.35024908550241, 29.649391549778745),
+	// 			(-82.35014449996858, 29.65075946917633),
+	// 			(-82.34916073446641, 29.65070265688781),
+	// 			(-82.3492653331286, 29.64933474064504),
+	// 		]
+	// 		.into(),
+	// 	);
 
-	// 		let pb: BuilderMercatorAntimeridianResampleClip<
-	// 			StreamDrainStub<f64>,
-	// 			Mercator<StreamDrainStub<f64>, f64>,
-	// 			f64,
-	// 		> = Mercator::builder().fit_extent_adjust([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
-	// 		assert_eq!(pb.get_scale(), 20969742.365692537_f64);
-	// 		assert_eq!(
-	// 			pb.get_translate(),
-	// 			Coordinate {
-	// 				x: 30139734.76760269_f64,
-	// 				y: 11371473.949706702_f64
-	// 			}
-	// 		);
+	// 	let pb: BuilderMercatorAntimeridianResampleClip<
+	// 		StreamDrainStub<f64>,
+	// 		Mercator<StreamDrainStub<f64>, f64>,
+	// 		f64,
+	// 	> = Mercator::builder().fit_extent_adjust([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
+	// 	assert_eq!(pb.get_scale(), 20969742.365692537_f64);
+	// 	assert_eq!(
+	// 		pb.get_translate(),
+	// 		Coordinate {
+	// 			x: 30139734.76760269_f64,
+	// 			y: 11371473.949706702_f64
+	// 		}
+	// 	);
 
-	// 		let pb = pb
-	// 			.rotate(&[0_f64, 95_f64, 0_f64])
-	// 			.fit_extent_adjust([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
-	// 		assert_eq!(pb.get_rotate(), [0_f64, 95_f64, 0_f64]);
-	// 		assert_eq!(pb.get_scale(), 35781690.650920525_f64);
-	// 		assert!(in_delta_coordinate(
-	// 			&pb.get_translate(),
-	// 			&Coordinate {
-	// 				x: 75115911.95344563_f64,
-	// 				y: 2586046.4116968135_f64
-	// 			},
-	// 			1e-6
-	// 		));
-	// 	}
+	// 	let pb = pb
+	// 		.rotate(&[0_f64, 95_f64, 0_f64])
+	// 		.fit_extent_adjust([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
+	// 	assert_eq!(pb.get_rotate(), [0_f64, 95_f64, 0_f64]);
+	// 	assert_eq!(pb.get_scale(), 35781690.650920525_f64);
+	// 	assert!(in_delta_coordinate(
+	// 		&pb.get_translate(),
+	// 		&Coordinate {
+	// 			x: 75115911.95344563_f64,
+	// 			y: 2586046.4116968135_f64
+	// 		},
+	// 		1e-6
+	// 	));
+	// }
 }

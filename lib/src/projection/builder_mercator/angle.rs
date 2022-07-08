@@ -1,4 +1,3 @@
-use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -16,6 +15,7 @@ use crate::projection::builder_mercator::ResampleNoClipC;
 use crate::projection::builder_mercator::ResampleNoClipU;
 use crate::projection::AngleGet;
 use crate::projection::AngleSet;
+use crate::stream::Stream;
 
 use crate::Transform;
 

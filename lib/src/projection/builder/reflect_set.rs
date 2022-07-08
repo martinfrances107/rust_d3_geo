@@ -1,4 +1,3 @@
-use crate::stream::Stream;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -8,6 +7,7 @@ use crate::projection::builder::ResampleClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::ReflectSet;
+use crate::stream::Stream;
 use crate::Transform;
 
 use super::template::ClipC;

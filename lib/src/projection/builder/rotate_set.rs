@@ -1,4 +1,3 @@
-use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -15,6 +14,7 @@ use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::RotateSet;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 

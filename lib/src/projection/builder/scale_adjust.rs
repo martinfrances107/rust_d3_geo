@@ -1,4 +1,3 @@
-use crate::projection::builder::BuilderCircleResampleNoneNoClip;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -8,6 +7,7 @@ use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneNoClip;
 use crate::projection::builder::types::BuilderCircleResampleClip;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
+use crate::projection::builder::BuilderCircleResampleNoneNoClip;
 use crate::projection::Scale;
 use crate::stream::Stream;
 use crate::Transform;

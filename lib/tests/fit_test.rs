@@ -13,22 +13,17 @@ mod fit_test {
 	use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
 	use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
 	use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleNoClip;
-	use rust_d3_geo::projection::builder::types::BuilderCircleResampleNoClip;
 	use rust_d3_geo::projection::equirectangular::Equirectangular;
 	use rust_d3_geo::projection::gnomic::Gnomic;
-	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::orthographic::Orthographic;
 	use rust_d3_geo::projection::stereographic::Stereographic;
 	use rust_d3_geo::projection::ClipAngleAdjust;
 	use rust_d3_geo::projection::Fit;
-	use rust_d3_geo::projection::PrecisionAdjust;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ScaleGet;
 	use rust_d3_geo::projection::TranslateGet;
-	use rust_d3_geo::stream::StreamDrainStub;
 	use std::fs::File;
 
-	use geo::polygon;
 	use geo::Geometry;
 	use topojson::Topology;
 
