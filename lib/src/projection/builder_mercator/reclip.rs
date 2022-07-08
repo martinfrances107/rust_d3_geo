@@ -7,8 +7,6 @@ use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResam
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneNoClip;
-use crate::projection::builder_mercator::types::BuilderMercatorCircleResampleClip;
-use crate::projection::builder_mercator::types::BuilderMercatorCircleResampleNoClip;
 use crate::projection::builder_mercator::types::BuilderMercatorCircleResampleNoneClip;
 use crate::projection::builder_mercator::types::BuilderMercatorCircleResampleNoneNoClip;
 use crate::projection::Build;

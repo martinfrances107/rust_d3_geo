@@ -1,14 +1,12 @@
-use crate::projection::builder::BuilderAntimeridianResampleNoClip;
-use crate::projection::builder::ResampleNoneClipC;
-use crate::projection::builder::ResampleNoneClipU;
-use crate::projection::builder::ResampleNoneNoClipC;
-use crate::projection::builder::ResampleNoneNoClipU;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::projection::builder::BuilderCircleResampleNoneNoClip;
+use crate::projection::builder::ResampleNoneClipC;
+use crate::projection::builder::ResampleNoneClipU;
+use crate::projection::builder::ResampleNoneNoClipC;
+use crate::projection::builder::ResampleNoneNoClipU;
 use crate::projection::Translate;
 use crate::stream::Stream;
 use crate::Transform;

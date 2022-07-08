@@ -1,7 +1,3 @@
-use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::builder::template::ResampleNoneNoClipU;
-use crate::projection::Build;
-use approx::AbsDiffEq;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -13,26 +9,18 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
 use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoneClipC;
+use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::builder::template::ResampleNoneNoClipC;
-use crate::projection::builder::types::BuilderAntimeridianResampleClip;
+use crate::projection::builder::template::ResampleNoneNoClipU;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneNoClip;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::types::BuilderCircleResampleNoneNoClip;
-use crate::projection::projector::types::ProjectorAntimeridianResampleClip;
-use crate::projection::projector::types::ProjectorAntimeridianResampleNoClip;
-use crate::projection::projector::types::ProjectorAntimeridianResampleNoneClip;
-use crate::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
-use crate::projection::projector::types::ProjectorCircleResampleNoClip;
-use crate::projection::projector::types::ProjectorCircleResampleNoneNoClip;
 use crate::rot::rotate_radians;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
@@ -45,9 +33,7 @@ use super::builder::template::NoClipC;
 use super::builder::template::NoClipU;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
-use super::projector::Projector;
 use super::resampler::resample::Resample;
-use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 
@@ -85,20 +71,6 @@ pub mod template;
 mod translate_adjust;
 mod translate_get;
 pub mod types;
-
-/// Design Review
-///
-/// fn build() varies by 3 independant variables.
-///
-/// 1) Clip stratergy
-/// 2) Resample Stratergy
-/// 3) Bounding stratergy
-///
-/// NB only 6/16 of the required are implemented.
-/// 16 seems crazy.
-///
-/// TODO Is there a neater way forward here.
-/// With macros or refactor?
 
 /// Marker trait for structs Identity or Rectangle
 pub trait PostClipNode {}
