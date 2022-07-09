@@ -2,6 +2,7 @@
 #[cfg(test)]
 mod mercator_tests {
 
+	use rust_d3_geo::projection::Build;
 	extern crate pretty_assertions;
 
 	use geo::Coordinate;
