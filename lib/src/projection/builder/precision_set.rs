@@ -1,4 +1,3 @@
-use crate::stream::Stream;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
@@ -18,6 +17,7 @@ use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::PrecisionSet;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 

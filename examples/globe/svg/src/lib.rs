@@ -14,7 +14,7 @@ extern crate web_sys;
 use geo::Coordinate;
 use geo::Geometry;
 use geo::GeometryCollection;
-use rust_d3_geo::projection::RotateSet;
+use rust_d3_geo::projection::Rotate;
 use rust_d3_geo::projection::Translate;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;

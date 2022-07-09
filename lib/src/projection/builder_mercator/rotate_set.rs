@@ -10,12 +10,12 @@ use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
-use crate::projection::RotateSet;
+use crate::projection::Rotate;
 use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> Rotate
 	for Builder<
 		DRAIN,
 		I,
@@ -42,7 +42,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
 	}
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> Rotate
 	for Builder<
 		DRAIN,
 		I,

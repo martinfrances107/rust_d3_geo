@@ -445,7 +445,7 @@ pub trait RotateGet {
 
 /// Rotation getter and setters.
 /// A projection builder sub trait.
-pub trait RotateSet {
+pub trait Rotate {
     /// f64 or f32.
     type T;
 

@@ -1,4 +1,3 @@
-use crate::projection::RecenterWithResampling;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -7,7 +6,8 @@ use crate::projection::builder::ResampleClipC;
 use crate::projection::builder::ResampleClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
-use crate::projection::RotateSet;
+use crate::projection::RecenterWithResampling;
+use crate::projection::Rotate;
 use crate::Transform;
 
 use super::template::ClipC;
@@ -16,7 +16,7 @@ use super::template::NoClipC;
 use super::template::NoClipU;
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> Rotate
     for Builder<
         DRAIN,
         I,
@@ -49,7 +49,7 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> Rotate
     for Builder<
         DRAIN,
         I,

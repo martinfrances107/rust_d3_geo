@@ -1,4 +1,3 @@
-use crate::projection::RecenterWithResampling;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -22,6 +21,7 @@ use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneNoClip;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::types::BuilderCircleResampleNoneNoClip;
+use crate::projection::RecenterWithResampling;
 use crate::rot::rotate_radians;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
@@ -64,8 +64,8 @@ mod precision_set;
 mod recenter;
 mod reflect_get;
 mod reflect_set;
+mod rotate;
 mod rotate_get;
-mod rotate_set;
 mod scale_adjust;
 mod scale_get;
 pub mod template;

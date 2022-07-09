@@ -20,8 +20,8 @@ mod mercator_tests {
 	use rust_d3_geo::projection::Fit;
 	use rust_d3_geo::projection::PrecisionBypass;
 	use rust_d3_geo::projection::ProjectionRawBase;
+	use rust_d3_geo::projection::Rotate;
 	use rust_d3_geo::projection::RotateGet;
-	use rust_d3_geo::projection::RotateSet;
 	use rust_d3_geo::projection::Scale;
 	use rust_d3_geo::projection::ScaleGet;
 	use rust_d3_geo::projection::Translate;
