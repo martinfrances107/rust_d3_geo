@@ -15,9 +15,9 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::Reclip;
-use super::TranslateSet;
+use super::TranslateReclip;
 
-impl<DRAIN, PR, T> TranslateSet for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> TranslateReclip for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
@@ -34,7 +34,7 @@ where
 	}
 }
 
-impl<DRAIN, PR, T> TranslateSet for BuilderMercatorAntimeridianResampleNoneNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> TranslateReclip for BuilderMercatorAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,

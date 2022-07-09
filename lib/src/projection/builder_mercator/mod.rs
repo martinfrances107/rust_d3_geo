@@ -20,10 +20,10 @@ pub mod rotate_get;
 pub mod rotate_set;
 pub mod scale_adjust;
 pub mod scale_get;
-pub mod scale_set;
+pub mod scale_reclip;
 pub mod translate_adjust;
 pub mod translate_get;
-pub mod translate_set;
+pub mod translate_reclip;
 pub mod types;
 
 use crate::projection::Build;
@@ -122,7 +122,7 @@ pub trait FitReclip {
 /// Here  centering, scaling and translate all end in a reclip.
 /// That is all involve a tranformation of the PCN
 /// specifcally a Identity struct to a Rectangle struct.
-pub trait ScaleSet {
+pub trait ScaleReclip {
 	/// Output type where the PCN is set to Rectangle.
 	type Output;
 
@@ -139,7 +139,7 @@ pub trait ScaleSet {
 /// Controls the projections translation factor.
 ///
 /// Projection builder sub trait.
-pub trait TranslateSet {
+pub trait TranslateReclip {
 	type Output;
 	/// f32 or f64.
 	type T;

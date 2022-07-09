@@ -7,7 +7,7 @@ use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-use crate::projection::builder_mercator::ScaleSet;
+use crate::projection::builder_mercator::ScaleReclip;
 use crate::stream::Stream;
 use crate::Transform;
 

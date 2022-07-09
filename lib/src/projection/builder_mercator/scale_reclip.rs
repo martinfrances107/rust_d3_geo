@@ -9,9 +9,9 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::Reclip;
-use super::ScaleSet;
+use super::ScaleReclip;
 
-impl<DRAIN, PR, T> ScaleSet for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> ScaleReclip for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T> + TransformExtent<T>,
