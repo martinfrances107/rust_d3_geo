@@ -23,9 +23,10 @@ pub(crate) mod rectangle;
 /// Clipping break line into segments which can lasted be reconnected together.
 pub(crate) mod rejoin;
 
-use crate::stream::Stream;
 use geo::CoordFloat;
 use geo::Coordinate;
+
+use crate::stream::Stream;
 
 use buffer::Buffer;
 

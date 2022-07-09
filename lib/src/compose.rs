@@ -4,7 +4,7 @@ use geo::{CoordFloat, Coordinate};
 
 use crate::Transform;
 
-/// Combines transform together.
+/// Combines transforms together.
 #[derive(Clone, Copy, Debug)]
 pub struct Compose<T, TA, TB> {
     p_t: PhantomData<T>,

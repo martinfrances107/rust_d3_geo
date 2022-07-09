@@ -13,8 +13,6 @@ use crate::Transform;
 
 use super::builder::template::NoClipC;
 use super::builder::template::NoClipU;
-use super::builder::template::ResampleNoClipC;
-use super::builder::template::ResampleNoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;
 

@@ -46,13 +46,6 @@ where
 	}
 }
 
-// impl<DRAIN, T> ProjectionRawMercator<T> for Mercator<DRAIN, T>
-// where
-//     DRAIN: Default + Stream<EP = DRAIN, T = T> ,
-//     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-// {
-// }
-
 impl<DRAIN, T> TransformExtent<T> for Mercator<DRAIN, T>
 where
 	DRAIN: Clone,

@@ -10,7 +10,6 @@ use num_traits::FloatConst;
 use crate::abs_diff_eq;
 use crate::clip::intersection::Intersection;
 use crate::clip::rejoin::link::link;
-// use crate::clip::InterpolateFn;
 use crate::clip::Interpolator;
 use crate::math::EPSILON;
 use crate::stream::Stream;
