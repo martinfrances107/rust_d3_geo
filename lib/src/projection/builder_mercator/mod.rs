@@ -6,7 +6,8 @@ pub mod clip_angle_set;
 pub mod clip_bounded;
 pub mod clip_extent_adjust;
 pub mod clip_extent_set;
-pub mod fit_adjust;
+pub mod fit;
+pub mod fit_reclip;
 pub mod precision_adjust;
 pub mod precision_bypass;
 pub mod precision_get;
@@ -52,7 +53,11 @@ use crate::Transform;
 
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
-pub trait FitSet {
+/// This trait is useful only for mercator projection.
+/// Here  centering, scaling and translate all end in a reclip.
+/// That is all involve a tranformation of the PCN
+/// specifcally a Identity struct to a Rectangle struct.
+pub trait FitReclip {
 	type Output;
 	/// f64 or f32.
 	type T;
@@ -77,7 +82,7 @@ pub trait FitSet {
 	///  x₁ is the right and y₁ is the bottom.
 	/// @param object A geographic feature supported by d3-geo
 	///   (An extension of GeoJSON feature).
-	fn fit_extent(
+	fn fit_extent_reclip(
 		self,
 		extent: [[Self::T; 2]; 2],
 		object: &impl Streamable<T = Self::T>,
@@ -92,25 +97,29 @@ pub trait FitSet {
 	///
 	///  @param size The size of the extent, specified as an array [width, height].
 	///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-	fn fit_size(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self::Output
+	fn fit_size_reclip(
+		self,
+		size: [Self::T; 2],
+		object: &impl Streamable<T = Self::T>,
+	) -> Self::Output
 	where
 		Self::T: AsPrimitive<Self::T> + CoordFloat;
 
 	/// Similar to fit_size where the width is automatically chosen from
 	/// the aspect ratio of object and the given constraint on height.
-	fn fit_width(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+	fn fit_width_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
 	where
 		Self::T: AsPrimitive<Self::T> + CoordFloat;
 
 	/// Similar to fit_size where the height is automatically chosen from
 	/// the aspect ratio of object and the given constraint on height.
-	fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+	fn fit_height_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
 	where
 		Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
 
 /// This trait is useful only for mercator projection.
-/// Here  centering, scaling and trasnlate all end in a reclip.
+/// Here  centering, scaling and translate all end in a reclip.
 /// That is all involve a tranformation of the PCN
 /// specifcally a Identity struct to a Rectangle struct.
 pub trait ScaleSet {

@@ -13,6 +13,7 @@ mod mercator_tests {
 	use rust_d3_geo::path::builder::Builder as PathBuilder;
 	use rust_d3_geo::path::string::String as PathString;
 	use rust_d3_geo::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
+	use rust_d3_geo::projection::builder_mercator::FitReclip;
 	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::ClipExtentAdjust;
 	use rust_d3_geo::projection::ClipExtentBounded;
@@ -235,7 +236,7 @@ mod mercator_tests {
 	// 		StreamDrainStub<f64>,
 	// 		Mercator<StreamDrainStub<f64>, f64>,
 	// 		f64,
-	// 	> = Mercator::builder().fit_extent_adjust([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
+	// 	> = Mercator::builder().fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
 	// 	assert_eq!(pb.get_scale(), 20969742.365692537_f64);
 	// 	assert_eq!(
 	// 		pb.get_translate(),
@@ -247,7 +248,7 @@ mod mercator_tests {
 
 	// 	let pb = pb
 	// 		.rotate(&[0_f64, 95_f64, 0_f64])
-	// 		.fit_extent_adjust([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
+	// 		.fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
 	// 	assert_eq!(pb.get_rotate(), [0_f64, 95_f64, 0_f64]);
 	// 	assert_eq!(pb.get_scale(), 35781690.650920525_f64);
 	// 	assert!(in_delta_coordinate(
