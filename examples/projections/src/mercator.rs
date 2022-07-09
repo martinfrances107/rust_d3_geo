@@ -1,6 +1,7 @@
 use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
+use rust_d3_geo::projection::Build;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 

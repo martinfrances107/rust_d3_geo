@@ -25,6 +25,7 @@ pub mod translate_get;
 pub mod translate_set;
 pub mod types;
 
+use crate::projection::Build;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -184,8 +185,8 @@ where
 	}
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-	Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Build
+	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
 	DRAIN: Clone,
 	I: Clone,
@@ -199,9 +200,22 @@ where
 	RU: Debug + Clone,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
+	type Drain = DRAIN;
+	type I = I;
+	type LB = LB;
+	type LC = LC;
+	type LU = LU;
+	type PCNC = PCNC;
+	type PCNU = PCNU;
+	type PR = PR;
+	type PV = PV;
+	type RC = RC;
+	type RU = RU;
+	type T = T;
+
 	/// Using the currently programmed state output a new projection.
 	#[inline]
-	pub fn build(&self) -> Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> {
+	fn build(&self) -> Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> {
 		Projector {
 			p_lb: PhantomData::<LB>,
 			p_lc: PhantomData::<LC>,
