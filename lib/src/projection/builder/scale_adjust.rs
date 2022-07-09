@@ -1,3 +1,5 @@
+use crate::projection::RecenterNoResampling;
+use crate::projection::RecenterWithResampling;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -32,6 +34,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
+    Self: RecenterWithResampling,
     T: CoordFloat + FloatConst,
 {
     type T = T;
@@ -88,6 +91,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
 where
     DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
+    Self: RecenterNoResampling,
     T: CoordFloat + FloatConst,
 {
     type T = T;

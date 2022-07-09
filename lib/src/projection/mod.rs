@@ -338,6 +338,16 @@ where
     fn clip_angle(self, angle: Self::T) -> Self;
 }
 
+pub trait RecenterWithResampling {
+    fn reset(self) -> Self;
+    fn recenter_with_resampling(self) -> Self;
+}
+
+pub trait RecenterNoResampling {
+    fn reset(self) -> Self;
+    fn recenter_no_resampling(self) -> Self;
+}
+
 pub trait ReflectGet {
     /// Returns or sets the x or y reflection.
     /// A projection builder sub trait.

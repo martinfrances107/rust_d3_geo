@@ -1,3 +1,4 @@
+use crate::projection::RecenterWithResampling;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -32,6 +33,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
     >
 where
     PR: Clone + Transform<T = T>,
+    Self: RecenterWithResampling,
     T: CoordFloat + FloatConst,
 {
     type T = T;

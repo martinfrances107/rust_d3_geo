@@ -1,3 +1,5 @@
+use crate::projection::RecenterNoResampling;
+use crate::projection::RecenterWithResampling;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -37,6 +39,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
 		T,
 	> where
 	PR: Clone + Transform<T = T>,
+	Self: RecenterWithResampling,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;
@@ -92,6 +95,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
 	> where
 	DRAIN: Stream<EP = DRAIN, T = T>,
 	PR: Clone + Transform<T = T>,
+	Self: RecenterNoResampling,
 	T: CoordFloat + FloatConst,
 {
 	type T = T;

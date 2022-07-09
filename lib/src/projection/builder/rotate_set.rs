@@ -1,3 +1,4 @@
+use crate::projection::RecenterWithResampling;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -32,6 +33,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
     >
 where
     PR: Clone + Transform<T = T>,
+    Self: RecenterWithResampling,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
