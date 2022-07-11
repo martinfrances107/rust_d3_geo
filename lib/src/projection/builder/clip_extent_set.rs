@@ -1,13 +1,9 @@
-use crate::stream::Stream;
 use core::marker::PhantomData;
 
-use approx::AbsDiffEq;
-use geo::CoordFloat;
-use geo::Coordinate;
-use num_traits::FloatConst;
-
 use crate::clip::antimeridian::gen_clip_antimeridian;
+use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::circle::gen_clip_circle;
+use crate::clip::circle::line::Line as LineCircle;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoneClipC;
@@ -16,13 +12,21 @@ use crate::projection::builder::types::BuilderAntimeridianResampleClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::builder::types::BuilderCircleResampleClip;
 use crate::projection::builder::types::BuilderCircleResampleNoneClip;
+use crate::projection::builder::Buffer;
 use crate::projection::builder::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::BuilderAntimeridianResampleNoneNoClip;
 use crate::projection::builder::BuilderCircleResampleNoClip;
 use crate::projection::builder::BuilderCircleResampleNoneNoClip;
+use approx::AbsDiffEq;
+use geo::CoordFloat;
+use geo::Coordinate;
+use num_traits::FloatConst;
+
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentSet;
+use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::Transform;
 
 use super::template::ClipC;
@@ -51,6 +55,7 @@ where
 		>();
 		let resample = Resample::new(self.project_transform.clone(), self.delta2);
 		let out = Self::OutputBounded {
+			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
@@ -107,6 +112,7 @@ where
 		>();
 		let resample = None::new(self.project_transform.clone());
 		let out = Self::OutputBounded {
+			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
@@ -164,6 +170,7 @@ where
 		>(self.theta.unwrap());
 		let resample = Resample::new(self.project_transform.clone(), self.delta2);
 		let out = Self::OutputBounded {
+			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
@@ -221,6 +228,7 @@ where
 		>(self.theta.unwrap());
 		let resample = None::new(self.project_transform.clone());
 		let out = Self::OutputBounded {
+			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,

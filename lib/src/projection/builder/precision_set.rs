@@ -82,6 +82,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<PCNC>,
 			sx: self.sx,
@@ -178,6 +179,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<PCNC>,
 			sx: self.sx,

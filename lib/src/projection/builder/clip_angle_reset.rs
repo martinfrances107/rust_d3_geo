@@ -60,6 +60,7 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 
 		// update only theta and preclip_factory.
 		let out = Self::Output {
+			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			clip,
 			delta_lambda: self.delta_lambda,

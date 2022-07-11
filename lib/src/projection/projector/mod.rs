@@ -41,7 +41,7 @@ where
 
     pub(crate) resample: RU,
 
-    pub(crate) clip: Clip<I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>,
+    pub(crate) clip: Clip<I, LC, LU, PR, PV, RC, RU, Unconnected, T>,
 
     pub(crate) rotator: RotatorRadians<Unconnected, T>,
 
@@ -56,7 +56,7 @@ where
         StreamTransformRadians<
             Connected<
                 RotatorRadians<
-                    Connected<Clip<I, LB, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>,
+                    Connected<Clip<I, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>,
                     T,
                 >,
             >,
@@ -68,19 +68,14 @@ impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     DRAIN: Clone + PartialEq + Stream<EP = DRAIN, T = T>,
-    // I: Clone + Interpolator<T = T>,
     I: Clone,
     LB: Clone,
     LC: Clone,
-    // LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    // LC: Clone + LineConnected<SC = RC> + Stream<EP = DRAIN, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
     PR: Clone,
-    // PV: Clone + PointVisible<T = T>,
     PV: Clone,
     RU: Clone + Connectable<SC = PCNC, Output = RC>,
-    // RC: Clone + Stream<EP = DRAIN, T = T>,
     RC: Clone,
     PCNU: Clone,
     T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -97,7 +92,7 @@ where
     ) -> StreamTransformRadians<
         Connected<
             RotatorRadians<
-                Connected<Clip<I, LB, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>,
+                Connected<Clip<I, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>,
                 T,
             >,
         >,

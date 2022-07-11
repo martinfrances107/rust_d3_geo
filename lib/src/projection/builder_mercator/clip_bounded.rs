@@ -41,6 +41,7 @@ where
 		let base = self.base;
 
 		let base_out = ProjectionBuilder {
+			p_lb: PhantomData::<LB>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			projection_raw: base.projection_raw,

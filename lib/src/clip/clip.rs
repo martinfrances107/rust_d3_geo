@@ -65,13 +65,13 @@ where
 /// and then modifies the ClipState to one than reflects
 /// the connected sink.
 impl<I, LB, LC, LU, PR, PV, RC, RU, T> Connectable
-    for Clip<I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
+    for Clip<I, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     T: CoordFloat,
 {
     type SC = RC;
-    type Output = Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, T>, T>;
+    type Output = Clip<I, LC, LU, PR, PV, RC, RU, Connected<LB, LC, T>, T>;
     fn connect(self, sink: RC) -> Self::Output {
         let line_node = self.clip_line.clone().connect(sink);
         let ring_buffer = Buffer::<T>::default();
@@ -89,7 +89,6 @@ where
         };
 
         Self::Output {
-            p_lb: PhantomData::<LB>,
             p_lc: PhantomData::<LC>,
             p_pr: PhantomData::<PR>,
             p_rc: PhantomData::<RC>,
@@ -105,12 +104,11 @@ where
 
 #[derive(Clone, Debug)]
 #[allow(dead_code)]
-pub struct Clip<I, LB, LC, LU, PR, PV, RC, RU, STATE, T>
+pub struct Clip<I, LC, LU, PR, PV, RC, RU, STATE, T>
 where
     T: CoordFloat,
 {
     state: STATE,
-    p_lb: PhantomData<LB>,
     p_lc: PhantomData<LC>,
     p_pr: PhantomData<PR>,
     p_rc: PhantomData<RC>,
@@ -122,7 +120,7 @@ where
     pub start: Coordinate<T>,
 }
 
-impl<I, LB, LC, LU, PR, PV, RC, RU, T> Clip<I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
+impl<I, LC, LU, PR, PV, RC, RU, T> Clip<I, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
     T: CoordFloat,
 {
@@ -132,7 +130,6 @@ where
     /// Line< ResampleNoneNoClipU<DRAIN, PR, T>, Unconnected, T>
     pub fn new(interpolator: I, clip_line: LU, pv: PV, start: Coordinate<T>) -> Self {
         Clip {
-            p_lb: PhantomData::<LB>,
             p_lc: PhantomData::<LC>,
             p_pr: PhantomData::<PR>,
             p_rc: PhantomData::<RC>,
@@ -146,8 +143,7 @@ where
     }
 }
 
-impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
-    Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, T>, T>
+impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Clip<I, LC, LU, PR, PV, RC, RU, Connected<LB, LC, T>, T>
 where
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
@@ -256,7 +252,7 @@ where
 }
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Stream
-    for Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, T>, T>
+    for Clip<I, LC, LU, PR, PV, RC, RU, Connected<LB, LC, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,

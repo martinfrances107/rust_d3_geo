@@ -71,6 +71,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		let clip = gen_clip_circle::<DRAIN, PCNC, PCNU, PR, RC, RU, T>(theta);
 		// Copy, Mutate - updating only theta and preclip_factory.
 		let out = Self::Output {
+			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<PCNC>,
 			projection_raw: self.projection_raw,

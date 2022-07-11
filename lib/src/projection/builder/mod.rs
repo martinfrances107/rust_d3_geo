@@ -9,6 +9,7 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
+use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
 use crate::identity::Identity;
@@ -84,10 +85,11 @@ pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     T: CoordFloat,
 {
+    pub p_lb: PhantomData<LB>,
     pub p_pcnc: PhantomData<PCNC>,
     pub p_drain: PhantomData<DRAIN>,
     pub projection_raw: PR,
-    pub clip: Clip<I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>,
+    pub clip: Clip<I, LC, LU, PR, PV, RC, RU, Unconnected, T>,
     pub lambda: T,
     pub phi: T,
     pub alpha: T, // post-rotate angle
@@ -138,7 +140,6 @@ where
     pub fn new(
         clip: Clip<
             InterpolateAntimeridian<T>,
-            LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
             LineAntimeridian<
                 ResampleNoClipC<DRAIN, PR, T>,
                 Connected<ResampleNoClipC<DRAIN, PR, T>>,
@@ -179,6 +180,7 @@ where
         let p_pcnc = PhantomData::<NoClipC<DRAIN>>;
         let out_a: Self = Self {
             clip,
+            p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_pcnc,
             p_drain: PhantomData::<DRAIN>,
             /// Input passing onto Projection.

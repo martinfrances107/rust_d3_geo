@@ -23,7 +23,6 @@ use super::clip::Clip;
 
 type ClipCircleU<PR, RC, RU, T> = Clip<
 	Interpolate<T>,
-	Line<Buffer<T>, Connected<Buffer<T>>, T>,
 	Line<RC, Connected<RC>, T>,
 	Line<RC, Unconnected, T>,
 	PR,

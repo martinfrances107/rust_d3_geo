@@ -90,6 +90,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			sx: self.sx,
@@ -163,6 +164,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			sx: self.sx,
@@ -254,6 +256,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			sx: self.sx,
@@ -341,6 +344,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			sx: self.sx,

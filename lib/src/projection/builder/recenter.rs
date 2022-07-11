@@ -83,6 +83,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterWithResampling
 		let resample = Resample::new(project_transform.clone(), self.delta2);
 
 		let out: Self = Builder {
+			p_lb: PhantomData::<LB>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: self.p_pcnc,
 			projection_raw: self.projection_raw,
@@ -170,6 +171,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterWithResampling
 		let resample = Resample::new(project_transform.clone(), self.delta2);
 
 		let out: Self = Builder {
+			p_lb: PhantomData::<LB>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: self.p_pcnc,
 			projection_raw: self.projection_raw,
@@ -256,6 +258,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterNoResampling
 
 		let resample = ResampleNone::new(project_transform.clone());
 		let out: Self = Builder {
+			p_lb: PhantomData::<LB>,
 			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			projection_raw: self.projection_raw,
@@ -343,6 +346,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterNoResampling
 
 		let resample = ResampleNone::new(project_transform.clone());
 		let out: Self = Builder {
+			p_lb: PhantomData::<LB>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			p_drain: PhantomData::<DRAIN>,
 			projection_raw: self.projection_raw,
