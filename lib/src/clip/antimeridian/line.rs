@@ -21,12 +21,8 @@ use super::intersect::intersect;
 
 /// Antimeridian Line.
 #[derive(Debug, Copy, Clone)]
-pub struct Line<EP, SC, STATE, T>
-where
-    EP: Stream<EP = EP, T = T>,
-{
+pub struct Line<SC, STATE, T> {
     state: STATE,
-    p_ep: PhantomData<EP>,
     p_sc: PhantomData<SC>,
     lambda0: T,
     phi0: T,
@@ -36,16 +32,14 @@ where
 }
 // Note Default is ONLY implenented for the unconnected state
 // Added when I found it was useful for type corercion.
-impl<EP, RC, T> Default for Line<EP, RC, Unconnected, T>
+impl<RC, T> Default for Line<RC, Unconnected, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     #[inline]
-    fn default() -> Line<EP, RC, Unconnected, T> {
+    fn default() -> Line<RC, Unconnected, T> {
         Self {
             state: Unconnected,
-            p_ep: PhantomData::<EP>,
             p_sc: PhantomData::<RC>,
             lambda0: T::nan(),
             phi0: T::nan(),
@@ -56,18 +50,16 @@ where
     }
 }
 
-impl<EP, SC, T> Bufferable for Line<EP, SC, Unconnected, T>
+impl<SC, T> Bufferable for Line<SC, Unconnected, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
-    type Output = Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
+    type Output = Line<Buffer<T>, Connected<Buffer<T>>, T>;
     type T = T;
 
     fn buffer(self, buffer: Buffer<T>) -> Self::Output {
         Line {
             state: Connected { sink: buffer },
-            p_ep: PhantomData::<Buffer<T>>,
             p_sc: PhantomData::<Buffer<T>>,
             lambda0: self.lambda0,
             phi0: self.phi0,
@@ -78,18 +70,16 @@ where
     }
 }
 
-impl<EP, SC, T> Connectable for Line<EP, SC, Unconnected, T>
+impl<SC, T> Connectable for Line<SC, Unconnected, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
-    type Output = Line<EP, SC, Connected<SC>, T>;
+    type Output = Line<SC, Connected<SC>, T>;
     type SC = SC;
 
-    fn connect(self, sink: SC) -> Line<EP, SC, Connected<SC>, T> {
+    fn connect(self, sink: SC) -> Line<SC, Connected<SC>, T> {
         Line {
             state: Connected { sink },
-            p_ep: PhantomData::<EP>,
             p_sc: PhantomData::<SC>,
             lambda0: self.lambda0,
             phi0: self.phi0,
@@ -100,16 +90,12 @@ where
     }
 }
 
-impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T>
-where
-    EP: Stream<EP = EP, T = T>,
-{
+impl<SINK, T> LineUnconnected for Line<SINK, Unconnected, T> {
     type SU = SINK;
 }
 
-impl<EP, SINK, T> LineConnected for Line<EP, SINK, Connected<SINK>, T>
+impl<SINK, T> LineConnected for Line<SINK, Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type SC = SINK;
@@ -119,9 +105,8 @@ where
     }
 }
 
-impl<EP, SINK, T> Clean for Line<EP, SINK, Connected<SINK>, T>
+impl<SINK, T> Clean for Line<SINK, Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     #[inline]
@@ -130,9 +115,8 @@ where
     }
 }
 
-impl<EP, SINK, T> Stream for Line<EP, SINK, Connected<SINK>, T>
+impl<EP, SINK, T> Stream for Line<SINK, Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T>,
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {

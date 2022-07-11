@@ -27,14 +27,13 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	for Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
-			DRAIN,
 			None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>,
 			Connected<None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>>,
 			T,
 		>,
-		LineAntimeridian<DRAIN, None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, Unconnected, T>,
+		LineAntimeridian<None<DRAIN, PR, PCNC, PCNU, Connected<PCNC>, T>, Unconnected, T>,
 		PCNC,
 		PCNU,
 		PR,
@@ -50,15 +49,13 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	type Output = Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<
-			DRAIN,
 			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
 			Connected<Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>>,
 			T,
 		>,
 		LineAntimeridian<
-			DRAIN,
 			Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
 			Unconnected,
 			T,

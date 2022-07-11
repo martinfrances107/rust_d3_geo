@@ -24,9 +24,9 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 	for Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<DRAIN, RC, Connected<RC>, T>,
-		LineAntimeridian<DRAIN, RC, Unconnected, T>,
+		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<RC, Connected<RC>, T>,
+		LineAntimeridian<RC, Unconnected, T>,
 		PCNC,
 		PCNU,
 		PR,

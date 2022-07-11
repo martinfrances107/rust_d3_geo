@@ -68,15 +68,13 @@ mod path_area_test {
 		let builder: PathBuilder<
 			Area<T>,
 			InterpolateAntimeridian<T>,
-			LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+			LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
 			LineAntimeridian<
-				Area<T>,
 				ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
 				Connected<ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>>,
 				T,
 			>,
 			LineAntimeridian<
-				Area<T>,
 				ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
 				Unconnected,
 				T,

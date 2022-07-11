@@ -23,9 +23,9 @@ use interpolate::Interpolate;
 type ClipAntimeridianU<DRAIN, PR, RC, RU, T> = Clip<
     DRAIN,
     Interpolate<T>,
-    Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-    Line<DRAIN, RC, Connected<RC>, T>,
-    Line<DRAIN, RC, Unconnected, T>,
+    Line<Buffer<T>, Connected<Buffer<T>>, T>,
+    Line<RC, Connected<RC>, T>,
+    Line<RC, Unconnected, T>,
     PR,
     PV<T>,
     RC,
@@ -42,7 +42,7 @@ where
     T: CoordFloat + FloatConst,
 {
     let interpolate = Interpolate::default();
-    let clip_line: Line<DRAIN, RC, Unconnected, T> = Line::default();
+    let clip_line: Line<RC, Unconnected, T> = Line::default();
     let pv = PV::default();
     let out = Clip::new(
         interpolate,

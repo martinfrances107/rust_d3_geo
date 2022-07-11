@@ -267,14 +267,10 @@ where
 {
 	type Drain = DRAIN;
 	type I = InterpolateAntimeridian<T>;
-	type LB = LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
-	type LC = LineAntimeridian<
-		DRAIN,
-		ResampleClipC<DRAIN, PR, T>,
-		Connected<ResampleClipC<DRAIN, PR, T>>,
-		T,
-	>;
-	type LU = LineAntimeridian<DRAIN, ResampleClipC<DRAIN, PR, T>, Unconnected, T>;
+	type LB = LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>;
+	type LC =
+		LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>;
+	type LU = LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Unconnected, T>;
 	type PCNC = ClipC<DRAIN, T>;
 	type PCNU = ClipU<DRAIN, T>;
 	type PR = PR;
@@ -286,10 +282,9 @@ where
 	#[inline]
 	fn build(&self) -> ProjectorAntimeridianResampleClip<DRAIN, PR, T> {
 		Projector {
-			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>>,
+			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_lc: PhantomData::<
 				LineAntimeridian<
-					DRAIN,
 					ResampleClipC<DRAIN, PR, T>,
 					Connected<ResampleClipC<DRAIN, PR, T>>,
 					T,

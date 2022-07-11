@@ -138,14 +138,13 @@ where
         clip: Clip<
             DRAIN,
             InterpolateAntimeridian<T>,
-            LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
+            LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
             LineAntimeridian<
-                DRAIN,
                 ResampleNoClipC<DRAIN, PR, T>,
                 Connected<ResampleNoClipC<DRAIN, PR, T>>,
                 T,
             >,
-            LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
+            LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
             PR,
             PVAntimeridian<T>,
             ResampleNoClipC<DRAIN, PR, T>,

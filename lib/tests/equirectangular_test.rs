@@ -29,9 +29,8 @@ mod equirectangular_test {
 	type B = Builder<
 		StreamDrainStub<f64>,
 		InterpolateAntimeridian<f64>,
-		LineAntimeridian<Buffer<f64>, Buffer<f64>, Connected<Buffer<f64>>, f64>,
+		LineAntimeridian<Buffer<f64>, Connected<Buffer<f64>>, f64>,
 		LineAntimeridian<
-			StreamDrainStub<f64>,
 			ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 			Connected<
 				ResampleNoClipC<
@@ -43,7 +42,6 @@ mod equirectangular_test {
 			f64,
 		>,
 		LineAntimeridian<
-			StreamDrainStub<f64>,
 			ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 			Unconnected,
 			f64,

@@ -39,9 +39,9 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 	type Output = Builder<
 		DRAIN,
 		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<DRAIN, RC, Connected<RC>, T>,
-		LineAntimeridian<DRAIN, RC, Unconnected, T>,
+		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
+		LineAntimeridian<RC, Connected<RC>, T>,
+		LineAntimeridian<RC, Unconnected, T>,
 		PCNC,
 		PCNU,
 		PR,

@@ -90,9 +90,8 @@ mod path_string_test {
         let mut builder: PathBuilder<
             PathString<f64>,
             InterpolateAntimeridian<f64>,
-            LineAntimeridian<Buffer<f64>, Buffer<f64>, Connected<Buffer<f64>>, f64>,
+            LineAntimeridian<Buffer<f64>, Connected<Buffer<f64>>, f64>,
             LineAntimeridian<
-                PathString<f64>,
                 ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
                 Connected<
                     ResampleNoneNoClipC<
@@ -104,7 +103,6 @@ mod path_string_test {
                 f64,
             >,
             LineAntimeridian<
-                PathString<f64>,
                 ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
                 Unconnected,
                 f64,
