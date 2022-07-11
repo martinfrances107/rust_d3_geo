@@ -56,7 +56,7 @@ where
         StreamTransformRadians<
             Connected<
                 RotatorRadians<
-                    Connected<Clip<I, LB, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, LU, T>, T>>,
+                    Connected<Clip<I, LB, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>,
                     T,
                 >,
             >,
@@ -97,7 +97,7 @@ where
     ) -> StreamTransformRadians<
         Connected<
             RotatorRadians<
-                Connected<Clip<I, LB, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, LU, T>, T>>,
+                Connected<Clip<I, LB, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>,
                 T,
             >,
         >,

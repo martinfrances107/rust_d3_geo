@@ -46,12 +46,11 @@ enum LineEndFn {
 /// Clip specific state of connection.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Connected<LB, LC, LU, T>
+pub struct Connected<LB, LC, T>
 where
     T: CoordFloat,
 {
     line_node: LC,
-    p_lu: PhantomData<LU>,
     polygon_started: bool,
     polygon: Vec<LineString<T>>,
     ring: LineString<T>,
@@ -72,13 +71,12 @@ where
     T: CoordFloat,
 {
     type SC = RC;
-    type Output = Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, LU, T>, T>;
+    type Output = Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, T>, T>;
     fn connect(self, sink: RC) -> Self::Output {
         let line_node = self.clip_line.clone().connect(sink);
         let ring_buffer = Buffer::<T>::default();
         let ring_sink = self.clip_line.clone().buffer(ring_buffer);
         let state = Connected {
-            p_lu: PhantomData::<LU>,
             polygon_started: false,
             polygon: Vec::new(),
             ring_sink,
@@ -149,7 +147,7 @@ where
 }
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
-    Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, LU, T>, T>
+    Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, T>, T>
 where
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
@@ -258,7 +256,7 @@ where
 }
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Stream
-    for Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, LU, T>, T>
+    for Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
