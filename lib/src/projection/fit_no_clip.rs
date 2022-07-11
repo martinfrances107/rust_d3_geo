@@ -11,6 +11,8 @@
 //! 3) Restore Post Clip Rectangle
 //!
 
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -27,7 +29,6 @@ use crate::path::Result;
 use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::Build;
-use crate::projection::Debug;
 use crate::projection::Scale;
 use crate::projection::Translate;
 use crate::stream::Connectable;

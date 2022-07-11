@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
@@ -20,7 +22,6 @@ use crate::projection::fit_no_clip::fit_extent_no_clip;
 use crate::projection::fit_no_clip::fit_height_no_clip;
 use crate::projection::fit_no_clip::fit_size_no_clip;
 use crate::projection::fit_no_clip::fit_width_no_clip;
-use crate::projection::Debug;
 use crate::projection::Fit;
 use crate::stream::Connectable;
 use crate::stream::Stream;
