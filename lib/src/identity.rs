@@ -11,14 +11,12 @@ use crate::stream::Unconnected;
 
 /// Identity is a stream pipe line stage.
 /// that acts as a pass through node.
-pub struct Identity<EP, SINK, STATE> {
-    p_ep: PhantomData<EP>,
+pub struct Identity<SINK, STATE> {
     p_sink: PhantomData<SINK>,
-    // p_t: PhantomData<T>,
     state: STATE,
 }
 
-impl<EP, SINK, STATE> Debug for Identity<EP, SINK, STATE>
+impl<SINK, STATE> Debug for Identity<SINK, STATE>
 where
     STATE: Debug,
 {
@@ -27,15 +25,13 @@ where
     }
 }
 
-impl<EP, SINK, STATE> Clone for Identity<EP, SINK, STATE>
+impl<SINK, STATE> Clone for Identity<SINK, STATE>
 where
     STATE: Clone,
 {
     fn clone(&self) -> Self {
         Self {
-            p_ep: PhantomData::<EP>,
             p_sink: PhantomData::<SINK>,
-            // p_t: PhantomData::<T>,
             state: self.state.clone(),
         }
     }
@@ -43,33 +39,29 @@ where
 
 /// Not auto deriving here - it does not makes sense to provide
 /// a default for the connected state.
-impl<EP, SINK> Default for Identity<EP, SINK, Unconnected> {
+impl<SINK> Default for Identity<SINK, Unconnected> {
     fn default() -> Self {
         Self {
-            p_ep: PhantomData::<EP>,
             p_sink: PhantomData::<SINK>,
-            // p_t: PhantomData::<T>,
             state: Unconnected,
         }
     }
 }
 
-impl<EP, SINK, STATE> PostClipNode for Identity<EP, SINK, STATE> {}
+impl<SINK, STATE> PostClipNode for Identity<SINK, STATE> {}
 
-impl<EP, SINK> Connectable for Identity<EP, SINK, Unconnected> {
+impl<SINK> Connectable for Identity<SINK, Unconnected> {
     type SC = SINK;
-    type Output = Identity<EP, SINK, Connected<Self::SC>>;
+    type Output = Identity<SINK, Connected<Self::SC>>;
     fn connect(self, sink: Self::SC) -> Self::Output {
         Identity {
-            p_ep: PhantomData::<EP>,
             p_sink: PhantomData::<SINK>,
-            // p_t: PhantomData::<T>,
             state: Connected { sink },
         }
     }
 }
 
-impl<EP, SINK, T> Stream for Identity<EP, SINK, Connected<SINK>>
+impl<EP, SINK, T> Stream for Identity<SINK, Connected<SINK>>
 where
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat,
