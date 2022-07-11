@@ -106,6 +106,9 @@ where
     T: CoordFloat,
 {
     state: STATE,
+    /// PhantomData<LC>
+    /// The hidden linkage occurs because LC is needed by
+    /// Connected.
     p_lc: PhantomData<LC>,
     /// PhantomData<RC>
     /// The hidden linkage is in the implementation of Connectable
