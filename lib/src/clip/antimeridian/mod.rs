@@ -7,11 +7,9 @@ pub mod pv;
 
 mod intersect;
 
-use crate::stream::Stream;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::Buffer;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use line::Line;

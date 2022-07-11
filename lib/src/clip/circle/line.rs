@@ -32,7 +32,6 @@ where
     state: STATE,
     /// PhantomData here soley to allow SINK to be defined in the Connecteable.
     p_sc: PhantomData<SC>,
-    // p_su: PhantomData<SU>,
     /// Code for previous point.
     c0: u8,
     clean: u8, // no intersections

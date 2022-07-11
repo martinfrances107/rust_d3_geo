@@ -14,7 +14,6 @@ use interpolate::Interpolate;
 use line::Line;
 use num_traits::FloatConst;
 
-use crate::clip::Buffer;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use pv::PV;

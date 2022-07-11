@@ -9,7 +9,6 @@ use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridi
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
-use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
 use crate::identity::Identity;

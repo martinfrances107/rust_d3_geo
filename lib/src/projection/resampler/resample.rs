@@ -74,18 +74,17 @@ where
 
 /// Resample the stream base on a given precision.
 #[derive(Clone)]
-pub struct Resample<PR, SC, SU, STATE, T>
+pub struct Resample<PR, SC, STATE, T>
 where
     T: CoordFloat,
 {
     delta2: T,
     p_sc: PhantomData<SC>,
-    p_su: PhantomData<SU>,
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
     state: STATE,
 }
 
-impl<PR, SC, SU, STATE, T> Debug for Resample<PR, SC, SU, STATE, T>
+impl<PR, SC, STATE, T> Debug for Resample<PR, SC, STATE, T>
 where
     STATE: Debug,
     T: CoordFloat,
@@ -95,15 +94,15 @@ where
     }
 }
 
-impl<PR, SC, SU, STATE, T> Resampler for Resample<PR, SC, SU, STATE, T> where T: CoordFloat {}
+impl<PR, SC, STATE, T> Resampler for Resample<PR, SC, STATE, T> where T: CoordFloat {}
 
-impl<PR, SC, SU, T> Connectable for Resample<PR, SC, SU, Unconnected, T>
+impl<PR, SC, T> Connectable for Resample<PR, SC, Unconnected, T>
 where
     T: CoordFloat + FloatConst,
 {
-    type Output = Resample<PR, SC, SU, Connected<SC, T>, T>;
+    type Output = Resample<PR, SC, Connected<SC, T>, T>;
     type SC = SC;
-    fn connect(self, sink: SC) -> Resample<PR, SC, SU, Connected<SC, T>, T> {
+    fn connect(self, sink: SC) -> Resample<PR, SC, Connected<SC, T>, T> {
         let state = Connected {
             sink,
             // first point
@@ -137,14 +136,13 @@ where
         Resample {
             delta2: self.delta2,
             p_sc: self.p_sc,
-            p_su: self.p_su,
             projection_transform: self.projection_transform,
             state,
         }
     }
 }
 
-impl<'a, PR, SC, SU, T> Resample<PR, SC, SU, Unconnected, T>
+impl<'a, PR, SC, T> Resample<PR, SC, Unconnected, T>
 where
     T: CoordFloat,
 {
@@ -152,18 +150,17 @@ where
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
         delta2: T,
-    ) -> Resample<PR, SC, SU, Unconnected, T> {
+    ) -> Resample<PR, SC, Unconnected, T> {
         Self {
             delta2,
             p_sc: PhantomData::<SC>,
-            p_su: PhantomData::<SU>,
             projection_transform,
             state: Unconnected,
         }
     }
 }
 
-impl<'a, EP, PR, SC, SU, T> Resample<PR, SC, SU, Connected<SC, T>, T>
+impl<'a, EP, PR, SC, T> Resample<PR, SC, Connected<SC, T>, T>
 where
     PR: Transform<T = T>,
     SC: Stream<EP = EP, T = T>,
@@ -334,7 +331,7 @@ where
     }
 }
 
-impl<'a, EP, PR, SC, SU, T> Stream for Resample<PR, SC, SU, Connected<SC, T>, T>
+impl<'a, EP, PR, SC, T> Stream for Resample<PR, SC, Connected<SC, T>, T>
 where
     EP: Stream<EP = EP, T = T> + Default,
     PR: Clone + Transform<T = T>,
