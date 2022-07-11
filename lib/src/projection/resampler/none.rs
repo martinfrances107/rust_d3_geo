@@ -18,16 +18,15 @@ use super::Resampler;
 ///
 /// A pass-through module, when no resampling is required.
 #[derive(Clone)]
-pub struct None<EP, PR, SC, SU, STATE, T> {
+pub struct None<PR, SC, SU, STATE, T> {
     state: STATE,
-    p_ep: PhantomData<EP>,
     p_sc: PhantomData<SC>,
     p_su: PhantomData<SU>,
     p_t: PhantomData<T>,
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
 }
 
-impl<EP, PR, SC, SU, STATE, T> Debug for None<EP, PR, SC, SU, STATE, T>
+impl<PR, SC, SU, STATE, T> Debug for None<PR, SC, SU, STATE, T>
 where
     STATE: Debug,
 {
@@ -36,14 +35,13 @@ where
     }
 }
 
-impl<EP, PR, SC, SU, T> None<EP, PR, SC, SU, Unconnected, T> {
+impl<PR, SC, SU, T> None<PR, SC, SU, Unconnected, T> {
     /// Constructor: Resample None.
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-    ) -> None<EP, PR, SC, SU, Unconnected, T> {
+    ) -> None<PR, SC, SU, Unconnected, T> {
         Self {
             state: Unconnected,
-            p_ep: PhantomData::<EP>,
             p_sc: PhantomData::<SC>,
             p_su: PhantomData::<SU>,
             p_t: PhantomData::<T>,
@@ -52,22 +50,18 @@ impl<EP, PR, SC, SU, T> None<EP, PR, SC, SU, Unconnected, T> {
     }
 }
 
-impl<EP, PR, SC, SU, STATE, T> Resampler for None<EP, PR, SC, SU, STATE, T> where
-    T: CoordFloat + FloatConst
-{
-}
+impl<PR, SC, SU, STATE, T> Resampler for None<PR, SC, SU, STATE, T> where T: CoordFloat + FloatConst {}
 
-impl<EP, PR, SC, SU, T> Connectable for None<EP, PR, SC, SU, Unconnected, T>
+impl<PR, SC, SU, T> Connectable for None<PR, SC, SU, Unconnected, T>
 where
     PR: Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
-    type Output = None<EP, PR, SC, SU, Connected<SC>, T>;
+    type Output = None<PR, SC, SU, Connected<SC>, T>;
     type SC = SC;
     fn connect(self, sink: SC) -> Self::Output {
-        None::<EP, PR, SC, SU, Connected<SC>, T> {
+        None::<PR, SC, SU, Connected<SC>, T> {
             state: Connected { sink },
-            p_ep: PhantomData::<EP>,
             p_sc: PhantomData::<SC>,
             p_su: PhantomData::<SU>,
             p_t: self.p_t,
@@ -77,7 +71,7 @@ where
     }
 }
 
-impl<EP, PR, SC, SU, T> Stream for None<EP, PR, SC, SU, Connected<SC>, T>
+impl<EP, PR, SC, SU, T> Stream for None<PR, SC, SU, Connected<SC>, T>
 where
     SC: Stream<EP = EP, T = T>,
     PR: Transform<T = T>,
