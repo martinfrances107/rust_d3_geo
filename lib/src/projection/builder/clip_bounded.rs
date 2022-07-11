@@ -19,7 +19,7 @@ where
 {
 	type T = T;
 	type OutputClear =
-		Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, PR, PV, RC, RU, T>;
+		Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN>, NoClipU<DRAIN>, PR, PV, RC, RU, T>;
 
 	fn get_clip_extent(&self) -> Option<[Coordinate<T>; 2]> {
 		match (self.x0, self.y0, self.x1, self.y1) {
@@ -32,7 +32,7 @@ where
 
 	fn clip_extent_clear(self) -> Self::OutputClear {
 		let out = Self::OutputClear {
-			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
+			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			projection_raw: self.projection_raw,
 			clip: self.clip,
 			phi: self.phi,

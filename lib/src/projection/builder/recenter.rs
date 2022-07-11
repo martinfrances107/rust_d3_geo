@@ -36,8 +36,8 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterWithResampling
 		LB,
 		LC,
 		LU,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		NoClipC<DRAIN>,
+		NoClipU<DRAIN>,
 		PR,
 		PV,
 		ResampleNoClipC<DRAIN, PR, T>,
@@ -207,8 +207,8 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterNoResampling
 		LB,
 		LC,
 		LU,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		NoClipC<DRAIN>,
+		NoClipU<DRAIN>,
 		PR,
 		PV,
 		ResampleNoneNoClipC<DRAIN, PR, T>,
@@ -254,7 +254,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterNoResampling
 
 		let resample = ResampleNone::new(project_transform.clone());
 		let out: Self = Builder {
-			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
+			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			projection_raw: self.projection_raw,
 			clip: self.clip,
 			phi: self.phi,

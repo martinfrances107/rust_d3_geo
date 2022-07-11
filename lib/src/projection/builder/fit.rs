@@ -43,7 +43,7 @@
 // 		LB,
 // 		LC,
 // 		LU,
-// 		NoClipC<Bounds<T>, T>,
+// 		NoClipC<Bounds<T>>,
 // 		NoClipU<Bounds<T>, T>,
 // 		PR,
 // 		PV,

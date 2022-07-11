@@ -15,8 +15,8 @@ use crate::stream::Unconnected;
 
 use super::Builder;
 
-pub type NoClipC<DRAIN, T> = Identity<DRAIN, DRAIN, Connected<DRAIN>, T>;
-pub type NoClipU<DRAIN, T> = Identity<DRAIN, DRAIN, Unconnected, T>;
+pub type NoClipC<DRAIN> = Identity<DRAIN, DRAIN, Connected<DRAIN>>;
+pub type NoClipU<DRAIN> = Identity<DRAIN, DRAIN, Unconnected>;
 
 pub type ClipC<DRAIN, T> = Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>;
 pub type ClipU<DRAIN, T> = Rectangle<DRAIN, DRAIN, Unconnected, T>;
@@ -28,17 +28,11 @@ pub type ResampleClipU<DRAIN, PR, T> =
     Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>;
 
 // ----
-pub type ResampleNoClipC<DRAIN, PR, T> = Resample<
-    DRAIN,
-    PR,
-    NoClipC<DRAIN, T>,
-    NoClipU<DRAIN, T>,
-    ConnectedResample<NoClipC<DRAIN, T>, T>,
-    T,
->;
+pub type ResampleNoClipC<DRAIN, PR, T> =
+    Resample<DRAIN, PR, NoClipC<DRAIN>, NoClipU<DRAIN>, ConnectedResample<NoClipC<DRAIN>, T>, T>;
 
 pub type ResampleNoClipU<DRAIN, PR, T> =
-    Resample<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Unconnected, T>;
+    Resample<DRAIN, PR, NoClipC<DRAIN>, NoClipU<DRAIN>, Unconnected, T>;
 
 /// ------------
 
@@ -51,10 +45,10 @@ pub type ResampleNoneClipU<DRAIN, PR, T> =
 /// ----
 
 pub type ResampleNoneNoClipC<DRAIN, PR, T> =
-    None<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Connected<NoClipC<DRAIN, T>>, T>;
+    None<DRAIN, PR, NoClipC<DRAIN>, NoClipU<DRAIN>, Connected<NoClipC<DRAIN>>, T>;
 
 pub type ResampleNoneNoClipU<DRAIN, PR, T> =
-    None<DRAIN, PR, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, Unconnected, T>;
+    None<DRAIN, PR, NoClipC<DRAIN>, NoClipU<DRAIN>, Unconnected, T>;
 
 // Default
 // No resampling,
@@ -65,8 +59,8 @@ pub type Default<DRAIN, I, LB, LC, LU, PR, PV, T> = Builder<
     LB,
     LC,
     LU,
-    NoClipC<DRAIN, T>,
-    NoClipU<DRAIN, T>,
+    NoClipC<DRAIN>,
+    NoClipU<DRAIN>,
     PR,
     PV,
     ResampleNoneNoClipC<DRAIN, PR, T>,

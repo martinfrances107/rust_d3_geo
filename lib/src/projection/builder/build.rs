@@ -112,8 +112,8 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		LB,
 		LC,
 		LU,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		NoClipC<DRAIN>,
+		NoClipU<DRAIN>,
 		PR,
 		PV,
 		ResampleNoneNoClipC<DRAIN, PR, T>,
@@ -135,8 +135,8 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 	type LB = LB;
 	type LC = LC;
 	type LU = LU;
-	type PCNC = NoClipC<DRAIN, T>;
-	type PCNU = NoClipU<DRAIN, T>;
+	type PCNC = NoClipC<DRAIN>;
+	type PCNU = NoClipU<DRAIN>;
 	type PR = PR;
 	type PV = PV;
 	type RC = ResampleNoneNoClipC<DRAIN, PR, T>;
@@ -152,8 +152,8 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		LB,
 		LC,
 		LU,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		NoClipC<DRAIN>,
+		NoClipU<DRAIN>,
 		PR,
 		PV,
 		ResampleNoneNoClipC<DRAIN, PR, T>,
@@ -189,8 +189,8 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		LB,
 		LC,
 		LU,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		NoClipC<DRAIN>,
+		NoClipU<DRAIN>,
 		PR,
 		PV,
 		ResampleNoClipC<DRAIN, PR, T>,
@@ -212,8 +212,8 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 	type LB = LB;
 	type LC = LC;
 	type LU = LU;
-	type PCNC = NoClipC<DRAIN, T>;
-	type PCNU = NoClipU<DRAIN, T>;
+	type PCNC = NoClipC<DRAIN>;
+	type PCNU = NoClipU<DRAIN>;
 	type PR = PR;
 	type PV = PV;
 	type RC = ResampleNoClipC<DRAIN, PR, T>;
@@ -230,8 +230,8 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		LB,
 		LC,
 		LU,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		NoClipC<DRAIN>,
+		NoClipU<DRAIN>,
 		PR,
 		PV,
 		ResampleNoClipC<DRAIN, PR, T>,

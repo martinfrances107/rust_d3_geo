@@ -7,6 +7,9 @@ use crate::Transform;
 /// Combines transforms together.
 #[derive(Clone, Copy, Debug)]
 pub struct Compose<T, TA, TB> {
+    /// Phantom T:
+    /// The hidden linkage is if the T in TA is f64
+    /// then the T in TB must also be f64.
     p_t: PhantomData<T>,
     pub a: TA,
     pub b: TB,

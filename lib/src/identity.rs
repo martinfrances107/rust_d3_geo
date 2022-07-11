@@ -11,14 +11,14 @@ use crate::stream::Unconnected;
 
 /// Identity is a stream pipe line stage.
 /// that acts as a pass through node.
-pub struct Identity<EP, SINK, STATE, T> {
+pub struct Identity<EP, SINK, STATE> {
     p_ep: PhantomData<EP>,
     p_sink: PhantomData<SINK>,
-    p_t: PhantomData<T>,
+    // p_t: PhantomData<T>,
     state: STATE,
 }
 
-impl<EP, SINK, STATE, T> Debug for Identity<EP, SINK, STATE, T>
+impl<EP, SINK, STATE> Debug for Identity<EP, SINK, STATE>
 where
     STATE: Debug,
 {
@@ -27,7 +27,7 @@ where
     }
 }
 
-impl<EP, SINK, STATE, T> Clone for Identity<EP, SINK, STATE, T>
+impl<EP, SINK, STATE> Clone for Identity<EP, SINK, STATE>
 where
     STATE: Clone,
 {
@@ -35,7 +35,7 @@ where
         Self {
             p_ep: PhantomData::<EP>,
             p_sink: PhantomData::<SINK>,
-            p_t: PhantomData::<T>,
+            // p_t: PhantomData::<T>,
             state: self.state.clone(),
         }
     }
@@ -43,47 +43,33 @@ where
 
 /// Not auto deriving here - it does not makes sense to provide
 /// a default for the connected state.
-impl<EP, SINK, T> Default for Identity<EP, SINK, Unconnected, T> {
+impl<EP, SINK> Default for Identity<EP, SINK, Unconnected> {
     fn default() -> Self {
         Self {
             p_ep: PhantomData::<EP>,
             p_sink: PhantomData::<SINK>,
-            p_t: PhantomData::<T>,
+            // p_t: PhantomData::<T>,
             state: Unconnected,
         }
     }
 }
 
-impl<EP, SINK, STATE, T> PostClipNode for Identity<EP, SINK, STATE, T> {}
+impl<EP, SINK, STATE> PostClipNode for Identity<EP, SINK, STATE> {}
 
-impl<EP, SINK, T> Identity<EP, SINK, Unconnected, T> {
-    pub fn default() -> Identity<EP, SINK, Unconnected, T> {
-        Identity {
-            p_ep: PhantomData::<EP>,
-            p_sink: PhantomData::<SINK>,
-            p_t: PhantomData::<T>,
-            state: Unconnected,
-        }
-    }
-}
-
-impl<EP, SINK, T> Connectable for Identity<EP, SINK, Unconnected, T>
-where
-    T: CoordFloat,
-{
+impl<EP, SINK> Connectable for Identity<EP, SINK, Unconnected> {
     type SC = SINK;
-    type Output = Identity<EP, SINK, Connected<Self::SC>, T>;
+    type Output = Identity<EP, SINK, Connected<Self::SC>>;
     fn connect(self, sink: Self::SC) -> Self::Output {
         Identity {
             p_ep: PhantomData::<EP>,
             p_sink: PhantomData::<SINK>,
-            p_t: PhantomData::<T>,
+            // p_t: PhantomData::<T>,
             state: Connected { sink },
         }
     }
 }
 
-impl<EP, SINK, T> Stream for Identity<EP, SINK, Connected<SINK>, T>
+impl<EP, SINK, T> Stream for Identity<EP, SINK, Connected<SINK>>
 where
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat,

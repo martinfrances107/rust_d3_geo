@@ -52,8 +52,8 @@ mod path_centroid_test {
     {
         let clip = gen_clip_antimeridian::<
             Centroid<T>,
-            NoClipC<Centroid<T>, T>,
-            NoClipU<Centroid<T>, T>,
+            NoClipC<Centroid<T>>,
+            NoClipU<Centroid<T>>,
             Equirectangular<Centroid<T>, T>,
             ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
             ResampleNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,

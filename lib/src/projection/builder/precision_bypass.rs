@@ -44,8 +44,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 			T,
 		>,
 		LineAntimeridian<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		NoClipC<DRAIN>,
+		NoClipU<DRAIN>,
 		PR,
 		PVAntimeridian<T>,
 		ResampleNoClipC<DRAIN, PR, T>,
@@ -67,8 +67,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 			T,
 		>,
 		LineAntimeridian<DRAIN, ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		NoClipC<DRAIN>,
+		NoClipU<DRAIN>,
 		PR,
 		PVAntimeridian<T>,
 		ResampleNoneNoClipC<DRAIN, PR, T>,
@@ -92,7 +92,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
+			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			sx: self.sx,
 			sy: self.sy,
 			x: self.x,
@@ -216,8 +216,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 			T,
 		>,
 		LineCircle<DRAIN, ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		NoClipC<DRAIN>,
+		NoClipU<DRAIN>,
 		PR,
 		PVCircle<T>,
 		ResampleNoClipC<DRAIN, PR, T>,
@@ -239,8 +239,8 @@ impl<DRAIN, PR, T> PrecisionBypass
 			T,
 		>,
 		LineCircle<DRAIN, ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		NoClipC<DRAIN, T>,
-		NoClipU<DRAIN, T>,
+		NoClipC<DRAIN>,
+		NoClipU<DRAIN>,
 		PR,
 		PVCircle<T>,
 		ResampleNoneNoClipC<DRAIN, PR, T>,
@@ -265,7 +265,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
-			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
+			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			sx: self.sx,
 			sy: self.sy,
 			x: self.x,

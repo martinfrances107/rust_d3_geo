@@ -26,7 +26,7 @@ where
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type OutputClear =
-		Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, PR, PV, RC, RU, T>;
+		Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN>, NoClipU<DRAIN>, PR, PV, RC, RU, T>;
 	/// f64 or f32.
 	type T = T;
 
@@ -41,7 +41,7 @@ where
 		let base = self.base;
 
 		let base_out = ProjectionBuilder {
-			p_pcnc: PhantomData::<NoClipC<DRAIN, T>>,
+			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			projection_raw: base.projection_raw,
 			clip: base.clip,
 			phi: base.phi,

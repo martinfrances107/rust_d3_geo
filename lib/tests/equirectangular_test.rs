@@ -48,8 +48,8 @@ mod equirectangular_test {
 			Unconnected,
 			f64,
 		>,
-		NoClipC<StreamDrainStub<f64>, f64>,
-		NoClipU<StreamDrainStub<f64>, f64>,
+		NoClipC<StreamDrainStub<f64>>,
+		NoClipU<StreamDrainStub<f64>>,
 		Equirectangular<StreamDrainStub<f64>, f64>,
 		PVAntimeridian<f64>,
 		ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
@@ -160,8 +160,8 @@ mod equirectangular_test {
 		println!("equirectangular(point) returns the expected result");
 		let clip = gen_clip_antimeridian::<
 			StreamDrainStub<f64>,
-			NoClipC<StreamDrainStub<f64>, f64>,
-			NoClipU<StreamDrainStub<f64>, f64>,
+			NoClipC<StreamDrainStub<f64>>,
+			NoClipU<StreamDrainStub<f64>>,
 			Equirectangular<StreamDrainStub<f64>, f64>,
 			ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 			ResampleNoClipU<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,

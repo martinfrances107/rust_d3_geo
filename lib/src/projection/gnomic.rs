@@ -49,7 +49,7 @@ where
 	where
 		DRAIN: Default + Stream<EP = DRAIN, T = T>,
 	{
-		let clip = gen_clip_antimeridian::<_, NoClipC<DRAIN, T>, NoClipU<DRAIN, T>, _, _, _, _>();
+		let clip = gen_clip_antimeridian::<_, NoClipC<DRAIN>, NoClipU<DRAIN>, _, _, _, _>();
 		Builder::new(clip, Gnomic::default())
 			.scale(T::from(144.049_f64).unwrap())
 			.clip_angle(T::from(60_f64).unwrap())
