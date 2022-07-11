@@ -89,7 +89,7 @@ where
     pub p_pcnc: PhantomData<PCNC>,
     pub p_drain: PhantomData<DRAIN>,
     pub projection_raw: PR,
-    pub clip: Clip<I, LC, LU, PV, RC, RU, Unconnected, T>,
+    pub clip: Clip<I, LC, LU, PV, RC, Unconnected, T>,
     pub lambda: T,
     pub phi: T,
     pub alpha: T, // post-rotate angle
@@ -148,7 +148,6 @@ where
             LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
             PVAntimeridian<T>,
             ResampleNoClipC<DRAIN, PR, T>,
-            ResampleNoClipU<DRAIN, PR, T>,
             Unconnected,
             T,
         >,

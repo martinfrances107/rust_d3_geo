@@ -21,19 +21,18 @@ use pv::PV;
 
 use super::clip::Clip;
 
-type ClipCircleU<RC, RU, T> = Clip<
+type ClipCircleU<RC, T> = Clip<
 	Interpolate<T>,
 	Line<RC, Connected<RC>, T>,
 	Line<RC, Unconnected, T>,
 	PV<T>,
 	RC,
-	RU,
 	Unconnected,
 	T,
 >;
 
 /// Returns a clip setup for circle clipping.
-pub fn gen_clip_circle<DRAIN, PCNC, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, RU, T>
+pub fn gen_clip_circle<DRAIN, PCNC, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
 where
 	DRAIN: Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

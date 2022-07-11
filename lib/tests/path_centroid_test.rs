@@ -54,7 +54,6 @@ mod path_centroid_test {
             NoClipC<Centroid<T>>,
             NoClipU<Centroid<T>>,
             ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-            ResampleNoClipU<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
             T,
         >();
 

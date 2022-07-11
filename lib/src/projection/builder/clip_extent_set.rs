@@ -49,7 +49,6 @@ where
 			ClipC<DRAIN, T>,
 			ClipU<DRAIN, T>,
 			ResampleClipC<DRAIN, PR, T>,
-			ResampleClipU<DRAIN, PR, T>,
 			T,
 		>();
 		let resample = Resample::new(self.project_transform.clone(), self.delta2);
@@ -105,7 +104,6 @@ where
 			ClipC<DRAIN, T>,
 			ClipU<DRAIN, T>,
 			ResampleNoneClipC<DRAIN, PR, T>,
-			ResampleNoneClipU<DRAIN, PR, T>,
 			T,
 		>();
 		let resample = None::new(self.project_transform.clone());

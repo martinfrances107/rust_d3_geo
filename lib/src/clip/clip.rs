@@ -64,13 +64,13 @@ where
 /// Takes the unconnected line temple stored in clip_line
 /// and then modifies the ClipState to one than reflects
 /// the connected sink.
-impl<I, LB, LC, LU, PV, RC, RU, T> Connectable for Clip<I, LC, LU, PV, RC, RU, Unconnected, T>
+impl<I, LB, LC, LU, PV, RC, T> Connectable for Clip<I, LC, LU, PV, RC, Unconnected, T>
 where
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     T: CoordFloat,
 {
     type SC = RC;
-    type Output = Clip<I, LC, LU, PV, RC, RU, Connected<LB, LC, T>, T>;
+    type Output = Clip<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>;
     fn connect(self, sink: RC) -> Self::Output {
         let line_node = self.clip_line.clone().connect(sink);
         let ring_buffer = Buffer::<T>::default();
@@ -90,7 +90,6 @@ where
         Self::Output {
             p_lc: PhantomData::<LC>,
             p_rc: PhantomData::<RC>,
-            p_ru: PhantomData::<RU>,
             state,
             clip_line: self.clip_line,
             interpolator: self.interpolator,
@@ -102,14 +101,16 @@ where
 
 #[derive(Clone, Debug)]
 #[allow(dead_code)]
-pub struct Clip<I, LC, LU, PV, RC, RU, STATE, T>
+pub struct Clip<I, LC, LU, PV, RC, STATE, T>
 where
     T: CoordFloat,
 {
     state: STATE,
     p_lc: PhantomData<LC>,
+    /// PhantomData<RC>
+    /// The hidden linkage is in the implementation of Connectable
+    /// Changing the RC results in a change of the Output type.
     p_rc: PhantomData<RC>,
-    p_ru: PhantomData<RU>,
     /// Needs to be public as precision() will copy these values.
     pub clip_line: LU,
     pub interpolator: I,
@@ -117,7 +118,7 @@ where
     pub start: Coordinate<T>,
 }
 
-impl<I, LC, LU, PV, RC, RU, T> Clip<I, LC, LU, PV, RC, RU, Unconnected, T>
+impl<I, LC, LU, PV, RC, T> Clip<I, LC, LU, PV, RC, Unconnected, T>
 where
     T: CoordFloat,
 {
@@ -129,7 +130,6 @@ where
         Clip {
             p_lc: PhantomData::<LC>,
             p_rc: PhantomData::<RC>,
-            p_ru: PhantomData::<RU>,
             state: Unconnected,
             clip_line,
             interpolator,
@@ -139,7 +139,7 @@ where
     }
 }
 
-impl<EP, I, LB, LC, LU, PV, RC, RU, T> Clip<I, LC, LU, PV, RC, RU, Connected<LB, LC, T>, T>
+impl<EP, I, LB, LC, LU, PV, RC, T> Clip<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>
 where
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
@@ -247,8 +247,7 @@ where
     }
 }
 
-impl<EP, I, LB, LC, LU, PV, RC, RU, T> Stream
-    for Clip<I, LC, LU, PV, RC, RU, Connected<LB, LC, T>, T>
+impl<EP, I, LB, LC, LU, PV, RC, T> Stream for Clip<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,

@@ -183,7 +183,7 @@ where
 	/// Wrap a default projector and provides mercator specific overrides.
 	pub fn new(pr: PR) -> Self {
 		let base = ProjectionBuilder::new(
-			gen_clip_antimeridian::<NoClipC<DRAIN>, NoClipU<DRAIN>, _, _, _>(),
+			gen_clip_antimeridian::<NoClipC<DRAIN>, NoClipU<DRAIN>, _, _>(),
 			pr.clone(),
 		);
 		Self {
