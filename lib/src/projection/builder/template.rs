@@ -18,8 +18,8 @@ use super::Builder;
 pub type NoClipC<DRAIN> = Identity<DRAIN, Connected<DRAIN>>;
 pub type NoClipU<DRAIN> = Identity<DRAIN, Unconnected>;
 
-pub type ClipC<DRAIN, T> = Rectangle<DRAIN, DRAIN, Connected<DRAIN>, T>;
-pub type ClipU<DRAIN, T> = Rectangle<DRAIN, DRAIN, Unconnected, T>;
+pub type ClipC<DRAIN, T> = Rectangle<DRAIN, Connected<DRAIN>, T>;
+pub type ClipU<DRAIN, T> = Rectangle<DRAIN, Unconnected, T>;
 
 pub type ResampleClipC<DRAIN, PR, T> =
     Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, ConnectedResample<ClipC<DRAIN, T>, T>, T>;

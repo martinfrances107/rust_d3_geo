@@ -30,12 +30,14 @@ use super::Interpolator as InterpolatorTrait;
 
 ///A primitive type used to for a PostClipNode pipeline stage.
 #[derive(Clone)]
-pub struct Rectangle<EP, SINK, STATE, T>
+pub struct Rectangle<SINK, STATE, T>
 where
     T: CoordFloat,
 {
     state: STATE,
-    p_ep: PhantomData<EP>,
+    // PhantomData<SINK>:
+    // The hidden linkage is in the implementation of Connectable.
+    // if Self::SC changes then Self::Output must change.
     p_sink: PhantomData<SINK>,
     buffer_stream: ClipBuffer<T>,
     clean: bool,
@@ -64,7 +66,7 @@ where
     use_buffer_stream: bool,
 }
 
-impl<EP, SINK, STATE, T> Debug for Rectangle<EP, SINK, STATE, T>
+impl<SINK, STATE, T> Debug for Rectangle<SINK, STATE, T>
 where
     T: CoordFloat,
 {
@@ -74,15 +76,14 @@ where
     }
 }
 
-impl<EP, SINK, T> Rectangle<EP, SINK, Unconnected, T>
+impl<SINK, T> Rectangle<SINK, Unconnected, T>
 where
     T: CoordFloat,
 {
     #[inline]
-    pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<EP, SINK, Unconnected, T> {
+    pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<SINK, Unconnected, T> {
         Self {
             state: Unconnected,
-            p_ep: PhantomData::<EP>,
             p_sink: PhantomData::<SINK>,
             buffer_stream: ClipBuffer::<T>::default(),
             first: false,
@@ -113,9 +114,9 @@ where
     }
 }
 
-impl<EP, SINK, STATE, T> PostClipNode for Rectangle<EP, SINK, STATE, T> where T: CoordFloat {}
+impl<SINK, STATE, T> PostClipNode for Rectangle<SINK, STATE, T> where T: CoordFloat {}
 
-impl<EP, SINK, T> Rectangle<EP, SINK, Connected<SINK>, T>
+impl<EP, SINK, T> Rectangle<SINK, Connected<SINK>, T>
 where
     SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
@@ -156,7 +157,7 @@ where
     }
 }
 
-impl<EP, SINK, T> Rectangle<EP, SINK, Connected<SINK>, T>
+impl<EP, SINK, T> Rectangle<SINK, Connected<SINK>, T>
 where
     SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -260,16 +261,15 @@ where
     }
 }
 
-impl<EP, SC, T> Connectable for Rectangle<EP, SC, Unconnected, T>
+impl<SC, T> Connectable for Rectangle<SC, Unconnected, T>
 where
     T: CoordFloat + FloatConst,
 {
-    type Output = Rectangle<EP, SC, Connected<SC>, T>;
+    type Output = Rectangle<SC, Connected<SC>, T>;
     type SC = SC;
     fn connect(self, sink: SC) -> Self::Output {
         Rectangle {
             state: Connected { sink },
-            p_ep: self.p_ep,
             p_sink: self.p_sink,
             buffer_stream: self.buffer_stream,
             clean: self.clean,
@@ -300,7 +300,7 @@ where
     }
 }
 
-impl<EP, SINK, T> Stream for Rectangle<EP, SINK, Connected<SINK>, T>
+impl<EP, SINK, T> Stream for Rectangle<SINK, Connected<SINK>, T>
 where
     EP: Stream<EP = EP, T = T> + Default,
     SINK: Stream<EP = EP, T = T>,
