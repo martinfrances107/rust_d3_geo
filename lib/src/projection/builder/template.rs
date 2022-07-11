@@ -34,19 +34,15 @@ pub type ResampleNoClipU<DRAIN, PR, T> = Resample<PR, NoClipC<DRAIN>, Unconnecte
 
 /// ------------
 
-pub type ResampleNoneClipC<DRAIN, PR, T> =
-    None<PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Connected<ClipC<DRAIN, T>>, T>;
+pub type ResampleNoneClipC<DRAIN, PR, T> = None<PR, ClipC<DRAIN, T>, Connected<ClipC<DRAIN, T>>, T>;
 
-pub type ResampleNoneClipU<DRAIN, PR, T> =
-    None<PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>;
+pub type ResampleNoneClipU<DRAIN, PR, T> = None<PR, ClipC<DRAIN, T>, Unconnected, T>;
 
 /// ----
 
-pub type ResampleNoneNoClipC<DRAIN, PR, T> =
-    None<PR, NoClipC<DRAIN>, NoClipU<DRAIN>, Connected<NoClipC<DRAIN>>, T>;
+pub type ResampleNoneNoClipC<DRAIN, PR, T> = None<PR, NoClipC<DRAIN>, Connected<NoClipC<DRAIN>>, T>;
 
-pub type ResampleNoneNoClipU<DRAIN, PR, T> =
-    None<PR, NoClipC<DRAIN>, NoClipU<DRAIN>, Unconnected, T>;
+pub type ResampleNoneNoClipU<DRAIN, PR, T> = None<PR, NoClipC<DRAIN>, Unconnected, T>;
 
 // Default
 // No resampling,

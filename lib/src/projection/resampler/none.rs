@@ -18,15 +18,15 @@ use super::Resampler;
 ///
 /// A pass-through module, when no resampling is required.
 #[derive(Clone)]
-pub struct None<PR, SC, SU, STATE, T> {
+pub struct None<PR, SC, STATE, T> {
     state: STATE,
     p_sc: PhantomData<SC>,
-    p_su: PhantomData<SU>,
+
     p_t: PhantomData<T>,
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
 }
 
-impl<PR, SC, SU, STATE, T> Debug for None<PR, SC, SU, STATE, T>
+impl<PR, SC, STATE, T> Debug for None<PR, SC, STATE, T>
 where
     STATE: Debug,
 {
@@ -35,35 +35,33 @@ where
     }
 }
 
-impl<PR, SC, SU, T> None<PR, SC, SU, Unconnected, T> {
+impl<PR, SC, T> None<PR, SC, Unconnected, T> {
     /// Constructor: Resample None.
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-    ) -> None<PR, SC, SU, Unconnected, T> {
+    ) -> None<PR, SC, Unconnected, T> {
         Self {
             state: Unconnected,
             p_sc: PhantomData::<SC>,
-            p_su: PhantomData::<SU>,
             p_t: PhantomData::<T>,
             projection_transform,
         }
     }
 }
 
-impl<PR, SC, SU, STATE, T> Resampler for None<PR, SC, SU, STATE, T> where T: CoordFloat + FloatConst {}
+impl<PR, SC, STATE, T> Resampler for None<PR, SC, STATE, T> where T: CoordFloat + FloatConst {}
 
-impl<PR, SC, SU, T> Connectable for None<PR, SC, SU, Unconnected, T>
+impl<PR, SC, T> Connectable for None<PR, SC, Unconnected, T>
 where
     PR: Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
-    type Output = None<PR, SC, SU, Connected<SC>, T>;
+    type Output = None<PR, SC, Connected<SC>, T>;
     type SC = SC;
     fn connect(self, sink: SC) -> Self::Output {
-        None::<PR, SC, SU, Connected<SC>, T> {
+        None::<PR, SC, Connected<SC>, T> {
             state: Connected { sink },
             p_sc: PhantomData::<SC>,
-            p_su: PhantomData::<SU>,
             p_t: self.p_t,
 
             projection_transform: self.projection_transform,
@@ -71,7 +69,7 @@ where
     }
 }
 
-impl<EP, PR, SC, SU, T> Stream for None<PR, SC, SU, Connected<SC>, T>
+impl<EP, PR, SC, T> Stream for None<PR, SC, Connected<SC>, T>
 where
     SC: Stream<EP = EP, T = T>,
     PR: Transform<T = T>,
