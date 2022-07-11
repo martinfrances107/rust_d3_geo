@@ -90,6 +90,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			sx: self.sx,
 			sy: self.sy,
@@ -162,6 +163,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			sx: self.sx,
 			sy: self.sy,
@@ -252,6 +254,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			sx: self.sx,
 			sy: self.sy,
@@ -338,6 +341,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			sx: self.sx,
 			sy: self.sy,

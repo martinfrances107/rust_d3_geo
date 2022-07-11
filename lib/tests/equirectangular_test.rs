@@ -157,7 +157,6 @@ mod equirectangular_test {
 	fn rotate_30_0() {
 		println!("equirectangular(point) returns the expected result");
 		let clip = gen_clip_antimeridian::<
-			StreamDrainStub<f64>,
 			NoClipC<StreamDrainStub<f64>>,
 			NoClipU<StreamDrainStub<f64>>,
 			Equirectangular<StreamDrainStub<f64>, f64>,

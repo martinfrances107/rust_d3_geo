@@ -92,21 +92,7 @@ where
     ) -> StreamTransformRadians<
         Connected<
             RotatorRadians<
-                Connected<
-                    Clip<
-                        DRAIN,
-                        I,
-                        LB,
-                        LC,
-                        LU,
-                        PR,
-                        PV,
-                        RC,
-                        RU,
-                        ConnectedClip<DRAIN, LB, LC, LU, T>,
-                        T,
-                    >,
-                >,
+                Connected<Clip<I, LB, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, LU, T>, T>>,
                 T,
             >,
         >,

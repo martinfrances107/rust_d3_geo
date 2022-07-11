@@ -42,7 +42,6 @@ where
 
 	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
 		let clip = gen_clip_antimeridian::<
-			DRAIN,
 			ClipC<DRAIN, T>,
 			ClipU<DRAIN, T>,
 			PR,
@@ -52,6 +51,7 @@ where
 		>();
 		let resample = Resample::new(self.project_transform.clone(), self.delta2);
 		let out = Self::OutputBounded {
+			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip,
@@ -98,7 +98,6 @@ where
 
 	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
 		let clip = gen_clip_antimeridian::<
-			DRAIN,
 			ClipC<DRAIN, T>,
 			ClipU<DRAIN, T>,
 			PR,
@@ -108,6 +107,7 @@ where
 		>();
 		let resample = None::new(self.project_transform.clone());
 		let out = Self::OutputBounded {
+			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip,
@@ -164,6 +164,7 @@ where
 		>(self.theta.unwrap());
 		let resample = Resample::new(self.project_transform.clone(), self.delta2);
 		let out = Self::OutputBounded {
+			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip,
@@ -220,6 +221,7 @@ where
 		>(self.theta.unwrap());
 		let resample = None::new(self.project_transform.clone());
 		let out = Self::OutputBounded {
+			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip,

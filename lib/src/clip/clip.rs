@@ -46,11 +46,10 @@ enum LineEndFn {
 /// Clip specific state of connection.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Connected<EP, LB, LC, LU, T>
+pub struct Connected<LB, LC, LU, T>
 where
     T: CoordFloat,
 {
-    p_ep: PhantomData<EP>,
     line_node: LC,
     p_lu: PhantomData<LU>,
     polygon_started: bool,
@@ -66,21 +65,20 @@ where
 /// Takes the unconnected line temple stored in clip_line
 /// and then modifies the ClipState to one than reflects
 /// the connected sink.
-impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Connectable
-    for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
+impl<I, LB, LC, LU, PR, PV, RC, RU, T> Connectable
+    for Clip<I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     T: CoordFloat,
 {
     type SC = RC;
-    type Output = Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, T>, T>;
+    type Output = Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, LU, T>, T>;
     fn connect(self, sink: RC) -> Self::Output {
         let line_node = self.clip_line.clone().connect(sink);
         let ring_buffer = Buffer::<T>::default();
         let ring_sink = self.clip_line.clone().buffer(ring_buffer);
         let state = Connected {
             p_lu: PhantomData::<LU>,
-            p_ep: PhantomData::<EP>,
             polygon_started: false,
             polygon: Vec::new(),
             ring_sink,
@@ -93,7 +91,6 @@ where
         };
 
         Self::Output {
-            p_ep: PhantomData::<EP>,
             p_lb: PhantomData::<LB>,
             p_lc: PhantomData::<LC>,
             p_pr: PhantomData::<PR>,
@@ -110,12 +107,11 @@ where
 
 #[derive(Clone, Debug)]
 #[allow(dead_code)]
-pub struct Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, STATE, T>
+pub struct Clip<I, LB, LC, LU, PR, PV, RC, RU, STATE, T>
 where
     T: CoordFloat,
 {
     state: STATE,
-    p_ep: PhantomData<EP>,
     p_lb: PhantomData<LB>,
     p_lc: PhantomData<LC>,
     p_pr: PhantomData<PR>,
@@ -128,7 +124,7 @@ where
     pub start: Coordinate<T>,
 }
 
-impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
+impl<I, LB, LC, LU, PR, PV, RC, RU, T> Clip<I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>
 where
     T: CoordFloat,
 {
@@ -138,7 +134,6 @@ where
     /// Line< ResampleNoneNoClipU<DRAIN, PR, T>, Unconnected, T>
     pub fn new(interpolator: I, clip_line: LU, pv: PV, start: Coordinate<T>) -> Self {
         Clip {
-            p_ep: PhantomData::<EP>,
             p_lb: PhantomData::<LB>,
             p_lc: PhantomData::<LC>,
             p_pr: PhantomData::<PR>,
@@ -154,7 +149,7 @@ where
 }
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T>
-    Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, T>, T>
+    Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, LU, T>, T>
 where
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
@@ -263,7 +258,7 @@ where
 }
 
 impl<EP, I, LB, LC, LU, PR, PV, RC, RU, T> Stream
-    for Clip<EP, I, LB, LC, LU, PR, PV, RC, RU, Connected<EP, LB, LC, LU, T>, T>
+    for Clip<I, LB, LC, LU, PR, PV, RC, RU, Connected<LB, LC, LU, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,

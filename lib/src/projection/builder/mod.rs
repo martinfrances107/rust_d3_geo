@@ -85,8 +85,9 @@ where
     T: CoordFloat,
 {
     pub p_pcnc: PhantomData<PCNC>,
+    pub p_drain: PhantomData<DRAIN>,
     pub projection_raw: PR,
-    pub clip: Clip<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>,
+    pub clip: Clip<I, LB, LC, LU, PR, PV, RC, RU, Unconnected, T>,
     pub lambda: T,
     pub phi: T,
     pub alpha: T, // post-rotate angle
@@ -136,7 +137,6 @@ where
     /// Projection builder.
     pub fn new(
         clip: Clip<
-            DRAIN,
             InterpolateAntimeridian<T>,
             LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
             LineAntimeridian<
@@ -180,6 +180,7 @@ where
         let out_a: Self = Self {
             clip,
             p_pcnc,
+            p_drain: PhantomData::<DRAIN>,
             /// Input passing onto Projection.
             projection_raw,
 

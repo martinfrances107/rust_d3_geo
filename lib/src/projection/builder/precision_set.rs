@@ -82,6 +82,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<PCNC>,
 			sx: self.sx,
 			sy: self.sy,
@@ -177,6 +178,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 
 		// Copy - Mutate.
 		let out = Self::Output {
+			p_drain: PhantomData::<DRAIN>,
 			p_pcnc: PhantomData::<PCNC>,
 			sx: self.sx,
 			sy: self.sy,
