@@ -135,7 +135,7 @@ where
     /// Takes a line and cuts into visible segments. Return values used for polygon
     ///
     ///
-    /// Line<DRAIN, ResampleNoneNoClipU<DRAIN, PR, T>, Unconnected, T>
+    /// Line< ResampleNoneNoClipU<DRAIN, PR, T>, Unconnected, T>
     pub fn new(interpolator: I, clip_line: LU, pv: PV, start: Coordinate<T>) -> Self {
         Clip {
             p_ep: PhantomData::<EP>,

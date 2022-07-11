@@ -21,9 +21,9 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 	for Builder<
 		DRAIN,
 		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<DRAIN, RC, Connected<RC>, T>,
-		LineCircle<DRAIN, RC, Unconnected, T>,
+		LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
+		LineCircle<RC, Connected<RC>, T>,
+		LineCircle<RC, Unconnected, T>,
 		PCNC,
 		PCNU,
 		PR,

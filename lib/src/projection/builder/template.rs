@@ -22,17 +22,17 @@ pub type ClipC<DRAIN, T> = Rectangle<DRAIN, Connected<DRAIN>, T>;
 pub type ClipU<DRAIN, T> = Rectangle<DRAIN, Unconnected, T>;
 
 pub type ResampleClipC<DRAIN, PR, T> =
-    Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, ConnectedResample<ClipC<DRAIN, T>, T>, T>;
+    Resample<PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, ConnectedResample<ClipC<DRAIN, T>, T>, T>;
 
 pub type ResampleClipU<DRAIN, PR, T> =
-    Resample<DRAIN, PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>;
+    Resample<PR, ClipC<DRAIN, T>, ClipU<DRAIN, T>, Unconnected, T>;
 
 // ----
 pub type ResampleNoClipC<DRAIN, PR, T> =
-    Resample<DRAIN, PR, NoClipC<DRAIN>, NoClipU<DRAIN>, ConnectedResample<NoClipC<DRAIN>, T>, T>;
+    Resample<PR, NoClipC<DRAIN>, NoClipU<DRAIN>, ConnectedResample<NoClipC<DRAIN>, T>, T>;
 
 pub type ResampleNoClipU<DRAIN, PR, T> =
-    Resample<DRAIN, PR, NoClipC<DRAIN>, NoClipU<DRAIN>, Unconnected, T>;
+    Resample<PR, NoClipC<DRAIN>, NoClipU<DRAIN>, Unconnected, T>;
 
 /// ------------
 

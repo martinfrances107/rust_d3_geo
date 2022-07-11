@@ -24,14 +24,12 @@ use super::intersect::IntersectReturn;
 
 /// Circle Line.
 #[derive(Clone, Debug)]
-pub struct Line<EP, SC, STATE, T>
+pub struct Line<SC, STATE, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     /// Connection State.
     state: STATE,
-    p_ep: PhantomData<EP>,
     /// PhantomData here soley to allow SINK to be defined in the Connecteable.
     p_sc: PhantomData<SC>,
     // p_su: PhantomData<SU>,
@@ -52,15 +50,13 @@ where
 // Note Default is ONLY implenented for the unconnected state
 // Added when I found it was useful for type corercion.
 
-impl<EP, RC, T> Default for Line<EP, RC, Unconnected, T>
+impl<RC, T> Default for Line<RC, Unconnected, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     fn default() -> Self {
         Self {
             state: Unconnected,
-            p_ep: PhantomData::<EP>,
 
             p_sc: PhantomData::<RC>,
 
@@ -80,17 +76,15 @@ where
     }
 }
 
-impl<EP, SINK, T> LineUnconnected for Line<EP, SINK, Unconnected, T>
+impl<SINK, T> LineUnconnected for Line<SINK, Unconnected, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type SU = SINK;
 }
 
-impl<EP, SINK, T> LineConnected for Line<EP, SINK, Connected<SINK>, T>
+impl<SINK, T> LineConnected for Line<SINK, Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type SC = SINK;
@@ -101,18 +95,16 @@ where
     }
 }
 
-impl<EP, SC, T> Bufferable for Line<EP, SC, Unconnected, T>
+impl<SC, T> Bufferable for Line<SC, Unconnected, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
-    type Output = Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>;
+    type Output = Line<Buffer<T>, Connected<Buffer<T>>, T>;
     type T = T;
 
     fn buffer(self, buffer: Buffer<T>) -> Self::Output {
         Line {
             state: Connected { sink: buffer },
-            p_ep: PhantomData::<Buffer<T>>,
             p_sc: PhantomData::<Buffer<T>>,
             cr: self.cr,
             not_hemisphere: self.not_hemisphere,
@@ -127,22 +119,19 @@ where
     }
 }
 
-impl<EP, SC, T> Connectable for Line<EP, SC, Unconnected, T>
+impl<SC, T> Connectable for Line<SC, Unconnected, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type SC = SC;
-    type Output = Line<EP, SC, Connected<SC>, T>;
+    type Output = Line<SC, Connected<SC>, T>;
 
     #[inline]
-    fn connect(self, sink: SC) -> Line<EP, SC, Connected<SC>, T> {
+    fn connect(self, sink: SC) -> Line<SC, Connected<SC>, T> {
         // Copy Mutate.
         Line {
             state: Connected { sink },
-            p_ep: PhantomData::<EP>,
             p_sc: PhantomData::<SC>,
-            // p_su: PhantomData::<SU>,
             cr: self.cr,
             not_hemisphere: self.not_hemisphere,
             point0: self.point0,
@@ -156,9 +145,8 @@ where
     }
 }
 
-impl<EP, SC, T> Line<EP, SC, Unconnected, T>
+impl<SC, T> Line<SC, Unconnected, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     /// Constructor.
@@ -170,7 +158,6 @@ where
         let epsilon = T::from(EPSILON).unwrap();
         Self {
             state: Unconnected,
-            p_ep: PhantomData::<EP>,
             p_sc: PhantomData::<SC>,
             c0: 0,
             clean: 0,
@@ -186,9 +173,8 @@ where
     }
 }
 
-impl<EP, SINK, T> Line<EP, SINK, Connected<SINK>, T>
+impl<SINK, T> Line<SINK, Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     // todo remove this duplicate.
@@ -214,9 +200,8 @@ static CODE_ABOVE: u8 = 8;
 ///
 /// TODO :-
 /// code is only available of from connected state.
-impl<EP, SINK, T> Line<EP, SINK, Connected<SINK>, T>
+impl<SINK, T> Line<SINK, Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     fn code(&self, p: &Coordinate<T>) -> u8 {
@@ -244,9 +229,8 @@ where
 }
 
 /// API clean only availble once connected.
-impl<EP, SINK, T> Clean for Line<EP, SINK, Connected<SINK>, T>
+impl<SINK, T> Clean for Line<SINK, Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     /// Rejoin first and last segments if there were intersections and the first
@@ -258,9 +242,8 @@ where
     }
 }
 
-impl<EP, SINK, T> Stream for Line<EP, SINK, Connected<SINK>, T>
+impl<EP, SINK, T> Stream for Line<SINK, Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T>,
     SINK: Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

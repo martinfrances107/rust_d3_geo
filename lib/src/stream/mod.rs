@@ -82,7 +82,7 @@ pub trait Streamable {
 /// The Projection Stream Pipeline :-
 ///
 /// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
-pub trait Pipeline<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T>
+pub trait PipeLine<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T>
 where
     T: CoordFloat,
 {

@@ -21,8 +21,8 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> PrecisionAdjust
         PCNU,
         PR,
         PV,
-        Resample<DRAIN, PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
-        Resample<DRAIN, PR, PCNC, PCNU, Unconnected, T>,
+        Resample<PR, PCNC, PCNU, ConnectedResample<PCNC, T>, T>,
+        Resample<PR, PCNC, PCNU, Unconnected, T>,
         T,
     >
 where

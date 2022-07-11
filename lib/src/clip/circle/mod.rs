@@ -24,9 +24,9 @@ use super::clip::Clip;
 type ClipCircleU<DRAIN, PR, RC, RU, T> = Clip<
 	DRAIN,
 	Interpolate<T>,
-	Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-	Line<DRAIN, RC, Connected<RC>, T>,
-	Line<DRAIN, RC, Unconnected, T>,
+	Line<Buffer<T>, Connected<Buffer<T>>, T>,
+	Line<RC, Connected<RC>, T>,
+	Line<RC, Unconnected, T>,
 	PR,
 	PV<T>,
 	RC,

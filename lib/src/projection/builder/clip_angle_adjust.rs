@@ -18,9 +18,9 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleAdjust
 	for Builder<
 		DRAIN,
 		Interpolate<T>,
-		Line<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-		Line<DRAIN, RC, Connected<RC>, T>,
-		Line<DRAIN, RC, Unconnected, T>,
+		Line<Buffer<T>, Connected<Buffer<T>>, T>,
+		Line<RC, Connected<RC>, T>,
+		Line<RC, Unconnected, T>,
 		PCNC,
 		PCNU,
 		PR,
