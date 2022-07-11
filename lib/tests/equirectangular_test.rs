@@ -159,7 +159,6 @@ mod equirectangular_test {
 		let clip = gen_clip_antimeridian::<
 			NoClipC<StreamDrainStub<f64>>,
 			NoClipU<StreamDrainStub<f64>>,
-			Equirectangular<StreamDrainStub<f64>, f64>,
 			ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 			ResampleNoClipU<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
 			f64,

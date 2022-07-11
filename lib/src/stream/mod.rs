@@ -91,10 +91,7 @@ where
         drain: &DRAIN,
     ) -> StreamTransformRadians<
         Connected<
-            RotatorRadians<
-                Connected<Clip<I, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>,
-                T,
-            >,
+            RotatorRadians<Connected<Clip<I, LC, LU, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>, T>,
         >,
     >;
 }

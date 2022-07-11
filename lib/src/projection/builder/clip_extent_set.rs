@@ -48,7 +48,6 @@ where
 		let clip = gen_clip_antimeridian::<
 			ClipC<DRAIN, T>,
 			ClipU<DRAIN, T>,
-			PR,
 			ResampleClipC<DRAIN, PR, T>,
 			ResampleClipU<DRAIN, PR, T>,
 			T,
@@ -105,7 +104,6 @@ where
 		let clip = gen_clip_antimeridian::<
 			ClipC<DRAIN, T>,
 			ClipU<DRAIN, T>,
-			PR,
 			ResampleNoneClipC<DRAIN, PR, T>,
 			ResampleNoneClipU<DRAIN, PR, T>,
 			T,

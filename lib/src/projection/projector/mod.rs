@@ -41,7 +41,7 @@ where
 
     pub(crate) resample: RU,
 
-    pub(crate) clip: Clip<I, LC, LU, PR, PV, RC, RU, Unconnected, T>,
+    pub(crate) clip: Clip<I, LC, LU, PV, RC, RU, Unconnected, T>,
 
     pub(crate) rotator: RotatorRadians<Unconnected, T>,
 
@@ -56,7 +56,7 @@ where
         StreamTransformRadians<
             Connected<
                 RotatorRadians<
-                    Connected<Clip<I, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>,
+                    Connected<Clip<I, LC, LU, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>,
                     T,
                 >,
             >,
@@ -91,10 +91,7 @@ where
         drain: &DRAIN,
     ) -> StreamTransformRadians<
         Connected<
-            RotatorRadians<
-                Connected<Clip<I, LC, LU, PR, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>,
-                T,
-            >,
+            RotatorRadians<Connected<Clip<I, LC, LU, PV, RC, RU, ConnectedClip<LB, LC, T>, T>>, T>,
         >,
     > {
         if let Some((cache_drain, output)) = &self.cache {
