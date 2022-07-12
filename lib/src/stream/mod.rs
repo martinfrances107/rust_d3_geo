@@ -16,11 +16,6 @@ use geo::Coordinate;
 use geo::LineString;
 use geo::Polygon;
 
-use crate::clip::clip::Clip;
-use crate::clip::clip::Connected as ConnectedClip;
-use crate::projection::stream_transform_radians::StreamTransformRadians;
-use crate::rot::rotator_radians::RotatorRadians;
-
 /// State -- Unconnected.
 ///
 /// A Stream Pipeline stages blank.

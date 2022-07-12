@@ -71,7 +71,6 @@ where
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	let builder = builder
-		.clone()
 		.scale(T::from(150.0_f64).unwrap())
 		.translate(&Coordinate {
 			x: T::zero(),
