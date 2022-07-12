@@ -29,7 +29,7 @@ pub struct Stereographic<DRAIN, T> {
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawCommon<T> for Stereographic<DRAIN, T>
+impl<DRAIN, T> ProjectionRawCommon for Stereographic<DRAIN, T>
 where
     DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
