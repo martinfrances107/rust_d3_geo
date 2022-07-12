@@ -44,7 +44,7 @@ where
 }
 
 /// Context related methods.
-impl<'a, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<Context<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
@@ -65,7 +65,7 @@ where
 }
 
 /// Context related methods.
-impl<'a, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Builder<String<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
 where
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,

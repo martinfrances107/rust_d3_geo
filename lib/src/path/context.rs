@@ -65,7 +65,7 @@ impl<T> PointRadiusTrait for Context<T> {
     }
 }
 
-impl<'a, T> Result for Context<T>
+impl<T> Result for Context<T>
 where
     T: CoordFloat,
 {

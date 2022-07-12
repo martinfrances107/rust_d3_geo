@@ -142,7 +142,7 @@ where
     }
 }
 
-impl<'a, PR, SC, T> Resample<PR, SC, Unconnected, T>
+impl<PR, SC, T> Resample<PR, SC, Unconnected, T>
 where
     T: CoordFloat,
 {
@@ -160,7 +160,7 @@ where
     }
 }
 
-impl<'a, EP, PR, SC, T> Resample<PR, SC, Connected<SC, T>, T>
+impl<EP, PR, SC, T> Resample<PR, SC, Connected<SC, T>, T>
 where
     PR: Transform<T = T>,
     SC: Stream<EP = EP, T = T>,
@@ -331,7 +331,7 @@ where
     }
 }
 
-impl<'a, EP, PR, SC, T> Stream for Resample<PR, SC, Connected<SC, T>, T>
+impl<EP, PR, SC, T> Stream for Resample<PR, SC, Connected<SC, T>, T>
 where
     EP: Stream<EP = EP, T = T> + Default,
     PR: Clone + Transform<T = T>,
