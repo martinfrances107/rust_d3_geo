@@ -41,13 +41,12 @@ where
 	}
 }
 
-impl<DRAIN, T> ProjectionRawBase<T> for Orthographic<DRAIN, T>
+impl<DRAIN, T> ProjectionRawBase for Orthographic<DRAIN, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = BuilderCircleResampleNoClip<DRAIN, Orthographic<DRAIN, T>, T>;
-	type T = T;
 
 	#[inline]
 	fn builder() -> Self::Builder {

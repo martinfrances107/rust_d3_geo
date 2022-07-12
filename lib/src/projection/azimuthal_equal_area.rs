@@ -33,13 +33,12 @@ where
 	p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawBase<T> for AzimuthalEqualArea<DRAIN, T>
+impl<DRAIN, T> ProjectionRawBase for AzimuthalEqualArea<DRAIN, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = BuilderCircleResampleNoClip<DRAIN, AzimuthalEqualArea<DRAIN, T>, T>;
-	type T = T;
 
 	#[inline]
 	fn builder() -> Self::Builder {

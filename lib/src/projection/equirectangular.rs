@@ -33,13 +33,12 @@ impl<DRAIN, T> Default for Equirectangular<DRAIN, T> {
 	}
 }
 
-impl<DRAIN, T> ProjectionRawBase<T> for Equirectangular<DRAIN, T>
+impl<DRAIN, T> ProjectionRawBase for Equirectangular<DRAIN, T>
 where
 	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 	T: CoordFloat + FloatConst,
 {
 	type Builder = BuilderAntimeridianResampleNoClip<DRAIN, Equirectangular<DRAIN, T>, T>;
-	type T = T;
 
 	#[inline]
 	fn builder() -> Self::Builder {

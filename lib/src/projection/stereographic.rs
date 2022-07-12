@@ -48,12 +48,11 @@ where
     }
 }
 
-impl<DRAIN, T> ProjectionRawBase<T> for Stereographic<DRAIN, T>
+impl<DRAIN, T> ProjectionRawBase for Stereographic<DRAIN, T>
 where
     DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type T = T;
     type Builder = BuilderCircleResampleNoClip<DRAIN, Stereographic<DRAIN, T>, T>;
 
     #[inline]

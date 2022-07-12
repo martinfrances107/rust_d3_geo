@@ -30,13 +30,12 @@ pub struct AzimuthalEquiDistant<DRAIN, T> {
 	p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawBase<T> for AzimuthalEquiDistant<DRAIN, T>
+impl<DRAIN, T> ProjectionRawBase for AzimuthalEquiDistant<DRAIN, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = BuilderCircleResampleNoClip<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>;
-	type T = T;
 
 	#[inline]
 	fn builder() -> Self::Builder {

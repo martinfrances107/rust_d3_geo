@@ -32,13 +32,12 @@ impl<DRAIN, T> Default for Mercator<DRAIN, T> {
 	}
 }
 
-impl<DRAIN, T> ProjectionRawBase<T> for Mercator<DRAIN, T>
+impl<DRAIN, T> ProjectionRawBase for Mercator<DRAIN, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Builder = BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN, T>, T>;
-	type T = T;
 
 	#[inline]
 	fn builder() -> Self::Builder {

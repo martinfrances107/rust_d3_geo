@@ -84,21 +84,20 @@ pub trait TransformExtent {
 /// things that follow the common family of raw projections.
 /// and alternatively the less common mercator family of raw projections.
 // pub trait ProjectionRawBase<T>: Clone + Debug + Default + Transform<T = T>
-pub trait ProjectionRawBase<T>: Transform<T = T> {
+pub trait ProjectionRawBase: Transform {
     /// The default builder.
     type Builder;
-    /// f32 or f64.
-    type T;
+
     /// Constructs the default projection builder.
     fn builder() -> Self::Builder;
 }
 
 /// Marker trait -  for family of raw projections.
 /// used to identify thing that ARE NOT the  mercator family of projections.
-pub trait ProjectionRawCommon<T>: ProjectionRawBase<T> {}
+pub trait ProjectionRawCommon<T>: ProjectionRawBase {}
 /// Marker trait identifies trait that need a highly specialised set of
 /// overreides. The mercator family.
-pub trait ProjectionRawMercator<T>: ProjectionRawBase<T> {}
+pub trait ProjectionRawMercator<T>: ProjectionRawBase {}
 
 pub trait Build
 where

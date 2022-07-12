@@ -35,15 +35,12 @@ impl<DRAIN, T> Default for Gnomic<DRAIN, T> {
 	}
 }
 
-impl<DRAIN, T> ProjectionRawBase<T> for Gnomic<DRAIN, T>
+impl<DRAIN, T> ProjectionRawBase for Gnomic<DRAIN, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Builder = BuilderCircleResampleNoClip<DRAIN, Gnomic<DRAIN, T>, T>;
-
-	/// f64 or f32.
-	type T = T;
 
 	fn builder() -> Self::Builder
 	where
