@@ -77,25 +77,6 @@ pub trait Streamable {
         SINK: Stream<EP = EP, T = Self::T>;
 }
 
-/// Connects a DRAIN to the projection.
-///
-/// The Projection Stream Pipeline :-
-///
-/// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
-pub trait PipeLine<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T>
-where
-    T: CoordFloat,
-{
-    fn stream(
-        &mut self,
-        drain: &DRAIN,
-    ) -> StreamTransformRadians<
-        Connected<
-            RotatorRadians<Connected<Clip<I, LC, LU, PV, RC, ConnectedClip<LB, LC, T>, T>>, T>,
-        >,
-    >;
-}
-
 /// Stub is useful only the transform portion of a projection is needed.
 /// TODO must add example to doc.
 #[derive(Clone, Copy, Debug)]

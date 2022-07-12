@@ -83,7 +83,6 @@ pub trait TransformExtent {
 /// Serves as a abstract trait both
 /// things that follow the common family of raw projections.
 /// and alternatively the less common mercator family of raw projections.
-// pub trait ProjectionRawBase<T>: Clone + Debug + Default + Transform<T = T>
 pub trait ProjectionRawBase: Transform {
     /// The default builder.
     type Builder;
