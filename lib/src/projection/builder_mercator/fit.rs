@@ -1,4 +1,3 @@
-use crate::projection::fit_clip::fit_extent_clip;
 use std::fmt::Debug;
 
 use approx::AbsDiffEq;
@@ -6,18 +5,11 @@ use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::rectangle::Rectangle;
 use crate::path::bounds::Bounds;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-use crate::projection::builder_mercator::FitReclip;
 use crate::projection::Fit;
-use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Streamable;
-use crate::stream::Unconnected;
 use crate::Transform;
-
-use super::Builder;
 
 impl<PR, T> Fit for BuilderMercatorAntimeridianResampleClip<Bounds<T>, PR, T>
 where

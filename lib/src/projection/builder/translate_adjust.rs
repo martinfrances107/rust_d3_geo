@@ -13,12 +13,10 @@ use crate::projection::Translate;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::template::ClipC;
 use super::template::ClipU;
 use super::template::ResampleClipC;
 use super::template::ResampleClipU;
 use super::Builder;
-use super::NoClipC;
 use super::NoClipU;
 use super::ResampleNoClipC;
 use super::ResampleNoClipU;

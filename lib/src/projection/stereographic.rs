@@ -13,7 +13,6 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
-use super::builder::template::NoClipC;
 use super::builder::template::NoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;

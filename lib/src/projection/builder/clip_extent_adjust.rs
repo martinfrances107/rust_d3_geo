@@ -4,7 +4,6 @@ use geo::Coordinate;
 use crate::clip::rectangle::Rectangle;
 use crate::projection::ClipExtentAdjust;
 
-use super::template::ClipC;
 use super::template::ClipU;
 use super::Builder;
 

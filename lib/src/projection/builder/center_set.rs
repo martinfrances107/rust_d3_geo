@@ -10,9 +10,7 @@ use crate::projection::builder::ResampleNoClipU;
 use crate::projection::CenterSet;
 use crate::Transform;
 
-use super::template::ClipC;
 use super::template::ClipU;
-use super::template::NoClipC;
 use super::template::NoClipU;
 use super::Builder;
 

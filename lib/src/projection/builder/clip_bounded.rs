@@ -6,9 +6,7 @@ use geo::Coordinate;
 use crate::identity::Identity;
 use crate::projection::ClipExtentBounded;
 
-use super::template::ClipC;
 use super::template::ClipU;
-use super::template::NoClipC;
 use super::template::NoClipU;
 use super::Builder;
 

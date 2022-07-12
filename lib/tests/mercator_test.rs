@@ -6,26 +6,18 @@ mod mercator_tests {
 	extern crate pretty_assertions;
 
 	use geo::Coordinate;
-	use geo::Geometry;
+
 	use pretty_assertions::assert_eq;
 	use rust_d3_geo::data_object::sphere::Sphere;
-	use rust_d3_geo::in_delta::in_delta_coordinate;
 	use rust_d3_geo::path::builder::Builder as PathBuilder;
 	use rust_d3_geo::path::string::String as PathString;
-	use rust_d3_geo::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-	use rust_d3_geo::projection::builder_mercator::FitReclip;
 	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::ClipExtentAdjust;
 	use rust_d3_geo::projection::ClipExtentBounded;
-	use rust_d3_geo::projection::Fit;
 	use rust_d3_geo::projection::PrecisionBypass;
 	use rust_d3_geo::projection::ProjectionRawBase;
-	use rust_d3_geo::projection::Rotate;
-	use rust_d3_geo::projection::RotateGet;
 	use rust_d3_geo::projection::Scale;
-	use rust_d3_geo::projection::ScaleGet;
 	use rust_d3_geo::projection::Translate;
-	use rust_d3_geo::projection::TranslateGet;
 
 	// #[test]
 	// fn test_clip_extent_defaults_to_automatic() {

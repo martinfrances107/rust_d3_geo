@@ -10,9 +10,7 @@ use crate::projection::RecenterWithResampling;
 use crate::projection::ReflectSet;
 use crate::Transform;
 
-use super::template::ClipC;
 use super::template::ClipU;
-use super::template::NoClipC;
 use super::template::NoClipU;
 use super::Builder;
 

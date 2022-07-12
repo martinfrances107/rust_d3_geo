@@ -6,7 +6,6 @@ use num_traits::FloatConst;
 use crate::projection::builder::types::BuilderAntimeridianResampleClip;
 use crate::projection::builder::types::BuilderCircleResampleClip;
 use crate::projection::builder::Builder;
-use crate::projection::builder::NoClipC;
 use crate::projection::builder::NoClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;

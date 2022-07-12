@@ -27,7 +27,6 @@ mod path_centroid_test {
     use rust_d3_geo::in_delta::in_delta_point;
     use rust_d3_geo::path::centroid::Centroid;
     use rust_d3_geo::path::Path;
-    use rust_d3_geo::projection::builder::template::NoClipC;
     use rust_d3_geo::projection::builder::template::NoClipU;
     use rust_d3_geo::projection::builder::template::ResampleNoClipC;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;

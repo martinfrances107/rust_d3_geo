@@ -11,7 +11,6 @@ use crate::projection::Scale;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::builder::template::NoClipC;
 use super::builder::template::NoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;

@@ -29,7 +29,6 @@ use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::template::ClipC;
 use super::template::ClipU;
 
 // Code Repeated 2^2 times.

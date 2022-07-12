@@ -12,7 +12,6 @@ use crate::clip::PointVisible;
 use crate::path::bounds::Bounds;
 use crate::projection::builder::Buffer;
 use crate::projection::builder::Builder;
-use crate::projection::builder::NoClipC;
 use crate::projection::builder::NoClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;

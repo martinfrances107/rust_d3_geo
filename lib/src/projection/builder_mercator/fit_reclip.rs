@@ -1,23 +1,13 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::rectangle::Rectangle;
-use crate::path::bounds::Bounds;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use crate::projection::builder_mercator::FitReclip;
-use crate::projection::Fit;
-use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Streamable;
-use crate::stream::Unconnected;
-use crate::Transform;
-
-use super::Builder;
 
 impl<DRAIN, PR, T> FitReclip for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where

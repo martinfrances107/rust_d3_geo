@@ -7,9 +7,7 @@ use num_traits::FloatConst;
 
 use crate::clip::PointVisible;
 use crate::identity::Identity;
-use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::NoClipC;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::builder_mercator::NoClipU;
 use crate::projection::ClipExtentBounded;

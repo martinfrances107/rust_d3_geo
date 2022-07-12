@@ -30,7 +30,6 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::builder::template::NoClipC;
 use super::builder::template::NoClipU;
 use super::builder::template::ResampleNoClipC;
 use super::builder::template::ResampleNoClipU;
@@ -38,7 +37,6 @@ use super::resampler::resample::Resample;
 use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 
-use template::ClipC;
 use template::ClipU;
 use template::ResampleClipC;
 use template::ResampleClipU;
@@ -176,7 +174,6 @@ where
         let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
         let postclip = Identity::default();
         let resample = Resample::new(project_transform.clone(), delta2);
-        let p_pcnc = PhantomData::<NoClipC<DRAIN>>;
         let out_a: Self = Self {
             clip,
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
