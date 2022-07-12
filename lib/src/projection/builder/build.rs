@@ -83,7 +83,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		T,
 	> {
 		Projector {
-			p_lc: PhantomData::<LC>,
 			cache: None,
 			postclip: self.postclip.clone(),
 			clip: self.clip.clone(),
@@ -155,7 +154,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		T,
 	> {
 		Projector {
-			p_lc: PhantomData::<LC>,
 			cache: None,
 			postclip: self.postclip.clone(),
 			clip: self.clip.clone(),
@@ -229,7 +227,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		T,
 	> {
 		Projector {
-			p_lc: PhantomData::<LC>,
 			cache: None,
 			postclip: self.postclip.clone(),
 			clip: self.clip.clone(),
@@ -269,13 +266,6 @@ where
 	#[inline]
 	fn build(&self) -> ProjectorAntimeridianResampleClip<DRAIN, PR, T> {
 		Projector {
-			p_lc: PhantomData::<
-				LineAntimeridian<
-					ResampleClipC<DRAIN, PR, T>,
-					Connected<ResampleClipC<DRAIN, PR, T>>,
-					T,
-				>,
-			>,
 			cache: None,
 			postclip: self.postclip.clone(),
 			clip: self.clip.clone(),

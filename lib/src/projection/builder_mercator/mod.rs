@@ -225,7 +225,6 @@ where
 	#[inline]
 	fn build(&self) -> Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> {
 		Projector {
-			p_lc: PhantomData::<LC>,
 			cache: None,
 			postclip: self.base.postclip.clone(),
 			clip: self.base.clip.clone(),

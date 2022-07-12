@@ -34,7 +34,6 @@ where
     T: CoordFloat,
 {
     /// Must be public as there is a implicit copy.
-    pub p_lc: PhantomData<LC>,
     pub(crate) postclip: PCNU,
 
     pub(crate) resample: RU,
