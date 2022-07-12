@@ -29,7 +29,7 @@ type ClipAntimeridianU<RC, T> = Clip<
 >;
 
 /// Returns a clip setup for antimeridian clipping.
-pub fn gen_clip_antimeridian<PCNC, PCNU, RC, T>() -> ClipAntimeridianU<RC, T>
+pub fn gen_clip_antimeridian<PCNU, RC, T>() -> ClipAntimeridianU<RC, T>
 where
     T: CoordFloat + FloatConst,
 {

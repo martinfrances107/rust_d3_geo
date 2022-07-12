@@ -16,8 +16,8 @@ use crate::projection::AngleGet;
 use crate::projection::AngleSet;
 use crate::Transform;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
-	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> AngleGet
+	for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
 	T: CoordFloat + FloatConst,
 {
@@ -36,7 +36,6 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 		LB,
 		LC,
 		LU,
-		NoClipC<DRAIN>,
 		NoClipU<DRAIN>,
 		PR,
 		PV,
@@ -67,7 +66,6 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 		LB,
 		LC,
 		LU,
-		ClipC<DRAIN, T>,
 		ClipU<DRAIN, T>,
 		PR,
 		PV,

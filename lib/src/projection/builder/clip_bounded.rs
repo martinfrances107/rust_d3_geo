@@ -13,13 +13,12 @@ use super::template::NoClipU;
 use super::Builder;
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentBounded
-	for Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+	for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
 	T: CoordFloat,
 {
 	type T = T;
-	type OutputClear =
-		Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN>, NoClipU<DRAIN>, PR, PV, RC, RU, T>;
+	type OutputClear = Builder<DRAIN, I, LB, LC, LU, NoClipU<DRAIN>, PR, PV, RC, RU, T>;
 
 	fn get_clip_extent(&self) -> Option<[Coordinate<T>; 2]> {
 		match (self.x0, self.y0, self.x1, self.y1) {
@@ -34,7 +33,6 @@ where
 		let out = Self::OutputClear {
 			p_lb: PhantomData::<LB>,
 			p_drain: PhantomData::<DRAIN>,
-			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			projection_raw: self.projection_raw,
 			clip: self.clip,
 			phi: self.phi,

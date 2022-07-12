@@ -49,7 +49,6 @@ mod reflect_tests {
 			Unconnected,
 			f64,
 		>,
-		Identity<StreamDrainStub<f64>, Connected<StreamDrainStub<f64>>>,
 		Identity<StreamDrainStub<f64>, Unconnected>,
 		Gnomic<StreamDrainStub<f64>, f64>,
 		PVCircle<f64>,
@@ -191,7 +190,7 @@ mod reflect_tests {
 	#[test]
 	fn reflect_x_works_with_projection_angle() {
 		println!("projection.reflectX(…) works with projection.angle()");
-		let builder: MercatorBuilder<StreamDrainStub<f32>, _, _, _, _, _, _, _, _, _, _, f32> =
+		let builder: MercatorBuilder<StreamDrainStub<f32>, _, _, _, _, _, _, _, _, _, f32> =
 			Mercator::builder()
 				.scale(1_f32)
 				.translate(&Coordinate {

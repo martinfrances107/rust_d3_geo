@@ -17,7 +17,6 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> PrecisionAdjust
         LB,
         LC,
         LU,
-        PCNC,
         PCNU,
         PR,
         PV,

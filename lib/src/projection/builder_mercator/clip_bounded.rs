@@ -19,14 +19,13 @@ use crate::Coordinate;
 use super::Builder;
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentBounded
-	for Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+	for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
 	PR: TransformExtent<T = T>,
 	PV: PointVisible<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	type OutputClear =
-		Builder<DRAIN, I, LB, LC, LU, NoClipC<DRAIN>, NoClipU<DRAIN>, PR, PV, RC, RU, T>;
+	type OutputClear = Builder<DRAIN, I, LB, LC, LU, NoClipU<DRAIN>, PR, PV, RC, RU, T>;
 	/// f64 or f32.
 	type T = T;
 
@@ -43,7 +42,6 @@ where
 		let base_out = ProjectionBuilder {
 			p_lb: PhantomData::<LB>,
 			p_drain: PhantomData::<DRAIN>,
-			p_pcnc: PhantomData::<NoClipC<DRAIN>>,
 			projection_raw: base.projection_raw,
 			clip: base.clip,
 			phi: base.phi,

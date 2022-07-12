@@ -5,8 +5,8 @@ use num_traits::FloatConst;
 use crate::projection::builder::Builder;
 use crate::projection::AngleGet;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> AngleGet
-	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> AngleGet
+	for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
 	T: CoordFloat + FloatConst,
 {

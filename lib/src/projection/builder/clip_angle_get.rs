@@ -6,8 +6,8 @@ use crate::projection::ClipAngleGet;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> ClipAngleGet
-    for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> ClipAngleGet
+    for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

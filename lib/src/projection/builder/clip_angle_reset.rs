@@ -18,14 +18,13 @@ use crate::stream::Unconnected;
 
 use super::Builder;
 
-impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
+impl<DRAIN, PCNU, RC, RU, PR, T> ClipAngleReset
 	for Builder<
 		DRAIN,
 		InterpolateCircle<T>,
 		LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<RC, Connected<RC>, T>,
 		LineCircle<RC, Unconnected, T>,
-		PCNC,
 		PCNU,
 		PR,
 		PVCircle<T>,
@@ -43,7 +42,6 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<RC, Connected<RC>, T>,
 		LineAntimeridian<RC, Unconnected, T>,
-		PCNC,
 		PCNU,
 		PR,
 		PVAntimeridian<T>,
@@ -56,7 +54,7 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 	// Set the internal clip angle (theta) to null and return a builder
 	// which uses the antimeridian clipping stratergy.
 	fn clip_angle_reset(self) -> Self::Output {
-		let clip = gen_clip_antimeridian::<PCNC, PCNU, RC, T>();
+		let clip = gen_clip_antimeridian::<PCNU, RC, T>();
 
 		// update only theta and preclip_factory.
 		let out = Self::Output {
@@ -66,7 +64,6 @@ impl<DRAIN, PCNC, PCNU, RC, RU, PR, T> ClipAngleReset
 			delta_lambda: self.delta_lambda,
 			delta_phi: self.delta_phi,
 			delta_gamma: self.delta_gamma,
-			p_pcnc: self.p_pcnc,
 			rotator: self.rotator,
 			projection_raw: self.projection_raw,
 			postclip: self.postclip,

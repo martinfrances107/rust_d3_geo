@@ -57,7 +57,7 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        let clip = gen_clip_antimeridian::<NoClipC<DRAIN>, NoClipU<DRAIN>, _, _>();
+        let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>();
 
         Builder::new(clip, Stereographic::default())
             .scale(T::from(250_f64).unwrap())

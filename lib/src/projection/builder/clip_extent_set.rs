@@ -45,17 +45,11 @@ where
 	type T = T;
 
 	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		let clip = gen_clip_antimeridian::<
-			ClipC<DRAIN, T>,
-			ClipU<DRAIN, T>,
-			ResampleClipC<DRAIN, PR, T>,
-			T,
-		>();
+		let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>();
 		let resample = Resample::new(self.project_transform.clone(), self.delta2);
 		let out = Self::OutputBounded {
 			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
-			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip,
 			phi: self.phi,
@@ -100,17 +94,11 @@ where
 	type T = T;
 
 	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		let clip = gen_clip_antimeridian::<
-			ClipC<DRAIN, T>,
-			ClipU<DRAIN, T>,
-			ResampleNoneClipC<DRAIN, PR, T>,
-			T,
-		>();
+		let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>();
 		let resample = None::new(self.project_transform.clone());
 		let out = Self::OutputBounded {
 			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
-			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip,
 			phi: self.phi,
@@ -157,7 +145,6 @@ where
 	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
 		let clip = gen_clip_circle::<
 			DRAIN,
-			ClipC<DRAIN, T>,
 			ClipU<DRAIN, T>,
 			PR,
 			ResampleClipC<DRAIN, PR, T>,
@@ -168,7 +155,6 @@ where
 		let out = Self::OutputBounded {
 			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
-			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip,
 			phi: self.phi,
@@ -215,7 +201,6 @@ where
 	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
 		let clip = gen_clip_circle::<
 			DRAIN,
-			ClipC<DRAIN, T>,
 			ClipU<DRAIN, T>,
 			PR,
 			ResampleNoneClipC<DRAIN, PR, T>,
@@ -226,7 +211,6 @@ where
 		let out = Self::OutputBounded {
 			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
-			p_pcnc: PhantomData::<ClipC<DRAIN, T>>,
 			projection_raw: self.projection_raw,
 			clip,
 			phi: self.phi,

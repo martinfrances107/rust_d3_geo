@@ -11,7 +11,7 @@ use crate::Transform;
 use super::Builder;
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentAdjust
-	for Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+	for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

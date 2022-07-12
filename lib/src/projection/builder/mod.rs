@@ -80,12 +80,11 @@ pub trait PostClipNode {}
 ///
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Debug)]
-pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+pub struct Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: CoordFloat,
 {
     pub p_lb: PhantomData<LB>,
-    pub p_pcnc: PhantomData<PCNC>,
     pub p_drain: PhantomData<DRAIN>,
     pub projection_raw: PR,
     pub clip: Clip<I, LC, LU, PV, RC, Unconnected, T>,
@@ -178,7 +177,6 @@ where
         let out_a: Self = Self {
             clip,
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
-            p_pcnc,
             p_drain: PhantomData::<DRAIN>,
             /// Input passing onto Projection.
             projection_raw,

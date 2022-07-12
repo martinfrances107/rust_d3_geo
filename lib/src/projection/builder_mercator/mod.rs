@@ -164,12 +164,12 @@ trait ReclipAdjust {
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+pub struct Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
 	T: CoordFloat,
 {
 	pub pr: PR,
-	pub base: ProjectionBuilder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
+	pub base: ProjectionBuilder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>,
 	pub extent: Option<[Coordinate<T>; 2]>, // post-clip extent
 }
 
@@ -181,10 +181,8 @@ where
 {
 	/// Wrap a default projector and provides mercator specific overrides.
 	pub fn new(pr: PR) -> Self {
-		let base = ProjectionBuilder::new(
-			gen_clip_antimeridian::<NoClipC<DRAIN>, NoClipU<DRAIN>, _, _>(),
-			pr.clone(),
-		);
+		let base =
+			ProjectionBuilder::new(gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(), pr.clone());
 		Self {
 			pr,
 			base,
@@ -193,8 +191,8 @@ where
 	}
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Build
-	for Builder<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Build
+	for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
 	DRAIN: Clone,
 	I: Clone,

@@ -31,7 +31,7 @@ type ClipCircleU<RC, T> = Clip<
 >;
 
 /// Returns a clip setup for circle clipping.
-pub fn gen_clip_circle<DRAIN, PCNC, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
+pub fn gen_clip_circle<DRAIN, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
 where
 	DRAIN: Stream<EP = DRAIN, T = T>,
 	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

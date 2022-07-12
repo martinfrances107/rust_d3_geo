@@ -29,7 +29,6 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
 		LineAntimeridian<RC, Connected<RC>, T>,
 		LineAntimeridian<RC, Unconnected, T>,
-		PCNC,
 		PCNU,
 		PR,
 		PVAntimeridian<T>,
@@ -50,7 +49,6 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
 		LineCircle<RC, Connected<RC>, T>,
 		LineCircle<RC, Unconnected, T>,
-		PCNC,
 		PCNU,
 		PR,
 		PVCircle<T>,
@@ -68,12 +66,11 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 		}
 
 		let theta = angle.to_radians();
-		let clip = gen_clip_circle::<DRAIN, PCNC, PCNU, PR, RC, RU, T>(theta);
+		let clip = gen_clip_circle::<DRAIN, PCNU, PR, RC, RU, T>(theta);
 		// Copy, Mutate - updating only theta and preclip_factory.
 		let out = Self::Output {
 			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_drain: PhantomData::<DRAIN>,
-			p_pcnc: PhantomData::<PCNC>,
 			projection_raw: self.projection_raw,
 			clip,
 			delta_lambda: self.delta_lambda,

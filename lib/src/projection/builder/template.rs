@@ -53,7 +53,6 @@ pub type Default<DRAIN, I, LB, LC, LU, PR, PV, T> = Builder<
     LB,
     LC,
     LU,
-    NoClipC<DRAIN>,
     NoClipU<DRAIN>,
     PR,
     PV,
