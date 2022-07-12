@@ -77,25 +77,24 @@ where
 /// Projection and context stream applied to a Streamable.
 #[derive(Debug)]
 #[allow(dead_code)]
-pub struct Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+pub struct Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: CoordFloat,
 {
     context_stream: CS,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
-    projection: Projector<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
+    projection: Projector<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>,
 }
 
-impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
     pub fn new(
         context_stream: CS,
-        projection: Projector<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
+        projection: Projector<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>,
     ) -> Self {
         Self {
             context_stream,
@@ -106,7 +105,7 @@ where
 }
 
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+    Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     CS: Clone + Default + PartialEq + Result + Stream<EP = CS, T = T>,
     I: Clone + Interpolator<T = T>,
@@ -130,7 +129,7 @@ where
 }
 
 impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Path<Area<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+    Path<Area<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
@@ -158,7 +157,7 @@ where
 }
 
 impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Path<Bounds<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+    Path<Bounds<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
@@ -184,7 +183,7 @@ where
 }
 
 impl<LB, LC, LU, I, PCNC, PCNU, PR, PV, RC, RU, T>
-    Path<Centroid<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+    Path<Centroid<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
@@ -211,8 +210,7 @@ where
     }
 }
 
-impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {

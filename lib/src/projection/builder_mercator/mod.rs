@@ -214,7 +214,6 @@ where
 	type LB = LB;
 	type LC = LC;
 	type LU = LU;
-	type PCNC = PCNC;
 	type PCNU = PCNU;
 	type PR = PR;
 	type PV = PV;
@@ -224,11 +223,9 @@ where
 
 	/// Using the currently programmed state output a new projection.
 	#[inline]
-	fn build(&self) -> Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> {
+	fn build(&self) -> Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> {
 		Projector {
-			p_lb: PhantomData::<LB>,
 			p_lc: PhantomData::<LC>,
-			p_pcnc: PhantomData::<PCNC>,
 			cache: None,
 			postclip: self.base.postclip.clone(),
 			clip: self.base.clip.clone(),

@@ -41,7 +41,7 @@ mod clipcircle_test {
             .clip_angle(170_f64)
             .build();
 
-        let path_builder: PathBuilder<String<f64>, _, _, _, _, _, _, _, _, _, _, f64> =
+        let path_builder: PathBuilder<String<f64>, _, _, _, _, _, _, _, _, _, f64> =
             PathBuilder::context_pathstring();
 
         let s = path_builder.build(projector).object(&d);

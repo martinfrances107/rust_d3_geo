@@ -79,7 +79,6 @@ mod path_area_test {
 				Unconnected,
 				T,
 			>,
-			NoClipC<Area<T>>,
 			NoClipU<Area<T>>,
 			Equirectangular<Area<T>, T>,
 			PVAntimeridian<T>,

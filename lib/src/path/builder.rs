@@ -19,17 +19,16 @@ use super::PointRadiusTrait;
 
 /// Path builder.
 #[derive(Debug, Clone)]
-pub struct Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+pub struct Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: CoordFloat,
 {
     pr: T,
     context_stream: CS,
-    projection: Option<Projector<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>>,
+    projection: Option<Projector<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>>,
 }
 
-impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
@@ -44,8 +43,8 @@ where
 }
 
 /// Context related methods.
-impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Builder<Context<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+    Builder<Context<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
@@ -65,8 +64,8 @@ where
 }
 
 /// Context related methods.
-impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Builder<String<T>, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+    Builder<String<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
 {
@@ -78,8 +77,8 @@ where
     }
 }
 
-impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> PointRadiusTrait
-    for Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> PointRadiusTrait
+    for Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     CS: PointRadiusTrait<T = T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -96,8 +95,7 @@ where
 }
 
 /// Projection related methods.
-impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Builder<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     CS: Stream<EP = CS, T = T>,
     T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
@@ -106,8 +104,8 @@ where
     #[inline]
     pub fn build(
         self,
-        projection: Projector<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>,
-    ) -> Path<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> {
+        projection: Projector<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>,
+    ) -> Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> {
         Path::new(self.context_stream, projection)
     }
 }

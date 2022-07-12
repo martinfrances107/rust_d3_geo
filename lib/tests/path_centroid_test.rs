@@ -30,7 +30,6 @@ mod path_centroid_test {
     use rust_d3_geo::projection::builder::template::NoClipC;
     use rust_d3_geo::projection::builder::template::NoClipU;
     use rust_d3_geo::projection::builder::template::ResampleNoClipC;
-    use rust_d3_geo::projection::builder::template::ResampleNoClipU;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;

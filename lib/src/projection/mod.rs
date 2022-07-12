@@ -107,7 +107,6 @@ where
     type LB;
     type LC;
     type LU;
-    type PCNC;
     type PCNU;
     type PR;
     type PV;
@@ -122,7 +121,6 @@ where
         Self::LB,
         Self::LC,
         Self::LU,
-        Self::PCNC,
         Self::PCNU,
         Self::PR,
         Self::PV,

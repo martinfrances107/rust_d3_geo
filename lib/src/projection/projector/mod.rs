@@ -29,13 +29,11 @@ pub mod types;
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Clone, Debug)]
-pub struct Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+pub struct Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: CoordFloat,
 {
     /// Must be public as there is a implicit copy.
-    pub p_pcnc: PhantomData<PCNC>,
-    pub p_lb: PhantomData<LB>,
     pub p_lc: PhantomData<LC>,
     pub(crate) postclip: PCNU,
 
@@ -62,7 +60,7 @@ where
 }
 
 impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+    Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     DRAIN: Clone + PartialEq + Stream<EP = DRAIN, T = T>,
     I: Clone,
@@ -118,8 +116,8 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T> Transform
-    for Projector<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Transform
+    for Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     PR: Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

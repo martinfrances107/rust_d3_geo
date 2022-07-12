@@ -107,7 +107,6 @@ mod path_string_test {
                 Unconnected,
                 f64,
             >,
-            Identity<PathString<f64>, Connected<PathString<f64>>>,
             Identity<PathString<f64>, Unconnected>,
             Equirectangular<PathString<f64>, f64>,
             PVAntimeridian<f64>,

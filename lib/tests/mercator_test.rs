@@ -103,7 +103,7 @@ mod mercator_tests {
 
 		let projection = projection_builder.build();
 
-		let path_builder: PathBuilder<PathString<f64>, _, _, _, _, _, _, _, _, _, _, f64> =
+		let path_builder: PathBuilder<PathString<f64>, _, _, _, _, _, _, _, _, _, f64> =
 			PathBuilder::context_pathstring();
 
 		let object = Sphere::default();

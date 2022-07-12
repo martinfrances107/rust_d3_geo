@@ -59,7 +59,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 	type LB = LB;
 	type LC = LC;
 	type LU = LU;
-	type PCNC = ClipC<DRAIN, T>;
 	type PCNU = ClipU<DRAIN, T>;
 	type PR = PR;
 	type PV = PV;
@@ -76,7 +75,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		LB,
 		LC,
 		LU,
-		ClipC<DRAIN, T>,
 		ClipU<DRAIN, T>,
 		PR,
 		PV,
@@ -85,9 +83,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		T,
 	> {
 		Projector {
-			p_lb: PhantomData::<LB>,
 			p_lc: PhantomData::<LC>,
-			p_pcnc: self.p_pcnc,
 			cache: None,
 			postclip: self.postclip.clone(),
 			clip: self.clip.clone(),
@@ -135,7 +131,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 	type LB = LB;
 	type LC = LC;
 	type LU = LU;
-	type PCNC = NoClipC<DRAIN>;
 	type PCNU = NoClipU<DRAIN>;
 	type PR = PR;
 	type PV = PV;
@@ -152,7 +147,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		LB,
 		LC,
 		LU,
-		NoClipC<DRAIN>,
 		NoClipU<DRAIN>,
 		PR,
 		PV,
@@ -161,9 +155,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		T,
 	> {
 		Projector {
-			p_lb: PhantomData::<LB>,
 			p_lc: PhantomData::<LC>,
-			p_pcnc: self.p_pcnc,
 			cache: None,
 			postclip: self.postclip.clone(),
 			clip: self.clip.clone(),
@@ -212,7 +204,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 	type LB = LB;
 	type LC = LC;
 	type LU = LU;
-	type PCNC = NoClipC<DRAIN>;
 	type PCNU = NoClipU<DRAIN>;
 	type PR = PR;
 	type PV = PV;
@@ -230,7 +221,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		LB,
 		LC,
 		LU,
-		NoClipC<DRAIN>,
 		NoClipU<DRAIN>,
 		PR,
 		PV,
@@ -239,9 +229,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		T,
 	> {
 		Projector {
-			p_lb: PhantomData::<LB>,
 			p_lc: PhantomData::<LC>,
-			p_pcnc: self.p_pcnc,
 			cache: None,
 			postclip: self.postclip.clone(),
 			clip: self.clip.clone(),
@@ -271,7 +259,6 @@ where
 	type LC =
 		LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>;
 	type LU = LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Unconnected, T>;
-	type PCNC = ClipC<DRAIN, T>;
 	type PCNU = ClipU<DRAIN, T>;
 	type PR = PR;
 	type PV = PVAntimeridian<T>;
@@ -282,7 +269,6 @@ where
 	#[inline]
 	fn build(&self) -> ProjectorAntimeridianResampleClip<DRAIN, PR, T> {
 		Projector {
-			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
 			p_lc: PhantomData::<
 				LineAntimeridian<
 					ResampleClipC<DRAIN, PR, T>,
@@ -290,7 +276,6 @@ where
 					T,
 				>,
 			>,
-			p_pcnc: self.p_pcnc,
 			cache: None,
 			postclip: self.postclip.clone(),
 			clip: self.clip.clone(),
