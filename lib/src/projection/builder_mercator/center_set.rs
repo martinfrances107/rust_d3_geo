@@ -15,7 +15,7 @@ use crate::Transform;
 impl<DRAIN, PR, T> CenterSet for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Debug + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,
 {
 	type T = T;

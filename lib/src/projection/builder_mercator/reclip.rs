@@ -24,7 +24,7 @@ use super::Reclip;
 impl<DRAIN, PR, T> Reclip for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>;
@@ -128,7 +128,7 @@ where
 impl<DRAIN, PR, T> Reclip for BuilderMercatorAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Output = BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>;
@@ -179,7 +179,7 @@ where
 impl<DRAIN, PR, T> Reclip for BuilderMercatorCircleResampleNoneNoClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type Output = BuilderMercatorCircleResampleNoneClip<DRAIN, PR, T>;

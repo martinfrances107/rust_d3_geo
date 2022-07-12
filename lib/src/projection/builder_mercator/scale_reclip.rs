@@ -14,7 +14,7 @@ use super::ScaleReclip;
 impl<DRAIN, PR, T> ScaleReclip for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>;

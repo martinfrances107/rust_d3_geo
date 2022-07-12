@@ -15,7 +15,7 @@ use super::ReclipAdjust;
 impl<DRAIN, PR, T> Scale for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

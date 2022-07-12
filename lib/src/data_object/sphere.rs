@@ -8,10 +8,7 @@ use crate::stream::Streamable;
 
 /// Unit sphere.
 #[derive(Clone, Debug)]
-pub struct Sphere<T>
-// where
-//     T: CoordFloat,
-{
+pub struct Sphere<T> {
     pd: PhantomData<T>,
 }
 

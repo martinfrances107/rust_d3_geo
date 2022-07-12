@@ -20,7 +20,7 @@ use super::TranslateReclip;
 impl<DRAIN, PR, T> TranslateReclip for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type Output = BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>;
@@ -37,7 +37,7 @@ where
 impl<DRAIN, PR, T> TranslateReclip for BuilderMercatorAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type T = T;

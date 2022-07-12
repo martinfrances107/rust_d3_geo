@@ -20,7 +20,7 @@ use super::ReclipAdjust;
 impl<DRAIN, PR, T> ReclipAdjust for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	fn reclip_adjust(mut self) -> Self {
@@ -67,7 +67,7 @@ where
 impl<DRAIN, PR, T> ReclipAdjust for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
 	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	fn reclip_adjust(mut self) -> Self {

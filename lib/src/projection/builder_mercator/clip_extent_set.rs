@@ -56,7 +56,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		T,
 	> where
 	DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
 	type OutputBounded = Builder<
@@ -101,7 +101,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 		T,
 	> where
 	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T>,
+	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
 	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type OutputBounded = BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>;

@@ -21,7 +21,7 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentBounded
 	for Builder<DRAIN, I, LB, LC, LU, ClipC<DRAIN, T>, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
-	PR: TransformExtent<T>,
+	PR: TransformExtent<T = T>,
 	PV: PointVisible<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {

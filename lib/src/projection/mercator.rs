@@ -46,7 +46,7 @@ where
 	}
 }
 
-impl<DRAIN, T> TransformExtent<T> for Mercator<DRAIN, T>
+impl<DRAIN, T> TransformExtent for Mercator<DRAIN, T>
 where
 	DRAIN: Clone,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
