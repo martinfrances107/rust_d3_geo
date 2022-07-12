@@ -28,7 +28,6 @@ pub mod types;
 
 use crate::projection::Build;
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
 use derivative::*;

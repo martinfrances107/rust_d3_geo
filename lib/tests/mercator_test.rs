@@ -26,7 +26,6 @@ mod mercator_tests {
 	use rust_d3_geo::projection::ScaleGet;
 	use rust_d3_geo::projection::Translate;
 	use rust_d3_geo::projection::TranslateGet;
-	use rust_d3_geo::stream::StreamDrainStub;
 
 	// #[test]
 	// fn test_clip_extent_defaults_to_automatic() {

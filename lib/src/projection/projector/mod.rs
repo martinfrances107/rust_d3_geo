@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
@@ -42,8 +41,6 @@ where
 
     pub(crate) rotator: RotatorRadians<Unconnected, T>,
 
-    /// Used exclusively by Transform( not stream releated).
-    // pub rotate_transform: Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
     pub project_rotate_transform:
         Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 

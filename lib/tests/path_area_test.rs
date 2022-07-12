@@ -23,7 +23,6 @@ mod path_area_test {
 	use rust_d3_geo::data_object::sphere::Sphere;
 	use rust_d3_geo::path::area::Area;
 	use rust_d3_geo::path::builder::Builder as PathBuilder;
-	use rust_d3_geo::projection::builder::template::NoClipC;
 	use rust_d3_geo::projection::builder::template::NoClipU;
 	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
 	use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;

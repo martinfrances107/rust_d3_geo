@@ -35,9 +35,9 @@ where
     T: CoordFloat,
 {
     state: STATE,
-    // PhantomData<SINK>:
-    // The hidden linkage is in the implementation of Connectable.
-    // if Self::SC changes then Self::Output must change.
+    /// PhantomData<SINK>:
+    /// The hidden linkage is in the implementation of Connectable.
+    /// if Self::SC changes then Self::Output must change.
     p_sink: PhantomData<SINK>,
     buffer_stream: ClipBuffer<T>,
     clean: bool,
