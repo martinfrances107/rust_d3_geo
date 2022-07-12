@@ -52,7 +52,7 @@ pub struct Connected<SINK, T> {
     use_line_start: bool,
     use_line_end: bool,
 
-    // generic constants<T>
+    /// generic constants<T>
     epsilon: T,
     four: T,
     frac_1_2: T,

@@ -20,6 +20,10 @@ use super::Resampler;
 #[derive(Clone)]
 pub struct None<PR, SC, STATE, T> {
     state: STATE,
+    /// PhantomData<SC>
+    /// The hidden linkage is in Connetable
+    /// when the input parameter changes so
+    /// must the output.
     p_sc: PhantomData<SC>,
 
     p_t: PhantomData<T>,

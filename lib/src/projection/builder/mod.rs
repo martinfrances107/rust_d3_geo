@@ -84,6 +84,9 @@ pub struct Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: CoordFloat,
 {
+    /// PhantomData<LB>
+    /// The hidden link is between the Projector<..,LB,..>
+    /// and the builder.
     pub p_lb: PhantomData<LB>,
     pub p_drain: PhantomData<DRAIN>,
     pub projection_raw: PR,
