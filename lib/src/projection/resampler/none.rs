@@ -12,8 +12,6 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::Resampler;
-
 /// Resample None.
 ///
 /// A pass-through module, when no resampling is required.
@@ -52,8 +50,6 @@ impl<PR, SC, T> None<PR, SC, Unconnected, T> {
         }
     }
 }
-
-impl<PR, SC, STATE, T> Resampler for None<PR, SC, STATE, T> where T: CoordFloat + FloatConst {}
 
 impl<PR, SC, T> Connectable for None<PR, SC, Unconnected, T>
 where

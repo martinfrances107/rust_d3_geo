@@ -16,8 +16,6 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::Resampler;
-
 static MAXDEPTH: u8 = 16_u8; // maximum depth of subdivision
 
 #[derive(Clone, Copy, Debug)]
@@ -93,8 +91,6 @@ where
         f.debug_tuple("").field(&self.state).finish()
     }
 }
-
-impl<PR, SC, STATE, T> Resampler for Resample<PR, SC, STATE, T> where T: CoordFloat {}
 
 impl<PR, SC, T> Connectable for Resample<PR, SC, Unconnected, T>
 where
