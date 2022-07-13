@@ -118,7 +118,7 @@ where
     PV: Clone,
     RC: Clone + Stream<EP = CS, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC>,
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     /// Combines projection, context stream and object.
     pub fn object(&mut self, object: &impl Streamable<T = T>) -> <CS as Result>::Out {
