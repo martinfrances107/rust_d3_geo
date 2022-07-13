@@ -91,13 +91,6 @@ pub trait ProjectionRawBase: Transform {
     fn builder() -> Self::Builder;
 }
 
-/// Marker trait -  for family of raw projections.
-/// used to identify thing that ARE NOT the  mercator family of projections.
-pub trait ProjectionRawCommon: ProjectionRawBase {}
-/// Marker trait identifies trait that need a highly specialised set of
-/// overreides. The mercator family.
-pub trait ProjectionRawMercator: ProjectionRawBase {}
-
 pub trait Build
 where
     <Self as Build>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,

@@ -16,7 +16,6 @@ use super::azimuthal::azimuthal_invert;
 use super::builder::template::NoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;
-use super::ProjectionRawCommon;
 
 /// Why the Phantom Data is required here...
 ///
@@ -26,13 +25,6 @@ use super::ProjectionRawCommon;
 pub struct Stereographic<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,
-}
-
-impl<DRAIN, T> ProjectionRawCommon for Stereographic<DRAIN, T>
-where
-    DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-{
 }
 
 impl<DRAIN, T> Default for Stereographic<DRAIN, T>
