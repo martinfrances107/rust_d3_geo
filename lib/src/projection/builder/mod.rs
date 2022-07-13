@@ -71,9 +71,6 @@ mod translate_adjust;
 mod translate_get;
 pub mod types;
 
-/// Marker trait for structs Identity or Rectangle
-pub trait PostClipNode {}
-
 /// Projection builder.
 ///
 /// Holds State related to the construction of the a projection.

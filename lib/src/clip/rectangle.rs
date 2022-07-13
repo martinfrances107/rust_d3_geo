@@ -14,7 +14,6 @@ use num_traits::Zero;
 
 use crate::clip::interpolator::Interpolator;
 use crate::path::Result;
-use crate::projection::builder::PostClipNode;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
@@ -113,8 +112,6 @@ where
         }
     }
 }
-
-impl<SINK, STATE, T> PostClipNode for Rectangle<SINK, STATE, T> where T: CoordFloat {}
 
 impl<EP, SINK, T> Rectangle<SINK, Connected<SINK>, T>
 where

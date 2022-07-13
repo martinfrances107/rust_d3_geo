@@ -3,7 +3,6 @@ use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
 
-use crate::projection::builder::PostClipNode;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
@@ -50,8 +49,6 @@ impl<SINK> Default for Identity<SINK, Unconnected> {
         }
     }
 }
-
-impl<SINK, STATE> PostClipNode for Identity<SINK, STATE> {}
 
 impl<SINK> Connectable for Identity<SINK, Unconnected> {
     type SC = SINK;
