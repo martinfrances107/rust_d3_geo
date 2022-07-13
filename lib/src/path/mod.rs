@@ -168,7 +168,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     /// Returns the bounds of the object
     ///
@@ -198,7 +198,7 @@ where
     PR: Clone + Transform<T = T>,
     RC: Clone + Stream<EP = Centroid<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC>,
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + AddAssign + CoordFloat + FloatConst,
 {
     /// Returns the centroid of the object.
     pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coordinate<T> {
@@ -212,7 +212,7 @@ where
 
 impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     /// Sets the context stream.
     pub fn context(mut self, context_stream: CS) -> Self {

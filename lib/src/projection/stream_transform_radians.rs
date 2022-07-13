@@ -1,8 +1,6 @@
 use std::fmt::Debug;
 
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 
 use crate::stream::Connected;
 use crate::stream::Stream;

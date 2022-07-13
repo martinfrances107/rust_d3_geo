@@ -1,11 +1,6 @@
-use std::fmt::Display;
-use std::ops::AddAssign;
-
-use approx::AbsDiffEq;
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
