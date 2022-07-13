@@ -11,8 +11,6 @@ use crate::Transform;
 
 use super::rotate_radians::RotateRadians;
 
-// trait RR: Transform {}
-
 #[derive(Debug, Clone)]
 pub struct RotatorRadians<STATE, T>
 where

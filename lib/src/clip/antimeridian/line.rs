@@ -9,7 +9,6 @@ use crate::clip::buffer::Buffer;
 use crate::clip::Bufferable;
 use crate::clip::Clean;
 use crate::clip::LineConnected;
-use crate::clip::LineUnconnected;
 use crate::math::EPSILON;
 use crate::stream::Connectable;
 use crate::stream::Connected;
@@ -93,10 +92,6 @@ where
             epsilon: self.epsilon,
         }
     }
-}
-
-impl<SINK, T> LineUnconnected for Line<SINK, Unconnected, T> {
-    type SU = SINK;
 }
 
 impl<SINK, T> LineConnected for Line<SINK, Connected<SINK>, T>

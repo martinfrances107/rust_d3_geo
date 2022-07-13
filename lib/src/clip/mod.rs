@@ -20,6 +20,7 @@ pub mod line_elem;
 mod line_fn;
 
 pub(crate) mod rectangle;
+
 /// Clipping break line into segments which can lasted be reconnected together.
 pub(crate) mod rejoin;
 
@@ -65,19 +66,8 @@ where
     fn point_visible(&self, p: &Coordinate<Self::T>) -> bool;
 }
 
-// /// A stage in the projector pipeline.
-// pub(crate) type PostClipFn<DRAIN> = Rc<dyn Fn(Rc<RefCell<DRAIN>>) -> Rc<RefCell<DRAIN>>>;
-
-/// Resample Stream Node - helper function.
-// pub(crate) type InterpolateFn<STREAM, T> =
-//     Rc<dyn Fn(Option<Coordinate<T>>, Option<Coordinate<T>>, T, &mut STREAM)>;
-
 /// Antimeridian or Circle interpolator.
 pub trait Interpolator {
-    // /// Final pipeline stage.
-    // type EP;
-    // /// Next stage of pipeline.
-    // type Stream;
     /// f64 or f32.
     type T;
     /// Stream modifier.
@@ -90,12 +80,6 @@ pub trait Interpolator {
     ) where
         STREAM: Stream<EP = EP, T = Self::T>,
         Self::T: CoordFloat;
-}
-
-/// Part of the clipping definition.
-pub trait LineUnconnected {
-    /// Sink -- When Unconnected.
-    type SU;
 }
 
 /// When connected a line can return a mutable sink.

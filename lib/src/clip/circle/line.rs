@@ -11,7 +11,6 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::Bufferable;
 use crate::clip::Clean;
 use crate::clip::LineConnected;
-use crate::clip::LineUnconnected;
 use crate::math::EPSILON;
 use crate::stream::Connectable;
 use crate::stream::Connected;
@@ -73,13 +72,6 @@ where
             v00: false,
         }
     }
-}
-
-impl<SINK, T> LineUnconnected for Line<SINK, Unconnected, T>
-where
-    T: CoordFloat,
-{
-    type SU = SINK;
 }
 
 impl<SINK, T> LineConnected for Line<SINK, Connected<SINK>, T>
