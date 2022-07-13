@@ -20,16 +20,9 @@ mod path_string_test {
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::circle::generator::Generator as CircleGenerator;
-    use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-    use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
-    use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
-    use rust_d3_geo::clip::buffer::Buffer;
-    use rust_d3_geo::identity::Identity;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::path::PointRadiusTrait;
-    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
-    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::orthographic::Orthographic;
     use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
@@ -38,9 +31,7 @@ mod path_string_test {
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::Scale;
     use rust_d3_geo::projection::Translate;
-    use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
-    use rust_d3_geo::stream::Unconnected;
 
     #[inline]
     fn equirectangular<T>(
@@ -87,33 +78,7 @@ mod path_string_test {
     fn point_renders_a_point_of_given_radius() {
         println!("geoPath.point(…) renders a point of a given radius");
 
-        let mut builder: PathBuilder<
-            PathString<f64>,
-            InterpolateAntimeridian<f64>,
-            LineAntimeridian<Buffer<f64>, Connected<Buffer<f64>>, f64>,
-            LineAntimeridian<
-                ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
-                Connected<
-                    ResampleNoneNoClipC<
-                        PathString<f64>,
-                        Equirectangular<PathString<f64>, f64>,
-                        f64,
-                    >,
-                >,
-                f64,
-            >,
-            LineAntimeridian<
-                ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
-                Unconnected,
-                f64,
-            >,
-            Identity<PathString<f64>, Unconnected>,
-            Equirectangular<PathString<f64>, f64>,
-            PVAntimeridian<f64>,
-            ResampleNoneNoClipC<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
-            ResampleNoneNoClipU<PathString<f64>, Equirectangular<PathString<f64>, f64>, f64>,
-            f64,
-        > = PathBuilder::context_pathstring();
+        let mut builder = PathBuilder::context_pathstring();
 
         builder.point_radius(10_f64);
 

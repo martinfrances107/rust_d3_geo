@@ -52,7 +52,6 @@ pub trait Connectable {
     fn connect(self, sink: Self::SC) -> Self::Output;
 }
 
-// Marker trait.
 /// Things the implement stream need to assert that
 /// Whatever specific state they are in,  it is to the exclusion
 /// on the unconnected state.
