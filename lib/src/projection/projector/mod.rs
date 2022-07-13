@@ -55,7 +55,7 @@ where
     )>,
 }
 
-impl<'a, DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
+impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     DRAIN: Clone + PartialEq + Stream<EP = DRAIN, T = T>,
