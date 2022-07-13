@@ -104,7 +104,7 @@ where
 
 impl<T> Result for Area<T>
 where
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     type Out = T;
 

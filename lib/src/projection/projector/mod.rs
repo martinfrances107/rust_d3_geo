@@ -3,7 +3,6 @@ use std::fmt::Debug;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::buffer::Buffer;
@@ -69,7 +68,7 @@ where
     RU: Clone + Connectable<SC = PCNC, Output = RC>,
     RC: Clone,
     PCNU: Clone,
-    T: AsPrimitive<T> + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to the projection.
     ///

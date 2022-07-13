@@ -140,7 +140,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Area<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat,
+    T: CoordFloat,
 {
     /// Returns the area of the Path
     /// This operation consumes the  Path.
