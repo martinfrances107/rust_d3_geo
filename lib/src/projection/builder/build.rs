@@ -1,6 +1,4 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
@@ -23,7 +21,6 @@ use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 use crate::projection::Projector;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 
 impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
@@ -40,14 +37,14 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		ResampleNoneClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone,
 	I: Clone,
 	LB: Clone,
 	LC: Clone,
 	LU: Clone,
 	PV: Clone,
 	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat,
 {
 	type Drain = DRAIN;
 	type I = I;
@@ -109,7 +106,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		ResampleNoneNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone,
 	I: Clone,
 	LB: Clone,
 	LC: Clone,
@@ -117,7 +114,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 	PV: Clone,
 	PR: Clone,
 	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat,
 {
 	type Drain = DRAIN;
 	type I = I;
@@ -180,7 +177,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 		ResampleNoClipU<DRAIN, PR, T>,
 		T,
 	> where
-	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone,
 	I: Clone,
 	LB: Clone,
 	LC: Clone,
@@ -188,7 +185,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 	PV: Clone,
 	PR: Clone,
 	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat,
 {
 	type Drain = DRAIN;
 	type I = I;
@@ -239,9 +236,9 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 
 impl<DRAIN, PR, T> Build for BuilderAntimeridianResampleClip<DRAIN, PR, T>
 where
-	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+	DRAIN: Clone,
 	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+	T: CoordFloat,
 {
 	type Drain = DRAIN;
 	type I = InterpolateAntimeridian<T>;

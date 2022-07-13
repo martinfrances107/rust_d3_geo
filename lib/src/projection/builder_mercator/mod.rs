@@ -26,7 +26,6 @@ pub mod translate_get;
 pub mod translate_reclip;
 pub mod types;
 
-use crate::projection::Build;
 use std::fmt::Debug;
 
 use approx::AbsDiffEq;
@@ -43,6 +42,7 @@ use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
+use crate::projection::Build;
 use crate::projection::Projector;
 use crate::stream::Stream;
 use crate::stream::Streamable;
