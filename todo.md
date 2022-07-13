@@ -1,32 +1,30 @@
 ## TODO
 
-TODDAY
+High Priority.
 
-index_test
-invert_test
-mercator test ( mostly reinstated.)
-snapshot test
-fit_test -- needs works.
-path_bounds_test
-projection_rotate_test -- did it ever work?
-snapshot
+* Missing Coverage
+  mercator test
+  - a single test to implement.
+  - investigate failing tests where the difference is between f32/f64.
 
-* Implement remaining fit_tests --- gives a minor bump in code coverage.
+* fit_test -- needs works.
+  * reclip needs work.
+  * lots of todos missing
+  * fit helper functions need parallel copies for MercatorBuilder.
 
-* examples/projections
-* examples/rings
+* Bnechmarks are broken.
 
- Investigiate why mercator fails.
-  -- mercator has differences between f64 and f32.
+* projection_rotate_test -- did it ever work?
+  Only differences are in the LSDigits.
 
 * examples/graticule - does this example need to exist?
-when projection displays graticules.
-styling of globe should include graticules?
+  when projection displays graticules.
+  styling of globe should include graticules?
 
-IF I am keeping it .. then
-- Convert to typescript
-- Stop using cdn as source of d3 module.
-- draw a clear distinction between what is JS and what is rust.
+  if I am keeping it .. then
+  - Convert to typescript
+  - Stop using cdn as source of d3 module.
+  - draw a clear distinction between what is JS and what is rust.
 
 * Write examples/index.html -- a guide to building rust projects.
 
@@ -41,8 +39,7 @@ IF I am keeping it .. then
 with links to the more detailed mini-apps.
 
 * Review  path/centroid_test.rs
-
-* Refactor trait names ending in Trait. LineTrait, StreamTrait, PointRadiusTrait.
+    has a small number of low priority test to implement.
 
 * Detail to development of mocks for RenderingContext2d
 
@@ -94,6 +91,8 @@ distance_test - Complete.
 
 equirectangular_test - Complete.
 
+invert_test - Complete.
+
 index_test - Need to get mocks working.
 
 length_test -  Needs feature collection tests.
@@ -113,3 +112,5 @@ polygon_contains_test - Complete.
 projection_reflect_test - Complete.
 
 stereographic_test - Complete.
+
+snapshot test - Must implment from scratch.
