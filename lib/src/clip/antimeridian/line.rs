@@ -23,6 +23,11 @@ use super::intersect::intersect;
 #[derive(Debug, Copy, Clone)]
 pub struct Line<SC, STATE, T> {
     state: STATE,
+    /// PhantomData<SC>
+    ///
+    /// The hidden linkage in Connectable::connect.
+    /// Changing the input paramter changes the output
+    /// parameter.
     p_sc: PhantomData<SC>,
     lambda0: T,
     phi0: T,
