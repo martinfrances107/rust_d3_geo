@@ -1,12 +1,6 @@
-use std::fmt::Debug;
-use std::fmt::Display;
-use std::ops::AddAssign;
-
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
-use num_traits::FloatConst;
 
 use crate::compose::Compose;
 use crate::projection::projector::Projector;
@@ -277,10 +271,7 @@ pub trait AngleSet {
     fn angle(self, angle: Self::T) -> Self;
 }
 
-pub trait ClipAngleReset
-where
-    <Self as ClipAngleReset>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + Debug + FloatConst,
-{
+pub trait ClipAngleReset {
     type Output;
 
     ///f64 or f32
@@ -288,10 +279,7 @@ where
     fn clip_angle_reset(self) -> Self::Output;
 }
 
-pub trait ClipAngleGet
-where
-    <Self as ClipAngleGet>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + Debug + FloatConst,
-{
+pub trait ClipAngleGet {
     ///f64 or f32
     type T;
 
@@ -352,24 +340,10 @@ pub trait ReflectSet {
     type T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x(self, reflect: bool) -> Self
-    where
-        <Self as ReflectSet>::T: AddAssign
-            + AsPrimitive<<Self as ReflectSet>::T>
-            + CoordFloat
-            + Debug
-            + Display
-            + FloatConst;
+    fn reflect_x(self, reflect: bool) -> Self;
 
     /// Set the projection builder to invert the y-coordinate.
-    fn reflect_y(self, reflect: bool) -> Self
-    where
-        <Self as ReflectSet>::T: AddAssign
-            + AsPrimitive<<Self as ReflectSet>::T>
-            + CoordFloat
-            + Debug
-            + Display
-            + FloatConst;
+    fn reflect_y(self, reflect: bool) -> Self;
 }
 
 /// Given the builder is already set to resample, adjust the precision setting.
