@@ -93,7 +93,7 @@ pub trait ProjectionRawBase: Transform {
 
 pub trait Build
 where
-    <Self as Build>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + FloatConst,
+    <Self as Build>::T: CoordFloat,
 {
     type Drain;
     type I;
@@ -310,10 +310,7 @@ pub trait ClipAngleSet {
     fn clip_angle(self, angle: Self::T) -> Self::Output;
 }
 
-pub trait ClipAngleAdjust
-where
-    <Self as ClipAngleAdjust>::T: AbsDiffEq<Epsilon = Self::T> + CoordFloat + Debug + FloatConst,
-{
+pub trait ClipAngleAdjust {
     /// Alters the clip angle on a projector builder previously configured to use
     ///  circle based clipping.
     /// A projection builder sub trait.
