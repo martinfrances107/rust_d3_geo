@@ -5,6 +5,7 @@ mod graticule_test {
     use geo::LineString;
     use geo::Polygon;
     use pretty_assertions::assert_eq;
+    use rust_d3_geo::graticule::builder::Builder;
 
     use rust_d3_geo::graticule::generate;
     use rust_d3_geo::math::EPSILON;
@@ -155,18 +156,30 @@ mod graticule_test {
     //   assert.strictEqual(lines[lines.length - 1].coordinates[0][0], +170);
     // });
 
-    // #[test]
-    // fn lines_default_longitude_ranges() {
-    //     println!("graticule.lines() default longitude ranges from 180°W (inclusive) to 180°E (exclusive)");
-    //     let builder = Builder::<f64>::default();
+    #[test]
+    fn lines_default_longitude_ranges() {
+        println!("graticule.lines() default longitude ranges from 180°W (inclusive) to 180°E (exclusive)");
+        let builder = Builder::<f64>::default();
 
-    //     let g = builder.gen();
-    //     let lines = g
-    //         .lines()
-    //         .filter(|line| line.pop().y() == line.pop().y())
-    //         .sort_by()
-    //         .collect();
-    // }
+        let g = builder.lines();
+        let mut lines: Vec<LineString> = g
+            .filter(|line| {
+                // split
+                let first = line.0[0].y;
+                let second = line.0[1].y;
+                first == second
+            })
+            .collect::<Vec<LineString>>();
+
+        lines.sort_by(|a, b| {
+            dbg!(a);
+            dbg!(b);
+            a[0].x.partial_cmp(&b[0].x).unwrap()
+        });
+
+        // let line0 = lines[0].0[0].x;
+        // assert_eq!(line0, -80_f64);
+    }
 
     // it("graticule.lines() default latitude ranges from 90°S (exclusive) to 90°N (exclusive)", () => {
     //   const lines = geoGraticule().lines()
