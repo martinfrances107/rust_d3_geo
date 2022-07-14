@@ -151,11 +151,13 @@ pub trait TranslateReclip {
 		Self::T: CoordFloat;
 }
 
+/// Implicit conversion of the PCN from Identity to Rectangle.
 trait Reclip {
 	type Output;
 	fn reclip(self) -> Self::Output;
 }
 
+/// Applies only when the PCN is Rectangle.
 trait ReclipAdjust {
 	fn reclip_adjust(self) -> Self;
 }
