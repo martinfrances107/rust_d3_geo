@@ -79,7 +79,7 @@ impl<T> Builder<T>
 where
     T: 'static + CoordFloat,
 {
-    fn generated_lines(self) -> impl Iterator<Item = Vec<Coordinate<T>>> {
+    pub fn generated_lines(self) -> impl Iterator<Item = Vec<Coordinate<T>>> {
         let range1 = range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX)
             .into_iter()
             .map(self.X);
@@ -101,7 +101,7 @@ where
         range1.chain(range2).chain(range3).chain(range4)
     }
 
-    /// Lines are a vector of Line strings.
+    /// Returns an Interator covering all the generated lines.
     pub fn lines(self) -> impl Iterator<Item = LineString<T>> {
         self.generated_lines().map(LineString)
     }

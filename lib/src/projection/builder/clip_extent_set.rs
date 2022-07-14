@@ -1,3 +1,4 @@
+use crate::projection::RecenterWithResampling;
 use core::marker::PhantomData;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
