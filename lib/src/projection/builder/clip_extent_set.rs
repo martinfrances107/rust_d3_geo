@@ -78,8 +78,7 @@ where
 			postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
 		};
 
-		// out.reset()
-		out
+		out.reset()
 	}
 }
 

@@ -84,12 +84,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 			transform_radians: StreamTransformRadians(Unconnected),
 		}
 	}
-
-	// fn reset(self) -> Self {
-	//     // self.cache_stream = None;
-	//     // self.cache = None;
-	//     self
-	// }
 }
 
 impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
@@ -154,12 +148,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 			transform_radians: StreamTransformRadians(Unconnected),
 		}
 	}
-
-	// fn reset(self) -> Self {
-	//     // self.cache_stream = None;
-	//     // self.cache = None;
-	//     self
-	// }
 }
 
 // impl<DRAIN, PR, T> Build for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
@@ -226,12 +214,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Build
 			transform_radians: StreamTransformRadians(Unconnected),
 		}
 	}
-
-	// fn reset(self) -> Self {
-	//     // self.cache_stream = None;
-	//     // self.cache = None;
-	//     self
-	// }
 }
 
 impl<DRAIN, PR, T> Build for BuilderAntimeridianResampleClip<DRAIN, PR, T>
@@ -265,10 +247,4 @@ where
 			transform_radians: StreamTransformRadians(Unconnected),
 		}
 	}
-
-	// fn reset(self) -> Self {
-	//     // self.cache_stream = None;
-	//     // self.cache = None;
-	//     self
-	// }
 }
