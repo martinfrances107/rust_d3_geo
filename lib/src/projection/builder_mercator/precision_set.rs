@@ -68,12 +68,12 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	>;
 	type T = T;
 
+	#[inline]
 	fn precision(self, delta: &T) -> Self::Output {
-		let base = self.base.precision(delta);
 		Self::Output {
 			extent: self.extent,
 			pr: self.pr,
-			base,
+			base: self.base.precision(delta),
 		}
 	}
 }
@@ -119,12 +119,12 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 	>;
 	type T = T;
 
+	#[inline]
 	fn precision(self, delta: &T) -> Self::Output {
-		let base = self.base.precision(delta);
 		Self::Output {
 			extent: self.extent,
 			pr: self.pr,
-			base,
+			base: self.base.precision(delta),
 		}
 	}
 }

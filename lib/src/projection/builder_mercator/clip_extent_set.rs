@@ -1,7 +1,6 @@
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
@@ -19,7 +18,6 @@ use crate::projection::builder::template::ResampleNoneClipC;
 use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::builder::template::ResampleNoneNoClipC;
 use crate::projection::builder::template::ResampleNoneNoClipU;
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::ClipExtentSet;
 use crate::projection::TransformExtent;
 use crate::stream::Connected;
@@ -69,37 +67,6 @@ impl<DRAIN, PR, T> ClipExtentSet
 		ResampleClipU<DRAIN, PR, T>,
 		T,
 	>;
-	type T = T;
-
-	fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		self.extent = Some(*extent);
-		self.reclip()
-	}
-}
-
-impl<DRAIN, PR, T> ClipExtentSet
-	for Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			ResampleNoneNoClipC<DRAIN, PR, T>,
-			Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
-			T,
-		>,
-		LineAntimeridian<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		NoClipU<DRAIN>,
-		PR,
-		PVAntimeridian<T>,
-		ResampleNoneNoClipC<DRAIN, PR, T>,
-		ResampleNoneNoClipU<DRAIN, PR, T>,
-		T,
-	> where
-	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	type OutputBounded = BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>;
 	type T = T;
 
 	fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {

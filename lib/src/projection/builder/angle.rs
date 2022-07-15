@@ -66,37 +66,3 @@ where
         self.recenter_with_resampling()
     }
 }
-
-// impl<DRAIN, PR, T> AngleSet
-//     for Builder<
-//         DRAIN,
-//         InterpolateAntimeridian<T>,
-//         LineAntimeridian<Buffer<T>, Buffer<T>, Connected<Buffer<T>>, T>,
-//         LineAntimeridian<
-//             DRAIN,
-//             ResampleNoneClipC<DRAIN, PR, T>,
-//             Connected<ResampleNoneClipC<DRAIN, PR, T>>,
-//             T,
-//         >,
-//         LineAntimeridian<DRAIN, ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
-//         ClipC<DRAIN, T>,
-//         ClipU<DRAIN, T>,
-//         PR,
-//         PVAntimeridian<T>,
-//         ResampleNoneClipC<DRAIN, PR, T>,
-//         ResampleNoneClipU<DRAIN, PR, T>,
-//         T,
-//     >
-// where
-//     DRAIN: Stream<EP = DRAIN, T = T>,
-//     PR: Clone + Transform<T = T>,
-//     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-// {
-//     /// f64 or f32.
-//     type T = T;
-
-//     fn angle(mut self, angle: T) -> Self {
-//         self.alpha = (angle % T::from(360_f64).unwrap()).to_radians();
-//         self.recenter_no_resampling()
-//     }
-// }

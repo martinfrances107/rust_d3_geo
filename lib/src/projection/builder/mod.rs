@@ -53,7 +53,6 @@ mod clip_angle_set;
 mod clip_bounded;
 mod clip_extent_adjust;
 mod clip_extent_set;
-mod fit_adjust;
 mod fit_no_clip;
 mod precision_adjust;
 mod precision_bypass;

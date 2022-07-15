@@ -51,6 +51,7 @@ pub type BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
 	T,
 >;
 
+//keep
 pub type BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
 	DRAIN,
 	InterpolateAntimeridian<T>,
@@ -65,23 +66,23 @@ pub type BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
 	T,
 >;
 
-pub type BuilderMercatorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateAntimeridian<T>,
-	LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineAntimeridian<
-		ResampleNoneNoClipC<DRAIN, PR, T>,
-		Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
-		T,
-	>,
-	LineAntimeridian<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-	NoClipU<DRAIN>,
-	PR,
-	PVAntimeridian<T>,
-	ResampleNoneNoClipC<DRAIN, PR, T>,
-	ResampleNoneNoClipU<DRAIN, PR, T>,
-	T,
->;
+// pub type BuilderMercatorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Builder<
+// 	DRAIN,
+// 	InterpolateAntimeridian<T>,
+// 	LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
+// 	LineAntimeridian<
+// 		ResampleNoneNoClipC<DRAIN, PR, T>,
+// 		Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
+// 		T,
+// 	>,
+// 	LineAntimeridian<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
+// 	NoClipU<DRAIN>,
+// 	PR,
+// 	PVAntimeridian<T>,
+// 	ResampleNoneNoClipC<DRAIN, PR, T>,
+// 	ResampleNoneNoClipU<DRAIN, PR, T>,
+// 	T,
+// >;
 
 pub type BuilderMercatorCircleResampleClip<DRAIN, PR, T> = Builder<
 	DRAIN,
@@ -97,33 +98,33 @@ pub type BuilderMercatorCircleResampleClip<DRAIN, PR, T> = Builder<
 	T,
 >;
 
-pub type BuilderMercatorCircleResampleNoClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateCircle<T>,
-	LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineCircle<ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
-	LineCircle<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-	NoClipU<DRAIN>,
-	PR,
-	PVCircle<T>,
-	ResampleNoClipC<DRAIN, PR, T>,
-	ResampleNoClipU<DRAIN, PR, T>,
-	T,
->;
+// pub type BuilderMercatorCircleResampleNoClip<DRAIN, PR, T> = Builder<
+// 	DRAIN,
+// 	InterpolateCircle<T>,
+// 	LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
+// 	LineCircle<ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
+// 	LineCircle<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
+// 	NoClipU<DRAIN>,
+// 	PR,
+// 	PVCircle<T>,
+// 	ResampleNoClipC<DRAIN, PR, T>,
+// 	ResampleNoClipU<DRAIN, PR, T>,
+// 	T,
+// >;
 
-pub type BuilderMercatorCircleResampleNoneNoClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateCircle<T>,
-	LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Connected<ResampleNoneNoClipC<DRAIN, PR, T>>, T>,
-	LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-	NoClipU<DRAIN>,
-	PR,
-	PVCircle<T>,
-	ResampleNoneNoClipC<DRAIN, PR, T>,
-	ResampleNoneNoClipU<DRAIN, PR, T>,
-	T,
->;
+// pub type BuilderMercatorCircleResampleNoneNoClip<DRAIN, PR, T> = Builder<
+// 	DRAIN,
+// 	InterpolateCircle<T>,
+// 	LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
+// 	LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Connected<ResampleNoneNoClipC<DRAIN, PR, T>>, T>,
+// 	LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
+// 	NoClipU<DRAIN>,
+// 	PR,
+// 	PVCircle<T>,
+// 	ResampleNoneNoClipC<DRAIN, PR, T>,
+// 	ResampleNoneNoClipU<DRAIN, PR, T>,
+// 	T,
+// >;
 
 pub type BuilderMercatorCircleResampleNoneClip<DRAIN, PR, T> = Builder<
 	DRAIN,

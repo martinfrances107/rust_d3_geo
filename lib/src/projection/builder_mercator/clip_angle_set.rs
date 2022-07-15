@@ -59,11 +59,11 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 
 	// Given an angle in degrees. Sets the internal clip angle and returns a builder
 	// which uses the clip circle stratergy.
+	#[inline]
 	fn clip_angle(self, angle: T) -> Self::Output {
-		let base = self.base.clip_angle(angle);
 		Self::Output {
 			pr: self.pr,
-			base,
+			base: self.base.clip_angle(angle),
 			extent: self.extent,
 		}
 	}
