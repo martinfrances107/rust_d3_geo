@@ -28,10 +28,6 @@ where
 	type T = T;
 
 	/// Returns a bounding box.
-	#[inline]
-	fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
-		self.extent
-	}
 
 	/// Clears the bounding box.
 	fn clip_extent_clear(self) -> Self::OutputClear {

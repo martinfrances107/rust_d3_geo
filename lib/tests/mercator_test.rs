@@ -14,6 +14,7 @@ mod mercator_tests {
 	use rust_d3_geo::projection::mercator::Mercator;
 	use rust_d3_geo::projection::ClipExtentAdjust;
 	use rust_d3_geo::projection::ClipExtentBounded;
+	use rust_d3_geo::projection::ClipExtentGet;
 	use rust_d3_geo::projection::PrecisionBypass;
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::Scale;

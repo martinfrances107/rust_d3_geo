@@ -148,6 +148,16 @@ pub trait CenterSet {
         Self::T: CoordFloat;
 }
 
+pub trait ClipExtentGet {
+    /// f64 or f32
+    type T;
+
+    /// Returns a bounding box.
+    fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]>
+    where
+        Self::T: CoordFloat;
+}
+
 /// Methods to clear or return bounding box.
 /// A projection builder sub trait.
 pub trait ClipExtentBounded {
@@ -155,11 +165,6 @@ pub trait ClipExtentBounded {
     type T;
 
     type OutputClear;
-
-    /// Returns a bounding box.
-    fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]>
-    where
-        Self::T: CoordFloat;
 
     /// clears the bounding box.
     fn clip_extent_clear(self) -> Self::OutputClear

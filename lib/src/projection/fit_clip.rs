@@ -11,6 +11,7 @@
 //! 3) SWAP -  implies inserting PostClip Rectangle.
 //!
 
+use crate::projection::ClipExtentGet;
 use num_traits::FloatConst;
 use std::fmt::Debug;
 
@@ -45,7 +46,10 @@ pub(super) fn fit_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
 	object: &impl Streamable<T = T>,
 ) -> B
 where
-	B: ClipExtentBounded<OutputClear = Bint, T = T> + Scale<T = T> + Translate<T = T>,
+	B: ClipExtentBounded<OutputClear = Bint, T = T>
+		+ ClipExtentGet<T = T>
+		+ Scale<T = T>
+		+ Translate<T = T>,
 	Bint: Build<
 			Drain = Bounds<T>,
 			I = I,
@@ -96,7 +100,10 @@ pub(super) fn fit_extent_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
 	object: &impl Streamable<T = T>,
 ) -> B
 where
-	B: ClipExtentBounded<OutputClear = Bint, T = T> + Scale<T = T> + Translate<T = T>,
+	B: ClipExtentBounded<OutputClear = Bint, T = T>
+		+ Scale<T = T>
+		+ ClipExtentGet<T = T>
+		+ Translate<T = T>,
 	Bint: Build<
 			Drain = Bounds<T>,
 			I = I,
