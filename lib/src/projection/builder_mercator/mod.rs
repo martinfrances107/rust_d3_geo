@@ -57,64 +57,64 @@ use crate::Transform;
 /// That is all involve a tranformation of the PCN
 /// specifcally a Identity struct to a Rectangle struct.
 pub trait FitReclip {
-	type Output;
-	/// f64 or f32.
-	type T;
+    type Output;
+    /// f64 or f32.
+    type T;
 
-	/// Sets the projection’s scale and translate to fit the specified
-	/// geographic feature in the center of the given extent.
-	///
-	/// Returns the projection.
-	///
-	/// For example, to scale and translate the New Jersey State Plane
-	/// projection to fit a GeoJSON object nj in the center of a 960×500
-	/// bounding box with 20 pixels of padding on each side:
-	///
-	/// Any clip extent is ignored when determining the new scale and
-	/// translate.
-	///
-	/// The precision used to compute the bounding box of the given object is
-	/// computed at an effective scale of 150.
-	///
-	/// @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]],
-	///  where x₀ is the left side of the bounding box, y₀ is the top,
-	///  x₁ is the right and y₁ is the bottom.
-	/// @param object A geographic feature supported by d3-geo
-	///   (An extension of GeoJSON feature).
-	fn fit_extent_reclip(
-		self,
-		extent: [[Self::T; 2]; 2],
-		object: &impl Streamable<T = Self::T>,
-	) -> Self::Output
-	where
-		Self::T: AsPrimitive<Self::T> + CoordFloat;
+    /// Sets the projection’s scale and translate to fit the specified
+    /// geographic feature in the center of the given extent.
+    ///
+    /// Returns the projection.
+    ///
+    /// For example, to scale and translate the New Jersey State Plane
+    /// projection to fit a GeoJSON object nj in the center of a 960×500
+    /// bounding box with 20 pixels of padding on each side:
+    ///
+    /// Any clip extent is ignored when determining the new scale and
+    /// translate.
+    ///
+    /// The precision used to compute the bounding box of the given object is
+    /// computed at an effective scale of 150.
+    ///
+    /// @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]],
+    ///  where x₀ is the left side of the bounding box, y₀ is the top,
+    ///  x₁ is the right and y₁ is the bottom.
+    /// @param object A geographic feature supported by d3-geo
+    ///   (An extension of GeoJSON feature).
+    fn fit_extent_reclip(
+        self,
+        extent: [[Self::T; 2]; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self::Output
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
 
-	///  Sets the projection’s scale and translate to fit the specified geographic feature in the center of an extent with the given size and top-left corner of [0, 0].
-	///  Returns the projection.
-	///
-	///  Any clip extent is ignored when determining the new scale and translate. The precision used to compute the bounding box of the given object is computed at an effective scale of 150.
-	///
-	///  @param size The size of the extent, specified as an array [width, height].
-	///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
-	fn fit_size_reclip(
-		self,
-		size: [Self::T; 2],
-		object: &impl Streamable<T = Self::T>,
-	) -> Self::Output
-	where
-		Self::T: AsPrimitive<Self::T> + CoordFloat;
+    ///  Sets the projection’s scale and translate to fit the specified geographic feature in the center of an extent with the given size and top-left corner of [0, 0].
+    ///  Returns the projection.
+    ///
+    ///  Any clip extent is ignored when determining the new scale and translate. The precision used to compute the bounding box of the given object is computed at an effective scale of 150.
+    ///
+    ///  @param size The size of the extent, specified as an array [width, height].
+    ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
+    fn fit_size_reclip(
+        self,
+        size: [Self::T; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self::Output
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
 
-	/// Similar to fit_size where the width is automatically chosen from
-	/// the aspect ratio of object and the given constraint on height.
-	fn fit_width_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
-	where
-		Self::T: AsPrimitive<Self::T> + CoordFloat;
+    /// Similar to fit_size where the width is automatically chosen from
+    /// the aspect ratio of object and the given constraint on height.
+    fn fit_width_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
 
-	/// Similar to fit_size where the height is automatically chosen from
-	/// the aspect ratio of object and the given constraint on height.
-	fn fit_height_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
-	where
-		Self::T: AsPrimitive<Self::T> + CoordFloat;
+    /// Similar to fit_size where the height is automatically chosen from
+    /// the aspect ratio of object and the given constraint on height.
+    fn fit_height_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
+    where
+        Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
 
 /// This trait is useful only for mercator projection.
@@ -122,45 +122,45 @@ pub trait FitReclip {
 /// That is all involve a tranformation of the PCN
 /// specifcally a Identity struct to a Rectangle struct.
 pub trait ScaleReclip {
-	/// Output type where the PCN is set to Rectangle.
-	type Output;
+    /// Output type where the PCN is set to Rectangle.
+    type Output;
 
-	/// f32 or f64.
-	type T;
+    /// f32 or f64.
+    type T;
 
-	///  Sets the projection’s scale factor to the specified value and returns the projection.
-	///  The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
-	///
-	///  @param scale Scale factor to be used for the projection; the default scale is projection-specific.
-	fn scale(self, scale: Self::T) -> Self::Output;
+    ///  Sets the projection’s scale factor to the specified value and returns the projection.
+    ///  The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
+    ///
+    ///  @param scale Scale factor to be used for the projection; the default scale is projection-specific.
+    fn scale_reclip(self, scale: Self::T) -> Self::Output;
 }
 
 /// Controls the projections translation factor.
 ///
 /// Projection builder sub trait.
 pub trait TranslateReclip {
-	type Output;
-	/// f32 or f64.
-	type T;
+    type Output;
+    /// f32 or f64.
+    type T;
 
-	///  Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
-	///  The translation offset determines the PIxel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
-	///
-	///  @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
-	fn translate(self, t: &Coordinate<Self::T>) -> Self::Output
-	where
-		Self::T: CoordFloat;
+    ///  Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
+    ///  The translation offset determines the PIxel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
+    ///
+    ///  @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
+    fn translate(self, t: &Coordinate<Self::T>) -> Self::Output
+    where
+        Self::T: CoordFloat;
 }
 
 /// Implicit conversion of the PCN from Identity to Rectangle.
-trait Reclip {
-	type Output;
-	fn reclip(self) -> Self::Output;
+pub trait Reclip {
+    type Output;
+    fn reclip(self) -> Self::Output;
 }
 
 /// Applies only when the PCN is Rectangle.
 trait ReclipAdjust {
-	fn reclip_adjust(self) -> Self;
+    fn reclip_adjust(self) -> Self;
 }
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
@@ -168,69 +168,69 @@ trait ReclipAdjust {
 #[derivative(Debug)]
 pub struct Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-	T: CoordFloat,
+    T: CoordFloat,
 {
-	pub pr: PR,
-	pub base: ProjectionBuilder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>,
-	pub extent: Option<[Coordinate<T>; 2]>, // post-clip extent
+    pub pr: PR,
+    pub base: ProjectionBuilder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>,
+    pub extent: Option<[Coordinate<T>; 2]>, // post-clip extent
 }
 
 impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
-	DRAIN: Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    DRAIN: Default + Stream<EP = DRAIN, T = T>,
+    PR: Clone + Transform<T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	/// Wrap a default projector and provides mercator specific overrides.
-	pub fn new(pr: PR) -> Self {
-		let base =
-			ProjectionBuilder::new(gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(), pr.clone());
-		Self {
-			pr,
-			base,
-			extent: None,
-		}
-	}
+    /// Wrap a default projector and provides mercator specific overrides.
+    pub fn new(pr: PR) -> Self {
+        let base =
+            ProjectionBuilder::new(gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(), pr.clone());
+        Self {
+            pr,
+            base,
+            extent: None,
+        }
+    }
 }
 
 impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Build
-	for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+    for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-	DRAIN: Clone,
-	I: Clone,
-	LB: Clone,
-	LC: Clone,
-	LU: Clone,
-	PCNU: Clone + Debug,
-	PR: Clone,
-	PV: Clone,
-	RC: Clone,
-	RU: Debug + Clone,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    DRAIN: Clone,
+    I: Clone,
+    LB: Clone,
+    LC: Clone,
+    LU: Clone,
+    PCNU: Clone + Debug,
+    PR: Clone,
+    PV: Clone,
+    RC: Clone,
+    RU: Debug + Clone,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	type Drain = DRAIN;
-	type I = I;
-	type LB = LB;
-	type LC = LC;
-	type LU = LU;
-	type PCNU = PCNU;
-	type PR = PR;
-	type PV = PV;
-	type RC = RC;
-	type RU = RU;
-	type T = T;
+    type Drain = DRAIN;
+    type I = I;
+    type LB = LB;
+    type LC = LC;
+    type LU = LU;
+    type PCNU = PCNU;
+    type PR = PR;
+    type PV = PV;
+    type RC = RC;
+    type RU = RU;
+    type T = T;
 
-	/// Using the currently programmed state output a new projection.
-	#[inline]
-	fn build(&self) -> Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> {
-		Projector {
-			cache: None,
-			postclip: self.base.postclip.clone(),
-			clip: self.base.clip.clone(),
-			resample: self.base.resample.clone(),
-			rotator: self.base.rotator.clone(),
-			project_rotate_transform: self.base.project_rotate_transform.clone(),
-			transform_radians: StreamTransformRadians(Unconnected),
-		}
-	}
+    /// Using the currently programmed state output a new projection.
+    #[inline]
+    fn build(&self) -> Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> {
+        Projector {
+            cache: None,
+            postclip: self.base.postclip.clone(),
+            clip: self.base.clip.clone(),
+            resample: self.base.resample.clone(),
+            rotator: self.base.rotator.clone(),
+            project_rotate_transform: self.base.project_rotate_transform.clone(),
+            transform_radians: StreamTransformRadians(Unconnected),
+        }
+    }
 }
