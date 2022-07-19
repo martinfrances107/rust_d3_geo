@@ -27,7 +27,6 @@ use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentSet;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::template::ClipU;
@@ -37,209 +36,205 @@ use super::template::ClipU;
 // Varariantion over Resample/None as Resample is rebuilt.
 impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type OutputBounded = BuilderAntimeridianResampleClip<DRAIN, PR, T>;
-	type T = T;
+    type OutputBounded = BuilderAntimeridianResampleClip<DRAIN, PR, T>;
+    type T = T;
 
-	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>();
-		let resample = Resample::new(self.project_transform.clone(), self.delta2);
-		let out = Self::OutputBounded {
-			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
-			p_drain: PhantomData::<DRAIN>,
-			projection_raw: self.projection_raw,
-			clip,
-			phi: self.phi,
-			lambda: self.lambda,
-			alpha: self.alpha,
-			k: self.k,
-			sx: self.sx,
-			sy: self.sy,
-			x: self.x,
-			y: self.y,
-			delta_lambda: self.delta_lambda,
-			delta_phi: self.delta_phi,
-			delta_gamma: self.delta_gamma,
-			delta2: self.delta2,
-			theta: self.theta,
-			rotate: self.rotate,
-			project_transform: self.project_transform,
-			project_rotate_transform: self.project_rotate_transform,
-			resample,
-			rotator: self.rotator,
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+        let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>();
+        let resample = Resample::new(self.project_transform.clone(), self.delta2);
+        let out = Self::OutputBounded {
+            p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
+            p_drain: PhantomData::<DRAIN>,
+            projection_raw: self.projection_raw,
+            clip,
+            phi: self.phi,
+            lambda: self.lambda,
+            alpha: self.alpha,
+            k: self.k,
+            sx: self.sx,
+            sy: self.sy,
+            x: self.x,
+            y: self.y,
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+            delta2: self.delta2,
+            theta: self.theta,
+            rotate: self.rotate,
+            project_transform: self.project_transform,
+            project_rotate_transform: self.project_rotate_transform,
+            resample,
+            rotator: self.rotator,
 
-			// Mutate stage
-			x0: Some(extent[0].x),
-			y0: Some(extent[0].y),
-			x1: Some(extent[1].x),
-			y1: Some(extent[1].y),
-			postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
-		};
+            // Mutate stage
+            x0: Some(extent[0].x),
+            y0: Some(extent[0].y),
+            x1: Some(extent[1].x),
+            y1: Some(extent[1].y),
+            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+        };
 
-		out.reset()
-	}
+        out.reset()
+    }
 }
 
 impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type OutputBounded = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
-	type T = T;
+    type OutputBounded = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
+    type T = T;
 
-	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>();
-		let resample = None::new(self.project_transform.clone());
-		let out = Self::OutputBounded {
-			p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
-			p_drain: PhantomData::<DRAIN>,
-			projection_raw: self.projection_raw,
-			clip,
-			phi: self.phi,
-			lambda: self.lambda,
-			alpha: self.alpha,
-			k: self.k,
-			sx: self.sx,
-			sy: self.sy,
-			x: self.x,
-			y: self.y,
-			delta_lambda: self.delta_lambda,
-			delta_phi: self.delta_phi,
-			delta_gamma: self.delta_gamma,
-			delta2: self.delta2,
-			theta: self.theta,
-			rotate: self.rotate,
-			project_transform: self.project_transform,
-			project_rotate_transform: self.project_rotate_transform,
-			resample,
-			rotator: self.rotator,
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+        let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>();
+        let resample = None::new(self.project_transform.clone());
+        let out = Self::OutputBounded {
+            p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
+            p_drain: PhantomData::<DRAIN>,
+            projection_raw: self.projection_raw,
+            clip,
+            phi: self.phi,
+            lambda: self.lambda,
+            alpha: self.alpha,
+            k: self.k,
+            sx: self.sx,
+            sy: self.sy,
+            x: self.x,
+            y: self.y,
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+            delta2: self.delta2,
+            theta: self.theta,
+            rotate: self.rotate,
+            project_transform: self.project_transform,
+            project_rotate_transform: self.project_rotate_transform,
+            resample,
+            rotator: self.rotator,
 
-			// Mutate stage
-			x0: Some(extent[0].x),
-			y0: Some(extent[0].y),
-			x1: Some(extent[1].x),
-			y1: Some(extent[1].y),
-			postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
-		};
+            // Mutate stage
+            x0: Some(extent[0].x),
+            y0: Some(extent[0].y),
+            x1: Some(extent[1].x),
+            y1: Some(extent[1].y),
+            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+        };
 
-		// out.reset()
-		out
-	}
+        // out.reset()
+        out
+    }
 }
 
 impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoClip<DRAIN, PR, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    PR: Clone,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type OutputBounded = BuilderCircleResampleClip<DRAIN, PR, T>;
-	type T = T;
+    type OutputBounded = BuilderCircleResampleClip<DRAIN, PR, T>;
+    type T = T;
 
-	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		let clip = gen_clip_circle::<
-			DRAIN,
-			ClipU<DRAIN, T>,
-			PR,
-			ResampleClipC<DRAIN, PR, T>,
-			ResampleClipU<DRAIN, PR, T>,
-			T,
-		>(self.theta.unwrap());
-		let resample = Resample::new(self.project_transform.clone(), self.delta2);
-		let out = Self::OutputBounded {
-			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
-			p_drain: PhantomData::<DRAIN>,
-			projection_raw: self.projection_raw,
-			clip,
-			phi: self.phi,
-			lambda: self.lambda,
-			alpha: self.alpha,
-			k: self.k,
-			sx: self.sx,
-			sy: self.sy,
-			x: self.x,
-			y: self.y,
-			delta_lambda: self.delta_lambda,
-			delta_phi: self.delta_phi,
-			delta_gamma: self.delta_gamma,
-			delta2: self.delta2,
-			theta: self.theta,
-			rotate: self.rotate,
-			project_transform: self.project_transform,
-			project_rotate_transform: self.project_rotate_transform,
-			resample,
-			rotator: self.rotator,
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+        let clip = gen_clip_circle::<
+            DRAIN,
+            ClipU<DRAIN, T>,
+            PR,
+            ResampleClipC<DRAIN, PR, T>,
+            ResampleClipU<DRAIN, PR, T>,
+            T,
+        >(self.theta.unwrap());
+        let resample = Resample::new(self.project_transform.clone(), self.delta2);
+        let out = Self::OutputBounded {
+            p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
+            p_drain: PhantomData::<DRAIN>,
+            projection_raw: self.projection_raw,
+            clip,
+            phi: self.phi,
+            lambda: self.lambda,
+            alpha: self.alpha,
+            k: self.k,
+            sx: self.sx,
+            sy: self.sy,
+            x: self.x,
+            y: self.y,
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+            delta2: self.delta2,
+            theta: self.theta,
+            rotate: self.rotate,
+            project_transform: self.project_transform,
+            project_rotate_transform: self.project_rotate_transform,
+            resample,
+            rotator: self.rotator,
 
-			// Mutate stage
-			x0: Some(extent[0].x),
-			y0: Some(extent[0].y),
-			x1: Some(extent[1].x),
-			y1: Some(extent[1].y),
-			postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
-		};
+            // Mutate stage
+            x0: Some(extent[0].x),
+            y0: Some(extent[0].y),
+            x1: Some(extent[1].x),
+            y1: Some(extent[1].y),
+            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+        };
 
-		// out.reset()
-		out
-	}
+        // out.reset()
+        out
+    }
 }
 
 impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    PR: Clone,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
-	type OutputBounded = BuilderCircleResampleNoneClip<DRAIN, PR, T>;
+    type T = T;
+    type OutputBounded = BuilderCircleResampleNoneClip<DRAIN, PR, T>;
 
-	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		let clip = gen_clip_circle::<
-			DRAIN,
-			ClipU<DRAIN, T>,
-			PR,
-			ResampleNoneClipC<DRAIN, PR, T>,
-			ResampleNoneClipU<DRAIN, PR, T>,
-			T,
-		>(self.theta.unwrap());
-		let resample = None::new(self.project_transform.clone());
-		let out = Self::OutputBounded {
-			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
-			p_drain: PhantomData::<DRAIN>,
-			projection_raw: self.projection_raw,
-			clip,
-			phi: self.phi,
-			lambda: self.lambda,
-			alpha: self.alpha,
-			k: self.k,
-			sx: self.sx,
-			sy: self.sy,
-			x: self.x,
-			y: self.y,
-			delta_lambda: self.delta_lambda,
-			delta_phi: self.delta_phi,
-			delta_gamma: self.delta_gamma,
-			delta2: self.delta2,
-			theta: self.theta,
-			rotate: self.rotate,
-			project_transform: self.project_transform,
-			project_rotate_transform: self.project_rotate_transform,
-			resample,
-			rotator: self.rotator,
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+        let clip = gen_clip_circle::<
+            DRAIN,
+            ClipU<DRAIN, T>,
+            PR,
+            ResampleNoneClipC<DRAIN, PR, T>,
+            ResampleNoneClipU<DRAIN, PR, T>,
+            T,
+        >(self.theta.unwrap());
+        let resample = None::new(self.project_transform.clone());
+        let out = Self::OutputBounded {
+            p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
+            p_drain: PhantomData::<DRAIN>,
+            projection_raw: self.projection_raw,
+            clip,
+            phi: self.phi,
+            lambda: self.lambda,
+            alpha: self.alpha,
+            k: self.k,
+            sx: self.sx,
+            sy: self.sy,
+            x: self.x,
+            y: self.y,
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+            delta2: self.delta2,
+            theta: self.theta,
+            rotate: self.rotate,
+            project_transform: self.project_transform,
+            project_rotate_transform: self.project_rotate_transform,
+            resample,
+            rotator: self.rotator,
 
-			// Mutate stage
-			x0: Some(extent[0].x),
-			y0: Some(extent[0].y),
-			x1: Some(extent[1].x),
-			y1: Some(extent[1].y),
-			postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
-		};
+            // Mutate stage
+            x0: Some(extent[0].x),
+            y0: Some(extent[0].y),
+            x1: Some(extent[1].x),
+            y1: Some(extent[1].y),
+            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+        };
 
-		// out.reset()
-		out
-	}
+        // out.reset()
+        out
+    }
 }

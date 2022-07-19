@@ -7,7 +7,6 @@ pub mod line;
 /// Holds the clip circle point visible function.
 pub mod pv;
 
-use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use interpolate::Interpolate;
@@ -21,33 +20,32 @@ use pv::PV;
 use super::clip::Clip;
 
 type ClipCircleU<RC, T> = Clip<
-	Interpolate<T>,
-	Line<RC, Connected<RC>, T>,
-	Line<RC, Unconnected, T>,
-	PV<T>,
-	RC,
-	Unconnected,
-	T,
+    Interpolate<T>,
+    Line<RC, Connected<RC>, T>,
+    Line<RC, Unconnected, T>,
+    PV<T>,
+    RC,
+    Unconnected,
+    T,
 >;
 
 /// Returns a clip setup for circle clipping.
 pub fn gen_clip_circle<DRAIN, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
 where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	let cr = radius.cos();
-	let small_radius = cr > T::zero();
-	let start = if small_radius {
-		[T::zero(), -radius]
-	} else {
-		[-T::PI(), radius - T::PI()]
-	};
+    let cr = radius.cos();
+    let small_radius = cr > T::zero();
+    let start = if small_radius {
+        [T::zero(), -radius]
+    } else {
+        [-T::PI(), radius - T::PI()]
+    };
 
-	Clip::new(
-		Interpolate::new(radius),
-		Line::new(radius),
-		PV::new(radius),
-		start.into(),
-	)
+    Clip::new(
+        Interpolate::new(radius),
+        Line::new(radius),
+        PV::new(radius),
+        start.into(),
+    )
 }

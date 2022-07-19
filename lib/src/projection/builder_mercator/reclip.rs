@@ -11,7 +11,6 @@ use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
 use crate::projection::TransformExtent;
 use crate::rot::rotate_radians;
-use crate::stream::Stream;
 use crate::Coordinate;
 use crate::Transform;
 
@@ -21,7 +20,7 @@ use super::Reclip;
 
 impl<DRAIN, PR, T> Reclip for BuilderMercatorAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
-    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -73,7 +72,7 @@ where
 
 impl<DRAIN, PR, T> Reclip for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
-    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

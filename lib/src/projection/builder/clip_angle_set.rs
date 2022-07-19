@@ -23,89 +23,89 @@ use crate::Transform;
 use super::Builder;
 
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
-	for Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<RC, Connected<RC>, T>,
-		LineAntimeridian<RC, Unconnected, T>,
-		PCNU,
-		PR,
-		PVAntimeridian<T>,
-		RC,
-		RU,
-		T,
-	> where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
-	PR: Clone + Transform<T = T>,
-	RC: Clone + Stream<EP = DRAIN, T = T>,
-	RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        InterpolateAntimeridian<T>,
+        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineAntimeridian<RC, Connected<RC>, T>,
+        LineAntimeridian<RC, Unconnected, T>,
+        PCNU,
+        PR,
+        PVAntimeridian<T>,
+        RC,
+        RU,
+        T,
+    >
+where
+    PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
+    PR: Clone + Transform<T = T>,
+    RC: Clone + Stream<EP = DRAIN, T = T>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type Output = Builder<
-		DRAIN,
-		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<RC, Connected<RC>, T>,
-		LineCircle<RC, Unconnected, T>,
-		PCNU,
-		PR,
-		PVCircle<T>,
-		RC,
-		RU,
-		T,
-	>;
-	type T = T;
+    type Output = Builder<
+        DRAIN,
+        InterpolateCircle<T>,
+        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineCircle<RC, Connected<RC>, T>,
+        LineCircle<RC, Unconnected, T>,
+        PCNU,
+        PR,
+        PVCircle<T>,
+        RC,
+        RU,
+        T,
+    >;
+    type T = T;
 
-	// Given an angle in degrees. Sets the internal clip angle and returns a builder
-	// which uses the clip circle stratergy.
-	fn clip_angle(self, angle: T) -> Self::Output {
-		if angle == T::zero() {
-			panic!("must call clip_angle_reset() instead");
-		}
+    // Given an angle in degrees. Sets the internal clip angle and returns a builder
+    // which uses the clip circle stratergy.
+    fn clip_angle(self, angle: T) -> Self::Output {
+        if angle == T::zero() {
+            panic!("must call clip_angle_reset() instead");
+        }
 
-		let theta = angle.to_radians();
-		let clip = gen_clip_circle::<DRAIN, PCNU, PR, RC, RU, T>(theta);
-		// Copy, Mutate - updating only theta and preclip_factory.
-		let out = Self::Output {
-			p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
-			p_drain: PhantomData::<DRAIN>,
-			projection_raw: self.projection_raw,
-			clip,
-			delta_lambda: self.delta_lambda,
-			delta_phi: self.delta_phi,
-			delta_gamma: self.delta_gamma,
-			x: self.x,
-			y: self.y,
+        let theta = angle.to_radians();
+        let clip = gen_clip_circle::<DRAIN, PCNU, PR, RC, RU, T>(theta);
+        // Copy, Mutate - updating only theta and preclip_factory.
+        let out = Self::Output {
+            p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
+            p_drain: PhantomData::<DRAIN>,
+            projection_raw: self.projection_raw,
+            clip,
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+            x: self.x,
+            y: self.y,
 
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1,
+            x0: self.x0,
+            y0: self.y0,
+            x1: self.x1,
+            y1: self.y1,
 
-			delta2: self.delta2,
-			lambda: self.lambda,
-			phi: self.phi,
+            delta2: self.delta2,
+            lambda: self.lambda,
+            phi: self.phi,
 
-			alpha: self.alpha,
-			k: self.k,
+            alpha: self.alpha,
+            k: self.k,
 
-			theta: Some(theta),
+            theta: Some(theta),
 
-			sx: self.sx,
-			sy: self.sy,
+            sx: self.sx,
+            sy: self.sy,
 
-			rotate: self.rotate,
-			project_transform: self.project_transform,
-			project_rotate_transform: self.project_rotate_transform,
-			postclip: self.postclip,
+            rotate: self.rotate,
+            project_transform: self.project_transform,
+            project_rotate_transform: self.project_rotate_transform,
+            postclip: self.postclip,
 
-			resample: self.resample,
-			rotator: self.rotator,
-		};
+            resample: self.resample,
+            rotator: self.rotator,
+        };
 
-		// out.reset()
-		out
-	}
+        // out.reset()
+        out
+    }
 }

@@ -16,179 +16,178 @@ use crate::projection::transform::generate as generate_str;
 use crate::projection::RecenterNoResampling;
 use crate::rot::rotate_radians;
 use crate::rot::rotator_radians::RotatorRadians;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::Builder;
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterNoResampling
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		NoClipU<DRAIN>,
-		PR,
-		PV,
-		ResampleNoneNoClipC<DRAIN, PR, T>,
-		ResampleNoneNoClipU<DRAIN, PR, T>,
-		T,
-	> where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
-	T: CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        NoClipU<DRAIN>,
+        PR,
+        PV,
+        ResampleNoneNoClipC<DRAIN, PR, T>,
+        ResampleNoneNoClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    PR: Clone + Transform<T = T>,
+    T: CoordFloat + FloatConst,
 {
-	fn reset(self) -> Self {
-		// self.cache_stream = None;
-		// self.cache = None;
-		self
-	}
+    fn reset(self) -> Self {
+        // self.cache_stream = None;
+        // self.cache = None;
+        self
+    }
 
-	fn recenter_no_resampling(self) -> Self {
-		let center = generate_str(
-			&self.k,
-			&T::zero(),
-			&T::zero(),
-			&self.sx,
-			&self.sy,
-			&self.alpha,
-		)
-		.transform(&self.projection_raw.transform(&Coordinate {
-			x: self.lambda,
-			y: self.phi,
-		}));
-		let transform = generate_str(
-			&self.k,
-			&(self.x - center.x),
-			&(self.y - center.y),
-			&self.sx,
-			&self.sy,
-			&self.alpha,
-		);
+    fn recenter_no_resampling(self) -> Self {
+        let center = generate_str(
+            &self.k,
+            &T::zero(),
+            &T::zero(),
+            &self.sx,
+            &self.sy,
+            &self.alpha,
+        )
+        .transform(&self.projection_raw.transform(&Coordinate {
+            x: self.lambda,
+            y: self.phi,
+        }));
+        let transform = generate_str(
+            &self.k,
+            &(self.x - center.x),
+            &(self.y - center.y),
+            &self.sx,
+            &self.sy,
+            &self.alpha,
+        );
 
-		let rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]);
-		let project_transform = Compose::new(self.projection_raw.clone(), transform);
-		let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
-		let rotator = RotatorRadians::new(rotate.clone());
+        let rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]);
+        let project_transform = Compose::new(self.projection_raw.clone(), transform);
+        let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
+        let rotator = RotatorRadians::new(rotate.clone());
 
-		let resample = ResampleNone::new(project_transform.clone());
-		let out: Self = Builder {
-			p_lb: PhantomData::<LB>,
-			p_drain: PhantomData::<DRAIN>,
-			projection_raw: self.projection_raw,
-			clip: self.clip,
-			phi: self.phi,
-			lambda: self.lambda,
-			alpha: self.alpha,
-			k: self.k,
-			sx: self.sx,
-			sy: self.sy,
-			x: self.x,
-			y: self.y,
-			delta_lambda: self.delta_lambda,
-			delta_phi: self.delta_phi,
-			delta_gamma: self.delta_gamma,
-			delta2: self.delta2,
-			theta: self.theta,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1,
-			rotate,
-			rotator,
-			postclip: self.postclip,
-			resample,
-			project_transform,
-			project_rotate_transform,
-		};
+        let resample = ResampleNone::new(project_transform.clone());
+        let out: Self = Builder {
+            p_lb: PhantomData::<LB>,
+            p_drain: PhantomData::<DRAIN>,
+            projection_raw: self.projection_raw,
+            clip: self.clip,
+            phi: self.phi,
+            lambda: self.lambda,
+            alpha: self.alpha,
+            k: self.k,
+            sx: self.sx,
+            sy: self.sy,
+            x: self.x,
+            y: self.y,
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+            delta2: self.delta2,
+            theta: self.theta,
+            x0: self.x0,
+            y0: self.y0,
+            x1: self.x1,
+            y1: self.y1,
+            rotate,
+            rotator,
+            postclip: self.postclip,
+            resample,
+            project_transform,
+            project_rotate_transform,
+        };
 
-		out.reset()
-	}
+        out.reset()
+    }
 }
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterNoResampling
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		ClipU<DRAIN, T>,
-		PR,
-		PV,
-		ResampleNoneClipC<DRAIN, PR, T>,
-		ResampleNoneClipU<DRAIN, PR, T>,
-		T,
-	> where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
-	T: CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        ClipU<DRAIN, T>,
+        PR,
+        PV,
+        ResampleNoneClipC<DRAIN, PR, T>,
+        ResampleNoneClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    PR: Clone + Transform<T = T>,
+    T: CoordFloat + FloatConst,
 {
-	fn reset(self) -> Self {
-		// self.cache_stream = None;
-		// self.cache = None;
-		self
-	}
+    fn reset(self) -> Self {
+        // self.cache_stream = None;
+        // self.cache = None;
+        self
+    }
 
-	fn recenter_no_resampling(self) -> Self {
-		let center = generate_str(
-			&self.k,
-			&T::zero(),
-			&T::zero(),
-			&self.sx,
-			&self.sy,
-			&self.alpha,
-		)
-		.transform(&self.projection_raw.transform(&Coordinate {
-			x: self.lambda,
-			y: self.phi,
-		}));
-		let transform = generate_str(
-			&self.k,
-			&(self.x - center.x),
-			&(self.y - center.y),
-			&self.sx,
-			&self.sy,
-			&self.alpha,
-		);
+    fn recenter_no_resampling(self) -> Self {
+        let center = generate_str(
+            &self.k,
+            &T::zero(),
+            &T::zero(),
+            &self.sx,
+            &self.sy,
+            &self.alpha,
+        )
+        .transform(&self.projection_raw.transform(&Coordinate {
+            x: self.lambda,
+            y: self.phi,
+        }));
+        let transform = generate_str(
+            &self.k,
+            &(self.x - center.x),
+            &(self.y - center.y),
+            &self.sx,
+            &self.sy,
+            &self.alpha,
+        );
 
-		let rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]);
-		let project_transform = Compose::new(self.projection_raw.clone(), transform);
-		let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
-		let rotator = RotatorRadians::new(rotate.clone());
+        let rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]);
+        let project_transform = Compose::new(self.projection_raw.clone(), transform);
+        let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
+        let rotator = RotatorRadians::new(rotate.clone());
 
-		let resample = ResampleNone::new(project_transform.clone());
-		let out: Self = Builder {
-			p_lb: PhantomData::<LB>,
-			p_drain: PhantomData::<DRAIN>,
-			projection_raw: self.projection_raw,
-			clip: self.clip,
-			phi: self.phi,
-			lambda: self.lambda,
-			alpha: self.alpha,
-			k: self.k,
-			sx: self.sx,
-			sy: self.sy,
-			x: self.x,
-			y: self.y,
-			delta_lambda: self.delta_lambda,
-			delta_phi: self.delta_phi,
-			delta_gamma: self.delta_gamma,
-			delta2: self.delta2,
-			theta: self.theta,
-			x0: self.x0,
-			y0: self.y0,
-			x1: self.x1,
-			y1: self.y1,
-			rotate,
-			rotator,
-			postclip: self.postclip,
-			resample,
-			project_transform,
-			project_rotate_transform,
-		};
+        let resample = ResampleNone::new(project_transform.clone());
+        let out: Self = Builder {
+            p_lb: PhantomData::<LB>,
+            p_drain: PhantomData::<DRAIN>,
+            projection_raw: self.projection_raw,
+            clip: self.clip,
+            phi: self.phi,
+            lambda: self.lambda,
+            alpha: self.alpha,
+            k: self.k,
+            sx: self.sx,
+            sy: self.sy,
+            x: self.x,
+            y: self.y,
+            delta_lambda: self.delta_lambda,
+            delta_phi: self.delta_phi,
+            delta_gamma: self.delta_gamma,
+            delta2: self.delta2,
+            theta: self.theta,
+            x0: self.x0,
+            y0: self.y0,
+            x1: self.x1,
+            y1: self.y1,
+            rotate,
+            rotator,
+            postclip: self.postclip,
+            resample,
+            project_transform,
+            project_rotate_transform,
+        };
 
-		out.reset()
-	}
+        out.reset()
+    }
 }

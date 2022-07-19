@@ -9,19 +9,18 @@ use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResam
 use crate::projection::builder_mercator::ReclipAdjust;
 use crate::projection::CenterSet;
 use crate::projection::TransformExtent;
-use crate::stream::Stream;
 use crate::Transform;
 
 impl<DRAIN, PR, T> CenterSet for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
-	DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,
+    DRAIN: Clone,
+    PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	fn center(mut self, center: &Coordinate<T>) -> Self {
-		self.base = self.base.center(center);
-		self.reclip_adjust()
-	}
+    fn center(mut self, center: &Coordinate<T>) -> Self {
+        self.base = self.base.center(center);
+        self.reclip_adjust()
+    }
 }

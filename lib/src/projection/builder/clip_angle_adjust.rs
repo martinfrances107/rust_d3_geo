@@ -1,4 +1,3 @@
-use crate::stream::Stream;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -15,36 +14,36 @@ use crate::stream::Unconnected;
 use super::Builder;
 
 impl<DRAIN, PCNU, PR, RC, RU, T> ClipAngleAdjust
-	for Builder<
-		DRAIN,
-		Interpolate<T>,
-		Line<Buffer<T>, Connected<Buffer<T>>, T>,
-		Line<RC, Connected<RC>, T>,
-		Line<RC, Unconnected, T>,
-		PCNU,
-		PR,
-		PV<T>,
-		RC,
-		RU,
-		T,
-	> where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        Interpolate<T>,
+        Line<Buffer<T>, Connected<Buffer<T>>, T>,
+        Line<RC, Connected<RC>, T>,
+        Line<RC, Unconnected, T>,
+        PCNU,
+        PR,
+        PV<T>,
+        RC,
+        RU,
+        T,
+    >
+where
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	fn clip_angle(mut self, angle: T) -> Self {
-		if angle == T::zero() {
-			panic!("must call clip_angle_reset() instead");
-		}
-		let theta = angle.to_radians();
-		let clip = gen_clip_circle::<DRAIN, PCNU, PR, RC, RU, T>(theta);
+    fn clip_angle(mut self, angle: T) -> Self {
+        if angle == T::zero() {
+            panic!("must call clip_angle_reset() instead");
+        }
+        let theta = angle.to_radians();
+        let clip = gen_clip_circle::<DRAIN, PCNU, PR, RC, RU, T>(theta);
 
-		self.clip = clip;
-		self.theta = Some(angle);
+        self.clip = clip;
+        self.theta = Some(angle);
 
-		// TODO must reinstate.
-		// self.reset()
-		self
-	}
+        // TODO must reinstate.
+        // self.reset()
+        self
+    }
 }

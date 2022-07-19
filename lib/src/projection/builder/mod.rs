@@ -26,7 +26,6 @@ use crate::rot::rotate_radians;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -129,7 +128,6 @@ where
 
 impl<DRAIN, PR, T> BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
-    DRAIN: Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
     Self: RecenterWithResampling,
     T: CoordFloat + FloatConst,

@@ -21,57 +21,55 @@ use super::ProjectionRawBase;
 /// Gnomic
 #[derive(Clone, Debug)]
 pub struct Gnomic<DRAIN, T> {
-	p_drain: PhantomData<DRAIN>,
-	p_t: PhantomData<T>,
+    p_drain: PhantomData<DRAIN>,
+    p_t: PhantomData<T>,
 }
 
 impl<DRAIN, T> Default for Gnomic<DRAIN, T> {
-	fn default() -> Self {
-		Gnomic {
-			p_drain: PhantomData::<DRAIN>,
-			p_t: PhantomData::<T>,
-		}
-	}
+    fn default() -> Self {
+        Gnomic {
+            p_drain: PhantomData::<DRAIN>,
+            p_t: PhantomData::<T>,
+        }
+    }
 }
 
 impl<DRAIN, T> ProjectionRawBase for Gnomic<DRAIN, T>
 where
-	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type Builder = BuilderCircleResampleNoClip<DRAIN, Gnomic<DRAIN, T>, T>;
+    type Builder = BuilderCircleResampleNoClip<DRAIN, Gnomic<DRAIN, T>, T>;
 
-	fn builder() -> Self::Builder
-	where
-		DRAIN: Default + Stream<EP = DRAIN, T = T>,
-	{
-		let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>();
-		Builder::new(clip, Gnomic::default())
-			.scale(T::from(144.049_f64).unwrap())
-			.clip_angle(T::from(60_f64).unwrap())
-	}
+    fn builder() -> Self::Builder
+    where
+        DRAIN: Default + Stream<EP = DRAIN, T = T>,
+    {
+        let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>();
+        Builder::new(clip, Gnomic::default())
+            .scale(T::from(144.049_f64).unwrap())
+            .clip_angle(T::from(60_f64).unwrap())
+    }
 }
 
-impl<DRAIN, EP, T> Transform for Gnomic<DRAIN, T>
+impl<DRAIN, T> Transform for Gnomic<DRAIN, T>
 where
-	DRAIN: Stream<EP = EP, T = T>,
-	EP: Stream<EP = EP, T = T> + Default,
-	T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
-	/// f64 or f32.
-	type T = T;
+    /// f64 or f32.
+    type T = T;
 
-	fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-		let cy = p.y.cos();
-		let k = p.x.cos() * cy;
-		Coordinate {
-			x: cy * p.x.sin() / k,
-			y: p.y.sin() / k,
-		}
-	}
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        let cy = p.y.cos();
+        let k = p.x.cos() * cy;
+        Coordinate {
+            x: cy * p.x.sin() / k,
+            y: p.y.sin() / k,
+        }
+    }
 
-	#[inline]
-	fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-		azimuthal_invert(p, T::atan)
-	}
+    #[inline]
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        azimuthal_invert(p, T::atan)
+    }
 }

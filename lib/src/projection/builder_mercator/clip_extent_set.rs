@@ -33,152 +33,153 @@ use super::ResampleNoClipU;
 // TOD must vary by ClipAntimeridian -- 2 more impl blocks
 
 impl<DRAIN, PR, T> ClipExtentSet
-	for Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			ResampleNoClipC<DRAIN, PR, T>,
-			Connected<ResampleNoClipC<DRAIN, PR, T>>,
-			T,
-		>,
-		LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		NoClipU<DRAIN>,
-		PR,
-		PVAntimeridian<T>,
-		ResampleNoClipC<DRAIN, PR, T>,
-		ResampleNoClipU<DRAIN, PR, T>,
-		T,
-	> where
-	DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        InterpolateAntimeridian<T>,
+        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineAntimeridian<
+            ResampleNoClipC<DRAIN, PR, T>,
+            Connected<ResampleNoClipC<DRAIN, PR, T>>,
+            T,
+        >,
+        LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
+        NoClipU<DRAIN>,
+        PR,
+        PVAntimeridian<T>,
+        ResampleNoClipC<DRAIN, PR, T>,
+        ResampleNoClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    PR: Clone + Transform<T = T> + TransformExtent<T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type OutputBounded = Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
-		LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PVAntimeridian<T>,
-		ResampleClipC<DRAIN, PR, T>,
-		ResampleClipU<DRAIN, PR, T>,
-		T,
-	>;
-	type T = T;
+    type OutputBounded = Builder<
+        DRAIN,
+        InterpolateAntimeridian<T>,
+        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
+        LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
+        ClipU<DRAIN, T>,
+        PR,
+        PVAntimeridian<T>,
+        ResampleClipC<DRAIN, PR, T>,
+        ResampleClipU<DRAIN, PR, T>,
+        T,
+    >;
+    type T = T;
 
-	fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		self.extent = Some(*extent);
-		self.reclip()
-	}
+    fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+        self.extent = Some(*extent);
+        self.reclip()
+    }
 }
 
 impl<DRAIN, PR, T> ClipExtentSet
-	for Builder<
-		DRAIN,
-		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
-		LineCircle<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		NoClipU<DRAIN>,
-		PR,
-		PVCircle<T>,
-		ResampleNoClipC<DRAIN, PR, T>,
-		ResampleNoClipU<DRAIN, PR, T>,
-		T,
-	> where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        InterpolateCircle<T>,
+        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineCircle<ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
+        LineCircle<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
+        NoClipU<DRAIN>,
+        PR,
+        PVCircle<T>,
+        ResampleNoClipC<DRAIN, PR, T>,
+        ResampleNoClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type OutputBounded = Builder<
-		DRAIN,
-		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
-		LineCircle<ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PVCircle<T>,
-		ResampleClipC<DRAIN, PR, T>,
-		ResampleClipU<DRAIN, PR, T>,
-		T,
-	>;
-	type T = T;
+    type OutputBounded = Builder<
+        DRAIN,
+        InterpolateCircle<T>,
+        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineCircle<ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
+        LineCircle<ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
+        ClipU<DRAIN, T>,
+        PR,
+        PVCircle<T>,
+        ResampleClipC<DRAIN, PR, T>,
+        ResampleClipU<DRAIN, PR, T>,
+        T,
+    >;
+    type T = T;
 
-	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		let base = self.base.clip_extent(extent);
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+        let base = self.base.clip_extent(extent);
 
-		// Architecture Discussion:
-		// CLIP is generic over <.. RC, RU,..>,
-		// So a change in the resample type causes rebuilding of clip.
-		let out = Self::OutputBounded {
-			base,
-			pr: self.pr,
-			// Mutate stage
-			extent: Some(*extent),
-		};
-		// .reset();
+        // Architecture Discussion:
+        // CLIP is generic over <.. RC, RU,..>,
+        // So a change in the resample type causes rebuilding of clip.
+        let out = Self::OutputBounded {
+            base,
+            pr: self.pr,
+            // Mutate stage
+            extent: Some(*extent),
+        };
+        // .reset();
 
-		// out.reset()
-		out
-	}
+        // out.reset()
+        out
+    }
 }
 
 impl<DRAIN, PR, T> ClipExtentSet
-	for Builder<
-		DRAIN,
-		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<
-			ResampleNoneNoClipC<DRAIN, PR, T>,
-			Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
-			T,
-		>,
-		LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-		NoClipU<DRAIN>,
-		PR,
-		PVCircle<T>,
-		ResampleNoneNoClipC<DRAIN, PR, T>,
-		ResampleNoneNoClipU<DRAIN, PR, T>,
-		T,
-	> where
-	DRAIN: Stream<EP = DRAIN, T = T>,
-	PR: Clone,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        InterpolateCircle<T>,
+        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineCircle<
+            ResampleNoneNoClipC<DRAIN, PR, T>,
+            Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
+            T,
+        >,
+        LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
+        NoClipU<DRAIN>,
+        PR,
+        PVCircle<T>,
+        ResampleNoneNoClipC<DRAIN, PR, T>,
+        ResampleNoneNoClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    PR: Clone,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type OutputBounded = Builder<
-		DRAIN,
-		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<ResampleNoneClipC<DRAIN, PR, T>, Connected<ResampleNoneClipC<DRAIN, PR, T>>, T>,
-		LineCircle<ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
-		ClipU<DRAIN, T>,
-		PR,
-		PVCircle<T>,
-		ResampleNoneClipC<DRAIN, PR, T>,
-		ResampleNoneClipU<DRAIN, PR, T>,
-		T,
-	>;
-	type T = T;
+    type OutputBounded = Builder<
+        DRAIN,
+        InterpolateCircle<T>,
+        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineCircle<ResampleNoneClipC<DRAIN, PR, T>, Connected<ResampleNoneClipC<DRAIN, PR, T>>, T>,
+        LineCircle<ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
+        ClipU<DRAIN, T>,
+        PR,
+        PVCircle<T>,
+        ResampleNoneClipC<DRAIN, PR, T>,
+        ResampleNoneClipU<DRAIN, PR, T>,
+        T,
+    >;
+    type T = T;
 
-	fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
-		let base = self.base.clip_extent(extent);
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+        let base = self.base.clip_extent(extent);
 
-		// Architecture Discussion:
-		// CLIP is generic over <.. RC, RU,..>,
-		// So a change in the resample type causes rebuilding of clip.
-		let out = Self::OutputBounded {
-			base,
-			pr: self.pr,
-			// Mutate stage
-			extent: Some(*extent),
-		};
-		// .reset();
+        // Architecture Discussion:
+        // CLIP is generic over <.. RC, RU,..>,
+        // So a change in the resample type causes rebuilding of clip.
+        let out = Self::OutputBounded {
+            base,
+            pr: self.pr,
+            // Mutate stage
+            extent: Some(*extent),
+        };
+        // .reset();
 
-		// out.reset()
-		out
-	}
+        // out.reset()
+        out
+    }
 }
