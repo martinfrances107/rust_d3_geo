@@ -56,6 +56,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
         T,
     >
 where
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

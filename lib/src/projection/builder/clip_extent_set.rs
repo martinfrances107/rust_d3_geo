@@ -36,6 +36,7 @@ use super::template::ClipU;
 // Varariantion over Resample/None as Resample is rebuilt.
 impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -83,6 +84,7 @@ where
 
 impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -131,6 +133,7 @@ where
 
 impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoClip<DRAIN, PR, T>
 where
+    DRAIN: Clone,
     PR: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -186,6 +189,7 @@ where
 
 impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
 where
+    DRAIN: Clone,
     PR: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

@@ -121,6 +121,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterNoResampling
         T,
     >
 where
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

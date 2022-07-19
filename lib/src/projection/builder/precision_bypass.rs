@@ -299,6 +299,7 @@ impl<DRAIN, PR, T> PrecisionBypass
         T,
     >
 where
+    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + FloatConst,
 {

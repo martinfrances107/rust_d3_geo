@@ -11,51 +11,54 @@ use crate::projection::RecenterWithResampling;
 use crate::projection::Scale;
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		NoClipU<DRAIN>,
-		PR,
-		PV,
-		ResampleNoClipC<DRAIN, PR, T>,
-		ResampleNoClipU<DRAIN, PR, T>,
-		T,
-	> where
-	Self: RecenterWithResampling,
-	T: CoordFloat,
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        NoClipU<DRAIN>,
+        PR,
+        PV,
+        ResampleNoClipC<DRAIN, PR, T>,
+        ResampleNoClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    Self: RecenterWithResampling,
+    T: CoordFloat,
 {
-	type T = T;
+    type T = T;
 
-	fn scale(mut self, scale: T) -> Self {
-		self.k = scale;
-		self.recenter_with_resampling()
-	}
+    fn scale(mut self, scale: T) -> Self {
+        self.k = scale;
+        self.recenter_with_resampling()
+    }
 }
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		ClipU<DRAIN, T>,
-		PR,
-		PV,
-		ResampleClipC<DRAIN, PR, T>,
-		ResampleClipU<DRAIN, PR, T>,
-		T,
-	> where
-	Self: RecenterWithResampling,
-	T: CoordFloat,
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        ClipU<DRAIN, T>,
+        PR,
+        PV,
+        ResampleClipC<DRAIN, PR, T>,
+        ResampleClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    DRAIN: Clone,
+    Self: RecenterWithResampling,
+    T: CoordFloat,
 {
-	type T = T;
+    type T = T;
 
-	fn scale(mut self, scale: T) -> Self {
-		self.k = scale;
-		self.recenter_with_resampling()
-	}
+    fn scale(mut self, scale: T) -> Self {
+        self.k = scale;
+        self.recenter_with_resampling()
+    }
 }

@@ -61,6 +61,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> Rotate
         T,
     >
 where
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

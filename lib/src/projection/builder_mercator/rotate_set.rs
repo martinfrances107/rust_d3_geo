@@ -14,53 +14,56 @@ use crate::Transform;
 use super::Builder;
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> Rotate
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		NoClipU<DRAIN>,
-		PR,
-		PV,
-		ResampleNoClipC<DRAIN, PR, T>,
-		ResampleNoClipU<DRAIN, PR, T>,
-		T,
-	> where
-	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        NoClipU<DRAIN>,
+        PR,
+        PV,
+        ResampleNoClipC<DRAIN, PR, T>,
+        ResampleNoClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	/// Sets the rotation angles as measured in degrees.
-	fn rotate(mut self, angles: &[T; 3]) -> Self {
-		self.base = self.base.rotate(angles);
-		self
-	}
+    /// Sets the rotation angles as measured in degrees.
+    fn rotate(mut self, angles: &[T; 3]) -> Self {
+        self.base = self.base.rotate(angles);
+        self
+    }
 }
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> Rotate
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		ClipU<DRAIN, T>,
-		PR,
-		PV,
-		ResampleClipC<DRAIN, PR, T>,
-		ResampleClipU<DRAIN, PR, T>,
-		T,
-	> where
-	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        ClipU<DRAIN, T>,
+        PR,
+        PV,
+        ResampleClipC<DRAIN, PR, T>,
+        ResampleClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    DRAIN: Clone,
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	/// Sets the rotation angles as measured in degrees.
-	fn rotate(mut self, angles: &[T; 3]) -> Self {
-		self.base = self.base.rotate(angles);
-		self
-	}
+    /// Sets the rotation angles as measured in degrees.
+    fn rotate(mut self, angles: &[T; 3]) -> Self {
+        self.base = self.base.rotate(angles);
+        self
+    }
 }

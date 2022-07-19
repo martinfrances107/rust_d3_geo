@@ -31,6 +31,7 @@ use super::Interpolator as InterpolatorTrait;
 #[derive(Clone)]
 pub struct Rectangle<SINK, STATE, T>
 where
+    STATE: Clone,
     T: CoordFloat,
 {
     state: STATE,
@@ -67,6 +68,7 @@ where
 
 impl<SINK, STATE, T> Debug for Rectangle<SINK, STATE, T>
 where
+    STATE: Clone,
     T: CoordFloat,
 {
     #[inline]
@@ -113,9 +115,9 @@ where
     }
 }
 
-impl<EP, SINK, T> Rectangle<SINK, Connected<SINK>, T>
+impl<SINK, T> Rectangle<SINK, Connected<SINK>, T>
 where
-    SINK: Stream<EP = EP, T = T>,
+    SINK: Clone,
     T: CoordFloat + FloatConst,
 {
     #[inline(always)]
@@ -156,7 +158,7 @@ where
 
 impl<EP, SINK, T> Rectangle<SINK, Connected<SINK>, T>
 where
-    SINK: Stream<EP = EP, T = T>,
+    SINK: Clone + Stream<EP = EP, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     #[inline]
@@ -260,6 +262,7 @@ where
 
 impl<SC, T> Connectable for Rectangle<SC, Unconnected, T>
 where
+    SC: Clone,
     T: CoordFloat + FloatConst,
 {
     type Output = Rectangle<SC, Connected<SC>, T>;
@@ -299,8 +302,7 @@ where
 
 impl<EP, SINK, T> Stream for Rectangle<SINK, Connected<SINK>, T>
 where
-    EP: Stream<EP = EP, T = T> + Default,
-    SINK: Stream<EP = EP, T = T>,
+    SINK: Clone + Stream<EP = EP, T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type EP = EP;

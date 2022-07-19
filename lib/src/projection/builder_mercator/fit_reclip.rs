@@ -10,6 +10,7 @@ use crate::stream::Streamable;
 
 impl<DRAIN, PR, T> FitReclip for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
+    DRAIN: Clone,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// f32 or f64

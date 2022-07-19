@@ -15,74 +15,77 @@ use crate::projection::AngleSet;
 use crate::Transform;
 
 impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> AngleGet
-	for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+    for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-	T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	#[inline]
-	fn get_angle(&self) -> T {
-		self.base.get_angle()
-	}
+    #[inline]
+    fn get_angle(&self) -> T {
+        self.base.get_angle()
+    }
 }
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		NoClipU<DRAIN>,
-		PR,
-		PV,
-		ResampleNoClipC<DRAIN, PR, T>,
-		ResampleNoClipU<DRAIN, PR, T>,
-		T,
-	> where
-	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        NoClipU<DRAIN>,
+        PR,
+        PV,
+        ResampleNoClipC<DRAIN, PR, T>,
+        ResampleNoClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	/// Sets the rotation angles as measured in degrees.
-	#[inline]
-	fn angle(self, angle: T) -> Self {
-		Self {
-			extent: self.extent, // post-clip extent
-			pr: self.pr,
-			base: self.base.angle(angle),
-		}
-	}
+    /// Sets the rotation angles as measured in degrees.
+    #[inline]
+    fn angle(self, angle: T) -> Self {
+        Self {
+            extent: self.extent, // post-clip extent
+            pr: self.pr,
+            base: self.base.angle(angle),
+        }
+    }
 }
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
-	for Builder<
-		DRAIN,
-		I,
-		LB,
-		LC,
-		LU,
-		ClipU<DRAIN, T>,
-		PR,
-		PV,
-		ResampleClipC<DRAIN, PR, T>,
-		ResampleClipU<DRAIN, PR, T>,
-		T,
-	> where
-	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        ClipU<DRAIN, T>,
+        PR,
+        PV,
+        ResampleClipC<DRAIN, PR, T>,
+        ResampleClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    DRAIN: Clone,
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	/// Sets the rotation angles as measured in degrees.
-	#[inline]
-	fn angle(self, angle: T) -> Self {
-		Self {
-			extent: self.extent,
-			pr: self.pr,
-			base: self.base.angle(angle),
-		}
-	}
+    /// Sets the rotation angles as measured in degrees.
+    #[inline]
+    fn angle(self, angle: T) -> Self {
+        Self {
+            extent: self.extent,
+            pr: self.pr,
+            base: self.base.angle(angle),
+        }
+    }
 }

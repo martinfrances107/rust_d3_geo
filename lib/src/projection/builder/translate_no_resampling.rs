@@ -58,6 +58,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
         T,
     >
 where
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

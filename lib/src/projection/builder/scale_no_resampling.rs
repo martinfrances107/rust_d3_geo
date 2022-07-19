@@ -51,6 +51,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
         T,
     >
 where
+    DRAIN: Clone,
     Self: RecenterNoResampling,
     T: CoordFloat,
 {

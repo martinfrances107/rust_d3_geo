@@ -29,6 +29,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
         T,
     >
 where
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     Self: RecenterWithResampling,
     T: CoordFloat + FloatConst,

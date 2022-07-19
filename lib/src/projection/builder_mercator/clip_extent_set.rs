@@ -91,6 +91,7 @@ impl<DRAIN, PR, T> ClipExtentSet
         T,
     >
 where
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -147,6 +148,7 @@ impl<DRAIN, PR, T> ClipExtentSet
         T,
     >
 where
+    DRAIN: Clone,
     PR: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

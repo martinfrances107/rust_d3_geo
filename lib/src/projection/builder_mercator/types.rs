@@ -66,7 +66,13 @@ pub type BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
     T,
 >;
 
-pub type BuilderMercatorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Builder<
+/// Visibility restricted to pub(super).
+/// The concept of NoClip in the mercator context is only useful for initialization.
+/// Once constructed all mutations end with a reclip() which can only result
+/// in something ResampleXClip...
+///
+/// So there is no reson for it to appear on any public API.
+pub(super) type BuilderMercatorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Builder<
     DRAIN,
     InterpolateAntimeridian<T>,
     LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
@@ -97,34 +103,6 @@ pub type BuilderMercatorCircleResampleClip<DRAIN, PR, T> = Builder<
     ResampleClipU<DRAIN, PR, T>,
     T,
 >;
-
-// pub type BuilderMercatorCircleResampleNoClip<DRAIN, PR, T> = Builder<
-// 	DRAIN,
-// 	InterpolateCircle<T>,
-// 	LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-// 	LineCircle<ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
-// 	LineCircle<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-// 	NoClipU<DRAIN>,
-// 	PR,
-// 	PVCircle<T>,
-// 	ResampleNoClipC<DRAIN, PR, T>,
-// 	ResampleNoClipU<DRAIN, PR, T>,
-// 	T,
-// >;
-
-// pub type BuilderMercatorCircleResampleNoneNoClip<DRAIN, PR, T> = Builder<
-// 	DRAIN,
-// 	InterpolateCircle<T>,
-// 	LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-// 	LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Connected<ResampleNoneNoClipC<DRAIN, PR, T>>, T>,
-// 	LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-// 	NoClipU<DRAIN>,
-// 	PR,
-// 	PVCircle<T>,
-// 	ResampleNoneNoClipC<DRAIN, PR, T>,
-// 	ResampleNoneNoClipU<DRAIN, PR, T>,
-// 	T,
-// >;
 
 pub type BuilderMercatorCircleResampleNoneClip<DRAIN, PR, T> = Builder<
     DRAIN,
