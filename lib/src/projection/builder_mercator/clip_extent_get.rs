@@ -1,7 +1,6 @@
 use crate::clip::PointVisible;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder_mercator::Builder;
-use crate::projection::builder_mercator::NoClipU;
 use crate::projection::AsPrimitive;
 use crate::projection::ClipExtentGet;
 use crate::projection::TransformExtent;
