@@ -8,15 +8,14 @@ use crate::projection::TranslateGet;
 use super::Builder;
 
 impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> TranslateGet
-	for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+    for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-	RU: Debug,
-	T: CoordFloat,
+    T: CoordFloat,
 {
-	type T = T;
+    type T = T;
 
-	#[inline]
-	fn get_translate(&self) -> Coordinate<T> {
-		self.base.get_translate()
-	}
+    #[inline]
+    fn get_translate(&self) -> Coordinate<T> {
+        self.base.get_translate()
+    }
 }

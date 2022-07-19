@@ -10,7 +10,6 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> TranslateGet
     for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    RU: Debug,
     T: CoordFloat,
 {
     type T = T;

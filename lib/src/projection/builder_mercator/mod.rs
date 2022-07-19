@@ -205,7 +205,7 @@ where
     PR: Clone,
     PV: Clone,
     RC: Clone,
-    RU: Debug + Clone,
+    RU: Clone,
     T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type Drain = DRAIN;
