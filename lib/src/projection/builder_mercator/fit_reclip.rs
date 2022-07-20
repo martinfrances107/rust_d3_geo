@@ -6,10 +6,14 @@ use num_traits::FloatConst;
 use crate::path::bounds::Bounds;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
 use crate::projection::builder_mercator::FitReclip;
+use crate::projection::fit_reclip::fit_extent_reclip;
+use crate::projection::fit_reclip::fit_height_reclip;
 use crate::projection::fit_reclip::fit_size_reclip;
+use crate::projection::fit_reclip::fit_width_reclip;
 use crate::projection::TransformExtent;
 use crate::stream::Streamable;
 use crate::Transform;
+
 impl<PR, T> FitReclip for BuilderMercatorAntimeridianResampleClip<Bounds<T>, PR, T>
 where
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
@@ -28,8 +32,7 @@ where
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {
-        // fit_extent_adjust(self, extent, object)
-        todo!();
+        fit_extent_reclip(self, extent, object)
     }
 
     #[inline]
@@ -45,8 +48,7 @@ where
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {
-        todo!();
-        // fit_width_adjust(self, w, object)
+        fit_width_reclip(self, w, object)
     }
 
     #[inline]
@@ -54,7 +56,6 @@ where
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {
-        todo!();
-        // fit_height_adjust(self, h, object)
+        fit_height_reclip(self, h, object)
     }
 }

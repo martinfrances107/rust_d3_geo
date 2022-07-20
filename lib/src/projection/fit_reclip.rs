@@ -38,7 +38,6 @@ use crate::stream::Streamable;
 use crate::Transform;
 
 use super::ClipExtentAdjust;
-use super::ClipExtentBounded;
 
 pub(super) fn fit_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
     builder: B,
@@ -173,4 +172,109 @@ where
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fit_extent_reclip(builder, [[T::zero(), T::zero()], size], object)
+}
+
+pub(super) fn fit_width_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+    builder: B,
+    width: T,
+    object: &impl Streamable<T = T>,
+) -> B
+where
+    B: Build<
+            Drain = Bounds<T>,
+            I = I,
+            LB = LB,
+            LC = LC,
+            LU = LU,
+            PCNU = ClipU<Bounds<T>, T>,
+            PR = PR,
+            PV = PV,
+            RC = RC,
+            RU = RU,
+            T = T,
+        > + Clone
+        + ClipExtentGet<T = T>
+        + ClipExtentAdjust<T = T>
+        + Scale<T = T>
+        + Translate<T = T>,
+    I: Clone + Interpolator<T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
+    PV: Clone + PointVisible<T = T>,
+    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+    let two = T::from(2.0_f64).unwrap();
+    let one_five_zero = T::from(150_f64).unwrap();
+
+    fit_reclip(
+        builder,
+        Box::new(move |b: [Coordinate<T>; 2], builder: B| {
+            let w = width;
+            let k = w / (b[1].x - b[0].x);
+            let x = (w - k * (b[1].x + b[0].x)) / two;
+            let y = -k * b[0].y;
+
+            builder
+                .scale(one_five_zero * k)
+                .translate(&Coordinate { x, y })
+        }),
+        object,
+    )
+}
+
+pub(super) fn fit_height_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+    builder: B,
+    height: T,
+    object: &impl Streamable<T = T>,
+) -> B
+where
+    PR: Clone + Transform<T = T>,
+    B: Build<
+            Drain = Bounds<T>,
+            I = I,
+            LB = LB,
+            LC = LC,
+            LU = LU,
+            PCNU = ClipU<Bounds<T>, T>,
+            PR = PR,
+            PV = PV,
+            RC = RC,
+            RU = RU,
+            T = T,
+        > + Clone
+        + ClipExtentGet<T = T>
+        + ClipExtentAdjust<T = T>
+        + Scale<T = T>
+        + Translate<T = T>,
+    I: Clone + Interpolator<T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
+    PV: Clone + PointVisible<T = T>,
+    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+{
+    let two = T::from(2.0_f64).unwrap();
+    let one_five_zero = T::from(150_f64).unwrap();
+
+    fit_reclip(
+        builder,
+        Box::new(move |b: [Coordinate<T>; 2], builder: B| {
+            let h = height;
+            let k = h / (b[1].y - b[0].y);
+            let x = -k * b[0].x;
+            let y = (h - k * (b[1].y + b[0].y)) / two;
+
+            builder
+                .scale(one_five_zero * k)
+                .translate(&Coordinate { x, y })
+        }),
+        object,
+    )
 }
