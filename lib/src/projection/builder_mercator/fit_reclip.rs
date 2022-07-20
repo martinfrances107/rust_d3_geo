@@ -3,19 +3,21 @@ use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::path::bounds::Bounds;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use crate::projection::builder_mercator::FitReclip;
+use crate::projection::fit_reclip::fit_size_reclip;
+use crate::projection::TransformExtent;
 use crate::stream::Streamable;
-
-impl<DRAIN, PR, T> FitReclip for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
+use crate::Transform;
+impl<PR, T> FitReclip for BuilderMercatorAntimeridianResampleClip<Bounds<T>, PR, T>
 where
-    DRAIN: Clone,
+    PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// f32 or f64
     type T = T;
-    type Output = BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>;
+    type Output = BuilderMercatorAntimeridianResampleClip<Bounds<T>, PR, T>;
 
     #[inline]
     fn fit_extent_reclip(
@@ -35,8 +37,7 @@ where
     where
         Self::T: AsPrimitive<T> + CoordFloat,
     {
-        todo!();
-        // fit_size_adjust(self, size, object)
+        fit_size_reclip(self, size, object)
     }
 
     #[inline]

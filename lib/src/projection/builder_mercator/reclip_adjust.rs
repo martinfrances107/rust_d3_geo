@@ -10,13 +10,11 @@ use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
 use crate::projection::TransformExtent;
 use crate::rot::rotate_radians;
-
 use crate::Transform;
 
 use super::Builder;
 use super::ReclipAdjust;
 
-// impl<DRAIN, PR, T> ReclipAdjust for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ReclipAdjust
     for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where

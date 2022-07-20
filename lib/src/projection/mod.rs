@@ -44,6 +44,7 @@ mod azimuthal;
 /// Helper functions found measuring the extent, width or height.
 mod fit_clip;
 mod fit_no_clip;
+mod fit_reclip;
 
 type FitBounds<B, T> = Box<dyn Fn([Coordinate<T>; 2], B) -> B>;
 

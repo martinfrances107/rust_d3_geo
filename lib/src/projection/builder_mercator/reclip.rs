@@ -4,7 +4,6 @@ use num_traits::FloatConst;
 
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
-
 use crate::projection::Build;
 use crate::projection::ClipExtentSet;
 use crate::projection::RotateGet;
@@ -15,10 +14,9 @@ use crate::Coordinate;
 use crate::Transform;
 
 use super::types::BuilderMercatorAntimeridianResampleNoneClip;
-use super::types::BuilderMercatorAntimeridianResampleNoneNoClip;
 use super::Reclip;
 
-impl<DRAIN, PR, T> Reclip for BuilderMercatorAntimeridianResampleNoneNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> Reclip for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
@@ -61,9 +59,10 @@ where
                 },
             ],
         };
-
+        let base = self.base;
         Self::Output {
-            base: self.base.clip_extent(&ce),
+            base,
+            // base: self.base.clip_extent(&ce),
             pr: self.pr,
             extent: Some(ce),
         }
