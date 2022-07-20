@@ -14,7 +14,7 @@ pub mod precision_bypass;
 pub mod precision_get;
 pub mod precision_set;
 pub mod reclip;
-pub mod reclip_adjust;
+pub mod reclip_convert;
 pub mod reflect_get;
 pub mod reflect_set;
 pub mod rotate_get;
@@ -153,14 +153,14 @@ pub trait TranslateReclip {
 }
 
 /// Implicit conversion of the PCN from Identity to Rectangle.
-pub trait Reclip {
+/// Restricted visibility - it is only for initialization.
+pub(super) trait ReclipConvert {
     type Output;
-    fn reclip(self) -> Self::Output;
+    fn reclip_convert(self) -> Self::Output;
 }
 
-/// Applies only when the PCN is Rectangle.
-trait ReclipAdjust {
-    fn reclip_adjust(self) -> Self;
+pub trait Reclip {
+    fn reclip(self) -> Self;
 }
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
@@ -179,7 +179,7 @@ impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     DRAIN: Default + Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     /// Wrap a default projector and provides mercator specific overrides.
     pub fn new(pr: PR) -> Self {
@@ -206,7 +206,7 @@ where
     PV: Clone,
     RC: Clone,
     RU: Clone,
-    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type Drain = DRAIN;
     type I = I;

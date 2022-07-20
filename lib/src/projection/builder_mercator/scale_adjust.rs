@@ -1,27 +1,79 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
+use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::ResampleClipC;
+use crate::projection::builder::template::ResampleClipU;
+use crate::projection::builder::template::ResampleNoneClipC;
+use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::Scale;
 use crate::projection::TransformExtent;
-use crate::stream::Stream;
 use crate::Transform;
 
-use super::ReclipAdjust;
+use super::Builder;
+use super::Reclip;
 
-impl<DRAIN, PR, T> Scale for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        ClipU<DRAIN, T>,
+        PR,
+        PV,
+        ResampleNoneClipC<DRAIN, PR, T>,
+        ResampleNoneClipU<DRAIN, PR, T>,
+        T,
+    >
 where
-	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    DRAIN: Clone,
+    I: Clone,
+    LC: Clone,
+    LU: Clone,
+    PV: Clone,
+    ClipU<DRAIN, T>: Clone,
+    PR: Clone + Transform<T = T> + TransformExtent<T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	fn scale(mut self, scale: T) -> Self {
-		self.base = self.base.scale(scale);
-		self.reclip_adjust()
-	}
+    fn scale(mut self, scale: T) -> Self {
+        self.base = self.base.scale(scale);
+        self.reclip()
+    }
+}
+
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
+    for Builder<
+        DRAIN,
+        I,
+        LB,
+        LC,
+        LU,
+        ClipU<DRAIN, T>,
+        PR,
+        PV,
+        ResampleClipC<DRAIN, PR, T>,
+        ResampleClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    DRAIN: Clone,
+    I: Clone,
+    LC: Clone,
+    LU: Clone,
+    PV: Clone,
+    ClipU<DRAIN, T>: Clone,
+    PR: Clone + Transform<T = T> + TransformExtent<T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+{
+    type T = T;
+
+    fn scale(mut self, scale: T) -> Self {
+        self.base = self.base.scale(scale);
+        self.reclip()
+    }
 }

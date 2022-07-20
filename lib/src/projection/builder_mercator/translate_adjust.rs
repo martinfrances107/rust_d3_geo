@@ -12,7 +12,7 @@ use crate::projection::Translate;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::ReclipAdjust;
+use super::Reclip;
 
 impl<DRAIN, PR, T> Translate for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
@@ -24,7 +24,7 @@ where
 
     fn translate(mut self, t: &Coordinate<T>) -> Self {
         self.base = self.base.translate(t);
-        self.reclip_adjust()
+        self.reclip()
     }
 }
 
@@ -38,6 +38,6 @@ where
 
     fn translate(mut self, t: &Coordinate<T>) -> Self {
         self.base = self.base.translate(t);
-        self.reclip_adjust()
+        self.reclip()
     }
 }

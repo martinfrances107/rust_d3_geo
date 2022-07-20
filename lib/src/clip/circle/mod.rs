@@ -9,6 +9,7 @@ pub mod pv;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
+use geo::Coordinate;
 use interpolate::Interpolate;
 use line::Line;
 use num_traits::FloatConst;
@@ -37,15 +38,21 @@ where
     let cr = radius.cos();
     let small_radius = cr > T::zero();
     let start = if small_radius {
-        [T::zero(), -radius]
+        Coordinate {
+            x: T::zero(),
+            y: -radius,
+        }
     } else {
-        [-T::PI(), radius - T::PI()]
+        Coordinate {
+            x: -T::PI(),
+            y: radius - T::PI(),
+        }
     };
 
     Clip::new(
         Interpolate::new(radius),
         Line::new(radius),
         PV::new(radius),
-        start.into(),
+        start,
     )
 }

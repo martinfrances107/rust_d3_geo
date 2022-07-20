@@ -171,12 +171,9 @@ mod graticule_test {
             })
             .collect::<Vec<LineString>>();
 
-        lines.sort_by(|a, b| {
-            dbg!(a);
-            dbg!(b);
-            a[0].x.partial_cmp(&b[0].x).unwrap()
-        });
+        lines.sort_by(|a, b| a[0].x.partial_cmp(&b[0].x).unwrap());
 
+        // TODO must complete...
         // let line0 = lines[0].0[0].x;
         // assert_eq!(line0, -80_f64);
     }

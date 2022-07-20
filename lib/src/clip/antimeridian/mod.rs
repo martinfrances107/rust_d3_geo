@@ -29,19 +29,15 @@ type ClipAntimeridianU<RC, T> = Clip<
 >;
 
 /// Returns a clip setup for antimeridian clipping.
+#[inline]
 pub fn gen_clip_antimeridian<PCNU, RC, T>() -> ClipAntimeridianU<RC, T>
 where
     T: CoordFloat + FloatConst,
 {
-    let interpolate = Interpolate::default();
-    let clip_line: Line<RC, Unconnected, T> = Line::default();
-    let pv = PV::default();
-    let out = Clip::new(
-        interpolate,
-        clip_line,
-        pv,
+    Clip::new(
+        Interpolate::default(),
+        Line::default(),
+        PV::default(),
         [-T::PI(), -T::FRAC_PI_2()].into(),
-    );
-
-    out
+    )
 }

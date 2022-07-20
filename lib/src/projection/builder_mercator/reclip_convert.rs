@@ -3,32 +3,26 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::ClipU;
 use crate::projection::Build;
-use crate::projection::ClipExtentAdjust;
+use crate::projection::ClipExtentSet;
 use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
 use crate::projection::TransformExtent;
 use crate::rot::rotate_radians;
 use crate::Transform;
 
-use super::Builder;
-use super::ReclipAdjust;
+use super::types::BuilderMercatorAntimeridianResampleClip;
+use super::types::BuilderMercatorAntimeridianResampleNoClip;
+use super::ReclipConvert;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ReclipAdjust
-    for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+impl<DRAIN, PR, T> ReclipConvert for BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
-    I: Clone,
-    LC: Clone,
-    LU: Clone,
-    PV: Clone,
-    RC: Clone,
-    RU: Clone,
-    ClipU<DRAIN, T>: Clone,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    fn reclip_adjust(mut self) -> Self {
+    type Output = BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>;
+    fn reclip_convert(self) -> Self::Output {
         let k = T::PI() * self.get_scale();
 
         let rotate_raw = self.base.get_rotate();
@@ -63,8 +57,11 @@ where
                 },
             ],
         };
-
-        self.base = self.base.clip_extent_adjust(&ce);
-        self
+        let base = self.base.clip_extent(&ce);
+        Self::Output {
+            pr: self.pr,
+            base,
+            extent: self.extent,
+        }
     }
 }

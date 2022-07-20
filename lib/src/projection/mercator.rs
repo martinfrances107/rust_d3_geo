@@ -7,7 +7,8 @@ use num_traits::float::FloatConst;
 use num_traits::AsPrimitive;
 
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-use crate::projection::builder_mercator::Reclip;
+use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
+use crate::projection::builder_mercator::ReclipConvert;
 use crate::projection::Scale;
 use crate::stream::Stream;
 use crate::Transform;
@@ -42,9 +43,11 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        let default = MercatorBuilder::new(Mercator::default()).reclip();
-        let out = default.scale(T::from(961_f64 / f64::TAU()).unwrap());
-        out
+        let default: BuilderMercatorAntimeridianResampleNoClip<DRAIN, Mercator<DRAIN, T>, T> =
+            MercatorBuilder::new(Mercator::default());
+        default
+            .reclip_convert()
+            .scale(T::from(961_f64 / f64::TAU()).unwrap())
     }
 }
 
@@ -54,7 +57,6 @@ where
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;
-
     #[inline]
     fn transform_extent(
         self,

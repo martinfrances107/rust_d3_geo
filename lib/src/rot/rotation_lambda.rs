@@ -22,7 +22,7 @@ fn forward_rotation_lambda<T: CoordFloat + FloatConst>(
     Coordinate { x: lambda, y: p.y }
 }
 
-impl<'a, T: CoordFloat + FloatConst> RotationLambda<T> {
+impl<T: CoordFloat + FloatConst> RotationLambda<T> {
     /// Constructor.
     #[inline]
     pub fn new(delta_lambda: T) -> RotationLambda<T> {

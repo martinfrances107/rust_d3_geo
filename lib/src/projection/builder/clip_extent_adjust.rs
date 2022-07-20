@@ -8,19 +8,19 @@ use super::template::ClipU;
 use super::Builder;
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentAdjust
-	for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+    for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
 where
-	T: CoordFloat,
+    T: CoordFloat,
 {
-	type T = T;
+    type T = T;
 
-	fn clip_extent_adjust(mut self, extent: &[Coordinate<T>; 2]) -> Self {
-		self.x0 = Some(extent[0].x);
-		self.y0 = Some(extent[0].y);
-		self.x1 = Some(extent[1].x);
-		self.y1 = Some(extent[1].y);
-		self.postclip = Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y);
-		// out.reset()
-		self
-	}
+    fn clip_extent_adjust(mut self, extent: &[Coordinate<T>; 2]) -> Self {
+        self.x0 = Some(extent[0].x);
+        self.y0 = Some(extent[0].y);
+        self.x1 = Some(extent[1].x);
+        self.y1 = Some(extent[1].y);
+        self.postclip = Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y);
+        // out.reset()
+        self
+    }
 }
