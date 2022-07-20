@@ -18,84 +18,69 @@ use crate::Transform;
 use super::builder::Builder;
 use super::ProjectionRawBase;
 
-/// Orthographic
-///
-/// Root transform.
-/// Used to define a projection builder.
-#[derive(Clone, Copy, Debug)]
+/// Projection definition.
+#[derive(Clone, Copy, Default, Debug)]
 pub struct Orthographic<DRAIN, T> {
-	p_drain: PhantomData<DRAIN>,
-	p_t: PhantomData<T>,
-}
-
-impl<DRAIN, T> Default for Orthographic<DRAIN, T>
-where
-	T: CoordFloat + FloatConst,
-{
-	fn default() -> Self {
-		Orthographic {
-			p_drain: PhantomData::<DRAIN>,
-			p_t: PhantomData::<T>,
-		}
-	}
+    p_drain: PhantomData<DRAIN>,
+    p_t: PhantomData<T>,
 }
 
 impl<DRAIN, T> ProjectionRawBase for Orthographic<DRAIN, T>
 where
-	DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-	T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
-	type Builder = BuilderCircleResampleNoClip<DRAIN, Orthographic<DRAIN, T>, T>;
+    type Builder = BuilderCircleResampleNoClip<DRAIN, Orthographic<DRAIN, T>, T>;
 
-	#[inline]
-	fn builder() -> Self::Builder {
-		let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>();
-		Builder::new(clip, Orthographic::default())
-			.scale(T::from(249.5_f64).unwrap())
-			.clip_angle(T::from(90_f64 + EPSILON).unwrap())
-	}
+    #[inline]
+    fn builder() -> Self::Builder {
+        let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>();
+        Builder::new(clip, Orthographic::default())
+            .scale(T::from(249.5_f64).unwrap())
+            .clip_angle(T::from(90_f64 + EPSILON).unwrap())
+    }
 }
 
 impl<DRAIN, T> Orthographic<DRAIN, T>
 where
-	T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
-	#[inline]
-	fn angle(z: T) -> T {
-		asin(z)
-	}
+    #[inline]
+    fn angle(z: T) -> T {
+        asin(z)
+    }
 
-	fn azimuthal_invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-		let z = (p.x * p.x + p.y * p.y).sqrt();
-		let c = Orthographic::<DRAIN, T>::angle(z);
-		let sc = c.sin();
-		let cc = c.cos();
+    fn azimuthal_invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        let z = (p.x * p.x + p.y * p.y).sqrt();
+        let c = Orthographic::<DRAIN, T>::angle(z);
+        let sc = c.sin();
+        let cc = c.cos();
 
-		let ret_x = (p.x * sc).atan2(z * cc);
+        let ret_x = (p.x * sc).atan2(z * cc);
 
-		let y_out = if z == T::zero() { z } else { p.y * sc / z };
-		let ret_y = asin(y_out);
+        let y_out = if z == T::zero() { z } else { p.y * sc / z };
+        let ret_y = asin(y_out);
 
-		Coordinate { x: ret_x, y: ret_y }
-	}
+        Coordinate { x: ret_x, y: ret_y }
+    }
 }
 
 impl<DRAIN, T> Transform for Orthographic<DRAIN, T>
 where
-	T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	#[inline]
-	fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-		Coordinate {
-			x: p.y.cos() * p.x.sin(),
-			y: p.y.sin(),
-		}
-	}
+    #[inline]
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        Coordinate {
+            x: p.y.cos() * p.x.sin(),
+            y: p.y.sin(),
+        }
+    }
 
-	#[inline]
-	fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-		self.azimuthal_invert(p)
-	}
+    #[inline]
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        self.azimuthal_invert(p)
+    }
 }

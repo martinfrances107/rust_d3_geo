@@ -18,26 +18,17 @@ use super::azimuthal::azimuthal_invert;
 use super::builder::Builder;
 use super::ProjectionRawBase;
 
-/// Gnomic
-#[derive(Clone, Debug)]
+/// Projection definition.
+#[derive(Clone, Default, Debug)]
 pub struct Gnomic<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Default for Gnomic<DRAIN, T> {
-    fn default() -> Self {
-        Gnomic {
-            p_drain: PhantomData::<DRAIN>,
-            p_t: PhantomData::<T>,
-        }
-    }
-}
-
 impl<DRAIN, T> ProjectionRawBase for Gnomic<DRAIN, T>
 where
     DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     type Builder = BuilderCircleResampleNoClip<DRAIN, Gnomic<DRAIN, T>, T>;
 

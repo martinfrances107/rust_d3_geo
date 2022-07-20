@@ -17,7 +17,7 @@ use super::builder_mercator::Builder as MercatorBuilder;
 use super::ProjectionRawBase;
 use super::TransformExtent;
 
-/// Defines a projection.
+/// Projection definition.
 #[derive(Clone, Copy, Debug)]
 pub struct Mercator<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
@@ -36,7 +36,7 @@ impl<DRAIN, T> Default for Mercator<DRAIN, T> {
 
 impl<DRAIN, T> ProjectionRawBase for Mercator<DRAIN, T>
 where
-    DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type Builder = BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN, T>, T>;
@@ -53,7 +53,6 @@ where
 
 impl<DRAIN, T> TransformExtent for Mercator<DRAIN, T>
 where
-    DRAIN: Clone,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     type T = T;

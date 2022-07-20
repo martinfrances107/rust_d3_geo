@@ -29,7 +29,13 @@ mod path_bounds_test {
 
     #[inline]
     fn equirectangular<
-        T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst,
+        T: AbsDiffEq<Epsilon = T>
+            + AsPrimitive<T>
+            + AddAssign
+            + CoordFloat
+            + Default
+            + Display
+            + FloatConst,
     >() -> ProjectorAntimeridianResampleNoneNoClip<Bounds<T>, Equirectangular<Bounds<T>, T>, T>
     {
         Equirectangular::builder()

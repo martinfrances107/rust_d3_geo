@@ -37,7 +37,7 @@ mod path_string_test {
     fn equirectangular<T>(
     ) -> ProjectorAntimeridianResampleNoneNoClip<PathString<T>, Equirectangular<PathString<T>, T>, T>
     where
-        T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
     {
         Equirectangular::builder()
             .scale(T::from(900f64 / PI).unwrap())

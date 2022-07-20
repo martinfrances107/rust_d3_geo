@@ -17,32 +17,22 @@ use super::builder::template::NoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;
 
-/// Why the Phantom Data is required here...
+/// Projection definition.
+///
+/// Why is the Phantom Data is required here...
 ///
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Stereographic<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Default for Stereographic<DRAIN, T>
-where
-    T: CoordFloat + FloatConst,
-{
-    fn default() -> Self {
-        Stereographic {
-            p_drain: PhantomData::<DRAIN>,
-            p_t: PhantomData::<T>,
-        }
-    }
-}
-
 impl<DRAIN, T> ProjectionRawBase for Stereographic<DRAIN, T>
 where
     DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     type Builder = BuilderCircleResampleNoClip<DRAIN, Stereographic<DRAIN, T>, T>;
 

@@ -45,6 +45,7 @@ mod path_centroid_test {
             + AddAssign<T>
             + AsPrimitive<T>
             + CoordFloat
+            + Default
             + Display
             + FloatConst,
     {

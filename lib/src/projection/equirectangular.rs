@@ -16,26 +16,16 @@ use super::ProjectionRawBase;
 
 /// Equirectangular
 /// Used to define a projection builder.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct Equirectangular<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Default for Equirectangular<DRAIN, T> {
-    fn default() -> Self {
-        Self {
-            p_drain: PhantomData::<DRAIN>,
-            p_t: PhantomData::<T>,
-        }
-    }
-}
-
 impl<DRAIN, T> ProjectionRawBase for Equirectangular<DRAIN, T>
 where
-    // DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-    DRAIN: Clone,
-    T: CoordFloat + FloatConst,
+    DRAIN: Clone + Default,
+    T: CoordFloat + Default + FloatConst,
 {
     type Builder = BuilderAntimeridianResampleNoClip<DRAIN, Equirectangular<DRAIN, T>, T>;
 
@@ -53,9 +43,12 @@ where
     /// f64 or f32.
     type T = T;
 
+    #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         *p
     }
+
+    #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         *p
     }

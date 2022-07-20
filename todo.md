@@ -53,6 +53,9 @@ with links to the more detailed mini-apps.
 
 * Detail why Feature and Feactue collection is complicated.
 
+* cargo docs:
+  Some traits are missing description.
+
 * Define graticule10 as an alias for Graticule::default().
  -- the code in examples looks scrappy.
 

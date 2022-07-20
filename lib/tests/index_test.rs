@@ -34,7 +34,13 @@ mod index_test {
     #[inline]
     fn equirectangular<
         EP: Clone + Stream<EP = EP, T = T> + Debug + Default,
-        T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + AddAssign + CoordFloat + Display + FloatConst,
+        T: AbsDiffEq<Epsilon = T>
+            + AsPrimitive<T>
+            + AddAssign
+            + CoordFloat
+            + Default
+            + Display
+            + FloatConst,
     >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<EP, T>, T> {
         Equirectangular::builder()
             .scale(T::from(900f64 / PI).unwrap())
