@@ -105,14 +105,17 @@ where
         self
     }
 
+    #[inline]
     fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
         (self.point_fn)(self, p);
     }
 
+    #[inline]
     fn line_start(&mut self) {
         (self.line_start_fn)(self);
     }
 
+    #[inline]
     fn line_end(&mut self) {
         (self.line_end_fn)(self);
     }

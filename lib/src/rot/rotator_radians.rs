@@ -25,6 +25,7 @@ where
     T: CoordFloat,
 {
     /// Constructor.
+    #[inline]
     pub fn new(rotate: RotateRadians<T>) -> Self {
         Self {
             state: Unconnected,
@@ -37,6 +38,7 @@ impl<T> RotatorRadians<Unconnected, T>
 where
     T: CoordFloat + FloatConst,
 {
+    #[inline]
     pub fn connect<SINK>(self, sink: SINK) -> RotatorRadians<Connected<SINK>, T> {
         RotatorRadians {
             state: Connected { sink },

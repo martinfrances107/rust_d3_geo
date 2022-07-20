@@ -9,6 +9,7 @@ pub const EPSILON2: f64 = 1e-12;
 /// RUST and JS verison of this funcion are identical.
 /// Here outside the range -1 < x < 1 we return +/- PI/2
 /// as opposed to NAN.
+#[inline]
 pub fn acos<T>(x: T) -> T
 where
     T: CoordFloat + FloatConst,
@@ -25,6 +26,7 @@ where
 /// RUST and JS verison of this funcion are identical.
 /// Here outside the range -1 < x < 1 we return +/- PI/2
 /// as opposed to NAN.
+#[inline]
 pub fn asin<T>(x: T) -> T
 where
     T: CoordFloat + FloatConst,

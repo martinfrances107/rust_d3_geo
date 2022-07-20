@@ -47,6 +47,7 @@ impl<T> Default for Area<T>
 where
     T: CoordFloat,
 {
+    #[inline]
     fn default() -> Self {
         Self {
             lambda00: T::nan(),
@@ -140,6 +141,7 @@ where
     type EP = Self;
     type T = T;
 
+    #[inline]
     fn get_endpoint<'a>(&mut self) -> &mut Self {
         self
     }

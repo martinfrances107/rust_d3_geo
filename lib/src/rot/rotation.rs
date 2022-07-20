@@ -22,6 +22,7 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
+    #[inline]
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
         Self {
             rotate: rotate_radians([

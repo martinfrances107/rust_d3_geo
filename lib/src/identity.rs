@@ -22,6 +22,7 @@ impl<SINK, STATE> Debug for Identity<SINK, STATE>
 where
     STATE: Debug,
 {
+    #[inline]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_tuple("").field(&self.state).finish()
     }
@@ -31,6 +32,7 @@ impl<SINK, STATE> Clone for Identity<SINK, STATE>
 where
     STATE: Clone,
 {
+    #[inline]
     fn clone(&self) -> Self {
         Self {
             p_sink: PhantomData::<SINK>,
@@ -42,6 +44,7 @@ where
 /// Not auto deriving here - it does not makes sense to provide
 /// a default for the connected state.
 impl<SINK> Default for Identity<SINK, Unconnected> {
+    #[inline]
     fn default() -> Self {
         Self {
             p_sink: PhantomData::<SINK>,
@@ -53,6 +56,8 @@ impl<SINK> Default for Identity<SINK, Unconnected> {
 impl<SINK> Connectable for Identity<SINK, Unconnected> {
     type SC = SINK;
     type Output = Identity<SINK, Connected<Self::SC>>;
+
+    #[inline]
     fn connect(self, sink: Self::SC) -> Self::Output {
         Identity {
             p_sink: PhantomData::<SINK>,

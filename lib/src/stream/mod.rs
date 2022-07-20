@@ -35,6 +35,7 @@ pub struct Connected<SINK> {
 
 impl<SINK> ConnectedState for Connected<SINK> {
     type Sink = SINK;
+
     #[inline]
     fn get_sink(&mut self) -> &mut Self::Sink {
         &mut self.sink
@@ -57,6 +58,7 @@ pub trait Connectable {
 /// on the unconnected state.
 pub trait ConnectedState {
     type Sink;
+
     fn get_sink(&mut self) -> &mut Self::Sink;
 }
 

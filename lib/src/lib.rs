@@ -69,6 +69,7 @@ where
 
     /// Transform a 2-D point to another.
     fn transform(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;
+
     /// Reversed the transform.
     fn invert(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;
 }

@@ -93,6 +93,7 @@ where
         self.Z0 += (z - self.Z0) / self.W0;
     }
 
+    #[inline]
     fn centroid_line_end(&mut self) {
         self.point_fn = Self::centroid_point;
     }
@@ -248,6 +249,7 @@ where
     type EP = Self;
     type T = T;
 
+    #[inline]
     fn get_endpoint(&mut self) -> &mut Self {
         self
     }

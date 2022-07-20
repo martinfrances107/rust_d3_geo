@@ -30,6 +30,7 @@ impl<T> Debug for RotateRadians<T>
 where
     T: Debug,
 {
+    #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             RotateRadians::C(_c) => {
@@ -50,6 +51,7 @@ impl<T> Clone for RotateRadians<T>
 where
     T: CoordFloat,
 {
+    #[inline]
     fn clone(&self) -> Self {
         match self {
             RotateRadians::C(c) => RotateRadians::C(Box::new(*c.clone())),
@@ -66,6 +68,7 @@ where
 {
     type T = T;
 
+    #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
             RotateRadians::C(c) => c.transform(p),
@@ -75,6 +78,7 @@ where
         }
     }
 
+    #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
             RotateRadians::C(c) => c.invert(p),

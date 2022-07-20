@@ -36,6 +36,7 @@ impl<T> RenderingContext2d<T> for TestContext
 where
     T: CoordFloat,
 {
+    #[inline]
     fn arc(&mut self, p: &Coordinate<T>, r: T, _start: T, _stop: T) {
         {
             self.buffer.push(format!(
@@ -46,17 +47,24 @@ where
             ));
         }
     }
+
+    #[inline]
     fn move_to(&mut self, p: &Coordinate<T>) {
         self.buffer
             .push(format!("type: moveTo {:?}, {:?}", p.x.round(), p.y.round()));
     }
+
+    #[inline]
     fn line_to(&mut self, p: &Coordinate<T>) {
         self.buffer
             .push(format!("type: lineTo {:?}, {:?}", p.x.round(), p.y.round()));
     }
+
+    #[inline]
     fn close_path(&mut self) {
         self.buffer.push(format!("closePath"));
     }
+
     fn rect(&mut self, p: &Coordinate<T>, w: T, h: T) {
         todo!("test do not use this.");
     }
