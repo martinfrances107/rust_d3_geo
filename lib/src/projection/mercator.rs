@@ -18,26 +18,16 @@ use super::ProjectionRawBase;
 use super::TransformExtent;
 
 /// Projection definition.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct Mercator<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> Default for Mercator<DRAIN, T> {
-    #[inline]
-    fn default() -> Self {
-        Mercator {
-            p_drain: PhantomData::<DRAIN>,
-            p_t: PhantomData::<T>,
-        }
-    }
-}
-
 impl<DRAIN, T> ProjectionRawBase for Mercator<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + FloatConst,
 {
     type Builder = BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN, T>, T>;
 

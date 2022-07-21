@@ -50,7 +50,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 where
     DRAIN: Clone,
     PR: Clone,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Output = Builder<
         DRAIN,
@@ -139,7 +139,7 @@ impl<DRAIN, PR, T> PrecisionBypass
 where
     DRAIN: Clone,
     PR: Clone,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Output = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;

@@ -27,104 +27,106 @@ use super::Builder;
 // vary by LineClip,
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
-	for Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			None<PR, PCNC, Connected<PCNC>, T>,
-			Connected<None<PR, PCNC, Connected<PCNC>, T>>,
-			T,
-		>,
-		LineAntimeridian<None<PR, PCNC, Connected<PCNC>, T>, Unconnected, T>,
-		PCNU,
-		PR,
-		PVAntimeridian<T>,
-		None<PR, PCNC, Connected<PCNC>, T>,
-		None<PR, PCNC, Unconnected, T>,
-		T,
-	> where
-	DRAIN: Default + Stream<EP = DRAIN, T = T>,
+    for Builder<
+        DRAIN,
+        InterpolateAntimeridian<T>,
+        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineAntimeridian<
+            None<PR, PCNC, Connected<PCNC>, T>,
+            Connected<None<PR, PCNC, Connected<PCNC>, T>>,
+            T,
+        >,
+        LineAntimeridian<None<PR, PCNC, Connected<PCNC>, T>, Unconnected, T>,
+        PCNU,
+        PR,
+        PVAntimeridian<T>,
+        None<PR, PCNC, Connected<PCNC>, T>,
+        None<PR, PCNC, Unconnected, T>,
+        T,
+    >
+where
+    DRAIN: Default + Stream<EP = DRAIN, T = T>,
 
-	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + FloatConst,
 {
-	type Output = Builder<
-		DRAIN,
-		InterpolateAntimeridian<T>,
-		LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineAntimeridian<
-			Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-			Connected<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
-			T,
-		>,
-		LineAntimeridian<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
-		PCNU,
-		PR,
-		PVAntimeridian<T>,
-		Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-		Resample<PR, PCNC, Unconnected, T>,
-		T,
-	>;
-	type T = T;
+    type Output = Builder<
+        DRAIN,
+        InterpolateAntimeridian<T>,
+        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineAntimeridian<
+            Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
+            Connected<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
+            T,
+        >,
+        LineAntimeridian<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
+        PCNU,
+        PR,
+        PVAntimeridian<T>,
+        Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
+        Resample<PR, PCNC, Unconnected, T>,
+        T,
+    >;
+    type T = T;
 
-	#[inline]
-	fn precision(self, delta: &T) -> Self::Output {
-		Self::Output {
-			extent: self.extent,
-			pr: self.pr,
-			base: self.base.precision(delta),
-		}
-	}
+    #[inline]
+    fn precision(self, delta: &T) -> Self::Output {
+        Self::Output {
+            extent: self.extent,
+            pr: self.pr,
+            base: self.base.precision(delta),
+        }
+    }
 }
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
-	for Builder<
-		DRAIN,
-		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<
-			None<PR, PCNC, Connected<PCNC>, T>,
-			Connected<None<PR, PCNC, Connected<PCNC>, T>>,
-			T,
-		>,
-		LineCircle<None<PR, PCNC, Connected<PCNC>, T>, Unconnected, T>,
-		PCNU,
-		PR,
-		PVCircle<T>,
-		None<PR, PCNC, Connected<PCNC>, T>,
-		None<PR, PCNC, Unconnected, T>,
-		T,
-	> where
-	DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
-	PR: Clone + Transform<T = T>,
-	T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    for Builder<
+        DRAIN,
+        InterpolateCircle<T>,
+        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineCircle<
+            None<PR, PCNC, Connected<PCNC>, T>,
+            Connected<None<PR, PCNC, Connected<PCNC>, T>>,
+            T,
+        >,
+        LineCircle<None<PR, PCNC, Connected<PCNC>, T>, Unconnected, T>,
+        PCNU,
+        PR,
+        PVCircle<T>,
+        None<PR, PCNC, Connected<PCNC>, T>,
+        None<PR, PCNC, Unconnected, T>,
+        T,
+    >
+where
+    DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
+    PR: Clone + Transform<T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-	type Output = Builder<
-		DRAIN,
-		InterpolateCircle<T>,
-		LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-		LineCircle<
-			Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-			Connected<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
-			T,
-		>,
-		LineCircle<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
-		PCNU,
-		PR,
-		PVCircle<T>,
-		Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-		Resample<PR, PCNC, Unconnected, T>,
-		T,
-	>;
-	type T = T;
+    type Output = Builder<
+        DRAIN,
+        InterpolateCircle<T>,
+        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
+        LineCircle<
+            Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
+            Connected<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
+            T,
+        >,
+        LineCircle<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
+        PCNU,
+        PR,
+        PVCircle<T>,
+        Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
+        Resample<PR, PCNC, Unconnected, T>,
+        T,
+    >;
+    type T = T;
 
-	#[inline]
-	fn precision(self, delta: &T) -> Self::Output {
-		Self::Output {
-			extent: self.extent,
-			pr: self.pr,
-			base: self.base.precision(delta),
-		}
-	}
+    #[inline]
+    fn precision(self, delta: &T) -> Self::Output {
+        Self::Output {
+            extent: self.extent,
+            pr: self.pr,
+            base: self.base.precision(delta),
+        }
+    }
 }

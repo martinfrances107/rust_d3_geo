@@ -32,7 +32,7 @@ type ClipAntimeridianU<RC, T> = Clip<
 #[inline]
 pub fn gen_clip_antimeridian<PCNU, RC, T>() -> ClipAntimeridianU<RC, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     Clip::new(
         Interpolate::default(),

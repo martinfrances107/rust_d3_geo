@@ -37,7 +37,7 @@ impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoClip<DRAIN, PR
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     type Output = BuilderAntimeridianResampleClip<DRAIN, PR, T>;
     type T = T;
@@ -85,7 +85,7 @@ impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoneNoClip<DRAIN
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     type Output = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;

@@ -11,7 +11,7 @@ impl<DRAIN, PR, T> PrecisionBypass for BuilderMercatorAntimeridianResampleClip<D
 where
     DRAIN: Clone,
     PR: Clone,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Output = BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;

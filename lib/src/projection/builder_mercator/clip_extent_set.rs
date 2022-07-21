@@ -53,7 +53,7 @@ impl<DRAIN, PR, T> ClipExtentSet
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     type Output = Builder<
         DRAIN,

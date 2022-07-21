@@ -179,7 +179,7 @@ impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     DRAIN: Default + Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + FloatConst,
 {
     /// Wrap a default projector and provides mercator specific overrides.
     pub fn new(pr: PR) -> Self {

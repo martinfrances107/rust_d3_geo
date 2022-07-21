@@ -6,7 +6,7 @@ use geo::Coordinate;
 use crate::clip::PointVisible;
 
 /// Antimeridian PV ( Point Visible).
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PV<T> {
     /// PhantomData:
     /// The hidden linkage is than any state stored here
@@ -18,14 +18,6 @@ pub struct PV<T> {
     pd: PhantomData<T>,
 }
 
-impl<T> Default for PV<T> {
-    #[inline]
-    fn default() -> PV<T> {
-        Self {
-            pd: PhantomData::<T>,
-        }
-    }
-}
 impl<T> PointVisible for PV<T>
 where
     T: CoordFloat,
