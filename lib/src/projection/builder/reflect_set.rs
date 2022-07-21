@@ -30,7 +30,6 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
     >
 where
     PR: Clone + Transform<T = T>,
-    Self: RecenterWithResampling,
     T: CoordFloat + FloatConst,
 {
     type T = T;

@@ -129,7 +129,6 @@ where
 impl<DRAIN, PR, T> BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone + Transform<T = T>,
-    Self: RecenterWithResampling,
     T: CoordFloat + FloatConst,
 {
     /// Given a Raw Projection and a clipping defintion create the associated

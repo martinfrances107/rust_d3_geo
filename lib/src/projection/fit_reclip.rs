@@ -38,6 +38,7 @@ use crate::stream::Streamable;
 use crate::Transform;
 
 use super::ClipExtentAdjust;
+use super::ClipExtentBounded;
 
 pub(super) fn fit_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
     builder: B,
@@ -59,6 +60,7 @@ where
             T = T,
         > + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
+        + ClipExtentBounded<Output = B, T = T>
         + Scale<T = T>
         + Translate<T = T>,
     I: Clone + Interpolator<T = T>,
@@ -72,18 +74,24 @@ where
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let clip = builder.get_clip_extent();
-    let b = builder
+    let mut b = builder
         .scale(T::from(150_f64).unwrap())
         .translate(&Coordinate {
             x: T::zero(),
             y: T::zero(),
         });
-
+    if clip.is_some() {
+        b = b.clip_extent_clear();
+    }
     let mut projector = b.build();
-    let mut bounds_stream = Bounds::default();
+    let bounds_stream = Bounds::default();
     let mut stream_in = projector.stream(&bounds_stream);
     object.to_stream(&mut stream_in);
-    fit_bounds(bounds_stream.result(), b).clip_extent_adjust(&clip.unwrap())
+
+    match clip {
+        Some(_) => b.clip_extent_adjust(&clip.unwrap()),
+        None => b,
+    }
 }
 
 pub(super) fn fit_extent_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
@@ -105,6 +113,7 @@ where
             RU = RU,
             T = T,
         > + ClipExtentGet<T = T>
+        + ClipExtentBounded<Output = B, T = T>
         + ClipExtentAdjust<T = T>
         + Scale<T = T>
         + Translate<T = T>,
@@ -156,6 +165,7 @@ where
             RU = RU,
             T = T,
         > + ClipExtentAdjust<T = T>
+        + ClipExtentBounded<Output = B, T = T>
         + ClipExtentGet<T = T>
         + Clone
         + Scale<T = T>
@@ -194,6 +204,7 @@ where
             T = T,
         > + Clone
         + ClipExtentGet<T = T>
+        + ClipExtentBounded<Output = B, T = T>
         + ClipExtentAdjust<T = T>
         + Scale<T = T>
         + Translate<T = T>,
@@ -247,6 +258,7 @@ where
             T = T,
         > + Clone
         + ClipExtentGet<T = T>
+        + ClipExtentBounded<Output = B, T = T>
         + ClipExtentAdjust<T = T>
         + Scale<T = T>
         + Translate<T = T>,

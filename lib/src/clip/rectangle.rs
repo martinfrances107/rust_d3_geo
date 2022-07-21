@@ -65,17 +65,6 @@ where
     use_buffer_stream: bool,
 }
 
-// impl<SINK, STATE, T> Debug for Rectangle<SINK, STATE, T>
-// where
-//     STATE: Clone,
-//     T: CoordFloat,
-// {
-//     #[inline]
-//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-//         f.debug_struct("PointRadiusEnum").finish()
-//     }
-// }
-
 impl<SINK, T> Rectangle<SINK, Unconnected, T>
 where
     T: CoordFloat,

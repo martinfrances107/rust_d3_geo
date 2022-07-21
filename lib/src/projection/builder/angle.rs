@@ -30,7 +30,6 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
     >
 where
     PR: Clone + Transform<T = T>,
-    Self: RecenterWithResampling,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;

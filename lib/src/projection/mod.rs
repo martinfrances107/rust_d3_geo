@@ -165,10 +165,10 @@ pub trait ClipExtentBounded {
     /// f64 or f32
     type T;
 
-    type OutputClear;
+    type Output;
 
     /// clears the bounding box.
-    fn clip_extent_clear(self) -> Self::OutputClear
+    fn clip_extent_clear(self) -> Self::Output
     where
         Self::T: CoordFloat;
 }
@@ -179,10 +179,10 @@ pub trait ClipExtentSet {
     /// f64 or f32
     type T;
 
-    type OutputBounded;
+    type Output;
 
     /// Sets the bounding box.
-    fn clip_extent(self, extent: &[Coordinate<Self::T>; 2]) -> Self::OutputBounded
+    fn clip_extent(self, extent: &[Coordinate<Self::T>; 2]) -> Self::Output
     where
         Self::T: CoordFloat;
 }

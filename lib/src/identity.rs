@@ -10,22 +10,13 @@ use crate::stream::Unconnected;
 
 /// Identity is a stream pipe line stage.
 /// that acts as a pass through node.
+#[derive(Debug)]
 pub struct Identity<SINK, STATE> {
     // PhantomData:
     // The hidden linkage is in the implementation of Connectable.
     // if Self::SC changes then Self::Output must change.
     p_sink: PhantomData<SINK>,
     state: STATE,
-}
-
-impl<SINK, STATE> Debug for Identity<SINK, STATE>
-where
-    STATE: Debug,
-{
-    #[inline]
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("").field(&self.state).finish()
-    }
 }
 
 impl<SINK, STATE> Clone for Identity<SINK, STATE>

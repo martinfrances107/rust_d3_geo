@@ -47,7 +47,7 @@ pub(super) fn fit_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: ClipExtentBounded<OutputClear = Bint, T = T>
+    B: ClipExtentBounded<Output = Bint, T = T>
         + ClipExtentGet<T = T>
         + Scale<T = T>
         + Translate<T = T>,
@@ -63,7 +63,7 @@ where
             RC = RC,
             RU = RU,
             T = T,
-        > + ClipExtentSet<OutputBounded = B, T = T>,
+        > + ClipExtentSet<Output = B, T = T>,
 
     // NB constraints below relate to Bint only not B.
     // They assume no NoClip...
@@ -101,7 +101,7 @@ pub(super) fn fit_extent_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: ClipExtentBounded<OutputClear = Bint, T = T>
+    B: ClipExtentBounded<Output = Bint, T = T>
         + Scale<T = T>
         + ClipExtentGet<T = T>
         + Translate<T = T>,
@@ -117,7 +117,7 @@ where
             RC = RC,
             RU = RU,
             T = T,
-        > + ClipExtentSet<OutputBounded = B, T = T>
+        > + ClipExtentSet<Output = B, T = T>
         + Scale<T = T>
         + Translate<T = T>,
     I: Clone + Interpolator<T = T>,

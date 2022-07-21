@@ -55,7 +55,7 @@ where
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type OutputBounded = Builder<
+    type Output = Builder<
         DRAIN,
         InterpolateAntimeridian<T>,
         LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
@@ -70,7 +70,7 @@ where
     >;
     type T = T;
 
-    fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+    fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         self.extent = Some(*extent);
         self.reclip_convert()
     }
@@ -95,7 +95,7 @@ where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type OutputBounded = Builder<
+    type Output = Builder<
         DRAIN,
         InterpolateCircle<T>,
         LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
@@ -110,13 +110,13 @@ where
     >;
     type T = T;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let base = self.base.clip_extent(extent);
 
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
-        let out = Self::OutputBounded {
+        let out = Self::Output {
             base,
             pr: self.pr,
             // Mutate stage
@@ -152,7 +152,7 @@ where
     PR: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type OutputBounded = Builder<
+    type Output = Builder<
         DRAIN,
         InterpolateCircle<T>,
         LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
@@ -167,13 +167,13 @@ where
     >;
     type T = T;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let base = self.base.clip_extent(extent);
 
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
-        let out = Self::OutputBounded {
+        let out = Self::Output {
             base,
             pr: self.pr,
             // Mutate stage

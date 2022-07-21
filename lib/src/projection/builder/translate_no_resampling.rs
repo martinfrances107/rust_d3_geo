@@ -31,7 +31,6 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
     >
 where
     PR: Clone + Transform<T = T>,
-    Self: RecenterNoResampling,
     T: CoordFloat + FloatConst,
 {
     type T = T;

@@ -15,7 +15,7 @@ use crate::Transform;
 /// Resample None.
 ///
 /// A pass-through module, when no resampling is required.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct None<PR, SC, STATE, T> {
     state: STATE,
     /// PhantomData<SC>
@@ -26,15 +26,6 @@ pub struct None<PR, SC, STATE, T> {
 
     p_t: PhantomData<T>,
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-}
-
-impl<PR, SC, STATE, T> Debug for None<PR, SC, STATE, T>
-where
-    STATE: Debug,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("").field(&self.state).finish()
-    }
 }
 
 impl<PR, SC, T> None<PR, SC, Unconnected, T> {

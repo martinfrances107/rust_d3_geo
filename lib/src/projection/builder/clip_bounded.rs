@@ -15,10 +15,10 @@
 //     T: CoordFloat,
 // {
 //     type T = T;
-//     type OutputClear = Builder<DRAIN, I, LB, LC, LU, NoClipU<DRAIN>, PR, PV, RC, RU, T>;
+//     type Output = Builder<DRAIN, I, LB, LC, LU, NoClipU<DRAIN>, PR, PV, RC, RU, T>;
 
-//     fn clip_extent_clear(self) -> Self::OutputClear {
-//         let out = Self::OutputClear {
+//     fn clip_extent_clear(self) -> Self::Output {
+//         let out = Self::Output {
 //             p_lb: PhantomData::<LB>,
 //             p_drain: PhantomData::<DRAIN>,
 //             projection_raw: self.projection_raw,

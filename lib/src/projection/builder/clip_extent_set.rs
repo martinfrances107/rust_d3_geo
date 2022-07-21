@@ -39,13 +39,13 @@ where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type OutputBounded = BuilderAntimeridianResampleClip<DRAIN, PR, T>;
+    type Output = BuilderAntimeridianResampleClip<DRAIN, PR, T>;
     type T = T;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>();
         let resample = Resample::new(self.project_transform.clone(), self.delta2);
-        let out = Self::OutputBounded {
+        let out = Self::Output {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw,
@@ -87,13 +87,13 @@ where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type OutputBounded = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
+    type Output = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>();
         let resample = None::new(self.project_transform.clone());
-        let out = Self::OutputBounded {
+        let out = Self::Output {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw,
@@ -136,10 +136,10 @@ where
     PR: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type OutputBounded = BuilderCircleResampleClip<DRAIN, PR, T>;
+    type Output = BuilderCircleResampleClip<DRAIN, PR, T>;
     type T = T;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let clip = gen_clip_circle::<
             DRAIN,
             ClipU<DRAIN, T>,
@@ -149,7 +149,7 @@ where
             T,
         >(self.theta.unwrap());
         let resample = Resample::new(self.project_transform.clone(), self.delta2);
-        let out = Self::OutputBounded {
+        let out = Self::Output {
             p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw,
@@ -193,9 +193,9 @@ where
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
-    type OutputBounded = BuilderCircleResampleNoneClip<DRAIN, PR, T>;
+    type Output = BuilderCircleResampleNoneClip<DRAIN, PR, T>;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::OutputBounded {
+    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let clip = gen_clip_circle::<
             DRAIN,
             ClipU<DRAIN, T>,
@@ -205,7 +205,7 @@ where
             T,
         >(self.theta.unwrap());
         let resample = None::new(self.project_transform.clone());
-        let out = Self::OutputBounded {
+        let out = Self::Output {
             p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw,

@@ -50,7 +50,7 @@ impl<I, LC, LB, LU, PR, PV, T> Fit
 		+ Connectable<Output = LC, SC = ResampleNoneNoClipC<Bounds<T>, PR, T>>
 		+ Bufferable<Output = LB, T = T>
 		+ Debug,
-	PR: Clone + Transform<T = T>,
+	PR: Clone + Debug + Transform<T = T>,
 	PV: Clone + PointVisible<T = T>,
 	PR: Clone + Transform<T = T>,
 	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
