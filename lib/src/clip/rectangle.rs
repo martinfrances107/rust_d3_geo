@@ -1,7 +1,6 @@
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::VecDeque;
-use std::fmt;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::rc::Rc;
@@ -28,7 +27,7 @@ use super::rejoin::CompareIntersectionsFn;
 use super::Interpolator as InterpolatorTrait;
 
 ///A primitive type used to for a PostClipNode pipeline stage.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Rectangle<SINK, STATE, T>
 where
     STATE: Clone,
@@ -66,16 +65,16 @@ where
     use_buffer_stream: bool,
 }
 
-impl<SINK, STATE, T> Debug for Rectangle<SINK, STATE, T>
-where
-    STATE: Clone,
-    T: CoordFloat,
-{
-    #[inline]
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("PointRadiusEnum").finish()
-    }
-}
+// impl<SINK, STATE, T> Debug for Rectangle<SINK, STATE, T>
+// where
+//     STATE: Clone,
+//     T: CoordFloat,
+// {
+//     #[inline]
+//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+//         f.debug_struct("PointRadiusEnum").finish()
+//     }
+// }
 
 impl<SINK, T> Rectangle<SINK, Unconnected, T>
 where
