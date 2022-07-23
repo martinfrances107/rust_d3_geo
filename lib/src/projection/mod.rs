@@ -318,12 +318,10 @@ pub trait ClipAngleAdjust {
 }
 
 pub trait RecenterWithResampling {
-    fn reset(self) -> Self;
     fn recenter_with_resampling(self) -> Self;
 }
 
 pub trait RecenterNoResampling {
-    fn reset(self) -> Self;
     fn recenter_no_resampling(self) -> Self;
 }
 

@@ -116,16 +116,12 @@ where
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
-        let out = Self::Output {
+        Self::Output {
             base,
             pr: self.pr,
             // Mutate stage
             extent: Some(*extent),
-        };
-        // .reset();
-
-        // out.reset()
-        out
+        }
     }
 }
 
@@ -173,15 +169,11 @@ where
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
-        let out = Self::Output {
+        Self::Output {
             base,
             pr: self.pr,
             // Mutate stage
             extent: Some(*extent),
-        };
-        // .reset();
-
-        // out.reset()
-        out
+        }
     }
 }

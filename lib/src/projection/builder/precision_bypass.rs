@@ -10,65 +10,27 @@ use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::template::ResampleNoneClipC;
-use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::builder::template::ResampleNoneNoClipC;
-use crate::projection::builder::template::ResampleNoneNoClipU;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::Clip;
-use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleNoClipC;
-use crate::projection::builder::ResampleNoClipU;
 use crate::projection::resampler::none::None;
 use crate::projection::PrecisionBypass;
 use crate::stream::Connected;
-use crate::stream::Unconnected;
 
-use super::Builder;
+use super::types::BuilderAntimeridianResampleClip;
+use super::types::BuilderAntimeridianResampleNoClip;
+use super::types::BuilderAntimeridianResampleNoneNoClip;
+use super::types::BuilderCircleResampleClip;
+use super::types::BuilderCircleResampleNoClip;
+use super::types::BuilderCircleResampleNoneClip;
+use super::types::BuilderCircleResampleNoneNoClip;
 
-impl<DRAIN, PR, T> PrecisionBypass
-    for Builder<
-        DRAIN,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<
-            ResampleNoClipC<DRAIN, PR, T>,
-            Connected<ResampleNoClipC<DRAIN, PR, T>>,
-            T,
-        >,
-        LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-        NoClipU<DRAIN>,
-        PR,
-        PVAntimeridian<T>,
-        ResampleNoClipC<DRAIN, PR, T>,
-        ResampleNoClipU<DRAIN, PR, T>,
-        T,
-    >
+impl<DRAIN, PR, T> PrecisionBypass for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + Default + FloatConst,
 {
-    type Output = Builder<
-        DRAIN,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<
-            ResampleNoneNoClipC<DRAIN, PR, T>,
-            Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
-            T,
-        >,
-        LineAntimeridian<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-        NoClipU<DRAIN>,
-        PR,
-        PVAntimeridian<T>,
-        ResampleNoneNoClipC<DRAIN, PR, T>,
-        ResampleNoneNoClipU<DRAIN, PR, T>,
-        T,
-    >;
+    type Output = BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>;
     type T = T;
 
     /// Set the projection builder precision
@@ -85,7 +47,7 @@ where
         let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
         // Copy - Mutate.
-        let out = Self::Output {
+        Self::Output {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             sx: self.sx,
@@ -115,27 +77,11 @@ where
             // Mutate section.
             delta2: T::zero(),
             resample,
-        };
-
-        // out.reset()
-        out
+        }
     }
 }
 
-impl<DRAIN, PR, T> PrecisionBypass
-    for Builder<
-        DRAIN,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
-        LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
-        ClipU<DRAIN, T>,
-        PR,
-        PVAntimeridian<T>,
-        ResampleClipC<DRAIN, PR, T>,
-        ResampleClipU<DRAIN, PR, T>,
-        T,
-    >
+impl<DRAIN, PR, T> PrecisionBypass for BuilderAntimeridianResampleClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
     PR: Clone,
@@ -158,7 +104,7 @@ where
         let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
         // Copy - Mutate.
-        let out = Self::Output {
+        Self::Output {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             sx: self.sx,
@@ -188,48 +134,16 @@ where
             // Mutate section.
             delta2: T::zero(),
             resample,
-        };
-
-        // out.reset()
-        out
+        }
     }
 }
 
-impl<DRAIN, PR, T> PrecisionBypass
-    for Builder<
-        DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
-        LineCircle<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-        NoClipU<DRAIN>,
-        PR,
-        PVCircle<T>,
-        ResampleNoClipC<DRAIN, PR, T>,
-        ResampleNoClipU<DRAIN, PR, T>,
-        T,
-    >
+impl<DRAIN, PR, T> PrecisionBypass for BuilderCircleResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: CoordFloat + FloatConst,
 {
-    type Output = Builder<
-        DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<
-            ResampleNoneNoClipC<DRAIN, PR, T>,
-            Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
-            T,
-        >,
-        LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-        NoClipU<DRAIN>,
-        PR,
-        PVCircle<T>,
-        ResampleNoneNoClipC<DRAIN, PR, T>,
-        ResampleNoneNoClipU<DRAIN, PR, T>,
-        T,
-    >;
+    type Output = BuilderCircleResampleNoneNoClip<DRAIN, PR, T>;
     type T = T;
 
     /// Set the projection builder precision
@@ -247,7 +161,7 @@ where
         let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
         // Copy - Mutate.
-        let out = Self::Output {
+        Self::Output {
             p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             sx: self.sx,
@@ -277,45 +191,17 @@ where
             // Mutate section.
             delta2: T::zero(),
             resample,
-        };
-
-        // out.reset()
-        out
+        }
     }
 }
 
-impl<DRAIN, PR, T> PrecisionBypass
-    for Builder<
-        DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
-        LineCircle<ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
-        ClipU<DRAIN, T>,
-        PR,
-        PVCircle<T>,
-        ResampleClipC<DRAIN, PR, T>,
-        ResampleClipU<DRAIN, PR, T>,
-        T,
-    >
+impl<DRAIN, PR, T> PrecisionBypass for BuilderCircleResampleClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + FloatConst,
 {
-    type Output = Builder<
-        DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<ResampleNoneClipC<DRAIN, PR, T>, Connected<ResampleNoneClipC<DRAIN, PR, T>>, T>,
-        LineCircle<ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
-        ClipU<DRAIN, T>,
-        PR,
-        PVCircle<T>,
-        ResampleNoneClipC<DRAIN, PR, T>,
-        ResampleNoneClipU<DRAIN, PR, T>,
-        T,
-    >;
+    type Output = BuilderCircleResampleNoneClip<DRAIN, PR, T>;
     type T = T;
 
     /// Set the projection builder precision
@@ -333,7 +219,7 @@ where
         let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
         // Copy - Mutate.
-        let out = Self::Output {
+        Self::Output {
             p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             sx: self.sx,
@@ -363,9 +249,6 @@ where
             // Mutate section.
             delta2: T::zero(),
             resample,
-        };
-
-        // out.reset()
-        out
+        }
     }
 }

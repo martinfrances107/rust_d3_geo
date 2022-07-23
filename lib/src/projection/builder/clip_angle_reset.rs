@@ -57,7 +57,7 @@ where
         let clip = gen_clip_antimeridian::<PCNU, RC, T>();
 
         // update only theta and preclip_factory.
-        let out = Self::Output {
+        Self::Output {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             clip,
@@ -86,10 +86,6 @@ where
             rotate: self.rotate.clone(),
             project_transform: self.project_transform,
             project_rotate_transform: self.project_rotate_transform,
-        };
-
-        // TODO must reinstate reset.
-        // out.reset()
-        out
+        }
     }
 }

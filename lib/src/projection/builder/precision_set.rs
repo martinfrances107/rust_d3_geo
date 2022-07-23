@@ -78,7 +78,7 @@ where
         let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
         // Copy - Mutate.
-        let out = Self::Output {
+        Self::Output {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             sx: self.sx,
@@ -108,10 +108,7 @@ where
             // Mutate section.
             delta2,
             resample,
-        };
-
-        // out.reset()
-        out
+        }
     }
 }
 
@@ -172,7 +169,7 @@ where
         let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
         // Copy - Mutate.
-        let out = Self::Output {
+        Self::Output {
             p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             sx: self.sx,
@@ -202,9 +199,6 @@ where
             // Mutate section.
             delta2,
             resample,
-        };
-
-        // out.reset()
-        out
+        }
     }
 }

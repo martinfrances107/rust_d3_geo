@@ -42,8 +42,6 @@ where
         self.clip = clip;
         self.theta = Some(angle);
 
-        // TODO must reinstate.
-        // self.reset()
         self
     }
 }

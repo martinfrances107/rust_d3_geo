@@ -24,7 +24,6 @@ use crate::projection::builder::BuilderCircleResampleNoneNoClip;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentSet;
-use crate::projection::RecenterWithResampling;
 use crate::stream::Connected;
 use crate::Transform;
 
@@ -45,7 +44,7 @@ where
     fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>();
         let resample = Resample::new(self.project_transform.clone(), self.delta2);
-        let out = Self::Output {
+        Self::Output {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw,
@@ -75,9 +74,7 @@ where
             x1: Some(extent[1].x),
             y1: Some(extent[1].y),
             postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
-        };
-
-        out.reset()
+        }
     }
 }
 
@@ -93,7 +90,8 @@ where
     fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>();
         let resample = None::new(self.project_transform.clone());
-        let out = Self::Output {
+
+        Self::Output {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw,
@@ -123,10 +121,7 @@ where
             x1: Some(extent[1].x),
             y1: Some(extent[1].y),
             postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
-        };
-
-        // out.reset()
-        out
+        }
     }
 }
 
@@ -149,7 +144,8 @@ where
             T,
         >(self.theta.unwrap());
         let resample = Resample::new(self.project_transform.clone(), self.delta2);
-        let out = Self::Output {
+
+        Self::Output {
             p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw,
@@ -179,10 +175,7 @@ where
             x1: Some(extent[1].x),
             y1: Some(extent[1].y),
             postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
-        };
-
-        // out.reset()
-        out
+        }
     }
 }
 
@@ -205,7 +198,7 @@ where
             T,
         >(self.theta.unwrap());
         let resample = None::new(self.project_transform.clone());
-        let out = Self::Output {
+        Self::Output {
             p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw,
@@ -235,9 +228,6 @@ where
             x1: Some(extent[1].x),
             y1: Some(extent[1].y),
             postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
-        };
-
-        // out.reset()
-        out
+        }
     }
 }

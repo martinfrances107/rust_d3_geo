@@ -72,7 +72,6 @@ mod translate_get;
 mod translate_no_resampling;
 mod translate_with_resampling;
 pub mod types;
-
 /// Projection builder.
 ///
 /// Holds State related to the construction of the a projection.
@@ -126,6 +125,17 @@ where
     pub resample: RU,
 }
 
+// Clip::new() input type,
+type ClipInitial<DRAIN, PR, T> = Clip<
+    InterpolateAntimeridian<T>,
+    LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
+    LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
+    PVAntimeridian<T>,
+    ResampleNoClipC<DRAIN, PR, T>,
+    Unconnected,
+    T,
+>;
+
 impl<DRAIN, PR, T> BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone + Transform<T = T>,
@@ -133,22 +143,7 @@ where
 {
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
-    pub fn new(
-        clip: Clip<
-            InterpolateAntimeridian<T>,
-            LineAntimeridian<
-                ResampleNoClipC<DRAIN, PR, T>,
-                Connected<ResampleNoClipC<DRAIN, PR, T>>,
-                T,
-            >,
-            LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-            PVAntimeridian<T>,
-            ResampleNoClipC<DRAIN, PR, T>,
-            Unconnected,
-            T,
-        >,
-        projection_raw: PR,
-    ) -> Self {
+    pub fn new(clip: ClipInitial<DRAIN, PR, T>, projection_raw: PR) -> Self {
         let x = T::from(480_f64).unwrap();
         let y = T::from(250_f64).unwrap();
         let lambda = T::zero();
