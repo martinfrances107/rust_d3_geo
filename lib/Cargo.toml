@@ -7,26 +7,25 @@ description="A port of D3/d3-geo"
 repository="https://github.com/martinfrances107/rust_d3_geo"
 
 [dependencies]
-approx="0.5.0"
-derivative = "2.2.0"
-num-traits="0.2.14"
-geo ="0.22.0"
+approx="~0.5"
+derivative = "~2"
+num-traits="~0.2"
+geo ="~0.22"
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 rust_d3_array = { git = "https://github.com/martinfrances107/rust_d3_array.git" }
 rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git" }
-
-serde_json = "1.0"
-futures = "0.3.17"
+serde_json = "~1.0"
+futures = "~0.3"
 
 [dev-dependencies]
-pretty_assertions = "1.0.0"
-lazy_static = "1.4.0"
-regex="1.5.4"
-topojson = "0.5.0"
-criterion ="0.3.5"
+pretty_assertions = "~1"
+lazy_static = "~1"
+regex="~1"
+topojson = "~0.5"
+criterion ="~0.3"
 
 [dependencies.web-sys]
-version = "0.3.47"
+version = "~0.3"
 features = [
     "CanvasRenderingContext2d",
 ]
