@@ -54,13 +54,11 @@ where
     // Set the internal clip angle (theta) to null and return a builder
     // which uses the antimeridian clipping stratergy.
     fn clip_angle_reset(self) -> Self::Output {
-        let clip = gen_clip_antimeridian::<PCNU, RC, T>();
-
         // update only theta and preclip_factory.
         Self::Output {
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
-            clip,
+            clip: gen_clip_antimeridian::<PCNU, RC, T>(),
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
             delta_gamma: self.delta_gamma,
@@ -83,7 +81,7 @@ where
             theta: None,
             sx: self.sx,
             sy: self.sy,
-            rotate: self.rotate.clone(),
+            rotate: self.rotate,
             project_transform: self.project_transform,
             project_rotate_transform: self.project_rotate_transform,
         }
