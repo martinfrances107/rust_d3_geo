@@ -36,7 +36,6 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
@@ -183,8 +182,7 @@ where
 {
     /// Wrap a default projector and provides mercator specific overrides.
     pub fn new(pr: PR) -> Self {
-        let base =
-            ProjectionBuilder::new(gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(), pr.clone());
+        let base = ProjectionBuilder::new(pr.clone());
         Self {
             pr,
             base,

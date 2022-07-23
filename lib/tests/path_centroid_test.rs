@@ -23,12 +23,9 @@ mod path_centroid_test {
     use num_traits::Float;
     use num_traits::FloatConst;
 
-    use rust_d3_geo::clip::antimeridian::gen_clip_antimeridian;
     use rust_d3_geo::in_delta::in_delta_point;
     use rust_d3_geo::path::centroid::Centroid;
     use rust_d3_geo::path::Path;
-    use rust_d3_geo::projection::builder::template::NoClipU;
-    use rust_d3_geo::projection::builder::template::ResampleNoClipC;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
@@ -49,13 +46,7 @@ mod path_centroid_test {
             + Display
             + FloatConst,
     {
-        let clip = gen_clip_antimeridian::<
-            NoClipU<Centroid<T>>,
-            ResampleNoClipC<Centroid<T>, Equirectangular<Centroid<T>, T>, T>,
-            T,
-        >();
-
-        ProjectionBuilder::new(clip, Equirectangular::default())
+        ProjectionBuilder::new(Equirectangular::default())
             .scale(T::from(900f64 / PI).unwrap())
             .precision_bypass()
             .build()

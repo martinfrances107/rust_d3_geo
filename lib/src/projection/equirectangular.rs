@@ -5,12 +5,10 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::Scale;
 use crate::Transform;
 
-use super::builder::template::NoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;
 
@@ -31,8 +29,7 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>();
-        Builder::new(clip, Equirectangular::default()).scale(T::from(152.63_f64).unwrap())
+        Builder::new(Equirectangular::default()).scale(T::from(152.63_f64).unwrap())
     }
 }
 

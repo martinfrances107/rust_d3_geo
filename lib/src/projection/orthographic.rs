@@ -5,10 +5,8 @@ use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::math::asin;
 use crate::math::EPSILON;
-use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ClipAngleSet;
 use crate::projection::Scale;
@@ -34,8 +32,7 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>();
-        Builder::new(clip, Orthographic::default())
+        Builder::new(Orthographic::default())
             .scale(T::from(249.5_f64).unwrap())
             .clip_angle(T::from(90_f64 + EPSILON).unwrap())
     }

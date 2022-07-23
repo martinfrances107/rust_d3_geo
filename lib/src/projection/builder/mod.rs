@@ -5,9 +5,8 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
+use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
 use crate::clip::buffer::Buffer;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
@@ -125,25 +124,14 @@ where
     pub resample: RU,
 }
 
-// Clip::new() input type,
-type ClipInitial<DRAIN, PR, T> = Clip<
-    InterpolateAntimeridian<T>,
-    LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
-    LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-    PVAntimeridian<T>,
-    ResampleNoClipC<DRAIN, PR, T>,
-    Unconnected,
-    T,
->;
-
 impl<DRAIN, PR, T> BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone + Transform<T = T>,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
-    pub fn new(clip: ClipInitial<DRAIN, PR, T>, projection_raw: PR) -> Self {
+    pub fn new(projection_raw: PR) -> Self {
         let x = T::from(480_f64).unwrap();
         let y = T::from(250_f64).unwrap();
         let lambda = T::zero();
@@ -167,7 +155,7 @@ where
         let postclip = Identity::default();
         let resample = Resample::new(project_transform.clone(), delta2);
         let out_a: Self = Self {
-            clip,
+            clip: gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(),
             p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
             /// Input passing onto Projection.

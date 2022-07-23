@@ -5,7 +5,6 @@ use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ClipAngleSet;
 use crate::projection::Scale;
@@ -13,7 +12,6 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
-use super::builder::template::NoClipU;
 use super::builder::Builder;
 use super::ProjectionRawBase;
 
@@ -38,9 +36,7 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>();
-
-        Builder::new(clip, Stereographic::default())
+        Builder::new(Stereographic::default())
             .scale(T::from(250_f64).unwrap())
             .clip_angle(T::from(142_f64).unwrap())
     }

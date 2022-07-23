@@ -6,8 +6,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ClipAngleSet;
 use crate::projection::Scale;
@@ -36,8 +34,7 @@ where
     where
         DRAIN: Default + Stream<EP = DRAIN, T = T>,
     {
-        let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>();
-        Builder::new(clip, Gnomic::default())
+        Builder::new(Gnomic::default())
             .scale(T::from(144.049_f64).unwrap())
             .clip_angle(T::from(60_f64).unwrap())
     }
