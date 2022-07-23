@@ -19,7 +19,9 @@ where
     #[derivative(Debug = "ignore")]
     /// Another intersection.
     pub o: Option<Rc<RefCell<Intersection<'a, T>>>>,
-    /// is any entry?
+    /// e - is any entry?
+    /// entry = true  means moving in a forward direction ( next )
+    /// entry = false implies exit go back ( previous )
     pub e: bool,
     /// visited.
     pub v: bool,
