@@ -67,7 +67,7 @@ where
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     PV: Clone + PointVisible<T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
@@ -87,10 +87,11 @@ where
     let bounds_stream = Bounds::default();
     let mut stream_in = projector.stream(&bounds_stream);
     object.to_stream(&mut stream_in);
-
+    let bounds = stream_in.get_endpoint().result();
+    let b_out = fit_bounds(bounds, b);
     match clip {
-        Some(_) => b.clip_extent_adjust(&clip.unwrap()),
-        None => b,
+        Some(_) => b_out.clip_extent_adjust(&clip.unwrap()),
+        None => b_out,
     }
 }
 
@@ -121,7 +122,7 @@ where
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
@@ -177,8 +178,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    PR: Clone + Transform<T = T>,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fit_extent_reclip(builder, [[T::zero(), T::zero()], size], object)
@@ -215,7 +215,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -269,7 +269,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
