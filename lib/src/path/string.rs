@@ -11,9 +11,9 @@ use super::Result;
 
 #[derive(Clone, Debug, PartialEq)]
 enum PointState {
-    LineAtStart,
+    AtLineStart,
     LineInProgress,
-    LineNotInProgress,
+    RenderingPoints,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -55,7 +55,7 @@ where
         Self {
             circle: Some(circle(T::from(4.5_f64).unwrap())),
             line: LineState::Stopped,
-            point: PointState::LineNotInProgress,
+            point: PointState::RenderingPoints,
             radius: T::from(4.5).unwrap(),
             string: Vec::new(),
         }
@@ -119,27 +119,27 @@ where
 
     #[inline]
     fn line_start(&mut self) {
-        self.point = PointState::LineAtStart;
+        self.point = PointState::AtLineStart;
     }
 
     fn line_end(&mut self) {
         if self.line == LineState::Started {
             self.string.push(S::from("Z"));
         }
-        self.point = PointState::LineNotInProgress;
+        self.point = PointState::RenderingPoints;
     }
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         match self.point {
-            PointState::LineAtStart => {
+            PointState::AtLineStart => {
                 self.string.push(format!("M{},{}", p.x, p.y));
                 self.point = PointState::LineInProgress;
             }
             PointState::LineInProgress => {
                 self.string.push(format!("L{},{}", p.x, p.y));
             }
-            PointState::LineNotInProgress => {
+            PointState::RenderingPoints => {
                 if self.circle.is_none() {
                     self.circle = Some(circle(self.radius));
                 }
