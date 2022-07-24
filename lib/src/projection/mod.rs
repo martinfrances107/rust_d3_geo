@@ -161,7 +161,7 @@ pub trait ClipExtentGet {
 
 /// Methods to clear or return bounding box.
 /// A projection builder sub trait.
-pub trait ClipExtentBounded {
+pub trait ClipExtentClear {
     /// f64 or f32
     type T;
 

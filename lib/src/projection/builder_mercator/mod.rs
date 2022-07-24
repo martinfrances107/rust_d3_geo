@@ -4,7 +4,7 @@ pub mod center_get;
 pub mod center_set;
 pub mod clip_angle_set;
 pub mod clip_extent_adjust;
-pub mod clip_extent_bounded;
+pub mod clip_extent_clear;
 pub mod clip_extent_get;
 pub mod clip_extent_set;
 pub mod fit;

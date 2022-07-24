@@ -38,7 +38,7 @@ use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
 
-use super::ClipExtentBounded;
+use super::ClipExtentClear;
 use super::ClipExtentSet;
 
 pub(super) fn fit_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
@@ -47,7 +47,7 @@ pub(super) fn fit_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: ClipExtentBounded<Output = Bint, T = T>
+    B: ClipExtentClear<Output = Bint, T = T>
         + ClipExtentGet<T = T>
         + Scale<T = T>
         + Translate<T = T>,
@@ -101,7 +101,7 @@ pub(super) fn fit_extent_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: ClipExtentBounded<Output = Bint, T = T>
+    B: ClipExtentClear<Output = Bint, T = T>
         + Scale<T = T>
         + ClipExtentGet<T = T>
         + Translate<T = T>,

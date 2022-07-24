@@ -38,7 +38,7 @@ use crate::stream::Streamable;
 use crate::Transform;
 
 use super::ClipExtentAdjust;
-use super::ClipExtentBounded;
+use super::ClipExtentClear;
 
 pub(super) fn fit_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
     builder: B,
@@ -60,7 +60,7 @@ where
             T = T,
         > + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
-        + ClipExtentBounded<Output = B, T = T>
+        + ClipExtentClear<Output = B, T = T>
         + Scale<T = T>
         + Translate<T = T>,
     I: Clone + Interpolator<T = T>,
@@ -114,7 +114,7 @@ where
             RU = RU,
             T = T,
         > + ClipExtentGet<T = T>
-        + ClipExtentBounded<Output = B, T = T>
+        + ClipExtentClear<Output = B, T = T>
         + ClipExtentAdjust<T = T>
         + Scale<T = T>
         + Translate<T = T>,
@@ -166,7 +166,7 @@ where
             RU = RU,
             T = T,
         > + ClipExtentAdjust<T = T>
-        + ClipExtentBounded<Output = B, T = T>
+        + ClipExtentClear<Output = B, T = T>
         + ClipExtentGet<T = T>
         + Clone
         + Scale<T = T>
@@ -204,7 +204,7 @@ where
             T = T,
         > + Clone
         + ClipExtentGet<T = T>
-        + ClipExtentBounded<Output = B, T = T>
+        + ClipExtentClear<Output = B, T = T>
         + ClipExtentAdjust<T = T>
         + Scale<T = T>
         + Translate<T = T>,
@@ -258,7 +258,7 @@ where
             T = T,
         > + Clone
         + ClipExtentGet<T = T>
-        + ClipExtentBounded<Output = B, T = T>
+        + ClipExtentClear<Output = B, T = T>
         + ClipExtentAdjust<T = T>
         + Scale<T = T>
         + Translate<T = T>,
