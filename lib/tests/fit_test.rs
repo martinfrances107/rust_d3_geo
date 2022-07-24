@@ -153,15 +153,9 @@ mod fit_test {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
-    //   it("projection.fitSize(…) world equirectangular", () => {
-    // 	const projection = geoEquirectangular();
-    // 	projection.fitSize([900, 900], world);
-    // 	assertInDelta(projection.scale(), 143.239449, 1e-6);
-    // 	assertInDelta(projection.translate(), [450, 442.000762], 1e-6);
-    //   });
     #[test]
     fn fit_size_world_equirectangular() {
-        println!("projection.fitExtent(…) world gnomonic");
+        println!("projection.fitSize(…) world equirectangular");
 
         let world = world();
         let projection = Equirectangular::builder().fit_size([900_f64, 900_f64], &world);
