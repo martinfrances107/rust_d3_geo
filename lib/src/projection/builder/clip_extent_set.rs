@@ -45,8 +45,8 @@ where
         let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>();
         let resample = Resample::new(self.project_transform.clone(), self.delta2);
         Self::Output {
-            p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
-            p_drain: PhantomData::<DRAIN>,
+            p_lb: self.p_lb,
+            p_drain: self.p_drain,
             projection_raw: self.projection_raw,
             clip,
             phi: self.phi,
@@ -92,8 +92,8 @@ where
         let resample = None::new(self.project_transform.clone());
 
         Self::Output {
-            p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
-            p_drain: PhantomData::<DRAIN>,
+            p_lb: self.p_lb,
+            p_drain: self.p_drain,
             projection_raw: self.projection_raw,
             clip,
             phi: self.phi,
@@ -146,8 +146,8 @@ where
         let resample = Resample::new(self.project_transform.clone(), self.delta2);
 
         Self::Output {
-            p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
-            p_drain: PhantomData::<DRAIN>,
+            p_lb: self.p_lb,
+            p_drain: self.p_drain,
             projection_raw: self.projection_raw,
             clip,
             phi: self.phi,
@@ -199,8 +199,8 @@ where
         >(self.theta.unwrap());
         let resample = None::new(self.project_transform.clone());
         Self::Output {
-            p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
-            p_drain: PhantomData::<DRAIN>,
+            p_lb: self.p_lb,
+            p_drain: self.p_drain,
             projection_raw: self.projection_raw,
             clip,
             phi: self.phi,
