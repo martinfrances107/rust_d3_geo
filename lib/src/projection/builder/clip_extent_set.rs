@@ -35,7 +35,7 @@ use super::template::ClipU;
 impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     type Output = BuilderAntimeridianResampleClip<DRAIN, PR, T>;
@@ -81,7 +81,7 @@ where
 impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
-    PR: Clone + Transform<T = T>,
+    PR: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     type Output = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
