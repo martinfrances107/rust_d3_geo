@@ -1,12 +1,9 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::buffer::Buffer;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
@@ -14,7 +11,6 @@ use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::Clip;
 use crate::projection::resampler::none::None;
 use crate::projection::PrecisionBypass;
-use crate::stream::Connected;
 
 use super::types::BuilderAntimeridianResampleClip;
 use super::types::BuilderAntimeridianResampleNoClip;
@@ -48,8 +44,8 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
-            p_drain: PhantomData::<DRAIN>,
+            p_lb: self.p_lb,
+            p_drain: self.p_drain,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -72,9 +68,9 @@ where
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
             delta_gamma: self.delta_gamma,
-            clip,
 
             // Mutate section.
+            clip,
             delta2: T::zero(),
             resample,
         }
@@ -105,8 +101,8 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
-            p_drain: PhantomData::<DRAIN>,
+            p_lb: self.p_lb,
+            p_drain: self.p_drain,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -129,9 +125,9 @@ where
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
             delta_gamma: self.delta_gamma,
-            clip,
 
             // Mutate section.
+            clip,
             delta2: T::zero(),
             resample,
         }
@@ -162,8 +158,8 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
-            p_drain: PhantomData::<DRAIN>,
+            p_lb: self.p_lb,
+            p_drain: self.p_drain,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -186,9 +182,9 @@ where
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
             delta_gamma: self.delta_gamma,
-            clip,
 
             // Mutate section.
+            clip,
             delta2: T::zero(),
             resample,
         }
@@ -220,8 +216,8 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
-            p_drain: PhantomData::<DRAIN>,
+            p_lb: self.p_lb,
+            p_drain: self.p_drain,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -244,9 +240,9 @@ where
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
             delta_gamma: self.delta_gamma,
-            clip,
 
             // Mutate section.
+            clip,
             delta2: T::zero(),
             resample,
         }

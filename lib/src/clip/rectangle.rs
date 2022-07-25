@@ -26,7 +26,7 @@ use super::rejoin::rejoin as clip_rejoin;
 use super::rejoin::CompareIntersectionsFn;
 use super::Interpolator as InterpolatorTrait;
 
-///A primitive type used to for a PostClipNode pipeline stage.
+///A primitive type used for a PostClipNode pipeline stage.
 #[derive(Clone, Debug)]
 pub struct Rectangle<SINK, STATE, T>
 where
