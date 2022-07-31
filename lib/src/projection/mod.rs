@@ -357,7 +357,7 @@ pub trait PrecisionAdjust {
     type T;
     ///  Sets the threshold for the projection’s adaptive resampling to the specified value in Pixels and returns the projection.
     ///  This value corresponds to the Douglas–Peucker distance.
-    fn precision(self, delta: &Self::T) -> Self;
+    fn precision_set(self, delta: &Self::T) -> Self;
 }
 
 /// Resampling Getter.
@@ -370,7 +370,7 @@ pub trait PrecisionGet {
 
     ///  Returns the projection’s current resampling precision which defaults to square root of 0.5.
     ///  This value corresponds to the Douglas–Peucker distance.
-    fn get_precision(&self) -> Self::T;
+    fn precision(&self) -> Self::T;
 }
 
 /// Switch to no resampling.

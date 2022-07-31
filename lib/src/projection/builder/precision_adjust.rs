@@ -33,7 +33,7 @@ where
     /// Set the projection builder precision
     ///
     /// delta is related to clip angle.
-    fn precision(mut self, delta: &T) -> Self {
+    fn precision_set(mut self, delta: &T) -> Self {
         let delta2 = *delta * *delta;
         let resample = Resample::new(self.project_transform.clone(), delta2);
         self.delta2 = delta2;

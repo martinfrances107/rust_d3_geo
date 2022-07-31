@@ -43,7 +43,7 @@ pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsVa
 			y: height / 2_f64,
 		})
 		.clip_angle(90_f64)
-		.precision(&10_f64)
+		.precision_set(&10_f64)
 		.build();
 
 	let mut path = pb.build(projector);

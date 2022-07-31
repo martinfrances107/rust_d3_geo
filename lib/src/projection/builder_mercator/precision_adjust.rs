@@ -33,9 +33,9 @@ where
     /// Set the projection builder precision
     ///
     /// delta is related to clip angle.
-    fn precision(self, delta: &T) -> Self {
+    fn precision_set(self, delta: &T) -> Self {
         let mut out = self;
-        out.base = out.base.precision(delta);
+        out.base = out.base.precision_set(delta);
         out
     }
 }

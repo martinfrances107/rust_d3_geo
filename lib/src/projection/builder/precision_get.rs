@@ -12,7 +12,7 @@ where
     type T = T;
 
     #[inline]
-    fn get_precision(&self) -> T {
+    fn precision(&self) -> T {
         self.delta2.sqrt()
     }
 }
