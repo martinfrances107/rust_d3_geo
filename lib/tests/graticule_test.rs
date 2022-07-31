@@ -14,35 +14,35 @@ mod graticule_test {
     fn gets_sets_precision() {
         println!("graticule.extent() gets precision");
         let g = generate();
-        assert_eq!(g.get_precision(), 2.5);
-        let g999 = g.precision(&999_f64);
-        assert_eq!(g999.get_precision(), 999_f64);
+        assert_eq!(g.precision(), 2.5);
+        let g999 = g.precision_set(&999_f64);
+        assert_eq!(g999.precision(), 999_f64);
     }
 
     #[test]
     fn read_write_extent_minor_and_major() {
         println!("graticule.extent(…) sets extentMinor and extentMajor");
 
-        let g = generate().extent([[-90_f64, -45_f64], [90_f64, 45_f64]]);
-        assert_eq!(g.get_extent_minor(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
-        assert_eq!(g.get_extent_major(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        let g = generate().extent_set([[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        assert_eq!(g.extent_minor(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        assert_eq!(g.extent_major(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
 
         // tests malformed ranges.( x0 > x1 etc)
-        let g = generate().extent([[90_f64, 45_f64], [-90_f64, -45_f64]]);
-        assert_eq!(g.get_extent_minor(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
-        assert_eq!(g.get_extent_major(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        let g = generate().extent_set([[90_f64, 45_f64], [-90_f64, -45_f64]]);
+        assert_eq!(g.extent_minor(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        assert_eq!(g.extent_major(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
     }
 
     #[test]
     fn read_write_extent_minor() {
-        let g = generate().extent_minor([[-90_f64, -45_f64], [90_f64, 45_f64]]);
-        assert_eq!(g.get_extent(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        let g = generate().extent_minor_set([[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        assert_eq!(g.extent(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
     }
 
     #[test]
     fn extent_major_default_ranges_longitude() {
         println!("graticule.extentMajor() default longitude ranges from 180°W (inclusive) to 180°E (exclusive)");
-        let e = generate::<f64>().get_extent_major();
+        let e = generate::<f64>().extent_major();
         assert_eq!(e[0][0], -180_f64);
         assert_eq!(e[1][0], 180_f64);
     }
@@ -51,7 +51,7 @@ mod graticule_test {
     fn extent_major_default_ranges_latitude() {
         println!("graticule.extentMajor() default latitude ranges from 90°S (exclusive) to 90°N (exclusive)");
 
-        let e = generate::<f64>().get_extent_major();
+        let e = generate::<f64>().extent_major();
         assert_eq!(e[0][1], -90_f64 + EPSILON);
         assert_eq!(e[1][1], 90_f64 - EPSILON);
     }
@@ -71,7 +71,7 @@ mod graticule_test {
     fn extent_minor_default_ranges_longitude() {
         println!("graticule.extentMinor() default latitude ranges from 80°S (inclusive) to 80°N (inclusive)");
 
-        let e = generate::<f64>().get_extent_minor();
+        let e = generate::<f64>().extent_minor();
         assert_eq!(e[0][0], -180_f64);
         assert_eq!(e[1][0], 180_f64);
     }
@@ -80,7 +80,7 @@ mod graticule_test {
     fn extent_minor_default_ranges_latitude() {
         println!("graticule.extentMinor() default latitude ranges from 80°S (inclusive) to 80°N (inclusive)");
 
-        let e = generate::<f64>().get_extent_minor();
+        let e = generate::<f64>().extent_minor();
         assert_eq!(e[0][1], -80_f64 - EPSILON);
         assert_eq!(e[1][1], 80_f64 + EPSILON);
     }
@@ -100,18 +100,18 @@ mod graticule_test {
     fn sets_minor_and_major_step() {
         println!("graticule.step(…) sets the minor and major step");
 
-        let e = generate::<f64>().step([22.5_f64, 22.5_f64]);
-        assert_eq!(e.get_step_minor(), [22.5_f64, 22.5_f64]);
-        assert_eq!(e.get_step_major(), [22.5_f64, 22.5_f64]);
+        let e = generate::<f64>().step_set([22.5_f64, 22.5_f64]);
+        assert_eq!(e.step_minor(), [22.5_f64, 22.5_f64]);
+        assert_eq!(e.step_major(), [22.5_f64, 22.5_f64]);
     }
 
     #[test]
     fn sets_minor_step() {
         println!("graticule.step() gets the minor step");
 
-        let e = generate::<f64>().step([22.5_f64, 22.5_f64]);
-        assert_eq!(e.get_step_minor(), [22.5_f64, 22.5_f64]);
-        assert_eq!(e.get_step_major(), [22.5_f64, 22.5_f64]);
+        let e = generate::<f64>().step_set([22.5_f64, 22.5_f64]);
+        assert_eq!(e.step_minor(), [22.5_f64, 22.5_f64]);
+        assert_eq!(e.step_major(), [22.5_f64, 22.5_f64]);
     }
 
     #[test]
@@ -119,7 +119,7 @@ mod graticule_test {
         println!("graticule.stepMinor() defaults to 10°, 10°");
 
         let g = generate::<f64>();
-        assert_eq!(g.get_step_minor(), [10_f64, 10_f64]);
+        assert_eq!(g.step_minor(), [10_f64, 10_f64]);
     }
 
     // Skipped test: Rust is strictly typed.
@@ -136,7 +136,7 @@ mod graticule_test {
         println!("graticule.stepMajor() defaults to 90°, 360°");
 
         let g = generate::<f64>();
-        assert_eq!(g.get_step_major(), [90_f64, 360_f64]);
+        assert_eq!(g.step_major(), [90_f64, 360_f64]);
     }
 
     // Skipped test: Rust is strictly typed.
@@ -216,9 +216,9 @@ mod graticule_test {
     fn graticule_lines() {
         println!("graticule.lines() returns an array of LineStrings");
         let lines: Vec<LineString<f64>> = generate::<f64>()
-            .extent([[-90_f64, -45_f64], [90_f64, 45_f64]])
-            .step([45_f64, 45_f64])
-            .precision(&3_f64)
+            .extent_set([[-90_f64, -45_f64], [90_f64, 45_f64]])
+            .step_set([45_f64, 45_f64])
+            .precision_set(&3_f64)
             .lines()
             .collect();
 
@@ -413,10 +413,10 @@ mod graticule_test {
         println!("graticule.outline() returns a Polygon encompassing the major extent");
 
         let graticule = generate::<f64>()
-            .extent_major([[-90_f64, -45_f64], [90_f64, 45_f64]])
-            .precision(&3_f64);
+            .extent_major_set([[-90_f64, -45_f64], [90_f64, 45_f64]])
+            .precision_set(&3_f64);
 
-        assert_eq!(graticule.get_precision(), 3_f64);
+        assert_eq!(graticule.precision(), 3_f64);
 
         let outline = graticule.outline();
 

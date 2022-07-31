@@ -126,24 +126,24 @@ where
 
     /// Returns the extent.
     #[inline]
-    pub fn get_extent(self) -> [[T; 2]; 2] {
-        self.get_extent_minor()
+    pub fn extent(self) -> [[T; 2]; 2] {
+        self.extent_minor()
     }
 
     /// Sets the extent.
     #[inline]
-    pub fn extent(self, param: [[T; 2]; 2]) -> Self {
-        self.extent_major(param).extent_minor(param)
+    pub fn extent_set(self, param: [[T; 2]; 2]) -> Self {
+        self.extent_major_set(param).extent_minor_set(param)
     }
 
     /// Returns the range associated with major ticks.
     #[inline]
-    pub fn get_extent_major(&self) -> [[T; 2]; 2] {
+    pub fn extent_major(&self) -> [[T; 2]; 2] {
         [[self.X0, self.Y0], [self.X1, self.Y1]]
     }
 
     /// Sets the major extent.
-    pub fn extent_major(mut self, param: [[T; 2]; 2]) -> Self {
+    pub fn extent_major_set(mut self, param: [[T; 2]; 2]) -> Self {
         self.X0 = param[0][0];
         self.Y0 = param[0][1];
         self.X1 = param[1][0];
@@ -155,17 +155,17 @@ where
             swap(&mut self.Y0, &mut self.Y1);
         }
         let p = self.precision;
-        self.precision(&p)
+        self.precision_set(&p)
     }
 
     /// Returns the range assoicated with the minor ticks.
     #[inline]
-    pub fn get_extent_minor(&self) -> [[T; 2]; 2] {
+    pub fn extent_minor(&self) -> [[T; 2]; 2] {
         [[self.x0, self.y0], [self.x1, self.y1]]
     }
 
     /// Sets the range associated with minor ticks.
-    pub fn extent_minor(mut self, param: [[T; 2]; 2]) -> Self {
+    pub fn extent_minor_set(mut self, param: [[T; 2]; 2]) -> Self {
         self.x0 = param[0][0];
         self.y0 = param[0][1];
         self.x1 = param[1][0];
@@ -179,23 +179,23 @@ where
         }
 
         let p = self.precision;
-        self.precision(&p)
+        self.precision_set(&p)
     }
 
     /// Sets the step for both the major and minor ticks.
     #[inline]
-    pub fn step(self, step: [T; 2]) -> Self {
-        self.step_major(step).step_minor(step)
+    pub fn step_set(self, step: [T; 2]) -> Self {
+        self.step_major_set(step).step_minor_set(step)
     }
 
     /// Returns the minor step parameters [dx, dy]
     #[inline]
-    pub fn get_step_major(&self) -> [T; 2] {
+    pub fn step_major(&self) -> [T; 2] {
         [self.DX, self.DY]
     }
 
     /// Sets the x and y major step size.
-    pub fn step_major(mut self, step: [T; 2]) -> Self {
+    pub fn step_major_set(mut self, step: [T; 2]) -> Self {
         self.DX = step[0];
         self.DY = step[1];
         self
@@ -203,12 +203,12 @@ where
 
     /// Returns the minor step parameters [dx, dy]
     #[inline]
-    pub fn get_step_minor(&self) -> [T; 2] {
+    pub fn step_minor(&self) -> [T; 2] {
         [self.dx, self.dy]
     }
 
     /// Sets the x and y minor step size.
-    pub fn step_minor(mut self, step: [T; 2]) -> Self {
+    pub fn step_minor_set(mut self, step: [T; 2]) -> Self {
         self.dx = step[0];
         self.dy = step[1];
         self
@@ -216,12 +216,12 @@ where
 
     #[inline]
     /// Returns the current precision.
-    pub fn get_precision(&self) -> T {
+    pub fn precision(&self) -> T {
         self.precision
     }
 
     /// Sets the precision for this graticule, in degrees.(Default: 2.5°)
-    pub fn precision(mut self, precision: &T) -> Self {
+    pub fn precision_set(mut self, precision: &T) -> Self {
         self.precision = *precision;
         self.x = graticule_x(self.y0, self.y1, T::from(90_f64).unwrap());
         self.y = graticule_y(self.x0, self.x1, self.precision);
