@@ -105,7 +105,7 @@ mod mercator_tests {
         let s = path_builder.build(projection).object(&object);
         assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
         assert_eq!(
-            projection_builder.get_clip_extent(),
+            projection_builder.clip_extent(),
             Some([
                 Coordinate {
                     x: -10_f64,
@@ -150,7 +150,7 @@ mod mercator_tests {
         let s = path_builder.build(projection).object(&object);
         assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
         assert_eq!(
-            projection_builder.get_clip_extent(),
+            projection_builder.clip_extent(),
             Some([
                 Coordinate {
                     x: -10_f64,
@@ -195,7 +195,7 @@ mod mercator_tests {
         let s = path_builder.build(projection).object(&object);
         assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
         assert_eq!(
-            projection_builder.get_clip_extent(),
+            projection_builder.clip_extent(),
             Some([
                 Coordinate {
                     x: -10_f64,

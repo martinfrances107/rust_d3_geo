@@ -70,7 +70,7 @@ where
     >;
     type T = T;
 
-    fn clip_extent(mut self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+    fn clip_extent_set(mut self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         self.extent = Some(*extent);
         self.reclip_convert()
     }
@@ -110,8 +110,8 @@ where
     >;
     type T = T;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
-        let base = self.base.clip_extent(extent);
+    fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+        let base = self.base.clip_extent_set(extent);
 
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
@@ -163,8 +163,8 @@ where
     >;
     type T = T;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
-        let base = self.base.clip_extent(extent);
+    fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+        let base = self.base.clip_extent_set(extent);
 
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,

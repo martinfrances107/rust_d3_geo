@@ -57,7 +57,7 @@ where
                 },
             ],
         };
-        let base = self.base.clip_extent(&ce);
+        let base = self.base.clip_extent_set(&ce);
         Self::Output {
             pr: self.pr,
             base,

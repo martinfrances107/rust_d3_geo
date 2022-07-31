@@ -77,7 +77,7 @@ where
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Debug + FloatConst,
 {
-    let clip = builder.get_clip_extent();
+    let clip = builder.clip_extent();
     let b_no_clip = builder
         .scale(T::from(150_f64).unwrap())
         .translate(&Coordinate {
@@ -92,7 +92,7 @@ where
     object.to_stream(&mut stream_in);
     let b_result = fit_bounds(bounds_stream.result(), b_no_clip);
 
-    b_result.clip_extent(&clip.unwrap())
+    b_result.clip_extent_set(&clip.unwrap())
 }
 
 pub(super) fn fit_extent_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(

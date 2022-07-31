@@ -41,7 +41,7 @@ where
     type Output = BuilderAntimeridianResampleClip<DRAIN, PR, T>;
     type T = T;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+    fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>();
         let resample = Resample::new(self.project_transform.clone(), self.delta2);
         Self::Output {
@@ -87,7 +87,7 @@ where
     type Output = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+    fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>();
         let resample = None::new(self.project_transform.clone());
 
@@ -134,7 +134,7 @@ where
     type Output = BuilderCircleResampleClip<DRAIN, PR, T>;
     type T = T;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+    fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let clip = gen_clip_circle::<
             DRAIN,
             ClipU<DRAIN, T>,
@@ -188,7 +188,7 @@ where
     type T = T;
     type Output = BuilderCircleResampleNoneClip<DRAIN, PR, T>;
 
-    fn clip_extent(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+    fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         let clip = gen_clip_circle::<
             DRAIN,
             ClipU<DRAIN, T>,

@@ -21,7 +21,7 @@ where
 
 	/// Returns a bounding box.
 	#[inline]
-	fn get_clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
+	fn clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
 		self.extent
 	}
 }

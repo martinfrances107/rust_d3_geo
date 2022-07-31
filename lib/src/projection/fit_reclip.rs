@@ -73,7 +73,7 @@ where
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
 {
-    let clip = builder.get_clip_extent();
+    let clip = builder.clip_extent();
     let mut b = builder
         .scale(T::from(150_f64).unwrap())
         .translate(&Coordinate {
