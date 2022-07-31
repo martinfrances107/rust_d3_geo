@@ -142,7 +142,7 @@ where
     type T = T;
 
     #[inline]
-    fn get_endpoint<'a>(&mut self) -> &mut Self {
+    fn endpoint<'a>(&mut self) -> &mut Self {
         self
     }
 

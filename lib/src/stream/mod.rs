@@ -88,7 +88,7 @@ where
     type T = T;
 
     #[inline]
-    fn get_endpoint(&mut self) -> &mut Self {
+    fn endpoint(&mut self) -> &mut Self {
         self
     }
 }
@@ -113,7 +113,7 @@ where
     type EP;
 
     /// Returns the end point of the stream.
-    fn get_endpoint(&mut self) -> &mut Self::EP;
+    fn endpoint(&mut self) -> &mut Self::EP;
 
     /// Declare a point.
     fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}

@@ -263,8 +263,8 @@ where
     type EP = EP;
 
     #[inline]
-    fn get_endpoint(&mut self) -> &mut Self::EP {
-        self.state.line_node.get_sink().get_endpoint()
+    fn endpoint(&mut self) -> &mut Self::EP {
+        self.state.line_node.get_sink().endpoint()
     }
 
     #[inline]

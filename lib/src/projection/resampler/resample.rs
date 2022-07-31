@@ -338,8 +338,8 @@ where
     type T = T;
 
     #[inline]
-    fn get_endpoint(&mut self) -> &mut Self::EP {
-        self.state.sink.get_endpoint()
+    fn endpoint(&mut self) -> &mut Self::EP {
+        self.state.sink.endpoint()
     }
     fn sphere(&mut self) {
         self.state.sink.sphere();

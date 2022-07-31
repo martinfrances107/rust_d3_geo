@@ -79,7 +79,7 @@ where
     let mut stream_in = builder.build().stream(&bounds_stream);
 
     object.to_stream(&mut stream_in);
-    let bounds = stream_in.get_endpoint().result();
+    let bounds = stream_in.endpoint().result();
     fit_bounds(bounds, builder)
 }
 

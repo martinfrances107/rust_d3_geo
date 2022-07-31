@@ -70,8 +70,8 @@ where
     type T = T;
 
     #[inline]
-    fn get_endpoint(&mut self) -> &mut Self::EP {
-        self.state.sink.get_endpoint()
+    fn endpoint(&mut self) -> &mut Self::EP {
+        self.state.sink.endpoint()
     }
 
     #[inline]

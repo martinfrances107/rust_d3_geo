@@ -240,7 +240,7 @@ where
     type T = T;
 
     #[inline]
-    fn get_endpoint(&mut self) -> &mut Self {
+    fn endpoint(&mut self) -> &mut Self {
         self
     }
 

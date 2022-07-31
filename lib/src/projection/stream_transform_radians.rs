@@ -32,8 +32,8 @@ where
     type T = T;
 
     #[inline]
-    fn get_endpoint(&mut self) -> &mut Self::EP {
-        self.0.sink.get_endpoint()
+    fn endpoint(&mut self) -> &mut Self::EP {
+        self.0.sink.endpoint()
     }
 
     #[inline]

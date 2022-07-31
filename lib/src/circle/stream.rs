@@ -46,7 +46,7 @@ where
     type EP = Self;
     type T = T;
 
-    fn get_endpoint(&mut self) -> &mut Self {
+    fn endpoint(&mut self) -> &mut Self {
         self
     }
 

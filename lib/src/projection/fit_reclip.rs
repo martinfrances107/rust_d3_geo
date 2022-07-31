@@ -87,7 +87,7 @@ where
     let bounds_stream = Bounds::default();
     let mut stream_in = projector.stream(&bounds_stream);
     object.to_stream(&mut stream_in);
-    let bounds = stream_in.get_endpoint().result();
+    let bounds = stream_in.endpoint().result();
     let b_out = fit_bounds(bounds, b);
     match clip {
         Some(_) => b_out.clip_extent_adjust(&clip.unwrap()),

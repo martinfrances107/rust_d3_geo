@@ -124,8 +124,8 @@ where
     type T = T;
 
     #[inline]
-    fn get_endpoint(&mut self) -> &mut Self::EP {
-        self.state.get_sink().get_endpoint()
+    fn endpoint(&mut self) -> &mut Self::EP {
+        self.state.get_sink().endpoint()
     }
 
     fn line_start(&mut self) {

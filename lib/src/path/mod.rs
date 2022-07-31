@@ -124,7 +124,7 @@ where
     pub fn object(&mut self, object: &impl Streamable<T = T>) -> <CS as Result>::Out {
         let mut stream_in = self.projection.stream(&self.context_stream);
         object.to_stream(&mut stream_in);
-        stream_in.get_endpoint().result()
+        stream_in.endpoint().result()
     }
 }
 
@@ -152,7 +152,7 @@ where
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
-        stream_in.0.sink.get_endpoint().result()
+        stream_in.0.sink.endpoint().result()
     }
 }
 
@@ -178,7 +178,7 @@ where
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
-        stream_in.get_endpoint().result()
+        stream_in.endpoint().result()
     }
 }
 
@@ -206,7 +206,7 @@ where
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
-        stream_in.get_endpoint().result()
+        stream_in.endpoint().result()
     }
 }
 
