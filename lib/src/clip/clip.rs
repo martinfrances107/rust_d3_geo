@@ -193,7 +193,7 @@ where
         self.state.ring_sink.line_end();
 
         let clean = self.state.ring_sink.clean();
-        let mut ring_segments = self.state.ring_sink.get_sink().result();
+        let mut ring_segments = self.state.ring_sink.sink().result();
         let n = ring_segments.len();
         let m;
 
@@ -216,15 +216,15 @@ where
             m = segment.len() - 1usize;
             if m > 0 {
                 if !self.state.polygon_started {
-                    self.state.line_node.get_sink().polygon_start();
+                    self.state.line_node.sink().polygon_start();
                     self.state.polygon_started = true;
                 }
-                self.state.line_node.get_sink().line_start();
+                self.state.line_node.sink().line_start();
                 for s in segment.iter().take(m) {
                     let point = s.p;
-                    self.state.line_node.get_sink().point(&point, None);
+                    self.state.line_node.sink().point(&point, None);
                 }
-                self.state.line_node.get_sink().line_end();
+                self.state.line_node.sink().line_end();
             }
             return;
         }
@@ -264,7 +264,7 @@ where
 
     #[inline]
     fn endpoint(&mut self) -> &mut Self::EP {
-        self.state.line_node.get_sink().endpoint()
+        self.state.line_node.sink().endpoint()
     }
 
     #[inline]
@@ -324,7 +324,7 @@ where
         let start_inside = polygon_contains(&self.state.polygon, &self.start);
 
         if !segments_inner.is_empty() {
-            self.state.line_node.get_sink().polygon_start();
+            self.state.line_node.sink().polygon_start();
             if !self.state.polygon_started {
                 self.state.polygon_started = true;
             }
@@ -333,20 +333,20 @@ where
                 gen_compare_intersection(),
                 start_inside,
                 &self.interpolator,
-                self.state.line_node.get_sink(),
+                self.state.line_node.sink(),
             );
         } else if start_inside {
             if !self.state.polygon_started {
-                self.state.line_node.get_sink().polygon_start();
+                self.state.line_node.sink().polygon_start();
                 self.state.polygon_started = true;
             }
-            self.state.line_node.get_sink().line_start();
+            self.state.line_node.sink().line_start();
             self.interpolator
-                .interpolate(None, None, T::one(), self.state.line_node.get_sink());
-            self.state.ring_sink.get_sink().line_end();
+                .interpolate(None, None, T::one(), self.state.line_node.sink());
+            self.state.ring_sink.sink().line_end();
         };
         if self.state.polygon_started {
-            self.state.line_node.get_sink().polygon_end();
+            self.state.line_node.sink().polygon_end();
             self.state.polygon_started = false;
         }
         self.state.segments.clear();
@@ -354,11 +354,11 @@ where
     }
 
     fn sphere(&mut self) {
-        self.state.line_node.get_sink().polygon_start();
-        self.state.line_node.get_sink().line_start();
+        self.state.line_node.sink().polygon_start();
+        self.state.line_node.sink().line_start();
         self.interpolator
-            .interpolate(None, None, T::one(), self.state.line_node.get_sink());
-        self.state.line_node.get_sink().line_end();
-        self.state.line_node.get_sink().polygon_end();
+            .interpolate(None, None, T::one(), self.state.line_node.sink());
+        self.state.line_node.sink().line_end();
+        self.state.line_node.sink().polygon_end();
     }
 }

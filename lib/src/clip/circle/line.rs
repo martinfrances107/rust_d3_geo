@@ -81,7 +81,7 @@ where
     type SC = SINK;
 
     // #[inline]
-    fn get_sink(&mut self) -> &mut Self::SC {
+    fn sink(&mut self) -> &mut Self::SC {
         &mut self.state.sink
     }
 }

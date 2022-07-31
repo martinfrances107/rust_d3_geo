@@ -87,5 +87,5 @@ pub trait LineConnected: Clean {
     /// Sink -- When Connected.
     type SC;
     /// Connects the next object in the pipeline.
-    fn get_sink(&mut self) -> &mut Self::SC;
+    fn sink(&mut self) -> &mut Self::SC;
 }
