@@ -32,7 +32,7 @@ mod path_area_test {
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
-    use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
     use rust_d3_geo::stream::Unconnected;
@@ -44,7 +44,7 @@ mod path_area_test {
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
     {
         let ba: BuilderAntimeridianResampleNoClip<Area<T>, Equirectangular<Area<T>, T>, T> =
-            Equirectangular::<Area<T>, T>::builder().scale(T::from(900f64 / PI).unwrap());
+            Equirectangular::<Area<T>, T>::builder().scale_set(T::from(900f64 / PI).unwrap());
 
         let builder = ba.precision_bypass();
         let out = builder.build();

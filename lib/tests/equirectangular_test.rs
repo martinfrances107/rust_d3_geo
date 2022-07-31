@@ -18,9 +18,9 @@ mod equirectangular_test {
     use rust_d3_geo::projection::projector::Projector;
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::ProjectionRawBase;
-    use rust_d3_geo::projection::Rotate;
-    use rust_d3_geo::projection::Scale;
-    use rust_d3_geo::projection::Translate;
+    use rust_d3_geo::projection::RotateSet;
+    use rust_d3_geo::projection::ScaleSet;
+    use rust_d3_geo::projection::TranslateSet;
     use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::StreamDrainStub;
     use rust_d3_geo::stream::Unconnected;
@@ -57,8 +57,8 @@ mod equirectangular_test {
     fn return_expected_result() {
         println!("equirectangular(point) returns the expected result");
         let b: B = Equirectangular::builder()
-            .translate(&Coordinate { x: 0f64, y: 0f64 })
-            .scale(1_f64);
+            .translate_set(&Coordinate { x: 0f64, y: 0f64 })
+            .scale_set(1_f64);
 
         let equirectangular = b.build();
 
@@ -156,9 +156,9 @@ mod equirectangular_test {
         println!("equirectangular(point) returns the expected result");
         let equirectangular: Projector<StreamDrainStub<f64>, _, _, _, _, _, _, _, _, _, f64> =
             Builder::new(Equirectangular::<StreamDrainStub<f64>, f64>::default())
-                .rotate(&[30f64, 0f64, 0f64])
-                .translate(&Coordinate { x: 0f64, y: 0f64 })
-                .scale(1_f64)
+                .rotate_set(&[30f64, 0f64, 0f64])
+                .translate_set(&Coordinate { x: 0f64, y: 0f64 })
+                .scale_set(1_f64)
                 .build();
 
         let pi = std::f64::consts::PI;
@@ -261,9 +261,9 @@ mod equirectangular_test {
     fn rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
         let b: B = Equirectangular::builder()
-            .rotate(&[30f64, 30f64, 0f64])
-            .translate(&Coordinate { x: 0f64, y: 0f64 })
-            .scale(1_f64);
+            .rotate_set(&[30f64, 30f64, 0f64])
+            .translate_set(&Coordinate { x: 0f64, y: 0f64 })
+            .scale_set(1_f64);
 
         let equirectangular = b.build();
 
@@ -368,9 +368,9 @@ mod equirectangular_test {
         println!("equirectangular.rotate([0, 0, 30])(point) returns the expected result");
 
         let b: B = Equirectangular::builder()
-            .rotate(&[0f64, 0f64, 30f64])
-            .translate(&Coordinate { x: 0f64, y: 0f64 })
-            .scale(1f64);
+            .rotate_set(&[0f64, 0f64, 30f64])
+            .translate_set(&Coordinate { x: 0f64, y: 0f64 })
+            .scale_set(1f64);
 
         // let equirectangular = b.build();
 
@@ -469,9 +469,9 @@ mod equirectangular_test {
     fn rotate_30_30_30() {
         println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
         let b: B = Equirectangular::builder()
-            .rotate(&[30f64, 30f64, 30f64])
-            .translate(&Coordinate { x: 0f64, y: 0f64 })
-            .scale(1f64);
+            .rotate_set(&[30f64, 30f64, 30f64])
+            .translate_set(&Coordinate { x: 0f64, y: 0f64 })
+            .scale_set(1f64);
 
         let equirectangular = b.build();
 

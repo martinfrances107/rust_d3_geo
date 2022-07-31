@@ -37,7 +37,7 @@ impl<SINK> ConnectedState for Connected<SINK> {
     type Sink = SINK;
 
     #[inline]
-    fn get_sink(&mut self) -> &mut Self::Sink {
+    fn sink(&mut self) -> &mut Self::Sink {
         &mut self.sink
     }
 }
@@ -59,7 +59,7 @@ pub trait Connectable {
 pub trait ConnectedState {
     type Sink;
 
-    fn get_sink(&mut self) -> &mut Self::Sink;
+    fn sink(&mut self) -> &mut Self::Sink;
 }
 
 /// to_stream()

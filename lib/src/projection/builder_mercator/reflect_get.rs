@@ -13,13 +13,13 @@ where
 
 	/// Is the projection builder set to invert the x-coordinate.
 	#[inline]
-	fn get_reflect_x(&self) -> bool {
+	fn is_x_reflected(&self) -> bool {
 		self.base.sx < T::zero()
 	}
 
 	/// Is the projection builder set to invert the y-coordinate.
 	#[inline]
-	fn get_reflect_y(&self) -> bool {
+	fn is_y_reflected(&self) -> bool {
 		self.base.sy < T::zero()
 	}
 }

@@ -9,7 +9,7 @@ use crate::math::asin;
 use crate::math::EPSILON;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ClipAngleSet;
-use crate::projection::Scale;
+use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -33,8 +33,8 @@ where
     #[inline]
     fn builder() -> Self::Builder {
         Builder::new(Orthographic::default())
-            .scale(T::from(249.5_f64).unwrap())
-            .clip_angle(T::from(90_f64 + EPSILON).unwrap())
+            .scale_set(T::from(249.5_f64).unwrap())
+            .clip_angle_set(T::from(90_f64 + EPSILON).unwrap())
     }
 }
 

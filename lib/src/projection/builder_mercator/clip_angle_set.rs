@@ -60,10 +60,10 @@ where
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
     // which uses the clip circle stratergy.
     #[inline]
-    fn clip_angle(self, angle: T) -> Self::Output {
+    fn clip_angle_set(self, angle: T) -> Self::Output {
         Self::Output {
             pr: self.pr,
-            base: self.base.clip_angle(angle),
+            base: self.base.clip_angle_set(angle),
             extent: self.extent,
         }
     }

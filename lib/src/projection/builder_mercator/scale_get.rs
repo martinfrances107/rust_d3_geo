@@ -13,7 +13,7 @@ where
     type T = T;
 
     #[inline]
-    fn get_scale(&self) -> T {
-        self.base.get_scale()
+    fn scale(&self) -> T {
+        self.base.scale()
     }
 }

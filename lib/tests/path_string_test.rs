@@ -29,8 +29,8 @@ mod path_string_test {
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
-    use rust_d3_geo::projection::Scale;
-    use rust_d3_geo::projection::Translate;
+    use rust_d3_geo::projection::ScaleSet;
+    use rust_d3_geo::projection::TranslateSet;
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
@@ -40,7 +40,7 @@ mod path_string_test {
         T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
     {
         Equirectangular::builder()
-            .scale(T::from(900f64 / PI).unwrap())
+            .scale_set(T::from(900f64 / PI).unwrap())
             .precision_bypass()
             .build()
     }
@@ -158,7 +158,7 @@ mod path_string_test {
 
     #[test]
     fn render_a_simple_multi_polygon() {
-        let gc = CircleGenerator::default().radius(10_f64).precision(80_f64);
+        let gc = CircleGenerator::default().radius_set(10_f64).precision_set(80_f64);
 
         let mut p_vec = vec![];
 
@@ -166,7 +166,7 @@ mod path_string_test {
         for long in (0..=40).step_by(40) {
             let poly = gc
                 .clone()
-                .center(&Coordinate {
+                .center_set(&Coordinate {
                     x: long as f64,
                     y: lat as f64,
                 })
@@ -176,8 +176,8 @@ mod path_string_test {
         let object = Geometry::MultiPolygon(MultiPolygon(p_vec));
 
         let ortho = Orthographic::<PathString<f64>, f64>::builder()
-            .scale(240_f64)
-            .translate(&Coordinate {
+            .scale_set(240_f64)
+            .translate_set(&Coordinate {
                 x: 300_f64,
                 y: 300_f64,
             })

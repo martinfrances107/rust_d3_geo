@@ -13,9 +13,9 @@ use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Rotate;
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::RotateSet;
+use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::TranslateSet;
 
 lazy_static! {
     /// Ignore every digit in a number after the decimal.
@@ -35,9 +35,9 @@ fn graticule() {
     };
 
     let ortho = Orthographic::builder()
-        .scale(240_f64)
-        .translate(&center)
-        .rotate(&[0_f64, -20_f64, 0_f64])
+        .scale_set(240_f64)
+        .translate_set(&center)
+        .rotate_set(&[0_f64, -20_f64, 0_f64])
         .build();
 
     let mut pb = PathBuilder::context_pathstring().build(ortho);

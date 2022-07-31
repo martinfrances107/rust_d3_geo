@@ -4,7 +4,7 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::projection::RecenterWithResampling;
-use crate::projection::Translate;
+use crate::projection::TranslateSet;
 use crate::Transform;
 
 use super::template::ClipU;
@@ -15,7 +15,7 @@ use super::NoClipU;
 use super::ResampleNoClipC;
 use super::ResampleNoClipU;
 
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateSet
     for Builder<
         DRAIN,
         I,
@@ -35,14 +35,14 @@ where
 {
     type T = T;
 
-    fn translate(mut self, t: &Coordinate<T>) -> Self {
+    fn translate_set(mut self, t: &Coordinate<T>) -> Self {
         self.x = t.x;
         self.y = t.y;
         self.recenter_with_resampling()
     }
 }
 
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateSet
     for Builder<
         DRAIN,
         I,
@@ -63,7 +63,7 @@ where
 {
     type T = T;
 
-    fn translate(mut self, t: &Coordinate<T>) -> Self {
+    fn translate_set(mut self, t: &Coordinate<T>) -> Self {
         self.x = t.x;
         self.y = t.y;
         self.recenter_with_resampling()

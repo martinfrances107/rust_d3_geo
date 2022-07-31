@@ -60,11 +60,11 @@ mod fit_test {
         let projection =
             projection.fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &d_object);
         assert!(in_delta(
-            projection.get_scale(),
+            projection.scale(),
             900. / (2_f64 * std::f64::consts::PI),
             1e-6
         ));
-        let translate = projection.get_translate();
+        let translate = projection.translate();
         assert!(in_delta_coordinate(
             &translate,
             &Coordinate {
@@ -82,9 +82,9 @@ mod fit_test {
 
         let projection = Equirectangular::builder()
             .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-        assert!(in_delta(projection.get_scale(), 143.239449, 1e-6));
+        assert!(in_delta(projection.scale(), 143.239449, 1e-6));
         assert!(in_delta_coordinate(
-            &projection.get_translate(),
+            &projection.translate(),
             &Coordinate {
                 x: 500_f64,
                 y: 492.000762_f64
@@ -100,9 +100,9 @@ mod fit_test {
         let world = world();
         let projection = AzimuthalEqualArea::builder()
             .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-        assert!(in_delta(projection.get_scale(), 228.357229, 1e-6));
+        assert!(in_delta(projection.scale(), 228.357229, 1e-6));
         assert!(in_delta_coordinate(
-            &projection.get_translate(),
+            &projection.translate(),
             &Coordinate {
                 x: 496.353618_f64,
                 y: 479.684353_f64
@@ -118,9 +118,9 @@ mod fit_test {
         let world = world();
         let projection = AzimuthalEquiDistant::builder()
             .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-        assert!(in_delta(projection.get_scale(), 153.559317, 1e-6));
+        assert!(in_delta(projection.scale(), 153.559317, 1e-6));
         assert!(in_delta_coordinate(
-            &projection.get_translate(),
+            &projection.translate(),
             &Coordinate {
                 x: 485.272493_f64,
                 y: 452.093375_f64
@@ -159,9 +159,9 @@ mod fit_test {
 
         let world = world();
         let projection = Equirectangular::builder().fit_size([900_f64, 900_f64], &world);
-        assert!(in_delta(projection.get_scale(), 143.239449, 1e-6));
+        assert!(in_delta(projection.scale(), 143.239449, 1e-6));
         assert!(in_delta_coordinate(
-            &projection.get_translate(),
+            &projection.translate(),
             &Coordinate {
                 x: 450_f64,
                 y: 442.000762_f64
@@ -178,7 +178,7 @@ mod fit_test {
         let projection = Gnomic::builder()
             .clip_angle(45_f64)
             .fit_extent([[50_f64, 50_f64], [950_f64, 950_f64]], &world);
-        assert!(in_delta(projection.get_scale(), 450.348233, 1e-6));
+        assert!(in_delta(projection.scale(), 450.348233, 1e-6));
         // TODO Must investigate the failure below.
         // assert!(in_delta_coordinate(
         // 	&projection.get_translate(),
@@ -205,9 +205,9 @@ mod fit_test {
         let world = world();
         let projection = Orthographic::builder()
             .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-        assert!((in_delta(projection.get_scale(), 451.406773, 1e-6)));
+        assert!((in_delta(projection.scale(), 451.406773, 1e-6)));
         assert!(in_delta_coordinate(
-            &projection.get_translate(),
+            &projection.translate(),
             &Coordinate {
                 x: 503.769179_f64,
                 y: 498.593227_f64
@@ -222,9 +222,9 @@ mod fit_test {
 
         let world = world();
         let projection = Orthographic::builder().fit_size([900.0_f64, 900.0_f64], &world);
-        assert!(in_delta(projection.get_scale(), 451.406773, 1e-6));
+        assert!(in_delta(projection.scale(), 451.406773, 1e-6));
         assert!(in_delta_coordinate(
-            &projection.get_translate(),
+            &projection.translate(),
             &Coordinate {
                 x: 453.769179_f64,
                 y: 448.593227_f64
@@ -240,9 +240,9 @@ mod fit_test {
         let world = world();
         let projection = Stereographic::builder()
             .fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
-        assert!(in_delta(projection.get_scale(), 162.934379_f64, 1e-6));
+        assert!(in_delta(projection.scale(), 162.934379_f64, 1e-6));
         assert!(in_delta_coordinate(
-            &projection.get_translate(),
+            &projection.translate(),
             &Coordinate {
                 x: 478.546293_f64,
                 y: 432.922534_f64
@@ -372,9 +372,9 @@ mod fit_test {
 
         let world = world();
         let projection = Equirectangular::builder().fit_width(900_f64, &world);
-        assert!(in_delta(projection.get_scale(), 143.239449_f64, 1e-6));
+        assert!(in_delta(projection.scale(), 143.239449_f64, 1e-6));
         assert!(in_delta_coordinate(
-            &projection.get_translate(),
+            &projection.translate(),
             &Coordinate {
                 x: 450_f64,
                 y: 208.999023_f64
@@ -405,9 +405,9 @@ mod fit_test {
 
         let world = world();
         let projection = Equirectangular::builder().fit_height(900f64, &world);
-        assert!(in_delta(projection.get_scale(), 297.042711_f64, 1e-6));
+        assert!(in_delta(projection.scale(), 297.042711_f64, 1e-6));
         assert!(in_delta_coordinate(
-            &projection.get_translate(),
+            &projection.translate(),
             &Coordinate {
                 x: 933.187199_f64,
                 y: 433.411585_f64

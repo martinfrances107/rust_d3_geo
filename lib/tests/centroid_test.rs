@@ -374,15 +374,15 @@ mod centroid_test {
     fn a_set_of_polygons_is_the_spherical_average_of_its_surface() {
         println!("the centroid of a set of polygons is the (spherical) average of its surface");
         let p45 = CircleGenerator::default()
-            .radius(45_f64)
-            .center(&Coordinate {
+            .radius_set(45_f64)
+            .center_set(&Coordinate {
                 x: 90_f64,
                 y: 0_f64,
             })
             .circle();
         let p60 = CircleGenerator::default()
-            .radius(60_f64)
-            .center(&Coordinate {
+            .radius_set(60_f64)
+            .center_set(&Coordinate {
                 x: -90_f64,
                 y: 0_f64,
             })
@@ -506,14 +506,14 @@ mod centroid_test {
     #[test]
     fn concentric_rings() {
         println!("concentric rings");
-        let cg = CircleGenerator::default().center(&Coordinate {
+        let cg = CircleGenerator::default().center_set(&Coordinate {
             x: 0_f64,
             y: 45_f64,
         });
 
-        let l60 = cg.clone().radius(60_f64).circle().exterior().clone();
+        let l60 = cg.clone().radius_set(60_f64).circle().exterior().clone();
 
-        let l45 = cg.radius(45_f64).circle().exterior().clone();
+        let l45 = cg.radius_set(45_f64).circle().exterior().clone();
         let rev_vec: Vec<Coordinate<f64>> = l45.into_iter().rev().collect();
         let l45_rev = LineString(rev_vec);
 

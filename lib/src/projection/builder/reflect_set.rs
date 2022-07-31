@@ -35,7 +35,7 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x(mut self, reflect: bool) -> Self {
+    fn reflect_x_set(mut self, reflect: bool) -> Self {
         if reflect {
             self.sx = T::from(-1.0_f64).unwrap();
         } else {
@@ -46,7 +46,7 @@ where
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y(mut self, reflect: bool) -> Self {
+    fn reflect_y_set(mut self, reflect: bool) -> Self {
         if reflect {
             self.sy = T::from(-1.0_f64).unwrap();
         } else {
@@ -79,7 +79,7 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x(mut self, reflect: bool) -> Self {
+    fn reflect_x_set(mut self, reflect: bool) -> Self {
         if reflect {
             self.sx = T::from(-1.0_f64).unwrap();
         } else {
@@ -90,7 +90,7 @@ where
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y(mut self, reflect: bool) -> Self {
+    fn reflect_y_set(mut self, reflect: bool) -> Self {
         if reflect {
             self.sy = T::from(-1.0_f64).unwrap();
         } else {

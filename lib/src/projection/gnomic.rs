@@ -8,7 +8,7 @@ use num_traits::float::FloatConst;
 
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ClipAngleSet;
-use crate::projection::Scale;
+use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -35,8 +35,8 @@ where
         DRAIN: Default + Stream<EP = DRAIN, T = T>,
     {
         Builder::new(Gnomic::default())
-            .scale(T::from(144.049_f64).unwrap())
-            .clip_angle(T::from(60_f64).unwrap())
+            .scale_set(T::from(144.049_f64).unwrap())
+            .clip_angle_set(T::from(60_f64).unwrap())
     }
 }
 

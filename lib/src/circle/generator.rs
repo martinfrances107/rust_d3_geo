@@ -75,38 +75,38 @@ where
     T: CoordFloat,
 {
     /// Center is used to programe the generator.
-    pub fn center(mut self, center: &Coordinate<T>) -> Generator<T> {
+    pub fn center_set(mut self, center: &Coordinate<T>) -> Generator<T> {
         self.center = *center;
         self
     }
 
     /// Returns the currently programmed center.
     #[inline]
-    pub fn get_center(&self) -> Coordinate<T> {
+    pub fn center(&self) -> Coordinate<T> {
         self.center
     }
 
     /// Sets the radius on the generator.
-    pub fn radius(mut self, radius: T) -> Self {
+    pub fn radius_set(mut self, radius: T) -> Self {
         self.radius = radius;
         self
     }
 
     /// Returns the currently programmed radius.
     #[inline]
-    pub fn get_radius(&self) -> T {
+    pub fn radius(&self) -> T {
         self.radius
     }
 
     /// Sets the precision.
-    pub fn precision(mut self, precision: T) -> Self {
+    pub fn precision_set(mut self, precision: T) -> Self {
         self.precision = precision;
         self
     }
 
     /// Returns the precision.
     #[inline]
-    pub fn get_precision(&self) -> T {
+    pub fn precision(&self) -> T {
         self.precision
     }
 }

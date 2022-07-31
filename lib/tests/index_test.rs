@@ -27,7 +27,7 @@ mod index_test {
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
-    use rust_d3_geo::projection::Scale;
+    use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::stream::Stream;
     use rust_d3_geo::stream::Streamable;
 
@@ -43,7 +43,7 @@ mod index_test {
             + FloatConst,
     >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<EP, T>, T> {
         Equirectangular::builder()
-            .scale(T::from(900f64 / PI).unwrap())
+            .scale_set(T::from(900f64 / PI).unwrap())
             .precision_bypass()
             .build()
     }

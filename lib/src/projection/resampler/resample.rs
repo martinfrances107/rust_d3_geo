@@ -65,7 +65,7 @@ where
     type Sink = SINK;
 
     #[inline]
-    fn get_sink(&mut self) -> &mut Self::Sink {
+    fn sink(&mut self) -> &mut Self::Sink {
         &mut self.sink
     }
 }

@@ -13,7 +13,7 @@ where
     type T = T;
 
     #[inline]
-    fn get_center(&self) -> Coordinate<T> {
-        self.base.get_center()
+    fn center(&self) -> Coordinate<T> {
+        self.base.center()
     }
 }

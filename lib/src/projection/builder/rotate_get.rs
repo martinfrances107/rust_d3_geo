@@ -13,7 +13,7 @@ where
 	type T = T;
 
 	#[inline]
-	fn get_rotate(&self) -> [T; 3] {
+	fn rotate(&self) -> [T; 3] {
 		[
 			self.delta_lambda.to_degrees(),
 			self.delta_phi.to_degrees(),

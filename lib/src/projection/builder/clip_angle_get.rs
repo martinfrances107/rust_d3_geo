@@ -15,7 +15,7 @@ where
 
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
     // which uses the clip circle stratergy.
-    fn get_clip_angle(&self) -> T {
+    fn clip_angle(&self) -> T {
         self.theta.unwrap()
     }
 }

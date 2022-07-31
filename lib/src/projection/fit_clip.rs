@@ -31,8 +31,8 @@ use crate::projection::builder::template::ClipU;
 use crate::projection::Build;
 use crate::projection::ClipExtentGet;
 use crate::projection::FitBounds;
-use crate::projection::Scale;
-use crate::projection::Translate;
+use crate::projection::ScaleSet;
+use crate::projection::TranslateSet;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Streamable;
@@ -49,8 +49,8 @@ pub(super) fn fit_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
 where
     B: ClipExtentClear<Output = Bint, T = T>
         + ClipExtentGet<T = T>
-        + Scale<T = T>
-        + Translate<T = T>,
+        + ScaleSet<T = T>
+        + TranslateSet<T = T>,
     Bint: Build<
             Drain = Bounds<T>,
             I = I,
@@ -79,8 +79,8 @@ where
 {
     let clip = builder.clip_extent();
     let b_no_clip = builder
-        .scale(T::from(150_f64).unwrap())
-        .translate(&Coordinate {
+        .scale_set(T::from(150_f64).unwrap())
+        .translate_set(&Coordinate {
             x: T::zero(),
             y: T::zero(),
         })
@@ -102,9 +102,9 @@ pub(super) fn fit_extent_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
 ) -> B
 where
     B: ClipExtentClear<Output = Bint, T = T>
-        + Scale<T = T>
+        + ScaleSet<T = T>
         + ClipExtentGet<T = T>
-        + Translate<T = T>,
+        + TranslateSet<T = T>,
     Bint: Build<
             Drain = Bounds<T>,
             I = I,
@@ -118,8 +118,8 @@ where
             RU = RU,
             T = T,
         > + ClipExtentSet<Output = B, T = T>
-        + Scale<T = T>
-        + Translate<T = T>,
+        + ScaleSet<T = T>
+        + TranslateSet<T = T>,
     I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
@@ -142,8 +142,8 @@ where
             let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
 
             builder
-                .scale(one_five_zero * k)
-                .translate(&Coordinate { x, y })
+                .scale_set(one_five_zero * k)
+                .translate_set(&Coordinate { x, y })
         }),
         object,
     )

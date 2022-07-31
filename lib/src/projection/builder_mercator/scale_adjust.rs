@@ -7,14 +7,14 @@ use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoneClipC;
 use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::Scale;
+use crate::projection::ScaleSet;
 use crate::projection::TransformExtent;
 use crate::Transform;
 
 use super::Builder;
 use super::Reclip;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleSet
     for Builder<
         DRAIN,
         I,
@@ -40,13 +40,13 @@ where
 {
     type T = T;
 
-    fn scale(mut self, scale: T) -> Self {
-        self.base = self.base.scale(scale);
+    fn scale_set(mut self, scale: T) -> Self {
+        self.base = self.base.scale_set(scale);
         self.reclip()
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleSet
     for Builder<
         DRAIN,
         I,
@@ -72,8 +72,8 @@ where
 {
     type T = T;
 
-    fn scale(mut self, scale: T) -> Self {
-        self.base = self.base.scale(scale);
+    fn scale_set(mut self, scale: T) -> Self {
+        self.base = self.base.scale_set(scale);
         self.reclip()
     }
 }

@@ -8,9 +8,9 @@ use crate::projection::builder::ResampleNoneClipU;
 use crate::projection::builder::ResampleNoneNoClipC;
 use crate::projection::builder::ResampleNoneNoClipU;
 use crate::projection::RecenterNoResampling;
-use crate::projection::Scale;
+use crate::projection::ScaleSet;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleSet
     for Builder<
         DRAIN,
         I,
@@ -30,13 +30,13 @@ where
 {
     type T = T;
 
-    fn scale(mut self, scale: T) -> Self {
+    fn scale_set(mut self, scale: T) -> Self {
         self.k = scale;
         self.recenter_no_resampling()
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> Scale
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleSet
     for Builder<
         DRAIN,
         I,
@@ -57,7 +57,7 @@ where
 {
     type T = T;
 
-    fn scale(mut self, scale: T) -> Self {
+    fn scale_set(mut self, scale: T) -> Self {
         self.k = scale;
         self.recenter_no_resampling()
     }

@@ -126,7 +126,7 @@ pub trait CenterGet {
     type T;
 
     ///  Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
-    fn get_center(&self) -> Coordinate<Self::T>
+    fn center(&self) -> Coordinate<Self::T>
     where
         Self::T: CoordFloat;
 }
@@ -144,7 +144,7 @@ pub trait CenterSet {
     ///
     /// @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
     ///
-    fn center(self, point: &Coordinate<Self::T>) -> Self
+    fn center_set(self, point: &Coordinate<Self::T>) -> Self
     where
         Self::T: CoordFloat;
 }
@@ -262,7 +262,7 @@ pub trait AngleGet {
 
     /// Returns the projection’s post-projection planar rotation angle.
     /// defaults to 0°.
-    fn get_angle(&self) -> Self::T;
+    fn angle(&self) -> Self::T;
 }
 
 /// Sets the post-projection planar rotation angle.
@@ -274,7 +274,7 @@ pub trait AngleSet {
     /// Sets the projection’s post-projection planar rotation angle to the
     /// specified angle in degrees and returns the projection.
     ///
-    fn angle(self, angle: Self::T) -> Self;
+    fn angle_set(self, angle: Self::T) -> Self;
 }
 
 pub trait ClipAngleReset {
@@ -289,7 +289,7 @@ pub trait ClipAngleGet {
     ///f64 or f32
     type T;
 
-    fn get_clip_angle(&self) -> Self::T;
+    fn clip_angle(&self) -> Self::T;
 }
 
 /// Selects the clipping strategy
@@ -301,7 +301,7 @@ pub trait ClipAngleSet {
     type T;
 
     ///  Switches the projection builder from antimeridian to circle based clipping.
-    fn clip_angle(self, angle: Self::T) -> Self::Output;
+    fn clip_angle_set(self, angle: Self::T) -> Self::Output;
 }
 
 pub trait ClipAngleAdjust {
@@ -333,10 +333,10 @@ pub trait ReflectGet {
     type T;
 
     /// Is the projection builder set to invert the x-coordinate.
-    fn get_reflect_x(&self) -> bool;
+    fn is_x_reflected(&self) -> bool;
 
     /// Is the projection builder set to invert the x-coordinate.
-    fn get_reflect_y(&self) -> bool;
+    fn is_y_reflected(&self) -> bool;
 }
 
 pub trait ReflectSet {
@@ -344,10 +344,10 @@ pub trait ReflectSet {
     type T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x(self, reflect: bool) -> Self;
+    fn reflect_x_set(self, reflect: bool) -> Self;
 
     /// Set the projection builder to invert the y-coordinate.
-    fn reflect_y(self, reflect: bool) -> Self;
+    fn reflect_y_set(self, reflect: bool) -> Self;
 }
 
 /// Given the builder is already set to resample, adjust the precision setting.
@@ -403,12 +403,12 @@ pub trait RotateGet {
     type T;
 
     /// Returns the three-axis rotaation.
-    fn get_rotate(&self) -> [Self::T; 3];
+    fn rotate(&self) -> [Self::T; 3];
 }
 
 /// Rotation getter and setters.
 /// A projection builder sub trait.
-pub trait Rotate {
+pub trait RotateSet {
     /// f64 or f32.
     type T;
 
@@ -416,7 +416,7 @@ pub trait Rotate {
     ///
     ///  @param angles  A three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
     ///  (These correspond to yaw, PItch and roll.)
-    fn rotate(self, angles: &[Self::T; 3]) -> Self;
+    fn rotate_set(self, angles: &[Self::T; 3]) -> Self;
 }
 
 /// Controls the projections scaling factor.
@@ -427,7 +427,7 @@ pub trait ScaleGet {
     type T;
 
     /// Returns the programmed scaling factor.
-    fn get_scale(&self) -> Self::T;
+    fn scale(&self) -> Self::T;
 }
 
 /// Controls the projections scaling factor.
@@ -435,7 +435,7 @@ pub trait ScaleGet {
 /// Adjust implies that the PCN - is a rectangle and it will be adjusted.
 ///
 /// Projection builder sub trait.
-pub trait Scale {
+pub trait ScaleSet {
     /// f32 or f64.
     type T;
 
@@ -443,7 +443,7 @@ pub trait Scale {
     ///  The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
     ///
     ///  @param scale Scale factor to be used for the projection; the default scale is projection-specific.
-    fn scale(self, scale: Self::T) -> Self;
+    fn scale_set(self, scale: Self::T) -> Self;
 }
 
 /// Controls the projections translation factor.
@@ -454,7 +454,7 @@ pub trait TranslateGet {
     type T;
 
     /// Returns the projections translation.
-    fn get_translate(&self) -> Coordinate<Self::T>
+    fn translate(&self) -> Coordinate<Self::T>
     where
         Self::T: CoordFloat;
 }
@@ -462,7 +462,7 @@ pub trait TranslateGet {
 /// Controls the projections translation factor.
 ///
 /// Projection builder sub trait.
-pub trait Translate {
+pub trait TranslateSet {
     /// f32 or f64.
     type T;
 
@@ -470,7 +470,7 @@ pub trait Translate {
     ///  The translation offset determines the PIxel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
     ///
     ///  @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
-    fn translate(self, t: &Coordinate<Self::T>) -> Self
+    fn translate_set(self, t: &Coordinate<Self::T>) -> Self
     where
         Self::T: CoordFloat;
 }

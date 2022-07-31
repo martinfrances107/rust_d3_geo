@@ -243,7 +243,7 @@ where
 
     #[inline]
     fn endpoint(&mut self) -> &mut Self::EP {
-        self.state.get_sink().endpoint()
+        self.state.sink().endpoint()
     }
 
     fn line_start(&mut self) {
@@ -386,7 +386,7 @@ where
     }
     fn line_end(&mut self) {
         if self.v0 {
-            self.state.get_sink().line_end();
+            self.state.sink().line_end();
         }
         self.point0 = None;
     }

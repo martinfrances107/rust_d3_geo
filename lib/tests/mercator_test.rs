@@ -16,8 +16,8 @@ mod mercator_tests {
     use rust_d3_geo::projection::ClipExtentGet;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
-    use rust_d3_geo::projection::Scale;
-    use rust_d3_geo::projection::Translate;
+    use rust_d3_geo::projection::ScaleSet;
+    use rust_d3_geo::projection::TranslateSet;
 
     // #[test]
     // fn test_clip_extent_defaults_to_automatic() {
@@ -78,7 +78,7 @@ mod mercator_tests {
 	            "mercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent"
 	        );
         let projection_builder = Mercator::builder()
-            .translate(&Coordinate { x: 0_f64, y: 0_f64 })
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .clip_extent_adjust(&[
                 Coordinate {
                     x: -10_f64,
@@ -89,7 +89,7 @@ mod mercator_tests {
                     y: 10_f64,
                 },
             ])
-            .scale(1_f64)
+            .scale_set(1_f64)
             .precision_bypass();
 
         let projection = projection_builder.build();
@@ -125,7 +125,7 @@ mod mercator_tests {
             "mercator.clipExtent(extent).translate(translate) updates the intersected clip extent"
         );
         let projection_builder = Mercator::builder()
-            .translate(&Coordinate { x: 0_f64, y: 0_f64 })
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .clip_extent_adjust(&[
                 Coordinate {
                     x: -10_f64,
@@ -136,7 +136,7 @@ mod mercator_tests {
                     y: 10_f64,
                 },
             ])
-            .scale(1_f64)
+            .scale_set(1_f64)
             .precision_bypass();
         let projection = projection_builder.build();
 
@@ -170,7 +170,7 @@ mod mercator_tests {
             "mercator.clipExtent(extent).translate(translate) updates the intersected clip extent"
         );
         let projection_builder = Mercator::builder()
-            .scale(1_f64)
+            .scale_set(1_f64)
             .clip_extent_adjust(&[
                 Coordinate {
                     x: -10_f64,
@@ -181,7 +181,7 @@ mod mercator_tests {
                     y: 10_f64,
                 },
             ])
-            .translate(&Coordinate { x: 0_f64, y: 0_f64 })
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .precision_bypass();
 
         let projection = projection_builder.build();

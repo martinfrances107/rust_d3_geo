@@ -26,8 +26,8 @@ mod reflect_tests {
 	use rust_d3_geo::projection::ProjectionRawBase;
 	use rust_d3_geo::projection::ReflectGet;
 	use rust_d3_geo::projection::ReflectSet;
-	use rust_d3_geo::projection::Scale;
-	use rust_d3_geo::projection::Translate;
+	use rust_d3_geo::projection::ScaleSet;
+	use rust_d3_geo::projection::TranslateSet;
 	use rust_d3_geo::stream::Connected;
 	use rust_d3_geo::stream::StreamDrainStub;
 	use rust_d3_geo::stream::Unconnected;
@@ -62,11 +62,11 @@ mod reflect_tests {
 		println!("projection.reflectX(…) defaults to false");
 
 		let builder: GB = Gnomic::builder()
-			.scale(1f64)
-			.translate(&Coordinate { x: 0_f64, y: 0_f64 });
+			.scale_set(1f64)
+			.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
 
-		assert_eq!(builder.get_reflect_x(), false);
-		assert_eq!(builder.get_reflect_y(), false);
+		assert_eq!(builder.is_x_reflected(), false);
+		assert_eq!(builder.is_y_reflected(), false);
 
 		let projection = builder.build();
 		assert!(projection_equal(
@@ -107,11 +107,11 @@ mod reflect_tests {
 	fn test_reflect_mirrors_x_after_processing() {
 		println!("projection.reflectX(…) mirrors x after projecting");
 		let mut builder: GB = Gnomic::builder()
-			.scale(1_f64)
-			.translate(&Coordinate { x: 0_f64, y: 0_f64 })
-			.reflect_x(true);
+			.scale_set(1_f64)
+			.translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+			.reflect_x_set(true);
 
-		assert_eq!(builder.get_reflect_x(), true);
+		assert_eq!(builder.is_x_reflected(), true);
 
 		let projection = builder.build();
 
@@ -148,10 +148,10 @@ mod reflect_tests {
 			None
 		));
 
-		builder = builder.reflect_x(false).reflect_y(true);
+		builder = builder.reflect_x_set(false).reflect_y_set(true);
 		let projection = builder.build();
-		assert_eq!(builder.get_reflect_x(), false);
-		assert_eq!(builder.get_reflect_y(), true);
+		assert_eq!(builder.is_x_reflected(), false);
+		assert_eq!(builder.is_y_reflected(), true);
 
 		assert!(projection_equal(
 			&projection,
@@ -192,16 +192,16 @@ mod reflect_tests {
 		println!("projection.reflectX(…) works with projection.angle()");
 		let builder: MercatorBuilder<StreamDrainStub<f32>, _, _, _, _, _, _, _, _, _, f32> =
 			Mercator::builder()
-				.scale(1_f32)
-				.translate(&Coordinate {
+				.scale_set(1_f32)
+				.translate_set(&Coordinate {
 					x: 10_f32,
 					y: 20_f32,
 				})
-				.reflect_x(true)
-				.angle(45_f32);
+				.reflect_x_set(true)
+				.angle_set(45_f32);
 
-		assert_eq!(builder.get_reflect_x(), true);
-		assert!(in_delta(45_f32, builder.get_angle(), 1e-6));
+		assert_eq!(builder.is_x_reflected(), true);
+		assert!(in_delta(45_f32, builder.angle(), 1e-6));
 		let p = builder.build();
 		assert_eq!(
 			p.transform(&Coordinate { x: 0_f32, y: 0_f32 }),

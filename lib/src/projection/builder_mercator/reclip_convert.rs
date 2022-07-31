@@ -23,9 +23,9 @@ where
 {
     type Output = BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>;
     fn reclip_convert(self) -> Self::Output {
-        let k = T::PI() * self.get_scale();
+        let k = T::PI() * self.scale();
 
-        let rotate_raw = self.base.get_rotate();
+        let rotate_raw = self.base.rotate();
         let t = rotate_radians(rotate_raw).invert(&Coordinate {
             x: T::zero(),
             y: T::zero(),

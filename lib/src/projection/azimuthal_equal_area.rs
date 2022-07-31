@@ -10,7 +10,7 @@ use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::Builder;
 use crate::projection::ClipAngleSet;
 use crate::projection::ProjectionRawBase;
-use crate::projection::Scale;
+use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -40,8 +40,8 @@ where
     #[inline]
     fn builder() -> Self::Builder {
         Builder::new(AzimuthalEqualArea::default())
-            .scale(T::from(124.75_f64).unwrap())
-            .clip_angle(T::from(180_f64 - 1e-3).unwrap())
+            .scale_set(T::from(124.75_f64).unwrap())
+            .clip_angle_set(T::from(180_f64 - 1e-3).unwrap())
     }
 }
 

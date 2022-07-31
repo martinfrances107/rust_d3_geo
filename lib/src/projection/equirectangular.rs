@@ -6,7 +6,7 @@ use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
-use crate::projection::Scale;
+use crate::projection::ScaleSet;
 use crate::Transform;
 
 use super::builder::Builder;
@@ -29,7 +29,7 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        Builder::new(Equirectangular::default()).scale(T::from(152.63_f64).unwrap())
+        Builder::new(Equirectangular::default()).scale_set(T::from(152.63_f64).unwrap())
     }
 }
 

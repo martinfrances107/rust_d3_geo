@@ -8,14 +8,14 @@ use crate::projection::builder::ResampleNoneClipU;
 use crate::projection::builder::ResampleNoneNoClipC;
 use crate::projection::builder::ResampleNoneNoClipU;
 use crate::projection::RecenterNoResampling;
-use crate::projection::Translate;
+use crate::projection::TranslateSet;
 use crate::Transform;
 
 use super::template::ClipU;
 use super::Builder;
 use super::NoClipU;
 
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateSet
     for Builder<
         DRAIN,
         I,
@@ -35,14 +35,14 @@ where
 {
     type T = T;
 
-    fn translate(mut self, t: &Coordinate<T>) -> Self {
+    fn translate_set(mut self, t: &Coordinate<T>) -> Self {
         self.x = t.x;
         self.y = t.y;
         self.recenter_no_resampling()
     }
 }
 
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> Translate
+impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateSet
     for Builder<
         DRAIN,
         I,
@@ -63,7 +63,7 @@ where
 {
     type T = T;
 
-    fn translate(mut self, t: &Coordinate<T>) -> Self {
+    fn translate_set(mut self, t: &Coordinate<T>) -> Self {
         self.x = t.x;
         self.y = t.y;
         self.recenter_no_resampling()

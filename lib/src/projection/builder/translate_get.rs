@@ -13,7 +13,7 @@ where
     type T = T;
 
     #[inline]
-    fn get_translate(&self) -> Coordinate<T> {
+    fn translate(&self) -> Coordinate<T> {
         Coordinate {
             x: self.x,
             y: self.y,

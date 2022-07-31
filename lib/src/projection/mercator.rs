@@ -9,7 +9,7 @@ use num_traits::AsPrimitive;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use crate::projection::builder_mercator::ReclipConvert;
-use crate::projection::Scale;
+use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -37,7 +37,7 @@ where
             MercatorBuilder::new(Mercator::default());
         default
             .reclip_convert()
-            .scale(T::from(961_f64 / f64::TAU()).unwrap())
+            .scale_set(T::from(961_f64 / f64::TAU()).unwrap())
     }
 }
 

@@ -16,7 +16,7 @@ where
 	/// Returns the projection’s post-projection planar rotation angle.
 	/// defaults to 0°.
 	#[inline]
-	fn get_angle(&self) -> Self::T {
+	fn angle(&self) -> Self::T {
 		self.alpha.to_degrees()
 	}
 }

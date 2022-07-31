@@ -22,8 +22,8 @@ where
     type T = T;
 
     #[inline]
-    fn get_angle(&self) -> T {
-        self.base.get_angle()
+    fn angle(&self) -> T {
+        self.base.angle()
     }
 }
 
@@ -49,11 +49,11 @@ where
 
     /// Sets the rotation angles as measured in degrees.
     #[inline]
-    fn angle(self, angle: T) -> Self {
+    fn angle_set(self, angle: T) -> Self {
         Self {
             extent: self.extent, // post-clip extent
             pr: self.pr,
-            base: self.base.angle(angle),
+            base: self.base.angle_set(angle),
         }
     }
 }
@@ -81,11 +81,11 @@ where
 
     /// Sets the rotation angles as measured in degrees.
     #[inline]
-    fn angle(self, angle: T) -> Self {
+    fn angle_set(self, angle: T) -> Self {
         Self {
             extent: self.extent,
             pr: self.pr,
-            base: self.base.angle(angle),
+            base: self.base.angle_set(angle),
         }
     }
 }

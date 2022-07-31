@@ -60,7 +60,7 @@ where
 
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
     // which uses the clip circle stratergy.
-    fn clip_angle(self, angle: T) -> Self::Output {
+    fn clip_angle_set(self, angle: T) -> Self::Output {
         if angle == T::zero() {
             panic!("must call clip_angle_reset() instead");
         }

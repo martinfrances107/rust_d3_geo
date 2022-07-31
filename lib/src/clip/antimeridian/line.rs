@@ -125,11 +125,11 @@ where
 
     #[inline]
     fn endpoint(&mut self) -> &mut Self::EP {
-        self.state.get_sink().endpoint()
+        self.state.sink().endpoint()
     }
 
     fn line_start(&mut self) {
-        self.state.get_sink().line_start();
+        self.state.sink().line_start();
         self.clean = 1;
     }
 
@@ -150,30 +150,30 @@ where
             } else {
                 -T::FRAC_PI_2()
             };
-            self.state.get_sink().point(
+            self.state.sink().point(
                 &Coordinate {
                     x: self.lambda0,
                     y: self.phi0,
                 },
                 None,
             );
-            self.state.get_sink().point(
+            self.state.sink().point(
                 &Coordinate {
                     x: self.sign0,
                     y: self.phi0,
                 },
                 None,
             );
-            self.state.get_sink().line_end();
-            self.state.get_sink().line_start();
-            self.state.get_sink().point(
+            self.state.sink().line_end();
+            self.state.sink().line_start();
+            self.state.sink().point(
                 &Coordinate {
                     x: sign1,
                     y: self.phi0,
                 },
                 None,
             );
-            self.state.get_sink().point(
+            self.state.sink().point(
                 &Coordinate {
                     x: lambda1,
                     y: self.phi0,
@@ -191,16 +191,16 @@ where
                 lambda1 = lambda1 - sign1 * self.epsilon;
             }
             self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
-            self.state.get_sink().point(
+            self.state.sink().point(
                 &Coordinate {
                     x: self.sign0,
                     y: self.phi0,
                 },
                 None,
             );
-            self.state.get_sink().line_end();
-            self.state.get_sink().line_start();
-            self.state.get_sink().point(
+            self.state.sink().line_end();
+            self.state.sink().line_start();
+            self.state.sink().point(
                 &Coordinate {
                     x: sign1,
                     y: self.phi0,
@@ -211,7 +211,7 @@ where
         }
         self.lambda0 = lambda1;
         self.phi0 = phi1;
-        self.state.get_sink().point(
+        self.state.sink().point(
             &Coordinate {
                 x: self.lambda0,
                 y: self.phi0,
@@ -222,7 +222,7 @@ where
     }
 
     fn line_end(&mut self) {
-        self.state.get_sink().line_end();
+        self.state.sink().line_end();
         self.lambda0 = T::nan();
         self.phi0 = T::nan();
     }

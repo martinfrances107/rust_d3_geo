@@ -14,7 +14,7 @@ where
     type T = T;
 
     #[inline]
-    fn get_center(&self) -> Coordinate<T> {
+    fn center(&self) -> Coordinate<T> {
         Coordinate {
             x: self.lambda.to_degrees(),
             y: self.phi.to_degrees(),

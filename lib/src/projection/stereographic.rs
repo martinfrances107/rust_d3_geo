@@ -7,7 +7,7 @@ use num_traits::float::FloatConst;
 
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ClipAngleSet;
-use crate::projection::Scale;
+use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -37,8 +37,8 @@ where
     #[inline]
     fn builder() -> Self::Builder {
         Builder::new(Stereographic::default())
-            .scale(T::from(250_f64).unwrap())
-            .clip_angle(T::from(142_f64).unwrap())
+            .scale_set(T::from(250_f64).unwrap())
+            .clip_angle_set(T::from(142_f64).unwrap())
     }
 }
 

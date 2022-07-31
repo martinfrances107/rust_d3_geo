@@ -30,9 +30,9 @@ where
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     fn reclip(mut self) -> Self {
-        let k = T::PI() * self.base.get_scale();
+        let k = T::PI() * self.base.scale();
 
-        let rotate_raw = self.base.get_rotate();
+        let rotate_raw = self.base.rotate();
         let t = rotate_radians(rotate_raw).invert(&Coordinate {
             x: T::zero(),
             y: T::zero(),

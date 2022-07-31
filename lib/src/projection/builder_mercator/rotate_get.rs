@@ -13,7 +13,7 @@ where
 	type T = T;
 
 	#[inline]
-	fn get_rotate(&self) -> [T; 3] {
-		self.base.get_rotate()
+	fn rotate(&self) -> [T; 3] {
+		self.base.rotate()
 	}
 }

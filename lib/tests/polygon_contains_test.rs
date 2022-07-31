@@ -89,7 +89,7 @@ mod polygon_contains_test {
     fn small_circle() {
         println!("geoPolygonContains(smallCircle, point) returns the expected value");
 
-        let mut circle = CircleGenerator::default().radius(60.0);
+        let mut circle = CircleGenerator::default().radius_set(60.0);
         let polygon = circle.circle();
 
         assert_eq!(
@@ -112,7 +112,7 @@ mod polygon_contains_test {
     fn wraps_longitudes() {
         println!("geoPolygonContains wraps longitudes");
 
-        let mut circle = CircleGenerator::default().center(&Coordinate { x: 300f64, y: 0f64 });
+        let mut circle = CircleGenerator::default().center_set(&Coordinate { x: 300f64, y: 0f64 });
         let c = circle.circle();
         let polygon = c;
 
@@ -449,7 +449,7 @@ mod polygon_contains_test {
     #[test]
     fn large_circle() {
         println!("geoPolygonContains(largeCircle, point) returns the expected value");
-        let mut circle = CircleGenerator::default().radius(120.0);
+        let mut circle = CircleGenerator::default().radius_set(120.0);
         let c = circle.circle();
         let polygon = c;
         println!("polygon {:#?}", polygon);
@@ -511,12 +511,12 @@ mod polygon_contains_test {
     fn large_narrow_equatorial_hole() {
         println!("geoPolygonContains(largeNarrowEquatorialHole, point) returns the expected value");
         let mut circle_gen = CircleGenerator::default()
-            .center(&Coordinate { x: 0f64, y: -90f64 })
-            .radius(90f64 - 0.1f64);
+            .center_set(&Coordinate { x: 0f64, y: -90f64 })
+            .radius_set(90f64 - 0.1f64);
         let ring0: LineString<f64> = circle_gen.circle().exterior().clone();
 
         let ring1 = circle_gen
-            .radius(90f64 + 0.1f64)
+            .radius_set(90f64 + 0.1f64)
             .circle()
             .exterior()
             .clone();
@@ -541,14 +541,14 @@ mod polygon_contains_test {
         println!("geoPolygonContains(largeNarrowEquatorialHole, point) returns the expected value");
 
         let mut circle = CircleGenerator::default()
-            .center(&Coordinate { x: 0f64, y: -90f64 })
-            .radius(90f64 + 0.1f64);
+            .center_set(&Coordinate { x: 0f64, y: -90f64 })
+            .radius_set(90f64 + 0.1f64);
 
         let ring1 = circle.circle().exterior().clone();
 
         let mut circle = CircleGenerator::default()
-            .center(&Coordinate { x: 0f64, y: -90f64 })
-            .radius(90f64 - 0.1f64);
+            .center_set(&Coordinate { x: 0f64, y: -90f64 })
+            .radius_set(90f64 - 0.1f64);
         let c2 = circle.circle().exterior().clone();
         let rev_vec = c2.into_iter().rev().collect();
         let ring2 = LineString(rev_vec);
@@ -1005,7 +1005,7 @@ mod polygon_contains_test {
             "geoPolygonContains(hemisphereTouchingTheSouthPole, point) returns the expected value"
         );
 
-        let mut circle = CircleGenerator::default().radius(90f64);
+        let mut circle = CircleGenerator::default().radius_set(90f64);
 
         let c = circle.circle();
         let polygon = &c;
