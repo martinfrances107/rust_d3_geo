@@ -4,7 +4,7 @@ use geo::MultiLineString;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-use crate::get_document;
+use crate::document;
 
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
@@ -14,11 +14,11 @@ use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::ClipAngleAdjust;
 use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::TranslateSet;
 
 pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
-	let document = get_document()?;
+	let document = document()?;
 	// Grab canvas.
 	let canvas = document
 		.get_element_by_id("stereographic-rust")
@@ -37,8 +37,8 @@ pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let pb = PathBuilder::new(context);
 
 	let stereographic = Stereographic::builder()
-		.scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-		.translate(&Coordinate {
+		.scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
+		.translate_set(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})

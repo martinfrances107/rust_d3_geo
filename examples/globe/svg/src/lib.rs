@@ -14,8 +14,8 @@ extern crate web_sys;
 use geo::Coordinate;
 use geo::Geometry;
 use geo::GeometryCollection;
-use rust_d3_geo::projection::Rotate;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::RotateSet;
+use rust_d3_geo::projection::TranslateSet;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
@@ -28,7 +28,7 @@ use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Scale;
+use rust_d3_geo::projection::ScaleSet;
 use rust_topojson_client::feature::Builder as FeatureBuilder;
 
 use topojson::Topology;
@@ -66,14 +66,14 @@ macro_rules! console_log {
 }
 
 #[cfg(not(tarpaulin_include))]
-fn get_document() -> Result<Document, JsValue> {
+fn document() -> Result<Document, JsValue> {
     let window = web_sys::window().unwrap();
     Ok(window.document().unwrap())
 }
 
 #[cfg(not(tarpaulin_include))]
-fn get_path_node(class_name: &str) -> Result<Element, JsValue> {
-    let document = get_document()?;
+fn path_node(class_name: &str) -> Result<Element, JsValue> {
+    let document = document()?;
     let class_list = document.get_elements_by_class_name(class_name);
 
     assert!(class_list.length() < 2);
@@ -96,7 +96,7 @@ fn get_path_node(class_name: &str) -> Result<Element, JsValue> {
 /// Entry point.
 #[wasm_bindgen]
 pub async fn start() -> Result<(), JsValue> {
-    let document = get_document()?;
+    let document = document()?;
     let window = web_sys::window().expect("Failed to get window");
 
     // Get data from world map.
@@ -123,12 +123,12 @@ pub async fn start() -> Result<(), JsValue> {
         .expect("Did not extract geometry");
 
     let ortho = Orthographic::builder()
-        .scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-        .translate(&Coordinate {
+        .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
+        .translate_set(&Coordinate {
             x: width / 2_f64,
             y: height / 2_f64,
         })
-        .rotate(&[270_f64, 0_f64, 0_f64])
+        .rotate_set(&[270_f64, 0_f64, 0_f64])
         .build();
 
     let fill: [&str; 7] = [
@@ -154,7 +154,7 @@ pub async fn start() -> Result<(), JsValue> {
                         for p in &mp.0 {
                             let s = builder.object(&Geometry::Polygon(p.clone()));
                             let class_name = format!("id-{}", i);
-                            let path = get_path_node(&class_name)?;
+                            let path = path_node(&class_name)?;
                             path.set_attribute_ns(None, "d", &s)?;
                             path.set_attribute_ns(None, "class", &class_name)?;
                             path.set_attribute_ns(None, "style", fill[i % 7])?;
@@ -166,7 +166,7 @@ pub async fn start() -> Result<(), JsValue> {
                         let s = builder.object(&Geometry::Polygon(p.clone()));
 
                         let class_name = format!("id-{}", i);
-                        let path = get_path_node(&class_name)?;
+                        let path = path_node(&class_name)?;
                         path.set_attribute_ns(None, "d", &s)?;
                         path.set_attribute_ns(None, "style", fill[i % 7])?;
                         svg.append_child(&path)?;

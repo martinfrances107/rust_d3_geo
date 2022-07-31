@@ -27,9 +27,9 @@ use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::ClipAngleAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Rotate;
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::RotateSet;
+use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::TranslateSet;
 
 mod dom_macros;
 
@@ -66,7 +66,7 @@ macro_rules! console_log {
     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
 }
 
-fn get_document() -> Result<Document> {
+fn document() -> Result<Document> {
 	let window = web_sys::window().unwrap();
 	Ok(window.document().unwrap())
 }
@@ -74,7 +74,7 @@ fn get_document() -> Result<Document> {
 /// Entry point.
 #[wasm_bindgen]
 pub fn run() -> Result<()> {
-	let document = get_document()?;
+	let document = document()?;
 	update_canvas(&document)?;
 	update_svg_mls(&document)?;
 	update_svg_polygon(&document)?;
@@ -105,9 +105,9 @@ fn update_canvas(document: &Document) -> Result<()> {
 	let pb = PathBuilder::new(context);
 
 	let ortho = Orthographic::builder()
-		.scale(240_f64)
-		.rotate(&[0_f64, -20_f64, 0_f64])
-		.translate(&Coordinate {
+		.scale_set(240_f64)
+		.rotate_set(&[0_f64, -20_f64, 0_f64])
+		.translate_set(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
@@ -130,8 +130,8 @@ fn update_canvas(document: &Document) -> Result<()> {
 }
 
 #[cfg(not(tarpaulin_include))]
-fn get_path_node(class_name: &str) -> Result<Element> {
-	let document = get_document()?;
+fn path_node(class_name: &str) -> Result<Element> {
+	let document = document()?;
 	// let class_name = format!("id-{}", i);
 	let class_list = document.get_elements_by_class_name(class_name);
 
@@ -174,12 +174,12 @@ fn update_svg_mls(document: &Document) -> Result<()> {
 	];
 	console_log!("Have builder");
 	let ortho = Orthographic::builder()
-		.scale(240_f64)
-		.translate(&Coordinate {
+		.scale_set(240_f64)
+		.translate_set(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.rotate(&[0_f64, -20_f64, 0_f64])
+		.rotate_set(&[0_f64, -20_f64, 0_f64])
 		.build();
 
 	let mut pb = PathBuilder::context_pathstring().build(ortho);
@@ -191,7 +191,7 @@ fn update_svg_mls(document: &Document) -> Result<()> {
 	let s = pb.object(&mls);
 	let i = 1;
 	let class_name = format!("id-{}", i);
-	let path = get_path_node(&class_name)?;
+	let path = path_node(&class_name)?;
 	path.set_attribute_ns(None, "d", &s)?;
 	path.set_attribute_ns(None, "style", stroke[i])?;
 	svg.append_child(&path)?;
@@ -220,12 +220,12 @@ fn update_svg_polygon(document: &Document) -> Result<()> {
 	];
 	console_log!("Have builder");
 	let ortho = Orthographic::builder()
-		.scale(240_f64)
-		.translate(&Coordinate {
+		.scale_set(240_f64)
+		.translate_set(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.rotate(&[0_f64, -20_f64, 0_f64])
+		.rotate_set(&[0_f64, -20_f64, 0_f64])
 		.build();
 	let mut pb = PathBuilder::context_pathstring().build(ortho);
 
@@ -240,7 +240,7 @@ fn update_svg_polygon(document: &Document) -> Result<()> {
 			// console_log!("polygon dropping {}", i);
 		} else {
 			let class_name = format!("s2-id-{}", i);
-			let path = get_path_node(&class_name)?;
+			let path = path_node(&class_name)?;
 			path.set_attribute_ns(None, "d", &s)?;
 			path.set_attribute_ns(None, "style", stroke[i % 7])?;
 			svg.append_child(&path)?;
@@ -272,12 +272,12 @@ fn update_svg_multipolygon(document: &Document) -> Result<()> {
 	];
 	console_log!("Have builder");
 	let ortho = Orthographic::builder()
-		.scale(240_f64)
-		.translate(&Coordinate {
+		.scale_set(240_f64)
+		.translate_set(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.rotate(&[0_f64, -20_f64, 0_f64])
+		.rotate_set(&[0_f64, -20_f64, 0_f64])
 		.build();
 	let mut pb = PathBuilder::context_pathstring().build(ortho);
 
@@ -296,7 +296,7 @@ fn update_svg_multipolygon(document: &Document) -> Result<()> {
 	} else {
 		console_log!("pass");
 		let class_name = format!("s2-id-{}", 0);
-		let path = get_path_node(&class_name)?;
+		let path = path_node(&class_name)?;
 		path.set_attribute_ns(None, "d", &s)?;
 		path.set_attribute_ns(None, "style", stroke[0 % 7])?;
 		svg.append_child(&path)?;

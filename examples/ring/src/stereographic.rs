@@ -14,14 +14,14 @@ use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::stereographic::Stereographic;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::TranslateSet;
 
-use super::get_document;
-use super::get_path_node;
+use super::document;
+use super::path_node;
 use super::Result;
 
 pub fn draw_sterographic() -> Result<()> {
-    let svg: SvgsvgElement = get_document()?
+    let svg: SvgsvgElement = document()?
         .get_element_by_id("ring_stereographic_rust")
         .unwrap()
         .dyn_into::<web_sys::SvgsvgElement>()?;
@@ -30,21 +30,21 @@ pub fn draw_sterographic() -> Result<()> {
     let height = svg.height().base_val().value()? as f64;
 
     let stereographic = Stereographic::<_, f64>::builder()
-        .translate(&Coordinate {
+        .translate_set(&Coordinate {
             x: width / 2_f64,
             y: height / 2_f64,
         })
         .build();
 
-    let cg_outer = CircleGenerator::default().radius(10_f64).precision(10_f64);
-    let cg_inner = CircleGenerator::default().radius(5_f64).precision(5_f64);
+    let cg_outer = CircleGenerator::default().radius_set(10_f64).precision_set(10_f64);
+    let cg_inner = CircleGenerator::default().radius_set(5_f64).precision_set(5_f64);
 
     let mut p_vec: Vec<Polygon<f64>> = vec![];
     for lat in (-30..=30).step_by(30) {
         for long in (-180..=180).step_by(40) {
             let mut inner = cg_inner
                 .clone()
-                .center(&Coordinate {
+                .center_set(&Coordinate {
                     x: long as f64,
                     y: lat as f64,
                 })
@@ -58,7 +58,7 @@ pub fn draw_sterographic() -> Result<()> {
             let poly = Polygon::new(
                 cg_outer
                     .clone()
-                    .center(&Coordinate {
+                    .center_set(&Coordinate {
                         x: long as f64,
                         y: lat as f64,
                     })
@@ -78,7 +78,7 @@ pub fn draw_sterographic() -> Result<()> {
     let s = path.object(&object);
 
     let class_name = format!("s2-id-{}", 0);
-    let path = get_path_node(&class_name)?;
+    let path = path_node(&class_name)?;
     path.set_attribute_ns(None, "d", &s)?;
     svg.append_child(&path)?;
 

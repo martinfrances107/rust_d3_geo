@@ -12,13 +12,13 @@ use rust_d3_geo::projection::mercator::Mercator;
 use rust_d3_geo::projection::ClipAngleSet;
 use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::TranslateSet;
 
-use crate::get_document;
+use crate::document;
 
 pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
-	let document = get_document()?;
+	let document = document()?;
 	// Grab canvas.
 	let canvas = document
 		.get_element_by_id("mercator-rust")
@@ -37,12 +37,12 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let pb = PathBuilder::new(context);
 
 	let mercator = Mercator::builder()
-		.scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-		.translate(&Coordinate {
+		.scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
+		.translate_set(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.clip_angle(90_f64)
+		.clip_angle_set(90_f64)
 		.precision_set(&10_f64)
 		.build();
 

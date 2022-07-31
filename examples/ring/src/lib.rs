@@ -51,7 +51,7 @@ macro_rules! console_log {
     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
 }
 
-fn get_document() -> Result<Document> {
+fn document() -> Result<Document> {
     let window = web_sys::window().unwrap();
     Ok(window.document().unwrap())
 }
@@ -65,8 +65,8 @@ pub fn run() -> Result<()> {
 }
 
 #[cfg(not(tarpaulin_include))]
-fn get_path_node(class_name: &str) -> Result<Element> {
-    let document = get_document()?;
+fn path_node(class_name: &str) -> Result<Element> {
+    let document = document()?;
 
     let class_list = document.get_elements_by_class_name(class_name);
 

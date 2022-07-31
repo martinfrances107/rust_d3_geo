@@ -11,14 +11,14 @@ use rust_d3_geo::projection::equirectangular::Equirectangular;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::CenterSet;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Rotate;
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::RotateSet;
+use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::TranslateSet;
 
-use crate::get_document;
+use crate::document;
 
 pub async fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
-	let document = get_document()?;
+	let document = document()?;
 	// Grab canvas.
 	let canvas = document
 		.get_element_by_id("equirectangular-rust")
@@ -39,10 +39,10 @@ pub async fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
 	let pb = PathBuilder::new(context);
 
 	let equirectangular = Equirectangular::builder()
-		.scale(width as f64 / 1.5_f64 / std::f64::consts::PI)
-		.rotate(&[0_f64, 0_f64, 0_f64])
-		.center(&Coordinate { x: 0_f64, y: 0_f64 })
-		.translate(&Coordinate {
+		.scale_set(width as f64 / 1.5_f64 / std::f64::consts::PI)
+		.rotate_set(&[0_f64, 0_f64, 0_f64])
+		.center_set(&Coordinate { x: 0_f64, y: 0_f64 })
+		.translate_set(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})

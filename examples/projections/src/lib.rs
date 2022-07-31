@@ -64,7 +64,7 @@ macro_rules! console_log {
 }
 
 #[cfg(not(tarpaulin_include))]
-fn get_document() -> Result<Document, JsValue> {
+fn document() -> Result<Document, JsValue> {
     let window = web_sys::window().unwrap();
     Ok(window.document().unwrap())
 }

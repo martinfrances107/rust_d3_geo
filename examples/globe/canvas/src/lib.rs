@@ -22,9 +22,9 @@ use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::ProjectionRawBase;
-use rust_d3_geo::projection::Rotate;
-use rust_d3_geo::projection::Scale;
-use rust_d3_geo::projection::Translate;
+use rust_d3_geo::projection::RotateSet;
+use rust_d3_geo::projection::ScaleSet;
+use rust_d3_geo::projection::TranslateSet;
 use rust_topojson_client::feature::Builder as FeatureBuilder;
 
 use topojson::Topology;
@@ -58,7 +58,7 @@ extern "C" {
 //     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
 // }
 
-fn get_document() -> Result<Document, JsValue> {
+fn document() -> Result<Document, JsValue> {
 	let window = web_sys::window().unwrap();
 	Ok(window.document().unwrap())
 }
@@ -66,7 +66,7 @@ fn get_document() -> Result<Document, JsValue> {
 /// Entry point
 #[wasm_bindgen(start)]
 pub async fn start() -> Result<(), JsValue> {
-	let document = get_document()?;
+	let document = document()?;
 	let window = web_sys::window().expect("Failed to get window");
 
 	// Get data from world map.
@@ -101,12 +101,12 @@ pub async fn start() -> Result<(), JsValue> {
 	let pb = PathBuilder::new(context);
 
 	let ortho = Orthographic::builder()
-		.scale(width as f64 / 1.3_f64 / std::f64::consts::PI)
-		.translate(&Coordinate {
+		.scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
+		.translate_set(&Coordinate {
 			x: width / 2_f64,
 			y: height / 2_f64,
 		})
-		.rotate(&[270_f64, 00_f64, 0_f64])
+		.rotate_set(&[270_f64, 00_f64, 0_f64])
 		.build();
 
 	let mut path = pb.build(ortho);
