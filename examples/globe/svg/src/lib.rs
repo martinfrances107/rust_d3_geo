@@ -29,7 +29,7 @@ use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::ProjectionRawBase;
 use rust_d3_geo::projection::ScaleSet;
-use rust_topojson_client::feature::Builder as FeatureBuilder;
+use rust_topojson_client::feature::feature_from_name;
 
 use topojson::Topology;
 
@@ -119,8 +119,7 @@ pub async fn start() -> Result<(), JsValue> {
     let width = svg.width().base_val().value()? as f64;
     let height = svg.height().base_val().value()? as f64;
 
-    let countries = FeatureBuilder::generate_from_name(&topology, "countries")
-        .expect("Did not extract geometry");
+    let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
     let ortho = Orthographic::builder()
         .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)

@@ -31,7 +31,7 @@ mod fit_test {
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleGet;
     use rust_d3_geo::projection::TranslateGet;
-    use rust_topojson_client::feature::Builder;
+    use rust_topojson_client::feature::feature_from_name;
 
     ///  Helper function to extract world geometry from file.
     fn world() -> Geometry<f64> {
@@ -40,7 +40,7 @@ mod fit_test {
         let topology: Topology =
             serde_json::from_reader(file).expect("File should be parse as JSON.");
 
-        if let Some(g) = Builder::generate_from_name(&topology, &"land") {
+        if let Some(g) = feature_from_name(&topology, &"land") {
             return g;
         } else {
             panic!("failed to file and decode from file.");

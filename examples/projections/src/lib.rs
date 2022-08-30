@@ -10,7 +10,7 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
-use rust_topojson_client::feature::Builder as FeatureBuilder;
+use rust_topojson_client::feature::feature_from_name;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
@@ -96,8 +96,8 @@ pub async fn start() -> Result<(), JsValue> {
 
     let topology: Topology = json.into_serde().expect("Could not parse as Topology");
 
-    let land: Geometry<f64> = FeatureBuilder::generate_from_name(&topology, "countries")
-        .expect("Did not extract geometry");
+    let land: Geometry<f64> =
+        feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
     let aea = draw_azimuthal_equal_area(&land);
     let ae = draw_azimuthal_equidistant(&land);
