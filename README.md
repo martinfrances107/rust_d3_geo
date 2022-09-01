@@ -30,6 +30,17 @@ In addition to the port, some examples are provided to help developers convert t
 | examples/ring | Renders a complex multipolygon.|
 
 
+### Running the examples
+
+  From a machine with npm and node installed.
+
+  First install wamm-pack [[ installation guide]](https://rustwasm.github.io/wasm-pack/installer/)
+  ```
+  cd rust_d3_geo/examples/ring/
+  npm install
+  npm start
+  ```
+
 ## The Intersection Problem ( Request for comments )
 
 There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes.
