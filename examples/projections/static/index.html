@@ -9,28 +9,28 @@
 </head>
 
 <style>
-  :root {
-    --projection-side-length: 410px;
+  body {
+    background-color: #2196F3;
   }
 
   .grid-container {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    justify-content: space-evenly;
-    background-color: #2196F3;
+    align-content: flex-end;
     padding: 20px;
     margin: 0;
   }
 
   .projection {
     background-color: rgba(255, 255, 255, 0.8);
-    width: var(--projection-side-length);
     text-align: center;
     border: 1px solid rgba(0, 0, 0, 0.8);
     border-radius: 5px;
     padding: 5px;
     margin: 5px;
+    min-width: 300px;
+    max-width: 600px;
   }
 
   .projection h1 {
@@ -49,8 +49,8 @@
     background-color: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(0, 0, 0, 0.8);
     padding: 0;
-    width: var(--projection-side-length);
-    height: var(--projection-side-length)
+    width: 100%;
+    aspect-ratio: 1/1;
   }
 </style>
 
