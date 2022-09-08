@@ -1,13 +1,10 @@
 use approx::AbsDiffEq;
-use core::marker::PhantomData;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::circle::gen_clip_circle;
-use crate::clip::circle::line::Line as LineCircle;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoneClipC;
@@ -16,7 +13,6 @@ use crate::projection::builder::types::BuilderAntimeridianResampleClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::builder::types::BuilderCircleResampleClip;
 use crate::projection::builder::types::BuilderCircleResampleNoneClip;
-use crate::projection::builder::Buffer;
 use crate::projection::builder::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::BuilderAntimeridianResampleNoneNoClip;
 use crate::projection::builder::BuilderCircleResampleNoClip;
@@ -24,8 +20,6 @@ use crate::projection::builder::BuilderCircleResampleNoneNoClip;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentSet;
-use crate::stream::Connected;
-use crate::Transform;
 
 use super::template::ClipU;
 
