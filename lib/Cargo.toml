@@ -3,14 +3,14 @@ name = "rust_d3_geo"
 version = "0.1.0"
 authors = ["martin frances <martinfrances107@hotmail.com>"]
 edition = "2021"
-description="A port of D3/d3-geo"
-repository="https://github.com/martinfrances107/rust_d3_geo"
+description = "A port of D3/d3-geo"
+repository = "https://github.com/martinfrances107/rust_d3_geo"
 
 [dependencies]
-approx="~0.5"
+approx = "~0.5"
 derivative = "~2"
-num-traits="~0.2"
-geo ="~0.22"
+num-traits = "~0.2"
+geo = "~0.23"
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 rust_d3_array = { git = "https://github.com/martinfrances107/rust_d3_array.git" }
 rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git" }
@@ -20,20 +20,18 @@ futures = "~0.3"
 [dev-dependencies]
 pretty_assertions = "~1"
 lazy_static = "~1"
-regex="~1"
+regex = "~1"
 topojson = "~0.5"
-criterion ="~0.3"
+criterion = "~0.3"
 
 [dependencies.web-sys]
 version = "~0.3"
-features = [
-    "CanvasRenderingContext2d",
-]
+features = ["CanvasRenderingContext2d"]
 
 [[bench]]
 name = "graticule"
-harness= false
+harness = false
 
 [[bench]]
 name = "rings"
-harness= false
+harness = false

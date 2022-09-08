@@ -1,6 +1,6 @@
 [package]
 name = "rust_d3_geo_example_graticule"
-description="rust_d3_geo wasm app"
+description = "rust_d3_geo wasm app"
 license = "MIT"
 version = "0.1.0"
 authors = ["martin <martinfrances107@hotmail.com>"]
@@ -13,13 +13,13 @@ crate-type = ["cdylib"]
 #default = ["wee_alloc"]
 
 [dependencies]
-rust_d3_geo = {path="../../lib"}
-geo="~0.22"
+rust_d3_geo = { path = "../../lib" }
+geo = "~0.23"
 # The `wasm-bindgen` crate provides the bare minimum functionality needed
 # to interact with JavaScript.
 wasm-bindgen = "~0.2"
 getrandom = { version = "~0.2", features = ["js"] }
-rand = { version = "~0.8"}
+rand = { version = "~0.8" }
 js-sys = "~0.3"
 
 # `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
@@ -106,5 +106,5 @@ features = [
     "SvgLength",
     "SvgPathElement",
     "Text",
-    "Window"
+    "Window",
 ]
