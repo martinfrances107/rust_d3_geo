@@ -23,6 +23,15 @@ use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 
 pub mod types;
 
+type CacheState<DRAIN, I, LB, LC, LU, PV, RC, T> = Option<(
+    DRAIN,
+    StreamTransformRadians<
+        Connected<
+            RotatorRadians<Connected<Clip<I, LC, LU, PV, RC, ConnectedClip<LB, LC, T>, T>>, T>,
+        >,
+    >,
+)>;
+
 /// Projection output of projection/Builder.
 ///
 /// Commnon functionality for all raw projection structs.
@@ -44,15 +53,12 @@ where
         Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     pub(crate) transform_radians: StreamTransformRadians<Unconnected>,
-    pub(crate) cache: Option<(
-        DRAIN,
-        StreamTransformRadians<
-            Connected<
-                RotatorRadians<Connected<Clip<I, LC, LU, PV, RC, ConnectedClip<LB, LC, T>, T>>, T>,
-            >,
-        >,
-    )>,
+    pub(crate) cache: CacheState<DRAIN, I, LB, LC, LU, PV, RC, T>,
 }
+
+type ProjectionStream<I, LB, LC, LU, PV, RC, T> = StreamTransformRadians<
+    Connected<RotatorRadians<Connected<Clip<I, LC, LU, PV, RC, ConnectedClip<LB, LC, T>, T>>, T>>,
+>;
 
 impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
@@ -76,14 +82,7 @@ where
     ///
     /// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
     ///
-    pub fn stream(
-        &mut self,
-        drain: &DRAIN,
-    ) -> StreamTransformRadians<
-        Connected<
-            RotatorRadians<Connected<Clip<I, LC, LU, PV, RC, ConnectedClip<LB, LC, T>, T>>, T>,
-        >,
-    > {
+    pub fn stream(&mut self, drain: &DRAIN) -> ProjectionStream<I, LB, LC, LU, PV, RC, T> {
         if let Some((cache_drain, output)) = &self.cache {
             if *cache_drain == *drain {
                 return (*output).clone();
