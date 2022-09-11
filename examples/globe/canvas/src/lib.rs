@@ -5,7 +5,6 @@
 //!
 //! See the README.md.
 extern crate js_sys;
-extern crate rand;
 extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
@@ -16,7 +15,6 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::Document;
 use web_sys::*;
-
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::orthographic::Orthographic;
@@ -28,35 +26,6 @@ use rust_d3_geo::projection::TranslateSet;
 use rust_topojson_client::feature::feature_from_name;
 
 use topojson::Topology;
-
-mod dom_macros;
-
-#[wasm_bindgen]
-#[cfg(not(tarpaulin_include))]
-extern "C" {
-    // Use `js_namespace` here to bind `console.log(..)` instead of just
-    // `log(..)`
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
-
-    // The `console.log` is quite polymorphic, so we can bind it with multiple
-    // signatures. Note that we need to use `js_name` to ensure we always call
-    // `log` in JS.
-    #[wasm_bindgen(js_namespace = console, js_name = log)]
-    fn log_u32(a: u32);
-
-    // Multiple arguments too!
-    #[wasm_bindgen(js_namespace = console, js_name = log)]
-    fn log_many(a: &str, b: &str);
-
-    fn alert(s: &str);
-}
-
-// macro_rules! console_log {
-//     // Note that this is using the `log` function imported above during
-//     // `bare_bones`
-//     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
-// }
 
 fn document() -> Result<Document, JsValue> {
     let window = web_sys::window().unwrap();
