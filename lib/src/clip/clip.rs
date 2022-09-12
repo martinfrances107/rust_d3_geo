@@ -61,7 +61,7 @@ where
     line_end_fn: LineEndFn,
 }
 
-/// Takes the unconnected line temple stored in clip_line
+/// Takes the unconnected line template stored in clip_line
 /// and then modifies the ClipState to one than reflects
 /// the connected sink.
 impl<I, LB, LC, LU, PV, RC, T> Connectable for Clip<I, LC, LU, PV, RC, Unconnected, T>
