@@ -14,7 +14,6 @@
 use num_traits::FloatConst;
 use std::fmt::Debug;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;

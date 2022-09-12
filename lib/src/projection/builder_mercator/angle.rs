@@ -1,6 +1,5 @@
 use approx::AbsDiffEq;
 use geo::CoordFloat;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::projection::builder::template::ClipU;
@@ -43,7 +42,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
     >
 where
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -75,7 +74,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 

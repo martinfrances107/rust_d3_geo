@@ -2,7 +2,6 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
-use num_traits::FloatConst;
 
 use crate::compose::Compose;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
@@ -45,7 +44,7 @@ impl<PR, SC, T> None<PR, SC, Unconnected, T> {
 impl<PR, SC, T> Connectable for None<PR, SC, Unconnected, T>
 where
     PR: Transform<T = T>,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type Output = None<PR, SC, Connected<SC>, T>;
     type SC = SC;
@@ -64,7 +63,7 @@ impl<EP, PR, SC, T> Stream for None<PR, SC, Connected<SC>, T>
 where
     SC: Stream<EP = EP, T = T>,
     PR: Transform<T = T>,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type EP = EP;
     type T = T;

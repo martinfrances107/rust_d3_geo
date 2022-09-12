@@ -341,6 +341,8 @@ where
     fn endpoint(&mut self) -> &mut Self::EP {
         self.state.sink.endpoint()
     }
+
+    #[inline]
     fn sphere(&mut self) {
         self.state.sink.sphere();
     }

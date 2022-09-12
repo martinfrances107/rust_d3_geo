@@ -1,4 +1,3 @@
-use crate::projection::RecenterWithResampling;
 use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -8,6 +7,7 @@ use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::AngleSet;
+use crate::projection::RecenterWithResampling;
 use crate::Transform;
 
 use super::template::ClipU;
@@ -30,7 +30,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
     >
 where
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
