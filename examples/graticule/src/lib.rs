@@ -32,8 +32,6 @@ use rust_d3_geo::projection::RotateSet;
 use rust_d3_geo::projection::ScaleSet;
 use rust_d3_geo::projection::TranslateSet;
 
-mod dom_macros;
-
 type Result<T> = std::result::Result<T, JsValue>;
 
 fn document() -> Result<Document> {
