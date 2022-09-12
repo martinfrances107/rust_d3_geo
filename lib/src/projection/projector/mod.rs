@@ -69,7 +69,6 @@ where
     LC: Clone,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
-    PR: Clone,
     PV: Clone,
     RU: Clone + Connectable<SC = PCNC, Output = RC>,
     RC: Clone,
