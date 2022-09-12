@@ -36,7 +36,7 @@ where
 
 impl<T> RotatorRadians<Unconnected, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     #[inline]
     pub fn connect<SINK>(self, sink: SINK) -> RotatorRadians<Connected<SINK>, T> {

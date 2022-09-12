@@ -75,7 +75,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Debug + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + Debug + FloatConst,
 {
     let clip = builder.clip_extent();
     let b_no_clip = builder
@@ -128,7 +128,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Debug + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fit_clip(
         builder,

@@ -124,10 +124,7 @@ impl<I, LC, LU, PV, RC, T> Clip<I, LC, LU, PV, RC, Unconnected, T>
 where
     T: CoordFloat,
 {
-    /// Takes a line and cuts into visible segments. Return values used for polygon
-    ///
-    ///
-    /// Line< ResampleNoneNoClipU<DRAIN, PR, T>, Unconnected, T>
+    /// Takes a line and cuts into visible segments. Returns values used for polygon.
     pub fn new(interpolator: I, clip_line: LU, pv: PV, start: Coordinate<T>) -> Self {
         Clip {
             p_lc: PhantomData::<LC>,

@@ -73,7 +73,7 @@ where
     RU: Clone + Connectable<SC = PCNC, Output = RC>,
     RC: Clone,
     PCNU: Clone,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Connects a DRAIN to the projection.
     ///
@@ -113,7 +113,7 @@ impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Transform
     for Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     PR: Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     /// f32 or f64
     type T = T;
