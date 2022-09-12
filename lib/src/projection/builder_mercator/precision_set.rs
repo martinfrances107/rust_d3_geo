@@ -1,8 +1,5 @@
-use std::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::CoordFloat;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
@@ -17,14 +14,10 @@ use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::PrecisionSet;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
-
-//TODO before release add more variants here
-// vary by LineClip,
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
@@ -45,10 +38,8 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
         T,
     >
 where
-    DRAIN: Default + Stream<EP = DRAIN, T = T>,
-
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     type Output = Builder<
         DRAIN,
@@ -98,9 +89,8 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
         T,
     >
 where
-    DRAIN: Default + Debug + Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type Output = Builder<
         DRAIN,
