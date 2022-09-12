@@ -1,14 +1,8 @@
-use std::cell::RefCell;
 use std::fmt::Debug;
-use std::fmt::Display;
-use std::ops::AddAssign;
-use std::rc::Rc;
 
-use geo::line_string;
 use geo::LineString;
 use geo::Polygon;
 use geo::{CoordFloat, Coordinate};
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::rot::rotate_radians;

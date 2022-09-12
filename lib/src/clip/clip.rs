@@ -100,7 +100,6 @@ where
 }
 
 #[derive(Clone, Debug)]
-#[allow(dead_code)]
 pub struct Clip<I, LC, LU, PV, RC, STATE, T>
 where
     T: CoordFloat,
