@@ -29,7 +29,7 @@ where
 
 impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AddAssign<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     /// Constructor.
     pub fn new(context_stream: CS) -> Self {
@@ -45,7 +45,7 @@ where
 impl<I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
     Builder<Context<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AddAssign<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     /// Returns the state within the builder.
     // pub fn get_context(&self) {
@@ -66,7 +66,7 @@ where
 impl<I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
     Builder<String<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AddAssign<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
     pub fn context_pathstring() -> Self {
@@ -80,7 +80,7 @@ impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> PointRadiusTrait
     for Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     CS: PointRadiusTrait<T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: CoordFloat,
 {
     /// f64 or f32.
     type T = T;
@@ -97,7 +97,7 @@ where
 impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     CS: Stream<EP = CS, T = T>,
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat,
 {
     /// From the progammed state generate a new projection.
     #[inline]

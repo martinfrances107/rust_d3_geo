@@ -7,7 +7,7 @@ mod path_centroid_test {
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
-    
+
     use geo::line_string;
     use geo::CoordFloat;
     use geo::Coordinate;

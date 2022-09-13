@@ -88,7 +88,7 @@ where
 
 impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AsPrimitive<T> + CoordFloat,
 {
     /// Constructor.
     pub fn new(
@@ -143,7 +143,7 @@ where
     /// This operation consumes the  Path.
     pub fn area(mut self, object: &impl Streamable<T = T>) -> T
     where
-        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         let stream_dst = Area::default();
         let mut stream_in = self.projection.stream(&stream_dst);

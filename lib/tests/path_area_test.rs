@@ -41,7 +41,7 @@ mod path_area_test {
     fn equirectangular<T>(
     ) -> ProjectorAntimeridianResampleNoneNoClip<Area<T>, Equirectangular<Area<T>, T>, T>
     where
-        T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+        T: CoordFloat + Default + Display + FloatConst,
     {
         let ba: BuilderAntimeridianResampleNoClip<Area<T>, Equirectangular<Area<T>, T>, T> =
             Equirectangular::<Area<T>, T>::builder().scale_set(T::from(900f64 / PI).unwrap());
@@ -62,7 +62,7 @@ mod path_area_test {
         object: impl Streamable<T = T>,
     ) -> T
     where
-        T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         let builder: PathBuilder<
             Area<T>,
