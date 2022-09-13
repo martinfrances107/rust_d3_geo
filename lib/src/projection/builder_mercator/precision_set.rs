@@ -39,7 +39,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
     >
 where
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Output = Builder<
         DRAIN,

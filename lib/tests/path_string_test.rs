@@ -6,7 +6,6 @@ mod path_string_test {
     use std::fmt::Display;
     use std::ops::AddAssign;
 
-    use approx::AbsDiffEq;
     use geo::line_string;
     use geo::point;
     use geo::CoordFloat;
@@ -37,7 +36,7 @@ mod path_string_test {
     fn equirectangular<T>(
     ) -> ProjectorAntimeridianResampleNoneNoClip<PathString<T>, Equirectangular<PathString<T>, T>, T>
     where
-        T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + Display + FloatConst,
+        T: CoordFloat + Default + Display + FloatConst,
     {
         Equirectangular::builder()
             .scale_set(T::from(900f64 / PI).unwrap())
@@ -56,7 +55,7 @@ mod path_string_test {
         object: impl Streamable<T = T>,
     ) -> String
     where
-        T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         PathBuilder::context_pathstring()
             .build(projection)
@@ -158,7 +157,9 @@ mod path_string_test {
 
     #[test]
     fn render_a_simple_multi_polygon() {
-        let gc = CircleGenerator::default().radius_set(10_f64).precision_set(80_f64);
+        let gc = CircleGenerator::default()
+            .radius_set(10_f64)
+            .precision_set(80_f64);
 
         let mut p_vec = vec![];
 

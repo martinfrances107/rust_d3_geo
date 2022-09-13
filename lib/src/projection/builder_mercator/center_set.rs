@@ -1,6 +1,5 @@
 use std::fmt::Debug;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -39,7 +38,7 @@ where
     PV: Clone,
 
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,
+    T: CoordFloat + Debug + FloatConst,
 {
     type T = T;
 
@@ -70,7 +69,7 @@ where
     LU: Clone,
     PV: Clone,
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,
+    T: CoordFloat + Debug + FloatConst,
 {
     type T = T;
 

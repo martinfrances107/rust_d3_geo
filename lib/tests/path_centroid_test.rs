@@ -7,8 +7,7 @@ mod path_centroid_test {
     use std::f64::consts::PI;
     use std::fmt::Display;
     use std::ops::AddAssign;
-
-    use approx::AbsDiffEq;
+    
     use geo::line_string;
     use geo::CoordFloat;
     use geo::Coordinate;
@@ -38,13 +37,7 @@ mod path_centroid_test {
     fn equirectangular<T>(
     ) -> ProjectorAntimeridianResampleNoneNoClip<Centroid<T>, Equirectangular<Centroid<T>, T>, T>
     where
-        T: AbsDiffEq<Epsilon = T>
-            + AddAssign<T>
-            + AsPrimitive<T>
-            + CoordFloat
-            + Default
-            + Display
-            + FloatConst,
+        T: AddAssign<T> + CoordFloat + Default + FloatConst,
     {
         ProjectionBuilder::new(Equirectangular::default())
             .scale_set(T::from(900f64 / PI).unwrap())
@@ -63,12 +56,7 @@ mod path_centroid_test {
         object: &impl Streamable<T = T>,
     ) -> Point<T>
     where
-        T: AddAssign<T>
-            + AbsDiffEq<Epsilon = T>
-            + AsPrimitive<T>
-            + CoordFloat
-            + Display
-            + FloatConst,
+        T: AddAssign<T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         let cs = Centroid::default();
         let result = Path::new(cs, projection).centroid(object);

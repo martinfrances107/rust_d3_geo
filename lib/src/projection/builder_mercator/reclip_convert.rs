@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -19,7 +18,7 @@ impl<DRAIN, PR, T> ReclipConvert for BuilderMercatorAntimeridianResampleNoClip<D
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Output = BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>;
     fn reclip_convert(self) -> Self::Output {

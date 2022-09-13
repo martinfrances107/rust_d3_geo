@@ -1,27 +1,26 @@
-use crate::clip::PointVisible;
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder_mercator::Builder;
-use crate::projection::AsPrimitive;
-use crate::projection::ClipExtentGet;
-use crate::projection::TransformExtent;
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentGet
-	for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
-where
-	PR: TransformExtent<T = T>,
-	PV: PointVisible<T = T>,
-	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
-{
-	/// f64 or f32.
-	type T = T;
+use crate::clip::PointVisible;
+use crate::projection::builder::template::ClipU;
+use crate::projection::builder_mercator::Builder;
+use crate::projection::ClipExtentGet;
+use crate::projection::TransformExtent;
 
-	/// Returns a bounding box.
-	#[inline]
-	fn clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
-		self.extent
-	}
+impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentGet
+    for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+where
+    PR: TransformExtent<T = T>,
+    PV: PointVisible<T = T>,
+    T: CoordFloat + FloatConst,
+{
+    /// f64 or f32.
+    type T = T;
+
+    /// Returns a bounding box.
+    #[inline]
+    fn clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
+        self.extent
+    }
 }

@@ -1,6 +1,4 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::projection::ClipAngleGet;
 
@@ -9,7 +7,7 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> ClipAngleGet
     for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
 

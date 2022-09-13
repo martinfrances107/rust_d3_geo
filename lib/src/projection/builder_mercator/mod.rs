@@ -29,7 +29,6 @@ pub mod types;
 
 use std::fmt::Debug;
 
-use approx::AbsDiffEq;
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -178,7 +177,7 @@ impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     DRAIN: Default + Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     /// Wrap a default projector and provides mercator specific overrides.
     pub fn new(pr: PR) -> Self {
@@ -204,7 +203,7 @@ where
     PV: Clone,
     RC: Clone,
     RU: Clone,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type Drain = DRAIN;
     type I = I;
