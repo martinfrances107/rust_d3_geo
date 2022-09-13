@@ -1,6 +1,5 @@
 use std::fmt::Debug;
 use std::fmt::Display;
-use std::ops::AddAssign;
 
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
