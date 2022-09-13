@@ -19,7 +19,7 @@ use crate::Transform;
 impl<PR, T> Fit for BuilderMercatorAntimeridianResampleClip<Bounds<T>, PR, T>
 where
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// f32 or f64
     type T = T;

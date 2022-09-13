@@ -23,7 +23,7 @@ where
     RU: Clone,
     ClipU<DRAIN, T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 

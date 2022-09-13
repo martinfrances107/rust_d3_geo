@@ -27,7 +27,7 @@ where
     RU: Clone,
     PV: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     fn reclip(mut self) -> Self {
         let k = T::PI() * self.base.scale();

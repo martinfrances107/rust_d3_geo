@@ -18,7 +18,7 @@ impl<DRAIN, PR, T> TranslateSet for BuilderMercatorAntimeridianResampleClip<DRAI
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -32,7 +32,7 @@ impl<DRAIN, PR, T> TranslateSet for BuilderMercatorAntimeridianResampleNoneClip<
 where
     DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 

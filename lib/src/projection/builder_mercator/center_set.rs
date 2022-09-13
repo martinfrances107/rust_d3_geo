@@ -39,7 +39,7 @@ where
     PV: Clone,
 
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,
 {
     type T = T;
 
@@ -70,7 +70,7 @@ where
     LU: Clone,
     PV: Clone,
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Debug + FloatConst,
 {
     type T = T;
 
