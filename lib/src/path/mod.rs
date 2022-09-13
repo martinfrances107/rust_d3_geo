@@ -107,7 +107,7 @@ where
 impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
     Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    CS: Clone + Default + PartialEq + Result + Stream<EP = CS, T = T>,
+    CS: Clone + Default + PartialEq + Result,
     I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = CS, T = T>,
