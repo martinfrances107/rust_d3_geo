@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
@@ -33,7 +32,7 @@ where
 impl<DRAIN, T> ProjectionRawBase for AzimuthalEqualArea<DRAIN, T>
 where
     DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Builder = BuilderCircleResampleNoClip<DRAIN, AzimuthalEqualArea<DRAIN, T>, T>;
 

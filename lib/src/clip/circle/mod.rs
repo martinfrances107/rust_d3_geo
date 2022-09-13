@@ -7,7 +7,6 @@ pub mod line;
 /// Holds the clip circle point visible function.
 pub mod pv;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use interpolate::Interpolate;
@@ -33,7 +32,7 @@ type ClipCircleU<RC, T> = Clip<
 /// Returns a clip setup for circle clipping.
 pub fn gen_clip_circle<DRAIN, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
 where
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     let cr = radius.cos();
     let small_radius = cr > T::zero();

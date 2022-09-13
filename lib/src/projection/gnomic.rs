@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
@@ -26,7 +25,7 @@ pub struct Gnomic<DRAIN, T> {
 impl<DRAIN, T> ProjectionRawBase for Gnomic<DRAIN, T>
 where
     DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Builder = BuilderCircleResampleNoClip<DRAIN, Gnomic<DRAIN, T>, T>;
 

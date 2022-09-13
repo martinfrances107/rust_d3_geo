@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -28,7 +27,7 @@ impl<DRAIN, PCNU, PR, RC, RU, T> ClipAngleAdjust
         T,
     >
 where
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

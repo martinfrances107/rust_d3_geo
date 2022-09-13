@@ -1,4 +1,4 @@
-use approx::AbsDiffEq;
+
 use geo::CoordFloat;
 use num_traits::FloatConst;
 use std::marker::PhantomData;
@@ -34,7 +34,7 @@ impl<DRAIN, PCNU, RC, RU, PR, T> ClipAngleReset
     >
 where
     RC: Stream<EP = DRAIN, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Output = Builder<
         DRAIN,

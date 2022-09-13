@@ -1,6 +1,5 @@
 use std::fmt::Debug;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -53,7 +52,7 @@ impl<I, LC, LB, LU, PR, PV, T> Fit
 	PR: Clone + Debug + Transform<T = T>,
 	PV: Clone + PointVisible<T = T>,
 	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+	T:  AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;
 
@@ -116,7 +115,7 @@ impl<I, LC, LB, LU, PR, PV, T> Fit
 	PR: Clone + Transform<T = T>,
 	PV: Clone + PointVisible<T = T>,
 	PR: Clone + Transform<T = T>,
-	T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+	T:  AsPrimitive<T> + CoordFloat + FloatConst,
 {
 	type T = T;
 

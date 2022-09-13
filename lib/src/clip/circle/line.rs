@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
@@ -236,7 +235,7 @@ where
 impl<EP, SINK, T> Stream for Line<SINK, Connected<SINK>, T>
 where
     SINK: Stream<EP = EP, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type EP = EP;
     type T = T;

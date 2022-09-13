@@ -13,7 +13,6 @@
 
 use std::fmt::Debug;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
@@ -67,7 +66,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let builder = builder
         .scale_set(T::from(150.0_f64).unwrap())
@@ -112,7 +111,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
@@ -164,7 +163,7 @@ where
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
     PR: Clone + Transform<T = T>,
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     fit_extent_no_clip(builder, [[T::zero(), T::zero()], size], object)
 }
@@ -198,7 +197,7 @@ where
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
@@ -249,7 +248,7 @@ where
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AsPrimitive<T> + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();

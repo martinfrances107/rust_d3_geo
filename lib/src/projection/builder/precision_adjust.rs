@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -26,7 +25,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> PrecisionAdjust
     >
 where
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T:  CoordFloat + FloatConst,
 {
     type T = T;
 

@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -30,7 +29,7 @@ impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoClip<DRAIN, PR
 where
     DRAIN: Clone,
     PR: Clone,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Output = BuilderAntimeridianResampleClip<DRAIN, PR, T>;
     type T = T;
@@ -76,7 +75,7 @@ impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoneNoClip<DRAIN
 where
     DRAIN: Clone,
     PR: Clone,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Output = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;
@@ -123,7 +122,7 @@ impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
     PR: Clone,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type Output = BuilderCircleResampleClip<DRAIN, PR, T>;
     type T = T;
@@ -177,7 +176,7 @@ impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoneNoClip<DRAIN, PR, 
 where
     DRAIN: Clone,
     PR: Clone,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
     type Output = BuilderCircleResampleNoneClip<DRAIN, PR, T>;

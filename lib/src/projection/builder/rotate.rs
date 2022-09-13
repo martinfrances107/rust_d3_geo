@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -31,7 +30,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
 where
     PR: Clone + Transform<T = T>,
     Self: RecenterWithResampling,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -63,7 +62,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

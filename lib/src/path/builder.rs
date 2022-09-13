@@ -2,7 +2,6 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
@@ -30,7 +29,7 @@ where
 
 impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    T: AddAssign<T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
     pub fn new(context_stream: CS) -> Self {
@@ -46,7 +45,7 @@ where
 impl<I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
     Builder<Context<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    T: AddAssign<T> + CoordFloat + Display + FloatConst,
 {
     /// Returns the state within the builder.
     // pub fn get_context(&self) {
@@ -67,7 +66,7 @@ where
 impl<I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
     Builder<String<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AddAssign<T> + AbsDiffEq<Epsilon = T> + CoordFloat + Display + FloatConst,
+    T: AddAssign<T> + CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
     pub fn context_pathstring() -> Self {
@@ -81,7 +80,7 @@ impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> PointRadiusTrait
     for Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     CS: PointRadiusTrait<T = T>,
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// f64 or f32.
     type T = T;
@@ -98,7 +97,7 @@ where
 impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     CS: Stream<EP = CS, T = T>,
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// From the progammed state generate a new projection.
     #[inline]

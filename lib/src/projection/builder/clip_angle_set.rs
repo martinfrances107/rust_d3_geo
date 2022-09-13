@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -41,7 +40,7 @@ where
     PR: Clone + Transform<T = T>,
     RC: Clone + Stream<EP = DRAIN, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type Output = Builder<
         DRAIN,

@@ -5,7 +5,6 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::rc::Rc;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -147,7 +146,7 @@ where
 impl<EP, SINK, T> Rectangle<SINK, Connected<SINK>, T>
 where
     SINK: Clone + Stream<EP = EP, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     #[inline]
     fn default_point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -291,7 +290,7 @@ where
 impl<EP, SINK, T> Stream for Rectangle<SINK, Connected<SINK>, T>
 where
     SINK: Clone + Stream<EP = EP, T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type EP = EP;
     type T = T;

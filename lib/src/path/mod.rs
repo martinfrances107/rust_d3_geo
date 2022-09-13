@@ -16,7 +16,6 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::AsPrimitive;
@@ -89,7 +88,7 @@ where
 
 impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AbsDiffEq<Epsilon = T> + AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
 {
     /// Constructor.
     pub fn new(
@@ -196,7 +195,7 @@ where
     PR: Clone + Transform<T = T>,
     RC: Clone + Stream<EP = Centroid<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC>,
-    T: 'static + AbsDiffEq<Epsilon = T> + AddAssign + CoordFloat + FloatConst,
+    T: 'static + AddAssign + CoordFloat + FloatConst,
 {
     /// Returns the centroid of the object.
     pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coordinate<T> {
