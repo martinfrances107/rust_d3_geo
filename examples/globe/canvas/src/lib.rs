@@ -10,11 +10,13 @@ extern crate topojson;
 extern crate web_sys;
 
 use geo::Coordinate;
+use topojson::Topology;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::Document;
 use web_sys::*;
+
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::orthographic::Orthographic;
@@ -24,8 +26,6 @@ use rust_d3_geo::projection::RotateSet;
 use rust_d3_geo::projection::ScaleSet;
 use rust_d3_geo::projection::TranslateSet;
 use rust_topojson_client::feature::feature_from_name;
-
-use topojson::Topology;
 
 fn document() -> Result<Document, JsValue> {
     let window = web_sys::window().unwrap();
@@ -43,8 +43,10 @@ pub async fn start() -> Result<(), JsValue> {
     opts.method("GET");
     opts.mode(RequestMode::Cors);
     let request = Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
+
     let resp_value = JsFuture::from(window.fetch_with_request(&request)).await?;
     let resp: Response = resp_value.dyn_into().unwrap();
+
     let json = JsFuture::from(resp.json()?).await?;
 
     let topology: Topology = json.into_serde().expect("Could not parse as Topology");
