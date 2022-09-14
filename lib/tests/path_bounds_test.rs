@@ -106,16 +106,13 @@ mod path_bounds_test {
                 Coordinate { x: 101., y: 0. },
                 Coordinate { x: 100., y: 0. },
             ]),
-            vec![
-                // [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]
-                LineString::from(vec![
-                    Coordinate { x: 100.2, y: 0.2 },
-                    Coordinate { x: 100.8, y: 0.2 },
-                    Coordinate { x: 100.8, y: 0.8 },
-                    Coordinate { x: 100.2, y: 0.8 },
-                    Coordinate { x: 100.2, y: 0.2 },
-                ]),
-            ],
+            vec![LineString::from(vec![
+                Coordinate { x: 100.2, y: 0.2 },
+                Coordinate { x: 100.8, y: 0.2 },
+                Coordinate { x: 100.8, y: 0.8 },
+                Coordinate { x: 100.2, y: 0.8 },
+                Coordinate { x: 100.2, y: 0.2 },
+            ])],
         ));
         let eq = equirectangular::<f64>();
         assert_eq!(
