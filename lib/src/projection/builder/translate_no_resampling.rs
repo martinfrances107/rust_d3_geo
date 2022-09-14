@@ -58,7 +58,7 @@ impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateSet
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
-    T:  CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
