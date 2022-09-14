@@ -52,7 +52,7 @@ mod polygon_contains_test {
     fn empty_return_false() {
         println!("geoPolygonContains(empty, point) returns false");
         let polygon: Polygon<f64> = Polygon::new(LineString(vec![]), vec![]);
-        let contained = polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 });
+        let contained = polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 });
         assert_eq!(contained, false);
     }
 
@@ -70,11 +70,11 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0.1f64, y: 2f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0.1f64, y: 2f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 0.1f64,
@@ -93,7 +93,7 @@ mod polygon_contains_test {
         let polygon = circle.circle();
 
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -180f64,
@@ -103,7 +103,7 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 1f64, y: 1f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 1f64, y: 1f64 }),
             true
         );
     }
@@ -117,15 +117,15 @@ mod polygon_contains_test {
         let polygon = c;
 
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 300f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 300f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: -60f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: -60f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -420f64,
@@ -162,15 +162,15 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -85f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -85f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
             true
         );
     }
@@ -195,19 +195,19 @@ mod polygon_contains_test {
         );
 
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 85f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 85f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -100f64,
@@ -217,7 +217,7 @@ mod polygon_contains_test {
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
             false
         );
     }
@@ -238,11 +238,11 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -60f64,
@@ -252,7 +252,7 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 60f64,
@@ -274,11 +274,11 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -60f64,
@@ -288,7 +288,7 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 60f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 60f64, y: 90f64 }),
             false
         );
     }
@@ -312,7 +312,7 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 0f64,
@@ -322,7 +322,7 @@ mod polygon_contains_test {
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -60f64,
@@ -347,7 +347,7 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 0.1f64,
@@ -357,7 +357,7 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 2.0f64,
@@ -390,7 +390,7 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 0.0f64,
@@ -400,7 +400,7 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -431,7 +431,7 @@ mod polygon_contains_test {
         );
 
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 0.0f64,
@@ -441,7 +441,7 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -454,7 +454,7 @@ mod polygon_contains_test {
         let polygon = c;
         println!("polygon {:#?}", polygon);
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -180f64,
@@ -464,7 +464,7 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: -90f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: -90f64, y: 0f64 }),
             true
         );
     }
@@ -498,11 +498,11 @@ mod polygon_contains_test {
         );
 
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0.0, y: 0.0 }),
+            polygon_contains(&polygon, &Coordinate { x: 0.0, y: 0.0 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 20f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 20f64 }),
             true
         );
     }
@@ -527,11 +527,11 @@ mod polygon_contains_test {
         let polygon = Polygon::new(ring0, vec![ring1_rev]);
 
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
             true
         );
     }
@@ -555,11 +555,11 @@ mod polygon_contains_test {
 
         let polygon = Polygon::new(ring1, vec![ring2]);
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -599,7 +599,7 @@ mod polygon_contains_test {
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
 
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 0.5f64,
@@ -609,7 +609,7 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 0.1f64,
@@ -650,11 +650,11 @@ mod polygon_contains_test {
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
 
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 20f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 20f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -704,11 +704,11 @@ mod polygon_contains_test {
         ring1.reverse();
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -757,11 +757,11 @@ mod polygon_contains_test {
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
 
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 20f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 20f64 }),
             true
         );
     }
@@ -800,11 +800,11 @@ mod polygon_contains_test {
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
 
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
             true
         );
     }
@@ -845,11 +845,11 @@ mod polygon_contains_test {
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
 
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
             true
         );
     }
@@ -872,7 +872,7 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 15f64,
@@ -882,11 +882,11 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 12f64, y: 2f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 12f64, y: 2f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 0.5f64,
@@ -896,7 +896,7 @@ mod polygon_contains_test {
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 2f64, y: 2f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 2f64, y: 2f64 }),
             true
         );
     }
@@ -940,15 +940,15 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -76f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -76f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -89f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -89f64 }),
             true
         );
     }
@@ -986,15 +986,15 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 76f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 76f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 89f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 89f64 }),
             true
         );
     }
@@ -1010,7 +1010,7 @@ mod polygon_contains_test {
         let c = circle.circle();
         let polygon = &c;
         assert_eq!(
-            polygon_contains::<f64>(polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(polygon, &Coordinate { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -1036,15 +1036,15 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: -46f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: -46f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 1f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 1f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -90f64,
@@ -1054,19 +1054,19 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: -44f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: -44f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -30f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -30f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 30f64,
@@ -1095,15 +1095,15 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: -46f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: -46f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 1f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 1f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -90f64,
@@ -1113,19 +1113,19 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: -44f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: -44f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -30f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -30f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 30f64,
@@ -1160,15 +1160,15 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 180f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 180f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 150f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 150f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 180f64,
@@ -1178,7 +1178,7 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: 150f64,
@@ -1188,15 +1188,15 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 180f64, y: 1f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 180f64, y: 1f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -90f64,
@@ -1228,23 +1228,23 @@ mod polygon_contains_test {
             vec![],
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: -90f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coordinate { x: -90f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -1f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -1f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: -80f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -80f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: -90f64, y: 1f64 }),
+            polygon_contains(&polygon, &Coordinate { x: -90f64, y: 1f64 }),
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -90f64,
@@ -1254,7 +1254,7 @@ mod polygon_contains_test {
             false
         );
         assert_eq!(
-            polygon_contains::<f64>(
+            polygon_contains(
                 &polygon,
                 &Coordinate {
                     x: -44f64,
@@ -1264,11 +1264,11 @@ mod polygon_contains_test {
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 0f64, y: 10f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 10f64 }),
             true
         );
         assert_eq!(
-            polygon_contains::<f64>(&polygon, &Coordinate { x: 30f64, y: 80f64 }),
+            polygon_contains(&polygon, &Coordinate { x: 30f64, y: 80f64 }),
             true
         );
     }

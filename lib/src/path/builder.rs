@@ -46,11 +46,6 @@ impl<I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: CoordFloat + FloatConst,
 {
-    /// Returns the state within the builder.
-    // pub fn get_context(&self) {
-    //     todo!("must implement");
-    // }
-
     /// Programe the builder with the context.
     pub fn context(self, context: CanvasRenderingContext2d) -> Self {
         Builder {

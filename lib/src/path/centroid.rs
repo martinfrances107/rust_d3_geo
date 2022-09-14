@@ -17,7 +17,7 @@ use super::Result;
 ///
 /// TODO Enforce positive area for exterior, negative area for interior?
 ///
-/// DISAMBIGUATION: lot sof code in common with src/centroid.rs
+/// DISAMBIGUATION: lot of code in common with src/centroid.rs
 /// but this is true of the javascript.
 pub struct Centroid<T>
 where
