@@ -15,7 +15,7 @@ use crate::Transform;
 impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> AngleGet
     for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
 
@@ -73,7 +73,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
-    T:  CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

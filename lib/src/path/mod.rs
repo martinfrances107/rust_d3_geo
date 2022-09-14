@@ -33,7 +33,6 @@ use crate::projection::projector::Projector;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Streamable;
-use crate::Transform;
 
 /// Path Result.
 pub trait Result {

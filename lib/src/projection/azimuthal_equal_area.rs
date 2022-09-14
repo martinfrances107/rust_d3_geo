@@ -23,7 +23,7 @@ use super::azimuthal::azimuthal_raw;
 #[derive(Copy, Clone, Debug, Default)]
 pub struct AzimuthalEqualArea<DRAIN, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,
