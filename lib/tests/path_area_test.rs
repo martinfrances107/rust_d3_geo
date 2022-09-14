@@ -14,16 +14,9 @@ mod path_area_test {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-    use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
-    use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
-    use rust_d3_geo::clip::buffer::Buffer;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::path::area::Area;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::projection::builder::template::NoClipU;
-    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipC;
-    use rust_d3_geo::projection::builder::template::ResampleNoneNoClipU;
     use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleNoClip;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
@@ -31,9 +24,7 @@ mod path_area_test {
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleSet;
-    use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::Streamable;
-    use rust_d3_geo::stream::Unconnected;
 
     #[inline]
     fn equirectangular<T>(
@@ -62,27 +53,7 @@ mod path_area_test {
     where
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let builder: PathBuilder<
-            Area<T>,
-            InterpolateAntimeridian<T>,
-            LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-            LineAntimeridian<
-                ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-                Connected<ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>>,
-                T,
-            >,
-            LineAntimeridian<
-                ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-                Unconnected,
-                T,
-            >,
-            NoClipU<Area<T>>,
-            Equirectangular<Area<T>, T>,
-            PVAntimeridian<T>,
-            ResampleNoneNoClipC<Area<T>, Equirectangular<Area<T>, T>, T>,
-            ResampleNoneNoClipU<Area<T>, Equirectangular<Area<T>, T>, T>,
-            T,
-        > = PathBuilder::new(Area::default());
+        let builder = PathBuilder::new(Area::default());
         builder.build(projection).area(&object)
     }
 
