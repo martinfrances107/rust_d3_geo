@@ -2,6 +2,8 @@
 extern crate criterion;
 extern crate pretty_assertions;
 
+use std::time::Duration;
+
 use criterion::Criterion;
 use geo::{Coordinate, LineString};
 use geo::{MultiPolygon, Polygon};
@@ -38,8 +40,12 @@ fn rings() {
         })
         .build();
 
-    let cg_outer = CircleGenerator::default().radius_set(10_f64).precision_set(10_f64);
-    let cg_inner = CircleGenerator::default().radius_set(5_f64).precision_set(5_f64);
+    let cg_outer = CircleGenerator::default()
+        .radius_set(10_f64)
+        .precision_set(10_f64);
+    let cg_inner = CircleGenerator::default()
+        .radius_set(5_f64)
+        .precision_set(5_f64);
 
     let mut p_vec: Vec<Polygon<f64>> = vec![];
     for lat in (-30..=30).step_by(30) {
@@ -85,7 +91,12 @@ fn rings() {
 }
 
 fn criterion_benchmark(c: &mut Criterion) {
-    c.bench_function("rings", |b| b.iter(|| rings()));
+    let mut g = c.benchmark_group("ring");
+
+    // Increased the default run time by 3 seconds after gettings warnings that the task was taking too long.
+    g.measurement_time(Duration::from_secs(8));
+
+    g.bench_function("rings", |b| b.iter(|| rings()));
 }
 
 criterion_group!(benches, criterion_benchmark);

@@ -2,6 +2,8 @@
 extern crate criterion;
 extern crate pretty_assertions;
 
+use std::time::Duration;
+
 use criterion::Criterion;
 use geo::{Coordinate, Geometry, LineString, MultiLineString};
 use lazy_static::lazy_static;
@@ -54,7 +56,11 @@ fn graticule() {
 }
 
 fn criterion_benchmark(c: &mut Criterion) {
-    c.bench_function("graticule", |b| b.iter(|| graticule()));
+    let mut g = c.benchmark_group("graticule");
+
+    // Increased the default run time by 3 seconds after gettings warnings that the task was taking too long.
+    g.measurement_time(Duration::from_secs(8));
+    g.bench_function("graticule", |b| b.iter(|| graticule()));
 }
 
 criterion_group!(benches, criterion_benchmark);

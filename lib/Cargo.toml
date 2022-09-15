@@ -23,7 +23,7 @@ pretty_assertions = "~1"
 lazy_static = "~1"
 regex = "~1"
 topojson = "~0.5"
-criterion = "~0.3"
+criterion = "~0.4"
 
 [dependencies.web-sys]
 version = "~0.3"
