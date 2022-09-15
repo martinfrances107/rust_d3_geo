@@ -19,6 +19,7 @@ where
     T: Copy,
 {
     /// Constructor.
+    #[inline]
     pub fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T) -> Self {
         Self {
             k: *k,

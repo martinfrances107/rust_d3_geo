@@ -66,10 +66,11 @@ mod rotate_get;
 mod scale_get;
 mod scale_no_resampling;
 mod scale_with_resampling;
-pub mod template;
 mod translate_get;
 mod translate_no_resampling;
 mod translate_with_resampling;
+
+pub mod template;
 pub mod types;
 /// Projection builder.
 ///

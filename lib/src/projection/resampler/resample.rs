@@ -98,42 +98,43 @@ where
 {
     type Output = Resample<PR, SC, Connected<SC, T>, T>;
     type SC = SC;
+
+    #[inline]
     fn connect(self, sink: SC) -> Resample<PR, SC, Connected<SC, T>, T> {
-        let state = Connected {
-            sink,
-            // first point
-            lambda00: T::nan(),
-            x00: T::nan(),
-            y00: T::nan(),
-            a00: T::nan(),
-            b00: T::nan(),
-            c00: T::nan(),
-
-            // previous point
-            lambda0: T::nan(),
-            x0: T::nan(),
-            y0: T::nan(),
-            a0: T::nan(),
-            b0: T::nan(),
-            c0: T::nan(),
-
-            // cos(minimium angular distance)
-            cos_min_distance: T::from(30_f64).unwrap().to_radians().cos(),
-            point_state: PointState::Default,
-            use_line_start: true,
-            use_line_end: true,
-
-            // Generic constants.
-            epsilon: T::from(EPSILON).unwrap(),
-            four: T::from(4_f64).unwrap(),
-            frac_1_2: T::from(0.5_f64).unwrap(),
-            frac_1_3: T::from(1_f64 / 3_f64).unwrap(),
-        };
         Resample {
             delta2: self.delta2,
             p_sc: self.p_sc,
             projection_transform: self.projection_transform,
-            state,
+            state: Connected {
+                sink,
+                // first point
+                lambda00: T::nan(),
+                x00: T::nan(),
+                y00: T::nan(),
+                a00: T::nan(),
+                b00: T::nan(),
+                c00: T::nan(),
+
+                // previous point
+                lambda0: T::nan(),
+                x0: T::nan(),
+                y0: T::nan(),
+                a0: T::nan(),
+                b0: T::nan(),
+                c0: T::nan(),
+
+                // cos(minimium angular distance)
+                cos_min_distance: T::from(30_f64).unwrap().to_radians().cos(),
+                point_state: PointState::Default,
+                use_line_start: true,
+                use_line_end: true,
+
+                // Generic constants.
+                epsilon: T::from(EPSILON).unwrap(),
+                four: T::from(4_f64).unwrap(),
+                frac_1_2: T::from(0.5_f64).unwrap(),
+                frac_1_3: T::from(1_f64 / 3_f64).unwrap(),
+            },
         }
     }
 }
@@ -142,7 +143,8 @@ impl<PR, SC, T> Resample<PR, SC, Unconnected, T>
 where
     T: CoordFloat,
 {
-    /// Returns a Resample for a given precision
+    /// Returns a Resample for a given precision.
+    #[inline]
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
         delta2: T,

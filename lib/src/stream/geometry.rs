@@ -17,7 +17,6 @@ where
     {
         match self {
             Geometry::Point(p) => p.to_stream(stream),
-
             Geometry::LineString(ls) => ls.to_stream(stream),
             Geometry::Polygon(p) => p.to_stream(stream),
             Geometry::MultiPoint(multi_point) => multi_point.to_stream(stream),
@@ -28,7 +27,6 @@ where
                     g.to_stream(stream);
                 }
             }
-            // Geometry::Line(l) => l.to_stream(stream),
             _ => {
                 todo!("Covers Line, Rect and Triangle, The javascript original does not implement these")
             }

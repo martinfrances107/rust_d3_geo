@@ -29,6 +29,7 @@ where
 {
     type Builder = BuilderCircleResampleNoClip<DRAIN, Gnomic<DRAIN, T>, T>;
 
+    #[inline]
     fn builder() -> Self::Builder
     where
         DRAIN: Default + Stream<EP = DRAIN, T = T>,

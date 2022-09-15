@@ -79,7 +79,7 @@ where
 {
     type SC = SINK;
 
-    // #[inline]
+    #[inline]
     fn sink(&mut self) -> &mut Self::SC {
         &mut self.state.sink
     }
@@ -92,6 +92,7 @@ where
     type Output = Line<Buffer<T>, Connected<Buffer<T>>, T>;
     type T = T;
 
+    #[inline]
     fn buffer(self, buffer: Buffer<T>) -> Self::Output {
         Line {
             state: Connected { sink: buffer },

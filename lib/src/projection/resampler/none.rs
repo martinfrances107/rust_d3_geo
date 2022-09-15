@@ -28,6 +28,7 @@ pub struct None<PR, SC, STATE, T> {
 }
 
 impl<PR, SC, T> None<PR, SC, Unconnected, T> {
+    #[inline]
     /// Constructor: Resample None.
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
@@ -47,12 +48,13 @@ where
 {
     type Output = None<PR, SC, Connected<SC>, T>;
     type SC = SC;
+
+    #[inline]
     fn connect(self, sink: SC) -> Self::Output {
         None::<PR, SC, Connected<SC>, T> {
             state: Connected { sink },
             p_sc: PhantomData::<SC>,
             p_t: self.p_t,
-
             projection_transform: self.projection_transform,
         }
     }

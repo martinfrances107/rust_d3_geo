@@ -11,6 +11,7 @@ where
 {
     type T = T;
 
+    #[inline]
     fn to_stream<EP, SD>(&self, stream: &mut SD)
     where
         SD: Stream<EP = EP, T = T>,

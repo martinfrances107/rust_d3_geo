@@ -11,6 +11,7 @@ use crate::stream::Unconnected;
 pub struct StreamTransformRadians<STATE>(pub STATE);
 
 impl StreamTransformRadians<Unconnected> {
+    #[inline]
     pub fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>> {
         StreamTransformRadians(Connected { sink })
     }
@@ -18,6 +19,7 @@ impl StreamTransformRadians<Unconnected> {
 /// Not auto deriving here - it does not makes sense to provide
 /// a default for the connected state.
 impl Default for StreamTransformRadians<Unconnected> {
+    #[inline]
     fn default() -> Self {
         Self(Unconnected)
     }
