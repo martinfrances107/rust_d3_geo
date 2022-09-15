@@ -24,10 +24,10 @@ lazy_static! {
     static ref ROUND_DOWN: Regex = Regex::new(r"\.\d+").unwrap();
 }
 
-// /// This benchmark is based on examples/rings
-// ///
-// /// It uses orthographic projection to generated a SVG path
-// /// for a complex MultiPolygon.
+/// This benchmark is based on examples/rings
+///
+/// It uses orthographic projection to generated a SVG path for a complex
+/// MultiPolygon.
 fn rings() {
     let width = 1000_f64;
     let height = 1000_f64;

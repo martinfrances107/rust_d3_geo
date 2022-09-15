@@ -26,8 +26,8 @@ lazy_static! {
 
 /// This benchmark is based on examples/graticule
 ///
-/// It uses orthographic projection to generated a SVG path
-/// for a complex MultiLineString
+/// It uses orthographic projection to generated a SVG path for a complex
+/// MultiLineString.
 fn graticule() {
     let width = 1000_f64;
     let height = 1000_f64;
