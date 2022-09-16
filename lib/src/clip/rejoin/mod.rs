@@ -67,7 +67,7 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
                 stream.line_end();
                 return;
             }
-            // handle degenerate cases by moving the point
+            // Handle degenerate cases by moving the point.
             p1.p.x = p1.p.x + two_epsilon;
         }
 
@@ -130,7 +130,7 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
         // Find first unvisited intersection.
         while current.borrow().v {
             current = current.clone().borrow().n.clone().unwrap();
-            // The javascrtip as this point does === on two objects.
+            // The javascript as this point does === on two objects.
             // This is the same a comparison of raw points.
             if current.as_ptr() == (*start).as_ptr() {
                 return;
@@ -149,7 +149,6 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
                     match points {
                         Some(points) => {
                             for p in points {
-                                // point = p;
                                 stream.point(&p.p, None);
                             }
                         }
