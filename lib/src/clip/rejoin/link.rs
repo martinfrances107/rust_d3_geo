@@ -19,14 +19,13 @@ where
     };
     let n = array.len();
     let mut a = array[0].clone();
-    let mut b: Rc<RefCell<Intersection<T>>>;
     for elem in array.iter().take(n).skip(1) {
-        b = elem.clone();
+        let b = elem.clone();
         (*a).borrow_mut().n = Some(b.clone());
         (*b).borrow_mut().p = Some(a.clone());
         a = b;
     }
-    b = array[0].clone();
+    let b = array[0].clone();
     (*a).borrow_mut().n = Some(b.clone());
     (*b).borrow_mut().p = Some(a);
 }
