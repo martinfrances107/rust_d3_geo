@@ -120,7 +120,6 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
     }
 
     let start = &subject[0];
-    let mut point;
 
     loop {
         // current: First unprocessed intersection point
@@ -150,8 +149,8 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
                     match points {
                         Some(points) => {
                             for p in points {
-                                point = p;
-                                stream.point(&point.p, None);
+                                // point = p;
+                                stream.point(&p.p, None);
                             }
                         }
                         None => {
@@ -173,8 +172,7 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
                         .borrow()
                         .z;
                     for le in points.unwrap().iter().rev() {
-                        point = le;
-                        stream.point(&point.p, None);
+                        stream.point(&le.p, None);
                     }
                 } else {
                     interpolator.interpolate(
