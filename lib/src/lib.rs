@@ -57,6 +57,8 @@ pub mod rot;
 /// Stream related helper functions.
 pub mod stream;
 
+pub mod path_test_context;
+
 /// 2-D Transform common to projections and, rotations.
 ///
 /// FloatConst is required by forward_rotation_lambda().

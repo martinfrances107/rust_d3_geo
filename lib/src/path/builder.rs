@@ -4,12 +4,16 @@ use std::fmt::Display;
 use geo::CoordFloat;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
-use web_sys::CanvasRenderingContext2d;
 
 use crate::path::context::Context;
 use crate::path::Path;
 use crate::projection::projector::Projector;
 use crate::stream::Stream;
+#[cfg(not(test))]
+use web_sys::CanvasRenderingContext2d;
+
+#[cfg(test)]
+use crate::path_test_context::CanvasRenderingContext2d;
 
 use super::context::Context as PathContext;
 use super::string::String;
@@ -42,7 +46,7 @@ where
 
 /// Context related methods.
 impl<I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
-    Builder<Context<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+    Builder<Context, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -50,7 +54,7 @@ where
     pub fn context(self, context: CanvasRenderingContext2d) -> Self {
         Builder {
             pr: self.pr,
-            context_stream: PathContext::<T>::new(context),
+            context_stream: PathContext::new(context),
             projection: self.projection,
         }
     }

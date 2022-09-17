@@ -1,28 +1,15 @@
-use geo::CoordFloat;
-use geo::Coordinate;
-
 #[cfg(not(tarpaulin_include))]
 /// Used by index_test
-#[derive(Clone, Debug, Default)]
-pub struct TestContext {
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
+pub struct CanvasRenderingContext2d {
     buffer: Vec<String>,
 }
 
 #[cfg(not(tarpaulin_include))]
 /// Stub for web_sys rendering context.
-pub trait RenderingContext2d<T>
-where
-    T: CoordFloat,
-{
-    fn arc(&mut self, p: &Coordinate<T>, r: T, start: T, stop: T);
-    fn close_path(&mut self);
-    fn line_to(&mut self, p: &Coordinate<T>);
-    fn move_to(&mut self, p: &Coordinate<T>);
-    fn rect(&mut self, p: &Coordinate<T>, w: T, h: T);
-}
 
 #[cfg(not(tarpaulin_include))]
-impl TestContext {
+impl CanvasRenderingContext2d {
     /// Buffered strings.
     pub fn result(&mut self) -> Vec<String> {
         let result = self.buffer.clone();
@@ -32,40 +19,39 @@ impl TestContext {
 }
 
 #[cfg(not(tarpaulin_include))]
-impl<T> RenderingContext2d<T> for TestContext
-where
-    T: CoordFloat,
-{
+impl CanvasRenderingContext2d {
     #[inline]
-    fn arc(&mut self, p: &Coordinate<T>, r: T, _start: T, _stop: T) {
+    pub fn arc(&mut self, x: f64, y: f64, r: f64, _start: f64, _stop: f64) {
         {
             self.buffer.push(format!(
                 "type: arc, x: {:?}, y: {:?}, r: {:?}",
-                p.x.round(),
-                p.y.round(),
+                x.round(),
+                y.round(),
                 r
             ));
         }
     }
 
     #[inline]
-    fn move_to(&mut self, p: &Coordinate<T>) {
-        self.buffer
-            .push(format!("type: moveTo {:?}, {:?}", p.x.round(), p.y.round()));
+    pub fn move_to(&mut self, x: f64, y: f64) {
+        self.buffer.push(format!(
+            "type: moveTo, x: {:?}, y: {:?}",
+            x.round(),
+            y.round()
+        ));
     }
 
     #[inline]
-    fn line_to(&mut self, p: &Coordinate<T>) {
-        self.buffer
-            .push(format!("type: lineTo {:?}, {:?}", p.x.round(), p.y.round()));
+    pub fn line_to(&mut self, x: f64, y: f64) {
+        self.buffer.push(format!(
+            "type: lineTo, x: {:?}, y: {:?}",
+            x.round(),
+            y.round()
+        ));
     }
 
     #[inline]
-    fn close_path(&mut self) {
-        self.buffer.push(format!("closePath"));
-    }
-
-    fn rect(&mut self, p: &Coordinate<T>, w: T, h: T) {
-        todo!("test do not use this.");
+    pub fn close_path(&mut self) {
+        self.buffer.push("closePath".to_string());
     }
 }

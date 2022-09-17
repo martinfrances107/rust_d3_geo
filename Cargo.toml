@@ -5,7 +5,7 @@ members = [
     "./examples/globe/svg",
     "./examples/graticule",
     "./examples/projections",
-    "./examples/ring"
+    "./examples/ring",
 ]
 
 [profile.release]

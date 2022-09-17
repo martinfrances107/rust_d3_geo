@@ -69,7 +69,7 @@ fn update_canvas(document: &Document) -> Result<()> {
     context_raw.set_stroke_style(&"black".into());
     context_raw.fill_rect(0.0, 0.0, width, height);
 
-    let context: Context<f64> = Context::new(context_raw.clone());
+    let context: Context = Context::new(context_raw.clone());
     let pb = PathBuilder::new(context);
 
     let ortho = Orthographic::builder()
