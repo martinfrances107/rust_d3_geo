@@ -66,7 +66,7 @@ impl PointRadiusTrait for Context {
     }
 }
 
-/// Reach into the Mock context and return the result.
+/// Reach into the mock and return a record of all activity.
 #[cfg(test)]
 impl Result for Context {
     type Out = Vec<String>;
@@ -79,6 +79,7 @@ impl Result for Context {
     }
 }
 
+/// Stub, In production code the API calls change the canvas directly.
 #[cfg(not(test))]
 impl Result for Context {
     type Out = Vec<String>;
@@ -173,6 +174,7 @@ mod index_test {
 
     use crate::path::builder::Builder as PathBuilder;
     use crate::path::context::Context;
+    use crate::path::Result;
     use crate::path_test_context::CanvasRenderingContext2d;
     use crate::projection::equirectangular::Equirectangular;
     use crate::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
@@ -509,4 +511,51 @@ mod index_test {
     //     //   ]);
     //     //   test.end();
     //     // });
+
+    #[test]
+    fn does_not_treat_the_point_as_part_of_a_line() {
+        println!(
+            "geoPath(LineString) then geoPath(Point) does not treat the point as part of a line"
+        );
+
+        let crc2d = CanvasRenderingContext2d::default();
+
+        // let equirectangular = Equirectangular::builder().build();
+        let context = Context::new(crc2d);
+        let pb = PathBuilder::new(context);
+
+        let mut path = pb.build(equirectangular());
+
+        let object = LineString(vec![
+            Coordinate {
+                x: -63_f64,
+                y: 18_f64,
+            },
+            Coordinate {
+                x: -62_f64,
+                y: 18_f64,
+            },
+            Coordinate {
+                x: -62_f64,
+                y: 17_f64,
+            },
+        ]);
+
+        assert_eq!(
+            path.object(&object),
+            [
+                "type: moveTo, x: 165.0, y: 160.0",
+                "type: lineTo, x: 170.0, y: 160.0",
+                "type: lineTo, x: 170.0, y: 165.0",
+            ]
+        );
+        let object = Geometry::Point(Point::new(-63_f64, 18_f64));
+        assert_eq!(
+            path.object(&object),
+            [
+                "type: moveTo, x: 170.0, y: 160.0",
+                "type: arc, x: 165.0, y: 160.0, r: 4.5"
+            ]
+        );
+    }
 }

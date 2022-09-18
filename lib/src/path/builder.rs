@@ -67,10 +67,9 @@ where
     T: CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
+    #[inline]
     pub fn context_pathstring() -> Self {
-        let context_stream = String::default();
-
-        Builder::new(context_stream)
+        Builder::new(String::default())
     }
 }
 
