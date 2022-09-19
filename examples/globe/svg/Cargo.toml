@@ -17,7 +17,6 @@ topojson = "~0.5"
 # The `wasm-bindgen` crate provides the bare minimum functionality needed
 # to interact with JavaScript.
 wasm-bindgen = { version = "~0.2", features = ["serde-serialize"] }
-
 wasm-bindgen-test = "~0.3"
 wasm-bindgen-futures = "~0.4"
 
