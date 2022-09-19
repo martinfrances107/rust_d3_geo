@@ -145,6 +145,8 @@ impl Stream for Context {
             }
         }
     }
+
+    fn sphere(&mut self) {}
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -155,8 +157,6 @@ mod index_test {
 
     use std::f64::consts::PI;
     use std::fmt::Debug;
-    use std::fmt::Display;
-    use std::ops::AddAssign;
 
     use approx::AbsDiffEq;
     use geo::line_string;
@@ -168,13 +168,11 @@ mod index_test {
     use geo::MultiPoint;
     use geo::Point;
     use geo::Polygon;
-    use num_traits::AsPrimitive;
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
     use crate::path::builder::Builder as PathBuilder;
     use crate::path::context::Context;
-    use crate::path::Result;
     use crate::path_test_context::CanvasRenderingContext2d;
     use crate::projection::equirectangular::Equirectangular;
     use crate::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
@@ -188,13 +186,7 @@ mod index_test {
     #[inline]
     fn equirectangular<
         EP: Clone + Stream<EP = EP, T = T> + Debug + Default,
-        T: AbsDiffEq<Epsilon = T>
-            + AsPrimitive<T>
-            + AddAssign
-            + CoordFloat
-            + Default
-            + Display
-            + FloatConst,
+        T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
     >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<EP, T>, T> {
         Equirectangular::builder()
             .scale_set(T::from(900f64 / PI).unwrap())
@@ -202,7 +194,6 @@ mod index_test {
             .build()
     }
 
-    #[cfg(any(test, integration_test))]
     fn test_path(
         projection: ProjectorAntimeridianResampleNoneNoClip<
             Context,
@@ -324,22 +315,6 @@ mod index_test {
             ]
         );
     }
-
-    //     // tape("geoPath(GeometryCollection) renders a geometry collection", function(test) {
-    //     //   test.deepEqual(testPath(equirectangular, {
-    //     //     type: "GeometryCollection",
-    //     //     geometries: [{
-    //     //       type: "Polygon",
-    //     //       coordinates: [[[-63, 18], [-62, 18], [-62, 17], [-63, 18]]]
-    //     //     }]
-    //     //   }), [
-    //     //     {type: "moveTo", x: 165, y: 160},
-    //     //     {type: "lineTo", x: 170, y: 160},
-    //     //     {type: "lineTo", x: 170, y: 165},
-    //     //     {type: "closePath"}
-    //     //   ]);
-    //     //   test.end();
-    //     // });
 
     #[test]
     fn render_a_gc() {
@@ -490,28 +465,6 @@ mod index_test {
     //     //   test.end();
     //     // });
 
-    //     // tape("geoPath(LineString) then geoPath(Point) does not treat the point as part of a line", function(test) {
-    //     //   var context = testContext(), path = d3_geo.geoPath().projection(equirectangular).context(context);
-    //     //   path({
-    //     //     type: "LineString",
-    //     //     coordinates: [[-63, 18], [-62, 18], [-62, 17]]
-    //     //   });
-    //     //   test.deepEqual(context.result(), [
-    //     //     {type: "moveTo", x: 165, y: 160},
-    //     //     {type: "lineTo", x: 170, y: 160},
-    //     //     {type: "lineTo", x: 170, y: 165}
-    //     //   ]);
-    //     //   path({
-    //     //     type: "Point",
-    //     //     coordinates: [-63, 18]
-    //     //   });
-    //     //   test.deepEqual(context.result(), [
-    //     //     {type: "moveTo", x: 170, y: 160},
-    //     //     {type: "arc", x: 165, y: 160, r: 4.5}
-    //     //   ]);
-    //     //   test.end();
-    //     // });
-
     #[test]
     fn does_not_treat_the_point_as_part_of_a_line() {
         println!(
@@ -547,6 +500,57 @@ mod index_test {
                 "type: moveTo, x: 165.0, y: 160.0",
                 "type: lineTo, x: 170.0, y: 160.0",
                 "type: lineTo, x: 170.0, y: 165.0",
+            ]
+        );
+        let object = Geometry::Point(Point::new(-63_f64, 18_f64));
+        assert_eq!(
+            path.object(&object),
+            [
+                "type: moveTo, x: 170.0, y: 160.0",
+                "type: arc, x: 165.0, y: 160.0, r: 4.5"
+            ]
+        );
+    }
+
+    #[test]
+    fn does_not_treat_the_point_as_part_of_a_polygon() {
+        println!(
+            "geoPath(LineString) then geoPath(Point) does not treat the point as part of a line"
+        );
+
+        let crc2d = CanvasRenderingContext2d::default();
+
+        // let equirectangular = Equirectangular::builder().build();
+        let context = Context::new(crc2d);
+        let pb = PathBuilder::new(context);
+
+        let mut path = pb.build(equirectangular());
+
+        let object = Geometry::Polygon(Polygon::new(
+            LineString(vec![
+                Coordinate {
+                    x: -63_f64,
+                    y: 18_f64,
+                },
+                Coordinate {
+                    x: -62_f64,
+                    y: 18_f64,
+                },
+                Coordinate {
+                    x: -62_f64,
+                    y: 17_f64,
+                },
+            ]),
+            vec![],
+        ));
+
+        assert_eq!(
+            path.object(&object),
+            [
+                "type: moveTo, x: 165.0, y: 160.0",
+                "type: lineTo, x: 170.0, y: 160.0",
+                "type: lineTo, x: 170.0, y: 165.0",
+                "closePath",
             ]
         );
         let object = Geometry::Point(Point::new(-63_f64, 18_f64));

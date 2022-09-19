@@ -57,6 +57,7 @@ pub mod rot;
 /// Stream related helper functions.
 pub mod stream;
 
+#[cfg(not(tarpaulin_include))]
 pub mod path_test_context;
 
 /// 2-D Transform common to projections and, rotations.
