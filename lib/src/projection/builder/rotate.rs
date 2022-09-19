@@ -28,7 +28,7 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
         T,
     >
 where
-    Self: RecenterWithResampling,
+    PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;

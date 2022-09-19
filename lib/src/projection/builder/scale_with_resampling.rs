@@ -1,4 +1,5 @@
 use geo::CoordFloat;
+use num_traits::FloatConst;
 
 use crate::projection::builder::Builder;
 use crate::projection::builder::ClipU;
@@ -9,6 +10,7 @@ use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::RecenterWithResampling;
 use crate::projection::ScaleSet;
+use crate::Transform;
 
 impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleSet
     for Builder<
@@ -25,8 +27,8 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleSet
         T,
     >
 where
-    Self: RecenterWithResampling,
-    T: CoordFloat,
+    PR: Clone + Transform<T = T>,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -52,8 +54,8 @@ impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleSet
     >
 where
     DRAIN: Clone,
-    Self: RecenterWithResampling,
-    T: CoordFloat,
+    PR: Clone + Transform<T = T>,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
