@@ -4,9 +4,8 @@
 //! # rust d3 geo rings
 //!
 //! See the README.md.
-extern crate js_sys;
-extern crate rand;
 extern crate web_sys;
+
 mod dom_macros;
 mod orthographic;
 mod stereographic;
