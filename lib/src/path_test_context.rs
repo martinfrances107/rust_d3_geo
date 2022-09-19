@@ -1,14 +1,9 @@
-#[cfg(not(tarpaulin_include))]
 /// Used by index_test
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct CanvasRenderingContext2d {
     buffer: Vec<String>,
 }
 
-#[cfg(not(tarpaulin_include))]
-/// Stub for web_sys rendering context.
-
-#[cfg(not(tarpaulin_include))]
 impl CanvasRenderingContext2d {
     /// Buffered strings.
     pub fn result(&mut self) -> Vec<String> {
@@ -18,18 +13,15 @@ impl CanvasRenderingContext2d {
     }
 }
 
-#[cfg(not(tarpaulin_include))]
 impl CanvasRenderingContext2d {
     #[inline]
     pub fn arc(&mut self, x: f64, y: f64, r: f64, _start: f64, _stop: f64) {
-        {
-            self.buffer.push(format!(
-                "type: arc, x: {:?}, y: {:?}, r: {:?}",
-                x.round(),
-                y.round(),
-                r
-            ));
-        }
+        self.buffer.push(format!(
+            "type: arc, x: {:?}, y: {:?}, r: {:?}",
+            x.round(),
+            y.round(),
+            r
+        ));
     }
 
     #[inline]
