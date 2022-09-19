@@ -90,12 +90,12 @@ where
     pub lambda: T,
     pub phi: T,
     pub alpha: T, // post-rotate angle
-    pub k: T,     // scale
-    pub sx: T,    // reflectX
-    pub sy: T,    // reflectY
+    k: T,         // scale
+    sx: T,        // reflectX
+    sy: T,        // reflectY
 
-    pub x: T,
-    pub y: T, // translate
+    x: T,
+    y: T, // translate
 
     pub delta_lambda: T,
     pub delta_phi: T,
