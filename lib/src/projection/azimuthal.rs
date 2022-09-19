@@ -32,11 +32,7 @@ where
     let cc = c.cos();
 
     let ret_x = (p.x * sc).atan2(z * cc);
-    let y_out: T =  if z == T::zero() {
-        z
-    } else {
-         p.y * sc / z
-    };
+    let y_out: T = if z.is_zero() { z } else { p.y * sc / z };
     let ret_y = asin(y_out);
 
     Coordinate { x: ret_x, y: ret_y }
