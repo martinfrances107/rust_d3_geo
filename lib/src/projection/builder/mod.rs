@@ -97,18 +97,18 @@ where
     x: T,
     y: T, // translate
 
-    pub delta_lambda: T,
-    pub delta_phi: T,
-    pub delta_gamma: T,
+    delta_lambda: T,
+    delta_phi: T,
+    delta_gamma: T,
 
-    pub delta2: T, // precision
+    delta2: T, // precision
 
-    pub theta: Option<T>,
+    theta: Option<T>,
 
-    pub x0: Option<T>,
-    pub y0: Option<T>,
-    pub x1: Option<T>,
-    pub y1: Option<T>, // post-clip extent
+    x0: Option<T>,
+    y0: Option<T>,
+    x1: Option<T>,
+    y1: Option<T>, // post-clip extent
 
     /// Used by recenter() to build the factories.
     pub rotate: RotateRadians<T>,
