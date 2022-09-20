@@ -83,16 +83,16 @@ where
     /// PhantomData<LB>
     /// The hidden link is between the Projector<..,LB,..>
     /// and the builder.
-    pub p_lb: PhantomData<LB>,
-    pub p_drain: PhantomData<DRAIN>,
-    pub projection_raw: PR,
-    pub clip: Clip<I, LC, LU, PV, RC, Unconnected, T>,
-    pub lambda: T,
-    pub phi: T,
-    pub alpha: T, // post-rotate angle
-    k: T,         // scale
-    sx: T,        // reflectX
-    sy: T,        // reflectY
+    p_lb: PhantomData<LB>,
+    p_drain: PhantomData<DRAIN>,
+    projection_raw: PR,
+    pub(super) clip: Clip<I, LC, LU, PV, RC, Unconnected, T>,
+    lambda: T,
+    phi: T,
+    alpha: T, // post-rotate angle
+    k: T,     // scale
+    sx: T,    // reflectX
+    sy: T,    // reflectY
 
     x: T,
     y: T, // translate
@@ -111,18 +111,18 @@ where
     y1: Option<T>, // post-clip extent
 
     /// Used by recenter() to build the factories.
-    pub rotate: RotateRadians<T>,
-    pub rotator: RotatorRadians<Unconnected, T>, //rotate, pre-rotate
-    pub project_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+    rotate: RotateRadians<T>,
+    pub(super) rotator: RotatorRadians<Unconnected, T>, //rotate, pre-rotate
+    project_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
     /// Used by rotate_transform_factory and projections transform.
-    pub project_rotate_transform:
+    pub(super) project_rotate_transform:
         Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     /// Projection pipeline stage.
-    pub postclip: PCNU,
+    pub(super) postclip: PCNU,
 
     /// Projection pipeline stage
-    pub resample: RU,
+    pub(super) resample: RU,
 }
 
 impl<DRAIN, PR, T> BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
