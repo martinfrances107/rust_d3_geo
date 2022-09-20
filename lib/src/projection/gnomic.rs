@@ -24,7 +24,7 @@ pub struct Gnomic<DRAIN, T> {
 
 impl<DRAIN, T> ProjectionRawBase for Gnomic<DRAIN, T>
 where
-    DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
     type Builder = BuilderCircleResampleNoClip<DRAIN, Gnomic<DRAIN, T>, T>;

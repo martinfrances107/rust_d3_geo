@@ -31,7 +31,7 @@ where
 
 impl<DRAIN, T> ProjectionRawBase for AzimuthalEqualArea<DRAIN, T>
 where
-    DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
     type Builder = BuilderCircleResampleNoClip<DRAIN, AzimuthalEqualArea<DRAIN, T>, T>;

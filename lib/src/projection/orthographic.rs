@@ -25,7 +25,7 @@ pub struct Orthographic<DRAIN, T> {
 
 impl<DRAIN, T> ProjectionRawBase for Orthographic<DRAIN, T>
 where
-    DRAIN: Clone + Debug + Default + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     type Builder = BuilderCircleResampleNoClip<DRAIN, Orthographic<DRAIN, T>, T>;

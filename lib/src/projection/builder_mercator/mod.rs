@@ -27,8 +27,6 @@ pub mod translate_get;
 pub mod translate_reclip;
 pub mod types;
 
-use std::fmt::Debug;
-
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -189,7 +187,7 @@ where
     LB: Clone,
     LC: Clone,
     LU: Clone,
-    PCNU: Clone + Debug,
+    PCNU: Clone,
     PR: Clone,
     PV: Clone,
     RC: Clone,
