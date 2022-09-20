@@ -9,6 +9,7 @@ mod fit_test {
 
     use geo::polygon;
     use geo::Geometry;
+    use rust_d3_geo::projection::PrecisionBypass;
     use topojson::Topology;
 
     use geo::Coordinate;
@@ -357,33 +358,33 @@ mod fit_test {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
-    // #[test]
-    // fn fit_size_resampling() {
-    //     println!("projection.fitSize(…) resampling - world mercator");
-    //     let box_object = Geometry::Polygon(polygon![
-    //         (x: -135f64, y: 45f64 ),
-    //         (x: -45f64, y: 45f64 ),
-    //         (x: -45f64, y: -45f64 ),
-    //         (x: -135f64, y: -45f64 ),
-    //         (x: -135f64, y: 45f64 )
-    //     ]);
-    //     let p1 = Mercator::builder()
-    //         .precision(&0.1_f64)
-    //         .fit_size([1000_f64, 1000_f64], &box_object);
-    //     let p2 = Mercator::builder()
-    //         .precision(&0.0_f64)
-    //         .fit_size([1000_f64, 1000_f64], &box_object);
-    //     let t1 = p1.get_translate();
-    //     let t2 = p2.get_translate();
-    //     assert_eq!(p1.get_precision(), 0.1_f64);
-    //     assert_eq!(p2.get_precision(), 0_f64);
-    //     assert!(in_delta(p1.get_scale(), 436.218018, 1e-6));
-    //     assert!(in_delta(p2.get_scale(), 567.296328, 1e-6));
-    //     assert!(in_delta(t1.x, 1185.209661_f64, 1e-6));
-    //     assert!(in_delta(t2.x, 1391.106989_f64, 1e-6));
-    //     assert!(in_delta(t1.y, 500_f64, 1e-6));
-    //     assert!(in_delta(t1.y, t2.y, 1e-6));
-    // }
+    #[test]
+    fn fit_size_resampling() {
+        println!("projection.fitSize(…) resampling - world mercator");
+        let box_object = Geometry::Polygon(polygon![
+            (x: -135f64, y: 45f64 ),
+            (x: -45f64, y: 45f64 ),
+            (x: -45f64, y: -45f64 ),
+            (x: -135f64, y: -45f64 ),
+            (x: -135f64, y: 45f64 )
+        ]);
+        let p1 = Mercator::builder()
+            .precision_set(&0.1_f64)
+            .fit_size([1000_f64, 1000_f64], &box_object);
+        let p2 = Mercator::builder()
+            .precision_bypass()
+            .fit_size([1000_f64, 1000_f64], &box_object);
+        let t1 = p1.translate();
+        let t2 = p2.translate();
+        assert_eq!(p1.precision(), 0.1_f64);
+        assert_eq!(p2.precision(), 0_f64);
+        assert!(in_delta(p1.scale(), 436.218018, 1e-6));
+        assert!(in_delta(p2.scale(), 567.296328, 1e-6));
+        assert!(in_delta(t1.x, 1185.209661_f64, 1e-6));
+        assert!(in_delta(t2.x, 1391.106989_f64, 1e-6));
+        assert!(in_delta(t1.y, 500_f64, 1e-6));
+        assert!(in_delta(t1.y, t2.y, 1e-6));
+    }
 
     #[test]
     fn fit_width_world_equirectangular() {
