@@ -105,7 +105,7 @@ where
 impl<SINK, T> Rectangle<SINK, Connected<SINK>, T>
 where
     SINK: Clone,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     #[inline(always)]
     fn visible(&self, p: &Coordinate<T>) -> bool {
@@ -146,7 +146,7 @@ where
 impl<EP, SINK, T> Rectangle<SINK, Connected<SINK>, T>
 where
     SINK: Clone + Stream<EP = EP, T = T>,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     #[inline]
     fn default_point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
@@ -250,7 +250,7 @@ where
 impl<SC, T> Connectable for Rectangle<SC, Unconnected, T>
 where
     SC: Clone,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type Output = Rectangle<SC, Connected<SC>, T>;
     type SC = SC;

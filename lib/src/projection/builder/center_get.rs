@@ -1,6 +1,5 @@
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::FloatConst;
 
 use crate::projection::CenterGet;
 
@@ -9,7 +8,7 @@ use super::Builder;
 impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> CenterGet
     for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
 

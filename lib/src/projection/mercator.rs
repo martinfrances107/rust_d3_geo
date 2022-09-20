@@ -1,10 +1,8 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
-use num_traits::AsPrimitive;
 
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
 use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
@@ -27,7 +25,7 @@ pub struct Mercator<DRAIN, T> {
 impl<DRAIN, T> ProjectionRawBase for Mercator<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type Builder = BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN, T>, T>;
 
@@ -43,7 +41,7 @@ where
 
 impl<DRAIN, T> TransformExtent for Mercator<DRAIN, T>
 where
-    T: AbsDiffEq<Epsilon = T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
     #[inline]

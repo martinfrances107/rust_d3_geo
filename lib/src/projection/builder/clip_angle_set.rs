@@ -17,7 +17,6 @@ use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
-use crate::Transform;
 
 use super::Builder;
 
@@ -37,7 +36,6 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
     >
 where
     PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
-    PR: Clone + Transform<T = T>,
     RC: Clone + Stream<EP = DRAIN, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
     T: CoordFloat + FloatConst,

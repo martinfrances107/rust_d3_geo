@@ -2,7 +2,6 @@ use std::fmt::Debug;
 use std::fmt::Display;
 
 use geo::CoordFloat;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::path::context::Context;
@@ -94,7 +93,7 @@ where
 impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     CS: Stream<EP = CS, T = T>,
-    T: AsPrimitive<T> + CoordFloat,
+    T: CoordFloat,
 {
     /// From the progammed state generate a new projection.
     #[inline]

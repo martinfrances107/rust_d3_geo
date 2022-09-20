@@ -1,5 +1,4 @@
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -25,7 +24,7 @@ impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> PrecisionAdjust
     >
 where
     PR: Clone + Transform<T = T>,
-    T:  CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
 

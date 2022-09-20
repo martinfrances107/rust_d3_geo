@@ -33,7 +33,12 @@ where
             epsilon: T::from(EPSILON).unwrap(),
         }
     }
+}
 
+impl<T> Interpolator<T>
+where
+    T: CoordFloat,
+{
     #[inline]
     fn corner(&self, p: &Coordinate<T>, direction: &T) -> i8 {
         if (p.x - self.x0).abs() < self.epsilon {
@@ -91,7 +96,7 @@ where
 
 impl<T> InterpolatorTrait for Interpolator<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
 

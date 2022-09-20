@@ -87,7 +87,7 @@ where
 
 impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
-    T: AsPrimitive<T> + CoordFloat,
+    T: CoordFloat,
 {
     /// Constructor.
     pub fn new(

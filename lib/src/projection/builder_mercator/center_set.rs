@@ -38,7 +38,7 @@ where
     PV: Clone,
 
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
-    T: CoordFloat + Debug + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -69,7 +69,7 @@ where
     LU: Clone,
     PV: Clone,
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
-    T: CoordFloat + Debug + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
