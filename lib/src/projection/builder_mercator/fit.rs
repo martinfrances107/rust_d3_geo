@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -16,7 +14,7 @@ use crate::Transform;
 
 impl<PR, T> Fit for BuilderMercatorAntimeridianResampleClip<Bounds<T>, PR, T>
 where
-    PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
+    PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     /// f32 or f64

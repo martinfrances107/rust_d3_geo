@@ -29,10 +29,9 @@ pub mod types;
 
 use std::fmt::Debug;
 
-use derivative::*;
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::projection::builder::template::NoClipU;
@@ -83,9 +82,7 @@ pub trait FitReclip {
         self,
         extent: [[Self::T; 2]; 2],
         object: &impl Streamable<T = Self::T>,
-    ) -> Self::Output
-    where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
+    ) -> Self::Output;
 
     ///  Sets the projection’s scale and translate to fit the specified geographic feature in the center of an extent with the given size and top-left corner of [0, 0].
     ///  Returns the projection.
@@ -98,21 +95,15 @@ pub trait FitReclip {
         self,
         size: [Self::T; 2],
         object: &impl Streamable<T = Self::T>,
-    ) -> Self::Output
-    where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
+    ) -> Self::Output;
 
     /// Similar to fit_size where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_width_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
-    where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
+    fn fit_width_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output;
 
     /// Similar to fit_size where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_height_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output
-    where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
+    fn fit_height_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output;
 }
 
 /// This trait is useful only for mercator projection.

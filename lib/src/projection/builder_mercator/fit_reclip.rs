@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -16,7 +15,7 @@ use crate::Transform;
 impl<PR, T> FitReclip for BuilderMercatorAntimeridianResampleClip<Bounds<T>, PR, T>
 where
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     /// f32 or f64
     type T = T;
