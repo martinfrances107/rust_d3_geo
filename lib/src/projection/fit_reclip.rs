@@ -15,7 +15,6 @@ use num_traits::FloatConst;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 
 use crate::clip::buffer::Buffer;
 use crate::clip::Bufferable;
@@ -69,7 +68,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     let clip = builder.clip_extent();
     let mut b = builder
@@ -123,7 +122,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     fit_reclip(
         builder,
@@ -175,7 +174,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     fit_extent_reclip(builder, [[T::zero(), T::zero()], size], object)
 }
@@ -211,7 +210,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
@@ -264,7 +263,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();

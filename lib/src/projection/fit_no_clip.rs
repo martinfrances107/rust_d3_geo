@@ -15,7 +15,6 @@ use std::fmt::Debug;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::buffer::Buffer;
@@ -62,11 +61,10 @@ where
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-    PR: Clone + Transform<T = T>,
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     let builder = builder
         .scale_set(T::from(150.0_f64).unwrap())
@@ -103,7 +101,6 @@ where
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    PR: Clone + Transform<T = T>,
     I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
@@ -111,7 +108,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
@@ -161,9 +158,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
-    PR: Clone + Transform<T = T>,
-    PR: Clone + Transform<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     fit_extent_no_clip(builder, [[T::zero(), T::zero()], size], object)
 }
@@ -196,8 +191,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
-    PR: Clone + Transform<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
@@ -247,8 +241,7 @@ where
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
-    PR: Clone + Transform<T = T>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();

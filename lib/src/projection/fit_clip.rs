@@ -12,11 +12,9 @@
 //!
 
 use num_traits::FloatConst;
-use std::fmt::Debug;
 
 use geo::CoordFloat;
 use geo::Coordinate;
-use num_traits::AsPrimitive;
 
 use crate::clip::buffer::Buffer;
 use crate::clip::Bufferable;
@@ -35,7 +33,6 @@ use crate::projection::TranslateSet;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Streamable;
-use crate::Transform;
 
 use super::ClipExtentClear;
 use super::ClipExtentSet;
@@ -70,11 +67,10 @@ where
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    PR: Clone + Transform<T = T>,
     PV: Clone + PointVisible<T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    T: AsPrimitive<T> + CoordFloat + Debug + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     let clip = builder.clip_extent();
     let b_no_clip = builder
@@ -123,11 +119,10 @@ where
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    PR: Clone + Transform<T = T>,
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     fit_clip(
         builder,

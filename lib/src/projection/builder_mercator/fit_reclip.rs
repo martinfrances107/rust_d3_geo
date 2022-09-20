@@ -1,6 +1,5 @@
 use approx::AbsDiffEq;
 use geo::CoordFloat;
-use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::path::bounds::Bounds;
@@ -17,7 +16,7 @@ use crate::Transform;
 impl<PR, T> FitReclip for BuilderMercatorAntimeridianResampleClip<Bounds<T>, PR, T>
 where
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     /// f32 or f64
     type T = T;
@@ -28,34 +27,22 @@ where
         self,
         extent: [[T; 2]; 2],
         object: &impl Streamable<T = Self::T>,
-    ) -> Self::Output
-    where
-        Self::T: AsPrimitive<T> + CoordFloat,
-    {
+    ) -> Self::Output {
         fit_extent_reclip(self, extent, object)
     }
 
     #[inline]
-    fn fit_size_reclip(self, size: [T; 2], object: &impl Streamable<T = T>) -> Self::Output
-    where
-        Self::T: AsPrimitive<T> + CoordFloat,
-    {
+    fn fit_size_reclip(self, size: [T; 2], object: &impl Streamable<T = T>) -> Self::Output {
         fit_size_reclip(self, size, object)
     }
 
     #[inline]
-    fn fit_width_reclip(self, w: T, object: &impl Streamable<T = T>) -> Self::Output
-    where
-        Self::T: AsPrimitive<T> + CoordFloat,
-    {
+    fn fit_width_reclip(self, w: T, object: &impl Streamable<T = T>) -> Self::Output {
         fit_width_reclip(self, w, object)
     }
 
     #[inline]
-    fn fit_height_reclip(self, h: T, object: &impl Streamable<T = T>) -> Self::Output
-    where
-        Self::T: AsPrimitive<T> + CoordFloat,
-    {
+    fn fit_height_reclip(self, h: T, object: &impl Streamable<T = T>) -> Self::Output {
         fit_height_reclip(self, h, object)
     }
 }

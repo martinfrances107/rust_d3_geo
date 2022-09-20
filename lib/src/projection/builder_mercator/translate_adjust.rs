@@ -1,6 +1,5 @@
 use std::fmt::Debug;
 
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -18,7 +17,7 @@ impl<DRAIN, PR, T> TranslateSet for BuilderMercatorAntimeridianResampleClip<DRAI
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -32,7 +31,7 @@ impl<DRAIN, PR, T> TranslateSet for BuilderMercatorAntimeridianResampleNoneClip<
 where
     DRAIN: Clone + Default + Debug + Stream<EP = DRAIN, T = T>,
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 

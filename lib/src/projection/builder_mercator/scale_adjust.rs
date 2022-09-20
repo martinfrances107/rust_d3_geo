@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -36,7 +35,7 @@ where
     PV: Clone,
     ClipU<DRAIN, T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -68,7 +67,7 @@ where
     PV: Clone,
     ClipU<DRAIN, T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type T = T;
 
