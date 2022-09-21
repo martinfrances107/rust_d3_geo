@@ -11,10 +11,11 @@
 //! 3) SWAP -  implies inserting PostClip Rectangle.
 //!
 
-use num_traits::FloatConst;
+use std::fmt::Debug;
 
 use geo::CoordFloat;
 use geo::Coordinate;
+use num_traits::FloatConst;
 
 use crate::clip::buffer::Buffer;
 use crate::clip::Bufferable;
@@ -25,6 +26,8 @@ use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::ClipC;
 use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::NoClipC;
+use crate::projection::builder::template::NoClipU;
 use crate::projection::Build;
 use crate::projection::ClipExtentGet;
 use crate::projection::FitBounds;
@@ -33,21 +36,18 @@ use crate::projection::TranslateSet;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Streamable;
+use crate::Transform;
 
 use super::ClipExtentClear;
 use super::ClipExtentSet;
 
-pub(super) fn fit_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_clip<B, Bint, I, LB, LC, LCint, LU, LUint, PR, PV, RC, RCint, RU, RUint, T>(
     builder: B,
     fit_bounds: FitBounds<Bint, T>,
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: ClipExtentClear<Output = Bint, T = T>
-        + ClipExtentGet<T = T>
-        + ScaleSet<T = T>
-        + TranslateSet<T = T>,
-    Bint: Build<
+    B: Build<
             Drain = Bounds<T>,
             I = I,
             LB = LB,
@@ -59,6 +59,23 @@ where
             RC = RC,
             RU = RU,
             T = T,
+        > + ClipExtentGet<T = T>
+        + ScaleSet<T = T>
+        + TranslateSet<T = T>
+        + ClipExtentClear<Output = Bint, T = T>,
+
+    Bint: Build<
+            Drain = Bounds<T>,
+            I = I,
+            LB = LB,
+            LC = LCint,
+            LU = LUint,
+            PCNU = NoClipU<Bounds<T>>,
+            PR = PR,
+            PV = PV,
+            RC = RCint,
+            RU = RUint,
+            T = T,
         > + ClipExtentSet<Output = B, T = T>,
 
     // NB constraints below relate to Bint only not B.
@@ -66,10 +83,14 @@ where
     I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+    LCint: Clone + LineConnected<SC = RCint> + Stream<EP = Bounds<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
+    LUint: Clone + Connectable<Output = LCint, SC = RCint> + Bufferable<Output = LB, T = T>,
     PV: Clone + PointVisible<T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
+    RUint: Clone + Connectable<Output = RCint, SC = NoClipC<Bounds<T>>>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RCint: Clone + Stream<EP = Bounds<T>, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     let clip = builder.clip_extent();
@@ -90,17 +111,29 @@ where
     b_result.clip_extent_set(&clip.unwrap())
 }
 
-pub(super) fn fit_extent_clip<B, Bint, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_extent_clip<
+    B,
+    Bint,
+    I,
+    LB,
+    LC,
+    LCint,
+    LU,
+    LUint,
+    PR,
+    PV,
+    RC,
+    RCint,
+    RU,
+    RUint,
+    T,
+>(
     builder: B,
     extent: [[T; 2]; 2],
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: ClipExtentClear<Output = Bint, T = T>
-        + ScaleSet<T = T>
-        + ClipExtentGet<T = T>
-        + TranslateSet<T = T>,
-    Bint: Build<
+    B: Build<
             Drain = Bounds<T>,
             I = I,
             LB = LB,
@@ -112,16 +145,36 @@ where
             RC = RC,
             RU = RU,
             T = T,
+        > + ClipExtentClear<Output = Bint, T = T>
+        + ScaleSet<T = T>
+        + ClipExtentGet<T = T>
+        + TranslateSet<T = T>,
+    Bint: Build<
+            Drain = Bounds<T>,
+            I = I,
+            LB = LB,
+            LC = LCint,
+            LU = LUint,
+            PCNU = NoClipU<Bounds<T>>,
+            PR = PR,
+            PV = PV,
+            RC = RCint,
+            RU = RUint,
+            T = T,
         > + ClipExtentSet<Output = B, T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     I: Clone + Interpolator<T = T>,
     LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
     LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+    LCint: Clone + LineConnected<SC = RCint> + Stream<EP = Bounds<T>, T = T>,
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
+    LUint: Clone + Connectable<Output = LCint, SC = RCint> + Bufferable<Output = LB, T = T>,
     PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RCint: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
+    RUint: Clone + Connectable<Output = RCint, SC = NoClipC<Bounds<T>>>,
     T: 'static + CoordFloat + FloatConst,
 {
     fit_clip(
@@ -134,6 +187,234 @@ where
             let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
             let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
             let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
+
+            builder
+                .scale_set(one_five_zero * k)
+                .translate_set(&Coordinate { x, y })
+        }),
+        object,
+    )
+}
+
+pub(super) fn fit_size_clip<B, Bint, I, LB, LC, LCint, LU, LUint, PR, PV, RC, RCint, RU, RUint, T>(
+    builder: B,
+    size: [T; 2],
+    object: &impl Streamable<T = T>,
+) -> B
+where
+    B: Build<
+            Drain = Bounds<T>,
+            I = I,
+            LB = LB,
+            LC = LC,
+            LU = LU,
+            PCNU = ClipU<Bounds<T>, T>,
+            PR = PR,
+            PV = PV,
+            RC = RC,
+            RU = RU,
+            T = T,
+        > + Clone
+        + ClipExtentClear<Output = Bint, T = T>
+        + ClipExtentGet<T = T>
+        + ScaleSet<T = T>
+        + TranslateSet<T = T>,
+
+    Bint: Build<
+            Drain = Bounds<T>,
+            I = I,
+            LB = LB,
+            LC = LCint,
+            LU = LUint,
+            PCNU = NoClipU<Bounds<T>>,
+            PR = PR,
+            PV = PV,
+            RC = RCint,
+            RU = RUint,
+            T = T,
+        > + ClipExtentSet<Output = B, T = T>
+        + TranslateSet<T = T>
+        + ScaleSet<T = T>,
+    I: Clone + Interpolator<T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+    LCint: Clone + LineConnected<SC = RCint> + Stream<EP = Bounds<T>, T = T>,
+    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+    LUint: Clone + Connectable<Output = LCint, SC = RCint> + Bufferable<Output = LB, T = T> + Debug,
+    PV: Clone + PointVisible<T = T>,
+    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RCint: Clone + Stream<EP = Bounds<T>, T = T>,
+    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>> + Debug,
+    RUint: Clone + Connectable<Output = RCint, SC = NoClipC<Bounds<T>>> + Debug,
+    T: 'static + CoordFloat + FloatConst,
+{
+    fit_extent_clip(builder, [[T::zero(), T::zero()], size], object)
+}
+
+pub(super) fn fit_width_clip<
+    B,
+    Bint,
+    I,
+    LB,
+    LC,
+    LCint,
+    LU,
+    LUint,
+    PR,
+    PV,
+    RC,
+    RCint,
+    RU,
+    RUint,
+    T,
+>(
+    builder: B,
+    width: T,
+    object: &impl Streamable<T = T>,
+) -> B
+where
+    B: Build<
+            Drain = Bounds<T>,
+            I = I,
+            LB = LB,
+            LC = LC,
+            LU = LU,
+            PCNU = ClipU<Bounds<T>, T>,
+            PR = PR,
+            PV = PV,
+            RC = RC,
+            RU = RU,
+            T = T,
+        > + Clone
+        + ClipExtentGet<T = T>
+        + ClipExtentClear<Output = Bint, T = T>
+        + ScaleSet<T = T>
+        + TranslateSet<T = T>,
+    Bint: Build<
+            Drain = Bounds<T>,
+            I = I,
+            LB = LB,
+            LC = LCint,
+            LU = LUint,
+            PCNU = NoClipU<Bounds<T>>,
+            PR = PR,
+            PV = PV,
+            RC = RCint,
+            RU = RUint,
+            T = T,
+        > + ClipExtentSet<Output = B, T = T>
+        + TranslateSet<T = T>
+        + ScaleSet<T = T>,
+    I: Clone + Interpolator<T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+    LCint: Clone + LineConnected<SC = RCint> + Stream<EP = Bounds<T>, T = T>,
+    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+    LUint: Clone + Connectable<Output = LCint, SC = RCint> + Bufferable<Output = LB, T = T> + Debug,
+    PV: Clone + PointVisible<T = T>,
+    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RCint: Clone + Stream<EP = Bounds<T>, T = T>,
+    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>> + Debug,
+    RUint: Clone + Connectable<Output = RCint, SC = NoClipC<Bounds<T>>> + Debug,
+    T: 'static + CoordFloat + FloatConst,
+{
+    let two = T::from(2.0_f64).unwrap();
+    let one_five_zero = T::from(150_f64).unwrap();
+    fit_clip(
+        builder,
+        Box::new(move |b: [Coordinate<T>; 2], builder: Bint| -> Bint {
+            let w = width;
+            let k = w / (b[1].x - b[0].x);
+            let x = (w - k * (b[1].x + b[0].x)) / two;
+            let y = -k * b[0].y;
+
+            builder
+                .scale_set(one_five_zero * k)
+                .translate_set(&Coordinate { x, y })
+        }),
+        object,
+    )
+}
+
+pub(super) fn fit_height_clip<
+    B,
+    Bint,
+    I,
+    LB,
+    LC,
+    LCint,
+    LU,
+    LUint,
+    PR,
+    PV,
+    RC,
+    RCint,
+    RU,
+    RUint,
+    T,
+>(
+    builder: B,
+    height: T,
+    object: &impl Streamable<T = T>,
+) -> B
+where
+    B: Build<
+            Drain = Bounds<T>,
+            I = I,
+            LB = LB,
+            LC = LC,
+            LU = LU,
+            PCNU = ClipU<Bounds<T>, T>,
+            PR = PR,
+            PV = PV,
+            RC = RC,
+            RU = RU,
+            T = T,
+        > + Clone
+        + ClipExtentGet<T = T>
+        + ClipExtentClear<Output = Bint, T = T>
+        + ScaleSet<T = T>
+        + TranslateSet<T = T>,
+
+    Bint: Build<
+            Drain = Bounds<T>,
+            I = I,
+            LB = LB,
+            LC = LCint,
+            LU = LUint,
+            PCNU = NoClipU<Bounds<T>>,
+            PR = PR,
+            PV = PV,
+            RC = RCint,
+            RU = RUint,
+            T = T,
+        > + ClipExtentSet<Output = B, T = T>
+        + TranslateSet<T = T>
+        + ScaleSet<T = T>,
+    I: Clone + Interpolator<T = T>,
+    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+    LCint: Clone + LineConnected<SC = RCint> + Stream<EP = Bounds<T>, T = T>,
+    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+    LUint: Clone + Connectable<Output = LCint, SC = RCint> + Bufferable<Output = LB, T = T> + Debug,
+    PR: Clone + Transform<T = T>,
+    PV: Clone + PointVisible<T = T>,
+    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RCint: Clone + Stream<EP = Bounds<T>, T = T>,
+    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>> + Debug,
+    RUint: Clone + Connectable<Output = RCint, SC = NoClipC<Bounds<T>>> + Debug,
+    T: 'static + CoordFloat + FloatConst,
+{
+    let two = T::from(2.0_f64).unwrap();
+    let one_five_zero = T::from(150_f64).unwrap();
+
+    fit_clip(
+        builder,
+        Box::new(move |b: [Coordinate<T>; 2], builder: Bint| -> Bint {
+            let h = height;
+            let k = h / (b[1].y - b[0].y);
+            let x = -k * b[0].x;
+            let y = (h - k * (b[1].y + b[0].y)) / two;
 
             builder
                 .scale_set(one_five_zero * k)
