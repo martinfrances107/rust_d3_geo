@@ -25,7 +25,7 @@ use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
 
-impl<I, LC, LB, LU, PR, PV, T> Fit
+impl<I, LB, LC,  LU, PR, PV, T> Fit
     for Builder<
         Bounds<T>,
         I,
@@ -77,7 +77,7 @@ where
     }
 }
 
-impl<I, LC, LB, LU, PR, PV, T> Fit
+impl<I, LB, LC, LU, PR, PV, T> Fit
     for Builder<
         Bounds<T>,
         I,

@@ -6,7 +6,7 @@ use crate::projection::Build;
 use crate::projection::Projector;
 use crate::stream::Unconnected;
 
-impl<DRAIN, I, LC, LB, LU, PCNU, PR, PV, RC, RU, T> Build
+impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Build
     for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
 where
     I: Clone,

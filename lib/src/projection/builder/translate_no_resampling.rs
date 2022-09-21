@@ -14,7 +14,7 @@ use super::template::ClipU;
 use super::Builder;
 use super::NoClipU;
 
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> TranslateSet
     for Builder<
         DRAIN,
         I,

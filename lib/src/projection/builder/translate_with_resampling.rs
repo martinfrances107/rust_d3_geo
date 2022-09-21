@@ -14,7 +14,7 @@ use super::NoClipU;
 use super::ResampleNoClipC;
 use super::ResampleNoClipU;
 
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> TranslateSet
     for Builder<
         DRAIN,
         I,
@@ -41,7 +41,7 @@ where
     }
 }
 
-impl<DRAIN, I, LC, LB, LU, PR, PV, T> TranslateSet
+impl<DRAIN, I, LB, LC, LU, PR, PV, T> TranslateSet
     for Builder<
         DRAIN,
         I,
