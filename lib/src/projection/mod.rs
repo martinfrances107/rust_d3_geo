@@ -54,14 +54,14 @@ pub type RotateTransform<PR, T> =
 
 /// Provides specialization over 'Projection Raw'
 ///
-/// Mercator projections [MercatorTransverseRaw and MercatorRaw]
-/// have a extent_transform() for their individual needs.
+/// Mercator projections [MercatorTransverseRaw and MercatorRaw] have a
+/// extent_transform() for their individual needs.
 pub trait TransformExtent {
     /// f64 or f32.
     type T;
 
-    /// Transform the extent stored in MercatorBuilder before
-    /// being passing into the base projection builder.
+    /// Transform the extent stored in MercatorBuilder before being passing
+    /// into the base projection builder.
     fn transform_extent(
         self,
         k: Self::T,
@@ -75,9 +75,9 @@ pub trait TransformExtent {
         Self::T: CoordFloat;
 }
 
-/// Serves as a abstract trait both
-/// things that follow the common family of raw projections.
-/// and alternatively the less common mercator family of raw projections.
+/// Serves as a abstract trait both things that follow the common family of
+/// raw projections.  and alternatively the less common mercator family of
+/// raw projections.
 pub trait ProjectionRawBase: Transform {
     /// The default builder.
     type Builder;
@@ -131,18 +131,17 @@ pub trait CenterGet {
         Self::T: CoordFloat;
 }
 
-/// Controls the projections center point.
+/// Sets the projection’s center to the specified center, a two-element
+/// array of longitude and latitude in degrees and returns the projection.
+/// The default is ⟨0°,0°⟩.
 ///
 /// Projection builder sub trait.
 pub trait CenterSet {
     /// f64 or f32.
     type T;
 
-    /// Sets the projection’s center to the specified center,
-    /// a two-element array of longitude and latitude in degrees and returns the projection.
-    /// The default is ⟨0°,0°⟩.
-    ///
-    /// @param point A point specified as a two-dimensional array [longitude, latitude] in degrees.
+    /// @param point A point specified as a two-dimensional array
+    /// [longitude, latitude] in degrees.
     ///
     fn center_set(self, point: &Coordinate<Self::T>) -> Self
     where
@@ -174,6 +173,7 @@ pub trait ClipExtentClear {
 }
 
 /// Sets the bounding box.
+///
 /// A projection builder sub trait.
 pub trait ClipExtentSet {
     /// f64 or f32
@@ -187,7 +187,8 @@ pub trait ClipExtentSet {
         Self::T: CoordFloat;
 }
 
-/// Sets the bounding box.
+/// Adjust an existing the bounding box.
+///
 /// A projection builder sub trait.
 pub trait ClipExtentAdjust {
     /// f64 or f32
@@ -199,7 +200,9 @@ pub trait ClipExtentAdjust {
         Self::T: CoordFloat;
 }
 
-/// Returns or sets the extent of the projection.
+/// Sets the projection’s scale and translate to fit the specified
+/// geographic feature in the center of the given extent.
+///
 /// A projection builder sub trait.
 pub trait Fit {
     /// f64 or f32.
@@ -217,26 +220,30 @@ pub trait Fit {
     /// Any clip extent is ignored when determining the new scale and
     /// translate.
     ///
-    /// The precision used to compute the bounding box of the given object is
-    /// computed at an effective scale of 150.
+    /// The precision used to compute the bounding box of the given object
+    /// is computed at an effective scale of 150.
     ///
-    /// @param extent The extent, specified as an array [[x₀, y₀], [x₁, y₁]],
-    ///  where x₀ is the left side of the bounding box, y₀ is the top,
-    ///  x₁ is the right and y₁ is the bottom.
-    /// @param object A geographic feature supported by d3-geo
-    ///   (An extension of GeoJSON feature).
+    /// @param extent The extent, specified as an array [[x₀, y₀], [x₁,
+    ///  y₁]], where x₀ is the left side of the bounding box, y₀ is the
+    ///  top, x₁ is the right and y₁ is the bottom.  @param object A
+    /// geographic feature supported by d3-geo (An extension of GeoJSON
+    ///   feature).
 
     fn fit_extent(self, extent: [[Self::T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
-    ///  Sets the projection’s scale and translate to fit the specified geographic feature in the center of an extent with the given size and top-left corner of [0, 0].
-    ///  Returns the projection.
+    ///  Sets the projection’s scale and translate to fit the specified
+    ///  geographic feature in the center of an extent with the given size
+    ///  and top-left corner of [0, 0].  Returns the projection.
     ///
-    ///  Any clip extent is ignored when determining the new scale and translate. The precision used to compute the bounding box of the given object is computed at an effective scale of 150.
+    ///  Any clip extent is ignored when determining the new scale and
+    ///  translate. The precision used to compute the bounding box of the
+    ///  given object is computed at an effective scale of 150.
     ///
-    ///  @param size The size of the extent, specified as an array [width, height].
-    ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
+    ///  @param size The size of the extent, specified as an array [width,
+    ///  height].  @param object A geographic feature supported by d3-geo
+    ///  (An extension of GeoJSON feature).
     fn fit_size(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
@@ -304,16 +311,16 @@ pub trait ClipAngleSet {
     fn clip_angle_set(self, angle: Self::T) -> Self::Output;
 }
 
+/// Alters the clip angle on a projector builder previously configured to
+///  use circle based clipping.
+///
+///  A projection builder sub trait.
 pub trait ClipAngleAdjust {
-    /// Alters the clip angle on a projector builder previously configured to use
-    ///  circle based clipping.
-    /// A projection builder sub trait.
-
     /// f64 or f32
     type T;
 
-    /// Given the angle, adjust the projection builder
-    /// Must already be set for  cicle based clipping.
+    /// Given the angle, adjust the projection builder Must already be set
+    /// for  cicle based clipping.
     fn clip_angle(self, angle: Self::T) -> Self;
 }
 
@@ -325,10 +332,10 @@ pub trait RecenterNoResampling {
     fn recenter_no_resampling(self) -> Self;
 }
 
+/// Returns or sets the x or y reflection.
+///
+/// A projection builder sub trait.
 pub trait ReflectGet {
-    /// Returns or sets the x or y reflection.
-    /// A projection builder sub trait.
-
     /// f64 or f32.
     type T;
 
@@ -350,26 +357,30 @@ pub trait ReflectSet {
     fn reflect_y_set(self, reflect: bool) -> Self;
 }
 
-/// Given the builder is already set to resample, adjust the precision setting.
+/// Given the builder is already set to resample, adjust the precision
+/// setting.  
+///
 /// A projection builder sub trait.
 pub trait PrecisionAdjust {
     /// f64 or f32.
     type T;
-    ///  Sets the threshold for the projection’s adaptive resampling to the specified value in Pixels and returns the projection.
-    ///  This value corresponds to the Douglas–Peucker distance.
+    ///  Sets the threshold for the projection’s adaptive resampling to the
+    ///  specified value in Pixels and returns the projection.  This value
+    ///  corresponds to the Douglas–Peucker distance.
     fn precision_set(self, delta: &Self::T) -> Self;
 }
 
 /// Resampling Getter.
 ///
-/// Applies only to projections where the resampling precision has been set.
-/// A projection builder sub trait.
+/// Applies only to projections where the resampling precision has been
+/// set.  A projection builder sub trait.
 pub trait PrecisionGet {
     /// f64 or f32.
     type T;
 
-    ///  Returns the projection’s current resampling precision which defaults to square root of 0.5.
-    ///  This value corresponds to the Douglas–Peucker distance.
+    ///  Returns the projection’s current resampling precision which
+    ///  defaults to square root of 0.5.  This value corresponds to the
+    ///  Douglas–Peucker distance.
     fn precision(&self) -> Self::T;
 }
 
@@ -383,20 +394,23 @@ pub trait PrecisionBypass {
     fn precision_bypass(self) -> Self::Output;
 }
 
-/// Give a resampling precision consume the object and return one that resamples.
+/// Give a resampling precision consume the object and return one that
+/// resamples.
 ///
-/// Similar to ResampleAdjust but with conversion.
-/// A projection builder sub trait.
+/// Similar to ResampleAdjust but with conversion.  A projection builder
+/// sub trait.
 pub trait PrecisionSet {
     /// f64 or f32.
     type T;
     type Output;
-    ///  Sets the threshold for the projection’s adaptive resampling to the specified value in Pixels and returns the projection.
-    ///  This value corresponds to the Douglas–Peucker distance.
+    ///  Sets the threshold for the projection’s adaptive resampling to the
+    ///  specified value in Pixels and returns the projection.  This value
+    ///  corresponds to the Douglas–Peucker distance.
     fn precision(self, delta: &Self::T) -> Self::Output;
 }
 
 /// Rotation getter and setters.
+///
 /// A projection builder sub trait.
 pub trait RotateGet {
     /// f64 or f32.
@@ -407,15 +421,18 @@ pub trait RotateGet {
 }
 
 /// Rotation getter and setters.
+///
 /// A projection builder sub trait.
 pub trait RotateSet {
     /// f64 or f32.
     type T;
 
-    ///  Sets the projection’s three-axis rotation to the specified angles, which must be a three-element array of numbers.
+    ///  Sets the projection’s three-axis rotation to the specified angles,
+    ///  which must be a three-element array of numbers.
     ///
-    ///  @param angles  A three-element array of numbers [lambda, phi, gamma] specifying the rotation angles in degrees about each spherical axis.
-    ///  (These correspond to yaw, PItch and roll.)
+    ///  @param angles  A three-element array of numbers [lambda, phi,
+    ///  gamma] specifying the rotation angles in degrees about each
+    ///  spherical axis.  (These correspond to yaw, PItch and roll.)
     fn rotate_set(self, angles: &[Self::T; 3]) -> Self;
 }
 
@@ -430,19 +447,19 @@ pub trait ScaleGet {
     fn scale(&self) -> Self::T;
 }
 
-/// Controls the projections scaling factor.
-///
-/// Adjust implies that the PCN - is a rectangle and it will be adjusted.
+///  Sets the projection’s scale factor to the specified value and returns
+///  the projection.  The scale factor corresponds linearly to the distance
+///  between projected points; however, absolute scale factors are not
+///  equivalent across projections.
 ///
 /// Projection builder sub trait.
 pub trait ScaleSet {
     /// f32 or f64.
     type T;
 
-    ///  Sets the projection’s scale factor to the specified value and returns the projection.
-    ///  The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
     ///
-    ///  @param scale Scale factor to be used for the projection; the default scale is projection-specific.
+    ///  @param scale Scale factor to be used for the projection; the
+    ///  default scale is projection-specific.
     fn scale_set(self, scale: Self::T) -> Self;
 }
 
@@ -459,17 +476,21 @@ pub trait TranslateGet {
         Self::T: CoordFloat;
 }
 
-/// Controls the projections translation factor.
+///  Sets the projection’s translation offset to the specified two-element
+///  array [tx, ty] and returns the projection.  The translation offset
+///  determines the Pixel coordinates of the projection’s center. The
+///  default translation offset places ⟨0°,0°⟩ at the center of a 960×500
+///  area.
 ///
 /// Projection builder sub trait.
 pub trait TranslateSet {
     /// f32 or f64.
     type T;
 
-    ///  Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
-    ///  The translation offset determines the PIxel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
     ///
-    ///  @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
+    ///  @param point A two-element array [tx, ty] specifying the
+    ///  translation offset. The default translation offset of defaults to
+    ///  [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
     fn translate_set(self, t: &Coordinate<Self::T>) -> Self
     where
         Self::T: CoordFloat;
