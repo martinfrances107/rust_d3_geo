@@ -40,25 +40,20 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
+    #[inline]
     fn reflect_x_set(self, reflect: bool) -> Self {
-        let reflected_base = self.base.reflect_x_set(reflect);
-        let base = reflected_base.recenter_with_resampling();
-
         Self {
-            extent: self.extent,
-            pr: self.pr,
-            base,
+            base: self.base.reflect_x_set(reflect).recenter_with_resampling(),
+            ..self
         }
     }
 
     /// Set the projection builder to invert the y-coordinate.    
+    #[inline]
     fn reflect_y_set(self, reflect: bool) -> Self {
-        let reflected_base = self.base.reflect_y_set(reflect);
-        let base = reflected_base.recenter_with_resampling();
         Self {
-            extent: self.extent,
-            pr: self.pr,
-            base,
+            base: self.base.reflect_y_set(reflect).recenter_with_resampling(),
+            ..self
         }
     }
 }
@@ -85,25 +80,20 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
+    #[inline]
     fn reflect_x_set(self, reflect: bool) -> Self {
-        let reflected_base = self.base.reflect_x_set(reflect);
-        let base = reflected_base.recenter_with_resampling();
-
         Self {
-            extent: self.extent,
-            pr: self.pr,
-            base,
+            base: self.base.reflect_x_set(reflect).recenter_with_resampling(),
+            ..self
         }
     }
 
     /// Set the projection builder to invert the y-coordinate.    
+    #[inline]
     fn reflect_y_set(self, reflect: bool) -> Self {
-        let reflected_base = self.base.reflect_y_set(reflect);
-        let base = reflected_base.recenter_with_resampling();
         Self {
-            extent: self.extent,
-            pr: self.pr,
-            base,
+            base: self.base.reflect_y_set(reflect).recenter_with_resampling(),
+            ..self
         }
     }
 }
@@ -130,25 +120,20 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
+    #[inline]
     fn reflect_x_set(self, reflect: bool) -> Self {
-        let reflected_base = self.base.reflect_x_set(reflect);
-        let base = reflected_base.recenter_no_resampling();
-
         Self {
-            extent: self.extent,
-            pr: self.pr,
-            base,
+            base: self.base.reflect_x_set(reflect).recenter_no_resampling(),
+            ..self
         }
     }
 
     /// Set the projection builder to invert the y-coordinate.
+    #[inline]
     fn reflect_y_set(self, reflect: bool) -> Self {
-        let reflected_base = self.base.reflect_y_set(reflect);
-        let base = reflected_base.recenter_no_resampling();
         Self {
-            extent: self.extent,
-            pr: self.pr,
-            base,
+            base: self.base.reflect_y_set(reflect).recenter_no_resampling(),
+            ..self
         }
     }
 }
@@ -175,25 +160,20 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
+    #[inline]
     fn reflect_x_set(self, reflect: bool) -> Self {
-        let reflected_base = self.base.reflect_x_set(reflect);
-        let base = reflected_base.recenter_no_resampling();
-
         Self {
-            extent: self.extent,
-            pr: self.pr,
-            base,
+            base: self.base.reflect_x_set(reflect).recenter_no_resampling(),
+            ..self
         }
     }
 
     /// Set the projection builder to invert the y-coordinate.
+    #[inline]
     fn reflect_y_set(self, reflect: bool) -> Self {
-        let reflected_base = self.base.reflect_y_set(reflect);
-        let base = reflected_base.recenter_no_resampling();
         Self {
-            extent: self.extent,
-            pr: self.pr,
-            base,
+            base: self.base.reflect_y_set(reflect).recenter_no_resampling(),
+            ..self
         }
     }
 }
