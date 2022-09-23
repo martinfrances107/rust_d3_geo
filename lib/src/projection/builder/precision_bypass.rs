@@ -196,7 +196,6 @@ where
     ///
     /// delta is related to clip angle.
     fn precision_bypass(self) -> Self::Output {
-        // let resample = None::new(self.project_transform.clone());
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
@@ -239,7 +238,7 @@ where
                 T,
             >(self.theta.unwrap()),
             delta2: T::zero(),
-            resample: None::new(self.project_transform.clone()),
+            resample: None::new(self.project_transform),
         }
     }
 }
