@@ -58,7 +58,7 @@ where
             project_rotate_transform: self.project_rotate_transform,
             rotator: self.rotator,
 
-            // Mutate stage
+            // Mutate section.
             clip: gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>(),
             postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             resample: Resample::new(self.project_transform, self.delta2),
@@ -103,7 +103,7 @@ where
             project_rotate_transform: self.project_rotate_transform,
             rotator: self.rotator,
 
-            // Mutate stage.
+            // Mutate section.
             clip: gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>(),
             postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             resample: None::new(self.project_transform),
@@ -148,7 +148,7 @@ where
             project_rotate_transform: self.project_rotate_transform,
             rotator: self.rotator,
 
-            // Mutate stage
+            // Mutate section.
             clip: gen_clip_circle::<
                 DRAIN,
                 ClipU<DRAIN, T>,
@@ -200,7 +200,7 @@ where
             project_rotate_transform: self.project_rotate_transform,
             rotator: self.rotator,
 
-            // Mutate stage
+            // Mutate section.
             clip: gen_clip_circle::<
                 DRAIN,
                 ClipU<DRAIN, T>,

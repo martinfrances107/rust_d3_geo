@@ -117,7 +117,7 @@ where
         Self::Output {
             base: self.base.clip_extent_set(extent),
             pr: self.pr,
-            // Mutate stage
+            // Mutate section.
             extent: Some(*extent),
         }
     }
@@ -169,7 +169,7 @@ where
         Self::Output {
             base: self.base.clip_extent_set(extent),
             pr: self.pr,
-            // Mutate stage
+            // Mutate section.
             extent: Some(*extent),
         }
     }

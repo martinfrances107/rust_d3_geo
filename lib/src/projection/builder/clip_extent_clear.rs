@@ -50,7 +50,7 @@ where
             project_rotate_transform: self.project_rotate_transform,
             rotator: self.rotator,
 
-            // Mutate stage
+            // Mutate section.
             postclip: Identity::default(),
             clip: gen_clip_antimeridian::<NoClipU<DRAIN>, ResampleNoClipC<DRAIN, PR, T>, T>(),
             resample: Resample::new(self.project_transform, self.delta2),
@@ -95,7 +95,7 @@ where
             project_rotate_transform: self.project_rotate_transform,
             rotator: self.rotator,
 
-            // Mutate stage
+            // Mutate section.
             clip: gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(),
             postclip: Identity::default(),
             resample: None::new(self.project_transform),
