@@ -2,23 +2,32 @@
 #[cfg(test)]
 mod mercator_tests {
 
-    use rust_d3_geo::projection::Build;
     extern crate pretty_assertions;
 
     use geo::Coordinate;
-
+    use geo::Geometry;
     use pretty_assertions::assert_eq;
+
     use rust_d3_geo::data_object::sphere::Sphere;
+    use rust_d3_geo::in_delta::in_delta_coordinate;
+    use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
+    use rust_d3_geo::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
     use rust_d3_geo::projection::mercator::Mercator;
+    use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::CenterSet;
     use rust_d3_geo::projection::ClipExtentAdjust;
     use rust_d3_geo::projection::ClipExtentClear;
     use rust_d3_geo::projection::ClipExtentGet;
+    use rust_d3_geo::projection::Fit;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
+    use rust_d3_geo::projection::RotateGet;
+    use rust_d3_geo::projection::RotateSet;
+    use rust_d3_geo::projection::ScaleGet;
     use rust_d3_geo::projection::ScaleSet;
+    use rust_d3_geo::projection::TranslateGet;
     use rust_d3_geo::projection::TranslateSet;
 
     #[ignore]
@@ -210,46 +219,48 @@ mod mercator_tests {
         );
     }
 
-    // #[test]
-    // fn rotate_does_not_affect_automatic_clip_extent() {
-    //     println!("mercator.rotate(…) does not affect the automatic clip extent");
+    // Must debug as final assert's for scale and translate are buggy.
+    #[ignore]
+    #[test]
+    fn rotate_does_not_affect_automatic_clip_extent() {
+        println!("mercator.rotate(…) does not affect the automatic clip extent");
 
-    //     let object: Geometry<f64> = Geometry::MultiPoint(
-    //         vec![
-    //             (-82.35024908550241, 29.649391549778745),
-    //             (-82.35014449996858, 29.65075946917633),
-    //             (-82.34916073446641, 29.65070265688781),
-    //             (-82.3492653331286, 29.64933474064504),
-    //         ]
-    //         .into(),
-    //     );
+        let object: Geometry<f64> = Geometry::MultiPoint(
+            vec![
+                (-82.35024908550241, 29.649391549778745),
+                (-82.35014449996858, 29.65075946917633),
+                (-82.34916073446641, 29.65070265688781),
+                (-82.3492653331286, 29.64933474064504),
+            ]
+            .into(),
+        );
 
-    //     let pb: BuilderMercatorAntimeridianResampleClip<
-    //         StreamDrainStub<f64>,
-    //         Mercator<StreamDrainStub<f64>, f64>,
-    //         f64,
-    //     > = Mercator::builder().fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
-    //     assert_eq!(pb.get_scale(), 20969742.365692537_f64);
-    //     assert_eq!(
-    //         pb.get_translate(),
-    //         Coordinate {
-    //             x: 30139734.76760269_f64,
-    //             y: 11371473.949706702_f64
-    //         }
-    //     );
+        let pb: BuilderMercatorAntimeridianResampleClip<
+            Bounds<f64>,
+            Mercator<Bounds<f64>, f64>,
+            f64,
+        > = Mercator::builder().fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
+        assert_eq!(pb.scale(), 20969742.365692537_f64);
+        assert_eq!(
+            pb.translate(),
+            Coordinate {
+                x: 30139734.76760269_f64,
+                y: 11371473.949706702_f64
+            }
+        );
 
-    //     let pb = pb
-    //         .rotate(&[0_f64, 95_f64, 0_f64])
-    //         .fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
-    //     assert_eq!(pb.get_rotate(), [0_f64, 95_f64, 0_f64]);
-    //     assert_eq!(pb.get_scale(), 35781690.650920525_f64);
-    //     assert!(in_delta_coordinate(
-    //         &pb.get_translate(),
-    //         &Coordinate {
-    //             x: 75115911.95344563_f64,
-    //             y: 2586046.4116968135_f64
-    //         },
-    //         1e-6
-    //     ));
-    // }
+        let pb = pb
+            .rotate_set(&[0_f64, 95_f64, 0_f64])
+            .fit_extent([[0_f64, 0f64], [960_f64, 600_f64]], &object);
+        assert_eq!(pb.rotate(), [0_f64, 95_f64, 0_f64]);
+        assert_eq!(pb.scale(), 35781690.650920525_f64);
+        assert!(in_delta_coordinate(
+            &pb.translate(),
+            &Coordinate {
+                x: 75115911.95344563_f64,
+                y: 2586046.4116968135_f64
+            },
+            1e-6
+        ));
+    }
 }
