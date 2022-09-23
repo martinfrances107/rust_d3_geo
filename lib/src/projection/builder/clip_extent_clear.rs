@@ -7,10 +7,8 @@ use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentClear;
 
-use super::template::NoClipC;
 use super::template::NoClipU;
 use super::template::ResampleNoClipC;
-use super::template::ResampleNoneNoClipC;
 use super::types::BuilderAntimeridianResampleClip;
 use super::types::BuilderAntimeridianResampleNoClip;
 use super::types::BuilderAntimeridianResampleNoneClip;
@@ -30,10 +28,6 @@ where
 
     #[inline]
     fn clip_extent_clear(self) -> Self::Output {
-        let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, ResampleNoClipC<DRAIN, PR, T>, T>();
-        let postclip: Identity<DRAIN, _> = Identity::default();
-        let resample: Resample<_, NoClipC<DRAIN>, _, _> =
-            Resample::new(self.project_transform.clone(), self.delta2);
         Self::Output {
             p_lb: self.p_lb,
             p_drain: self.p_drain,
@@ -52,14 +46,14 @@ where
             delta2: self.delta2,
             theta: self.theta,
             rotate: self.rotate,
-            project_transform: self.project_transform,
+            project_transform: self.project_transform.clone(),
             project_rotate_transform: self.project_rotate_transform,
             rotator: self.rotator,
 
             // Mutate stage
-            postclip,
-            clip,
-            resample,
+            postclip: Identity::default(),
+            clip: gen_clip_antimeridian::<NoClipU<DRAIN>, ResampleNoClipC<DRAIN, PR, T>, T>(),
+            resample: Resample::new(self.project_transform, self.delta2),
             x0: None,
             y0: None,
             x1: None,
@@ -79,9 +73,6 @@ where
 
     #[inline]
     fn clip_extent_clear(self) -> Self::Output {
-        let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, ResampleNoneNoClipC<DRAIN, PR, T>, T>();
-        let postclip: Identity<DRAIN, _> = Identity::default();
-        let resample = None::new(self.project_transform.clone());
         Self::Output {
             p_lb: self.p_lb,
             p_drain: self.p_drain,
@@ -100,14 +91,14 @@ where
             delta2: self.delta2,
             theta: self.theta,
             rotate: self.rotate,
-            project_transform: self.project_transform,
+            project_transform: self.project_transform.clone(),
             project_rotate_transform: self.project_rotate_transform,
             rotator: self.rotator,
 
             // Mutate stage
-            postclip,
-            clip,
-            resample,
+            clip: gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(),
+            postclip: Identity::default(),
+            resample: None::new(self.project_transform),
             x0: None,
             y0: None,
             x1: None,

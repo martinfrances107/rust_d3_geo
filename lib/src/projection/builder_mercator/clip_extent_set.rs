@@ -109,14 +109,13 @@ where
     >;
     type T = T;
 
+    #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
-        let base = self.base.clip_extent_set(extent);
-
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
         Self::Output {
-            base,
+            base: self.base.clip_extent_set(extent),
             pr: self.pr,
             // Mutate stage
             extent: Some(*extent),
@@ -162,14 +161,13 @@ where
     >;
     type T = T;
 
+    #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
-        let base = self.base.clip_extent_set(extent);
-
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
         Self::Output {
-            base,
+            base: self.base.clip_extent_set(extent),
             pr: self.pr,
             // Mutate stage
             extent: Some(*extent),

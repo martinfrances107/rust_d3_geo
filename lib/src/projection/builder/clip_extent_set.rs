@@ -34,14 +34,12 @@ where
     type Output = BuilderAntimeridianResampleClip<DRAIN, PR, T>;
     type T = T;
 
+    #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
-        let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>();
-        let resample = Resample::new(self.project_transform.clone(), self.delta2);
         Self::Output {
             p_lb: self.p_lb,
             p_drain: self.p_drain,
             projection_raw: self.projection_raw,
-            clip,
             phi: self.phi,
             lambda: self.lambda,
             alpha: self.alpha,
@@ -56,17 +54,18 @@ where
             delta2: self.delta2,
             theta: self.theta,
             rotate: self.rotate,
-            project_transform: self.project_transform,
+            project_transform: self.project_transform.clone(),
             project_rotate_transform: self.project_rotate_transform,
-            resample,
             rotator: self.rotator,
 
             // Mutate stage
+            clip: gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>(),
+            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            resample: Resample::new(self.project_transform, self.delta2),
             x0: Some(extent[0].x),
             y0: Some(extent[0].y),
             x1: Some(extent[1].x),
             y1: Some(extent[1].y),
-            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
         }
     }
 }
@@ -80,15 +79,12 @@ where
     type Output = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;
 
+    #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
-        let clip = gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>();
-        let resample = None::new(self.project_transform.clone());
-
         Self::Output {
             p_lb: self.p_lb,
             p_drain: self.p_drain,
             projection_raw: self.projection_raw,
-            clip,
             phi: self.phi,
             lambda: self.lambda,
             alpha: self.alpha,
@@ -103,17 +99,18 @@ where
             delta2: self.delta2,
             theta: self.theta,
             rotate: self.rotate,
-            project_transform: self.project_transform,
+            project_transform: self.project_transform.clone(),
             project_rotate_transform: self.project_rotate_transform,
-            resample,
             rotator: self.rotator,
 
-            // Mutate stage
+            // Mutate stage.
+            clip: gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>(),
+            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            resample: None::new(self.project_transform),
             x0: Some(extent[0].x),
             y0: Some(extent[0].y),
             x1: Some(extent[1].x),
             y1: Some(extent[1].y),
-            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
         }
     }
 }
@@ -127,22 +124,12 @@ where
     type Output = BuilderCircleResampleClip<DRAIN, PR, T>;
     type T = T;
 
+    #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
-        let clip = gen_clip_circle::<
-            DRAIN,
-            ClipU<DRAIN, T>,
-            PR,
-            ResampleClipC<DRAIN, PR, T>,
-            ResampleClipU<DRAIN, PR, T>,
-            T,
-        >(self.theta.unwrap());
-        let resample = Resample::new(self.project_transform.clone(), self.delta2);
-
         Self::Output {
             p_lb: self.p_lb,
             p_drain: self.p_drain,
             projection_raw: self.projection_raw,
-            clip,
             phi: self.phi,
             lambda: self.lambda,
             alpha: self.alpha,
@@ -157,17 +144,25 @@ where
             delta2: self.delta2,
             theta: self.theta,
             rotate: self.rotate,
-            project_transform: self.project_transform,
+            project_transform: self.project_transform.clone(),
             project_rotate_transform: self.project_rotate_transform,
-            resample,
             rotator: self.rotator,
 
             // Mutate stage
+            clip: gen_clip_circle::<
+                DRAIN,
+                ClipU<DRAIN, T>,
+                PR,
+                ResampleClipC<DRAIN, PR, T>,
+                ResampleClipU<DRAIN, PR, T>,
+                T,
+            >(self.theta.unwrap()),
+            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            resample: Resample::new(self.project_transform, self.delta2),
             x0: Some(extent[0].x),
             y0: Some(extent[0].y),
             x1: Some(extent[1].x),
             y1: Some(extent[1].y),
-            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
         }
     }
 }
@@ -181,21 +176,12 @@ where
     type T = T;
     type Output = BuilderCircleResampleNoneClip<DRAIN, PR, T>;
 
+    #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
-        let clip = gen_clip_circle::<
-            DRAIN,
-            ClipU<DRAIN, T>,
-            PR,
-            ResampleNoneClipC<DRAIN, PR, T>,
-            ResampleNoneClipU<DRAIN, PR, T>,
-            T,
-        >(self.theta.unwrap());
-        let resample = None::new(self.project_transform.clone());
         Self::Output {
             p_lb: self.p_lb,
             p_drain: self.p_drain,
             projection_raw: self.projection_raw,
-            clip,
             phi: self.phi,
             lambda: self.lambda,
             alpha: self.alpha,
@@ -210,17 +196,25 @@ where
             delta2: self.delta2,
             theta: self.theta,
             rotate: self.rotate,
-            project_transform: self.project_transform,
+            project_transform: self.project_transform.clone(),
             project_rotate_transform: self.project_rotate_transform,
-            resample,
             rotator: self.rotator,
 
             // Mutate stage
+            clip: gen_clip_circle::<
+                DRAIN,
+                ClipU<DRAIN, T>,
+                PR,
+                ResampleNoneClipC<DRAIN, PR, T>,
+                ResampleNoneClipU<DRAIN, PR, T>,
+                T,
+            >(self.theta.unwrap()),
+            resample: None::new(self.project_transform),
+            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             x0: Some(extent[0].x),
             y0: Some(extent[0].y),
             x1: Some(extent[1].x),
             y1: Some(extent[1].y),
-            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
         }
     }
 }
