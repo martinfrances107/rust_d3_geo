@@ -32,7 +32,7 @@ fn rings() {
     let width = 1000_f64;
     let height = 1000_f64;
 
-    let ortho = Orthographic::<_, f64>::builder()
+    let ortho = Orthographic::builder()
         .scale_set(240_f64)
         .translate_set(&Coordinate {
             x: width / 2_f64,
@@ -47,7 +47,7 @@ fn rings() {
         .radius_set(5_f64)
         .precision_set(5_f64);
 
-    let mut p_vec: Vec<Polygon<f64>> = vec![];
+    let mut p_vec = vec![];
     for lat in (-30..=30).step_by(30) {
         for long in (-180..=180).step_by(40) {
             let mut inner = cg_inner

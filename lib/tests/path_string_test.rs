@@ -81,7 +81,7 @@ mod path_string_test {
 
         builder.point_radius(10_f64);
 
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
         let mut path = builder.build(eq);
         let object = Geometry::Point(point!(x: -63_f64, y:18_f64));
 
@@ -102,7 +102,7 @@ mod path_string_test {
             ]
             .into(),
         );
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
         assert_eq!(test_path(eq, object),
 			"M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,165m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z");
     }
@@ -112,7 +112,7 @@ mod path_string_test {
         let object = Geometry::LineString(line_string![
             (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
         ]);
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
         assert_eq!(test_path(eq, object), "M165,160L170,160L170,165");
     }
 
@@ -124,7 +124,7 @@ mod path_string_test {
             ],
             vec![],
         ));
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
         assert_eq!(test_path(eq, object), "M165,160L170,160L170,165Z");
     }
 
@@ -148,7 +148,7 @@ mod path_string_test {
             ),
         ]));
 
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
         assert_eq!(
             test_path(eq, object),
             "M165,160L170,160L170,165ZM480,250L480,245L485,245L480,245Z"
@@ -176,7 +176,7 @@ mod path_string_test {
         }
         let object = Geometry::MultiPolygon(MultiPolygon(p_vec));
 
-        let ortho = Orthographic::<PathString<f64>, f64>::builder()
+        let ortho = Orthographic::<PathString<f64>, _>::builder()
             .scale_set(240_f64)
             .translate_set(&Coordinate {
                 x: 300_f64,
@@ -201,7 +201,7 @@ mod path_string_test {
                 vec![],
             ),
         )]));
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
         assert_eq!(test_path(eq, object), "M165,160L170,160L170,165Z");
     }
 
@@ -216,7 +216,7 @@ mod path_string_test {
             (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
         ]);
         let point_object = Geometry::Point(point!(x: -63_f64, y:18_f64));
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
 
         assert_eq!(
             test_path(eq.clone(), line_object),

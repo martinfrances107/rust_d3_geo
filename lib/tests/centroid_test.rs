@@ -92,8 +92,7 @@ mod centroid_test {
         assert!(p1.x().is_nan());
         assert!(p1.y().is_nan());
 
-        // let p2: Point<f64> = Centroid::default().centroid(&MultiPoint(vec![]));
-        let p2: Point<f64> = Centroid::default().centroid(&MultiPoint(vec![
+        let p2 = Centroid::default().centroid(&MultiPoint(vec![
             Point::new(0_f64, 0_f64),
             Point::new(90_f64, 0_f64),
             Point::new(180_f64, 0_f64),
@@ -102,7 +101,7 @@ mod centroid_test {
         assert!(p2.x().is_nan());
         assert!(p2.y().is_nan());
 
-        let p3: Point<f64> = Centroid::default().centroid(&MultiPoint(vec![
+        let p3 = Centroid::default().centroid(&MultiPoint(vec![
             Point::new(0_f64, 0_f64),
             Point::new(0_f64, 90_f64),
             Point::new(180_f64, 0_f64),
@@ -514,7 +513,7 @@ mod centroid_test {
         let l60 = cg.clone().radius_set(60_f64).circle().exterior().clone();
 
         let l45 = cg.radius_set(45_f64).circle().exterior().clone();
-        let rev_vec: Vec<Coordinate<f64>> = l45.into_iter().rev().collect();
+        let rev_vec = l45.into_iter().rev().collect();
         let l45_rev = LineString(rev_vec);
 
         let polygon = Polygon::new(l60, vec![l45_rev]);
@@ -557,7 +556,7 @@ mod centroid_test {
             Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
             Geometry::Point(point!(x:0_f64, y: 0_f64)),
         ]);
-        let centroid: Point<f64> = Centroid::default().centroid(&data_object);
+        let centroid = Centroid::default().centroid(&data_object);
         assert!(in_delta_point(centroid, (179.5_f64, 0_f64).into(), 1e-6));
     }
 
@@ -590,7 +589,7 @@ mod centroid_test {
             Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
             Geometry::Point(point!(x:0_f64, y: 0_f64)),
         ]);
-        let centroid: Point<f64> = Centroid::default().centroid(&data_object);
+        let centroid = Centroid::default().centroid(&data_object);
         assert!(in_delta_point(
             centroid,
             (-179.5_f64, 0.500006_f64).into(),
@@ -607,7 +606,7 @@ mod centroid_test {
                 vec![],
             )),
         ]);
-        let centroid: Point<f64> = Centroid::default().centroid(&data_object);
+        let centroid = Centroid::default().centroid(&data_object);
         assert!(in_delta_point(
             centroid,
             (-179.5_f64, 0.500006_f64).into(),

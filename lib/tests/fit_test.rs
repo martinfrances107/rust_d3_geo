@@ -340,7 +340,6 @@ mod fit_test {
         let p1 = Equirectangular::builder().fit_size([1000_f64, 1000_f64], &world);
         let s1 = p1.scale();
         let t1 = p1.translate();
-        // let c1 = p1.clip_extent(); //cp is NoClip<>
 
         let p2_a: BuilderAntimeridianResampleClip<
             Bounds<f64>,

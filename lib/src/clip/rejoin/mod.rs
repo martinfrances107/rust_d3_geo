@@ -124,7 +124,7 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
     loop {
         // current: First unprocessed intersection point
         // of the subject polygon.
-        let mut current: Rc<RefCell<Intersection<T>>> = start.clone();
+        let mut current = start.clone();
         let mut is_subject = true;
 
         // Find first unvisited intersection.

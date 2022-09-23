@@ -11,7 +11,6 @@ mod mercator_tests {
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::in_delta::in_delta_coordinate;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::path::string::String as PathString;
     use rust_d3_geo::projection::mercator::Mercator;
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::CenterSet;
@@ -32,7 +31,7 @@ mod mercator_tests {
     #[test]
     fn test_clip_extent_defaults_to_automatic() {
         println!("mercator.clipExtent(null) sets the default automatic clip extent");
-        let projection_builder = Mercator::<PathString<f32>, f32>::builder()
+        let projection_builder = Mercator::builder()
             .translate_set(&Coordinate { x: 0_f32, y: 0_f32 })
             .scale_set(1_f32)
             .precision_bypass()

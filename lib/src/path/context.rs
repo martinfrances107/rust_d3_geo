@@ -473,7 +473,6 @@ mod index_test {
 
         let crc2d = CanvasRenderingContext2d::default();
 
-        // let equirectangular = Equirectangular::builder().build();
         let context = Context::new(crc2d);
         let pb = PathBuilder::new(context);
 
@@ -520,7 +519,6 @@ mod index_test {
 
         let crc2d = CanvasRenderingContext2d::default();
 
-        // let equirectangular = Equirectangular::builder().build();
         let context = Context::new(crc2d);
         let pb = PathBuilder::new(context);
 

@@ -114,7 +114,7 @@ mod path_bounds_test {
                 Coordinate { x: 100.2, y: 0.2 },
             ])],
         ));
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
         assert_eq!(
             test_bounds(eq, &object),
             [
@@ -133,7 +133,7 @@ mod path_bounds_test {
     #[test]
     fn area_of_a_sphere() {
         println!("geoPath.area(…) of a sphere");
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
         let object = Sphere::default();
         assert_eq!(
             test_bounds(eq, &object),

@@ -56,7 +56,7 @@ mod area_test {
         println!("area: Point");
 
         let g = Geometry::Point(Point::new(0_f64, 0_f64));
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert_eq!(area, 0_f64);
     }
 
@@ -64,7 +64,7 @@ mod area_test {
     fn multipoint() {
         println!("area: Mutlipoint");
         let g = Geometry::MultiPoint(vec![(0_f64, 1_f64), (2_f64, 3_f64)].into());
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert_eq!(area, 0_f64);
     }
 
@@ -72,7 +72,7 @@ mod area_test {
     fn line_string() {
         println!("area: LineString");
         let g = Geometry::LineString(vec![(0_f64, 1_f64), (2_f64, 3_f64)].into());
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert_eq!(area, 0_f64);
     }
 
@@ -83,7 +83,7 @@ mod area_test {
             line_string![(x:0_f64, y:1_f64), (x:2_f64, y:3_f64)],
             line_string![(x:4_f64, y:5_f64), (x:6_f64,y:7_f64)],
         ]);
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert_eq!(area, 0_f64);
     }
 
@@ -97,7 +97,7 @@ mod area_test {
             (x:-64.66074946804680, y:18.33994007490749),
             (x:-64.66070178517852, y:18.33986913231323)
         ];
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert!(in_delta(area, 4.890516e-13, 1e-13));
     }
 
@@ -127,7 +127,7 @@ mod area_test {
         (x: 96.81065389253769, y:5.272455576551362),
         (x: 96.79142432523281, y:5.262704519048153)
             ];
-        let area = Area::<f32>::calc(&g);
+        let area = Area::calc(&g);
         assert_eq!(area, 0_f32);
     }
 
@@ -142,7 +142,7 @@ mod area_test {
             (x:0_f64, y:0_f64)
         ];
 
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert!(in_delta(area, std::f64::consts::PI / 2_f64, 1e-6));
     }
 
@@ -158,7 +158,7 @@ mod area_test {
             (x:0_f64, y:0_f64)
         ];
 
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert!(in_delta(area, std::f64::consts::PI, 1e-6));
     }
 
@@ -174,7 +174,7 @@ mod area_test {
             (x:0_f64, y:0_f64)
         ];
 
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert!(in_delta(area, 2_f64 * std::f64::consts::PI, 1e-6));
     }
 
@@ -190,7 +190,7 @@ mod area_test {
             (x:0_f64, y:0_f64)
         ];
 
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert!(in_delta(area, 2_f64 * std::f64::consts::PI, 1e-6));
     }
 
@@ -206,7 +206,7 @@ mod area_test {
             (x:0_f64, y:0_f64)
         ];
 
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert!(in_delta(area, 2_f64 * std::f64::consts::PI, 1e-6));
     }
 
@@ -222,7 +222,7 @@ mod area_test {
             (x:0_f64, y:0_f64)
         ];
 
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert!(in_delta(area, 2_f64 * std::f64::consts::PI, 1e-6));
     }
 
@@ -232,7 +232,7 @@ mod area_test {
         let outline = generate_graticule()
             .extent_set([[-180_f64, -90_f64], [180_f64, 90_f64]])
             .outline();
-        let area = Area::<f64>::calc(&outline);
+        let area = Area::calc(&outline);
         assert!(in_delta(area, 4_f64 * std::f64::consts::PI, 1e-5));
     }
 
@@ -242,7 +242,7 @@ mod area_test {
         let outline = generate_graticule()
             .extent_set([[-180_f64, 0_f64], [180_f64, 90_f64]])
             .outline();
-        let area = Area::<f64>::calc(&outline);
+        let area = Area::calc(&outline);
         assert!(in_delta(area, 2_f64 * std::f64::consts::PI, 1e-5));
     }
 
@@ -252,7 +252,7 @@ mod area_test {
         let outline = generate_graticule()
             .extent_set([[0_f64, 0_f64], [90_f64, 90_f64]])
             .outline();
-        let area = Area::<f64>::calc(&outline);
+        let area = Area::calc(&outline);
         assert!(in_delta(area, std::f64::consts::FRAC_PI_2, 1e-5));
     }
 
@@ -260,7 +260,7 @@ mod area_test {
     fn circle_hemisphere() {
         println!("area: Polygon - circles hemisphere");
         let circle = CircleGenerator::default().radius_set(90_f64).circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(area, 2_f64 * std::f64::consts::PI, 1e-5));
     }
 
@@ -271,7 +271,7 @@ mod area_test {
             .radius_set(60_f64)
             .precision_set(0.1_f64)
             .circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(area, std::f64::consts::PI, 1e-5));
     }
 
@@ -286,7 +286,7 @@ mod area_test {
                 y: 90_f64,
             })
             .circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(area, std::f64::consts::PI, 1e-5));
     }
 
@@ -297,7 +297,7 @@ mod area_test {
             .radius_set(45_f64)
             .precision_set(0.1_f64)
             .circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(
             area,
             (2_f64 - (2_f64).sqrt()) * std::f64::consts::PI,
@@ -316,7 +316,7 @@ mod area_test {
                 y: 90_f64,
             })
             .circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(
             area,
             (2_f64 - (2_f64).sqrt()) * std::f64::consts::PI,
@@ -335,7 +335,7 @@ mod area_test {
                 y: -90_f64,
             })
             .circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(
             area,
             (2_f64 - (2_f64).sqrt()) * std::f64::consts::PI,
@@ -350,7 +350,7 @@ mod area_test {
             .radius_set(135_f64)
             .precision_set(0.1_f64)
             .circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(
             area,
             (2_f64 + (2_f64).sqrt()) * std::f64::consts::PI,
@@ -369,7 +369,7 @@ mod area_test {
                 y: 90_f64,
             })
             .circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(
             area,
             (2_f64 + (2_f64).sqrt()) * std::f64::consts::PI,
@@ -388,7 +388,7 @@ mod area_test {
                 y: -90_f64,
             })
             .circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(
             area,
             (2_f64 + (2_f64).sqrt()) * std::f64::consts::PI,
@@ -403,7 +403,7 @@ mod area_test {
             .radius_set(1e-6_f64)
             .precision_set(0.1_f64)
             .circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(area, 0_f64, 1e-5));
     }
 
@@ -414,7 +414,7 @@ mod area_test {
             .radius_set(180_f64 - 1e-6_f64)
             .precision_set(0.1_f64)
             .circle();
-        let area = Area::<f64>::calc(&circle);
+        let area = Area::calc(&circle);
         assert!(in_delta(area, 4_f64 * std::f64::consts::PI, 1e-5));
     }
 
@@ -434,12 +434,12 @@ mod area_test {
             .exterior()
             .clone();
 
-        let rev_vec: Vec<Coordinate<f64>> = ring2.into_iter().rev().collect();
+        let rev_vec = ring2.into_iter().rev().collect();
         let ring2_rev = LineString(rev_vec);
 
         let polygon = Polygon::new(ring1, vec![ring2_rev]);
         assert!(in_delta(
-            Area::<f64>::calc(&polygon),
+            Area::calc(&polygon),
             (2_f64.sqrt() - 1_f64) * std::f64::consts::PI,
             1e-5
         ));
@@ -469,12 +469,12 @@ mod area_test {
             .exterior()
             .clone();
 
-        let rev2_vec: Vec<Coordinate<f64>> = ring2.into_iter().rev().collect();
+        let rev2_vec = ring2.into_iter().rev().collect();
         let ring2_rev = LineString(rev2_vec);
 
         let polygon = Polygon::new(ring1_rev, vec![ring2_rev]);
         assert!(in_delta(
-            Area::<f64>::calc(&polygon),
+            Area::calc(&polygon),
             2_f64 * 2_f64.sqrt() * std::f64::consts::PI,
             1e-5
         ));
@@ -509,7 +509,7 @@ mod area_test {
 
         let polygon = Polygon::new(ring1_rev, vec![ring2_rev]);
         assert!(in_delta(
-            Area::<f64>::calc(&polygon),
+            Area::calc(&polygon),
             2_f64 * 2_f64.sqrt() * std::f64::consts::PI,
             1e-5
         ));
@@ -519,7 +519,7 @@ mod area_test {
     fn stripes_45_minus_45() {
         println!("area: Polygon - stripes 45°, -45°");
         let stripes = stripes(45_f64, -45_f64);
-        let area = Area::<f64>::calc(&stripes);
+        let area = Area::calc(&stripes);
         assert!(in_delta(
             area,
             std::f64::consts::PI * 2_f64 * 2f64.sqrt(),
@@ -531,7 +531,7 @@ mod area_test {
     fn stripes_minus_45_plus_45() {
         println!("area: Polygon - stripes 45°, 45°");
         let stripes = stripes(-45_f64, 45_f64);
-        let area = Area::<f64>::calc(&stripes);
+        let area = Area::calc(&stripes);
         assert!(in_delta(
             area,
             std::f64::consts::PI * 2_f64 * (2_f64 - 2f64.sqrt()),
@@ -543,7 +543,7 @@ mod area_test {
     fn stripes_45_30() {
         println!("area: Polygon - stripes 45°, 30°");
         let stripes = stripes(45_f64, 30_f64);
-        let area = Area::<f64>::calc(&stripes);
+        let area = Area::calc(&stripes);
         assert!(in_delta(
             area,
             std::f64::consts::PI * (2f64.sqrt() - 1_f64),
@@ -577,7 +577,7 @@ mod area_test {
             ),
         ]);
         let data_o = Geometry::MultiPolygon(mp);
-        let area = Area::<f64>::calc(&data_o);
+        let area = Area::calc(&data_o);
         assert!(in_delta(area, 4_f64 * std::f64::consts::PI, 1e-6));
     }
 
@@ -587,7 +587,7 @@ mod area_test {
 
         let g = Sphere::default();
 
-        let area = Area::<f64>::calc(&g);
+        let area = Area::calc(&g);
         assert!(in_delta(area, 4_f64 * std::f64::consts::PI, 1e-6));
     }
 

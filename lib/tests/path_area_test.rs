@@ -70,7 +70,7 @@ mod path_area_test {
             ]),
             vec![],
         ));
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
         assert_eq!(test_area(eq, object), 25_f64);
     }
 
@@ -93,7 +93,7 @@ mod path_area_test {
                 Coordinate { x: 100.2, y: 0.2 },
             ])],
         ));
-        let eq = equirectangular::<f64>();
+        let eq = equirectangular();
         assert_eq!(test_area(eq, object), 16_f64);
     }
 
