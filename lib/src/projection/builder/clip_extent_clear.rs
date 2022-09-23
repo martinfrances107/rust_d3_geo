@@ -1,29 +1,39 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
+use num_traits::FloatConst;
 
+use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::identity::Identity;
+use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentClear;
 
-use super::template::ClipU;
+use super::template::NoClipC;
 use super::template::NoClipU;
-use super::Builder;
+use super::template::ResampleNoClipC;
+use super::types::BuilderAntimeridianResampleClip;
+use super::types::BuilderAntimeridianResampleNoClip;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentClear
-    for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+// TODO Need 4 varyations here.
+// Vary by Antimeridian/Circle
+// Vary by Resample/None
+impl<DRAIN, PR, T> ClipExtentClear for BuilderAntimeridianResampleClip<DRAIN, PR, T>
 where
-    T: CoordFloat,
+    DRAIN: Clone,
+    PR: Clone,
+    T: CoordFloat + Default + FloatConst,
 {
     type T = T;
-    type Output = Builder<DRAIN, I, LB, LC, LU, NoClipU<DRAIN>, PR, PV, RC, RU, T>;
+    type Output = BuilderAntimeridianResampleNoClip<DRAIN, PR, T>;
 
     #[inline]
     fn clip_extent_clear(self) -> Self::Output {
+        let clip = gen_clip_antimeridian::<NoClipU<DRAIN>, ResampleNoClipC<DRAIN, PR, T>, T>();
+        let postclip: Identity<DRAIN, _> = Identity::default();
+        let resample: Resample<_, NoClipC<DRAIN>, _, _> =
+            Resample::new(self.project_transform.clone(), self.delta2);
         Self::Output {
-            p_lb: PhantomData::<LB>,
-            p_drain: PhantomData::<DRAIN>,
+            p_lb: self.p_lb,
+            p_drain: self.p_drain,
             projection_raw: self.projection_raw,
-            clip: self.clip,
             phi: self.phi,
             lambda: self.lambda,
             alpha: self.alpha,
@@ -40,15 +50,16 @@ where
             rotate: self.rotate,
             project_transform: self.project_transform,
             project_rotate_transform: self.project_rotate_transform,
-            resample: self.resample,
             rotator: self.rotator,
 
             // Mutate stage
+            postclip,
+            clip,
+            resample,
             x0: None,
             y0: None,
             x1: None,
             y1: None,
-            postclip: Identity::default(),
         }
     }
 }
