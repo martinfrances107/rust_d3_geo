@@ -10,10 +10,8 @@ mod mercator_tests {
 
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::in_delta::in_delta_coordinate;
-    use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String as PathString;
-    use rust_d3_geo::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
     use rust_d3_geo::projection::mercator::Mercator;
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::CenterSet;
@@ -54,7 +52,7 @@ mod mercator_tests {
         // after tracing the program and seeing that its input to the
         // raw mercator projection was FRAC_PI_2 and evaluates to NAN
         // while JS provides a large numeric value.
-        let s: String = path_builder.build(projection).object(&object);
+        let s = path_builder.build(projection).object(&object);
         assert_eq!(s, "M3.141593,0L3.141593,0L3.141593,3.141593L3.141593,3.141593L-3.141593,3.141593L-3.141593,3.141593L-3.141593,0L-3.141593,-3.141593L-3.141593,-3.141593L3.141593,-3.141593Z");
     }
 
@@ -104,8 +102,7 @@ mod mercator_tests {
 
         let projection = projection_builder.build();
 
-        let path_builder: PathBuilder<PathString<f64>, _, _, _, _, _, _, _, _, _, f64> =
-            PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::default();
 
@@ -235,11 +232,7 @@ mod mercator_tests {
             .into(),
         );
 
-        let pb: BuilderMercatorAntimeridianResampleClip<
-            Bounds<f64>,
-            Mercator<Bounds<f64>, f64>,
-            f64,
-        > = Mercator::builder().fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
+        let pb = Mercator::builder().fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
         assert_eq!(pb.scale(), 20969742.365692537_f64);
         assert_eq!(
             pb.translate(),
