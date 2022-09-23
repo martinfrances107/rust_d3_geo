@@ -52,6 +52,7 @@ mod clip_extent_adjust;
 mod clip_extent_clear;
 mod clip_extent_get;
 mod clip_extent_set;
+mod fit_clip;
 mod fit_no_clip;
 mod precision_adjust;
 mod precision_bypass;

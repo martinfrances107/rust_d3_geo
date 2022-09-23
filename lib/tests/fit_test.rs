@@ -9,7 +9,7 @@ mod fit_test {
 
     use geo::polygon;
     use geo::Geometry;
-    use rust_d3_geo::projection::PrecisionBypass;
+    use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleClip;
     use topojson::Topology;
 
     use geo::Coordinate;
@@ -26,8 +26,10 @@ mod fit_test {
     use rust_d3_geo::projection::orthographic::Orthographic;
     use rust_d3_geo::projection::stereographic::Stereographic;
     use rust_d3_geo::projection::ClipAngleAdjust;
+    use rust_d3_geo::projection::ClipExtentSet;
     use rust_d3_geo::projection::Fit;
     use rust_d3_geo::projection::PrecisionAdjust;
+    use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::PrecisionGet;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleGet;
@@ -191,14 +193,8 @@ mod fit_test {
         // ));
     }
 
-    // 	// 	// // // tape("projection.fitExtent(…) world mercator", function(test) {
-    // 	// 	// // //   var projection = d3.geoMercator();
-    // 	// 	// // //   projection.fitExtent([[50, 50], [950, 950]], world);
-    // 	// 	// // //   test.inDelta(projection.scale(), 143.239449, 1e-6);
-    // 	// 	// // //   test.inDelta(projection.translate(), [500, 481.549457], 1e-6);
-    // 	// 	// // //   test.end();
-    // 	// 	// // // });
-
+    // TODO this look like a bug. the y value of translate is actuall a copy of the x value.
+    #[ignore]
     #[test]
     fn fit_extent_world_mercator() {
         println!("projection.fitExtent(…) world mercator");
@@ -207,15 +203,15 @@ mod fit_test {
         let projection =
             Mercator::builder().fit_extent([[50.0_f64, 50.0_f64], [950.0_f64, 950.0_f64]], &world);
         assert!((in_delta(projection.scale(), 143.239449, 1e-6)));
-        // TODO this look like a bug. the y value of translate is actuall a copy of the x value ... Hmm.
-        // assert!(in_delta_coordinate(
-        //     &projection.translate(),
-        //     &Coordinate {
-        //         x: 500_f64,
-        //         y: 481.549457_f64
-        //     },
-        //     1e-6
-        // ));
+
+        assert!(in_delta_coordinate(
+            &projection.translate(),
+            &Coordinate {
+                x: 500_f64,
+                y: 481.549457_f64
+            },
+            1e-6
+        ));
     }
 
     #[test]
@@ -335,21 +331,41 @@ mod fit_test {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
-    // 	// 	// // // tape("projection.fitSize(…) ignore clipExtent - world equirectangular", function(test) {
-    // 	// 	// // //   var p1 = d3.geoEquirectangular().fitSize([1000, 1000], world),
-    // 	// 	// // //       s1 = p1.scale(),
-    // 	// 	// // //       t1 = p1.translate(),
-    // 	// 	// // //       c1 = p1.clipExtent(),
-    // 	// 	// // //       p2 = d3.geoEquirectangular().clipExtent([[100, 200], [700, 600]]).fitSize([1000, 1000], world),
-    // 	// 	// // //       s2 = p2.scale(),
-    // 	// 	// // //       t2 = p2.translate(),
-    // 	// 	// // //       c2 = p2.clipExtent();
-    // 	// 	// // //   test.inDelta(s1, s2, 1e-6);
-    // 	// 	// // //   test.inDelta(t1, t2, 1e-6);
-    // 	// 	// // //   test.equal(c1, null);
-    // 	// 	// // //   test.deepEqual(c2, [[100, 200], [700, 600]]);
-    // 	// 	// // //   test.end();
-    // 	// 	// // // });
+    /// Ignored tests. Needs debugging, but the fact that this compiles is the first step.
+    #[test]
+    #[ignore]
+    fn fit_size_ignore_clip_extent() {
+        println!("projection.fitSize(…) ignore clipExtent - world equirectangular");
+        let world = world();
+        let p1 = Equirectangular::builder().fit_size([1000_f64, 1000_f64], &world);
+        let s1 = p1.scale();
+        let t1 = p1.translate();
+        // let c1 = p1.clip_extent(); //cp is NoClip<>
+
+        let p2_a: BuilderAntimeridianResampleClip<
+            Bounds<f64>,
+            Equirectangular<Bounds<f64>, f64>,
+            f64,
+        > = Equirectangular::<Bounds<f64>, f64>::builder().clip_extent_set(&[
+            Coordinate {
+                x: 100_f64,
+                y: 200_f64,
+            },
+            Coordinate {
+                x: 700_f64,
+                y: 600_f64,
+            },
+        ]);
+
+        let p2_b = p2_a.fit_size([1000_f64, 1000_f64], &world);
+        let s2 = p2_b.scale();
+        let t2 = p2_b.translate();
+
+        assert!(in_delta(s1, s2, 1e-6));
+        assert!(in_delta_coordinate(&t1, &t2, 1e-6));
+
+        // assert!(in_delta(c2 = [100_f64, 200_f64], 1e-6));
+    }
 
     // 	// 	// // // tape("projection.fitExtent(…) chaining - world transverseMercator", function(test) {
     // 	// 	// // //   var projection = d3.geoTransverseMercator().fitExtent([[50, 50], [950, 950]], world).scale(500);
