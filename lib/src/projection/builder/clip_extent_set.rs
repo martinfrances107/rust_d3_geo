@@ -4,6 +4,7 @@ use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
 use crate::clip::circle::gen_clip_circle;
+use crate::clip::rectangle::Rectangle;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::template::ResampleNoneClipC;
@@ -60,7 +61,7 @@ where
 
             // Mutate section.
             clip: gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>(),
-            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             resample: Resample::new(self.project_transform, self.delta2),
             x0: Some(extent[0].x),
             y0: Some(extent[0].y),
@@ -105,7 +106,7 @@ where
 
             // Mutate section.
             clip: gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>(),
-            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             resample: None::new(self.project_transform),
             x0: Some(extent[0].x),
             y0: Some(extent[0].y),
@@ -157,7 +158,7 @@ where
                 ResampleClipU<DRAIN, PR, T>,
                 T,
             >(self.theta.unwrap()),
-            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             resample: Resample::new(self.project_transform, self.delta2),
             x0: Some(extent[0].x),
             y0: Some(extent[0].y),
@@ -210,11 +211,12 @@ where
                 T,
             >(self.theta.unwrap()),
             resample: None::new(self.project_transform),
-            postclip: ClipU::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             x0: Some(extent[0].x),
             y0: Some(extent[0].y),
             x1: Some(extent[1].x),
             y1: Some(extent[1].y),
         }
+        //TODO javascipt calls reset here.
     }
 }
