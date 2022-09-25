@@ -25,38 +25,34 @@ mod identity_test {
     //   assertProjectionEqual(identity, [  30,  30], [  30,  30]);
     // });
 
-    #[ignore]
     #[test]
     fn test_returns_a_point() {
         let identity: Projector<StreamDrainStub<f64>, _, _, _> = Builder::default()
-            .translate_set(&Coordinate {
-                x: 100_f64,
-                y: 10_f64,
-            })
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .scale_set(2_f64)
             .build::<NoClipC<StreamDrainStub<f64>>>();
         assert!(projection_equal(
             &identity,
             &(0f64, 0f64).into(),
-            &(100f64, 10f64).into(),
+            &(0f64, 0f64).into(),
             None
         ));
         assert!(projection_equal(
             &identity,
             &(-180f64, 0f64).into(),
-            &(-260f64, 10f64).into(),
+            &(-180f64, 0f64).into(),
             None
         ));
         assert!(projection_equal(
             &identity,
             &(180f64, 0f64).into(),
-            &(460f64, 10f64).into(),
+            &(180f64, 0f64).into(),
             None
         ));
         assert!(projection_equal(
             &identity,
             &(30f64, 30f64).into(),
-            &(160f64, 70f64).into(),
+            &(30f64, 30f64).into(),
             None
         ));
     }
