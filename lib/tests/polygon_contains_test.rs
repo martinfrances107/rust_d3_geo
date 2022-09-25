@@ -1,5 +1,4 @@
 #[cfg(not(tarpaulin_include))]
-#[cfg(test)]
 mod polygon_contains_test {
     extern crate pretty_assertions;
 

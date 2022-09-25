@@ -1,6 +1,4 @@
 #[cfg(not(tarpaulin_include))]
-#[cfg(test)]
-
 mod angle_test {
 
     use geo::Coordinate;

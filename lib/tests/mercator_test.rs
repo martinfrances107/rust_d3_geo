@@ -1,5 +1,4 @@
 #[cfg(not(tarpaulin_include))]
-#[cfg(test)]
 mod mercator_tests {
 
     extern crate pretty_assertions;

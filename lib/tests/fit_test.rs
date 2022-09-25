@@ -1,6 +1,4 @@
 #[cfg(not(tarpaulin_include))]
-#[cfg(test)]
-
 mod fit_test {
     extern crate pretty_assertions;
     extern crate rust_topojson_client;

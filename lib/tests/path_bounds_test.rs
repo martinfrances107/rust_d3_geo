@@ -1,5 +1,4 @@
 #[cfg(not(tarpaulin_include))]
-#[cfg(test)]
 mod path_bounds_test {
 
     use std::f64::consts::PI;

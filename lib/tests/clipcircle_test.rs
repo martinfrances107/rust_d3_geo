@@ -1,6 +1,4 @@
 #[cfg(not(tarpaulin_include))]
-#[cfg(test)]
-
 mod clipcircle_test {
 
     extern crate pretty_assertions;

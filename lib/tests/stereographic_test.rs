@@ -1,5 +1,4 @@
 #[cfg(not(tarpaulin_include))]
-#[cfg(test)]
 mod stereographic_tests {
     use geo::Coordinate;
     use rust_d3_geo::projection::ScaleSet;
