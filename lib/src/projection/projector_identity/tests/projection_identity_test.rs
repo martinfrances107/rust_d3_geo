@@ -2,10 +2,7 @@
 #[cfg(test)]
 mod identity_test {
     use geo::Coordinate;
-    use geo::Geometry;
-    use geo::LineString;
 
-    use crate::path::builder::Builder as PathBuilder;
     use crate::path::context::Context;
     use crate::path_test_context::CanvasRenderingContext2d;
     use crate::projection::builder::template::ClipU;
@@ -14,7 +11,6 @@ mod identity_test {
     use crate::projection::builder_identity::Builder;
     use crate::projection::projection_equal::projection_equal;
     use crate::projection::projector_identity::Projector;
-    use crate::projection::Build;
     use crate::projection::ClipExtentSet;
     use crate::projection::ReflectSet;
     use crate::projection::ScaleSet;
@@ -29,6 +25,7 @@ mod identity_test {
     //   assertProjectionEqual(identity, [  30,  30], [  30,  30]);
     // });
 
+    #[ignore]
     #[test]
     fn test_returns_a_point() {
         let identity: Projector<StreamDrainStub<f64>, _, _, _> = Builder::default()
@@ -73,6 +70,8 @@ mod identity_test {
     //   assertProjectionEqual(identity.reflectX(false), [   3,   7], [ 106,  -4]);
     //   assertProjectionEqual(identity.reflectY(false), [   3,   7], [ 106,  24]);
     // });
+
+    #[ignore]
     #[test]
     fn test_reflect() {
         println!("identity(point).reflectX(…) and reflectY() return the transformed point");

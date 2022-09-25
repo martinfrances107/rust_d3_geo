@@ -1,31 +1,32 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::stream::Connectable;
+use crate::stream::Unconnected;
 use crate::Transform;
 
 // pub mod types;
 mod tests;
+pub mod transformer;
+
+use transformer::Transformer;
+
 type CacheState<DRAIN, PCNC> = Option<(DRAIN, PCNC)>;
 
 /// Projection output of projection/Builder.
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Clone, Debug)]
-pub struct Projector<DRAIN, PCNC, PCNU, T> {
-    // Hidden linkage
-    p_t: PhantomData<T>,
-    /// Must be public as there is a implicit copy.
+pub struct Projector<DRAIN, PCNC, PCNU, T>
+where
+    T: CoordFloat,
+{
+    // Must be public as there is a implicit copy.
     pub(crate) postclip: PCNU,
-    // pub(crate) rotator: RotatorRadians<Unconnected, T>,
-    // projection: Transform<T = T>,
-    // pub project_rotate_transform:
-    //     Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
-    // pub(crate) transform_radians: StreamTransformRadians<Unconnected>,
+    pub(crate) transform: Transformer<PCNU, Unconnected, T>,
     pub(crate) cache: CacheState<DRAIN, PCNC>,
 }
 
@@ -38,8 +39,8 @@ where
     DRAIN: Clone + PartialEq,
     PCNC: Clone,
     PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
-    PCNU: Clone,
-    // T: CoordFloat,
+    // PCNU: Clone,
+    T: CoordFloat,
 {
     /// Connects a DRAIN to the projection.
     ///
@@ -53,25 +54,18 @@ where
                 return (*output).clone();
             }
         }
+
+        // let transformer = self.transform.connect(drain.clone());
+
         // Build cache.
-        let out = self.postclip.clone().connect(drain.clone());
-
-        // let resample_node = self.resample.clone().connect(postclip_node);
-
-        // let preclip_node = self.clip.clone().connect(resample_node);
-
-        // let rotate_node = self.rotator.clone().connect(preclip_node);
-
-        // let out = self
-        //     .transform_radians
-        //     .clone()
-        //     .connect::<DRAIN, _, T>(rotate_node);
+        // let out = self.postclip.clone().connect(transformer);
 
         // Populate cache.
-        self.cache = Some((drain.clone(), out.clone()));
+        // self.cache = Some((drain.clone(), out.clone()));
 
         // Output stage is a transform_radians node.
-        out
+        todo!();
+        // out
     }
 }
 
@@ -82,12 +76,10 @@ where
     /// f32 or f64
     type T = T;
 
-    fn transform(&self, _p: &Coordinate<T>) -> Coordinate<T> {
-        // self.projecton.transform(p)
-        todo!();
+    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        self.transform.transform(p)
     }
-    fn invert(&self, _p: &Coordinate<T>) -> Coordinate<T> {
-        // self.projection.invert(p)
-        todo!();
+    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        self.transform.invert(p)
     }
 }

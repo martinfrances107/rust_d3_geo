@@ -40,17 +40,17 @@ where
     /// and the builder.    
     p_drain: PhantomData<DRAIN>,
     // projection_raw: PR,
-    alpha: T, // post-rotate angle
-    ca: T,
-    sa: T,
-    sx: T,
-    sy: T,
-    k: T,
-    kx: T, // scale
-    ky: T,
+    pub(super) alpha: T, // post-rotate angle
+    pub(super) ca: T,
+    pub(super) sa: T,
+    pub(super) sx: T,
+    pub(super) sy: T,
+    pub(super) k: T,
+    pub(super) kx: T, // scale
+    pub(super) ky: T,
 
-    x: T,
-    y: T, // translate
+    pub(super) tx: T,
+    pub(super) ty: T, // translate
 
     x0: Option<T>,
     y0: Option<T>,
@@ -78,8 +78,6 @@ where
             // clip: gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(),
             // p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
-            x: T::from(480_f64).unwrap(),
-            y: T::from(250_f64).unwrap(),
 
             x0: None,
             y0: None,
@@ -94,6 +92,8 @@ where
             sa: T::nan(),
             sx: T::one(),
             sy: T::one(),
+            tx: T::zero(),
+            ty: T::zero(),
             postclip,
             // project_transform,
             // project_rotate_transform,

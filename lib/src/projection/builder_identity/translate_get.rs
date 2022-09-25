@@ -14,8 +14,8 @@ where
     #[inline]
     fn translate(&self) -> Coordinate<T> {
         Coordinate {
-            x: self.x,
-            y: self.y,
+            x: self.tx,
+            y: self.ty,
         }
     }
 }

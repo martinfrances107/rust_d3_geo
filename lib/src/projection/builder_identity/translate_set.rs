@@ -13,8 +13,8 @@ where
 
     #[inline]
     fn translate_set(mut self, t: &Coordinate<T>) -> Self {
-        self.x = t.x;
-        self.y = t.y;
+        self.tx = t.x;
+        self.ty = t.y;
         self
     }
 }
