@@ -13,6 +13,6 @@ where
     #[inline]
     fn scale_set(mut self, k: T) -> Self {
         self.k = k;
-        self
+        self.reset()
     }
 }

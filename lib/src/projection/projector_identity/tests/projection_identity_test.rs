@@ -29,7 +29,7 @@ mod identity_test {
     fn test_returns_a_point() {
         let identity: Projector<StreamDrainStub<f64>, _, _, _> = Builder::default()
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
-            .scale_set(2_f64)
+            .scale_set(1_f64)
             .build::<NoClipC<StreamDrainStub<f64>>>();
         assert!(projection_equal(
             &identity,
@@ -67,47 +67,50 @@ mod identity_test {
     //   assertProjectionEqual(identity.reflectY(false), [   3,   7], [ 106,  24]);
     // });
 
-    #[ignore]
     #[test]
     fn test_reflect() {
         println!("identity(point).reflectX(…) and reflectY() return the transformed point");
-        let identity: Builder<StreamDrainStub<f64>, _, _> = Builder::default()
+        let mut identity: Builder<StreamDrainStub<f64>, _, _> = Builder::default()
             .translate_set(&Coordinate {
                 x: 100_f64,
                 y: 10_f64,
             })
             .scale_set(2_f64);
+
         assert!(projection_equal(
-            &identity
-                .clone()
-                .reflect_x_set(true)
-                .build::<NoClipU<StreamDrainStub<f64>>>(),
+            &identity.clone().build::<NoClipU<StreamDrainStub<f64>>>(),
+            &(3f64, 7f64).into(),
+            &(106f64, 24f64).into(),
+            None
+        ));
+
+        identity = identity.reflect_x_set(true);
+        assert!(projection_equal(
+            &identity.clone().build::<NoClipU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(94f64, 24f64).into(),
             None
         ));
+
+        identity = identity.reflect_y_set(true);
         assert!(projection_equal(
-            &identity
-                .clone()
-                .reflect_y_set(true)
-                .build::<NoClipU<StreamDrainStub<f64>>>(),
+            &identity.clone().build::<NoClipU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(94f64, -4f64).into(),
             None
         ));
+
+        identity = identity.reflect_x_set(false);
         assert!(projection_equal(
-            &identity
-                .clone()
-                .reflect_x_set(false)
-                .build::<NoClipU<StreamDrainStub<f64>>>(),
+            &identity.clone().build::<NoClipU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(106f64, -4f64).into(),
             None
         ));
+
+        identity = identity.reflect_y_set(false);
         assert!(projection_equal(
-            &identity
-                .reflect_y_set(false)
-                .build::<NoClipU<StreamDrainStub<f64>>>(),
+            &identity.build::<NoClipU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None

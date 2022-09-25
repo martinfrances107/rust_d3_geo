@@ -15,8 +15,6 @@ where
         self.alpha = (angle % T::from(360_f64).unwrap()).to_radians();
         self.sa = self.alpha.sin();
         self.ca = self.alpha.cos();
-        self.reset();
-
-        self
+        self.reset()
     }
 }

@@ -18,7 +18,7 @@ where
         } else {
             self.sx = T::one();
         }
-        self
+        self.reset()
     }
 
     /// Set the projection builder to invert the y-coordinate.
@@ -29,6 +29,6 @@ where
         } else {
             self.sy = T::one();
         }
-        self
+        self.reset()
     }
 }

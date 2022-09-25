@@ -35,11 +35,7 @@ pub struct Builder<DRAIN, PCNU, T>
 where
     T: CoordFloat,
 {
-    /// PhantomData<LB>
-    /// The hidden link is between the Projector<..,LB,..>
-    /// and the builder.    
     p_drain: PhantomData<DRAIN>,
-    // projection_raw: PR,
     pub(super) alpha: T, // post-rotate angle
     pub(super) ca: T,
     pub(super) sa: T,
@@ -67,36 +63,27 @@ where
 {
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
+    #[inline]
     pub fn default() -> Self {
-        // let x = T::from(480_f64).unwrap();
-        // let y = T::from(250_f64).unwrap();
-
-        let alpha = T::zero();
-
-        let postclip = Identity::default();
         Self {
-            // clip: gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(),
-            // p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
             p_drain: PhantomData::<DRAIN>,
 
             x0: None,
             y0: None,
             x1: None,
             y1: None, //postclip = identity, // post-clip extent
-            ca: T::nan(),
 
-            alpha,
+            alpha: T::zero(),
             k: T::one(),
             kx: T::one(),
             ky: T::one(),
+            ca: T::nan(),
             sa: T::nan(),
             sx: T::one(),
             sy: T::one(),
             tx: T::zero(),
             ty: T::zero(),
-            postclip,
-            // project_transform,
-            // project_rotate_transform,
+            postclip: Identity::default(),
         }
     }
 }
@@ -105,8 +92,9 @@ impl<DRAIN, PCNU, T> Builder<DRAIN, PCNU, T>
 where
     T: CoordFloat,
 {
-    fn reset(&mut self) {
+    fn reset(mut self) -> Self {
         self.kx = self.k * self.sx;
         self.ky = self.k * self.sy;
+        self
     }
 }

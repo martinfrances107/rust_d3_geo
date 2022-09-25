@@ -39,5 +39,6 @@ where
             x1: None,
             y1: None,
         }
+        .reset()
     }
 }
