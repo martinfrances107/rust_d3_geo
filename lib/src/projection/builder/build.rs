@@ -1,10 +1,11 @@
 use geo::CoordFloat;
 
-use crate::projection::builder::Builder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 use crate::projection::Projector;
 use crate::stream::Unconnected;
+
+use super::Builder;
 
 impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Build
     for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>

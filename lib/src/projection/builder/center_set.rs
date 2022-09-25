@@ -1,5 +1,3 @@
-use crate::projection::RecenterNoResampling;
-use crate::projection::RecenterWithResampling;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -9,6 +7,8 @@ use crate::projection::builder::template::ResampleClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::CenterSet;
+use crate::projection::RecenterNoResampling;
+use crate::projection::RecenterWithResampling;
 use crate::Transform;
 
 use super::template::ClipU;

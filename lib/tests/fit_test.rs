@@ -10,7 +10,6 @@ mod fit_test {
     use geo::CoordFloat;
     use geo::Geometry;
     use num_traits::FloatConst;
-    use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleClip;
     use topojson::Topology;
 
     use geo::Coordinate;
@@ -347,24 +346,20 @@ mod fit_test {
         let s1 = p1.scale();
         let t1 = p1.translate();
 
-        let p2_a: BuilderAntimeridianResampleClip<
-            Bounds<f64>,
-            Equirectangular<Bounds<f64>, f64>,
-            f64,
-        > = Equirectangular::<Bounds<f64>, f64>::builder().clip_extent_set(&[
-            Coordinate {
-                x: 100_f64,
-                y: 200_f64,
-            },
-            Coordinate {
-                x: 700_f64,
-                y: 600_f64,
-            },
-        ]);
-
-        let p2_b = p2_a.fit_size([1000_f64, 1000_f64], &world);
-        let s2 = p2_b.scale();
-        let t2 = p2_b.translate();
+        let p2 = Equirectangular::<Bounds<f64>, f64>::builder()
+            .clip_extent_set(&[
+                Coordinate {
+                    x: 100_f64,
+                    y: 200_f64,
+                },
+                Coordinate {
+                    x: 700_f64,
+                    y: 600_f64,
+                },
+            ])
+            .fit_size([1000_f64, 1000_f64], &world);
+        let s2 = p2.scale();
+        let t2 = p2.translate();
 
         assert!(in_delta(s1, s2, 1e-6));
         assert!(in_delta_coordinate(&t1, &t2, 1e-6));

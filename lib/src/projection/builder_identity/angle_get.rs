@@ -4,8 +4,7 @@ use crate::projection::AngleGet;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> AngleGet
-    for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<DRAIN, PCNU, T> AngleGet for Builder<DRAIN, PCNU, T>
 where
     T: CoordFloat,
 {

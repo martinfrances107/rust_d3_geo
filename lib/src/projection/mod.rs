@@ -23,15 +23,18 @@ pub mod mercator;
 pub mod orthographic;
 /// The raw projection.
 pub mod stereographic;
-
-/// The default projection builder.
+// The default projection builder.
 pub mod builder;
+/// Identity builder.
+pub mod builder_identity;
 /// A specalised builder wrapping the default mecator.
 pub mod builder_mercator;
 /// Debug and test helper function.
 pub mod projection_equal;
 /// Projection object.
 pub mod projector;
+/// Projection Identity object.
+pub mod projector_identity;
 /// Resample based on a given precision.
 pub mod resampler;
 /// A stream node pipeline stage.
