@@ -91,6 +91,8 @@ where
     fn endpoint(&mut self) -> &mut Self {
         self
     }
+
+    fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}
 }
 
 impl<T> Default for StreamDrainStub<T> {
@@ -116,7 +118,7 @@ where
     fn endpoint(&mut self) -> &mut Self::EP;
 
     /// Declare a point.
-    fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}
+    fn point(&mut self, p: &Coordinate<Self::T>, m: Option<u8>);
     /// Declare a sphere object.
     fn sphere(&mut self) {}
     /// Declare the start of a line segments.
