@@ -17,9 +17,21 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use pv::PV;
 
+use super::buffer::Buffer;
 use super::clip::Clip;
+use super::clip::Connected as ConnectedClip;
 
-type ClipCircleU<RC, T> = Clip<
+pub type ClipCircleC<RC, T> = Clip<
+    Interpolate<T>,
+    Line<RC, Connected<RC>, T>,
+    Line<RC, Unconnected, T>,
+    PV<T>,
+    RC,
+    ConnectedClip<Line<Buffer<T>, Connected<Buffer<T>>, T>, Line<RC, Connected<RC>, T>, T>,
+    T,
+>;
+
+pub type ClipCircleU<RC, T> = Clip<
     Interpolate<T>,
     Line<RC, Connected<RC>, T>,
     Line<RC, Unconnected, T>,
@@ -32,6 +44,7 @@ type ClipCircleU<RC, T> = Clip<
 /// Returns a clip setup for circle clipping.
 pub fn gen_clip_circle<DRAIN, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
 where
+    RC: Clone,
     T: CoordFloat + FloatConst,
 {
     let cr = radius.cos();

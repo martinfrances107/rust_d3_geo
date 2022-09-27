@@ -1,9 +1,13 @@
+use std::marker::PhantomData;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::circle::gen_clip_circle;
+use crate::clip::circle::ClipCircleC;
 use crate::clip::rectangle::Rectangle;
 use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
@@ -38,8 +42,9 @@ where
     #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         Self::Output {
-            p_lb: self.p_lb,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleClipC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
+            p_rc: PhantomData::<ResampleClipC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw,
             phi: self.phi,
             lambda: self.lambda,
@@ -83,8 +88,10 @@ where
     #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         Self::Output {
-            p_lb: self.p_lb,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneClipC<DRAIN, PR, T>, T>>,
+
             p_drain: self.p_drain,
+            p_rc: PhantomData::<ResampleNoneClipC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw,
             phi: self.phi,
             lambda: self.lambda,
@@ -128,8 +135,9 @@ where
     #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         Self::Output {
-            p_lb: self.p_lb,
+            p_clipc: PhantomData::<ClipCircleC<ResampleClipC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
+            p_rc: PhantomData::<ResampleClipC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw,
             phi: self.phi,
             lambda: self.lambda,
@@ -180,8 +188,9 @@ where
     #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         Self::Output {
-            p_lb: self.p_lb,
+            p_clipc: PhantomData::<ClipCircleC<ResampleNoneClipC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
+            p_rc: PhantomData::<ResampleNoneClipC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw,
             phi: self.phi,
             lambda: self.lambda,

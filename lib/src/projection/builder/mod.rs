@@ -6,14 +6,11 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::buffer::Buffer;
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
 use crate::identity::Identity;
-use crate::projection::builder::template::ResampleNoneClipC;
 use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::builder::template::ResampleNoneNoClipC;
 use crate::projection::builder::template::ResampleNoneNoClipU;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
@@ -24,7 +21,6 @@ use crate::projection::RecenterWithResampling;
 use crate::rot::rotate_radians;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
-use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -77,17 +73,17 @@ pub mod types;
 ///
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Debug)]
-pub struct Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat,
 {
-    /// PhantomData<LB>
-    /// The hidden link is between the Projector<..,LB,..>
-    /// and the builder.
-    p_lb: PhantomData<LB>,
+    p_clipc: PhantomData<CLIPC>,
     p_drain: PhantomData<DRAIN>,
+    p_rc: PhantomData<RC>,
     projection_raw: PR,
-    pub(super) clip: Clip<I, LC, LU, PV, RC, Unconnected, T>,
+    pub(super) clip: CLIPU,
     lambda: T,
     phi: T,
     alpha: T, // post-rotate angle
@@ -128,6 +124,7 @@ where
 
 impl<DRAIN, PR, T> BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + Default + FloatConst,
 {
@@ -158,7 +155,8 @@ where
         let resample = Resample::new(project_transform.clone(), delta2);
         let out_a: Self = Self {
             clip: gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(),
-            p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoClipC<DRAIN, PR, T>, T>>,
+            p_rc: PhantomData::<ResampleNoClipC<DRAIN, PR, T>>,
             p_drain: PhantomData::<DRAIN>,
             /// Input passing onto Projection.
             projection_raw,

@@ -6,9 +6,11 @@ use crate::projection::ClipExtentClear;
 use super::Builder;
 use super::Reclip;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentClear
-    for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> ClipExtentClear
+    for Builder<CLIPC, CLIPU, DRAIN, ClipU<DRAIN, T>, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     Self: Reclip,
     T: CoordFloat,
 {

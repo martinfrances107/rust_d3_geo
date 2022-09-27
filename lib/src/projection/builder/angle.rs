@@ -1,9 +1,7 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::AngleSet;
 use crate::projection::RecenterWithResampling;
@@ -11,23 +9,25 @@ use crate::Transform;
 
 use super::template::ClipU;
 use super::template::NoClipU;
+use super::template::ResampleClipC;
+use super::template::ResampleNoClipC;
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> AngleSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoClipC<DRAIN, PR, T>,
         ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -39,21 +39,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> AngleSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> AngleSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleClipC<DRAIN, PR, T>,
         ResampleClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

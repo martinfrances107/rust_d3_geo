@@ -4,55 +4,26 @@ use std::marker::PhantomData;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::buffer::Buffer;
+use super::Builder;
+use crate::clip::antimeridian::ClipAntimeridianC;
+use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::gen_clip_circle;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
+use crate::clip::circle::ClipCircleC;
+use crate::clip::circle::ClipCircleU;
 use crate::projection::ClipAngleSet;
 use crate::stream::Connectable;
-use crate::stream::Connected;
-use crate::stream::Stream;
-use crate::stream::Unconnected;
 
-use super::Builder;
+use crate::stream::Stream;
 
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
-    for Builder<
-        DRAIN,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<RC, Connected<RC>, T>,
-        LineAntimeridian<RC, Unconnected, T>,
-        PCNU,
-        PR,
-        PVAntimeridian<T>,
-        RC,
-        RU,
-        T,
-    >
+    for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>
 where
     PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
     RC: Clone + Stream<EP = DRAIN, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
     T: CoordFloat + FloatConst,
 {
-    type Output = Builder<
-        DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<RC, Connected<RC>, T>,
-        LineCircle<RC, Unconnected, T>,
-        PCNU,
-        PR,
-        PVCircle<T>,
-        RC,
-        RU,
-        T,
-    >;
+    type Output = Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>;
     type T = T;
 
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
@@ -66,7 +37,8 @@ where
         let clip = gen_clip_circle::<DRAIN, PCNU, PR, RC, RU, T>(theta);
         // Copy, Mutate - updating only theta and preclip_factory.
         Self::Output {
-            p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
+            p_clipc: PhantomData::<ClipCircleC<RC, T>>,
+            p_rc: PhantomData::<RC>,
             p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw,
             clip,

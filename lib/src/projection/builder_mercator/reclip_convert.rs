@@ -1,7 +1,11 @@
+use std::marker::PhantomData;
+
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
+use crate::projection::builder::template::ResampleClipC;
 use crate::projection::Build;
 use crate::projection::ClipExtentSet;
 use crate::projection::RotateGet;
@@ -58,6 +62,9 @@ where
         };
         let base = self.base.clip_extent_set(&ce);
         Self::Output {
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleClipC<DRAIN, PR, T>, T>>,
+            p_drain: PhantomData::<DRAIN>,
+            p_rc: PhantomData::<ResampleClipC<DRAIN, PR, T>>,
             pr: self.pr,
             base,
             extent: self.extent,

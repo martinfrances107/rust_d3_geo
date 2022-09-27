@@ -1,8 +1,12 @@
+use std::marker::PhantomData;
+
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::circle::gen_clip_circle;
+use crate::clip::circle::ClipCircleC;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::resampler::none::None;
 use crate::projection::PrecisionBypass;
@@ -37,8 +41,9 @@ where
     fn precision_bypass(self) -> Self::Output {
         // Copy - Mutate.
         Self::Output {
-            p_lb: self.p_lb,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneNoClipC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
+            p_rc: PhantomData::<ResampleNoneNoClipC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -89,8 +94,9 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_lb: self.p_lb,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneClipC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
+            p_rc: PhantomData::<ResampleNoneClipC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -143,8 +149,9 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_lb: self.p_lb,
+            p_clipc: PhantomData::<ClipCircleC<ResampleNoneNoClipC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
+            p_rc: PhantomData::<ResampleNoneNoClipC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -201,10 +208,20 @@ where
         // So a change in the resample type causes rebuilding of clip.
         // let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
+        let clip = gen_clip_circle::<
+            DRAIN,
+            ClipU<DRAIN, T>,
+            PR,
+            ResampleNoneClipC<DRAIN, PR, T>,
+            ResampleNoneClipU<DRAIN, PR, T>,
+            T,
+        >(self.theta.unwrap());
+
         // Copy - Mutate.
         Self::Output {
-            p_lb: self.p_lb,
+            p_clipc: PhantomData::<ClipCircleC<ResampleNoneClipC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
+            p_rc: PhantomData::<ResampleNoneClipC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -229,14 +246,7 @@ where
             delta_gamma: self.delta_gamma,
 
             // Mutate section.
-            clip: gen_clip_circle::<
-                DRAIN,
-                ClipU<DRAIN, T>,
-                PR,
-                ResampleNoneClipC<DRAIN, PR, T>,
-                ResampleNoneClipU<DRAIN, PR, T>,
-                T,
-            >(self.theta.unwrap()),
+            clip,
             delta2: T::zero(),
             resample: None::new(self.project_transform),
         }

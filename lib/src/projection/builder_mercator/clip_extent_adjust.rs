@@ -10,15 +10,12 @@ use crate::Transform;
 use super::Builder;
 use super::Reclip;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentAdjust
-    for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> ClipExtentAdjust
+    for Builder<CLIPC, CLIPU, DRAIN, ClipU<DRAIN, T>, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
-    I: Clone,
-    LC: Clone,
-    LU: Clone,
-    PV: Clone,
-    RC: Clone,
     RU: Clone,
     ClipU<DRAIN, T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,

@@ -13,21 +13,21 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoClipC<DRAIN, PR, T>,
         ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
@@ -40,21 +40,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> RotateSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleClipC<DRAIN, PR, T>,
         ResampleClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

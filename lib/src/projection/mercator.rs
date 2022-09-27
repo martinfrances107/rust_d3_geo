@@ -4,13 +4,13 @@ use std::marker::PhantomData;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use crate::projection::builder_mercator::ReclipConvert;
 use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
+use super::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
+use super::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use super::builder_mercator::Builder as MercatorBuilder;
 use super::ProjectionRawBase;
 use super::TransformExtent;

@@ -44,7 +44,10 @@ impl<SINK> Default for Identity<SINK, Unconnected> {
     }
 }
 
-impl<SINK> Connectable for Identity<SINK, Unconnected> {
+impl<SINK> Connectable for Identity<SINK, Unconnected>
+where
+    SINK: Clone,
+{
     type SC = SINK;
     type Output = Identity<SINK, Connected<Self::SC>>;
 
@@ -59,7 +62,7 @@ impl<SINK> Connectable for Identity<SINK, Unconnected> {
 
 impl<EP, SINK, T> Stream for Identity<SINK, Connected<SINK>>
 where
-    SINK: Stream<EP = EP, T = T>,
+    SINK: Clone + Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type EP = EP;

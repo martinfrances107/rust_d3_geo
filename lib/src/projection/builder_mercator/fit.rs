@@ -4,8 +4,6 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::path::bounds::Bounds;
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::fit_reclip::fit_extent_reclip;
 use crate::projection::fit_reclip::fit_height_reclip;
 use crate::projection::fit_reclip::fit_size_reclip;
@@ -14,6 +12,9 @@ use crate::projection::Fit;
 use crate::projection::TransformExtent;
 use crate::stream::Streamable;
 use crate::Transform;
+
+use super::types::BuilderMercatorAntimeridianResampleClip;
+use super::types::BuilderMercatorAntimeridianResampleNoneClip;
 
 impl<PR, T> Fit for BuilderMercatorAntimeridianResampleClip<Bounds<T>, PR, T>
 where

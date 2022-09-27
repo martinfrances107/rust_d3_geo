@@ -29,11 +29,17 @@ pub struct Unconnected;
 /// Overriden when the state need to contain more variables.
 /// see Resample and Clip.
 #[derive(Clone, Debug)]
-pub struct Connected<SINK> {
+pub struct Connected<SINK>
+where
+    SINK: Clone,
+{
     pub sink: SINK,
 }
 
-impl<SINK> ConnectedState for Connected<SINK> {
+impl<SINK> ConnectedState for Connected<SINK>
+where
+    SINK: Clone,
+{
     type Sink = SINK;
 
     #[inline]

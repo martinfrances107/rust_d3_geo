@@ -7,7 +7,6 @@ use num_traits::float::FloatConst;
 use crate::math::asin;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::Builder;
-use crate::projection::ClipAngleSet;
 use crate::projection::ProjectionRawBase;
 use crate::projection::ScaleSet;
 use crate::stream::Stream;
@@ -15,6 +14,7 @@ use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
+use super::ClipAngleSet;
 
 /// Why the Phantom Data is required here...
 ///

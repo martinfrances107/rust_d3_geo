@@ -19,60 +19,20 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoClipC<DRAIN, PR, T>,
         ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
 where
-    PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-{
-    type T = T;
-
-    /// Set the projection builder to invert the x-coordinate.
-    #[inline]
-    fn reflect_x_set(self, reflect: bool) -> Self {
-        Self {
-            base: self.base.reflect_x_set(reflect).recenter_with_resampling(),
-            ..self
-        }
-    }
-
-    /// Set the projection builder to invert the y-coordinate.    
-    #[inline]
-    fn reflect_y_set(self, reflect: bool) -> Self {
-        Self {
-            base: self.base.reflect_y_set(reflect).recenter_with_resampling(),
-            ..self
-        }
-    }
-}
-
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
-    for Builder<
-        DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
-        ClipU<DRAIN, T>,
-        PR,
-        PV,
-        ResampleClipC<DRAIN, PR, T>,
-        ResampleClipU<DRAIN, PR, T>,
-        T,
-    >
-where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -98,21 +58,59 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
+        ClipU<DRAIN, T>,
+        PR,
+        ResampleClipC<DRAIN, PR, T>,
+        ResampleClipU<DRAIN, PR, T>,
+        T,
+    >
+where
+    CLIPC: Clone,
+    CLIPU: Clone,
+    DRAIN: Clone,
+    PR: Clone + Transform<T = T>,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+{
+    type T = T;
+
+    /// Set the projection builder to invert the x-coordinate.
+    #[inline]
+    fn reflect_x_set(self, reflect: bool) -> Self {
+        Self {
+            base: self.base.reflect_x_set(reflect).recenter_with_resampling(),
+            ..self
+        }
+    }
+
+    /// Set the projection builder to invert the y-coordinate.    
+    #[inline]
+    fn reflect_y_set(self, reflect: bool) -> Self {
+        Self {
+            base: self.base.reflect_y_set(reflect).recenter_with_resampling(),
+            ..self
+        }
+    }
+}
+
+impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
+    for Builder<
+        CLIPC,
+        CLIPU,
+        DRAIN,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoneNoClipC<DRAIN, PR, T>,
         ResampleNoneNoClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -138,21 +136,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleNoneClipC<DRAIN, PR, T>,
         ResampleNoneClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

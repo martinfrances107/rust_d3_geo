@@ -2,9 +2,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::ResampleClipC;
 use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::CenterSet;
 use crate::projection::RecenterNoResampling;
@@ -13,25 +11,26 @@ use crate::Transform;
 
 use super::template::ClipU;
 use super::template::NoClipU;
+use super::template::ResampleClipC;
+use super::template::ResampleNoClipC;
 use super::template::ResampleNoneClipC;
 use super::template::ResampleNoneClipU;
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleClipC<DRAIN, PR, T>,
         ResampleClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -45,21 +44,21 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoClipC<DRAIN, PR, T>,
         ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -72,21 +71,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleNoneClipC<DRAIN, PR, T>,
         ResampleNoneClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

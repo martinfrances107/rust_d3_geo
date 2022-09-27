@@ -1,18 +1,16 @@
 use std::fmt::Debug;
+use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::buffer::Buffer;
-use crate::clip::clip::Clip;
-use crate::clip::clip::Connected as ConnectedClip;
-use crate::clip::Bufferable;
 use crate::compose::Compose;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connectable;
 use crate::stream::Connected;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -21,29 +19,28 @@ use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 
 pub mod types;
 
-type CacheState<DRAIN, I, LB, LC, LU, PV, RC, T> = Option<(
+type CacheState<CLIP, DRAIN, T> = Option<(
     DRAIN,
-    StreamTransformRadians<
-        Connected<
-            RotatorRadians<Connected<Clip<I, LC, LU, PV, RC, ConnectedClip<LB, LC, T>, T>>, T>,
-        >,
-    >,
+    StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>,
 )>;
 
 /// Projection output of projection/Builder.
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Clone, Debug)]
-pub struct Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+pub struct Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat,
 {
+    pub(crate) p_rc: PhantomData<RC>,
     /// Must be public as there is a implicit copy.
     pub(crate) postclip: PCNU,
 
     pub(crate) resample: RU,
 
-    pub(crate) clip: Clip<I, LC, LU, PV, RC, Unconnected, T>,
+    pub(crate) clip: CLIPU,
 
     pub(crate) rotator: RotatorRadians<Unconnected, T>,
 
@@ -51,26 +48,20 @@ where
         Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 
     pub(crate) transform_radians: StreamTransformRadians<Unconnected>,
-    pub(crate) cache: CacheState<DRAIN, I, LB, LC, LU, PV, RC, T>,
+    pub(crate) cache: CacheState<CLIPC, DRAIN, T>,
 }
 
-type ProjectionStream<I, LB, LC, LU, PV, RC, T> = StreamTransformRadians<
-    Connected<RotatorRadians<Connected<Clip<I, LC, LU, PV, RC, ConnectedClip<LB, LC, T>, T>>, T>>,
->;
+type ProjectionStream<CLIP, T> =
+    StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CC, CU, DRAIN, PCNC, PCNU, PR, RC, RU, T> Projector<CC, CU, DRAIN, PCNU, PR, RC, RU, T>
 where
+    CC: Clone + Stream<EP = DRAIN, T = T>,
+    CU: Clone + Connectable<Output = CC, SC = RC>,
     DRAIN: Clone + PartialEq,
-    I: Clone,
-    LB: Clone,
-    LC: Clone,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
-    PV: Clone,
     RU: Clone + Connectable<SC = PCNC, Output = RC>,
     RC: Clone,
-    PCNU: Clone,
     T: CoordFloat,
 {
     /// Connects a DRAIN to the projection.
@@ -79,7 +70,7 @@ where
     ///
     /// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
     ///
-    pub fn stream(&mut self, drain: &DRAIN) -> ProjectionStream<I, LB, LC, LU, PV, RC, T> {
+    pub fn stream(&mut self, drain: &DRAIN) -> ProjectionStream<CC, T> {
         if let Some((cache_drain, output)) = &self.cache {
             if *cache_drain == *drain {
                 return (*output).clone();
@@ -107,9 +98,12 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Transform
-    for Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> Transform
+    for Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
+
     PR: Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

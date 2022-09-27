@@ -6,10 +6,13 @@ use num_traits::FloatConst;
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::buffer::Buffer;
+use crate::clip::antimeridian::ClipAntimeridianC;
+use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
+use crate::clip::circle::ClipCircleC;
+use crate::clip::circle::ClipCircleU;
 use crate::projection::builder::Clip;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
@@ -19,43 +22,32 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+use super::template::ResampleClipC;
+use super::template::ResampleNoneClipC;
 use super::Builder;
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
+        ClipAntimeridianC<None<PR, PCNC, Connected<PCNC>, T>, T>,
+        ClipAntimeridianU<None<PR, PCNC, Connected<PCNC>, T>, T>,
         DRAIN,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<
-            None<PR, PCNC, Connected<PCNC>, T>,
-            Connected<None<PR, PCNC, Connected<PCNC>, T>>,
-            T,
-        >,
-        LineAntimeridian<None<PR, PCNC, Connected<PCNC>, T>, Unconnected, T>,
         PCNU,
         PR,
-        PVAntimeridian<T>,
         None<PR, PCNC, Connected<PCNC>, T>,
         None<PR, PCNC, Unconnected, T>,
         T,
     >
 where
+    PCNC: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + Default + FloatConst,
 {
     type Output = Builder<
+        ClipAntimeridianC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+        ClipAntimeridianU<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
         DRAIN,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<
-            Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-            Connected<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
-            T,
-        >,
-        LineAntimeridian<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
         PCNU,
         PR,
-        PVAntimeridian<T>,
         Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
         Resample<PR, PCNC, Unconnected, T>,
         T,
@@ -65,7 +57,7 @@ where
     /// Set the projection builder precision
     ///
     /// delta is related to clip angle.
-    fn precision(self, delta: &T) -> Self::Output {
+    fn precision_set(self, delta: &T) -> Self::Output {
         let pv = PVAntimeridian::default();
         let interpolator = InterpolateAntimeridian::default();
         let line = LineAntimeridian::default();
@@ -78,7 +70,10 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
+            p_clipc: PhantomData::<
+                ClipAntimeridianC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+            >,
+            p_rc: PhantomData::<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
             sx: self.sx,
             sy: self.sy,
@@ -113,39 +108,27 @@ where
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
+        ClipCircleC<ResampleNoneClipC<DRAIN, PR, T>, T>,
+        ClipCircleU<ResampleNoneClipC<DRAIN, PR, T>, T>,
         DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<
-            None<PR, PCNC, Connected<PCNC>, T>,
-            Connected<None<PR, PCNC, Connected<PCNC>, T>>,
-            T,
-        >,
-        LineCircle<None<PR, PCNC, Connected<PCNC>, T>, Unconnected, T>,
         PCNU,
         PR,
-        PVCircle<T>,
         None<PR, PCNC, Connected<PCNC>, T>,
         None<PR, PCNC, Unconnected, T>,
         T,
     >
 where
+    DRAIN: Clone,
+    PCNC: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type Output = Builder<
+        ClipCircleC<ResampleClipC<DRAIN, PR, T>, T>,
+        ClipCircleU<ResampleClipC<DRAIN, PR, T>, T>,
         DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<
-            Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-            Connected<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
-            T,
-        >,
-        LineCircle<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
         PCNU,
         PR,
-        PVCircle<T>,
         Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
         Resample<PR, PCNC, Unconnected, T>,
         T,
@@ -155,7 +138,7 @@ where
     /// Set the projection builder precision
     ///
     /// delta is related to clip angle.
-    fn precision(self, delta: &T) -> Self::Output {
+    fn precision_set(self, delta: &T) -> Self::Output {
         let radius = self.clip.interpolator.radius;
         let pv = PVCircle::new(radius);
         let interpolator = InterpolateCircle::new(radius);
@@ -169,8 +152,9 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_lb: PhantomData::<LineCircle<Buffer<T>, Connected<Buffer<T>>, T>>,
+            p_clipc: PhantomData::<ClipCircleC<ResampleClipC<DRAIN, PR, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
+            p_rc: PhantomData::<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,

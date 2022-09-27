@@ -175,6 +175,7 @@ mod index_test {
     use crate::path::context::Context;
     use crate::path_test_context::CanvasRenderingContext2d;
     use crate::projection::equirectangular::Equirectangular;
+
     use crate::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
     use crate::projection::Build;
     use crate::projection::PrecisionBypass;

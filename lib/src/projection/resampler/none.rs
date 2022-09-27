@@ -44,6 +44,7 @@ impl<PR, SC, T> None<PR, SC, Unconnected, T> {
 
 impl<PR, SC, T> Connectable for None<PR, SC, Unconnected, T>
 where
+    SC: Clone,
     T: CoordFloat,
 {
     type Output = None<PR, SC, Connected<SC>, T>;
@@ -62,7 +63,7 @@ where
 
 impl<EP, PR, SC, T> Stream for None<PR, SC, Connected<SC>, T>
 where
-    SC: Stream<EP = EP, T = T>,
+    SC: Clone + Stream<EP = EP, T = T>,
     PR: Transform<T = T>,
     T: CoordFloat,
 {

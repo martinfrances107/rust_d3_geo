@@ -39,7 +39,10 @@ where
     T: CoordFloat,
 {
     #[inline]
-    pub fn connect<SINK>(self, sink: SINK) -> RotatorRadians<Connected<SINK>, T> {
+    pub fn connect<SINK>(self, sink: SINK) -> RotatorRadians<Connected<SINK>, T>
+    where
+        SINK: Clone,
+    {
         RotatorRadians {
             state: Connected { sink },
             rotate: self.rotate,
@@ -49,7 +52,7 @@ where
 
 impl<EP, SINK, T> Stream for RotatorRadians<Connected<SINK>, T>
 where
-    SINK: Stream<EP = EP, T = T>,
+    SINK: Clone + Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type EP = EP;

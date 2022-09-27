@@ -4,29 +4,30 @@ use num_traits::FloatConst;
 use crate::projection::builder::Builder;
 use crate::projection::builder::ClipU;
 use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleClipC;
 use crate::projection::builder::ResampleClipU;
-use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::RecenterWithResampling;
 use crate::projection::ScaleSet;
 use crate::Transform;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleSet
+use super::template::ResampleClipC;
+use super::template::ResampleNoClipC;
+
+impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoClipC<DRAIN, PR, T>,
         ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -38,21 +39,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ScaleSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleClipC<DRAIN, PR, T>,
         ResampleClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

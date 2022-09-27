@@ -1,9 +1,7 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::builder::ResampleClipC;
 use crate::projection::builder::ResampleClipU;
-use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
 use crate::projection::RecenterNoResampling;
 use crate::projection::RecenterWithResampling;
@@ -12,27 +10,29 @@ use crate::Transform;
 
 use super::template::ClipU;
 use super::template::NoClipU;
+use super::template::ResampleClipC;
+use super::template::ResampleNoClipC;
 use super::template::ResampleNoneClipC;
 use super::template::ResampleNoneClipU;
 use super::template::ResampleNoneNoClipC;
 use super::template::ResampleNoneNoClipU;
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoClipC<DRAIN, PR, T>,
         ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -60,21 +60,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleClipC<DRAIN, PR, T>,
         ResampleClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -103,21 +102,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoneNoClipC<DRAIN, PR, T>,
         ResampleNoneNoClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -146,21 +144,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> ReflectSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleNoneClipC<DRAIN, PR, T>,
         ResampleNoneClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

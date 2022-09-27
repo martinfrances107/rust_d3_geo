@@ -2,17 +2,17 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::PointVisible;
 use crate::projection::builder::template::ClipU;
 use crate::projection::builder_mercator::Builder;
 use crate::projection::ClipExtentGet;
 use crate::projection::TransformExtent;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentGet
-    for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> ClipExtentGet
+    for Builder<CLIPC, CLIPU, DRAIN, ClipU<DRAIN, T>, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     PR: TransformExtent<T = T>,
-    PV: PointVisible<T = T>,
     T: CoordFloat + FloatConst,
 {
     /// f64 or f32.

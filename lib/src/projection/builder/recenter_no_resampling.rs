@@ -5,9 +5,7 @@ use num_traits::FloatConst;
 use crate::compose::Compose;
 use crate::projection::builder::ClipU;
 use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleNoneClipC;
 use crate::projection::builder::ResampleNoneClipU;
-use crate::projection::builder::ResampleNoneNoClipC;
 use crate::projection::builder::ResampleNoneNoClipU;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::transform::generate as generate_str;
@@ -16,23 +14,25 @@ use crate::rot::rotate_radians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::Transform;
 
+use super::template::ResampleNoneClipC;
+use super::template::ResampleNoneNoClipC;
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterNoResampling
+impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterNoResampling
     for Builder<
+        CLIPU,
+        CLIPC,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoneNoClipC<DRAIN, PR, T>,
         ResampleNoneNoClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -73,21 +73,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterNoResampling
+impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterNoResampling
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleNoneClipC<DRAIN, PR, T>,
         ResampleNoneClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

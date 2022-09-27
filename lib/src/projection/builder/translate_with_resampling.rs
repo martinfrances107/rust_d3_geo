@@ -9,26 +9,26 @@ use crate::Transform;
 use super::template::ClipU;
 use super::template::ResampleClipC;
 use super::template::ResampleClipU;
+use super::template::ResampleNoClipC;
 use super::Builder;
 use super::NoClipU;
-use super::ResampleNoClipC;
 use super::ResampleNoClipU;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> TranslateSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> TranslateSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoClipC<DRAIN, PR, T>,
         ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPU: Clone,
+    CLIPC: Clone,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -41,21 +41,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> TranslateSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> TranslateSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleClipC<DRAIN, PR, T>,
         ResampleClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

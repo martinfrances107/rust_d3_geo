@@ -1,122 +1,103 @@
-use approx::AbsDiffEq;
-use geo::CoordFloat;
-use num_traits::FloatConst;
+// use std::marker::PhantomData;
 
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::buffer::Buffer;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
-use crate::projection::resampler::none::None;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
-use crate::projection::PrecisionSet;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
-use crate::Transform;
+// use approx::AbsDiffEq;
+// use geo::CoordFloat;
+// use num_traits::FloatConst;
 
-use super::Builder;
+// use crate::clip::antimeridian::ClipAntimeridianC;
+// use crate::clip::antimeridian::ClipAntimeridianU;
+// use crate::clip::circle::ClipCircleC;
+// use crate::clip::circle::ClipCircleU;
+// use crate::projection::resampler::none::None;
+// use crate::projection::resampler::resample::Connected as ConnectedResample;
+// use crate::projection::resampler::resample::Resample;
+// use crate::projection::PrecisionSet;
+// use crate::stream::Connected;
+// use crate::stream::Unconnected;
+// use crate::Transform;
 
-impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
-    for Builder<
-        DRAIN,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<
-            None<PR, PCNC, Connected<PCNC>, T>,
-            Connected<None<PR, PCNC, Connected<PCNC>, T>>,
-            T,
-        >,
-        LineAntimeridian<None<PR, PCNC, Connected<PCNC>, T>, Unconnected, T>,
-        PCNU,
-        PR,
-        PVAntimeridian<T>,
-        None<PR, PCNC, Connected<PCNC>, T>,
-        None<PR, PCNC, Unconnected, T>,
-        T,
-    >
-where
-    PR: Clone + Transform<T = T>,
-    T: CoordFloat + Default + FloatConst,
-{
-    type Output = Builder<
-        DRAIN,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<
-            Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-            Connected<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
-            T,
-        >,
-        LineAntimeridian<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
-        PCNU,
-        PR,
-        PVAntimeridian<T>,
-        Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-        Resample<PR, PCNC, Unconnected, T>,
-        T,
-    >;
-    type T = T;
+// use super::Builder;
 
-    #[inline]
-    fn precision(self, delta: &T) -> Self::Output {
-        Self::Output {
-            extent: self.extent,
-            pr: self.pr,
-            base: self.base.precision(delta),
-        }
-    }
-}
+// impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
+//     for Builder<
+//         ClipAntimeridianC<None<PR, PCNC, Connected<PCNC>, T>, T>,
+//         ClipAntimeridianU<None<PR, PCNC, Connected<PCNC>, T>, T>,
+//         DRAIN,
+//         PCNU,
+//         PR,
+//         None<PR, PCNC, Connected<PCNC>, T>,
+//         None<PR, PCNC, Unconnected, T>,
+//         T,
+//     >
+// where
+//     PCNC: Clone,
+//     PR: Clone + Transform<T = T>,
+//     T: CoordFloat + Default + FloatConst,
+// {
+//     type Output = Builder<
+//         ClipAntimeridianC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+//         ClipAntimeridianU<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+//         DRAIN,
+//         PCNU,
+//         PR,
+//         Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
+//         Resample<PR, PCNC, Unconnected, T>,
+//         T,
+//     >;
+//     type T = T;
 
-impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
-    for Builder<
-        DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<
-            None<PR, PCNC, Connected<PCNC>, T>,
-            Connected<None<PR, PCNC, Connected<PCNC>, T>>,
-            T,
-        >,
-        LineCircle<None<PR, PCNC, Connected<PCNC>, T>, Unconnected, T>,
-        PCNU,
-        PR,
-        PVCircle<T>,
-        None<PR, PCNC, Connected<PCNC>, T>,
-        None<PR, PCNC, Unconnected, T>,
-        T,
-    >
-where
-    PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-{
-    type Output = Builder<
-        DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<
-            Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-            Connected<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
-            T,
-        >,
-        LineCircle<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, Unconnected, T>,
-        PCNU,
-        PR,
-        PVCircle<T>,
-        Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-        Resample<PR, PCNC, Unconnected, T>,
-        T,
-    >;
-    type T = T;
+//     #[inline]
+//     fn precision_set(self, delta: &T) -> Self::Output {
+//         Self::Output {
+//             p_clipc: PhantomData::<
+//                 ClipAntimeridianC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+//             >,
+//             p_drain: PhantomData::<DRAIN>,
+//             p_rc: PhantomData::<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
+//             extent: self.extent,
+//             pr: self.pr,
+//             base: self.base.precision_set(delta),
+//         }
+//     }
+// }
 
-    #[inline]
-    fn precision(self, delta: &T) -> Self::Output {
-        Self::Output {
-            extent: self.extent,
-            pr: self.pr,
-            base: self.base.precision(delta),
-        }
-    }
-}
+// impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
+//     for Builder<
+//         ClipCircleC<None<PR, PCNC, Connected<PCNC>, T>, T>,
+//         ClipCircleU<None<PR, PCNC, Connected<PCNC>, T>, T>,
+//         DRAIN,
+//         PCNU,
+//         PR,
+//         None<PR, PCNC, Connected<PCNC>, T>,
+//         None<PR, PCNC, Unconnected, T>,
+//         T,
+//     >
+// where
+//     PR: Clone + Transform<T = T>,
+//     PCNC: Clone,
+//     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+// {
+//     type Output = Builder<
+//         ClipCircleC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+//         ClipCircleU<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+//         DRAIN,
+//         PCNU,
+//         PR,
+//         Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
+//         Resample<PR, PCNC, Unconnected, T>,
+//         T,
+//     >;
+//     type T = T;
+
+//     #[inline]
+//     fn precision_set(self, delta: &T) -> Self::Output {
+//         Self::Output {
+//             p_clipc: PhantomData::<ClipCircleC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>>,
+//             p_drain: PhantomData::<DRAIN>,
+//             p_rc: PhantomData::<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
+//             extent: self.extent,
+//             pr: self.pr,
+//             base: self.base.precision_set(delta),
+//         }
+//     }
+// }

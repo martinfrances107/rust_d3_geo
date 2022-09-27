@@ -14,6 +14,7 @@ pub mod string;
 use std::fmt;
 use std::fmt::Debug;
 use std::fmt::Display;
+use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
@@ -21,11 +22,6 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::buffer::Buffer;
-use crate::clip::Bufferable;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
@@ -75,26 +71,34 @@ where
 /// Projection and context stream applied to a Streamable.
 #[derive(Debug)]
 #[allow(dead_code)]
-pub struct Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+pub struct Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat,
 {
+    p_pcnc: PhantomData<PCNC>,
+    p_rc: PhantomData<RC>,
     context_stream: CS,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
-    projection: Projector<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>,
+    projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,
 }
 
-impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat,
 {
     /// Constructor.
     pub fn new(
         context_stream: CS,
-        projection: Projector<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>,
+        projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,
     ) -> Self {
         Self {
+            p_pcnc: PhantomData::<PCNC>,
+            p_rc: PhantomData::<RC>,
             context_stream,
             point_radius: PointRadiusEnum::Val(T::from(4.5_f64).unwrap()),
             projection,
@@ -102,16 +106,12 @@ where
     }
 }
 
-impl<CS, I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 where
+    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
+    CLIPC: Clone + Stream<EP = CS, T = T>,
     CS: Clone + Default + PartialEq + Result,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = CS, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     PCNU: Clone + Connectable<Output = PCNC, SC = CS>,
-    PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = CS, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC>,
     T: 'static + CoordFloat + FloatConst,
@@ -124,15 +124,11 @@ where
     }
 }
 
-impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Path<Area<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, Area<T>, PCNC, PCNU, PR, RC, RU, T>
 where
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Area<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
+    CLIPC: Clone + Stream<EP = Area<T>, T = T>,
+    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
     PCNU: Clone + Connectable<Output = PCNC, SC = Area<T>>,
-    PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Area<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC>,
     T: CoordFloat,
@@ -151,15 +147,12 @@ where
     }
 }
 
-impl<I, LB, LC, LU, PCNC, PCNU, PR, PV, RC, RU, T>
-    Path<Bounds<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
+    Path<CLIPC, CLIPU, Bounds<T>, PCNC, PCNU, PR, RC, RU, T>
 where
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+    CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
     PCNU: Clone + Connectable<Output = PCNC, SC = Bounds<T>>,
-    PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
     T: 'static + CoordFloat + FloatConst,
@@ -176,19 +169,13 @@ where
     }
 }
 
-impl<LB, LC, LU, I, PCNC, PCNU, PR, PV, RC, RU, T>
-    Path<Centroid<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
+    Path<CLIPC, CLIPU, Centroid<T>, PCNC, PCNU, PR, RC, RU, T>
 where
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Centroid<T>, T = T>,
-    LU: Clone
-        + Bufferable<Output = LB, T = T>
-        + Connectable<Output = LC, SC = RC>
-        + Connectable<Output = LC, SC = RC>,
+    CLIPC: Clone + Stream<EP = Centroid<T>, T = T>,
+    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
     PCNC: Stream<EP = Centroid<T>, T = T>,
     PCNU: Clone + Connectable<Output = PCNC, SC = Centroid<T>>,
-    PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Centroid<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC>,
     T: 'static + AddAssign + CoordFloat + FloatConst,
@@ -203,8 +190,10 @@ where
     }
 }
 
-impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat,
 {
     /// Sets the context stream.

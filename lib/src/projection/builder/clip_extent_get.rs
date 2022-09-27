@@ -6,9 +6,11 @@ use crate::projection::ClipExtentGet;
 use super::template::ClipU;
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, RC, RU, T> ClipExtentGet
-    for Builder<DRAIN, I, LB, LC, LU, ClipU<DRAIN, T>, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> ClipExtentGet
+    for Builder<CLIPC, CLIPU, DRAIN, ClipU<DRAIN, T>, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat,
 {
     type T = T;

@@ -5,9 +5,11 @@ use crate::projection::ScaleGet;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> ScaleGet
-    for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> ScaleGet
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat + FloatConst,
 {
     type T = T;

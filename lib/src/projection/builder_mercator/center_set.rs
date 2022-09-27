@@ -16,26 +16,21 @@ use crate::Transform;
 use super::Builder;
 use super::Reclip;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleClipC<DRAIN, PR, T>,
         ResampleClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
-    I: Clone,
-    LC: Clone,
-    LU: Clone,
-    PV: Clone,
 
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
@@ -48,26 +43,21 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> CenterSet
+impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleNoneClipC<DRAIN, PR, T>,
         ResampleNoneClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
-    I: Clone,
-    LC: Clone,
-    LU: Clone,
-    PV: Clone,
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {

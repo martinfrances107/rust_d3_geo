@@ -17,11 +17,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::buffer::Buffer;
-use crate::clip::Bufferable;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::NoClipC;
@@ -36,32 +31,26 @@ use crate::Transform;
 
 /// no_clip in the sense tha input is  NoClip (Identity)
 /// and so is the output.
-fn fit_no_clip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+fn fit_no_clip<B, CC, CU, PR, RC, RU, T>(
     builder: B,
     fit_bounds: Box<dyn Fn([Coordinate<T>; 2], B) -> B>,
     object: &impl Streamable<T = T>,
 ) -> B
 where
     B: Build<
+            ClipC = CC,
+            ClipU = CU,
             Drain = Bounds<T>,
-            I = I,
-            LB = LB,
-            LC = LC,
-            LU = LU,
             PCNU = NoClipU<Bounds<T>>,
             PR = PR,
-            PV = PV,
             RC = RC,
             RU = RU,
             T = T,
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-    PV: Clone + PointVisible<T = T>,
+    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
@@ -80,32 +69,26 @@ where
     fit_bounds(bounds, builder)
 }
 
-pub(super) fn fit_extent_no_clip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_extent_no_clip<B, CC, CU, PR, RC, RU, T>(
     builder: B,
     extent: [[T; 2]; 2],
     object: &impl Streamable<T = T>,
 ) -> B
 where
     B: Build<
+            ClipC = CC,
+            ClipU = CU,
             Drain = Bounds<T>,
-            I = I,
-            LB = LB,
-            LC = LC,
-            LU = LU,
             PCNU = NoClipU<Bounds<T>>,
             PR = PR,
-            PV = PV,
             RC = RC,
             RU = RU,
             T = T,
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-    PV: Clone + PointVisible<T = T>,
+    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
@@ -130,32 +113,26 @@ where
     )
 }
 
-pub(super) fn fit_size_no_clip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_size_no_clip<B, CC, CU, PR, RC, RU, T>(
     builder: B,
     size: [T; 2],
     object: &impl Streamable<T = T>,
 ) -> B
 where
     B: Build<
+            ClipC = CC,
+            ClipU = CU,
             Drain = Bounds<T>,
-            I = I,
-            LB = LB,
-            LC = LC,
-            LU = LU,
             PCNU = NoClipU<Bounds<T>>,
             PR = PR,
-            PV = PV,
             RC = RC,
             RU = RU,
             T = T,
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-    PV: Clone + PointVisible<T = T>,
+    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
@@ -163,32 +140,26 @@ where
     fit_extent_no_clip(builder, [[T::zero(), T::zero()], size], object)
 }
 
-pub(super) fn fit_width_no_clip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_width_no_clip<B, CC, CU, PR, RC, RU, T>(
     builder: B,
     width: T,
     object: &impl Streamable<T = T>,
 ) -> B
 where
     B: Build<
+            ClipC = CC,
+            ClipU = CU,
             Drain = Bounds<T>,
-            I = I,
-            LB = LB,
-            LC = LC,
-            LU = LU,
             PCNU = NoClipU<Bounds<T>>,
             PR = PR,
-            PV = PV,
             RC = RC,
             RU = RU,
             T = T,
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-    PV: Clone + PointVisible<T = T>,
+    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
@@ -212,7 +183,7 @@ where
     )
 }
 
-pub(super) fn fit_height_no_clip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_height_no_clip<B, CC, CU, PR, RC, RU, T>(
     builder: B,
     height: T,
     object: &impl Streamable<T = T>,
@@ -220,25 +191,24 @@ pub(super) fn fit_height_no_clip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
 where
     PR: Clone + Transform<T = T>,
     B: Build<
+            ClipC = CC,
+            ClipU = CU,
             Drain = Bounds<T>,
-            I = I,
-            LB = LB,
-            LC = LC,
-            LU = LU,
             PCNU = NoClipU<Bounds<T>>,
             PR = PR,
-            PV = PV,
             RC = RC,
             RU = RU,
             T = T,
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
-    PV: Clone + PointVisible<T = T>,
+    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CC: Clone + Stream<EP = Bounds<T>, T = T>,
+    // I: Clone + Interpolator<T = T>,
+    // LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    // LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
+    // LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
+    // PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,

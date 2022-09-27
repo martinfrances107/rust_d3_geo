@@ -75,6 +75,7 @@ where
 
 impl<SINK, T> LineConnected for Line<SINK, Connected<SINK>, T>
 where
+    SINK: Clone,
     T: CoordFloat,
 {
     type SC = SINK;
@@ -112,6 +113,7 @@ where
 
 impl<SC, T> Connectable for Line<SC, Unconnected, T>
 where
+    SC: Clone,
     T: CoordFloat,
 {
     type SC = SC;
@@ -166,6 +168,7 @@ where
 
 impl<SINK, T> Line<SINK, Connected<SINK>, T>
 where
+    SINK: Clone,
     T: CoordFloat,
 {
     // todo remove this duplicate.
@@ -193,6 +196,7 @@ static CODE_ABOVE: u8 = 8;
 /// code is only available of from connected state.
 impl<SINK, T> Line<SINK, Connected<SINK>, T>
 where
+    SINK: Clone,
     T: CoordFloat + FloatConst,
 {
     fn code(&self, p: &Coordinate<T>) -> u8 {
@@ -222,6 +226,7 @@ where
 /// API clean only availble once connected.
 impl<SINK, T> Clean for Line<SINK, Connected<SINK>, T>
 where
+    SINK: Clone,
     T: CoordFloat,
 {
     /// Rejoin first and last segments if there were intersections and the first
@@ -235,7 +240,7 @@ where
 
 impl<EP, SINK, T> Stream for Line<SINK, Connected<SINK>, T>
 where
-    SINK: Stream<EP = EP, T = T>,
+    SINK: Clone + Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type EP = EP;

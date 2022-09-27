@@ -5,15 +5,17 @@ use crate::projection::RotateGet;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> RotateGet
-	for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> RotateGet
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
 where
-	T: CoordFloat + FloatConst,
+    CLIPC: Clone,
+    CLIPU: Clone,
+    T: CoordFloat + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	#[inline]
-	fn rotate(&self) -> [T; 3] {
-		self.base.rotate()
-	}
+    #[inline]
+    fn rotate(&self) -> [T; 3] {
+        self.base.rotate()
+    }
 }

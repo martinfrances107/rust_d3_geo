@@ -10,22 +10,22 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNC, PCNU, PR, PV, T> PrecisionAdjust
+impl<CLIPC, CLIPU, DRAIN, PCNC, PCNU, PR, T> PrecisionAdjust
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         PCNU,
         PR,
-        PV,
         Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
         Resample<PR, PCNC, Unconnected, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     PR: Clone + Transform<T = T>,
+    PCNC: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;

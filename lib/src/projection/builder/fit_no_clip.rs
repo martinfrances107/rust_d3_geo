@@ -3,18 +3,8 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::Bufferable;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
 use crate::path::bounds::Bounds;
-use crate::projection::builder::Buffer;
 use crate::projection::builder::Builder;
-use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleNoClipC;
-use crate::projection::builder::ResampleNoClipU;
-use crate::projection::builder::ResampleNoneNoClipC;
-use crate::projection::builder::ResampleNoneNoClipU;
 use crate::projection::fit_no_clip::fit_extent_no_clip;
 use crate::projection::fit_no_clip::fit_height_no_clip;
 use crate::projection::fit_no_clip::fit_size_no_clip;
@@ -25,33 +15,27 @@ use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
 
-impl<I, LB, LC,  LU, PR, PV, T> Fit
+use super::template::NoClipU;
+use super::template::ResampleNoClipC;
+use super::template::ResampleNoClipU;
+use super::template::ResampleNoneNoClipC;
+use super::template::ResampleNoneNoClipU;
+
+impl<CLIPC, CLIPU, PR, T> Fit
     for Builder<
+    CLIPC,
+        CLIPU,
         Bounds<T>,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<Bounds<T>>,
         PR,
-        PV,
         ResampleNoneNoClipC<Bounds<T>, PR, T>,
         ResampleNoneNoClipU<Bounds<T>, PR, T>,
         T,
     >
 where
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone
-        + LineConnected<SC = ResampleNoneNoClipC<Bounds<T>, PR, T>>
-        + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone
-        + Connectable<Output = LC, SC = ResampleNoneNoClipC<Bounds<T>, PR, T>>
-        + Bufferable<Output = LB, T = T>
-        + Debug,
+    CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CLIPU: Clone + Connectable<Output = CLIPC, SC = ResampleNoneNoClipC<Bounds<T>, PR, T>>,
     PR: Clone + Debug + Transform<T = T>,
-    PV: Clone + PointVisible<T = T>,
-    PR: Clone + Transform<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
@@ -77,32 +61,21 @@ where
     }
 }
 
-impl<I, LB, LC, LU, PR, PV, T> Fit
+impl<CC, CU, PR, T> Fit
     for Builder<
+    CC,
+        CU,
         Bounds<T>,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<Bounds<T>>,
         PR,
-        PV,
         ResampleNoClipC<Bounds<T>, PR, T>,
         ResampleNoClipU<Bounds<T>, PR, T>,
         T,
     >
 where
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone
-        + LineConnected<SC = ResampleNoClipC<Bounds<T>, PR, T>>
-        + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone
-        + Connectable<Output = LC, SC = ResampleNoClipC<Bounds<T>, PR, T>>
-        + Bufferable<Output = LB, T = T>
-        + Debug,
+    CU: Clone + Connectable<Output = CC, SC = ResampleNoClipC<Bounds<T>, PR, T>>,
+    CC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Clone + Transform<T = T>,
-    PV: Clone + PointVisible<T = T>,
     PR: Clone + Transform<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {

@@ -4,9 +4,11 @@ use crate::projection::ReflectGet;
 
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> ReflectGet
-    for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> ReflectGet
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat,
 {
     type T = T;

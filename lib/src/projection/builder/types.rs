@@ -1,10 +1,8 @@
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::buffer::Buffer;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
+use crate::clip::antimeridian::ClipAntimeridianC;
+use crate::clip::antimeridian::ClipAntimeridianU;
+
+use crate::clip::circle::ClipCircleC;
+use crate::clip::circle::ClipCircleU;
 use crate::projection::builder::template::ResampleNoneClipC;
 use crate::projection::builder::template::ResampleNoneClipU;
 use crate::projection::builder::template::ResampleNoneNoClipC;
@@ -15,127 +13,93 @@ use crate::projection::builder::ResampleClipC;
 use crate::projection::builder::ResampleClipU;
 use crate::projection::builder::ResampleNoClipC;
 use crate::projection::builder::ResampleNoClipU;
-use crate::stream::Connected;
-use crate::stream::Unconnected;
 
 use super::Builder;
 
 pub type BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateAntimeridian<T>,
-	LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineAntimeridian<
-		ResampleNoneNoClipC<DRAIN, PR, T>,
-		Connected<ResampleNoneNoClipC<DRAIN, PR, T>>,
-		T,
-	>,
-	LineAntimeridian<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-	NoClipU<DRAIN>,
-	PR,
-	PVAntimeridian<T>,
-	ResampleNoneNoClipC<DRAIN, PR, T>,
-	ResampleNoneNoClipU<DRAIN, PR, T>,
-	T,
+    ClipAntimeridianC<ResampleNoneNoClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResampleNoneNoClipC<DRAIN, PR, T>, T>,
+    DRAIN,
+    NoClipU<DRAIN>,
+    PR,
+    ResampleNoneNoClipC<DRAIN, PR, T>,
+    ResampleNoneNoClipU<DRAIN, PR, T>,
+    T,
 >;
 
 pub type BuilderAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateAntimeridian<T>,
-	LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineAntimeridian<
-		ResampleNoneClipC<DRAIN, PR, T>,
-		Connected<ResampleNoneClipC<DRAIN, PR, T>>,
-		T,
-	>,
-	LineAntimeridian<ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
-	ClipU<DRAIN, T>,
-	PR,
-	PVAntimeridian<T>,
-	ResampleNoneClipC<DRAIN, PR, T>,
-	ResampleNoneClipU<DRAIN, PR, T>,
-	T,
+    ClipAntimeridianC<ResampleNoneClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResampleNoneClipC<DRAIN, PR, T>, T>,
+    DRAIN,
+    ClipU<DRAIN, T>,
+    PR,
+    ResampleNoneClipC<DRAIN, PR, T>,
+    ResampleNoneClipU<DRAIN, PR, T>,
+    T,
 >;
 
 pub type BuilderAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateAntimeridian<T>,
-	LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
-	LineAntimeridian<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-	NoClipU<DRAIN>,
-	PR,
-	PVAntimeridian<T>,
-	ResampleNoClipC<DRAIN, PR, T>,
-	ResampleNoClipU<DRAIN, PR, T>,
-	T,
+    ClipAntimeridianC<ResampleNoClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResampleNoClipC<DRAIN, PR, T>, T>,
+    DRAIN,
+    NoClipU<DRAIN>,
+    PR,
+    ResampleNoClipC<DRAIN, PR, T>,
+    ResampleNoClipU<DRAIN, PR, T>,
+    T,
 >;
 
 pub type BuilderAntimeridianResampleClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateAntimeridian<T>,
-	LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
-	LineAntimeridian<ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
-	ClipU<DRAIN, T>,
-	PR,
-	PVAntimeridian<T>,
-	ResampleClipC<DRAIN, PR, T>,
-	ResampleClipU<DRAIN, PR, T>,
-	T,
+    ClipAntimeridianC<ResampleClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResampleClipC<DRAIN, PR, T>, T>,
+    DRAIN,
+    ClipU<DRAIN, T>,
+    PR,
+    ResampleClipC<DRAIN, PR, T>,
+    ResampleClipU<DRAIN, PR, T>,
+    T,
 >;
 
 pub type BuilderCircleResampleNoClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateCircle<T>,
-	LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineCircle<ResampleNoClipC<DRAIN, PR, T>, Connected<ResampleNoClipC<DRAIN, PR, T>>, T>,
-	LineCircle<ResampleNoClipC<DRAIN, PR, T>, Unconnected, T>,
-	NoClipU<DRAIN>,
-	PR,
-	PVCircle<T>,
-	ResampleNoClipC<DRAIN, PR, T>,
-	ResampleNoClipU<DRAIN, PR, T>,
-	T,
+    ClipCircleC<ResampleNoClipC<DRAIN, PR, T>, T>,
+    ClipCircleU<ResampleNoClipC<DRAIN, PR, T>, T>,
+    DRAIN,
+    NoClipU<DRAIN>,
+    PR,
+    ResampleNoClipC<DRAIN, PR, T>,
+    ResampleNoClipU<DRAIN, PR, T>,
+    T,
 >;
 
 pub type BuilderCircleResampleNoneNoClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateCircle<T>,
-	LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Connected<ResampleNoneNoClipC<DRAIN, PR, T>>, T>,
-	LineCircle<ResampleNoneNoClipC<DRAIN, PR, T>, Unconnected, T>,
-	NoClipU<DRAIN>,
-	PR,
-	PVCircle<T>,
-	ResampleNoneNoClipC<DRAIN, PR, T>,
-	ResampleNoneNoClipU<DRAIN, PR, T>,
-	T,
+    ClipCircleC<ResampleNoneNoClipC<DRAIN, PR, T>, T>,
+    ClipCircleU<ResampleNoneNoClipC<DRAIN, PR, T>, T>,
+    DRAIN,
+    NoClipU<DRAIN>,
+    PR,
+    ResampleNoneNoClipC<DRAIN, PR, T>,
+    ResampleNoneNoClipU<DRAIN, PR, T>,
+    T,
 >;
 
 pub type BuilderCircleResampleClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateCircle<T>,
-	LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineCircle<ResampleClipC<DRAIN, PR, T>, Connected<ResampleClipC<DRAIN, PR, T>>, T>,
-	LineCircle<ResampleClipC<DRAIN, PR, T>, Unconnected, T>,
-	ClipU<DRAIN, T>,
-	PR,
-	PVCircle<T>,
-	ResampleClipC<DRAIN, PR, T>,
-	ResampleClipU<DRAIN, PR, T>,
-	T,
+    ClipCircleC<ResampleClipC<DRAIN, PR, T>, T>,
+    ClipCircleU<ResampleClipC<DRAIN, PR, T>, T>,
+    DRAIN,
+    ClipU<DRAIN, T>,
+    PR,
+    ResampleClipC<DRAIN, PR, T>,
+    ResampleClipU<DRAIN, PR, T>,
+    T,
 >;
 
 pub type BuilderCircleResampleNoneClip<DRAIN, PR, T> = Builder<
-	DRAIN,
-	InterpolateCircle<T>,
-	LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-	LineCircle<ResampleNoneClipC<DRAIN, PR, T>, Connected<ResampleNoneClipC<DRAIN, PR, T>>, T>,
-	LineCircle<ResampleNoneClipC<DRAIN, PR, T>, Unconnected, T>,
-	ClipU<DRAIN, T>,
-	PR,
-	PVCircle<T>,
-	ResampleNoneClipC<DRAIN, PR, T>,
-	ResampleNoneClipU<DRAIN, PR, T>,
-	T,
+    ClipCircleC<ResampleNoneClipC<DRAIN, PR, T>, T>,
+    ClipCircleU<ResampleNoneClipC<DRAIN, PR, T>, T>,
+    DRAIN,
+    ClipU<DRAIN, T>,
+    PR,
+    ResampleNoneClipC<DRAIN, PR, T>,
+    ResampleNoneClipU<DRAIN, PR, T>,
+    T,
 >;

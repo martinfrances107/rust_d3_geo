@@ -1,5 +1,6 @@
 use std::fmt::Debug;
 use std::fmt::Display;
+use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -20,22 +21,31 @@ use super::PointRadiusTrait;
 
 /// Path builder.
 #[derive(Debug, Clone)]
-pub struct Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+pub struct Builder<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat,
 {
+    p_pcnc: PhantomData<PCNC>,
+    p_rc: PhantomData<RC>,
     pr: T,
     context_stream: CS,
-    projection: Option<Projector<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>>,
+    projection: Option<Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>>,
 }
 
-impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+    Builder<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
     pub fn new(context_stream: CS) -> Self {
         Self {
+            p_pcnc: PhantomData::<PCNC>,
+            p_rc: PhantomData::<RC>,
             context_stream,
             pr: T::from(4.5_f64).unwrap(),
             projection: None,
@@ -44,14 +54,18 @@ where
 }
 
 /// Context related methods.
-impl<I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
-    Builder<Context, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
+    Builder<CLIPC, CLIPU, Context, PCNC, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
     pub fn context(self, context: CanvasRenderingContext2d) -> Self {
         Builder {
+            p_pcnc: PhantomData::<PCNC>,
+            p_rc: PhantomData::<RC>,
             pr: self.pr,
             context_stream: PathContext::new(context),
             projection: self.projection,
@@ -60,9 +74,11 @@ where
 }
 
 /// Context related methods.
-impl<I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
-    Builder<String<T>, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
+    Builder<CLIPC, CLIPU, String<T>, PCNC, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
@@ -72,9 +88,11 @@ where
     }
 }
 
-impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> PointRadiusTrait
-    for Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> PointRadiusTrait
+    for Builder<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     CS: PointRadiusTrait<T = T>,
     T: CoordFloat,
 {
@@ -90,8 +108,11 @@ where
 }
 
 /// Projection related methods.
-impl<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Builder<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+    Builder<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     CS: Stream<EP = CS, T = T>,
     T: CoordFloat,
 {
@@ -99,8 +120,8 @@ where
     #[inline]
     pub fn build(
         self,
-        projection: Projector<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>,
-    ) -> Path<CS, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> {
+        projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,
+    ) -> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> {
         Path::new(self.context_stream, projection)
     }
 }

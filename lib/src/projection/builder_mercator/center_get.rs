@@ -4,9 +4,11 @@ use geo::Coordinate;
 use crate::projection::builder_mercator::Builder;
 use crate::projection::CenterGet;
 
-impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> CenterGet
-    for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> CenterGet
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat,
 {
     type T = T;

@@ -3,11 +3,9 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::ClipU;
 use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleClipC;
 use crate::projection::builder::ResampleClipU;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::transform::generate as generate_str;
@@ -16,23 +14,25 @@ use crate::rot::rotate_radians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::Transform;
 
+use super::template::ResampleClipC;
+use super::template::ResampleNoClipC;
 use super::Builder;
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterWithResampling
+impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterWithResampling
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         NoClipU<DRAIN>,
         PR,
-        PV,
         ResampleNoClipC<DRAIN, PR, T>,
         ResampleNoClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -74,21 +74,20 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PR, PV, T> RecenterWithResampling
+impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterWithResampling
     for Builder<
+        CLIPC,
+        CLIPU,
         DRAIN,
-        I,
-        LB,
-        LC,
-        LU,
         ClipU<DRAIN, T>,
         PR,
-        PV,
         ResampleClipC<DRAIN, PR, T>,
         ResampleClipU<DRAIN, PR, T>,
         T,
     >
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

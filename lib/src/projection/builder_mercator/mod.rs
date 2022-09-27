@@ -27,16 +27,18 @@ pub mod translate_get;
 pub mod translate_reclip;
 pub mod types;
 
+use std::marker::PhantomData;
+
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::projection::builder::template::NoClipU;
 use crate::projection::builder::template::ResampleNoClipC;
 use crate::projection::builder::template::ResampleNoClipU;
 use crate::projection::builder::Builder as ProjectionBuilder;
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 use crate::projection::Projector;
@@ -44,6 +46,8 @@ use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
+
+use self::types::BuilderMercatorAntimeridianResampleNoClip;
 
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
@@ -153,18 +157,23 @@ pub trait Reclip {
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     T: CoordFloat,
 {
+    p_clipc: PhantomData<CLIPC>,
+    p_drain: PhantomData<DRAIN>,
+    p_rc: PhantomData<RC>,
     pub pr: PR,
-    pub base: ProjectionBuilder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>,
+    pub base: ProjectionBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>,
     pub extent: Option<[Coordinate<T>; 2]>, // post-clip extent
 }
 
 impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
 where
-    DRAIN: Default + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + Default + FloatConst,
 {
@@ -172,6 +181,9 @@ where
     pub fn new(pr: PR) -> Self {
         let base = ProjectionBuilder::new(pr.clone());
         Self {
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoClipC<DRAIN, PR, T>, T>>,
+            p_drain: PhantomData::<DRAIN>,
+            p_rc: PhantomData::<ResampleNoClipC<DRAIN, PR, T>>,
             pr,
             base,
             extent: None,
@@ -179,37 +191,32 @@ where
     }
 }
 
-impl<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> Build
-    for Builder<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> Build
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     DRAIN: Clone,
-    I: Clone,
-    LB: Clone,
-    LC: Clone,
-    LU: Clone,
     PCNU: Clone,
     PR: Clone,
-    PV: Clone,
-    RC: Clone,
     RU: Clone,
     T: CoordFloat,
 {
+    type ClipC = CLIPC;
+    type ClipU = CLIPU;
     type Drain = DRAIN;
-    type I = I;
-    type LB = LB;
-    type LC = LC;
-    type LU = LU;
     type PCNU = PCNU;
     type PR = PR;
-    type PV = PV;
     type RC = RC;
     type RU = RU;
     type T = T;
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    fn build(&self) -> Projector<DRAIN, I, LB, LC, LU, PCNU, PR, PV, RC, RU, T> {
+    fn build(&self) -> Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> {
         Projector {
+            p_rc: PhantomData::<RC>,
+            // p_drain: PhantomData::<DRAIN>,
             cache: None,
             postclip: self.base.postclip.clone(),
             clip: self.base.clip.clone(),

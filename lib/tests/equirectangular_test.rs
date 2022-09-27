@@ -4,10 +4,8 @@ mod equirectangular_test {
 
     use geo::Coordinate;
 
-    use rust_d3_geo::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-    use rust_d3_geo::clip::antimeridian::line::Line as LineAntimeridian;
-    use rust_d3_geo::clip::antimeridian::pv::PV as PVAntimeridian;
-    use rust_d3_geo::clip::buffer::Buffer;
+    use rust_d3_geo::clip::antimeridian::ClipAntimeridianC;
+    use rust_d3_geo::clip::antimeridian::ClipAntimeridianU;
     use rust_d3_geo::projection::builder::template::NoClipU;
     use rust_d3_geo::projection::builder::template::ResampleNoClipC;
     use rust_d3_geo::projection::builder::template::ResampleNoClipU;
@@ -20,33 +18,20 @@ mod equirectangular_test {
     use rust_d3_geo::projection::RotateSet;
     use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::projection::TranslateSet;
-    use rust_d3_geo::stream::Connected;
     use rust_d3_geo::stream::StreamDrainStub;
-    use rust_d3_geo::stream::Unconnected;
 
     type B = Builder<
+        ClipAntimeridianC<
+            ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+            f64,
+        >,
+        ClipAntimeridianU<
+            ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+            f64,
+        >,
         StreamDrainStub<f64>,
-        InterpolateAntimeridian<f64>,
-        LineAntimeridian<Buffer<f64>, Connected<Buffer<f64>>, f64>,
-        LineAntimeridian<
-            ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
-            Connected<
-                ResampleNoClipC<
-                    StreamDrainStub<f64>,
-                    Equirectangular<StreamDrainStub<f64>, f64>,
-                    f64,
-                >,
-            >,
-            f64,
-        >,
-        LineAntimeridian<
-            ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
-            Unconnected,
-            f64,
-        >,
         NoClipU<StreamDrainStub<f64>>,
         Equirectangular<StreamDrainStub<f64>, f64>,
-        PVAntimeridian<f64>,
         ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
         ResampleNoClipU<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
         f64,
@@ -153,7 +138,7 @@ mod equirectangular_test {
     #[test]
     fn rotate_30_0() {
         println!("equirectangular(point) returns the expected result");
-        let equirectangular: Projector<StreamDrainStub<f64>, _, _, _, _, _, _, _, _, _, _> =
+        let equirectangular: Projector<_, _, StreamDrainStub<f64>, _, _, _, _, _> =
             Builder::new(Equirectangular::<StreamDrainStub<f64>, f64>::default())
                 .rotate_set(&[30f64, 0f64, 0f64])
                 .translate_set(&Coordinate { x: 0f64, y: 0f64 })

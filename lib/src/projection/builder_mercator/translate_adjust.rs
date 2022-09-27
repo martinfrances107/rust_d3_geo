@@ -4,13 +4,13 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-use crate::projection::builder_mercator::types::BuilderMercatorAntimeridianResampleNoneClip;
 use crate::projection::TransformExtent;
 use crate::projection::TranslateSet;
 use crate::stream::Stream;
 use crate::Transform;
 
+use super::types::BuilderMercatorAntimeridianResampleClip;
+use super::types::BuilderMercatorAntimeridianResampleNoneClip;
 use super::Reclip;
 
 impl<DRAIN, PR, T> TranslateSet for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>

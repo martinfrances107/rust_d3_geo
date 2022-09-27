@@ -91,30 +91,26 @@ pub trait ProjectionRawBase: Transform {
 
 pub trait Build
 where
+    <Self as Build>::ClipC: Clone,
+    <Self as Build>::ClipU: Clone,
     <Self as Build>::T: CoordFloat,
 {
+    type ClipC;
+    type ClipU;
     type Drain;
-    type I;
-    type LB;
-    type LC;
-    type LU;
     type PCNU;
     type PR;
-    type PV;
     type RC;
     type RU;
     type T;
     fn build(
         &self,
     ) -> Projector<
+        Self::ClipC,
+        Self::ClipU,
         Self::Drain,
-        Self::I,
-        Self::LB,
-        Self::LC,
-        Self::LU,
         Self::PCNU,
         Self::PR,
-        Self::PV,
         Self::RC,
         Self::RU,
         Self::T,
@@ -409,7 +405,7 @@ pub trait PrecisionSet {
     ///  Sets the threshold for the projection’s adaptive resampling to the
     ///  specified value in Pixels and returns the projection.  This value
     ///  corresponds to the Douglas–Peucker distance.
-    fn precision(self, delta: &Self::T) -> Self::Output;
+    fn precision_set(self, delta: &Self::T) -> Self::Output;
 }
 
 /// Rotation getter and setters.

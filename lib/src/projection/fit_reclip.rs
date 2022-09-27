@@ -16,11 +16,6 @@ use num_traits::FloatConst;
 use geo::CoordFloat;
 use geo::Coordinate;
 
-use crate::clip::buffer::Buffer;
-use crate::clip::Bufferable;
-use crate::clip::Interpolator;
-use crate::clip::LineConnected;
-use crate::clip::PointVisible;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::ClipC;
@@ -38,21 +33,18 @@ use crate::Transform;
 use super::ClipExtentAdjust;
 use super::ClipExtentClear;
 
-pub(super) fn fit_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     builder: B,
     fit_bounds: FitBounds<B, T>,
     object: &impl Streamable<T = T>,
 ) -> B
 where
     B: Build<
+            ClipC = CLIPC,
+            ClipU = CLIPU,
             Drain = Bounds<T>,
-            I = I,
-            LB = LB,
-            LC = LC,
-            LU = LU,
             PCNU = ClipU<Bounds<T>, T>,
             PR = PR,
-            PV = PV,
             RC = RC,
             RU = RU,
             T = T,
@@ -61,11 +53,8 @@ where
         + ClipExtentClear<Output = B, T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    PV: Clone + PointVisible<T = T>,
+    CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     T: 'static + CoordFloat + FloatConst,
@@ -92,21 +81,18 @@ where
     }
 }
 
-pub(super) fn fit_extent_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_extent_reclip<B, CC, CU, PR, RC, RU, T>(
     builder: B,
     extent: [[T; 2]; 2],
     object: &impl Streamable<T = T>,
 ) -> B
 where
     B: Build<
+            ClipC = CC,
+            ClipU = CU,
             Drain = Bounds<T>,
-            I = I,
-            LB = LB,
-            LC = LC,
-            LU = LU,
             PCNU = ClipU<Bounds<T>, T>,
             PR = PR,
-            PV = PV,
             RC = RC,
             RU = RU,
             T = T,
@@ -115,11 +101,8 @@ where
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    PV: Clone + PointVisible<T = T>,
+    CC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CU: Clone + Connectable<Output = CC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
     T: 'static + CoordFloat + FloatConst,
@@ -143,21 +126,18 @@ where
     )
 }
 
-pub(super) fn fit_size_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_size_reclip<B, CC, CU, PR, RC, RU, T>(
     builder: B,
     size: [T; 2],
     object: &impl Streamable<T = T>,
 ) -> B
 where
     B: Build<
+            ClipC = CC,
+            ClipU = CU,
             Drain = Bounds<T>,
-            I = I,
-            LB = LB,
-            LC = LC,
-            LU = LU,
             PCNU = ClipU<Bounds<T>, T>,
             PR = PR,
-            PV = PV,
             RC = RC,
             RU = RU,
             T = T,
@@ -167,11 +147,8 @@ where
         + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    PV: Clone + PointVisible<T = T>,
+    CC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CU: Clone + Connectable<Output = CC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
     T: 'static + CoordFloat + FloatConst,
@@ -179,21 +156,18 @@ where
     fit_extent_reclip(builder, [[T::zero(), T::zero()], size], object)
 }
 
-pub(super) fn fit_width_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_width_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     builder: B,
     width: T,
     object: &impl Streamable<T = T>,
 ) -> B
 where
     B: Build<
+            ClipC = CLIPC,
+            ClipU = CLIPU,
             Drain = Bounds<T>,
-            I = I,
-            LB = LB,
-            LC = LC,
-            LU = LU,
             PCNU = ClipU<Bounds<T>, T>,
             PR = PR,
-            PV = PV,
             RC = RC,
             RU = RU,
             T = T,
@@ -203,11 +177,8 @@ where
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    PV: Clone + PointVisible<T = T>,
+    CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
     T: 'static + CoordFloat + FloatConst,
@@ -231,7 +202,7 @@ where
     )
 }
 
-pub(super) fn fit_height_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
+pub(super) fn fit_height_reclip<B, CC, CU, PR, RC, RU, T>(
     builder: B,
     height: T,
     object: &impl Streamable<T = T>,
@@ -239,14 +210,11 @@ pub(super) fn fit_height_reclip<B, I, LB, LC, LU, PR, PV, RC, RU, T>(
 where
     PR: Clone + Transform<T = T>,
     B: Build<
+            ClipC = CC,
+            ClipU = CU,
             Drain = Bounds<T>,
-            I = I,
-            LB = LB,
-            LC = LC,
-            LU = LU,
             PCNU = ClipU<Bounds<T>, T>,
             PR = PR,
-            PV = PV,
             RC = RC,
             RU = RU,
             T = T,
@@ -256,11 +224,8 @@ where
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    I: Clone + Interpolator<T = T>,
-    LB: Clone + LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: Clone + LineConnected<SC = RC> + Stream<EP = Bounds<T>, T = T>,
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
-    PV: Clone + PointVisible<T = T>,
+    CC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CU: Clone + Connectable<Output = CC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
     T: 'static + CoordFloat + FloatConst,

@@ -50,6 +50,7 @@ where
 
 impl<SC, T> Connectable for Transformer<SC, Unconnected, T>
 where
+    SC: Clone,
     T: CoordFloat,
 {
     type Output = Transformer<SC, Connected<SC>, T>;
@@ -106,7 +107,7 @@ where
 
 impl<SC, T> Stream for Transformer<SC, Connected<SC>, T>
 where
-    SC: Stream<EP = SC, T = T>,
+    SC: Clone + Stream<EP = SC, T = T>,
     T: CoordFloat,
 {
     type T = T;

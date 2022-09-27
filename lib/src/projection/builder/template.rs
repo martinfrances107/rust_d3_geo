@@ -47,15 +47,12 @@ pub type ResampleNoneNoClipU<DRAIN, PR, T> = None<PR, NoClipC<DRAIN>, Unconnecte
 // Default
 // No resampling,
 // No Clipping.
-pub type Default<DRAIN, I, LB, LC, LU, PR, PV, T> = Builder<
+pub type Default<CLIPC, CLIPU, DRAIN, PR, T> = Builder<
+    CLIPC,
+    CLIPU,
     DRAIN,
-    I,
-    LB,
-    LC,
-    LU,
     NoClipU<DRAIN>,
     PR,
-    PV,
     ResampleNoneNoClipC<DRAIN, PR, T>,
     ResampleNoneNoClipU<DRAIN, PR, T>,
     T,

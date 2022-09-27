@@ -12,7 +12,10 @@ pub struct StreamTransformRadians<STATE>(pub STATE);
 
 impl StreamTransformRadians<Unconnected> {
     #[inline]
-    pub fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>> {
+    pub fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
+    where
+        SINK: Clone,
+    {
         StreamTransformRadians(Connected { sink })
     }
 }
@@ -27,7 +30,7 @@ impl Default for StreamTransformRadians<Unconnected> {
 
 impl<EP, T, SINK> Stream for StreamTransformRadians<Connected<SINK>>
 where
-    SINK: Stream<EP = EP, T = T>,
+    SINK: Clone + Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type EP = EP;

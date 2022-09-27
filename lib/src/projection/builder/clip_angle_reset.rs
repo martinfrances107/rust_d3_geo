@@ -4,51 +4,23 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip_antimeridian;
-use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
-use crate::clip::antimeridian::line::Line as LineAntimeridian;
-use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::buffer::Buffer;
-use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
-use crate::clip::circle::line::Line as LineCircle;
-use crate::clip::circle::pv::PV as PVCircle;
+use crate::clip::antimeridian::ClipAntimeridianC;
+use crate::clip::antimeridian::ClipAntimeridianU;
+use crate::clip::circle::ClipCircleC;
+use crate::clip::circle::ClipCircleU;
+
 use crate::projection::ClipAngleReset;
-use crate::stream::Connected;
-use crate::stream::Stream;
-use crate::stream::Unconnected;
 
 use super::Builder;
 
-impl<DRAIN, PCNU, RC, RU, PR, T> ClipAngleReset
-    for Builder<
-        DRAIN,
-        InterpolateCircle<T>,
-        LineCircle<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineCircle<RC, Connected<RC>, T>,
-        LineCircle<RC, Unconnected, T>,
-        PCNU,
-        PR,
-        PVCircle<T>,
-        RC,
-        RU,
-        T,
-    >
+impl<DRAIN, PCNU, PR, RC, RU, T> ClipAngleReset
+    for Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>
 where
-    RC: Stream<EP = DRAIN, T = T>,
+    RC: Clone,
     T: CoordFloat + Default + FloatConst,
 {
-    type Output = Builder<
-        DRAIN,
-        InterpolateAntimeridian<T>,
-        LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>,
-        LineAntimeridian<RC, Connected<RC>, T>,
-        LineAntimeridian<RC, Unconnected, T>,
-        PCNU,
-        PR,
-        PVAntimeridian<T>,
-        RC,
-        RU,
-        T,
-    >;
+    type Output =
+        Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>;
     type T = T;
 
     // Set the internal clip angle (theta) to null and return a builder
@@ -57,7 +29,8 @@ where
     fn clip_angle_reset(self) -> Self::Output {
         // update only theta and preclip_factory.
         Self::Output {
-            p_lb: PhantomData::<LineAntimeridian<Buffer<T>, Connected<Buffer<T>>, T>>,
+            p_clipc: PhantomData::<ClipAntimeridianC<RC, T>>,
+            p_rc: PhantomData::<RC>,
             p_drain: PhantomData::<DRAIN>,
             clip: gen_clip_antimeridian::<PCNU, RC, T>(),
             delta_lambda: self.delta_lambda,

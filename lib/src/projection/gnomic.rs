@@ -6,13 +6,13 @@ use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
-use crate::projection::ClipAngleSet;
 use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
 use super::builder::Builder;
+use super::ClipAngleSet;
 use super::ProjectionRawBase;
 
 /// Projection definition.
