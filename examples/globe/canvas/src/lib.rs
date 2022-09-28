@@ -10,6 +10,7 @@ extern crate topojson;
 extern crate web_sys;
 
 use geo::Coordinate;
+use gloo_utils::format::JsValueSerdeExt;
 use topojson::Topology;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -49,7 +50,8 @@ pub async fn start() -> Result<(), JsValue> {
 
     let json = JsFuture::from(resp.json()?).await?;
 
-    let topology: Topology = json.into_serde().expect("Could not parse as Topology");
+    let topology =
+        JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
 
     // Grab canvas.
     let canvas = document

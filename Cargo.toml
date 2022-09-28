@@ -13,6 +13,7 @@ js-sys = "~0.3"
 rust_d3_geo = { path = "../../lib" }
 geo = "~0.23"
 getrandom = { version = "~0.2", features = ["js"] }
+gloo-utils = "0.1.5"
 futures = "~0.3"
 rand = { version = "~0.8" }
 topojson = "~0.5"
