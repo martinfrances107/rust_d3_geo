@@ -35,9 +35,9 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::ClipAntimeridianC;
-use crate::projection::builder::template::NoClipU;
-use crate::projection::builder::template::ResampleNoClipC;
-use crate::projection::builder::template::ResampleNoClipU;
+use crate::projection::builder::template::NoPCNU;
+use crate::projection::builder::template::ResampleNoPCNC;
+use crate::projection::builder::template::ResampleNoPCNU;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
@@ -181,9 +181,9 @@ where
     pub fn new(pr: PR) -> Self {
         let base = ProjectionBuilder::new(pr.clone());
         Self {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<ResampleNoClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResampleNoPCNC<DRAIN, PR, T>>,
             pr,
             base,
             extent: None,

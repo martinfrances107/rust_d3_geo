@@ -1,11 +1,11 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::template::ResampleNoneClipC;
-use crate::projection::builder::template::ResampleNoneClipU;
+use crate::projection::builder::template::ResampleNonePCNC;
+use crate::projection::builder::template::ResampleNonePCNU;
+use crate::projection::builder::template::ResamplePCNC;
+use crate::projection::builder::template::ResamplePCNU;
+use crate::projection::builder::template::PCNU;
 use crate::projection::ScaleSet;
 use crate::projection::TransformExtent;
 use crate::Transform;
@@ -18,17 +18,17 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
         CLIPC,
         CLIPU,
         DRAIN,
-        ClipU<DRAIN, T>,
+        PCNU<DRAIN, T>,
         PR,
-        ResampleNoneClipC<DRAIN, PR, T>,
-        ResampleNoneClipU<DRAIN, PR, T>,
+        ResampleNonePCNC<DRAIN, PR, T>,
+        ResampleNonePCNU<DRAIN, PR, T>,
         T,
     >
 where
     CLIPC: Clone,
     CLIPU: Clone,
     DRAIN: Clone,
-    ClipU<DRAIN, T>: Clone,
+    PCNU<DRAIN, T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -45,17 +45,17 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
         CLIPC,
         CLIPU,
         DRAIN,
-        ClipU<DRAIN, T>,
+        PCNU<DRAIN, T>,
         PR,
-        ResampleClipC<DRAIN, PR, T>,
-        ResampleClipU<DRAIN, PR, T>,
+        ResamplePCNC<DRAIN, PR, T>,
+        ResamplePCNU<DRAIN, PR, T>,
         T,
     >
 where
     CLIPC: Clone,
     CLIPU: Clone,
     DRAIN: Clone,
-    ClipU<DRAIN, T>: Clone,
+    PCNU<DRAIN, T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {

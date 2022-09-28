@@ -1,7 +1,7 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::PCNU;
 use crate::projection::Build;
 use crate::projection::ClipExtentAdjust;
 use crate::projection::RotateGet;
@@ -15,7 +15,7 @@ use super::Builder;
 use super::Reclip;
 
 impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> Reclip
-    for Builder<CLIPC, CLIPU, DRAIN, ClipU<DRAIN, T>, PR, RC, RU, T>
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<DRAIN, T>, PR, RC, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

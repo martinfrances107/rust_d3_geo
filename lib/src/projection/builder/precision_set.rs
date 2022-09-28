@@ -22,8 +22,8 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::template::ResampleClipC;
-use super::template::ResampleNoneClipC;
+use super::template::ResampleNonePCNC;
+use super::template::ResamplePCNC;
 use super::Builder;
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
@@ -108,8 +108,8 @@ where
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
-        ClipCircleC<ResampleNoneClipC<DRAIN, PR, T>, T>,
-        ClipCircleU<ResampleNoneClipC<DRAIN, PR, T>, T>,
+        ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
+        ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
         DRAIN,
         PCNU,
         PR,
@@ -124,8 +124,8 @@ where
     T: CoordFloat + FloatConst,
 {
     type Output = Builder<
-        ClipCircleC<ResampleClipC<DRAIN, PR, T>, T>,
-        ClipCircleU<ResampleClipC<DRAIN, PR, T>, T>,
+        ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>,
+        ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
         DRAIN,
         PCNU,
         PR,
@@ -152,7 +152,7 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipCircleC<ResampleClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
             p_rc: PhantomData::<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
             sx: self.sx,

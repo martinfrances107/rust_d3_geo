@@ -6,23 +6,23 @@ use crate::projection::RecenterWithResampling;
 use crate::projection::TranslateSet;
 use crate::Transform;
 
-use super::template::ClipU;
-use super::template::ResampleClipC;
-use super::template::ResampleClipU;
-use super::template::ResampleNoClipC;
+use super::template::ResampleNoPCNC;
+use super::template::ResamplePCNC;
+use super::template::ResamplePCNU;
+use super::template::PCNU;
 use super::Builder;
-use super::NoClipU;
-use super::ResampleNoClipU;
+use super::NoPCNU;
+use super::ResampleNoPCNU;
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> TranslateSet
     for Builder<
         CLIPC,
         CLIPU,
         DRAIN,
-        NoClipU<DRAIN>,
+        NoPCNU<DRAIN>,
         PR,
-        ResampleNoClipC<DRAIN, PR, T>,
-        ResampleNoClipU<DRAIN, PR, T>,
+        ResampleNoPCNC<DRAIN, PR, T>,
+        ResampleNoPCNU<DRAIN, PR, T>,
         T,
     >
 where
@@ -46,10 +46,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> TranslateSet
         CLIPC,
         CLIPU,
         DRAIN,
-        ClipU<DRAIN, T>,
+        PCNU<DRAIN, T>,
         PR,
-        ResampleClipC<DRAIN, PR, T>,
-        ResampleClipU<DRAIN, PR, T>,
+        ResamplePCNC<DRAIN, PR, T>,
+        ResamplePCNU<DRAIN, PR, T>,
         T,
     >
 where

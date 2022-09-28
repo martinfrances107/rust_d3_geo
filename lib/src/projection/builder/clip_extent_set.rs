@@ -9,10 +9,10 @@ use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::circle::gen_clip_circle;
 use crate::clip::circle::ClipCircleC;
 use crate::clip::rectangle::Rectangle;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::template::ResampleNoneClipC;
-use crate::projection::builder::template::ResampleNoneClipU;
+use crate::projection::builder::template::ResampleNonePCNC;
+use crate::projection::builder::template::ResampleNonePCNU;
+use crate::projection::builder::template::ResamplePCNC;
+use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::types::BuilderAntimeridianResampleClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::builder::types::BuilderCircleResampleClip;
@@ -25,7 +25,7 @@ use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentSet;
 
-use super::template::ClipU;
+use super::template::PCNU;
 
 // Code Repeated 2^2 times.
 // Variantion over ClipAntimeridian/ClipCircle as Clip is rebuilt.
@@ -42,9 +42,9 @@ where
     #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResamplePCNC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw,
             phi: self.phi,
             lambda: self.lambda,
@@ -65,7 +65,7 @@ where
             rotator: self.rotator,
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleClipC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<PCNU<DRAIN, T>, ResamplePCNC<DRAIN, PR, T>, T>(),
             postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             resample: Resample::new(self.project_transform, self.delta2),
             x0: Some(extent[0].x),
@@ -88,10 +88,10 @@ where
     #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
 
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNoneClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw,
             phi: self.phi,
             lambda: self.lambda,
@@ -112,7 +112,7 @@ where
             rotator: self.rotator,
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<PCNU<DRAIN, T>, ResampleNonePCNC<DRAIN, PR, T>, T>(),
             postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             resample: None::new(self.project_transform),
             x0: Some(extent[0].x),
@@ -135,9 +135,9 @@ where
     #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         Self::Output {
-            p_clipc: PhantomData::<ClipCircleC<ResampleClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResamplePCNC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw,
             phi: self.phi,
             lambda: self.lambda,
@@ -160,10 +160,10 @@ where
             // Mutate section.
             clip: gen_clip_circle::<
                 DRAIN,
-                ClipU<DRAIN, T>,
+                PCNU<DRAIN, T>,
                 PR,
-                ResampleClipC<DRAIN, PR, T>,
-                ResampleClipU<DRAIN, PR, T>,
+                ResamplePCNC<DRAIN, PR, T>,
+                ResamplePCNU<DRAIN, PR, T>,
                 T,
             >(self.theta.unwrap()),
             postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
@@ -188,9 +188,9 @@ where
     #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<T>; 2]) -> Self::Output {
         Self::Output {
-            p_clipc: PhantomData::<ClipCircleC<ResampleNoneClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNoneClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw,
             phi: self.phi,
             lambda: self.lambda,
@@ -213,10 +213,10 @@ where
             // Mutate section.
             clip: gen_clip_circle::<
                 DRAIN,
-                ClipU<DRAIN, T>,
+                PCNU<DRAIN, T>,
                 PR,
-                ResampleNoneClipC<DRAIN, PR, T>,
-                ResampleNoneClipU<DRAIN, PR, T>,
+                ResampleNonePCNC<DRAIN, PR, T>,
+                ResampleNonePCNU<DRAIN, PR, T>,
                 T,
             >(self.theta.unwrap()),
             resample: None::new(self.project_transform),

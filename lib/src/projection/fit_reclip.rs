@@ -18,8 +18,8 @@ use geo::Coordinate;
 
 use crate::path::bounds::Bounds;
 use crate::path::Result;
-use crate::projection::builder::template::ClipC;
-use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::PCNC;
+use crate::projection::builder::template::PCNU;
 use crate::projection::Build;
 use crate::projection::ClipExtentGet;
 use crate::projection::FitBounds;
@@ -43,7 +43,7 @@ where
             ClipC = CLIPC,
             ClipU = CLIPU,
             Drain = Bounds<T>,
-            PCNU = ClipU<Bounds<T>, T>,
+            PCNU = PCNU<Bounds<T>, T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -55,7 +55,7 @@ where
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
-    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -91,7 +91,7 @@ where
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = ClipU<Bounds<T>, T>,
+            PCNU = PCNU<Bounds<T>, T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -104,7 +104,7 @@ where
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     CU: Clone + Connectable<Output = CC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
     T: 'static + CoordFloat + FloatConst,
 {
     fit_reclip(
@@ -136,7 +136,7 @@ where
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = ClipU<Bounds<T>, T>,
+            PCNU = PCNU<Bounds<T>, T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -150,7 +150,7 @@ where
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     CU: Clone + Connectable<Output = CC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
     T: 'static + CoordFloat + FloatConst,
 {
     fit_extent_reclip(builder, [[T::zero(), T::zero()], size], object)
@@ -166,7 +166,7 @@ where
             ClipC = CLIPC,
             ClipU = CLIPU,
             Drain = Bounds<T>,
-            PCNU = ClipU<Bounds<T>, T>,
+            PCNU = PCNU<Bounds<T>, T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -180,7 +180,7 @@ where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -213,7 +213,7 @@ where
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = ClipU<Bounds<T>, T>,
+            PCNU = PCNU<Bounds<T>, T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -227,7 +227,7 @@ where
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     CU: Clone + Connectable<Output = CC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();

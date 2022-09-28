@@ -15,34 +15,34 @@ use crate::stream::Unconnected;
 
 use super::Builder;
 
-pub type NoClipC<DRAIN> = Identity<DRAIN, Connected<DRAIN>>;
-pub type NoClipU<DRAIN> = Identity<DRAIN, Unconnected>;
+pub type NoPCNC<DRAIN> = Identity<DRAIN, Connected<DRAIN>>;
+pub type NoPCNU<DRAIN> = Identity<DRAIN, Unconnected>;
 
-pub type ClipC<DRAIN, T> = Rectangle<DRAIN, Connected<DRAIN>, T>;
-pub type ClipU<DRAIN, T> = Rectangle<DRAIN, Unconnected, T>;
+pub type PCNC<DRAIN, T> = Rectangle<DRAIN, Connected<DRAIN>, T>;
+pub type PCNU<DRAIN, T> = Rectangle<DRAIN, Unconnected, T>;
 
-pub type ResampleClipC<DRAIN, PR, T> =
-    Resample<PR, ClipC<DRAIN, T>, ConnectedResample<ClipC<DRAIN, T>, T>, T>;
+pub type ResamplePCNC<DRAIN, PR, T> =
+    Resample<PR, PCNC<DRAIN, T>, ConnectedResample<PCNC<DRAIN, T>, T>, T>;
 
-pub type ResampleClipU<DRAIN, PR, T> = Resample<PR, ClipC<DRAIN, T>, Unconnected, T>;
+pub type ResamplePCNU<DRAIN, PR, T> = Resample<PR, PCNC<DRAIN, T>, Unconnected, T>;
 
 // ----
-pub type ResampleNoClipC<DRAIN, PR, T> =
-    Resample<PR, NoClipC<DRAIN>, ConnectedResample<NoClipC<DRAIN>, T>, T>;
+pub type ResampleNoPCNC<DRAIN, PR, T> =
+    Resample<PR, NoPCNC<DRAIN>, ConnectedResample<NoPCNC<DRAIN>, T>, T>;
 
-pub type ResampleNoClipU<DRAIN, PR, T> = Resample<PR, NoClipC<DRAIN>, Unconnected, T>;
+pub type ResampleNoPCNU<DRAIN, PR, T> = Resample<PR, NoPCNC<DRAIN>, Unconnected, T>;
 
 /// ------------
 
-pub type ResampleNoneClipC<DRAIN, PR, T> = None<PR, ClipC<DRAIN, T>, Connected<ClipC<DRAIN, T>>, T>;
+pub type ResampleNonePCNC<DRAIN, PR, T> = None<PR, PCNC<DRAIN, T>, Connected<PCNC<DRAIN, T>>, T>;
 
-pub type ResampleNoneClipU<DRAIN, PR, T> = None<PR, ClipC<DRAIN, T>, Unconnected, T>;
+pub type ResampleNonePCNU<DRAIN, PR, T> = None<PR, PCNC<DRAIN, T>, Unconnected, T>;
 
 /// ----
 
-pub type ResampleNoneNoClipC<DRAIN, PR, T> = None<PR, NoClipC<DRAIN>, Connected<NoClipC<DRAIN>>, T>;
+pub type ResampleNoneNoPCNC<DRAIN, PR, T> = None<PR, NoPCNC<DRAIN>, Connected<NoPCNC<DRAIN>>, T>;
 
-pub type ResampleNoneNoClipU<DRAIN, PR, T> = None<PR, NoClipC<DRAIN>, Unconnected, T>;
+pub type ResampleNoneNoPCNU<DRAIN, PR, T> = None<PR, NoPCNC<DRAIN>, Unconnected, T>;
 
 // Default
 // No resampling,
@@ -51,9 +51,9 @@ pub type Default<CLIPC, CLIPU, DRAIN, PR, T> = Builder<
     CLIPC,
     CLIPU,
     DRAIN,
-    NoClipU<DRAIN>,
+    NoPCNU<DRAIN>,
     PR,
-    ResampleNoneNoClipC<DRAIN, PR, T>,
-    ResampleNoneNoClipU<DRAIN, PR, T>,
+    ResampleNoneNoPCNC<DRAIN, PR, T>,
+    ResampleNoneNoPCNU<DRAIN, PR, T>,
     T,
 >;

@@ -5,9 +5,9 @@ mod identity_test {
 
     use crate::path::context::Context;
     use crate::path_test_context::CanvasRenderingContext2d;
-    use crate::projection::builder::template::ClipU;
-    use crate::projection::builder::template::NoClipC;
-    use crate::projection::builder::template::NoClipU;
+    use crate::projection::builder::template::NoPCNC;
+    use crate::projection::builder::template::NoPCNU;
+    use crate::projection::builder::template::PCNU;
     use crate::projection::builder_identity::Builder;
     use crate::projection::projection_equal::projection_equal;
     use crate::projection::projector_identity::Projector;
@@ -30,7 +30,7 @@ mod identity_test {
         let identity: Projector<StreamDrainStub<f64>, _, _, _> = Builder::default()
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64)
-            .build::<NoClipC<StreamDrainStub<f64>>>();
+            .build::<NoPCNC<StreamDrainStub<f64>>>();
         assert!(projection_equal(
             &identity,
             &(0f64, 0f64).into(),
@@ -78,7 +78,7 @@ mod identity_test {
             .scale_set(2_f64);
 
         assert!(projection_equal(
-            &identity.clone().build::<NoClipU<StreamDrainStub<f64>>>(),
+            &identity.clone().build::<NoPCNU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None
@@ -86,7 +86,7 @@ mod identity_test {
 
         identity = identity.reflect_x_set(true);
         assert!(projection_equal(
-            &identity.clone().build::<NoClipU<StreamDrainStub<f64>>>(),
+            &identity.clone().build::<NoPCNU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(94f64, 24f64).into(),
             None
@@ -94,7 +94,7 @@ mod identity_test {
 
         identity = identity.reflect_y_set(true);
         assert!(projection_equal(
-            &identity.clone().build::<NoClipU<StreamDrainStub<f64>>>(),
+            &identity.clone().build::<NoPCNU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(94f64, -4f64).into(),
             None
@@ -102,7 +102,7 @@ mod identity_test {
 
         identity = identity.reflect_x_set(false);
         assert!(projection_equal(
-            &identity.clone().build::<NoClipU<StreamDrainStub<f64>>>(),
+            &identity.clone().build::<NoPCNU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(106f64, -4f64).into(),
             None
@@ -110,7 +110,7 @@ mod identity_test {
 
         identity = identity.reflect_y_set(false);
         assert!(projection_equal(
-            &identity.build::<NoClipU<StreamDrainStub<f64>>>(),
+            &identity.build::<NoPCNU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None
@@ -128,7 +128,7 @@ mod identity_test {
     fn identity_returns_path() {
         print!("geoPath(identity) returns the path");
 
-        let identity: Builder<Context, ClipU<Context, f64>, f64> = Builder::default()
+        let identity: Builder<Context, PCNU<Context, f64>, f64> = Builder::default()
             .translate_set(&Coordinate {
                 x: 100_f64,
                 y: 10_f64,

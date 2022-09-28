@@ -10,8 +10,8 @@ use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
 use crate::identity::Identity;
-use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::builder::template::ResampleNoneNoClipU;
+use crate::projection::builder::template::ResampleNoneNoPCNU;
+use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneNoClip;
@@ -24,16 +24,16 @@ use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::builder::template::NoClipU;
-use super::builder::template::ResampleNoClipC;
-use super::builder::template::ResampleNoClipU;
+use super::builder::template::NoPCNU;
+use super::builder::template::ResampleNoPCNC;
+use super::builder::template::ResampleNoPCNU;
 use super::resampler::resample::Resample;
 use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 
-use template::ClipU;
-use template::ResampleClipC;
-use template::ResampleClipU;
+use template::ResamplePCNC;
+use template::ResamplePCNU;
+use template::PCNU;
 
 mod angle;
 mod angle_get;
@@ -154,9 +154,9 @@ where
         let postclip = Identity::default();
         let resample = Resample::new(project_transform.clone(), delta2);
         let out_a: Self = Self {
-            clip: gen_clip_antimeridian::<NoClipU<DRAIN>, _, _>(),
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoClipC<DRAIN, PR, T>, T>>,
-            p_rc: PhantomData::<ResampleNoClipC<DRAIN, PR, T>>,
+            clip: gen_clip_antimeridian::<NoPCNU<DRAIN>, _, _>(),
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
+            p_rc: PhantomData::<ResampleNoPCNC<DRAIN, PR, T>>,
             p_drain: PhantomData::<DRAIN>,
             /// Input passing onto Projection.
             projection_raw,

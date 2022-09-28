@@ -15,26 +15,26 @@ use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
 
-use super::template::NoClipU;
-use super::template::ResampleNoClipC;
-use super::template::ResampleNoClipU;
-use super::template::ResampleNoneNoClipC;
-use super::template::ResampleNoneNoClipU;
+use super::template::NoPCNU;
+use super::template::ResampleNoPCNC;
+use super::template::ResampleNoPCNU;
+use super::template::ResampleNoneNoPCNC;
+use super::template::ResampleNoneNoPCNU;
 
 impl<CLIPC, CLIPU, PR, T> Fit
     for Builder<
-    CLIPC,
+        CLIPC,
         CLIPU,
         Bounds<T>,
-        NoClipU<Bounds<T>>,
+        NoPCNU<Bounds<T>>,
         PR,
-        ResampleNoneNoClipC<Bounds<T>, PR, T>,
-        ResampleNoneNoClipU<Bounds<T>, PR, T>,
+        ResampleNoneNoPCNC<Bounds<T>, PR, T>,
+        ResampleNoneNoPCNU<Bounds<T>, PR, T>,
         T,
     >
 where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + Connectable<Output = CLIPC, SC = ResampleNoneNoClipC<Bounds<T>, PR, T>>,
+    CLIPU: Clone + Connectable<Output = CLIPC, SC = ResampleNoneNoPCNC<Bounds<T>, PR, T>>,
     PR: Clone + Debug + Transform<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -63,17 +63,17 @@ where
 
 impl<CC, CU, PR, T> Fit
     for Builder<
-    CC,
+        CC,
         CU,
         Bounds<T>,
-        NoClipU<Bounds<T>>,
+        NoPCNU<Bounds<T>>,
         PR,
-        ResampleNoClipC<Bounds<T>, PR, T>,
-        ResampleNoClipU<Bounds<T>, PR, T>,
+        ResampleNoPCNC<Bounds<T>, PR, T>,
+        ResampleNoPCNU<Bounds<T>, PR, T>,
         T,
     >
 where
-    CU: Clone + Connectable<Output = CC, SC = ResampleNoClipC<Bounds<T>, PR, T>>,
+    CU: Clone + Connectable<Output = CC, SC = ResampleNoPCNC<Bounds<T>, PR, T>>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Clone + Transform<T = T>,
     PR: Clone + Transform<T = T>,

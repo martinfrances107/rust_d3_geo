@@ -3,10 +3,10 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-use crate::projection::builder::template::ResampleNoClipU;
-use crate::projection::builder::ClipU;
-use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleClipU;
+use crate::projection::builder::template::ResampleNoPCNU;
+use crate::projection::builder::NoPCNU;
+use crate::projection::builder::ResamplePCNU;
+use crate::projection::builder::PCNU;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::transform::generate as generate_str;
 use crate::projection::RecenterWithResampling;
@@ -14,8 +14,8 @@ use crate::rot::rotate_radians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::Transform;
 
-use super::template::ResampleClipC;
-use super::template::ResampleNoClipC;
+use super::template::ResampleNoPCNC;
+use super::template::ResamplePCNC;
 use super::Builder;
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterWithResampling
@@ -23,10 +23,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterWithResampling
         CLIPC,
         CLIPU,
         DRAIN,
-        NoClipU<DRAIN>,
+        NoPCNU<DRAIN>,
         PR,
-        ResampleNoClipC<DRAIN, PR, T>,
-        ResampleNoClipU<DRAIN, PR, T>,
+        ResampleNoPCNC<DRAIN, PR, T>,
+        ResampleNoPCNU<DRAIN, PR, T>,
         T,
     >
 where
@@ -79,10 +79,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterWithResampling
         CLIPC,
         CLIPU,
         DRAIN,
-        ClipU<DRAIN, T>,
+        PCNU<DRAIN, T>,
         PR,
-        ResampleClipC<DRAIN, PR, T>,
-        ResampleClipU<DRAIN, PR, T>,
+        ResamplePCNC<DRAIN, PR, T>,
+        ResamplePCNU<DRAIN, PR, T>,
         T,
     >
 where

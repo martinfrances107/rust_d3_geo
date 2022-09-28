@@ -2,26 +2,26 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::projection::builder::Builder;
-use crate::projection::builder::ClipU;
-use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleClipU;
-use crate::projection::builder::ResampleNoClipU;
+use crate::projection::builder::NoPCNU;
+use crate::projection::builder::ResampleNoPCNU;
+use crate::projection::builder::ResamplePCNU;
+use crate::projection::builder::PCNU;
 use crate::projection::RecenterWithResampling;
 use crate::projection::ScaleSet;
 use crate::Transform;
 
-use super::template::ResampleClipC;
-use super::template::ResampleNoClipC;
+use super::template::ResampleNoPCNC;
+use super::template::ResamplePCNC;
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
     for Builder<
         CLIPC,
         CLIPU,
         DRAIN,
-        NoClipU<DRAIN>,
+        NoPCNU<DRAIN>,
         PR,
-        ResampleNoClipC<DRAIN, PR, T>,
-        ResampleNoClipU<DRAIN, PR, T>,
+        ResampleNoPCNC<DRAIN, PR, T>,
+        ResampleNoPCNU<DRAIN, PR, T>,
         T,
     >
 where
@@ -44,10 +44,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
         CLIPC,
         CLIPU,
         DRAIN,
-        ClipU<DRAIN, T>,
+        PCNU<DRAIN, T>,
         PR,
-        ResampleClipC<DRAIN, PR, T>,
-        ResampleClipU<DRAIN, PR, T>,
+        ResamplePCNC<DRAIN, PR, T>,
+        ResamplePCNU<DRAIN, PR, T>,
         T,
     >
 where

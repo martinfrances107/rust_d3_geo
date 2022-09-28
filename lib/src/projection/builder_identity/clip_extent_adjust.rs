@@ -2,12 +2,12 @@ use geo::CoordFloat;
 use geo::Coordinate;
 
 use crate::clip::rectangle::Rectangle;
-use crate::projection::builder::template::ClipU;
+use crate::projection::builder::template::PCNU;
 use crate::projection::ClipExtentAdjust;
 
 use super::Builder;
 
-impl<DRAIN, T> ClipExtentAdjust for Builder<DRAIN, ClipU<DRAIN, T>, T>
+impl<DRAIN, T> ClipExtentAdjust for Builder<DRAIN, PCNU<DRAIN, T>, T>
 where
     T: CoordFloat,
 {

@@ -19,10 +19,10 @@ use num_traits::FloatConst;
 
 use crate::path::bounds::Bounds;
 use crate::path::Result;
-use crate::projection::builder::template::ClipC;
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
+use crate::projection::builder::template::NoPCNC;
+use crate::projection::builder::template::NoPCNU;
+use crate::projection::builder::template::PCNC;
+use crate::projection::builder::template::PCNU;
 use crate::projection::Build;
 use crate::projection::ClipExtentGet;
 use crate::projection::FitBounds;
@@ -46,7 +46,7 @@ where
             ClipC = CLIPC,
             ClipU = CLIPU,
             Drain = Bounds<T>,
-            PCNU = ClipU<Bounds<T>, T>,
+            PCNU = PCNU<Bounds<T>, T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -60,7 +60,7 @@ where
             ClipC = CLIPCint,
             ClipU = CLIPUint,
             Drain = Bounds<T>,
-            PCNU = NoClipU<Bounds<T>>,
+            PCNU = NoPCNU<Bounds<T>>,
             PR = PR,
             RC = RCint,
             RU = RUint,
@@ -70,8 +70,8 @@ where
     CLIPUint: Clone + Connectable<Output = CLIPCint, SC = RCint>,
     // NB constraints below relate to Bint only not B.
     // They assume no NoClip...
-    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    RUint: Clone + Connectable<Output = RCint, SC = NoClipC<Bounds<T>>>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
+    RUint: Clone + Connectable<Output = RCint, SC = NoPCNC<Bounds<T>>>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RCint: Clone + Stream<EP = Bounds<T>, T = T>,
     T: 'static + CoordFloat + FloatConst,
@@ -117,7 +117,7 @@ where
             ClipC = CLIPC,
             ClipU = CLIPU,
             Drain = Bounds<T>,
-            PCNU = ClipU<Bounds<T>, T>,
+            PCNU = PCNU<Bounds<T>, T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -130,7 +130,7 @@ where
             ClipC = CLIPCint,
             ClipU = CLIPUint,
             Drain = Bounds<T>,
-            PCNU = NoClipU<Bounds<T>>,
+            PCNU = NoPCNU<Bounds<T>>,
             PR = PR,
             RC = RCint,
             RU = RUint,
@@ -144,8 +144,8 @@ where
     CLIPUint: Clone + Connectable<Output = CLIPCint, SC = RCint>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RCint: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>>,
-    RUint: Clone + Connectable<Output = RCint, SC = NoClipC<Bounds<T>>>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
+    RUint: Clone + Connectable<Output = RCint, SC = NoPCNC<Bounds<T>>>,
     T: 'static + CoordFloat + FloatConst,
 {
     fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
@@ -190,7 +190,7 @@ where
             ClipC = CLIPC,
             ClipU = CLIPU,
             Drain = Bounds<T>,
-            PCNU = ClipU<Bounds<T>, T>,
+            PCNU = PCNU<Bounds<T>, T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -205,7 +205,7 @@ where
             ClipC = CLIPCint,
             ClipU = CLIPUint,
             Drain = Bounds<T>,
-            PCNU = NoClipU<Bounds<T>>,
+            PCNU = NoPCNU<Bounds<T>>,
             PR = PR,
             RC = RCint,
             RU = RUint,
@@ -219,8 +219,8 @@ where
     CLIPUint: Clone + Connectable<Output = CLIPCint, SC = RCint>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RCint: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>> + Debug,
-    RUint: Clone + Connectable<Output = RCint, SC = NoClipC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>> + Debug,
+    RUint: Clone + Connectable<Output = RCint, SC = NoPCNC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     fit_extent_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
@@ -253,7 +253,7 @@ where
             ClipC = CLIPC,
             ClipU = CLIPU,
             Drain = Bounds<T>,
-            PCNU = ClipU<Bounds<T>, T>,
+            PCNU = PCNU<Bounds<T>, T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -267,7 +267,7 @@ where
             ClipC = CLIPCint,
             ClipU = CLIPUint,
             Drain = Bounds<T>,
-            PCNU = NoClipU<Bounds<T>>,
+            PCNU = NoPCNU<Bounds<T>>,
             PR = PR,
             RC = RCint,
             RU = RUint,
@@ -281,8 +281,8 @@ where
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RCint: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>> + Debug,
-    RUint: Clone + Connectable<Output = RCint, SC = NoClipC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>> + Debug,
+    RUint: Clone + Connectable<Output = RCint, SC = NoPCNC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -326,7 +326,7 @@ where
             ClipC = CLIPC,
             ClipU = CLIPU,
             Drain = Bounds<T>,
-            PCNU = ClipU<Bounds<T>, T>,
+            PCNU = PCNU<Bounds<T>, T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -341,7 +341,7 @@ where
             ClipC = CLIPCint,
             ClipU = CLIPUint,
             Drain = Bounds<T>,
-            PCNU = NoClipU<Bounds<T>>,
+            PCNU = NoPCNU<Bounds<T>>,
             PR = PR,
             RC = RCint,
             RU = RUint,
@@ -356,8 +356,8 @@ where
     PR: Clone + Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RCint: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = ClipC<Bounds<T>, T>> + Debug,
-    RUint: Clone + Connectable<Output = RCint, SC = NoClipC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>> + Debug,
+    RUint: Clone + Connectable<Output = RCint, SC = NoPCNC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();

@@ -2,16 +2,16 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::NoClipU;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::template::ResampleNoClipC;
-use crate::projection::builder::template::ResampleNoClipU;
-use crate::projection::builder::template::ResampleNoneClipC;
-use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::builder::template::ResampleNoneNoClipC;
-use crate::projection::builder::template::ResampleNoneNoClipU;
+use crate::projection::builder::template::NoPCNU;
+use crate::projection::builder::template::ResampleNoPCNC;
+use crate::projection::builder::template::ResampleNoPCNU;
+use crate::projection::builder::template::ResampleNoneNoPCNC;
+use crate::projection::builder::template::ResampleNoneNoPCNU;
+use crate::projection::builder::template::ResampleNonePCNC;
+use crate::projection::builder::template::ResampleNonePCNU;
+use crate::projection::builder::template::ResamplePCNC;
+use crate::projection::builder::template::ResamplePCNU;
+use crate::projection::builder::template::PCNU;
 use crate::projection::RecenterNoResampling;
 use crate::projection::RecenterWithResampling;
 use crate::projection::ReflectSet;
@@ -24,10 +24,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
         CLIPC,
         CLIPU,
         DRAIN,
-        NoClipU<DRAIN>,
+        NoPCNU<DRAIN>,
         PR,
-        ResampleNoClipC<DRAIN, PR, T>,
-        ResampleNoClipU<DRAIN, PR, T>,
+        ResampleNoPCNC<DRAIN, PR, T>,
+        ResampleNoPCNU<DRAIN, PR, T>,
         T,
     >
 where
@@ -63,10 +63,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
         CLIPC,
         CLIPU,
         DRAIN,
-        ClipU<DRAIN, T>,
+        PCNU<DRAIN, T>,
         PR,
-        ResampleClipC<DRAIN, PR, T>,
-        ResampleClipU<DRAIN, PR, T>,
+        ResamplePCNC<DRAIN, PR, T>,
+        ResamplePCNU<DRAIN, PR, T>,
         T,
     >
 where
@@ -102,10 +102,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
         CLIPC,
         CLIPU,
         DRAIN,
-        NoClipU<DRAIN>,
+        NoPCNU<DRAIN>,
         PR,
-        ResampleNoneNoClipC<DRAIN, PR, T>,
-        ResampleNoneNoClipU<DRAIN, PR, T>,
+        ResampleNoneNoPCNC<DRAIN, PR, T>,
+        ResampleNoneNoPCNU<DRAIN, PR, T>,
         T,
     >
 where
@@ -141,10 +141,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
         CLIPC,
         CLIPU,
         DRAIN,
-        ClipU<DRAIN, T>,
+        PCNU<DRAIN, T>,
         PR,
-        ResampleNoneClipC<DRAIN, PR, T>,
-        ResampleNoneClipU<DRAIN, PR, T>,
+        ResampleNonePCNC<DRAIN, PR, T>,
+        ResampleNonePCNU<DRAIN, PR, T>,
         T,
     >
 where

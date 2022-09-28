@@ -11,12 +11,12 @@ use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::resampler::none::None;
 use crate::projection::PrecisionBypass;
 
-use super::template::ClipU;
-use super::template::NoClipU;
-use super::template::ResampleNoneClipC;
-use super::template::ResampleNoneClipU;
-use super::template::ResampleNoneNoClipC;
-use super::template::ResampleNoneNoClipU;
+use super::template::NoPCNU;
+use super::template::ResampleNoneNoPCNC;
+use super::template::ResampleNoneNoPCNU;
+use super::template::ResampleNonePCNC;
+use super::template::ResampleNonePCNU;
+use super::template::PCNU;
 use super::types::BuilderAntimeridianResampleClip;
 use super::types::BuilderAntimeridianResampleNoClip;
 use super::types::BuilderAntimeridianResampleNoneNoClip;
@@ -41,9 +41,9 @@ where
     fn precision_bypass(self) -> Self::Output {
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneNoClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNoneNoClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResampleNoneNoPCNC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -68,7 +68,7 @@ where
             delta_gamma: self.delta_gamma,
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<NoClipU<DRAIN>, ResampleNoneNoClipC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<NoPCNU<DRAIN>, ResampleNoneNoPCNC<DRAIN, PR, T>, T>(),
             delta2: T::zero(),
             resample: None::new(self.project_transform),
         }
@@ -94,9 +94,9 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNoneClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -121,7 +121,7 @@ where
             delta_gamma: self.delta_gamma,
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<ClipU<DRAIN, T>, ResampleNoneClipC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<PCNU<DRAIN, T>, ResampleNonePCNC<DRAIN, PR, T>, T>(),
             delta2: T::zero(),
             resample: None::new(self.project_transform),
         }
@@ -149,9 +149,9 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipCircleC<ResampleNoneNoClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipCircleC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNoneNoClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResampleNoneNoPCNC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -178,10 +178,10 @@ where
             // Mutate section.
             clip: gen_clip_circle::<
                 DRAIN,
-                NoClipU<DRAIN>,
+                NoPCNU<DRAIN>,
                 PR,
-                ResampleNoneNoClipC<DRAIN, PR, T>,
-                ResampleNoneNoClipU<DRAIN, PR, T>,
+                ResampleNoneNoPCNC<DRAIN, PR, T>,
+                ResampleNoneNoPCNU<DRAIN, PR, T>,
                 T,
             >(self.theta.unwrap()),
             delta2: T::zero(),
@@ -210,18 +210,18 @@ where
 
         let clip = gen_clip_circle::<
             DRAIN,
-            ClipU<DRAIN, T>,
+            PCNU<DRAIN, T>,
             PR,
-            ResampleNoneClipC<DRAIN, PR, T>,
-            ResampleNoneClipU<DRAIN, PR, T>,
+            ResampleNonePCNC<DRAIN, PR, T>,
+            ResampleNonePCNU<DRAIN, PR, T>,
             T,
         >(self.theta.unwrap());
 
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipCircleC<ResampleNoneClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNoneClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,

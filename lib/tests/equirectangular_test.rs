@@ -6,9 +6,9 @@ mod equirectangular_test {
 
     use rust_d3_geo::clip::antimeridian::ClipAntimeridianC;
     use rust_d3_geo::clip::antimeridian::ClipAntimeridianU;
-    use rust_d3_geo::projection::builder::template::NoClipU;
-    use rust_d3_geo::projection::builder::template::ResampleNoClipC;
-    use rust_d3_geo::projection::builder::template::ResampleNoClipU;
+    use rust_d3_geo::projection::builder::template::NoPCNU;
+    use rust_d3_geo::projection::builder::template::ResampleNoPCNC;
+    use rust_d3_geo::projection::builder::template::ResampleNoPCNU;
     use rust_d3_geo::projection::builder::Builder;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projection_equal::projection_equal;
@@ -22,18 +22,18 @@ mod equirectangular_test {
 
     type B = Builder<
         ClipAntimeridianC<
-            ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+            ResampleNoPCNC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
             f64,
         >,
         ClipAntimeridianU<
-            ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+            ResampleNoPCNC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
             f64,
         >,
         StreamDrainStub<f64>,
-        NoClipU<StreamDrainStub<f64>>,
+        NoPCNU<StreamDrainStub<f64>>,
         Equirectangular<StreamDrainStub<f64>, f64>,
-        ResampleNoClipC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
-        ResampleNoClipU<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+        ResampleNoPCNC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+        ResampleNoPCNU<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
         f64,
     >;
 

@@ -2,35 +2,35 @@ use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::template::ResampleNoneClipC;
-use crate::projection::builder::template::ResampleNoneClipU;
+use crate::projection::builder::template::ResampleNonePCNC;
+use crate::projection::builder::template::ResampleNonePCNU;
+use crate::projection::builder::template::ResamplePCNC;
+use crate::projection::builder::template::ResamplePCNU;
+use crate::projection::builder::template::PCNU;
 use crate::projection::builder_mercator::Builder;
-use crate::projection::builder_mercator::NoClipU;
-use crate::projection::builder_mercator::ResampleNoClipC;
-use crate::projection::builder_mercator::ResampleNoClipU;
+use crate::projection::builder_mercator::NoPCNU;
+use crate::projection::builder_mercator::ResampleNoPCNC;
+use crate::projection::builder_mercator::ResampleNoPCNU;
 
 pub type BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T> = Builder<
-    ClipAntimeridianC<ResampleClipC<DRAIN, PR, T>, T>,
-    ClipAntimeridianU<ResampleClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    ClipU<DRAIN, T>,
+    PCNU<DRAIN, T>,
     PR,
-    ResampleClipC<DRAIN, PR, T>,
-    ResampleClipU<DRAIN, PR, T>,
+    ResamplePCNC<DRAIN, PR, T>,
+    ResamplePCNU<DRAIN, PR, T>,
     T,
 >;
 
 pub type BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
-    ClipAntimeridianC<ResampleNoneClipC<DRAIN, PR, T>, T>,
-    ClipAntimeridianU<ResampleNoneClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    ClipU<DRAIN, T>,
+    PCNU<DRAIN, T>,
     PR,
-    ResampleNoneClipC<DRAIN, PR, T>,
-    ResampleNoneClipU<DRAIN, PR, T>,
+    ResampleNonePCNC<DRAIN, PR, T>,
+    ResampleNonePCNU<DRAIN, PR, T>,
     T,
 >;
 
@@ -41,13 +41,13 @@ pub type BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
 ///
 /// So there is no reson for it to appear on any public API.
 pub type BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
-    ClipAntimeridianC<ResampleNoClipC<DRAIN, PR, T>, T>,
-    ClipAntimeridianU<ResampleNoClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResampleNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoClipU<DRAIN>,
+    NoPCNU<DRAIN>,
     PR,
-    ResampleNoClipC<DRAIN, PR, T>,
-    ResampleNoClipU<DRAIN, PR, T>,
+    ResampleNoPCNC<DRAIN, PR, T>,
+    ResampleNoPCNU<DRAIN, PR, T>,
     T,
 >;
 
@@ -70,23 +70,23 @@ pub type BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
 // >;
 
 pub type BuilderMercatorCircleResampleClip<DRAIN, PR, T> = Builder<
-    ClipCircleC<ResampleClipC<DRAIN, PR, T>, T>,
-    ClipCircleU<ResampleClipC<DRAIN, PR, T>, T>,
+    ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>,
+    ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    ClipU<DRAIN, T>,
+    PCNU<DRAIN, T>,
     PR,
-    ResampleClipC<DRAIN, PR, T>,
-    ResampleClipU<DRAIN, PR, T>,
+    ResamplePCNC<DRAIN, PR, T>,
+    ResamplePCNU<DRAIN, PR, T>,
     T,
 >;
 
 pub type BuilderMercatorCircleResampleNoneClip<DRAIN, PR, T> = Builder<
-    ClipCircleC<ResampleNoneClipC<DRAIN, PR, T>, T>,
-    ClipCircleU<ResampleNoneClipC<DRAIN, PR, T>, T>,
+    ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
+    ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    ClipU<DRAIN, T>,
+    PCNU<DRAIN, T>,
     PR,
-    ResampleNoneClipC<DRAIN, PR, T>,
-    ResampleNoneClipU<DRAIN, PR, T>,
+    ResampleNonePCNC<DRAIN, PR, T>,
+    ResampleNonePCNU<DRAIN, PR, T>,
     T,
 >;

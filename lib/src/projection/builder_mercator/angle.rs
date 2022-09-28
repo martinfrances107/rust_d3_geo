@@ -3,13 +3,13 @@ use std::marker::PhantomData;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::NoClipU;
-use crate::projection::builder::template::ResampleClipC;
-use crate::projection::builder::template::ResampleClipU;
-use crate::projection::builder::template::ResampleNoClipC;
+use crate::projection::builder::template::NoPCNU;
+use crate::projection::builder::template::ResampleNoPCNC;
+use crate::projection::builder::template::ResamplePCNC;
+use crate::projection::builder::template::ResamplePCNU;
+use crate::projection::builder::template::PCNU;
 use crate::projection::builder_mercator::Builder;
-use crate::projection::builder_mercator::ResampleNoClipU;
+use crate::projection::builder_mercator::ResampleNoPCNU;
 use crate::projection::AngleGet;
 use crate::projection::AngleSet;
 use crate::Transform;
@@ -34,10 +34,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> AngleSet
         CLIPC,
         CLIPU,
         DRAIN,
-        NoClipU<DRAIN>,
+        NoPCNU<DRAIN>,
         PR,
-        ResampleNoClipC<DRAIN, PR, T>,
-        ResampleNoClipU<DRAIN, PR, T>,
+        ResampleNoPCNC<DRAIN, PR, T>,
+        ResampleNoPCNU<DRAIN, PR, T>,
         T,
     >
 where
@@ -55,7 +55,7 @@ where
         Self {
             p_drain: PhantomData::<DRAIN>,
             p_clipc: PhantomData::<CLIPC>,
-            p_rc: PhantomData::<ResampleNoClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResampleNoPCNC<DRAIN, PR, T>>,
             extent: self.extent, // post-clip extent
             pr: self.pr,
             base: self.base.angle_set(angle),
@@ -68,10 +68,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> AngleSet
         CLIPC,
         CLIPU,
         DRAIN,
-        ClipU<DRAIN, T>,
+        PCNU<DRAIN, T>,
         PR,
-        ResampleClipC<DRAIN, PR, T>,
-        ResampleClipU<DRAIN, PR, T>,
+        ResamplePCNC<DRAIN, PR, T>,
+        ResamplePCNU<DRAIN, PR, T>,
         T,
     >
 where
@@ -89,7 +89,7 @@ where
         Self {
             p_clipc: PhantomData::<CLIPC>,
             p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<ResampleClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResamplePCNC<DRAIN, PR, T>>,
             extent: self.extent,
             pr: self.pr,
             base: self.base.angle_set(angle),

@@ -10,8 +10,8 @@ mod reflect_tests {
     use rust_d3_geo::clip::circle::ClipCircleU;
     use rust_d3_geo::identity::Identity;
     use rust_d3_geo::in_delta::in_delta;
-    use rust_d3_geo::projection::builder::template::ResampleNoClipC;
-    use rust_d3_geo::projection::builder::template::ResampleNoClipU;
+    use rust_d3_geo::projection::builder::template::ResampleNoPCNC;
+    use rust_d3_geo::projection::builder::template::ResampleNoPCNU;
     use rust_d3_geo::projection::builder::Builder;
     use rust_d3_geo::projection::builder_mercator::Builder as MercatorBuilder;
     use rust_d3_geo::projection::gnomic::Gnomic;
@@ -31,18 +31,18 @@ mod reflect_tests {
 
     type GB = Builder<
         ClipCircleC<
-            ResampleNoClipC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
+            ResampleNoPCNC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
             f64,
         >,
         ClipCircleU<
-            ResampleNoClipC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
+            ResampleNoPCNC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
             f64,
         >,
         StreamDrainStub<f64>,
         Identity<StreamDrainStub<f64>, Unconnected>,
         Gnomic<StreamDrainStub<f64>, f64>,
-        ResampleNoClipC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
-        ResampleNoClipU<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
+        ResampleNoPCNC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
+        ResampleNoPCNU<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
         f64,
     >;
 

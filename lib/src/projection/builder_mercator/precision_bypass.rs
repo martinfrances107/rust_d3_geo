@@ -6,7 +6,7 @@ use super::types::BuilderMercatorCircleResampleClip;
 use super::types::BuilderMercatorCircleResampleNoneClip;
 use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::circle::ClipCircleC;
-use crate::projection::builder::template::ResampleNoneClipC;
+use crate::projection::builder::template::ResampleNonePCNC;
 use crate::projection::PrecisionBypass;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -23,9 +23,9 @@ where
     fn precision_bypass(self) -> Self::Output {
         let base = self.base.precision_bypass();
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<ResampleNoneClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             extent: self.extent, // post-clip extent
             pr: self.pr,
             base,
@@ -45,9 +45,9 @@ where
     fn precision_bypass(self) -> Self::Output {
         let base = self.base.precision_bypass();
         Self::Output {
-            p_clipc: PhantomData::<ClipCircleC<ResampleNoneClipC<DRAIN, PR, T>, T>>,
+            p_clipc: PhantomData::<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<ResampleNoneClipC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             extent: self.extent, // post-clip extent
             pr: self.pr,
             base,

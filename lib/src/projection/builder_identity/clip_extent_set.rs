@@ -2,19 +2,19 @@ use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::clip::rectangle::Rectangle;
-use crate::projection::builder::template::ClipU;
-use crate::projection::builder::template::NoClipU;
+use crate::projection::builder::template::NoPCNU;
+use crate::projection::builder::template::PCNU;
 use crate::projection::ClipExtentSet;
 
 use super::Builder;
 
-impl<DRAIN, T> ClipExtentSet for Builder<DRAIN, NoClipU<DRAIN>, T>
+impl<DRAIN, T> ClipExtentSet for Builder<DRAIN, NoPCNU<DRAIN>, T>
 where
     DRAIN: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     type T = T;
-    type Output = Builder<DRAIN, ClipU<DRAIN, T>, T>;
+    type Output = Builder<DRAIN, PCNU<DRAIN, T>, T>;
 
     #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<Self::T>; 2]) -> Self::Output {

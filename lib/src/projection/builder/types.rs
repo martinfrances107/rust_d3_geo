@@ -3,103 +3,103 @@ use crate::clip::antimeridian::ClipAntimeridianU;
 
 use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
-use crate::projection::builder::template::ResampleNoneClipC;
-use crate::projection::builder::template::ResampleNoneClipU;
-use crate::projection::builder::template::ResampleNoneNoClipC;
-use crate::projection::builder::template::ResampleNoneNoClipU;
-use crate::projection::builder::ClipU;
-use crate::projection::builder::NoClipU;
-use crate::projection::builder::ResampleClipC;
-use crate::projection::builder::ResampleClipU;
-use crate::projection::builder::ResampleNoClipC;
-use crate::projection::builder::ResampleNoClipU;
+use crate::projection::builder::template::ResampleNoneNoPCNC;
+use crate::projection::builder::template::ResampleNoneNoPCNU;
+use crate::projection::builder::template::ResampleNonePCNC;
+use crate::projection::builder::template::ResampleNonePCNU;
+use crate::projection::builder::NoPCNU;
+use crate::projection::builder::ResampleNoPCNC;
+use crate::projection::builder::ResampleNoPCNU;
+use crate::projection::builder::ResamplePCNC;
+use crate::projection::builder::ResamplePCNU;
+use crate::projection::builder::PCNU;
 
 use super::Builder;
 
 pub type BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Builder<
-    ClipAntimeridianC<ResampleNoneNoClipC<DRAIN, PR, T>, T>,
-    ClipAntimeridianU<ResampleNoneNoClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoClipU<DRAIN>,
+    NoPCNU<DRAIN>,
     PR,
-    ResampleNoneNoClipC<DRAIN, PR, T>,
-    ResampleNoneNoClipU<DRAIN, PR, T>,
+    ResampleNoneNoPCNC<DRAIN, PR, T>,
+    ResampleNoneNoPCNU<DRAIN, PR, T>,
     T,
 >;
 
 pub type BuilderAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
-    ClipAntimeridianC<ResampleNoneClipC<DRAIN, PR, T>, T>,
-    ClipAntimeridianU<ResampleNoneClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    ClipU<DRAIN, T>,
+    PCNU<DRAIN, T>,
     PR,
-    ResampleNoneClipC<DRAIN, PR, T>,
-    ResampleNoneClipU<DRAIN, PR, T>,
+    ResampleNonePCNC<DRAIN, PR, T>,
+    ResampleNonePCNU<DRAIN, PR, T>,
     T,
 >;
 
 pub type BuilderAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
-    ClipAntimeridianC<ResampleNoClipC<DRAIN, PR, T>, T>,
-    ClipAntimeridianU<ResampleNoClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResampleNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoClipU<DRAIN>,
+    NoPCNU<DRAIN>,
     PR,
-    ResampleNoClipC<DRAIN, PR, T>,
-    ResampleNoClipU<DRAIN, PR, T>,
+    ResampleNoPCNC<DRAIN, PR, T>,
+    ResampleNoPCNU<DRAIN, PR, T>,
     T,
 >;
 
 pub type BuilderAntimeridianResampleClip<DRAIN, PR, T> = Builder<
-    ClipAntimeridianC<ResampleClipC<DRAIN, PR, T>, T>,
-    ClipAntimeridianU<ResampleClipC<DRAIN, PR, T>, T>,
+    ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    ClipU<DRAIN, T>,
+    PCNU<DRAIN, T>,
     PR,
-    ResampleClipC<DRAIN, PR, T>,
-    ResampleClipU<DRAIN, PR, T>,
+    ResamplePCNC<DRAIN, PR, T>,
+    ResamplePCNU<DRAIN, PR, T>,
     T,
 >;
 
 pub type BuilderCircleResampleNoClip<DRAIN, PR, T> = Builder<
-    ClipCircleC<ResampleNoClipC<DRAIN, PR, T>, T>,
-    ClipCircleU<ResampleNoClipC<DRAIN, PR, T>, T>,
+    ClipCircleC<ResampleNoPCNC<DRAIN, PR, T>, T>,
+    ClipCircleU<ResampleNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoClipU<DRAIN>,
+    NoPCNU<DRAIN>,
     PR,
-    ResampleNoClipC<DRAIN, PR, T>,
-    ResampleNoClipU<DRAIN, PR, T>,
+    ResampleNoPCNC<DRAIN, PR, T>,
+    ResampleNoPCNU<DRAIN, PR, T>,
     T,
 >;
 
 pub type BuilderCircleResampleNoneNoClip<DRAIN, PR, T> = Builder<
-    ClipCircleC<ResampleNoneNoClipC<DRAIN, PR, T>, T>,
-    ClipCircleU<ResampleNoneNoClipC<DRAIN, PR, T>, T>,
+    ClipCircleC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
+    ClipCircleU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoClipU<DRAIN>,
+    NoPCNU<DRAIN>,
     PR,
-    ResampleNoneNoClipC<DRAIN, PR, T>,
-    ResampleNoneNoClipU<DRAIN, PR, T>,
+    ResampleNoneNoPCNC<DRAIN, PR, T>,
+    ResampleNoneNoPCNU<DRAIN, PR, T>,
     T,
 >;
 
 pub type BuilderCircleResampleClip<DRAIN, PR, T> = Builder<
-    ClipCircleC<ResampleClipC<DRAIN, PR, T>, T>,
-    ClipCircleU<ResampleClipC<DRAIN, PR, T>, T>,
+    ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>,
+    ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    ClipU<DRAIN, T>,
+    PCNU<DRAIN, T>,
     PR,
-    ResampleClipC<DRAIN, PR, T>,
-    ResampleClipU<DRAIN, PR, T>,
+    ResamplePCNC<DRAIN, PR, T>,
+    ResamplePCNU<DRAIN, PR, T>,
     T,
 >;
 
 pub type BuilderCircleResampleNoneClip<DRAIN, PR, T> = Builder<
-    ClipCircleC<ResampleNoneClipC<DRAIN, PR, T>, T>,
-    ClipCircleU<ResampleNoneClipC<DRAIN, PR, T>, T>,
+    ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
+    ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    ClipU<DRAIN, T>,
+    PCNU<DRAIN, T>,
     PR,
-    ResampleNoneClipC<DRAIN, PR, T>,
-    ResampleNoneClipU<DRAIN, PR, T>,
+    ResampleNonePCNC<DRAIN, PR, T>,
+    ResampleNonePCNU<DRAIN, PR, T>,
     T,
 >;

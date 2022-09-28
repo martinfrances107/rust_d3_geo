@@ -19,8 +19,8 @@ use num_traits::FloatConst;
 
 use crate::path::bounds::Bounds;
 use crate::path::Result;
-use crate::projection::builder::template::NoClipC;
-use crate::projection::builder::template::NoClipU;
+use crate::projection::builder::template::NoPCNC;
+use crate::projection::builder::template::NoPCNU;
 use crate::projection::Build;
 use crate::projection::ScaleSet;
 use crate::projection::TranslateSet;
@@ -41,7 +41,7 @@ where
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = NoClipU<Bounds<T>>,
+            PCNU = NoPCNU<Bounds<T>>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -52,7 +52,7 @@ where
     CU: Clone + Connectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     let builder = builder
@@ -79,7 +79,7 @@ where
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = NoClipU<Bounds<T>>,
+            PCNU = NoPCNU<Bounds<T>>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -90,7 +90,7 @@ where
     CU: Clone + Connectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -123,7 +123,7 @@ where
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = NoClipU<Bounds<T>>,
+            PCNU = NoPCNU<Bounds<T>>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -134,7 +134,7 @@ where
     CU: Clone + Connectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     fit_extent_no_clip(builder, [[T::zero(), T::zero()], size], object)
@@ -150,7 +150,7 @@ where
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = NoClipU<Bounds<T>>,
+            PCNU = NoPCNU<Bounds<T>>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -161,7 +161,7 @@ where
     CU: Clone + Connectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -194,7 +194,7 @@ where
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = NoClipU<Bounds<T>>,
+            PCNU = NoPCNU<Bounds<T>>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -210,7 +210,7 @@ where
     // LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T> + Debug,
     // PV: Clone + PointVisible<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = NoClipC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();

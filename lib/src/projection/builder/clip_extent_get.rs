@@ -3,11 +3,11 @@ use geo::Coordinate;
 
 use crate::projection::ClipExtentGet;
 
-use super::template::ClipU;
+use super::template::PCNU;
 use super::Builder;
 
 impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> ClipExtentGet
-    for Builder<CLIPC, CLIPU, DRAIN, ClipU<DRAIN, T>, PR, RC, RU, T>
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<DRAIN, T>, PR, RC, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
