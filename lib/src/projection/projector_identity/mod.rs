@@ -1,10 +1,12 @@
 use std::fmt::Debug;
+use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::stream::Connectable;
+use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -22,24 +24,21 @@ type CacheState<DRAIN, PCNC> = Option<(DRAIN, PCNC)>;
 #[derive(Clone, Debug)]
 pub struct Projector<DRAIN, PCNC, PCNU, T>
 where
+    PCNC: Clone,
     T: CoordFloat,
 {
+    pub(crate) p_pcnc: PhantomData<PCNC>,
     // Must be public as there is a implicit copy.
     pub(crate) postclip: PCNU,
-    pub(crate) transform: Transformer<PCNU, Unconnected, T>,
-    pub(crate) cache: CacheState<DRAIN, PCNC>,
+    pub(crate) transform: Transformer<PCNC, Unconnected, T>,
+    pub(crate) cache: CacheState<DRAIN, Transformer<PCNC, Connected<PCNC>, T>>,
 }
-
-// type ProjectionStream<T> = StreamTransformRadians<
-//     Connected<RotatorRadians<Connected<Clip<I, LC, LU, PV, RC, ConnectedClip<LB, LC, T>, T>>, T>>,
-// >;
 
 impl<DRAIN, PCNC, PCNU, T> Projector<DRAIN, PCNC, PCNU, T>
 where
     DRAIN: Clone + PartialEq,
     PCNC: Clone,
-    PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
-    // PCNU: Clone,
+    PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
     T: CoordFloat,
 {
     /// Connects a DRAIN to the projection.
@@ -48,29 +47,28 @@ where
     ///
     /// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
     ///
-    pub fn stream(&mut self, drain: &DRAIN) -> PCNC {
+    pub fn stream(&mut self, drain: &DRAIN) -> Transformer<PCNC, Connected<PCNC>, T> {
         if let Some((cache_drain, output)) = &self.cache {
             if *cache_drain == *drain {
                 return (*output).clone();
             }
         }
 
-        // let transformer = self.transform.connect(drain.clone());
+        let pcn = self.postclip.clone().connect(drain.clone());
 
-        // Build cache.
-        // let out = self.postclip.clone().connect(transformer);
+        let out = self.transform.clone().connect(pcn);
 
         // Populate cache.
-        // self.cache = Some((drain.clone(), out.clone()));
+        self.cache = Some((drain.clone(), out.clone()));
 
         // Output stage is a transform_radians node.
-        todo!();
-        // out
+        out
     }
 }
 
 impl<DRAIN, PCNC, PCNU, T> Transform for Projector<DRAIN, PCNC, PCNU, T>
 where
+    PCNC: Clone,
     T: CoordFloat + FloatConst,
 {
     /// f32 or f64

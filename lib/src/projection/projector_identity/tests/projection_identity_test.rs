@@ -7,6 +7,7 @@ mod identity_test {
     use crate::path_test_context::CanvasRenderingContext2d;
     use crate::projection::builder::template::NoPCNC;
     use crate::projection::builder::template::NoPCNU;
+    use crate::projection::builder::template::PCNC;
     use crate::projection::builder::template::PCNU;
     use crate::projection::builder_identity::Builder;
     use crate::projection::projection_equal::projection_equal;
@@ -15,6 +16,7 @@ mod identity_test {
     use crate::projection::ReflectSet;
     use crate::projection::ScaleSet;
     use crate::projection::TranslateSet;
+    use crate::stream::Connected;
     use crate::stream::StreamDrainStub;
 
     // it("identity(point) returns the point", () => {
@@ -30,7 +32,7 @@ mod identity_test {
         let identity: Projector<StreamDrainStub<f64>, _, _, _> = Builder::default()
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64)
-            .build::<NoPCNC<StreamDrainStub<f64>>>();
+            .build::<PCNC<StreamDrainStub<f64>, f64>>();
         assert!(projection_equal(
             &identity,
             &(0f64, 0f64).into(),

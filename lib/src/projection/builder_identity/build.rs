@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use geo::CoordFloat;
 
 use super::Builder;
@@ -10,8 +12,9 @@ where
     T: CoordFloat,
 {
     #[inline]
-    pub fn build<PCNC>(&self) -> Projector<DRAIN, PCNC, PCNU, T> {
+    pub fn build<PCNC: Clone>(&self) -> Projector<DRAIN, PCNC, PCNU, T> {
         Projector {
+            p_pcnc: PhantomData::<PCNC>,
             transform: Transformer::new(
                 self.alpha, self.kx, self.ky, self.ca, self.sa, self.tx, self.ty,
             ),

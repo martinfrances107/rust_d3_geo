@@ -9,7 +9,7 @@ use crate::{
 
 // TODO this is very similar to st.rs am I repeating myself?
 #[derive(Clone, Debug)]
-pub(crate) struct Transformer<SC, STATE, T>
+pub struct Transformer<SC, STATE, T>
 where
     T: CoordFloat,
 {
