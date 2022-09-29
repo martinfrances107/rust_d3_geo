@@ -11,6 +11,8 @@ pub mod context;
 /// Path String.
 pub mod string;
 
+mod tests;
+
 use std::fmt;
 use std::fmt::Debug;
 use std::fmt::Display;
