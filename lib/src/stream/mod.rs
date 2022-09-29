@@ -115,26 +115,25 @@ pub trait Stream
 where
     <Self as Stream>::T: CoordFloat,
 {
-    /// f32 or f64.
-    type T;
     /// The End point.
     type EP;
+    /// f32 or f64.
+    type T;
 
     /// Returns the end point of the stream.
     fn endpoint(&mut self) -> &mut Self::EP;
-
+    /// Declare the end of a line segment.
+    fn line_end(&mut self) {}
+    // Declare the start of a line segment.
+    fn line_start(&mut self) {}
     /// Declare a point.
     fn point(&mut self, p: &Coordinate<Self::T>, m: Option<u8>);
-    /// Declare a sphere object.
-    fn sphere(&mut self) {}
-    /// Declare the start of a line segments.
-    fn line_start(&mut self) {}
-    /// Declare the end of a line segments.
-    fn line_end(&mut self) {}
-    /// Declare the start of a polygon.
-    fn polygon_start(&mut self) {}
     /// Declare the end of a polygon.
     fn polygon_end(&mut self) {}
+    /// Declare the start of a polygon.
+    fn polygon_start(&mut self) {}
+    /// Declare a sphere object.
+    fn sphere(&mut self) {}
 }
 
 fn stream_line<EP, S, T>(ls: &LineString<T>, stream: &mut S, closed: usize)

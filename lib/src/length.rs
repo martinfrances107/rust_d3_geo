@@ -106,8 +106,8 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
-        (self.point_fn)(self, p);
+    fn line_end(&mut self) {
+        (self.line_end_fn)(self);
     }
 
     #[inline]
@@ -116,7 +116,7 @@ where
     }
 
     #[inline]
-    fn line_end(&mut self) {
-        (self.line_end_fn)(self);
+    fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
+        (self.point_fn)(self, p);
     }
 }

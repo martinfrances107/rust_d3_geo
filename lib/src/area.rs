@@ -147,13 +147,10 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        match self.point_fn {
-            PointFn::AreaFirst => {
-                self.area_point_first(p, m);
-            }
-            PointFn::Area => self.area_point(p, m),
-            PointFn::Noop => {}
+    fn line_end(&mut self) {
+        match self.line_end_fn {
+            LineEndFn::AreaRingEnd => self.area_ring_end(),
+            LineEndFn::Noop => {}
         }
     }
 
@@ -166,18 +163,15 @@ where
     }
 
     #[inline]
-    fn line_end(&mut self) {
-        match self.line_end_fn {
-            LineEndFn::AreaRingEnd => self.area_ring_end(),
-            LineEndFn::Noop => {}
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        match self.point_fn {
+            PointFn::AreaFirst => {
+                self.area_point_first(p, m);
+            }
+            PointFn::Area => self.area_point(p, m),
+            PointFn::Noop => {}
         }
     }
-    fn polygon_start(&mut self) {
-        self.area_ring_sum = T::zero();
-        self.line_start_fn = LineStartFn::AreaRingStart;
-        self.line_end_fn = LineEndFn::AreaRingEnd;
-    }
-
     fn polygon_end(&mut self) {
         let area_ring = self.area_ring_sum;
         if area_ring < T::zero() {
@@ -189,6 +183,12 @@ where
         self.line_start_fn = LineStartFn::Noop;
         self.line_end_fn = LineEndFn::Noop;
         self.point_fn = PointFn::Noop;
+    }
+
+    fn polygon_start(&mut self) {
+        self.area_ring_sum = T::zero();
+        self.line_start_fn = LineStartFn::AreaRingStart;
+        self.line_end_fn = LineEndFn::AreaRingEnd;
     }
 
     #[inline]

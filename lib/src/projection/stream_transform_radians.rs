@@ -42,6 +42,16 @@ where
     }
 
     #[inline]
+    fn line_end(&mut self) {
+        self.0.sink.line_end();
+    }
+
+    #[inline]
+    fn line_start(&mut self) {
+        self.0.sink.line_start();
+    }
+
+    #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         self.0.sink.point(
             &Coordinate {
@@ -53,25 +63,15 @@ where
     }
 
     #[inline]
-    fn sphere(&mut self) {
-        self.0.sink.sphere();
-    }
-
-    #[inline]
-    fn line_start(&mut self) {
-        self.0.sink.line_start();
-    }
-
-    #[inline]
-    fn line_end(&mut self) {
-        self.0.sink.line_end();
+    fn polygon_end(&mut self) {
+        self.0.sink.polygon_end();
     }
     #[inline]
     fn polygon_start(&mut self) {
         self.0.sink.polygon_start()
     }
     #[inline]
-    fn polygon_end(&mut self) {
-        self.0.sink.polygon_end();
+    fn sphere(&mut self) {
+        self.0.sink.sphere();
     }
 }

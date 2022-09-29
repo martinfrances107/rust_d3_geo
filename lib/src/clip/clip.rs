@@ -255,8 +255,8 @@ where
     RC: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
-    type T = T;
     type EP = EP;
+    type T = T;
 
     #[inline]
     fn endpoint(&mut self) -> &mut Self::EP {
@@ -264,16 +264,13 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        match self.state.point_fn {
-            PointFn::Default => {
-                self.point_default(p, m);
+    fn line_end(&mut self) {
+        match self.state.line_end_fn {
+            LineEndFn::Default => {
+                self.line_end_default();
             }
-            PointFn::Line => {
-                self.point_line(p, m);
-            }
-            PointFn::Ring => {
-                self.point_ring(p, m);
+            LineEndFn::Ring => {
+                self.ring_end();
             }
         }
     }
@@ -291,23 +288,18 @@ where
     }
 
     #[inline]
-    fn line_end(&mut self) {
-        match self.state.line_end_fn {
-            LineEndFn::Default => {
-                self.line_end_default();
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        match self.state.point_fn {
+            PointFn::Default => {
+                self.point_default(p, m);
             }
-            LineEndFn::Ring => {
-                self.ring_end();
+            PointFn::Line => {
+                self.point_line(p, m);
+            }
+            PointFn::Ring => {
+                self.point_ring(p, m);
             }
         }
-    }
-
-    fn polygon_start(&mut self) {
-        self.state.point_fn = PointFn::Ring;
-        self.state.line_start_fn = LineStartFn::Ring;
-        self.state.line_end_fn = LineEndFn::Ring;
-        self.state.segments = VecDeque::new();
-        self.state.polygon = Vec::new();
     }
 
     fn polygon_end(&mut self) {
@@ -347,6 +339,14 @@ where
         }
         self.state.segments.clear();
         self.state.polygon.clear();
+    }
+
+    fn polygon_start(&mut self) {
+        self.state.point_fn = PointFn::Ring;
+        self.state.line_start_fn = LineStartFn::Ring;
+        self.state.line_end_fn = LineEndFn::Ring;
+        self.state.segments = VecDeque::new();
+        self.state.polygon = Vec::new();
     }
 
     fn sphere(&mut self) {

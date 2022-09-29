@@ -114,8 +114,8 @@ where
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
     T: CoordFloat,
 {
-    type T = T;
     type EP = DRAIN;
+    type T = T;
     #[inline]
     fn endpoint(&mut self) -> &mut Self::EP {
         self.state.sink.endpoint()

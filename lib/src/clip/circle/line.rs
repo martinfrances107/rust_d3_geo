@@ -251,12 +251,18 @@ where
         self.state.sink().endpoint()
     }
 
+    fn line_end(&mut self) {
+        if self.v0 {
+            self.state.sink().line_end();
+        }
+        self.point0 = None;
+    }
+
     fn line_start(&mut self) {
         self.v00 = false;
         self.v0 = false;
         self.clean = 1;
     }
-
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         let mut point1 = Some(LineElem { p: *p, m: None });
         let mut point2: Option<LineElem<T>>;
@@ -388,11 +394,5 @@ where
         self.point0 = point1;
         self.v0 = v;
         self.c0 = c;
-    }
-    fn line_end(&mut self) {
-        if self.v0 {
-            self.state.sink().line_end();
-        }
-        self.point0 = None;
     }
 }

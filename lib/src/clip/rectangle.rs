@@ -300,6 +300,45 @@ where
         self.state.sink.endpoint()
     }
 
+    fn line_end(&mut self) {
+        if self.segments.is_some() {
+            self.line_point(
+                &Coordinate {
+                    x: self.x__,
+                    y: self.y__,
+                },
+                None,
+            );
+            if self.v__ && self.v_ {
+                self.buffer_stream.rejoin();
+            }
+
+            self.segments
+                .as_mut()
+                .unwrap()
+                .push_back(self.buffer_stream.result());
+        }
+        self.use_line_point = false;
+        if self.v_ {
+            if self.use_buffer_stream {
+                self.buffer_stream.line_end();
+            } else {
+                self.state.sink.line_end();
+            }
+        }
+    }
+
+    fn line_start(&mut self) {
+        self.use_line_point = true;
+        if let Some(polygon) = &mut self.polygon {
+            polygon.push(Vec::new());
+        }
+        self.first = true;
+        self.v_ = false;
+        self.x_ = T::nan();
+        self.y_ = T::nan();
+    }
+
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         if self.use_line_point {
@@ -307,15 +346,6 @@ where
         } else {
             self.default_point(p, m);
         }
-    }
-
-    // Buffer geometry within a polygon and then clip it en masse.
-    fn polygon_start(&mut self) {
-        self.use_buffer_stream = true;
-
-        self.segments = Some(VecDeque::new());
-        self.polygon = Some(Vec::new());
-        self.clean = true;
     }
 
     fn polygon_end(&mut self) {
@@ -370,42 +400,12 @@ where
         }
     }
 
-    fn line_start(&mut self) {
-        self.use_line_point = true;
-        if let Some(polygon) = &mut self.polygon {
-            polygon.push(Vec::new());
-        }
-        self.first = true;
-        self.v_ = false;
-        self.x_ = T::nan();
-        self.y_ = T::nan();
-    }
+    // Buffer geometry within a polygon and then clip it en masse.
+    fn polygon_start(&mut self) {
+        self.use_buffer_stream = true;
 
-    fn line_end(&mut self) {
-        if self.segments.is_some() {
-            self.line_point(
-                &Coordinate {
-                    x: self.x__,
-                    y: self.y__,
-                },
-                None,
-            );
-            if self.v__ && self.v_ {
-                self.buffer_stream.rejoin();
-            }
-
-            self.segments
-                .as_mut()
-                .unwrap()
-                .push_back(self.buffer_stream.result());
-        }
-        self.use_line_point = false;
-        if self.v_ {
-            if self.use_buffer_stream {
-                self.buffer_stream.line_end();
-            } else {
-                self.state.sink.line_end();
-            }
-        }
+        self.segments = Some(VecDeque::new());
+        self.polygon = Some(Vec::new());
+        self.clean = true;
     }
 }

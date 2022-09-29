@@ -98,21 +98,6 @@ impl Stream for Context {
         self
     }
 
-    #[inline]
-    fn polygon_start(&mut self) {
-        self.line = LineState::PolygonStarted;
-    }
-
-    #[inline]
-    fn polygon_end(&mut self) {
-        self.line = LineState::Init;
-    }
-
-    #[inline]
-    fn line_start(&mut self) {
-        self.point = PointState::LineStart;
-    }
-
     fn line_end(&mut self) {
         if LineState::PolygonStarted == self.line {
             if let Some(c) = &mut self.context {
@@ -121,6 +106,11 @@ impl Stream for Context {
         }
 
         self.point = PointState::Init;
+    }
+
+    #[inline]
+    fn line_start(&mut self) {
+        self.point = PointState::LineStart;
     }
 
     #[inline]
@@ -144,6 +134,16 @@ impl Stream for Context {
                 }
             }
         }
+    }
+
+    #[inline]
+    fn polygon_end(&mut self) {
+        self.line = LineState::Init;
+    }
+
+    #[inline]
+    fn polygon_start(&mut self) {
+        self.line = LineState::PolygonStarted;
     }
 
     fn sphere(&mut self) {}

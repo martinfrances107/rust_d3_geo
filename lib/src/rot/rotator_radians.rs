@@ -64,13 +64,8 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        self.state.sink.point(&self.rotate.transform(p), m);
-    }
-
-    #[inline]
-    fn sphere(&mut self) {
-        self.state.sink.sphere();
+    fn line_end(&mut self) {
+        self.state.sink.line_end();
     }
 
     #[inline]
@@ -79,8 +74,13 @@ where
     }
 
     #[inline]
-    fn line_end(&mut self) {
-        self.state.sink.line_end();
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        self.state.sink.point(&self.rotate.transform(p), m);
+    }
+
+    #[inline]
+    fn polygon_end(&mut self) {
+        self.state.sink.polygon_end();
     }
 
     #[inline]
@@ -89,7 +89,7 @@ where
     }
 
     #[inline]
-    fn polygon_end(&mut self) {
-        self.state.sink.polygon_end();
+    fn sphere(&mut self) {
+        self.state.sink.sphere();
     }
 }

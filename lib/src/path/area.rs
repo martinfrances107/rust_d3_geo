@@ -123,8 +123,8 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        (self.point_fn)(self, p);
+    fn line_end(&mut self) {
+        (self.line_end_fn)(self);
     }
 
     #[inline]
@@ -133,19 +133,19 @@ where
     }
 
     #[inline]
-    fn line_end(&mut self) {
-        (self.line_end_fn)(self);
+    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+        (self.point_fn)(self, p);
     }
 
-    fn polygon_start(&mut self) {
-        self.line_start_fn = Self::area_ring_start;
-        self.line_end_fn = Self::area_ring_end;
-    }
     fn polygon_end(&mut self) {
         self.line_start_fn = Self::line_noop;
         self.line_end_fn = Self::line_noop;
         self.point_fn = Self::point_noop;
         self.area_sum = self.area_sum + self.area_ring_sum.abs();
         self.area_ring_sum = T::zero();
+    }
+    fn polygon_start(&mut self) {
+        self.line_start_fn = Self::area_ring_start;
+        self.line_end_fn = Self::area_ring_end;
     }
 }

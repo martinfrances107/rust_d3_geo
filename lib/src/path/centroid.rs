@@ -245,8 +245,8 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
-        (self.point_fn)(self, p);
+    fn line_end(&mut self) {
+        (self.line_end_fn)(self);
     }
 
     #[inline]
@@ -255,17 +255,17 @@ where
     }
 
     #[inline]
-    fn line_end(&mut self) {
-        (self.line_end_fn)(self);
+    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+        (self.point_fn)(self, p);
     }
 
-    fn polygon_start(&mut self) {
-        self.line_start_fn = Self::centroid_ring_start;
-        self.line_end_fn = Self::centroid_ring_end;
-    }
     fn polygon_end(&mut self) {
         self.point_fn = Self::centroid_point;
         self.line_start_fn = Self::centroid_line_start;
         self.line_end_fn = Self::centroid_line_end;
+    }
+    fn polygon_start(&mut self) {
+        self.line_start_fn = Self::centroid_ring_start;
+        self.line_end_fn = Self::centroid_ring_end;
     }
 }

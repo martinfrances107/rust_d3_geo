@@ -76,8 +76,8 @@ where
     }
 
     #[inline]
-    fn sphere(&mut self) {
-        self.state.sink.sphere();
+    fn line_end(&mut self) {
+        self.state.sink.line_end();
     }
 
     #[inline]
@@ -85,9 +85,14 @@ where
         self.state.sink.line_start();
     }
 
+    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+        let t = &self.projection_transform.transform(p);
+        self.state.sink.point(t, m);
+    }
+
     #[inline]
-    fn line_end(&mut self) {
-        self.state.sink.line_end();
+    fn polygon_end(&mut self) {
+        self.state.sink.polygon_end();
     }
 
     #[inline]
@@ -96,12 +101,7 @@ where
     }
 
     #[inline]
-    fn polygon_end(&mut self) {
-        self.state.sink.polygon_end();
-    }
-
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        let t = &self.projection_transform.transform(p);
-        self.state.sink.point(t, m);
+    fn sphere(&mut self) {
+        self.state.sink.sphere();
     }
 }

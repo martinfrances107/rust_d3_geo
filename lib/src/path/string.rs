@@ -107,26 +107,16 @@ where
         self
     }
 
-    #[inline]
-    fn polygon_start(&mut self) {
-        self.line = LineState::Started;
-    }
-
-    #[inline]
-    fn polygon_end(&mut self) {
-        self.line = LineState::Stopped;
-    }
-
-    #[inline]
-    fn line_start(&mut self) {
-        self.point = PointState::AtLineStart;
-    }
-
     fn line_end(&mut self) {
         if self.line == LineState::Started {
             self.string.push(S::from("Z"));
         }
         self.point = PointState::RenderingPoints;
+    }
+
+    #[inline]
+    fn line_start(&mut self) {
+        self.point = PointState::AtLineStart;
     }
 
     #[inline]
@@ -147,5 +137,15 @@ where
                 self.string.push(self.circle.as_ref().unwrap().clone());
             }
         }
+    }
+
+    #[inline]
+    fn polygon_end(&mut self) {
+        self.line = LineState::Stopped;
+    }
+
+    #[inline]
+    fn polygon_start(&mut self) {
+        self.line = LineState::Started;
     }
 }

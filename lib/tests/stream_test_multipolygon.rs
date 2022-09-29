@@ -22,9 +22,9 @@ mod stream_multipolygon_test {
             self
         }
 
-        fn polygon_start(&mut self) {
+        fn line_end(&mut self) {
             self.calls += 1;
-            assert!(self.calls == 1 || self.calls == 7)
+            assert!(self.calls == 5 || self.calls == 11);
         }
 
         fn line_start(&mut self) {
@@ -43,14 +43,14 @@ mod stream_multipolygon_test {
             assert!(3 <= self.calls && self.calls <= 4 || 9 <= self.calls && self.calls <= 10);
         }
 
-        fn line_end(&mut self) {
-            self.calls += 1;
-            assert!(self.calls == 5 || self.calls == 11);
-        }
-
         fn polygon_end(&mut self) {
             self.calls += 1;
             assert!(self.calls == 6 || self.calls == 12);
+        }
+
+        fn polygon_start(&mut self) {
+            self.calls += 1;
+            assert!(self.calls == 1 || self.calls == 7)
         }
     }
 

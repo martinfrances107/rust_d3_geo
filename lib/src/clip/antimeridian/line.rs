@@ -131,6 +131,12 @@ where
         self.state.sink().endpoint()
     }
 
+    fn line_end(&mut self) {
+        self.state.sink().line_end();
+        self.lambda0 = T::nan();
+        self.phi0 = T::nan();
+    }
+
     fn line_start(&mut self) {
         self.state.sink().line_start();
         self.clean = 1;
@@ -222,11 +228,5 @@ where
             None,
         );
         self.sign0 = sign1;
-    }
-
-    fn line_end(&mut self) {
-        self.state.sink().line_end();
-        self.lambda0 = T::nan();
-        self.phi0 = T::nan();
     }
 }

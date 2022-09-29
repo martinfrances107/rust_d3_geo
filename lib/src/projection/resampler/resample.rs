@@ -345,18 +345,21 @@ where
     }
 
     #[inline]
-    fn sphere(&mut self) {
-        self.state.sink.sphere();
+    fn line_end(&mut self) {
+        if self.state.use_line_end {
+            self.line_end_default();
+        } else {
+            self.ring_end();
+        }
     }
-    fn polygon_start(&mut self) {
-        self.state.sink.polygon_start();
-        self.state.use_line_start = false;
+    #[inline]
+    fn line_start(&mut self) {
+        if self.state.use_line_start {
+            self.line_start_default();
+        } else {
+            self.ring_start();
+        }
     }
-    fn polygon_end(&mut self) {
-        self.state.sink.polygon_end();
-        self.state.use_line_start = true;
-    }
-
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         match self.state.point_state {
@@ -372,21 +375,18 @@ where
         }
     }
 
-    #[inline]
-    fn line_start(&mut self) {
-        if self.state.use_line_start {
-            self.line_start_default();
-        } else {
-            self.ring_start();
-        }
+    fn polygon_end(&mut self) {
+        self.state.sink.polygon_end();
+        self.state.use_line_start = true;
+    }
+
+    fn polygon_start(&mut self) {
+        self.state.sink.polygon_start();
+        self.state.use_line_start = false;
     }
 
     #[inline]
-    fn line_end(&mut self) {
-        if self.state.use_line_end {
-            self.line_end_default();
-        } else {
-            self.ring_end();
-        }
+    fn sphere(&mut self) {
+        self.state.sink.sphere();
     }
 }
