@@ -147,6 +147,18 @@ where
     T: CoordFloat,
 {
     #[inline]
+    fn line_end_default(&mut self) {
+        self.state.point_fn = PointFn::Default;
+        self.state.line_node.line_end();
+    }
+
+    #[inline]
+    fn line_start_default(&mut self) {
+        self.state.point_fn = PointFn::Line;
+        self.state.line_node.line_start();
+    }
+
+    #[inline]
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         if self.pv.point_visible(p) {
             self.state.line_node.point(p, m);
@@ -159,27 +171,9 @@ where
     }
 
     #[inline]
-    fn line_start_default(&mut self) {
-        self.state.point_fn = PointFn::Line;
-        self.state.line_node.line_start();
-    }
-
-    #[inline]
-    fn line_end_default(&mut self) {
-        self.state.point_fn = PointFn::Default;
-        self.state.line_node.line_end();
-    }
-
-    #[inline]
     fn point_ring(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         self.state.ring.0.push(*p);
         self.state.ring_sink.point(p, _m);
-    }
-
-    #[inline]
-    fn ring_start(&mut self) {
-        self.state.ring_sink.line_start();
-        self.state.ring.0.clear();
     }
 
     fn ring_end(&mut self) {
@@ -243,6 +237,12 @@ where
         ring_segments.retain(|segment| segment.len() > 1usize);
 
         self.state.segments.push_back(ring_segments);
+    }
+
+    #[inline]
+    fn ring_start(&mut self) {
+        self.state.ring_sink.line_start();
+        self.state.ring.0.clear();
     }
 }
 

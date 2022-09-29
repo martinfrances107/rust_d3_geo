@@ -107,11 +107,6 @@ where
     SINK: Clone,
     T: CoordFloat,
 {
-    #[inline(always)]
-    fn visible(&self, p: &Coordinate<T>) -> bool {
-        self.x0 <= p.x && p.x <= self.x1 && self.y0 <= p.y && p.y <= self.y1
-    }
-
     fn polygon_inside(&self) -> bool {
         let mut winding = 0;
 
@@ -140,6 +135,11 @@ where
             }
         }
         !winding.is_zero()
+    }
+
+    #[inline(always)]
+    fn visible(&self, p: &Coordinate<T>) -> bool {
+        self.x0 <= p.x && p.x <= self.x1 && self.y0 <= p.y && p.y <= self.y1
     }
 }
 
