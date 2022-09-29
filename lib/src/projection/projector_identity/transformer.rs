@@ -2,14 +2,15 @@ use std::marker::PhantomData;
 
 use geo::{CoordFloat, Coordinate};
 
-use crate::{
-    stream::{Connectable, Connected, Stream, Unconnected},
-    Transform,
-};
+use crate::stream::Connectable;
+use crate::stream::Connected;
+use crate::stream::Stream;
+use crate::stream::Unconnected;
+use crate::Transform;
 
 // TODO this is very similar to st.rs am I repeating myself?
 #[derive(Clone, Debug)]
-pub struct Transformer<SC, STATE, T>
+pub struct Transformer<DRAIN, SC, STATE, T>
 where
     T: CoordFloat,
 {
@@ -20,6 +21,7 @@ where
     /// Changing the input paramter changes the output
     /// parameter.
     p_sc: PhantomData<SC>,
+    p_drain: PhantomData<DRAIN>,
     alpha: T,
     kx: T,
     ky: T,
@@ -29,12 +31,13 @@ where
     ty: T,
 }
 
-impl<SC, T> Transformer<SC, Unconnected, T>
+impl<DRAIN, SC, T> Transformer<DRAIN, SC, Unconnected, T>
 where
     T: CoordFloat,
 {
     pub(crate) fn new(alpha: T, kx: T, ky: T, ca: T, sa: T, tx: T, ty: T) -> Self {
         Self {
+            p_drain: PhantomData::<DRAIN>,
             p_sc: PhantomData::<SC>,
             alpha,
             kx,
@@ -48,16 +51,17 @@ where
     }
 }
 
-impl<SC, T> Connectable for Transformer<SC, Unconnected, T>
+impl<DRAIN, SC, T> Connectable for Transformer<DRAIN, SC, Unconnected, T>
 where
     SC: Clone,
     T: CoordFloat,
 {
-    type Output = Transformer<SC, Connected<SC>, T>;
+    type Output = Transformer<DRAIN, SC, Connected<SC>, T>;
     type SC = SC;
     fn connect(self, sink: Self::SC) -> Self::Output {
         Self::Output {
             state: Connected { sink },
+            p_drain: PhantomData::<DRAIN>,
             p_sc: PhantomData::<SC>,
             alpha: self.alpha,
             kx: self.kx,
@@ -70,7 +74,7 @@ where
     }
 }
 
-impl<SC, STATE, T> Transform for Transformer<SC, STATE, T>
+impl<DRAIN, SC, STATE, T> Transform for Transformer<DRAIN, SC, STATE, T>
 where
     T: CoordFloat,
 {
@@ -105,13 +109,13 @@ where
     }
 }
 
-impl<SC, T> Stream for Transformer<SC, Connected<SC>, T>
+impl<DRAIN, SC, T> Stream for Transformer<DRAIN, SC, Connected<DRAIN>, T>
 where
-    SC: Clone + Stream<EP = SC, T = T>,
+    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
     T: CoordFloat,
 {
     type T = T;
-    type EP = SC;
+    type EP = DRAIN;
     #[inline]
     fn endpoint(&mut self) -> &mut Self::EP {
         self.state.sink.endpoint()

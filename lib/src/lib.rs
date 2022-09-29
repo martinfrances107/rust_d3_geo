@@ -48,6 +48,7 @@ pub mod length;
 pub mod math;
 /// Stream end point: Calculation of paths to a string or rendering context.
 pub mod path;
+pub mod path_identity;
 /// Determines when points are located inside data objects.
 pub mod polygon_contains;
 /// Holds proctions and associated builders.

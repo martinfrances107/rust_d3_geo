@@ -1,9 +1,14 @@
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod identity_test {
+
     use geo::Coordinate;
+    use geo::Geometry;
+    use geo::LineString;
 
     use crate::path::context::Context;
+    use crate::path_identity::builder::Builder as PathBuilder;
+    use crate::path_identity::Path;
     use crate::path_test_context::CanvasRenderingContext2d;
     use crate::projection::builder::template::NoPCNC;
     use crate::projection::builder::template::NoPCNU;
@@ -12,11 +17,9 @@ mod identity_test {
     use crate::projection::builder_identity::Builder;
     use crate::projection::projection_equal::projection_equal;
     use crate::projection::projector_identity::Projector;
-    use crate::projection::ClipExtentSet;
     use crate::projection::ReflectSet;
     use crate::projection::ScaleSet;
     use crate::projection::TranslateSet;
-    use crate::stream::Connected;
     use crate::stream::StreamDrainStub;
 
     // it("identity(point) returns the point", () => {
@@ -126,23 +129,33 @@ mod identity_test {
     //   identity.translate([30,90]).scale(2).reflectY(true);
     //   assert.strictEqual(path({type:"LineString", coordinates: [[0,0], [10,10]]}), "M30,90L50,70");
     // });
+
+    #[ignore]
     #[test]
     fn identity_returns_path() {
         print!("geoPath(identity) returns the path");
 
-        let identity: Builder<Context, PCNU<Context, f64>, f64> = Builder::default()
-            .translate_set(&Coordinate {
-                x: 100_f64,
+        let identity_projection_builder: Builder<Context, _, _> = Builder::default()
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+            .scale_set(1_f64);
+
+        let identity_projector = identity_projection_builder.build::<NoPCNC<Context>>();
+
+        let context = Context::new(CanvasRenderingContext2d::default());
+
+        let path: Path<Context, NoPCNC<Context>, NoPCNU<Context>, f64> =
+            PathBuilder::new(context).build(identity_projector);
+
+        let ls = Geometry::LineString(LineString(vec![
+            Coordinate { x: 0_f64, y: 0_f64 },
+            Coordinate {
+                x: 10_f64,
                 y: 10_f64,
-            })
-            .scale_set(2_f64)
-            .clip_extent_set(&[(5_f64, 5_f64).into(), (40_f64, 80_f64).into()]);
-        let crc2d = CanvasRenderingContext2d::default();
+            },
+        ]));
 
-        let context = Context::new(crc2d);
-        // let pb = PathBuilder::new(context);
-
-        // let mut path = pb.build(equirectangular());
+        todo!();
+        // let object = path.object(&ls);
 
         // let path = PathBuilder::new(context)
         //     .build(identity)
@@ -165,14 +178,11 @@ mod identity_test {
     //   assert.strictEqual(path({type:"LineString", coordinates: [[0,0], [10,10]]}), "M35,85L44,76");
     // });
 
+    #[ignore]
     #[test]
     fn respects_clip_extent() {
         print!("geoPath(identity) respects clipExtent");
-        // let identity: Builder<
-        //     StreamDrainStub<f64>,
-        //     NoClipC<StreamDrainStub<f64>>,
-        //     NoClipU<StreamDrainStub<f64>>,
-        // > = Builder::default()
+        // let identity: Builder<Context, PCNU<Context, f64>, f64> = Builder::default()
         //     .translate_set(&Coordinate {
         //         x: 100_f64,
         //         y: 10_f64,
@@ -180,8 +190,14 @@ mod identity_test {
         //     .scale_set(2_f64)
         //     .clip_extent_set(&[(5_f64, 5_f64).into(), (40_f64, 80_f64).into()]);
 
+        // let crc2d = CanvasRenderingContext2d::default();
+
+        // let context = Context::new(crc2d);
+
+        // let projector = identity.build::<NoPCNC<Context>>();
+
         // let path = PathBuilder::context_pathstring()
-        //     .build(identity)
+        //     .build(projector)
         //     .object(&Geometry::LineString(LineString::new(vec![/* Coords*/])));
 
         // assert_eq!(path.object());

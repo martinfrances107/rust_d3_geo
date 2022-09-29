@@ -11,9 +11,9 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 // pub mod types;
-mod tests;
+pub mod tests;
 pub mod transformer;
-
+pub mod types;
 use transformer::Transformer;
 
 type CacheState<DRAIN, PCNC> = Option<(DRAIN, PCNC)>;
@@ -29,9 +29,10 @@ where
 {
     pub(crate) p_pcnc: PhantomData<PCNC>,
     // Must be public as there is a implicit copy.
+    // pub(crate) postclip: PCNU,
     pub(crate) postclip: PCNU,
-    pub(crate) transform: Transformer<PCNC, Unconnected, T>,
-    pub(crate) cache: CacheState<DRAIN, Transformer<PCNC, Connected<PCNC>, T>>,
+    pub(crate) transform: Transformer<DRAIN, PCNC, Unconnected, T>,
+    pub(crate) cache: CacheState<DRAIN, Transformer<DRAIN, PCNC, Connected<PCNC>, T>>,
 }
 
 impl<DRAIN, PCNC, PCNU, T> Projector<DRAIN, PCNC, PCNU, T>
@@ -47,7 +48,7 @@ where
     ///
     /// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
     ///
-    pub fn stream(&mut self, drain: &DRAIN) -> Transformer<PCNC, Connected<PCNC>, T> {
+    pub fn stream(&mut self, drain: &DRAIN) -> Transformer<DRAIN, PCNC, Connected<PCNC>, T> {
         if let Some((cache_drain, output)) = &self.cache {
             if *cache_drain == *drain {
                 return (*output).clone();

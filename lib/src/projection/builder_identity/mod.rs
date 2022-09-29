@@ -8,6 +8,8 @@ use crate::identity::Identity;
 
 use crate::stream::Unconnected;
 
+pub mod types;
+
 mod angle;
 mod angle_get;
 mod build;

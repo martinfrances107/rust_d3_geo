@@ -89,6 +89,14 @@ pub trait ProjectionRawBase: Transform {
     fn builder() -> Self::Builder;
 }
 
+// pub trait ProjectionIdentityRawBase: Transform {
+//     /// The default builder.
+//     type Builder;
+
+//     /// Constructs the default projection builder.
+//     fn identity_builder() -> Self::Builder;
+// }
+
 pub trait Build
 where
     <Self as Build>::ClipC: Clone,
