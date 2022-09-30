@@ -57,7 +57,7 @@ where
     fn point_radius(&mut self, d: Self::T) {
         if self.radius != d {
             self.radius = d;
-            self.circle = circle(T::from(4.5_f64).unwrap());
+            self.circle = circle(d);
         }
     }
 }

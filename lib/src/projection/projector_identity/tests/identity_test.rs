@@ -130,23 +130,17 @@ mod identity_test {
     //   assert.strictEqual(path({type:"LineString", coordinates: [[0,0], [10,10]]}), "M30,90L50,70");
     // });
 
-    #[ignore]
     #[test]
     fn identity_returns_path() {
         print!("geoPath(identity) returns the path");
 
-        let identity_projection_builder: Builder<String<f64>, _, _> = Builder::default()
+        let projection_builder: Builder<String<f64>, _, _> = Builder::default()
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64);
 
-        let identity_projector: Projector<
-            String<f64>,
-            NoPCNC<String<f64>>,
-            NoPCNU<String<f64>>,
-            f64,
-        > = identity_projection_builder.build();
+        let projector = projection_builder.build();
 
-        let mut path = PathBuilder::context_pathstring().build(identity_projector);
+        let mut path = PathBuilder::context_pathstring().build(projector);
 
         let ls = Geometry::LineString(LineString(vec![
             Coordinate { x: 0_f64, y: 0_f64 },
@@ -156,16 +150,20 @@ mod identity_test {
             },
         ]));
 
-        // PathBuilder::context_pathstring().build(ortho);
+        assert_eq!("M0,0L10,10", path.object(&ls));
 
-        let result = path.object(&ls);
-        dbg!(&result);
-        assert_eq!("M0,0L10,10", result);
+        let projection_buidler2 = projection_builder
+            .translate_set(&Coordinate {
+                x: 30_f64,
+                y: 90_f64,
+            })
+            .scale_set(2_f64)
+            .reflect_y_set(true);
+        let projector2 = projection_buidler2.build::<NoPCNC<String<f64>>>();
 
-        // assert_eq!(path.object());
-        assert!(false);
+        let mut path2 = PathBuilder::context_pathstring().build(projector2);
 
-        // let identities = identity.clip_extent_set(&[(0, 0).into(), (0.0).into()]);
+        assert_eq!("M30,90L50,70", path2.object(&ls));
     }
 
     // it("geoPath(identity) respects clipExtent", () => {
