@@ -17,6 +17,9 @@ mod identity_test {
     use crate::projection::builder_identity::Builder;
     use crate::projection::projection_equal::projection_equal;
     use crate::projection::projector_identity::Projector;
+    use crate::projection::ClipExtentAdjust;
+    use crate::projection::ClipExtentGet;
+    use crate::projection::ClipExtentSet;
     use crate::projection::ReflectSet;
     use crate::projection::ScaleSet;
     use crate::projection::TranslateSet;
@@ -175,30 +178,58 @@ mod identity_test {
     //   assert.strictEqual(path({type:"LineString", coordinates: [[0,0], [10,10]]}), "M35,85L44,76");
     // });
 
-    #[ignore]
     #[test]
     fn respects_clip_extent() {
         print!("geoPath(identity) respects clipExtent");
-        // let identity: Builder<Context, PCNU<Context, f64>, f64> = Builder::default()
-        //     .translate_set(&Coordinate {
-        //         x: 100_f64,
-        //         y: 10_f64,
-        //     })
-        //     .scale_set(2_f64)
-        //     .clip_extent_set(&[(5_f64, 5_f64).into(), (40_f64, 80_f64).into()]);
 
-        // let crc2d = CanvasRenderingContext2d::default();
+        let projection_builder: Builder<String<f64>, _, _> = Builder::default()
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+            .scale_set(1_f64)
+            .clip_extent_set(&[
+                Coordinate { x: 5_f64, y: 5_f64 },
+                Coordinate {
+                    x: 40_f64,
+                    y: 80_f64,
+                },
+            ]);
 
-        // let context = Context::new(crc2d);
+        let projector = projection_builder.build();
 
-        // let projector = identity.build::<NoPCNC<Context>>();
+        let mut path = PathBuilder::context_pathstring().build(projector);
 
-        // let path = PathBuilder::context_pathstring()
-        //     .build(projector)
-        //     .object(&Geometry::LineString(LineString::new(vec![/* Coords*/])));
+        let ls = Geometry::LineString(LineString(vec![
+            Coordinate { x: 0_f64, y: 0_f64 },
+            Coordinate {
+                x: 10_f64,
+                y: 10_f64,
+            },
+        ]));
 
-        // assert_eq!(path.object());
+        assert_eq!("M5,5L10,10", path.object(&ls));
 
-        // let identities = identity.clip_extent_set(&[(0, 0).into(), (0.0).into()]);
+        let projection_builder2: Builder<String<f64>, _, _> = Builder::default()
+            .translate_set(&Coordinate {
+                x: 30_f64,
+                y: 90_f64,
+            })
+            .scale_set(2_f64)
+            .reflect_y_set(true)
+            .clip_extent_set(&[
+                Coordinate {
+                    x: 35_f64,
+                    y: 76_f64,
+                },
+                Coordinate {
+                    x: 45_f64,
+                    y: 86_f64,
+                },
+            ]);
+
+        // let projector2 = projection_builder2.build::<PCNC<String<f64>, f64>>();
+        let projector2 = projection_builder2.build();
+
+        let mut path2 = PathBuilder::context_pathstring().build(projector2);
+
+        assert_eq!("M35,85L44,76", path2.object(&ls));
     }
 }
