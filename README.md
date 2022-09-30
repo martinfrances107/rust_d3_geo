@@ -21,13 +21,13 @@ Test coverage in that area is high so the algortihms is working but the data str
 
 In addition to the port, some examples are provided to help developers convert their existing javascript to rust.
 
-| Name | Description|
---- | ---|
-| examples/globe/canvas | Shows how to load/parse/display  a complex topojson file to a CANVAS element.|
-| examples/globe/svg  | Shows how to load/parse/display the globe as indivdual SVG PATH elements. Useful when the semantic meaing of the data needs to be preserved.|
-| examples/projections | Shows a side by side comparison of the all the projections rendered by both javascript and rust.|
-| examples/graticule | Show various ways of rendering latitide and longitude lines.|
-| examples/ring | Renders a complex multipolygon.|
+| Name                  | Description                                                                                                                                  |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| examples/globe/canvas | Shows how to load/parse/display  a complex topojson file to a CANVAS element.                                                                |
+| examples/globe/svg    | Shows how to load/parse/display the globe as indivdual SVG PATH elements. Useful when the semantic meaing of the data needs to be preserved. |
+| examples/projections  | Shows a side by side comparison of the all the projections rendered by both javascript and rust.                                             |
+| examples/graticule    | Show various ways of rendering latitide and longitude lines.                                                                                 |
+| examples/ring         | Renders a complex multipolygon.                                                                                                              |
 
 
 ### Running the examples
@@ -142,8 +142,7 @@ A complete list of all ported projections can be found in invert-test.rs. Out of
   * src/projection/clip_extent_clear()
 
 ### To be implemented
-  * path/measure and measure-test.js
-  * Identity.js and Identity-test.js
+  * path/measure and measure-test.js  
 
 Finally
 
