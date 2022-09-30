@@ -14,8 +14,6 @@ High Priority.
   * lots of todos missing
   * fit helper functions need parallel copies for MercatorBuilder.
 
-* Bnechmarks are broken.
-
 * projection_rotate_test -- did it ever work?
   Only differences are in the LSDigits.
 
