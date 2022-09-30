@@ -46,7 +46,7 @@ where
     ///
     /// The Projection Stream Pipeline :-
     ///
-    /// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
+    ///  Transformer -> postclip -> DRAIN
     ///
     pub fn stream(&mut self, drain: &DRAIN) -> Transformer<DRAIN, PCNC, Connected<PCNC>, T> {
         if let Some((cache_drain, output)) = &self.cache {

@@ -7,13 +7,13 @@ mod identity_test {
     use geo::LineString;
 
     use crate::path::context::Context;
+    use crate::path::string::String;
     use crate::path_identity::builder::Builder as PathBuilder;
     use crate::path_identity::Path;
     use crate::path_test_context::CanvasRenderingContext2d;
     use crate::projection::builder::template::NoPCNC;
     use crate::projection::builder::template::NoPCNU;
     use crate::projection::builder::template::PCNC;
-    use crate::projection::builder::template::PCNU;
     use crate::projection::builder_identity::Builder;
     use crate::projection::projection_equal::projection_equal;
     use crate::projection::projector_identity::Projector;
@@ -135,16 +135,18 @@ mod identity_test {
     fn identity_returns_path() {
         print!("geoPath(identity) returns the path");
 
-        let identity_projection_builder: Builder<Context, _, _> = Builder::default()
+        let identity_projection_builder: Builder<String<f64>, _, _> = Builder::default()
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64);
 
-        let identity_projector = identity_projection_builder.build::<NoPCNC<Context>>();
+        let identity_projector: Projector<
+            String<f64>,
+            NoPCNC<String<f64>>,
+            NoPCNU<String<f64>>,
+            f64,
+        > = identity_projection_builder.build();
 
-        let context = Context::new(CanvasRenderingContext2d::default());
-
-        let path: Path<Context, NoPCNC<Context>, NoPCNU<Context>, f64> =
-            PathBuilder::new(context).build(identity_projector);
+        let mut path = PathBuilder::context_pathstring().build(identity_projector);
 
         let ls = Geometry::LineString(LineString(vec![
             Coordinate { x: 0_f64, y: 0_f64 },
@@ -154,17 +156,14 @@ mod identity_test {
             },
         ]));
 
-        todo!();
-        // let object = path.object(&ls);
+        // PathBuilder::context_pathstring().build(ortho);
 
-        // let path = PathBuilder::new(context)
-        //     .build(identity)
-        //     .object(&Geometry::LineString(LineString::new(vec![
-        //         (0f64, 0f64).into(),
-        //         (10f64, 10f64).into(),
-        //     ])));
+        let result = path.object(&ls);
+        dbg!(&result);
+        assert_eq!("M0,0L10,10", result);
 
         // assert_eq!(path.object());
+        assert!(false);
 
         // let identities = identity.clip_extent_set(&[(0, 0).into(), (0.0).into()]);
     }

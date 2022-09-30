@@ -56,16 +56,15 @@ where
     }
 }
 
-impl<CS, PCNC, PCNU, T> Path<CS, PCNC, PCNU, T>
+impl<DRAIN, PCNC, PCNU, T> Path<DRAIN, PCNC, PCNU, T>
 where
-    CS: Clone + Default + PartialEq + Result,
-    PCNC: Clone + Stream<EP = CS, T = T>,
-    PCNU: Clone + Connectable<Output = PCNC, SC = CS>,
-    Transformer<CS, PCNC, Connected<PCNC>, T>: Stream<EP = CS, T = T>,
+    DRAIN: Clone + Default + PartialEq + Result + Stream<EP = DRAIN, T = T>,
+    PCNC: Clone + Stream<EP = DRAIN, T = T>,
+    PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
     T: 'static + CoordFloat + FloatConst,
 {
     /// Combines projection, context stream and object.
-    pub fn object(&mut self, object: &impl Streamable<T = T>) -> <CS as Result>::Out {
+    pub fn object(&mut self, object: &impl Streamable<T = T>) -> <DRAIN as Result>::Out {
         let mut stream_in = self.projection.stream(&self.context_stream);
         object.to_stream(&mut stream_in);
         stream_in.endpoint().result()
@@ -76,7 +75,6 @@ impl<PCNC, PCNU, T> Path<Area<T>, PCNC, PCNU, T>
 where
     PCNC: Clone + Stream<EP = Area<T>, T = T>,
     PCNU: Clone + Connectable<Output = PCNC, SC = Area<T>>,
-    Transformer<Area<T>, PCNC, Connected<PCNC>, T>: Stream<EP = Area<T>, T = T>,
     T: CoordFloat,
 {
     /// Returns the area of the Path
@@ -98,7 +96,6 @@ impl<PCNC, PCNU, T> Path<Bounds<T>, PCNC, PCNU, T>
 where
     PCNC: Clone + Stream<EP = Bounds<T>, T = T>,
     PCNU: Clone + Connectable<Output = PCNC, SC = Bounds<T>>,
-    Transformer<Bounds<T>, PCNC, Connected<PCNC>, T>: Stream<EP = Bounds<T>, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     /// Returns the bounds of the object
@@ -117,8 +114,6 @@ impl<PCNC, PCNU, T> Path<Centroid<T>, PCNC, PCNU, T>
 where
     PCNC: Clone + Stream<EP = Centroid<T>, T = T>,
     PCNU: Clone + Connectable<Output = PCNC, SC = Centroid<T>>,
-    Transformer<Centroid<T>, PCNC, Connected<PCNC>, T>: Stream<EP = Centroid<T>, T = T>,
-
     T: 'static + AddAssign + CoordFloat + FloatConst,
 {
     /// Returns the centroid of the object.

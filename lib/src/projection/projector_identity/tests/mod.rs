@@ -1,1 +1,1 @@
-mod projection_identity_test;
+mod identity_test;

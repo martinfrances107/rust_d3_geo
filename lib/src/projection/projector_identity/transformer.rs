@@ -14,7 +14,6 @@ pub struct Transformer<DRAIN, SC, STATE, T>
 where
     T: CoordFloat,
 {
-    state: STATE,
     /// PhantomData<SC>
     ///
     /// The hidden linkage in Connectable::connect.
@@ -28,6 +27,7 @@ where
     ca: T,
     sa: T,
     tx: T,
+    state: STATE,
     ty: T,
 }
 
@@ -35,6 +35,7 @@ impl<DRAIN, SC, T> Transformer<DRAIN, SC, Unconnected, T>
 where
     T: CoordFloat,
 {
+    #[inline]
     pub(crate) fn new(alpha: T, kx: T, ky: T, ca: T, sa: T, tx: T, ty: T) -> Self {
         Self {
             p_drain: PhantomData::<DRAIN>,
@@ -60,7 +61,6 @@ where
     type SC = SC;
     fn connect(self, sink: Self::SC) -> Self::Output {
         Self::Output {
-            state: Connected { sink },
             p_drain: PhantomData::<DRAIN>,
             p_sc: PhantomData::<SC>,
             alpha: self.alpha,
@@ -70,6 +70,7 @@ where
             sa: self.sa,
             tx: self.tx,
             ty: self.ty,
+            state: Connected { sink },
         }
     }
 }
@@ -109,9 +110,10 @@ where
     }
 }
 
-impl<DRAIN, SC, T> Stream for Transformer<DRAIN, SC, Connected<DRAIN>, T>
+impl<DRAIN, SINK, T> Stream for Transformer<DRAIN, SINK, Connected<SINK>, T>
 where
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+    SINK: Clone + Stream<EP = DRAIN, T = T>,
     T: CoordFloat,
 {
     type EP = DRAIN;
