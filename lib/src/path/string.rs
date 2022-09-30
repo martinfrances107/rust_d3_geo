@@ -18,28 +18,14 @@ enum PointState {
 
 #[derive(Clone, Debug, PartialEq)]
 enum LineState {
-    Stopped,
-    Started,
-}
-
-#[inline]
-fn circle<T>(radius: T) -> S
-where
-    T: CoordFloat + Display,
-{
-    let two = T::from(2_f64).unwrap();
-    format!(
-        "m0,{radius}a{radius},{radius} 0 1,1 0,{m2r}a{radius},{radius} 0 1,1 0,{p2r}z",
-        radius = radius,
-        m2r = -two * radius,
-        p2r = two * radius
-    )
+    PolygonStopped,
+    PolygonStarted,
 }
 
 /// PathString.
 #[derive(Debug, Clone, PartialEq)]
 pub struct String<T> {
-    circle: Option<S>,
+    circle: S,
     line: LineState,
     point: PointState,
     radius: T,
@@ -53,8 +39,8 @@ where
     #[inline]
     fn default() -> Self {
         Self {
-            circle: Some(circle(T::from(4.5_f64).unwrap())),
-            line: LineState::Stopped,
+            circle: circle(T::from(4.5_f64).unwrap()),
+            line: LineState::PolygonStopped,
             point: PointState::RenderingPoints,
             radius: T::from(4.5).unwrap(),
             string: Vec::new(),
@@ -64,14 +50,14 @@ where
 
 impl<T> PointRadiusTrait for String<T>
 where
-    T: CoordFloat,
+    T: CoordFloat + Display,
 {
     type T = T;
 
     fn point_radius(&mut self, d: Self::T) {
         if self.radius != d {
             self.radius = d;
-            self.circle = None;
+            self.circle = circle(T::from(4.5_f64).unwrap());
         }
     }
 }
@@ -108,7 +94,7 @@ where
     }
 
     fn line_end(&mut self) {
-        if self.line == LineState::Started {
+        if self.line == LineState::PolygonStarted {
             self.string.push(S::from("Z"));
         }
         self.point = PointState::RenderingPoints;
@@ -130,22 +116,34 @@ where
                 self.string.push(format!("L{},{}", p.x, p.y));
             }
             PointState::RenderingPoints => {
-                if self.circle.is_none() {
-                    self.circle = Some(circle(self.radius));
-                }
                 self.string.push(format!("M{},{}", p.x, p.y));
-                self.string.push(self.circle.as_ref().unwrap().clone());
+                self.string.push(self.circle.clone());
             }
         }
     }
 
     #[inline]
     fn polygon_end(&mut self) {
-        self.line = LineState::Stopped;
+        self.line = LineState::PolygonStopped;
     }
 
     #[inline]
     fn polygon_start(&mut self) {
-        self.line = LineState::Started;
+        self.line = LineState::PolygonStarted;
     }
+}
+
+/// Private helper functions.
+#[inline]
+fn circle<T>(radius: T) -> S
+where
+    T: CoordFloat + Display,
+{
+    let two = T::from(2_f64).unwrap();
+    format!(
+        "m0,{radius}a{radius},{radius} 0 1,1 0,{m2r}a{radius},{radius} 0 1,1 0,{p2r}z",
+        radius = radius,
+        m2r = -two * radius,
+        p2r = two * radius
+    )
 }
