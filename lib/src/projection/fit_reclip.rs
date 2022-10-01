@@ -107,11 +107,12 @@ where
     RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
     T: 'static + CoordFloat + FloatConst,
 {
+    let two = T::from(2.0_f64).unwrap();
+    let one_five_zero = T::from(150_f64).unwrap();
+
     fit_reclip(
         builder,
         Box::new(move |b: [Coordinate<T>; 2], builder: B| -> B {
-            let two = T::from(2.0_f64).unwrap();
-            let one_five_zero = T::from(150_f64).unwrap();
             let w = extent[1][0] - extent[0][0];
             let h = extent[1][1] - extent[0][1];
             let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
