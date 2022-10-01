@@ -79,8 +79,23 @@ pub trait Streamable {
         SINK: Stream<EP = EP, T = Self::T>;
 }
 
-/// Stub is useful only the transform portion of a projection is needed.
-/// TODO must add example to doc.
+/// Useful when the stream pipeline is not used and only
+/// the transform portion of a projection is needed.
+///
+/// ```
+/// use geo::Coordinate;
+/// use rust_d3_geo::Transform;
+/// use rust_d3_geo::projection::stereographic::Stereographic;
+/// use rust_d3_geo::projection::Build;
+/// use rust_d3_geo::projection::ProjectionRawBase;
+/// use rust_d3_geo::stream::StreamDrainStub;
+///
+/// // The Projector needs a mock endpoint here for the stream pipeline.
+/// let p = Stereographic::<StreamDrainStub<f32>, f32>::builder().build();
+///
+/// let transformed_point = p.transform(&Coordinate{x: 0_f32, y:0_f32});
+///
+/// ```
 #[derive(Clone, Copy, Debug)]
 pub struct StreamDrainStub<T> {
     phantom: PhantomData<T>,
@@ -110,7 +125,9 @@ impl<T> Default for StreamDrainStub<T> {
 }
 
 /// Stream pipeline API
-/// Default implmentation is a no-op.
+///
+/// Pipeline states can be connected to perform a sequence of
+/// operations where the results can be stored in an endpoint.
 pub trait Stream
 where
     <Self as Stream>::T: CoordFloat,
