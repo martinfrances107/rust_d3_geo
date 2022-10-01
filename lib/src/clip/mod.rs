@@ -49,7 +49,7 @@ pub trait Bufferable {
     /// f64 or f32
     type T;
     /// conected buffer as the next pipeline stage.
-    fn buffer(self, buffer: Buffer<Self::T>) -> Self::Output
+    fn buffer(&mut self, buffer: Buffer<Self::T>) -> Self::Output
     where
         Self::T: CoordFloat;
 }

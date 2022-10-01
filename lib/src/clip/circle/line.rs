@@ -94,7 +94,7 @@ where
     type T = T;
 
     #[inline]
-    fn buffer(self, buffer: Buffer<T>) -> Self::Output {
+    fn buffer(&mut self, buffer: Buffer<T>) -> Self::Output {
         Line {
             state: Connected { sink: buffer },
             p_sc: PhantomData::<Buffer<T>>,

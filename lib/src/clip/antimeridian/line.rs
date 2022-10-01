@@ -61,7 +61,7 @@ where
     type Output = Line<Buffer<T>, Connected<Buffer<T>>, T>;
     type T = T;
 
-    fn buffer(self, buffer: Buffer<T>) -> Self::Output {
+    fn buffer(&mut self, buffer: Buffer<T>) -> Self::Output {
         Line {
             state: Connected { sink: buffer },
             p_sc: PhantomData::<Buffer<T>>,
