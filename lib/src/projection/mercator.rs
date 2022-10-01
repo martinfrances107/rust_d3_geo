@@ -16,10 +16,22 @@ use super::ProjectionRawBase;
 use super::TransformExtent;
 
 /// Projection definition.
-#[derive(Clone, Copy, Default, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Mercator<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
-    p_t: PhantomData<T>,
+    two: T,
+}
+
+impl<DRAIN, T> Default for Mercator<DRAIN, T>
+where
+    T: CoordFloat,
+{
+    fn default() -> Self {
+        Self {
+            p_drain: PhantomData::<DRAIN>,
+            two: T::from(2_f64).unwrap(),
+        }
+    }
 }
 
 impl<DRAIN, T> ProjectionRawBase for Mercator<DRAIN, T>
@@ -75,7 +87,6 @@ where
 
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let two = T::from(2).unwrap();
         // Divergence between f64 and f32
         // when p.y  = 1.5707963267948966  (PI/2)
         // f64 outputs -37.33185619326892 which is consistent
@@ -87,16 +98,15 @@ where
         // large number in both the JS and RUST.
         Coordinate {
             x: p.x,
-            y: ((T::FRAC_PI_2() + p.y) / two).tan().ln(),
+            y: ((T::FRAC_PI_2() + p.y) / self.two).tan().ln(),
         }
     }
 
     #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let two = T::from(2).unwrap();
         Coordinate {
             x: p.x,
-            y: two * (p.y.exp()).atan() - T::FRAC_PI_2(),
+            y: self.two * (p.y.exp()).atan() - T::FRAC_PI_2(),
         }
     }
 }
