@@ -36,7 +36,7 @@ where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
-    fn recenter_with_resampling(mut self) -> Self {
+    fn recenter_with_resampling(&mut self) -> &mut Self {
         assert!(!self.delta2.is_zero());
         let center = generate_str(
             &self.k,
@@ -92,7 +92,7 @@ where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
-    fn recenter_with_resampling(mut self) -> Self {
+    fn recenter_with_resampling(&mut self) -> &mut Self {
         assert!(!self.delta2.is_zero());
         let center = generate_str(
             &self.k,

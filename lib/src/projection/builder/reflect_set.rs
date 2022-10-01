@@ -39,24 +39,26 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x_set(mut self, reflect: bool) -> Self {
+    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
         if reflect {
             self.sx = T::from(-1.0_f64).unwrap();
         } else {
             self.sx = T::one();
         }
-        self.recenter_with_resampling()
+        self.recenter_with_resampling();
+        self
     }
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y_set(mut self, reflect: bool) -> Self {
+    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
         if reflect {
             self.sy = T::from(-1.0_f64).unwrap();
         } else {
             self.sy = T::one();
         }
-        self.recenter_with_resampling()
+        self.recenter_with_resampling();
+        self
     }
 }
 
@@ -81,24 +83,26 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x_set(mut self, reflect: bool) -> Self {
+    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
         if reflect {
             self.sx = T::from(-1.0_f64).unwrap();
         } else {
             self.sx = T::one();
         }
-        self.recenter_with_resampling()
+        self.recenter_with_resampling();
+        self
     }
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y_set(mut self, reflect: bool) -> Self {
+    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
         if reflect {
             self.sy = T::from(-1.0_f64).unwrap();
         } else {
             self.sy = T::one();
         }
-        self.recenter_with_resampling()
+        self.recenter_with_resampling();
+        self
     }
 }
 
@@ -123,24 +127,26 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x_set(mut self, reflect: bool) -> Self {
+    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
         if reflect {
             self.sx = T::from(-1.0_f64).unwrap();
         } else {
             self.sx = T::one();
         }
-        self.recenter_no_resampling()
+        self.recenter_no_resampling();
+        self
     }
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y_set(mut self, reflect: bool) -> Self {
+    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
         if reflect {
             self.sy = T::from(-1.0_f64).unwrap();
         } else {
             self.sy = T::one();
         }
-        self.recenter_no_resampling()
+        self.recenter_no_resampling();
+        self
     }
 }
 
@@ -165,23 +171,25 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x_set(mut self, reflect: bool) -> Self {
+    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
         if reflect {
             self.sx = T::from(-1.0_f64).unwrap();
         } else {
             self.sx = T::one();
         }
-        self.recenter_no_resampling()
+        self.recenter_no_resampling();
+        self
     }
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y_set(mut self, reflect: bool) -> Self {
+    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
         if reflect {
             self.sy = T::from(-1.0_f64).unwrap();
         } else {
             self.sy = T::one();
         }
-        self.recenter_no_resampling()
+        self.recenter_no_resampling();
+        self
     }
 }

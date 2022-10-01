@@ -18,7 +18,7 @@ where
 
     #[inline]
     fn clip_extent_set(self, extent: &[Coordinate<Self::T>; 2]) -> Self::Output {
-        Self::Output {
+        let mut out = Self::Output {
             p_drain: self.p_drain,
 
             alpha: self.alpha,
@@ -38,7 +38,8 @@ where
             y0: None,
             x1: None,
             y1: None,
-        }
-        .reset()
+        };
+        out.reset();
+        out
     }
 }

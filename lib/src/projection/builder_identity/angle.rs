@@ -11,7 +11,7 @@ where
 {
     type T = T;
 
-    fn angle_set(mut self, angle: T) -> Self {
+    fn angle_set(&mut self, angle: T) -> &mut Self {
         self.alpha = (angle % T::from(360_f64).unwrap()).to_radians();
         self.sa = self.alpha.sin();
         self.ca = self.alpha.cos();

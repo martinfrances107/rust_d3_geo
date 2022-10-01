@@ -36,7 +36,7 @@ where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
-    fn recenter_no_resampling(mut self) -> Self {
+    fn recenter_no_resampling(&mut self) -> &mut Self {
         let center = generate_str(
             &self.k,
             &T::zero(),
@@ -91,7 +91,7 @@ where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
-    fn recenter_no_resampling(mut self) -> Self {
+    fn recenter_no_resampling(&mut self) -> &mut Self {
         let center = generate_str(
             &self.k,
             &T::zero(),

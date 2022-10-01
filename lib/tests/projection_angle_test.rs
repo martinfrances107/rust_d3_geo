@@ -141,10 +141,10 @@ mod angle_test {
     #[test]
     fn angle_rotates_by_plus_30() {
         println!("projection.angle(…) defaults to zero");
-        let pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
+        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
             .scale_set(1_f64)
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
-            .angle_set(30_f64);
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        let pb = pb.angle_set(30_f64);
 
         // this rounds to 29.9999999 not 30!!
         // assert_eq!(pb.get_angle(), 30_f64);
@@ -265,10 +265,11 @@ mod angle_test {
     #[test]
     fn angle_rotates_by_minus_30() {
         println!("projection.angle(…) defaults to zero");
-        let pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
+        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
             .scale_set(1_f64)
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
-            .angle_set(-30_f64);
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+
+        pb.angle_set(-30_f64);
 
         // this rounds to 29.9999999 not 30!!
         assert!(in_delta(pb.angle(), -30_f64, 1e-6));
@@ -388,10 +389,10 @@ mod angle_test {
     #[test]
     fn wraps_360() {
         println!("projection.angle(…) wraps around 360°");
-        let pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
+        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
             .scale_set(1_f64)
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
-            .angle_set(360_f64);
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        pb.angle_set(360_f64);
 
         assert!(in_delta(pb.angle(), 0_f64, 1e-6));
     }
@@ -401,11 +402,12 @@ mod angle_test {
     fn rotates_geo_identity() {
         println!("identity.angle(…) rotates geoIdentity");
 
-        let pb: rust_d3_geo::projection::builder_identity::Builder<
+        let mut pb: rust_d3_geo::projection::builder_identity::Builder<
             StreamDrainStub<f32>,
             NoPCNU<StreamDrainStub<f32>>,
             f32,
-        > = BuilderIdentity::default().angle_set(-45_f32);
+        > = BuilderIdentity::default();
+        pb.angle_set(-45_f32);
 
         let sqrt2_2 = 2f32.sqrt() / 2f32;
 

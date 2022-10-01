@@ -51,15 +51,9 @@ where
 
     /// Sets the rotation angles as measured in degrees.
     #[inline]
-    fn angle_set(self, angle: T) -> Self {
-        Self {
-            p_drain: PhantomData::<DRAIN>,
-            p_clipc: PhantomData::<CLIPC>,
-            p_rc: PhantomData::<ResampleNoPCNC<DRAIN, PR, T>>,
-            extent: self.extent, // post-clip extent
-            pr: self.pr,
-            base: self.base.angle_set(angle),
-        }
+    fn angle_set(&mut self, angle: T) -> &mut Self {
+        self.base.angle_set(angle);
+        self
     }
 }
 
@@ -85,14 +79,8 @@ where
 
     /// Sets the rotation angles as measured in degrees.
     #[inline]
-    fn angle_set(self, angle: T) -> Self {
-        Self {
-            p_clipc: PhantomData::<CLIPC>,
-            p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<ResamplePCNC<DRAIN, PR, T>>,
-            extent: self.extent,
-            pr: self.pr,
-            base: self.base.angle_set(angle),
-        }
+    fn angle_set(&mut self, angle: T) -> &mut Self {
+        self.base.angle_set(angle);
+        self
     }
 }

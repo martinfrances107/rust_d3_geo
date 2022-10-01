@@ -88,7 +88,7 @@ impl<DRAIN, PCNU, T> Builder<DRAIN, PCNU, T>
 where
     T: CoordFloat,
 {
-    fn reset(mut self) -> Self {
+    fn reset(&mut self) -> &mut Self {
         self.kx = self.k * self.sx;
         self.ky = self.k * self.sy;
         self

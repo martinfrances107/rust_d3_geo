@@ -15,6 +15,7 @@ where
     fn translate_set(mut self, t: &Coordinate<T>) -> Self {
         self.tx = t.x;
         self.ty = t.y;
-        self.reset()
+        self.reset();
+        self
     }
 }

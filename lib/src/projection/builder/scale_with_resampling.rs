@@ -35,7 +35,8 @@ where
 
     fn scale_set(mut self, scale: T) -> Self {
         self.k = scale;
-        self.recenter_with_resampling()
+        self.recenter_with_resampling();
+        self
     }
 }
 
@@ -61,6 +62,7 @@ where
 
     fn scale_set(mut self, scale: T) -> Self {
         self.k = scale;
-        self.recenter_with_resampling()
+        self.recenter_with_resampling();
+        self
     }
 }

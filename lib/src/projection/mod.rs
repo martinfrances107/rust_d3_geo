@@ -288,7 +288,7 @@ pub trait AngleSet {
     /// Sets the projection’s post-projection planar rotation angle to the
     /// specified angle in degrees and returns the projection.
     ///
-    fn angle_set(self, angle: Self::T) -> Self;
+    fn angle_set(&mut self, angle: Self::T) -> &mut Self;
 }
 
 pub trait ClipAngleReset {
@@ -332,11 +332,11 @@ pub trait ClipAngleAdjust {
 }
 
 pub trait RecenterWithResampling {
-    fn recenter_with_resampling(self) -> Self;
+    fn recenter_with_resampling(&mut self) -> &mut Self;
 }
 
 pub trait RecenterNoResampling {
-    fn recenter_no_resampling(self) -> Self;
+    fn recenter_no_resampling(&mut self) -> &mut Self;
 }
 
 /// Returns or sets the x or y reflection.
@@ -358,10 +358,10 @@ pub trait ReflectSet {
     type T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x_set(self, reflect: bool) -> Self;
+    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self;
 
     /// Set the projection builder to invert the y-coordinate.
-    fn reflect_y_set(self, reflect: bool) -> Self;
+    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self;
 }
 
 /// Given the builder is already set to resample, adjust the precision

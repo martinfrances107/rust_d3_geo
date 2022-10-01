@@ -41,20 +41,16 @@ where
 
     /// Set the projection builder to invert the x-coordinate.
     #[inline]
-    fn reflect_x_set(self, reflect: bool) -> Self {
-        Self {
-            base: self.base.reflect_x_set(reflect).recenter_with_resampling(),
-            ..self
-        }
+    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
+        self.base.reflect_x_set(reflect).recenter_with_resampling();
+        self
     }
 
     /// Set the projection builder to invert the y-coordinate.    
     #[inline]
-    fn reflect_y_set(self, reflect: bool) -> Self {
-        Self {
-            base: self.base.reflect_y_set(reflect).recenter_with_resampling(),
-            ..self
-        }
+    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
+        self.base.reflect_y_set(reflect).recenter_with_resampling();
+        self
     }
 }
 
@@ -80,20 +76,16 @@ where
 
     /// Set the projection builder to invert the x-coordinate.
     #[inline]
-    fn reflect_x_set(self, reflect: bool) -> Self {
-        Self {
-            base: self.base.reflect_x_set(reflect).recenter_with_resampling(),
-            ..self
-        }
+    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
+        self.base.reflect_x_set(reflect).recenter_with_resampling();
+        self
     }
 
     /// Set the projection builder to invert the y-coordinate.    
     #[inline]
-    fn reflect_y_set(self, reflect: bool) -> Self {
-        Self {
-            base: self.base.reflect_y_set(reflect).recenter_with_resampling(),
-            ..self
-        }
+    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
+        self.base.reflect_y_set(reflect).recenter_with_resampling();
+        self
     }
 }
 
@@ -119,20 +111,16 @@ where
 
     /// Set the projection builder to invert the x-coordinate.
     #[inline]
-    fn reflect_x_set(self, reflect: bool) -> Self {
-        Self {
-            base: self.base.reflect_x_set(reflect).recenter_no_resampling(),
-            ..self
-        }
+    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
+        self.base.reflect_x_set(reflect).recenter_no_resampling();
+        self
     }
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y_set(self, reflect: bool) -> Self {
-        Self {
-            base: self.base.reflect_y_set(reflect).recenter_no_resampling(),
-            ..self
-        }
+    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
+        self.base.reflect_y_set(reflect).recenter_no_resampling();
+        self
     }
 }
 
@@ -158,19 +146,15 @@ where
 
     /// Set the projection builder to invert the x-coordinate.
     #[inline]
-    fn reflect_x_set(self, reflect: bool) -> Self {
-        Self {
-            base: self.base.reflect_x_set(reflect).recenter_no_resampling(),
-            ..self
-        }
+    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
+        self.base.reflect_x_set(reflect).recenter_no_resampling();
+        self
     }
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y_set(self, reflect: bool) -> Self {
-        Self {
-            base: self.base.reflect_y_set(reflect).recenter_no_resampling(),
-            ..self
-        }
+    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
+        self.base.reflect_y_set(reflect).recenter_no_resampling();
+        self
     }
 }
