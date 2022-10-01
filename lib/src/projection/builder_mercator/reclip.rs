@@ -1,4 +1,5 @@
 use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::projection::builder::template::PCNU;
@@ -8,7 +9,6 @@ use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
 use crate::projection::TransformExtent;
 use crate::rot::rotate_radians;
-use crate::Coordinate;
 use crate::Transform;
 
 use super::Builder;

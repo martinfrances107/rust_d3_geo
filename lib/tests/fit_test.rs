@@ -8,11 +8,11 @@ mod fit_test {
 
     use geo::polygon;
     use geo::CoordFloat;
+    use geo::Coordinate;
     use geo::Geometry;
     use num_traits::FloatConst;
     use topojson::Topology;
 
-    use geo::Coordinate;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::in_delta::in_delta;
     use rust_d3_geo::in_delta::in_delta_coordinate;
