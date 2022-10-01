@@ -84,8 +84,8 @@ where
         let mut x = p.x * self.kx;
         let mut y = p.y * self.ky;
         if !self.alpha.is_zero() {
-            let t = y * self.ca + x * self.sa;
-            x = x * self.ca + y + self.sa;
+            let t = y * self.ca - x * self.sa;
+            x = x * self.ca + y * self.sa;
             y = t;
         }
         Coordinate {

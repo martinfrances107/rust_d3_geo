@@ -5,7 +5,6 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::identity::Identity;
-
 use crate::stream::Unconnected;
 
 pub mod types;
@@ -13,9 +12,6 @@ pub mod types;
 mod angle;
 mod angle_get;
 mod build;
-
-// mod fit_clip;
-// mod fit_no_clip;
 mod clip_extent_adjust;
 mod clip_extent_clear;
 mod clip_extent_get;
@@ -27,8 +23,6 @@ mod scale_set;
 mod translate_get;
 mod translate_set;
 
-// pub mod template;
-// pub mod types;
 /// Projection builder.
 ///
 /// Holds State related to the construction of the a projection.

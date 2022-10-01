@@ -3,17 +3,21 @@ mod angle_test {
 
     use geo::Coordinate;
     use pretty_assertions::assert_eq;
-    use rust_d3_geo::projection::AngleSet;
 
     use rust_d3_geo::in_delta::in_delta;
+    use rust_d3_geo::projection::builder::template::NoPCNC;
+    use rust_d3_geo::projection::builder::template::NoPCNU;
+    use rust_d3_geo::projection::builder_identity::Builder as BuilderIdentity;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::AngleGet;
+    use rust_d3_geo::projection::AngleSet;
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::projection::TranslateSet;
     use rust_d3_geo::stream::StreamDrainStub;
+    use rust_d3_geo::Transform;
 
     #[test]
     fn angle_defaults_to_zero() {
@@ -391,5 +395,47 @@ mod angle_test {
 
         assert!(in_delta(pb.angle(), 0_f64, 1e-6));
     }
-    // TODO add geoIdentity test
+
+    #[test]
+    // Using f32 as f64 has rounding errors in the last digit.
+    fn rotates_geo_identity() {
+        println!("identity.angle(…) rotates geoIdentity");
+
+        let pb: rust_d3_geo::projection::builder_identity::Builder<
+            StreamDrainStub<f32>,
+            NoPCNU<StreamDrainStub<f32>>,
+            f32,
+        > = BuilderIdentity::default().angle_set(-45_f32);
+
+        let sqrt2_2 = 2f32.sqrt() / 2f32;
+
+        let projector = pb.build::<NoPCNC<StreamDrainStub<f32>>>();
+
+        assert_eq!(
+            projector.transform(&Coordinate { x: 0f32, y: 0f32 }),
+            Coordinate { x: 0f32, y: 0f32 }
+        );
+
+        assert_eq!(
+            projector.transform(&Coordinate { x: 1f32, y: 0f32 }),
+            Coordinate {
+                x: sqrt2_2,
+                y: sqrt2_2
+            }
+        );
+        assert_eq!(
+            projector.transform(&Coordinate { x: -1f32, y: 0f32 }),
+            Coordinate {
+                x: -sqrt2_2,
+                y: -sqrt2_2
+            }
+        );
+        assert_eq!(
+            projector.transform(&Coordinate { x: 0f32, y: 1f32 }),
+            Coordinate {
+                x: -sqrt2_2,
+                y: sqrt2_2
+            }
+        );
+    }
 }
