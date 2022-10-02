@@ -31,12 +31,12 @@ where
     type Output = BuilderAntimeridianResampleNoClip<DRAIN, PR, T>;
 
     #[inline]
-    fn clip_extent_clear(self) -> Self::Output {
+    fn clip_extent_clear(&self) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
             p_rc: PhantomData::<ResampleNoPCNC<DRAIN, PR, T>>,
-            projection_raw: self.projection_raw,
+            projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
             alpha: self.alpha,
@@ -50,15 +50,15 @@ where
             delta_gamma: self.delta_gamma,
             delta2: self.delta2,
             theta: self.theta,
-            rotate: self.rotate,
+            rotate: self.rotate.clone(),
             project_transform: self.project_transform.clone(),
-            project_rotate_transform: self.project_rotate_transform,
-            rotator: self.rotator,
+            project_rotate_transform: self.project_rotate_transform.clone(),
+            rotator: self.rotator.clone(),
 
             // Mutate section.
             postclip: Identity::default(),
             clip: gen_clip_antimeridian::<NoPCNU<DRAIN>, ResampleNoPCNC<DRAIN, PR, T>, T>(),
-            resample: Resample::new(self.project_transform, self.delta2),
+            resample: Resample::new(self.project_transform.clone(), self.delta2),
             x0: None,
             y0: None,
             x1: None,
@@ -77,12 +77,12 @@ where
     type Output = BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>;
 
     #[inline]
-    fn clip_extent_clear(self) -> Self::Output {
+    fn clip_extent_clear(&self) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
             p_rc: PhantomData::<ResampleNoneNoPCNC<DRAIN, PR, T>>,
-            projection_raw: self.projection_raw,
+            projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
             alpha: self.alpha,
@@ -96,15 +96,15 @@ where
             delta_gamma: self.delta_gamma,
             delta2: self.delta2,
             theta: self.theta,
-            rotate: self.rotate,
+            rotate: self.rotate.clone(),
             project_transform: self.project_transform.clone(),
-            project_rotate_transform: self.project_rotate_transform,
-            rotator: self.rotator,
+            project_rotate_transform: self.project_rotate_transform.clone(),
+            rotator: self.rotator.clone(),
 
             // Mutate section.
             clip: gen_clip_antimeridian::<NoPCNU<DRAIN>, _, _>(),
             postclip: Identity::default(),
-            resample: None::new(self.project_transform),
+            resample: None::new(self.project_transform.clone()),
             x0: None,
             y0: None,
             x1: None,

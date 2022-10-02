@@ -11,6 +11,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> ClipExtentClear
 where
     CLIPC: Clone,
     CLIPU: Clone,
+    DRAIN: Clone,
+    PR: Clone,
+    RC: Clone,
+    RU: Clone,
     Self: Reclip,
     T: CoordFloat,
 {
@@ -18,9 +22,16 @@ where
     /// f64 or f32.
     type T = T;
 
-    fn clip_extent_clear(mut self) -> Self {
-        self.extent = None;
-        self.reclip();
-        self
+    fn clip_extent_clear(&self) -> Self::Output {
+        let mut binding = Self::Output {
+            p_drain: self.p_drain,
+            p_rc: self.p_rc,
+            p_clipc: self.p_clipc,
+            base: self.base.clone(),
+            pr: self.pr.clone(),
+            extent: None,
+        };
+        let out = binding.reclip();
+        out.clone()
     }
 }

@@ -18,6 +18,7 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::path::bounds::Bounds;
+use crate::path::Result;
 use crate::projection::builder::template::NoPCNC;
 use crate::projection::builder::template::NoPCNU;
 use crate::projection::builder::template::PCNC;
@@ -75,23 +76,21 @@ pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint,
     T: 'static + CoordFloat + FloatConst,
 {
     let clip = builder.clip_extent();
-    todo!();
-    // let mut b_no_clip = builder
-    //     .scale_set(T::from(150_f64).unwrap())
-    //     .translate_set(&Coordinate {
-    //         x: T::zero(),
-    //         y: T::zero(),
-    //     })
-    //     .clip_extent_clear();
+    let b = builder;
+    b.scale_set(T::from(150_f64).unwrap());
+    b.translate_set(&Coordinate {
+        x: T::zero(),
+        y: T::zero(),
+    });
+    let mut b_no_clip = b.clip_extent_clear();
 
-    // let mut stripped_projector = b_no_clip.build();
-    // let mut bounds_stream = Bounds::default();
-    // let mut stream_in = stripped_projector.stream(&bounds_stream);
-    // object.to_stream(&mut stream_in);
-    // fit_bounds(bounds_stream.result(), &mut b_no_clip);
+    let mut stripped_projector = b_no_clip.build();
+    let mut bounds_stream = Bounds::default();
+    let mut stream_in = stripped_projector.stream(&bounds_stream);
+    object.to_stream(&mut stream_in);
+    fit_bounds(bounds_stream.result(), &mut b_no_clip);
 
-    // b_no_clip.clip_extent_set(&clip.unwrap());
-    todo!();
+    b_no_clip.clip_extent_set(&clip.unwrap());
 }
 
 pub(super) fn fit_extent_clip<

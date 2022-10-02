@@ -174,7 +174,7 @@ pub trait ClipExtentClear {
     type Output;
 
     /// clears the bounding box.
-    fn clip_extent_clear(self) -> Self::Output
+    fn clip_extent_clear(&self) -> Self::Output
     where
         Self::T: CoordFloat;
 }
