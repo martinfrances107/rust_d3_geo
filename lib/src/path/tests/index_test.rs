@@ -38,10 +38,9 @@ mod index_test {
         EP: Clone + Stream<EP = EP, T = T> + Debug + Default,
         T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
     >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<EP, T>, T> {
-        Equirectangular::builder()
-            .scale_set(T::from(900f64 / PI).unwrap())
-            .precision_bypass()
-            .build()
+        let mut e = Equirectangular::builder();
+        e.scale_set(T::from(900f64 / PI).unwrap());
+        e.precision_bypass().build()
     }
 
     fn test_path(

@@ -11,7 +11,7 @@ where
     type T = T;
 
     #[inline]
-    fn scale_set(mut self, k: T) -> Self {
+    fn scale_set(&mut self, k: T) -> &mut Self {
         self.k = k;
         self.reset();
         self

@@ -81,7 +81,7 @@ pub trait FitReclip {
     /// @param object A geographic feature supported by d3-geo
     ///   (An extension of GeoJSON feature).
     fn fit_extent_reclip(
-        self,
+        &self,
         extent: [[Self::T; 2]; 2],
         object: &impl Streamable<T = Self::T>,
     ) -> Self::Output;
@@ -94,18 +94,18 @@ pub trait FitReclip {
     ///  @param size The size of the extent, specified as an array [width, height].
     ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
     fn fit_size_reclip(
-        self,
+        &self,
         size: [Self::T; 2],
         object: &impl Streamable<T = Self::T>,
     ) -> Self::Output;
 
     /// Similar to fit_size where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_width_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output;
+    fn fit_width_reclip(&self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output;
 
     /// Similar to fit_size where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_height_reclip(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output;
+    fn fit_height_reclip(&self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output;
 }
 
 /// This trait is useful only for mercator projection.
@@ -151,7 +151,7 @@ pub(super) trait ReclipConvert {
 }
 
 pub trait Reclip {
-    fn reclip(self) -> Self;
+    fn reclip(&mut self) -> &mut Self;
 }
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.

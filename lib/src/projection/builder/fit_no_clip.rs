@@ -41,23 +41,30 @@ where
     type T = T;
 
     #[inline]
-    fn fit_extent(self, extent: [[T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self {
-        fit_extent_no_clip(self, extent, object)
+    fn fit_extent(
+        &mut self,
+        extent: [[T; 2]; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> &mut Self {
+        fit_extent_no_clip(self, extent, object);
+        self
     }
 
     #[inline]
-    fn fit_height(self, h: T, object: &impl Streamable<T = T>) -> Self {
-        fit_height_no_clip(self, h, object)
+    fn fit_height(&mut self, h: T, object: &impl Streamable<T = T>) -> &mut Self {
+        fit_height_no_clip(self, h, object);
+        self
     }
 
     #[inline]
-    fn fit_size(self, size: [T; 2], object: &impl Streamable<T = T>) -> Self {
-        fit_size_no_clip(self, size, object)
+    fn fit_size(&mut self, size: [T; 2], object: &impl Streamable<T = T>) -> &mut Self {
+        fit_size_no_clip(self, size, object);
+        self
     }
-
     #[inline]
-    fn fit_width(self, w: T, object: &impl Streamable<T = T>) -> Self {
-        fit_width_no_clip(self, w, object)
+    fn fit_width(&mut self, w: T, object: &impl Streamable<T = T>) -> &mut Self {
+        fit_width_no_clip(self, w, object);
+        self
     }
 }
 
@@ -82,22 +89,30 @@ where
     type T = T;
 
     #[inline]
-    fn fit_extent(self, extent: [[T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self {
-        fit_extent_no_clip(self, extent, object)
+    fn fit_extent(
+        &mut self,
+        extent: [[T; 2]; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> &mut Self {
+        fit_extent_no_clip(self, extent, object);
+        self
     }
 
     #[inline]
-    fn fit_size(self, size: [T; 2], object: &impl Streamable<T = T>) -> Self {
-        fit_size_no_clip(self, size, object)
+    fn fit_size(&mut self, size: [T; 2], object: &impl Streamable<T = T>) -> &mut Self {
+        fit_size_no_clip(self, size, object);
+        self
     }
 
     #[inline]
-    fn fit_width(self, w: T, object: &impl Streamable<T = T>) -> Self {
-        fit_width_no_clip(self, w, object)
+    fn fit_width(&mut self, w: T, object: &impl Streamable<T = T>) -> &mut Self {
+        fit_width_no_clip(self, w, object);
+        self
     }
 
     #[inline]
-    fn fit_height(self, h: T, object: &impl Streamable<T = T>) -> Self {
-        fit_height_no_clip(self, h, object)
+    fn fit_height(&mut self, h: T, object: &impl Streamable<T = T>) -> &mut Self {
+        fit_height_no_clip(self, h, object);
+        self
     }
 }

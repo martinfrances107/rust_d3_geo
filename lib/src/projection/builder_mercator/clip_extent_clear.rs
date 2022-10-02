@@ -20,6 +20,7 @@ where
 
     fn clip_extent_clear(mut self) -> Self {
         self.extent = None;
-        self.reclip()
+        self.reclip();
+        self
     }
 }

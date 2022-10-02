@@ -55,7 +55,8 @@ mod identity_test {
     #[test]
     fn test_reflect() {
         println!("identity(point).reflectX(…) and reflectY() return the transformed point");
-        let mut identity: Builder<StreamDrainStub<f64>, _, _> = Builder::default()
+        let mut identity: Builder<StreamDrainStub<f64>, _, _> = Builder::default();
+        identity
             .translate_set(&Coordinate {
                 x: 100_f64,
                 y: 10_f64,
@@ -106,7 +107,8 @@ mod identity_test {
     fn identity_returns_path() {
         print!("geoPath(identity) returns the path");
 
-        let projection_builder: Builder<String<f64>, _, _> = Builder::default()
+        let mut projection_builder: Builder<String<f64>, _, _> = Builder::default();
+        projection_builder
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64);
 
@@ -124,7 +126,7 @@ mod identity_test {
 
         assert_eq!("M0,0L10,10", path.object(&ls));
 
-        let mut projection_buidler2 = projection_builder
+        let projection_buidler2 = projection_builder
             .translate_set(&Coordinate {
                 x: 30_f64,
                 y: 90_f64,
@@ -142,16 +144,18 @@ mod identity_test {
     fn respects_clip_extent() {
         print!("geoPath(identity) respects clipExtent");
 
-        let projection_builder: Builder<String<f64>, _, _> = Builder::default()
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
-            .scale_set(1_f64)
-            .clip_extent_set(&[
-                Coordinate { x: 5_f64, y: 5_f64 },
-                Coordinate {
-                    x: 40_f64,
-                    y: 80_f64,
-                },
-            ]);
+        let mut projection_builder: Builder<String<f64>, _, _> = Builder::default();
+
+        let projection_builder =
+            projection_builder.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        let projection_builder = projection_builder.scale_set(1_f64);
+        let projection_builder = projection_builder.clip_extent_set(&[
+            Coordinate { x: 5_f64, y: 5_f64 },
+            Coordinate {
+                x: 40_f64,
+                y: 80_f64,
+            },
+        ]);
 
         let projector = projection_builder.build();
 
@@ -167,14 +171,15 @@ mod identity_test {
 
         assert_eq!("M5,5L10,10", path.object(&ls));
 
-        let mut projection_builder2: Builder<String<f64>, _, _> = Builder::default()
+        let mut projection_builder2: Builder<String<f64>, _, _> = Builder::default();
+
+        projection_builder2
             .translate_set(&Coordinate {
                 x: 30_f64,
                 y: 90_f64,
             })
-            .scale_set(2_f64);
-
-        projection_builder2.reflect_y_set(true);
+            .scale_set(2_f64)
+            .reflect_y_set(true);
         let projection_builder2 = projection_builder2.clip_extent_set(&[
             Coordinate {
                 x: 35_f64,

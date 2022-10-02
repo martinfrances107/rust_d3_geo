@@ -45,9 +45,10 @@ where
     fn builder() -> Self::Builder {
         let default: BuilderMercatorAntimeridianResampleNoClip<DRAIN, Mercator<DRAIN, T>, T> =
             MercatorBuilder::new(Mercator::default());
-        default
-            .reclip_convert()
-            .scale_set(T::from(961_f64 / f64::TAU()).unwrap())
+        let mut default = default.reclip_convert();
+        let default = default.scale_set(T::from(961_f64 / f64::TAU()).unwrap());
+        // TODO can I refactor the .clone() away.
+        default.clone()
     }
 }
 

@@ -19,6 +19,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
     for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>
 where
     PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
+    PR: Clone,
     RC: Clone + Stream<EP = DRAIN, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
     T: CoordFloat + FloatConst,
@@ -28,7 +29,7 @@ where
 
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
     // which uses the clip circle stratergy.
-    fn clip_angle_set(self, angle: T) -> Self::Output {
+    fn clip_angle_set(&self, angle: T) -> Self::Output {
         if angle == T::zero() {
             panic!("must call clip_angle_reset() instead");
         }
@@ -40,7 +41,7 @@ where
             p_clipc: PhantomData::<ClipCircleC<RC, T>>,
             p_rc: PhantomData::<RC>,
             p_drain: PhantomData::<DRAIN>,
-            projection_raw: self.projection_raw,
+            projection_raw: self.projection_raw.clone(),
             clip,
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
@@ -65,13 +66,13 @@ where
             sx: self.sx,
             sy: self.sy,
 
-            rotate: self.rotate,
-            project_transform: self.project_transform,
-            project_rotate_transform: self.project_rotate_transform,
-            postclip: self.postclip,
+            rotate: self.rotate.clone(),
+            project_transform: self.project_transform.clone(),
+            project_rotate_transform: self.project_rotate_transform.clone(),
+            postclip: self.postclip.clone(),
 
-            resample: self.resample,
-            rotator: self.rotator,
+            resample: self.resample.clone(),
+            rotator: self.rotator.clone(),
         }
     }
 }

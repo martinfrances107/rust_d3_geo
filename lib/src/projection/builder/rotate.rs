@@ -34,7 +34,7 @@ where
     type T = T;
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate_set(mut self, angles: &[T; 3]) -> Self {
+    fn rotate_set(&mut self, angles: &[T; 3]) -> &mut Self {
         let [delta_lambda, delta_phi, delta_gamma] = *angles;
         let f360 = T::from(360_f64).unwrap();
         self.delta_lambda = (delta_lambda % f360).to_radians();
@@ -66,7 +66,7 @@ where
     type T = T;
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate_set(mut self, angles: &[T; 3]) -> Self {
+    fn rotate_set(&mut self, angles: &[T; 3]) -> &mut Self {
         let [delta_lambda, delta_phi, delta_gamma] = *angles;
         let f360 = T::from(360_f64).unwrap();
         self.delta_lambda = (delta_lambda % f360).to_radians();

@@ -18,7 +18,6 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::path::bounds::Bounds;
-use crate::path::Result;
 use crate::projection::builder::template::NoPCNC;
 use crate::projection::builder::template::NoPCNU;
 use crate::projection::builder::template::PCNC;
@@ -37,11 +36,10 @@ use super::ClipExtentClear;
 use super::ClipExtentSet;
 
 pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
-    builder: B,
+    builder: &mut B,
     fit_bounds: FitBounds<Bint, T>,
     object: &impl Streamable<T = T>,
-) -> B
-where
+) where
     B: Build<
             ClipC = CLIPC,
             ClipU = CLIPU,
@@ -77,21 +75,23 @@ where
     T: 'static + CoordFloat + FloatConst,
 {
     let clip = builder.clip_extent();
-    let b_no_clip = builder
-        .scale_set(T::from(150_f64).unwrap())
-        .translate_set(&Coordinate {
-            x: T::zero(),
-            y: T::zero(),
-        })
-        .clip_extent_clear();
+    todo!();
+    // let mut b_no_clip = builder
+    //     .scale_set(T::from(150_f64).unwrap())
+    //     .translate_set(&Coordinate {
+    //         x: T::zero(),
+    //         y: T::zero(),
+    //     })
+    //     .clip_extent_clear();
 
-    let mut stripped_projector = b_no_clip.build();
-    let mut bounds_stream = Bounds::default();
-    let mut stream_in = stripped_projector.stream(&bounds_stream);
-    object.to_stream(&mut stream_in);
-    let b_result = fit_bounds(bounds_stream.result(), b_no_clip);
+    // let mut stripped_projector = b_no_clip.build();
+    // let mut bounds_stream = Bounds::default();
+    // let mut stream_in = stripped_projector.stream(&bounds_stream);
+    // object.to_stream(&mut stream_in);
+    // fit_bounds(bounds_stream.result(), &mut b_no_clip);
 
-    b_result.clip_extent_set(&clip.unwrap())
+    // b_no_clip.clip_extent_set(&clip.unwrap());
+    todo!();
 }
 
 pub(super) fn fit_extent_clip<
@@ -108,11 +108,10 @@ pub(super) fn fit_extent_clip<
     RUint,
     T,
 >(
-    builder: B,
+    builder: &mut B,
     extent: [[T; 2]; 2],
     object: &impl Streamable<T = T>,
-) -> B
-where
+) where
     B: Build<
             ClipC = CLIPC,
             ClipU = CLIPU,
@@ -153,7 +152,7 @@ where
 
     fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
         builder,
-        Box::new(move |b: [Coordinate<T>; 2], builder: Bint| -> Bint {
+        Box::new(move |b: [Coordinate<T>; 2], builder: &mut Bint| {
             let w = extent[1][0] - extent[0][0];
             let h = extent[1][1] - extent[0][1];
             let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
@@ -162,10 +161,10 @@ where
 
             builder
                 .scale_set(one_five_zero * k)
-                .translate_set(&Coordinate { x, y })
+                .translate_set(&Coordinate { x, y });
         }),
         object,
-    )
+    );
 }
 
 pub(super) fn fit_size_clip<
@@ -182,11 +181,10 @@ pub(super) fn fit_size_clip<
     RUint,
     T,
 >(
-    builder: B,
+    builder: &mut B,
     size: [T; 2],
     object: &impl Streamable<T = T>,
-) -> B
-where
+) where
     B: Build<
             ClipC = CLIPC,
             ClipU = CLIPU,
@@ -245,11 +243,10 @@ pub(super) fn fit_width_clip<
     RUint,
     T,
 >(
-    builder: B,
+    builder: &mut B,
     width: T,
     object: &impl Streamable<T = T>,
-) -> B
-where
+) where
     B: Build<
             ClipC = CLIPC,
             ClipU = CLIPU,
@@ -291,7 +288,7 @@ where
 
     fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
         builder,
-        Box::new(move |b: [Coordinate<T>; 2], builder: Bint| -> Bint {
+        Box::new(move |b: [Coordinate<T>; 2], builder: &mut Bint| {
             let w = width;
             let k = w / (b[1].x - b[0].x);
             let x = (w - k * (b[1].x + b[0].x)) / two;
@@ -299,10 +296,10 @@ where
 
             builder
                 .scale_set(one_five_zero * k)
-                .translate_set(&Coordinate { x, y })
+                .translate_set(&Coordinate { x, y });
         }),
         object,
-    )
+    );
 }
 
 pub(super) fn fit_height_clip<
@@ -319,11 +316,10 @@ pub(super) fn fit_height_clip<
     RUint,
     T,
 >(
-    builder: B,
+    builder: &mut B,
     height: T,
     object: &impl Streamable<T = T>,
-) -> B
-where
+) where
     B: Build<
             ClipC = CLIPC,
             ClipU = CLIPU,
@@ -367,7 +363,7 @@ where
 
     fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
         builder,
-        Box::new(move |b: [Coordinate<T>; 2], builder: Bint| -> Bint {
+        Box::new(move |b: [Coordinate<T>; 2], builder: &mut Bint| {
             let h = height;
             let k = h / (b[1].y - b[0].y);
             let x = -k * b[0].x;
@@ -375,8 +371,8 @@ where
 
             builder
                 .scale_set(one_five_zero * k)
-                .translate_set(&Coordinate { x, y })
+                .translate_set(&Coordinate { x, y });
         }),
         object,
-    )
+    );
 }

@@ -34,9 +34,9 @@ where
     where
         DRAIN: Default + Stream<EP = DRAIN, T = T>,
     {
-        Builder::new(Gnomic::default())
-            .scale_set(T::from(144.049_f64).unwrap())
-            .clip_angle_set(T::from(60_f64).unwrap())
+        let mut b = Builder::new(Gnomic::default());
+        b.scale_set(T::from(144.049_f64).unwrap());
+        b.clip_angle_set(T::from(60_f64).unwrap())
     }
 }
 

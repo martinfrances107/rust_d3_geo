@@ -35,9 +35,9 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        Builder::new(AzimuthalEquiDistant::default())
-            .scale_set(T::from(79.4188_f64).unwrap())
-            .clip_angle_set(T::from(180_f64 - 1e-3).unwrap())
+        let mut b = Builder::new(AzimuthalEquiDistant::default());
+        b.scale_set(T::from(79.4188_f64).unwrap());
+        b.clip_angle_set(T::from(180_f64 - 1e-3).unwrap())
     }
 }
 

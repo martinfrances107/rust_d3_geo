@@ -174,20 +174,21 @@ mod mercator_tests {
         println!(
             "mercator.clipExtent(extent).translate(translate) updates the intersected clip extent"
         );
-        let projection_builder = Mercator::builder()
-            .scale_set(1_f64)
-            .clip_extent_adjust(&[
-                Coordinate {
-                    x: -10_f64,
-                    y: -10_f64,
-                },
-                Coordinate {
-                    x: 10_f64,
-                    y: 10_f64,
-                },
-            ])
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
-            .precision_bypass();
+        let mut projection_builder = Mercator::builder();
+        projection_builder.scale_set(1_f64);
+        projection_builder.clip_extent_adjust(&[
+            Coordinate {
+                x: -10_f64,
+                y: -10_f64,
+            },
+            Coordinate {
+                x: 10_f64,
+                y: 10_f64,
+            },
+        ]);
+        let projection_builder =
+            projection_builder.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        let projection_builder = projection_builder.precision_bypass();
 
         let projection = projection_builder.build();
         let path_builder = PathBuilder::context_pathstring();
@@ -230,7 +231,8 @@ mod mercator_tests {
             .into(),
         );
 
-        let pb = Mercator::builder().fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
+        let mut pb = Mercator::builder();
+        pb.fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
         assert_eq!(pb.scale(), 20969742.365692537_f64);
         assert_eq!(
             pb.translate(),

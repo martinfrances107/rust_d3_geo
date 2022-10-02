@@ -38,7 +38,7 @@ where
     ///
     /// delta is related to clip angle.
     #[inline]
-    fn precision_bypass(self) -> Self::Output {
+    fn precision_bypass(&self) -> Self::Output {
         // Copy - Mutate.
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
@@ -53,15 +53,15 @@ where
             x1: self.x1,
             y1: self.y1,
             theta: self.theta,
-            rotate: self.rotate,
-            rotator: self.rotator,
+            rotate: self.rotate.clone(),
+            rotator: self.rotator.clone(),
             project_transform: self.project_transform.clone(),
-            project_rotate_transform: self.project_rotate_transform,
-            postclip: self.postclip,
+            project_rotate_transform: self.project_rotate_transform.clone(),
+            postclip: self.postclip.clone(),
             alpha: self.alpha,
             lambda: self.lambda,
             phi: self.phi,
-            projection_raw: self.projection_raw,
+            projection_raw: self.projection_raw.clone(),
             k: self.k,
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
@@ -70,7 +70,7 @@ where
             // Mutate section.
             clip: gen_clip_antimeridian::<NoPCNU<DRAIN>, ResampleNoneNoPCNC<DRAIN, PR, T>, T>(),
             delta2: T::zero(),
-            resample: None::new(self.project_transform),
+            resample: None::new(self.project_transform.clone()),
         }
     }
 }
@@ -87,7 +87,7 @@ where
     /// Set the projection builder precision
     ///
     /// delta is related to clip angle.
-    fn precision_bypass(self) -> Self::Output {
+    fn precision_bypass(&self) -> Self::Output {
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
@@ -106,15 +106,15 @@ where
             x1: self.x1,
             y1: self.y1,
             theta: self.theta,
-            rotate: self.rotate,
-            rotator: self.rotator,
+            rotate: self.rotate.clone(),
+            rotator: self.rotator.clone(),
             project_transform: self.project_transform.clone(),
-            project_rotate_transform: self.project_rotate_transform,
-            postclip: self.postclip,
+            project_rotate_transform: self.project_rotate_transform.clone(),
+            postclip: self.postclip.clone(),
             alpha: self.alpha,
             lambda: self.lambda,
             phi: self.phi,
-            projection_raw: self.projection_raw,
+            projection_raw: self.projection_raw.clone(),
             k: self.k,
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
@@ -123,7 +123,7 @@ where
             // Mutate section.
             clip: gen_clip_antimeridian::<PCNU<DRAIN, T>, ResampleNonePCNC<DRAIN, PR, T>, T>(),
             delta2: T::zero(),
-            resample: None::new(self.project_transform),
+            resample: None::new(self.project_transform.clone()),
         }
     }
 }
@@ -141,7 +141,7 @@ where
     ///
     /// delta is related to clip angle.
     #[inline]
-    fn precision_bypass(self) -> Self::Output {
+    fn precision_bypass(&self) -> Self::Output {
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
@@ -161,15 +161,15 @@ where
             x1: self.x1,
             y1: self.y1,
             theta: self.theta,
-            rotate: self.rotate,
-            rotator: self.rotator,
+            rotate: self.rotate.clone(),
+            rotator: self.rotator.clone(),
             project_transform: self.project_transform.clone(),
-            project_rotate_transform: self.project_rotate_transform,
-            postclip: self.postclip,
+            project_rotate_transform: self.project_rotate_transform.clone(),
+            postclip: self.postclip.clone(),
             alpha: self.alpha,
             lambda: self.lambda,
             phi: self.phi,
-            projection_raw: self.projection_raw,
+            projection_raw: self.projection_raw.clone(),
             k: self.k,
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
@@ -185,7 +185,7 @@ where
                 T,
             >(self.theta.unwrap()),
             delta2: T::zero(),
-            resample: None::new(self.project_transform),
+            resample: None::new(self.project_transform.clone()),
         }
     }
 }
@@ -202,7 +202,7 @@ where
     /// Set the projection builder precision
     ///
     /// delta is related to clip angle.
-    fn precision_bypass(self) -> Self::Output {
+    fn precision_bypass(&self) -> Self::Output {
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
@@ -231,15 +231,15 @@ where
             x1: self.x1,
             y1: self.y1,
             theta: self.theta,
-            rotate: self.rotate,
-            rotator: self.rotator,
+            rotate: self.rotate.clone(),
+            rotator: self.rotator.clone(),
             project_transform: self.project_transform.clone(),
-            project_rotate_transform: self.project_rotate_transform,
-            postclip: self.postclip,
+            project_rotate_transform: self.project_rotate_transform.clone(),
+            postclip: self.postclip.clone(),
             alpha: self.alpha,
             lambda: self.lambda,
             phi: self.phi,
-            projection_raw: self.projection_raw,
+            projection_raw: self.projection_raw.clone(),
             k: self.k,
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
@@ -248,7 +248,7 @@ where
             // Mutate section.
             clip,
             delta2: T::zero(),
-            resample: None::new(self.project_transform),
+            resample: None::new(self.project_transform.clone()),
         }
     }
 }

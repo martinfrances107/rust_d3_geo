@@ -31,8 +31,9 @@ mod path_area_test {
     where
         T: CoordFloat + Default + Display + FloatConst,
     {
-        let ba: BuilderAntimeridianResampleNoClip<Area<T>, Equirectangular<Area<T>, T>, T> =
-            Equirectangular::<Area<T>, T>::builder().scale_set(T::from(900f64 / PI).unwrap());
+        let mut ba: BuilderAntimeridianResampleNoClip<Area<T>, Equirectangular<Area<T>, T>, T> =
+            Equirectangular::<Area<T>, T>::builder();
+        ba.scale_set(T::from(900f64 / PI).unwrap());
 
         let builder = ba.precision_bypass();
         let out = builder.build();

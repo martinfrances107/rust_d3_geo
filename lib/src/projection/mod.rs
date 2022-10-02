@@ -49,7 +49,7 @@ mod fit_clip;
 mod fit_no_clip;
 mod fit_reclip;
 
-type FitBounds<B, T> = Box<dyn Fn([Coordinate<T>; 2], B) -> B>;
+type FitBounds<B, T> = Box<dyn Fn([Coordinate<T>; 2], &mut B)>;
 
 /// Projection type.
 pub type RotateTransform<PR, T> =
@@ -150,7 +150,7 @@ pub trait CenterSet {
     /// @param point A point specified as a two-dimensional array
     /// [longitude, latitude] in degrees.
     ///
-    fn center_set(self, point: &Coordinate<Self::T>) -> Self
+    fn center_set(&mut self, point: &Coordinate<Self::T>) -> &mut Self
     where
         Self::T: CoordFloat;
 }
@@ -189,7 +189,7 @@ pub trait ClipExtentSet {
     type Output;
 
     /// Sets the bounding box.
-    fn clip_extent_set(self, extent: &[Coordinate<Self::T>; 2]) -> Self::Output
+    fn clip_extent_set(&self, extent: &[Coordinate<Self::T>; 2]) -> Self::Output
     where
         Self::T: CoordFloat;
 }
@@ -202,7 +202,7 @@ pub trait ClipExtentAdjust {
     type T;
 
     /// Sets the bounding box.
-    fn clip_extent_adjust(self, extent: &[Coordinate<Self::T>; 2]) -> Self
+    fn clip_extent_adjust(&mut self, extent: &[Coordinate<Self::T>; 2]) -> &mut Self
     where
         Self::T: CoordFloat;
 }
@@ -236,7 +236,11 @@ pub trait Fit {
     /// geographic feature supported by d3-geo (An extension of GeoJSON
     ///   feature).
 
-    fn fit_extent(self, extent: [[Self::T; 2]; 2], object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_extent(
+        &mut self,
+        extent: [[Self::T; 2]; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> &mut Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
@@ -251,19 +255,19 @@ pub trait Fit {
     ///  @param size The size of the extent, specified as an array [width,
     ///  height].  @param object A geographic feature supported by d3-geo
     ///  (An extension of GeoJSON feature).
-    fn fit_size(self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_size(&mut self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> &mut Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on width.
-    fn fit_width(self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_width(&mut self, w: Self::T, object: &impl Streamable<T = Self::T>) -> &mut Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to fit_size where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_height(self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_height(&mut self, h: Self::T, object: &impl Streamable<T = Self::T>) -> &mut Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }
@@ -315,7 +319,7 @@ pub trait ClipAngleSet {
     type T;
 
     ///  Switches the projection builder from antimeridian to circle based clipping.
-    fn clip_angle_set(self, angle: Self::T) -> Self::Output;
+    fn clip_angle_set(&self, angle: Self::T) -> Self::Output;
 }
 
 /// Alters the clip angle on a projector builder previously configured to
@@ -328,7 +332,7 @@ pub trait ClipAngleAdjust {
 
     /// Given the angle, adjust the projection builder Must already be set
     /// for  cicle based clipping.
-    fn clip_angle(self, angle: Self::T) -> Self;
+    fn clip_angle(&mut self, angle: Self::T) -> &mut Self;
 }
 
 pub trait RecenterWithResampling {
@@ -374,7 +378,7 @@ pub trait PrecisionAdjust {
     ///  Sets the threshold for the projection’s adaptive resampling to the
     ///  specified value in Pixels and returns the projection.  This value
     ///  corresponds to the Douglas–Peucker distance.
-    fn precision_set(self, delta: &Self::T) -> Self;
+    fn precision_set(&mut self, delta: &Self::T) -> &mut Self;
 }
 
 /// Resampling Getter.
@@ -398,7 +402,7 @@ pub trait PrecisionBypass {
     /// f64 or f32.
     type T;
     type Output;
-    fn precision_bypass(self) -> Self::Output;
+    fn precision_bypass(&self) -> Self::Output;
 }
 
 /// Give a resampling precision consume the object and return one that
@@ -440,7 +444,7 @@ pub trait RotateSet {
     ///  @param angles  A three-element array of numbers [lambda, phi,
     ///  gamma] specifying the rotation angles in degrees about each
     ///  spherical axis.  (These correspond to yaw, PItch and roll.)
-    fn rotate_set(self, angles: &[Self::T; 3]) -> Self;
+    fn rotate_set(&mut self, angles: &[Self::T; 3]) -> &mut Self;
 }
 
 /// Controls the projections scaling factor.
@@ -467,7 +471,7 @@ pub trait ScaleSet {
     ///
     ///  @param scale Scale factor to be used for the projection; the
     ///  default scale is projection-specific.
-    fn scale_set(self, scale: Self::T) -> Self;
+    fn scale_set(&mut self, scale: Self::T) -> &mut Self;
 }
 
 /// Controls the projections translation factor.
@@ -498,7 +502,7 @@ pub trait TranslateSet {
     ///  @param point A two-element array [tx, ty] specifying the
     ///  translation offset. The default translation offset of defaults to
     ///  [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
-    fn translate_set(self, t: &Coordinate<Self::T>) -> Self
+    fn translate_set(&mut self, t: &Coordinate<Self::T>) -> &mut Self
     where
         Self::T: CoordFloat;
 }

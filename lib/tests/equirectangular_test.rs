@@ -40,9 +40,9 @@ mod equirectangular_test {
     #[test]
     fn return_expected_result() {
         println!("equirectangular(point) returns the expected result");
-        let b: B = Equirectangular::builder()
-            .translate_set(&Coordinate { x: 0f64, y: 0f64 })
-            .scale_set(1_f64);
+        let mut b: B = Equirectangular::builder();
+        b.translate_set(&Coordinate { x: 0f64, y: 0f64 });
+        b.scale_set(1_f64);
 
         let equirectangular = b.build();
 
@@ -244,10 +244,10 @@ mod equirectangular_test {
     #[test]
     fn rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
-        let b: B = Equirectangular::builder()
-            .rotate_set(&[30f64, 30f64, 0f64])
-            .translate_set(&Coordinate { x: 0f64, y: 0f64 })
-            .scale_set(1_f64);
+        let mut b: B = Equirectangular::builder();
+        b.rotate_set(&[30f64, 30f64, 0f64]);
+        b.translate_set(&Coordinate { x: 0f64, y: 0f64 });
+        b.scale_set(1_f64);
 
         let equirectangular = b.build();
 
@@ -351,10 +351,10 @@ mod equirectangular_test {
     fn rotate_0_0_30() {
         println!("equirectangular.rotate([0, 0, 30])(point) returns the expected result");
 
-        let b: B = Equirectangular::builder()
-            .rotate_set(&[0f64, 0f64, 30f64])
-            .translate_set(&Coordinate { x: 0f64, y: 0f64 })
-            .scale_set(1f64);
+        let mut b: B = Equirectangular::builder();
+        b.rotate_set(&[0f64, 0f64, 30f64]);
+        b.translate_set(&Coordinate { x: 0f64, y: 0f64 });
+        b.scale_set(1f64);
 
         // let equirectangular = b.build();
 
@@ -452,10 +452,10 @@ mod equirectangular_test {
     #[test]
     fn rotate_30_30_30() {
         println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
-        let b: B = Equirectangular::builder()
-            .rotate_set(&[30f64, 30f64, 30f64])
-            .translate_set(&Coordinate { x: 0f64, y: 0f64 })
-            .scale_set(1f64);
+        let mut b: B = Equirectangular::builder();
+        b.rotate_set(&[30f64, 30f64, 30f64]);
+        b.translate_set(&Coordinate { x: 0f64, y: 0f64 });
+        b.scale_set(1f64);
 
         let equirectangular = b.build();
 

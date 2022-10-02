@@ -29,7 +29,9 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        Builder::new(Equirectangular::default()).scale_set(T::from(152.63_f64).unwrap())
+        let mut b = Builder::new(Equirectangular::default());
+        b.scale_set(T::from(152.63_f64).unwrap());
+        b
     }
 }
 

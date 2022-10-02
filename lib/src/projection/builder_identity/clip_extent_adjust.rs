@@ -13,7 +13,7 @@ where
 {
     type T = T;
 
-    fn clip_extent_adjust(mut self, extent: &[Coordinate<T>; 2]) -> Self {
+    fn clip_extent_adjust(&mut self, extent: &[Coordinate<T>; 2]) -> &mut Self {
         self.x0 = Some(extent[0].x);
         self.y0 = Some(extent[0].y);
         self.x1 = Some(extent[1].x);

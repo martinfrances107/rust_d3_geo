@@ -32,12 +32,12 @@ where
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
     // which uses the clip circle stratergy.
     #[inline]
-    fn clip_angle_set(self, angle: T) -> Self::Output {
+    fn clip_angle_set(&self, angle: T) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<RC, T>>,
             p_drain: PhantomData::<DRAIN>,
             p_rc: PhantomData::<RC>,
-            pr: self.pr,
+            pr: self.pr.clone(),
             base: self.base.clip_angle_set(angle),
             extent: self.extent,
         }

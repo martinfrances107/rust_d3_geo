@@ -22,9 +22,9 @@ mod angle_test {
     #[test]
     fn angle_defaults_to_zero() {
         println!("projection.angle(…) defaults to zero");
-        let pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
-            .scale_set(1_f64)
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder();
+        pb.scale_set(1_f64);
+        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
         assert_eq!(pb.angle(), 0_f64);
         let projection = pb.build();
 
@@ -141,8 +141,8 @@ mod angle_test {
     #[test]
     fn angle_rotates_by_plus_30() {
         println!("projection.angle(…) defaults to zero");
-        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
-            .scale_set(1_f64)
+        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder();
+        pb.scale_set(1_f64)
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
         let pb = pb.angle_set(30_f64);
 
@@ -265,8 +265,8 @@ mod angle_test {
     #[test]
     fn angle_rotates_by_minus_30() {
         println!("projection.angle(…) defaults to zero");
-        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
-            .scale_set(1_f64)
+        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder();
+        pb.scale_set(1_f64)
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
 
         pb.angle_set(-30_f64);
@@ -389,9 +389,9 @@ mod angle_test {
     #[test]
     fn wraps_360() {
         println!("projection.angle(…) wraps around 360°");
-        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder()
-            .scale_set(1_f64)
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder();
+        pb.scale_set(1_f64);
+        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
         pb.angle_set(360_f64);
 
         assert!(in_delta(pb.angle(), 0_f64, 1e-6));

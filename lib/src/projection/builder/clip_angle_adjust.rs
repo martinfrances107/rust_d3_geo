@@ -16,7 +16,7 @@ where
 {
     type T = T;
 
-    fn clip_angle(mut self, angle: T) -> Self {
+    fn clip_angle(&mut self, angle: T) -> &mut Self {
         if angle == T::zero() {
             panic!("must call clip_angle_reset() instead");
         }

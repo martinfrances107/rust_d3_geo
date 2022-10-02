@@ -38,9 +38,9 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        Builder::new(AzimuthalEqualArea::default())
-            .scale_set(T::from(124.75_f64).unwrap())
-            .clip_angle_set(T::from(180_f64 - 1e-3).unwrap())
+        let mut b = Builder::new(AzimuthalEqualArea::default());
+        b.scale_set(T::from(124.75_f64).unwrap());
+        b.clip_angle_set(T::from(180_f64 - 1e-3).unwrap())
     }
 }
 

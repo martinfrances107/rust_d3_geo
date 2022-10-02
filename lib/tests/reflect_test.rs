@@ -50,9 +50,9 @@ mod reflect_tests {
     fn test_reflect_x_defaults_to_false() {
         println!("projection.reflectX(…) defaults to false");
 
-        let builder: GB = Gnomic::builder()
-            .scale_set(1f64)
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        let mut builder: GB = Gnomic::builder();
+        builder.scale_set(1f64);
+        builder.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
 
         assert_eq!(builder.is_x_reflected(), false);
         assert_eq!(builder.is_y_reflected(), false);
@@ -95,9 +95,9 @@ mod reflect_tests {
     #[test]
     fn test_reflect_mirrors_x_after_processing() {
         println!("projection.reflectX(…) mirrors x after projecting");
-        let mut builder: GB = Gnomic::builder()
-            .scale_set(1_f64)
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        let mut builder: GB = Gnomic::builder();
+        builder.scale_set(1_f64);
+        builder.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
 
         builder.reflect_x_set(true);
 
@@ -181,12 +181,11 @@ mod reflect_tests {
     fn reflect_x_works_with_projection_angle() {
         println!("projection.reflectX(…) works with projection.angle()");
         let mut builder: MercatorBuilder<_, _, StreamDrainStub<f32>, _, _, _, _, f32> =
-            Mercator::builder()
-                .scale_set(1_f32)
-                .translate_set(&Coordinate {
-                    x: 10_f32,
-                    y: 20_f32,
-                });
+            Mercator::builder();
+        builder.scale_set(1_f32).translate_set(&Coordinate {
+            x: 10_f32,
+            y: 20_f32,
+        });
 
         builder.reflect_x_set(true).angle_set(45_f32);
 

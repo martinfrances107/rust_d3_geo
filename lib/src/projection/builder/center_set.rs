@@ -37,7 +37,7 @@ where
 {
     type T = T;
 
-    fn center_set(mut self, p: &Coordinate<T>) -> Self {
+    fn center_set(&mut self, p: &Coordinate<T>) -> &mut Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
         self.recenter_with_resampling();
@@ -65,7 +65,7 @@ where
 {
     type T = T;
 
-    fn center_set(mut self, p: &Coordinate<T>) -> Self {
+    fn center_set(&mut self, p: &Coordinate<T>) -> &mut Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
         self.recenter_with_resampling();
@@ -93,7 +93,7 @@ where
 {
     type T = T;
 
-    fn center_set(mut self, p: &Coordinate<T>) -> Self {
+    fn center_set(&mut self, p: &Coordinate<T>) -> &mut Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
         self.recenter_no_resampling();

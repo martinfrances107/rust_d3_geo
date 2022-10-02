@@ -37,8 +37,8 @@ where
 {
     type T = T;
 
-    fn center_set(mut self, center: &Coordinate<T>) -> Self {
-        self.base = self.base.center_set(center);
+    fn center_set(&mut self, center: &Coordinate<T>) -> &mut Self {
+        self.base.center_set(center);
         self.reclip()
     }
 }
@@ -63,8 +63,8 @@ where
 {
     type T = T;
 
-    fn center_set(mut self, center: &Coordinate<T>) -> Self {
-        self.base = self.base.center_set(center);
+    fn center_set(&mut self, center: &Coordinate<T>) -> &mut Self {
+        self.base.center_set(center);
         self.reclip()
     }
 }

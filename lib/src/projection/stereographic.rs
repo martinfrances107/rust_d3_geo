@@ -34,9 +34,9 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        Builder::new(Stereographic::default())
-            .scale_set(T::from(250_f64).unwrap())
-            .clip_angle_set(T::from(142_f64).unwrap())
+        let mut b = Builder::new(Stereographic::default());
+        b.scale_set(T::from(250_f64).unwrap());
+        b.clip_angle_set(T::from(142_f64).unwrap())
     }
 }
 

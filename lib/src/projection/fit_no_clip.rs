@@ -32,11 +32,10 @@ use crate::Transform;
 /// no_clip in the sense tha input is  NoClip (Identity)
 /// and so is the output.
 fn fit_no_clip<B, CC, CU, PR, RC, RU, T>(
-    builder: B,
-    fit_bounds: Box<dyn Fn([Coordinate<T>; 2], B) -> B>,
+    builder: &mut B,
+    fit_bounds: Box<dyn Fn([Coordinate<T>; 2], &mut B)>,
     object: &impl Streamable<T = T>,
-) -> B
-where
+) where
     B: Build<
             ClipC = CC,
             ClipU = CU,
@@ -66,15 +65,14 @@ where
 
     object.to_stream(&mut stream_in);
     let bounds = stream_in.endpoint().result();
-    fit_bounds(bounds, builder)
+    fit_bounds(bounds, builder);
 }
 
 pub(super) fn fit_extent_no_clip<B, CC, CU, PR, RC, RU, T>(
-    builder: B,
+    builder: &mut B,
     extent: [[T; 2]; 2],
     object: &impl Streamable<T = T>,
-) -> B
-where
+) where
     B: Build<
             ClipC = CC,
             ClipU = CU,
@@ -98,7 +96,7 @@ where
 
     fit_no_clip(
         builder,
-        Box::new(move |b: [Coordinate<T>; 2], builder: B| {
+        Box::new(move |b: [Coordinate<T>; 2], builder: &mut B| {
             let w = extent[1][0] - extent[0][0];
             let h = extent[1][1] - extent[0][1];
             let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
@@ -107,18 +105,17 @@ where
 
             builder
                 .scale_set(one_five_zero * k)
-                .translate_set(&Coordinate { x, y })
+                .translate_set(&Coordinate { x, y });
         }),
         object,
-    )
+    );
 }
 
 pub(super) fn fit_size_no_clip<B, CC, CU, PR, RC, RU, T>(
-    builder: B,
+    builder: &mut B,
     size: [T; 2],
     object: &impl Streamable<T = T>,
-) -> B
-where
+) where
     B: Build<
             ClipC = CC,
             ClipU = CU,
@@ -137,15 +134,14 @@ where
     RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
-    fit_extent_no_clip(builder, [[T::zero(), T::zero()], size], object)
+    fit_extent_no_clip(builder, [[T::zero(), T::zero()], size], object);
 }
 
 pub(super) fn fit_width_no_clip<B, CC, CU, PR, RC, RU, T>(
-    builder: B,
+    builder: &mut B,
     width: T,
     object: &impl Streamable<T = T>,
-) -> B
-where
+) where
     B: Build<
             ClipC = CC,
             ClipU = CU,
@@ -169,7 +165,7 @@ where
 
     fit_no_clip(
         builder,
-        Box::new(move |b: [Coordinate<T>; 2], builder: B| {
+        Box::new(move |b: [Coordinate<T>; 2], builder: &mut B| {
             let w = width;
             let k = w / (b[1].x - b[0].x);
             let x = (w - k * (b[1].x + b[0].x)) / two;
@@ -177,18 +173,17 @@ where
 
             builder
                 .scale_set(one_five_zero * k)
-                .translate_set(&Coordinate { x, y })
+                .translate_set(&Coordinate { x, y });
         }),
         object,
-    )
+    );
 }
 
 pub(super) fn fit_height_no_clip<B, CC, CU, PR, RC, RU, T>(
-    builder: B,
+    builder: &mut B,
     height: T,
     object: &impl Streamable<T = T>,
-) -> B
-where
+) where
     PR: Clone + Transform<T = T>,
     B: Build<
             ClipC = CC,
@@ -213,7 +208,7 @@ where
 
     fit_no_clip(
         builder,
-        Box::new(move |b: [Coordinate<T>; 2], builder: B| {
+        Box::new(move |b: [Coordinate<T>; 2], builder: &mut B| {
             let h = height;
             let k = h / (b[1].y - b[0].y);
             let x = -k * b[0].x;
@@ -221,7 +216,7 @@ where
 
             builder
                 .scale_set(one_five_zero * k)
-                .translate_set(&Coordinate { x, y })
+                .translate_set(&Coordinate { x, y });
         }),
         object,
     )

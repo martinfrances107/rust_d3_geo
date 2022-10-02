@@ -21,8 +21,8 @@ where
 {
     type T = T;
 
-    fn translate_set(mut self, t: &Coordinate<T>) -> Self {
-        self.base = self.base.translate_set(t);
+    fn translate_set(&mut self, t: &Coordinate<T>) -> &mut Self {
+        self.base.translate_set(t);
         self.reclip()
     }
 }
@@ -35,8 +35,8 @@ where
 {
     type T = T;
 
-    fn translate_set(mut self, t: &Coordinate<T>) -> Self {
-        self.base = self.base.translate_set(t);
+    fn translate_set(&mut self, t: &Coordinate<T>) -> &mut Self {
+        self.base.translate_set(t);
         self.reclip()
     }
 }

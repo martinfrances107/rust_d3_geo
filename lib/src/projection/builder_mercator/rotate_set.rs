@@ -34,8 +34,8 @@ where
     type T = T;
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate_set(mut self, angles: &[T; 3]) -> Self {
-        self.base = self.base.rotate_set(angles);
+    fn rotate_set(&mut self, angles: &[T; 3]) -> &mut Self {
+        self.base.rotate_set(angles);
         self
     }
 }
@@ -61,8 +61,8 @@ where
     type T = T;
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate_set(mut self, angles: &[T; 3]) -> Self {
-        self.base = self.base.rotate_set(angles);
+    fn rotate_set(&mut self, angles: &[T; 3]) -> &mut Self {
+        self.base.rotate_set(angles);
         self
     }
 }

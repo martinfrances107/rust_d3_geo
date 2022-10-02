@@ -32,9 +32,9 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        Builder::new(Orthographic::default())
-            .scale_set(T::from(249.5_f64).unwrap())
-            .clip_angle_set(T::from(90_f64 + EPSILON).unwrap())
+        let mut b = Builder::new(Orthographic::default());
+        b.scale_set(T::from(249.5_f64).unwrap());
+        b.clip_angle_set(T::from(90_f64 + EPSILON).unwrap())
     }
 }
 

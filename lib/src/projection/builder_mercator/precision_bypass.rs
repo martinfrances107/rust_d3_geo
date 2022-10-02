@@ -20,14 +20,14 @@ where
     type Output = BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;
 
-    fn precision_bypass(self) -> Self::Output {
+    fn precision_bypass(&self) -> Self::Output {
         let base = self.base.precision_bypass();
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
             p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             extent: self.extent, // post-clip extent
-            pr: self.pr,
+            pr: self.pr.clone(),
             base,
         }
     }
@@ -42,15 +42,15 @@ where
     type Output = BuilderMercatorCircleResampleNoneClip<DRAIN, PR, T>;
     type T = T;
 
-    fn precision_bypass(self) -> Self::Output {
-        let base = self.base.precision_bypass();
+    #[inline]
+    fn precision_bypass(&self) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
             p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             extent: self.extent, // post-clip extent
-            pr: self.pr,
-            base,
+            pr: self.pr.clone(),
+            base: self.base.precision_bypass(),
         }
     }
 }

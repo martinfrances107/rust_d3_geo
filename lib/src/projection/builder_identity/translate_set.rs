@@ -12,7 +12,7 @@ where
     type T = T;
 
     #[inline]
-    fn translate_set(mut self, t: &Coordinate<T>) -> Self {
+    fn translate_set(&mut self, t: &Coordinate<T>) -> &mut Self {
         self.tx = t.x;
         self.ty = t.y;
         self.reset();

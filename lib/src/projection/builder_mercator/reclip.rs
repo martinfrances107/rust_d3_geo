@@ -24,7 +24,7 @@ where
     RU: Clone,
     T: CoordFloat + FloatConst,
 {
-    fn reclip(mut self) -> Self {
+    fn reclip(&mut self) -> &mut Self {
         let k = T::PI() * self.base.scale();
 
         let rotate_raw = self.base.rotate();
@@ -59,7 +59,7 @@ where
                 },
             ],
         };
-        self.base = self.base.clip_extent_adjust(&ce);
+        self.base.clip_extent_adjust(&ce);
         self
     }
 }

@@ -37,10 +37,11 @@ mod path_bounds_test {
             + FloatConst,
     >() -> ProjectorAntimeridianResampleNoneNoClip<Bounds<T>, Equirectangular<Bounds<T>, T>, T>
     {
-        Equirectangular::builder()
-            .scale_set(T::from(900f64 / PI).unwrap())
-            .precision_bypass()
-            .build()
+        let mut b = Equirectangular::builder();
+        let b = b.scale_set(T::from(900f64 / PI).unwrap());
+        let b = b.precision_bypass();
+
+        b.build()
     }
 
     #[inline]

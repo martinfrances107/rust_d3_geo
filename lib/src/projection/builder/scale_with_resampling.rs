@@ -33,7 +33,7 @@ where
 {
     type T = T;
 
-    fn scale_set(mut self, scale: T) -> Self {
+    fn scale_set(&mut self, scale: T) -> &mut Self {
         self.k = scale;
         self.recenter_with_resampling();
         self
@@ -60,7 +60,7 @@ where
 {
     type T = T;
 
-    fn scale_set(mut self, scale: T) -> Self {
+    fn scale_set(&mut self, scale: T) -> &mut Self {
         self.k = scale;
         self.recenter_with_resampling();
         self
