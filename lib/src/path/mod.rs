@@ -138,7 +138,7 @@ where
     PCNU: Clone + Connectable<Output = PCNC, SC = Measure<T>>,
     RC: Clone + Stream<EP = Measure<T>, T = T>,
     RU: Clone + Connectable<Output = RC, SC = PCNC>,
-    T: CoordFloat,
+    T: AddAssign + CoordFloat,
 {
     /// Returns the area of the Path
     /// This operation consumes the  Path.

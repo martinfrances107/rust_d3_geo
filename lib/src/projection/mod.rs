@@ -17,9 +17,9 @@ pub mod azimuthal_equidistant;
 pub mod equirectangular;
 /// The raw projection.
 pub mod gnomic;
+pub mod identity_raw;
 /// The raw projection.
 pub mod mercator;
-/// The raw projection.
 /// /// The raw projection.
 pub mod mercator_transverse;
 pub mod orthographic;

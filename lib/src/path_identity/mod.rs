@@ -11,6 +11,7 @@ use num_traits::FloatConst;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
+use crate::path::measure::Measure;
 use crate::path::PointRadiusEnum;
 use crate::path::Result;
 use crate::projection::projector_identity::transformer::Transformer;
@@ -89,6 +90,27 @@ where
 
         // stream_in.0.sink.endpoint().result()
         todo!();
+    }
+}
+
+impl<PCNC, PCNU, T> Path<Measure<T>, PCNC, PCNU, T>
+where
+    PCNC: Clone + Stream<EP = Measure<T>, T = T>,
+    PCNU: Clone + Connectable<Output = PCNC, SC = Measure<T>>,
+
+    T: AddAssign + CoordFloat,
+{
+    /// Returns the area of the Path
+    /// This operation consumes the  Path.
+    pub fn measure(mut self, object: &impl Streamable<T = T>) -> T
+    where
+        T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    {
+        let stream_dst = Measure::default();
+        let mut stream_in = self.projection.stream(&stream_dst);
+        object.to_stream(&mut stream_in);
+
+        stream_in.endpoint().result()
     }
 }
 

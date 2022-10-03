@@ -1,3 +1,5 @@
+use std::ops::AddAssign;
+
 use derivative::*;
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -41,11 +43,12 @@ where
 
 impl<T> Default for Measure<T>
 where
-    T: CoordFloat,
+    T: AddAssign + CoordFloat,
 {
     #[inline]
     fn default() -> Self {
         Self {
+            // in the javascript, this is lengthRing
             mode: MeasureMode::None,
             length_sum: T::zero(),
             p0: Coordinate {
@@ -63,10 +66,10 @@ where
 
 impl<T> Measure<T>
 where
-    T: CoordFloat,
+    T: AddAssign + CoordFloat,
 {
     #[inline]
-    fn point_noop(&mut self, p: &Coordinate<T>) {}
+    fn point_noop(&mut self, _p: &Coordinate<T>) {}
 
     fn length_point_first(&mut self, p: &Coordinate<T>) {
         self.point_fn = Self::length_point;
@@ -76,7 +79,8 @@ where
 
     fn length_point(&mut self, p: &Coordinate<T>) {
         self.p0 = self.p0 - *p;
-        self.length_sum = self.length_sum + (self.p0.x * self.p0.x + self.p0.y * self.p0.y).sqrt();
+
+        self.length_sum += (self.p0.x * self.p0.x + self.p0.y * self.p0.y).sqrt();
         self.p0 = *p;
     }
 }
@@ -96,7 +100,7 @@ where
 
 impl<T> Stream for Measure<T>
 where
-    T: CoordFloat + FloatConst,
+    T: AddAssign + CoordFloat + FloatConst,
 {
     type EP = Self;
     type T = T;
@@ -108,12 +112,10 @@ where
 
     #[inline]
     fn line_end(&mut self) {
-        match self.mode {
-            MeasureMode::Polygon => {}
-            _ => {
-                self.length_point(&self.p00.clone());
-            }
+        if let MeasureMode::Polygon = self.mode {
+            self.length_point(&self.p00.clone());
         };
+
         self.point_fn = Measure::point_noop;
     }
 

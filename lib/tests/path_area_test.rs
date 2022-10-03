@@ -26,7 +26,7 @@ mod path_area_test {
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
-    fn equirectangular<T>(
+    fn projector<T>(
     ) -> ProjectorAntimeridianResampleNoneNoClip<Area<T>, Equirectangular<Area<T>, T>, T>
     where
         T: CoordFloat + Default + Display + FloatConst,
@@ -70,7 +70,7 @@ mod path_area_test {
             ]),
             vec![],
         ));
-        let eq = equirectangular();
+        let eq = projector();
         assert_eq!(test_area(eq, object), 25_f64);
     }
 
@@ -93,14 +93,14 @@ mod path_area_test {
                 Coordinate { x: 100.2, y: 0.2 },
             ])],
         ));
-        let eq = equirectangular();
+        let eq = projector();
         assert_eq!(test_area(eq, object), 16_f64);
     }
 
     #[test]
     fn area_of_a_sphere() {
         println!("geoPath.area(…) of a sphere");
-        let eq = equirectangular::<f64>();
+        let eq = projector::<f64>();
         let object = Sphere::default();
         assert_eq!(test_area(eq, object), 1620000_f64);
     }

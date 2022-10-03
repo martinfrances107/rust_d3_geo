@@ -86,8 +86,6 @@ A complete list of all ported projections can be found in invert-test.rs. Out of
   * src/projection/clip_angle_reset()
   * src/projection/clip_extent_clear()
 
-### To be implemented
-  * path/measure and measure-test.js  
 
 Finally
 
