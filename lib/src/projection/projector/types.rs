@@ -37,8 +37,8 @@ pub type ProjectorAntimeridianResampleNoneClip<DRAIN, PR, T> = Projector<
 >;
 
 pub type ProjectorAntimeridianResampleNoClip<DRAIN, PR, T> = Projector<
-    ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>,
-    ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
+    ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>,
+    ClipAntimeridianU<ResampleNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
     NoPCNU<DRAIN>,
     PR,
