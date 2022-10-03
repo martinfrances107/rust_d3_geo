@@ -61,7 +61,7 @@ I have made extensive use of iterators when porting the code and rayon support t
 
 ## Archetecture discussion 
 
-There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes. A fully discusion can be found [here](/intersection_problem.md)
+There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes. A full discusion can be found [here](/intersection_problem.md)
 ## Unimplemented sections of the library.
 
 Support for a custom projection is not yet supported.
