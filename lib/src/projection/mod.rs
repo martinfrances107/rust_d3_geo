@@ -20,6 +20,8 @@ pub mod gnomic;
 /// The raw projection.
 pub mod mercator;
 /// The raw projection.
+/// /// The raw projection.
+pub mod mercator_transverse;
 pub mod orthographic;
 /// The raw projection.
 pub mod stereographic;
@@ -417,7 +419,7 @@ pub trait PrecisionSet {
     ///  Sets the threshold for the projection’s adaptive resampling to the
     ///  specified value in Pixels and returns the projection.  This value
     ///  corresponds to the Douglas–Peucker distance.
-    fn precision_set(self, delta: &Self::T) -> Self::Output;
+    fn precision_set(&self, delta: &Self::T) -> Self::Output;
 }
 
 /// Rotation getter and setters.

@@ -8,6 +8,8 @@ pub mod builder;
 pub mod centroid;
 /// Path context.
 pub mod context;
+// Measure the perimeters of polyogns, lengths of lines.
+pub mod measure;
 /// Path String.
 pub mod string;
 
@@ -31,6 +33,8 @@ use crate::projection::projector::Projector;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Streamable;
+
+use self::measure::Measure;
 
 /// Path Result.
 pub trait Result {
@@ -123,6 +127,30 @@ where
         let mut stream_in = self.projection.stream(&self.context_stream);
         object.to_stream(&mut stream_in);
         stream_in.endpoint().result()
+    }
+}
+
+impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
+    Path<CLIPC, CLIPU, Measure<T>, PCNC, PCNU, PR, RC, RU, T>
+where
+    CLIPC: Clone + Stream<EP = Measure<T>, T = T>,
+    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
+    PCNU: Clone + Connectable<Output = PCNC, SC = Measure<T>>,
+    RC: Clone + Stream<EP = Measure<T>, T = T>,
+    RU: Clone + Connectable<Output = RC, SC = PCNC>,
+    T: CoordFloat,
+{
+    /// Returns the area of the Path
+    /// This operation consumes the  Path.
+    pub fn measure(mut self, object: &impl Streamable<T = T>) -> T
+    where
+        T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    {
+        let stream_dst = Measure::default();
+        let mut stream_in = self.projection.stream(&stream_dst);
+        object.to_stream(&mut stream_in);
+
+        stream_in.0.sink.endpoint().result()
     }
 }
 
