@@ -10,15 +10,16 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
+use futures::try_join;
+use geo::Geometry;
 use gloo_utils::format::JsValueSerdeExt;
 use rust_topojson_client::feature::feature_from_name;
+use topojson::Topology;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::Document;
 use web_sys::*;
-
-use topojson::Topology;
 
 mod azimuthal_equal_area;
 mod azimuthal_equidistant;
@@ -74,7 +75,6 @@ fn document() -> Result<Document, JsValue> {
 #[wasm_bindgen(start)]
 #[cfg(not(tarpaulin_include))]
 pub async fn start() -> Result<(), JsValue> {
-    use geo::Geometry;
     console_log!("run() - wasm entry point");
 
     let mut opts = RequestInit::new();
@@ -109,13 +109,15 @@ pub async fn start() -> Result<(), JsValue> {
     let equirectangular = draw_equirectangular(&land);
     let gnomic = draw_gnomic(&land);
 
-    aea.await?;
-    ae.await?;
-    orthographic.await?;
-    mercator.await?;
-    sterographic.await?;
-    equirectangular.await?;
-    gnomic.await?;
+    try_join!(
+        aea,
+        ae,
+        orthographic,
+        mercator,
+        sterographic,
+        equirectangular,
+        gnomic
+    )?;
 
     Ok(())
 }
