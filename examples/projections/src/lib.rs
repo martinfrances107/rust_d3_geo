@@ -101,22 +101,14 @@ pub async fn start() -> Result<(), JsValue> {
     let land: Geometry<f64> =
         feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
-    let aea = draw_azimuthal_equal_area(&land);
-    let ae = draw_azimuthal_equidistant(&land);
-    let orthographic = draw_orthographic(&land);
-    let mercator = draw_mercator(&land);
-    let sterographic = draw_sterographic(&land);
-    let equirectangular = draw_equirectangular(&land);
-    let gnomic = draw_gnomic(&land);
-
     try_join!(
-        aea,
-        ae,
-        orthographic,
-        mercator,
-        sterographic,
-        equirectangular,
-        gnomic
+        draw_azimuthal_equal_area(&land),
+        draw_azimuthal_equidistant(&land),
+        draw_orthographic(&land),
+        draw_mercator(&land),
+        draw_sterographic(&land),
+        draw_equirectangular(&land),
+        draw_gnomic(&land),
     )?;
 
     Ok(())

@@ -13,13 +13,22 @@
     background-color: #2196F3;
   }
 
+  body>h2 {
+    margin: 5px;
+  }
+
+  body>h1 {
+    margin: 5px;
+  }
+
+  body>p {
+    margin: 5px;
+  }
+
   .grid-container {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-content: flex-end;
-    padding: 20px;
-    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px 5px;
   }
 
   .projection {
@@ -29,8 +38,6 @@
     border-radius: 5px;
     padding: 5px;
     margin: 5px;
-    min-width: 300px;
-    max-width: 600px;
   }
 
   .projection h1 {
