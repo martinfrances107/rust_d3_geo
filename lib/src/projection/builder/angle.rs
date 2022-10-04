@@ -35,8 +35,7 @@ where
 
     fn angle_set(&mut self, angle: T) -> &mut Self {
         self.alpha = (angle % T::from(360_f64).unwrap()).to_radians();
-        self.recenter_with_resampling();
-        self
+        self.recenter_with_resampling()
     }
 }
 
@@ -62,7 +61,6 @@ where
 
     fn angle_set(&mut self, angle: T) -> &mut Self {
         self.alpha = (angle % T::from(360_f64).unwrap()).to_radians();
-        self.recenter_with_resampling();
-        self
+        self.recenter_with_resampling()
     }
 }

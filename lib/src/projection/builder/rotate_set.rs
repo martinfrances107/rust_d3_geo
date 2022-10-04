@@ -40,8 +40,7 @@ where
         self.delta_lambda = (delta_lambda % f360).to_radians();
         self.delta_phi = (delta_phi % f360).to_radians();
         self.delta_gamma = (delta_gamma % f360).to_radians();
-        self.recenter_with_resampling();
-        self
+        self.recenter_with_resampling()
     }
 }
 
@@ -72,7 +71,6 @@ where
         self.delta_lambda = (delta_lambda % f360).to_radians();
         self.delta_phi = (delta_phi % f360).to_radians();
         self.delta_gamma = (delta_gamma % f360).to_radians();
-        self.recenter_with_resampling();
-        self
+        self.recenter_with_resampling()
     }
 }
