@@ -47,8 +47,7 @@ where
             MercatorBuilder::new(Mercator::default());
         let mut default = default.reclip_convert();
         let default = default.scale_set(T::from(961_f64 / f64::TAU()).unwrap());
-        // TODO can I refactor the .clone() away.
-        default.clone()
+        default.to_owned()
     }
 }
 

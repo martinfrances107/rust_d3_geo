@@ -88,8 +88,7 @@ where
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
-        // stream_in.0.sink.endpoint().result()
-        todo!();
+        stream_in.endpoint().result()
     }
 }
 
