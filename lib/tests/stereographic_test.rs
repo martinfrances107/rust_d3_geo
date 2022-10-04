@@ -12,7 +12,7 @@ mod stereographic_tests {
     use rust_d3_geo::stream::StreamDrainStub;
 
     #[test]
-    fn test_stereographic() {
+    fn stereographic() {
         let stereo: ProjectorCircleResampleNoClip<
             StreamDrainStub<f64>,
             Stereographic<StreamDrainStub<f64>, f64>,

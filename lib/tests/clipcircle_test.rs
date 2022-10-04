@@ -19,7 +19,7 @@ mod clipcircle_test {
     use rust_d3_geo::projection::TranslateSet;
 
     #[test]
-    fn test_projection_clip_angle_degenerate_polygons() {
+    fn projection_clip_angle_degenerate_polygons() {
         println!("projection.clipAngle() deals with degenerate polygons");
 
         lazy_static! {

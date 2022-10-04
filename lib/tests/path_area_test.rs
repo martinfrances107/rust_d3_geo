@@ -42,7 +42,7 @@ mod path_area_test {
     }
 
     #[inline]
-    fn test_area<'a, T>(
+    fn area<'a, T>(
         projection: ProjectorAntimeridianResampleNoneNoClip<
             Area<T>,
             Equirectangular<Area<T>, T>,
@@ -71,7 +71,7 @@ mod path_area_test {
             vec![],
         ));
         let eq = projector();
-        assert_eq!(test_area(eq, object), 25_f64);
+        assert_eq!(area(eq, object), 25_f64);
     }
 
     #[test]
@@ -94,7 +94,7 @@ mod path_area_test {
             ])],
         ));
         let eq = projector();
-        assert_eq!(test_area(eq, object), 16_f64);
+        assert_eq!(area(eq, object), 16_f64);
     }
 
     #[test]
@@ -102,6 +102,6 @@ mod path_area_test {
         println!("geoPath.area(…) of a sphere");
         let eq = projector::<f64>();
         let object = Sphere::default();
-        assert_eq!(test_area(eq, object), 1620000_f64);
+        assert_eq!(area(eq, object), 1620000_f64);
     }
 }

@@ -28,7 +28,7 @@ mod mercator_tranverse_tests {
     // });
 
     #[test]
-    fn test_clip_extent_defaults_to_automatic() {
+    fn clip_extent_defaults_to_automatic() {
         println!("transverseMercator.clipExtent(null) sets the default automatic clip extent");
         // let projection_builder = MercatorTransverse::builder();
         // .translate_adjust(&Coordinate { x: 0_f32, y: 0_f32 })
@@ -53,7 +53,7 @@ mod mercator_tranverse_tests {
     // });
 
     #[test]
-    fn test_center_set_the_automatic_clip_extent() {
+    fn center_set_the_automatic_clip_extent() {
         println!("transverseMercator.center(center) sets the correct automatic clip extent");
         // let projection_builder = MercatorTransverse::<String<f32>, f32>::builder();
         // projection_builder.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
@@ -81,7 +81,7 @@ mod mercator_tranverse_tests {
     // });
 
     #[test]
-    fn test_clip_extent_intersects() {
+    fn clip_extent_intersects() {
         println!("transverseMercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent");
         // let projection_builder = MercatorTransverse::builder()
         //     .translate_set(&Coordinate { x: 0_f32, y: 0_f32 })

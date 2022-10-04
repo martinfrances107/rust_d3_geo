@@ -21,7 +21,7 @@ mod identity_test {
     use crate::stream::StreamDrainStub;
 
     #[test]
-    fn test_returns_a_point() {
+    fn returns_a_point() {
         let identity: Projector<StreamDrainStub<f64>, _, _, _> = Builder::default()
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64)
@@ -53,7 +53,7 @@ mod identity_test {
     }
 
     #[test]
-    fn test_reflect() {
+    fn reflect_return_the_transformed_point() {
         println!("identity(point).reflectX(…) and reflectY() return the transformed point");
         let mut identity: Builder<StreamDrainStub<f64>, _, _> = Builder::default();
         identity

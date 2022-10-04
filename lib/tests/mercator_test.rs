@@ -28,7 +28,7 @@ mod mercator_tests {
 
     #[ignore]
     #[test]
-    fn test_clip_extent_defaults_to_automatic() {
+    fn clip_extent_defaults_to_automatic() {
         println!("mercator.clipExtent(null) sets the default automatic clip extent");
         let projection_builder = Mercator::builder()
             .translate_set(&Coordinate { x: 0_f32, y: 0_f32 })

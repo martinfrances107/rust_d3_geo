@@ -22,7 +22,7 @@ mod path_measure_test {
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
-    fn test_measure<'a, T>(
+    fn measure<'a, T>(
         projection: ProjectorIdentityAntimeridianResampleNoClip<Measure<T>, T>,
         object: impl Streamable<T = T>,
     ) -> T
@@ -39,7 +39,7 @@ mod path_measure_test {
         println!("geoPath.measure(…) of a Point");
         assert_eq!(
             0_f64,
-            test_measure(
+            measure(
                 IdentityRaw::builder().build(),
                 Geometry::Point((0_f64, 0_f64).into())
             )
@@ -51,7 +51,7 @@ mod path_measure_test {
         println!("geoPath.measure(…) of a MultiPoint");
         assert_eq!(
             0_f64,
-            test_measure(
+            measure(
                 IdentityRaw::builder().build(),
                 Geometry::MultiPoint(MultiPoint(vec![(0_f64, 0_f64).into()]))
             )
@@ -63,7 +63,7 @@ mod path_measure_test {
         println!("geoPath.measure(…) of a LineString");
         assert_eq!(
             3_f64,
-            test_measure(
+            measure(
                 IdentityRaw::builder().build(),
                 Geometry::LineString(LineString(vec![
                     (0_f64, 0_f64).into(),
@@ -80,7 +80,7 @@ mod path_measure_test {
         println!("geoPath.measure(…) of a MultiLineString");
         assert_eq!(
             3_f64,
-            test_measure(
+            measure(
                 IdentityRaw::builder().build(),
                 Geometry::MultiLineString(MultiLineString(vec![LineString(vec![
                     (0_f64, 0_f64).into(),
@@ -97,7 +97,7 @@ mod path_measure_test {
         println!("geoPath.measure(…) of a Polygon");
         assert_eq!(
             4_f64,
-            test_measure(
+            measure(
                 IdentityRaw::builder().build(),
                 Geometry::Polygon(Polygon::new(
                     LineString(vec![
@@ -118,7 +118,7 @@ mod path_measure_test {
         println!("geoPath.measure(…) of a Polygon with a hole");
         assert_eq!(
             16_f64,
-            test_measure(
+            measure(
                 IdentityRaw::builder().build(),
                 Geometry::Polygon(Polygon::new(
                     LineString(vec![
@@ -145,7 +145,7 @@ mod path_measure_test {
         println!("geoPath.measure(…) of a MultiPolygon");
         assert_eq!(
             16_f64,
-            test_measure(
+            measure(
                 IdentityRaw::builder().build(),
                 Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
                     LineString(vec![

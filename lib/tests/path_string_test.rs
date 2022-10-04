@@ -44,7 +44,7 @@ mod path_string_test {
     }
 
     #[inline]
-    fn test_path<'a, T>(
+    fn path<'a, T>(
         projection: ProjectorAntimeridianResampleNoneNoClip<
             PathString<T>,
             Equirectangular<PathString<T>, T>,
@@ -67,7 +67,7 @@ mod path_string_test {
         let object = Geometry::Point(point!(x: -63_f64, y:18_f64));
         let eq = equirectangular::<f64>();
         assert_eq!(
-            test_path(eq, object),
+            path(eq, object),
             "M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z"
         );
     }
@@ -102,7 +102,7 @@ mod path_string_test {
             .into(),
         );
         let eq = equirectangular();
-        assert_eq!(test_path(eq, object),
+        assert_eq!(path(eq, object),
 			"M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9zM170,165m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z");
     }
 
@@ -112,7 +112,7 @@ mod path_string_test {
             (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
         ]);
         let eq = equirectangular();
-        assert_eq!(test_path(eq, object), "M165,160L170,160L170,165");
+        assert_eq!(path(eq, object), "M165,160L170,160L170,165");
     }
 
     #[test]
@@ -124,7 +124,7 @@ mod path_string_test {
             vec![],
         ));
         let eq = equirectangular();
-        assert_eq!(test_path(eq, object), "M165,160L170,160L170,165Z");
+        assert_eq!(path(eq, object), "M165,160L170,160L170,165Z");
     }
 
     #[test]
@@ -149,7 +149,7 @@ mod path_string_test {
 
         let eq = equirectangular();
         assert_eq!(
-            test_path(eq, object),
+            path(eq, object),
             "M165,160L170,160L170,165ZM480,250L480,245L485,245L480,245Z"
         );
     }
@@ -201,7 +201,7 @@ mod path_string_test {
             ),
         )]));
         let eq = equirectangular();
-        assert_eq!(test_path(eq, object), "M165,160L170,160L170,165Z");
+        assert_eq!(path(eq, object), "M165,160L170,160L170,165Z");
     }
 
     // Missing Feature, FeatureCollection test.
@@ -217,13 +217,10 @@ mod path_string_test {
         let point_object = Geometry::Point(point!(x: -63_f64, y:18_f64));
         let eq = equirectangular();
 
-        assert_eq!(
-            test_path(eq.clone(), line_object),
-            "M165,160L170,160L170,165"
-        );
+        assert_eq!(path(eq.clone(), line_object), "M165,160L170,160L170,165");
 
         assert_eq!(
-            test_path(eq, point_object),
+            path(eq, point_object),
             "M165,160m0,4.5a4.5,4.5 0 1,1 0,-9a4.5,4.5 0 1,1 0,9z"
         );
     }

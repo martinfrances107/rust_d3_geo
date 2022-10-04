@@ -43,7 +43,7 @@ mod index_test {
         e.precision_bypass().build()
     }
 
-    fn test_path(
+    fn path(
         projection: ProjectorAntimeridianResampleNoneNoClip<
             Context,
             Equirectangular<Context, f64>,
@@ -89,7 +89,7 @@ mod index_test {
         println!("geoPath(Point) renders a point");
         let object = Geometry::Point(Point::new(-63.0_f64, 18.0_f64));
         assert_eq!(
-            test_path(equirectangular(), object),
+            path(equirectangular(), object),
             [
                 "type: moveTo, x: 170.0, y: 160.0",
                 "type: arc, x: 165.0, y: 160.0, r: 4.5"
@@ -106,7 +106,7 @@ mod index_test {
             Point::new(-62.0_f64, 17.0_f64),
         ]));
         assert_eq!(
-            test_path(equirectangular(), object),
+            path(equirectangular(), object),
             [
                 "type: moveTo, x: 170.0, y: 160.0",
                 "type: arc, x: 165.0, y: 160.0, r: 4.5",
@@ -125,7 +125,7 @@ mod index_test {
 			(x: -63_f64, y: 18_f64),(x: -62_f64, y: 18_f64), (x: -62_f64, y:17_f64) ]);
 
         assert_eq!(
-            test_path(equirectangular(), object),
+            path(equirectangular(), object),
             [
                 "type: moveTo, x: 165.0, y: 160.0",
                 "type: lineTo, x: 170.0, y: 160.0",
@@ -155,7 +155,7 @@ mod index_test {
             vec![],
         ));
         assert_eq!(
-            test_path(equirectangular(), object),
+            path(equirectangular(), object),
             [
                 "type: moveTo, x: 165.0, y: 160.0",
                 "type: lineTo, x: 170.0, y: 160.0",
@@ -188,7 +188,7 @@ mod index_test {
             ),
         )]));
         assert_eq!(
-            test_path(equirectangular(), object),
+            path(equirectangular(), object),
             [
                 "type: moveTo, x: 165.0, y: 160.0",
                 "type: lineTo, x: 170.0, y: 160.0",
@@ -234,11 +234,11 @@ mod index_test {
     //     // });
 
     #[test]
-    fn test_wrap_longitude_outside_180() {
+    fn wrap_longitude_outside_180() {
         println!("geoPath(…) wraps longitudes outside of ±180°");
         let object = Geometry::Point(Point::new(180_f64 + 1e-6_f64, 0_f64));
         assert_eq!(
-            test_path(equirectangular(), object),
+            path(equirectangular(), object),
             [
                 "type: moveTo, x: -415.0, y: 250.0",
                 "type: arc, x: -420.0, y: 250.0, r: 4.5"
@@ -275,7 +275,7 @@ mod index_test {
             vec![],
         ));
         assert_eq!(
-            test_path(equirectangular(), object),
+            path(equirectangular(), object),
             [
                 "type: moveTo, x: 480.0, y: 248.0",
                 "type: lineTo, x: 480.0, y: 248.0",

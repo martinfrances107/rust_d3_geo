@@ -45,7 +45,7 @@ mod path_bounds_test {
     }
 
     #[inline]
-    fn test_bounds<'a, T>(
+    fn bounds<'a, T>(
         projection: ProjectorAntimeridianResampleNoneNoClip<
             Bounds<T>,
             Equirectangular<Bounds<T>, T>,
@@ -81,7 +81,7 @@ mod path_bounds_test {
         ));
         let eq = equirectangular::<f64>();
         assert_eq!(
-            test_bounds(eq, &object),
+            bounds(eq, &object),
             [
                 Coordinate {
                     x: 980_f64,
@@ -116,7 +116,7 @@ mod path_bounds_test {
         ));
         let eq = equirectangular();
         assert_eq!(
-            test_bounds(eq, &object),
+            bounds(eq, &object),
             [
                 Coordinate {
                     x: 980_f64,
@@ -136,7 +136,7 @@ mod path_bounds_test {
         let eq = equirectangular();
         let object = Sphere::default();
         assert_eq!(
-            test_bounds(eq, &object),
+            bounds(eq, &object),
             [
                 Coordinate {
                     x: -420_f64,

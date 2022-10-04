@@ -47,7 +47,7 @@ mod reflect_tests {
     >;
 
     #[test]
-    fn test_reflect_x_defaults_to_false() {
+    fn reflect_x_defaults_to_false() {
         println!("projection.reflectX(…) defaults to false");
 
         let mut builder: GB = Gnomic::builder();
@@ -93,7 +93,7 @@ mod reflect_tests {
     }
 
     #[test]
-    fn test_reflect_mirrors_x_after_processing() {
+    fn reflect_mirrors_x_after_processing() {
         println!("projection.reflectX(…) mirrors x after projecting");
         let mut builder: GB = Gnomic::builder();
         builder.scale_set(1_f64);
