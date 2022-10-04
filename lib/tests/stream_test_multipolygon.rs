@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod stream_multipolygon_test {
+mod stream_multipolygon {
 
     extern crate pretty_assertions;
 

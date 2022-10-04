@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod path_bounds_test {
+mod path_bounds {
 
     use std::f64::consts::PI;
     use std::fmt::Display;

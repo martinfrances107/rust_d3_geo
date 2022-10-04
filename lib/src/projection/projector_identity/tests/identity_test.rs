@@ -1,6 +1,6 @@
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
-mod identity_test {
+mod identity {
 
     use geo::Coordinate;
     use geo::Geometry;

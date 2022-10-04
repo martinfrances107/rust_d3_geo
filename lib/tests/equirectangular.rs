@@ -1,6 +1,6 @@
 #[cfg(not(tarpaulin_include))]
 
-mod equirectangular_test {
+mod equirectangular {
 
     use geo::Coordinate;
 

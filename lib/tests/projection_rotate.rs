@@ -1,5 +1,6 @@
 #[cfg(not(tarpaulin_include))]
-mod projection_rotate_test {
+mod projection_rotate
+ {
 
     use geo::Coordinate;
     use geo::Geometry;

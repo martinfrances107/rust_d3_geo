@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod path_string_test {
+mod path_string {
 
     use std::f64::consts::PI;
     use std::fmt::Display;

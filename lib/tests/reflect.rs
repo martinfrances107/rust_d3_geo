@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod reflect_tests {
+mod reflect {
 
     extern crate pretty_assertions;
 
@@ -47,7 +47,7 @@ mod reflect_tests {
     >;
 
     #[test]
-    fn reflect_x_defaults_to_false() {
+    fn x_defaults_to_false() {
         println!("projection.reflectX(…) defaults to false");
 
         let mut builder: GB = Gnomic::builder();
@@ -93,7 +93,7 @@ mod reflect_tests {
     }
 
     #[test]
-    fn reflect_mirrors_x_after_processing() {
+    fn mirrors_x_after_processing() {
         println!("projection.reflectX(…) mirrors x after projecting");
         let mut builder: GB = Gnomic::builder();
         builder.scale_set(1_f64);
@@ -178,7 +178,7 @@ mod reflect_tests {
     }
 
     #[test]
-    fn reflect_x_works_with_projection_angle() {
+    fn x_works_with_projection_angle() {
         println!("projection.reflectX(…) works with projection.angle()");
         let mut builder: MercatorBuilder<_, _, StreamDrainStub<f32>, _, _, _, _, f32> =
             Mercator::builder();

@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod angle_test {
+mod projection_angle {
 
     use geo::Coordinate;
     use pretty_assertions::assert_eq;

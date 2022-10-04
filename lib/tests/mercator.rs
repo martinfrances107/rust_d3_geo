@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod mercator_tests {
+mod mercator {
 
     extern crate pretty_assertions;
 

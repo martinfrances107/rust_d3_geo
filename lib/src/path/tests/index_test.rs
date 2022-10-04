@@ -1,6 +1,6 @@
 #[cfg(not(tarpaulin_include))]
 #[cfg(test)]
-mod index_test {
+mod index {
 
     extern crate pretty_assertions;
 

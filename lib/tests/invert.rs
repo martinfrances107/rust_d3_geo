@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod invert_test {
+mod invert {
 
     use geo::Coordinate;
 

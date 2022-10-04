@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod centroid_test {
+mod centroid {
     extern crate pretty_assertions;
     use geo::line_string;
     use geo::point;

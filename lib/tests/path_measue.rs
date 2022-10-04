@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod path_measure_test {
+mod path_measure {
 
     use std::fmt::Display;
     use std::ops::AddAssign;
@@ -35,7 +35,7 @@ mod path_measure_test {
     }
 
     #[test]
-    fn measure_of_a_point() {
+    fn of_a_point() {
         println!("geoPath.measure(…) of a Point");
         assert_eq!(
             0_f64,
@@ -47,7 +47,7 @@ mod path_measure_test {
     }
 
     #[test]
-    fn measure_of_a_mulitpoint() {
+    fn of_a_mulitpoint() {
         println!("geoPath.measure(…) of a MultiPoint");
         assert_eq!(
             0_f64,
@@ -59,7 +59,7 @@ mod path_measure_test {
     }
 
     #[test]
-    fn measure_of_a_linestring() {
+    fn of_a_linestring() {
         println!("geoPath.measure(…) of a LineString");
         assert_eq!(
             3_f64,
@@ -76,7 +76,7 @@ mod path_measure_test {
     }
 
     #[test]
-    fn measure_of_a_multilinestring() {
+    fn of_a_multilinestring() {
         println!("geoPath.measure(…) of a MultiLineString");
         assert_eq!(
             3_f64,
@@ -93,7 +93,7 @@ mod path_measure_test {
     }
 
     #[test]
-    fn measure_of_a_polygon() {
+    fn of_a_polygon() {
         println!("geoPath.measure(…) of a Polygon");
         assert_eq!(
             4_f64,
@@ -114,7 +114,7 @@ mod path_measure_test {
     }
 
     #[test]
-    fn measure_of_a_polygon_with_a_hole() {
+    fn of_a_polygon_with_a_hole() {
         println!("geoPath.measure(…) of a Polygon with a hole");
         assert_eq!(
             16_f64,
@@ -141,7 +141,7 @@ mod path_measure_test {
     }
 
     #[test]
-    fn measure_of_a_multipolygon() {
+    fn of_a_multipolygon() {
         println!("geoPath.measure(…) of a MultiPolygon");
         assert_eq!(
             16_f64,

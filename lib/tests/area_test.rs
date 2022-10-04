@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod area_test {
+mod area {
     extern crate pretty_assertions;
 
     use geo::line_string;

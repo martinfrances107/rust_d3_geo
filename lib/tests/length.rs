@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod length_test {
+mod length {
     extern crate pretty_assertions;
 
     use std::f64::consts::PI;

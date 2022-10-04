@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod distance_test {
+mod distance {
     extern crate pretty_assertions;
 
     use geo::Coordinate;

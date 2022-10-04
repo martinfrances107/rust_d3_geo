@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod graticule_test {
+mod graticule {
     extern crate pretty_assertions;
     use geo::LineString;
     use geo::Polygon;

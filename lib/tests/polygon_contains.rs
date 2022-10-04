@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod polygon_contains_test {
+mod polygon_contains {
     extern crate pretty_assertions;
 
     use geo::{CoordFloat, Coordinate, LineString, Polygon};

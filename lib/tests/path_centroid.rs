@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod path_centroid_test {
+mod path_centroid {
 
     extern crate pretty_assertions;
 
