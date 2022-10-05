@@ -21,7 +21,6 @@ pub mod rotate_get;
 pub mod rotate_set;
 pub mod scale_adjust;
 pub mod scale_get;
-pub mod scale_reclip;
 pub mod translate_adjust;
 pub mod translate_get;
 pub mod translate_reclip;

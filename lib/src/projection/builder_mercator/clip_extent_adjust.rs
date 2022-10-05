@@ -25,7 +25,6 @@ where
 
     fn clip_extent_adjust(&mut self, extent: &[Coordinate<T>; 2]) -> &mut Self {
         self.extent = Some(*extent);
-        self.reclip();
-        self
+        self.reclip()
     }
 }

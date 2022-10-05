@@ -36,8 +36,7 @@ where
 
     fn scale_set(&mut self, scale: T) -> &mut Self {
         self.base.scale_set(scale);
-        self.reclip();
-        self
+        self.reclip()
     }
 }
 
@@ -64,7 +63,6 @@ where
 
     fn scale_set(&mut self, scale: T) -> &mut Self {
         self.base.scale_set(scale);
-        self.reclip();
-        self
+        self.reclip()
     }
 }
