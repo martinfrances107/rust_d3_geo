@@ -107,12 +107,11 @@ mod identity {
     fn identity_returns_path() {
         print!("geoPath(identity) returns the path");
 
-        let mut projection_builder: Builder<String<f64>, _, _> = Builder::default();
-        projection_builder
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+        let mut pb: Builder<String<f64>, _, _> = Builder::default();
+        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64);
 
-        let projector = projection_builder.build();
+        let projector = pb.build();
 
         let mut path = PathBuilder::context_pathstring().build(projector);
 
@@ -126,7 +125,7 @@ mod identity {
 
         assert_eq!("M0,0L10,10", path.object(&ls));
 
-        let projection_buidler2 = projection_builder
+        let projection_buidler2 = pb
             .translate_set(&Coordinate {
                 x: 30_f64,
                 y: 90_f64,
@@ -144,12 +143,11 @@ mod identity {
     fn respects_clip_extent() {
         print!("geoPath(identity) respects clipExtent");
 
-        let mut projection_builder: Builder<String<f64>, _, _> = Builder::default();
+        let mut pb: Builder<String<f64>, _, _> = Builder::default();
 
-        let projection_builder =
-            projection_builder.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
-        let projection_builder = projection_builder.scale_set(1_f64);
-        let projection_builder = projection_builder.clip_extent_set(&[
+        let pb = pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        let pb = pb.scale_set(1_f64);
+        let pb = pb.clip_extent_set(&[
             Coordinate { x: 5_f64, y: 5_f64 },
             Coordinate {
                 x: 40_f64,
@@ -157,7 +155,7 @@ mod identity {
             },
         ]);
 
-        let projector = projection_builder.build();
+        let projector = pb.build();
 
         let mut path = PathBuilder::context_pathstring().build(projector);
 
@@ -171,16 +169,15 @@ mod identity {
 
         assert_eq!("M5,5L10,10", path.object(&ls));
 
-        let mut projection_builder2: Builder<String<f64>, _, _> = Builder::default();
+        let mut pb2: Builder<String<f64>, _, _> = Builder::default();
 
-        projection_builder2
-            .translate_set(&Coordinate {
-                x: 30_f64,
-                y: 90_f64,
-            })
-            .scale_set(2_f64)
-            .reflect_y_set(true);
-        let projection_builder2 = projection_builder2.clip_extent_set(&[
+        pb2.translate_set(&Coordinate {
+            x: 30_f64,
+            y: 90_f64,
+        })
+        .scale_set(2_f64)
+        .reflect_y_set(true);
+        let pb2 = pb2.clip_extent_set(&[
             Coordinate {
                 x: 35_f64,
                 y: 76_f64,
@@ -191,7 +188,7 @@ mod identity {
             },
         ]);
 
-        let projector2 = projection_builder2.build();
+        let projector2 = pb2.build();
 
         let mut path2 = PathBuilder::context_pathstring().build(projector2);
 

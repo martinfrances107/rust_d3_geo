@@ -30,14 +30,14 @@ mod mercator_tranverse_tests {
     #[test]
     fn clip_extent_defaults_to_automatic() {
         println!("transverseMercator.clipExtent(null) sets the default automatic clip extent");
-        // let projection_builder = MercatorTransverse::builder();
+        // let pb = MercatorTransverse::builder();
         // .translate_adjust(&Coordinate { x: 0_f32, y: 0_f32 })
-        // projection_builder.scale_reclip(1_f32);
+        // pb.scale_reclip(1_f32);
 
-        // let projection_builder = projection_builder.clip_extent_clear();
-        // let projection_builder = projection_builder.precision_bypass();
+        // let pb = pb.clip_extent_clear();
+        // let pb = pb.precision_bypass();
 
-        // let projection = projection_builder.build();
+        // let projection = pb.build();
         // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::<f32>::default();
@@ -55,17 +55,17 @@ mod mercator_tranverse_tests {
     #[test]
     fn center_set_the_automatic_clip_extent() {
         println!("transverseMercator.center(center) sets the correct automatic clip extent");
-        // let projection_builder = MercatorTransverse::<String<f32>, f32>::builder();
-        // projection_builder.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
+        // let pb = MercatorTransverse::<String<f32>, f32>::builder();
+        // pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
 
-        // let projection_builder = projection_builder.scale_set(1_f32);
-        // let projection_builder = projection_builder.center_set(&Coordinate {
+        // let pb = pb.scale_set(1_f32);
+        // let pb = pb.center_set(&Coordinate {
         //     x: 10_f32,
         //     y: 10_f32,
         // });
-        // projection_builder.precision_bypass();
+        // pb.precision_bypass();
 
-        // let projection = projection_builder.build();
+        // let projection = pb.build();
         // let path_builder = PathBuilder::context_pathstring();
 
         // let object = Sphere::<f32>::default();
@@ -83,7 +83,7 @@ mod mercator_tranverse_tests {
     #[test]
     fn clip_extent_intersects() {
         println!("transverseMercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent");
-        // let projection_builder = MercatorTransverse::builder()
+        // let pb = MercatorTransverse::builder()
         //     .translate_set(&Coordinate { x: 0_f32, y: 0_f32 })
         //     .scale_set(1_f32)
         //     .clip_extent(&[
@@ -98,7 +98,7 @@ mod mercator_tranverse_tests {
         //     ])
         //     .precision_bypass();
 
-        // let projection = projection_builder.build();
+        // let projection = pb.build();
         // let path_builder = PathBuilder::context_pathstring();
 
         // let object = Sphere::<f32>::default();
