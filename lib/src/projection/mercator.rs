@@ -60,14 +60,14 @@ where
         self,
         k: T,
         t: Coordinate<T>,
-        _x0: T,
+        x0: T,
         y0: T,
         x1: T,
         y1: T,
     ) -> [Coordinate<T>; 2] {
         [
             Coordinate {
-                x: T::max(t.x - k, t.y - k),
+                x: T::max(t.x - k, x0),
                 y: y0,
             },
             Coordinate {

@@ -83,19 +83,19 @@ where
         self,
         k: T,
         t: Coordinate<T>,
-        _x0: T,
+        x0: T,
         y0: T,
         x1: T,
         y1: T,
     ) -> [Coordinate<T>; 2] {
         [
             Coordinate {
-                x: T::max(t.x - k, t.y - k),
-                y: y0,
+                x: x0,
+                y: T::max(t.x - k, y0),
             },
             Coordinate {
-                x: T::min(t.x + k, x1),
-                y: y1,
+                x: x1,
+                y: T::min(t.y + k, y1),
             },
         ]
     }
