@@ -8,6 +8,7 @@ mod invert {
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mercator::Mercator;
+    use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
     use rust_d3_geo::projection::orthographic::Orthographic;
     use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::stereographic::Stereographic;
@@ -75,6 +76,12 @@ mod invert {
     #[test]
     fn mercator() {
         let m = Mercator::<StreamDrainStub<f64>, f64>::builder().build();
+        symetric_invert(m);
+    }
+
+    #[test]
+    fn mercator_traverse() {
+        let m = MercatorTransverse::<StreamDrainStub<f64>, f64>::builder().build();
         symetric_invert(m);
     }
 
