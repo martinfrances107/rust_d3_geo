@@ -1,4 +1,5 @@
-use geo::{CoordFloat, GeometryCollection};
+use geo::CoordFloat;
+use geo::GeometryCollection;
 
 use crate::stream::Stream;
 

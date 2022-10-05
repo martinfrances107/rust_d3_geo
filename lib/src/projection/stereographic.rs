@@ -1,7 +1,8 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
@@ -11,7 +12,8 @@ use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
 use super::builder::Builder;
-use super::{ClipAngleSet, ProjectionRawBase};
+use super::ClipAngleSet;
+use super::ProjectionRawBase;
 
 /// Projection definition.
 ///

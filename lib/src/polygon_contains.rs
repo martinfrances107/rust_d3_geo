@@ -1,13 +1,15 @@
 use geo::coords_iter::CoordsIter;
+use geo::CoordFloat;
+use geo::Coordinate;
 use geo::LineString;
-use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
 use crate::cartesian::cross;
 use crate::cartesian::normalize_in_place;
+use crate::math::asin;
 use crate::math::EPSILON2;
-use crate::math::{asin, EPSILON};
+use crate::EPSILON;
 
 #[inline]
 fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {

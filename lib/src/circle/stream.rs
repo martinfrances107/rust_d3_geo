@@ -1,6 +1,7 @@
 use std::fmt::Debug;
 
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::rot::rotate_radians::RotateRadians;

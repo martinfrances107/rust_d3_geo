@@ -2,7 +2,8 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::math::asin;

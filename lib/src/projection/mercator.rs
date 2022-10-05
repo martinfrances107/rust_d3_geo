@@ -1,7 +1,8 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::float::FloatConst;
 
 use crate::projection::ScaleSet;

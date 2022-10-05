@@ -1,7 +1,8 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 
 use crate::compose::Compose;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;

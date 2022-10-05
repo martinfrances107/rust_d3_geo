@@ -1,6 +1,8 @@
 use std::fmt::Display;
 
-use geo::{CoordFloat, Coordinate, Point};
+use geo::CoordFloat;
+use geo::Coordinate;
+use geo::Point;
 
 #[cfg(not(tarpaulin_include))]
 /// True if two points are identical within the specified difference.

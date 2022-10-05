@@ -2,7 +2,8 @@ use geo::CoordFloat;
 use geo::MultiLineString;
 
 use super::stream_line;
-use super::{Stream, Streamable};
+use super::Stream;
+use super::Streamable;
 
 impl<T> Streamable for MultiLineString<T>
 where

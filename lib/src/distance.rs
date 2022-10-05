@@ -1,4 +1,6 @@
-use geo::{CoordFloat, Coordinate, LineString};
+use geo::CoordFloat;
+use geo::Coordinate;
+use geo::LineString;
 
 use crate::length::Stream;
 

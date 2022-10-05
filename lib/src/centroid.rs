@@ -1,7 +1,9 @@
 use std::ops::AddAssign;
 
 use derivative::*;
-use geo::{CoordFloat, Coordinate, Point};
+use geo::CoordFloat;
+use geo::Coordinate;
+use geo::Point;
 use num_traits::FloatConst;
 
 use crate::math::asin;

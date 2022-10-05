@@ -1,7 +1,8 @@
 use std::fmt::Debug;
 use std::fmt::Display;
 
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 
 use crate::in_delta::in_delta;
 use crate::math::EPSILON;

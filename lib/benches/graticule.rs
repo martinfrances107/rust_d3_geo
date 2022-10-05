@@ -5,7 +5,10 @@ extern crate pretty_assertions;
 use std::time::Duration;
 
 use criterion::Criterion;
-use geo::{Coordinate, Geometry, LineString, MultiLineString};
+use geo::Coordinate;
+use geo::Geometry;
+use geo::LineString;
+use geo::MultiLineString;
 use lazy_static::lazy_static;
 use pretty_assertions::assert_eq;
 use regex::Regex;

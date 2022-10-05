@@ -1,4 +1,5 @@
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::cartesian::add_in_place;

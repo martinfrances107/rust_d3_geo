@@ -2,7 +2,10 @@
 mod polygon_contains {
     extern crate pretty_assertions;
 
-    use geo::{CoordFloat, Coordinate, LineString, Polygon};
+    use geo::CoordFloat;
+    use geo::Coordinate;
+    use geo::LineString;
+    use geo::Polygon;
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::circle::generator::Generator as CircleGenerator;

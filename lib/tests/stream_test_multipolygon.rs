@@ -3,7 +3,9 @@ mod stream_multipolygon {
 
     extern crate pretty_assertions;
 
-    use geo::{polygon, Coordinate, MultiPolygon};
+    use geo::polygon;
+    use geo::Coordinate;
+    use geo::MultiPolygon;
 
     use rust_d3_geo::stream::Stream;
     use rust_d3_geo::stream::Streamable;

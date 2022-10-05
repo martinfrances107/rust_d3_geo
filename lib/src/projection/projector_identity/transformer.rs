@@ -1,6 +1,7 @@
 use std::marker::PhantomData;
 
-use geo::{CoordFloat, Coordinate};
+use geo::CoordFloat;
+use geo::Coordinate;
 
 use crate::stream::Connectable;
 use crate::stream::Connected;

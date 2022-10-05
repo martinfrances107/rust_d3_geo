@@ -1,8 +1,9 @@
 use std::fmt::Debug;
 
+use geo::CoordFloat;
+use geo::Coordinate;
 use geo::LineString;
 use geo::Polygon;
-use geo::{CoordFloat, Coordinate};
 use num_traits::FloatConst;
 
 use crate::rot::rotate_radians;
