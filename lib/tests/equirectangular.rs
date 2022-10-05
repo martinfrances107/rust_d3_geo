@@ -356,8 +356,6 @@ mod equirectangular {
         b.translate_set(&Coordinate { x: 0f64, y: 0f64 });
         b.scale_set(1f64);
 
-        // let equirectangular = b.build();
-
         let equirectangular = b.build();
 
         let pi = std::f64::consts::PI;

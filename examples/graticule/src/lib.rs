@@ -100,11 +100,9 @@ fn update_canvas(document: &Document) -> Result<()> {
 #[cfg(not(tarpaulin_include))]
 fn path_node(class_name: &str) -> Result<Element> {
     let document = document()?;
-    // let class_name = format!("id-{}", i);
     let class_list = document.get_elements_by_class_name(class_name);
 
     assert!(class_list.length() < 2);
-    // console_log!("assert passed.");
     let ret = match class_list.item(0) {
         Some(element) => element,
         None => {

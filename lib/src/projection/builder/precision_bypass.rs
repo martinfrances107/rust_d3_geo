@@ -145,7 +145,6 @@ where
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
-        // let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
         // Copy - Mutate.
         Self::Output {
@@ -206,7 +205,6 @@ where
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
-        // let clip = Clip::new(interpolator, line, pv, self.clip.start);
 
         let clip = gen_clip_circle::<
             DRAIN,
