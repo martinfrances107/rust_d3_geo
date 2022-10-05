@@ -153,7 +153,7 @@ where
         let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
         let postclip = Identity::default();
         let resample = Resample::new(project_transform.clone(), delta2);
-        let mut out_a: Self = Self {
+        let mut out: Self = Self {
             clip: gen_clip_antimeridian::<NoPCNU<DRAIN>, _, _>(),
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
             p_rc: PhantomData::<ResampleNoPCNC<DRAIN, PR, T>>,
@@ -191,7 +191,7 @@ where
             resample,
         };
 
-        out_a.recenter_with_resampling();
-        out_a
+        out.recenter_with_resampling();
+        out
     }
 }

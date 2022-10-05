@@ -23,7 +23,7 @@ where
     type T = T;
 
     fn clip_extent_clear(&self) -> Self::Output {
-        let mut binding = Self::Output {
+        let mut out = Self::Output {
             p_drain: self.p_drain,
             p_rc: self.p_rc,
             p_clipc: self.p_clipc,
@@ -31,7 +31,7 @@ where
             pr: self.pr.clone(),
             extent: None,
         };
-        let out = binding.reclip();
-        out.clone()
+        out.reclip();
+        out
     }
 }

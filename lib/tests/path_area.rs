@@ -36,9 +36,7 @@ mod path_area {
         ba.scale_set(T::from(900f64 / PI).unwrap());
 
         let builder = ba.precision_bypass();
-        let out = builder.build();
-
-        out
+        builder.build()
     }
 
     #[inline]

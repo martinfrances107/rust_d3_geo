@@ -29,8 +29,7 @@ mod polygon_contains {
             .map(|x| point_radians(&x))
             .collect::<Vec<Coordinate<T>>>();
         v.pop();
-        let out = LineString(v);
-        out
+        LineString(v)
     }
 
     fn polygon_contains<T>(polygon_p: &Polygon<T>, point: &Coordinate<T>) -> bool
