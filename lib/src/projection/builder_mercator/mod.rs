@@ -30,8 +30,6 @@ use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::ClipAntimeridianC;
-use crate::projection::builder::template::NoPCNU;
-use crate::projection::builder::template::ResampleNoPCNC;
 use crate::projection::builder::template::ResampleNoPCNU;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
@@ -175,12 +173,12 @@ where
         // Dummy clip values here will be overriten by the following reclip.
         let base = base.clip_extent_set(&[
             Coordinate {
-                x: T::zero(),
-                y: T::zero(),
+                x: T::neg_infinity(),
+                y: T::neg_infinity(),
             },
             Coordinate {
-                x: T::zero(),
-                y: T::zero(),
+                x: T::infinity(),
+                y: T::infinity(),
             },
         ]);
 

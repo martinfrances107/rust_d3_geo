@@ -2,11 +2,6 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::NoPCNU;
-use crate::projection::builder::template::ResampleNoPCNC;
-use crate::projection::builder::template::ResampleNoPCNU;
-use crate::projection::builder::template::ResampleNoneNoPCNC;
-use crate::projection::builder::template::ResampleNoneNoPCNU;
 use crate::projection::builder::template::ResampleNonePCNC;
 use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::template::ResamplePCNC;
@@ -18,41 +13,6 @@ use crate::projection::ReflectSet;
 use crate::Transform;
 
 use super::Builder;
-
-impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        NoPCNU<DRAIN>,
-        PR,
-        ResampleNoPCNC<DRAIN, PR, T>,
-        ResampleNoPCNU<DRAIN, PR, T>,
-        T,
-    >
-where
-    CLIPC: Clone,
-    CLIPU: Clone,
-    DRAIN: Clone,
-    PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-{
-    type T = T;
-
-    /// Set the projection builder to invert the x-coordinate.
-    #[inline]
-    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
-        self.base.reflect_x_set(reflect).recenter_with_resampling();
-        self
-    }
-
-    /// Set the projection builder to invert the y-coordinate.    
-    #[inline]
-    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
-        self.base.reflect_y_set(reflect).recenter_with_resampling();
-        self
-    }
-}
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<
@@ -85,41 +45,6 @@ where
     #[inline]
     fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
         self.base.reflect_y_set(reflect).recenter_with_resampling();
-        self
-    }
-}
-
-impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        NoPCNU<DRAIN>,
-        PR,
-        ResampleNoneNoPCNC<DRAIN, PR, T>,
-        ResampleNoneNoPCNU<DRAIN, PR, T>,
-        T,
-    >
-where
-    CLIPC: Clone,
-    CLIPU: Clone,
-    DRAIN: Clone,
-    PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
-{
-    type T = T;
-
-    /// Set the projection builder to invert the x-coordinate.
-    #[inline]
-    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
-        self.base.reflect_x_set(reflect).recenter_no_resampling();
-        self
-    }
-
-    /// Set the projection builder to invert the y-coordinate.
-    #[inline]
-    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
-        self.base.reflect_y_set(reflect).recenter_no_resampling();
         self
     }
 }

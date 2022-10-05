@@ -44,7 +44,6 @@ where
     fn builder() -> Self::Builder {
         let mut default: BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN, T>, T> =
             MercatorBuilder::new(Mercator::default());
-        // let mut default = default.reclip_convert();
         let default = default.scale_set(T::from(961_f64 / f64::TAU()).unwrap());
         default.to_owned()
     }
