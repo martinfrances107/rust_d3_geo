@@ -13,9 +13,12 @@ mod mercator_tranverse_tests {
     use rust_d3_geo::path::string::String;
     use rust_d3_geo::projection::builder_mercator::ScaleReclip;
     use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
+    use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::CenterGet;
     use rust_d3_geo::projection::CenterSet;
+    use rust_d3_geo::projection::ClipExtentAdjust;
     use rust_d3_geo::projection::ClipExtentClear;
+    use rust_d3_geo::projection::ClipExtentSet;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleSet;
@@ -52,26 +55,27 @@ mod mercator_tranverse_tests {
     //   assert.strictEqual(projection.clipExtent(), null);
     // });
 
+    #[ignore]
     #[test]
     fn center_set_the_automatic_clip_extent() {
         println!("transverseMercator.center(center) sets the correct automatic clip extent");
-        // let pb = MercatorTransverse::<String<f32>, f32>::builder();
-        // pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
+        let mut pb = MercatorTransverse::<String<f32>, f32>::builder();
+        pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
 
-        // let pb = pb.scale_set(1_f32);
-        // let pb = pb.center_set(&Coordinate {
-        //     x: 10_f32,
-        //     y: 10_f32,
-        // });
-        // pb.precision_bypass();
+        let pb = pb.scale_set(1_f32);
+        let pb = pb.center_set(&Coordinate {
+            x: 10_f32,
+            y: 10_f32,
+        });
+        pb.precision_bypass();
 
-        // let projection = pb.build();
-        // let path_builder = PathBuilder::context_pathstring();
+        let projection = pb.build();
+        let path_builder = PathBuilder::context_pathstring();
 
-        // let object = Sphere::<f32>::default();
+        let object = Sphere::<f32>::default();
 
-        // let s = path_builder.build(projection).object(&object);
-        // assert_eq!(s, "M2.966167,3.316126L-0.175426,3.316126L-3.317018,3.316126L-3.317019,-2.967060L-3.317019,-2.967060L-0.175426,-2.967060L2.966167,-2.967060L2.966167,3.316126Z");
+        let s = path_builder.build(projection).object(&object);
+        assert_eq!(s, "M2.966167,3.316126L-0.175426,3.316126L-3.317018,3.316126L-3.317019,-2.967060L-3.317019,-2.967060L-0.175426,-2.967060L2.966167,-2.967060L2.966167,3.316126Z");
     }
 
     // it("transverseMercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent", () => {
@@ -80,31 +84,33 @@ mod mercator_tranverse_tests {
     //   assert.deepStrictEqual(projection.clipExtent(), [[-10, -10], [10, 10]]);
     // });
 
+    #[ignore]
     #[test]
     fn clip_extent_intersects() {
         println!("transverseMercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent");
-        // let pb = MercatorTransverse::builder()
-        //     .translate_set(&Coordinate { x: 0_f32, y: 0_f32 })
-        //     .scale_set(1_f32)
-        //     .clip_extent(&[
-        //         Coordinate {
-        //             x: -10_f32,
-        //             y: -10_f32,
-        //         },
-        //         Coordinate {
-        //             x: 10_f32,
-        //             y: 10_f32,
-        //         },
-        //     ])
-        //     .precision_bypass();
+        let mut pb = MercatorTransverse::builder();
 
-        // let projection = pb.build();
-        // let path_builder = PathBuilder::context_pathstring();
+        pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
+        pb.scale_set(1_f32);
+        pb.clip_extent_adjust(&[
+            Coordinate {
+                x: -10_f32,
+                y: -10_f32,
+            },
+            Coordinate {
+                x: 10_f32,
+                y: 10_f32,
+            },
+        ]);
+        pb.precision_bypass();
 
-        // let object = Sphere::<f32>::default();
+        let projection = pb.build();
+        let path_builder = PathBuilder::context_pathstring();
 
-        // let s = path_builder.build(projection).object(&object);
-        // assert_eq!(s, "M10,3.141593L0,3.141593L-10,3.141593L-10,-3.141593L-10,-3.141593L0,-3.141593L10,-3.141593L10,3.141593Z");
+        let object = Sphere::<f32>::default();
+
+        let s = path_builder.build(projection).object(&object);
+        assert_eq!(s, "M10,3.141593L0,3.141593L-10,3.141593L-10,-3.141593L-10,-3.141593L0,-3.141593L10,-3.141593L10,3.141593Z");
     }
 
     // it("transverseMercator.clipExtent(extent).scale(scale) updates the intersected clip extent", () => {
