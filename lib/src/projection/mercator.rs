@@ -4,13 +4,11 @@ use std::marker::PhantomData;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-use crate::projection::builder_mercator::ReclipConvert;
 use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-use super::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use super::builder_mercator::Builder as MercatorBuilder;
 use super::ProjectionRawBase;
 use super::TransformExtent;
@@ -43,9 +41,9 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        let default: BuilderMercatorAntimeridianResampleNoClip<DRAIN, Mercator<DRAIN, T>, T> =
+        let mut default: BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN, T>, T> =
             MercatorBuilder::new(Mercator::default());
-        let mut default = default.reclip_convert();
+        // let mut default = default.reclip_convert();
         let default = default.scale_set(T::from(961_f64 / f64::TAU()).unwrap());
         default.to_owned()
     }

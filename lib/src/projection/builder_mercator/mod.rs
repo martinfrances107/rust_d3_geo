@@ -14,7 +14,8 @@ pub mod precision_bypass;
 pub mod precision_get;
 pub mod precision_set;
 pub mod reclip;
-pub mod reclip_convert;
+/// Reclip is private beacuse it is only used to intialise the builder.
+mod reclip_convert;
 pub mod reflect_get;
 pub mod reflect_set;
 pub mod rotate_get;
@@ -46,7 +47,11 @@ use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use self::types::BuilderMercatorAntimeridianResampleNoClip;
+use self::types::BuilderMercatorAntimeridianResampleClip;
+
+use super::builder::template::ResamplePCNC;
+use super::ClipExtentSet;
+use super::TransformExtent;
 
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
@@ -142,13 +147,6 @@ pub trait TranslateReclip {
         Self::T: CoordFloat;
 }
 
-/// Implicit conversion of the PCN from Identity to Rectangle.
-/// Restricted visibility - it is only for initialization.
-pub(super) trait ReclipConvert {
-    type Output;
-    fn reclip_convert(self) -> Self::Output;
-}
-
 pub trait Reclip {
     fn reclip(&mut self) -> &mut Self;
 }
@@ -170,23 +168,37 @@ where
     pub extent: Option<[Coordinate<T>; 2]>, // post-clip extent
 }
 
-impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
-    PR: Clone + Transform<T = T>,
+    PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + Default + FloatConst,
 {
     /// Wrap a default projector and provides mercator specific overrides.
     pub fn new(pr: PR) -> Self {
         let base = ProjectionBuilder::new(pr.clone());
-        Self {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
+        // Dummy clip values here will be overriten by the following reclip.
+        let base = base.clip_extent_set(&[
+            Coordinate {
+                x: T::zero(),
+                y: T::zero(),
+            },
+            Coordinate {
+                x: T::zero(),
+                y: T::zero(),
+            },
+        ]);
+
+        let mut out = Self {
+            p_clipc: PhantomData::<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<ResampleNoPCNC<DRAIN, PR, T>>,
+            p_rc: PhantomData::<ResamplePCNC<DRAIN, PR, T>>,
             pr,
             base,
             extent: None,
-        }
+        };
+        out.reclip();
+        out
     }
 }
 

@@ -4,13 +4,10 @@ use std::marker::PhantomData;
 use geo::{CoordFloat, Coordinate};
 use num_traits::float::FloatConst;
 
-use crate::projection::builder_mercator::ReclipConvert;
-use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-use super::builder_mercator::types::BuilderMercatorAntimeridianResampleNoClip;
 use super::builder_mercator::Builder as MercatorBuilder;
 use super::ProjectionRawBase;
 use super::TransformExtent;
@@ -43,13 +40,12 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        let default: BuilderMercatorAntimeridianResampleNoClip<
+        let default: BuilderMercatorAntimeridianResampleClip<
             DRAIN,
             MercatorTransverse<DRAIN, T>,
             T,
         > = MercatorBuilder::new(MercatorTransverse::default());
-        // default.scale_set(T::from(961_f64 / f64::TAU()).unwrap())
-        todo!();
+        default
     }
 }
 
@@ -73,5 +69,33 @@ where
             x: p.x,
             y: self.two * (p.y.exp()).atan() - T::FRAC_PI_2(),
         }
+    }
+}
+
+impl<DRAIN, T> TransformExtent for MercatorTransverse<DRAIN, T>
+where
+    T: CoordFloat,
+{
+    type T = T;
+    #[inline]
+    fn transform_extent(
+        self,
+        k: T,
+        t: Coordinate<T>,
+        _x0: T,
+        y0: T,
+        x1: T,
+        y1: T,
+    ) -> [Coordinate<T>; 2] {
+        [
+            Coordinate {
+                x: T::max(t.x - k, t.y - k),
+                y: y0,
+            },
+            Coordinate {
+                x: T::min(t.x + k, x1),
+                y: y1,
+            },
+        ]
     }
 }
