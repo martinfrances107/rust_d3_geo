@@ -17,11 +17,13 @@ pub mod azimuthal_equidistant;
 pub mod equirectangular;
 /// The raw projection.
 pub mod gnomic;
+// The raw projection.
 pub mod identity_raw;
 /// The raw projection.
 pub mod mercator;
-/// /// The raw projection.
+/// The raw projection.
 pub mod mercator_transverse;
+/// The raw projection.
 pub mod orthographic;
 /// The raw projection.
 pub mod stereographic;
@@ -90,14 +92,6 @@ pub trait ProjectionRawBase: Transform {
     /// Constructs the default projection builder.
     fn builder() -> Self::Builder;
 }
-
-// pub trait ProjectionIdentityRawBase: Transform {
-//     /// The default builder.
-//     type Builder;
-
-//     /// Constructs the default projection builder.
-//     fn identity_builder() -> Self::Builder;
-// }
 
 pub trait Build
 where
@@ -237,7 +231,6 @@ pub trait Fit {
     ///  top, x₁ is the right and y₁ is the bottom.  @param object A
     /// geographic feature supported by d3-geo (An extension of GeoJSON
     ///   feature).
-
     fn fit_extent(
         &mut self,
         extent: [[Self::T; 2]; 2],
@@ -293,7 +286,6 @@ pub trait AngleSet {
 
     /// Sets the projection’s post-projection planar rotation angle to the
     /// specified angle in degrees and returns the projection.
-    ///
     fn angle_set(&mut self, angle: Self::T) -> &mut Self;
 }
 
@@ -320,14 +312,14 @@ pub trait ClipAngleSet {
     ///f64 or f32
     type T;
 
-    ///  Switches the projection builder from antimeridian to circle based clipping.
+    /// Switches the projection builder from antimeridian to circle based clipping.
     fn clip_angle_set(&self, angle: Self::T) -> Self::Output;
 }
 
 /// Alters the clip angle on a projector builder previously configured to
-///  use circle based clipping.
+/// use circle based clipping.
 ///
-///  A projection builder sub trait.
+/// A projection builder sub trait.
 pub trait ClipAngleAdjust {
     /// f64 or f32
     type T;
