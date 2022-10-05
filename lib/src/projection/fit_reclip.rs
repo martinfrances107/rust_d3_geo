@@ -65,7 +65,7 @@ pub(super) fn fit_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
             x: T::zero(),
             y: T::zero(),
         });
-    if clip.is_some() {
+    if let Some(clip) = clip {
         let mut b = bprime.clip_extent_clear();
         let mut projector = b.build();
         let bounds_stream = Bounds::default();
@@ -73,7 +73,7 @@ pub(super) fn fit_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
         object.to_stream(&mut stream_in);
         let bounds = stream_in.endpoint().result();
         fit_bounds(bounds, &mut b);
-        b.clip_extent_adjust(&clip.unwrap());
+        b.clip_extent_adjust(&clip);
     } else {
         let b = bprime;
         let mut projector = b.build();
