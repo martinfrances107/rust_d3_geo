@@ -156,9 +156,8 @@ mod path_string {
 
     #[test]
     fn render_a_simple_multi_polygon() {
-        let gc = CircleGenerator::default()
-            .radius_set(10_f64)
-            .precision_set(80_f64);
+        let mut gc = CircleGenerator::default();
+        gc.radius_set(10_f64).precision_set(80_f64);
 
         let mut p_vec = vec![];
 

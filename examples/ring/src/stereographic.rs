@@ -35,12 +35,11 @@ pub fn draw_sterographic() -> Result<()> {
         })
         .build();
 
-    let cg_outer = CircleGenerator::default()
-        .radius_set(10_f64)
-        .precision_set(10_f64);
-    let cg_inner = CircleGenerator::default()
-        .radius_set(5_f64)
-        .precision_set(5_f64);
+    let mut cg_outer = CircleGenerator::default();
+    cg_outer.radius_set(10_f64).precision_set(10_f64);
+
+    let mut cg_inner = CircleGenerator::default();
+    cg_inner.radius_set(5_f64).precision_set(5_f64);
 
     let mut p_vec: Vec<Polygon<f64>> = vec![];
     for lat in (-30..=30).step_by(30) {

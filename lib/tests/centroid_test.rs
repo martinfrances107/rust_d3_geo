@@ -504,7 +504,8 @@ mod centroid {
     #[test]
     fn concentric_rings() {
         println!("concentric rings");
-        let cg = CircleGenerator::default().center_set(&Coordinate {
+        let mut cg = CircleGenerator::default();
+        cg.center_set(&Coordinate {
             x: 0_f64,
             y: 45_f64,
         });

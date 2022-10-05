@@ -62,14 +62,9 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
-    pub fn context(self, context: CanvasRenderingContext2d) -> Self {
-        Builder {
-            p_pcnc: PhantomData::<PCNC>,
-            p_rc: PhantomData::<RC>,
-            pr: self.pr,
-            context_stream: PathContext::new(context),
-            projection: self.projection,
-        }
+    pub fn context(&mut self, context: CanvasRenderingContext2d) -> &mut Self {
+        self.context_stream = PathContext::new(context);
+        self
     }
 }
 
