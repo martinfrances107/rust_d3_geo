@@ -23,7 +23,6 @@ pub mod scale_adjust;
 pub mod scale_get;
 pub mod translate_adjust;
 pub mod translate_get;
-pub mod translate_reclip;
 pub mod types;
 
 use std::marker::PhantomData;
