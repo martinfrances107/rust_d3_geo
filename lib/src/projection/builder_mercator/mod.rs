@@ -1,12 +1,10 @@
 pub mod angle;
-pub mod builder;
 pub mod center_get;
 pub mod center_set;
 pub mod clip_angle_set;
 pub mod clip_extent_adjust;
 pub mod clip_extent_clear;
 pub mod clip_extent_get;
-pub mod clip_extent_set;
 pub mod fit;
 pub mod fit_reclip;
 pub mod precision_adjust;
@@ -14,8 +12,6 @@ pub mod precision_bypass;
 pub mod precision_get;
 pub mod precision_set;
 pub mod reclip;
-/// Reclip is private beacuse it is only used to intialise the builder.
-mod reclip_convert;
 pub mod reflect_get;
 pub mod reflect_set;
 pub mod rotate_get;
@@ -24,7 +20,6 @@ pub mod scale_adjust;
 pub mod scale_get;
 pub mod translate_adjust;
 pub mod translate_get;
-pub mod translate_reclip;
 pub mod types;
 
 use std::marker::PhantomData;
@@ -47,11 +42,11 @@ use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use self::types::BuilderMercatorAntimeridianResampleClip;
-
 use super::builder::template::ResamplePCNC;
 use super::ClipExtentSet;
 use super::TransformExtent;
+
+use self::types::BuilderMercatorAntimeridianResampleClip;
 
 /// Returns or sets the extent of the projection.
 /// A projection builder sub trait.
