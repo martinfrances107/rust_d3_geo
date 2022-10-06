@@ -42,10 +42,6 @@ where
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;
-        // TODO the minus sign in the y-output component I think is a inconsistency/bug in the javascript.
-        // it should be :-
-        // self.dy + self.k * y
-        // but that would mean a departure from the copy and would have to be adjusted elsewhere.
         Coordinate {
             x: self.dx + self.k * x,
             y: self.dy - self.k * y,
