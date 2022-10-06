@@ -33,6 +33,8 @@ pub mod builder;
 pub mod builder_identity;
 /// A specalised builder wrapping the default mecator.
 pub mod builder_mercator;
+/// A specalised builder wrapping the mecator builder.
+pub mod builder_mercator_transverse;
 /// Debug and test helper function.
 pub mod projection_equal;
 /// Projection object.

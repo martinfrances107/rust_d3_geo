@@ -59,16 +59,16 @@ where
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         Coordinate {
-            x: p.x,
-            y: ((T::FRAC_PI_2() + p.y) / self.two).tan().ln(),
+            x: ((T::FRAC_PI_2() + p.y) / self.two).tan().ln(),
+            y: -p.x,
         }
     }
 
     #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         Coordinate {
-            x: p.x,
-            y: self.two * (p.y.exp()).atan() - T::FRAC_PI_2(),
+            x: -p.y,
+            y: self.two * (p.x.exp()).atan() - T::FRAC_PI_2(),
         }
     }
 }

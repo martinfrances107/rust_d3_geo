@@ -20,6 +20,7 @@ import equirectangular from './equirectangular';
 import gnomic from "./gnomic";
 import orthographic from './orthographic';
 import mercator from './mercator';
+import mercatorTransverse from './mercatorTransverse';
 import stereographic from './stereographic';
 
 fetch("../world-atlas/world/50m.json").then(response => response.json())
@@ -34,7 +35,8 @@ fetch("../world-atlas/world/50m.json").then(response => response.json())
         azimuthalEqualArea(world),
         azimuthalEquidistant(world),
         gnomic(world),
-        mercator(world)
+        mercator(world),
+        mercatorTransverse(world)
       ]
     )
   });

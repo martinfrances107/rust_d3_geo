@@ -220,7 +220,6 @@ where
     fn build(&self) -> Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> {
         Projector {
             p_rc: PhantomData::<RC>,
-            // p_drain: PhantomData::<DRAIN>,
             cache: None,
             postclip: self.base.postclip.clone(),
             clip: self.base.clip.clone(),

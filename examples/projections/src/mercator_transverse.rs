@@ -1,14 +1,14 @@
 use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
+use rust_d3_geo::projection::Build;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
-use rust_d3_geo::projection::mercator::Mercator;
-use rust_d3_geo::projection::Build;
+use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
 use rust_d3_geo::projection::ClipAngleSet;
 use rust_d3_geo::projection::PrecisionAdjust;
 use rust_d3_geo::projection::ProjectionRawBase;
@@ -17,11 +17,11 @@ use rust_d3_geo::projection::TranslateSet;
 
 use crate::document;
 
-pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
+pub async fn draw_mercator_transverse(land: &Geometry<f64>) -> Result<(), JsValue> {
     let document = document()?;
     // Grab canvas.
     let canvas = document
-        .get_element_by_id("mercator-rust")
+        .get_element_by_id("mercator-transverse-rust")
         .unwrap()
         .dyn_into::<web_sys::HtmlCanvasElement>()?;
 
@@ -36,7 +36,7 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
     let context = Context::new(context_raw.clone());
     let pb = PathBuilder::new(context);
 
-    let mut mercator = Mercator::builder();
+    let mut mercator = MercatorTransverse::builder();
     let mercator = mercator.scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI);
     mercator.translate_set(&Coordinate {
         x: width / 2_f64,

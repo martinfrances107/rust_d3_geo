@@ -27,6 +27,7 @@ mod dom_macros;
 mod equirectangular;
 mod gnomic;
 mod mercator;
+mod mercator_transverse;
 mod orthographic;
 mod stereographic;
 
@@ -35,6 +36,7 @@ use azimuthal_equidistant::draw_azimuthal_equidistant;
 use equirectangular::draw_equirectangular;
 use gnomic::draw_gnomic;
 use mercator::draw_mercator;
+use mercator_transverse::draw_mercator_transverse;
 use orthographic::draw_orthographic;
 use stereographic::draw_sterographic;
 
@@ -106,6 +108,7 @@ pub async fn start() -> Result<(), JsValue> {
         draw_azimuthal_equidistant(&land),
         draw_orthographic(&land),
         draw_mercator(&land),
+        draw_mercator_transverse(&land),
         draw_sterographic(&land),
         draw_equirectangular(&land),
         draw_gnomic(&land),
