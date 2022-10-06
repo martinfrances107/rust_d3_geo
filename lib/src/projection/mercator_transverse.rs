@@ -1,6 +1,7 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
@@ -8,8 +9,8 @@ use num_traits::float::FloatConst;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
-use super::builder_mercator::Builder as MercatorBuilder;
+use super::builder_mercator_transverse::types::BuilderMercatorTransverseAntimeridianResampleClip;
+use super::builder_mercator_transverse::Builder as MercatorTraverseBuilder;
 use super::ProjectionRawBase;
 use super::TransformExtent;
 
@@ -35,17 +36,18 @@ where
 impl<DRAIN, T> ProjectionRawBase for MercatorTransverse<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
-    T: CoordFloat + Default + FloatConst,
+    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderMercatorAntimeridianResampleClip<DRAIN, MercatorTransverse<DRAIN, T>, T>;
+    type Builder =
+        BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, MercatorTransverse<DRAIN, T>, T>;
 
     #[inline]
     fn builder() -> Self::Builder {
-        let default: BuilderMercatorAntimeridianResampleClip<
+        let default: BuilderMercatorTransverseAntimeridianResampleClip<
             DRAIN,
             MercatorTransverse<DRAIN, T>,
             T,
-        > = MercatorBuilder::new(MercatorTransverse::default());
+        > = MercatorTraverseBuilder::new(MercatorTransverse::default());
         default
     }
 }

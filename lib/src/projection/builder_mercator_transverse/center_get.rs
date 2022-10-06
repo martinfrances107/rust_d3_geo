@@ -15,6 +15,7 @@ where
 
     #[inline]
     fn center(&self) -> Coordinate<T> {
-        self.base.center()
+        let c = self.base.center();
+        Coordinate { x: c.y, y: -c.x }
     }
 }

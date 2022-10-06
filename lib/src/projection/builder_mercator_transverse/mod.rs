@@ -20,6 +20,7 @@ pub mod rotate_set;
 // pub mod scale_get;
 // pub mod translate_adjust;
 // pub mod translate_get;
+mod scale_set;
 pub mod types;
 
 use std::marker::PhantomData;
@@ -44,8 +45,6 @@ use super::stream_transform_radians::StreamTransformRadians;
 use super::RotateSet;
 use super::ScaleSet;
 use super::TransformExtent;
-
-// use self::types::BuilderMercatorAntimeridianResampleClip;
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]

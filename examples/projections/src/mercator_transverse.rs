@@ -37,7 +37,9 @@ pub async fn draw_mercator_transverse(land: &Geometry<f64>) -> Result<(), JsValu
     let pb = PathBuilder::new(context);
 
     let mut mercator = MercatorTransverse::builder();
-    let mercator = mercator.scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI);
+    let mercator = mercator
+        .base
+        .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI);
     mercator.translate_set(&Coordinate {
         x: width / 2_f64,
         y: height / 2_f64,
