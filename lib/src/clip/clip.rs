@@ -161,7 +161,7 @@ where
     #[inline]
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         if self.pv.point_visible(p) {
-            self.state.line_node.point(p, m);
+            self.state.line_node.sink().point(p, m)
         }
     }
 

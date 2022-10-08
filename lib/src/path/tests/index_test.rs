@@ -24,11 +24,12 @@ mod index {
     use crate::path::context::Context;
     use crate::path_test_context::CanvasRenderingContext2d;
     use crate::projection::equirectangular::Equirectangular;
-
+    use crate::projection::orthographic::Orthographic;
     use crate::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
     use crate::projection::Build;
     use crate::projection::PrecisionBypass;
     use crate::projection::ProjectionRawBase;
+    use crate::projection::RotateSet;
     use crate::projection::ScaleSet;
     use crate::stream::Stream;
     use crate::stream::Streamable;
@@ -406,6 +407,61 @@ mod index {
             [
                 "type: moveTo, x: 170.0, y: 160.0",
                 "type: arc, x: 165.0, y: 160.0, r: 4.5"
+            ]
+        );
+    }
+
+    /// This test is not in the javascript original.
+    /// it was used to diagnose a problem in the the d3_geo_voronoi/benchmark.
+    /// After rendering polygons additional point were not drawn.
+    #[test]
+    fn emulate_benchmark() {
+        println!("emulate benchmark");
+
+        let crc2d = CanvasRenderingContext2d::default();
+
+        let context = Context::new(crc2d);
+        let pb = PathBuilder::new(context);
+
+        // let mut ob = Equirectangular::builder();
+        let mut ob = Orthographic::builder();
+        ob.rotate_set(&[95_f64, 0_f64, 0_f64]);
+        let ortho = ob.build();
+        let mut path = pb.build(ortho);
+
+        let object = Geometry::Polygon(Polygon::new(
+            LineString(vec![
+                Coordinate {
+                    x: -63_f64,
+                    y: 18_f64,
+                },
+                Coordinate {
+                    x: -62_f64,
+                    y: 18_f64,
+                },
+                Coordinate {
+                    x: -62_f64,
+                    y: 17_f64,
+                },
+            ]),
+            vec![],
+        ));
+
+        assert_eq!(
+            path.object(&object),
+            [
+                "type: moveTo, x: 606.0, y: 173.0",
+                "type: lineTo, x: 609.0, y: 173.0",
+                "type: lineTo, x: 610.0, y: 177.0",
+                "closePath",
+            ]
+        );
+        let object = Geometry::Point(Point::new(-63_f64, 18_f64));
+        assert_eq!(
+            path.object(&object),
+            [
+                "type: moveTo, x: 610.0, y: 173.0",
+                "type: arc, x: 606.0, y: 173.0, r: 4.5",
             ]
         );
     }
