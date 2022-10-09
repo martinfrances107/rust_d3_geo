@@ -1,4 +1,4 @@
-****# Rust D3 Geo
+# Rust D3 Geo
 Rust 2021 Edition.
 
 This is a port  [d3-geo](https://github.com/d3/d3-geo) into RUST.
