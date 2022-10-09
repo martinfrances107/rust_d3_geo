@@ -265,7 +265,6 @@ where
 
     #[inline]
     fn line_end(&mut self) {
-        self.state.point_fn = PointFn::Default;
         match self.state.line_end_fn {
             LineEndFn::Default => {
                 self.line_end_default();
