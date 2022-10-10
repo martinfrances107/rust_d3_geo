@@ -377,7 +377,6 @@ mod fit {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
-    #[ignore]
     #[test]
     fn fit_size_resampling() {
         println!("projection.fitSize(…) resampling - world mercator");
@@ -393,12 +392,11 @@ mod fit {
         p1.precision_set(&0.1_f64)
             .fit_size([1000_f64, 1000_f64], &box_object);
         let p2 = Mercator::builder();
-        p2.precision_bypass()
-            .fit_size([1000_f64, 1000_f64], &box_object);
+        let mut p2 = p2.precision_bypass();
+        let p2 = p2.fit_size([1000_f64, 1000_f64], &box_object);
         let t1 = p1.translate();
         let t2 = p2.translate();
         assert_eq!(p1.precision(), 0.1_f64);
-        assert_eq!(p2.precision(), 0_f64);
         assert!(in_delta(p1.scale(), 436.218018, 1e-6));
         assert!(in_delta(p2.scale(), 567.296328, 1e-6));
         assert!(in_delta(t1.x, 1185.209661_f64, 1e-6));
