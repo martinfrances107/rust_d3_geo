@@ -43,12 +43,7 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        let default: BuilderMercatorTransverseAntimeridianResampleClip<
-            DRAIN,
-            MercatorTransverse<DRAIN, T>,
-            T,
-        > = MercatorTraverseBuilder::new(MercatorTransverse::default());
-        default
+        MercatorTraverseBuilder::new(MercatorTransverse::default())
     }
 }
 
