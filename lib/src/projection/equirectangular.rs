@@ -35,20 +35,6 @@ where
     }
 }
 
-// impl<DRAIN, T> ProjectionIdentityRawBase for Equirectangular<DRAIN, T>
-// where
-//     DRAIN: Clone + Default,
-//     T: CoordFloat + Default + FloatConst,
-// {
-//     type Builder = BuilderIdentityAntimeridianResampleNoClip<DRAIN, T>;
-
-//     #[inline]
-//     fn identity_builder() -> Self::Builder {
-//         let b1 = BuilderIdentity::default();
-//         let b2 = b1.scale_set(T::from(152.63_f64).unwrap());
-//         b2
-//     }
-// }
 impl<DRAIN, T> Transform for Equirectangular<DRAIN, T>
 where
     T: CoordFloat,
