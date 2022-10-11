@@ -13,10 +13,14 @@ mod mercator_tranverse_tests {
     use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::CenterSet;
+    use rust_d3_geo::projection::ClipExtentAdjust;
+    use rust_d3_geo::projection::ClipExtentClear;
+    use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::projection::TranslateSet;
     use rust_d3_geo::stream::StreamDrainStub;
+
     use rust_d3_geo::Transform;
 
     // it("transverseMercator.clipExtent(null) sets the default automatic clip extent", () => {
@@ -29,16 +33,12 @@ mod mercator_tranverse_tests {
     #[test]
     fn clip_extent_defaults_to_automatic() {
         println!("transverseMercator.clipExtent(null) sets the default automatic clip extent");
-        let mut pb: BuilderMercatorTransverseAntimeridianResampleClip<
-            String<f32>,
-            MercatorTransverse<String<f32>, f32>,
-            f32,
-        > = MercatorTransverse::builder();
+        let mut pb = MercatorTransverse::builder();
         pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
         pb.scale_set(1_f32);
 
-        // let pb = pb.clip_extent_clear();
-        // let pb = pb.precision_bypass();
+        let pb = pb.clip_extent_clear();
+        let pb = pb.precision_bypass();
 
         let projection = pb.build();
         let path_builder = PathBuilder::context_pathstring();
@@ -67,7 +67,7 @@ mod mercator_tranverse_tests {
             x: 10_f32,
             y: 10_f32,
         });
-        // pb.precision_bypass();
+        pb.precision_bypass();
 
         let projection = pb.build();
         let path_builder = PathBuilder::context_pathstring();
@@ -92,17 +92,17 @@ mod mercator_tranverse_tests {
 
         pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
         pb.scale_set(1_f32);
-        // pb.clip_extent_set(&[
-        //     Coordinate {
-        //         x: -10_f32,
-        //         y: -10_f32,
-        //     },
-        //     Coordinate {
-        //         x: 10_f32,
-        //         y: 10_f32,
-        //     },
-        // ]);
-        // let pb = pb.precision_bypass();
+        pb.clip_extent_adjust(&[
+            Coordinate {
+                x: -10_f32,
+                y: -10_f32,
+            },
+            Coordinate {
+                x: 10_f32,
+                y: 10_f32,
+            },
+        ]);
+        let pb = pb.precision_bypass();
 
         let projection = pb.build();
         let path_builder = PathBuilder::context_pathstring();

@@ -1,29 +1,25 @@
 use geo::CoordFloat;
-use geo::Coordinate;
 use num_traits::FloatConst;
 
 use crate::projection::builder::template::PCNU;
-use crate::projection::ClipExtentAdjust;
+use crate::projection::builder_mercator::Reclip;
 use crate::projection::TransformExtent;
 use crate::Transform;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> ClipExtentAdjust
+impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> Reclip
     for Builder<CLIPC, CLIPU, DRAIN, PCNU<DRAIN, T>, PR, RC, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
     DRAIN: Clone,
-    RU: Clone,
-    PCNU<DRAIN, T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
+    RU: Clone,
     T: CoordFloat + FloatConst,
 {
-    type T = T;
-
-    fn clip_extent_adjust(&mut self, extent: &[Coordinate<T>; 2]) -> &mut Self {
-        self.base.clip_extent_adjust(extent);
+    fn reclip(&mut self) -> &mut Self {
+        self.base.reclip();
         self
     }
 }

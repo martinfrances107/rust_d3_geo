@@ -29,7 +29,6 @@ where
 {
     pub(crate) p_pcnc: PhantomData<PCNC>,
     // Must be public as there is a implicit copy.
-    // pub(crate) postclip: PCNU,
     pub(crate) postclip: PCNU,
     pub(crate) transform: Transformer<DRAIN, PCNC, Unconnected, T>,
     pub(crate) cache: CacheState<DRAIN, Transformer<DRAIN, PCNC, Connected<PCNC>, T>>,

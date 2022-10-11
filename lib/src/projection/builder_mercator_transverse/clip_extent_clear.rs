@@ -1,8 +1,10 @@
 use geo::CoordFloat;
+use num_traits::FloatConst;
 
 use crate::projection::builder::template::PCNU;
 use crate::projection::builder_mercator::Reclip;
-use crate::projection::ClipExtentClear;
+use crate::projection::{ClipExtentClear, TransformExtent};
+use crate::Transform;
 
 use super::Builder;
 
@@ -12,11 +14,10 @@ where
     CLIPC: Clone,
     CLIPU: Clone,
     DRAIN: Clone,
-    PR: Clone,
+    PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     RC: Clone,
     RU: Clone,
-    Self: Reclip,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     type Output = Self;
     /// f64 or f32.
