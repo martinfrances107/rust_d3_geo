@@ -129,8 +129,7 @@ where
         } else {
             self.sx = T::one();
         }
-        self.recenter_no_resampling();
-        self
+        self.recenter_no_resampling()
     }
 
     /// Set the projection builder to invert the y-coordinate.
@@ -141,8 +140,7 @@ where
         } else {
             self.sy = T::one();
         }
-        self.recenter_no_resampling();
-        self
+        self.recenter_no_resampling()
     }
 }
 
@@ -173,8 +171,7 @@ where
         } else {
             self.sx = T::one();
         }
-        self.recenter_no_resampling();
-        self
+        self.recenter_no_resampling()
     }
 
     /// Set the projection builder to invert the y-coordinate.
@@ -185,7 +182,6 @@ where
         } else {
             self.sy = T::one();
         }
-        self.recenter_no_resampling();
-        self
+        self.recenter_no_resampling()
     }
 }

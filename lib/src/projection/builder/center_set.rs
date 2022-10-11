@@ -94,7 +94,6 @@ where
     fn center_set(&mut self, p: &Coordinate<T>) -> &mut Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
-        self.recenter_no_resampling();
-        self
+        self.recenter_no_resampling()
     }
 }

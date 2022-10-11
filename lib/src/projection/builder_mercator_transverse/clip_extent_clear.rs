@@ -28,8 +28,6 @@ where
             p_rc: self.p_rc,
             p_clipc: self.p_clipc,
             base: self.base.clone(),
-            // pr: self.pr.clone(),
-            // extent: None,
         };
         out.reclip();
         out

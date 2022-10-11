@@ -8,7 +8,6 @@ use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
-
 use crate::projection::ClipAngleReset;
 
 use super::Builder;

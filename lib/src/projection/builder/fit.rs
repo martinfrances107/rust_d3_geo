@@ -6,35 +6,24 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::clip::rectangle::Rectangle;
-// use crate::clip::Interpolate;
 use crate::clip::PointVisible;
 use crate::identity::Identity;
 use crate::path::bounds::Bounds;
-// use crate::projection::fit::fit_extent_adjust;
-// use crate::projection::fit::fit_extent_convert;
-// use crate::projection::fit::fit_height_adjust;
 use crate::projection::fit::fit_height_convert;
-// use crate::projection::fit::fit_size_adjust;
-
-// use crate::projection::fit::fit_width_adjust;
 use crate::projection::fit::fit_width_convert;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::resampler::Resampler;
 use crate::projection::FitConvert;
-use crate::Transform;
-// use crate::projection::Interpolate;
 use crate::stream::Connectable;
-
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::stream::Unconnected;
+use crate::Transform;
 
 use super::Builder;
-
 use super::PostClipNode;
-// use super::ProjectionRawBase;
 
 impl<I, LB, LC, LU, PR, PV, RC, RU, T> FitConvert
     for Builder<

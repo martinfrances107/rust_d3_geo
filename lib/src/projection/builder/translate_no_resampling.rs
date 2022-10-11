@@ -37,8 +37,7 @@ where
     fn translate_set(&mut self, t: &Coordinate<T>) -> &mut Self {
         self.x = t.x;
         self.y = t.y;
-        self.recenter_no_resampling();
-        self
+        self.recenter_no_resampling()
     }
 }
 
@@ -65,7 +64,6 @@ where
     fn translate_set(&mut self, t: &Coordinate<T>) -> &mut Self {
         self.x = t.x;
         self.y = t.y;
-        self.recenter_no_resampling();
-        self
+        self.recenter_no_resampling()
     }
 }
