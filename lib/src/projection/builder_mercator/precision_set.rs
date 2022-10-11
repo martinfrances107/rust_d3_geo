@@ -93,14 +93,13 @@ where
     #[inline]
     fn precision_set(&self, delta: &T) -> Self::Output {
         todo!();
-        // let base = self.base.precision_set(delta);
         // Self::Output {
         //     p_clipc: PhantomData::<ClipCircleC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>>,
         //     p_drain: PhantomData::<DRAIN>,
         //     p_rc: PhantomData::<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
         //     extent: self.extent,
-        //     pr: self.pr,
-        //     base,
+        //     pr: self.pr.clone(),
+        //     base: self.base.precision_set(delta),
         // }
     }
 }

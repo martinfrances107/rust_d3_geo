@@ -1,8 +1,8 @@
 ## TODO
 
+High Priority.
 examples/projection eslint needs updating.
 
-High Priority.
 
 * Missing Coverage
   mercator test

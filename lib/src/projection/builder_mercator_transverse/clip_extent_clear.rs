@@ -1,13 +1,10 @@
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::projection::builder::template::PCNU;
+use crate::projection::builder_mercator::Reclip;
 use crate::projection::ClipExtentClear;
-use crate::projection::TransformExtent;
-use crate::Transform;
 
 use super::Builder;
-use super::Reclip;
 
 impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> ClipExtentClear
     for Builder<CLIPC, CLIPU, DRAIN, PCNU<DRAIN, T>, PR, RC, RU, T>
@@ -15,10 +12,11 @@ where
     CLIPC: Clone,
     CLIPU: Clone,
     DRAIN: Clone,
-    PR: Clone + Transform<T = T> + TransformExtent<T = T>,
+    PR: Clone,
     RC: Clone,
     RU: Clone,
-    T: CoordFloat + FloatConst,
+    Self: Reclip,
+    T: CoordFloat,
 {
     type Output = Self;
     /// f64 or f32.
@@ -30,8 +28,8 @@ where
             p_rc: self.p_rc,
             p_clipc: self.p_clipc,
             base: self.base.clone(),
-            pr: self.pr.clone(),
-            extent: None,
+            // pr: self.pr.clone(),
+            // extent: None,
         };
         out.reclip();
         out

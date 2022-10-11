@@ -184,15 +184,15 @@ mod fit {
 
         let world = world();
         let mut projection = Gnomic::builder();
-        projection.clip_angle(45_f32);
-        projection.fit_extent([[50_f32, 50_f32], [950_f32, 950_f32]], &world);
-        assert!(in_delta(projection.scale(), 450.348233_f32, 1e-6));
+        projection.clip_angle(45_f64);
+        projection.fit_extent([[50_f64, 50_f64], [950_f64, 950_f64]], &world);
+        assert!(in_delta(projection.scale(), 450.348233_f64, 1e-6));
         // TODO Must investigate the failure below.
         assert!(in_delta_coordinate(
             &projection.translate(),
             &Coordinate {
-                x: 500.115138_f32,
-                y: 556.522620_f32
+                x: 500.115138_f64,
+                y: 556.522620_f64
             },
             1e-6
         ));

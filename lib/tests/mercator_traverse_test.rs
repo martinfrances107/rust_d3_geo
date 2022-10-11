@@ -12,6 +12,7 @@ mod mercator_tranverse_tests {
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String;
     use rust_d3_geo::projection::builder_mercator::ScaleReclip;
+    use rust_d3_geo::projection::builder_mercator_transverse::types::BuilderMercatorTransverseAntimeridianResampleClip;
     use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::CenterGet;
@@ -32,23 +33,28 @@ mod mercator_tranverse_tests {
     //   assert.strictEqual(projection.clipExtent(), null);
     // });
 
+    #[ignore]
     #[test]
     fn clip_extent_defaults_to_automatic() {
         println!("transverseMercator.clipExtent(null) sets the default automatic clip extent");
-        // let pb = MercatorTransverse::builder();
-        // pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 })
-        // pb.scale_set(1_f32);
+        let mut pb: BuilderMercatorTransverseAntimeridianResampleClip<
+            String<f32>,
+            MercatorTransverse<String<f32>, f32>,
+            f32,
+        > = MercatorTransverse::builder();
+        pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
+        pb.scale_set(1_f32);
 
         // let pb = pb.clip_extent_clear();
         // let pb = pb.precision_bypass();
 
-        // let projection = pb.build();
-        // let path_builder = PathBuilder::context_pathstring();
+        let projection = pb.build();
+        let path_builder = PathBuilder::context_pathstring();
 
-        // let object = Sphere::<f32>::default();
+        let object = Sphere::<f32>::default();
 
-        // let s = path_builder.build(projection).object(&object);
-        // assert_eq!(s, "M3.141593,3.141593L0,3.141593L-3.141593,3.141593L-3.141593,-3.141593L-3.141593,-3.141593L0,-3.141593L3.141593,-3.141593L3.141593,3.141593Z");
+        let s = path_builder.build(projection).object(&object);
+        assert_eq!(s, "M3.141593,3.141593L0,3.141593L-3.141593,3.141593L-3.141593,-3.141593L-3.141593,-3.141593L0,-3.141593L3.141593,-3.141593L3.141593,3.141593Z");
     }
 
     // it("transverseMercator.center(center) sets the correct automatic clip extent", () => {
@@ -62,13 +68,13 @@ mod mercator_tranverse_tests {
     fn center_set_the_automatic_clip_extent() {
         println!("transverseMercator.center(center) sets the correct automatic clip extent");
         let mut pb = MercatorTransverse::<String<f32>, f32>::builder();
-        // pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
+        pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
 
-        // let pb = pb.scale_set(1_f32);
-        // let pb = pb.center_set(&Coordinate {
-        //     x: 10_f32,
-        //     y: 10_f32,
-        // });
+        let pb = pb.scale_set(1_f32);
+        let pb = pb.center_set(&Coordinate {
+            x: 10_f32,
+            y: 10_f32,
+        });
         // pb.precision_bypass();
 
         let projection = pb.build();
@@ -92,9 +98,9 @@ mod mercator_tranverse_tests {
         println!("transverseMercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent");
         let mut pb = MercatorTransverse::builder();
 
-        // pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
-        // pb.scale_set(1_f32);
-        // pb.clip_extent_adjust(&[
+        pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
+        pb.scale_set(1_f32);
+        // pb.clip_extent_set(&[
         //     Coordinate {
         //         x: -10_f32,
         //         y: -10_f32,
@@ -104,7 +110,7 @@ mod mercator_tranverse_tests {
         //         y: 10_f32,
         //     },
         // ]);
-        // pb.precision_bypass();
+        // let pb = pb.precision_bypass();
 
         let projection = pb.build();
         let path_builder = PathBuilder::context_pathstring();
@@ -117,7 +123,7 @@ mod mercator_tranverse_tests {
 
     #[test]
     fn point_test() {
-        println!("has no direct equivalent in javascript, but this helped me debugged.");
+        println!("has no direct equivalent in javascript, but this helped me debug.");
         let p = MercatorTransverse::<StreamDrainStub<f64>, f64>::builder().build();
 
         let t = p.transform(&Coordinate { x: 0_f64, y: 0_f64 });
