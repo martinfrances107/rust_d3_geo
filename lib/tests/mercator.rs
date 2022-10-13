@@ -26,32 +26,22 @@ mod mercator {
     use rust_d3_geo::projection::TranslateGet;
     use rust_d3_geo::projection::TranslateSet;
 
-    #[ignore]
     #[test]
     fn clip_extent_defaults_to_automatic() {
         println!("mercator.clipExtent(null) sets the default automatic clip extent");
         let pb = Mercator::builder()
-            .translate_set(&Coordinate { x: 0_f32, y: 0_f32 })
-            .scale_set(1_f32)
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+            .scale_set(1_f64)
             .precision_bypass()
             .clip_extent_clear();
 
         let projection = pb.build();
         let path_builder = PathBuilder::context_pathstring();
 
-        let object = Sphere::<f32>::default();
+        let object = Sphere::<f64>::default();
 
-        // The strings are very close here..
-        // There is a divergence between JS and RUST here
-        // See mercator.transform .. f32 is implied here
-        // So I have adjusted some values ending 3 with 27.
-        // From the JS reference I have adjusted the second numeric
-        // value in the string to be zero 0
-        // after tracing the program and seeing that its input to the
-        // raw mercator projection was FRAC_PI_2 and evaluates to NAN
-        // while JS provides a large numeric value.
         let s = path_builder.build(projection).object(&object);
-        assert_eq!(s, "M3.141593,0L3.141593,0L3.141593,3.141593L3.141593,3.141593L-3.141593,3.141593L-3.141593,3.141593L-3.141593,0L-3.141593,-3.141593L-3.141593,-3.141593L3.141593,-3.141593Z");
+        assert_eq!(s, "M3.141593,-3.141593L3.141593,0L3.141593,3.141593L3.141593,3.141593L-3.141593,3.141593L-3.141593,3.141593L-3.141593,0L-3.141593,-3.141593L-3.141593,-3.141593L3.141593,-3.141593Z");
     }
 
     #[ignore]
@@ -59,12 +49,12 @@ mod mercator {
     fn center_set_correct_automatic() {
         println!("mercator.center(center) sets the correct automatic clip extent");
         let pb = Mercator::builder()
-            .translate_set(&Coordinate { x: 0_f32, y: 0_f32 })
+            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .center_set(&Coordinate {
-                x: 10_f32,
-                y: 10_f32,
+                x: 10_f64,
+                y: 10_f64,
             })
-            .scale_set(1_f32)
+            .scale_set(1_f64)
             .precision_bypass();
 
         let projection = pb.build();
@@ -108,7 +98,7 @@ mod mercator {
         // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
         // See MercatorRaw::transform for an expanation of the issue.
         let s = path_builder.build(projection).object(&object);
-        assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
+        assert_eq!(s, "M3.141593,-10L3.141593,0L3.141593,10L3.141593,10L-3.141593,10L-3.141593,10L-3.141593,0L-3.141593,-10L-3.141593,-10L3.141593,-10Z");
         assert_eq!(
             pb.clip_extent(),
             Some([
@@ -127,7 +117,7 @@ mod mercator {
     #[test]
     fn scale_updates_the_intersected_clip_extent() {
         println!(
-            "mercator.clipExtent(extent).translate(translate) updates the intersected clip extent"
+            "mercator.clipExtent(extent).translate(scale) updates the intersected clip extent"
         );
         let pb = Mercator::builder()
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
@@ -149,11 +139,8 @@ mod mercator {
 
         let object = Sphere::default();
 
-        // There is a bodge associated with this test
-        // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
-        // See MercatorRaw::transform for an expanation of the issue.
         let s = path_builder.build(projection).object(&object);
-        assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
+        assert_eq!(s, "M3.141593,-10L3.141593,0L3.141593,10L3.141593,10L-3.141593,10L-3.141593,10L-3.141593,0L-3.141593,-10L-3.141593,-10L3.141593,-10Z");
         assert_eq!(
             pb.clip_extent(),
             Some([
@@ -194,11 +181,8 @@ mod mercator {
 
         let object = Sphere::default();
 
-        // There is a bodge associated with this test
-        // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
-        // See MercatorRaw::transform for an expanation of the issue.
         let s = path_builder.build(projection).object(&object);
-        assert_eq!(s, "M3.141592653589793,-10L3.141592653589793,0L3.141592653589793,10L3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,10L-3.141592653589793,0L-3.141592653589793,-10L-3.141592653589793,-10L3.141592653589793,-10Z");
+        assert_eq!(s, "M3.141593,-10L3.141593,0L3.141593,10L3.141593,10L-3.141593,10L-3.141593,10L-3.141593,0L-3.141593,-10L-3.141593,-10L3.141593,-10Z");
         assert_eq!(
             pb.clip_extent(),
             Some([

@@ -107,16 +107,21 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+        // 6 digits of precision NAN maps to zero!!!
+        let x = p.x.to_f64().unwrap_or(0_f64);
+        let x_rounded = (x * 1000000_f64).round() / 1000000_f64;
+        let y = p.y.to_f64().unwrap_or(0_f64);
+        let y_rounded = (y * 1000000_f64).round() / 1000000_f64;
         match self.point {
             PointState::AtLineStart => {
-                self.string.push(format!("M{},{}", p.x, p.y));
+                self.string.push(format!("M{},{}", x_rounded, y_rounded));
                 self.point = PointState::LineInProgress;
             }
             PointState::LineInProgress => {
-                self.string.push(format!("L{},{}", p.x, p.y));
+                self.string.push(format!("L{},{}", x_rounded, y_rounded));
             }
             PointState::RenderingPoints => {
-                self.string.push(format!("M{},{}", p.x, p.y));
+                self.string.push(format!("M{},{}", x_rounded, y_rounded));
                 self.string.push(self.circle.clone());
             }
         }

@@ -29,13 +29,37 @@ mod mercator_tranverse_tests {
     //   assert.strictEqual(projection.clipExtent(), null);
     // });
 
+    // There are subtle mercator - mercaotorTransverse / f32 issues
+    //
+    // see mt_clip_extent_defaults_to_automatic().
+    // and think about close to the poles ( PI /2 )
+    //
+    // mercator transoform looks like this
+    //
+    // return [log(tan((halfPi + phi) / 2)), -lambda];
+    //
+    // in the test I have found problems with the limited resoultion of f32
+    //
+    // This causes error, looking at :-
+    // in line_fn.rs:: line()
+    //
+    // let mut r = x0 - xa
+    // r = r / dx
+    //
+    // The subtraction was evaluated differently.
+    //
+    // using f64  -> 10^9 - PI == 999999996.8584074
+    // using f32  -> 10^9 - PI resolved to 10^9
+    //
+    // line() was whoes output [&mut a] should be PI, PI
+    // had a buggy output of 0, PI.
     #[ignore]
     #[test]
     fn clip_extent_defaults_to_automatic() {
         println!("transverseMercator.clipExtent(null) sets the default automatic clip extent");
         let mut pb = MercatorTransverse::builder();
-        pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
-        pb.scale_set(1_f32);
+        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        pb.scale_set(1_f64);
 
         let pb = pb.clip_extent_clear();
         let pb = pb.precision_bypass();
@@ -43,7 +67,7 @@ mod mercator_tranverse_tests {
         let projection = pb.build();
         let path_builder = PathBuilder::context_pathstring();
 
-        let object = Sphere::<f32>::default();
+        let object = Sphere::<f64>::default();
 
         let s = path_builder.build(projection).object(&object);
         assert_eq!(s, "M3.141593,3.141593L0,3.141593L-3.141593,3.141593L-3.141593,-3.141593L-3.141593,-3.141593L0,-3.141593L3.141593,-3.141593L3.141593,3.141593Z");
@@ -59,20 +83,20 @@ mod mercator_tranverse_tests {
     #[test]
     fn center_set_the_automatic_clip_extent() {
         println!("transverseMercator.center(center) sets the correct automatic clip extent");
-        let mut pb = MercatorTransverse::<String<f32>, f32>::builder();
-        pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
+        let mut pb = MercatorTransverse::<String<f64>, f64>::builder();
+        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
 
-        let pb = pb.scale_set(1_f32);
+        let pb = pb.scale_set(1_f64);
         let pb = pb.center_set(&Coordinate {
-            x: 10_f32,
-            y: 10_f32,
+            x: 10_f64,
+            y: 10_f64,
         });
         pb.precision_bypass();
 
         let projection = pb.build();
         let path_builder = PathBuilder::context_pathstring();
 
-        let object = Sphere::<f32>::default();
+        let object = Sphere::<f64>::default();
 
         let s = path_builder.build(projection).object(&object);
         assert_eq!(s, "M2.966167,3.316126L-0.175426,3.316126L-3.317018,3.316126L-3.317019,-2.967060L-3.317019,-2.967060L-0.175426,-2.967060L2.966167,-2.967060L2.966167,3.316126Z");
@@ -90,16 +114,16 @@ mod mercator_tranverse_tests {
         println!("transverseMercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent");
         let mut pb = MercatorTransverse::builder();
 
-        pb.translate_set(&Coordinate { x: 0_f32, y: 0_f32 });
-        pb.scale_set(1_f32);
+        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        pb.scale_set(1_f64);
         pb.clip_extent_adjust(&[
             Coordinate {
-                x: -10_f32,
-                y: -10_f32,
+                x: -10_f64,
+                y: -10_f64,
             },
             Coordinate {
-                x: 10_f32,
-                y: 10_f32,
+                x: 10_f64,
+                y: 10_f64,
             },
         ]);
         let pb = pb.precision_bypass();
@@ -107,7 +131,7 @@ mod mercator_tranverse_tests {
         let projection = pb.build();
         let path_builder = PathBuilder::context_pathstring();
 
-        let object = Sphere::<f32>::default();
+        let object = Sphere::<f64>::default();
 
         let s = path_builder.build(projection).object(&object);
         assert_eq!(s, "M10,3.141593L0,3.141593L-10,3.141593L-10,-3.141593L-10,-3.141593L0,-3.141593L10,-3.141593L10,3.141593Z");
