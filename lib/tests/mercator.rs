@@ -44,7 +44,6 @@ mod mercator {
         assert_eq!(s, "M3.141593,-3.141593L3.141593,0L3.141593,3.141593L3.141593,3.141593L-3.141593,3.141593L-3.141593,3.141593L-3.141593,0L-3.141593,-3.141593L-3.141593,-3.141593L3.141593,-3.141593Z");
     }
 
-    #[ignore]
     #[test]
     fn center_set_correct_automatic() {
         println!("mercator.center(center) sets the correct automatic clip extent");
@@ -61,9 +60,10 @@ mod mercator {
         let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::default();
-
+        //Bodge: I have had to alter the expected string ... dropping trailing 0 from some floats.
+        // This is a trivial difference to between rust and Javascriipt.
         let s = path_builder.build(projection).object(&object);
-        assert_eq!(s, "M2.967060,-2.966167L2.967060,0.175426L2.967060,3.317018L2.967060,3.317018L-3.316126,3.317018L-3.316126,3.317019L-3.316126,0.175426L-3.316126,-2.966167L-3.316126,-2.966167L2.967060,-2.966167Z");
+        assert_eq!(s, "M2.96706,-2.966167L2.96706,0.175426L2.96706,3.317018L2.96706,3.317018L-3.316126,3.317018L-3.316126,3.317019L-3.316126,0.175426L-3.316126,-2.966167L-3.316126,-2.966167L2.96706,-2.966167Z");
 
         // assert_eq!(pb.get_clip_extent(), None);
     }
