@@ -15,9 +15,9 @@ mod projection_rotate {
     use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::projection::TranslateSet;
 
-    #[ignore]
     #[test]
     fn degenerate_polygon_should_not_break() {
+        println!("a rotation of a degenerate polygon should not break");
         let projection = Mercator::builder()
             .rotate_set(&[-134.3_f64, 25.776_f64, 0_f64])
             .scale_set(750_f64)
