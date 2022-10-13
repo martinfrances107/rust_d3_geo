@@ -4,7 +4,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use geo::Point;
 
-#[cfg(not(tarpaulin_include))]
 /// True if two points are identical within the specified difference.
 pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bool {
     println!(
@@ -28,7 +27,6 @@ pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bo
     is_ok
 }
 
-#[cfg(not(tarpaulin_include))]
 /// Returns true if two points are considered equal, within the specified differnce.
 ///
 /// Debug and test helper function.
@@ -44,7 +42,6 @@ pub fn in_delta_point<T: CoordFloat + Display>(
     in_delta(actual.x(), expected.x(), delta) && in_delta(actual.y(), expected.y(), delta)
 }
 
-#[cfg(not(tarpaulin_include))]
 /// Returns true if two points are considered equal, within the specified differnce.
 ///
 /// Debug and test helper function.

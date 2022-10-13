@@ -36,6 +36,7 @@ pub mod builder_mercator;
 /// A specalised builder wrapping the mecator builder.
 pub mod builder_mercator_transverse;
 /// Debug and test helper function.
+#[cfg(not(tarpaulin_include))]
 pub mod projection_equal;
 /// Projection object.
 pub mod projector;

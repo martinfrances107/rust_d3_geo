@@ -41,6 +41,7 @@ pub mod graticule;
 /// A stream pipeline stage
 pub mod identity;
 /// Testing and Debug helpers.
+#[cfg(not(tarpaulin_include))]
 pub mod in_delta;
 /// Stream end point: Calculation of object lengths.
 pub mod length;
