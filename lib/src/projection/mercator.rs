@@ -1,7 +1,11 @@
+//! A Raw Projection.
+//!
+//! Unlike all other raw projections Mercator and MercatorTransverse are
+//! hard coded to work only with f64s The Additional dynamic range/
+//! resolution  is essential in giving accuarate results near the poles.
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
 
@@ -16,75 +20,63 @@ use super::TransformExtent;
 
 /// Projection definition.
 #[derive(Clone, Copy, Debug)]
-pub struct Mercator<DRAIN, T> {
+pub struct Mercator<DRAIN> {
     p_drain: PhantomData<DRAIN>,
-    two: T,
 }
 
-impl<DRAIN, T> Default for Mercator<DRAIN, T>
-where
-    T: CoordFloat,
-{
+impl<DRAIN> Default for Mercator<DRAIN> {
     fn default() -> Self {
         Self {
             p_drain: PhantomData::<DRAIN>,
-            two: T::from(2_f64).unwrap(),
         }
     }
 }
 
-impl<DRAIN, T> ProjectionRawBase for Mercator<DRAIN, T>
+impl<DRAIN> ProjectionRawBase for Mercator<DRAIN>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
-    T: CoordFloat + Default + FloatConst,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
-    type Builder = BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN, T>, T>;
+    type Builder = BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN>, f64>;
 
     #[inline]
     fn builder() -> Self::Builder {
-        let mut default: BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN, T>, T> =
+        let mut default: BuilderMercatorAntimeridianResampleClip<DRAIN, Mercator<DRAIN>, f64> =
             MercatorBuilder::new(Mercator::default());
-        let default = default.scale_set(T::from(961_f64 / f64::TAU()).unwrap());
+        let default = default.scale_set(961_f64 / f64::TAU());
         default.to_owned()
     }
 }
 
-impl<DRAIN, T> TransformExtent for Mercator<DRAIN, T>
-where
-    T: CoordFloat,
-{
-    type T = T;
+impl<DRAIN> TransformExtent for Mercator<DRAIN> {
+    type T = f64;
     #[inline]
     fn transform_extent(
         self,
-        k: T,
-        t: Coordinate<T>,
-        x0: T,
-        y0: T,
-        x1: T,
-        y1: T,
-    ) -> [Coordinate<T>; 2] {
+        k: f64,
+        t: Coordinate<f64>,
+        x0: f64,
+        y0: f64,
+        x1: f64,
+        y1: f64,
+    ) -> [Coordinate<f64>; 2] {
         [
             Coordinate {
-                x: T::max(t.x - k, x0),
+                x: f64::max(t.x - k, x0),
                 y: y0,
             },
             Coordinate {
-                x: T::min(t.x + k, x1),
+                x: f64::min(t.x + k, x1),
                 y: y1,
             },
         ]
     }
 }
 
-impl<DRAIN, T> Transform for Mercator<DRAIN, T>
-where
-    T: CoordFloat + FloatConst,
-{
-    type T = T;
+impl<DRAIN> Transform for Mercator<DRAIN> {
+    type T = f64;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
         // Divergence between f64 and f32
         // when p.y  = 1.5707963267948966  (PI/2)
         // f64 outputs -37.33185619326892 which is consistent
@@ -96,15 +88,15 @@ where
         // large number in both the JS and RUST.
         Coordinate {
             x: p.x,
-            y: ((T::FRAC_PI_2() + p.y) / self.two).tan().ln(),
+            y: ((f64::FRAC_PI_2() + p.y) / 2f64).tan().ln(),
         }
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
         Coordinate {
             x: p.x,
-            y: self.two * (p.y.exp()).atan() - T::FRAC_PI_2(),
+            y: 2f64 * (p.y.exp()).atan() - f64::FRAC_PI_2(),
         }
     }
 }

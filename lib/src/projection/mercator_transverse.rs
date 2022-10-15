@@ -1,8 +1,11 @@
+//! A Raw Projection.
+//!
+//! Unlike all other raw projections Mercator and MercatorTransverse are
+//! hard coded to work only with f64s The Additional dynamic range/
+//! resolution  is essential in giving accuarate results near the poles.
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use approx::AbsDiffEq;
-use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
 
@@ -16,30 +19,24 @@ use super::TransformExtent;
 
 /// Projection definition.
 #[derive(Clone, Copy, Debug)]
-pub struct MercatorTransverse<DRAIN, T> {
+pub struct MercatorTransverse<DRAIN> {
     p_drain: PhantomData<DRAIN>,
-    two: T,
 }
 
-impl<DRAIN, T> Default for MercatorTransverse<DRAIN, T>
-where
-    T: CoordFloat,
-{
+impl<DRAIN> Default for MercatorTransverse<DRAIN> {
     fn default() -> Self {
         Self {
             p_drain: PhantomData::<DRAIN>,
-            two: T::from(2_f64).unwrap(),
         }
     }
 }
 
-impl<DRAIN, T> ProjectionRawBase for MercatorTransverse<DRAIN, T>
+impl<DRAIN> ProjectionRawBase for MercatorTransverse<DRAIN>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
     type Builder =
-        BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, MercatorTransverse<DRAIN, T>, T>;
+        BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, MercatorTransverse<DRAIN>, f64>;
 
     #[inline]
     fn builder() -> Self::Builder {
@@ -47,52 +44,57 @@ where
     }
 }
 
-impl<DRAIN, T> Transform for MercatorTransverse<DRAIN, T>
-where
-    T: CoordFloat + FloatConst,
-{
-    type T = T;
+impl<DRAIN> Transform for MercatorTransverse<DRAIN> {
+    type T = f64;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        Coordinate {
-            x: ((T::FRAC_PI_2() + p.y) / self.two).tan().ln(),
+    fn transform(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
+        let angle = (f64::FRAC_PI_2() + p.y) / 2f64;
+        // Javascript compatibility mode.
+        let tan_angle = if angle == f64::FRAC_PI_2() {
+            16331239353195370_f64
+        } else if angle == -f64::FRAC_PI_2() {
+            -16331239353195370_f64
+        } else {
+            angle.tan()
+        };
+
+        let out = Coordinate {
+            x: tan_angle.ln(),
             y: -p.x,
-        }
+        };
+        out
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
         Coordinate {
             x: -p.y,
-            y: self.two * (p.x.exp()).atan() - T::FRAC_PI_2(),
+            y: 2f64 * (p.x.exp()).atan() - f64::FRAC_PI_2(),
         }
     }
 }
 
-impl<DRAIN, T> TransformExtent for MercatorTransverse<DRAIN, T>
-where
-    T: CoordFloat,
-{
-    type T = T;
+impl<DRAIN> TransformExtent for MercatorTransverse<DRAIN> {
+    type T = f64;
     #[inline]
     fn transform_extent(
         self,
-        k: T,
-        t: Coordinate<T>,
-        x0: T,
-        y0: T,
-        x1: T,
-        y1: T,
-    ) -> [Coordinate<T>; 2] {
+        k: f64,
+        t: Coordinate<f64>,
+        x0: f64,
+        y0: f64,
+        x1: f64,
+        y1: f64,
+    ) -> [Coordinate<f64>; 2] {
         [
             Coordinate {
                 x: x0,
-                y: T::max(t.x - k, y0),
+                y: f64::max(t.x - k, y0),
             },
             Coordinate {
                 x: x1,
-                y: T::min(t.y + k, y1),
+                y: f64::min(t.y + k, y1),
             },
         ]
     }

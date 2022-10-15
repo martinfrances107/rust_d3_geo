@@ -53,9 +53,8 @@ mod mercator_tranverse_tests {
     //
     // line() was whoes output [&mut a] should be PI, PI
     // had a buggy output of 0, PI.
-    #[ignore]
     #[test]
-    fn clip_extent_defaults_to_automatic() {
+    fn mt_clip_extent_defaults_to_automatic() {
         println!("transverseMercator.clipExtent(null) sets the default automatic clip extent");
         let mut pb = MercatorTransverse::builder();
         pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
@@ -83,7 +82,7 @@ mod mercator_tranverse_tests {
     #[test]
     fn center_set_the_automatic_clip_extent() {
         println!("transverseMercator.center(center) sets the correct automatic clip extent");
-        let mut pb = MercatorTransverse::<String<f64>, f64>::builder();
+        let mut pb = MercatorTransverse::<String<f64>>::builder();
         pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
 
         let pb = pb.scale_set(1_f64);
@@ -140,7 +139,7 @@ mod mercator_tranverse_tests {
     #[test]
     fn point_test() {
         println!("has no direct equivalent in javascript, but this helped me debug.");
-        let p = MercatorTransverse::<StreamDrainStub<f64>, f64>::builder().build();
+        let p = MercatorTransverse::<StreamDrainStub<f64>>::builder().build();
 
         let t = p.transform(&Coordinate { x: 0_f64, y: 0_f64 });
         assert_eq!(

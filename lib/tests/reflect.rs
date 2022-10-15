@@ -180,43 +180,43 @@ mod reflect {
     #[test]
     fn x_works_with_projection_angle() {
         println!("projection.reflectX(…) works with projection.angle()");
-        let mut builder: MercatorBuilder<_, _, StreamDrainStub<f32>, _, _, _, _, f32> =
+        let mut builder: MercatorBuilder<_, _, StreamDrainStub<f64>, _, _, _, _, f64> =
             Mercator::builder();
-        builder.scale_set(1_f32).translate_set(&Coordinate {
-            x: 10_f32,
-            y: 20_f32,
+        builder.scale_set(1_f64).translate_set(&Coordinate {
+            x: 10_f64,
+            y: 20_f64,
         });
 
-        builder.reflect_x_set(true).angle_set(45_f32);
+        builder.reflect_x_set(true).angle_set(45_f64);
 
         assert_eq!(builder.is_x_reflected(), true);
-        assert!(in_delta(45_f32, builder.angle(), 1e-6));
+        assert!(in_delta(45_f64, builder.angle(), 1e-6));
         let p = builder.build();
         assert_eq!(
-            p.transform(&Coordinate { x: 0_f32, y: 0_f32 }),
+            p.transform(&Coordinate { x: 0_f64, y: 0_f64 }),
             Coordinate {
-                x: 10_f32,
-                y: 20_f32
+                x: 10_f64,
+                y: 20_f64
             }
         );
         assert_eq!(
             p.transform(&Coordinate {
-                x: 10_f32,
-                y: 0_f32
+                x: 10_f64,
+                y: 0_f64
             }),
             Coordinate {
-                x: 9.87658658_f32,
-                y: 20.12341341_f32
+                x: 9.876586585051157_f64,
+                y: 20.123413414948843_f64
             }
         );
         assert_eq!(
             p.transform(&Coordinate {
-                x: 0_f32,
-                y: 10_f32
+                x: 0_f64,
+                y: 10_f64
             }),
             Coordinate {
-                x: 9.87595521_f32,
-                y: 19.87595521_f32
+                x: 9.875955206257924_f64,
+                y: 19.875955206257924_f64
             }
         );
     }

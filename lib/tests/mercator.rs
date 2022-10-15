@@ -60,6 +60,7 @@ mod mercator {
         let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::default();
+
         //Bodge: I have had to alter the expected string ... dropping trailing 0 from some floats.
         // This is a trivial difference to between rust and Javascriipt.
         let s = path_builder.build(projection).object(&object);
@@ -94,9 +95,6 @@ mod mercator {
 
         let object = Sphere::default();
 
-        // There is a bodge associated with this test
-        // I have had to adjust the return string to include PI_f64 not PI_f32 to get this to pass.
-        // See MercatorRaw::transform for an expanation of the issue.
         let s = path_builder.build(projection).object(&object);
         assert_eq!(s, "M3.141593,-10L3.141593,0L3.141593,10L3.141593,10L-3.141593,10L-3.141593,10L-3.141593,0L-3.141593,-10L-3.141593,-10L3.141593,-10Z");
         assert_eq!(

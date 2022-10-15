@@ -75,13 +75,13 @@ mod invert {
 
     #[test]
     fn mercator() {
-        let m = Mercator::<StreamDrainStub<f64>, f64>::builder().build();
+        let m = Mercator::<StreamDrainStub<f64>>::builder().build();
         symetric_invert(m);
     }
 
     #[test]
     fn mercator_traverse() {
-        let m = MercatorTransverse::<StreamDrainStub<f64>, f64>::builder().build();
+        let m = MercatorTransverse::<StreamDrainStub<f64>>::builder().build();
         symetric_invert(m);
     }
 

@@ -114,10 +114,9 @@ where
             (Some(to), Some(from)) => {
                 let mut a = self.corner(&from, &direction);
                 let a1 = self.corner(&to, &direction);
-                let cp = self.compare_point(&from, &to) < Ordering::Less;
+                let cp = self.compare_point(&from, &to) == Ordering::Less;
                 let is_direction = direction > T::zero();
-                // logical exor: cp ^^ is_direction
-                if a != a1 || (cp && !is_direction) || (!cp && is_direction) {
+                if a != a1 || (cp != is_direction) {
                     loop {
                         let p = Coordinate {
                             x: if a == 0 || a == 3 { self.x0 } else { self.x1 },
@@ -130,10 +129,12 @@ where
                             break;
                         }
                     }
+                } else {
+                    stream.point(&to, None);
                 }
             }
-            (Some(to), None) => {
-                stream.point(&to, None);
+            (Some(_to), None) => {
+                panic!("DO I ever get here");
             }
             _ => {
                 panic!("did not expect only from and no to .. or Nothing at all Does the JS version get here?");
