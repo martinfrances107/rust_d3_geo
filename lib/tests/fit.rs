@@ -343,7 +343,7 @@ mod fit {
         println!("projection.fitSize(…) ignore clipExtent - world equirectangular");
         let world = world();
         let mut p1 = Equirectangular::builder();
-        p1.fit_size([1000_f64, 1000_f64], &world);
+        let p1 = p1.fit_size([1000_f64, 1000_f64], &world);
         let s1 = p1.scale();
         let t1 = p1.translate();
 
@@ -358,7 +358,7 @@ mod fit {
                 y: 600_f64,
             },
         ]);
-        p2.fit_size([1000_f64, 1000_f64], &world);
+        let p2 = p2.fit_size([1000_f64, 1000_f64], &world);
         let s2 = p2.scale();
         let t2 = p2.translate();
 
