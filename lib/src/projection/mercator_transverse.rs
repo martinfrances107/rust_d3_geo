@@ -59,11 +59,10 @@ impl<DRAIN> Transform for MercatorTransverse<DRAIN> {
             angle.tan()
         };
 
-        let out = Coordinate {
+        Coordinate {
             x: tan_angle.ln(),
             y: -p.x,
-        };
-        out
+        }
     }
 
     #[inline]

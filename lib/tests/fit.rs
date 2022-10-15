@@ -199,7 +199,6 @@ mod fit {
     }
 
     // TODO this look like a bug. the y value of translate is actuall a copy of the x value.
-    #[ignore]
     #[test]
     fn fit_extent_world_mercator() {
         println!("projection.fitExtent(…) world mercator");

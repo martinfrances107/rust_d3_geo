@@ -34,7 +34,7 @@ mod mercator_tranverse_tests {
     // see mt_clip_extent_defaults_to_automatic().
     // and think about close to the poles ( PI /2 )
     //
-    // mercator transoform looks like this
+    // mercator transform looks like this
     //
     // return [log(tan((halfPi + phi) / 2)), -lambda];
     //
@@ -107,7 +107,6 @@ mod mercator_tranverse_tests {
     //   assert.deepStrictEqual(projection.clipExtent(), [[-10, -10], [10, 10]]);
     // });
 
-    #[ignore]
     #[test]
     fn clip_extent_intersects() {
         println!("transverseMercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent");
