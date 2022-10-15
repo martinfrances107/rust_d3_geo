@@ -6,6 +6,7 @@ mod identity {
     use geo::Geometry;
     use geo::LineString;
 
+    use crate::identity::Identity;
     use crate::path::string::String;
     use crate::path_identity::builder::Builder as PathBuilder;
     use crate::projection::builder::template::NoPCNC;
@@ -13,19 +14,26 @@ mod identity {
     use crate::projection::builder::template::PCNC;
     use crate::projection::builder_identity::Builder;
     use crate::projection::projection_equal::projection_equal;
-    use crate::projection::projector_identity::Projector;
     use crate::projection::ClipExtentSet;
+    use crate::projection::ReflectGet;
     use crate::projection::ReflectSet;
+    use crate::projection::ScaleGet;
     use crate::projection::ScaleSet;
+    use crate::projection::TranslateGet;
     use crate::projection::TranslateSet;
     use crate::stream::StreamDrainStub;
+    use crate::stream::Unconnected;
 
     #[test]
     fn returns_a_point() {
-        let identity: Projector<StreamDrainStub<f64>, _, _, _> = Builder::default()
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
-            .scale_set(1_f64)
-            .build::<PCNC<StreamDrainStub<f64>, f64>>();
+        let mut ib = Builder::<
+            StreamDrainStub<f64>,
+            Identity<StreamDrainStub<f64>, Unconnected>,
+            f64,
+        >::default();
+        ib.translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+            .scale_set(1_f64);
+        let identity = ib.build::<PCNC<StreamDrainStub<f64>, f64>>();
         assert!(projection_equal(
             &identity,
             &(0f64, 0f64).into(),
@@ -50,57 +58,66 @@ mod identity {
             &(30f64, 30f64).into(),
             None
         ));
+
+        // These getter asserts have no direct equivalent in the javascript original.
+        // but increase code coverage.
+        assert_eq!(ib.scale(), 1_f64);
+        assert_eq!(ib.translate(), Coordinate { x: 0_f64, y: 0_f64 });
     }
 
     #[test]
     fn reflect_return_the_transformed_point() {
         println!("identity(point).reflectX(…) and reflectY() return the transformed point");
-        let mut identity: Builder<StreamDrainStub<f64>, _, _> = Builder::default();
-        identity
-            .translate_set(&Coordinate {
-                x: 100_f64,
-                y: 10_f64,
-            })
-            .scale_set(2_f64);
+        let mut ib: Builder<StreamDrainStub<f64>, _, _> = Builder::default();
+        ib.translate_set(&Coordinate {
+            x: 100_f64,
+            y: 10_f64,
+        })
+        .scale_set(2_f64);
 
         assert!(projection_equal(
-            &identity.clone().build::<NoPCNU<StreamDrainStub<f64>>>(),
+            &ib.build::<NoPCNU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None
         ));
 
-        identity.reflect_x_set(true);
+        ib.reflect_x_set(true);
         assert!(projection_equal(
-            &identity.clone().build::<NoPCNU<StreamDrainStub<f64>>>(),
+            &ib.build::<NoPCNU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(94f64, 24f64).into(),
             None
         ));
 
-        identity.reflect_y_set(true);
+        ib.reflect_y_set(true);
         assert!(projection_equal(
-            &identity.clone().build::<NoPCNU<StreamDrainStub<f64>>>(),
+            &ib.build::<NoPCNU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(94f64, -4f64).into(),
             None
         ));
 
-        identity.reflect_x_set(false);
+        ib.reflect_x_set(false);
         assert!(projection_equal(
-            &identity.clone().build::<NoPCNU<StreamDrainStub<f64>>>(),
+            &ib.build::<NoPCNU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(106f64, -4f64).into(),
             None
         ));
 
-        identity.reflect_y_set(false);
+        ib.reflect_y_set(false);
         assert!(projection_equal(
-            &identity.build::<NoPCNU<StreamDrainStub<f64>>>(),
+            &ib.build::<NoPCNU<StreamDrainStub<f64>>>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None
         ));
+
+        // These getter asserts have no direct equivalent in the javascript original.
+        // but increase code coverage.
+        assert_eq!(ib.is_x_reflected(), false);
+        assert_eq!(ib.is_y_reflected(), false);
     }
 
     #[test]
