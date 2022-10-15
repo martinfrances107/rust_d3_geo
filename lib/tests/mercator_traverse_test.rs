@@ -78,7 +78,6 @@ mod mercator_tranverse_tests {
     //   assert.strictEqual(projection.clipExtent(), null);
     // });
 
-    #[ignore]
     #[test]
     fn center_set_the_automatic_clip_extent() {
         println!("transverseMercator.center(center) sets the correct automatic clip extent");
@@ -90,7 +89,7 @@ mod mercator_tranverse_tests {
             x: 10_f64,
             y: 10_f64,
         });
-        pb.precision_bypass();
+        let pb = pb.precision_bypass();
 
         let projection = pb.build();
         let path_builder = PathBuilder::context_pathstring();
@@ -98,7 +97,7 @@ mod mercator_tranverse_tests {
         let object = Sphere::<f64>::default();
 
         let s = path_builder.build(projection).object(&object);
-        assert_eq!(s, "M2.966167,3.316126L-0.175426,3.316126L-3.317018,3.316126L-3.317019,-2.967060L-3.317019,-2.967060L-0.175426,-2.967060L2.966167,-2.967060L2.966167,3.316126Z");
+        assert_eq!(s, "M2.966167,3.316126L-0.175426,3.316126L-3.317018,3.316126L-3.317019,-2.96706L-3.317019,-2.96706L-0.175426,-2.96706L2.966167,-2.96706L2.966167,3.316126Z");
     }
 
     // it("transverseMercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent", () => {
