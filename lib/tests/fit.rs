@@ -198,7 +198,6 @@ mod fit {
         ));
     }
 
-    // TODO this look like a bug. the y value of translate is actuall a copy of the x value.
     #[test]
     fn fit_extent_world_mercator() {
         println!("projection.fitExtent(…) world mercator");
@@ -348,7 +347,7 @@ mod fit {
         let s1 = p1.scale();
         let t1 = p1.translate();
 
-        let p2 = Equirectangular::<Bounds<f64>, f64>::builder();
+        let p2 = Equirectangular::<Bounds<_>, _>::builder();
         let mut p2 = p2.clip_extent_set(&[
             Coordinate {
                 x: 100_f64,

@@ -9,12 +9,12 @@ mod mercator_tranverse_tests {
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::path::string::String;
-    use rust_d3_geo::projection::builder_mercator_transverse::types::BuilderMercatorTransverseAntimeridianResampleClip;
     use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::CenterSet;
     use rust_d3_geo::projection::ClipExtentAdjust;
     use rust_d3_geo::projection::ClipExtentClear;
+    use rust_d3_geo::projection::ClipExtentGet;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleSet;
@@ -133,6 +133,19 @@ mod mercator_tranverse_tests {
 
         let s = path_builder.build(projection).object(&object);
         assert_eq!(s, "M10,3.141593L0,3.141593L-10,3.141593L-10,-3.141593L-10,-3.141593L0,-3.141593L10,-3.141593L10,3.141593Z");
+        assert_eq!(
+            pb.clip_extent(),
+            Some([
+                Coordinate {
+                    x: -10_f64,
+                    y: -10_f64,
+                },
+                Coordinate {
+                    x: 10_f64,
+                    y: 10_f64,
+                },
+            ])
+        );
     }
 
     #[test]
