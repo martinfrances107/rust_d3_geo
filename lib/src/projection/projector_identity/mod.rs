@@ -10,7 +10,6 @@ use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-// pub mod types;
 pub mod tests;
 pub mod transformer;
 pub mod types;

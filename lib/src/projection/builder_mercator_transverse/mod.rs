@@ -58,7 +58,6 @@ where
     p_clipc: PhantomData<CLIPC>,
     p_drain: PhantomData<DRAIN>,
     p_rc: PhantomData<RC>,
-    // pub pr: PR,
     pub base: ProjectionMercatorBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>,
 }
 
