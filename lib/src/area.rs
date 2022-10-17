@@ -84,8 +84,7 @@ where
         self.lambda0 = p.x.to_radians();
         let phi = p.y.to_radians();
         let phi = phi / self.two + T::FRAC_PI_4();
-        self.cos_phi0 = phi.cos();
-        self.sin_phi0 = phi.sin();
+        (self.sin_phi0, self.cos_phi0) = phi.sin_cos();
     }
 
     fn area_point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
@@ -104,8 +103,7 @@ where
             -T::one()
         };
         let ad_lambda = sd_lambda * d_lambda;
-        let cos_phi = phi.cos();
-        let sin_phi = phi.sin();
+        let (sin_phi, cos_phi) = phi.sin_cos();
         let k = self.sin_phi0 * sin_phi;
         let u = self.cos_phi0 * cos_phi + k * ad_lambda.cos();
         let v = k * sd_lambda * ad_lambda.sin();

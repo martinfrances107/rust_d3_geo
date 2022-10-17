@@ -26,8 +26,7 @@ where
 {
     /// Constructor.
     pub(crate) fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: &T) -> Self {
-        let cos_alpha = alpha.cos();
-        let sin_alpha = alpha.sin();
+        let (sin_alpha, cos_alpha) = alpha.sin_cos();
         Str {
             a: cos_alpha * *k,
             b: sin_alpha * *k,

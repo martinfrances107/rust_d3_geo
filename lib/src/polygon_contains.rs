@@ -50,14 +50,12 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
         let mut point0 = *ring.0.last().unwrap();
         let mut lambda0 = longitude(&point0);
         let phi0 = point0.y / two + T::FRAC_PI_4();
-        let mut sin_phi0 = phi0.sin();
-        let mut cos_phi0 = phi0.cos();
+        let (mut sin_phi0, mut cos_phi0) = phi0.sin_cos();
 
         for point1 in ring.0.iter().take(m) {
             let lambda1 = longitude(point1);
             let phi1 = point1.y / two + T::FRAC_PI_4();
-            let sin_phi1 = phi1.sin();
-            let cos_phi1 = phi1.cos();
+            let (sin_phi1, cos_phi1) = phi1.sin_cos();
             let delta = lambda1 - lambda0;
             let sign = delta.signum();
             let abs_delta = sign * delta;

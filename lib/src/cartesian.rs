@@ -27,8 +27,9 @@ where
 pub fn cartesian<T: CoordFloat>(spherical: &Coordinate<T>) -> [T; 3] {
     let lambda = spherical.x;
     let phi = spherical.y;
-    let cos_phi = phi.cos();
-    [cos_phi * lambda.cos(), cos_phi * lambda.sin(), phi.sin()]
+    let (sin_phi, cos_phi) = phi.sin_cos();
+    let (sin_lambda, cos_lambda) = lambda.sin_cos();
+    [cos_phi * cos_lambda, cos_phi * sin_lambda, sin_phi]
 }
 
 /// Calculate the dot product.

@@ -56,8 +56,7 @@ where
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         self.lambda0 = lambda;
-        self.sin_phi0 = phi.sin();
-        self.cos_phi0 = phi.cos();
+        (self.sin_phi0, self.cos_phi0) = phi.sin_cos();
         self.point_fn = Self::length_point;
     }
 
@@ -65,11 +64,10 @@ where
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
 
-        let sin_phi = phi.sin();
-        let cos_phi = phi.cos();
+        let (sin_phi, cos_phi) = phi.sin_cos();
         let delta = (lambda - self.lambda0).abs();
-        let cos_delta = (delta).cos();
-        let sin_delta = (delta).sin();
+
+        let (sin_delta, cos_delta) = delta.sin_cos();
 
         let x = cos_phi * sin_delta;
         let y = self.cos_phi0 * sin_phi - self.sin_phi0 * cos_phi * cos_delta;

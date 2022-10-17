@@ -103,8 +103,9 @@ where
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let cos_phi = phi.cos();
-        self.x0 = cos_phi * lambda.cos();
-        self.y0 = cos_phi * lambda.sin();
+        let (lambda_sin, lambda_cos) = lambda.sin_cos();
+        self.x0 = cos_phi * lambda_cos;
+        self.y0 = cos_phi * lambda_sin;
         self.z0 = phi.sin();
         self.point_fn = Self::centroid_line_point;
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
@@ -113,10 +114,11 @@ where
     fn centroid_line_point(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
-        let cos_phi = phi.cos();
-        let x = cos_phi * lambda.cos();
-        let y = cos_phi * lambda.sin();
-        let z = phi.sin();
+        let (sin_lambda, cos_lambda) = lambda.sin_cos();
+        let (phi_sin, phi_cos) = phi.sin_cos();
+        let x = phi_cos * cos_lambda;
+        let y = phi_cos * sin_lambda;
+        let z = phi_sin;
         let w0 = self.y0 * z - self.z0 * y;
         let w1 = self.z0 * x - self.x0 * z;
         let w2 = self.x0 * y - self.y0 * x;
@@ -141,8 +143,9 @@ where
     fn centroid_point(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
-        let cos_phi = phi.cos();
-        self.centroid_point_cartesian(cos_phi * lambda.cos(), cos_phi * lambda.sin(), phi.sin());
+        let (sin_phi, cos_phi) = phi.sin_cos();
+        let (sin_lambda, cos_lambda) = lambda.sin_cos();
+        self.centroid_point_cartesian(cos_phi * cos_lambda, cos_phi * sin_lambda, sin_phi);
     }
 
     fn centroid_ring_point_first(&mut self, p: &Coordinate<T>) {
@@ -150,10 +153,11 @@ where
         self.phi00 = p.y;
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
-        let cos_phi = phi.cos();
-        self.x0 = cos_phi * lambda.cos();
-        self.y0 = cos_phi * lambda.sin();
-        self.z0 = phi.sin();
+        let (sin_phi, cos_phi) = phi.sin_cos();
+        let (sin_lambda, cos_lambda) = lambda.sin_cos();
+        self.x0 = cos_phi * cos_lambda;
+        self.y0 = cos_phi * sin_lambda;
+        self.z0 = sin_phi;
         self.point_fn = Self::centroid_ring_point;
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
@@ -161,10 +165,11 @@ where
     fn centroid_ring_point(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
-        let cos_phi = phi.cos();
-        let x = cos_phi * lambda.cos();
-        let y = cos_phi * lambda.sin();
-        let z = phi.sin();
+        let (sin_phi, cos_phi) = phi.sin_cos();
+        let (sin_lambda, cos_lambda) = lambda.sin_cos();
+        let x = cos_phi * cos_lambda;
+        let y = cos_phi * sin_lambda;
+        let z = sin_phi;
         let cx = self.y0 * z - self.z0 * y;
         let cy = self.z0 * x - self.x0 * z;
         let cz = self.x0 * y - self.y0 * x;

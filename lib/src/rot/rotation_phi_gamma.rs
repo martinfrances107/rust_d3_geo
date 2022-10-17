@@ -38,10 +38,11 @@ where
         let lambda = p.x;
         let phi = p.y;
 
-        let cos_phi = phi.cos();
-        let x = lambda.cos() * cos_phi;
-        let y = lambda.sin() * cos_phi;
-        let z = phi.sin();
+        let (sin_phi, cos_phi) = phi.sin_cos();
+        let (sin_lambda, cos_lambda) = lambda.sin_cos();
+        let x = cos_lambda * cos_phi;
+        let y = sin_lambda * cos_phi;
+        let z = sin_phi;
         let k = z * self.cos_delta_phi + x * self.sin_delta_phi;
 
         Coordinate {
@@ -56,10 +57,11 @@ where
         let lambda = p.x;
         let phi = p.y;
 
-        let cos_phi = phi.cos();
-        let x = lambda.cos() * cos_phi;
-        let y = lambda.sin() * cos_phi;
-        let z = phi.sin();
+        let (sin_lambda, cos_lambda) = lambda.sin_cos();
+        let (sin_phi, cos_phi) = phi.sin_cos();
+        let x = cos_lambda * cos_phi;
+        let y = sin_lambda * cos_phi;
+        let z = sin_phi;
         let k = z * self.cos_delta_gamma - y * self.sin_delta_gamma;
 
         Coordinate {
