@@ -5,7 +5,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
 
-use crate::math::asin;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::Builder;
 use crate::projection::ProjectionRawBase;
@@ -57,7 +56,7 @@ where
     #[inline]
     fn z(z: T) -> T {
         let two = T::from(2.0_f64).unwrap();
-        two * asin(z / two)
+        two * (z / two).asin()
     }
 }
 

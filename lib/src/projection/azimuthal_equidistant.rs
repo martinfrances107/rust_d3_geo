@@ -5,7 +5,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
 
-use crate::math::acos;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::Builder;
 use crate::projection::ProjectionRawBase;
@@ -48,7 +47,7 @@ where
 {
     #[inline]
     fn c(c: T) -> T {
-        let c = acos(c);
+        let c = c.acos();
         if c == T::zero() {
             c
         } else {

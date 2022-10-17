@@ -7,7 +7,6 @@ use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
 use crate::compose::Compose;
-use crate::math::asin;
 use crate::math::EPSILON;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::stream::Connectable;
@@ -285,7 +284,7 @@ where
                 let mut c = c0 + c1;
                 let m = (a * a + b * b + c * c).sqrt();
                 c = c / m;
-                let phi2 = asin(c);
+                let phi2 = c.asin();
                 let lambda2 = if (c.abs() - T::one()).abs() < self.state.epsilon
                     || (lambda0 - lambda1).abs() < self.state.epsilon
                 {

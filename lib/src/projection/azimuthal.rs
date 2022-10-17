@@ -2,8 +2,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::math::asin;
-
 pub(super) fn azimuthal_raw<T>(p: &Coordinate<T>, scale: fn(T) -> T) -> Coordinate<T>
 where
     T: CoordFloat,
@@ -34,7 +32,7 @@ where
 
     let ret_x = (p.x * sc).atan2(z * cc);
     let y_out: T = if z.is_zero() { z } else { p.y * sc / z };
-    let ret_y = asin(y_out);
+    let ret_y = y_out.asin();
 
     Coordinate { x: ret_x, y: ret_y }
 }

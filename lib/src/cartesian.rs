@@ -2,14 +2,12 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::math::asin;
-
 /// Converts 3D Cartesian to spherical coordinates (degrees).
 #[inline]
 pub fn spherical<T: CoordFloat + FloatConst>(cartesian: &[T; 3]) -> Coordinate<T> {
     Coordinate {
         x: cartesian[1].atan2(cartesian[0]).to_degrees(),
-        y: asin(cartesian[2]).to_degrees(),
+        y: cartesian[2].asin().to_degrees(),
     }
 }
 
@@ -21,7 +19,7 @@ where
 {
     Coordinate {
         x: cartesian[1].atan2(cartesian[0]),
-        y: asin(cartesian[2]),
+        y: cartesian[2].asin(),
     }
 }
 

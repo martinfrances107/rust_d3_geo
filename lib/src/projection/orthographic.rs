@@ -6,7 +6,6 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::float::FloatConst;
 
-use crate::math::asin;
 use crate::math::EPSILON;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ScaleSet;
@@ -45,7 +44,7 @@ where
 {
     #[inline]
     fn angle(z: T) -> T {
-        asin(z)
+        z.asin()
     }
 
     fn azimuthal_invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
@@ -57,7 +56,7 @@ where
         let ret_x = (p.x * sc).atan2(z * cc);
 
         let y_out = if z == T::zero() { z } else { p.y * sc / z };
-        let ret_y = asin(y_out);
+        let ret_y = y_out.asin();
 
         Coordinate { x: ret_x, y: ret_y }
     }

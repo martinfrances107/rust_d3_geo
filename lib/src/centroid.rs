@@ -6,7 +6,6 @@ use geo::Coordinate;
 use geo::Point;
 use num_traits::FloatConst;
 
-use crate::math::asin;
 use crate::math::EPSILON;
 use crate::math::EPSILON2;
 use crate::stream::Stream as StreamTrait;
@@ -170,7 +169,7 @@ where
         let cy = self.z0 * x - self.x0 * z;
         let cz = self.x0 * y - self.y0 * x;
         let m = (cx * cx + cy * cy + cz * cz).sqrt();
-        let w = asin(m); // line weight = angle
+        let w = m.asin(); // line weight = angle
 
         let v: T = if m == T::zero() { T::zero() } else { -w / m }; // area weight multiplier
 
@@ -240,7 +239,7 @@ where
             }
         }
 
-        Point::new(y.atan2(x).to_degrees(), asin(z / m).to_degrees())
+        Point::new(y.atan2(x).to_degrees(), (z / m).asin().to_degrees())
     }
 }
 

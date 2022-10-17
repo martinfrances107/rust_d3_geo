@@ -7,7 +7,6 @@ use num_traits::FloatConst;
 use crate::cartesian::cartesian;
 use crate::cartesian::cross;
 use crate::cartesian::normalize_in_place;
-use crate::math::asin;
 use crate::math::EPSILON2;
 use crate::EPSILON;
 
@@ -83,9 +82,9 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
                 let mut intersection = cross(&normal, &arc);
                 normalize_in_place(&mut intersection);
                 let phi_arc: T = if antimeridian ^ (delta >= T::zero()) {
-                    -asin(intersection[2])
+                    -(intersection[2].asin())
                 } else {
-                    asin(intersection[2])
+                    intersection[2].asin()
                 };
 
                 if phi > phi_arc || phi == phi_arc && (arc[0] != T::zero() || arc[1] != T::zero()) {

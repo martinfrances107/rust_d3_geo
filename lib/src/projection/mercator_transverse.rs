@@ -51,14 +51,14 @@ impl<DRAIN> Transform for MercatorTransverse<DRAIN> {
     fn transform(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
         let angle = (f64::FRAC_PI_2() + p.y) / 2f64;
         // Javascript compatibility mode.
-        let tan_angle = if angle == f64::FRAC_PI_2() {
-            16331239353195370_f64
-        } else if angle == -f64::FRAC_PI_2() {
-            -16331239353195370_f64
-        } else {
-            angle.tan()
-        };
-
+        // let tan_angle = if angle == f64::FRAC_PI_2() {
+        //     16331239353195370_f64
+        // } else if angle == -f64::FRAC_PI_2() {
+        //     -16331239353195370_f64
+        // } else {
+        //     angle.tan()
+        // };
+        let tan_angle = angle.tan();
         Coordinate {
             x: tan_angle.ln(),
             y: -p.x,
