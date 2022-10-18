@@ -6,8 +6,8 @@ pub(super) fn azimuthal_raw<T>(p: &Coordinate<T>, scale: fn(T) -> T) -> Coordina
 where
     T: CoordFloat,
 {
-    let cx = p.x.cos();
-    let cy = p.y.cos();
+    let (sx, cx) = p.x.sin_cos();
+    let (sy, cy) = p.y.sin_cos();
     let k = scale(cx * cy);
     if k.is_infinite() {
         return Coordinate {
@@ -16,8 +16,8 @@ where
         };
     }
     Coordinate {
-        x: k * cy * p.x.sin(),
-        y: k * p.y.sin(),
+        x: k * cy * sx,
+        y: k * sy,
     }
 }
 

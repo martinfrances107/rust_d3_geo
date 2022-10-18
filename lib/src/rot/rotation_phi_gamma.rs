@@ -17,11 +17,13 @@ impl<'a, T: CoordFloat> RotationPhiGamma<T> {
     /// Constructor.
     #[inline]
     pub fn new(delta_phi: &'a T, delta_gamma: &'a T) -> Self {
+        let (sin_delta_phi, cos_delta_phi) = delta_phi.sin_cos();
+        let (sin_delta_gamma, cos_delta_gamma) = delta_gamma.sin_cos();
         Self {
-            cos_delta_phi: delta_phi.cos(),
-            sin_delta_phi: delta_phi.sin(),
-            cos_delta_gamma: delta_gamma.cos(),
-            sin_delta_gamma: delta_gamma.sin(),
+            cos_delta_phi: cos_delta_phi,
+            sin_delta_phi: sin_delta_phi,
+            cos_delta_gamma: cos_delta_gamma,
+            sin_delta_gamma: sin_delta_gamma,
         }
     }
 }

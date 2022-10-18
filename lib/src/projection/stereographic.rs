@@ -63,11 +63,13 @@ where
     type T = T;
 
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let cy = p.y.cos();
-        let k = T::one() + p.x.cos() * cy;
+        let (sx, cx) = p.x.sin_cos();
+        let (sy, cy) = p.y.sin_cos();
+        // let cy = p.y.cos();
+        let k = T::one() + cx * cy;
         Coordinate {
-            x: cy * p.x.sin() / k,
-            y: p.y.sin() / k,
+            x: cy * sx / k,
+            y: sy / k,
         }
     }
 

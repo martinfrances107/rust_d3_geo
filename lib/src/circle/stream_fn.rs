@@ -22,8 +22,7 @@ pub fn stream_fn<EP, STREAM, T>(
     if delta.is_zero() {
         return;
     }
-    let cos_radius = radius.cos();
-    let sin_radius = radius.sin();
+    let (sin_radius, cos_radius) = radius.sin_cos();
     let step = direction * delta;
     let mut t0: T;
     let t1: T;

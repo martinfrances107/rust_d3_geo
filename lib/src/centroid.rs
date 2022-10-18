@@ -102,11 +102,11 @@ where
     fn centroid_line_point_first(&mut self, p: &Coordinate<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
-        let cos_phi = phi.cos();
+        let (sin_phi, cos_phi) = phi.sin_cos();
         let (lambda_sin, lambda_cos) = lambda.sin_cos();
         self.x0 = cos_phi * lambda_cos;
         self.y0 = cos_phi * lambda_sin;
-        self.z0 = phi.sin();
+        self.z0 = sin_phi;
         self.point_fn = Self::centroid_line_point;
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }

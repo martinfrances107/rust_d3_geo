@@ -50,8 +50,7 @@ where
     fn azimuthal_invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let z = (p.x * p.x + p.y * p.y).sqrt();
         let c = Orthographic::<DRAIN, T>::angle(z);
-        let sc = c.sin();
-        let cc = c.cos();
+        let (sc, cc) = c.sin_cos();
 
         let ret_x = (p.x * sc).atan2(z * cc);
 
@@ -70,9 +69,10 @@ where
 
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+        let (sin_y, cos_y) = p.y.sin_cos();
         Coordinate {
-            x: p.y.cos() * p.x.sin(),
-            y: p.y.sin(),
+            x: cos_y * p.x.sin(),
+            y: sin_y,
         }
     }
 

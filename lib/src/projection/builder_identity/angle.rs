@@ -13,8 +13,9 @@ where
 
     fn angle_set(&mut self, angle: T) -> &mut Self {
         self.alpha = (angle % T::from(360_f64).unwrap()).to_radians();
-        self.sa = self.alpha.sin();
-        self.ca = self.alpha.cos();
+        let (sa, ca) = self.alpha.sin_cos();
+        self.sa = sa;
+        self.ca = ca;
         self.reset()
     }
 }
