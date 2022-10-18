@@ -20,10 +20,10 @@ impl<'a, T: CoordFloat> RotationPhiGamma<T> {
         let (sin_delta_phi, cos_delta_phi) = delta_phi.sin_cos();
         let (sin_delta_gamma, cos_delta_gamma) = delta_gamma.sin_cos();
         Self {
-            cos_delta_phi: cos_delta_phi,
-            sin_delta_phi: sin_delta_phi,
-            cos_delta_gamma: cos_delta_gamma,
-            sin_delta_gamma: sin_delta_gamma,
+            cos_delta_phi,
+            sin_delta_phi,
+            cos_delta_gamma,
+            sin_delta_gamma,
         }
     }
 }

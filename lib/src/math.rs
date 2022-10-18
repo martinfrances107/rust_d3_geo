@@ -1,6 +1,3 @@
-use geo::CoordFloat;
-use num_traits::FloatConst;
-
 /// Floating point number within this range are considered indistinguiable.
 pub const EPSILON: f64 = 1e-6;
 /// The precision used to distinguish floating point numbers squared.
