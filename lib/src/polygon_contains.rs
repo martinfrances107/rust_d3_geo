@@ -27,7 +27,8 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
     let lambda = longitude(point);
     let mut phi = point.y;
     let sin_phi = phi.sin();
-    let normal = [lambda.sin(), -lambda.cos(), T::zero()];
+    let (sin_lambda, cos_lambda) = lambda.sin_cos();
+    let normal = [sin_lambda, -cos_lambda, T::zero()];
     let mut angle = T::zero();
 
     let mut sum = T::zero();

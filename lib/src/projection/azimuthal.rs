@@ -27,9 +27,7 @@ where
 {
     let z = (p.x * p.x + p.y * p.y).sqrt();
     let c = angle(z);
-    let sc = c.sin();
-    let cc = c.cos();
-
+    let (sc, cc) = c.sin_cos();
     let ret_x = (p.x * sc).atan2(z * cc);
     let y_out: T = if z.is_zero() { z } else { p.y * sc / z };
     let ret_y = y_out.asin();

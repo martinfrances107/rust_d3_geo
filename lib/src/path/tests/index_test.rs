@@ -423,7 +423,6 @@ mod index {
         let context = Context::new(crc2d);
         let pb = PathBuilder::new(context);
 
-        // let mut ob = Equirectangular::builder();
         let mut ob = Orthographic::builder();
         ob.rotate_set(&[95_f64, 0_f64, 0_f64]);
         let ortho = ob.build();

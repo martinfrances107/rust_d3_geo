@@ -65,7 +65,6 @@ where
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         let (sx, cx) = p.x.sin_cos();
         let (sy, cy) = p.y.sin_cos();
-        // let cy = p.y.cos();
         let k = T::one() + cx * cy;
         Coordinate {
             x: cy * sx / k,
