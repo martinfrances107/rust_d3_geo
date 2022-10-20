@@ -23,6 +23,7 @@ use web_sys::*;
 
 mod azimuthal_equal_area;
 mod azimuthal_equidistant;
+mod conic_equal_area;
 mod dom_macros;
 mod equirectangular;
 mod gnomic;
@@ -33,6 +34,7 @@ mod stereographic;
 
 use azimuthal_equal_area::draw_azimuthal_equal_area;
 use azimuthal_equidistant::draw_azimuthal_equidistant;
+use conic_equal_area::draw_conic_equal_area;
 use equirectangular::draw_equirectangular;
 use gnomic::draw_gnomic;
 use mercator::draw_mercator;
@@ -106,6 +108,7 @@ pub async fn start() -> Result<(), JsValue> {
     try_join!(
         draw_azimuthal_equal_area(&land),
         draw_azimuthal_equidistant(&land),
+        draw_conic_equal_area(&land),
         draw_orthographic(&land),
         draw_mercator(&land),
         draw_mercator_transverse(&land),

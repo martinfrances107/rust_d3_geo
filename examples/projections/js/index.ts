@@ -16,6 +16,7 @@ import { Topology } from "topojson-specification";
 
 import azimuthalEqualArea from './azimuthalEqualArea';
 import azimuthalEquidistant from './azimuthalEquidistant';
+import conicEqualArea from "./conicEqualArea";
 import equirectangular from './equirectangular';
 import gnomic from "./gnomic";
 import orthographic from './orthographic';
@@ -29,14 +30,15 @@ fetch("../world-atlas/world/50m.json").then(response => response.json())
     const world = feature(worldTopo, worldTopo.objects.countries);
     Promise.all(
       [
-        stereographic(world),
-        orthographic(world),
-        equirectangular(world),
         azimuthalEqualArea(world),
         azimuthalEquidistant(world),
+        conicEqualArea(world),
+        equirectangular(world),
+        orthographic(world),
         gnomic(world),
         mercator(world),
-        mercatorTransverse(world)
+        mercatorTransverse(world),
+        stereographic(world),
       ]
     )
   });
