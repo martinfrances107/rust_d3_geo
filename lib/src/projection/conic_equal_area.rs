@@ -14,13 +14,13 @@ use super::builder::types::BuilderAntimeridianResampleNoClip;
 use super::builder::Builder;
 use super::cylindrical_equal_area::CylindricalEqualAreaRaw;
 use super::CenterSet;
+use super::ProjectionRawBase;
 
 #[derive(Clone, Debug)]
 pub struct ConicEqualAreaRaw<DRAIN, T> {
     c: T,
     p_drain: PhantomData<DRAIN>,
     n: T,
-    sy0: T,
     r0: T,
     two: T,
 }
@@ -68,20 +68,17 @@ where
             return EqualAreaRaw::Cyl(CylindricalEqualAreaRaw::new(y0));
         }
         let c = T::one() + sy0 * (two * n - sy0);
-        let r0 = c.sqrt() / n;
-
         EqualAreaRaw::Con(ConicEqualAreaRaw {
             p_drain: PhantomData::<DRAIN>,
             c: T::one() + sy0,
             r0: c.sqrt() / n,
             n,
-            sy0,
             two,
         })
     }
     #[inline]
     /// Phi0 value in radians.
-    pub fn builder(
+    pub fn builder_with_phi0_phi1(
         y0: T,
         y1: T,
     ) -> BuilderAntimeridianResampleNoClip<DRAIN, EqualAreaRaw<DRAIN, T>, T> {
@@ -95,6 +92,18 @@ where
     }
 }
 
+impl<DRAIN, T> ProjectionRawBase for ConicEqualAreaRaw<DRAIN, T>
+where
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    T: CoordFloat + Default + FloatConst,
+{
+    type Builder = BuilderAntimeridianResampleNoClip<DRAIN, EqualAreaRaw<DRAIN, T>, T>;
+    #[inline]
+    fn builder() -> Self::Builder {
+        Self::builder_with_phi0_phi1(T::zero(), T::FRAC_PI_3())
+    }
+}
+
 impl<DRAIN, T> Transform for ConicEqualAreaRaw<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
@@ -103,7 +112,7 @@ where
 
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let r = (self.c - self.two * self.n * p.y.sin()) / self.n;
+        let r = (self.c - self.two * self.n * p.y.sin()).sqrt() / self.n;
         let x = p.x * self.n;
         Coordinate {
             x: r * x.sin(),
