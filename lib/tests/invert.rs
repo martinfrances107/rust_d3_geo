@@ -5,6 +5,7 @@ mod invert {
 
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
+    use rust_d3_geo::projection::conic_equal_area::ConicEqualAreaRaw;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mercator::Mercator;
@@ -53,6 +54,13 @@ mod invert {
     fn azimuthal_equidistant() {
         let a = AzimuthalEquiDistant::<StreamDrainStub<f64>, f64>::builder().build();
         symetric_invert(a);
+    }
+
+    #[ignore]
+    #[test]
+    fn conic_equal_area() {
+        let c = ConicEqualAreaRaw::<StreamDrainStub<f64>, f64>::builder(0_f64, 0_f64).build();
+        symetric_invert(c);
     }
 
     #[test]

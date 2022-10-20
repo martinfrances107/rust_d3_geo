@@ -14,6 +14,10 @@ pub mod azimuthal_equal_area;
 /// The raw projection.
 pub mod azimuthal_equidistant;
 /// The raw projection.
+pub mod conic_equal_area;
+// No direct Access - Access is through conic_equal_area.
+pub mod cylindrical_equal_area;
+/// The raw projection.
 pub mod equirectangular;
 /// The raw projection.
 pub mod gnomic;
