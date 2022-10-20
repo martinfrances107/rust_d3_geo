@@ -56,10 +56,9 @@ mod invert {
         symetric_invert(a);
     }
 
-    #[ignore]
     #[test]
     fn conic_equal_area() {
-        let c = ConicEqualAreaRaw::<StreamDrainStub<f64>, f64>::builder(0_f64, 0_f64).build();
+        let c = ConicEqualAreaRaw::<StreamDrainStub<f64>, f64>::builder().build();
         symetric_invert(c);
     }
 

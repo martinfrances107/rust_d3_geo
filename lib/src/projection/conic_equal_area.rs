@@ -9,7 +9,6 @@ use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
-use super::builder::types::BuilderAntimeridianResampleClip;
 use super::builder::types::BuilderAntimeridianResampleNoClip;
 use super::builder::Builder;
 use super::cylindrical_equal_area::CylindricalEqualAreaRaw;
@@ -47,8 +46,8 @@ where
     #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            EqualAreaRaw::Cyl(cyl) => cyl.transform(p),
-            EqualAreaRaw::Con(con) => con.transform(p),
+            EqualAreaRaw::Cyl(cyl) => cyl.invert(p),
+            EqualAreaRaw::Con(con) => con.invert(p),
         }
     }
 }
