@@ -72,6 +72,12 @@ where
             n,
         })
     }
+    // pub fn builder_parallels(
+    //     phi0: f64,
+    //     phi1: f64,
+    // ) -> BuilderAntimeridianResampleNoClip<DRAIN, ConformalRaw<DRAIN>, f64> {
+    //     Self::builder_with_phi0_phi1(phi0.to_radians(), phi1.to_radians())
+    // }
 
     #[inline]
     /// Phi0 value in radians.
@@ -81,9 +87,21 @@ where
     ) -> BuilderAntimeridianResampleNoClip<DRAIN, ConformalRaw<DRAIN>, f64> {
         let mut b = Builder::new(ConicConformalRaw::new(y0, y1));
         b.scale_set(109.5_f64);
-        // todo must implement parallels.
-        //.parallels(&[30_f64, 30_f64]);
+
+        b.parallels(30_f64, 30_f64);
         b
+    }
+}
+
+// Reach into builder and alter the PR.
+impl<DRAIN> BuilderAntimeridianResampleNoClip<DRAIN, ConformalRaw<DRAIN>, f64>
+where
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
+{
+    fn parallels(&mut self, phi0: f64, phi1: f64) -> &mut Self {
+        let projection_raw = ConicConformalRaw::new(phi0.to_radians(), phi1.to_radians());
+        self.update_pr(projection_raw);
+        self
     }
 }
 

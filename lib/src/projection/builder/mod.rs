@@ -194,4 +194,38 @@ where
         out.recenter_with_resampling();
         out
     }
+
+    // Drop the current raw projection, use the new projection_raw and rebuild
+    // state. ( very experimental)
+    pub fn update_pr(&mut self, projection_raw: PR) -> &mut Self {
+        // rebuild
+        let center = generate_str(
+            &self.k,
+            &T::zero(),
+            &T::zero(),
+            &self.sx,
+            &self.sy,
+            &self.alpha,
+        )
+        .transform(&projection_raw.transform(&Coordinate {
+            x: self.lambda,
+            y: self.phi,
+        }));
+        let str = generate_str(
+            &self.k,
+            &(self.x - center.x),
+            &(self.y - center.y),
+            &self.sx,
+            &self.sy,
+            &self.alpha,
+        );
+
+        self.projection_raw = projection_raw.clone();
+        self.rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]); // pre-rotate
+        self.rotator = RotatorRadians::new(self.rotate.clone());
+        self.project_transform = Compose::new(projection_raw.clone(), str);
+        self.project_rotate_transform =
+            Compose::new(self.rotate.clone(), self.project_transform.clone());
+        self
+    }
 }
