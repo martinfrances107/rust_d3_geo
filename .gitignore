@@ -3,6 +3,8 @@
 !.gitattributes
 !.gitignore
 !.vscode
-examples/*
+**/node_modules
+**/package-lock.json
+**/pkg
 target/
 Cargo.lock
