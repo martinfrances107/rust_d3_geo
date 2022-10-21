@@ -20,7 +20,7 @@ use super::string::String;
 use super::PointRadiusTrait;
 
 /// Path builder.
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct Builder<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 where
     CLIPC: Clone,
