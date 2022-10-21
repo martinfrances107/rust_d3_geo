@@ -3,6 +3,12 @@ Rust 2021 Edition.
 
 This is a port  [d3-geo](https://github.com/d3/d3-geo) into RUST.
 
+## Why use the rust version of the library
+
+The limits of the javascript version become obvious when developing interactive applications that handle large datasets.
+
+For example the examples/globe applications operate of a 50m resolution map of the earth. On a desktop machine  this js beyond the javascript version.
+
 ## Status
 The majority of the libray has been ported along with the associated tests. The aim is to eventaully release this as a rust crate.
 but at the moment is this alpha grade software.
