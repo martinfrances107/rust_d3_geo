@@ -4,11 +4,87 @@
 #![allow(clippy::many_single_char_names)]
 //! A port of [d3/d3-geo](<https://github.com/d3/d3-geo>).
 //!
+//! This rust repository [rust_d3_geo](<https://github.com/martinfrances107/rust_d3_geo>)
+//!
 //! Geographic projections, spherical shapes and spherical trigonometry.
 //!
-//! <hr>
+//! Features :-
+//!  - complex transformations - scaling, rotating and translation give fine
+//!    grained control the desired map view.
 //!
-//! Repository [rust_d3_geo](<https://github.com/martinfrances107/rust_d3_geo>)
+//!  - Large datasets can be resampled to reduce compute.
+//!
+//!  - Computation of paramters such as [Area](path::area::Area), [Centroids](path::centroid::Centroid),
+//!     and [Bounds](path::bounds::Bounds) on polygons and lines.
+//!
+//! TODO add note about stream pipelines and endpoints.
+//!
+//! # Available projections
+//!
+//! - [AzimuthalEqualArea](projection::azimuthal_equal_area::AzimuthalEqualArea)
+//! - [AzimuthalEquiDistant](projection::azimuthal_equidistant::AzimuthalEquiDistant)
+//! - [ConicEqualAreaRaw](projection::conic_equal_area::ConicEqualAreaRaw)
+//! - [Equirectangular](projection::equirectangular::Equirectangular)
+//! - [Gnomic](projection::gnomic::Gnomic)
+//! - [Orthographic](projection::orthographic::Orthographic)
+//! - [Mercator](projection::mercator::Mercator)
+//! - [MercatorTransverse](projection::mercator_transverse::MercatorTransverse)
+//! - [Stereographic](projection::stereographic::Stereographic)
+//!
+//! Each projection has default builder
+//!
+//! Stereographic for example
+//!
+//! ```rust
+//! let stereographic_builder = Stereographic::builder()
+//! ```
+//!
+//! # Examples
+//!
+//! The examples directory contains a large selection of applications demmonstration web applications
+//! rendering to a CANVAS or SVG elemments.
+//!
+//! A a migration guide
+//! examples/projection shows each projction in turn, with the javascript and rust version drawn side by side.
+//!
+//! examples/globe - demonstrates that this library can process larger datasets than is possible which javascript
+//!   The javascript version operate on a 110m dataset of the globe while, the RUST version use a denser 50m dataset.
+//!
+//! Here is code snippet from example/projection/globe/ showing the rendering of a globe.
+//!
+//! ```rust
+//!   let context = Context::new(context_raw.clone());
+//!   let pb = PathBuilder::new(context);
+//!
+//!   // The default orthographic builder is adjusted with calls like scale_set()
+//!   // calling .build() constructs the projector from  builder.
+//!   let ortho = Orthographic::builder()
+//!        .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
+//!        .translate_set(&Coordinate {
+//!            x: width / 2_f64,
+//!            y: height / 2_f64,
+//!        })
+//!        .rotate_set(&[270_f64, 00_f64, 0_f64])
+//!        .build();
+//!
+//!   // Output countries on the screen.
+//!   // 'countries' is a large dataset of the perimeters of all the countries on the globe.
+//!   let mut path = pb.build(ortho);
+//!   context_raw.set_stroke_style(&"#333".into());
+//!   context_raw.set_line_width(0.5);
+//!   path.object(&countries);
+//!   context_raw.stroke();
+//!
+//!   // Output the default Graticule, a set of longitude and latitude lines.
+//!   let graticule =
+//!       Geometry::MultiLineString(MultiLineString(generate_graticule().lines().collect()));
+//!   context_raw.begin_path();
+//!   context_raw.set_stroke_style(&"#ccc".into());
+//!   path.object(&graticule);
+//!   context_raw.stroke();
+//! ```
+//!
+//! <hr>
 
 /// Allows the ommission of complex fields from debug output.
 extern crate derivative;
@@ -64,7 +140,6 @@ pub mod path_test_context;
 
 /// 2-D Transform common to projections and, rotations.
 ///
-/// FloatConst is required by forward_rotation_lambda().
 pub trait Transform
 where
     <Self as Transform>::T: CoordFloat,
