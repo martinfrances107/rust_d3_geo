@@ -13,6 +13,7 @@ extern crate web_sys;
 use geo::Coordinate;
 use geo::Geometry;
 use geo::GeometryCollection;
+use geo::MultiLineString;
 use gloo_utils::format::JsValueSerdeExt;
 use topojson::Topology;
 use wasm_bindgen::prelude::*;
@@ -23,6 +24,7 @@ use web_sys::Document;
 use web_sys::SvgsvgElement;
 use web_sys::*;
 
+use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Build;
@@ -150,6 +152,17 @@ pub async fn start() -> Result<(), JsValue> {
             console_log!("Not a geometry collection.")
         }
     }
+
+    // Graticule
+    let graticule =
+        Geometry::MultiLineString(MultiLineString(generate_graticule().lines().collect()));
+
+    let graticule_d = builder.object(&graticule);
+    let class_name = "graticule";
+    let path = path_node(&class_name)?;
+    path.set_attribute_ns(None, "d", &graticule_d)?;
+    path.set_attribute_ns(None, "style", &"#ccc")?;
+    svg.append_child(&path)?;
 
     Ok(())
 }

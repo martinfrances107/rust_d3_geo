@@ -10,6 +10,8 @@ extern crate topojson;
 extern crate web_sys;
 
 use geo::Coordinate;
+use geo::Geometry;
+use geo::MultiLineString;
 use gloo_utils::format::JsValueSerdeExt;
 use topojson::Topology;
 use wasm_bindgen::prelude::*;
@@ -18,6 +20,7 @@ use wasm_bindgen_futures::JsFuture;
 use web_sys::Document;
 use web_sys::*;
 
+use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::orthographic::Orthographic;
@@ -82,8 +85,17 @@ pub async fn start() -> Result<(), JsValue> {
         .build();
 
     let mut path = pb.build(ortho);
-    context_raw.set_stroke_style(&"#69b3a2".into());
+    context_raw.set_stroke_style(&"#333".into());
+    context_raw.set_line_width(0.5);
     path.object(&countries);
+    context_raw.stroke();
+
+    // Graticule
+    let graticule =
+        Geometry::MultiLineString(MultiLineString(generate_graticule().lines().collect()));
+    context_raw.begin_path();
+    context_raw.set_stroke_style(&"#ccc".into());
+    path.object(&graticule);
     context_raw.stroke();
 
     Ok(())

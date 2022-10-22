@@ -32,13 +32,12 @@ Test coverage in that area is high so the algortihms is working but the data str
 
 In addition to the port, some examples are provided to help developers convert their existing javascript to rust.
 
-| Name                  | Description                                                                                                                                  |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| examples/globe/canvas | Shows how to load/parse/display  a complex topojson file to a CANVAS element.                                                                |
-| examples/globe/svg    | Shows how to load/parse/display the globe as indivdual SVG PATH elements. Useful when the semantic meaing of the data needs to be preserved. |
-| examples/projections  | Shows a side by side comparison of the all the projections rendered by both javascript and rust.                                             |
-| examples/graticule    | Show various ways of rendering latitide and longitude lines.                                                                                 |
-| examples/ring         | Renders a complex multipolygon.                                                                                                              |
+| Name                  | Description                                                                                                                                                                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| examples/globe/canvas | Shows how to load/parse/display  a complex topojson file to a CANVAS element.                                                                                                                                                  |
+| examples/globe/svg    | SVG are useful  when the semantic meaing of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules. |
+| examples/projections  | Shows a side by side comparison of the all the projections rendered by both **javascript** and rust.                                                                                                                           |
+| examples/ring         | Renders a complex multipolygon.                                                                                                                                                                                                |
  ## Running the examples
 
 <details>
@@ -49,6 +48,7 @@ In addition to the port, some examples are provided to help developers convert t
   First install wamm-pack [[ installation guide]](https://rustwasm.github.io/wasm-pack/installer/)
   ```
   cd rust_d3_geo/examples/ring/
+  cargo build
   npm install
   npm start
   ```
