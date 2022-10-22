@@ -10,17 +10,19 @@ The limits of the javascript library become obvious when developing interactive 
 For example the examples/globe applications operate on a 50m resolution map of the earth. On a desktop machine this is beyond the javascript version.
 
 ## Status
+I have a acitvely maintained milestone [Alpha release](https://github.com/martinfrances107/rust_d3_geo/milestone/1)
+
 The majority of the libray has been ported along with the associated tests. The aim is to eventaully release this as a rust crate.
-but at the moment is this alpha grade software.
+but at the moment is this alpha grade software. 
 
 <details>
-<summary> Here is a list of thing to-do before the crate is published.</summary>
+<summary> Here is a summry  of things to-do before the crate is published.</summary>
 
 * The recenter state-based API refacor is almost complete.
   Once fit_size_resampling() is reinstated the code-coverage metric will jump 10% back to the previous value of approx 82%
 * The clipping algorithm in clip/rejoin/mod.rs needs to be refactored.
 see  [The intersection Problem.](#the-intersection-problem--request-for-comments)
-Test coverage in that area is high so the algortihms is working but the data structures make extensive use of Vec<Options<Rc<RefCell<_Intersection_>>>> which is not performant.
+Test coverage in that area is high so the algortihms is working but the data structures make extensive use of vectors ( heap objects ) containng references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>> ```   which is not performant.
 
 * The API is not stabalised. If perfomance issues arise then the API will change. Additionaly I plan a final review to remove anything uneeded before making changes become complicated.
 
@@ -81,13 +83,14 @@ I have made extensive use of iterators when porting the code and rayon support t
 
 <br>
 
-## Archetecture discussion 
+## Architecture discussion 
 
 There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes. A full discusion can be found [here](/intersection_problem.md)
 
 <br>
 
 ## Unimplemented sections of the library.
+
 <details>
 <summary>See the details.</summary>
 Support for a custom projection is not yet supported.
@@ -120,5 +123,5 @@ A complete list of all ported projections can be found in invert-test.rs. Out of
 
 Finally
 
-todo.md contains a more detailed todo list.
+[todo.md](/todo.md) contains a more detailed list
 </details>
