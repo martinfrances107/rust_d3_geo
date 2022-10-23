@@ -197,6 +197,7 @@ pub mod length;
 pub mod math;
 /// Stream end point: Calculation of paths to a string or rendering context.
 pub mod path;
+/// A stripped down version of [path](crate::path)
 pub mod path_identity;
 /// Determines when points are located inside data objects.
 pub mod polygon_contains;
@@ -208,7 +209,7 @@ pub mod rot;
 pub mod stream;
 
 #[cfg(not(tarpaulin_include))]
-pub mod path_test_context;
+mod path_test_context;
 
 /// 2-D Transform common to projections and, rotations.
 ///

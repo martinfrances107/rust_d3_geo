@@ -21,6 +21,7 @@ use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
+/// A stripped down version of [builder](crate::path)
 pub mod builder;
 
 /// Projection and context stream applied to a Streamable.

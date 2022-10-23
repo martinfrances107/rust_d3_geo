@@ -101,6 +101,9 @@ where
 }
 
 #[derive(Clone, Debug)]
+/// State associated with the clipping stratergy.
+///
+/// Two distinct stratergies [Antimeridian](crate::clip::antimeridian) and [Circle](crate::clip::circle).
 pub struct Clip<I, LC, LU, PV, RC, STATE, T>
 where
     T: CoordFloat,
@@ -116,7 +119,9 @@ where
     p_rc: PhantomData<RC>,
     /// Needs to be public as precision() will copy these values.
     pub clip_line: LU,
+    /// Antimerdian and Circle stratergies have distinct interpolator functions.
     pub interpolator: I,
+    /// Antimerdian and Circle stratergies have distinct point_visible functions.
     pub pv: PV,
     pub start: Coordinate<T>,
 }

@@ -27,7 +27,7 @@ pub mod translate_adjust;
 /// A builder getter.
 pub mod translate_get;
 
-/// Builder shorthand notation.
+/// Builder shorthand notations.
 pub mod types;
 
 use std::marker::PhantomData;

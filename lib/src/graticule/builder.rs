@@ -79,6 +79,7 @@ impl<T> Builder<T>
 where
     T: 'static + CoordFloat,
 {
+    /// Ouptut a iterator, which depends on the builder settings.
     pub fn generated_lines(self) -> impl Iterator<Item = Vec<Coordinate<T>>> {
         let range1 = range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX)
             .into_iter()

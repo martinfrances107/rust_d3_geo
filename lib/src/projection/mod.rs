@@ -160,6 +160,9 @@ pub trait CenterSet {
         Self::T: CoordFloat;
 }
 
+/// Returns the clip extent.
+///
+/// Projection builder sub trait.
 pub trait ClipExtentGet {
     /// f64 or f32
     type T;
@@ -278,6 +281,7 @@ pub trait Fit {
 }
 
 /// Gets the post-projection planar rotation angle.
+///
 /// A projection builder sub trait.
 pub trait AngleGet {
     /// f64 or f32.
@@ -308,6 +312,9 @@ pub trait ClipAngleReset {
     fn clip_angle_reset(self) -> Self::Output;
 }
 
+/// Clip angle getter.
+///
+/// A projection builder sub trait.
 pub trait ClipAngleGet {
     ///f64 or f32
     type T;
@@ -349,7 +356,7 @@ pub trait RecenterNoResampling {
     fn recenter_no_resampling(&mut self) -> &mut Self;
 }
 
-/// Returns or sets the x or y reflection.
+/// Returns the x or y reflection.
 ///
 /// A projection builder sub trait.
 pub trait ReflectGet {
@@ -363,6 +370,9 @@ pub trait ReflectGet {
     fn is_y_reflected(&self) -> bool;
 }
 
+/// Sets the x or y reflection.
+///
+/// A projection builder sub trait.
 pub trait ReflectSet {
     /// f64 or f32.
     type T;
@@ -428,7 +438,7 @@ pub trait PrecisionSet {
     fn precision_set(&self, delta: &Self::T) -> Self::Output;
 }
 
-/// Rotation getter and setters.
+/// Rotation getter.
 ///
 /// A projection builder sub trait.
 pub trait RotateGet {

@@ -15,6 +15,7 @@ impl CanvasRenderingContext2d {
 
 impl CanvasRenderingContext2d {
     #[inline]
+    /// Shadows methods in the browser.
     pub fn arc(&mut self, x: f64, y: f64, r: f64, _start: f64, _stop: f64) {
         self.buffer.push(format!(
             "type: arc, x: {:?}, y: {:?}, r: {:?}",
@@ -25,6 +26,7 @@ impl CanvasRenderingContext2d {
     }
 
     #[inline]
+    /// Shadows methods in the browser.
     pub fn move_to(&mut self, x: f64, y: f64) {
         self.buffer.push(format!(
             "type: moveTo, x: {:?}, y: {:?}",
@@ -34,6 +36,7 @@ impl CanvasRenderingContext2d {
     }
 
     #[inline]
+    /// Shadows methods in the browser.
     pub fn line_to(&mut self, x: f64, y: f64) {
         self.buffer.push(format!(
             "type: lineTo, x: {:?}, y: {:?}",
@@ -43,6 +46,7 @@ impl CanvasRenderingContext2d {
     }
 
     #[inline]
+    /// Shadows methods in the browser.
     pub fn close_path(&mut self) {
         self.buffer.push("closePath".to_string());
     }

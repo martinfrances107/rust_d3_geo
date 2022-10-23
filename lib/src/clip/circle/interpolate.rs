@@ -19,6 +19,7 @@ impl<T> Interpolate<T>
 where
     T: CoordFloat + FloatConst,
 {
+    /// Constructs a Interpolate State based on the specified radius.
     pub fn new(radius: T) -> Self {
         Self {
             radius,
