@@ -16,7 +16,7 @@ use super::mercator::Mercator;
 use super::ProjectionRawBase;
 
 #[derive(Clone, Debug)]
-pub struct ConicConformalRaw<DRAIN> {
+pub struct ConicConformal<DRAIN> {
     p_drain: PhantomData<DRAIN>,
     n: f64,
     f: f64,
@@ -27,34 +27,34 @@ fn tany(y: f64) -> f64 {
 }
 
 #[derive(Clone, Debug)]
-pub enum ConformalRaw<DRAIN> {
+pub enum Conformal<DRAIN> {
     Mercator(Mercator<DRAIN>),
-    Conic(ConicConformalRaw<DRAIN>),
+    Conic(ConicConformal<DRAIN>),
 }
 
-impl<DRAIN> Transform for ConformalRaw<DRAIN> {
+impl<DRAIN> Transform for Conformal<DRAIN> {
     type T = f64;
     fn transform(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
         match self {
-            ConformalRaw::Mercator(m) => m.transform(p),
-            ConformalRaw::Conic(c) => c.transform(p),
+            Conformal::Mercator(m) => m.transform(p),
+            Conformal::Conic(c) => c.transform(p),
         }
     }
 
     #[inline]
     fn invert(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
         match self {
-            ConformalRaw::Mercator(m) => m.invert(p),
-            ConformalRaw::Conic(c) => c.invert(p),
+            Conformal::Mercator(m) => m.invert(p),
+            Conformal::Conic(c) => c.invert(p),
         }
     }
 }
 
-impl<DRAIN> ConicConformalRaw<DRAIN>
+impl<DRAIN> ConicConformal<DRAIN>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
-    pub(super) fn new(y0: f64, y1: f64) -> ConformalRaw<DRAIN> {
+    pub(super) fn new(y0: f64, y1: f64) -> Conformal<DRAIN> {
         let cy0 = y0.cos();
         let n = match y0 == y1 {
             true => y0.sin(),
@@ -62,11 +62,11 @@ where
         };
 
         if !n.is_zero() {
-            return ConformalRaw::Mercator(Mercator::default());
+            return Conformal::Mercator(Mercator::default());
         }
 
         let f = cy0 * pow(tany(y0), n as usize);
-        ConformalRaw::Conic(ConicConformalRaw {
+        Conformal::Conic(ConicConformal {
             p_drain: PhantomData::<DRAIN>,
             f,
             n,
@@ -75,7 +75,7 @@ where
     // pub fn builder_parallels(
     //     phi0: f64,
     //     phi1: f64,
-    // ) -> BuilderAntimeridianResampleNoClip<DRAIN, ConformalRaw<DRAIN>, f64> {
+    // ) -> BuilderAntimeridianResampleNoClip<DRAIN, Conformal<DRAIN>, f64> {
     //     Self::builder_with_phi0_phi1(phi0.to_radians(), phi1.to_radians())
     // }
 
@@ -84,8 +84,8 @@ where
     pub fn builder_with_phi0_phi1(
         y0: f64,
         y1: f64,
-    ) -> BuilderAntimeridianResampleNoClip<DRAIN, ConformalRaw<DRAIN>, f64> {
-        let mut b = Builder::new(ConicConformalRaw::new(y0, y1));
+    ) -> BuilderAntimeridianResampleNoClip<DRAIN, Conformal<DRAIN>, f64> {
+        let mut b = Builder::new(ConicConformal::new(y0, y1));
         b.scale_set(109.5_f64);
 
         b.parallels(30_f64, 30_f64);
@@ -94,29 +94,29 @@ where
 }
 
 // Reach into builder and alter the PR.
-impl<DRAIN> BuilderAntimeridianResampleNoClip<DRAIN, ConformalRaw<DRAIN>, f64>
+impl<DRAIN> BuilderAntimeridianResampleNoClip<DRAIN, Conformal<DRAIN>, f64>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
     fn parallels(&mut self, phi0: f64, phi1: f64) -> &mut Self {
-        let projection_raw = ConicConformalRaw::new(phi0.to_radians(), phi1.to_radians());
+        let projection_raw = ConicConformal::new(phi0.to_radians(), phi1.to_radians());
         self.update_pr(projection_raw);
         self
     }
 }
 
-impl<DRAIN> ProjectionRawBase for ConicConformalRaw<DRAIN>
+impl<DRAIN> ProjectionRawBase for ConicConformal<DRAIN>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
-    type Builder = BuilderAntimeridianResampleNoClip<DRAIN, ConformalRaw<DRAIN>, f64>;
+    type Builder = BuilderAntimeridianResampleNoClip<DRAIN, Conformal<DRAIN>, f64>;
     #[inline]
     fn builder() -> Self::Builder {
         Self::builder_with_phi0_phi1(0_f64, f64::FRAC_PI_3())
     }
 }
 
-impl<DRAIN> Transform for ConicConformalRaw<DRAIN> {
+impl<DRAIN> Transform for ConicConformal<DRAIN> {
     type T = f64;
 
     #[inline]

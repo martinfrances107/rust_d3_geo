@@ -33,7 +33,7 @@ pub mod builder_mercator;
 /// A specalised builder wrapping the mecator builder.
 pub mod builder_mercator_transverse;
 /// The raw projection.
-pub mod identity_raw;
+pub mod identity;
 /// The raw projection.
 pub mod mercator;
 /// The raw projection.

@@ -14,12 +14,12 @@ use super::ProjectionRawBase;
 
 /// Projection definition.
 #[derive(Clone, Copy, Default, Debug)]
-pub struct IdentityRaw<DRAIN, T> {
+pub struct Identity<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawBase for IdentityRaw<DRAIN, T>
+impl<DRAIN, T> ProjectionRawBase for Identity<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
@@ -32,7 +32,7 @@ where
     }
 }
 
-impl<DRAIN, T> Transform for IdentityRaw<DRAIN, T>
+impl<DRAIN, T> Transform for Identity<DRAIN, T>
 where
     T: CoordFloat,
 {

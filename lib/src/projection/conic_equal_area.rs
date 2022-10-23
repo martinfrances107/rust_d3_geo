@@ -11,7 +11,7 @@ use crate::Transform;
 
 use super::builder::types::BuilderAntimeridianResampleNoClip;
 use super::builder::Builder;
-use super::cylindrical_equal_area::CylindricalEqualAreaRaw;
+use super::cylindrical_equal_area::CylindricalEqualArea;
 use super::CenterSet;
 use super::ProjectionRawBase;
 
@@ -22,7 +22,7 @@ use super::ProjectionRawBase;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
-pub struct ConicEqualAreaRaw<DRAIN, T> {
+pub struct ConicEqualArea<DRAIN, T> {
     c: T,
     p_drain: PhantomData<DRAIN>,
     n: T,
@@ -35,49 +35,49 @@ pub struct ConicEqualAreaRaw<DRAIN, T> {
 /// Depending constgruction parameters
 /// one of two Projection types are returned.
 #[derive(Clone, Debug)]
-pub enum EqualAreaRaw<DRAIN, T> {
+pub enum EqualArea<DRAIN, T> {
     /// Parallels symetical around the Equator.
-    Cyl(CylindricalEqualAreaRaw<DRAIN, T>),
+    Cyl(CylindricalEqualArea<DRAIN, T>),
     /// Conic
-    Con(ConicEqualAreaRaw<DRAIN, T>),
+    Con(ConicEqualArea<DRAIN, T>),
 }
-impl<DRAIN, T> Transform for EqualAreaRaw<DRAIN, T>
+impl<DRAIN, T> Transform for EqualArea<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
     type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            EqualAreaRaw::Cyl(cyl) => cyl.transform(p),
-            EqualAreaRaw::Con(con) => con.transform(p),
+            EqualArea::Cyl(cyl) => cyl.transform(p),
+            EqualArea::Con(con) => con.transform(p),
         }
     }
 
     #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            EqualAreaRaw::Cyl(cyl) => cyl.invert(p),
-            EqualAreaRaw::Con(con) => con.invert(p),
+            EqualArea::Cyl(cyl) => cyl.invert(p),
+            EqualArea::Con(con) => con.invert(p),
         }
     }
 }
 
-impl<DRAIN, T> ConicEqualAreaRaw<DRAIN, T>
+impl<DRAIN, T> ConicEqualArea<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    pub(super) fn new(y0: T, y1: T) -> EqualAreaRaw<DRAIN, T> {
+    pub(super) fn new(y0: T, y1: T) -> EqualArea<DRAIN, T> {
         let two = T::from(2_f64).unwrap();
         let sy0 = y0.sin();
         let n = (sy0 + y1.sin()) / two;
 
         // Are the parallels symmetrical around the Equator?
         if n.abs() < T::from(EPSILON).unwrap() {
-            return EqualAreaRaw::Cyl(CylindricalEqualAreaRaw::new(y0));
+            return EqualArea::Cyl(CylindricalEqualArea::new(y0));
         }
         let c = T::one() + sy0 * (two * n - sy0);
-        EqualAreaRaw::Con(ConicEqualAreaRaw {
+        EqualArea::Con(ConicEqualArea {
             p_drain: PhantomData::<DRAIN>,
             c: T::one() + sy0,
             r0: c.sqrt() / n,
@@ -90,8 +90,8 @@ where
     pub fn builder_with_phi0_phi1(
         y0: T,
         y1: T,
-    ) -> BuilderAntimeridianResampleNoClip<DRAIN, EqualAreaRaw<DRAIN, T>, T> {
-        let mut b = Builder::new(ConicEqualAreaRaw::new(y0, y1));
+    ) -> BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T> {
+        let mut b = Builder::new(ConicEqualArea::new(y0, y1));
         b.scale_set(T::from(155.424).unwrap())
             .center_set(&Coordinate {
                 x: T::zero(),
@@ -101,19 +101,19 @@ where
     }
 }
 
-impl<DRAIN, T> ProjectionRawBase for ConicEqualAreaRaw<DRAIN, T>
+impl<DRAIN, T> ProjectionRawBase for ConicEqualArea<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderAntimeridianResampleNoClip<DRAIN, EqualAreaRaw<DRAIN, T>, T>;
+    type Builder = BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>;
     #[inline]
     fn builder() -> Self::Builder {
         Self::builder_with_phi0_phi1(T::zero(), T::FRAC_PI_3())
     }
 }
 
-impl<DRAIN, T> Transform for ConicEqualAreaRaw<DRAIN, T>
+impl<DRAIN, T> Transform for ConicEqualArea<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {

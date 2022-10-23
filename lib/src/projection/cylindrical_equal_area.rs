@@ -17,12 +17,12 @@ use crate::stream::Stream;
 use crate::Transform;
 
 #[derive(Clone, Debug)]
-pub struct CylindricalEqualAreaRaw<DRAIN, T> {
+pub struct CylindricalEqualArea<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     cos_phi0: T,
 }
 
-impl<DRAIN, T> CylindricalEqualAreaRaw<DRAIN, T>
+impl<DRAIN, T> CylindricalEqualArea<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
@@ -37,7 +37,7 @@ where
     }
 }
 
-impl<DRAIN, T> Transform for CylindricalEqualAreaRaw<DRAIN, T>
+impl<DRAIN, T> Transform for CylindricalEqualArea<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {

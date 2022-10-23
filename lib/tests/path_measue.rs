@@ -16,7 +16,7 @@ mod path_measure {
 
     use rust_d3_geo::path::measure::Measure;
     use rust_d3_geo::path_identity::builder::Builder as PathBuilder;
-    use rust_d3_geo::projection::identity_raw::IdentityRaw;
+    use rust_d3_geo::projection::identity::Identity;
     use rust_d3_geo::projection::projector_identity::types::ProjectorIdentityAntimeridianResampleNoClip;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::stream::Streamable;
@@ -40,7 +40,7 @@ mod path_measure {
         assert_eq!(
             0_f64,
             measure(
-                IdentityRaw::builder().build(),
+                Identity::builder().build(),
                 Geometry::Point((0_f64, 0_f64).into())
             )
         );
@@ -52,7 +52,7 @@ mod path_measure {
         assert_eq!(
             0_f64,
             measure(
-                IdentityRaw::builder().build(),
+                Identity::builder().build(),
                 Geometry::MultiPoint(MultiPoint(vec![(0_f64, 0_f64).into()]))
             )
         );
@@ -64,7 +64,7 @@ mod path_measure {
         assert_eq!(
             3_f64,
             measure(
-                IdentityRaw::builder().build(),
+                Identity::builder().build(),
                 Geometry::LineString(LineString(vec![
                     (0_f64, 0_f64).into(),
                     (0_f64, 1_f64).into(),
@@ -81,7 +81,7 @@ mod path_measure {
         assert_eq!(
             3_f64,
             measure(
-                IdentityRaw::builder().build(),
+                Identity::builder().build(),
                 Geometry::MultiLineString(MultiLineString(vec![LineString(vec![
                     (0_f64, 0_f64).into(),
                     (0_f64, 1_f64).into(),
@@ -98,7 +98,7 @@ mod path_measure {
         assert_eq!(
             4_f64,
             measure(
-                IdentityRaw::builder().build(),
+                Identity::builder().build(),
                 Geometry::Polygon(Polygon::new(
                     LineString(vec![
                         (0_f64, 0_f64).into(),
@@ -119,7 +119,7 @@ mod path_measure {
         assert_eq!(
             16_f64,
             measure(
-                IdentityRaw::builder().build(),
+                Identity::builder().build(),
                 Geometry::Polygon(Polygon::new(
                     LineString(vec![
                         (-1_f64, -1_f64).into(),
@@ -146,7 +146,7 @@ mod path_measure {
         assert_eq!(
             16_f64,
             measure(
-                IdentityRaw::builder().build(),
+                Identity::builder().build(),
                 Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
                     LineString(vec![
                         (-1_f64, -1_f64).into(),
