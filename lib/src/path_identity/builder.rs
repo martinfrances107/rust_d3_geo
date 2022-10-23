@@ -89,7 +89,6 @@ where
     CS: PointRadiusTrait<T = T>,
     T: CoordFloat,
 {
-    /// f64 or f32.
     type T = T;
 
     /// From the progammed state generate a new projection.

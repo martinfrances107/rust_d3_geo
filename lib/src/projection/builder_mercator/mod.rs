@@ -72,6 +72,7 @@ use self::types::BuilderMercatorAntimeridianResampleClip;
 /// That is all involve a tranformation of the PCN
 /// specifcally a Identity struct to a Rectangle struct.
 pub trait FitReclip {
+    /// The resultant builder type.
     type Output;
     /// f64 or f32.
     type T;
@@ -146,6 +147,7 @@ pub trait ScaleReclip {
 ///
 /// Projection builder sub trait.
 pub trait TranslateReclip {
+    /// The resultant builder type.
     type Output;
     /// f32 or f64.
     type T;

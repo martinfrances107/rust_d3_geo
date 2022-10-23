@@ -142,14 +142,14 @@ mod identity {
 
         assert_eq!("M0,0L10,10", path.object(&ls));
 
-        let projection_buidler2 = pb
+        let projection_builder2 = pb
             .translate_set(&Coordinate {
                 x: 30_f64,
                 y: 90_f64,
             })
             .scale_set(2_f64);
-        projection_buidler2.reflect_y_set(true);
-        let projector2 = projection_buidler2.build::<NoPCNC<String<f64>>>();
+        projection_builder2.reflect_y_set(true);
+        let projector2 = projection_builder2.build::<NoPCNC<String<f64>>>();
 
         let mut path2 = PathBuilder::context_pathstring().build(projector2);
 

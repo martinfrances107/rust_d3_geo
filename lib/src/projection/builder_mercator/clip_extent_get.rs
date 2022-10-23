@@ -16,7 +16,6 @@ where
     PR: TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
-    /// f64 or f32.
     type T = T;
 
     /// Returns a bounding box.

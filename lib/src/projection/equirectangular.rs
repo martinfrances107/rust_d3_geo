@@ -39,7 +39,6 @@ impl<DRAIN, T> Transform for Equirectangular<DRAIN, T>
 where
     T: CoordFloat,
 {
-    /// f64 or f32.
     type T = T;
 
     #[inline]

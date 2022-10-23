@@ -85,7 +85,6 @@ where
     T: CoordFloat + Display,
 {
     type EP = Self;
-    /// f64 or f32.
     type T = T;
 
     #[inline]

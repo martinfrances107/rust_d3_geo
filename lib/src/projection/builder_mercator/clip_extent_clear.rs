@@ -21,7 +21,6 @@ where
     T: CoordFloat + FloatConst,
 {
     type Output = Self;
-    /// f64 or f32.
     type T = T;
 
     fn clip_extent_clear(&self) -> Self::Output {

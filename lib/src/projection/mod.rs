@@ -175,7 +175,7 @@ pub trait ClipExtentGet {
 pub trait ClipExtentClear {
     /// f64 or f32
     type T;
-    /// The resultant buidler type.
+    /// The resultant builder type.
     type Output;
 
     /// clears the bounding box.
@@ -191,7 +191,7 @@ pub trait ClipExtentSet {
     /// f64 or f32
     type T;
 
-    /// The resultant buidler type.
+    /// The resultant builder type.
     type Output;
 
     /// Sets the bounding box.
@@ -300,7 +300,7 @@ pub trait AngleSet {
 }
 
 pub trait ClipAngleReset {
-    /// The resultant buidler type.
+    /// The resultant builder type.
     type Output;
 
     ///f64 or f32
@@ -318,7 +318,7 @@ pub trait ClipAngleGet {
 /// Selects the clipping strategy
 /// A projection builder sub trait.
 pub trait ClipAngleSet {
-    /// The resultant buidler type.
+    /// The resultant builder type.
     type Output;
 
     ///f64 or f32
@@ -407,7 +407,7 @@ pub trait PrecisionGet {
 pub trait PrecisionBypass {
     /// f64 or f32.
     type T;
-    /// The resultant buidler type.
+    /// The resultant builder type.
     type Output;
     fn precision_bypass(&self) -> Self::Output;
 }
@@ -420,7 +420,7 @@ pub trait PrecisionBypass {
 pub trait PrecisionSet {
     /// f64 or f32.
     type T;
-    /// The resultant buidler type.
+    /// The resultant builder type.
     type Output;
     ///  Sets the threshold for the projection’s adaptive resampling to the
     ///  specified value in Pixels and returns the projection.  This value

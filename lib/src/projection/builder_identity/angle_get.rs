@@ -8,7 +8,6 @@ impl<DRAIN, PCNU, T> AngleGet for Builder<DRAIN, PCNU, T>
 where
     T: CoordFloat,
 {
-    /// f64 or f32.
     type T = T;
 
     /// Returns the projection’s post-projection planar rotation angle.

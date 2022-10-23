@@ -44,7 +44,6 @@ impl<DRAIN, T> Transform for Gnomic<DRAIN, T>
 where
     T: CoordFloat + FloatConst,
 {
-    /// f64 or f32.
     type T = T;
 
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
