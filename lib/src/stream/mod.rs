@@ -27,12 +27,15 @@ pub struct Unconnected;
 ///
 /// Common to many pipeline stages
 /// Overriden when the state need to contain more variables.
-/// see Resample and Clip.
+/// see [Resample](crate::projection::resampler::resample::Resample) and [Clip](crate::clip::clip::Clip).
+///
+/// [Equirectangular](crate::projection::equirectangular::Equirectangular)
 #[derive(Clone, Debug)]
 pub struct Connected<SINK>
 where
     SINK: Clone,
 {
+    /// The next stage in the pipeline,
     pub sink: SINK,
 }
 
@@ -63,8 +66,10 @@ pub trait Connectable {
 /// Whatever specific state they are in,  it is to the exclusion
 /// on the unconnected state.
 pub trait ConnectedState {
+    /// The next pipeline stage type
     type Sink;
 
+    /// Connects the next object in the pipeline.
     fn sink(&mut self) -> &mut Self::Sink;
 }
 
@@ -141,7 +146,7 @@ where
     fn endpoint(&mut self) -> &mut Self::EP;
     /// Declare the end of a line segment.
     fn line_end(&mut self) {}
-    // Declare the start of a line segment.
+    /// Declare the start of a line segment.
     fn line_start(&mut self) {}
     /// Declare a point.
     fn point(&mut self, p: &Coordinate<Self::T>, m: Option<u8>);

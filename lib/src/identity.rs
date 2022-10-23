@@ -50,6 +50,7 @@ where
     SINK: Clone,
 {
     type SC = SINK;
+    /// The resultant buidler type.
     type Output = Identity<SINK, Connected<Self::SC>>;
 
     #[inline]

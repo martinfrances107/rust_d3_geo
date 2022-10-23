@@ -44,7 +44,7 @@ pub trait Clean {
 /// Can make stream connections to a specfic EP.
 /// A buffer.
 pub trait Bufferable {
-    /// Line type: Antimeridian or Clip.
+    /// Resultant Line type: Antimeridian or Clip.
     type Output;
     /// f64 or f32
     type T;

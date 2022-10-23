@@ -91,7 +91,9 @@ impl<SC, T> Bufferable for Line<SC, Unconnected, T>
 where
     T: CoordFloat,
 {
+    /// The resultant line type.
     type Output = Line<Buffer<T>, Connected<Buffer<T>>, T>;
+    /// f64 or f32.
     type T = T;
 
     #[inline]

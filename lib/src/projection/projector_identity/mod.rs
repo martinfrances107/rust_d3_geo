@@ -12,6 +12,7 @@ use crate::Transform;
 
 pub mod tests;
 pub mod transformer;
+/// Builder shorthand notations.
 pub mod types;
 use transformer::Transformer;
 

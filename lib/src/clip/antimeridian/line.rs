@@ -59,6 +59,7 @@ impl<SC, T> Bufferable for Line<SC, Unconnected, T>
 where
     T: CoordFloat,
 {
+    /// The resultant line buffer type.
     type Output = Line<Buffer<T>, Connected<Buffer<T>>, T>;
     type T = T;
 
@@ -80,6 +81,7 @@ where
     SC: Clone,
     T: CoordFloat,
 {
+    /// The resultant line type.
     type Output = Line<SC, Connected<SC>, T>;
     type SC = SC;
 

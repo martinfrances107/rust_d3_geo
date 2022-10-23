@@ -24,16 +24,7 @@ pub mod equirectangular;
 /// The raw projection.
 pub mod gnomic;
 // The raw projection.
-pub mod identity_raw;
-/// The raw projection.
-pub mod mercator;
-/// The raw projection.
-pub mod mercator_transverse;
-/// The raw projection.
-pub mod orthographic;
-/// The raw projection.
-pub mod stereographic;
-// The default projection builder.
+/// The default projection builder.
 pub mod builder;
 /// Identity builder.
 pub mod builder_identity;
@@ -41,6 +32,13 @@ pub mod builder_identity;
 pub mod builder_mercator;
 /// A specalised builder wrapping the mecator builder.
 pub mod builder_mercator_transverse;
+pub mod identity_raw;
+/// The raw projection.
+pub mod mercator;
+/// The raw projection.
+pub mod mercator_transverse;
+/// The raw projection.
+pub mod orthographic;
 /// Debug and test helper function.
 #[cfg(not(tarpaulin_include))]
 pub mod projection_equal;
@@ -50,6 +48,8 @@ pub mod projector;
 pub mod projector_identity;
 /// Resample based on a given precision.
 pub mod resampler;
+/// The raw projection.
+pub mod stereographic;
 /// A stream node pipeline stage.
 pub mod stream_transform_radians;
 /// Scale translate and rotate.
@@ -175,7 +175,7 @@ pub trait ClipExtentGet {
 pub trait ClipExtentClear {
     /// f64 or f32
     type T;
-
+    /// The resultant buidler type.
     type Output;
 
     /// clears the bounding box.
@@ -191,6 +191,7 @@ pub trait ClipExtentSet {
     /// f64 or f32
     type T;
 
+    /// The resultant buidler type.
     type Output;
 
     /// Sets the bounding box.
@@ -299,6 +300,7 @@ pub trait AngleSet {
 }
 
 pub trait ClipAngleReset {
+    /// The resultant buidler type.
     type Output;
 
     ///f64 or f32
@@ -316,6 +318,7 @@ pub trait ClipAngleGet {
 /// Selects the clipping strategy
 /// A projection builder sub trait.
 pub trait ClipAngleSet {
+    /// The resultant buidler type.
     type Output;
 
     ///f64 or f32
@@ -404,6 +407,7 @@ pub trait PrecisionGet {
 pub trait PrecisionBypass {
     /// f64 or f32.
     type T;
+    /// The resultant buidler type.
     type Output;
     fn precision_bypass(&self) -> Self::Output;
 }
@@ -416,6 +420,7 @@ pub trait PrecisionBypass {
 pub trait PrecisionSet {
     /// f64 or f32.
     type T;
+    /// The resultant buidler type.
     type Output;
     ///  Sets the threshold for the projection’s adaptive resampling to the
     ///  specified value in Pixels and returns the projection.  This value

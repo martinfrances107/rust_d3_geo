@@ -1,25 +1,44 @@
 pub mod angle;
+
+/// A builder getter.
 pub mod center_get;
+/// A builder tansform.
 pub mod center_set;
+/// A builder tansform.
 pub mod clip_angle_set;
+/// A builder tansform.
 pub mod clip_extent_adjust;
+/// A builder tansform.
 pub mod clip_extent_clear;
+/// A builder tansform.
 pub mod clip_extent_get;
+/// A builder tansform.
 pub mod fit;
 pub mod fit_reclip;
+
 pub mod precision_adjust;
 pub mod precision_bypass;
+/// A builder getter.
 pub mod precision_get;
 pub mod precision_set;
 pub mod reclip;
+/// A builder getter.
 pub mod reflect_get;
+/// A builder tansform.
 pub mod reflect_set;
+/// A builder getter.
 pub mod rotate_get;
+/// A builder tansform.
 pub mod rotate_set;
+/// A builder tansform.
 pub mod scale_adjust;
+/// A builder getter.
 pub mod scale_get;
+/// A builder tansform.
 pub mod translate_adjust;
+/// A builder getter.
 pub mod translate_get;
+/// Builder shorthand notations.
 pub mod types;
 
 use std::marker::PhantomData;
@@ -156,9 +175,12 @@ where
     p_clipc: PhantomData<CLIPC>,
     p_drain: PhantomData<DRAIN>,
     p_rc: PhantomData<RC>,
+    /// The raw projeciton.
     pub pr: PR,
+    /// The wrapped builder type.
     pub base: ProjectionBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>,
-    pub extent: Option<[Coordinate<T>; 2]>, // post-clip extent
+    /// post-clip extent
+    pub extent: Option<[Coordinate<T>; 2]>,
 }
 
 impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>

@@ -1,26 +1,33 @@
-// pub mod angle;
+/// A builder getter.
 pub mod center_get;
+/// A builder tansform.
 pub mod center_set;
-// pub mod clip_angle_set;
+/// A builder tansform.
 pub mod clip_extent_adjust;
+/// A builder tansform.
 pub mod clip_extent_clear;
+/// A builder getter.
 pub mod clip_extent_get;
+/// A builder tansform.
 pub mod fit;
-// pub mod fit_reclip;
-// pub mod precision_adjust;
+/// A builder tansform.
 pub mod precision_bypass;
-// pub mod precision_get;
-// pub mod precision_set;
+/// A builder tansform.
 pub mod reclip;
-// pub mod reflect_get;
-// pub mod reflect_set;
+/// A builder getter.
 pub mod rotate_get;
+/// A builder tansform.
 pub mod rotate_set;
-// pub mod scale_adjust;
+/// A builder getter.
 pub mod scale_get;
+/// A builder tansform.
 pub mod scale_set;
+/// A builder tansform.
 pub mod translate_adjust;
+/// A builder getter.
 pub mod translate_get;
+
+/// Builder shorthand notation.
 pub mod types;
 
 use std::marker::PhantomData;
@@ -58,6 +65,7 @@ where
     p_clipc: PhantomData<CLIPC>,
     p_drain: PhantomData<DRAIN>,
     p_rc: PhantomData<RC>,
+    /// The type this builder wraps.
     pub base: ProjectionMercatorBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>,
 }
 

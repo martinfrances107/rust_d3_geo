@@ -252,6 +252,7 @@ where
     SC: Clone,
     T: CoordFloat,
 {
+    /// The resultant postclip node  type.
     type Output = Rectangle<SC, Connected<SC>, T>;
     type SC = SC;
     fn connect(self, sink: SC) -> Self::Output {

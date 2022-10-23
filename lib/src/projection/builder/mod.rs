@@ -68,6 +68,7 @@ mod translate_no_resampling;
 mod translate_with_resampling;
 
 pub mod template;
+/// Builder shorthand notations.
 pub mod types;
 /// Projection builder.
 ///
@@ -195,8 +196,8 @@ where
         out
     }
 
-    // Drop the current raw projection, use the new projection_raw and rebuild
-    // state. ( very experimental)
+    /// Drop the current raw projection, use the new projection_raw and rebuild
+    /// state. ( very experimental)
     pub fn update_pr(&mut self, projection_raw: PR) -> &mut Self {
         // rebuild
         let center = generate_str(

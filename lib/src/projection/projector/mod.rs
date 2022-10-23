@@ -17,6 +17,7 @@ use crate::Transform;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 
+/// Builder shorthand notations.
 pub mod types;
 
 type CacheState<CLIP, DRAIN, T> = Option<(

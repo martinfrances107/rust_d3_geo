@@ -7,6 +7,7 @@ use num_traits::FloatConst;
 use crate::identity::Identity;
 use crate::stream::Unconnected;
 
+/// Builder shorthand notations.
 pub mod types;
 
 mod angle;

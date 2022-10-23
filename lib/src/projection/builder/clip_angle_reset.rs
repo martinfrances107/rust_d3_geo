@@ -18,6 +18,7 @@ where
     RC: Clone,
     T: CoordFloat + Default + FloatConst,
 {
+    /// The resultant buidler type.
     type Output =
         Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>;
     type T = T;
