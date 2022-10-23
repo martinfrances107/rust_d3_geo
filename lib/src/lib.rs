@@ -1,5 +1,5 @@
 #![allow(clippy::pedantic)]
-#![warn(missing_docs)]
+// #![warn(missing_docs)]
 #![warn(missing_debug_implementations)]
 #![allow(clippy::many_single_char_names)]
 //! A port of [d3/d3-geo](<https://github.com/d3/d3-geo>).
