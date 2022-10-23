@@ -107,8 +107,8 @@ where
     PCNU: Clone,
     T: CoordFloat,
 {
-    /// From the progammed state generate a new projection.
     #[inline]
+    /// Returns a projectors based on the builder settings.
     pub fn build(self, projection: Projector<CS, PCNC, PCNU, T>) -> Path<CS, PCNC, PCNU, T> {
         Path::new(self.context_stream, projection)
     }

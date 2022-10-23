@@ -22,7 +22,7 @@ enum LineState {
     PolygonStarted,
 }
 
-/// PathString.
+/// Stream endpoint: Output SVG path strings.
 #[derive(Debug, Clone, PartialEq)]
 pub struct String<T> {
     circle: S,

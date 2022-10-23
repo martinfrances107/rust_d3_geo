@@ -24,7 +24,7 @@ enum LineState {
     PolygonStarted,
 }
 
-/// Path Context.
+/// Stream endpoint: Output to a HTML canvas element
 #[derive(Clone, Debug, PartialEq)]
 pub struct Context {
     line: LineState,

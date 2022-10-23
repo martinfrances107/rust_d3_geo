@@ -41,7 +41,7 @@ where
         self
     }
 
-    /// Set the projection builder to invert the y-coordinate.    
+    /// Set the projection builder to invert the y-coordinate.
     #[inline]
     fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
         self.base.reflect_y_set(reflect).recenter_with_resampling();

@@ -91,7 +91,7 @@ where
     type T = T;
 
     #[inline]
-    fn precision_set(&self, delta: &T) -> Self::Output {
+    fn precision_set(&self, _delta: &T) -> Self::Output {
         todo!();
         // Self::Output {
         //     p_clipc: PhantomData::<ClipCircleC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>>,

@@ -9,8 +9,8 @@
 //! Geographic projections, spherical shapes and spherical trigonometry.
 //!
 //! Features :-
-//!  - complex transformations - scaling, rotating and translation give fine
-//!    grained control the desired map view.
+//!  - Complex transformations - scaling, rotating and translation give fine
+//!    grained control to get the desired map view.
 //!
 //!  - Large datasets can be resampled to reduce compute.
 //!

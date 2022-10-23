@@ -1,3 +1,4 @@
+/// Getters and setters for the circle clipping stratergy.
 pub mod angle;
 
 /// A builder getter.
@@ -14,14 +15,18 @@ pub mod clip_extent_clear;
 pub mod clip_extent_get;
 /// A builder tansform.
 pub mod fit;
-pub mod fit_reclip;
 
+/// A builder tranform.
 pub mod precision_adjust;
+/// A builder tranform.
 pub mod precision_bypass;
 /// A builder getter.
 pub mod precision_get;
+/// A builder tranform.
 pub mod precision_set;
-pub mod reclip;
+
+mod fit_reclip;
+mod reclip;
 /// A builder getter.
 pub mod reflect_get;
 /// A builder tansform.
@@ -161,7 +166,8 @@ pub trait TranslateReclip {
         Self::T: CoordFloat;
 }
 
-pub trait Reclip {
+/// Reclip is common to both Mercator and MercatorTransverse.
+pub(super) trait Reclip {
     fn reclip(&mut self) -> &mut Self;
 }
 

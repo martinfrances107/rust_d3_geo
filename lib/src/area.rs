@@ -5,7 +5,7 @@ use num_traits::FloatConst;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
-/// Area - from a streamable object.
+/// Stream endpoint: Compute the area.
 ///
 /// DISAMBIGUATION: Lots of code in common with path/area.rs
 /// but this is true of the Javascript.
@@ -94,8 +94,8 @@ where
         let phi = phi / self.two + T::FRAC_PI_4(); // half the angular distance from south pole
 
         // Spherical excess E for a spherical triangle with vertices: south pole,
-        // previous point, current point.  Uses a formula derived from Cagnoli’s
-        // theorem.  See Todhunter, Spherical Trig. (1871), Sec. 103, Eq. (2).
+        // previous point, current point. Uses a formula derived from Cagnoli’s
+        // theorem. See Todhunter, Spherical Trig. (1871), Sec. 103, Eq. (2).
         let d_lambda = lambda - self.lambda0;
         let sd_lambda = if d_lambda >= T::zero() {
             T::one()

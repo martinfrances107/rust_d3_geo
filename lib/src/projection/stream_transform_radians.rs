@@ -7,12 +7,16 @@ use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 
-/// TODO: Can this be optimised away?
+// A node pipeline stage.
+//
+/// Type-Driven API, STATE prevent calls to .connect()
+/// on a perviously connected object
 #[derive(Clone, Debug)]
 pub struct StreamTransformRadians<STATE>(pub STATE);
 
 impl StreamTransformRadians<Unconnected> {
     #[inline]
+    /// Connect this node to the next element in the pipeline.
     pub fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
     where
         SINK: Clone,

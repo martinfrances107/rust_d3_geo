@@ -111,8 +111,8 @@ where
     CS: Stream<EP = CS, T = T>,
     T: CoordFloat,
 {
-    /// From the progammed state generate a new projection.
     #[inline]
+    /// Returns a projectors based on the builder settings.
     pub fn build(
         self,
         projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,

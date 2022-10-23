@@ -11,6 +11,7 @@ use crate::Transform;
 
 use super::rotate_radians::RotateRadians;
 
+/// A Stream node, that applied a rotator transform.
 #[derive(Debug, Clone)]
 pub struct RotatorRadians<STATE, T>
 where

@@ -132,7 +132,7 @@ where
     fn line_start(&mut self) {
         self.state.sink.line_start();
     }
-    /// Declare a point.    
+    /// Declare a point.
     #[inline]
     fn point(&mut self, p: &Coordinate<Self::T>, m: Option<u8>) {
         self.state.sink.point(&self.transform(p), m)

@@ -15,6 +15,12 @@ use super::cylindrical_equal_area::CylindricalEqualAreaRaw;
 use super::CenterSet;
 use super::ProjectionRawBase;
 
+///Projection definition.
+///
+/// Why is the Phantom Data is required here...
+///
+/// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
 pub struct ConicEqualAreaRaw<DRAIN, T> {
     c: T,
@@ -24,9 +30,13 @@ pub struct ConicEqualAreaRaw<DRAIN, T> {
     two: T,
 }
 
+/// ConicEqualAreaRaw return type.
+///
+/// Depending constgruction parameters
+/// one of two Projection types are returned.
 #[derive(Clone, Debug)]
 pub enum EqualAreaRaw<DRAIN, T> {
-    // Parallels symetical around the Equator.
+    /// Parallels symetical around the Equator.
     Cyl(CylindricalEqualAreaRaw<DRAIN, T>),
     /// Conic
     Con(ConicEqualAreaRaw<DRAIN, T>),

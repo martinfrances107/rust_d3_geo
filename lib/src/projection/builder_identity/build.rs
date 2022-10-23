@@ -12,6 +12,7 @@ where
     T: CoordFloat,
 {
     #[inline]
+    /// Returns a projectors based on the builder settings.
     pub fn build<PCNC: Clone>(&self) -> Projector<DRAIN, PCNC, PCNU, T> {
         Projector {
             p_pcnc: PhantomData::<PCNC>,

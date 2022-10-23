@@ -32,6 +32,7 @@ pub mod builder_identity;
 pub mod builder_mercator;
 /// A specalised builder wrapping the mecator builder.
 pub mod builder_mercator_transverse;
+/// The raw projection.
 pub mod identity_raw;
 /// The raw projection.
 pub mod mercator;
@@ -92,7 +93,7 @@ pub trait TransformExtent {
 }
 
 /// Serves as a abstract trait both things that follow the common family of
-/// raw projections.  and alternatively the less common mercator family of
+/// raw projections, and alternatively the less common mercator family of
 /// raw projections.
 pub trait ProjectionRawBase: Transform {
     /// The default builder.
@@ -102,20 +103,30 @@ pub trait ProjectionRawBase: Transform {
     fn builder() -> Self::Builder;
 }
 
+/// Output a Projector base on a Builders configuration.
 pub trait Build
 where
     <Self as Build>::ClipC: Clone,
     <Self as Build>::ClipU: Clone,
     <Self as Build>::T: CoordFloat,
 {
+    /// The Clip stratrgy to be used [The type once connected].
     type ClipC;
+    /// The Clip stratrgy to be used [The type in a unconnected].
     type ClipU;
+    /// The pipelines endpoint.
     type Drain;
+    /// The post clip node [The type in a unconnected state].
     type PCNU;
+    /// The raw projection.
     type PR;
+    /// The resample node [The type in a connected state].
     type RC;
+    /// The resample node [The type in a unconnected state].
     type RU;
+    /// f64 or f32
     type T;
+    /// Returns a Projector base on a builder configuration.
     fn build(
         &self,
     ) -> Projector<
@@ -241,7 +252,9 @@ pub trait Fit {
     ///
     /// @param extent The extent, specified as an array [[x₀, y₀], [x₁,
     ///  y₁]], where x₀ is the left side of the bounding box, y₀ is the
-    ///  top, x₁ is the right and y₁ is the bottom.  @param object A
+    ///  top, x₁ is the right and y₁ is the bottom.
+    ///
+    ///  @param object A
     /// geographic feature supported by d3-geo (An extension of GeoJSON
     ///   feature).
     fn fit_extent(
@@ -254,14 +267,14 @@ pub trait Fit {
 
     ///  Sets the projection’s scale and translate to fit the specified
     ///  geographic feature in the center of an extent with the given size
-    ///  and top-left corner of [0, 0].  Returns the projection.
+    ///  and top-left corner of [0, 0]. Returns the projection.
     ///
     ///  Any clip extent is ignored when determining the new scale and
     ///  translate. The precision used to compute the bounding box of the
     ///  given object is computed at an effective scale of 150.
     ///
     ///  @param size The size of the extent, specified as an array [width,
-    ///  height].  @param object A geographic feature supported by d3-geo
+    ///  height]. @param object A geographic feature supported by d3-geo
     ///  (An extension of GeoJSON feature).
     fn fit_size(&mut self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> &mut Self
     where
@@ -303,26 +316,40 @@ pub trait AngleSet {
     fn angle_set(&mut self, angle: Self::T) -> &mut Self;
 }
 
+/// Change the clip stratergy from circle to antimeridan.
 pub trait ClipAngleReset {
     /// The resultant builder type.
     type Output;
 
     ///f64 or f32
     type T;
+
+    /// Converts a builder using a circle clipping statergy into one using
+    /// the antimerdian stratergy.
     fn clip_angle_reset(self) -> Self::Output;
 }
 
 /// Clip angle getter.
+///
+/// API-state design:
+/// Note this method is only availble on on builders using the
+/// circle clipping stratergy.
 ///
 /// A projection builder sub trait.
 pub trait ClipAngleGet {
     ///f64 or f32
     type T;
 
+    /// Returns the builder clipping angle (radians).
     fn clip_angle(&self) -> Self::T;
 }
 
-/// Selects the clipping strategy
+/// Transforms the builder in one using the circle clipping strategy
+///
+/// API-state design:
+/// Note this method is only availble on on builders using the
+/// antimeridian clipping stratergy.
+///
 /// A projection builder sub trait.
 pub trait ClipAngleSet {
     /// The resultant builder type.
@@ -346,14 +373,6 @@ pub trait ClipAngleAdjust {
     /// Given the angle, adjust the projection builder Must already be set
     /// for  cicle based clipping.
     fn clip_angle(&mut self, angle: Self::T) -> &mut Self;
-}
-
-pub trait RecenterWithResampling {
-    fn recenter_with_resampling(&mut self) -> &mut Self;
-}
-
-pub trait RecenterNoResampling {
-    fn recenter_no_resampling(&mut self) -> &mut Self;
 }
 
 /// Returns the x or y reflection.
@@ -385,14 +404,14 @@ pub trait ReflectSet {
 }
 
 /// Given the builder is already set to resample, adjust the precision
-/// setting.  
+/// setting.
 ///
 /// A projection builder sub trait.
 pub trait PrecisionAdjust {
     /// f64 or f32.
     type T;
     ///  Sets the threshold for the projection’s adaptive resampling to the
-    ///  specified value in Pixels and returns the projection.  This value
+    ///  specified value in Pixels and returns the projection. This value
     ///  corresponds to the Douglas–Peucker distance.
     fn precision_set(&mut self, delta: &Self::T) -> &mut Self;
 }
@@ -400,13 +419,13 @@ pub trait PrecisionAdjust {
 /// Resampling Getter.
 ///
 /// Applies only to projections where the resampling precision has been
-/// set.  A projection builder sub trait.
+/// set. A projection builder sub trait.
 pub trait PrecisionGet {
     /// f64 or f32.
     type T;
 
     ///  Returns the projection’s current resampling precision which
-    ///  defaults to square root of 0.5.  This value corresponds to the
+    ///  defaults to square root of 0.5. This value corresponds to the
     ///  Douglas–Peucker distance.
     fn precision(&self) -> Self::T;
 }
@@ -419,13 +438,14 @@ pub trait PrecisionBypass {
     type T;
     /// The resultant builder type.
     type Output;
+    /// Switch to no resampling.
     fn precision_bypass(&self) -> Self::Output;
 }
 
 /// Give a resampling precision consume the object and return one that
 /// resamples.
 ///
-/// Similar to ResampleAdjust but with conversion.  A projection builder
+/// Similar to ResampleAdjust but with conversion. A projection builder
 /// sub trait.
 pub trait PrecisionSet {
     /// f64 or f32.
@@ -433,7 +453,7 @@ pub trait PrecisionSet {
     /// The resultant builder type.
     type Output;
     ///  Sets the threshold for the projection’s adaptive resampling to the
-    ///  specified value in Pixels and returns the projection.  This value
+    ///  specified value in Pixels and returns the projection. This value
     ///  corresponds to the Douglas–Peucker distance.
     fn precision_set(&self, delta: &Self::T) -> Self::Output;
 }
@@ -461,7 +481,7 @@ pub trait RotateSet {
     ///
     ///  @param angles  A three-element array of numbers [lambda, phi,
     ///  gamma] specifying the rotation angles in degrees about each
-    ///  spherical axis.  (These correspond to yaw, PItch and roll.)
+    ///  spherical axis. (These correspond to yaw, PItch and roll.)
     fn rotate_set(&mut self, angles: &[Self::T; 3]) -> &mut Self;
 }
 
@@ -477,7 +497,7 @@ pub trait ScaleGet {
 }
 
 ///  Sets the projection’s scale factor to the specified value and returns
-///  the projection.  The scale factor corresponds linearly to the distance
+///  the projection. The scale factor corresponds linearly to the distance
 ///  between projected points; however, absolute scale factors are not
 ///  equivalent across projections.
 ///
@@ -506,7 +526,7 @@ pub trait TranslateGet {
 }
 
 ///  Sets the projection’s translation offset to the specified two-element
-///  array [tx, ty] and returns the projection.  The translation offset
+///  array [tx, ty] and returns the projection. The translation offset
 ///  determines the Pixel coordinates of the projection’s center. The
 ///  default translation offset places ⟨0°,0°⟩ at the center of a 960×500
 ///  area.
@@ -523,4 +543,14 @@ pub trait TranslateSet {
     fn translate_set(&mut self, t: &Coordinate<Self::T>) -> &mut Self
     where
         Self::T: CoordFloat;
+}
+
+/// Private traits.
+
+trait RecenterWithResampling {
+    fn recenter_with_resampling(&mut self) -> &mut Self;
+}
+
+trait RecenterNoResampling {
+    fn recenter_no_resampling(&mut self) -> &mut Self;
 }

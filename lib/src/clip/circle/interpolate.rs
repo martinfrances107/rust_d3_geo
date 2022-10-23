@@ -11,7 +11,7 @@ use crate::stream::Stream;
 /// Interpolate Circle.
 #[derive(Clone, Debug)]
 pub struct Interpolate<T> {
-    pub radius: T,
+    pub(crate) radius: T,
     delta: T,
 }
 

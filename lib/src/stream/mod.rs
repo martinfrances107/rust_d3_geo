@@ -51,7 +51,7 @@ where
     }
 }
 
-/// Can make connections to a stream pipeline.
+/// Make connections to a stream pipeline.
 pub trait Connectable {
     /// Represents to final connected state.
     type Output;

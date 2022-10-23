@@ -61,17 +61,14 @@ where
     line_end_fn: LineEndFn,
 }
 
-/// Takes the unconnected line template stored in clip_line
-/// and then modifies the ClipState to one than reflects
-/// the connected sink.
 impl<I, LB, LC, LU, PV, RC, T> Connectable for Clip<I, LC, LU, PV, RC, Unconnected, T>
 where
     LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
     T: CoordFloat,
 {
     type SC = RC;
-    /// The resultant clip type.
     type Output = Clip<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>;
+
     fn connect(self, sink: RC) -> Self::Output {
         let line_node = self.clip_line.clone().connect(sink);
         let ring_buffer = Buffer::<T>::default();

@@ -58,6 +58,7 @@ pub type ProjectorAntimeridianResampleClip<DRAIN, PR, T> = Projector<
     T,
 >;
 
+/// A projector with a circle clipping stratergy, with no resampling and no post clip node.
 pub type ProjectorCircleResampleNoneNoClip<DRAIN, PR, T> = Projector<
     ClipCircleC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
@@ -69,6 +70,7 @@ pub type ProjectorCircleResampleNoneNoClip<DRAIN, PR, T> = Projector<
     T,
 >;
 
+/// A projector with a circle clipping stratergy, with no resampling and post clip node.
 pub type ProjectorCircleResampleNoneClip<DRAIN, PR, T> = Projector<
     ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
@@ -80,6 +82,7 @@ pub type ProjectorCircleResampleNoneClip<DRAIN, PR, T> = Projector<
     T,
 >;
 
+/// A projector with a circle clipping stratergy, with resampling and post clip node.
 pub type ProjectorCircleResampleNoClip<DRAIN, PR, T> = Projector<
     ClipCircleC<ResampleNoPCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNoPCNC<DRAIN, PR, T>, T>,
@@ -91,6 +94,7 @@ pub type ProjectorCircleResampleNoClip<DRAIN, PR, T> = Projector<
     T,
 >;
 
+/// A projector with a circle clipping stratergy, with resampling and post clip node.
 pub type ProjectorCircleResampleClip<DRAIN, PR, T> = Projector<
     ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,

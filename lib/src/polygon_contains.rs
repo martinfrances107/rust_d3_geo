@@ -110,7 +110,7 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
     //   (counter-clockwise) area.
     //
     // Second, count the (signed) number of times a segment crosses a lambda
-    // from the point to the South pole.  If it is zero, then the point is the
+    // from the point to the South pole. If it is zero, then the point is the
     // same side as the South pole.
     let is_winding_odd = winding & 1 == 1;
 

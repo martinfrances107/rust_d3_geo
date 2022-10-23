@@ -5,7 +5,7 @@ use crate::stream::Stream;
 
 use super::Result;
 
-/// A stream node endpoint for computing a bounding box.
+/// Stream endpoint: Compute the bounding box.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Bounds<T>
 where
@@ -53,7 +53,6 @@ where
     T: CoordFloat,
 {
     type EP = Self;
-    /// f632 or f64
     type T = T;
 
     #[inline]
