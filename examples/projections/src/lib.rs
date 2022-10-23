@@ -24,7 +24,6 @@ use web_sys::*;
 mod azimuthal_equal_area;
 mod azimuthal_equidistant;
 mod conic_equal_area;
-mod dom_macros;
 mod equirectangular;
 mod gnomic;
 mod mercator;

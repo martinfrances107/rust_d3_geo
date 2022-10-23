@@ -6,7 +6,6 @@
 //! See the README.md.
 extern crate web_sys;
 
-mod dom_macros;
 mod orthographic;
 mod stereographic;
 
