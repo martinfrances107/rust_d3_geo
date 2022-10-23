@@ -11,37 +11,37 @@ use crate::stream::Stream;
 /// Interpolate Circle.
 #[derive(Clone, Debug)]
 pub struct Interpolate<T> {
-	pub radius: T,
-	delta: T,
+    pub radius: T,
+    delta: T,
 }
 
 impl<T> Interpolate<T>
 where
-	T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
-	pub fn new(radius: T) -> Self {
-		Self {
-			radius,
-			delta: T::from(6_f64).unwrap().to_radians(),
-		}
-	}
+    pub fn new(radius: T) -> Self {
+        Self {
+            radius,
+            delta: T::from(6_f64).unwrap().to_radians(),
+        }
+    }
 }
 
 impl<T> Interpolator for Interpolate<T>
 where
-	T: CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
-	type T = T;
+    type T = T;
 
-	fn interpolate<EP, STREAM>(
-		&self,
-		from: Option<Coordinate<T>>,
-		to: Option<Coordinate<T>>,
-		direction: T,
-		stream: &mut STREAM,
-	) where
-		STREAM: Stream<EP = EP, T = T>,
-	{
-		stream_fn(stream, self.radius, self.delta, direction, from, to);
-	}
+    fn interpolate<EP, STREAM>(
+        &self,
+        from: Option<Coordinate<T>>,
+        to: Option<Coordinate<T>>,
+        direction: T,
+        stream: &mut STREAM,
+    ) where
+        STREAM: Stream<EP = EP, T = T>,
+    {
+        stream_fn(stream, self.radius, self.delta, direction, from, to);
+    }
 }
