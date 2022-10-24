@@ -5,25 +5,26 @@ This is a port  [d3-geo](https://github.com/d3/d3-geo) into RUST.
 
 ## When to use the rust version of the library
 
-The limits of the javascript library become obvious when developing interactive applications that procress large datasets.
+The limits of the javascript library become obvious when developing interactive applications that process large datasets.
 For example the examples/globe applications operate on a 50m resolution map of the earth. On a desktop machine this is beyond the javascript version.
 
 ## Status
-I have a acitvely maintained milestone [Alpha release](https://github.com/martinfrances107/rust_d3_geo/milestone/1)
+I am acitvely maintaining a [Alpha release](https://github.com/martinfrances107/rust_d3_geo/milestone/1) milestone.
 
 The majority of the library has been ported along with the associated tests. The aim is to eventaully release this as a rust crate.
 but at the moment is this alpha grade software. 
 
 <details>
-<summary> Here is a summry  of things to-do before the crate is published.</summary>
+<summary> Here is a summary of things to-do before the crate is published.</summary>
 
 * The recenter state-based API refacor is almost complete.
   Once fit_size_resampling() is reinstated the code-coverage metric will jump 10% back to the previous value of approx 82%
+
+* The API is not stabalised. If perfomance issues arise then the API will change. Additionaly I plan a final review to remove anything uneeded before making changes become complicated.
+
 * The clipping algorithm in clip/rejoin/mod.rs needs to be refactored.
 see  [The intersection Problem.](#the-intersection-problem--request-for-comments)
 Test coverage in that area is high so the algortihms is working but the data structures make extensive use of vectors ( heap objects ) containng references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>> ```   which is not performant.
-
-* The API is not stabalised. If perfomance issues arise then the API will change. Additionaly I plan a final review to remove anything uneeded before making changes become complicated.
 
 </details>
 
@@ -34,13 +35,13 @@ Test coverage in that area is high so the algortihms is working but the data str
 Examples are provided to help developers convert their existing javascript to rust.
 To run the example please follow the "Running the examples" below. The globe examples are interactve and for perfomance reasons they are best viewed as a static web site.
 
-| Name                               | Description                                                                                                                                                                                                                       |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| examples/globe/canvas              | Shows how to load/parse/display  a complex topojson file to a CANVAS element.                                                                                                                                                     |
-| examples/globe/canvas_rotating_50m | **At the moment this example is very experimental** This is a conversion of the d3_geo example found in https://www.d3indepth.com/geographic/ It uses the gloo_timer module to emulate calls to window.setInterval(update, 100);. |
-| examples/globe/svg                 | SVG are useful  when the semantic meaing of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules.    |
-| examples/projections               | Shows a side by side comparison of the all the projections rendered by both **javascript** and rust.                                                                                                                              |
-| examples/ring                      | Renders a complex multipolygon.                                                                                                                                                                                                   |
+| Name                               | Description                                                                                                                                                                                                                                  |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| examples/globe/canvas              | Shows how to load/parse/display  a complex topojson file to a CANVAS element.                                                                                                                                                                |
+| examples/globe/canvas_rotating_50m | **At the moment this example is very experimental** This is a conversion of the javascript d3_geo example found in https://www.d3indepth.com/geographic/ It uses the gloo_timer module to emulate calls to window.setInterval(update, 100);. |
+| examples/globe/svg                 | SVG are useful  when the semantic meaing of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules.               |
+| examples/projections               | Shows a side by side comparison of the all the projections rendered by both **javascript** and rust.                                                                                                                                         |
+| examples/ring                      | Renders a complex multipolygon.                                                                                                                                                                                                              |
  ## Running the examples
 
 <details>
@@ -58,7 +59,7 @@ Requirements:
 To view the application either create a devleopment build, or construct a static-web site as follows
 
  ### Start And Run A Development Build
- ```
+ ```console
  cd rust_d3_geo/examples/ring/
  cargo build
  npm install
@@ -71,7 +72,7 @@ The last command "npm run start"  will automatically open your default browser a
 
 Much better performance can be acheived by bulding a static web site and viewing that direclty.
 
-```
+```console
   cd rust_d3_geo/examples/ring
   cargo build
   npm run  build
@@ -85,7 +86,7 @@ By security reasons, browsers prevent HTML pages with WASM files from being view
 
 A way forward here is to use a npm package called serve
 
-```
+```console
   sudo npm install --global serve
   serve dist
 ```
@@ -114,6 +115,7 @@ Also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voron
 <details>
 <summary>See the details.</summary>
 On my todo list.
+
 * [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
 I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
 
