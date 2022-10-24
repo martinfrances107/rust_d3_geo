@@ -10,20 +10,24 @@ extern crate topojson;
 extern crate web_sys;
 
 use futures::prelude::*;
-use futures_util::StreamExt;
 use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
 use gloo_timers::future::IntervalStream;
 use gloo_utils::format::JsValueSerdeExt;
 use topojson::Topology;
-use wasm_bindgen::prelude::*;
+
+use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
+use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::spawn_local;
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::console_log;
 use web_sys::Document;
-use web_sys::*;
+use web_sys::Request;
+use web_sys::RequestInit;
+use web_sys::RequestMode;
+use web_sys::Response;
 
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
