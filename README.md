@@ -6,13 +6,12 @@ This is a port  [d3-geo](https://github.com/d3/d3-geo) into RUST.
 ## When to use the rust version of the library
 
 The limits of the javascript library become obvious when developing interactive applications that procress large datasets.
-
 For example the examples/globe applications operate on a 50m resolution map of the earth. On a desktop machine this is beyond the javascript version.
 
 ## Status
 I have a acitvely maintained milestone [Alpha release](https://github.com/martinfrances107/rust_d3_geo/milestone/1)
 
-The majority of the libray has been ported along with the associated tests. The aim is to eventaully release this as a rust crate.
+The majority of the library has been ported along with the associated tests. The aim is to eventaully release this as a rust crate.
 but at the moment is this alpha grade software. 
 
 <details>
@@ -32,7 +31,8 @@ Test coverage in that area is high so the algortihms is working but the data str
 
 ## Examples
 
-In addition to the port, some examples are provided to help developers convert their existing javascript to rust.
+Examples are provided to help developers convert their existing javascript to rust.
+To run the example please follow the "Running the examples" below. The globe examples are interactve and for perfomance reasons they are best viewed as a static web site.
 
 | Name                  | Description                                                                                                                                                                                                                    |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -45,15 +45,54 @@ In addition to the port, some examples are provided to help developers convert t
 <details>
 <summary>See the details.</summary>
 
-  From a machine with npm and node installed.
+<br/>
+Requirements:
 
-  First install wamm-pack [[ installation guide]](https://rustwasm.github.io/wasm-pack/installer/)
-  ```
-  cd rust_d3_geo/examples/ring/
+ * node and npm [installation guide](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+ * wasm-pack [installation guide](https://rustwasm.github.io/wasm-pack/installer/)
+
+<br/>
+
+To view the application either create a devleopment build, or construct a static-web site as follows
+
+ ### Start And Run A Development Build
+ ```
+ cd rust_d3_geo/examples/ring/
+ cargo build
+ npm install
+ npm start
+ ```
+
+The last command "npm run start"  will automatically open your default browser at http:://localhost::8080
+
+### Building A Static Site
+
+Much better performance can be acheived by bulding a static web site and viewing that direclty.
+
+```
+  cd rust_d3_geo/examples/ring
   cargo build
-  npm install
-  npm start
-  ```
+  npm run  build
+```
+
+This creates a static HTML site in the dist/ directory.
+
+To view the site you cannot just point you browser at a location of the form file:://home/user/alice/dist/index.html
+
+By security reasons, browsers prevent HTML pages with WASM files from being viewed this way. You must host the site first.
+
+A way forward here is to use a npm package called serve
+
+```
+  sudo npm install --global serve
+  serve dist
+```
+
+If everything works you will be given a locaation to view
+
+For example http:://localhost::3000
+
 </details>
 <br>
 
