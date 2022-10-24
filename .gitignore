@@ -6,5 +6,6 @@
 **/node_modules
 **/package-lock.json
 **/pkg
+**/dist
 target/
 Cargo.lock

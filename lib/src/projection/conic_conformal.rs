@@ -54,7 +54,7 @@ impl<DRAIN> ConicConformal<DRAIN>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
-    pub(super) fn new(y0: f64, y1: f64) -> Conformal<DRAIN> {
+    pub(super) fn generate(y0: f64, y1: f64) -> Conformal<DRAIN> {
         let cy0 = y0.cos();
         let n = match y0 == y1 {
             true => y0.sin(),
@@ -85,7 +85,7 @@ where
         y0: f64,
         y1: f64,
     ) -> BuilderAntimeridianResampleNoClip<DRAIN, Conformal<DRAIN>, f64> {
-        let mut b = Builder::new(ConicConformal::new(y0, y1));
+        let mut b = Builder::new(ConicConformal::generate(y0, y1));
         b.scale_set(109.5_f64);
 
         b.parallels(30_f64, 30_f64);
@@ -99,7 +99,7 @@ where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
     fn parallels(&mut self, phi0: f64, phi1: f64) -> &mut Self {
-        let projection_raw = ConicConformal::new(phi0.to_radians(), phi1.to_radians());
+        let projection_raw = ConicConformal::generate(phi0.to_radians(), phi1.to_radians());
         self.update_pr(projection_raw);
         self
     }
@@ -124,7 +124,7 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
         let mut y = f64::NAN;
         if self.f > 0f64 {
             if y < -f64::FRAC_PI_2() + EPSILON {
-                y = f64::FRAC_PI_2() - EPSILON;
+                y = -f64::FRAC_PI_2() + EPSILON;
             } else if y > f64::FRAC_PI_2() - EPSILON {
                 y = f64::FRAC_PI_2() - EPSILON;
             }
@@ -144,7 +144,7 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
         let mut l = p.x.atan2(fy.abs()) * fy.signum();
 
         if fy * self.n < 0f64 {
-            l = l - f64::PI() * p.x.signum() * fy.signum();
+            l -= f64::PI() * p.x.signum() * fy.signum();
         }
         Coordinate {
             x: l / self.n,

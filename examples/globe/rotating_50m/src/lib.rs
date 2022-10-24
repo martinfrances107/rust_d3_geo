@@ -119,7 +119,7 @@ pub async fn start() -> Result<(), JsValue> {
                 context_raw.set_stroke_style(&"#ccc".into());
                 path.object(&graticule);
                 context_raw.stroke();
-                yaw = yaw - 0.2f64;
+                yaw -= 0.2f64;
 
                 console_log!("yaw :{}", yaw);
 

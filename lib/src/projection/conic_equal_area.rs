@@ -67,7 +67,7 @@ where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    pub(super) fn new(y0: T, y1: T) -> EqualArea<DRAIN, T> {
+    pub(super) fn generate(y0: T, y1: T) -> EqualArea<DRAIN, T> {
         let two = T::from(2_f64).unwrap();
         let sy0 = y0.sin();
         let n = (sy0 + y1.sin()) / two;
@@ -91,7 +91,7 @@ where
         y0: T,
         y1: T,
     ) -> BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T> {
-        let mut b = Builder::new(ConicEqualArea::new(y0, y1));
+        let mut b = Builder::new(ConicEqualArea::generate(y0, y1));
         b.scale_set(T::from(155.424).unwrap())
             .center_set(&Coordinate {
                 x: T::zero(),

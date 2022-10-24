@@ -224,7 +224,7 @@ where
         self.projection_raw = projection_raw.clone();
         self.rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]); // pre-rotate
         self.rotator = RotatorRadians::new(self.rotate.clone());
-        self.project_transform = Compose::new(projection_raw.clone(), str);
+        self.project_transform = Compose::new(projection_raw, str);
         self.project_rotate_transform =
             Compose::new(self.rotate.clone(), self.project_transform.clone());
         self
