@@ -2,6 +2,7 @@
 members = [
     "./lib",
     "./examples/globe/canvas",
+    "./examples/globe/canvas_rotating_50m",
     "./examples/globe/svg",
     "./examples/projections",
     "./examples/ring",

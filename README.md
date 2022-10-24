@@ -34,12 +34,13 @@ Test coverage in that area is high so the algortihms is working but the data str
 Examples are provided to help developers convert their existing javascript to rust.
 To run the example please follow the "Running the examples" below. The globe examples are interactve and for perfomance reasons they are best viewed as a static web site.
 
-| Name                  | Description                                                                                                                                                                                                                    |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| examples/globe/canvas | Shows how to load/parse/display  a complex topojson file to a CANVAS element.                                                                                                                                                  |
-| examples/globe/svg    | SVG are useful  when the semantic meaing of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules. |
-| examples/projections  | Shows a side by side comparison of the all the projections rendered by both **javascript** and rust.                                                                                                                           |
-| examples/ring         | Renders a complex multipolygon.                                                                                                                                                                                                |
+| Name                               | Description                                                                                                                                                                                                                       |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| examples/globe/canvas              | Shows how to load/parse/display  a complex topojson file to a CANVAS element.                                                                                                                                                     |
+| examples/globe/canvas_rotating_50m | **At the moment this example is very experimental** This is a conversion of the d3_geo example found in https://www.d3indepth.com/geographic/ It uses the gloo_timer module to emulate calls to window.setInterval(update, 100);. |
+| examples/globe/svg                 | SVG are useful  when the semantic meaing of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules.    |
+| examples/projections               | Shows a side by side comparison of the all the projections rendered by both **javascript** and rust.                                                                                                                              |
+| examples/ring                      | Renders a complex multipolygon.                                                                                                                                                                                                   |
  ## Running the examples
 
 <details>
