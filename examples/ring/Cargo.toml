@@ -10,11 +10,11 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-rust_d3_geo = { path = "../../lib" }
 geo = { workspace = true }
-wasm-bindgen-test = { workspace = true }
 getrandom = { workspace = true, features = ["js"] }
 rand = { workspace = true }
+rust_d3_geo = { path = "../../lib" }
+wasm-bindgen-test = { workspace = true }
 wasm-bindgen = { workspace = true }
 
 # The `web-sys` crate allows you to interact with the various browser APIs,

@@ -9,19 +9,19 @@ members = [
 ]
 
 [workspace.dependencies]
-js-sys = "~0.3"
-rust_d3_geo = { path = "../../lib" }
 geo = "~0.23"
 getrandom = { version = "~0.2", features = ["js"] }
 gloo-utils = "0.1.5"
+js-sys = "~0.3"
 futures = "~0.3"
 rand = { version = "~0.8" }
+rust_d3_geo = { path = "../../lib" }
+rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git", branch = "main" }
 topojson = "~0.5"
 wasm-bindgen = "~0.2"
 wasm-bindgen-test = "~0.3"
 wasm-bindgen-futures = "~0.4"
 web-sys = "~0.3"
-rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git", branch = "main" }
 
 [profile.release]
 lto = true

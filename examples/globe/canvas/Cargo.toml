@@ -10,17 +10,13 @@ crate-type = ["cdylib"]
 
 
 [dependencies]
-js-sys = { workspace = true }
 geo = { workspace = true }
 gloo-utils = { workspace = true }
+js-sys = { workspace = true }
 rust_d3_geo = { path = "../../../lib" }
 rust_topojson_client = { workspace = true }
 topojson = { workspace = true }
-# The `wasm-bindgen` crate provides the bare minimum functionality needed
-# to interact with JavaScript.
 wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
-
-# These crates are used for running unit tests.
 wasm-bindgen-futures = { workspace = true }
 
 # The `web-sys` crate allows you to interact with the various browser APIs,
