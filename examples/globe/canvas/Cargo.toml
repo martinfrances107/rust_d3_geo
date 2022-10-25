@@ -2,10 +2,11 @@
 authors = { workspace = true }
 edition = { workspace = true }
 name = "rust_d3_geo_example_canvas"
-license = { workspace = true }
+# license = { workspace = true }
+licesnse = "MIT"
 description = "A example app from the rust_d3_geo package, the app displays a globe."
 readme = { workspace = true }
-repository = { workspace = true }
+# repository = { workspace = true }
 version = { workspace = true }
 
 [lib]

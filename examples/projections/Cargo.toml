@@ -2,10 +2,10 @@
 authors = { workspace = true }
 edition = { workspace = true }
 description = "A example app from the rust_d3_geo package. Code examples are provided so one can compare code to display a globe in all availble projections."
-license = { workspace = true }
+license = "MIT"
 name = "rust_d3_geo_example_projection"
 readme = { workspace = true }
-repository = { workspace = true }
+# repository = { workspace = true }
 version = { workspace = true }
 
 

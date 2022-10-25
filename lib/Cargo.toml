@@ -3,8 +3,9 @@ authors = { workspace = true }
 edition = { workspace = true }
 description = "A port of D3/d3-geo"
 name = "rust_d3_geo"
+license = "MIT"
 readme = { workspace = true }
-repository = { workspace = true }
+# repository = { workspace = true }
 version = { workspace = true }
 
 [dependencies]

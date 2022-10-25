@@ -2,10 +2,11 @@
 authors = { workspace = true }
 edition = { workspace = true }
 description = "A example app from the rust_d3_geo package. Code examples are provided to display the rings using orthographic and sterographic projection."
-license = { workspace = true }
+# license = { workspace = true }
+license = "MIT"
 name = "rust_d3_geo_example_ring"
 readme = { workspace = true }
-repository = { workspace = true }
+#repository = { workspace = true }
 version = { workspace = true }
 
 [lib]
