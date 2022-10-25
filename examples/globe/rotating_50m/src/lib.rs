@@ -97,7 +97,7 @@ pub async fn start() -> Result<(), JsValue> {
     spawn_local(async move {
         let mut count = 0;
 
-        IntervalStream::new(500)
+        IntervalStream::new(20)
             .take_while(|_| {
                 count += 1;
                 future::ready(count < 100)
@@ -112,6 +112,7 @@ pub async fn start() -> Result<(), JsValue> {
 
                 let mut path = pb.build(ortho);
                 context_raw.set_stroke_style(&"#333".into());
+                context_raw.begin_path();
                 path.object(&countries);
                 context_raw.stroke();
 
