@@ -8,6 +8,14 @@ members = [
     "./examples/ring",
 ]
 
+[workspace.package]
+authors = ["martin <martinfrances107@hotmail.com>"]
+edition = "2021"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/martinfrances107/rust_d3_geo"
+version = "0.1.0"
+
 [workspace.dependencies]
 geo = "~0.23"
 getrandom = { version = "~0.2", features = ["js"] }

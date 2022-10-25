@@ -1,10 +1,13 @@
 [package]
+authors = { workspace = true }
+edition = { workspace = true }
 name = "rust_d3_geo_example_canvas"
-description = "rust_d3_geo benchmark wasm app"
-license = "MIT"
-version = "0.1.0"
-authors = ["martin <martinfrances107@hotmail.com>"]
-edition = "2021"
+license = { workspace = true }
+description = "A example app from the rust_d3_geo package, the app displays a globe."
+readme = { workspace = true }
+repository = { workspace = true }
+version = { workspace = true }
+
 [lib]
 crate-type = ["cdylib"]
 

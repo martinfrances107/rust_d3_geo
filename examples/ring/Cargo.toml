@@ -1,10 +1,12 @@
 [package]
+authors = { workspace = true }
+edition = { workspace = true }
+description = "A example app from the rust_d3_geo package. Code examples are provided to display the rings using orthographic and sterographic projection."
+license = { workspace = true }
 name = "rust_d3_geo_example_ring"
-description = "rust_d3_geo wasm app"
-license = "MIT"
-version = "0.1.0"
-authors = ["martin <martinfrances107@hotmail.com>"]
-edition = "2021"
+readme = { workspace = true }
+repository = { workspace = true }
+version = { workspace = true }
 
 [lib]
 crate-type = ["cdylib"]

@@ -1,11 +1,11 @@
 [package]
-name = "rust_d3_geo"
-version = "0.1.0"
-authors = ["martin frances <martinfrances107@hotmail.com>"]
-edition = "2021"
-readme = "README.md"
+authors = { workspace = true }
+edition = { workspace = true }
 description = "A port of D3/d3-geo"
-repository = "https://github.com/martinfrances107/rust_d3_geo"
+name = "rust_d3_geo"
+readme = { workspace = true }
+repository = { workspace = true }
+version = { workspace = true }
 
 [dependencies]
 approx = "~0.5"
