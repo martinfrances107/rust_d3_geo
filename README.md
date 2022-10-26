@@ -3,6 +3,21 @@ Rust 2021 Edition.
 
 This is a port  [d3-geo](https://github.com/d3/d3-geo) into RUST.
 
+<table>
+<thead>
+<tr>
+<th align="center">abc</th>
+<th align="right">defghi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">bar</td>
+<td align="right">baz</td>
+</tr>
+</tbody>
+</table>
+
 ## When to use the rust version of the library
 
 The limits of the javascript library become obvious when developing interactive applications that process large datasets.
@@ -35,13 +50,40 @@ Test coverage in that area is high so the algortihms is working but the data str
 Examples are provided to help developers convert their existing javascript to rust.
 To run the example please follow the "Running the examples" below. The globe examples are interactve and for perfomance reasons they are best viewed as a static web site.
 
-| Name                               | Description                                                                                                                                                                                                                                  |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| examples/globe/canvas              | Shows how to load/parse/display  a complex topojson file to a CANVAS element.                                                                                                                                                                |
-| examples/globe/canvas_rotating_50m | **At the moment this example is very experimental** This is a conversion of the javascript d3_geo example found in https://www.d3indepth.com/geographic/ It uses the gloo_timer module to emulate calls to window.setInterval(update, 100);. |
-| examples/globe/svg                 | SVG are useful  when the semantic meaing of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules.               |
-| examples/projections               | Shows a side by side comparison of the all the projections rendered by both **javascript** and rust.                                                                                                                                         |
-| examples/ring                      | Renders a complex multipolygon.                                                                                                                                                                                                              |
+<table>
+<thead>
+<tr>
+<th align="left">Description</th>
+<th align="right">Image</th>
+</tr>
+</thead>
+<tbody align="left" style="vertical-align: top;">
+<tr>
+<td><strong>examples/globe/canvas<strong><br/><br/>
+Shows how to load/parse/display  a complex topojson file to a CANVAS element.</td>
+<td ></td>
+</tr>
+<tr>
+<td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>. It uses the gloo_timer module to emulate calls to window.setInterval(update, 100);
+<br/><strong>At the moment this example is very experimental</strong>
+</td>
+<td><image src="images/rotating.png"></td>
+</tr>
+<tr>
+<td>examples/globe/svg <br/><br/> SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules. </td>
+<td><image src="images/globe.svg"> </td>
+</tr>
+<tr>
+<td><strong>examples/projections</strong> <br/><br/> Shows a side by side comparison of the all the projections rendered by both **javascript** and rust. </td>
+<td><image src="images/projection.png"> </td>
+</tr>
+<tr>
+<td> examples/ring <br/> Renders a complex multipolygon. </td>
+<td><image src="images/ring.png"></td>
+</tr>
+</tbody>
+<table>
+
  ## Running the examples
 
 <details>
