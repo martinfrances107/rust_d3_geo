@@ -12,11 +12,12 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
-        - uses: actions/checkout@v2
+        uses: actions/checkout@v2
       - name: Test
-        - uses: icepuma/rust-action@master
+        uses: icepuma/rust-action@master
         with:
           args: cargo fmt -- --check  && cargo test
       - name: Run cargo-tarpaulin
