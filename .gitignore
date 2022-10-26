@@ -4,6 +4,7 @@
 !.gitignore
 !.vscode
 !target/debug/.cargo-lock
+!target/debug/.fingerprint/EMPTY
 **/node_modules
 **/package-lock.json
 **/pkg
