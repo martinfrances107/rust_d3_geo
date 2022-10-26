@@ -2,18 +2,55 @@
 Rust 2021 Edition.
 
 This is a port  [d3-geo](https://github.com/d3/d3-geo) into RUST.
+I am actively working towards a [Alpha release](https://github.com/martinfrances107/rust_d3_geo/milestone/1) milestone. I intended to eventually publish this on [crates.io](https://crates.io/)
+
+## Examples
+Examples are provided to help developers convert their existing javascript to rust.
+To run the example please follow the "Running the examples" below.
+
+<table>
+<thead>
+<tr>
+<th align="left">Description</th>
+<th align="right"></th>
+</tr>
+</thead>
+<tbody align="left" style="vertical-align:top;">
+
+<tr>
+<td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>. It uses the gloo_timer module to emulate calls to window.setInterval(update, 100); <br/><br/> For perfomance reasons this example is best viewed as a static web site, rather the running the development build.
+<br/>
+<br/><strong>At the moment this example is very experimental</strong>
+</td>
+<td><image src="images/rotating.png"></td>
+</tr>
+<tr>
+<td><strong>examples/globe/svg</strong> <br/><br/> SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules. </td>
+<td><image src="images/globe.svg"> </td>
+</tr>
+<tr>
+<td><strong>examples/projections</strong> <br/><br/> Shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>. </td>
+<td><image src="images/projection.png"> </td>
+</tr>
+<tr>
+<td> <strong>examples/ring</strong><br/>Renders a complex multipolygon. </td>
+<td><image src="images/ring.png"></td>
+</tr>
+</tbody>
+<table>
+
 
 ## When to use the rust version of the library
 
 The limits of the javascript library become obvious when developing interactive applications that process large datasets.
 For example the examples/globe applications operate on a 50m resolution map of the earth. On a desktop machine this is beyond the javascript version.
 
-## Status
-I am acitvely maintaining a [Alpha release](https://github.com/martinfrances107/rust_d3_geo/milestone/1) milestone.
+## Current Status
 
 The majority of the library has been ported along with the associated tests. The aim is to eventaully release this as a rust crate.
-but at the moment is this alpha grade software. 
+but at the moment is this alpha grade software.
 
+<br/>
 <details>
 <summary> Here is a summary of things to-do before the crate is published.</summary>
 
@@ -28,48 +65,7 @@ Test coverage in that area is high so the algortihms is working but the data str
 
 </details>
 
-<br>
-
-## Examples
-
-Examples are provided to help developers convert their existing javascript to rust.
-To run the example please follow the "Running the examples" below. The globe examples are interactve and for perfomance reasons they are best viewed as a static web site.
-
-<table>
-<thead>
-<tr>
-<th align="left">Description</th>
-<th align="right"></th>
-</tr>
-</thead>
-<tbody align="left" style="vertical-align:top;">
-<tr>
-<td><strong>examples/globe/canvas</strong><br/><br/>
-Shows how to load/parse/display  a complex topojson file to a CANVAS element.</td>
-<td ></td>
-</tr>
-<tr>
-<td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>. It uses the gloo_timer module to emulate calls to window.setInterval(update, 100);
-<br/><strong>At the moment this example is very experimental</strong>
-</td>
-<td><image src="images/rotating.png"></td>
-</tr>
-<tr>
-<td><strong>examples/globe/svg</strong> <br/><br/> SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules. </td>
-<td><image src="images/globe.svg"> </td>
-</tr>
-<tr>
-<td><strong>examples/projections</strong> <br/><br/> Shows a side by side comparison of the all the projections rendered by both **javascript** and rust. </td>
-<td><image src="images/projection.png"> </td>
-</tr>
-<tr>
-<td> <strong>examples/ring</strong><br/>Renders a complex multipolygon. </td>
-<td><image src="images/ring.png"></td>
-</tr>
-</tbody>
-<table>
-
- ## Running the examples
+## Running the examples
 
 <details>
 <summary>See the details.</summary>
