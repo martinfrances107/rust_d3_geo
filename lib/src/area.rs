@@ -103,10 +103,11 @@ where
             -T::one()
         };
         let ad_lambda = sd_lambda * d_lambda;
+        let (ad_lambda_sin, ad_lambda_cos) = ad_lambda.sin_cos();
         let (sin_phi, cos_phi) = phi.sin_cos();
         let k = self.sin_phi0 * sin_phi;
-        let u = self.cos_phi0 * cos_phi + k * ad_lambda.cos();
-        let v = k * sd_lambda * ad_lambda.sin();
+        let u = self.cos_phi0 * cos_phi + k * ad_lambda_cos;
+        let v = k * sd_lambda * ad_lambda_sin;
         self.area_ring_sum = self.area_ring_sum.add(v.atan2(u));
 
         // Advance the previous points.
