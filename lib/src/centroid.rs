@@ -16,7 +16,7 @@ use crate::stream::Streamable;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone, Copy)]
-/// Stream endpoint: Compute the centroid.
+/// Stream endpoint: Computes the centroid.
 ///
 /// DISAMBIGUATION: Lots of code in common with path/centroid.rs
 /// but this is true of the Javascript.

@@ -31,7 +31,7 @@ where
     Box::new(move |y| x.iter().map(|x| Coordinate { x: *x, y }).collect())
 }
 
-/// Returns the default graticule.
+/// Helper function returns the default graticule.
 pub fn generate<T>() -> GraticuleBuilder<T>
 where
     T: 'static + CoordFloat,

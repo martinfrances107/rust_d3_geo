@@ -2,11 +2,9 @@
 // #![warn(missing_docs)]
 #![warn(missing_debug_implementations)]
 #![allow(clippy::many_single_char_names)]
-//! A port of [d3/d3-geo](<https://github.com/d3/d3-geo>).
+//! A port of [d3/d3-geo](<https://github.com/d3/d3-geo>) into  [rust_d3_geo](<https://github.com/martinfrances107/rust_d3_geo>).
 //!
-//! This rust repository [rust_d3_geo](<https://github.com/martinfrances107/rust_d3_geo>)
-//!
-//! Geographic projections, spherical shapes and spherical trigonometry.
+//! A library with a wide range of geographic projections, spherical shapes and spherical trigonometry.
 //!
 //! Features :-
 //!  - Each projection builder supports - scaling, rotating and translation to yield the desired map view.
@@ -33,7 +31,7 @@
 //!
 //! Each projection has default builder, Stereographic for example
 //!
-//! ```compile_fail rust
+//! ```rust
 //! use crate::rust_d3_geo::projection::ProjectionRawBase;
 //! use rust_d3_geo::projection::stereographic::Stereographic;
 //!
@@ -43,9 +41,7 @@
 //! # Examples
 //!
 //! The examples directory contains a large selection of applications demmonstration web applications
-//! rendering to a CANVAS or SVG elemments.
-//!
-//! A a migration guide
+//! rendering to a CANVAS or SVG elemments. It serves as a migration guide
 //! examples/projection shows each projction in turn, with the javascript and rust version drawn side by side.
 //!
 //! examples/globe - demonstrates that this library can process larger datasets than is possible which javascript
@@ -172,7 +168,7 @@ use math::EPSILON;
 pub mod area;
 /// Vector arithmatic operations on 3-D vectors.
 pub mod cartesian;
-/// Stream end point: Calculates centroid point for a given object.
+/// Use to calculate the centroid point for a given object.
 pub mod centroid;
 /// Related to the injection of circles into a stream.
 pub mod circle;
@@ -182,16 +178,16 @@ pub mod clip;
 mod compose;
 /// Streamable Data obejcts.
 pub mod data_object;
-/// Stream end point: calculation of distances on a surface.
+/// Used to calculate distances on a sphereical surface.
 pub mod distance;
 /// A graticule is a network of lines used for plotting, scaling.
 pub mod graticule;
-/// A stream pipeline stage
+/// A stream pipeline stage.
 pub mod identity;
-/// Testing and Debug helpers.
+/// Testing and debug helpers.
 #[cfg(not(tarpaulin_include))]
 pub mod in_delta;
-/// Stream end point: Calculation of object lengths.
+/// Used to calculate of object lengths.
 pub mod length;
 /// Mathematical constants.
 pub mod math;
