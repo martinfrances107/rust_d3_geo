@@ -9,7 +9,7 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-// TODO this is very similar to st.rs am I repeating myself?
+/// A Stream node, that applies a complex transform to each point.
 #[derive(Clone, Debug)]
 pub struct Transformer<DRAIN, SC, STATE, T>
 where

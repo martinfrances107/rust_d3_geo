@@ -39,6 +39,7 @@ impl<T> RotatorRadians<Unconnected, T>
 where
     T: CoordFloat,
 {
+    /// Connects the next stage in the stream pipline.
     #[inline]
     pub fn connect<SINK>(self, sink: SINK) -> RotatorRadians<Connected<SINK>, T>
     where

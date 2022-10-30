@@ -24,6 +24,7 @@ enum PointState {
     Ring,
 }
 
+/// State specific to the resample connection.
 #[derive(Clone, Debug)]
 pub struct Connected<SINK, T> {
     sink: SINK,

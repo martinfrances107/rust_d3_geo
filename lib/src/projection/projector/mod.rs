@@ -45,6 +45,7 @@ where
 
     pub(crate) rotator: RotatorRadians<Unconnected, T>,
 
+    /// Transform applied after conversion to radians.
     pub project_rotate_transform:
         Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
 

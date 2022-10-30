@@ -9,8 +9,9 @@ use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
-
+/// Unit tests.
 pub mod tests;
+/// A stream pipeline stage.
 pub mod transformer;
 /// Builder shorthand notations.
 pub mod types;

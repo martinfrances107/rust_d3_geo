@@ -15,6 +15,12 @@ use super::builder::Builder;
 use super::mercator::Mercator;
 use super::ProjectionRawBase;
 
+/// Projection definition.
+///
+/// Why is the Phantom Data is required here...
+///
+/// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
 pub struct ConicConformal<DRAIN> {
     p_drain: PhantomData<DRAIN>,
@@ -26,9 +32,17 @@ fn tany(y: f64) -> f64 {
     ((f64::FRAC_PI_2() + y) / 2f64).tan()
 }
 
+/// Projection definition.
+///
+/// Why is the Phantom Data is required here...
+///
+/// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
+/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
 pub enum Conformal<DRAIN> {
+    /// Projection depends of values set by builder_with_phi0_phi1.
     Mercator(Mercator<DRAIN>),
+    /// Projection depends of values set by builder_with_phi0_phi1.
     Conic(ConicConformal<DRAIN>),
 }
 

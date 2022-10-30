@@ -14,6 +14,7 @@ use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::template::PCNU;
 use crate::projection::Projector;
 
+/// A projector with a antimeridian clipping stratergy, with resampling and no post clip node.
 pub type ProjectorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Projector<
     ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
@@ -25,6 +26,7 @@ pub type ProjectorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Projector<
     T,
 >;
 
+/// A projector with a antimeridian clipping stratergy, with no resampling and a post clip node.
 pub type ProjectorAntimeridianResampleNoneClip<DRAIN, PR, T> = Projector<
     ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNonePCNC<DRAIN, PR, T>, T>,
@@ -36,6 +38,7 @@ pub type ProjectorAntimeridianResampleNoneClip<DRAIN, PR, T> = Projector<
     T,
 >;
 
+/// A projector with a antimeridian clipping stratergy, with resampling and no post clip node.
 pub type ProjectorAntimeridianResampleNoClip<DRAIN, PR, T> = Projector<
     ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNoPCNC<DRAIN, PR, T>, T>,
@@ -47,6 +50,7 @@ pub type ProjectorAntimeridianResampleNoClip<DRAIN, PR, T> = Projector<
     T,
 >;
 
+/// A projector with a antimeridian clipping stratergy, with resampling and a post clip node.
 pub type ProjectorAntimeridianResampleClip<DRAIN, PR, T> = Projector<
     ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,

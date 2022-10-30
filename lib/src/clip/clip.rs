@@ -120,6 +120,7 @@ where
     pub interpolator: I,
     /// Antimerdian and Circle stratergies have distinct point_visible functions.
     pub pv: PV,
+    /// First point checked in rejoin algorithm.
     pub start: Coordinate<T>,
 }
 
