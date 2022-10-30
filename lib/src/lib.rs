@@ -9,12 +9,12 @@
 //! Geographic projections, spherical shapes and spherical trigonometry.
 //!
 //! Features :-
-//!  - Complex transformations - scaling, rotating and translation give fine
-//!    grained control to get the desired map view.
+//!  - Each projection builder supports - scaling, rotating and translation to yield the desired map view.
 //!
 //!  - Large datasets can be resampled to reduce compute.
 //!
-//!  - Computation of paramters such as [Area](path::area::Area), [Centroids](path::centroid::Centroid),
+//!  - As well as displaying to a CANVAS element or SVG, various metric can be computed on the geometry
+//!    such as [Area](path::area::Area), [Centroids](path::centroid::Centroid),
 //!     and [Bounds](path::bounds::Bounds) on polygons and lines.
 //!
 //! TODO add note about stream pipelines and endpoints.
@@ -23,7 +23,7 @@
 //!
 //! - [AzimuthalEqualArea](projection::azimuthal_equal_area::AzimuthalEqualArea)
 //! - [AzimuthalEquiDistant](projection::azimuthal_equidistant::AzimuthalEquiDistant)
-//! - [ConicEqualAreaRaw](projection::conic_equal_area::ConicEqualAreaRaw)
+//! - [ConicEqualArea](projection::conic_equal_area::ConicEqualArea)
 //! - [Equirectangular](projection::equirectangular::Equirectangular)
 //! - [Gnomic](projection::gnomic::Gnomic)
 //! - [Orthographic](projection::orthographic::Orthographic)

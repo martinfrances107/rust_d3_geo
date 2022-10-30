@@ -7,15 +7,15 @@ export default async function mercator(world: GeoPermissibleObjects) {
   const context = canvas.getContext("2d");
 
   const width = canvas.width;
-  let height = canvas.height;
+  const height = canvas.height;
 
-  var projection = geoTransverseMercator()
+  const projection = geoTransverseMercator()
     .scale(width / 1.3 / 3.14)
     .translate([width / 2, height / 2])
     .clipAngle(90)
     .precision(10);
 
-  var path = geoPath(projection, context);
+  const path = geoPath(projection, context);
 
   context.strokeStyle = '#69b2a2';
   context.stroke();

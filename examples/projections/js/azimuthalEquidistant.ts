@@ -10,13 +10,13 @@ export default async function azimuthalEqidistant(world: GeoPermissibleObjects) 
   const width = canvas.width;
   const height = canvas.height;
 
-  var projection = geoAzimuthalEquidistant()
+  const projection = geoAzimuthalEquidistant()
     .scale(width / 3)
     .translate([width / 2, height / 2])
     .clipAngle(90)
     .precision(10);
 
-  var path = geoPath(projection, context);
+  const path = geoPath(projection, context);
 
   context.strokeStyle = '#69b2a2';
   path(world);

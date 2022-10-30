@@ -9,13 +9,13 @@ export default async function sterographic(world: GeoPermissibleObjects) {
   const width = canvas.width;
   const height = canvas.height;
 
-  var projection = geoStereographic()
+  const projection = geoStereographic()
     .scale(width / 1.3 / 3.14)
     .translate([width / 2, height / 2])
     .clipAngle(90)
     .precision(10);
 
-  var path = geoPath(projection, context);
+  const path = geoPath(projection, context);
   context.strokeStyle = '#69b2a2';
   path(world);
   context.stroke();

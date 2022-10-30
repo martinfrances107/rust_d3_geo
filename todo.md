@@ -3,7 +3,6 @@
 High Priority.
 examples/projection eslint needs updating.
 
-
 * Missing Coverage
   mercator test
   - a single test to implement.
@@ -17,15 +16,6 @@ examples/projection eslint needs updating.
 * projection_rotate_test -- did it ever work?
   Only differences are in the LSDigits.
 
-* examples/graticule - does this example need to exist?
-  when projection displays graticules.
-  styling of globe should include graticules?
-
-  if I am keeping it .. then
-  - Convert to typescript
-  - Stop using cdn as source of d3 module.
-  - draw a clear distinction between what is JS and what is rust.
-
 * Write examples/index.html -- a guide to building rust projects.
 
 * Develop styling for world maps graticules on bottom, overlayed by land.
@@ -34,9 +24,6 @@ examples/projection eslint needs updating.
 
 * Check on performance of real world test ... ortho projection of 50m.json altas
  with graticules showing africa or South pacific.
-
-* Put images of ring and world map on homepage. Plus add a gallery homepage for the examples
-with links to the more detailed mini-apps.
 
 * Review  path/centroid_test.rs
     has a small number of low priority test to implement.

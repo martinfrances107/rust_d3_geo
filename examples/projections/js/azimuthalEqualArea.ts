@@ -10,12 +10,12 @@ export default async function azimuthalEqualArea(world: GeoPermissibleObjects) {
   const width = canvas.width;
   const height = canvas.height;
 
-  var projection = geoAzimuthalEqualArea()
+  const projection = geoAzimuthalEqualArea()
     .scale(width / 3)
     .translate([width / 2, height / 2])
     .precision(0.1);
 
-  var path = geoPath(projection, context);
+  const path = geoPath(projection, context);
 
   context.strokeStyle = '#69b2a2';
   path(world);

@@ -10,13 +10,13 @@ export default async function equirectangular(world: GeoPermissibleObjects) {
   const width = canvas.width;
   const height = canvas.height;
 
-  var projection = geoEquirectangular()
+  const projection = geoEquirectangular()
     .scale(width / 1.5 / Math.PI)
     .rotate([0, 0])
     .center([0, 0])
     .translate([width / 2, height / 2])
 
-  var path = geoPath(projection, context);
+  const path = geoPath(projection, context);
 
   context.strokeStyle = '#69b2a2';
   path(world);
