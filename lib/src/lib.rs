@@ -2,7 +2,8 @@
 // #![warn(missing_docs)]
 #![warn(missing_debug_implementations)]
 #![allow(clippy::many_single_char_names)]
-//! A port of [d3/d3-geo](<https://github.com/d3/d3-geo>) into  [rust_d3_geo](<https://github.com/martinfrances107/rust_d3_geo>).
+#![doc(html_logo_url = "https://github.com/martinfrances107/rust_d3_geo/images/logo.png")]
+//! A port of [d3/d3-geo](<https://github.com/d3/d3-geo>) into [rust_d3_geo](<https://github.com/martinfrances107/rust_d3_geo>).
 //!
 //! A library with a wide range of geographic projections, spherical shapes and spherical trigonometry.
 //!
