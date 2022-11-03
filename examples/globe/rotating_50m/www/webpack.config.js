@@ -15,7 +15,8 @@ module.exports = {
         new ESLintPlugin(),
         new CopyWebpackPlugin({
             patterns: [
-                { from: 'index.html' }
+                { from: 'index.html' },
+                { from: 'public/world-atlas', to: 'world-atlas' }
             ]
         })
     ]
