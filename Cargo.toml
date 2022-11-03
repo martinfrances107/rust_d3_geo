@@ -32,6 +32,8 @@ wasm-bindgen-futures = "~0.4"
 web-sys = "~0.3"
 
 [profile.release]
-lto = true
-debug = true
 codegen-units = 1
+debug = true
+lto = true
+panic = "abort"
+stripe = true
