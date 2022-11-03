@@ -18,9 +18,9 @@ To run the example please follow the "Running the examples" below.
 <tbody align="left" style="vertical-align:top;">
 
 <tr>
-<td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>. It uses the gloo_timer module to emulate calls to window.setInterval(update, 100); <br/><br/> For perfomance reasons this example is best viewed as a static web site, rather the running the development build.
+<td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>.  <br/><br/> For perfomance reasons this example is best viewed as a static web site, rather the running the development build.
 <br/>
-<br/><strong>At the moment this example is very experimental</strong>
+<br/>
 </td>
 <td><image src="images/rotating.png"></td>
 </tr>
@@ -29,7 +29,10 @@ To run the example please follow the "Running the examples" below.
 <td><image src="images/globe.svg"> </td>
 </tr>
 <tr>
-<td><strong>examples/projections</strong> <br/><br/> Shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>. </td>
+<td><strong>examples/projections</strong> <br/><br/>
+
+As a confidence building exercise, this demo
+shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>. </td>
 <td><image src="images/projection.png"> </td>
 </tr>
 <tr>
@@ -148,7 +151,7 @@ I have made extensive use of iterators when porting the code and rayon support t
 
 <br>
 
-## Architecture discussion 
+## Architecture discussion
 
 There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes. A full discusion can be found [here](/intersection_problem.md)
 

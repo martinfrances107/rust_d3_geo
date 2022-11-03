@@ -12,33 +12,33 @@
       font-size: 14px;
       color: #333;
     }
+
+    #perf {
+      font-weight: bold;
+    }
   </style>
 </head>
 
-
 <body>
 
-  <h1>Example: Globe(Canvas)</h1>
+  <h1>Example: Rotating Globe(Canvas)</h1>
   <h2>Rust d3 geo</h2>
   <noscript>
     <h2>This page contains webassembly and javascript content, please enable javascript in your browser.</h2>
   </noscript>
+
   <p>
-    The canvas version of the globe is different from the svg example.
-  </p>
-  <p>
-    The canvas version is build for performance.
-  </p>
-  <p>
-    The SVG version demonstrates the complex decoding of the world map to retain the sematic meaning of the polygons.
+    This example shows a globe base on a 50m resolution, a resolution higher than than could be done with the
+    javascript.
   </p>
 
+  <p id="perf">Loading..</p>
 
+  <p> The mean render time and standard deviation are based on the last 200 frames. </p>
 
   <canvas id="c" width="1800" height="1200"></canvas>
 
-
-  <script src="./index.js"></script>
+  <script src="./bootstrap.js"></script>
 </body>
 
 </html>
