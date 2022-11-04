@@ -2,7 +2,6 @@ use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt::Debug;
-use std::marker::PhantomData;
 use std::rc::Rc;
 
 use geo::CoordFloat;
@@ -27,16 +26,12 @@ use super::Interpolator as InterpolatorTrait;
 
 ///A primitive type used for a PostClipNode pipeline stage.
 #[derive(Clone, Debug)]
-pub struct Rectangle<SINK, STATE, T>
+pub struct Rectangle<STATE, T>
 where
     STATE: Clone,
     T: CoordFloat,
 {
     state: STATE,
-    /// PhantomData<SINK>:
-    /// The hidden linkage is in the implementation of Connectable.
-    /// if Self::SC changes then Self::Output must change.
-    p_sink: PhantomData<SINK>,
     buffer_stream: ClipBuffer<T>,
     clean: bool,
     clip_min: T,
@@ -64,15 +59,14 @@ where
     use_buffer_stream: bool,
 }
 
-impl<SINK, T> Rectangle<SINK, Unconnected, T>
+impl<T> Rectangle<Unconnected, T>
 where
     T: CoordFloat,
 {
     #[inline]
-    pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<SINK, Unconnected, T> {
+    pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<Unconnected, T> {
         Self {
             state: Unconnected,
-            p_sink: PhantomData::<SINK>,
             buffer_stream: ClipBuffer::<T>::default(),
             first: false,
             clean: false,
@@ -102,7 +96,7 @@ where
     }
 }
 
-impl<SINK, T> Rectangle<SINK, Connected<SINK>, T>
+impl<SINK, T> Rectangle<Connected<SINK>, T>
 where
     SINK: Clone,
     T: CoordFloat,
@@ -143,7 +137,7 @@ where
     }
 }
 
-impl<EP, SINK, T> Rectangle<SINK, Connected<SINK>, T>
+impl<EP, SINK, T> Rectangle<Connected<SINK>, T>
 where
     SINK: Clone + Stream<EP = EP, T = T>,
     T: CoordFloat,
@@ -247,18 +241,16 @@ where
     }
 }
 
-impl<SC, T> Connectable for Rectangle<SC, Unconnected, T>
+impl<T> Connectable for Rectangle<Unconnected, T>
 where
-    SC: Clone,
     T: CoordFloat,
 {
     /// The resultant postclip node  type.
-    type Output = Rectangle<SC, Connected<SC>, T>;
-    type SC = SC;
-    fn connect(self, sink: SC) -> Self::Output {
+    type Output<SC: Clone> = Rectangle<Connected<SC>, T>;
+
+    fn connect<SC: Clone>(self, sink: SC) -> Self::Output<SC> {
         Rectangle {
             state: Connected { sink },
-            p_sink: self.p_sink,
             buffer_stream: self.buffer_stream,
             clean: self.clean,
             clip_min: self.clip_min,
@@ -288,7 +280,7 @@ where
     }
 }
 
-impl<EP, SINK, T> Stream for Rectangle<SINK, Connected<SINK>, T>
+impl<EP, SINK, T> Stream for Rectangle<Connected<SINK>, T>
 where
     SINK: Clone + Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,

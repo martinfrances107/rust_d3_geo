@@ -54,12 +54,10 @@ where
 /// Make connections to a stream pipeline.
 pub trait Connectable {
     /// Represents to final connected state.
-    type Output;
+    type Output<SC: Clone>;
 
-    /// The type passed to the function connect().
-    type SC;
     /// Connects to previous pipeline stage.
-    fn connect(self, sink: Self::SC) -> Self::Output;
+    fn connect<SC: Clone>(self, sink: SC) -> Self::Output<SC>;
 }
 
 /// Things the implement stream need to assert that

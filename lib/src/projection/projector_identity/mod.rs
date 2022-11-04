@@ -31,15 +31,15 @@ where
     pub(crate) p_pcnc: PhantomData<PCNC>,
     // Must be public as there is a implicit copy.
     pub(crate) postclip: PCNU,
-    pub(crate) transform: Transformer<DRAIN, PCNC, Unconnected, T>,
-    pub(crate) cache: CacheState<DRAIN, Transformer<DRAIN, PCNC, Connected<PCNC>, T>>,
+    pub(crate) transform: Transformer<DRAIN, Unconnected, T>,
+    pub(crate) cache: CacheState<DRAIN, Transformer<DRAIN, Connected<PCNC>, T>>,
 }
 
 impl<DRAIN, PCNC, PCNU, T> Projector<DRAIN, PCNC, PCNU, T>
 where
     DRAIN: Clone + PartialEq,
     PCNC: Clone,
-    PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
+    PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     T: CoordFloat,
 {
     /// Connects a DRAIN to the projection.
@@ -48,7 +48,7 @@ where
     ///
     ///  Transformer -> postclip -> DRAIN
     ///
-    pub fn stream(&mut self, drain: &DRAIN) -> Transformer<DRAIN, PCNC, Connected<PCNC>, T> {
+    pub fn stream(&mut self, drain: &DRAIN) -> Transformer<DRAIN, Connected<PCNC>, T> {
         if let Some((cache_drain, output)) = &self.cache {
             if *cache_drain == *drain {
                 return (*output).clone();

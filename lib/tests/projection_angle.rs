@@ -404,7 +404,7 @@ mod projection_angle {
 
         let mut pb: rust_d3_geo::projection::builder_identity::Builder<
             StreamDrainStub<f32>,
-            NoPCNU<StreamDrainStub<f32>>,
+            NoPCNU,
             f32,
         > = BuilderIdentity::default();
         pb.angle_set(-45_f32);

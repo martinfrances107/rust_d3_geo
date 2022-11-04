@@ -18,10 +18,12 @@ use crate::stream::Stream;
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
     for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>
 where
-    PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
+    DRAIN: Clone,
+    PCNC: Clone,
+    PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     PR: Clone,
     RC: Clone + Stream<EP = DRAIN, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
+    RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     T: CoordFloat + FloatConst,
 {
     type Output = Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>;

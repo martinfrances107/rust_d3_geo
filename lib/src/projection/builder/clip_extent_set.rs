@@ -65,7 +65,7 @@ where
             rotator: self.rotator.clone(),
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<PCNU<DRAIN, T>, ResamplePCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<PCNU<T>, ResamplePCNC<DRAIN, PR, T>, T>(),
             postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             resample: Resample::new(self.project_transform.clone(), self.delta2),
             x0: Some(extent[0].x),
@@ -112,7 +112,7 @@ where
             rotator: self.rotator.clone(),
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<PCNU<DRAIN, T>, ResampleNonePCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<PCNU<T>, ResampleNonePCNC<DRAIN, PR, T>, T>(),
             postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
             resample: None::new(self.project_transform.clone()),
             x0: Some(extent[0].x),
@@ -160,10 +160,10 @@ where
             // Mutate section.
             clip: gen_clip_circle::<
                 DRAIN,
-                PCNU<DRAIN, T>,
+                PCNU<T>,
                 PR,
                 ResamplePCNC<DRAIN, PR, T>,
-                ResamplePCNU<DRAIN, PR, T>,
+                ResamplePCNU<PR, T>,
                 T,
             >(self.theta.unwrap()),
             postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
@@ -213,10 +213,10 @@ where
             // Mutate section.
             clip: gen_clip_circle::<
                 DRAIN,
-                PCNU<DRAIN, T>,
+                PCNU<T>,
                 PR,
                 ResampleNonePCNC<DRAIN, PR, T>,
-                ResampleNonePCNU<DRAIN, PR, T>,
+                ResampleNonePCNU<PR, T>,
                 T,
             >(self.theta.unwrap()),
             resample: None::new(self.project_transform.clone()),

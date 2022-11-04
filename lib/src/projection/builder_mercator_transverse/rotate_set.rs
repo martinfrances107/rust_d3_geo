@@ -15,10 +15,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
         CLIPC,
         CLIPU,
         DRAIN,
-        PCNU<DRAIN, T>,
+        PCNU<T>,
         PR,
         ResamplePCNC<DRAIN, PR, T>,
-        ResamplePCNU<DRAIN, PR, T>,
+        ResamplePCNU<PR, T>,
         T,
     >
 where

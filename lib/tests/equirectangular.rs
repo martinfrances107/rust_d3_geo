@@ -30,10 +30,10 @@ mod equirectangular {
             f64,
         >,
         StreamDrainStub<f64>,
-        NoPCNU<StreamDrainStub<f64>>,
+        NoPCNU,
         Equirectangular<StreamDrainStub<f64>, f64>,
         ResampleNoPCNC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
-        ResampleNoPCNU<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+        ResampleNoPCNU<Equirectangular<StreamDrainStub<f64>, f64>, f64>,
         f64,
     >;
 

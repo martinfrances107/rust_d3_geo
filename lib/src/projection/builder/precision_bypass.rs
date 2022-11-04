@@ -68,7 +68,7 @@ where
             delta_gamma: self.delta_gamma,
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<NoPCNU<DRAIN>, ResampleNoneNoPCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<NoPCNU, ResampleNoneNoPCNC<DRAIN, PR, T>, T>(),
             delta2: T::zero(),
             resample: None::new(self.project_transform.clone()),
         }
@@ -121,7 +121,7 @@ where
             delta_gamma: self.delta_gamma,
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<PCNU<DRAIN, T>, ResampleNonePCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<PCNU<T>, ResampleNonePCNC<DRAIN, PR, T>, T>(),
             delta2: T::zero(),
             resample: None::new(self.project_transform.clone()),
         }
@@ -177,10 +177,10 @@ where
             // Mutate section.
             clip: gen_clip_circle::<
                 DRAIN,
-                NoPCNU<DRAIN>,
+                NoPCNU,
                 PR,
                 ResampleNoneNoPCNC<DRAIN, PR, T>,
-                ResampleNoneNoPCNU<DRAIN, PR, T>,
+                ResampleNoneNoPCNU<PR, T>,
                 T,
             >(self.theta.unwrap()),
             delta2: T::zero(),
@@ -208,10 +208,10 @@ where
 
         let clip = gen_clip_circle::<
             DRAIN,
-            PCNU<DRAIN, T>,
+            PCNU<T>,
             PR,
             ResampleNonePCNC<DRAIN, PR, T>,
-            ResampleNonePCNU<DRAIN, PR, T>,
+            ResampleNonePCNU<PR, T>,
             T,
         >(self.theta.unwrap());
 

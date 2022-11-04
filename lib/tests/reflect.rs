@@ -39,10 +39,10 @@ mod reflect {
             f64,
         >,
         StreamDrainStub<f64>,
-        Identity<StreamDrainStub<f64>, Unconnected>,
+        Identity<Unconnected>,
         Gnomic<StreamDrainStub<f64>, f64>,
         ResampleNoPCNC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
-        ResampleNoPCNU<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
+        ResampleNoPCNU<Gnomic<StreamDrainStub<f64>, f64>, f64>,
         f64,
     >;
 

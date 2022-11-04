@@ -24,6 +24,17 @@ use super::Interpolator;
 use super::LineConnected;
 use super::PointVisible;
 
+/// Clip specific connections to a stream pipeline.
+pub trait ClipConnectable {
+    /// Represents to final connected state.
+    type Output;
+    /// The next stream node in the pipeline.
+    type SC;
+
+    /// Connects to previous pipeline stage.
+    fn connect(self, sink: Self::SC) -> Self::Output;
+}
+
 #[derive(Clone, Debug)]
 enum PointFn {
     Default,
@@ -61,9 +72,10 @@ where
     line_end_fn: LineEndFn,
 }
 
-impl<I, LB, LC, LU, PV, RC, T> Connectable for Clip<I, LC, LU, PV, RC, Unconnected, T>
+impl<I, LB, LC, LU, PV, RC, T> ClipConnectable for Clip<I, LC, LU, PV, RC, Unconnected, T>
 where
-    LU: Clone + Connectable<Output = LC, SC = RC> + Bufferable<Output = LB, T = T>,
+    LU: Clone + Connectable<Output<RC> = LC> + Bufferable<Output = LB, T = T>,
+    RC: Clone,
     T: CoordFloat,
 {
     type SC = RC;

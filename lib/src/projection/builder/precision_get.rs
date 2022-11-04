@@ -17,13 +17,13 @@ use super::Builder;
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionGet
     for Builder<
-        ClipAntimeridianC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
-        ClipAntimeridianU<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+        ClipAntimeridianC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
+        ClipAntimeridianU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-        Resample<PR, PCNC, Unconnected, T>,
+        Resample<PR, ConnectedResample<PCNC, T>, T>,
+        Resample<PR, Unconnected, T>,
         T,
     >
 where
@@ -42,13 +42,13 @@ where
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionGet
     for Builder<
-        ClipCircleC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
-        ClipCircleU<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+        ClipCircleC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
+        ClipCircleU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-        Resample<PR, PCNC, Unconnected, T>,
+        Resample<PR, ConnectedResample<PCNC, T>, T>,
+        Resample<PR, Unconnected, T>,
         T,
     >
 where

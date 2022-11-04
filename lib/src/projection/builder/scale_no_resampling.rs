@@ -18,10 +18,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
         CLIPC,
         CLIPU,
         DRAIN,
-        NoPCNU<DRAIN>,
+        NoPCNU,
         PR,
         ResampleNoneNoPCNC<DRAIN, PR, T>,
-        ResampleNoneNoPCNU<DRAIN, PR, T>,
+        ResampleNoneNoPCNU<PR, T>,
         T,
     >
 where
@@ -44,10 +44,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
         CLIPC,
         CLIPU,
         DRAIN,
-        PCNU<DRAIN, T>,
+        PCNU<T>,
         PR,
         ResampleNonePCNC<DRAIN, PR, T>,
-        ResampleNonePCNU<DRAIN, PR, T>,
+        ResampleNonePCNU<PR, T>,
         T,
     >
 where

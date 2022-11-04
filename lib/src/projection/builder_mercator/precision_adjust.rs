@@ -17,8 +17,8 @@ impl<CLIPC, CLIPU, DRAIN, PCNC, PCNU, PR, T> PrecisionAdjust
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-        Resample<PR, PCNC, Unconnected, T>,
+        Resample<PR, ConnectedResample<PCNC, T>, T>,
+        Resample<PR, Unconnected, T>,
         T,
     >
 where

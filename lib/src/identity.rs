@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -12,22 +11,17 @@ use crate::stream::Unconnected;
 /// Identity is a stream pipe line stage.
 /// that acts as a pass through node.
 #[derive(Debug)]
-pub struct Identity<SINK, STATE> {
-    // PhantomData:
-    // The hidden linkage is in the implementation of Connectable.
-    // if Self::SC changes then Self::Output must change.
-    p_sink: PhantomData<SINK>,
+pub struct Identity<STATE> {
     state: STATE,
 }
 
-impl<SINK, STATE> Clone for Identity<SINK, STATE>
+impl<STATE> Clone for Identity<STATE>
 where
     STATE: Clone,
 {
     #[inline]
     fn clone(&self) -> Self {
         Self {
-            p_sink: PhantomData::<SINK>,
             state: self.state.clone(),
         }
     }
@@ -35,34 +29,26 @@ where
 
 /// Not auto deriving here - it does not makes sense to provide
 /// a default for the connected state.
-impl<SINK> Default for Identity<SINK, Unconnected> {
+impl Default for Identity<Unconnected> {
     #[inline]
     fn default() -> Self {
-        Self {
-            p_sink: PhantomData::<SINK>,
-            state: Unconnected,
-        }
+        Self { state: Unconnected }
     }
 }
 
-impl<SINK> Connectable for Identity<SINK, Unconnected>
-where
-    SINK: Clone,
-{
-    type SC = SINK;
+impl Connectable for Identity<Unconnected> {
     /// The resultant builder type.
-    type Output = Identity<SINK, Connected<Self::SC>>;
+    type Output<SC: Clone> = Identity<Connected<SC>>;
 
     #[inline]
-    fn connect(self, sink: Self::SC) -> Self::Output {
+    fn connect<SC: Clone>(self, sink: SC) -> Self::Output<SC> {
         Identity {
-            p_sink: PhantomData::<SINK>,
             state: Connected { sink },
         }
     }
 }
 
-impl<EP, SINK, T> Stream for Identity<SINK, Connected<SINK>>
+impl<EP, SINK, T> Stream for Identity<Connected<SINK>>
 where
     SINK: Clone + Stream<EP = EP, T = T>,
     T: CoordFloat,

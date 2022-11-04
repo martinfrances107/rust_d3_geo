@@ -16,53 +16,43 @@ use crate::Transform;
 ///
 /// A pass-through module, when no resampling is required.
 #[derive(Clone, Debug)]
-pub struct None<PR, SC, STATE, T> {
+pub struct None<PR, STATE, T> {
     state: STATE,
-    /// PhantomData<SC>
-    /// The hidden linkage is in Connetable
-    /// when the input parameter changes so
-    /// must the output.
-    p_sc: PhantomData<SC>,
-
     p_t: PhantomData<T>,
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
 }
 
-impl<PR, SC, T> None<PR, SC, Unconnected, T> {
+impl<PR, T> None<PR, Unconnected, T> {
     #[inline]
     /// Constructor: Resample None.
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-    ) -> None<PR, SC, Unconnected, T> {
+    ) -> None<PR, Unconnected, T> {
         Self {
             state: Unconnected,
-            p_sc: PhantomData::<SC>,
             p_t: PhantomData::<T>,
             projection_transform,
         }
     }
 }
 
-impl<PR, SC, T> Connectable for None<PR, SC, Unconnected, T>
+impl<PR, T> Connectable for None<PR, Unconnected, T>
 where
-    SC: Clone,
     T: CoordFloat,
 {
-    type Output = None<PR, SC, Connected<SC>, T>;
-    type SC = SC;
+    type Output<SC: Clone> = None<PR, Connected<SC>, T>;
 
     #[inline]
-    fn connect(self, sink: SC) -> Self::Output {
-        None::<PR, SC, Connected<SC>, T> {
+    fn connect<SC: Clone>(self, sink: SC) -> Self::Output<SC> {
+        None::<PR, Connected<SC>, T> {
             state: Connected { sink },
-            p_sc: PhantomData::<SC>,
             p_t: self.p_t,
             projection_transform: self.projection_transform,
         }
     }
 }
 
-impl<EP, PR, SC, T> Stream for None<PR, SC, Connected<SC>, T>
+impl<EP, PR, SC, T> Stream for None<PR, Connected<SC>, T>
 where
     SC: Clone + Stream<EP = EP, T = T>,
     PR: Transform<T = T>,

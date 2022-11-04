@@ -15,7 +15,7 @@ use super::Builder;
 use super::Reclip;
 
 impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> Reclip
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<DRAIN, T>, PR, RC, RU, T>
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, RC, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

@@ -23,23 +23,16 @@ use interpolate::Interpolate;
 /// Connected clip type using antimerdian interpolator, point_visble function line handler.
 pub type ClipAntimeridianC<RC, T> = Clip<
     Interpolate<T>,
-    Line<RC, Connected<RC>, T>,
-    Line<RC, Unconnected, T>,
+    Line<Connected<RC>, T>,
+    Line<Unconnected, T>,
     PV<T>,
     RC,
-    ConnectedClip<Line<Buffer<T>, Connected<Buffer<T>>, T>, Line<RC, Connected<RC>, T>, T>,
+    ConnectedClip<Line<Connected<Buffer<T>>, T>, Line<Connected<RC>, T>, T>,
     T,
 >;
 /// Unconnected clip type using antimerdian interpolator, point_visble function line handler.
-pub type ClipAntimeridianU<RC, T> = Clip<
-    Interpolate<T>,
-    Line<RC, Connected<RC>, T>,
-    Line<RC, Unconnected, T>,
-    PV<T>,
-    RC,
-    Unconnected,
-    T,
->;
+pub type ClipAntimeridianU<RC, T> =
+    Clip<Interpolate<T>, Line<Connected<RC>, T>, Line<Unconnected, T>, PV<T>, RC, Unconnected, T>;
 
 /// Returns a clip setup for antimeridian clipping.
 #[inline]

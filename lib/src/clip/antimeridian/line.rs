@@ -1,6 +1,5 @@
 use std::default::Default;
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -21,14 +20,8 @@ use super::intersect::intersect;
 
 /// Antimeridian Line.
 #[derive(Debug, Copy, Clone)]
-pub struct Line<SC, STATE, T> {
+pub struct Line<STATE, T> {
     state: STATE,
-    /// PhantomData<SC>
-    ///
-    /// The hidden linkage in Connectable::connect.
-    /// Changing the input paramter changes the output
-    /// parameter.
-    p_sc: PhantomData<SC>,
     lambda0: T,
     phi0: T,
     sign0: T,
@@ -37,15 +30,14 @@ pub struct Line<SC, STATE, T> {
 }
 // Note Default is ONLY implenented for the unconnected state
 // Added when I found it was useful for type corercion.
-impl<RC, T> Default for Line<RC, Unconnected, T>
+impl<T> Default for Line<Unconnected, T>
 where
     T: CoordFloat,
 {
     #[inline]
-    fn default() -> Line<RC, Unconnected, T> {
+    fn default() -> Line<Unconnected, T> {
         Self {
             state: Unconnected,
-            p_sc: PhantomData::<RC>,
             lambda0: T::nan(),
             phi0: T::nan(),
             sign0: T::nan(),
@@ -55,18 +47,17 @@ where
     }
 }
 
-impl<SC, T> Bufferable for Line<SC, Unconnected, T>
+impl<T> Bufferable for Line<Unconnected, T>
 where
     T: CoordFloat,
 {
     /// The resultant line buffer type.
-    type Output = Line<Buffer<T>, Connected<Buffer<T>>, T>;
+    type Output = Line<Connected<Buffer<T>>, T>;
     type T = T;
 
     fn buffer(&mut self, buffer: Buffer<T>) -> Self::Output {
         Line {
             state: Connected { sink: buffer },
-            p_sc: PhantomData::<Buffer<T>>,
             lambda0: self.lambda0,
             phi0: self.phi0,
             sign0: self.sign0,
@@ -76,19 +67,16 @@ where
     }
 }
 
-impl<SC, T> Connectable for Line<SC, Unconnected, T>
+impl<T> Connectable for Line<Unconnected, T>
 where
-    SC: Clone,
     T: CoordFloat,
 {
     /// The resultant line type.
-    type Output = Line<SC, Connected<SC>, T>;
-    type SC = SC;
+    type Output<SC: Clone> = Line<Connected<SC>, T>;
 
-    fn connect(self, sink: SC) -> Line<SC, Connected<SC>, T> {
+    fn connect<SC: Clone>(self, sink: SC) -> Self::Output<SC> {
         Line {
             state: Connected { sink },
-            p_sc: PhantomData::<SC>,
             lambda0: self.lambda0,
             phi0: self.phi0,
             sign0: self.sign0,
@@ -98,7 +86,7 @@ where
     }
 }
 
-impl<SINK, T> LineConnected for Line<SINK, Connected<SINK>, T>
+impl<SINK, T> LineConnected for Line<Connected<SINK>, T>
 where
     SINK: Clone,
     T: CoordFloat,
@@ -110,7 +98,7 @@ where
     }
 }
 
-impl<SINK, T> Clean for Line<SINK, Connected<SINK>, T>
+impl<SINK, T> Clean for Line<Connected<SINK>, T>
 where
     SINK: Clone,
     T: CoordFloat,
@@ -121,7 +109,7 @@ where
     }
 }
 
-impl<EP, SINK, T> Stream for Line<SINK, Connected<SINK>, T>
+impl<EP, SINK, T> Stream for Line<Connected<SINK>, T>
 where
     SINK: Clone + Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,

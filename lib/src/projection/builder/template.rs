@@ -16,48 +16,46 @@ use crate::stream::Unconnected;
 use super::Builder;
 
 /// A connected pass through post clip node.
-pub type NoPCNC<DRAIN> = Identity<DRAIN, Connected<DRAIN>>;
+pub type NoPCNC<DRAIN> = Identity<Connected<DRAIN>>;
 /// A unconnected pass through post clip node.
-pub type NoPCNU<DRAIN> = Identity<DRAIN, Unconnected>;
+pub type NoPCNU = Identity<Unconnected>;
 
 /// A connected post clip node.
-pub type PCNC<DRAIN, T> = Rectangle<DRAIN, Connected<DRAIN>, T>;
+pub type PCNC<DRAIN, T> = Rectangle<Connected<DRAIN>, T>;
 /// A unconnected post clip node.
-pub type PCNU<DRAIN, T> = Rectangle<DRAIN, Unconnected, T>;
+pub type PCNU<T> = Rectangle<Unconnected, T>;
 
 /// A connected resample node connected to a post clip node.
-pub type ResamplePCNC<DRAIN, PR, T> =
-    Resample<PR, PCNC<DRAIN, T>, ConnectedResample<PCNC<DRAIN, T>, T>, T>;
+pub type ResamplePCNC<DRAIN, PR, T> = Resample<PR, ConnectedResample<PCNC<DRAIN, T>, T>, T>;
 
 /// A unconnected resample node connected to a post clip node.
-pub type ResamplePCNU<DRAIN, PR, T> = Resample<PR, PCNC<DRAIN, T>, Unconnected, T>;
+pub type ResamplePCNU<PR, T> = Resample<PR, Unconnected, T>;
 
 /// A connected resample node, connected to pass through clip node.
-pub type ResampleNoPCNC<DRAIN, PR, T> =
-    Resample<PR, NoPCNC<DRAIN>, ConnectedResample<NoPCNC<DRAIN>, T>, T>;
+pub type ResampleNoPCNC<DRAIN, PR, T> = Resample<PR, ConnectedResample<NoPCNC<DRAIN>, T>, T>;
 /// A unconnected resample node, connected to pass through clip node.
-pub type ResampleNoPCNU<DRAIN, PR, T> = Resample<PR, NoPCNC<DRAIN>, Unconnected, T>;
+pub type ResampleNoPCNU<PR, T> = Resample<PR, Unconnected, T>;
 
 /// A connected resample pass through node, connected to a post clip node.
-pub type ResampleNonePCNC<DRAIN, PR, T> = None<PR, PCNC<DRAIN, T>, Connected<PCNC<DRAIN, T>>, T>;
+pub type ResampleNonePCNC<DRAIN, PR, T> = None<PR, Connected<PCNC<DRAIN, T>>, T>;
 
 /// A unconnected resample pass through node, connected to a post clip node.
-pub type ResampleNonePCNU<DRAIN, PR, T> = None<PR, PCNC<DRAIN, T>, Unconnected, T>;
+pub type ResampleNonePCNU<PR, T> = None<PR, Unconnected, T>;
 
 /// A connected resample pass through node, connected to a pass through post clip node.
-pub type ResampleNoneNoPCNC<DRAIN, PR, T> = None<PR, NoPCNC<DRAIN>, Connected<NoPCNC<DRAIN>>, T>;
+pub type ResampleNoneNoPCNC<DRAIN, PR, T> = None<PR, Connected<NoPCNC<DRAIN>>, T>;
 
 /// A unconnected resample pass through node, connected to a pass through post clip node.
-pub type ResampleNoneNoPCNU<DRAIN, PR, T> = None<PR, NoPCNC<DRAIN>, Unconnected, T>;
+pub type ResampleNoneNoPCNU<PR, T> = None<PR, Unconnected, T>;
 
 /// Default builder, no resampling, no Clipping.
 pub type Default<CLIPC, CLIPU, DRAIN, PR, T> = Builder<
     CLIPC,
     CLIPU,
     DRAIN,
-    NoPCNU<DRAIN>,
+    NoPCNU,
     PR,
     ResampleNoneNoPCNC<DRAIN, PR, T>,
-    ResampleNoneNoPCNU<DRAIN, PR, T>,
+    ResampleNoneNoPCNU<PR, T>,
     T,
 >;

@@ -11,16 +11,10 @@ use crate::Transform;
 
 /// A Stream node, that applies a complex transform to each point.
 #[derive(Clone, Debug)]
-pub struct Transformer<DRAIN, SC, STATE, T>
+pub struct Transformer<DRAIN, STATE, T>
 where
     T: CoordFloat,
 {
-    /// PhantomData<SC>
-    ///
-    /// The hidden linkage in Connectable::connect.
-    /// Changing the input paramter changes the output
-    /// parameter.
-    p_sc: PhantomData<SC>,
     p_drain: PhantomData<DRAIN>,
     alpha: T,
     kx: T,
@@ -32,7 +26,7 @@ where
     ty: T,
 }
 
-impl<DRAIN, SC, T> Transformer<DRAIN, SC, Unconnected, T>
+impl<DRAIN, T> Transformer<DRAIN, Unconnected, T>
 where
     T: CoordFloat,
 {
@@ -40,7 +34,6 @@ where
     pub(crate) fn new(alpha: T, kx: T, ky: T, ca: T, sa: T, tx: T, ty: T) -> Self {
         Self {
             p_drain: PhantomData::<DRAIN>,
-            p_sc: PhantomData::<SC>,
             alpha,
             kx,
             ky,
@@ -53,17 +46,17 @@ where
     }
 }
 
-impl<DRAIN, SC, T> Connectable for Transformer<DRAIN, SC, Unconnected, T>
+impl<DRAIN, T> Connectable for Transformer<DRAIN, Unconnected, T>
 where
-    SC: Clone,
     T: CoordFloat,
 {
-    type Output = Transformer<DRAIN, SC, Connected<SC>, T>;
-    type SC = SC;
-    fn connect(self, sink: Self::SC) -> Self::Output {
+    type Output<SC: Clone> = Transformer<DRAIN, Connected<SC>, T>;
+    fn connect<SC>(self, sink: SC) -> Transformer<DRAIN, Connected<SC>, T>
+    where
+        SC: Clone,
+    {
         Self::Output {
             p_drain: PhantomData::<DRAIN>,
-            p_sc: PhantomData::<SC>,
             alpha: self.alpha,
             kx: self.kx,
             ky: self.ky,
@@ -76,7 +69,7 @@ where
     }
 }
 
-impl<DRAIN, SC, STATE, T> Transform for Transformer<DRAIN, SC, STATE, T>
+impl<DRAIN, STATE, T> Transform for Transformer<DRAIN, STATE, T>
 where
     T: CoordFloat,
 {
@@ -111,7 +104,7 @@ where
     }
 }
 
-impl<DRAIN, SINK, T> Stream for Transformer<DRAIN, SINK, Connected<SINK>, T>
+impl<DRAIN, SINK, T> Stream for Transformer<DRAIN, Connected<SINK>, T>
 where
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
     SINK: Clone + Stream<EP = DRAIN, T = T>,

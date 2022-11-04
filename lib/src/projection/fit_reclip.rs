@@ -16,6 +16,7 @@ use num_traits::FloatConst;
 use geo::CoordFloat;
 use geo::Coordinate;
 
+use crate::clip::clip::ClipConnectable;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::PCNC;
@@ -42,7 +43,7 @@ pub(super) fn fit_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
             ClipC = CLIPC,
             ClipU = CLIPU,
             Drain = Bounds<T>,
-            PCNU = PCNU<Bounds<T>, T>,
+            PCNU = PCNU<T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -53,8 +54,8 @@ pub(super) fn fit_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -94,7 +95,7 @@ pub(super) fn fit_extent_reclip<B, CC, CU, PR, RC, RU, T>(
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = PCNU<Bounds<T>, T>,
+            PCNU = PCNU<T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -105,9 +106,9 @@ pub(super) fn fit_extent_reclip<B, CC, CU, PR, RC, RU, T>(
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
+    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -139,7 +140,7 @@ pub(super) fn fit_size_reclip<B, CC, CU, PR, RC, RU, T>(
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = PCNU<Bounds<T>, T>,
+            PCNU = PCNU<T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -151,9 +152,9 @@ pub(super) fn fit_size_reclip<B, CC, CU, PR, RC, RU, T>(
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
+    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
     fit_extent_reclip(builder, [[T::zero(), T::zero()], size], object);
@@ -168,7 +169,7 @@ pub(super) fn fit_width_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
             ClipC = CLIPC,
             ClipU = CLIPU,
             Drain = Bounds<T>,
-            PCNU = PCNU<Bounds<T>, T>,
+            PCNU = PCNU<T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -180,9 +181,9 @@ pub(super) fn fit_width_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
+    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -214,7 +215,7 @@ pub(super) fn fit_height_reclip<B, CC, CU, PR, RC, RU, T>(
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = PCNU<Bounds<T>, T>,
+            PCNU = PCNU<T>,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -226,9 +227,9 @@ pub(super) fn fit_height_reclip<B, CC, CU, PR, RC, RU, T>(
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC<Bounds<T>, T>>,
+    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();

@@ -15,10 +15,10 @@ pub type BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T> = Build
     ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<DRAIN, T>,
+    PCNU<T>,
     PR,
     ResamplePCNC<DRAIN, PR, T>,
-    ResamplePCNU<DRAIN, PR, T>,
+    ResamplePCNU<PR, T>,
     T,
 >;
 
@@ -27,10 +27,10 @@ pub type BuilderMercatorTransverseAntimeridianResampleNoneClip<DRAIN, PR, T> = B
     ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<DRAIN, T>,
+    PCNU<T>,
     PR,
     ResampleNonePCNC<DRAIN, PR, T>,
-    ResampleNonePCNU<DRAIN, PR, T>,
+    ResampleNonePCNU<PR, T>,
     T,
 >;
 
@@ -39,10 +39,10 @@ pub type BuilderMercatorTransverseCircleResampleClip<DRAIN, PR, T> = Builder<
     ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<DRAIN, T>,
+    PCNU<T>,
     PR,
     ResamplePCNC<DRAIN, PR, T>,
-    ResamplePCNU<DRAIN, PR, T>,
+    ResamplePCNU<PR, T>,
     T,
 >;
 
@@ -51,9 +51,9 @@ pub type BuilderMercatorTransverseCircleResampleNoneClip<DRAIN, PR, T> = Builder
     ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<DRAIN, T>,
+    PCNU<T>,
     PR,
     ResampleNonePCNC<DRAIN, PR, T>,
-    ResampleNonePCNU<DRAIN, PR, T>,
+    ResampleNonePCNU<PR, T>,
     T,
 >;

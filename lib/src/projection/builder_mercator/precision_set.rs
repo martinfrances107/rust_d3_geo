@@ -20,13 +20,13 @@ use super::Builder;
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
-        ClipAntimeridianC<None<PR, PCNC, Connected<PCNC>, T>, T>,
-        ClipAntimeridianU<None<PR, PCNC, Connected<PCNC>, T>, T>,
+        ClipAntimeridianC<None<PR, Connected<PCNC>, T>, T>,
+        ClipAntimeridianU<None<PR, Connected<PCNC>, T>, T>,
         DRAIN,
         PCNU,
         PR,
-        None<PR, PCNC, Connected<PCNC>, T>,
-        None<PR, PCNC, Unconnected, T>,
+        None<PR, Connected<PCNC>, T>,
+        None<PR, Unconnected, T>,
         T,
     >
 where
@@ -36,13 +36,13 @@ where
     T: CoordFloat + Default + FloatConst,
 {
     type Output = Builder<
-        ClipAntimeridianC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
-        ClipAntimeridianU<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+        ClipAntimeridianC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
+        ClipAntimeridianU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-        Resample<PR, PCNC, Unconnected, T>,
+        Resample<PR, ConnectedResample<PCNC, T>, T>,
+        Resample<PR, Unconnected, T>,
         T,
     >;
     type T = T;
@@ -50,11 +50,9 @@ where
     #[inline]
     fn precision_set(&self, delta: &T) -> Self::Output {
         Self::Output {
-            p_clipc: PhantomData::<
-                ClipAntimeridianC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
-            >,
+            p_clipc: PhantomData::<ClipAntimeridianC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
+            p_rc: PhantomData::<Resample<PR, ConnectedResample<PCNC, T>, T>>,
             extent: self.extent,
             pr: self.pr.clone(),
             base: self.base.precision_set(delta),
@@ -64,13 +62,13 @@ where
 
 impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
-        ClipCircleC<None<PR, PCNC, Connected<PCNC>, T>, T>,
-        ClipCircleU<None<PR, PCNC, Connected<PCNC>, T>, T>,
+        ClipCircleC<None<PR, Connected<PCNC>, T>, T>,
+        ClipCircleU<None<PR, Connected<PCNC>, T>, T>,
         DRAIN,
         PCNU,
         PR,
-        None<PR, PCNC, Connected<PCNC>, T>,
-        None<PR, PCNC, Unconnected, T>,
+        None<PR, Connected<PCNC>, T>,
+        None<PR, Unconnected, T>,
         T,
     >
 where
@@ -79,13 +77,13 @@ where
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type Output = Builder<
-        ClipCircleC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
-        ClipCircleU<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>,
+        ClipCircleC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
+        ClipCircleU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>,
-        Resample<PR, PCNC, Unconnected, T>,
+        Resample<PR, ConnectedResample<PCNC, T>, T>,
+        Resample<PR, Unconnected, T>,
         T,
     >;
     type T = T;

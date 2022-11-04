@@ -57,7 +57,7 @@ where
 
             // Mutate section.
             postclip: Identity::default(),
-            clip: gen_clip_antimeridian::<NoPCNU<DRAIN>, ResampleNoPCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<NoPCNU, ResampleNoPCNC<DRAIN, PR, T>, T>(),
             resample: Resample::new(self.project_transform.clone(), self.delta2),
             x0: None,
             y0: None,
@@ -102,7 +102,7 @@ where
             rotator: self.rotator.clone(),
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<NoPCNU<DRAIN>, _, _>(),
+            clip: gen_clip_antimeridian::<NoPCNU, _, _>(),
             postclip: Identity::default(),
             resample: None::new(self.project_transform.clone()),
             x0: None,

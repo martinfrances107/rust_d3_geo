@@ -26,11 +26,7 @@ mod identity {
 
     #[test]
     fn returns_a_point() {
-        let mut ib = Builder::<
-            StreamDrainStub<f64>,
-            Identity<StreamDrainStub<f64>, Unconnected>,
-            f64,
-        >::default();
+        let mut ib = Builder::<StreamDrainStub<f64>, Identity<Unconnected>, f64>::default();
         ib.translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64);
         let identity = ib.build::<PCNC<StreamDrainStub<f64>, f64>>();
@@ -76,7 +72,7 @@ mod identity {
         .scale_set(2_f64);
 
         assert!(projection_equal(
-            &ib.build::<NoPCNU<StreamDrainStub<f64>>>(),
+            &ib.build::<NoPCNU>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None
@@ -84,7 +80,7 @@ mod identity {
 
         ib.reflect_x_set(true);
         assert!(projection_equal(
-            &ib.build::<NoPCNU<StreamDrainStub<f64>>>(),
+            &ib.build::<NoPCNU>(),
             &(3f64, 7f64).into(),
             &(94f64, 24f64).into(),
             None
@@ -92,7 +88,7 @@ mod identity {
 
         ib.reflect_y_set(true);
         assert!(projection_equal(
-            &ib.build::<NoPCNU<StreamDrainStub<f64>>>(),
+            &ib.build::<NoPCNU>(),
             &(3f64, 7f64).into(),
             &(94f64, -4f64).into(),
             None
@@ -100,7 +96,7 @@ mod identity {
 
         ib.reflect_x_set(false);
         assert!(projection_equal(
-            &ib.build::<NoPCNU<StreamDrainStub<f64>>>(),
+            &ib.build::<NoPCNU>(),
             &(3f64, 7f64).into(),
             &(106f64, -4f64).into(),
             None
@@ -108,7 +104,7 @@ mod identity {
 
         ib.reflect_y_set(false);
         assert!(projection_equal(
-            &ib.build::<NoPCNU<StreamDrainStub<f64>>>(),
+            &ib.build::<NoPCNU>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None

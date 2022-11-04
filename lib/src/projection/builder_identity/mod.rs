@@ -54,7 +54,7 @@ where
     pub(super) postclip: PCNU,
 }
 
-impl<DRAIN, T> Builder<DRAIN, Identity<DRAIN, Unconnected>, T>
+impl<DRAIN, T> Builder<DRAIN, Identity<Unconnected>, T>
 where
     T: CoordFloat + Default + FloatConst,
 {

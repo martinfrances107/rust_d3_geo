@@ -16,7 +16,7 @@ use crate::Transform;
 use super::Builder;
 
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
-    for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>
+    for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<T>, DRAIN, PCNU, PR, RC, RU, T>
 where
     PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
     RC: Clone + Stream<EP = DRAIN, T = T>,
@@ -24,7 +24,7 @@ where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Output = Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>;
+    type Output = Builder<ClipCircleC<RC, T>, ClipCircleU<T>, DRAIN, PCNU, PR, RC, RU, T>;
     /// f32 or f64.
     type T = T;
 

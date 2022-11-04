@@ -3,6 +3,7 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::clip::ClipConnectable;
 use crate::path::bounds::Bounds;
 use crate::projection::builder::Builder;
 use crate::projection::fit_no_clip::fit_extent_no_clip;
@@ -26,15 +27,15 @@ impl<CLIPC, CLIPU, PR, T> Fit
         CLIPC,
         CLIPU,
         Bounds<T>,
-        NoPCNU<Bounds<T>>,
+        NoPCNU,
         PR,
         ResampleNoneNoPCNC<Bounds<T>, PR, T>,
-        ResampleNoneNoPCNU<Bounds<T>, PR, T>,
+        ResampleNoneNoPCNU<PR, T>,
         T,
     >
 where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + Connectable<Output = CLIPC, SC = ResampleNoneNoPCNC<Bounds<T>, PR, T>>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = ResampleNoneNoPCNC<Bounds<T>, PR, T>>,
     PR: Clone + Debug + Transform<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -73,14 +74,14 @@ impl<CC, CU, PR, T> Fit
         CC,
         CU,
         Bounds<T>,
-        NoPCNU<Bounds<T>>,
+        NoPCNU,
         PR,
         ResampleNoPCNC<Bounds<T>, PR, T>,
-        ResampleNoPCNU<Bounds<T>, PR, T>,
+        ResampleNoPCNU<PR, T>,
         T,
     >
 where
-    CU: Clone + Connectable<Output = CC, SC = ResampleNoPCNC<Bounds<T>, PR, T>>,
+    CU: Clone + ClipConnectable<Output = CC, SC = ResampleNoPCNC<Bounds<T>, PR, T>>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Clone + Transform<T = T>,
     PR: Clone + Transform<T = T>,

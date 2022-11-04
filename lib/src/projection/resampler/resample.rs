@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::Coordinate;
@@ -72,17 +71,16 @@ where
 
 /// Resample the stream base on a given precision.
 #[derive(Clone)]
-pub struct Resample<PR, SC, STATE, T>
+pub struct Resample<PR, STATE, T>
 where
     T: CoordFloat,
 {
     delta2: T,
-    p_sc: PhantomData<SC>,
     projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
     state: STATE,
 }
 
-impl<PR, SC, STATE, T> Debug for Resample<PR, SC, STATE, T>
+impl<PR, STATE, T> Debug for Resample<PR, STATE, T>
 where
     STATE: Debug,
     T: CoordFloat,
@@ -92,18 +90,16 @@ where
     }
 }
 
-impl<PR, SC, T> Connectable for Resample<PR, SC, Unconnected, T>
+impl<PR, T> Connectable for Resample<PR, Unconnected, T>
 where
     T: CoordFloat + FloatConst,
 {
-    type Output = Resample<PR, SC, Connected<SC, T>, T>;
-    type SC = SC;
+    type Output<SC: Clone> = Resample<PR, Connected<SC, T>, T>;
 
     #[inline]
-    fn connect(self, sink: SC) -> Resample<PR, SC, Connected<SC, T>, T> {
+    fn connect<SC: Clone>(self, sink: SC) -> Resample<PR, Connected<SC, T>, T> {
         Resample {
             delta2: self.delta2,
-            p_sc: self.p_sc,
             projection_transform: self.projection_transform,
             state: Connected {
                 sink,
@@ -139,7 +135,7 @@ where
     }
 }
 
-impl<PR, SC, T> Resample<PR, SC, Unconnected, T>
+impl<PR, T> Resample<PR, Unconnected, T>
 where
     T: CoordFloat,
 {
@@ -148,17 +144,16 @@ where
     pub fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
         delta2: T,
-    ) -> Resample<PR, SC, Unconnected, T> {
+    ) -> Resample<PR, Unconnected, T> {
         Self {
             delta2,
-            p_sc: PhantomData::<SC>,
             projection_transform,
             state: Unconnected,
         }
     }
 }
 
-impl<EP, PR, SC, T> Resample<PR, SC, Connected<SC, T>, T>
+impl<EP, PR, SC, T> Resample<PR, Connected<SC, T>, T>
 where
     PR: Transform<T = T>,
     SC: Stream<EP = EP, T = T>,
@@ -329,7 +324,7 @@ where
     }
 }
 
-impl<EP, PR, SC, T> Stream for Resample<PR, SC, Connected<SC, T>, T>
+impl<EP, PR, SC, T> Stream for Resample<PR, Connected<SC, T>, T>
 where
     EP: Stream<EP = EP, T = T> + Default,
     PR: Clone + Transform<T = T>,

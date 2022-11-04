@@ -19,10 +19,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> TranslateSet
         CLIPC,
         CLIPU,
         DRAIN,
-        NoPCNU<DRAIN>,
+        NoPCNU,
         PR,
         ResampleNoPCNC<DRAIN, PR, T>,
-        ResampleNoPCNU<DRAIN, PR, T>,
+        ResampleNoPCNU<PR, T>,
         T,
     >
 where
@@ -46,10 +46,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> TranslateSet
         CLIPC,
         CLIPU,
         DRAIN,
-        PCNU<DRAIN, T>,
+        PCNU<T>,
         PR,
         ResamplePCNC<DRAIN, PR, T>,
-        ResamplePCNU<DRAIN, PR, T>,
+        ResamplePCNU<PR, T>,
         T,
     >
 where

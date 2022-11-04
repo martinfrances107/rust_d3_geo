@@ -10,13 +10,13 @@ use crate::Transform;
 use super::Builder;
 
 impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> ClipExtentAdjust
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<DRAIN, T>, PR, RC, RU, T>
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, RC, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
     DRAIN: Clone,
     RU: Clone,
-    PCNU<DRAIN, T>: Clone,
+    PCNU<T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {

@@ -19,10 +19,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
         CLIPC,
         CLIPU,
         DRAIN,
-        PCNU<DRAIN, T>,
+        PCNU<T>,
         PR,
         ResamplePCNC<DRAIN, PR, T>,
-        ResamplePCNU<DRAIN, PR, T>,
+        ResamplePCNU<PR, T>,
         T,
     >
 where
@@ -54,10 +54,10 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
         CLIPC,
         CLIPU,
         DRAIN,
-        PCNU<DRAIN, T>,
+        PCNU<T>,
         PR,
         ResampleNonePCNC<DRAIN, PR, T>,
-        ResampleNonePCNU<DRAIN, PR, T>,
+        ResampleNonePCNU<PR, T>,
         T,
     >
 where

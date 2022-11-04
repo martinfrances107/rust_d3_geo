@@ -17,6 +17,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::clip::clip::ClipConnectable;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::NoPCNC;
@@ -40,7 +41,7 @@ fn fit_no_clip<B, CC, CU, PR, RC, RU, T>(
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = NoPCNU<Bounds<T>>,
+            PCNU = NoPCNU,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -48,10 +49,10 @@ fn fit_no_clip<B, CC, CU, PR, RC, RU, T>(
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     let builder = builder
@@ -77,7 +78,7 @@ pub(super) fn fit_extent_no_clip<B, CC, CU, PR, RC, RU, T>(
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = NoPCNU<Bounds<T>>,
+            PCNU = NoPCNU,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -85,10 +86,10 @@ pub(super) fn fit_extent_no_clip<B, CC, CU, PR, RC, RU, T>(
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -120,7 +121,7 @@ pub(super) fn fit_size_no_clip<B, CC, CU, PR, RC, RU, T>(
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = NoPCNU<Bounds<T>>,
+            PCNU = NoPCNU,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -128,10 +129,10 @@ pub(super) fn fit_size_no_clip<B, CC, CU, PR, RC, RU, T>(
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     fit_extent_no_clip(builder, [[T::zero(), T::zero()], size], object);
@@ -146,7 +147,7 @@ pub(super) fn fit_width_no_clip<B, CC, CU, PR, RC, RU, T>(
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = NoPCNU<Bounds<T>>,
+            PCNU = NoPCNU,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -154,10 +155,10 @@ pub(super) fn fit_width_no_clip<B, CC, CU, PR, RC, RU, T>(
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -189,7 +190,7 @@ pub(super) fn fit_height_no_clip<B, CC, CU, PR, RC, RU, T>(
             ClipC = CC,
             ClipU = CU,
             Drain = Bounds<T>,
-            PCNU = NoPCNU<Bounds<T>>,
+            PCNU = NoPCNU,
             PR = PR,
             RC = RC,
             RU = RU,
@@ -197,10 +198,10 @@ pub(super) fn fit_height_no_clip<B, CC, CU, PR, RC, RU, T>(
         > + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = NoPCNC<Bounds<T>>> + Debug,
+    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();

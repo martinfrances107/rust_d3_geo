@@ -19,9 +19,11 @@ use super::Builder;
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
     for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>
 where
-    PCNU: Clone + Connectable<Output = PCNC, SC = DRAIN>,
+    DRAIN: Clone,
+    PCNC: Clone,
+    PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     RC: Clone + Stream<EP = DRAIN, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
+    RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {

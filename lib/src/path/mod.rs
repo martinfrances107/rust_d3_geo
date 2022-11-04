@@ -26,6 +26,7 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
+use crate::clip::clip::ClipConnectable;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
@@ -114,12 +115,13 @@ where
 
 impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 where
-    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = CS, T = T>,
     CS: Clone + Default + PartialEq + Result,
-    PCNU: Clone + Connectable<Output = PCNC, SC = CS>,
+    PCNC: Clone,
+    PCNU: Clone + Connectable<Output<CS> = PCNC>,
     RC: Clone + Stream<EP = CS, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC>,
+    RU: Clone + Connectable<Output<PCNC> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
     /// Combines projection, context stream and object.
@@ -134,10 +136,11 @@ impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
     Path<CLIPC, CLIPU, Measure<T>, PCNC, PCNU, PR, RC, RU, T>
 where
     CLIPC: Clone + Stream<EP = Measure<T>, T = T>,
-    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
-    PCNU: Clone + Connectable<Output = PCNC, SC = Measure<T>>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    PCNU: Clone + Connectable<Output<Measure<T>> = PCNC>,
+    PCNC: Clone,
     RC: Clone + Stream<EP = Measure<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC>,
+    RU: Clone + Connectable<Output<PCNC> = RC>,
     T: AddAssign + CoordFloat,
 {
     /// Returns the area of the Path
@@ -157,10 +160,11 @@ where
 impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, Area<T>, PCNC, PCNU, PR, RC, RU, T>
 where
     CLIPC: Clone + Stream<EP = Area<T>, T = T>,
-    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
-    PCNU: Clone + Connectable<Output = PCNC, SC = Area<T>>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    PCNC: Clone,
+    PCNU: Clone + Connectable<Output<Area<T>> = PCNC>,
     RC: Clone + Stream<EP = Area<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC>,
+    RU: Clone + Connectable<Output<PCNC> = RC>,
     T: CoordFloat,
 {
     /// Returns the area of the Path
@@ -181,10 +185,11 @@ impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
     Path<CLIPC, CLIPU, Bounds<T>, PCNC, PCNU, PR, RC, RU, T>
 where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
-    PCNU: Clone + Connectable<Output = PCNC, SC = Bounds<T>>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    PCNC: Clone,
+    PCNU: Clone + Connectable<Output<Bounds<T>> = PCNC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC> + Debug,
+    RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
     /// Returns the bounds of the object
@@ -203,11 +208,11 @@ impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
     Path<CLIPC, CLIPU, Centroid<T>, PCNC, PCNU, PR, RC, RU, T>
 where
     CLIPC: Clone + Stream<EP = Centroid<T>, T = T>,
-    CLIPU: Clone + Connectable<Output = CLIPC, SC = RC>,
-    PCNC: Stream<EP = Centroid<T>, T = T>,
-    PCNU: Clone + Connectable<Output = PCNC, SC = Centroid<T>>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    PCNC: Clone + Stream<EP = Centroid<T>, T = T>,
+    PCNU: Clone + Connectable<Output<Centroid<T>> = PCNC>,
     RC: Clone + Stream<EP = Centroid<T>, T = T>,
-    RU: Clone + Connectable<Output = RC, SC = PCNC>,
+    RU: Clone + Connectable<Output<PCNC> = RC>,
     T: 'static + AddAssign + CoordFloat + FloatConst,
 {
     /// Returns the centroid of the object.

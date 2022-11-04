@@ -5,6 +5,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::clip::clip::ClipConnectable;
 use crate::compose::Compose;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
@@ -59,10 +60,11 @@ type ProjectionStream<CLIP, T> =
 impl<CC, CU, DRAIN, PCNC, PCNU, PR, RC, RU, T> Projector<CC, CU, DRAIN, PCNU, PR, RC, RU, T>
 where
     CC: Clone + Stream<EP = DRAIN, T = T>,
-    CU: Clone + Connectable<Output = CC, SC = RC>,
+    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     DRAIN: Clone + PartialEq,
-    PCNU: Clone + Connectable<SC = DRAIN, Output = PCNC>,
-    RU: Clone + Connectable<SC = PCNC, Output = RC>,
+    PCNC: Clone,
+    PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
+    RU: Clone + Connectable<Output<PCNC> = RC>,
     RC: Clone,
     T: CoordFloat,
 {
