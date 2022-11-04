@@ -19,15 +19,16 @@ jobs:
         uses: icepuma/rust-action@master
         with:
           args: cargo fmt -- --check  && cargo test
-      - name: Run cargo-tarpaulin
-        uses: actions-rs/tarpaulin@v0.1
-        with:
-          version: '0.15.0'
-          args: '--workspace --out Xml -- --test-threads 1'
-      - name: Upload to codecov.io
-        uses: codecov/codecov-action@v3
-      - name: Archive code coverage results
-        uses: actions/upload-artifact@v1
-        with:
-          name: code-coverage-report
-          path: cobertura.xml
+      # Removed as I as exceeding the allowed time on github.
+      # - name: Run cargo-tarpaulin
+      #   uses: actions-rs/tarpaulin@v0.1
+      #   with:
+      #     version: '0.15.0'
+      #     args: '--workspace --out Xml -- --test-threads 1'
+      # - name: Upload to codecov.io
+      #   uses: codecov/codecov-action@v3
+      # - name: Archive code coverage results
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: code-coverage-report
+      #     path: cobertura.xml
