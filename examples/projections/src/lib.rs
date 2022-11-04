@@ -1,6 +1,8 @@
 #![allow(clippy::pedantic)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
+#![cfg(not(tarpaulin_include))]
+
 //! # rust d3 geo voronoi
 //!
 //! See the README.md.

@@ -29,13 +29,30 @@
 //! - [MercatorTransverse](projection::mercator_transverse::MercatorTransverse)
 //! - [Stereographic](projection::stereographic::Stereographic)
 //!
-//! Each projection has default builder, Stereographic for example
+//! Each projection has default builder, which can be programmed.
+//!
+//! Stereographic for example
 //!
 //! ```rust
-//! use crate::rust_d3_geo::projection::ProjectionRawBase;
+//! use geo::Coordinate;
+//! use rust_d3_geo::projection::Build;
+//! use rust_d3_geo::projection::ProjectionRawBase;
 //! use rust_d3_geo::projection::stereographic::Stereographic;
+//! use rust_d3_geo::projection::ClipAngleAdjust;
+//! use rust_d3_geo::projection::PrecisionAdjust;
+//! use rust_d3_geo::projection::ScaleSet;
+//! use rust_d3_geo::projection::TranslateSet;
+//! use rust_d3_geo::stream::StreamDrainStub;
 //!
-//! let stereographic_builder = Stereographic::builder()
+//!     let stereographic = Stereographic::<StreamDrainStub<f64>, f64>::builder()
+//!       .scale_set(100_f64)
+//!       .translate_set(&Coordinate {
+//!          x: 300_f64,
+//!          y: 300_f64,
+//!       })
+//!       .clip_angle(90_f64)
+//!       .precision_set(&10_f64)
+//!       .build();
 //! ```
 //!
 //! # Examples
@@ -48,8 +65,6 @@
 //!   The javascript version operate on a 110m dataset of the globe while, the RUST version use a denser 50m dataset.
 //!
 //! Here is code snippet from example/projection/globe/ showing the rendering of a globe.
-//!
-//!
 //!
 //! ```no_run rust
 //!
