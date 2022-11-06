@@ -18,7 +18,6 @@ Renderer.new('./world-atlas/world/50m.json', 0)
         const renderLoop = () => {
             context.clearRect(0, 0, 960, 600);
             const t0 = performance.now();
-            console.log(renderer);
             renderer.render();
             const t1 = performance.now();
 
