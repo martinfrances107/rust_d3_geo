@@ -17,6 +17,10 @@ module.exports = {
             exclude: '/node_modules/'
         }]
     },
+    performance: {
+        maxEntrypointSize: 1 * 1024 * 1024,
+        maxAssetSize: 1 * 1024 * 1024
+    },
     resolve: {
         extensions: ['.tsx', '.ts', '.js']
     },
