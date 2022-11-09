@@ -21,6 +21,7 @@ mod identity {
     use crate::projection::ScaleSet;
     use crate::projection::TranslateGet;
     use crate::projection::TranslateSet;
+    use crate::projection::REFLECT;
     use crate::stream::StreamDrainStub;
     use crate::stream::Unconnected;
 
@@ -78,7 +79,7 @@ mod identity {
             None
         ));
 
-        ib.reflect_x_set(true);
+        ib.reflect_x_set(REFLECT::Flipped);
         assert!(projection_equal(
             &ib.build::<NoPCNU>(),
             &(3f64, 7f64).into(),
@@ -86,7 +87,7 @@ mod identity {
             None
         ));
 
-        ib.reflect_y_set(true);
+        ib.reflect_y_set(REFLECT::Flipped);
         assert!(projection_equal(
             &ib.build::<NoPCNU>(),
             &(3f64, 7f64).into(),
@@ -94,7 +95,7 @@ mod identity {
             None
         ));
 
-        ib.reflect_x_set(false);
+        ib.reflect_x_set(REFLECT::Unflipped);
         assert!(projection_equal(
             &ib.build::<NoPCNU>(),
             &(3f64, 7f64).into(),
@@ -102,7 +103,7 @@ mod identity {
             None
         ));
 
-        ib.reflect_y_set(false);
+        ib.reflect_y_set(REFLECT::Unflipped);
         assert!(projection_equal(
             &ib.build::<NoPCNU>(),
             &(3f64, 7f64).into(),
@@ -144,7 +145,7 @@ mod identity {
                 y: 90_f64,
             })
             .scale_set(2_f64);
-        projection_builder2.reflect_y_set(true);
+        projection_builder2.reflect_y_set(REFLECT::Flipped);
         let projector2 = projection_builder2.build::<NoPCNC<String<f64>>>();
 
         let mut path2 = PathBuilder::context_pathstring().build(projector2);
@@ -189,7 +190,7 @@ mod identity {
             y: 90_f64,
         })
         .scale_set(2_f64)
-        .reflect_y_set(true);
+        .reflect_y_set(REFLECT::Flipped);
         let pb2 = pb2.clip_extent_set(&[
             Coordinate {
                 x: 35_f64,

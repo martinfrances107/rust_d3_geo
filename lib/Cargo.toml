@@ -71,10 +71,10 @@ harness = false
 name = "rings"
 harness = false
 
-[[example]]
-name = "globe_canvas"
-path = "../examples/globe/canvas/src/lib.rs"
-crate-type = ["cdylib"]
+# [[example]]
+# name = "globe_canvas"
+# path = "../examples/globe/canvas/src/lib.rs"
+# crate-type = ["cdylib"]
 
 [[example]]
 name = "globe_svg"

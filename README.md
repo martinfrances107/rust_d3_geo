@@ -157,6 +157,10 @@ There is an aspect of the design that needs review. It related to the best way t
 
 <br>
 
+## Coding Standard
+ * Idomatic RUST, as defined by cargo clippy where possible.
+ * No booleans as arguments to functions/methods, use two state enums instead,
+   see enum::Reflect as an example.
 ## Unimplemented sections of the library.
 
 <details>

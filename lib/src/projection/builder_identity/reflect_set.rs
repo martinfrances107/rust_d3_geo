@@ -1,7 +1,7 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::ReflectSet;
+use crate::projection::{ReflectSet, REFLECT};
 
 use super::Builder;
 
@@ -12,23 +12,21 @@ where
     type T = T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x_set(&mut self, reflect: bool) -> &mut Self {
-        if reflect {
-            self.sx = T::from(-1.0_f64).unwrap();
-        } else {
-            self.sx = T::one();
-        }
+    fn reflect_x_set(&mut self, reflect: REFLECT) -> &mut Self {
+        self.sx = match reflect {
+            REFLECT::Flipped => T::from(-1.0_f64).unwrap(),
+            REFLECT::Unflipped => T::one(),
+        };
         self.reset()
     }
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y_set(&mut self, reflect: bool) -> &mut Self {
-        if reflect {
-            self.sy = T::from(-1.0_f64).unwrap();
-        } else {
-            self.sy = T::one();
-        }
+    fn reflect_y_set(&mut self, reflect: REFLECT) -> &mut Self {
+        self.sy = match reflect {
+            REFLECT::Flipped => T::from(-1.0_f64).unwrap(),
+            REFLECT::Unflipped => T::one(),
+        };
         self.reset()
     }
 }

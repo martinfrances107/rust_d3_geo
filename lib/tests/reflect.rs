@@ -25,6 +25,7 @@ mod reflect {
     use rust_d3_geo::projection::ReflectSet;
     use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::projection::TranslateSet;
+    use rust_d3_geo::projection::REFLECT;
     use rust_d3_geo::stream::StreamDrainStub;
     use rust_d3_geo::stream::Unconnected;
     use rust_d3_geo::Transform;
@@ -99,7 +100,7 @@ mod reflect {
         builder.scale_set(1_f64);
         builder.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
 
-        builder.reflect_x_set(true);
+        builder.reflect_x_set(REFLECT::Flipped);
 
         assert_eq!(builder.is_x_reflected(), true);
 
@@ -138,7 +139,9 @@ mod reflect {
             None
         ));
 
-        builder.reflect_x_set(false).reflect_y_set(true);
+        builder
+            .reflect_x_set(REFLECT::Unflipped)
+            .reflect_y_set(REFLECT::Flipped);
         let projection = builder.build();
         assert_eq!(builder.is_x_reflected(), false);
         assert_eq!(builder.is_y_reflected(), true);
@@ -187,7 +190,7 @@ mod reflect {
             y: 20_f64,
         });
 
-        builder.reflect_x_set(true).angle_set(45_f64);
+        builder.reflect_x_set(REFLECT::Flipped).angle_set(45_f64);
 
         assert_eq!(builder.is_x_reflected(), true);
         assert!(in_delta(45_f64, builder.angle(), 1e-6));
