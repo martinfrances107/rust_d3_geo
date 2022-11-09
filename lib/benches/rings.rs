@@ -97,7 +97,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     // Increased the default run time by 3 seconds after gettings warnings that the task was taking too long.
     g.measurement_time(Duration::from_secs(8));
 
-    g.bench_function("rings", |b| b.iter(|| rings()));
+    g.bench_function("rings", |b| b.iter(rings));
 }
 
 criterion_group!(benches, criterion_benchmark);

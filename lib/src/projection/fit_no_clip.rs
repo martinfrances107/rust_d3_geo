@@ -30,11 +30,13 @@ use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
 
+use super::FitBounds;
+
 /// no_clip in the sense tha input is  NoClip (Identity)
 /// and so is the output.
 fn fit_no_clip<B, CC, CU, PR, RC, RU, T>(
     builder: &mut B,
-    fit_bounds: Box<dyn Fn([Coordinate<T>; 2], &mut B)>,
+    fit_bounds: FitBounds<B, T>,
     object: &impl Streamable<T = T>,
 ) where
     B: Build<

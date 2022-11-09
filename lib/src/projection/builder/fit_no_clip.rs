@@ -11,7 +11,6 @@ use crate::projection::fit_no_clip::fit_height_no_clip;
 use crate::projection::fit_no_clip::fit_size_no_clip;
 use crate::projection::fit_no_clip::fit_width_no_clip;
 use crate::projection::Fit;
-use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
