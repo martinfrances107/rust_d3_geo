@@ -44,7 +44,7 @@ mod path_string {
     }
 
     #[inline]
-    fn path<'a, T>(
+    fn path<T>(
         projection: ProjectorAntimeridianResampleNoneNoClip<
             PathString<T>,
             Equirectangular<PathString<T>, T>,

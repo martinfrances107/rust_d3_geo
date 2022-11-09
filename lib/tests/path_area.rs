@@ -40,7 +40,7 @@ mod path_area {
     }
 
     #[inline]
-    fn area<'a, T>(
+    fn area<T>(
         projection: ProjectorAntimeridianResampleNoneNoClip<
             Area<T>,
             Equirectangular<Area<T>, T>,

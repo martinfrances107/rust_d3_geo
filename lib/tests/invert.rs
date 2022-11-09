@@ -22,7 +22,7 @@ mod invert {
     where
         PM: Transform<T = f64>,
     {
-        for p in vec![
+        for p in [
             &Coordinate {
                 x: 0.0f64,
                 y: 0.0f64,
@@ -40,7 +40,7 @@ mod invert {
                 y: -5.0f64,
             },
         ] {
-            assert!(projection_equal(&pm, &p, &pm.transform(&p), None));
+            assert!(projection_equal(&pm, p, &pm.transform(p), None));
         }
     }
 

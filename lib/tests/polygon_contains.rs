@@ -29,7 +29,7 @@ mod polygon_contains {
         let mut v: Vec<Coordinate<T>> = ring
             .0
             .iter()
-            .map(|x| point_radians(&x))
+            .map(|x| point_radians(x))
             .collect::<Vec<Coordinate<T>>>();
         v.pop();
         LineString(v)
@@ -45,8 +45,8 @@ mod polygon_contains {
         let combined = [vec![e], i].concat();
 
         let polygon_radians: Vec<LineString<T>> =
-            combined.iter().map(|x| ring_radians(&x)).collect();
-        return contains(&polygon_radians, &point_radians(&(*point)));
+            combined.iter().map(|x| ring_radians(x)).collect();
+        contains(&polygon_radians, &point_radians(point))
     }
 
     #[test]

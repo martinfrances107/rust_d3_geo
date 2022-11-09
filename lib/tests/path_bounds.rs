@@ -45,7 +45,7 @@ mod path_bounds {
     }
 
     #[inline]
-    fn bounds<'a, T>(
+    fn bounds<T>(
         projection: ProjectorAntimeridianResampleNoneNoClip<
             Bounds<T>,
             Equirectangular<Bounds<T>, T>,

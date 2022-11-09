@@ -22,7 +22,7 @@ mod path_measure {
     use rust_d3_geo::stream::Streamable;
 
     #[inline]
-    fn measure<'a, T>(
+    fn measure<T>(
         projection: ProjectorIdentityAntimeridianResampleNoClip<Measure<T>, T>,
         object: impl Streamable<T = T>,
     ) -> T

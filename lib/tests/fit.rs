@@ -46,8 +46,8 @@ mod fit {
         let topology: Topology =
             serde_json::from_reader(file).expect("File should be parse as JSON.");
 
-        if let Some(g) = feature_from_name(&topology, &"land") {
-            return g;
+        if let Some(g) = feature_from_name(&topology, "land") {
+            g
         } else {
             panic!("failed to file and decode from file.");
         }
