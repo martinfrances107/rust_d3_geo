@@ -112,8 +112,8 @@ mod identity {
 
         // These getter asserts have no direct equivalent in the javascript original.
         // but increase code coverage.
-        assert_eq!(ib.is_x_reflected(), false);
-        assert_eq!(ib.is_y_reflected(), false);
+        assert!(!ib.is_x_reflected());
+        assert!(!ib.is_y_reflected());
     }
 
     #[test]

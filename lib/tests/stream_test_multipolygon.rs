@@ -20,7 +20,7 @@ mod stream_multipolygon {
         type EP = MultiPolygonStream;
         type T = f64;
 
-        fn endpoint<'a>(&'a mut self) -> &'a mut Self::EP {
+        fn endpoint(&mut self) -> &mut Self::EP {
             self
         }
 
