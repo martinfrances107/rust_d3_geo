@@ -45,7 +45,7 @@ mod path_centroid {
     }
 
     #[inline]
-    fn centroid<'a, T>(
+    fn centroid<T>(
         projection: ProjectorAntimeridianResampleNoneNoClip<
             Centroid<T>,
             Equirectangular<Centroid<T>, T>,
