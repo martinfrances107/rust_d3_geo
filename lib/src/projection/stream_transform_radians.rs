@@ -17,7 +17,7 @@ pub struct StreamTransformRadians<STATE>(pub STATE);
 impl StreamTransformRadians<Unconnected> {
     #[inline]
     /// Connect this node to the next element in the pipeline.
-    pub fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
+    pub const fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
     where
         SINK: Clone,
     {
@@ -73,7 +73,7 @@ where
     }
     #[inline]
     fn polygon_start(&mut self) {
-        self.0.sink.polygon_start()
+        self.0.sink.polygon_start();
     }
     #[inline]
     fn sphere(&mut self) {

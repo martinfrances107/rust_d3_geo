@@ -7,7 +7,7 @@ use num_traits::FloatConst;
 use super::Builder;
 use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
-use crate::clip::circle::gen_clip_circle;
+use crate::clip::circle::gen_clip;
 use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
 use crate::projection::ClipAngleSet;
@@ -32,12 +32,10 @@ where
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
     // which uses the clip circle stratergy.
     fn clip_angle_set(&self, angle: T) -> Self::Output {
-        if angle == T::zero() {
-            panic!("must call clip_angle_reset() instead");
-        }
+        debug_assert!(angle != T::zero(), "must call clip_angle_reset() instead");
 
         let theta = angle.to_radians();
-        let clip = gen_clip_circle::<DRAIN, PCNU, PR, RC, RU, T>(theta);
+        let clip = gen_clip::<DRAIN, PCNU, PR, RC, RU, T>(theta);
         // Copy, Mutate - updating only theta and preclip_factory.
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<RC, T>>,

@@ -50,14 +50,14 @@ mod index {
             Equirectangular<Context, f64>,
             f64,
         >,
-        object: impl Streamable<T = f64>,
+        object: &impl Streamable<T = f64>,
     ) -> Vec<String> {
         let crc2d = CanvasRenderingContext2d::default();
 
         let context = Context::new(crc2d);
         let pb = PathBuilder::new(context);
 
-        pb.build(projection).object(&object)
+        pb.build(projection).object(object)
     }
 
     // tape("geoPath.projection() defaults to null", function(test) {
@@ -90,7 +90,7 @@ mod index {
         println!("geoPath(Point) renders a point");
         let object = Geometry::Point(Point::new(-63.0_f64, 18.0_f64));
         assert_eq!(
-            path(equirectangular(), object),
+            path(equirectangular(), &object),
             [
                 "type: moveTo, x: 170.0, y: 160.0",
                 "type: arc, x: 165.0, y: 160.0, r: 4.5"
@@ -107,7 +107,7 @@ mod index {
             Point::new(-62.0_f64, 17.0_f64),
         ]));
         assert_eq!(
-            path(equirectangular(), object),
+            path(equirectangular(), &object),
             [
                 "type: moveTo, x: 170.0, y: 160.0",
                 "type: arc, x: 165.0, y: 160.0, r: 4.5",
@@ -126,7 +126,7 @@ mod index {
 			(x: -63_f64, y: 18_f64),(x: -62_f64, y: 18_f64), (x: -62_f64, y:17_f64) ]);
 
         assert_eq!(
-            path(equirectangular(), object),
+            path(equirectangular(), &object),
             [
                 "type: moveTo, x: 165.0, y: 160.0",
                 "type: lineTo, x: 170.0, y: 160.0",
@@ -156,7 +156,7 @@ mod index {
             vec![],
         ));
         assert_eq!(
-            path(equirectangular(), object),
+            path(equirectangular(), &object),
             [
                 "type: moveTo, x: 165.0, y: 160.0",
                 "type: lineTo, x: 170.0, y: 160.0",
@@ -189,7 +189,7 @@ mod index {
             ),
         )]));
         assert_eq!(
-            path(equirectangular(), object),
+            path(equirectangular(), &object),
             [
                 "type: moveTo, x: 165.0, y: 160.0",
                 "type: lineTo, x: 170.0, y: 160.0",
@@ -239,7 +239,7 @@ mod index {
         println!("geoPath(…) wraps longitudes outside of ±180°");
         let object = Geometry::Point(Point::new(180_f64 + 1e-6_f64, 0_f64));
         assert_eq!(
-            path(equirectangular(), object),
+            path(equirectangular(), &object),
             [
                 "type: moveTo, x: -415.0, y: 250.0",
                 "type: arc, x: -420.0, y: 250.0, r: 4.5"
@@ -248,6 +248,7 @@ mod index {
     }
 
     #[test]
+    #[allow(clippy::unreadable_literal)]
     fn observes_the_correct_winding_order_of_a_tiny_polygon() {
         println!("geoPath(…) observes the correct winding order of a tiny polygon");
         let object = Geometry::Polygon(Polygon::new(
@@ -276,7 +277,7 @@ mod index {
             vec![],
         ));
         assert_eq!(
-            path(equirectangular(), object),
+            path(equirectangular(), &object),
             [
                 "type: moveTo, x: 480.0, y: 248.0",
                 "type: lineTo, x: 480.0, y: 248.0",
@@ -412,7 +413,7 @@ mod index {
     }
 
     /// This test is not in the javascript original.
-    /// it was used to diagnose a problem in the the d3_geo_voronoi/benchmark.
+    /// it was used to diagnose a problem in the `d3_geo_voronoi/benchmark`.
     /// After rendering polygons additional point were not drawn.
     #[test]
     fn emulate_benchmark() {

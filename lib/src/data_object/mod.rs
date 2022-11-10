@@ -31,7 +31,7 @@ where
     Neighbors(Vec<usize>),
 }
 
-/// FeatruesCollection - An array of feature objects.
+/// An array of feature objects.
 #[derive(Clone, Debug)]
 pub struct FeatureCollection<T: CoordFloat>(pub Vec<Features<T>>);
 

@@ -1,8 +1,11 @@
-#![allow(clippy::pedantic)]
+#![deny(clippy::all)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::nursery)]
+#![warn(clippy::cargo)]
 #![warn(missing_docs)]
 #![warn(missing_debug_implementations)]
 #![allow(clippy::many_single_char_names)]
-//! A port of [d3/d3-geo](<https://github.com/d3/d3-geo>) into [rust_d3_geo](<https://github.com/martinfrances107/rust_d3_geo>).
+//! A port of [d3/d3-geo](<https://github.com/d3/d3-geo>) into [`rust_d3_geo`](<https://github.com/martinfrances107/rust_d3_geo>).
 //!
 //! A library with a wide range of geographic projections, spherical shapes and spherical trigonometry.
 //!
@@ -19,15 +22,15 @@
 //!
 //! # Available projections
 //!
-//! - [AzimuthalEqualArea](projection::azimuthal_equal_area::AzimuthalEqualArea)
-//! - [AzimuthalEquiDistant](projection::azimuthal_equidistant::AzimuthalEquiDistant)
-//! - [ConicEqualArea](projection::conic_equal_area::ConicEqualArea)
-//! - [Equirectangular](projection::equirectangular::Equirectangular)
-//! - [Gnomic](projection::gnomic::Gnomic)
-//! - [Orthographic](projection::orthographic::Orthographic)
-//! - [Mercator](projection::mercator::Mercator)
-//! - [MercatorTransverse](projection::mercator_transverse::MercatorTransverse)
-//! - [Stereographic](projection::stereographic::Stereographic)
+//! - [`AzimuthalEqualArea`](projection::azimuthal_equal_area::AzimuthalEqualArea)
+//! - [`AzimuthalEquiDistant`](projection::azimuthal_equidistant::AzimuthalEquiDistant)
+//! - [`ConicEqualArea`](projection::conic_equal_area::ConicEqualArea)
+//! - [`Equirectangular`](projection::equirectangular::Equirectangular)
+//! - [`Gnomic`](projection::gnomic::Gnomic)
+//! - [`Orthographic`](projection::orthographic::Orthographic)
+//! - [`Mercator`](projection::mercator::Mercator)
+//! - [`MercatorTransverse`](projection::mercator_transverse::MercatorTransverse)
+//! - [`Stereographic`](projection::stereographic::Stereographic)
 //!
 //! Each projection has default builder, which can be programmed.
 //!
@@ -42,9 +45,9 @@
 //! use rust_d3_geo::projection::PrecisionAdjust;
 //! use rust_d3_geo::projection::ScaleSet;
 //! use rust_d3_geo::projection::TranslateSet;
-//! use rust_d3_geo::stream::StreamDrainStub;
+//! use rust_d3_geo::stream::DrainStub;
 //!
-//!     let stereographic = Stereographic::<StreamDrainStub<f64>, f64>::builder()
+//!     let stereographic = Stereographic::<DrainStub<f64>, f64>::builder()
 //!       .scale_set(100_f64)
 //!       .translate_set(&Coordinate {
 //!          x: 300_f64,
@@ -179,7 +182,7 @@ use geo::Coordinate;
 
 use math::EPSILON;
 
-/// GeoArea Stream.
+/// Area Stream.
 pub mod area;
 /// Vector arithmatic operations on 3-D vectors.
 pub mod cartesian;

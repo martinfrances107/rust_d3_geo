@@ -77,7 +77,7 @@ where
 
     /// Returns the currently programmed center.
     #[inline]
-    pub fn center(&self) -> Coordinate<T> {
+    pub const fn center(&self) -> Coordinate<T> {
         self.center
     }
 
@@ -89,7 +89,7 @@ where
 
     /// Returns the currently programmed radius.
     #[inline]
-    pub fn radius(&self) -> T {
+    pub const fn radius(&self) -> T {
         self.radius
     }
 
@@ -101,7 +101,7 @@ where
 
     /// Returns the precision.
     #[inline]
-    pub fn precision(&self) -> T {
+    pub const fn precision(&self) -> T {
         self.precision
     }
 }

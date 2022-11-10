@@ -71,7 +71,7 @@ pub trait ConnectedState {
     fn sink(&mut self) -> &mut Self::Sink;
 }
 
-/// to_stream()
+/// Objects that can be passing to a stream pipeline.
 pub trait Streamable {
     /// f32 or f64.
     type T: CoordFloat;
@@ -91,20 +91,20 @@ pub trait Streamable {
 /// use rust_d3_geo::projection::stereographic::Stereographic;
 /// use rust_d3_geo::projection::Build;
 /// use rust_d3_geo::projection::ProjectionRawBase;
-/// use rust_d3_geo::stream::StreamDrainStub;
+/// use rust_d3_geo::stream::DrainStub;
 ///
 /// // The Projector needs a mock endpoint here for the stream pipeline.
-/// let p = Stereographic::<StreamDrainStub<f32>, f32>::builder().build();
+/// let p = Stereographic::<DrainStub<f32>, f32>::builder().build();
 ///
 /// let transformed_point = p.transform(&Coordinate{x: 0_f32, y:0_f32});
 ///
 /// ```
 #[derive(Clone, Copy, Debug)]
-pub struct StreamDrainStub<T> {
+pub struct DrainStub<T> {
     phantom: PhantomData<T>,
 }
 
-impl<T> Stream for StreamDrainStub<T>
+impl<T> Stream for DrainStub<T>
 where
     T: CoordFloat,
 {
@@ -119,7 +119,7 @@ where
     fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}
 }
 
-impl<T> Default for StreamDrainStub<T> {
+impl<T> Default for DrainStub<T> {
     fn default() -> Self {
         Self {
             phantom: PhantomData::default(),

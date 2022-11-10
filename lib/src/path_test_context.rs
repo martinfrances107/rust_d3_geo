@@ -1,4 +1,4 @@
-/// Used by index_test
+/// Used by `index_test`
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct CanvasRenderingContext2d {
     buffer: Vec<String>,

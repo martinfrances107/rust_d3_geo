@@ -1,4 +1,4 @@
-use derivative::*;
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -91,9 +91,11 @@ where
     }
 
     #[inline]
+    #[allow(clippy::unused_self)]
     fn point_noop(&mut self, _p: &Coordinate<T>) {}
 
     #[inline]
+    #[allow(clippy::unused_self)]
     fn line_noop(&mut self) {}
 }
 

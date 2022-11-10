@@ -50,16 +50,16 @@ impl<DRAIN> Transform for Conformal<DRAIN> {
     type T = f64;
     fn transform(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
         match self {
-            Conformal::Mercator(m) => m.transform(p),
-            Conformal::Conic(c) => c.transform(p),
+            Self::Mercator(m) => m.transform(p),
+            Self::Conic(c) => c.transform(p),
         }
     }
 
     #[inline]
     fn invert(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
         match self {
-            Conformal::Mercator(m) => m.invert(p),
-            Conformal::Conic(c) => c.invert(p),
+            Self::Mercator(m) => m.invert(p),
+            Self::Conic(c) => c.invert(p),
         }
     }
 }
@@ -70,9 +70,11 @@ where
 {
     pub(super) fn generate(y0: f64, y1: f64) -> Conformal<DRAIN> {
         let cy0 = y0.cos();
-        let n = match y0 == y1 {
-            true => y0.sin(),
-            false => (cy0 / y1.cos()).ln() / y1.cos() / (tany(y1) / tany(y0)).ln(),
+
+        let n = if (y0 - y1).abs() < EPSILON {
+            y0.sin()
+        } else {
+            (cy0 / y1.cos()).ln() / y1.cos() / (tany(y1) / tany(y0)).ln()
         };
 
         if !n.is_zero() {
@@ -80,7 +82,7 @@ where
         }
 
         let f = cy0 * pow(tany(y0), n as usize);
-        Conformal::Conic(ConicConformal {
+        Conformal::Conic(Self {
             p_drain: PhantomData::<DRAIN>,
             f,
             n,
@@ -94,12 +96,13 @@ where
     // }
 
     #[inline]
+    #[must_use]
     /// Phi0 value in radians.
     pub fn builder_with_phi0_phi1(
         y0: f64,
         y1: f64,
     ) -> BuilderAntimeridianResampleNoClip<DRAIN, Conformal<DRAIN>, f64> {
-        let mut b = Builder::new(ConicConformal::generate(y0, y1));
+        let mut b = Builder::new(Self::generate(y0, y1));
         b.scale_set(109.5_f64);
 
         b.parallels(30_f64, 30_f64);

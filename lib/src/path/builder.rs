@@ -31,6 +31,7 @@ where
     p_rc: PhantomData<RC>,
     pr: T,
     context_stream: CS,
+    #[allow(clippy::type_complexity)]
     projection: Option<Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>>,
 }
 
@@ -42,6 +43,9 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
+    ///
+    /// # Panics
+    ///  Will never happen as 4.5 will always be converted into T.
     pub fn new(context_stream: CS) -> Self {
         Self {
             p_pcnc: PhantomData::<PCNC>,
@@ -78,8 +82,9 @@ where
 {
     /// Returns a Builder from default values.
     #[inline]
+    #[must_use]
     pub fn context_pathstring() -> Self {
-        Builder::new(String::default())
+        Self::new(String::default())
     }
 }
 

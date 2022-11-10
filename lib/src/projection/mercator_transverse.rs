@@ -1,6 +1,6 @@
 //! A Raw Projection.
 //!
-//! Unlike all other raw projections Mercator and MercatorTransverse are
+//! Unlike all other raw projections `Mercator` and `MercatorTransverse` are
 //! hard coded to work only with f64s The Additional dynamic range/
 //! resolution  is essential in giving accuarate results near the poles.
 use std::fmt::Debug;
@@ -35,12 +35,11 @@ impl<DRAIN> ProjectionRawBase for MercatorTransverse<DRAIN>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
-    type Builder =
-        BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, MercatorTransverse<DRAIN>, f64>;
+    type Builder = BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, Self, f64>;
 
     #[inline]
     fn builder() -> Self::Builder {
-        MercatorTraverseBuilder::new(MercatorTransverse::default())
+        MercatorTraverseBuilder::new(Self::default())
     }
 }
 

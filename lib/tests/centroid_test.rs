@@ -17,7 +17,7 @@ mod centroid {
     use rust_d3_geo::centroid::Centroid;
     use rust_d3_geo::circle::generator::Generator as CircleGenerator;
     use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::in_delta::in_delta_point;
+    use rust_d3_geo::in_delta::point as in_delta_point;
 
     #[test]
     fn of_a_point_is_itself() {

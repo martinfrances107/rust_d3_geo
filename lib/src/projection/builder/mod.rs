@@ -5,7 +5,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_antimeridian;
+use crate::clip::antimeridian::gen_clip;
 use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::clip::Clip;
 use crate::compose::Compose;
@@ -132,6 +132,9 @@ where
 {
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
+    ///
+    /// # Panics
+    ///  Will never happen as various consts will always be converted into T.
     pub fn new(projection_raw: PR) -> Self {
         let x = T::from(480_f64).unwrap();
         let y = T::from(250_f64).unwrap();
@@ -156,7 +159,7 @@ where
         let postclip = Identity::default();
         let resample = Resample::new(project_transform.clone(), delta2);
         let mut out: Self = Self {
-            clip: gen_clip_antimeridian::<NoPCNU, _, _>(),
+            clip: gen_clip::<NoPCNU, _, _>(),
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
             p_rc: PhantomData::<ResampleNoPCNC<DRAIN, PR, T>>,
             p_drain: PhantomData::<DRAIN>,
@@ -197,7 +200,7 @@ where
         out
     }
 
-    /// Drop the current raw projection, use the new projection_raw and rebuild
+    /// Drop the current raw projection, use the new `projection_raw` and rebuild
     /// state. ( very experimental)
     pub fn update_pr(&mut self, projection_raw: PR) -> &mut Self {
         // rebuild

@@ -18,10 +18,11 @@ use super::template::ResampleNoneNoPCNC;
 use super::template::ResampleNonePCNC;
 use super::Builder;
 
+#[allow(clippy::similar_names)]
 impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterNoResampling
     for Builder<
-        CLIPU,
         CLIPC,
+        CLIPU,
         DRAIN,
         NoPCNU,
         PR,

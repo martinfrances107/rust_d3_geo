@@ -26,7 +26,7 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::clip::ClipConnectable;
+use crate::clip::clip::Connectable as ClipConnectable;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
@@ -99,6 +99,9 @@ where
     T: CoordFloat,
 {
     /// Constructor.
+    ///
+    /// # Panics
+    ///  Will never happen as 4.5 will always be converted into T.
     pub fn new(
         context_stream: CS,
         projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,
@@ -232,12 +235,14 @@ where
     T: CoordFloat,
 {
     /// Sets the context stream.
+    #[must_use]
     pub fn context(mut self, context_stream: CS) -> Self {
         self.context_stream = context_stream;
         self
     }
 
     #[inline]
+    #[must_use]
     fn point_radius(mut self, input: PointRadiusEnum<T>) -> Self {
         self.point_radius = match input {
             PointRadiusEnum::F(ref _input_fn) => input,

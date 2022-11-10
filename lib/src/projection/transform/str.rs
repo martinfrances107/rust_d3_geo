@@ -3,7 +3,7 @@ use geo::Coordinate;
 
 use crate::Transform;
 
-/// An inner type of the Enum ScaleTranslateRotate.
+/// An inner type of the [`ScaleTranslateRotate`].
 ///
 /// Covers both translate and rotate.
 #[derive(Clone, Copy, Debug, Default)]
@@ -27,7 +27,7 @@ where
     /// Constructor.
     pub(crate) fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: &T) -> Self {
         let (sin_alpha, cos_alpha) = alpha.sin_cos();
-        Str {
+        Self {
             a: cos_alpha * *k,
             b: sin_alpha * *k,
             ai: cos_alpha / *k,

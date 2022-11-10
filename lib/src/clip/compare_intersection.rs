@@ -12,7 +12,11 @@ use super::intersection::Intersection;
 
 /// Intersections are sorted along the clip edge. For both antimeridian cutting
 /// and circle clipping, the same comparison is used.
-pub fn gen_compare_intersection<T>() -> CompareIntersectionsFn<T>
+///
+/// # Panics
+///  Will never happen as EPSILON will always be converted into T.
+#[must_use]
+pub fn gen_compare<T>() -> CompareIntersectionsFn<T>
 where
     T: 'static + CoordFloat + FloatConst,
 {
@@ -20,14 +24,17 @@ where
     Box::new(
         move |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| -> Ordering {
             let ax = a.borrow().x;
-            let part1 = match ax.p.x < T::zero() {
-                true => ax.p.y - T::FRAC_PI_2() - epsilon,
-                false => T::FRAC_PI_2() - ax.p.y,
+            let part1 = if ax.p.x < T::zero() {
+                ax.p.y - T::FRAC_PI_2() - epsilon
+            } else {
+                T::FRAC_PI_2() - ax.p.y
             };
             let bx = b.borrow().x;
-            let part2 = match bx.p.x < T::zero() {
-                true => bx.p.y - T::FRAC_PI_2() - epsilon,
-                false => T::FRAC_PI_2() - bx.p.y,
+
+            let part2 = if bx.p.x < T::zero() {
+                bx.p.y - T::FRAC_PI_2() - epsilon
+            } else {
+                T::FRAC_PI_2() - bx.p.y
             };
 
             let diff = part1 - part2;

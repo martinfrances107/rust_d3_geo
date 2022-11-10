@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use derivative::*;
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use geo::LineString;
@@ -10,11 +10,11 @@ use num_traits::FloatConst;
 
 use crate::path::Result;
 use crate::polygon_contains::polygon_contains;
-use crate::stream::Connectable;
+use crate::stream::Connectable as StreamConnectable;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 
-use super::compare_intersection::gen_compare_intersection;
+use super::compare_intersection::gen_compare;
 use super::line_elem::LineElem;
 use super::rejoin::rejoin;
 use super::Buffer;
@@ -25,7 +25,7 @@ use super::LineConnected;
 use super::PointVisible;
 
 /// Clip specific connections to a stream pipeline.
-pub trait ClipConnectable {
+pub trait Connectable {
     /// Represents to final connected state.
     type Output;
     /// The next stream node in the pipeline.
@@ -72,9 +72,9 @@ where
     line_end_fn: LineEndFn,
 }
 
-impl<I, LB, LC, LU, PV, RC, T> ClipConnectable for Clip<I, LC, LU, PV, RC, Unconnected, T>
+impl<I, LB, LC, LU, PV, RC, T> Connectable for Clip<I, LC, LU, PV, RC, Unconnected, T>
 where
-    LU: Clone + Connectable<Output<RC> = LC> + Bufferable<Output = LB, T = T>,
+    LU: Clone + StreamConnectable<Output<RC> = LC> + Bufferable<Output = LB, T = T>,
     RC: Clone,
     T: CoordFloat,
 {
@@ -141,8 +141,8 @@ where
     T: CoordFloat,
 {
     /// Takes a line and cuts into visible segments. Returns values used for polygon.
-    pub fn new(interpolator: I, clip_line: LU, pv: PV, start: Coordinate<T>) -> Self {
-        Clip {
+    pub const fn new(interpolator: I, clip_line: LU, pv: PV, start: Coordinate<T>) -> Self {
+        Self {
             p_lc: PhantomData::<LC>,
             p_rc: PhantomData::<RC>,
             state: Unconnected,
@@ -177,7 +177,7 @@ where
     #[inline]
     fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         if self.pv.point_visible(p) {
-            self.state.line_node.sink().point(p, m)
+            self.state.line_node.sink().point(p, m);
         }
     }
 
@@ -187,9 +187,9 @@ where
     }
 
     #[inline]
-    fn point_ring(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+    fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
         self.state.ring.0.push(*p);
-        self.state.ring_sink.point(p, _m);
+        self.state.ring_sink.point(p, m);
     }
 
     fn ring_end(&mut self) {
@@ -334,7 +334,7 @@ where
             }
             rejoin(
                 &segments_inner,
-                gen_compare_intersection(),
+                gen_compare(),
                 start_inside,
                 &self.interpolator,
                 self.state.line_node.sink(),

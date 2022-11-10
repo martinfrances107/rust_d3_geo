@@ -24,7 +24,8 @@ use super::rejoin::rejoin as clip_rejoin;
 use super::rejoin::CompareIntersectionsFn;
 use super::Interpolator as InterpolatorTrait;
 
-///A primitive type used for a PostClipNode pipeline stage.
+///A primitive type used for a `PostClipNode` pipeline stage.
+#[allow(clippy::struct_excessive_bools)]
 #[derive(Clone, Debug)]
 pub struct Rectangle<STATE, T>
 where
@@ -64,7 +65,7 @@ where
     T: CoordFloat,
 {
     #[inline]
-    pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Rectangle<Unconnected, T> {
+    pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Self {
         Self {
             state: Unconnected,
             buffer_stream: ClipBuffer::<T>::default(),
@@ -123,7 +124,7 @@ where
                     } else if b1 <= self.y1
                         && (b0 - a0) * (self.y1 - a1) < (b1 - a1) * (self.x0 - a0)
                     {
-                        winding -= 1
+                        winding -= 1;
                     }
                 }
             }
@@ -131,7 +132,7 @@ where
         !winding.is_zero()
     }
 
-    #[inline(always)]
+    #[inline]
     fn visible(&self, p: &Coordinate<T>) -> bool {
         self.x0 <= p.x && p.x <= self.x1 && self.y0 <= p.y && p.y <= self.y1
     }

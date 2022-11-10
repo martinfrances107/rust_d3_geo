@@ -26,24 +26,18 @@ mod reflect {
     use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::projection::TranslateSet;
     use rust_d3_geo::projection::REFLECT;
-    use rust_d3_geo::stream::StreamDrainStub;
+    use rust_d3_geo::stream::DrainStub;
     use rust_d3_geo::stream::Unconnected;
     use rust_d3_geo::Transform;
 
     type GB = Builder<
-        ClipCircleC<
-            ResampleNoPCNC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
-            f64,
-        >,
-        ClipCircleU<
-            ResampleNoPCNC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
-            f64,
-        >,
-        StreamDrainStub<f64>,
+        ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<DrainStub<f64>, f64>, f64>, f64>,
+        ClipCircleU<ResampleNoPCNC<DrainStub<f64>, Gnomic<DrainStub<f64>, f64>, f64>, f64>,
+        DrainStub<f64>,
         Identity<Unconnected>,
-        Gnomic<StreamDrainStub<f64>, f64>,
-        ResampleNoPCNC<StreamDrainStub<f64>, Gnomic<StreamDrainStub<f64>, f64>, f64>,
-        ResampleNoPCNU<Gnomic<StreamDrainStub<f64>, f64>, f64>,
+        Gnomic<DrainStub<f64>, f64>,
+        ResampleNoPCNC<DrainStub<f64>, Gnomic<DrainStub<f64>, f64>, f64>,
+        ResampleNoPCNU<Gnomic<DrainStub<f64>, f64>, f64>,
         f64,
     >;
 
@@ -183,7 +177,7 @@ mod reflect {
     #[test]
     fn x_works_with_projection_angle() {
         println!("projection.reflectX(…) works with projection.angle()");
-        let mut builder: MercatorBuilder<_, _, StreamDrainStub<f64>, _, _, _, _, f64> =
+        let mut builder: MercatorBuilder<_, _, DrainStub<f64>, _, _, _, _, f64> =
             Mercator::builder();
         builder.scale_set(1_f64).translate_set(&Coordinate {
             x: 10_f64,

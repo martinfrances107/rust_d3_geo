@@ -9,7 +9,7 @@ use crate::rot::rotation_identity::RotationIdentity;
 use crate::stream::Stream as StreamTrait;
 use crate::Transform;
 
-/// Output of CircleGenertor::circle()
+/// Output of `CircleGenertor::circle()`.
 #[derive(Clone, Debug)]
 pub struct Stream<T>
 where

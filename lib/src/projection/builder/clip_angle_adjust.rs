@@ -1,7 +1,7 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::circle::gen_clip_circle;
+use crate::clip::circle::gen_clip;
 use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
 use crate::projection::ClipAngleAdjust;
@@ -17,11 +17,9 @@ where
     type T = T;
 
     fn clip_angle(&mut self, angle: T) -> &mut Self {
-        if angle == T::zero() {
-            panic!("must call clip_angle_reset() instead");
-        }
+        debug_assert!(angle != T::zero(), "must call clip_angle_reset() instead");
         let theta = angle.to_radians();
-        let clip = gen_clip_circle::<DRAIN, PCNU, PR, RC, RU, T>(theta);
+        let clip = gen_clip::<DRAIN, PCNU, PR, RC, RU, T>(theta);
 
         self.clip = clip;
         self.theta = Some(angle);

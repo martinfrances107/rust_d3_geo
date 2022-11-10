@@ -1,14 +1,14 @@
-//! # fit_rectangle.
+//! # `fit_rectangle`.
 //!
 //! 1) Removed Post Clip Rectangle.
 //! 2) Perform operations.
 //! 3) Restore Post Clip Rectangle
 //!
-//! # Elsewhere  in fit_no_rectangle.
+//! # Elsewhere  in `fit_no_rectangle`.
 //!
 //! 1) No-op: No rectange to remove.
 //! 2) Perform operations.
-//! 3) SWAP -  implies inserting PostClip Rectangle.
+//! 3) SWAP -  implies inserting `PostClip` Rectangle.
 //!
 
 use num_traits::FloatConst;
@@ -16,7 +16,7 @@ use num_traits::FloatConst;
 use geo::CoordFloat;
 use geo::Coordinate;
 
-use crate::clip::clip::ClipConnectable;
+use crate::clip::clip::Connectable as ClipConnectable;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::PCNC;

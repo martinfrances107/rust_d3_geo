@@ -1,6 +1,6 @@
 use std::ops::AddAssign;
 
-use derivative::*;
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
@@ -69,6 +69,7 @@ where
     T: AddAssign + CoordFloat,
 {
     #[inline]
+    #[allow(clippy::unused_self)]
     fn point_noop(&mut self, _p: &Coordinate<T>) {}
 
     fn length_point_first(&mut self, p: &Coordinate<T>) {
@@ -116,12 +117,12 @@ where
             self.length_point(&self.p00.clone());
         };
 
-        self.point_fn = Measure::point_noop;
+        self.point_fn = Self::point_noop;
     }
 
     #[inline]
     fn line_start(&mut self) {
-        self.point_fn = Measure::length_point_first;
+        self.point_fn = Self::length_point_first;
     }
 
     #[inline]
@@ -130,7 +131,7 @@ where
     }
 
     fn polygon_end(&mut self) {
-        self.mode = MeasureMode::None
+        self.mode = MeasureMode::None;
     }
     fn polygon_start(&mut self) {
         self.mode = MeasureMode::Polygon;

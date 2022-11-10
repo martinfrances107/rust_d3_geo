@@ -1,11 +1,13 @@
 [package]
 authors = { workspace = true }
+categories = { workspace = true }
 edition = { workspace = true }
 description = "A example app from the rust_d3_geo package. The app is an example of code that manipulates SVG elements to display a globe."
+keywords = { workspace = true }
 name = "rust_d3_geo_example_svg"
 license = "MIT"
 readme = { workspace = true }
-# repository = { workspace = true }
+repository = { workspace = true }
 version = { workspace = true }
 
 

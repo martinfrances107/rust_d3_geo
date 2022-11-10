@@ -35,7 +35,7 @@ where
     T: CoordFloat,
 {
     #[inline]
-    fn default() -> Line<Unconnected, T> {
+    fn default() -> Self {
         Self {
             state: Unconnected,
             lambda0: T::nan(),

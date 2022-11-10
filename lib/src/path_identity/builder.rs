@@ -40,6 +40,9 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
+    ///
+    /// # Panics
+    ///  Will never happen as 4.5 will always be converted into T.
     pub fn new(context_stream: CS) -> Self {
         Self {
             p_pcnc: PhantomData::<PCNC>,
@@ -58,8 +61,9 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
+    #[must_use]
     pub fn context(self, context: CanvasRenderingContext2d) -> Self {
-        Builder {
+        Self {
             p_pcnc: PhantomData::<PCNC>,
             pr: self.pr,
             context_stream: PathContext::new(context),
@@ -77,8 +81,9 @@ where
 {
     /// Returns a Builder from default values.
     #[inline]
+    #[must_use]
     pub fn context_pathstring() -> Self {
-        Builder::new(String::default())
+        Self::new(String::default())
     }
 }
 

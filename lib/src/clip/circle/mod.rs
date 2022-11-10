@@ -21,7 +21,7 @@ use super::buffer::Buffer;
 use super::clip::Clip;
 use super::clip::Connected as ConnectedClip;
 
-/// Connected clip type using circle interpolator, point_visble function line handler.
+/// Connected clip type using circle interpolator, `point_visble` function line handler.
 pub type ClipCircleC<RC, T> = Clip<
     Interpolate<T>,
     Line<Connected<RC>, T>,
@@ -32,12 +32,12 @@ pub type ClipCircleC<RC, T> = Clip<
     T,
 >;
 
-/// Unconnected clip type using circle interpolator, point_visble function line handler.
+/// Unconnected clip type using circle interpolator, `point_visble` function line handler.
 pub type ClipCircleU<RC, T> =
     Clip<Interpolate<T>, Line<Connected<RC>, T>, Line<Unconnected, T>, PV<T>, RC, Unconnected, T>;
 
 /// Returns a clip setup for circle clipping.
-pub fn gen_clip_circle<DRAIN, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
+pub fn gen_clip<DRAIN, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
 where
     RC: Clone,
     T: CoordFloat + FloatConst,

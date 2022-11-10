@@ -72,7 +72,7 @@ where
 {
     /// Calculate the objects associated area.
     pub fn calc(object: &impl Streamable<T = T>) -> T {
-        let mut a = Area::default();
+        let mut a = Self::default();
         object.to_stream(&mut a);
         a.area_sum * a.two
     }
@@ -87,6 +87,7 @@ where
         (self.sin_phi0, self.cos_phi0) = phi.sin_cos();
     }
 
+    #[allow(clippy::similar_names)]
     fn area_point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
@@ -102,6 +103,7 @@ where
         } else {
             -T::one()
         };
+
         let ad_lambda = sd_lambda * d_lambda;
         let (ad_lambda_sin, ad_lambda_cos) = ad_lambda.sin_cos();
         let (sin_phi, cos_phi) = phi.sin_cos();

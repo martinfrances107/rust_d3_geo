@@ -6,15 +6,15 @@ if (perf != null) {
 
     perf.innerHTML = 'Render Time: ...Calculating';
 
-
     // Holds elapsed samples (use to compute the standard deviation).
-    const elapsedArray = [];
+    let elapsedArray: number[];
     // index into the elapsedArray 0..199
     let index = 0;
 
     console.log('wasm is imported');
     Renderer.new('./world-atlas/world/50m.json', 0)
         .then((renderer) => {
+
             const canvas = document.getElementById('c')
             if (canvas === null) {
                 return

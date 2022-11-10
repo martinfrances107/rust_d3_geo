@@ -10,7 +10,7 @@ use super::line_elem::LineElem;
 
 /// Buffer is a pipeline terminating object ( a drain object ).
 ///
-/// Stored data can be extracted via ::result()
+/// Stored data can be extracted via result()
 #[derive(Clone, Debug)]
 pub struct Buffer<T>
 where
@@ -61,7 +61,7 @@ where
                 .pop_front()
                 .unwrap_or_else(|| Vec::with_capacity(0));
             let combined = [line_last, line_first].concat();
-            self.lines.push_back(combined)
+            self.lines.push_back(combined);
         }
     }
 }
@@ -79,12 +79,12 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
-        match self.lines.back_mut() {
-            Some(line) => {
+        self.lines.back_mut().map_or_else(
+            || panic!("buffers: lines was not properly initialised."),
+            |line| {
                 line.push(LineElem { p: *p, m });
-            }
-            None => panic!("buffers: lines was not properly initialised."),
-        }
+            },
+        );
     }
 
     #[inline]

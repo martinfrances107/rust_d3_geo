@@ -10,6 +10,9 @@ use crate::Transform;
 
 /// Helper test function.
 /// A point projected and then inverted returns to the original location.
+///
+/// # Panics
+///  Will never happen as EPSILON will always be converted into T.
 pub fn projection_equal<'a, P, T>(
     projection: &P,
     expected_location: &'a Coordinate<T>,
@@ -20,10 +23,7 @@ where
     P: Transform<T = T>,
     T: CoordFloat + Display,
 {
-    let delta = match delta_p {
-        Some(d) => d,
-        None => T::from(EPSILON).unwrap(),
-    };
+    let delta = delta_p.map_or_else(|| T::from(EPSILON).unwrap(), |d| d);
     println!("project_equal");
     println!(
         "1) expected location [{:?}, {:?}], expected point [{:?}, {:?}]",

@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::clip::ClipConnectable;
+use crate::clip::clip::Connectable;
 use crate::path::bounds::Bounds;
 use crate::projection::builder::Builder;
 use crate::projection::fit_no_clip::fit_extent_no_clip;
@@ -34,7 +34,7 @@ impl<CLIPC, CLIPU, PR, T> Fit
     >
 where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = ResampleNoneNoPCNC<Bounds<T>, PR, T>>,
+    CLIPU: Clone + Connectable<Output = CLIPC, SC = ResampleNoneNoPCNC<Bounds<T>, PR, T>>,
     PR: Clone + Debug + Transform<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -80,9 +80,8 @@ impl<CC, CU, PR, T> Fit
         T,
     >
 where
-    CU: Clone + ClipConnectable<Output = CC, SC = ResampleNoPCNC<Bounds<T>, PR, T>>,
+    CU: Clone + Connectable<Output = CC, SC = ResampleNoPCNC<Bounds<T>, PR, T>>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
-    PR: Clone + Transform<T = T>,
     PR: Clone + Transform<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {

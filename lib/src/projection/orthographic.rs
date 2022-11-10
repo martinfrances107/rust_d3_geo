@@ -16,6 +16,30 @@ use super::builder::Builder;
 use super::ClipAngleSet;
 use super::ProjectionRawBase;
 
+#[inline]
+fn angle<T>(z: T) -> T
+where
+    T: CoordFloat + FloatConst,
+{
+    z.asin()
+}
+
+fn azimuthal_invert<T>(p: &Coordinate<T>) -> Coordinate<T>
+where
+    T: CoordFloat + FloatConst,
+{
+    let z = (p.x * p.x + p.y * p.y).sqrt();
+    let c = angle(z);
+    let (sc, cc) = c.sin_cos();
+
+    let ret_x = (p.x * sc).atan2(z * cc);
+
+    let y_out = if z == T::zero() { z } else { p.y * sc / z };
+    let ret_y = y_out.asin();
+
+    Coordinate { x: ret_x, y: ret_y }
+}
+
 /// Projection definition.
 #[derive(Clone, Copy, Default, Debug)]
 pub struct Orthographic<DRAIN, T> {
@@ -28,38 +52,17 @@ where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderCircleResampleNoClip<DRAIN, Orthographic<DRAIN, T>, T>;
+    type Builder = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
     fn builder() -> Self::Builder {
-        let mut b = Builder::new(Orthographic::default());
+        let mut b = Builder::new(Self::default());
         b.scale_set(T::from(249.5_f64).unwrap());
         b.clip_angle_set(T::from(90_f64 + EPSILON).unwrap())
     }
 }
 
-impl<DRAIN, T> Orthographic<DRAIN, T>
-where
-    T: CoordFloat + FloatConst,
-{
-    #[inline]
-    fn angle(z: T) -> T {
-        z.asin()
-    }
-
-    fn azimuthal_invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let z = (p.x * p.x + p.y * p.y).sqrt();
-        let c = Orthographic::<DRAIN, T>::angle(z);
-        let (sc, cc) = c.sin_cos();
-
-        let ret_x = (p.x * sc).atan2(z * cc);
-
-        let y_out = if z == T::zero() { z } else { p.y * sc / z };
-        let ret_y = y_out.asin();
-
-        Coordinate { x: ret_x, y: ret_y }
-    }
-}
+impl<DRAIN, T> Orthographic<DRAIN, T> where T: CoordFloat + FloatConst {}
 
 impl<DRAIN, T> Transform for Orthographic<DRAIN, T>
 where
@@ -78,6 +81,6 @@ where
 
     #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        self.azimuthal_invert(p)
+        azimuthal_invert(p)
     }
 }

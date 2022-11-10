@@ -9,13 +9,13 @@ mod stereographic_tests {
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::TranslateSet;
-    use rust_d3_geo::stream::StreamDrainStub;
+    use rust_d3_geo::stream::DrainStub;
 
     #[test]
     fn stereographic() {
         let stereo: ProjectorCircleResampleNoClip<
-            StreamDrainStub<f64>,
-            Stereographic<StreamDrainStub<f64>, f64>,
+            DrainStub<f64>,
+            Stereographic<DrainStub<f64>, f64>,
             f64,
         > = Stereographic::builder()
             .translate_set(&Coordinate { x: 0f64, y: 0f64 })

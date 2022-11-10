@@ -3,7 +3,7 @@ use geo::Coordinate;
 
 use crate::Transform;
 
-/// An inner type of the Enum ScaleTranslateRotate.
+/// An inner type of [`ScaleTranslateRotate`].
 ///
 /// Simplification when only  translate is needed.
 #[derive(Clone, Copy, Debug)]
@@ -21,7 +21,7 @@ where
 {
     /// Constructor.
     #[inline]
-    pub fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T) -> Self {
+    pub const fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T) -> Self {
         Self {
             k: *k,
             dx: *dx,

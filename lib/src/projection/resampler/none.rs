@@ -25,9 +25,7 @@ pub struct None<PR, STATE, T> {
 impl<PR, T> None<PR, Unconnected, T> {
     #[inline]
     /// Constructor: Resample None.
-    pub fn new(
-        projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
-    ) -> None<PR, Unconnected, T> {
+    pub const fn new(projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>) -> Self {
         Self {
             state: Unconnected,
             p_t: PhantomData::<T>,

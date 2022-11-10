@@ -11,9 +11,9 @@ use crate::cartesian::spherical_radians;
 use crate::clip::line_elem::LineElem;
 use crate::math::EPSILON;
 
-/// IntersectReturn none, one or two 2d floats.
+/// `IntersectReturn` none, one or two 2d floats.
 #[derive(Debug)]
-pub enum IntersectReturn<T: CoordFloat> {
+pub enum Return<T: CoordFloat> {
     /// One Point.
     One(Option<LineElem<T>>),
     /// Two polar points
@@ -25,13 +25,18 @@ pub enum IntersectReturn<T: CoordFloat> {
 }
 
 /// Intersects the great circle between a and b with the clip circle.
+///
+/// # Panics
+///  Will never happen as EPSILON will always be converted into T.
 #[allow(clippy::many_single_char_names)]
+#[allow(clippy::similar_names)]
+#[allow(non_snake_case)]
 pub fn intersect<T: CoordFloat + FloatConst>(
     a: &LineElem<T>,
     b: &LineElem<T>,
     cr: T,
     two: bool,
-) -> IntersectReturn<T> {
+) -> Return<T> {
     let pa = cartesian(&a.p);
     let pb = cartesian(&b.p);
 
@@ -45,19 +50,18 @@ pub fn intersect<T: CoordFloat + FloatConst>(
 
     // Two polar points.
     if determinant.is_zero() {
-        if two {
-            return IntersectReturn::False;
+        return if two {
+            Return::False
         } else {
-            return IntersectReturn::One(Some(*a));
-        }
+            Return::One(Some(*a))
+        };
     };
 
     let c1 = cr * n2n2 / determinant;
     let c2 = -cr * n1n2 / determinant;
     let n1xn2 = cross(&n1, &n2);
-    #[allow(non_snake_case)]
+
     let mut A = scale(&n1, c1);
-    #[allow(non_snake_case)]
     let B = scale(&n2, c2);
     add_in_place(&mut A, &B);
 
@@ -68,7 +72,7 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     let t2 = w * w - uu * (dot(&A, &A) - T::one());
 
     if t2 < T::zero() {
-        return IntersectReturn::None;
+        return Return::None;
     }
 
     let t = t2.sqrt();
@@ -78,7 +82,7 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     let q: Coordinate<T> = spherical_radians(&q);
 
     if !two {
-        return IntersectReturn::One(Some(LineElem { p: q, m: None }));
+        return Return::One(Some(LineElem { p: q, m: None }));
     };
 
     // Two intersection points.
@@ -102,7 +106,7 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     if !polar && phi1 < phi0 {
         z = phi0;
         phi0 = phi1;
-        phi1 = z
+        phi1 = z;
     };
 
     // Check that the first point is between a and b.
@@ -127,8 +131,8 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     if condition {
         let mut q1 = scale(&u, (-w + t) / uu);
         add_in_place(&mut q1, &A);
-        return IntersectReturn::Two([q, spherical_radians(&q1)]);
+        return Return::Two([q, spherical_radians(&q1)]);
     }
 
-    IntersectReturn::One(None)
+    Return::One(None)
 }

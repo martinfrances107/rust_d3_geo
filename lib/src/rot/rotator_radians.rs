@@ -27,7 +27,7 @@ where
 {
     /// Constructor.
     #[inline]
-    pub fn new(rotate: RotateRadians<T>) -> Self {
+    pub const fn new(rotate: RotateRadians<T>) -> Self {
         Self {
             state: Unconnected,
             rotate,
@@ -87,7 +87,7 @@ where
 
     #[inline]
     fn polygon_start(&mut self) {
-        self.state.sink.polygon_start()
+        self.state.sink.polygon_start();
     }
 
     #[inline]

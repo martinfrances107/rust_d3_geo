@@ -48,6 +48,8 @@ where
     T: CoordFloat,
 {
     /// Constructor.
+    /// # Panics
+    /// Will never happen as 4.5 will always be converted into T.
     pub fn new(context_stream: CS, projection: Projector<CS, PCNC, PCNU, T>) -> Self {
         Self {
             p_pcnc: PhantomData::<PCNC>,
@@ -156,6 +158,7 @@ where
     T: CoordFloat,
 {
     /// Sets the context stream.
+    #[must_use]
     pub fn context(mut self, context_stream: CS) -> Self {
         self.context_stream = context_stream;
         self

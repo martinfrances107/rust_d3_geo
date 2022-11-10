@@ -11,7 +11,7 @@ use self::str::Str;
 use scale_translate_rotate::ScaleTranslateRotate;
 use st::St;
 
-/// Construct a ScaleTranslateRotate transform.
+/// Construct a `ScaleTranslateRotate` transform.
 #[inline]
 pub fn generate<T>(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: &T) -> ScaleTranslateRotate<T>
 where

@@ -54,11 +54,8 @@ where
                 1
             }
         } else if (p.y - self.y0).abs() < self.epsilon {
-            if direction > &T::zero() {
-                1
-            } else {
-                0
-            }
+            // Returns 1 or 0.
+            (*direction > T::zero()).into()
         } else if direction > &T::zero() {
             3
         } else {
@@ -70,13 +67,7 @@ where
     pub fn compare_point(&self, a: &Coordinate<T>, b: &Coordinate<T>) -> Ordering {
         let ca = self.corner(a, &T::one());
         let cb = self.corner(b, &T::one());
-        if ca != cb {
-            if (ca - cb) > 0 {
-                Ordering::Greater
-            } else {
-                Ordering::Less
-            }
-        } else {
+        if ca == cb {
             let diff = match ca {
                 0 => b.y - a.y,
                 1 => a.x - b.x,
@@ -90,6 +81,10 @@ where
             } else {
                 Ordering::Equal
             }
+        } else if (ca - cb) > 0 {
+            Ordering::Greater
+        } else {
+            Ordering::Less
         }
     }
 }

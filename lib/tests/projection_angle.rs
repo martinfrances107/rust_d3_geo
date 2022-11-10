@@ -16,13 +16,13 @@ mod projection_angle {
     use rust_d3_geo::projection::ProjectionRawBase;
     use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::projection::TranslateSet;
-    use rust_d3_geo::stream::StreamDrainStub;
+    use rust_d3_geo::stream::DrainStub;
     use rust_d3_geo::Transform;
 
     #[test]
     fn angle_defaults_to_zero() {
         println!("projection.angle(…) defaults to zero");
-        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder();
+        let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
         pb.scale_set(1_f64);
         pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
         assert_eq!(pb.angle(), 0_f64);
@@ -141,7 +141,7 @@ mod projection_angle {
     #[test]
     fn angle_rotates_by_plus_30() {
         println!("projection.angle(…) defaults to zero");
-        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder();
+        let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
         pb.scale_set(1_f64)
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
         let pb = pb.angle_set(30_f64);
@@ -265,7 +265,7 @@ mod projection_angle {
     #[test]
     fn angle_rotates_by_minus_30() {
         println!("projection.angle(…) defaults to zero");
-        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder();
+        let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
         pb.scale_set(1_f64)
             .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
 
@@ -389,7 +389,7 @@ mod projection_angle {
     #[test]
     fn wraps_360() {
         println!("projection.angle(…) wraps around 360°");
-        let mut pb = Gnomic::<StreamDrainStub<f64>, f64>::builder();
+        let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
         pb.scale_set(1_f64);
         pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
         pb.angle_set(360_f64);
@@ -403,7 +403,7 @@ mod projection_angle {
         println!("identity.angle(…) rotates geoIdentity");
 
         let mut pb: rust_d3_geo::projection::builder_identity::Builder<
-            StreamDrainStub<f32>,
+            DrainStub<f32>,
             NoPCNU,
             f32,
         > = BuilderIdentity::default();
@@ -411,7 +411,7 @@ mod projection_angle {
 
         let sqrt2_2 = 2f32.sqrt() / 2f32;
 
-        let projector = pb.build::<NoPCNC<StreamDrainStub<f32>>>();
+        let projector = pb.build::<NoPCNC<DrainStub<f32>>>();
 
         assert_eq!(
             projector.transform(&Coordinate { x: 0f32, y: 0f32 }),

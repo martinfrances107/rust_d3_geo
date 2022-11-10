@@ -20,6 +20,9 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Constructs a Interpolate State based on the specified radius.
+    ///
+    /// # Panics
+    ///  Will never happen as 6 will always be converted into T.
     pub fn new(radius: T) -> Self {
         Self {
             radius,

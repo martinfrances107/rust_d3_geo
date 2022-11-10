@@ -1,10 +1,10 @@
-//! # fit_no_rectangle.
+//! # `fit_no_rectangle`.
 //!
 //! 1) No-op: No rectange to remove.
 //! 2) Perform operations.
-//! 3) SWAP -  NoClip for Clip
+//! 3) SWAP -  `NoClip` for `Clip`
 //!
-//! # Elsewhere in fit_no_rectangle.
+//! # Elsewhere in `fit_no_rectangle`.
 //!
 //! 1) Removed Post Clip Rectangle.
 //! 2) Perform operations.
@@ -17,7 +17,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::clip::ClipConnectable;
+use crate::clip::clip::Connectable as ClipConnectable;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::NoPCNC;
@@ -32,7 +32,7 @@ use crate::Transform;
 
 use super::FitBounds;
 
-/// no_clip in the sense tha input is  NoClip (Identity)
+/// `no_clip` in the sense that input is  `NoClip` (Identity)
 /// and so is the output.
 fn fit_no_clip<B, CC, CU, PR, RC, RU, T>(
     builder: &mut B,
@@ -222,5 +222,5 @@ pub(super) fn fit_height_no_clip<B, CC, CU, PR, RC, RU, T>(
                 .translate_set(&Coordinate { x, y });
         }),
         object,
-    )
+    );
 }

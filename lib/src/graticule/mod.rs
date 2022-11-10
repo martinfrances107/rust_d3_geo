@@ -32,6 +32,10 @@ where
 }
 
 /// Helper function returns the default graticule.
+///
+/// # Panics
+///  Will never happen as +/-90 will always be converted into T.
+#[must_use]
 pub fn generate<T>() -> GraticuleBuilder<T>
 where
     T: 'static + CoordFloat,

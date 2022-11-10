@@ -15,10 +15,10 @@ mod invert {
     use rust_d3_geo::projection::stereographic::Stereographic;
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::ProjectionRawBase;
-    use rust_d3_geo::stream::StreamDrainStub;
+    use rust_d3_geo::stream::DrainStub;
     use rust_d3_geo::Transform;
 
-    fn symetric_invert<'a, PM>(pm: PM)
+    fn symetric_invert<PM>(pm: PM)
     where
         PM: Transform<T = f64>,
     {
@@ -46,55 +46,55 @@ mod invert {
 
     #[test]
     fn azimuthal_equal_area() {
-        let a = AzimuthalEqualArea::<StreamDrainStub<f64>, f64>::builder().build();
+        let a = AzimuthalEqualArea::<DrainStub<f64>, f64>::builder().build();
         symetric_invert(a);
     }
 
     #[test]
     fn azimuthal_equidistant() {
-        let a = AzimuthalEquiDistant::<StreamDrainStub<f64>, f64>::builder().build();
+        let a = AzimuthalEquiDistant::<DrainStub<f64>, f64>::builder().build();
         symetric_invert(a);
     }
 
     #[test]
     fn conic_equal_area() {
-        let c = ConicEqualArea::<StreamDrainStub<f64>, f64>::builder().build();
+        let c = ConicEqualArea::<DrainStub<f64>, f64>::builder().build();
         symetric_invert(c);
     }
 
     #[test]
     fn equirectangular() {
-        let e = Equirectangular::<StreamDrainStub<f64>, f64>::builder().build();
+        let e = Equirectangular::<DrainStub<f64>, f64>::builder().build();
         symetric_invert(e);
     }
 
     #[test]
     fn gnomic() {
-        let g = Gnomic::<StreamDrainStub<f64>, f64>::builder().build();
+        let g = Gnomic::<DrainStub<f64>, f64>::builder().build();
         symetric_invert(g);
     }
 
     #[test]
     fn orthographic() {
-        let o = Orthographic::<StreamDrainStub<f64>, f64>::builder().build();
+        let o = Orthographic::<DrainStub<f64>, f64>::builder().build();
         symetric_invert(o);
     }
 
     #[test]
     fn mercator() {
-        let m = Mercator::<StreamDrainStub<f64>>::builder().build();
+        let m = Mercator::<DrainStub<f64>>::builder().build();
         symetric_invert(m);
     }
 
     #[test]
     fn mercator_traverse() {
-        let m = MercatorTransverse::<StreamDrainStub<f64>>::builder().build();
+        let m = MercatorTransverse::<DrainStub<f64>>::builder().build();
         symetric_invert(m);
     }
 
     #[test]
     fn stereographic() {
-        let s = Stereographic::<StreamDrainStub<f64>, f64>::builder().build();
+        let s = Stereographic::<DrainStub<f64>, f64>::builder().build();
         symetric_invert(s);
     }
 }

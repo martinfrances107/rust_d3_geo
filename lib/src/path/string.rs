@@ -108,9 +108,9 @@ where
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         // 6 digits of precision NAN maps to zero!!!
         let x = p.x.to_f64().unwrap_or(0_f64);
-        let x_rounded = (x * 1000000_f64).round() / 1000000_f64;
+        let x_rounded = (x * 1_000_000_f64).round() / 1_000_000_f64;
         let y = p.y.to_f64().unwrap_or(0_f64);
-        let y_rounded = (y * 1000000_f64).round() / 1000000_f64;
+        let y_rounded = (y * 1_000_000_f64).round() / 1_000_000_f64;
         match self.point {
             PointState::AtLineStart => {
                 self.string.push(format!("M{},{}", x_rounded, y_rounded));

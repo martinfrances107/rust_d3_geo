@@ -63,16 +63,16 @@ where
     #[inline]
     fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
         if p.x < self.p0.x {
-            self.p0.x = p.x
+            self.p0.x = p.x;
         }
         if p.x > self.p1.x {
-            self.p1.x = p.x
+            self.p1.x = p.x;
         }
         if p.y < self.p0.y {
-            self.p0.y = p.y
+            self.p0.y = p.y;
         }
         if p.y > self.p1.y {
-            self.p1.y = p.y
+            self.p1.y = p.y;
         }
     }
 }

@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use derivative::*;
+use derivative::Derivative;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -37,7 +37,7 @@ impl<'a, T> Intersection<'a, T>
 where
     T: CoordFloat + FloatConst,
 {
-    pub fn new(
+    pub const fn new(
         point: LineElem<T>,
         points: Option<&'a Vec<LineElem<T>>>,
         other: Option<Rc<RefCell<Intersection<'a, T>>>>,

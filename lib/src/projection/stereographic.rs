@@ -32,11 +32,11 @@ where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderCircleResampleNoClip<DRAIN, Stereographic<DRAIN, T>, T>;
+    type Builder = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
     fn builder() -> Self::Builder {
-        let mut b = Builder::new(Stereographic::default());
+        let mut b = Builder::new(Self::default());
         b.scale_set(T::from(250_f64).unwrap());
         b.clip_angle_set(T::from(142_f64).unwrap())
     }

@@ -76,6 +76,9 @@ where
     T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     /// Wrap a default projector and provides mercator specific overrides.
+    ///
+    /// # Panics
+    ///  Will never happen as 159.155 will always be converted into T.
     pub fn new(pr: PR) -> Self {
         let mut base = ProjectionMercatorBuilder::new(pr);
         base.rotate_set(&[T::zero(), T::zero(), T::from(90).unwrap()]);

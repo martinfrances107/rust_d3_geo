@@ -1,7 +1,7 @@
 use core::iter::Iterator;
 use std::mem::swap;
 
-use derivative::*;
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use geo::LineString;
@@ -133,17 +133,19 @@ where
 
     /// Sets the extent.
     #[inline]
+    #[must_use]
     pub fn extent_set(self, param: [[T; 2]; 2]) -> Self {
         self.extent_major_set(param).extent_minor_set(param)
     }
 
     /// Returns the range associated with major ticks.
     #[inline]
-    pub fn extent_major(&self) -> [[T; 2]; 2] {
+    pub const fn extent_major(&self) -> [[T; 2]; 2] {
         [[self.X0, self.Y0], [self.X1, self.Y1]]
     }
 
     /// Sets the major extent.
+    #[must_use]
     pub fn extent_major_set(mut self, param: [[T; 2]; 2]) -> Self {
         self.X0 = param[0][0];
         self.Y0 = param[0][1];
@@ -161,11 +163,12 @@ where
 
     /// Returns the range assoicated with the minor ticks.
     #[inline]
-    pub fn extent_minor(&self) -> [[T; 2]; 2] {
+    pub const fn extent_minor(&self) -> [[T; 2]; 2] {
         [[self.x0, self.y0], [self.x1, self.y1]]
     }
 
     /// Sets the range associated with minor ticks.
+    #[must_use]
     pub fn extent_minor_set(mut self, param: [[T; 2]; 2]) -> Self {
         self.x0 = param[0][0];
         self.y0 = param[0][1];
@@ -185,17 +188,19 @@ where
 
     /// Sets the step for both the major and minor ticks.
     #[inline]
+    #[must_use]
     pub fn step_set(self, step: [T; 2]) -> Self {
         self.step_major_set(step).step_minor_set(step)
     }
 
     /// Returns the minor step parameters [dx, dy]
     #[inline]
-    pub fn step_major(&self) -> [T; 2] {
+    pub const fn step_major(&self) -> [T; 2] {
         [self.DX, self.DY]
     }
 
     /// Sets the x and y major step size.
+    #[must_use]
     pub fn step_major_set(mut self, step: [T; 2]) -> Self {
         self.DX = step[0];
         self.DY = step[1];
@@ -204,11 +209,12 @@ where
 
     /// Returns the minor step parameters [dx, dy]
     #[inline]
-    pub fn step_minor(&self) -> [T; 2] {
+    pub const fn step_minor(&self) -> [T; 2] {
         [self.dx, self.dy]
     }
 
     /// Sets the x and y minor step size.
+    #[must_use]
     pub fn step_minor_set(mut self, step: [T; 2]) -> Self {
         self.dx = step[0];
         self.dy = step[1];
@@ -217,11 +223,15 @@ where
 
     #[inline]
     /// Returns the current precision.
-    pub fn precision(&self) -> T {
+    pub const fn precision(&self) -> T {
         self.precision
     }
 
     /// Sets the precision for this graticule, in degrees.(Default: 2.5°)
+    ///
+    /// # Panics
+    ///  Will never happen as 90 will always be converted into T.
+    #[must_use]
     pub fn precision_set(mut self, precision: &T) -> Self {
         self.precision = *precision;
         self.x = graticule_x(self.y0, self.y1, T::from(90_f64).unwrap());

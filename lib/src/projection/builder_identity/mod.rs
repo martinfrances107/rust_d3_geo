@@ -61,6 +61,7 @@ where
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
     #[inline]
+    #[must_use]
     pub fn default() -> Self {
         Self {
             p_drain: PhantomData::<DRAIN>,

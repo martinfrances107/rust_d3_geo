@@ -34,11 +34,11 @@ where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderCircleResampleNoClip<DRAIN, AzimuthalEqualArea<DRAIN, T>, T>;
+    type Builder = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
     fn builder() -> Self::Builder {
-        let mut b = Builder::new(AzimuthalEqualArea::default());
+        let mut b = Builder::new(Self::default());
         b.scale_set(T::from(124.75_f64).unwrap());
         b.clip_angle_set(T::from(180_f64 - 1e-3).unwrap())
     }

@@ -5,7 +5,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::clip::ClipConnectable;
+use crate::clip::clip::Connectable as ClipConnectable;
 use crate::compose::Compose;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
@@ -72,7 +72,7 @@ where
     ///
     /// The Projection Stream Pipeline :-
     ///
-    /// StreamTransformRadians -> StreamTransform -> preclip -> resample -> postclip -> DRAIN
+    /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
     ///
     pub fn stream(&mut self, drain: &DRAIN) -> ProjectionStream<CC, T> {
         if let Some((cache_drain, output)) = &self.cache {

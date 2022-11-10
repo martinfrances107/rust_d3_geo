@@ -33,16 +33,16 @@ where
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            RotateRadians::C(_c) => {
+            Self::C(_c) => {
                 // todo!("must find a way to do Box");
                 f.debug_struct("RotateRadians::C").finish()
             }
-            RotateRadians::RL(rl) => f.debug_struct("RotateRadians::RL").field("0", rl).finish(),
-            RotateRadians::RPG(rpg) => f
+            Self::RL(rl) => f.debug_struct("RotateRadians::RL").field("0", rl).finish(),
+            Self::RPG(rpg) => f
                 .debug_struct("RotateRadians::RPG")
                 .field("0", rpg)
                 .finish(),
-            RotateRadians::I(i) => f.debug_struct("RotateRadians::I").field("0", i).finish(),
+            Self::I(i) => f.debug_struct("RotateRadians::I").field("0", i).finish(),
         }
     }
 }
@@ -54,10 +54,10 @@ where
     #[inline]
     fn clone(&self) -> Self {
         match self {
-            RotateRadians::C(c) => RotateRadians::C(Box::new(*c.clone())),
-            RotateRadians::RL(rl) => RotateRadians::RL(*rl),
-            RotateRadians::RPG(rpg) => RotateRadians::RPG(*rpg),
-            RotateRadians::I(i) => RotateRadians::I(*i),
+            Self::C(c) => Self::C(Box::new(*c.clone())),
+            Self::RL(rl) => Self::RL(*rl),
+            Self::RPG(rpg) => Self::RPG(*rpg),
+            Self::I(i) => Self::I(*i),
         }
     }
 }
@@ -71,20 +71,20 @@ where
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            RotateRadians::C(c) => c.transform(p),
-            RotateRadians::RL(rl) => rl.transform(p),
-            RotateRadians::RPG(rpg) => rpg.transform(p),
-            RotateRadians::I(i) => i.transform(p),
+            Self::C(c) => c.transform(p),
+            Self::RL(rl) => rl.transform(p),
+            Self::RPG(rpg) => rpg.transform(p),
+            Self::I(i) => i.transform(p),
         }
     }
 
     #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            RotateRadians::C(c) => c.invert(p),
-            RotateRadians::RL(rl) => rl.invert(p),
-            RotateRadians::RPG(rpg) => rpg.invert(p),
-            RotateRadians::I(i) => i.invert(p),
+            Self::C(c) => c.invert(p),
+            Self::RL(rl) => rl.invert(p),
+            Self::RPG(rpg) => rpg.invert(p),
+            Self::I(i) => i.invert(p),
         }
     }
 }

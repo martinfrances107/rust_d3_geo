@@ -1,6 +1,6 @@
 //! This should not be constructed directly.
 //!
-//! Construct conic_equal_area instead.
+//! Construct [`conic_equal_area`] instead.
 //!
 //! Common Values(degrees) for phi0
 //! 0 - Lambert

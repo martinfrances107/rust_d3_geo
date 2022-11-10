@@ -1,6 +1,6 @@
 use std::ops::AddAssign;
 
-use derivative::*;
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;

@@ -21,7 +21,7 @@ mod path_centroid {
     use num_traits::Float;
     use num_traits::FloatConst;
 
-    use rust_d3_geo::in_delta::in_delta_point;
+    use rust_d3_geo::in_delta::point as in_delta_point;
     use rust_d3_geo::path::centroid::Centroid;
     use rust_d3_geo::path::Path;
     use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;

@@ -18,9 +18,10 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 
 use super::intersect::intersect;
-use super::intersect::IntersectReturn;
+use super::intersect::Return;
 
 /// Circle Line.
+#[allow(clippy::struct_excessive_bools)]
 #[derive(Clone, Debug)]
 pub struct Line<STATE, T>
 where
@@ -135,6 +136,9 @@ where
     T: CoordFloat,
 {
     /// Constructor.
+    ///
+    /// # Panics
+    ///  Will never happen as EPSILON will always be converted into T.
     #[inline]
     pub fn new(radius: T) -> Self {
         // TODO small_radius, rc  is a shadow variables!!!
@@ -290,13 +294,13 @@ where
                 self.radius.cos(),
                 false,
             ) {
-                IntersectReturn::One(p_return) => p_return,
-                IntersectReturn::None => None,
-                IntersectReturn::False => {
+                Return::One(p_return) => p_return,
+                Return::None => None,
+                Return::False => {
                     todo!("This case is not handled by test");
                     // I think I should set point2 to None here but must test.
                 }
-                IntersectReturn::Two(_t) => {
+                Return::Two(_t) => {
                     // There is a subtle bug in the javascript here two points is handles
                     // as if the second does not exits.
                     // For now just cause a panic here to see how many times it occurs.
@@ -325,25 +329,25 @@ where
                 // outside going in
                 self.state.sink.line_start();
                 point2 = match intersect(&point1.unwrap(), &self.point0.unwrap(), self.cr, false) {
-                    IntersectReturn::One(le) => le,
-                    IntersectReturn::Two([_p, _m]) => {
+                    Return::One(le) => le,
+                    Return::Two([_p, _m]) => {
                         panic!("Silently dropping second point.");
                     }
-                    IntersectReturn::None => None,
-                    IntersectReturn::False => {
+                    Return::None => None,
+                    Return::False => {
                         todo!("must cover this case.");
                     }
                 };
-                self.state.sink.point(&point2.unwrap().p, None)
+                self.state.sink.point(&point2.unwrap().p, None);
             } else {
                 // Inside going out.
                 point2 = match intersect(&self.point0.unwrap(), &point1.unwrap(), self.cr, false) {
-                    IntersectReturn::One(le) => le,
-                    IntersectReturn::Two([_, _]) => {
+                    Return::One(le) => le,
+                    Return::Two([_, _]) => {
                         panic!("Silently dropping second point.");
                     }
-                    IntersectReturn::None => None,
-                    IntersectReturn::False => {
+                    Return::None => None,
+                    Return::False => {
                         todo!("must handle this case.");
                     }
                 };
@@ -360,8 +364,8 @@ where
                 match t {
                     // Request two received one!!
                     // This copies the behaviour of the javascript original.
-                    IntersectReturn::False | IntersectReturn::None | IntersectReturn::One(_) => {}
-                    IntersectReturn::Two(t) => {
+                    Return::False | Return::None | Return::One(_) => {}
+                    Return::Two(t) => {
                         self.clean = 0;
                         if self.small_radius {
                             self.state.sink.line_start();

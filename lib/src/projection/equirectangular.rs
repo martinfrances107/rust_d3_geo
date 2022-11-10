@@ -25,11 +25,11 @@ where
     DRAIN: Clone + Default,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderAntimeridianResampleNoClip<DRAIN, Equirectangular<DRAIN, T>, T>;
+    type Builder = BuilderAntimeridianResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
     fn builder() -> Self::Builder {
-        let mut b = Builder::new(Equirectangular::default());
+        let mut b = Builder::new(Self::default());
         b.scale_set(T::from(152.63_f64).unwrap());
         b
     }

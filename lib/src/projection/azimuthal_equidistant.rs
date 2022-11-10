@@ -31,11 +31,11 @@ where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderCircleResampleNoClip<DRAIN, AzimuthalEquiDistant<DRAIN, T>, T>;
+    type Builder = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
     fn builder() -> Self::Builder {
-        let mut b = Builder::new(AzimuthalEquiDistant::default());
+        let mut b = Builder::new(Self::default());
         b.scale_set(T::from(79.4188_f64).unwrap());
         b.clip_angle_set(T::from(180_f64 - 1e-3).unwrap())
     }
@@ -56,7 +56,7 @@ where
     }
 
     #[inline]
-    fn z(z: T) -> T {
+    const fn z(z: T) -> T {
         z
     }
 }

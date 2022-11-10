@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_antimeridian;
+use crate::clip::antimeridian::gen_clip;
 use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::ClipCircleC;
@@ -32,7 +32,7 @@ where
             p_clipc: PhantomData::<ClipAntimeridianC<RC, T>>,
             p_rc: PhantomData::<RC>,
             p_drain: PhantomData::<DRAIN>,
-            clip: gen_clip_antimeridian::<PCNU, RC, T>(),
+            clip: gen_clip::<PCNU, RC, T>(),
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
             delta_gamma: self.delta_gamma,

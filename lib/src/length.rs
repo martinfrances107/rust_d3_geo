@@ -1,4 +1,4 @@
-use derivative::*;
+use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Coordinate;
 
@@ -47,7 +47,7 @@ where
 {
     /// Calculate the objects associated length.
     pub fn calc(object: &impl Streamable<T = T>) -> T {
-        let mut ls = Stream::default();
+        let mut ls = Self::default();
         object.to_stream(&mut ls);
         ls.length_sum
     }
@@ -88,7 +88,9 @@ where
         self.point_fn = Self::length_point_first;
         self.line_end_fn = Self::length_line_end;
     }
+    #[allow(clippy::unused_self)]
     fn point_noop(&mut self, _p: &Coordinate<T>) {}
+    #[allow(clippy::unused_self)]
     fn line_end_noop(&mut self) {}
 }
 

@@ -32,10 +32,10 @@ where
 
     /// Sets the rotation angles as measured in degrees.
     fn rotate_set(&mut self, angles: &[T; 3]) -> &mut Self {
-        let a2 = if !angles[2].is_zero() {
-            angles[2] + T::from(90_f64).unwrap()
-        } else {
+        let a2 = if angles[2].is_zero() {
             T::from(90_f64).unwrap()
+        } else {
+            angles[2] + T::from(90_f64).unwrap()
         };
         self.base.rotate_set(&[angles[0], angles[1], a2]);
         self

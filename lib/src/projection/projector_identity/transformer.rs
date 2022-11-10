@@ -31,7 +31,7 @@ where
     T: CoordFloat,
 {
     #[inline]
-    pub(crate) fn new(alpha: T, kx: T, ky: T, ca: T, sa: T, tx: T, ty: T) -> Self {
+    pub(crate) const fn new(alpha: T, kx: T, ky: T, ca: T, sa: T, tx: T, ty: T) -> Self {
         Self {
             p_drain: PhantomData::<DRAIN>,
             alpha,
@@ -128,7 +128,7 @@ where
     /// Declare a point.
     #[inline]
     fn point(&mut self, p: &Coordinate<Self::T>, m: Option<u8>) {
-        self.state.sink.point(&self.transform(p), m)
+        self.state.sink.point(&self.transform(p), m);
     }
 
     /// Declare the end of a polygon.

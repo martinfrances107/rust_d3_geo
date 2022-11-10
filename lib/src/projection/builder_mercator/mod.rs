@@ -88,7 +88,7 @@ pub trait FitReclip {
     /// Returns the projection.
     ///
     /// For example, to scale and translate the New Jersey State Plane
-    /// projection to fit a GeoJSON object nj in the center of a 960×500
+    /// projection to fit a `GeoJSON` object nj in the center of a 960×500
     /// bounding box with 20 pixels of padding on each side:
     ///
     /// Any clip extent is ignored when determining the new scale and
@@ -101,7 +101,7 @@ pub trait FitReclip {
     ///  where x₀ is the left side of the bounding box, y₀ is the top,
     ///  x₁ is the right and y₁ is the bottom.
     /// @param object A geographic feature supported by d3-geo
-    ///   (An extension of GeoJSON feature).
+    ///   (An extension of `GeoJSON` feature).
     fn fit_extent_reclip(
         &self,
         extent: [[Self::T; 2]; 2],
@@ -114,18 +114,18 @@ pub trait FitReclip {
     ///  Any clip extent is ignored when determining the new scale and translate. The precision used to compute the bounding box of the given object is computed at an effective scale of 150.
     ///
     ///  @param size The size of the extent, specified as an array [width, height].
-    ///  @param object A geographic feature supported by d3-geo (An extension of GeoJSON feature).
+    ///  @param object A geographic feature supported by d3-geo (An extension of `GeoJSON` feature).
     fn fit_size_reclip(
         &self,
         size: [Self::T; 2],
         object: &impl Streamable<T = Self::T>,
     ) -> Self::Output;
 
-    /// Similar to fit_size where the width is automatically chosen from
+    /// Similar to `fit_size` where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
     fn fit_width_reclip(&self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output;
 
-    /// Similar to fit_size where the height is automatically chosen from
+    /// Similar to `fit_size` where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
     fn fit_height_reclip(&self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output;
 }
@@ -158,7 +158,7 @@ pub trait TranslateReclip {
     type T;
 
     ///  Sets the projection’s translation offset to the specified two-element array [tx, ty] and returns the projection.
-    ///  The translation offset determines the PIxel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
+    ///  The translation offset determines the pixel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
     ///
     ///  @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
     fn translate(self, t: &Coordinate<Self::T>) -> Self::Output
@@ -166,7 +166,7 @@ pub trait TranslateReclip {
         Self::T: CoordFloat;
 }
 
-/// Reclip is common to both Mercator and MercatorTransverse.
+/// Reclip is common to both `Mercator` and `MercatorTransverse`.
 pub(super) trait Reclip {
     fn reclip(&mut self) -> &mut Self;
 }

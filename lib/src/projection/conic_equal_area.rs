@@ -30,7 +30,7 @@ pub struct ConicEqualArea<DRAIN, T> {
     two: T,
 }
 
-/// ConicEqualAreaRaw return type.
+/// [`ConicEqualAreaRaw`] return type.
 ///
 /// Depending constgruction parameters
 /// one of two Projection types are returned.
@@ -48,16 +48,16 @@ where
     type T = T;
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            EqualArea::Cyl(cyl) => cyl.transform(p),
-            EqualArea::Con(con) => con.transform(p),
+            Self::Cyl(cyl) => cyl.transform(p),
+            Self::Con(con) => con.transform(p),
         }
     }
 
     #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            EqualArea::Cyl(cyl) => cyl.invert(p),
-            EqualArea::Con(con) => con.invert(p),
+            Self::Cyl(cyl) => cyl.invert(p),
+            Self::Con(con) => con.invert(p),
         }
     }
 }
@@ -77,7 +77,7 @@ where
             return EqualArea::Cyl(CylindricalEqualArea::new(y0));
         }
         let c = T::one() + sy0 * (two * n - sy0);
-        EqualArea::Con(ConicEqualArea {
+        EqualArea::Con(Self {
             p_drain: PhantomData::<DRAIN>,
             c: T::one() + sy0,
             r0: c.sqrt() / n,
@@ -87,11 +87,14 @@ where
     }
     #[inline]
     /// Phi0 value in radians.
+    ///
+    /// # Panics
+    ///  Will never happen as 33.6442 will always be converted into T.
     pub fn builder_with_phi0_phi1(
         y0: T,
         y1: T,
     ) -> BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T> {
-        let mut b = Builder::new(ConicEqualArea::generate(y0, y1));
+        let mut b = Builder::new(Self::generate(y0, y1));
         b.scale_set(T::from(155.424).unwrap())
             .center_set(&Coordinate {
                 x: T::zero(),

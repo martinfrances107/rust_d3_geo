@@ -14,8 +14,8 @@ mod fit {
     use topojson::Topology;
 
     use rust_d3_geo::data_object::sphere::Sphere;
+    use rust_d3_geo::in_delta::coordinate as in_delta_coordinate;
     use rust_d3_geo::in_delta::in_delta;
-    use rust_d3_geo::in_delta::in_delta_coordinate;
     use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;

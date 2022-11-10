@@ -27,14 +27,14 @@ where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderCircleResampleNoClip<DRAIN, Gnomic<DRAIN, T>, T>;
+    type Builder = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
     fn builder() -> Self::Builder
     where
         DRAIN: Default + Stream<EP = DRAIN, T = T>,
     {
-        let mut b = Builder::new(Gnomic::default());
+        let mut b = Builder::new(Self::default());
         b.scale_set(T::from(144.049_f64).unwrap());
         b.clip_angle_set(T::from(60_f64).unwrap())
     }

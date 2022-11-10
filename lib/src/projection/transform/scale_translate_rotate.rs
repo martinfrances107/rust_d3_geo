@@ -16,7 +16,7 @@ pub enum ScaleTranslateRotate<T> {
     STR(Str<T>),
 }
 
-impl<T: CoordFloat> Transform for ScaleTranslateRotate<T>
+impl<T> Transform for ScaleTranslateRotate<T>
 where
     T: CoordFloat,
 {
@@ -25,16 +25,16 @@ where
     #[inline]
     fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            ScaleTranslateRotate::ST(st) => st.transform(p),
-            ScaleTranslateRotate::STR(str) => str.transform(p),
+            Self::ST(st) => st.transform(p),
+            Self::STR(str) => str.transform(p),
         }
     }
 
     #[inline]
     fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
         match self {
-            ScaleTranslateRotate::ST(st) => st.invert(p),
-            ScaleTranslateRotate::STR(str) => str.invert(p),
+            Self::ST(st) => st.invert(p),
+            Self::STR(str) => str.invert(p),
         }
     }
 }

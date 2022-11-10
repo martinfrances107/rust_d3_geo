@@ -71,13 +71,13 @@ pub type RotateTransform<PR, T> =
 
 /// Provides specialization over 'Projection Raw'
 ///
-/// Mercator projections [MercatorTransverseRaw and MercatorRaw] have a
-/// extent_transform() for their individual needs.
+/// Mercator projections [`MercatorTransverseRaw` and `MercatorRaw`] have a
+/// `extent_transform`() for their individual needs.
 pub trait TransformExtent {
     /// f64 or f32.
     type T;
 
-    /// Transform the extent stored in MercatorBuilder before being passing
+    /// Transform the extent stored in `MercatorBuilder` before being passing
     /// into the base projection builder.
     fn transform_extent(
         self,
@@ -127,6 +127,7 @@ where
     /// f64 or f32
     type T;
     /// Returns a Projector base on a builder configuration.
+    #[allow(clippy::type_complexity)]
     fn build(
         &self,
     ) -> Projector<
@@ -241,7 +242,7 @@ pub trait Fit {
     /// Returns the projection.
     ///
     /// For example, to scale and translate the New Jersey State Plane
-    /// projection to fit a GeoJSON object nj in the center of a 960×500
+    /// projection to fit a `GeoJSON` object nj in the center of a 960×500
     /// bounding box with 20 pixels of padding on each side:
     ///
     /// Any clip extent is ignored when determining the new scale and
@@ -255,7 +256,7 @@ pub trait Fit {
     ///  top, x₁ is the right and y₁ is the bottom.
     ///
     ///  @param object A
-    /// geographic feature supported by d3-geo (An extension of GeoJSON
+    /// geographic feature supported by d3-geo (An extension of `GeoJSON`
     ///   feature).
     fn fit_extent(
         &mut self,
@@ -275,18 +276,18 @@ pub trait Fit {
     ///
     ///  @param size The size of the extent, specified as an array [width,
     ///  height]. @param object A geographic feature supported by d3-geo
-    ///  (An extension of GeoJSON feature).
+    ///  (An extension of `GeoJSON` feature).
     fn fit_size(&mut self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> &mut Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
-    /// Similar to fit_size where the height is automatically chosen from
+    /// Similar to [`fit_size`] where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on width.
     fn fit_width(&mut self, w: Self::T, object: &impl Streamable<T = Self::T>) -> &mut Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
-    /// Similar to fit_size where the width is automatically chosen from
+    /// Similar to [`fit_size`] where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
     fn fit_height(&mut self, h: Self::T, object: &impl Streamable<T = Self::T>) -> &mut Self
     where
@@ -453,7 +454,7 @@ pub trait PrecisionBypass {
 /// Give a resampling precision consume the object and return one that
 /// resamples.
 ///
-/// Similar to ResampleAdjust but with conversion. A projection builder
+/// Similar to [`ResampleAdjust`] but with conversion. A projection builder
 /// sub trait.
 pub trait PrecisionSet {
     /// f64 or f32.
@@ -489,7 +490,7 @@ pub trait RotateSet {
     ///
     ///  @param angles  A three-element array of numbers [lambda, phi,
     ///  gamma] specifying the rotation angles in degrees about each
-    ///  spherical axis. (These correspond to yaw, PItch and roll.)
+    ///  spherical axis. (These correspond to yaw, pitch and roll.)
     fn rotate_set(&mut self, angles: &[Self::T; 3]) -> &mut Self;
 }
 

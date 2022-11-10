@@ -15,9 +15,14 @@ where
     point[0] = point[0] - cos_radius;
     normalize_in_place(&mut point);
     let radius = (-point[1]).acos();
-    let radius_signed = match -point[2] < T::zero() {
-        true => -radius,
-        false => radius,
+    // let radius_signed = match -point[2] < T::zero() {
+    //     true => -radius,
+    //     false => radius,
+    // };
+    let radius_signed = if -point[2] < T::zero() {
+        -radius
+    } else {
+        radius
     };
     radius_signed + T::TAU() - T::from(EPSILON).unwrap() % T::TAU()
 }

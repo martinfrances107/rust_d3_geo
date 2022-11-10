@@ -26,7 +26,7 @@ fn forward_rotation_lambda<T: CoordFloat + FloatConst>(
 impl<T: CoordFloat + FloatConst> RotationLambda<T> {
     /// Constructor.
     #[inline]
-    pub fn new(delta_lambda: T) -> RotationLambda<T> {
+    pub const fn new(delta_lambda: T) -> Self {
         Self { delta_lambda }
     }
 }

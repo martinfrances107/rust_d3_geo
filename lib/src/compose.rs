@@ -18,8 +18,8 @@ pub struct Compose<T, TA, TB> {
 
 impl<T, TA, TB> Compose<T, TA, TB> {
     #[inline]
-    pub fn new(a: TA, b: TB) -> Compose<T, TA, TB> {
-        Compose {
+    pub const fn new(a: TA, b: TB) -> Self {
+        Self {
             p_t: PhantomData::<T>,
             a,
             b,

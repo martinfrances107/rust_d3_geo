@@ -22,15 +22,15 @@ mod identity {
     use crate::projection::TranslateGet;
     use crate::projection::TranslateSet;
     use crate::projection::REFLECT;
-    use crate::stream::StreamDrainStub;
+    use crate::stream::DrainStub;
     use crate::stream::Unconnected;
 
     #[test]
     fn returns_a_point() {
-        let mut ib = Builder::<StreamDrainStub<f64>, Identity<Unconnected>, f64>::default();
+        let mut ib = Builder::<DrainStub<f64>, Identity<Unconnected>, f64>::default();
         ib.translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64);
-        let identity = ib.build::<PCNC<StreamDrainStub<f64>, f64>>();
+        let identity = ib.build::<PCNC<DrainStub<f64>, f64>>();
         assert!(projection_equal(
             &identity,
             &(0f64, 0f64).into(),
@@ -65,7 +65,7 @@ mod identity {
     #[test]
     fn reflect_return_the_transformed_point() {
         println!("identity(point).reflectX(…) and reflectY() return the transformed point");
-        let mut ib: Builder<StreamDrainStub<f64>, _, _> = Builder::default();
+        let mut ib: Builder<DrainStub<f64>, _, _> = Builder::default();
         ib.translate_set(&Coordinate {
             x: 100_f64,
             y: 10_f64,

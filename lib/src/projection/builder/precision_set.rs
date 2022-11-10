@@ -105,7 +105,7 @@ where
     }
 }
 
-impl<DRAIN, PR, PCNC: Clone, PCNU, T> PrecisionSet
+impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
         ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
         ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,

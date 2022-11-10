@@ -18,22 +18,22 @@ mod equirectangular {
     use rust_d3_geo::projection::RotateSet;
     use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::projection::TranslateSet;
-    use rust_d3_geo::stream::StreamDrainStub;
+    use rust_d3_geo::stream::DrainStub;
 
     type B = Builder<
         ClipAntimeridianC<
-            ResampleNoPCNC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+            ResampleNoPCNC<DrainStub<f64>, Equirectangular<DrainStub<f64>, f64>, f64>,
             f64,
         >,
         ClipAntimeridianU<
-            ResampleNoPCNC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+            ResampleNoPCNC<DrainStub<f64>, Equirectangular<DrainStub<f64>, f64>, f64>,
             f64,
         >,
-        StreamDrainStub<f64>,
+        DrainStub<f64>,
         NoPCNU,
-        Equirectangular<StreamDrainStub<f64>, f64>,
-        ResampleNoPCNC<StreamDrainStub<f64>, Equirectangular<StreamDrainStub<f64>, f64>, f64>,
-        ResampleNoPCNU<Equirectangular<StreamDrainStub<f64>, f64>, f64>,
+        Equirectangular<DrainStub<f64>, f64>,
+        ResampleNoPCNC<DrainStub<f64>, Equirectangular<DrainStub<f64>, f64>, f64>,
+        ResampleNoPCNU<Equirectangular<DrainStub<f64>, f64>, f64>,
         f64,
     >;
 
@@ -138,8 +138,8 @@ mod equirectangular {
     #[test]
     fn rotate_30_0() {
         println!("equirectangular(point) returns the expected result");
-        let equirectangular: Projector<_, _, StreamDrainStub<f64>, _, _, _, _, _> =
-            Builder::new(Equirectangular::<StreamDrainStub<f64>, f64>::default())
+        let equirectangular: Projector<_, _, DrainStub<f64>, _, _, _, _, _> =
+            Builder::new(Equirectangular::<DrainStub<f64>, f64>::default())
                 .rotate_set(&[30f64, 0f64, 0f64])
                 .translate_set(&Coordinate { x: 0f64, y: 0f64 })
                 .scale_set(1_f64)

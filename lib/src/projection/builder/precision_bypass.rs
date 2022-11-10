@@ -3,9 +3,9 @@ use std::marker::PhantomData;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::gen_clip_antimeridian;
+use crate::clip::antimeridian::gen_clip as gen_clip_antimeridian;
 use crate::clip::antimeridian::ClipAntimeridianC;
-use crate::clip::circle::gen_clip_circle;
+use crate::clip::circle::gen_clip as gen_clip_circle;
 use crate::clip::circle::ClipCircleC;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::resampler::none::None;

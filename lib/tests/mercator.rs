@@ -8,7 +8,7 @@ mod mercator {
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::in_delta::in_delta_coordinate;
+    use rust_d3_geo::in_delta::coordinate as in_delta_coordinate;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::projection::mercator::Mercator;
     use rust_d3_geo::projection::Build;

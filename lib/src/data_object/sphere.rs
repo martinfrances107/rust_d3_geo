@@ -17,7 +17,7 @@ where
     T: CoordFloat,
 {
     fn default() -> Self {
-        Sphere {
+        Self {
             pd: PhantomData::default(),
         }
     }

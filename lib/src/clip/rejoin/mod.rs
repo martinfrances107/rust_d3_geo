@@ -16,14 +16,14 @@ use crate::stream::Stream;
 
 use super::line_elem::LineElem;
 
-pub(crate) type CompareIntersectionsFn<T> =
+pub type CompareIntersectionsFn<T> =
     Box<dyn Fn(&Rc<RefCell<Intersection<T>>>, &Rc<RefCell<Intersection<T>>>) -> Ordering>;
 
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
 ///
-/// (see)[https://www.inf.usi.ch/hormann/papers/Greiner.1998.ECO.pdf]
+/// [see][https://www.inf.usi.ch/hormann/papers/Greiner.1998.ECO.pdf]
 ///
 /// Variable definition.
 ///

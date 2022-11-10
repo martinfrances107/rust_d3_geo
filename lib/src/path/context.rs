@@ -48,7 +48,8 @@ impl Default for Context {
 impl Context {
     /// Contructor.
     #[inline]
-    pub fn new(context: CanvasRenderingContext2d) -> Self {
+    #[must_use]
+    pub const fn new(context: CanvasRenderingContext2d) -> Self {
         Self {
             context: Some(context),
             line: LineState::Init,

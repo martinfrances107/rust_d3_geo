@@ -141,10 +141,10 @@ where
 {
     /// Returns a Resample for a given precision.
     #[inline]
-    pub fn new(
+    pub const fn new(
         projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
         delta2: T,
-    ) -> Resample<PR, Unconnected, T> {
+    ) -> Self {
         Self {
             delta2,
             projection_transform,
@@ -252,6 +252,7 @@ where
 
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::many_single_char_names)]
+    #[allow(clippy::similar_names)]
     fn resample_line_to(
         &mut self,
         x0: T,
@@ -297,6 +298,7 @@ where
                 let x2 = p.x;
                 let y2 = p.y;
                 let dx2 = x2 - x0;
+
                 let dy2 = y2 - y0;
                 let dz = dy * dx2 - dx * dy2;
                 // Three condtions :-

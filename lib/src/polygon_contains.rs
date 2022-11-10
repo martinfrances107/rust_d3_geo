@@ -20,6 +20,9 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
 }
 
 /// Determines wheather a point is inside the polygon.
+///
+/// # Panics
+///  Will never happen as EPSILON will always be converted into T.
 pub fn polygon_contains<T: CoordFloat + FloatConst>(
     polygon: &[LineString<T>],
     point: &Coordinate<T>,
@@ -66,9 +69,10 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
             sum =
                 sum + (k * sign * abs_delta.sin()).atan2(cos_phi0 * cos_phi1 + k * abs_delta.cos());
             angle = angle
-                + match antimeridian {
-                    true => delta + sign * T::TAU(),
-                    false => delta,
+                + if antimeridian {
+                    delta + sign * T::TAU()
+                } else {
+                    delta
                 };
 
             // Are the longitudes either side of the point’s meridian (lambda),
@@ -87,9 +91,10 @@ pub fn polygon_contains<T: CoordFloat + FloatConst>(
                 };
 
                 if phi > phi_arc || phi == phi_arc && (arc[0] != T::zero() || arc[1] != T::zero()) {
-                    match antimeridian ^ (delta >= T::zero()) {
-                        true => winding += 1,
-                        false => winding -= 1,
+                    if antimeridian ^ (delta >= T::zero()) {
+                        winding += 1;
+                    } else {
+                        winding -= 1;
                     };
                 }
             }

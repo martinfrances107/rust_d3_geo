@@ -20,7 +20,7 @@ use super::clip::Clip;
 use super::clip::Connected as ConnectedClip;
 use interpolate::Interpolate;
 
-/// Connected clip type using antimerdian interpolator, point_visble function line handler.
+/// Connected clip type using antimerdian interpolator, `point_visble` function line handler.
 pub type ClipAntimeridianC<RC, T> = Clip<
     Interpolate<T>,
     Line<Connected<RC>, T>,
@@ -30,13 +30,14 @@ pub type ClipAntimeridianC<RC, T> = Clip<
     ConnectedClip<Line<Connected<Buffer<T>>, T>, Line<Connected<RC>, T>, T>,
     T,
 >;
-/// Unconnected clip type using antimerdian interpolator, point_visble function line handler.
+/// Unconnected clip type using antimerdian interpolator, `point_visble` function line handler.
 pub type ClipAntimeridianU<RC, T> =
     Clip<Interpolate<T>, Line<Connected<RC>, T>, Line<Unconnected, T>, PV<T>, RC, Unconnected, T>;
 
 /// Returns a clip setup for antimeridian clipping.
 #[inline]
-pub fn gen_clip_antimeridian<PCNU, RC, T>() -> ClipAntimeridianU<RC, T>
+#[must_use]
+pub fn gen_clip<PCNU, RC, T>() -> ClipAntimeridianU<RC, T>
 where
     RC: Clone,
     T: CoordFloat + Default + FloatConst,

@@ -73,7 +73,7 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coordinate<Self::T>, m: Option<u8>) {
-        self.state.sink.point(p, m)
+        self.state.sink.point(p, m);
     }
 
     #[inline]
@@ -88,6 +88,6 @@ where
 
     #[inline]
     fn sphere(&mut self) {
-        self.state.sink.sphere()
+        self.state.sink.sphere();
     }
 }
