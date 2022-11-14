@@ -42,19 +42,21 @@ where
 {
     let epsilon = T::from(EPSILON).unwrap();
 
-    GraticuleBuilder::default()
-        .extent_major_set([
-            [T::from(-180).unwrap(), T::from(-90_f64).unwrap() + epsilon],
-            [
-                T::from(180_f64).unwrap(),
-                T::from(90_f64).unwrap() - epsilon,
-            ],
-        ])
-        .extent_minor_set([
-            [T::from(-180).unwrap(), T::from(-80_f64).unwrap() - epsilon],
-            [
-                T::from(180_f64).unwrap(),
-                T::from(80_f64).unwrap() + epsilon,
-            ],
-        ])
+    let mut out = GraticuleBuilder::default();
+    out.extent_major_set([
+        [T::from(-180).unwrap(), T::from(-90_f64).unwrap() + epsilon],
+        [
+            T::from(180_f64).unwrap(),
+            T::from(90_f64).unwrap() - epsilon,
+        ],
+    ])
+    .extent_minor_set([
+        [T::from(-180).unwrap(), T::from(-80_f64).unwrap() - epsilon],
+        [
+            T::from(180_f64).unwrap(),
+            T::from(80_f64).unwrap() + epsilon,
+        ],
+    ]);
+
+    out
 }

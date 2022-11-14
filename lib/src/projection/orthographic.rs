@@ -39,7 +39,6 @@ where
 
     Coordinate { x: ret_x, y: ret_y }
 }
-
 /// Projection definition.
 #[derive(Clone, Copy, Default, Debug)]
 pub struct Orthographic<DRAIN, T> {

@@ -80,35 +80,35 @@ where
     T: 'static + CoordFloat,
 {
     /// Ouptut a iterator, which depends on the builder settings.
-    pub fn generated_lines(self) -> impl Iterator<Item = Vec<Coordinate<T>>> {
+    pub fn generated_lines(&self) -> impl Iterator<Item = Vec<Coordinate<T>>> + '_ {
         let range1 = range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX)
             .into_iter()
-            .map(self.X);
+            .map(&self.X);
 
         let range2 = range(T::ceil(self.Y0 / self.DY) * self.DY, self.Y1, self.DY)
             .into_iter()
-            .map(self.Y);
+            .map(&self.Y);
 
         let range3 = range(T::ceil(self.x0 / self.dx) * self.dx, self.x1, self.dx)
             .into_iter()
             .filter(move |x| (*x % self.DX).abs() > self.epsilon)
-            .map(self.x);
+            .map(&self.x);
 
         let range4 = range(T::ceil(self.y0 / self.dy) * self.dy, self.y1, self.dy)
             .into_iter()
             .filter(move |y| (*y % self.DY).abs() > self.epsilon)
-            .map(self.y);
+            .map(&self.y);
 
         range1.chain(range2).chain(range3).chain(range4)
     }
 
     /// Returns an Interator covering all the generated lines.
-    pub fn lines(self) -> impl Iterator<Item = LineString<T>> {
+    pub fn lines(&self) -> impl Iterator<Item = LineString<T>> + '_ {
         self.generated_lines().map(LineString)
     }
 
     /// Generates the outline.
-    pub fn outline(self) -> Polygon<T> {
+    pub fn outline(&self) -> Polygon<T> {
         let mut c = (self.X)(self.X0);
         c.append(&mut (self.Y)(self.Y1).split_off(1));
 
@@ -127,14 +127,14 @@ where
 
     /// Returns the extent.
     #[inline]
-    pub fn extent(self) -> [[T; 2]; 2] {
+    pub const fn extent(&self) -> [[T; 2]; 2] {
         self.extent_minor()
     }
 
     /// Sets the extent.
     #[inline]
     #[must_use]
-    pub fn extent_set(self, param: [[T; 2]; 2]) -> Self {
+    pub fn extent_set(&mut self, param: [[T; 2]; 2]) -> &mut Self {
         self.extent_major_set(param).extent_minor_set(param)
     }
 
@@ -146,7 +146,7 @@ where
 
     /// Sets the major extent.
     #[must_use]
-    pub fn extent_major_set(mut self, param: [[T; 2]; 2]) -> Self {
+    pub fn extent_major_set(&mut self, param: [[T; 2]; 2]) -> &mut Self {
         self.X0 = param[0][0];
         self.Y0 = param[0][1];
         self.X1 = param[1][0];
@@ -158,7 +158,8 @@ where
             swap(&mut self.Y0, &mut self.Y1);
         }
         let p = self.precision;
-        self.precision_set(&p)
+        self.precision_set(&p);
+        self
     }
 
     /// Returns the range assoicated with the minor ticks.
@@ -169,7 +170,7 @@ where
 
     /// Sets the range associated with minor ticks.
     #[must_use]
-    pub fn extent_minor_set(mut self, param: [[T; 2]; 2]) -> Self {
+    pub fn extent_minor_set(&mut self, param: [[T; 2]; 2]) -> &mut Self {
         self.x0 = param[0][0];
         self.y0 = param[0][1];
         self.x1 = param[1][0];
@@ -189,7 +190,7 @@ where
     /// Sets the step for both the major and minor ticks.
     #[inline]
     #[must_use]
-    pub fn step_set(self, step: [T; 2]) -> Self {
+    pub fn step_set(&mut self, step: [T; 2]) -> &mut Self {
         self.step_major_set(step).step_minor_set(step)
     }
 
@@ -201,7 +202,7 @@ where
 
     /// Sets the x and y major step size.
     #[must_use]
-    pub fn step_major_set(mut self, step: [T; 2]) -> Self {
+    pub fn step_major_set(&mut self, step: [T; 2]) -> &mut Self {
         self.DX = step[0];
         self.DY = step[1];
         self
@@ -215,7 +216,7 @@ where
 
     /// Sets the x and y minor step size.
     #[must_use]
-    pub fn step_minor_set(mut self, step: [T; 2]) -> Self {
+    pub fn step_minor_set(&mut self, step: [T; 2]) -> &mut Self {
         self.dx = step[0];
         self.dy = step[1];
         self
@@ -232,7 +233,7 @@ where
     /// # Panics
     ///  Will never happen as 90 will always be converted into T.
     #[must_use]
-    pub fn precision_set(mut self, precision: &T) -> Self {
+    pub fn precision_set(&mut self, precision: &T) -> &mut Self {
         self.precision = *precision;
         self.x = graticule_x(self.y0, self.y1, T::from(90_f64).unwrap());
         self.y = graticule_y(self.x0, self.x1, self.precision);

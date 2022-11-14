@@ -49,7 +49,8 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
     path.object(land);
     context_raw.stroke();
 
-    let lines = generate_graticule().lines();
+    let graticule = generate_graticule();
+    let lines = graticule.lines();
     let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
     context_raw.begin_path();
     context_raw.set_fill_style(&"#999".into());

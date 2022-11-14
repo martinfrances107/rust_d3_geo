@@ -228,9 +228,9 @@ mod area {
     #[test]
     fn graticule_outline_sphere() {
         println!("area: Polygon - graticule outline sphere");
-        let outline = generate_graticule()
-            .extent_set([[-180_f64, -90_f64], [180_f64, 90_f64]])
-            .outline();
+        let mut graticule = generate_graticule();
+        graticule.extent_set([[-180_f64, -90_f64], [180_f64, 90_f64]]);
+        let outline = graticule.outline();
         let area = Area::calc(&outline);
         assert!(in_delta(area, 4_f64 * std::f64::consts::PI, 1e-5));
     }
@@ -238,9 +238,9 @@ mod area {
     #[test]
     fn graticule_outline_hemisphere() {
         println!("area: Polygon - graticule outline hemisphere");
-        let outline = generate_graticule()
-            .extent_set([[-180_f64, 0_f64], [180_f64, 90_f64]])
-            .outline();
+        let mut graticule = generate_graticule();
+        graticule.extent_set([[-180_f64, 0_f64], [180_f64, 90_f64]]);
+        let outline = graticule.outline();
         let area = Area::calc(&outline);
         assert!(in_delta(area, 2_f64 * std::f64::consts::PI, 1e-5));
     }
@@ -248,9 +248,9 @@ mod area {
     #[test]
     fn graticule_outline_semilune() {
         println!("area: Polygon - graticule outline semilune");
-        let outline = generate_graticule()
-            .extent_set([[0_f64, 0_f64], [90_f64, 90_f64]])
-            .outline();
+        let mut graticule = generate_graticule();
+        graticule.extent_set([[0_f64, 0_f64], [90_f64, 90_f64]]);
+        let outline = graticule.outline();
         let area = Area::calc(&outline);
         assert!(in_delta(area, std::f64::consts::FRAC_PI_2, 1e-5));
     }

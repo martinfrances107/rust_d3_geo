@@ -12,7 +12,7 @@ mod graticule {
     #[test]
     fn gets_sets_precision() {
         println!("graticule.extent() gets precision");
-        let g = generate();
+        let mut g = generate();
         assert_eq!(g.precision(), 2.5);
         let g999 = g.precision_set(&999_f64);
         assert_eq!(g999.precision(), 999_f64);
@@ -22,19 +22,22 @@ mod graticule {
     fn read_write_extent_minor_and_major() {
         println!("graticule.extent(…) sets extentMinor and extentMajor");
 
-        let g = generate().extent_set([[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        let mut g = generate();
+        g.extent_set([[-90_f64, -45_f64], [90_f64, 45_f64]]);
         assert_eq!(g.extent_minor(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
         assert_eq!(g.extent_major(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
 
         // tests malformed ranges.( x0 > x1 etc)
-        let g = generate().extent_set([[90_f64, 45_f64], [-90_f64, -45_f64]]);
+        let mut g = generate();
+        g.extent_set([[90_f64, 45_f64], [-90_f64, -45_f64]]);
         assert_eq!(g.extent_minor(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
         assert_eq!(g.extent_major(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
     }
 
     #[test]
     fn read_write_extent_minor() {
-        let g = generate().extent_minor_set([[-90_f64, -45_f64], [90_f64, 45_f64]]);
+        let mut g = generate();
+        g.extent_minor_set([[-90_f64, -45_f64], [90_f64, 45_f64]]);
         assert_eq!(g.extent(), [[-90_f64, -45_f64], [90_f64, 45_f64]]);
     }
 
@@ -99,7 +102,8 @@ mod graticule {
     fn sets_minor_and_major_step() {
         println!("graticule.step(…) sets the minor and major step");
 
-        let e = generate::<f64>().step_set([22.5_f64, 22.5_f64]);
+        let mut e = generate::<f64>();
+        e.step_set([22.5_f64, 22.5_f64]);
         assert_eq!(e.step_minor(), [22.5_f64, 22.5_f64]);
         assert_eq!(e.step_major(), [22.5_f64, 22.5_f64]);
     }
@@ -108,7 +112,8 @@ mod graticule {
     fn sets_minor_step() {
         println!("graticule.step() gets the minor step");
 
-        let e = generate::<f64>().step_set([22.5_f64, 22.5_f64]);
+        let mut e = generate::<f64>();
+        e.step_set([22.5_f64, 22.5_f64]);
         assert_eq!(e.step_minor(), [22.5_f64, 22.5_f64]);
         assert_eq!(e.step_major(), [22.5_f64, 22.5_f64]);
     }
@@ -214,12 +219,11 @@ mod graticule {
     #[test]
     fn graticule_lines() {
         println!("graticule.lines() returns an array of LineStrings");
-        let lines: Vec<LineString<f64>> = generate::<f64>()
-            .extent_set([[-90_f64, -45_f64], [90_f64, 45_f64]])
+        let mut g = generate::<f64>();
+        g.extent_set([[-90_f64, -45_f64], [90_f64, 45_f64]])
             .step_set([45_f64, 45_f64])
-            .precision_set(&3_f64)
-            .lines()
-            .collect();
+            .precision_set(&3_f64);
+        let lines: Vec<LineString<f64>> = g.lines().collect();
 
         assert_eq!(
             lines[0],
@@ -411,7 +415,8 @@ mod graticule {
     fn outline_return_a_polygon() {
         println!("graticule.outline() returns a Polygon encompassing the major extent");
 
-        let graticule = generate::<f64>()
+        let mut graticule = generate::<f64>();
+        graticule
             .extent_major_set([[-90_f64, -45_f64], [90_f64, 45_f64]])
             .precision_set(&3_f64);
 
