@@ -8,7 +8,7 @@ keywords = { workspace = true }
 license = "MIT"
 name = "rust_d3_geo_example_ring"
 readme = { workspace = true }
-repository = { workspace = true }
+repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
 version = { workspace = true }
 
 [lib]
