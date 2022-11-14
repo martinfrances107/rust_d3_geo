@@ -62,13 +62,9 @@ where
 {
     /// Programe the builder with the context.
     #[must_use]
-    pub fn context(self, context: CanvasRenderingContext2d) -> Self {
-        Self {
-            p_pcnc: PhantomData::<PCNC>,
-            pr: self.pr,
-            context_stream: PathContext::new(context),
-            projection: self.projection,
-        }
+    pub fn context(&mut self, context: CanvasRenderingContext2d) -> &mut Self {
+        self.context_stream = PathContext::new(context);
+        self
     }
 }
 

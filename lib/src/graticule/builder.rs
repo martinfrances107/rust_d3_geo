@@ -135,7 +135,8 @@ where
     #[inline]
     #[must_use]
     pub fn extent_set(&mut self, param: [[T; 2]; 2]) -> &mut Self {
-        self.extent_major_set(param).extent_minor_set(param)
+        self.extent_major_set(param).extent_minor_set(param);
+        self
     }
 
     /// Returns the range associated with major ticks.
