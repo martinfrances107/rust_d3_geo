@@ -13,7 +13,7 @@ mod identity {
     use crate::projection::builder::template::NoPCNU;
     use crate::projection::builder::template::PCNC;
     use crate::projection::builder_identity::Builder;
-    use crate::projection::projection_equal::projection_equal;
+    use crate::projection::equality::projection_equal;
     use crate::projection::ClipExtentSet;
     use crate::projection::ReflectGet;
     use crate::projection::ReflectSet;

@@ -10,7 +10,7 @@ use crate::Transform;
 
 use super::builder_identity::types::BuilderIdentityAntimeridianResampleNoClip;
 use super::builder_identity::Builder;
-use super::ProjectionRawBase;
+use super::RawBase;
 
 /// Projection definition.
 #[derive(Clone, Copy, Default, Debug)]
@@ -19,7 +19,7 @@ pub struct Identity<DRAIN, T> {
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawBase for Identity<DRAIN, T>
+impl<DRAIN, T> RawBase for Identity<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,

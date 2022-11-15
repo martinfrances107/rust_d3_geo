@@ -7,7 +7,7 @@ use num_traits::float::FloatConst;
 
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::Builder;
-use crate::projection::ProjectionRawBase;
+use crate::projection::RawBase;
 use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
@@ -26,7 +26,7 @@ pub struct AzimuthalEquiDistant<DRAIN, T> {
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawBase for AzimuthalEquiDistant<DRAIN, T>
+impl<DRAIN, T> RawBase for AzimuthalEquiDistant<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,

@@ -13,7 +13,7 @@ use crate::Transform;
 use super::azimuthal::azimuthal_invert;
 use super::builder::Builder;
 use super::ClipAngleSet;
-use super::ProjectionRawBase;
+use super::RawBase;
 
 /// Projection definition.
 #[derive(Clone, Default, Debug)]
@@ -22,7 +22,7 @@ pub struct Gnomic<DRAIN, T> {
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawBase for Gnomic<DRAIN, T>
+impl<DRAIN, T> RawBase for Gnomic<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,

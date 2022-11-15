@@ -10,7 +10,7 @@ use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::equirectangular::Equirectangular;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::CenterSet;
-use rust_d3_geo::projection::ProjectionRawBase;
+use rust_d3_geo::projection::RawBase;
 use rust_d3_geo::projection::RotateSet;
 use rust_d3_geo::projection::ScaleSet;
 use rust_d3_geo::projection::TranslateSet;

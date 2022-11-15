@@ -14,7 +14,7 @@ use crate::Transform;
 
 use super::builder_mercator_transverse::types::BuilderMercatorTransverseAntimeridianResampleClip;
 use super::builder_mercator_transverse::Builder as MercatorTraverseBuilder;
-use super::ProjectionRawBase;
+use super::RawBase;
 use super::TransformExtent;
 
 /// Projection definition.
@@ -31,7 +31,7 @@ impl<DRAIN> Default for MercatorTransverse<DRAIN> {
     }
 }
 
-impl<DRAIN> ProjectionRawBase for MercatorTransverse<DRAIN>
+impl<DRAIN> RawBase for MercatorTransverse<DRAIN>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {

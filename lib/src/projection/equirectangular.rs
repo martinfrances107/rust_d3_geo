@@ -10,7 +10,7 @@ use crate::projection::ScaleSet;
 use crate::Transform;
 
 use super::builder::Builder;
-use super::ProjectionRawBase;
+use super::RawBase;
 
 /// Equirectangular
 /// Used to define a projection builder.
@@ -20,7 +20,7 @@ pub struct Equirectangular<DRAIN, T> {
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawBase for Equirectangular<DRAIN, T>
+impl<DRAIN, T> RawBase for Equirectangular<DRAIN, T>
 where
     DRAIN: Clone + Default,
     T: CoordFloat + Default + FloatConst,

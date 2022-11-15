@@ -32,6 +32,9 @@ pub mod builder_identity;
 pub mod builder_mercator;
 /// A specalised builder wrapping the mecator builder.
 pub mod builder_mercator_transverse;
+/// Debug and test helper function.
+#[cfg(not(tarpaulin_include))]
+pub mod equality;
 /// The raw projection.
 pub mod identity;
 /// The raw projection.
@@ -40,9 +43,6 @@ pub mod mercator;
 pub mod mercator_transverse;
 /// The raw projection.
 pub mod orthographic;
-/// Debug and test helper function.
-#[cfg(not(tarpaulin_include))]
-pub mod projection_equal;
 /// Projection object.
 pub mod projector;
 /// Projection Identity object.
@@ -95,7 +95,7 @@ pub trait TransformExtent {
 /// Serves as a abstract trait both things that follow the common family of
 /// raw projections, and alternatively the less common mercator family of
 /// raw projections.
-pub trait ProjectionRawBase: Transform {
+pub trait RawBase: Transform {
     /// The default builder.
     type Builder;
 

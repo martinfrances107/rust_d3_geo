@@ -13,7 +13,7 @@ use crate::Transform;
 use super::azimuthal::azimuthal_invert;
 use super::builder::Builder;
 use super::ClipAngleSet;
-use super::ProjectionRawBase;
+use super::RawBase;
 
 /// Projection definition.
 ///
@@ -27,7 +27,7 @@ pub struct Stereographic<DRAIN, T> {
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawBase for Stereographic<DRAIN, T>
+impl<DRAIN, T> RawBase for Stereographic<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,

@@ -18,7 +18,7 @@ mod path_measure {
     use rust_d3_geo::path_identity::builder::Builder as PathBuilder;
     use rust_d3_geo::projection::identity::Identity;
     use rust_d3_geo::projection::projector_identity::types::ProjectorIdentityAntimeridianResampleNoClip;
-    use rust_d3_geo::projection::ProjectionRawBase;
+    use rust_d3_geo::projection::RawBase;
     use rust_d3_geo::stream::Streamable;
 
     #[inline]

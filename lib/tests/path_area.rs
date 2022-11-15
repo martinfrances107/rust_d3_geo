@@ -21,7 +21,7 @@ mod path_area {
     use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::PrecisionBypass;
-    use rust_d3_geo::projection::ProjectionRawBase;
+    use rust_d3_geo::projection::RawBase;
     use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::stream::Streamable;
 

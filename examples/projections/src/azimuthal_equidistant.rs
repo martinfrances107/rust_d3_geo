@@ -11,7 +11,7 @@ use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::ClipAngleAdjust;
 use rust_d3_geo::projection::PrecisionAdjust;
-use rust_d3_geo::projection::ProjectionRawBase;
+use rust_d3_geo::projection::RawBase;
 use rust_d3_geo::projection::ScaleSet;
 use rust_d3_geo::projection::TranslateSet;
 

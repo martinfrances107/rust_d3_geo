@@ -90,7 +90,7 @@ pub trait Streamable {
 /// use rust_d3_geo::Transform;
 /// use rust_d3_geo::projection::stereographic::Stereographic;
 /// use rust_d3_geo::projection::Build;
-/// use rust_d3_geo::projection::ProjectionRawBase;
+/// use rust_d3_geo::projection::RawBase as ProjectionRawBase;
 /// use rust_d3_geo::stream::DrainStub;
 ///
 /// // The Projector needs a mock endpoint here for the stream pipeline.

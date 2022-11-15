@@ -14,13 +14,13 @@ mod reflect {
     use rust_d3_geo::projection::builder::template::ResampleNoPCNU;
     use rust_d3_geo::projection::builder::Builder;
     use rust_d3_geo::projection::builder_mercator::Builder as MercatorBuilder;
+    use rust_d3_geo::projection::equality::projection_equal;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mercator::Mercator;
-    use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::AngleGet;
     use rust_d3_geo::projection::AngleSet;
     use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::ProjectionRawBase;
+    use rust_d3_geo::projection::RawBase;
     use rust_d3_geo::projection::ReflectGet;
     use rust_d3_geo::projection::ReflectSet;
     use rust_d3_geo::projection::ScaleSet;

@@ -7,7 +7,7 @@ use num_traits::float::FloatConst;
 
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::Builder;
-use crate::projection::ProjectionRawBase;
+use crate::projection::RawBase;
 use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
@@ -29,7 +29,7 @@ where
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawBase for AzimuthalEqualArea<DRAIN, T>
+impl<DRAIN, T> RawBase for AzimuthalEqualArea<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,

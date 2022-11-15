@@ -3,11 +3,11 @@ mod stereographic_tests {
     use geo::Coordinate;
     use rust_d3_geo::projection::ScaleSet;
 
-    use rust_d3_geo::projection::projection_equal::projection_equal;
+    use rust_d3_geo::projection::equality::projection_equal;
     use rust_d3_geo::projection::projector::types::ProjectorCircleResampleNoClip;
     use rust_d3_geo::projection::stereographic::Stereographic;
     use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::ProjectionRawBase;
+    use rust_d3_geo::projection::RawBase;
     use rust_d3_geo::projection::TranslateSet;
     use rust_d3_geo::stream::DrainStub;
 

@@ -11,7 +11,7 @@ use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
 use rust_d3_geo::projection::ClipAngleSet;
 use rust_d3_geo::projection::PrecisionAdjust;
-use rust_d3_geo::projection::ProjectionRawBase;
+use rust_d3_geo::projection::RawBase;
 use rust_d3_geo::projection::ScaleSet;
 use rust_d3_geo::projection::TranslateSet;
 

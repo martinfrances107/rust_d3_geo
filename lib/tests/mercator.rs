@@ -18,7 +18,7 @@ mod mercator {
     use rust_d3_geo::projection::ClipExtentGet;
     use rust_d3_geo::projection::Fit;
     use rust_d3_geo::projection::PrecisionBypass;
-    use rust_d3_geo::projection::ProjectionRawBase;
+    use rust_d3_geo::projection::RawBase;
     use rust_d3_geo::projection::RotateGet;
     use rust_d3_geo::projection::RotateSet;
     use rust_d3_geo::projection::ScaleGet;

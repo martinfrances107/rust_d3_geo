@@ -31,7 +31,7 @@ mod fit {
     use rust_d3_geo::projection::PrecisionAdjust;
     use rust_d3_geo::projection::PrecisionBypass;
     use rust_d3_geo::projection::PrecisionGet;
-    use rust_d3_geo::projection::ProjectionRawBase;
+    use rust_d3_geo::projection::RawBase;
     use rust_d3_geo::projection::ScaleGet;
     use rust_d3_geo::projection::TranslateGet;
     use rust_topojson_client::feature::feature_from_name;

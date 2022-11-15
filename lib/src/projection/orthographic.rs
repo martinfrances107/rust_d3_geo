@@ -14,7 +14,7 @@ use crate::Transform;
 
 use super::builder::Builder;
 use super::ClipAngleSet;
-use super::ProjectionRawBase;
+use super::RawBase;
 
 #[inline]
 fn angle<T>(z: T) -> T
@@ -46,7 +46,7 @@ pub struct Orthographic<DRAIN, T> {
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> ProjectionRawBase for Orthographic<DRAIN, T>
+impl<DRAIN, T> RawBase for Orthographic<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,

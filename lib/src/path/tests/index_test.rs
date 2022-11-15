@@ -28,7 +28,7 @@ mod index {
     use crate::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
     use crate::projection::Build;
     use crate::projection::PrecisionBypass;
-    use crate::projection::ProjectionRawBase;
+    use crate::projection::RawBase;
     use crate::projection::RotateSet;
     use crate::projection::ScaleSet;
     use crate::stream::Stream;

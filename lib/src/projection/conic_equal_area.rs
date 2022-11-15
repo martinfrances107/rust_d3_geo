@@ -13,7 +13,7 @@ use super::builder::types::BuilderAntimeridianResampleNoClip;
 use super::builder::Builder;
 use super::cylindrical_equal_area::CylindricalEqualArea;
 use super::CenterSet;
-use super::ProjectionRawBase;
+use super::RawBase;
 
 ///Projection definition.
 ///
@@ -104,7 +104,7 @@ where
     }
 }
 
-impl<DRAIN, T> ProjectionRawBase for ConicEqualArea<DRAIN, T>
+impl<DRAIN, T> RawBase for ConicEqualArea<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,

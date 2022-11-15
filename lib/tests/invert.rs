@@ -6,15 +6,15 @@ mod invert {
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
     use rust_d3_geo::projection::conic_equal_area::ConicEqualArea;
+    use rust_d3_geo::projection::equality::projection_equal;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mercator::Mercator;
     use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
     use rust_d3_geo::projection::orthographic::Orthographic;
-    use rust_d3_geo::projection::projection_equal::projection_equal;
     use rust_d3_geo::projection::stereographic::Stereographic;
     use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::ProjectionRawBase;
+    use rust_d3_geo::projection::RawBase;
     use rust_d3_geo::stream::DrainStub;
     use rust_d3_geo::Transform;
 

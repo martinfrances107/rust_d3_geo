@@ -13,7 +13,7 @@ use crate::Transform;
 use super::builder::types::BuilderAntimeridianResampleNoClip;
 use super::builder::Builder;
 use super::mercator::Mercator;
-use super::ProjectionRawBase;
+use super::RawBase;
 
 /// Projection definition.
 ///
@@ -122,7 +122,7 @@ where
     }
 }
 
-impl<DRAIN> ProjectionRawBase for ConicConformal<DRAIN>
+impl<DRAIN> RawBase for ConicConformal<DRAIN>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
@@ -157,7 +157,7 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
     #[inline]
     fn invert(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
         let fy = self.f - p.y;
-        let r = self.n.signum() * (p.x * p.x + fy * fy).sqrt();
+        let r = self.n.signum() * p.x.hypot(fy);
         let mut l = p.x.atan2(fy.abs()) * fy.signum();
 
         if fy * self.n < 0f64 {

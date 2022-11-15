@@ -10,7 +10,7 @@ mod projection_rotate {
     use rust_d3_geo::path::builder::Builder as PathBuilder;
     use rust_d3_geo::projection::mercator::Mercator;
     use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::ProjectionRawBase;
+    use rust_d3_geo::projection::RawBase;
     use rust_d3_geo::projection::RotateSet;
     use rust_d3_geo::projection::ScaleSet;
     use rust_d3_geo::projection::TranslateSet;
