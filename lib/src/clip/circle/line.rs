@@ -312,14 +312,14 @@ where
                 || abs_diff_eq(&self.point0.unwrap().p, &point2.unwrap().p)
                 || abs_diff_eq(&point1.unwrap().p, &point2.unwrap().p)
             {
-                match point1 {
-                    Some(p) => {
-                        point1 = Some(LineElem { p: p.p, m: Some(1) });
-                    }
-                    None => {
+                point1.map_or_else(
+                    || {
                         panic!("Trying to set m on a blank.");
-                    }
-                }
+                    },
+                    |p| {
+                        point1 = Some(LineElem { p: p.p, m: Some(1) });
+                    },
+                );
             }
         }
 

@@ -146,16 +146,16 @@ pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
             current.borrow_mut().v = true;
             if current.borrow().e {
                 if is_subject {
-                    match points {
-                        Some(points) => {
+                    points.map_or_else(
+                        || {
+                            todo!("how to do nothing here");
+                        },
+                        |points| {
                             for p in points {
                                 stream.point(&p.p, None);
                             }
-                        }
-                        None => {
-                            todo!("how to do nothing here");
-                        }
-                    }
+                        },
+                    );
                 } else {
                     interpolator.interpolate(
                         Some((current.clone()).borrow().x.p),

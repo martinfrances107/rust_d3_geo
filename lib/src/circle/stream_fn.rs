@@ -29,24 +29,22 @@ pub fn stream_fn<EP, STREAM, T>(
     let step = direction * delta;
     let mut t0: T;
     let t1: T;
-    match (t0_in, t1_in) {
-        (Some(p0), Some(p1)) => {
-            t0 = calc_radius(cos_radius, &p0);
-            t1 = calc_radius(cos_radius, &p1);
-            let check = if direction > T::zero() {
-                t0 < t1
-            } else {
-                t0 > t1
-            };
 
-            if check {
-                t0 = t0 + direction * T::TAU();
-            }
+    if let (Some(p0), Some(p1)) = (t0_in, t1_in) {
+        t0 = calc_radius(cos_radius, &p0);
+        t1 = calc_radius(cos_radius, &p1);
+        let check = if direction > T::zero() {
+            t0 < t1
+        } else {
+            t0 > t1
+        };
+
+        if check {
+            t0 = t0 + direction * T::TAU();
         }
-        (_, _) => {
-            t0 = radius + direction * T::TAU();
-            t1 = radius - step / T::from(2).unwrap();
-        }
+    } else {
+        t0 = radius + direction * T::TAU();
+        t1 = radius - step / T::from(2).unwrap();
     }
 
     let mut t = t0;
