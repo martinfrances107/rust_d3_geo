@@ -7,7 +7,7 @@ use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip;
 use crate::clip::antimeridian::ClipAntimeridianC;
-use crate::clip::clip::Clip;
+use crate::clip::clipper::Clipper;
 use crate::compose::Compose;
 use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoneNoPCNU;

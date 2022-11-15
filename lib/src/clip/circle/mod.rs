@@ -18,11 +18,11 @@ use crate::stream::Unconnected;
 use pv::PV;
 
 use super::buffer::Buffer;
-use super::clip::Clip;
-use super::clip::Connected as ConnectedClip;
+use super::clipper::Clipper;
+use super::clipper::Connected as ConnectedClip;
 
 /// Connected clip type using circle interpolator, `point_visble` function line handler.
-pub type ClipCircleC<RC, T> = Clip<
+pub type ClipCircleC<RC, T> = Clipper<
     Interpolate<T>,
     Line<Connected<RC>, T>,
     Line<Unconnected, T>,
@@ -33,8 +33,15 @@ pub type ClipCircleC<RC, T> = Clip<
 >;
 
 /// Unconnected clip type using circle interpolator, `point_visble` function line handler.
-pub type ClipCircleU<RC, T> =
-    Clip<Interpolate<T>, Line<Connected<RC>, T>, Line<Unconnected, T>, PV<T>, RC, Unconnected, T>;
+pub type ClipCircleU<RC, T> = Clipper<
+    Interpolate<T>,
+    Line<Connected<RC>, T>,
+    Line<Unconnected, T>,
+    PV<T>,
+    RC,
+    Unconnected,
+    T,
+>;
 
 /// Returns a clip setup for circle clipping.
 pub fn gen_clip<DRAIN, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
@@ -56,7 +63,7 @@ where
         }
     };
 
-    Clip::new(
+    Clipper::new(
         Interpolate::new(radius),
         Line::new(radius),
         PV::new(radius),

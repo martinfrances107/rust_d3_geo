@@ -7,7 +7,7 @@ pub mod buffer;
 /// Related the specifics of circle clipping.
 pub mod circle;
 /// Holds the clip struct.
-pub mod clip;
+pub mod clipper;
 /// Helper function.
 pub mod compare_intersection;
 /// Interpolator used by Rectangle.

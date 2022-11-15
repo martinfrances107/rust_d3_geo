@@ -72,14 +72,14 @@ where
     line_end_fn: LineEndFn,
 }
 
-impl<I, LB, LC, LU, PV, RC, T> Connectable for Clip<I, LC, LU, PV, RC, Unconnected, T>
+impl<I, LB, LC, LU, PV, RC, T> Connectable for Clipper<I, LC, LU, PV, RC, Unconnected, T>
 where
     LU: Clone + StreamConnectable<Output<RC> = LC> + Bufferable<Output = LB, T = T>,
     RC: Clone,
     T: CoordFloat,
 {
     type SC = RC;
-    type Output = Clip<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>;
+    type Output = Clipper<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>;
 
     fn connect(self, sink: RC) -> Self::Output {
         let line_node = self.clip_line.clone().connect(sink);
@@ -113,7 +113,7 @@ where
 /// State associated with the clipping stratergy.
 ///
 /// Two distinct stratergies [Antimeridian](crate::clip::antimeridian) and [Circle](crate::clip::circle).
-pub struct Clip<I, LC, LU, PV, RC, STATE, T>
+pub struct Clipper<I, LC, LU, PV, RC, STATE, T>
 where
     T: CoordFloat,
 {
@@ -136,7 +136,7 @@ where
     pub start: Coordinate<T>,
 }
 
-impl<I, LC, LU, PV, RC, T> Clip<I, LC, LU, PV, RC, Unconnected, T>
+impl<I, LC, LU, PV, RC, T> Clipper<I, LC, LU, PV, RC, Unconnected, T>
 where
     T: CoordFloat,
 {
@@ -154,7 +154,7 @@ where
     }
 }
 
-impl<EP, I, LB, LC, LU, PV, RC, T> Clip<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>
+impl<EP, I, LB, LC, LU, PV, RC, T> Clipper<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>
 where
     LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
@@ -262,7 +262,7 @@ where
     }
 }
 
-impl<EP, I, LB, LC, LU, PV, RC, T> Stream for Clip<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>
+impl<EP, I, LB, LC, LU, PV, RC, T> Stream for Clipper<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,

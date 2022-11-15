@@ -13,7 +13,7 @@ use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
 use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
-use crate::projection::builder::Clip;
+use crate::projection::builder::Clipper;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -67,7 +67,7 @@ where
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
-        let clip = Clip::new(interpolator, line, pv, self.clip.start);
+        let clip = Clipper::new(interpolator, line, pv, self.clip.start);
 
         // Copy - Mutate.
         Self::Output {
@@ -148,7 +148,7 @@ where
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
-        let clip = Clip::new(interpolator, line, pv, self.clip.start);
+        let clip = Clipper::new(interpolator, line, pv, self.clip.start);
 
         // Copy - Mutate.
         Self::Output {

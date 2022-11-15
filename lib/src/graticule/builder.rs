@@ -135,8 +135,7 @@ where
     #[inline]
     #[must_use]
     pub fn extent_set(&mut self, param: [[T; 2]; 2]) -> &mut Self {
-        self.extent_major_set(param).extent_minor_set(param);
-        self
+        self.extent_major_set(param).extent_minor_set(param)
     }
 
     /// Returns the range associated with major ticks.
@@ -159,8 +158,7 @@ where
             swap(&mut self.Y0, &mut self.Y1);
         }
         let p = self.precision;
-        self.precision_set(&p);
-        self
+        self.precision_set(&p)
     }
 
     /// Returns the range assoicated with the minor ticks.

@@ -16,12 +16,12 @@ use line::Line;
 use pv::PV;
 
 use super::buffer::Buffer;
-use super::clip::Clip;
-use super::clip::Connected as ConnectedClip;
+use super::clipper::Clipper;
+use super::clipper::Connected as ConnectedClip;
 use interpolate::Interpolate;
 
 /// Connected clip type using antimerdian interpolator, `point_visble` function line handler.
-pub type ClipAntimeridianC<RC, T> = Clip<
+pub type ClipAntimeridianC<RC, T> = Clipper<
     Interpolate<T>,
     Line<Connected<RC>, T>,
     Line<Unconnected, T>,
@@ -31,8 +31,15 @@ pub type ClipAntimeridianC<RC, T> = Clip<
     T,
 >;
 /// Unconnected clip type using antimerdian interpolator, `point_visble` function line handler.
-pub type ClipAntimeridianU<RC, T> =
-    Clip<Interpolate<T>, Line<Connected<RC>, T>, Line<Unconnected, T>, PV<T>, RC, Unconnected, T>;
+pub type ClipAntimeridianU<RC, T> = Clipper<
+    Interpolate<T>,
+    Line<Connected<RC>, T>,
+    Line<Unconnected, T>,
+    PV<T>,
+    RC,
+    Unconnected,
+    T,
+>;
 
 /// Returns a clip setup for antimeridian clipping.
 #[inline]
@@ -42,7 +49,7 @@ where
     RC: Clone,
     T: CoordFloat + Default + FloatConst,
 {
-    Clip::new(
+    Clipper::new(
         Interpolate::default(),
         Line::default(),
         PV::default(),

@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::clip::Connectable;
+use crate::clip::clipper::Connectable;
 use crate::path::bounds::Bounds;
 use crate::projection::builder::Builder;
 use crate::projection::fit_no_clip::fit_extent_no_clip;

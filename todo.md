@@ -22,6 +22,9 @@ examples/projection eslint needs updating.
 
 * Add examples landing page. - showing images of the each projection.
 
+* Make a tranlucent globe using reflectX.
+ https://observablehq.com/@d3/projection-reflectx?collection=@d3/d3-geo
+
 * Check on performance of real world test ... ortho projection of 50m.json altas
  with graticules showing africa or South pacific.
 

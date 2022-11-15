@@ -26,7 +26,7 @@ use geo::Coordinate;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::clip::Connectable as ClipConnectable;
+use crate::clip::clipper::Connectable as ClipConnectable;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;

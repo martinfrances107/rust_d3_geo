@@ -5,7 +5,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
-use crate::clip::clip::Connectable as ClipConnectable;
+use crate::clip::clipper::Connectable as ClipConnectable;
 use crate::compose::Compose;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;

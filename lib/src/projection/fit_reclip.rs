@@ -16,7 +16,7 @@ use num_traits::FloatConst;
 use geo::CoordFloat;
 use geo::Coordinate;
 
-use crate::clip::clip::Connectable as ClipConnectable;
+use crate::clip::clipper::Connectable as ClipConnectable;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::PCNC;
