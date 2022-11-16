@@ -185,7 +185,6 @@ where
 
     /// Sets the step for both the major and minor ticks.
     #[inline]
-    #[must_use]
     pub fn step_set(&mut self, step: [T; 2]) -> &mut Self {
         self.step_major_set(step).step_minor_set(step)
     }
