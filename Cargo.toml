@@ -23,7 +23,7 @@ rust-version = "1.65"
 [workspace.dependencies]
 geo = "~0.23"
 getrandom = { version = "~0.2", features = ["js"] }
-gloo-utils = "0.1.5"
+gloo-utils = "~0.1"
 js-sys = "~0.3"
 futures = "~0.3"
 rand = { version = "~0.8" }
