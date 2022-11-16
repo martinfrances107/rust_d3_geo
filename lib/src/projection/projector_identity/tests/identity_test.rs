@@ -7,6 +7,8 @@ mod identity {
     use geo::LineString;
 
     use crate::identity::Identity;
+    use crate::in_delta::in_delta;
+    use crate::math::EPSILON;
     use crate::path::string::String;
     use crate::path_identity::builder::Builder as PathBuilder;
     use crate::projection::builder::template::NoPCNC;
@@ -58,7 +60,7 @@ mod identity {
 
         // These getter asserts have no direct equivalent in the javascript original.
         // but increase code coverage.
-        assert_eq!(ib.scale(), 1_f64);
+        assert!(in_delta(ib.scale(), 1_f64, f64::EPSILON));
         assert_eq!(ib.translate(), Coordinate { x: 0_f64, y: 0_f64 });
     }
 

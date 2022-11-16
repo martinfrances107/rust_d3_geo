@@ -75,7 +75,7 @@ impl Result for Context {
     fn result(&mut self) -> Self::Out {
         self.context
             .as_mut()
-            .map_or_else(Vec::new, |context| context.result())
+            .map_or_else(Vec::new, CanvasRenderingContext2d::result)
     }
 }
 

@@ -98,20 +98,26 @@ mod tests {
     fn identity_rotation() {
         println!("the identity rotation constrains longitudes to [-180°, 180°]");
         let rotate = Rotation::new(0f64, 0f64, 0f64);
-        assert_eq!(
+        assert!(in_delta(
             rotate.transform(&Coordinate { x: 180f64, y: 0f64 }).x,
-            180f64
-        );
-        assert_eq!(
+            180f64,
+            f64::EPSILON
+        ));
+        assert!(in_delta(
             rotate
                 .transform(&Coordinate {
                     x: -180f64,
                     y: 0f64
                 })
                 .x,
-            -180f64
-        );
-        assert_eq!(rotate.transform(&Coordinate { x: 360f64, y: 0f64 }).x, 0f64);
+            -180f64,
+            f64::EPSILON
+        ));
+        assert!(in_delta(
+            rotate.transform(&Coordinate { x: 360f64, y: 0f64 }).x,
+            0f64,
+            f64::EPSILON
+        ));
         assert!(in_delta(
             rotate
                 .transform(&Coordinate {
