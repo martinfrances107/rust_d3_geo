@@ -61,7 +61,6 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
-    #[must_use]
     pub fn context(&mut self, context: CanvasRenderingContext2d) -> &mut Self {
         self.context_stream = PathContext::new(context);
         self

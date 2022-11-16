@@ -1,11 +1,11 @@
-use geo::Coordinate;
+use std::vec::Vec;
 
+use geo::Coordinate;
 #[cfg(not(any(test)))]
 use web_sys::CanvasRenderingContext2d;
 
 #[cfg(any(test))]
 use crate::path_test_context::CanvasRenderingContext2d;
-
 use crate::stream::Stream;
 
 use super::PointRadiusTrait;
@@ -73,10 +73,9 @@ impl Result for Context {
     type Out = Vec<String>;
     #[inline]
     fn result(&mut self) -> Self::Out {
-        match &mut self.context {
-            Some(context) => context.result(),
-            None => vec![],
-        }
+        self.context
+            .as_mut()
+            .map_or_else(Vec::new, |context| context.result())
     }
 }
 

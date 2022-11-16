@@ -158,7 +158,6 @@ where
     T: CoordFloat,
 {
     /// Sets the context stream.
-    #[must_use]
     pub fn context(&mut self, context_stream: CS) -> &mut Self {
         self.context_stream = context_stream;
         self

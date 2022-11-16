@@ -133,7 +133,6 @@ where
 
     /// Sets the extent.
     #[inline]
-    #[must_use]
     pub fn extent_set(&mut self, param: [[T; 2]; 2]) -> &mut Self {
         self.extent_major_set(param).extent_minor_set(param)
     }
@@ -145,7 +144,6 @@ where
     }
 
     /// Sets the major extent.
-    #[must_use]
     pub fn extent_major_set(&mut self, param: [[T; 2]; 2]) -> &mut Self {
         self.X0 = param[0][0];
         self.Y0 = param[0][1];
@@ -168,7 +166,6 @@ where
     }
 
     /// Sets the range associated with minor ticks.
-    #[must_use]
     pub fn extent_minor_set(&mut self, param: [[T; 2]; 2]) -> &mut Self {
         self.x0 = param[0][0];
         self.y0 = param[0][1];
@@ -200,7 +197,6 @@ where
     }
 
     /// Sets the x and y major step size.
-    #[must_use]
     pub fn step_major_set(&mut self, step: [T; 2]) -> &mut Self {
         self.DX = step[0];
         self.DY = step[1];
@@ -214,7 +210,6 @@ where
     }
 
     /// Sets the x and y minor step size.
-    #[must_use]
     pub fn step_minor_set(&mut self, step: [T; 2]) -> &mut Self {
         self.dx = step[0];
         self.dy = step[1];
@@ -231,7 +226,6 @@ where
     ///
     /// # Panics
     ///  Will never happen as 90 will always be converted into T.
-    #[must_use]
     pub fn precision_set(&mut self, precision: &T) -> &mut Self {
         self.precision = *precision;
         self.x = graticule_x(self.y0, self.y1, T::from(90_f64).unwrap());
