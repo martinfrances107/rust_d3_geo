@@ -51,7 +51,7 @@ where
     T: CoordFloat,
 {
     type Output<SC: Clone> = Transformer<DRAIN, Connected<SC>, T>;
-    fn connect<SC>(self, sink: SC) -> Transformer<DRAIN, Connected<SC>, T>
+    fn connect<SC>(&self, sink: SC) -> Transformer<DRAIN, Connected<SC>, T>
     where
         SC: Clone,
     {

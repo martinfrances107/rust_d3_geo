@@ -54,7 +54,6 @@ mod tests {
     use crate::in_delta::in_delta;
     use crate::Transform;
     use geo::Coordinate;
-    use pretty_assertions::assert_eq;
     use rotation::Rotation;
 
     #[test]

@@ -55,9 +55,9 @@ where
             }
         }
 
-        let pcn = self.postclip.clone().connect(drain.clone());
+        let pcn = self.postclip.connect(drain.clone());
 
-        let out = self.transform.clone().connect(pcn);
+        let out = self.transform.connect(pcn);
 
         // Populate cache.
         self.cache = Some((drain.clone(), out.clone()));

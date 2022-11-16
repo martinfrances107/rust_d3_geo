@@ -32,7 +32,7 @@ pub trait Connectable {
     type SC;
 
     /// Connects to previous pipeline stage.
-    fn connect(self, sink: Self::SC) -> Self::Output;
+    fn connect(&self, sink: Self::SC) -> Self::Output;
 }
 
 #[derive(Clone, Debug)]
@@ -74,14 +74,16 @@ where
 
 impl<I, LB, LC, LU, PV, RC, T> Connectable for Clipper<I, LC, LU, PV, RC, Unconnected, T>
 where
+    I: Clone,
     LU: Clone + StreamConnectable<Output<RC> = LC> + Bufferable<Output = LB, T = T>,
+    PV: Clone,
     RC: Clone,
     T: CoordFloat,
 {
     type SC = RC;
     type Output = Clipper<I, LC, LU, PV, RC, Connected<LB, LC, T>, T>;
 
-    fn connect(self, sink: RC) -> Self::Output {
+    fn connect(&self, sink: RC) -> Self::Output {
         let line_node = self.clip_line.clone().connect(sink);
         let ring_buffer = Buffer::<T>::default();
         let ring_sink = self.clip_line.clone().buffer(ring_buffer);
@@ -101,9 +103,9 @@ where
             p_lc: PhantomData::<LC>,
             p_rc: PhantomData::<RC>,
             state,
-            clip_line: self.clip_line,
-            interpolator: self.interpolator,
-            pv: self.pv,
+            clip_line: self.clip_line.clone(),
+            interpolator: self.interpolator.clone(),
+            pv: self.pv.clone(),
             start: self.start,
         }
     }

@@ -85,7 +85,7 @@ where
 
         let resample_node = self.resample.clone().connect(postclip_node);
 
-        let preclip_node = self.clip.clone().connect(resample_node);
+        let preclip_node = self.clip.connect(resample_node);
 
         let rotate_node = self.rotator.clone().connect(preclip_node);
 

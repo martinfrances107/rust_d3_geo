@@ -8,7 +8,6 @@ mod identity {
 
     use crate::identity::Identity;
     use crate::in_delta::in_delta;
-    use crate::math::EPSILON;
     use crate::path::string::String;
     use crate::path_identity::builder::Builder as PathBuilder;
     use crate::projection::builder::template::NoPCNC;

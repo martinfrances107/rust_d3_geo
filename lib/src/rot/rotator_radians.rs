@@ -4,6 +4,7 @@ use geo::CoordFloat;
 use geo::Coordinate;
 use num_traits::FloatConst;
 
+use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
@@ -35,19 +36,20 @@ where
     }
 }
 
-impl<T> RotatorRadians<Unconnected, T>
+impl<T> Connectable for RotatorRadians<Unconnected, T>
 where
     T: CoordFloat,
 {
+    type Output<SINK: Clone> = RotatorRadians<Connected<SINK>, T>;
     /// Connects the next stage in the stream pipline.
     #[inline]
-    pub fn connect<SINK>(self, sink: SINK) -> RotatorRadians<Connected<SINK>, T>
+    fn connect<SINK>(&self, sink: SINK) -> Self::Output<SINK>
     where
         SINK: Clone,
     {
         RotatorRadians {
             state: Connected { sink },
-            rotate: self.rotate,
+            rotate: self.rotate.clone(),
         }
     }
 }

@@ -114,7 +114,7 @@ where
     type Output<SC: Clone> = Line<Connected<SC>, T>;
 
     #[inline]
-    fn connect<SC: Clone>(self, sink: SC) -> Line<Connected<SC>, T> {
+    fn connect<SC: Clone>(&self, sink: SC) -> Line<Connected<SC>, T> {
         // Copy Mutate.
         Line {
             state: Connected { sink },

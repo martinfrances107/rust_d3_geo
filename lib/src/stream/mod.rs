@@ -57,7 +57,7 @@ pub trait Connectable {
     type Output<SC: Clone>;
 
     /// Connects to previous pipeline stage.
-    fn connect<SC: Clone>(self, sink: SC) -> Self::Output<SC>;
+    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC>;
 }
 
 /// Things the implement stream need to assert that

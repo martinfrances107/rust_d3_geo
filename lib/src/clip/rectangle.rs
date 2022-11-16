@@ -249,10 +249,10 @@ where
     /// The resultant postclip node  type.
     type Output<SC: Clone> = Rectangle<Connected<SC>, T>;
 
-    fn connect<SC: Clone>(self, sink: SC) -> Self::Output<SC> {
+    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
         Rectangle {
             state: Connected { sink },
-            buffer_stream: self.buffer_stream,
+            buffer_stream: self.buffer_stream.clone(),
             clean: self.clean,
             clip_min: self.clip_min,
             clip_max: self.clip_max,
@@ -263,8 +263,8 @@ where
             x1: self.x1,
             y1: self.y1,
 
-            polygon: self.polygon,
-            segments: self.segments,
+            polygon: self.polygon.clone(),
+            segments: self.segments.clone(),
 
             // first point.
             x__: self.x__,

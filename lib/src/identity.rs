@@ -41,7 +41,7 @@ impl Connectable for Identity<Unconnected> {
     type Output<SC: Clone> = Identity<Connected<SC>>;
 
     #[inline]
-    fn connect<SC: Clone>(self, sink: SC) -> Self::Output<SC> {
+    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
         Identity {
             state: Connected { sink },
         }
