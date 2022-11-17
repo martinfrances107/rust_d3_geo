@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-
+#[allow(clippy::excessive_precision)]
 mod equirectangular {
 
     use geo_types::Coord;
@@ -242,6 +242,7 @@ mod equirectangular {
         ));
     }
     #[test]
+    #[allow(clippy::excessive_precision)]
     fn rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
         let mut b: B = Equirectangular::builder();

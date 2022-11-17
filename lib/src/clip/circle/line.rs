@@ -258,6 +258,8 @@ where
         self.v0 = false;
         self.clean = 1;
     }
+
+    #[allow(clippy::too_many_lines)]
     fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         let mut point1 = Some(LineElem { p: *p, m: None });
         let mut point2: Option<LineElem<T>>;

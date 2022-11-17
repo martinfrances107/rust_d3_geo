@@ -90,6 +90,7 @@ mod area {
     fn polygon_tiny() {
         println!("area: Polygon - tiny");
 
+        #[allow(clippy::excessive_precision)]
         let g = polygon![
             (x:-64.66070178517852, y:18.33986913231323),
             (x:-64.66079715091509, y:18.33994007490749),
@@ -119,6 +120,7 @@ mod area {
     fn polygon_zero_area() {
         println!("area: Polygon - zero area");
 
+        #[allow(clippy::excessive_precision)]
         let g = polygon![
         (x: 96.79142432523281, y:5.262704519048153),
         (x: 96.81065389253769, y:5.272455576551362),

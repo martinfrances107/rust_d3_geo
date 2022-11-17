@@ -164,7 +164,8 @@ where
     }
 
     #[inline]
-    fn point_radius(mut self, input: PointRadiusEnum<T>) -> Self {
+    #[must_use]
+    pub fn point_radius(mut self, input: PointRadiusEnum<T>) -> Self {
         self.point_radius = match input {
             PointRadiusEnum::F(ref _input_fn) => input,
             PointRadiusEnum::Val(_input_value) => input,

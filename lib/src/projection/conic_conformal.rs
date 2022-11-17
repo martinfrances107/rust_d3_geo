@@ -1,7 +1,6 @@
 use std::marker::PhantomData;
 
 use geo_types::Coord;
-use num_traits::pow;
 use num_traits::FloatConst;
 use num_traits::Zero;
 
