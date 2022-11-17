@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::projection::builder::template::ResampleNonePCNC;
@@ -37,7 +37,7 @@ where
 {
     type T = T;
 
-    fn center_set(&mut self, center: &Coordinate<T>) -> &mut Self {
+    fn center_set(&mut self, center: &Coord<T>) -> &mut Self {
         self.base.center_set(center);
         self.reclip()
     }
@@ -63,7 +63,7 @@ where
 {
     type T = T;
 
-    fn center_set(&mut self, center: &Coordinate<T>) -> &mut Self {
+    fn center_set(&mut self, center: &Coord<T>) -> &mut Self {
         self.base.center_set(center);
         self.reclip()
     }

@@ -1,6 +1,6 @@
 use std::vec::Vec;
 
-use geo::Coordinate;
+use geo_types::Coord;
 #[cfg(not(any(test)))]
 use web_sys::CanvasRenderingContext2d;
 
@@ -114,7 +114,7 @@ impl Stream for Context {
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<f64>, _z: Option<u8>) {
+    fn point(&mut self, p: &Coord<f64>, _z: Option<u8>) {
         match self.point {
             PointState::LineStart => {
                 if let Some(c) = &mut self.context {

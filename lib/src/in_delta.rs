@@ -1,8 +1,8 @@
 use std::fmt::Display;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use geo::Point;
+use geo_types::Coord;
 
 /// True if two points are identical within the specified difference.
 pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bool {
@@ -42,8 +42,8 @@ pub fn point<T: CoordFloat + Display>(actual: Point<T>, expected: Point<T>, delt
 ///
 /// Debug and test helper function.
 pub fn coordinate<T: CoordFloat + Display>(
-    actual: &Coordinate<T>,
-    expected: &Coordinate<T>,
+    actual: &Coord<T>,
+    expected: &Coord<T>,
     delta: T,
 ) -> bool {
     println!(

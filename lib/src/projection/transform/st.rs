@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::Transform;
 
@@ -39,18 +39,18 @@ where
     type T = T;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         let x = p.x * self.sx;
         let y = p.y * self.sy;
-        Coordinate {
+        Coord {
             x: self.dx + self.k * x,
             y: self.dy - self.k * y,
         }
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        Coordinate {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
+        Coord {
             x: (p.x - self.dx) / self.k * self.sx,
             y: (self.dy - p.y) / self.k * self.sy,
         }

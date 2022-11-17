@@ -6,7 +6,7 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::float::FloatConst;
 
 use crate::stream::Stream;
@@ -47,7 +47,7 @@ impl<DRAIN> Transform for MercatorTransverse<DRAIN> {
     type T = f64;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
+    fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
         let angle = (f64::FRAC_PI_2() + p.y) / 2f64;
         // Javascript compatibility mode.
         // let tan_angle = if angle == f64::FRAC_PI_2() {
@@ -58,15 +58,15 @@ impl<DRAIN> Transform for MercatorTransverse<DRAIN> {
         //     angle.tan()
         // };
         let tan_angle = angle.tan();
-        Coordinate {
+        Coord {
             x: tan_angle.ln(),
             y: -p.x,
         }
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
-        Coordinate {
+    fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
+        Coord {
             x: -p.y,
             y: 2f64 * (p.x.exp()).atan() - f64::FRAC_PI_2(),
         }
@@ -79,18 +79,18 @@ impl<DRAIN> TransformExtent for MercatorTransverse<DRAIN> {
     fn transform_extent(
         self,
         k: f64,
-        t: Coordinate<f64>,
+        t: Coord<f64>,
         x0: f64,
         y0: f64,
         x1: f64,
         y1: f64,
-    ) -> [Coordinate<f64>; 2] {
+    ) -> [Coord<f64>; 2] {
         [
-            Coordinate {
+            Coord {
                 x: x0,
                 y: f64::max(t.x - k, y0),
             },
-            Coordinate {
+            Coord {
                 x: x1,
                 y: f64::min(t.y + k, y1),
             },

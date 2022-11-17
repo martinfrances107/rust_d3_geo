@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::Interpolator;
@@ -30,8 +30,8 @@ where
     type T = T;
     fn interpolate<EP, STREAM>(
         &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
+        from: Option<Coord<T>>,
+        to: Option<Coord<T>>,
         direction: T,
         stream_in: &mut STREAM,
     ) where
@@ -43,58 +43,58 @@ where
                 phi = direction * T::FRAC_PI_2();
 
                 stream_in.point(
-                    &Coordinate {
+                    &Coord {
                         x: -T::PI(),
                         y: phi,
                     },
                     None,
                 );
                 stream_in.point(
-                    &Coordinate {
+                    &Coord {
                         x: T::zero(),
                         y: phi,
                     },
                     None,
                 );
-                stream_in.point(&Coordinate { x: T::PI(), y: phi }, None);
+                stream_in.point(&Coord { x: T::PI(), y: phi }, None);
 
                 stream_in.point(
-                    &Coordinate {
+                    &Coord {
                         x: T::PI(),
                         y: T::zero(),
                     },
                     None,
                 );
                 stream_in.point(
-                    &Coordinate {
+                    &Coord {
                         x: T::PI(),
                         y: -phi,
                     },
                     None,
                 );
                 stream_in.point(
-                    &Coordinate {
+                    &Coord {
                         x: T::zero(),
                         y: -phi,
                     },
                     None,
                 );
                 stream_in.point(
-                    &Coordinate {
+                    &Coord {
                         x: -T::PI(),
                         y: -phi,
                     },
                     None,
                 );
                 stream_in.point(
-                    &Coordinate {
+                    &Coord {
                         x: -T::PI(),
                         y: T::zero(),
                     },
                     None,
                 );
                 stream_in.point(
-                    &Coordinate {
+                    &Coord {
                         x: -T::PI(),
                         y: phi,
                     },
@@ -107,15 +107,15 @@ where
                     let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
 
                     phi = direction * lambda / T::from(2).unwrap();
-                    stream_in.point(&Coordinate { x: -lambda, y: phi }, None);
+                    stream_in.point(&Coord { x: -lambda, y: phi }, None);
                     stream_in.point(
-                        &Coordinate {
+                        &Coord {
                             x: T::zero(),
                             y: phi,
                         },
                         None,
                     );
-                    stream_in.point(&Coordinate { x: lambda, y: phi }, None);
+                    stream_in.point(&Coord { x: lambda, y: phi }, None);
                 } else {
                     stream_in.point(&to, None);
                 }

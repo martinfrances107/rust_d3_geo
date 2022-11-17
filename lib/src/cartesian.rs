@@ -1,11 +1,11 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 /// Converts 3D Cartesian to spherical coordinates (degrees).
 #[inline]
-pub fn spherical<T: CoordFloat + FloatConst>(cartesian: &[T; 3]) -> Coordinate<T> {
-    Coordinate {
+pub fn spherical<T: CoordFloat + FloatConst>(cartesian: &[T; 3]) -> Coord<T> {
+    Coord {
         x: cartesian[1].atan2(cartesian[0]).to_degrees(),
         y: cartesian[2].asin().to_degrees(),
     }
@@ -13,18 +13,18 @@ pub fn spherical<T: CoordFloat + FloatConst>(cartesian: &[T; 3]) -> Coordinate<T
 
 /// Converts 3D Cartesian to spherical coordinates (radians).
 #[inline]
-pub fn spherical_radians<T>(cartesian: &[T; 3]) -> Coordinate<T>
+pub fn spherical_radians<T>(cartesian: &[T; 3]) -> Coord<T>
 where
     T: CoordFloat + FloatConst,
 {
-    Coordinate {
+    Coord {
         x: cartesian[1].atan2(cartesian[0]),
         y: cartesian[2].asin(),
     }
 }
 
 /// Convert point on sphere to cartesian coordinates.
-pub fn cartesian<T: CoordFloat>(spherical: &Coordinate<T>) -> [T; 3] {
+pub fn cartesian<T: CoordFloat>(spherical: &Coord<T>) -> [T; 3] {
     let lambda = spherical.x;
     let phi = spherical.y;
     let (sin_phi, cos_phi) = phi.sin_cos();

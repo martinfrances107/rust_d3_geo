@@ -50,7 +50,7 @@ use std::marker::PhantomData;
 
 use derivative::Derivative;
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::ClipAntimeridianC;
@@ -161,7 +161,7 @@ pub trait TranslateReclip {
     ///  The translation offset determines the pixel coordinates of the projection’s center. The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
     ///
     ///  @param point A two-element array [tx, ty] specifying the translation offset. The default translation offset of defaults to [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
-    fn translate(self, t: &Coordinate<Self::T>) -> Self::Output
+    fn translate(self, t: &Coord<Self::T>) -> Self::Output
     where
         Self::T: CoordFloat;
 }
@@ -188,7 +188,7 @@ where
     /// The wrapped builder type.
     pub base: ProjectionBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>,
     /// post-clip extent
-    pub extent: Option<[Coordinate<T>; 2]>,
+    pub extent: Option<[Coord<T>; 2]>,
 }
 
 impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
@@ -202,11 +202,11 @@ where
         let base = ProjectionBuilder::new(pr.clone());
         // Dummy clip values here will be overriten by the following reclip.
         let base = base.clip_extent_set(&[
-            Coordinate {
+            Coord {
                 x: T::neg_infinity(),
                 y: T::neg_infinity(),
             },
-            Coordinate {
+            Coord {
                 x: T::infinity(),
                 y: T::infinity(),
             },

@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::fmt::Display;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::in_delta::in_delta;
 use crate::math::EPSILON;
@@ -15,8 +15,8 @@ use crate::Transform;
 ///  Will never happen as EPSILON will always be converted into T.
 pub fn projection_equal<'a, P, T>(
     projection: &P,
-    expected_location: &'a Coordinate<T>,
-    expected_point: &'a Coordinate<T>,
+    expected_location: &'a Coord<T>,
+    expected_point: &'a Coord<T>,
     delta_p: Option<T>,
 ) -> bool
 where
@@ -40,8 +40,8 @@ where
 }
 
 fn planar_equal<T: CoordFloat + Debug + Display>(
-    actual: &Coordinate<T>,
-    expected: &Coordinate<T>,
+    actual: &Coord<T>,
+    expected: &Coord<T>,
     delta: T,
 ) -> bool {
     let e0 = in_delta(actual.x, expected.x, delta);
@@ -49,7 +49,7 @@ fn planar_equal<T: CoordFloat + Debug + Display>(
     e0 && e1
 }
 
-fn spherical_equal<T>(actual: &Coordinate<T>, expected: &Coordinate<T>, delta: T) -> bool
+fn spherical_equal<T>(actual: &Coord<T>, expected: &Coord<T>, delta: T) -> bool
 where
     T: CoordFloat + Display,
 {

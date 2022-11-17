@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::stream::Connectable;
@@ -78,7 +78,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, m: Option<u8>) {
         self.state.sink.point(&self.rotate.transform(p), m);
     }
 

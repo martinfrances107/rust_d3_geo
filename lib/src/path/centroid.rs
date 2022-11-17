@@ -2,7 +2,7 @@ use std::ops::AddAssign;
 
 use derivative::Derivative;
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
@@ -38,7 +38,7 @@ where
     y0: T,
 
     #[derivative(Debug = "ignore")]
-    point_fn: fn(&mut Self, &Coordinate<T>),
+    point_fn: fn(&mut Self, &Coord<T>),
     #[derivative(Debug = "ignore")]
     line_start_fn: fn(&mut Self),
     #[derivative(Debug = "ignore")]
@@ -106,7 +106,7 @@ impl<T> Centroid<T>
 where
     T: AddAssign<T> + CoordFloat,
 {
-    fn centroid_point(&mut self, p: &Coordinate<T>) {
+    fn centroid_point(&mut self, p: &Coord<T>) {
         self.X0 += p.x;
         self.Y0 += p.y;
         self.Z0 += T::one();
@@ -117,14 +117,14 @@ where
         self.point_fn = Self::centroid_point_first_line;
     }
 
-    fn centroid_point_first_line(&mut self, p: &Coordinate<T>) {
+    fn centroid_point_first_line(&mut self, p: &Coord<T>) {
         self.point_fn = Self::centroid_point_line;
         self.x0 = p.x;
         self.y0 = p.y;
         self.centroid_point(p);
     }
 
-    fn centroid_point_line(&mut self, p: &Coordinate<T>) {
+    fn centroid_point_line(&mut self, p: &Coord<T>) {
         let dx = p.x - self.x0;
         let dy = p.y - self.y0;
         let z = (dx * dx + dy * dy).sqrt();
@@ -151,14 +151,14 @@ where
 
     #[inline]
     fn centroid_ring_end(&mut self) {
-        self.centroid_point_ring(&Coordinate {
+        self.centroid_point_ring(&Coord {
             x: self.x00,
             y: self.y00,
         });
     }
 
     #[inline]
-    fn centroid_point_first_ring(&mut self, p: &Coordinate<T>) {
+    fn centroid_point_first_ring(&mut self, p: &Coord<T>) {
         self.point_fn = Self::centroid_point_ring;
         self.x00 = p.x;
         self.x0 = p.x;
@@ -169,7 +169,7 @@ where
     }
 
     #[inline]
-    fn centroid_point_ring(&mut self, p: &Coordinate<T>) {
+    fn centroid_point_ring(&mut self, p: &Coord<T>) {
         let dx = p.x - self.x0;
         let dy = p.y - self.y0;
         let z = (dx * dx + dy * dy).sqrt();
@@ -193,27 +193,27 @@ impl<T> Result for Centroid<T>
 where
     T: AddAssign<T> + CoordFloat,
 {
-    type Out = Coordinate<T>;
+    type Out = Coord<T>;
 
     /// Return the result, resetting the Centroid.
     fn result(&mut self) -> Self::Out {
         let centroid = if !self.Z2.is_zero() {
-            Coordinate {
+            Coord {
                 x: self.X2 / self.Z2,
                 y: self.Y2 / self.Z2,
             }
         } else if !self.Z1.is_zero() {
-            Coordinate {
+            Coord {
                 x: self.X1 / self.Z1,
                 y: self.Y1 / self.Z1,
             }
         } else if !self.Z0.is_zero() {
-            Coordinate {
+            Coord {
                 x: self.X0 / self.Z0,
                 y: self.Y0 / self.Z0,
             }
         } else {
-            Coordinate {
+            Coord {
                 x: T::nan(),
                 y: T::nan(),
             }
@@ -255,7 +255,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         (self.point_fn)(self, p);
     }
 

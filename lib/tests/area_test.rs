@@ -5,13 +5,13 @@ mod area {
     use geo::line_string;
     use geo::polygon;
     use geo::CoordFloat;
-    use geo::Coordinate;
     use geo::Geometry;
     use geo::LineString;
     use geo::MultiLineString;
     use geo::MultiPolygon;
     use geo::Point;
     use geo::Polygon;
+    use geo_types::Coord;
 
     use pretty_assertions::assert_eq;
 
@@ -280,7 +280,7 @@ mod area {
         let circle = CircleGenerator::default()
             .radius_set(60_f64)
             .precision_set(0.1_f64)
-            .center_set(&Coordinate {
+            .center_set(&Coord {
                 x: 0_f64,
                 y: 90_f64,
             })
@@ -310,7 +310,7 @@ mod area {
         let circle = CircleGenerator::default()
             .radius_set(45_f64)
             .precision_set(0.1_f64)
-            .center_set(&Coordinate {
+            .center_set(&Coord {
                 x: 0_f64,
                 y: 90_f64,
             })
@@ -329,7 +329,7 @@ mod area {
         let circle = CircleGenerator::default()
             .radius_set(45_f64)
             .precision_set(0.1_f64)
-            .center_set(&Coordinate {
+            .center_set(&Coord {
                 x: 0_f64,
                 y: -90_f64,
             })
@@ -363,7 +363,7 @@ mod area {
         let circle = CircleGenerator::default()
             .radius_set(135_f64)
             .precision_set(0.1_f64)
-            .center_set(&Coordinate {
+            .center_set(&Coord {
                 x: 0_f64,
                 y: 90_f64,
             })
@@ -382,7 +382,7 @@ mod area {
         let circle = CircleGenerator::default()
             .radius_set(135_f64)
             .precision_set(0.1_f64)
-            .center_set(&Coordinate {
+            .center_set(&Coord {
                 x: 0_f64,
                 y: -90_f64,
             })
@@ -450,17 +450,17 @@ mod area {
         let ring1 = CircleGenerator::default()
             .precision_set(0.1)
             .radius_set(45_f64)
-            .center_set(&Coordinate { x: 0_f64, y: 0_f64 })
+            .center_set(&Coord { x: 0_f64, y: 0_f64 })
             .circle()
             .exterior()
             .clone();
-        let rev1_vec: Vec<Coordinate<f64>> = ring1.into_iter().rev().collect();
+        let rev1_vec: Vec<Coord<f64>> = ring1.into_iter().rev().collect();
         let ring1_rev = LineString(rev1_vec);
 
         let ring2 = CircleGenerator::default()
             .precision_set(0.1)
             .radius_set(45_f64)
-            .center_set(&Coordinate {
+            .center_set(&Coord {
                 x: 0_f64,
                 y: 90_f64,
             })
@@ -485,25 +485,25 @@ mod area {
         let ring1 = CircleGenerator::default()
             .precision_set(0.1)
             .radius_set(45_f64)
-            .center_set(&Coordinate {
+            .center_set(&Coord {
                 x: 0_f64,
                 y: 90_f64,
             })
             .circle()
             .exterior()
             .clone();
-        let rev1_vec: Vec<Coordinate<f64>> = ring1.into_iter().rev().collect();
+        let rev1_vec: Vec<Coord<f64>> = ring1.into_iter().rev().collect();
         let ring1_rev = LineString(rev1_vec);
 
         let ring2 = CircleGenerator::default()
             .precision_set(0.1)
             .radius_set(45_f64)
-            .center_set(&Coordinate { x: 0_f64, y: 0_f64 })
+            .center_set(&Coord { x: 0_f64, y: 0_f64 })
             .circle()
             .exterior()
             .clone();
 
-        let rev2_vec: Vec<Coordinate<f64>> = ring2.into_iter().rev().collect();
+        let rev2_vec: Vec<Coord<f64>> = ring2.into_iter().rev().collect();
         let ring2_rev = LineString(rev2_vec);
 
         let polygon = Polygon::new(ring1_rev, vec![ring2_rev]);

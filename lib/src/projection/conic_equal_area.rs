@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::math::EPSILON;
@@ -46,7 +46,7 @@ where
     T: CoordFloat + FloatConst,
 {
     type T = T;
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         match self {
             Self::Cyl(cyl) => cyl.transform(p),
             Self::Con(con) => con.transform(p),
@@ -54,7 +54,7 @@ where
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         match self {
             Self::Cyl(cyl) => cyl.invert(p),
             Self::Con(con) => con.invert(p),
@@ -95,11 +95,10 @@ where
         y1: T,
     ) -> BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T> {
         let mut b = Builder::new(Self::generate(y0, y1));
-        b.scale_set(T::from(155.424).unwrap())
-            .center_set(&Coordinate {
-                x: T::zero(),
-                y: T::from(33.6442).unwrap(),
-            });
+        b.scale_set(T::from(155.424).unwrap()).center_set(&Coord {
+            x: T::zero(),
+            y: T::from(33.6442).unwrap(),
+        });
         b
     }
 }
@@ -123,24 +122,24 @@ where
     type T = T;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         let r = (self.c - self.two * self.n * p.y.sin()).sqrt() / self.n;
         let x = p.x * self.n;
-        Coordinate {
+        Coord {
             x: r * x.sin(),
             y: self.r0 - r * x.cos(),
         }
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         let r0y = self.r0 - p.y;
         let mut l = p.x.atan2(r0y.abs()) * r0y.signum();
         if r0y * self.n < T::zero() {
             l = l - T::PI() * p.x.signum() * r0y.signum();
         }
 
-        Coordinate {
+        Coord {
             x: l / self.n,
             y: ((self.c - (p.x * p.x + r0y * r0y) * self.n * self.n) / (self.two * self.n)).asin(),
         }

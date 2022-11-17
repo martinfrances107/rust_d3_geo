@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::cartesian::spherical_radians;
@@ -16,8 +16,8 @@ pub fn stream_fn<EP, STREAM, T>(
     radius: T,
     delta: T,
     direction: T,
-    t0_in: Option<Coordinate<T>>,
-    t1_in: Option<Coordinate<T>>,
+    t0_in: Option<Coord<T>>,
+    t1_in: Option<Coord<T>>,
 ) where
     T: CoordFloat + FloatConst,
     STREAM: Stream<EP = EP, T = T>,

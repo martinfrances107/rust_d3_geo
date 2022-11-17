@@ -4,8 +4,8 @@ pub mod sphere;
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use geo::Geometry;
+use geo_types::Coord;
 
 /// Specifies a valie feature property.
 #[derive(Clone, Debug)]
@@ -14,19 +14,19 @@ where
     T: CoordFloat,
 {
     /// Circumcenter.
-    Circumecenter(Coordinate<T>),
+    Circumecenter(Coord<T>),
     /// Length.
     Length(T),
     /// Source.
-    Source(Coordinate<T>),
+    Source(Coord<T>),
     /// Target.
-    Target(Coordinate<T>),
+    Target(Coord<T>),
     /// Urquhart distances.
     Urquhart(bool),
     /// Site Coordinate.
-    Site(Coordinate<T>),
+    Site(Coord<T>),
     /// Sites Coordinates.
-    Sitecoordinates(Coordinate<T>),
+    Sitecoordinates(Coord<T>),
     ///  A collection of indexes.
     Neighbors(Vec<usize>),
 }

@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::float::FloatConst;
 
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
@@ -46,18 +46,18 @@ where
 {
     type T = T;
 
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         let (sx, cs) = p.x.sin_cos();
         let (sy, cy) = p.y.sin_cos();
         let k = cs * cy;
-        Coordinate {
+        Coord {
             x: cy * sx / k,
             y: sy / k,
         }
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         azimuthal_invert(p, T::atan)
     }
 }

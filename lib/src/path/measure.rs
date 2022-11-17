@@ -2,7 +2,7 @@ use std::ops::AddAssign;
 
 use derivative::Derivative;
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
@@ -24,10 +24,10 @@ where
 {
     mode: MeasureMode,
     length_sum: T,
-    p00: Coordinate<T>,
-    p0: Coordinate<T>,
+    p00: Coord<T>,
+    p0: Coord<T>,
     #[derivative(Debug = "ignore")]
-    point_fn: fn(&mut Self, &Coordinate<T>),
+    point_fn: fn(&mut Self, &Coord<T>),
 }
 
 // Ignore the state machine functions.
@@ -51,11 +51,11 @@ where
             // in the javascript, this is lengthRing
             mode: MeasureMode::None,
             length_sum: T::zero(),
-            p0: Coordinate {
+            p0: Coord {
                 x: T::nan(),
                 y: T::nan(),
             },
-            p00: Coordinate {
+            p00: Coord {
                 x: T::nan(),
                 y: T::nan(),
             },
@@ -70,15 +70,15 @@ where
 {
     #[inline]
     #[allow(clippy::unused_self)]
-    fn point_noop(&mut self, _p: &Coordinate<T>) {}
+    fn point_noop(&mut self, _p: &Coord<T>) {}
 
-    fn length_point_first(&mut self, p: &Coordinate<T>) {
+    fn length_point_first(&mut self, p: &Coord<T>) {
         self.point_fn = Self::length_point;
         self.p0 = *p;
         self.p00 = *p;
     }
 
-    fn length_point(&mut self, p: &Coordinate<T>) {
+    fn length_point(&mut self, p: &Coord<T>) {
         self.p0 = self.p0 - *p;
 
         self.length_sum += (self.p0.x * self.p0.x + self.p0.y * self.p0.y).sqrt();
@@ -126,7 +126,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         (self.point_fn)(self, p);
     }
 

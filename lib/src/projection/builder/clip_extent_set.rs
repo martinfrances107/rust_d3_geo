@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip as gen_clip_antimeridian;
@@ -40,7 +40,7 @@ where
     type T = T;
 
     #[inline]
-    fn clip_extent_set(&self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+    fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
@@ -86,7 +86,7 @@ where
     type T = T;
 
     #[inline]
-    fn clip_extent_set(&self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+    fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
 
@@ -133,7 +133,7 @@ where
     type T = T;
 
     #[inline]
-    fn clip_extent_set(&self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+    fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
@@ -186,7 +186,7 @@ where
     type Output = BuilderCircleResampleNoneClip<DRAIN, PR, T>;
 
     #[inline]
-    fn clip_extent_set(&self, extent: &[Coordinate<T>; 2]) -> Self::Output {
+    fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,

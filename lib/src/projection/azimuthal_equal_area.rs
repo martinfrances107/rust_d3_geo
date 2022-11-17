@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::float::FloatConst;
 
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
@@ -67,12 +67,12 @@ where
     type T = T;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         azimuthal_raw(p, Self::cxcy)
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         azimuthal_invert(p, Self::z)
     }
 }

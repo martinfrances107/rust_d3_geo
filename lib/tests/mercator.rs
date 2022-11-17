@@ -3,8 +3,8 @@ mod mercator {
 
     extern crate pretty_assertions;
 
-    use geo::Coordinate;
     use geo::Geometry;
+    use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::data_object::sphere::Sphere;
@@ -30,7 +30,7 @@ mod mercator {
     fn clip_extent_defaults_to_automatic() {
         println!("mercator.clipExtent(null) sets the default automatic clip extent");
         let pb = Mercator::builder()
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+            .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64)
             .precision_bypass()
             .clip_extent_clear();
@@ -48,8 +48,8 @@ mod mercator {
     fn center_set_correct_automatic() {
         println!("mercator.center(center) sets the correct automatic clip extent");
         let pb = Mercator::builder()
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
-            .center_set(&Coordinate {
+            .translate_set(&Coord { x: 0_f64, y: 0_f64 })
+            .center_set(&Coord {
                 x: 10_f64,
                 y: 10_f64,
             })
@@ -75,13 +75,13 @@ mod mercator {
 	            "mercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent"
 	        );
         let pb = Mercator::builder()
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+            .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .clip_extent_adjust(&[
-                Coordinate {
+                Coord {
                     x: -10_f64,
                     y: -10_f64,
                 },
-                Coordinate {
+                Coord {
                     x: 10_f64,
                     y: 10_f64,
                 },
@@ -100,11 +100,11 @@ mod mercator {
         assert_eq!(
             pb.clip_extent(),
             Some([
-                Coordinate {
+                Coord {
                     x: -10_f64,
                     y: -10_f64,
                 },
-                Coordinate {
+                Coord {
                     x: 10_f64,
                     y: 10_f64,
                 },
@@ -118,13 +118,13 @@ mod mercator {
             "mercator.clipExtent(extent).translate(scale) updates the intersected clip extent"
         );
         let pb = Mercator::builder()
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+            .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .clip_extent_adjust(&[
-                Coordinate {
+                Coord {
                     x: -10_f64,
                     y: -10_f64,
                 },
-                Coordinate {
+                Coord {
                     x: 10_f64,
                     y: 10_f64,
                 },
@@ -142,11 +142,11 @@ mod mercator {
         assert_eq!(
             pb.clip_extent(),
             Some([
-                Coordinate {
+                Coord {
                     x: -10_f64,
                     y: -10_f64,
                 },
-                Coordinate {
+                Coord {
                     x: 10_f64,
                     y: 10_f64,
                 },
@@ -162,16 +162,16 @@ mod mercator {
         let mut pb = Mercator::builder();
         pb.scale_set(1_f64);
         pb.clip_extent_adjust(&[
-            Coordinate {
+            Coord {
                 x: -10_f64,
                 y: -10_f64,
             },
-            Coordinate {
+            Coord {
                 x: 10_f64,
                 y: 10_f64,
             },
         ]);
-        let pb = pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        let pb = pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
@@ -184,11 +184,11 @@ mod mercator {
         assert_eq!(
             pb.clip_extent(),
             Some([
-                Coordinate {
+                Coord {
                     x: -10_f64,
                     y: -10_f64,
                 },
-                Coordinate {
+                Coord {
                     x: 10_f64,
                     y: 10_f64,
                 },
@@ -217,7 +217,7 @@ mod mercator {
         assert_eq!(pb.scale(), 20969742.365692537_f64);
         assert_eq!(
             pb.translate(),
-            Coordinate {
+            Coord {
                 x: 30139734.76760269_f64,
                 y: 11371473.949706702_f64
             }
@@ -230,7 +230,7 @@ mod mercator {
         assert_eq!(pb.scale(), 35781690.650920525_f64);
         assert!(in_delta_coordinate(
             &pb.translate(),
-            &Coordinate {
+            &Coord {
                 x: 75115911.95344563_f64,
                 y: 2586046.4116968135_f64
             },

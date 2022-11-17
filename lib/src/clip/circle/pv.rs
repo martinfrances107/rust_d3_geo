@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::clip::PointVisible;
 
@@ -27,7 +27,7 @@ where
     type T = T;
 
     #[inline]
-    fn point_visible(&self, p: &Coordinate<T>) -> bool {
+    fn point_visible(&self, p: &Coord<T>) -> bool {
         p.x.cos() * p.y.cos() > self.cr
     }
 }

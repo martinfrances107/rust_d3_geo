@@ -5,7 +5,7 @@ use std::fmt::Debug;
 use std::rc::Rc;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 use num_traits::Zero;
 
@@ -44,7 +44,7 @@ where
     x1: T,
     y1: T,
 
-    polygon: Option<Vec<Vec<Coordinate<T>>>>,
+    polygon: Option<Vec<Vec<Coord<T>>>>,
     segments: Option<VecDeque<VecDeque<Vec<LineElem<T>>>>>,
 
     // first point.
@@ -133,7 +133,7 @@ where
     }
 
     #[inline]
-    fn visible(&self, p: &Coordinate<T>) -> bool {
+    fn visible(&self, p: &Coord<T>) -> bool {
         self.x0 <= p.x && p.x <= self.x1 && self.y0 <= p.y && p.y <= self.y1
     }
 }
@@ -144,7 +144,7 @@ where
     T: CoordFloat,
 {
     #[inline]
-    fn default_point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn default_point(&mut self, p: &Coord<T>, m: Option<u8>) {
         if self.visible(p) {
             if self.use_buffer_stream {
                 self.buffer_stream.point(p, m);
@@ -154,7 +154,7 @@ where
         }
     }
 
-    fn line_point(&mut self, p_in: &Coordinate<T>, m: Option<u8>) {
+    fn line_point(&mut self, p_in: &Coord<T>, m: Option<u8>) {
         let mut p = *p_in;
         let v = self.visible(&p);
 
@@ -199,22 +199,16 @@ where
                 if !self.v_ {
                     if self.use_buffer_stream {
                         self.buffer_stream.line_start();
-                        self.buffer_stream
-                            .point(&Coordinate { x: a[0], y: a[1] }, None);
+                        self.buffer_stream.point(&Coord { x: a[0], y: a[1] }, None);
                     } else {
                         self.state.sink.line_start();
-                        self.state
-                            .sink
-                            .point(&Coordinate { x: a[0], y: a[1] }, None);
+                        self.state.sink.point(&Coord { x: a[0], y: a[1] }, None);
                     }
                 }
                 if self.use_buffer_stream {
-                    self.buffer_stream
-                        .point(&Coordinate { x: b[0], y: b[1] }, None);
+                    self.buffer_stream.point(&Coord { x: b[0], y: b[1] }, None);
                 } else {
-                    self.state
-                        .sink
-                        .point(&Coordinate { x: b[0], y: b[1] }, None);
+                    self.state.sink.point(&Coord { x: b[0], y: b[1] }, None);
                 }
                 if !v {
                     if self.use_buffer_stream {
@@ -297,7 +291,7 @@ where
     fn line_end(&mut self) {
         if self.segments.is_some() {
             self.line_point(
-                &Coordinate {
+                &Coord {
                     x: self.x__,
                     y: self.y__,
                 },
@@ -334,7 +328,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, m: Option<u8>) {
         if self.use_line_point {
             self.line_point(p, m);
         } else {

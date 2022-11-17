@@ -1,7 +1,7 @@
 use geo::coords_iter::CoordsIter;
 use geo::CoordFloat;
-use geo::Coordinate;
 use geo::LineString;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
@@ -11,7 +11,7 @@ use crate::math::EPSILON2;
 use crate::EPSILON;
 
 #[inline]
-fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
+fn longitude<T: CoordFloat + FloatConst>(point: &Coord<T>) -> T {
     if point.x.abs() <= T::PI() {
         point.x
     } else {
@@ -25,7 +25,7 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coordinate<T>) -> T {
 ///  Will never happen as EPSILON will always be converted into T.
 pub fn polygon_contains<T: CoordFloat + FloatConst>(
     polygon: &[LineString<T>],
-    point: &Coordinate<T>,
+    point: &Coord<T>,
 ) -> bool {
     let lambda = longitude(point);
     let mut phi = point.y;

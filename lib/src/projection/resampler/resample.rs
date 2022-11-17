@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
@@ -160,7 +160,7 @@ where
     SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
-    fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point_default(&mut self, p: &Coord<T>, m: Option<u8>) {
         let pt = self.projection_transform.transform(p);
         self.state.sink.point(&pt, m);
     }
@@ -182,9 +182,9 @@ where
         self.state.use_line_end = false;
     }
 
-    fn ring_point(&mut self, p: &Coordinate<T>) {
+    fn ring_point(&mut self, p: &Coord<T>) {
         self.state.lambda00 = p.x;
-        self.line_point(&Coordinate {
+        self.line_point(&Coord {
             x: self.state.lambda00,
             y: p.y,
         });
@@ -218,7 +218,7 @@ where
         self.state.sink.line_end();
     }
 
-    fn line_point(&mut self, p: &Coordinate<T>) {
+    fn line_point(&mut self, p: &Coord<T>) {
         let c = cartesian(p);
         let p_transformed = self.projection_transform.transform(p);
         self.resample_line_to(
@@ -243,7 +243,7 @@ where
         self.state.b0 = c[1];
         self.state.c0 = c[2];
         self.state.sink.point(
-            &Coordinate {
+            &Coord {
                 x: self.state.x0,
                 y: self.state.y0,
             },
@@ -291,7 +291,7 @@ where
                     b.atan2(a)
                 };
 
-                let p = self.projection_transform.transform(&Coordinate {
+                let p = self.projection_transform.transform(&Coord {
                     x: lambda2,
                     y: phi2,
                 });
@@ -316,7 +316,7 @@ where
                     self.resample_line_to(
                         x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth,
                     );
-                    self.state.sink.point(&Coordinate { x: x2, y: y2 }, None);
+                    self.state.sink.point(&Coord { x: x2, y: y2 }, None);
 
                     self.resample_line_to(
                         x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth,
@@ -359,7 +359,7 @@ where
         }
     }
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, m: Option<u8>) {
         match self.state.point_state {
             PointState::Default => {
                 self.point_default(p, m);

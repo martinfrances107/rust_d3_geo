@@ -1,7 +1,7 @@
 #[cfg(not(tarpaulin_include))]
 mod projection_angle {
 
-    use geo::Coordinate;
+    use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::in_delta::in_delta;
@@ -24,24 +24,24 @@ mod projection_angle {
         println!("projection.angle(…) defaults to zero");
         let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
         pb.scale_set(1_f64);
-        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         assert_eq!(pb.angle(), 0_f64);
         let projection = pb.build();
 
         assert!(projection_equal(
             &projection,
-            &Coordinate { x: 0f64, y: 0f64 },
-            &Coordinate { x: 0f64, y: 0f64 },
+            &Coord { x: 0f64, y: 0f64 },
+            &Coord { x: 0f64, y: 0f64 },
             None
         ));
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: 0_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.17632698070846498_f64,
                 y: 0_f64
             },
@@ -49,11 +49,11 @@ mod projection_angle {
         ));
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: -10_f64,
                 y: 0_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.17632698070846498_f64,
                 y: 0_f64
             },
@@ -62,11 +62,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: -0.17632698070846498_f64
             },
@@ -74,11 +74,11 @@ mod projection_angle {
         ));
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: -10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: 0.17632698070846498_f64
             },
@@ -87,11 +87,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.17632698070846495_f64,
                 y: -0.17904710860483972_f64
             },
@@ -100,11 +100,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: -10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.17632698070846495_f64,
                 y: 0.17904710860483972_f64
             },
@@ -113,11 +113,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: -10_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.17632698070846495_f64,
                 y: -0.17904710860483972_f64
             },
@@ -126,11 +126,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: -10_f64,
                 y: -10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.17632698070846495_f64,
                 y: 0.17904710860483972_f64
             },
@@ -143,7 +143,7 @@ mod projection_angle {
         println!("projection.angle(…) defaults to zero");
         let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
         pb.scale_set(1_f64)
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+            .translate_set(&Coord { x: 0_f64, y: 0_f64 });
         let pb = pb.angle_set(30_f64);
 
         // this rounds to 29.9999999 not 30!!
@@ -153,18 +153,18 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate { x: 0f64, y: 0f64 },
-            &Coordinate { x: 0f64, y: 0f64 },
+            &Coord { x: 0f64, y: 0f64 },
+            &Coord { x: 0f64, y: 0f64 },
             None
         ));
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: 0_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.1527036446661393_f64,
                 y: -0.08816349035423247_f64
             },
@@ -173,11 +173,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: -10_f64,
                 y: 0_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.1527036446661393_f64,
                 y: 0.08816349035423247_f64
             },
@@ -186,11 +186,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.08816349035423247_f64,
                 y: -0.1527036446661393_f64
             },
@@ -198,11 +198,11 @@ mod projection_angle {
         ));
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: -10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.08816349035423247_f64,
                 y: 0.1527036446661393_f64
             },
@@ -211,11 +211,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.06318009036371944_f64,
                 y: -0.24322283488017502_f64
             },
@@ -224,11 +224,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: -10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.24222719896855913_f64,
                 y: 0.0668958541717101
             },
@@ -237,11 +237,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: -10_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.24222719896855913_f64,
                 y: -0.0668958541717101
             },
@@ -250,11 +250,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: -10_f64,
                 y: -10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.06318009036371944_f64,
                 y: 0.24322283488017502
             },
@@ -267,7 +267,7 @@ mod projection_angle {
         println!("projection.angle(…) defaults to zero");
         let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
         pb.scale_set(1_f64)
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+            .translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
         pb.angle_set(-30_f64);
 
@@ -277,18 +277,18 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate { x: 0f64, y: 0f64 },
-            &Coordinate { x: 0f64, y: 0f64 },
+            &Coord { x: 0f64, y: 0f64 },
+            &Coord { x: 0f64, y: 0f64 },
             None
         ));
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: 0_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.1527036446661393_f64,
                 y: 0.08816349035423247_f64
             },
@@ -297,11 +297,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: -10_f64,
                 y: 0_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.1527036446661393_f64,
                 y: -0.08816349035423247_f64
             },
@@ -310,11 +310,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.08816349035423247_f64,
                 y: -0.1527036446661393_f64
             },
@@ -322,11 +322,11 @@ mod projection_angle {
         ));
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: -10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.08816349035423247_f64,
                 y: 0.1527036446661393_f64
             },
@@ -335,11 +335,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.24222719896855913_f64,
                 y: -0.0668958541717101_f64
             },
@@ -348,11 +348,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: -10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.06318009036371944_f64,
                 y: 0.24322283488017502_f64,
             },
@@ -361,11 +361,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: -10_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.06318009036371944_f64,
                 y: -0.24322283488017502_f64
             },
@@ -374,11 +374,11 @@ mod projection_angle {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: -10_f64,
                 y: -10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.24222719896855913_f64,
                 y: 0.0668958541717101_f64
             },
@@ -391,7 +391,7 @@ mod projection_angle {
         println!("projection.angle(…) wraps around 360°");
         let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
         pb.scale_set(1_f64);
-        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         pb.angle_set(360_f64);
 
         assert!(in_delta(pb.angle(), 0_f64, 1e-6));
@@ -414,27 +414,27 @@ mod projection_angle {
         let projector = pb.build::<NoPCNC<DrainStub<f32>>>();
 
         assert_eq!(
-            projector.transform(&Coordinate { x: 0f32, y: 0f32 }),
-            Coordinate { x: 0f32, y: 0f32 }
+            projector.transform(&Coord { x: 0f32, y: 0f32 }),
+            Coord { x: 0f32, y: 0f32 }
         );
 
         assert_eq!(
-            projector.transform(&Coordinate { x: 1f32, y: 0f32 }),
-            Coordinate {
+            projector.transform(&Coord { x: 1f32, y: 0f32 }),
+            Coord {
                 x: sqrt2_2,
                 y: sqrt2_2
             }
         );
         assert_eq!(
-            projector.transform(&Coordinate { x: -1f32, y: 0f32 }),
-            Coordinate {
+            projector.transform(&Coord { x: -1f32, y: 0f32 }),
+            Coord {
                 x: -sqrt2_2,
                 y: -sqrt2_2
             }
         );
         assert_eq!(
-            projector.transform(&Coordinate { x: 0f32, y: 1f32 }),
-            Coordinate {
+            projector.transform(&Coord { x: 0f32, y: 1f32 }),
+            Coord {
                 x: -sqrt2_2,
                 y: sqrt2_2
             }

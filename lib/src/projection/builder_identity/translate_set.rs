@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::projection::TranslateSet;
 
@@ -12,7 +12,7 @@ where
     type T = T;
 
     #[inline]
-    fn translate_set(&mut self, t: &Coordinate<T>) -> &mut Self {
+    fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.tx = t.x;
         self.ty = t.y;
         self.reset()

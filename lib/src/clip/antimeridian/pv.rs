@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::clip::PointVisible;
 
@@ -25,7 +25,7 @@ where
     type T = T;
 
     #[inline]
-    fn point_visible(&self, _p: &Coordinate<T>) -> bool {
+    fn point_visible(&self, _p: &Coord<T>) -> bool {
         true
     }
 }

@@ -3,20 +3,20 @@ mod polygon_contains {
     extern crate pretty_assertions;
 
     use geo::CoordFloat;
-    use geo::Coordinate;
     use geo::LineString;
     use geo::Polygon;
+    use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::circle::generator::Generator as CircleGenerator;
     use rust_d3_geo::polygon_contains::polygon_contains as contains;
 
     #[inline]
-    fn point_radians<T>(p: &Coordinate<T>) -> Coordinate<T>
+    fn point_radians<T>(p: &Coord<T>) -> Coord<T>
     where
         T: CoordFloat,
     {
-        Coordinate {
+        Coord {
             x: p.x.to_radians(),
             y: p.y.to_radians(),
         }
@@ -26,16 +26,16 @@ mod polygon_contains {
     where
         T: CoordFloat,
     {
-        let mut v: Vec<Coordinate<T>> = ring
+        let mut v: Vec<Coord<T>> = ring
             .0
             .iter()
             .map(|x| point_radians(x))
-            .collect::<Vec<Coordinate<T>>>();
+            .collect::<Vec<Coord<T>>>();
         v.pop();
         LineString(v)
     }
 
-    fn polygon_contains<T>(polygon_p: &Polygon<T>, point: &Coordinate<T>) -> bool
+    fn polygon_contains<T>(polygon_p: &Polygon<T>, point: &Coord<T>) -> bool
     where
         T: CoordFloat + num_traits::float::FloatConst,
     {
@@ -53,7 +53,7 @@ mod polygon_contains {
     fn empty_return_false() {
         println!("geoPolygonContains(empty, point) returns false");
         let polygon: Polygon<f64> = Polygon::new(LineString(vec![]), vec![]);
-        let contained = polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 });
+        let contained = polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 });
         assert_eq!(contained, false);
     }
 
@@ -62,22 +62,22 @@ mod polygon_contains {
         println!("geoPolygonContains(simple, point) returns the expected value");
         let polygon: Polygon<f64> = Polygon::new(
             LineString(vec![
-                Coordinate { x: 0f64, y: 0f64 },
-                Coordinate { x: 0f64, y: 1f64 },
-                Coordinate { x: 1f64, y: 1f64 },
-                Coordinate { x: 1f64, y: 0f64 },
-                Coordinate { x: 0f64, y: 0f64 },
+                Coord { x: 0f64, y: 0f64 },
+                Coord { x: 0f64, y: 1f64 },
+                Coord { x: 1f64, y: 1f64 },
+                Coord { x: 1f64, y: 0f64 },
+                Coord { x: 0f64, y: 0f64 },
             ]),
             vec![],
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0.1f64, y: 2f64 }),
+            polygon_contains(&polygon, &Coord { x: 0.1f64, y: 2f64 }),
             false
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 0.1f64,
                     y: 0.1f64
                 }
@@ -97,7 +97,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -180f64,
                     y: 0f64
                 }
@@ -105,7 +105,7 @@ mod polygon_contains {
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 1f64, y: 1f64 }),
+            polygon_contains(&polygon, &Coord { x: 1f64, y: 1f64 }),
             true
         );
     }
@@ -115,22 +115,22 @@ mod polygon_contains {
         println!("geoPolygonContains wraps longitudes");
 
         let mut circle = CircleGenerator::default();
-        circle.center_set(&Coordinate { x: 300f64, y: 0f64 });
+        circle.center_set(&Coord { x: 300f64, y: 0f64 });
         let c = circle.circle();
         let polygon = c;
 
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 300f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 300f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: -60f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: -60f64, y: 0f64 }),
             true
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -420f64,
                     y: 0f64
                 }
@@ -145,19 +145,19 @@ mod polygon_contains {
 
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: -60f64,
                     y: -80f64,
                 },
-                Coordinate {
+                Coord {
                     x: 60f64,
                     y: -80f64,
                 },
-                Coordinate {
+                Coord {
                     x: 180f64,
                     y: -80f64,
                 },
-                Coordinate {
+                Coord {
                     x: -60f64,
                     y: -80f64,
                 },
@@ -165,15 +165,15 @@ mod polygon_contains {
             vec![],
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -85f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -85f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -90f64 }),
             true
         );
     }
@@ -183,36 +183,36 @@ mod polygon_contains {
         println!("geoPolygonContains(northPole, point) returns the expected value");
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate { x: 60f64, y: 80f64 },
-                Coordinate {
+                Coord { x: 60f64, y: 80f64 },
+                Coord {
                     x: -60f64,
                     y: 80f64,
                 },
-                Coordinate {
+                Coord {
                     x: -180f64,
                     y: 80f64,
                 },
-                Coordinate { x: 60f64, y: 80f64 },
+                Coord { x: 60f64, y: 80f64 },
             ]),
             vec![],
         );
 
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 85f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 85f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 90f64 }),
             true
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -100f64,
                     y: 90f64
                 }
@@ -220,7 +220,7 @@ mod polygon_contains {
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -90f64 }),
             false
         );
     }
@@ -230,24 +230,24 @@ mod polygon_contains {
         println!("geoPolygonContains(touchingPole, Pole) returns true (issue #105)");
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate { x: 0f64, y: -30f64 },
-                Coordinate {
+                Coord { x: 0f64, y: -30f64 },
+                Coord {
                     x: 120f64,
                     y: -30f64,
                 },
-                Coordinate { x: 0f64, y: -90f64 },
-                Coordinate { x: 0f64, y: -30f64 },
+                Coord { x: 0f64, y: -90f64 },
+                Coord { x: 0f64, y: -30f64 },
             ]),
             vec![],
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -90f64 }),
             false
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -60f64,
                     y: -90f64
                 }
@@ -257,7 +257,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 60f64,
                     y: -90f64
                 }
@@ -266,24 +266,24 @@ mod polygon_contains {
         );
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate { x: 0f64, y: 30f64 },
-                Coordinate {
+                Coord { x: 0f64, y: 30f64 },
+                Coord {
                     x: -120f64,
                     y: 30f64,
                 },
-                Coordinate { x: 0f64, y: 90f64 },
-                Coordinate { x: 0f64, y: 30f64 },
+                Coord { x: 0f64, y: 90f64 },
+                Coord { x: 0f64, y: 30f64 },
             ]),
             vec![],
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 90f64 }),
             false
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -60f64,
                     y: 90f64
                 }
@@ -291,7 +291,7 @@ mod polygon_contains {
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 60f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coord { x: 60f64, y: 90f64 }),
             false
         );
     }
@@ -301,23 +301,23 @@ mod polygon_contains {
         println!("geoPolygonContains(southHemispherePoly) returns the expected value");
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate { x: 0f64, y: 0f64 },
-                Coordinate {
+                Coord { x: 0f64, y: 0f64 },
+                Coord {
                     x: 10f64,
                     y: -40f64,
                 },
-                Coordinate {
+                Coord {
                     x: -10f64,
                     y: -40f64,
                 },
-                Coordinate { x: 0f64, y: 0f64 },
+                Coord { x: 0f64, y: 0f64 },
             ]),
             vec![],
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 0f64,
                     y: -40.2f64
                 }
@@ -327,7 +327,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -60f64,
                     y: -40.5f64
                 }
@@ -341,18 +341,18 @@ mod polygon_contains {
         println!("geoPolygonContains(largeNearOrigin, point) returns the expected value");
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate { x: 0f64, y: 0f64 },
-                Coordinate { x: 1f64, y: 0f64 },
-                Coordinate { x: 1f64, y: 1f64 },
-                Coordinate { x: 0f64, y: 1f64 },
-                Coordinate { x: 0f64, y: 0f64 },
+                Coord { x: 0f64, y: 0f64 },
+                Coord { x: 1f64, y: 0f64 },
+                Coord { x: 1f64, y: 1f64 },
+                Coord { x: 0f64, y: 1f64 },
+                Coord { x: 0f64, y: 0f64 },
             ]),
             vec![],
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 0.1f64,
                     y: 0.1f64
                 }
@@ -362,7 +362,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 2.0f64,
                     y: 0.1f64
                 }
@@ -376,16 +376,16 @@ mod polygon_contains {
         println!("geoPolygonContains(largeNearSouthPole, point) returns the expected value");
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: -60f64,
                     y: 80f64,
                 },
-                Coordinate { x: 60f64, y: 80f64 },
-                Coordinate {
+                Coord { x: 60f64, y: 80f64 },
+                Coord {
                     x: 180f64,
                     y: 80f64,
                 },
-                Coordinate {
+                Coord {
                     x: -60f64,
                     y: 80f64,
                 },
@@ -395,7 +395,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 0.0f64,
                     y: 85.0f64
                 }
@@ -403,7 +403,7 @@ mod polygon_contains {
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -413,19 +413,19 @@ mod polygon_contains {
         println!("geoPolygonContains(largeNearNorthPole, point) returns the expected value");
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: 60f64,
                     y: -80f64,
                 },
-                Coordinate {
+                Coord {
                     x: -60f64,
                     y: -80f64,
                 },
-                Coordinate {
+                Coord {
                     x: -180f64,
                     y: -80f64,
                 },
-                Coordinate {
+                Coord {
                     x: 60f64,
                     y: -80f64,
                 },
@@ -436,7 +436,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 0.0f64,
                     y: -85.0f64
                 }
@@ -444,7 +444,7 @@ mod polygon_contains {
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -460,7 +460,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -180f64,
                     y: 0f64
                 }
@@ -468,7 +468,7 @@ mod polygon_contains {
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: -90f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: -90f64, y: 0f64 }),
             true
         );
     }
@@ -478,22 +478,22 @@ mod polygon_contains {
         println!("geoPolygonContains(largeNarrowStripHole, point) returns the expected value");
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: -170f64,
                     y: -1f64,
                 },
-                Coordinate { x: 0f64, y: -1f64 },
-                Coordinate {
+                Coord { x: 0f64, y: -1f64 },
+                Coord {
                     x: 170f64,
                     y: -1f64,
                 },
-                Coordinate { x: 170f64, y: 1f64 },
-                Coordinate { x: 0f64, y: 1f64 },
-                Coordinate {
+                Coord { x: 170f64, y: 1f64 },
+                Coord { x: 0f64, y: 1f64 },
+                Coord {
                     x: -170f64,
                     y: 1f64,
                 },
-                Coordinate {
+                Coord {
                     x: -170f64,
                     y: -1f64,
                 },
@@ -501,12 +501,9 @@ mod polygon_contains {
             vec![],
         );
 
+        assert_eq!(polygon_contains(&polygon, &Coord { x: 0.0, y: 0.0 }), false);
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0.0, y: 0.0 }),
-            false
-        );
-        assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 20f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 20f64 }),
             true
         );
     }
@@ -516,7 +513,7 @@ mod polygon_contains {
         println!("geoPolygonContains(largeNarrowEquatorialHole, point) returns the expected value");
         let mut circle_gen = CircleGenerator::default();
         circle_gen
-            .center_set(&Coordinate { x: 0f64, y: -90f64 })
+            .center_set(&Coord { x: 0f64, y: -90f64 })
             .radius_set(90f64 - 0.1f64);
         let ring0: LineString<f64> = circle_gen.circle().exterior().clone();
 
@@ -526,17 +523,17 @@ mod polygon_contains {
             .exterior()
             .clone();
 
-        let rev_vec: Vec<Coordinate<f64>> = ring1.into_iter().rev().collect();
+        let rev_vec: Vec<Coord<f64>> = ring1.into_iter().rev().collect();
         let ring1_rev = LineString(rev_vec);
 
         let polygon = Polygon::new(ring0, vec![ring1_rev]);
 
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -90f64 }),
             true
         );
     }
@@ -546,14 +543,14 @@ mod polygon_contains {
         println!("geoPolygonContains(largeNarrowEquatorialHole, point) returns the expected value");
 
         let mut circle = CircleGenerator::default();
-        circle.center_set(&Coordinate { x: 0f64, y: -90f64 });
+        circle.center_set(&Coord { x: 0f64, y: -90f64 });
         circle.radius_set(90f64 + 0.1f64);
 
         let ring1 = circle.circle().exterior().clone();
 
         let mut circle = CircleGenerator::default();
         circle
-            .center_set(&Coordinate { x: 0f64, y: -90f64 })
+            .center_set(&Coord { x: 0f64, y: -90f64 })
             .radius_set(90f64 - 0.1f64);
         let c2 = circle.circle().exterior().clone();
         let rev_vec = c2.into_iter().rev().collect();
@@ -561,11 +558,11 @@ mod polygon_contains {
 
         let polygon = Polygon::new(ring1, vec![ring2]);
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -90f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -574,30 +571,30 @@ mod polygon_contains {
     fn ring_near_origin() {
         println!("geoPolygonContains(ringNearOrigin, point) returns the expected value");
         let ring0 = vec![
-            Coordinate { x: 0f64, y: 0f64 },
-            Coordinate { x: 0f64, y: 1f64 },
-            Coordinate { x: 1f64, y: 1f64 },
-            Coordinate { x: 1f64, y: 0f64 },
-            Coordinate { x: 0f64, y: 0f64 },
+            Coord { x: 0f64, y: 0f64 },
+            Coord { x: 0f64, y: 1f64 },
+            Coord { x: 1f64, y: 1f64 },
+            Coord { x: 1f64, y: 0f64 },
+            Coord { x: 0f64, y: 0f64 },
         ];
         let ring1 = vec![
-            Coordinate {
+            Coord {
                 x: 0.4f64,
                 y: 0.4f64,
             },
-            Coordinate {
+            Coord {
                 x: 0.6f64,
                 y: 0.4f64,
             },
-            Coordinate {
+            Coord {
                 x: 0.6f64,
                 y: 0.6f64,
             },
-            Coordinate {
+            Coord {
                 x: 0.4f64,
                 y: 0.6f64,
             },
-            Coordinate {
+            Coord {
                 x: 0.4f64,
                 y: 0.4f64,
             },
@@ -607,7 +604,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 0.5f64,
                     y: 0.5f64
                 }
@@ -617,7 +614,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 0.1f64,
                     y: 0.5f64
                 }
@@ -630,37 +627,37 @@ mod polygon_contains {
     fn ring_equatorial() {
         println!("geoPolygonContains(ringEquatorial, point) returns the expected value");
         let ring0 = vec![
-            Coordinate { x: 0f64, y: -10f64 },
-            Coordinate {
+            Coord { x: 0f64, y: -10f64 },
+            Coord {
                 x: -120f64,
                 y: -10f64,
             },
-            Coordinate {
+            Coord {
                 x: 120f64,
                 y: -10f64,
             },
-            Coordinate { x: 0f64, y: -10f64 },
+            Coord { x: 0f64, y: -10f64 },
         ];
         let ring1 = vec![
-            Coordinate { x: 0f64, y: 10f64 },
-            Coordinate {
+            Coord { x: 0f64, y: 10f64 },
+            Coord {
                 x: 120f64,
                 y: 10f64,
             },
-            Coordinate {
+            Coord {
                 x: -120f64,
                 y: 10f64,
             },
-            Coordinate { x: 0f64, y: 10f64 },
+            Coord { x: 0f64, y: 10f64 },
         ];
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
 
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 20f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 20f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -669,40 +666,40 @@ mod polygon_contains {
     fn ring_excluding_both_poles() {
         println!("geoPolygonContains(ringExcludingBothPoles, point) returns the expected value");
         let mut ring0 = vec![
-            Coordinate { x: 10f64, y: 10f64 },
-            Coordinate {
+            Coord { x: 10f64, y: 10f64 },
+            Coord {
                 x: -10f64,
                 y: 10f64,
             },
-            Coordinate {
+            Coord {
                 x: -10f64,
                 y: -10f64,
             },
-            Coordinate {
+            Coord {
                 x: 10f64,
                 y: -10f64,
             },
-            Coordinate { x: 10f64, y: 10f64 },
+            Coord { x: 10f64, y: 10f64 },
         ];
         ring0.reverse();
         let mut ring1 = vec![
-            Coordinate {
+            Coord {
                 x: 170f64,
                 y: 10f64,
             },
-            Coordinate {
+            Coord {
                 x: 170f64,
                 y: -10f64,
             },
-            Coordinate {
+            Coord {
                 x: -170f64,
                 y: -10f64,
             },
-            Coordinate {
+            Coord {
                 x: -170f64,
                 y: 10f64,
             },
-            Coordinate {
+            Coord {
                 x: 170f64,
                 y: 10f64,
             },
@@ -710,11 +707,11 @@ mod polygon_contains {
         ring1.reverse();
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 90f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             true
         );
     }
@@ -723,39 +720,39 @@ mod polygon_contains {
     fn ring_containing_both_poles() {
         println!("geoPolygonContains(ringExcludingBothPoles, point) returns the expected value");
         let ring0 = vec![
-            Coordinate { x: 10f64, y: 10f64 },
-            Coordinate {
+            Coord { x: 10f64, y: 10f64 },
+            Coord {
                 x: -10f64,
                 y: 10f64,
             },
-            Coordinate {
+            Coord {
                 x: -10f64,
                 y: -10f64,
             },
-            Coordinate {
+            Coord {
                 x: 10f64,
                 y: -10f64,
             },
-            Coordinate { x: 10f64, y: 10f64 },
+            Coord { x: 10f64, y: 10f64 },
         ];
         let ring1 = vec![
-            Coordinate {
+            Coord {
                 x: 170f64,
                 y: 10f64,
             },
-            Coordinate {
+            Coord {
                 x: 170f64,
                 y: -10f64,
             },
-            Coordinate {
+            Coord {
                 x: -170f64,
                 y: -10f64,
             },
-            Coordinate {
+            Coord {
                 x: -170f64,
                 y: 10f64,
             },
-            Coordinate {
+            Coord {
                 x: 170f64,
                 y: 10f64,
             },
@@ -763,11 +760,11 @@ mod polygon_contains {
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
 
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 20f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 20f64 }),
             true
         );
     }
@@ -776,41 +773,41 @@ mod polygon_contains {
     fn ring_containing_south_pole() {
         println!("geoPolygonContains(ringContainingSouthPole, point) returns the expected value");
         let ring0 = vec![
-            Coordinate { x: 10f64, y: 10f64 },
-            Coordinate {
+            Coord { x: 10f64, y: 10f64 },
+            Coord {
                 x: -10f64,
                 y: 10f64,
             },
-            Coordinate {
+            Coord {
                 x: -10f64,
                 y: -10f64,
             },
-            Coordinate {
+            Coord {
                 x: 10f64,
                 y: -10f64,
             },
-            Coordinate { x: 10f64, y: 10f64 },
+            Coord { x: 10f64, y: 10f64 },
         ];
         let ring1 = vec![
-            Coordinate { x: 0f64, y: 80f64 },
-            Coordinate {
+            Coord { x: 0f64, y: 80f64 },
+            Coord {
                 x: 120f64,
                 y: 80f64,
             },
-            Coordinate {
+            Coord {
                 x: -120f64,
                 y: 80f64,
             },
-            Coordinate { x: 0f64, y: 80f64 },
+            Coord { x: 0f64, y: 80f64 },
         ];
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
 
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 90f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -90f64 }),
             true
         );
     }
@@ -819,43 +816,43 @@ mod polygon_contains {
     fn ring_containing_north_pole() {
         println!("geoPolygonContains(ringContainingNorthPole, point) returns the expected value");
         let mut ring0 = vec![
-            Coordinate { x: 10f64, y: 10f64 },
-            Coordinate {
+            Coord { x: 10f64, y: 10f64 },
+            Coord {
                 x: -10f64,
                 y: 10f64,
             },
-            Coordinate {
+            Coord {
                 x: -10f64,
                 y: -10f64,
             },
-            Coordinate {
+            Coord {
                 x: 10f64,
                 y: -10f64,
             },
-            Coordinate { x: 10f64, y: 10f64 },
+            Coord { x: 10f64, y: 10f64 },
         ];
         ring0.reverse();
         let mut ring1 = vec![
-            Coordinate { x: 0f64, y: 80f64 },
-            Coordinate {
+            Coord { x: 0f64, y: 80f64 },
+            Coord {
                 x: 120f64,
                 y: 80f64,
             },
-            Coordinate {
+            Coord {
                 x: -120f64,
                 y: 80f64,
             },
-            Coordinate { x: 0f64, y: 80f64 },
+            Coord { x: 0f64, y: 80f64 },
         ];
         ring1.reverse();
         let polygon = Polygon::new(LineString(ring0), vec![LineString(ring1)]);
 
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -90f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 90f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 90f64 }),
             true
         );
     }
@@ -867,20 +864,20 @@ mod polygon_contains {
         );
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate { x: 0f64, y: 0f64 },
-                Coordinate { x: 1f64, y: 0f64 },
-                Coordinate { x: 1f64, y: 3f64 },
-                Coordinate { x: 3f64, y: 3f64 },
-                Coordinate { x: 3f64, y: 1f64 },
-                Coordinate { x: 0f64, y: 1f64 },
-                Coordinate { x: 0f64, y: 0f64 },
+                Coord { x: 0f64, y: 0f64 },
+                Coord { x: 1f64, y: 0f64 },
+                Coord { x: 1f64, y: 3f64 },
+                Coord { x: 3f64, y: 3f64 },
+                Coord { x: 3f64, y: 1f64 },
+                Coord { x: 0f64, y: 1f64 },
+                Coord { x: 0f64, y: 0f64 },
             ]),
             vec![],
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 15f64,
                     y: 0.5f64
                 }
@@ -888,13 +885,13 @@ mod polygon_contains {
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 12f64, y: 2f64 }),
+            polygon_contains(&polygon, &Coord { x: 12f64, y: 2f64 }),
             false
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 0.5f64,
                     y: 0.5f64
                 }
@@ -902,7 +899,7 @@ mod polygon_contains {
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 2f64, y: 2f64 }),
+            polygon_contains(&polygon, &Coord { x: 2f64, y: 2f64 }),
             true
         );
     }
@@ -914,31 +911,31 @@ mod polygon_contains {
         );
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: -10f64,
                     y: -80f64,
                 },
-                Coordinate {
+                Coord {
                     x: 120f64,
                     y: -80f64,
                 },
-                Coordinate {
+                Coord {
                     x: -120f64,
                     y: -80f64,
                 },
-                Coordinate {
+                Coord {
                     x: 10f64,
                     y: -85f64,
                 },
-                Coordinate {
+                Coord {
                     x: 10f64,
                     y: -75f64,
                 },
-                Coordinate {
+                Coord {
                     x: -10f64,
                     y: 75f64,
                 },
-                Coordinate {
+                Coord {
                     x: -10f64,
                     y: -80f64,
                 },
@@ -946,15 +943,15 @@ mod polygon_contains {
             vec![],
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -76f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -76f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -89f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -89f64 }),
             true
         );
     }
@@ -966,25 +963,25 @@ mod polygon_contains {
         );
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: -10f64,
                     y: 80f64,
                 },
-                Coordinate {
+                Coord {
                     x: -10f64,
                     y: 75f64,
                 },
-                Coordinate { x: 10f64, y: 75f64 },
-                Coordinate { x: 10f64, y: 85f64 },
-                Coordinate {
+                Coord { x: 10f64, y: 75f64 },
+                Coord { x: 10f64, y: 85f64 },
+                Coord {
                     x: -120f64,
                     y: 80f64,
                 },
-                Coordinate {
+                Coord {
                     x: 120f64,
                     y: 80f64,
                 },
-                Coordinate {
+                Coord {
                     x: -10f64,
                     y: 80f64,
                 },
@@ -992,15 +989,15 @@ mod polygon_contains {
             vec![],
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 76f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 76f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 89f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 89f64 }),
             true
         );
     }
@@ -1016,10 +1013,7 @@ mod polygon_contains {
 
         let c = circle.circle();
         let polygon = &c;
-        assert_eq!(
-            polygon_contains(polygon, &Coordinate { x: 0f64, y: 0f64 }),
-            true
-        );
+        assert_eq!(polygon_contains(polygon, &Coord { x: 0f64, y: 0f64 }), true);
     }
 
     #[test]
@@ -1029,13 +1023,13 @@ mod polygon_contains {
         );
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: 180f64,
                     y: -90f64,
                 },
-                Coordinate { x: -45f64, y: 0f64 },
-                Coordinate { x: 45f64, y: 0f64 },
-                Coordinate {
+                Coord { x: -45f64, y: 0f64 },
+                Coord { x: 45f64, y: 0f64 },
+                Coord {
                     x: 180f64,
                     y: -90f64,
                 },
@@ -1043,17 +1037,17 @@ mod polygon_contains {
             vec![],
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: -46f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: -46f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 1f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 1f64 }),
             false
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -90f64,
                     y: -80f64
                 }
@@ -1061,21 +1055,21 @@ mod polygon_contains {
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: -44f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: -44f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -30f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -30f64 }),
             true
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 30f64,
                     y: -80f64
                 }
@@ -1091,28 +1085,28 @@ mod polygon_contains {
         );
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate { x: -45f64, y: 0f64 },
-                Coordinate { x: 45f64, y: 0f64 },
-                Coordinate {
+                Coord { x: -45f64, y: 0f64 },
+                Coord { x: 45f64, y: 0f64 },
+                Coord {
                     x: 180f64,
                     y: -90f64,
                 },
-                Coordinate { x: -45f64, y: 0f64 },
+                Coord { x: -45f64, y: 0f64 },
             ]),
             vec![],
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: -46f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: -46f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 1f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 1f64 }),
             false
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -90f64,
                     y: -80f64
                 }
@@ -1120,21 +1114,21 @@ mod polygon_contains {
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: -44f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: -44f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -30f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -30f64 }),
             true
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 30f64,
                     y: -80f64
                 }
@@ -1150,16 +1144,16 @@ mod polygon_contains {
         );
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: 180f64,
                     y: -90f64,
                 },
-                Coordinate {
+                Coord {
                     x: -135f64,
                     y: 0f64,
                 },
-                Coordinate { x: 135f64, y: 0f64 },
-                Coordinate {
+                Coord { x: 135f64, y: 0f64 },
+                Coord {
                     x: 180f64,
                     y: -90f64,
                 },
@@ -1167,17 +1161,17 @@ mod polygon_contains {
             vec![],
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 180f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 180f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 150f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 150f64, y: 0f64 }),
             false
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 180f64,
                     y: -30f64
                 }
@@ -1187,7 +1181,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: 150f64,
                     y: -80f64
                 }
@@ -1195,17 +1189,17 @@ mod polygon_contains {
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 180f64, y: 1f64 }),
+            polygon_contains(&polygon, &Coord { x: 180f64, y: 1f64 }),
             true
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -90f64,
                     y: -80f64
                 }
@@ -1221,13 +1215,13 @@ mod polygon_contains {
         );
         let polygon = Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: 180f64,
                     y: 90f64,
                 },
-                Coordinate { x: 45f64, y: 0f64 },
-                Coordinate { x: -45f64, y: 0f64 },
-                Coordinate {
+                Coord { x: 45f64, y: 0f64 },
+                Coord { x: -45f64, y: 0f64 },
+                Coord {
                     x: 180f64,
                     y: 90f64,
                 },
@@ -1235,25 +1229,25 @@ mod polygon_contains {
             vec![],
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: -90f64, y: 0f64 }),
+            polygon_contains(&polygon, &Coord { x: -90f64, y: 0f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -1f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -1f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: -80f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: -80f64 }),
             false
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: -90f64, y: 1f64 }),
+            polygon_contains(&polygon, &Coord { x: -90f64, y: 1f64 }),
             false
         );
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -90f64,
                     y: 80f64
                 }
@@ -1263,7 +1257,7 @@ mod polygon_contains {
         assert_eq!(
             polygon_contains(
                 &polygon,
-                &Coordinate {
+                &Coord {
                     x: -44f64,
                     y: 10f64
                 }
@@ -1271,11 +1265,11 @@ mod polygon_contains {
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 0f64, y: 10f64 }),
+            polygon_contains(&polygon, &Coord { x: 0f64, y: 10f64 }),
             true
         );
         assert_eq!(
-            polygon_contains(&polygon, &Coordinate { x: 30f64, y: 80f64 }),
+            polygon_contains(&polygon, &Coord { x: 30f64, y: 80f64 }),
             true
         );
     }

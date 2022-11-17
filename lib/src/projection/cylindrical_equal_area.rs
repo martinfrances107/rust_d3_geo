@@ -10,7 +10,7 @@
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
@@ -50,16 +50,16 @@ where
     type T = T;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        Coordinate {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
+        Coord {
             x: p.x * self.cos_phi0,
             y: p.y.sin() / self.cos_phi0,
         }
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        Coordinate {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
+        Coord {
             x: p.x / self.cos_phi0,
             y: (p.y * self.cos_phi0).asin(),
         }

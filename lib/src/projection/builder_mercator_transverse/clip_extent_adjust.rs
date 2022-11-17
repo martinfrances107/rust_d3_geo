@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::projection::builder::template::PCNU;
@@ -22,7 +22,7 @@ where
 {
     type T = T;
 
-    fn clip_extent_adjust(&mut self, extent: &[Coordinate<T>; 2]) -> &mut Self {
+    fn clip_extent_adjust(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
         self.base.clip_extent_adjust(extent);
         self
     }

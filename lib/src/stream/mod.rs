@@ -12,9 +12,9 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use geo::LineString;
 use geo::Polygon;
+use geo_types::Coord;
 
 /// State -- Unconnected.
 ///
@@ -86,7 +86,7 @@ pub trait Streamable {
 /// the transform portion of a projection is needed.
 ///
 /// ```
-/// use geo::Coordinate;
+/// use geo_types::Coord;
 /// use rust_d3_geo::Transform;
 /// use rust_d3_geo::projection::stereographic::Stereographic;
 /// use rust_d3_geo::projection::Build;
@@ -96,7 +96,7 @@ pub trait Streamable {
 /// // The Projector needs a mock endpoint here for the stream pipeline.
 /// let p = Stereographic::<DrainStub<f32>, f32>::builder().build();
 ///
-/// let transformed_point = p.transform(&Coordinate{x: 0_f32, y:0_f32});
+/// let transformed_point = p.transform(&Coord{x: 0_f32, y:0_f32});
 ///
 /// ```
 #[derive(Clone, Copy, Debug)]
@@ -116,7 +116,7 @@ where
         self
     }
 
-    fn point(&mut self, _p: &Coordinate<Self::T>, _m: Option<u8>) {}
+    fn point(&mut self, _p: &Coord<Self::T>, _m: Option<u8>) {}
 }
 
 impl<T> Default for DrainStub<T> {
@@ -147,7 +147,7 @@ where
     /// Declare the start of a line segment.
     fn line_start(&mut self) {}
     /// Declare a point.
-    fn point(&mut self, p: &Coordinate<Self::T>, m: Option<u8>);
+    fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>);
     /// Declare the end of a polygon.
     fn polygon_end(&mut self) {}
     /// Declare the start of a polygon.

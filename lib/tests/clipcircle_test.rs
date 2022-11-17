@@ -4,8 +4,8 @@ mod clipcircle {
     extern crate pretty_assertions;
 
     use geo::polygon;
-    use geo::Coordinate;
     use geo::Geometry;
+    use geo_types::Coord;
     use lazy_static::lazy_static;
     use pretty_assertions::assert_eq;
     use regex::Regex;
@@ -30,7 +30,7 @@ mod clipcircle {
         let d = Geometry::Polygon(poly);
 
         let projector = AzimuthalEqualArea::builder()
-            .translate_set(&Coordinate {
+            .translate_set(&Coord {
                 x: 0.5_f64,
                 y: 0.5_f64,
             })

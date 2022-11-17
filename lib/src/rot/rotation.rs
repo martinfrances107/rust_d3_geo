@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::Transform;
@@ -42,23 +42,23 @@ where
     ///f64 or f32.
     type T = T;
 
-    fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
-        let temp = self.rotate.transform(&Coordinate {
+    fn transform(&self, coordinate: &Coord<T>) -> Coord<T> {
+        let temp = self.rotate.transform(&Coord {
             x: coordinate.x.to_radians(),
             y: coordinate.y.to_radians(),
         });
-        Coordinate {
+        Coord {
             x: temp.x.to_degrees(),
             y: temp.y.to_degrees(),
         }
     }
 
-    fn invert(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
-        let temp = self.rotate.invert(&Coordinate {
+    fn invert(&self, coordinate: &Coord<T>) -> Coord<T> {
+        let temp = self.rotate.invert(&Coord {
             x: coordinate.x.to_radians(),
             y: coordinate.y.to_radians(),
         });
-        Coordinate {
+        Coord {
             x: temp.x.to_degrees(),
             y: temp.y.to_degrees(),
         }

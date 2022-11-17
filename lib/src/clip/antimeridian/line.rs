@@ -2,7 +2,7 @@ use std::default::Default;
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::buffer::Buffer;
@@ -133,7 +133,7 @@ where
         self.clean = 1;
     }
 
-    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         let mut lambda1 = p.x;
         let phi1 = p.y;
         let sign1 = if lambda1 > T::zero() {
@@ -151,14 +151,14 @@ where
                 -T::FRAC_PI_2()
             };
             self.state.sink().point(
-                &Coordinate {
+                &Coord {
                     x: self.lambda0,
                     y: self.phi0,
                 },
                 None,
             );
             self.state.sink().point(
-                &Coordinate {
+                &Coord {
                     x: self.sign0,
                     y: self.phi0,
                 },
@@ -167,14 +167,14 @@ where
             self.state.sink().line_end();
             self.state.sink().line_start();
             self.state.sink().point(
-                &Coordinate {
+                &Coord {
                     x: sign1,
                     y: self.phi0,
                 },
                 None,
             );
             self.state.sink().point(
-                &Coordinate {
+                &Coord {
                     x: lambda1,
                     y: self.phi0,
                 },
@@ -192,7 +192,7 @@ where
             }
             self.phi0 = intersect(self.lambda0, self.phi0, lambda1, phi1);
             self.state.sink().point(
-                &Coordinate {
+                &Coord {
                     x: self.sign0,
                     y: self.phi0,
                 },
@@ -201,7 +201,7 @@ where
             self.state.sink().line_end();
             self.state.sink().line_start();
             self.state.sink().point(
-                &Coordinate {
+                &Coord {
                     x: sign1,
                     y: self.phi0,
                 },
@@ -212,7 +212,7 @@ where
         self.lambda0 = lambda1;
         self.phi0 = phi1;
         self.state.sink().point(
-            &Coordinate {
+            &Coord {
                 x: self.lambda0,
                 y: self.phi0,
             },

@@ -1,6 +1,6 @@
-use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
+use geo_types::Coord;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -41,8 +41,8 @@ pub async fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
     let equirectangular = Equirectangular::builder()
         .scale_set(width as f64 / 1.5_f64 / std::f64::consts::PI)
         .rotate_set(&[0_f64, 0_f64, 0_f64])
-        .center_set(&Coordinate { x: 0_f64, y: 0_f64 })
-        .translate_set(&Coordinate {
+        .center_set(&Coord { x: 0_f64, y: 0_f64 })
+        .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,
         })

@@ -7,10 +7,10 @@ mod path_bounds {
 
     use approx::AbsDiffEq;
     use geo::CoordFloat;
-    use geo::Coordinate;
     use geo::Geometry;
     use geo::LineString;
     use geo::Polygon;
+    use geo_types::Coord;
     use num_traits::AsPrimitive;
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
@@ -52,7 +52,7 @@ mod path_bounds {
             T,
         >,
         object: &impl Streamable<T = T>,
-    ) -> [Coordinate<T>; 2]
+    ) -> [Coord<T>; 2]
     where
         T: AbsDiffEq<Epsilon = T>
             + AsPrimitive<T>
@@ -71,11 +71,11 @@ mod path_bounds {
         println!("geoPath.area(…) of a polygon with no holes");
         let object = Geometry::Polygon(Polygon::new(
             LineString::from(vec![
-                Coordinate { x: 100., y: 0. },
-                Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
-                Coordinate { x: 101., y: 1. },
-                Coordinate { x: 101., y: 0. },
-                Coordinate { x: 100., y: 0. },
+                Coord { x: 100., y: 0. },
+                Coord { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
+                Coord { x: 101., y: 1. },
+                Coord { x: 101., y: 0. },
+                Coord { x: 100., y: 0. },
             ]),
             vec![],
         ));
@@ -83,11 +83,11 @@ mod path_bounds {
         assert_eq!(
             bounds(eq, &object),
             [
-                Coordinate {
+                Coord {
                     x: 980_f64,
                     y: 245_f64
                 },
-                Coordinate {
+                Coord {
                     x: 985_f64,
                     y: 250_f64
                 }
@@ -100,29 +100,29 @@ mod path_bounds {
         println!("geoPath.area(…) of a polygon with holes");
         let object = Geometry::Polygon(Polygon::new(
             LineString::from(vec![
-                Coordinate { x: 100., y: 0. },
-                Coordinate { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
-                Coordinate { x: 101., y: 1. },
-                Coordinate { x: 101., y: 0. },
-                Coordinate { x: 100., y: 0. },
+                Coord { x: 100., y: 0. },
+                Coord { x: 100., y: 1. }, //  [101, 1], [101, 0], [100, 0]
+                Coord { x: 101., y: 1. },
+                Coord { x: 101., y: 0. },
+                Coord { x: 100., y: 0. },
             ]),
             vec![LineString::from(vec![
-                Coordinate { x: 100.2, y: 0.2 },
-                Coordinate { x: 100.8, y: 0.2 },
-                Coordinate { x: 100.8, y: 0.8 },
-                Coordinate { x: 100.2, y: 0.8 },
-                Coordinate { x: 100.2, y: 0.2 },
+                Coord { x: 100.2, y: 0.2 },
+                Coord { x: 100.8, y: 0.2 },
+                Coord { x: 100.8, y: 0.8 },
+                Coord { x: 100.2, y: 0.8 },
+                Coord { x: 100.2, y: 0.2 },
             ])],
         ));
         let eq = equirectangular();
         assert_eq!(
             bounds(eq, &object),
             [
-                Coordinate {
+                Coord {
                     x: 980_f64,
                     y: 245_f64
                 },
-                Coordinate {
+                Coord {
                     x: 985_f64,
                     y: 250_f64
                 }
@@ -138,11 +138,11 @@ mod path_bounds {
         assert_eq!(
             bounds(eq, &object),
             [
-                Coordinate {
+                Coord {
                     x: -420_f64,
                     y: -200_f64
                 },
-                Coordinate {
+                Coord {
                     x: 1380_f64,
                     y: 700_f64
                 }

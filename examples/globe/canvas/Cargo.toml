@@ -16,6 +16,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 geo = { workspace = true }
+geo-types = { workspace = true }
 gloo-utils = { workspace = true }
 js-sys = { workspace = true }
 rust_d3_geo = { path = "../../../lib" }

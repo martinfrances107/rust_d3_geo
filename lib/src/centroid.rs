@@ -2,8 +2,8 @@ use std::ops::AddAssign;
 
 use derivative::Derivative;
 use geo::CoordFloat;
-use geo::Coordinate;
 use geo::Point;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::math::EPSILON;
@@ -41,7 +41,7 @@ where
     y0: T,
     z0: T, // previous point
     #[derivative(Debug = "ignore")]
-    point_fn: fn(&mut Self, &Coordinate<T>),
+    point_fn: fn(&mut Self, &Coord<T>),
     #[derivative(Debug = "ignore")]
     line_start_fn: fn(&mut Self),
     #[derivative(Debug = "ignore")]
@@ -99,7 +99,7 @@ where
         self.point_fn = Self::centroid_point;
     }
 
-    fn centroid_line_point_first(&mut self, p: &Coordinate<T>) {
+    fn centroid_line_point_first(&mut self, p: &Coord<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let (sin_phi, cos_phi) = phi.sin_cos();
@@ -111,7 +111,7 @@ where
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
-    fn centroid_line_point(&mut self, p: &Coordinate<T>) {
+    fn centroid_line_point(&mut self, p: &Coord<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let (sin_lambda, cos_lambda) = lambda.sin_cos();
@@ -140,7 +140,7 @@ where
     }
 
     /// Arithmetic mean of Cartesian vectors.
-    fn centroid_point(&mut self, p: &Coordinate<T>) {
+    fn centroid_point(&mut self, p: &Coord<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let (sin_phi, cos_phi) = phi.sin_cos();
@@ -148,7 +148,7 @@ where
         self.centroid_point_cartesian(cos_phi * cos_lambda, cos_phi * sin_lambda, sin_phi);
     }
 
-    fn centroid_ring_point_first(&mut self, p: &Coordinate<T>) {
+    fn centroid_ring_point_first(&mut self, p: &Coord<T>) {
         self.lambda00 = p.x;
         self.phi00 = p.y;
         let lambda = p.x.to_radians();
@@ -162,7 +162,7 @@ where
         self.centroid_point_cartesian(self.x0, self.y0, self.z0);
     }
 
-    fn centroid_ring_point(&mut self, p: &Coordinate<T>) {
+    fn centroid_ring_point(&mut self, p: &Coord<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         let (sin_phi, cos_phi) = phi.sin_cos();
@@ -192,7 +192,7 @@ where
     }
 
     fn centroid_ring_end(&mut self) {
-        self.centroid_ring_point(&Coordinate {
+        self.centroid_ring_point(&Coord {
             x: self.lambda00,
             y: self.phi00,
         });
@@ -271,7 +271,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<Self::T>, _m: Option<u8>) {
+    fn point(&mut self, p: &Coord<Self::T>, _m: Option<u8>) {
         (self.point_fn)(self, p);
     }
 

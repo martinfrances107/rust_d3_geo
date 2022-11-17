@@ -10,13 +10,13 @@ mod index {
     use approx::AbsDiffEq;
     use geo::line_string;
     use geo::CoordFloat;
-    use geo::Coordinate;
     use geo::Geometry;
     use geo::GeometryCollection;
     use geo::LineString;
     use geo::MultiPoint;
     use geo::Point;
     use geo::Polygon;
+    use geo_types::Coord;
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
@@ -140,15 +140,15 @@ mod index {
         println!("geoPath(Polygon) renders a polygon");
         let object = Geometry::Polygon(Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: -63_f64,
                     y: 18_f64,
                 },
-                Coordinate {
+                Coord {
                     x: -62_f64,
                     y: 18_f64,
                 },
-                Coordinate {
+                Coord {
                     x: -62_f64,
                     y: 17_f64,
                 },
@@ -172,15 +172,15 @@ mod index {
         let object = Geometry::GeometryCollection(GeometryCollection(vec![Geometry::Polygon(
             Polygon::new(
                 LineString(vec![
-                    Coordinate {
+                    Coord {
                         x: -63_f64,
                         y: 18_f64,
                     },
-                    Coordinate {
+                    Coord {
                         x: -62_f64,
                         y: 18_f64,
                     },
-                    Coordinate {
+                    Coord {
                         x: -62_f64,
                         y: 17_f64,
                     },
@@ -253,23 +253,23 @@ mod index {
         println!("geoPath(…) observes the correct winding order of a tiny polygon");
         let object = Geometry::Polygon(Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: -0.06904102953339501,
                     y: 0.346043661846373,
                 },
-                Coordinate {
+                Coord {
                     x: -6.725674252975136e-15,
                     y: 0.3981303360336475,
                 },
-                Coordinate {
+                Coord {
                     x: -6.742247658534323e-15,
                     y: -0.08812465346531581,
                 },
-                Coordinate {
+                Coord {
                     x: -0.17301258217724075,
                     y: -0.12278150669440671,
                 },
-                Coordinate {
+                Coord {
                     x: -0.06904102953339501,
                     y: 0.346043661846373,
                 },
@@ -330,15 +330,15 @@ mod index {
         let mut path = pb.build(equirectangular());
 
         let object = LineString(vec![
-            Coordinate {
+            Coord {
                 x: -63_f64,
                 y: 18_f64,
             },
-            Coordinate {
+            Coord {
                 x: -62_f64,
                 y: 18_f64,
             },
-            Coordinate {
+            Coord {
                 x: -62_f64,
                 y: 17_f64,
             },
@@ -377,15 +377,15 @@ mod index {
 
         let object = Geometry::Polygon(Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: -63_f64,
                     y: 18_f64,
                 },
-                Coordinate {
+                Coord {
                     x: -62_f64,
                     y: 18_f64,
                 },
-                Coordinate {
+                Coord {
                     x: -62_f64,
                     y: 17_f64,
                 },
@@ -431,15 +431,15 @@ mod index {
 
         let object = Geometry::Polygon(Polygon::new(
             LineString(vec![
-                Coordinate {
+                Coord {
                     x: -63_f64,
                     y: 18_f64,
                 },
-                Coordinate {
+                Coord {
                     x: -62_f64,
                     y: 18_f64,
                 },
-                Coordinate {
+                Coord {
                     x: -62_f64,
                     y: 17_f64,
                 },

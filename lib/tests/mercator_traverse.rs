@@ -3,8 +3,8 @@ mod mercator_tranverse {
 
     extern crate pretty_assertions;
 
-    use geo::Coordinate;
     use geo::Geometry;
+    use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::data_object::sphere::Sphere;
@@ -58,7 +58,7 @@ mod mercator_tranverse {
     fn mt_clip_extent_defaults_to_automatic() {
         println!("transverseMercator.clipExtent(null) sets the default automatic clip extent");
         let mut pb = MercatorTransverse::builder();
-        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         pb.scale_set(1_f64);
 
         let pb = pb.clip_extent_clear();
@@ -77,11 +77,11 @@ mod mercator_tranverse {
     fn center_set_the_automatic_clip_extent() {
         println!("transverseMercator.center(center) sets the correct automatic clip extent");
         let mut pb = MercatorTransverse::<String<f64>>::builder();
-        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
         let pb = pb.scale_set(1_f64);
         let pb = pb
-            .center_set(&Coordinate {
+            .center_set(&Coord {
                 x: 10_f64,
                 y: 10_f64,
             })
@@ -102,14 +102,14 @@ mod mercator_tranverse {
         println!("transverseMercator.clipExtent(extent) intersects the specified clip extent with the automatic clip extent");
         let mut pb = MercatorTransverse::builder();
 
-        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         pb.scale_set(1_f64);
         pb.clip_extent_adjust(&[
-            Coordinate {
+            Coord {
                 x: -10_f64,
                 y: -10_f64,
             },
-            Coordinate {
+            Coord {
                 x: 10_f64,
                 y: 10_f64,
             },
@@ -126,11 +126,11 @@ mod mercator_tranverse {
         assert_eq!(
             pb.clip_extent(),
             Some([
-                Coordinate {
+                Coord {
                     x: -10_f64,
                     y: -10_f64,
                 },
-                Coordinate {
+                Coord {
                     x: 10_f64,
                     y: 10_f64,
                 },
@@ -148,13 +148,13 @@ mod mercator_tranverse {
         println!("transverseMercator.clipExtent(extent).scale(scale) updates the intersected clip extent");
         let mut pb = MercatorTransverse::builder();
 
-        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         pb.clip_extent_adjust(&[
-            Coordinate {
+            Coord {
                 x: -10_f64,
                 y: -10_f64,
             },
-            Coordinate {
+            Coord {
                 x: 10_f64,
                 y: 10_f64,
             },
@@ -172,11 +172,11 @@ mod mercator_tranverse {
         assert_eq!(
             pb.clip_extent(),
             Some([
-                Coordinate {
+                Coord {
                     x: -10_f64,
                     y: -10_f64,
                 },
-                Coordinate {
+                Coord {
                     x: 10_f64,
                     y: 10_f64,
                 },
@@ -190,13 +190,13 @@ mod mercator_tranverse {
         let mut pb = MercatorTransverse::builder();
 
         pb.scale_set(1_f64);
-        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         pb.clip_extent_adjust(&[
-            Coordinate {
+            Coord {
                 x: -10_f64,
                 y: -10_f64,
             },
-            Coordinate {
+            Coord {
                 x: 10_f64,
                 y: 10_f64,
             },
@@ -213,11 +213,11 @@ mod mercator_tranverse {
         assert_eq!(
             pb.clip_extent(),
             Some([
-                Coordinate {
+                Coord {
                     x: -10_f64,
                     y: -10_f64,
                 },
-                Coordinate {
+                Coord {
                     x: 10_f64,
                     y: 10_f64,
                 },
@@ -262,7 +262,7 @@ mod mercator_tranverse {
         assert_eq!(pb.scale(), 15724992.330511674_f64);
         assert_eq!(
             pb.translate(),
-            Coordinate {
+            Coord {
                 x: 20418843.897824813_f64,
                 y: 21088401.790971387_f64
             }
@@ -275,7 +275,7 @@ mod mercator_tranverse {
         assert_eq!(pb.scale(), 15724992.330511674_f64);
         assert!(in_delta_coordinate(
             &pb.translate(),
-            &Coordinate {
+            &Coord {
                 x: 20418843.897824813_f64,
                 y: 47161426.43770847_f64
             },
@@ -288,21 +288,21 @@ mod mercator_tranverse {
         println!("has no direct equivalent in javascript, but this helped me debug.");
         let p = MercatorTransverse::<DrainStub<f64>>::builder().build();
 
-        let t = p.transform(&Coordinate { x: 0_f64, y: 0_f64 });
+        let t = p.transform(&Coord { x: 0_f64, y: 0_f64 });
         assert_eq!(
             t,
-            Coordinate {
+            Coord {
                 x: 480_f64,
                 y: 250_f64
             }
         );
-        let t = p.transform(&Coordinate {
+        let t = p.transform(&Coord {
             x: 55_f64,
             y: 3_f64,
         });
         assert_eq!(
             t,
-            Coordinate {
+            Coord {
                 x: 663.160624073884_f64,
                 y: 235.49824637431624_f64
             }

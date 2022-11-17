@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::AsPrimitive;
 
 use crate::compose::Compose;
@@ -63,7 +63,7 @@ mod fit_clip;
 mod fit_no_clip;
 mod fit_reclip;
 
-type FitBounds<B, T> = Box<dyn Fn([Coordinate<T>; 2], &mut B)>;
+type FitBounds<B, T> = Box<dyn Fn([Coord<T>; 2], &mut B)>;
 
 /// Projection type.
 pub type RotateTransform<PR, T> =
@@ -82,12 +82,12 @@ pub trait TransformExtent {
     fn transform_extent(
         self,
         k: Self::T,
-        t: Coordinate<Self::T>,
+        t: Coord<Self::T>,
         x0: Self::T,
         y0: Self::T,
         x1: Self::T,
         y1: Self::T,
-    ) -> [Coordinate<Self::T>; 2]
+    ) -> [Coord<Self::T>; 2]
     where
         Self::T: CoordFloat;
 }
@@ -150,7 +150,7 @@ pub trait CenterGet {
     type T;
 
     ///  Returns the current center of the projection, which defaults to ⟨0°,0°⟩.
-    fn center(&self) -> Coordinate<Self::T>
+    fn center(&self) -> Coord<Self::T>
     where
         Self::T: CoordFloat;
 }
@@ -167,7 +167,7 @@ pub trait CenterSet {
     /// @param point A point specified as a two-dimensional array
     /// [longitude, latitude] in degrees.
     ///
-    fn center_set(&mut self, point: &Coordinate<Self::T>) -> &mut Self
+    fn center_set(&mut self, point: &Coord<Self::T>) -> &mut Self
     where
         Self::T: CoordFloat;
 }
@@ -180,7 +180,7 @@ pub trait ClipExtentGet {
     type T;
 
     /// Returns a bounding box.
-    fn clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]>
+    fn clip_extent(&self) -> Option<[Coord<Self::T>; 2]>
     where
         Self::T: CoordFloat;
 }
@@ -210,7 +210,7 @@ pub trait ClipExtentSet {
     type Output;
 
     /// Sets the bounding box.
-    fn clip_extent_set(&self, extent: &[Coordinate<Self::T>; 2]) -> Self::Output
+    fn clip_extent_set(&self, extent: &[Coord<Self::T>; 2]) -> Self::Output
     where
         Self::T: CoordFloat;
 }
@@ -223,7 +223,7 @@ pub trait ClipExtentAdjust {
     type T;
 
     /// Sets the bounding box.
-    fn clip_extent_adjust(&mut self, extent: &[Coordinate<Self::T>; 2]) -> &mut Self
+    fn clip_extent_adjust(&mut self, extent: &[Coord<Self::T>; 2]) -> &mut Self
     where
         Self::T: CoordFloat;
 }
@@ -529,7 +529,7 @@ pub trait TranslateGet {
     type T;
 
     /// Returns the projections translation.
-    fn translate(&self) -> Coordinate<Self::T>
+    fn translate(&self) -> Coord<Self::T>
     where
         Self::T: CoordFloat;
 }
@@ -549,7 +549,7 @@ pub trait TranslateSet {
     ///  @param point A two-element array [tx, ty] specifying the
     ///  translation offset. The default translation offset of defaults to
     ///  [480, 250] places ⟨0°,0°⟩ at the center of a 960×500 area.
-    fn translate_set(&mut self, t: &Coordinate<Self::T>) -> &mut Self
+    fn translate_set(&mut self, t: &Coord<Self::T>) -> &mut Self
     where
         Self::T: CoordFloat;
 }

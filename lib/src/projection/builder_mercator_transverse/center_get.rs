@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::projection::builder_mercator_transverse::Builder;
 use crate::projection::CenterGet;
@@ -14,8 +14,8 @@ where
     type T = T;
 
     #[inline]
-    fn center(&self) -> Coordinate<T> {
+    fn center(&self) -> Coord<T> {
         let c = self.base.center();
-        Coordinate { x: c.y, y: -c.x }
+        Coord { x: c.y, y: -c.x }
     }
 }

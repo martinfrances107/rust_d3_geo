@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::rectangle::Rectangle;
@@ -18,7 +18,7 @@ where
     type Output = Builder<DRAIN, PCNU<T>, T>;
 
     #[inline]
-    fn clip_extent_set(&self, extent: &[Coordinate<Self::T>; 2]) -> Self::Output {
+    fn clip_extent_set(&self, extent: &[Coord<Self::T>; 2]) -> Self::Output {
         let mut out = Self::Output {
             p_drain: self.p_drain,
 

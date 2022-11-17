@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::projection::builder_mercator::Builder;
 use crate::projection::CenterGet;
@@ -14,7 +14,7 @@ where
     type T = T;
 
     #[inline]
-    fn center(&self) -> Coordinate<T> {
+    fn center(&self) -> Coord<T> {
         self.base.center()
     }
 }

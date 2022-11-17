@@ -5,10 +5,10 @@ extern crate pretty_assertions;
 use std::time::Duration;
 
 use criterion::Criterion;
-use geo::Coordinate;
 use geo::LineString;
 use geo::MultiPolygon;
 use geo::Polygon;
+use geo_types::Coord;
 use lazy_static::lazy_static;
 use pretty_assertions::assert_eq;
 use regex::Regex;
@@ -36,7 +36,7 @@ fn rings() {
 
     let ortho = Orthographic::builder()
         .scale_set(240_f64)
-        .translate_set(&Coordinate {
+        .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,
         })
@@ -53,7 +53,7 @@ fn rings() {
         for long in (-180..=180).step_by(40) {
             let mut inner = cg_inner
                 .clone()
-                .center_set(&Coordinate {
+                .center_set(&Coord {
                     x: long as f64,
                     y: lat as f64,
                 })
@@ -67,7 +67,7 @@ fn rings() {
             let poly = Polygon::new(
                 cg_outer
                     .clone()
-                    .center_set(&Coordinate {
+                    .center_set(&Coord {
                         x: long as f64,
                         y: lat as f64,
                     })

@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::float::FloatConst;
 
 use crate::math::EPSILON;
@@ -24,7 +24,7 @@ where
     z.asin()
 }
 
-fn azimuthal_invert<T>(p: &Coordinate<T>) -> Coordinate<T>
+fn azimuthal_invert<T>(p: &Coord<T>) -> Coord<T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -37,7 +37,7 @@ where
     let y_out = if z == T::zero() { z } else { p.y * sc / z };
     let ret_y = y_out.asin();
 
-    Coordinate { x: ret_x, y: ret_y }
+    Coord { x: ret_x, y: ret_y }
 }
 /// Projection definition.
 #[derive(Clone, Copy, Default, Debug)]
@@ -70,16 +70,16 @@ where
     type T = T;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         let (sin_y, cos_y) = p.y.sin_cos();
-        Coordinate {
+        Coord {
             x: cos_y * p.x.sin(),
             y: sin_y,
         }
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         azimuthal_invert(p)
     }
 }

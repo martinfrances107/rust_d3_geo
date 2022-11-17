@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::compose::Compose;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
@@ -75,7 +75,7 @@ where
         self.state.sink.line_start();
     }
 
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, m: Option<u8>) {
         let t = &self.projection_transform.transform(p);
         self.state.sink.point(t, m);
     }

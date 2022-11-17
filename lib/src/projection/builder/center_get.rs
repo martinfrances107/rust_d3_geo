@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::projection::CenterGet;
 
@@ -15,8 +15,8 @@ where
     type T = T;
 
     #[inline]
-    fn center(&self) -> Coordinate<T> {
-        Coordinate {
+    fn center(&self) -> Coord<T> {
+        Coord {
             x: self.lambda.to_degrees(),
             y: self.phi.to_degrees(),
         }

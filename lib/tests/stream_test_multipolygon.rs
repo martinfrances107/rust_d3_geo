@@ -4,8 +4,8 @@ mod stream_multipolygon {
     extern crate pretty_assertions;
 
     use geo::polygon;
-    use geo::Coordinate;
     use geo::MultiPolygon;
+    use geo_types::Coord;
 
     use rust_d3_geo::stream::Stream;
     use rust_d3_geo::stream::Streamable;
@@ -34,7 +34,7 @@ mod stream_multipolygon {
             assert!(self.calls == 2 || self.calls == 8)
         }
 
-        fn point(&mut self, p: &Coordinate<f64>, _m: Option<u8>) {
+        fn point(&mut self, p: &Coord<f64>, _m: Option<u8>) {
             self.coordinates += 1_f64;
             assert!(p.x == self.coordinates);
             self.coordinates += 1_f64;

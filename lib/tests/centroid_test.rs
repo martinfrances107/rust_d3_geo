@@ -4,7 +4,6 @@ mod centroid {
     use geo::line_string;
     use geo::point;
     use geo::polygon;
-    use geo::Coordinate;
     use geo::Geometry;
     use geo::GeometryCollection;
     use geo::LineString;
@@ -13,6 +12,7 @@ mod centroid {
     use geo::MultiPolygon;
     use geo::Point;
     use geo::Polygon;
+    use geo_types::Coord;
 
     use rust_d3_geo::centroid::Centroid;
     use rust_d3_geo::circle::generator::Generator as CircleGenerator;
@@ -225,8 +225,8 @@ mod centroid {
     fn a_set_of_line_strings_is_the_spherical_average_of_its_great_arc_segments() {
         println!("the centroid of a set of line strings is the (spherical) average of its constituent great arc segments");
         let mls = MultiLineString(vec![LineString(vec![
-            Coordinate { x: 0_f64, y: 0_f64 },
-            Coordinate { x: 0_f64, y: 2_f64 },
+            Coord { x: 0_f64, y: 0_f64 },
+            Coord { x: 0_f64, y: 2_f64 },
         ])]);
 
         assert!(in_delta_point(
@@ -240,8 +240,8 @@ mod centroid {
     fn a_line_of_zero_length_is_treated_as_points() {
         println!("a line of zero length is treated as points");
         let ls = LineString(vec![
-            Coordinate { x: 1_f64, y: 1_f64 },
-            Coordinate { x: 1_f64, y: 1_f64 },
+            Coord { x: 1_f64, y: 1_f64 },
+            Coord { x: 1_f64, y: 1_f64 },
         ]);
 
         assert!(in_delta_point(
@@ -253,8 +253,8 @@ mod centroid {
         let gc = GeometryCollection(vec![
             Geometry::Point(Point::new(0_f64, 0_f64)),
             Geometry::LineString(LineString(vec![
-                Coordinate { x: 1_f64, y: 2_f64 },
-                Coordinate { x: 1_f64, y: 2_f64 },
+                Coord { x: 1_f64, y: 2_f64 },
+                Coord { x: 1_f64, y: 2_f64 },
             ])),
         ]);
 
@@ -373,14 +373,14 @@ mod centroid {
         println!("the centroid of a set of polygons is the (spherical) average of its surface");
         let p45 = CircleGenerator::default()
             .radius_set(45_f64)
-            .center_set(&Coordinate {
+            .center_set(&Coord {
                 x: 90_f64,
                 y: 0_f64,
             })
             .circle();
         let p60 = CircleGenerator::default()
             .radius_set(60_f64)
-            .center_set(&Coordinate {
+            .center_set(&Coord {
                 x: -90_f64,
                 y: 0_f64,
             })
@@ -505,7 +505,7 @@ mod centroid {
     fn concentric_rings() {
         println!("concentric rings");
         let mut cg = CircleGenerator::default();
-        cg.center_set(&Coordinate {
+        cg.center_set(&Coord {
             x: 0_f64,
             y: 45_f64,
         });

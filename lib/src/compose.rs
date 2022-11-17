@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::Transform;
 
@@ -35,13 +35,13 @@ where
 {
     type T = T;
     // Apply A then B.
-    fn transform(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, coordinate: &Coord<T>) -> Coord<T> {
         let temp = self.a.transform(coordinate);
         self.b.transform(&temp)
     }
 
     // Apply B them A.
-    fn invert(&self, coordinate: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, coordinate: &Coord<T>) -> Coord<T> {
         let temp = self.b.invert(coordinate);
         self.a.invert(&temp)
     }

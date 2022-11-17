@@ -1,6 +1,6 @@
-use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
+use geo_types::Coord;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -38,7 +38,7 @@ pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsVa
 
     let projector = AzimuthalEquiDistant::<Context, f64>::builder()
         .scale_set(width as f64 / 3_f64)
-        .translate_set(&Coordinate {
+        .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,
         })

@@ -8,11 +8,11 @@ mod path_string {
     use geo::line_string;
     use geo::point;
     use geo::CoordFloat;
-    use geo::Coordinate;
     use geo::Geometry;
     use geo::GeometryCollection;
     use geo::MultiPolygon;
     use geo::Polygon;
+    use geo_types::Coord;
     use num_traits::AsPrimitive;
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
@@ -164,7 +164,7 @@ mod path_string {
         for long in (0..=40).step_by(40) {
             let poly = gc
                 .clone()
-                .center_set(&Coordinate {
+                .center_set(&Coord {
                     x: long as f64,
                     y: lat as f64,
                 })
@@ -175,7 +175,7 @@ mod path_string {
 
         let ortho = Orthographic::<PathString<f64>, _>::builder()
             .scale_set(240_f64)
-            .translate_set(&Coordinate {
+            .translate_set(&Coord {
                 x: 300_f64,
                 y: 300_f64,
             })

@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::abs_diff_eq;
@@ -168,7 +168,7 @@ where
 {
     // todo remove this duplicate.
     #[inline]
-    fn visible(&self, p: &Coordinate<T>) -> bool {
+    fn visible(&self, p: &Coord<T>) -> bool {
         p.x.cos() * p.y.cos() > self.cr
     }
 }
@@ -194,7 +194,7 @@ where
     SINK: Clone,
     T: CoordFloat + FloatConst,
 {
-    fn code(&self, p: &Coordinate<T>) -> u8 {
+    fn code(&self, p: &Coord<T>) -> u8 {
         let lambda = p.x;
         let phi = p.y;
         let r = if self.small_radius {
@@ -258,7 +258,7 @@ where
         self.v0 = false;
         self.clean = 1;
     }
-    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         let mut point1 = Some(LineElem { p: *p, m: None });
         let mut point2: Option<LineElem<T>>;
         let v = self.visible(p);
@@ -271,7 +271,7 @@ where
             }
         } else if v {
             let inc = if p.x < T::zero() { T::PI() } else { -T::PI() };
-            self.code(&Coordinate {
+            self.code(&Coord {
                 x: p.x + inc,
                 y: p.y,
             })

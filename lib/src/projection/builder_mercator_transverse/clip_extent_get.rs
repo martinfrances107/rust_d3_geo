@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::projection::builder::template::PCNU;
@@ -21,7 +21,7 @@ where
 
     /// Returns a bounding box.
     #[inline]
-    fn clip_extent(&self) -> Option<[Coordinate<Self::T>; 2]> {
+    fn clip_extent(&self) -> Option<[Coord<Self::T>; 2]> {
         self.base.extent
     }
 }

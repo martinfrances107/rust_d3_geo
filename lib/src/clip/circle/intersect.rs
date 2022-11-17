@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::cartesian::add_in_place;
@@ -17,7 +17,7 @@ pub enum Return<T: CoordFloat> {
     /// One Point.
     One(Option<LineElem<T>>),
     /// Two polar points
-    Two([Coordinate<T>; 2]),
+    Two([Coord<T>; 2]),
     /// TODO can I remove,
     False,
     /// No Intersection.
@@ -79,7 +79,7 @@ pub fn intersect<T: CoordFloat + FloatConst>(
     let mut q = scale(&u, (-w - t) / uu);
     add_in_place(&mut q, &A);
     // Javascript has implicit cast q of from [F;3] to a Point here.
-    let q: Coordinate<T> = spherical_radians(&q);
+    let q: Coord<T> = spherical_radians(&q);
 
     if !two {
         return Return::One(Some(LineElem { p: q, m: None }));

@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::projection::TransformExtent;
@@ -21,7 +21,7 @@ where
 {
     type T = T;
 
-    fn translate_set(&mut self, t: &Coordinate<T>) -> &mut Self {
+    fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.base.translate_set(t);
         self.reclip()
     }
@@ -35,7 +35,7 @@ where
 {
     type T = T;
 
-    fn translate_set(&mut self, t: &Coordinate<T>) -> &mut Self {
+    fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.base.translate_set(t);
         self.reclip()
     }

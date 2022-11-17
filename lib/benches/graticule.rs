@@ -5,10 +5,10 @@ extern crate pretty_assertions;
 use std::time::Duration;
 
 use criterion::Criterion;
-use geo::Coordinate;
 use geo::Geometry;
 use geo::LineString;
 use geo::MultiLineString;
+use geo_types::Coord;
 use lazy_static::lazy_static;
 use pretty_assertions::assert_eq;
 use regex::Regex;
@@ -34,7 +34,7 @@ lazy_static! {
 fn graticule() {
     let width = 1000_f64;
     let height = 1000_f64;
-    let center = Coordinate {
+    let center = Coord {
         x: width / 2_f64,
         y: height / 2_f64,
     };

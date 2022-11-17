@@ -17,6 +17,7 @@ crate-type = ["cdylib"]
 [dependencies]
 js-sys = { workspace = true }
 geo = { workspace = true }
+geo-types = { workspace = true }
 gloo-utils = { workspace = true }
 gloo-timers = { version = "~0.2", features = ["futures"] }
 futures = "~0.3"

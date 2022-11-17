@@ -1,6 +1,6 @@
-use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
+use geo_types::Coord;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -34,7 +34,7 @@ pub async fn draw_conic_equal_area(land: &Geometry<f64>) -> Result<(), JsValue> 
     let pb = PathBuilder::new(context);
 
     let cea = ConicEqualArea::builder()
-        .translate_set(&Coordinate {
+        .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,
         })

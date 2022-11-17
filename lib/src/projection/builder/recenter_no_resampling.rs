@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
@@ -46,7 +46,7 @@ where
             &self.sy,
             &self.alpha,
         )
-        .transform(&self.projection_raw.transform(&Coordinate {
+        .transform(&self.projection_raw.transform(&Coord {
             x: self.lambda,
             y: self.phi,
         }));
@@ -101,7 +101,7 @@ where
             &self.sy,
             &self.alpha,
         )
-        .transform(&self.projection_raw.transform(&Coordinate {
+        .transform(&self.projection_raw.transform(&Coord {
             x: self.lambda,
             y: self.phi,
         }));

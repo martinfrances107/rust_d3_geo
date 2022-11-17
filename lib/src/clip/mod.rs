@@ -25,7 +25,7 @@ pub(crate) mod rectangle;
 pub(crate) mod rejoin;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::stream::Stream;
 
@@ -63,7 +63,7 @@ where
     type T;
 
     /// Is the point visible after clipping?
-    fn point_visible(&self, p: &Coordinate<Self::T>) -> bool;
+    fn point_visible(&self, p: &Coord<Self::T>) -> bool;
 }
 
 /// Antimeridian or Circle interpolator.
@@ -73,8 +73,8 @@ pub trait Interpolator {
     /// Stream modifier.
     fn interpolate<EP, STREAM>(
         &self,
-        to: Option<Coordinate<Self::T>>,
-        from: Option<Coordinate<Self::T>>,
+        to: Option<Coord<Self::T>>,
+        from: Option<Coord<Self::T>>,
         direction: Self::T,
         stream: &mut STREAM,
     ) where

@@ -3,9 +3,9 @@ use std::mem::swap;
 
 use derivative::Derivative;
 use geo::CoordFloat;
-use geo::Coordinate;
 use geo::LineString;
 use geo::Polygon;
+use geo_types::Coord;
 
 use rust_d3_array::range::range;
 
@@ -80,7 +80,7 @@ where
     T: 'static + CoordFloat,
 {
     /// Ouptut a iterator, which depends on the builder settings.
-    pub fn generated_lines(&self) -> impl Iterator<Item = Vec<Coordinate<T>>> + '_ {
+    pub fn generated_lines(&self) -> impl Iterator<Item = Vec<Coord<T>>> + '_ {
         let range1 = range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX)
             .into_iter()
             .map(&self.X);

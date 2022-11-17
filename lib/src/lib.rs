@@ -37,7 +37,7 @@
 //! Stereographic for example
 //!
 //! ```rust
-//! use geo::Coordinate;
+//! use geo_types::Coord;
 //! use rust_d3_geo::projection::Build;
 //! use rust_d3_geo::projection::RawBase as ProjectionRawBase;
 //! use rust_d3_geo::projection::stereographic::Stereographic;
@@ -49,7 +49,7 @@
 //!
 //!     let stereographic = Stereographic::<DrainStub<f64>, f64>::builder()
 //!       .scale_set(100_f64)
-//!       .translate_set(&Coordinate {
+//!       .translate_set(&Coord {
 //!          x: 300_f64,
 //!          y: 300_f64,
 //!       })
@@ -76,7 +76,7 @@
 //! extern crate topojson;
 //! extern crate web_sys;
 //!
-//! use geo::Coordinate;
+//! use geo_types::Coord;
 //! use geo::Geometry;
 //! use geo::MultiLineString;
 //! use topojson::Topology;
@@ -144,7 +144,7 @@
 //!
 //!     let ortho = Orthographic::builder()
 //!         .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
-//!         .translate_set(&Coordinate {
+//!         .translate_set(&Coord {
 //!             x: width / 2_f64,
 //!             y: height / 2_f64,
 //!         })
@@ -178,7 +178,7 @@ extern crate rust_d3_array;
 extern crate web_sys;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use math::EPSILON;
 
@@ -235,17 +235,17 @@ where
     type T;
 
     /// Transform a 2-D point to another.
-    fn transform(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;
+    fn transform(&self, p: &Coord<Self::T>) -> Coord<Self::T>;
 
     /// Reversed the transform.
-    fn invert(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T>;
+    fn invert(&self, p: &Coord<Self::T>) -> Coord<Self::T>;
 }
 
-// The implementation used to be available on Coordinate<T>
+// The implementation used to be available on Coord<T>
 // but geo has since been refactored into workspaces. where the packages geo and geo-types are separate.
 // abs_diff_eq() is private to the geo-types package. And Coordinate is accessed through the geo package
 // Sp I have had to transplant this here.
-pub(crate) fn abs_diff_eq<T: CoordFloat>(a: &Coordinate<T>, b: &Coordinate<T>) -> bool {
+pub(crate) fn abs_diff_eq<T: CoordFloat>(a: &Coord<T>, b: &Coord<T>) -> bool {
     let e = T::from(EPSILON).unwrap();
     (a.x - b.x).abs() < e && (a.y - b.y).abs() < e
 }

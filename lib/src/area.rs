@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
@@ -77,7 +77,7 @@ where
         a.area_sum * a.two
     }
 
-    fn area_point_first(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+    fn area_point_first(&mut self, p: &Coord<T>, _m: Option<u8>) {
         self.point_fn = PointFn::Area;
         self.lambda00 = p.x;
         self.phi00 = p.y;
@@ -88,7 +88,7 @@ where
     }
 
     #[allow(clippy::similar_names)]
-    fn area_point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+    fn area_point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
 
@@ -126,7 +126,7 @@ where
     #[inline]
     fn area_ring_end(&mut self) {
         self.area_point(
-            &Coordinate {
+            &Coord {
                 x: self.lambda00,
                 y: self.phi00,
             },
@@ -164,7 +164,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, m: Option<u8>) {
         match self.point_fn {
             PointFn::AreaFirst => {
                 self.area_point_first(p, m);

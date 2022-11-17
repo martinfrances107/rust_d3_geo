@@ -8,8 +8,8 @@ mod fit {
 
     use geo::polygon;
     use geo::CoordFloat;
-    use geo::Coordinate;
     use geo::Geometry;
+    use geo_types::Coord;
     use num_traits::FloatConst;
     use topojson::Topology;
 
@@ -72,7 +72,7 @@ mod fit {
         let translate = projection.translate();
         assert!(in_delta_coordinate(
             &translate,
-            &Coordinate {
+            &Coord {
                 x: 500_f64,
                 y: 500_f64
             },
@@ -90,7 +90,7 @@ mod fit {
         assert!(in_delta(projection.scale(), 143.239449, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 500_f64,
                 y: 492.000762_f64
             },
@@ -108,7 +108,7 @@ mod fit {
         assert!(in_delta(projection.scale(), 228.357229, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 496.353618_f64,
                 y: 479.684353_f64
             },
@@ -126,7 +126,7 @@ mod fit {
         assert!(in_delta(projection.scale(), 153.559317, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 485.272493_f64,
                 y: 452.093375_f64
             },
@@ -168,7 +168,7 @@ mod fit {
         assert!(in_delta(projection.scale(), 143.239449, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 450_f64,
                 y: 442.000762_f64
             },
@@ -190,7 +190,7 @@ mod fit {
         // TODO Must investigate the failure below.
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 500.115138_f64,
                 y: 556.522620_f64
             },
@@ -209,7 +209,7 @@ mod fit {
 
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 500_f64,
                 y: 481.549457_f64
             },
@@ -228,7 +228,7 @@ mod fit {
         assert!((in_delta(projection.scale(), 451.406773, 1e-6)));
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 503.769179_f64,
                 y: 498.593227_f64
             },
@@ -246,7 +246,7 @@ mod fit {
         assert!(in_delta(projection.scale(), 451.406773, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 453.769179_f64,
                 y: 448.593227_f64
             },
@@ -264,7 +264,7 @@ mod fit {
         assert!(in_delta(projection.scale(), 162.934379_f64, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 478.546293_f64,
                 y: 432.922534_f64
             },
@@ -349,11 +349,11 @@ mod fit {
 
         let p2 = Equirectangular::<Bounds<_>, _>::builder();
         let mut p2 = p2.clip_extent_set(&[
-            Coordinate {
+            Coord {
                 x: 100_f64,
                 y: 200_f64,
             },
-            Coordinate {
+            Coord {
                 x: 700_f64,
                 y: 600_f64,
             },
@@ -413,7 +413,7 @@ mod fit {
         assert!(in_delta(projection.scale(), 143.239449_f64, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 450_f64,
                 y: 208.999023_f64
             },
@@ -447,7 +447,7 @@ mod fit {
         assert!(in_delta(projection.scale(), 297.042711_f64, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
-            &Coordinate {
+            &Coord {
                 x: 933.187199_f64,
                 y: 433.411585_f64
             },

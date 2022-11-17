@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip;
@@ -149,7 +149,7 @@ where
         let delta_gamma = T::zero();
         let delta2 = T::from(0.5_f64).unwrap();
         let center = generate_str(&k, &T::zero(), &T::zero(), &sx, &sy, &alpha)
-            .transform(&projection_raw.transform(&Coordinate { x: lambda, y: phi }));
+            .transform(&projection_raw.transform(&Coord { x: lambda, y: phi }));
         let str = generate_str(&k, &(x - center.x), &(y - center.y), &sx, &sy, &alpha);
 
         let rotate = rotate_radians([delta_lambda, delta_phi, delta_gamma]); // pre-rotate
@@ -212,7 +212,7 @@ where
             &self.sy,
             &self.alpha,
         )
-        .transform(&projection_raw.transform(&Coordinate {
+        .transform(&projection_raw.transform(&Coord {
             x: self.lambda,
             y: self.phi,
         }));

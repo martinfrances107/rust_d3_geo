@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::rot::rotate_radians::RotateRadians;
@@ -18,7 +18,7 @@ where
     /// The rotation used to generate the circle stream.
     pub rotate: RotateRadians<T>,
     /// The coordinates of the ring.
-    pub ring: Vec<Coordinate<T>>,
+    pub ring: Vec<Coord<T>>,
 }
 
 impl<T> Default for Stream<T>
@@ -45,9 +45,9 @@ where
         self
     }
 
-    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         let x_rotated = &self.rotate.invert(p);
-        self.ring.push(Coordinate {
+        self.ring.push(Coord {
             x: x_rotated.x.to_degrees(),
             y: x_rotated.y.to_degrees(),
         });

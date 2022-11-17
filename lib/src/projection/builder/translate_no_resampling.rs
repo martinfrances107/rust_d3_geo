@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::projection::builder::ResampleNoneNoPCNU;
@@ -34,7 +34,7 @@ where
 {
     type T = T;
 
-    fn translate_set(&mut self, t: &Coordinate<T>) -> &mut Self {
+    fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.x = t.x;
         self.y = t.y;
         self.recenter_no_resampling()
@@ -61,7 +61,7 @@ where
 {
     type T = T;
 
-    fn translate_set(&mut self, t: &Coordinate<T>) -> &mut Self {
+    fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.x = t.x;
         self.y = t.y;
         self.recenter_no_resampling()

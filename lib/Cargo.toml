@@ -15,6 +15,7 @@ approx = "~0.5"
 derivative = "~2"
 num-traits = "~0.2"
 geo = { workspace = true }
+geo-types = { workspace = true }
 delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
 rust_d3_array = { git = "https://github.com/martinfrances107/rust_d3_array.git" }
 rust_topojson_client = { workspace = true }

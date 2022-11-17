@@ -6,7 +6,7 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::float::FloatConst;
 
 use crate::projection::ScaleSet;
@@ -53,18 +53,18 @@ impl<DRAIN> TransformExtent for Mercator<DRAIN> {
     fn transform_extent(
         self,
         k: f64,
-        t: Coordinate<f64>,
+        t: Coord<f64>,
         x0: f64,
         y0: f64,
         x1: f64,
         y1: f64,
-    ) -> [Coordinate<f64>; 2] {
+    ) -> [Coord<f64>; 2] {
         [
-            Coordinate {
+            Coord {
                 x: f64::max(t.x - k, x0),
                 y: y0,
             },
-            Coordinate {
+            Coord {
                 x: f64::min(t.x + k, x1),
                 y: y1,
             },
@@ -76,7 +76,7 @@ impl<DRAIN> Transform for Mercator<DRAIN> {
     type T = f64;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
+    fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
         // Divergence between f64 and f32
         // when p.y  = 1.5707963267948966  (PI/2)
         // f64 outputs -37.33185619326892 which is consistent
@@ -86,15 +86,15 @@ impl<DRAIN> Transform for Mercator<DRAIN> {
         // The value returned
         // from tan(PI_f64/2_f64) happens to be the same
         // large number in both the JS and RUST.
-        Coordinate {
+        Coord {
             x: p.x,
             y: ((f64::FRAC_PI_2() + p.y) / 2f64).tan().ln(),
         }
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
-        Coordinate {
+    fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
+        Coord {
             x: p.x,
             y: 2f64 * (p.y.exp()).atan() - f64::FRAC_PI_2(),
         }

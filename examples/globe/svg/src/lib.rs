@@ -12,10 +12,10 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
-use geo::Coordinate;
 use geo::Geometry;
 use geo::GeometryCollection;
 use geo::MultiLineString;
+use geo_types::Coord;
 use gloo_utils::format::JsValueSerdeExt;
 use topojson::Topology;
 use wasm_bindgen::prelude::*;
@@ -95,7 +95,7 @@ pub async fn start() -> Result<(), JsValue> {
 
     let ortho = Orthographic::builder()
         .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
-        .translate_set(&Coordinate {
+        .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,
         })

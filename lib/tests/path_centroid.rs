@@ -9,7 +9,6 @@ mod path_centroid {
 
     use geo::line_string;
     use geo::CoordFloat;
-    use geo::Coordinate;
     use geo::Geometry;
     use geo::GeometryCollection;
     use geo::MultiLineString;
@@ -17,6 +16,7 @@ mod path_centroid {
     use geo::MultiPolygon;
     use geo::Point;
     use geo::Polygon;
+    use geo_types::Coord;
     use num_traits::AsPrimitive;
     use num_traits::Float;
     use num_traits::FloatConst;
@@ -65,7 +65,7 @@ mod path_centroid {
     #[test]
     fn of_a_point() {
         println!("geoPath.centroid(…) of a point");
-        let point = Geometry::Point(Point(Coordinate { x: 0_f64, y: 0_f64 }));
+        let point = Geometry::Point(Point(Coord { x: 0_f64, y: 0_f64 }));
 
         let eq = equirectangular();
         assert!(in_delta_point(

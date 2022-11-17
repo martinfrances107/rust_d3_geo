@@ -1,6 +1,6 @@
 #[cfg(not(tarpaulin_include))]
 mod stereographic_tests {
-    use geo::Coordinate;
+    use geo_types::Coord;
     use rust_d3_geo::projection::ScaleSet;
 
     use rust_d3_geo::projection::equality::projection_equal;
@@ -18,23 +18,23 @@ mod stereographic_tests {
             Stereographic<DrainStub<f64>, f64>,
             f64,
         > = Stereographic::builder()
-            .translate_set(&Coordinate { x: 0f64, y: 0f64 })
+            .translate_set(&Coord { x: 0f64, y: 0f64 })
             .scale_set(1f64)
             .build();
 
         assert!(projection_equal(
             &stereo,
-            &Coordinate { x: 0_f64, y: 0_f64 },
-            &Coordinate { x: 0_f64, y: 0_f64 },
+            &Coord { x: 0_f64, y: 0_f64 },
+            &Coord { x: 0_f64, y: 0_f64 },
             None
         ));
         assert!(projection_equal(
             &stereo,
-            &Coordinate {
+            &Coord {
                 x: -90_f64,
                 y: 0_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -1_f64,
                 y: 0_f64
             },
@@ -42,29 +42,29 @@ mod stereographic_tests {
         ));
         assert!(projection_equal(
             &stereo,
-            &Coordinate {
+            &Coord {
                 x: 90_f64,
                 y: 0_f64
             },
-            &Coordinate { x: 1_f64, y: 0_f64 },
+            &Coord { x: 1_f64, y: 0_f64 },
             None
         ));
         assert!(projection_equal(
             &stereo,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: -90_f64
             },
-            &Coordinate { x: 0_f64, y: 1_f64 },
+            &Coord { x: 0_f64, y: 1_f64 },
             None
         ));
         assert!(projection_equal(
             &stereo,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: 90_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: -1_f64
             },

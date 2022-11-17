@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::stream::Connected;
 use crate::stream::Stream;
@@ -57,9 +57,9 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, m: Option<u8>) {
         self.0.sink.point(
-            &Coordinate {
+            &Coord {
                 x: p.x.to_radians(),
                 y: p.y.to_radians(),
             },

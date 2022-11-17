@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::clipper::Connectable as ClipConnectable;
@@ -114,16 +114,16 @@ where
     /// f32 or f64
     type T = T;
 
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
-        let r = Coordinate {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
+        let r = Coord {
             x: p.x.to_radians(),
             y: p.y.to_radians(),
         };
         self.project_rotate_transform.transform(&r)
     }
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         let d = self.project_rotate_transform.invert(p);
-        Coordinate {
+        Coord {
             x: d.x.to_degrees(),
             y: d.y.to_degrees(),
         }

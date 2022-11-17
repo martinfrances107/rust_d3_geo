@@ -16,6 +16,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 geo = { workspace = true }
+geo-types = { workspace = true }
 gloo-utils = { workspace = true }
 getrandom = { workspace = true, features = ["js"] }
 futures = { workspace = true }

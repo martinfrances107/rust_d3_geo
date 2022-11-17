@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::projection::TranslateGet;
 
@@ -15,7 +15,7 @@ where
     type T = T;
 
     #[inline]
-    fn translate(&self) -> Coordinate<T> {
+    fn translate(&self) -> Coord<T> {
         self.base.translate()
     }
 }

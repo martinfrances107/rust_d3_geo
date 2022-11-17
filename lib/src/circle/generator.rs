@@ -1,9 +1,9 @@
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
 use geo::LineString;
 use geo::Polygon;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::rot::rotate_radians;
@@ -19,7 +19,7 @@ pub struct Generator<T>
 where
     T: CoordFloat,
 {
-    center: Coordinate<T>,
+    center: Coord<T>,
     radius: T,
     precision: T,
     stream: Stream<T>,
@@ -32,7 +32,7 @@ where
     #[inline]
     fn default() -> Self {
         Self {
-            center: Coordinate {
+            center: Coord {
                 x: T::zero(),
                 y: T::zero(),
             },
@@ -70,14 +70,14 @@ where
     T: CoordFloat,
 {
     /// Center is used to programe the generator.
-    pub fn center_set(&mut self, center: &Coordinate<T>) -> &mut Self {
+    pub fn center_set(&mut self, center: &Coord<T>) -> &mut Self {
         self.center = *center;
         self
     }
 
     /// Returns the currently programmed center.
     #[inline]
-    pub const fn center(&self) -> Coordinate<T> {
+    pub const fn center(&self) -> Coord<T> {
         self.center
     }
 

@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
@@ -125,7 +125,7 @@ where
     /// Returns the bounds of the object
     ///
     /// This operation consumes the  Path.
-    pub fn bounds(mut self, object: &impl Streamable<T = T>) -> [Coordinate<T>; 2] {
+    pub fn bounds(mut self, object: &impl Streamable<T = T>) -> [Coord<T>; 2] {
         let stream_dst = Bounds::default();
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
@@ -141,7 +141,7 @@ where
     T: 'static + AddAssign + CoordFloat + FloatConst,
 {
     /// Returns the centroid of the object.
-    pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coordinate<T> {
+    pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coord<T> {
         let stream_dst = Centroid::default();
         let mut stream_in: Transformer<Centroid<T>, Connected<PCNC>, T> =
             self.projection.stream(&stream_dst);

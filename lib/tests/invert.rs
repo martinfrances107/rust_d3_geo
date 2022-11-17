@@ -1,7 +1,7 @@
 #[cfg(not(tarpaulin_include))]
 mod invert {
 
-    use geo::Coordinate;
+    use geo_types::Coord;
 
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
@@ -23,19 +23,19 @@ mod invert {
         PM: Transform<T = f64>,
     {
         for p in [
-            &Coordinate {
+            &Coord {
                 x: 0.0f64,
                 y: 0.0f64,
             },
-            &Coordinate {
+            &Coord {
                 x: 30.3f64,
                 y: 24.1f64,
             },
-            &Coordinate {
+            &Coord {
                 x: -10f64,
                 y: 42f64,
             },
-            &Coordinate {
+            &Coord {
                 x: -2.0f64,
                 y: -5.0f64,
             },

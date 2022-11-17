@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::projection::builder::template::PCNU;
@@ -28,7 +28,7 @@ where
         let k = T::PI() * self.base.scale();
 
         let rotate_raw = self.base.rotate();
-        let t = rotate_radians(rotate_raw).invert(&Coordinate {
+        let t = rotate_radians(rotate_raw).invert(&Coord {
             x: T::zero(),
             y: T::zero(),
         });
@@ -49,11 +49,11 @@ where
                 )
             }
             _ => [
-                Coordinate {
+                Coord {
                     x: t.x - k,
                     y: t.y - k,
                 },
-                Coordinate {
+                Coord {
                     x: t.x + k,
                     y: t.y + k,
                 },

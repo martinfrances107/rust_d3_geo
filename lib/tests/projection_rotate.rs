@@ -1,10 +1,10 @@
 #[cfg(not(tarpaulin_include))]
 mod projection_rotate {
 
-    use geo::Coordinate;
     use geo::Geometry;
     use geo::LineString;
     use geo::Polygon;
+    use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::path::builder::Builder as PathBuilder;
@@ -21,30 +21,30 @@ mod projection_rotate {
         let projection = Mercator::builder()
             .rotate_set(&[-134.3_f64, 25.776_f64, 0_f64])
             .scale_set(750_f64)
-            .translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+            .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .build();
 
         let path_builder = PathBuilder::context_pathstring();
 
         let object = Geometry::Polygon(Polygon::new(
             LineString::from(vec![
-                Coordinate {
+                Coord {
                     x: 125.67351590459046,
                     y: -14.17673705310531,
                 },
-                Coordinate {
+                Coord {
                     x: 125.67351590459046,
                     y: -14.173276873687367,
                 },
-                Coordinate {
+                Coord {
                     x: 125.67351590459046,
                     y: -14.173276873687367,
                 },
-                Coordinate {
+                Coord {
                     x: 125.67351590459046,
                     y: -14.169816694269425,
                 },
-                Coordinate {
+                Coord {
                     x: 125.67351590459046,
                     y: -14.17673705310531,
                 },

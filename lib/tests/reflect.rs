@@ -3,7 +3,7 @@ mod reflect {
 
     extern crate pretty_assertions;
 
-    use geo::Coordinate;
+    use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
     use rust_d3_geo::clip::circle::ClipCircleC;
@@ -47,7 +47,7 @@ mod reflect {
 
         let mut builder: GB = Gnomic::builder();
         builder.scale_set(1f64);
-        builder.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
         assert_eq!(builder.is_x_reflected(), false);
         assert_eq!(builder.is_y_reflected(), false);
@@ -55,18 +55,18 @@ mod reflect {
         let projection = builder.build();
         assert!(projection_equal(
             &projection,
-            &Coordinate { x: 0_f64, y: 0_f64 },
-            &Coordinate { x: 0_f64, y: 0_f64 },
+            &Coord { x: 0_f64, y: 0_f64 },
+            &Coord { x: 0_f64, y: 0_f64 },
             None
         ));
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: 0_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.17632698070846498_f64,
                 y: 0_f64
             },
@@ -75,11 +75,11 @@ mod reflect {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: -0.17632698070846498_f64
             },
@@ -92,7 +92,7 @@ mod reflect {
         println!("projection.reflectX(…) mirrors x after projecting");
         let mut builder: GB = Gnomic::builder();
         builder.scale_set(1_f64);
-        builder.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
         builder.reflect_x_set(REFLECT::Flipped);
 
@@ -102,18 +102,18 @@ mod reflect {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate { x: 0_f64, y: 0_f64 },
-            &Coordinate { x: 0_f64, y: 0_f64 },
+            &Coord { x: 0_f64, y: 0_f64 },
+            &Coord { x: 0_f64, y: 0_f64 },
             None
         ));
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: 0_f64
             },
-            &Coordinate {
+            &Coord {
                 x: -0.17632698070846498_f64,
                 y: 0_f64
             },
@@ -122,11 +122,11 @@ mod reflect {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: -0.17632698070846498_f64
             },
@@ -142,18 +142,18 @@ mod reflect {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate { x: 0_f64, y: 0_f64 },
-            &Coordinate { x: 0_f64, y: 0_f64 },
+            &Coord { x: 0_f64, y: 0_f64 },
+            &Coord { x: 0_f64, y: 0_f64 },
             None
         ));
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 10_f64,
                 y: 0_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0.17632698070846498_f64,
                 y: 0_f64
             },
@@ -162,11 +162,11 @@ mod reflect {
 
         assert!(projection_equal(
             &projection,
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: 10_f64
             },
-            &Coordinate {
+            &Coord {
                 x: 0_f64,
                 y: 0.17632698070846498_f64
             },
@@ -179,7 +179,7 @@ mod reflect {
         println!("projection.reflectX(…) works with projection.angle()");
         let mut builder: MercatorBuilder<_, _, DrainStub<f64>, _, _, _, _, f64> =
             Mercator::builder();
-        builder.scale_set(1_f64).translate_set(&Coordinate {
+        builder.scale_set(1_f64).translate_set(&Coord {
             x: 10_f64,
             y: 20_f64,
         });
@@ -190,28 +190,28 @@ mod reflect {
         assert!(in_delta(45_f64, builder.angle(), 1e-6));
         let p = builder.build();
         assert_eq!(
-            p.transform(&Coordinate { x: 0_f64, y: 0_f64 }),
-            Coordinate {
+            p.transform(&Coord { x: 0_f64, y: 0_f64 }),
+            Coord {
                 x: 10_f64,
                 y: 20_f64
             }
         );
         assert_eq!(
-            p.transform(&Coordinate {
+            p.transform(&Coord {
                 x: 10_f64,
                 y: 0_f64
             }),
-            Coordinate {
+            Coord {
                 x: 9.876586585051157_f64,
                 y: 20.123413414948843_f64
             }
         );
         assert_eq!(
-            p.transform(&Coordinate {
+            p.transform(&Coord {
                 x: 0_f64,
                 y: 10_f64
             }),
-            Coordinate {
+            Coord {
                 x: 9.875955206257924_f64,
                 y: 19.875955206257924_f64
             }

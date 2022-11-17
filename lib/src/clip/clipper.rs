@@ -4,8 +4,8 @@ use std::marker::PhantomData;
 
 use derivative::Derivative;
 use geo::CoordFloat;
-use geo::Coordinate;
 use geo::LineString;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::path::Result;
@@ -135,7 +135,7 @@ where
     /// Antimerdian and Circle stratergies have distinct point_visible functions.
     pub pv: PV,
     /// First point checked in rejoin algorithm.
-    pub start: Coordinate<T>,
+    pub start: Coord<T>,
 }
 
 impl<I, LC, LU, PV, RC, T> Clipper<I, LC, LU, PV, RC, Unconnected, T>
@@ -143,7 +143,7 @@ where
     T: CoordFloat,
 {
     /// Takes a line and cuts into visible segments. Returns values used for polygon.
-    pub const fn new(interpolator: I, clip_line: LU, pv: PV, start: Coordinate<T>) -> Self {
+    pub const fn new(interpolator: I, clip_line: LU, pv: PV, start: Coord<T>) -> Self {
         Self {
             p_lc: PhantomData::<LC>,
             p_rc: PhantomData::<RC>,
@@ -177,19 +177,19 @@ where
     }
 
     #[inline]
-    fn point_default(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point_default(&mut self, p: &Coord<T>, m: Option<u8>) {
         if self.pv.point_visible(p) {
             self.state.line_node.sink().point(p, m);
         }
     }
 
     #[inline]
-    fn point_line(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point_line(&mut self, p: &Coord<T>, m: Option<u8>) {
         self.state.line_node.point(p, m);
     }
 
     #[inline]
-    fn point_ring(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point_ring(&mut self, p: &Coord<T>, m: Option<u8>) {
         self.state.ring.0.push(*p);
         self.state.ring_sink.point(p, m);
     }
@@ -306,7 +306,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, m: Option<u8>) {
         match self.state.point_fn {
             PointFn::Default => {
                 self.point_default(p, m);

@@ -8,7 +8,7 @@ pub mod line;
 pub mod pv;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use interpolate::Interpolate;
 use line::Line;
 use num_traits::FloatConst;
@@ -52,12 +52,12 @@ where
     let cr = radius.cos();
     let small_radius = cr > T::zero();
     let start = if small_radius {
-        Coordinate {
+        Coord {
             x: T::zero(),
             y: -radius,
         }
     } else {
-        Coordinate {
+        Coord {
             x: -T::PI(),
             y: radius - T::PI(),
         }

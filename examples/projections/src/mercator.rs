@@ -1,6 +1,6 @@
-use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
+use geo_types::Coord;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -38,7 +38,7 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
 
     let mut mercator = Mercator::builder();
     let mercator = mercator.scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI);
-    mercator.translate_set(&Coordinate {
+    mercator.translate_set(&Coord {
         x: width / 2_f64,
         y: height / 2_f64,
     });

@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::clip::rectangle::Rectangle;
 use crate::projection::ClipExtentAdjust;
@@ -16,7 +16,7 @@ where
 {
     type T = T;
 
-    fn clip_extent_adjust(&mut self, extent: &[Coordinate<T>; 2]) -> &mut Self {
+    fn clip_extent_adjust(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
         self.x0 = Some(extent[0].x);
         self.y0 = Some(extent[0].y);
         self.x1 = Some(extent[1].x);

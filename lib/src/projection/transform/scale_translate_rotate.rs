@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::Transform;
 
@@ -23,7 +23,7 @@ where
     type T = T;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         match self {
             Self::ST(st) => st.transform(p),
             Self::STR(str) => str.transform(p),
@@ -31,7 +31,7 @@ where
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         match self {
             Self::ST(st) => st.invert(p),
             Self::STR(str) => str.invert(p),

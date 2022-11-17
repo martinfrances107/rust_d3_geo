@@ -3,7 +3,7 @@ use std::fmt::Formatter;
 use std::fmt::Result;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
@@ -69,7 +69,7 @@ where
     type T = T;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         match self {
             Self::C(c) => c.transform(p),
             Self::RL(rl) => rl.transform(p),
@@ -79,7 +79,7 @@ where
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         match self {
             Self::C(c) => c.invert(p),
             Self::RL(rl) => rl.invert(p),

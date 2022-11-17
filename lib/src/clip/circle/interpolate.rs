@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::circle::stream_fn::stream_fn;
@@ -39,8 +39,8 @@ where
 
     fn interpolate<EP, STREAM>(
         &self,
-        from: Option<Coordinate<T>>,
-        to: Option<Coordinate<T>>,
+        from: Option<Coord<T>>,
+        to: Option<Coord<T>>,
         direction: T,
         stream: &mut STREAM,
     ) where

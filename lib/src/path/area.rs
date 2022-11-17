@@ -1,6 +1,6 @@
 use derivative::Derivative;
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
@@ -17,10 +17,10 @@ where
 {
     area_sum: T,
     area_ring_sum: T,
-    p00: Coordinate<T>,
-    p0: Coordinate<T>,
+    p00: Coord<T>,
+    p0: Coord<T>,
     #[derivative(Debug = "ignore")]
-    point_fn: fn(&mut Self, &Coordinate<T>),
+    point_fn: fn(&mut Self, &Coord<T>),
     #[derivative(Debug = "ignore")]
     line_start_fn: fn(&mut Self),
     #[derivative(Debug = "ignore")]
@@ -49,11 +49,11 @@ where
         Self {
             area_sum: T::zero(),
             area_ring_sum: T::zero(),
-            p0: Coordinate {
+            p0: Coord {
                 x: T::nan(),
                 y: T::nan(),
             },
-            p00: Coordinate {
+            p00: Coord {
                 x: T::nan(),
                 y: T::nan(),
             },
@@ -73,13 +73,13 @@ where
         self.point_fn = Self::area_point_first;
     }
 
-    fn area_point_first(&mut self, p: &Coordinate<T>) {
+    fn area_point_first(&mut self, p: &Coord<T>) {
         self.point_fn = Self::area_point;
         self.p0 = *p;
         self.p00 = *p;
     }
 
-    fn area_point(&mut self, p: &Coordinate<T>) {
+    fn area_point(&mut self, p: &Coord<T>) {
         self.area_ring_sum = self.area_ring_sum + self.p0.y * p.x - self.p0.x * p.y;
         self.p0 = *p;
     }
@@ -92,7 +92,7 @@ where
 
     #[inline]
     #[allow(clippy::unused_self)]
-    fn point_noop(&mut self, _p: &Coordinate<T>) {}
+    fn point_noop(&mut self, _p: &Coord<T>) {}
 
     #[inline]
     #[allow(clippy::unused_self)]
@@ -135,7 +135,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, _m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         (self.point_fn)(self, p);
     }
 

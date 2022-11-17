@@ -1,6 +1,6 @@
 use std::marker::PhantomData;
 
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::pow;
 use num_traits::FloatConst;
 use num_traits::Zero;
@@ -48,7 +48,7 @@ pub enum Conformal<DRAIN> {
 
 impl<DRAIN> Transform for Conformal<DRAIN> {
     type T = f64;
-    fn transform(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
+    fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
         match self {
             Self::Mercator(m) => m.transform(p),
             Self::Conic(c) => c.transform(p),
@@ -56,7 +56,7 @@ impl<DRAIN> Transform for Conformal<DRAIN> {
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
+    fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
         match self {
             Self::Mercator(m) => m.invert(p),
             Self::Conic(c) => c.invert(p),
@@ -137,7 +137,7 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
     type T = f64;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
+    fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
         let mut y = f64::NAN;
         if self.f > 0f64 {
             if y < -f64::FRAC_PI_2() + EPSILON {
@@ -148,14 +148,14 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
         }
         let r = self.f / pow(tany(y), self.n as usize);
 
-        Coordinate {
+        Coord {
             x: r * (self.n * p.x).sin(),
             y: self.f - r * (self.n * p.x).cos(),
         }
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<f64>) -> Coordinate<f64> {
+    fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
         let fy = self.f - p.y;
         let r = self.n.signum() * p.x.hypot(fy);
         let mut l = p.x.atan2(fy.abs()) * fy.signum();
@@ -163,7 +163,7 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
         if fy * self.n < 0f64 {
             l -= f64::PI() * p.x.signum() * fy.signum();
         }
-        Coordinate {
+        Coord {
             x: l / self.n,
             y: 2f64 * (pow(self.f / r, (1f64 / self.n) as usize).atan() - f64::FRAC_PI_2()),
         }

@@ -1,6 +1,6 @@
 use derivative::Derivative;
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::stream::Streamable;
 
@@ -12,7 +12,7 @@ use super::stream::Stream as StreamTrait;
 /// Length Stream.
 pub struct Stream<T: CoordFloat> {
     #[derivative(Debug = "ignore")]
-    point_fn: fn(&mut Self, &Coordinate<T>),
+    point_fn: fn(&mut Self, &Coord<T>),
     #[derivative(Debug = "ignore")]
     line_start_fn: fn(&mut Self),
     #[derivative(Debug = "ignore")]
@@ -52,7 +52,7 @@ where
         ls.length_sum
     }
 
-    fn length_point_first(&mut self, p: &Coordinate<T>) {
+    fn length_point_first(&mut self, p: &Coord<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
         self.lambda0 = lambda;
@@ -60,7 +60,7 @@ where
         self.point_fn = Self::length_point;
     }
 
-    fn length_point(&mut self, p: &Coordinate<T>) {
+    fn length_point(&mut self, p: &Coord<T>) {
         let lambda = p.x.to_radians();
         let phi = p.y.to_radians();
 
@@ -89,7 +89,7 @@ where
         self.line_end_fn = Self::length_line_end;
     }
     #[allow(clippy::unused_self)]
-    fn point_noop(&mut self, _p: &Coordinate<T>) {}
+    fn point_noop(&mut self, _p: &Coord<T>) {}
     #[allow(clippy::unused_self)]
     fn line_end_noop(&mut self) {}
 }
@@ -117,7 +117,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, _z: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, _z: Option<u8>) {
         (self.point_fn)(self, p);
     }
 }

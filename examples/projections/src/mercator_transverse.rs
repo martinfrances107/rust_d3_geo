@@ -1,6 +1,6 @@
-use geo::Coordinate;
 use geo::Geometry;
 use geo::MultiLineString;
+use geo_types::Coord;
 use rust_d3_geo::projection::Build;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -40,7 +40,7 @@ pub async fn draw_mercator_transverse(land: &Geometry<f64>) -> Result<(), JsValu
     let mercator = mercator
         .base
         .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI);
-    mercator.translate_set(&Coordinate {
+    mercator.translate_set(&Coord {
         x: width / 2_f64,
         y: height / 2_f64,
     });

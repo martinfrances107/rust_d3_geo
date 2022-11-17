@@ -2,9 +2,9 @@
 #[cfg(test)]
 mod identity {
 
-    use geo::Coordinate;
     use geo::Geometry;
     use geo::LineString;
+    use geo_types::Coord;
 
     use crate::identity::Identity;
     use crate::in_delta::in_delta;
@@ -29,7 +29,7 @@ mod identity {
     #[test]
     fn returns_a_point() {
         let mut ib = Builder::<DrainStub<f64>, Identity<Unconnected>, f64>::default();
-        ib.translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+        ib.translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64);
         let identity = ib.build::<PCNC<DrainStub<f64>, f64>>();
         assert!(projection_equal(
@@ -60,14 +60,14 @@ mod identity {
         // These getter asserts have no direct equivalent in the javascript original.
         // but increase code coverage.
         assert!(in_delta(ib.scale(), 1_f64, f64::EPSILON));
-        assert_eq!(ib.translate(), Coordinate { x: 0_f64, y: 0_f64 });
+        assert_eq!(ib.translate(), Coord { x: 0_f64, y: 0_f64 });
     }
 
     #[test]
     fn reflect_return_the_transformed_point() {
         println!("identity(point).reflectX(…) and reflectY() return the transformed point");
         let mut ib: Builder<DrainStub<f64>, _, _> = Builder::default();
-        ib.translate_set(&Coordinate {
+        ib.translate_set(&Coord {
             x: 100_f64,
             y: 10_f64,
         })
@@ -123,7 +123,7 @@ mod identity {
         print!("geoPath(identity) returns the path");
 
         let mut pb: Builder<String<f64>, _, _> = Builder::default();
-        pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 })
+        pb.translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64);
 
         let projector = pb.build();
@@ -131,8 +131,8 @@ mod identity {
         let mut path = PathBuilder::context_pathstring().build(projector);
 
         let ls = Geometry::LineString(LineString(vec![
-            Coordinate { x: 0_f64, y: 0_f64 },
-            Coordinate {
+            Coord { x: 0_f64, y: 0_f64 },
+            Coord {
                 x: 10_f64,
                 y: 10_f64,
             },
@@ -141,7 +141,7 @@ mod identity {
         assert_eq!("M0,0L10,10", path.object(&ls));
 
         let projection_builder2 = pb
-            .translate_set(&Coordinate {
+            .translate_set(&Coord {
                 x: 30_f64,
                 y: 90_f64,
             })
@@ -160,11 +160,11 @@ mod identity {
 
         let mut pb: Builder<String<f64>, _, _> = Builder::default();
 
-        let pb = pb.translate_set(&Coordinate { x: 0_f64, y: 0_f64 });
+        let pb = pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         let pb = pb.scale_set(1_f64);
         let pb = pb.clip_extent_set(&[
-            Coordinate { x: 5_f64, y: 5_f64 },
-            Coordinate {
+            Coord { x: 5_f64, y: 5_f64 },
+            Coord {
                 x: 40_f64,
                 y: 80_f64,
             },
@@ -175,8 +175,8 @@ mod identity {
         let mut path = PathBuilder::context_pathstring().build(projector);
 
         let ls = Geometry::LineString(LineString(vec![
-            Coordinate { x: 0_f64, y: 0_f64 },
-            Coordinate {
+            Coord { x: 0_f64, y: 0_f64 },
+            Coord {
                 x: 10_f64,
                 y: 10_f64,
             },
@@ -186,18 +186,18 @@ mod identity {
 
         let mut pb2: Builder<String<f64>, _, _> = Builder::default();
 
-        pb2.translate_set(&Coordinate {
+        pb2.translate_set(&Coord {
             x: 30_f64,
             y: 90_f64,
         })
         .scale_set(2_f64)
         .reflect_y_set(REFLECT::Flipped);
         let pb2 = pb2.clip_extent_set(&[
-            Coordinate {
+            Coord {
                 x: 35_f64,
                 y: 76_f64,
             },
-            Coordinate {
+            Coord {
                 x: 45_f64,
                 y: 86_f64,
             },

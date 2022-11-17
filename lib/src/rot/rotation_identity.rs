@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::Transform;
@@ -29,20 +29,20 @@ where
     type T = T;
 
     #[inline]
-    fn transform(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         normalise(p)
     }
 
     #[inline]
-    fn invert(&self, p: &Coordinate<T>) -> Coordinate<T> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         normalise(p)
     }
 }
 
 #[inline]
-fn normalise<T: CoordFloat + FloatConst>(p: &Coordinate<T>) -> Coordinate<T> {
+fn normalise<T: CoordFloat + FloatConst>(p: &Coord<T>) -> Coord<T> {
     if p.x.abs() > T::PI() {
-        Coordinate {
+        Coord {
             x: p.x - (p.x / T::TAU()).round() * T::TAU(),
             y: p.y,
         }

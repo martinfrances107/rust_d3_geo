@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::math::EPSILON;
@@ -40,7 +40,7 @@ where
     T: CoordFloat,
 {
     #[inline]
-    fn corner(&self, p: &Coordinate<T>, direction: &T) -> i8 {
+    fn corner(&self, p: &Coord<T>, direction: &T) -> i8 {
         if (p.x - self.x0).abs() < self.epsilon {
             if direction > &T::zero() {
                 0
@@ -64,7 +64,7 @@ where
     }
 
     // Warning from JS a, b are LineElem.
-    pub fn compare_point(&self, a: &Coordinate<T>, b: &Coordinate<T>) -> Ordering {
+    pub fn compare_point(&self, a: &Coord<T>, b: &Coord<T>) -> Ordering {
         let ca = self.corner(a, &T::one());
         let cb = self.corner(b, &T::one());
         if ca == cb {
@@ -97,8 +97,8 @@ where
 
     fn interpolate<EP, STREAM>(
         &self,
-        from: Option<Coordinate<Self::T>>,
-        to: Option<Coordinate<Self::T>>,
+        from: Option<Coord<Self::T>>,
+        to: Option<Coord<Self::T>>,
         direction: Self::T,
         stream: &mut STREAM,
     ) where
@@ -113,7 +113,7 @@ where
                 let is_direction = direction > T::zero();
                 if a != a1 || (cp != is_direction) {
                     loop {
-                        let p = Coordinate {
+                        let p = Coord {
                             x: if a == 0 || a == 3 { self.x0 } else { self.x1 },
                             y: if a > 1 { self.y1 } else { self.y0 },
                         };

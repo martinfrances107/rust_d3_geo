@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::projection::builder::template::ResamplePCNU;
@@ -37,7 +37,7 @@ where
 {
     type T = T;
 
-    fn center_set(&mut self, p: &Coordinate<T>) -> &mut Self {
+    fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
         self.recenter_with_resampling()
@@ -64,7 +64,7 @@ where
 {
     type T = T;
 
-    fn center_set(&mut self, p: &Coordinate<T>) -> &mut Self {
+    fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
         self.recenter_with_resampling()
@@ -91,7 +91,7 @@ where
 {
     type T = T;
 
-    fn center_set(&mut self, p: &Coordinate<T>) -> &mut Self {
+    fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % T::from(360_u16).unwrap()).to_radians();
         self.phi = (p.y % T::from(360_u16).unwrap()).to_radians();
         self.recenter_no_resampling()

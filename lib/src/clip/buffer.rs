@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::path::Result;
 use crate::stream::Stream;
@@ -78,7 +78,7 @@ where
     }
 
     #[inline]
-    fn point(&mut self, p: &Coordinate<T>, m: Option<u8>) {
+    fn point(&mut self, p: &Coord<T>, m: Option<u8>) {
         self.lines.back_mut().map_or_else(
             || panic!("buffers: lines was not properly initialised."),
             |line| {

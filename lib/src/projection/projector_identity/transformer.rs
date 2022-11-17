@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 
 use crate::stream::Connectable;
 use crate::stream::Connected;
@@ -74,7 +74,7 @@ where
     T: CoordFloat,
 {
     type T = T;
-    fn transform(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T> {
+    fn transform(&self, p: &Coord<Self::T>) -> Coord<Self::T> {
         let mut x = p.x * self.kx;
         let mut y = p.y * self.ky;
         if !self.alpha.is_zero() {
@@ -82,13 +82,13 @@ where
             x = x * self.ca + y * self.sa;
             y = t;
         }
-        Coordinate {
+        Coord {
             x: x + self.tx,
             y: y + self.ty,
         }
     }
 
-    fn invert(&self, p: &Coordinate<Self::T>) -> Coordinate<Self::T> {
+    fn invert(&self, p: &Coord<Self::T>) -> Coord<Self::T> {
         let mut x = p.x - self.tx;
         let mut y = p.y - self.ty;
 
@@ -97,7 +97,7 @@ where
             x = x * self.ca - y * self.sa;
             y = t;
         }
-        Coordinate {
+        Coord {
             x: x / self.kx,
             y: y / self.ky,
         }
@@ -127,7 +127,7 @@ where
     }
     /// Declare a point.
     #[inline]
-    fn point(&mut self, p: &Coordinate<Self::T>, m: Option<u8>) {
+    fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
         self.state.sink.point(&self.transform(p), m);
     }
 

@@ -14,7 +14,7 @@
 use std::fmt::Debug;
 
 use geo::CoordFloat;
-use geo::Coordinate;
+use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::clipper::Connectable as ClipConnectable;
@@ -59,7 +59,7 @@ fn fit_no_clip<B, CC, CU, PR, RC, RU, T>(
 {
     let builder = builder
         .scale_set(T::from(150.0_f64).unwrap())
-        .translate_set(&Coordinate {
+        .translate_set(&Coord {
             x: T::zero(),
             y: T::zero(),
         });
@@ -99,7 +99,7 @@ pub(super) fn fit_extent_no_clip<B, CC, CU, PR, RC, RU, T>(
 
     fit_no_clip(
         builder,
-        Box::new(move |b: [Coordinate<T>; 2], builder: &mut B| {
+        Box::new(move |b: [Coord<T>; 2], builder: &mut B| {
             let w = extent[1][0] - extent[0][0];
             let h = extent[1][1] - extent[0][1];
             let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
@@ -108,7 +108,7 @@ pub(super) fn fit_extent_no_clip<B, CC, CU, PR, RC, RU, T>(
 
             builder
                 .scale_set(one_five_zero * k)
-                .translate_set(&Coordinate { x, y });
+                .translate_set(&Coord { x, y });
         }),
         object,
     );
@@ -168,7 +168,7 @@ pub(super) fn fit_width_no_clip<B, CC, CU, PR, RC, RU, T>(
 
     fit_no_clip(
         builder,
-        Box::new(move |b: [Coordinate<T>; 2], builder: &mut B| {
+        Box::new(move |b: [Coord<T>; 2], builder: &mut B| {
             let w = width;
             let k = w / (b[1].x - b[0].x);
             let x = (w - k * (b[1].x + b[0].x)) / two;
@@ -176,7 +176,7 @@ pub(super) fn fit_width_no_clip<B, CC, CU, PR, RC, RU, T>(
 
             builder
                 .scale_set(one_five_zero * k)
-                .translate_set(&Coordinate { x, y });
+                .translate_set(&Coord { x, y });
         }),
         object,
     );
@@ -211,7 +211,7 @@ pub(super) fn fit_height_no_clip<B, CC, CU, PR, RC, RU, T>(
 
     fit_no_clip(
         builder,
-        Box::new(move |b: [Coordinate<T>; 2], builder: &mut B| {
+        Box::new(move |b: [Coord<T>; 2], builder: &mut B| {
             let h = height;
             let k = h / (b[1].y - b[0].y);
             let x = -k * b[0].x;
@@ -219,7 +219,7 @@ pub(super) fn fit_height_no_clip<B, CC, CU, PR, RC, RU, T>(
 
             builder
                 .scale_set(one_five_zero * k)
-                .translate_set(&Coordinate { x, y });
+                .translate_set(&Coord { x, y });
         }),
         object,
     );
