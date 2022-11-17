@@ -81,7 +81,7 @@ where
             return Conformal::Mercator(Mercator::default());
         }
 
-        let f = cy0 * pow(tany(y0), n as usize);
+        let f = cy0 * f64::powf(tany(y0), n);
         Conformal::Conic(Self {
             p_drain: PhantomData::<DRAIN>,
             f,
@@ -146,7 +146,7 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
                 y = f64::FRAC_PI_2() - EPSILON;
             }
         }
-        let r = self.f / pow(tany(y), self.n as usize);
+        let r = self.f / f64::powf(tany(y), self.n);
 
         Coord {
             x: r * (self.n * p.x).sin(),
@@ -165,7 +165,7 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
         }
         Coord {
             x: l / self.n,
-            y: 2f64 * (pow(self.f / r, (1f64 / self.n) as usize).atan() - f64::FRAC_PI_2()),
+            y: 2f64 * (f64::powf(self.f / r, 1f64 / self.n).atan() - f64::FRAC_PI_2()),
         }
     }
 }
