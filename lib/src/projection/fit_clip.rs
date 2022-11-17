@@ -26,7 +26,6 @@ use crate::projection::builder::template::PCNC;
 use crate::projection::builder::template::PCNU;
 use crate::projection::Build;
 use crate::projection::ClipExtentGet;
-use crate::projection::FitBounds;
 use crate::projection::ScaleSet;
 use crate::projection::TranslateSet;
 use crate::stream::Connectable;
@@ -37,9 +36,9 @@ use crate::Transform;
 use super::ClipExtentClear;
 use super::ClipExtentSet;
 
-pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
+pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, FB, PR, RC, RCint, RU, RUint, T>(
     builder: &mut B,
-    fit_bounds: FitBounds<Bint, T>,
+    fit_bounds: FB,
     object: &impl Streamable<T = T>,
 ) where
     B: Build<
@@ -68,6 +67,7 @@ pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint,
         > + ClipExtentSet<Output = B, T = T>,
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPUint: Clone + ClipConnectable<Output = CLIPCint, SC = RCint>,
+    FB: FnOnce([Coord<T>; 2], &mut Bint),
     // NB constraints below relate to Bint only not B.
     // They assume no NoClip...
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
@@ -150,9 +150,9 @@ pub(super) fn fit_extent_clip<
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
+    fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, _, PR, RC, RCint, RU, RUint, T>(
         builder,
-        Box::new(move |b: [Coord<T>; 2], builder: &mut Bint| {
+        move |b: [Coord<T>; 2], builder: &mut Bint| {
             let w = extent[1][0] - extent[0][0];
             let h = extent[1][1] - extent[0][1];
             let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
@@ -162,7 +162,7 @@ pub(super) fn fit_extent_clip<
             builder
                 .scale_set(one_five_zero * k)
                 .translate_set(&Coord { x, y });
-        }),
+        },
         object,
     );
 }
@@ -286,9 +286,9 @@ pub(super) fn fit_width_clip<
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
+    fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, _, PR, RC, RCint, RU, RUint, T>(
         builder,
-        Box::new(move |b: [Coord<T>; 2], builder: &mut Bint| {
+        move |b: [Coord<T>; 2], builder: &mut Bint| {
             let w = width;
             let k = w / (b[1].x - b[0].x);
             let x = (w - k * (b[1].x + b[0].x)) / two;
@@ -297,7 +297,7 @@ pub(super) fn fit_width_clip<
             builder
                 .scale_set(one_five_zero * k)
                 .translate_set(&Coord { x, y });
-        }),
+        },
         object,
     );
 }
@@ -361,9 +361,9 @@ pub(super) fn fit_height_clip<
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
+    fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, _, PR, RC, RCint, RU, RUint, T>(
         builder,
-        Box::new(move |b: [Coord<T>; 2], builder: &mut Bint| {
+        move |b: [Coord<T>; 2], builder: &mut Bint| {
             let h = height;
             let k = h / (b[1].y - b[0].y);
             let x = -k * b[0].x;
@@ -372,7 +372,7 @@ pub(super) fn fit_height_clip<
             builder
                 .scale_set(one_five_zero * k)
                 .translate_set(&Coord { x, y });
-        }),
+        },
         object,
     );
 }

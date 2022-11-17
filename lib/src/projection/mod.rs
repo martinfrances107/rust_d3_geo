@@ -63,8 +63,6 @@ mod fit_clip;
 mod fit_no_clip;
 mod fit_reclip;
 
-type FitBounds<B, T> = Box<dyn Fn([Coord<T>; 2], &mut B)>;
-
 /// Projection type.
 pub type RotateTransform<PR, T> =
     Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>;

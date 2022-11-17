@@ -23,7 +23,6 @@ use crate::projection::builder::template::PCNC;
 use crate::projection::builder::template::PCNU;
 use crate::projection::Build;
 use crate::projection::ClipExtentGet;
-use crate::projection::FitBounds;
 use crate::projection::ScaleSet;
 use crate::projection::TranslateSet;
 use crate::stream::Connectable;
@@ -34,9 +33,9 @@ use crate::Transform;
 use super::ClipExtentAdjust;
 use super::ClipExtentClear;
 
-pub(super) fn fit_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
+pub(super) fn fit_reclip<B, CLIPC, CLIPU, FB, PR, RC, RU, T>(
     builder: &mut B,
-    fit_bounds: FitBounds<B, T>,
+    fit_bounds: FB,
     object: &impl Streamable<T = T>,
 ) where
     B: Build<
@@ -55,6 +54,7 @@ pub(super) fn fit_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    FB: FnOnce([Coord<T>; 2], &mut B),
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     T: 'static + CoordFloat + FloatConst,
