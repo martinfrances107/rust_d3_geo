@@ -228,7 +228,7 @@ where
     /// and last points were visible.
     #[inline]
     fn clean(&self) -> u8 {
-        let b: u8 = ((self.v00 && self.v0) as u8) << 1;
+        let b: u8 = u8::from(self.v00 && self.v0) << 1;
         self.clean | b
     }
 }
