@@ -33,13 +33,14 @@ pub type CompareIntersectionsFn<T> =
 /// A Clipped polygon is the result after the subject has be limited in extent
 /// to no more than the boundary of the cutting polygon.
 #[allow(clippy::too_many_lines)]
-pub fn rejoin<EP, INTERPOLATOR, SINK, T>(
+pub fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
     segments: &[Vec<LineElem<T>>],
-    compare_intersection: CompareIntersectionsFn<T>,
+    compare_intersection: CI,
     start_inside: bool,
     interpolator: &INTERPOLATOR,
     stream: &mut SINK,
 ) where
+    CI: Fn(&Rc<RefCell<Intersection<T>>>, &Rc<RefCell<Intersection<T>>>) -> Ordering,
     SINK: Stream<EP = EP, T = T>,
     INTERPOLATOR: Interpolator<T = T>,
     T: CoordFloat + FloatConst,

@@ -21,7 +21,6 @@ use super::intersection::Intersection;
 use super::line_elem::LineElem;
 use super::line_fn::line as clip_line;
 use super::rejoin::rejoin as clip_rejoin;
-use super::rejoin::CompareIntersectionsFn;
 use super::Interpolator as InterpolatorTrait;
 
 ///A primitive type used for a `PostClipNode` pipeline stage.
@@ -366,13 +365,11 @@ where
                 self.state.sink.line_end();
             }
 
-            let compare_intersection: CompareIntersectionsFn<T> = Box::new(
-                move |a: &Rc<RefCell<Intersection<T>>>,
-                      b: &Rc<RefCell<Intersection<T>>>|
-                      -> Ordering {
-                    interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
-                },
-            );
+            let compare_intersection = move |a: &Rc<RefCell<Intersection<T>>>,
+                                             b: &Rc<RefCell<Intersection<T>>>|
+                  -> Ordering {
+                interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
+            };
 
             if visible {
                 clip_rejoin(
