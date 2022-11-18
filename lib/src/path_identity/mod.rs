@@ -48,6 +48,7 @@ where
     T: CoordFloat,
 {
     /// Constructor.
+    ///
     /// # Panics
     /// Will never happen as 4.5 will always be converted into T.
     pub fn new(context_stream: CS, projection: Projector<CS, PCNC, PCNU, T>) -> Self {
