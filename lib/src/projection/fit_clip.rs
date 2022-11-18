@@ -38,7 +38,7 @@ use super::ClipExtentSet;
 
 pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, FB, PR, RC, RCint, RU, RUint, T>(
     builder: &mut B,
-    fit_bounds: FB,
+    mut fit_bounds: FB,
     object: &impl Streamable<T = T>,
 ) where
     B: Build<
@@ -67,7 +67,7 @@ pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, FB, PR, RC, RC
         > + ClipExtentSet<Output = B, T = T>,
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPUint: Clone + ClipConnectable<Output = CLIPCint, SC = RCint>,
-    FB: FnOnce([Coord<T>; 2], &mut Bint),
+    FB: FnMut([Coord<T>; 2], &mut Bint),
     // NB constraints below relate to Bint only not B.
     // They assume no NoClip...
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,

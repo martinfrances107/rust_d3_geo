@@ -35,7 +35,7 @@ use super::ClipExtentClear;
 
 pub(super) fn fit_reclip<B, CLIPC, CLIPU, FB, PR, RC, RU, T>(
     builder: &mut B,
-    fit_bounds: FB,
+    mut fit_bounds: FB,
     object: &impl Streamable<T = T>,
 ) where
     B: Build<
@@ -54,7 +54,7 @@ pub(super) fn fit_reclip<B, CLIPC, CLIPU, FB, PR, RC, RU, T>(
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
-    FB: FnOnce([Coord<T>; 2], &mut B),
+    FB: FnMut([Coord<T>; 2], &mut B),
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     T: 'static + CoordFloat + FloatConst,
@@ -116,7 +116,7 @@ pub(super) fn fit_extent_reclip<B, CC, CU, PR, RC, RU, T>(
 
     fit_reclip(
         builder,
-        Box::new(move |b: [Coord<T>; 2], builder: &mut B| {
+        move |b: [Coord<T>; 2], builder: &mut B| {
             let w = extent[1][0] - extent[0][0];
             let h = extent[1][1] - extent[0][1];
             let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
@@ -126,7 +126,7 @@ pub(super) fn fit_extent_reclip<B, CC, CU, PR, RC, RU, T>(
             builder
                 .scale_set(one_five_zero * k)
                 .translate_set(&Coord { x, y });
-        }),
+        },
         object,
     );
 }
@@ -191,7 +191,7 @@ pub(super) fn fit_width_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
 
     fit_reclip(
         builder,
-        Box::new(move |b: [Coord<T>; 2], builder: &mut B| {
+        move |b: [Coord<T>; 2], builder: &mut B| {
             let w = width;
             let k = w / (b[1].x - b[0].x);
             let x = (w - k * (b[1].x + b[0].x)) / two;
@@ -200,7 +200,7 @@ pub(super) fn fit_width_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
             builder
                 .scale_set(one_five_zero * k)
                 .translate_set(&Coord { x, y });
-        }),
+        },
         object,
     );
 }
@@ -237,7 +237,7 @@ pub(super) fn fit_height_reclip<B, CC, CU, PR, RC, RU, T>(
 
     fit_reclip(
         builder,
-        Box::new(move |b: [Coord<T>; 2], builder: &mut B| {
+        move |b: [Coord<T>; 2], builder: &mut B| {
             let h = height;
             let k = h / (b[1].y - b[0].y);
             let x = -k * b[0].x;
@@ -246,7 +246,7 @@ pub(super) fn fit_height_reclip<B, CC, CU, PR, RC, RU, T>(
             builder
                 .scale_set(one_five_zero * k)
                 .translate_set(&Coord { x, y });
-        }),
+        },
         object,
     );
 }
