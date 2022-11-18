@@ -223,6 +223,7 @@ pub mod rot;
 pub mod stream;
 
 #[cfg(not(tarpaulin_include))]
+#[cfg(test)]
 mod path_test_context;
 
 /// 2-D Transform common to projections and, rotations.

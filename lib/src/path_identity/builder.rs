@@ -20,7 +20,7 @@ use crate::path::string::String;
 use crate::path::PointRadiusTrait;
 
 /// Path builder.
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct Builder<CS, PCNC, PCNU, T>
 where
     PCNU: Clone,

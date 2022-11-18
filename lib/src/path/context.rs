@@ -127,10 +127,17 @@ impl Stream for Context {
                     c.line_to(p.x, p.y);
                 }
             }
+            #[allow(clippy::assertions_on_constants)]
             PointState::Init => {
                 if let Some(c) = &mut self.context {
                     c.move_to(p.x + self.radius, p.y);
-                    c.arc(p.x, p.y, self.radius, 0_f64, std::f64::consts::TAU);
+
+                    match c.arc(p.x, p.y, self.radius, 0_f64, std::f64::consts::TAU) {
+                        Ok(_) => {}
+                        Err(_) => {
+                            debug_assert!(true, "Suppressing arc failure");
+                        }
+                    };
                 }
             }
         }
