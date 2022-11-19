@@ -60,6 +60,9 @@ where
 {
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
+    ///
+    /// # Panics
+    ///  Will never happen as 360 will always be converted into T.
     #[inline]
     #[must_use]
     pub fn default() -> Self {
