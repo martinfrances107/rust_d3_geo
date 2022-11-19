@@ -1,6 +1,7 @@
 //! This should not be constructed directly.
 //!
-//! Construct [`conic_equal_area`] instead.
+//! instead call
+//! [`EqualArea::generate()`](super::equal_area::EqualArea::generate)
 //!
 //! Common Values(degrees) for phi0
 //! 0 - Lambert

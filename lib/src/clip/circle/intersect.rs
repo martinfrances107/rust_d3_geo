@@ -27,7 +27,7 @@ pub enum Return<T: CoordFloat> {
 /// Intersects the great circle between a and b with the clip circle.
 ///
 /// # Panics
-///  Will never happen as EPSILON will always be converted into T.
+/// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
 #[allow(clippy::many_single_char_names)]
 #[allow(clippy::similar_names)]
 #[allow(non_snake_case)]

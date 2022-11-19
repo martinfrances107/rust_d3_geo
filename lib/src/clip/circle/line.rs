@@ -138,7 +138,7 @@ where
     /// Constructor.
     ///
     /// # Panics
-    ///  Will never happen as EPSILON will always be converted into T.
+    /// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
     #[inline]
     pub fn new(radius: T) -> Self {
         // TODO small_radius, rc  is a shadow variables!!!

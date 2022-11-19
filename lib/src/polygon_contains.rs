@@ -22,7 +22,7 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coord<T>) -> T {
 /// Determines wheather a point is inside the polygon.
 ///
 /// # Panics
-///  Will never happen as EPSILON will always be converted into T.
+/// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
 pub fn polygon_contains<T: CoordFloat + FloatConst>(
     polygon: &[LineString<T>],
     point: &Coord<T>,

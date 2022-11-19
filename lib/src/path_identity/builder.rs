@@ -42,7 +42,7 @@ where
     /// Constructor.
     ///
     /// # Panics
-    ///  Will never happen as 4.5 will always be converted into T.
+    /// unwrap() is used here but a panic will never happen as 4.5 will always be converted into T.
     pub fn new(context_stream: CS) -> Self {
         Self {
             p_pcnc: PhantomData::<PCNC>,

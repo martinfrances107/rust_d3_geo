@@ -14,7 +14,7 @@ use super::intersection::Intersection;
 /// and circle clipping, the same comparison is used.
 ///
 /// # Panics
-///  Will never happen as EPSILON will always be converted into T.
+/// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
 #[must_use]
 pub fn gen_compare<T>() -> CompareIntersectionsFn<T>
 where

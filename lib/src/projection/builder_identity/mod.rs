@@ -62,7 +62,7 @@ where
     /// Projection builder.
     ///
     /// # Panics
-    ///  Will never happen as 360 will always be converted into T.
+    /// unwrap() is used here but a panic will never happen as 360 will always be converted into T.
     #[inline]
     #[must_use]
     pub fn default() -> Self {

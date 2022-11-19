@@ -5,7 +5,7 @@ edition = { workspace = true }
 description = "A example app from the rust_d3_geo package. The app is an example of code that display a globe using a HTML CANVAS element."
 keywords = { workspace = true }
 name = "rust_d3_geo_example_canvas"
-licesnse = "MIT"
+license = "MIT"
 readme = { workspace = true }
 repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
 version = { workspace = true }

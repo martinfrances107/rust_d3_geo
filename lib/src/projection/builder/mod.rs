@@ -132,7 +132,7 @@ where
     /// Projection builder.
     ///
     /// # Panics
-    ///  Will never happen as various consts will always be converted into T.
+    /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
     pub fn new(projection_raw: PR) -> Self {
         let x = T::from(480_f64).unwrap();
         let y = T::from(250_f64).unwrap();

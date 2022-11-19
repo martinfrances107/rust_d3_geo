@@ -3,7 +3,7 @@ use geo_types::Coord;
 
 use crate::Transform;
 
-/// An inner type of [`ScaleTranslateRotate`].
+/// An inner type of [`ScaleTranslateRotate`](super::ScaleTranslateRotate).
 ///
 /// Simplification when only  translate is needed.
 #[derive(Clone, Copy, Debug)]

@@ -32,6 +32,8 @@ pub mod builder_identity;
 pub mod builder_mercator;
 /// A specalised builder wrapping the mecator builder.
 pub mod builder_mercator_transverse;
+/// Enum and generator for "Cyclindrical" or "Conic" equal area projection.
+pub mod equal_area;
 /// Debug and test helper function.
 #[cfg(not(tarpaulin_include))]
 pub mod equality;
@@ -279,13 +281,13 @@ pub trait Fit {
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
-    /// Similar to [`fit_size`] where the height is automatically chosen from
+    /// Similar to [`fit_size`](Self::fit_size) where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on width.
     fn fit_width(&mut self, w: Self::T, object: &impl Streamable<T = Self::T>) -> &mut Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
-    /// Similar to [`fit_size`] where the width is automatically chosen from
+    /// Similar to [`fit_size`](Self::fit_size) where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
     fn fit_height(&mut self, h: Self::T, object: &impl Streamable<T = Self::T>) -> &mut Self
     where
@@ -452,8 +454,7 @@ pub trait PrecisionBypass {
 /// Give a resampling precision consume the object and return one that
 /// resamples.
 ///
-/// Similar to [`ResampleAdjust`] but with conversion. A projection builder
-/// sub trait.
+/// A projection builder sub trait.
 pub trait PrecisionSet {
     /// f64 or f32.
     type T;

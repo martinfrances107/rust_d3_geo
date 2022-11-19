@@ -27,7 +27,7 @@ pub struct Unconnected;
 ///
 /// Common to many pipeline stages
 /// Overriden when the state need to contain more variables.
-/// see [Resample](crate::projection::resampler::resample::Resample) and [Clip](crate::clip::clip::Clip).
+/// see [Resample](crate::projection::resampler::resample::Resample) and [Clip](crate::clip::clipper::Clipper).
 ///
 /// [Equirectangular](crate::projection::equirectangular::Equirectangular)
 #[derive(Clone, Debug)]

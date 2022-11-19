@@ -7,7 +7,7 @@ use wasm_bindgen::JsCast;
 use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
-use rust_d3_geo::projection::conic_equal_area::ConicEqualArea;
+use rust_d3_geo::projection::equal_area::EqualArea;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::RawBase;
 use rust_d3_geo::projection::TranslateSet;
@@ -33,7 +33,8 @@ pub async fn draw_conic_equal_area(land: &Geometry<f64>) -> Result<(), JsValue> 
     let context: Context = Context::new(context_raw.clone());
     let pb = PathBuilder::new(context);
 
-    let cea = ConicEqualArea::builder()
+    // input params will cause a conic equal area projection to be constructed.
+    let cea = EqualArea::builder()
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

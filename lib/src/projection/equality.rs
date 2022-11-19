@@ -12,7 +12,7 @@ use crate::Transform;
 /// A point projected and then inverted returns to the original location.
 ///
 /// # Panics
-///  Will never happen as EPSILON will always be converted into T.
+/// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
 pub fn projection_equal<'a, P, T>(
     projection: &P,
     expected_location: &'a Coord<T>,

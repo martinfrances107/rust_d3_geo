@@ -34,7 +34,7 @@ where
 /// Helper function returns the default graticule.
 ///
 /// # Panics
-///  Will never happen as +/-90 will always be converted into T.
+/// unwrap() is used here but a panic will never happen as -90/-80 will always be converted into T.
 #[must_use]
 pub fn generate<T>() -> GraticuleBuilder<T>
 where
