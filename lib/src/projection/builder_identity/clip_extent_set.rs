@@ -32,6 +32,7 @@ where
             ky: self.ky,
             tx: self.tx,
             ty: self.ty,
+            t360: self.t360,
 
             // Mutate section.
             postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),

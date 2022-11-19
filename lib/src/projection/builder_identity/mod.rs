@@ -44,7 +44,7 @@ where
 
     pub(super) tx: T,
     pub(super) ty: T, // translate
-
+    t360: T,
     x0: Option<T>,
     y0: Option<T>,
     x1: Option<T>,
@@ -81,6 +81,7 @@ where
             sy: T::one(),
             tx: T::zero(),
             ty: T::zero(),
+            t360: T::from(360_f64).unwrap(),
             postclip: Identity::default(),
         }
     }
