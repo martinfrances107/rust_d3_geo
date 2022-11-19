@@ -48,6 +48,7 @@ where
             delta_gamma: self.delta_gamma,
             x: self.x,
             y: self.y,
+            t360: self.t360,
 
             x0: self.x0,
             y0: self.y0,

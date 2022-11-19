@@ -96,6 +96,7 @@ where
     x: T,
     y: T, // translate
 
+    t360: T,
     delta_lambda: T,
     delta_phi: T,
     delta_gamma: T,
@@ -144,6 +145,7 @@ where
         let k = T::from(150_f64).unwrap();
         let sx = T::one();
         let sy = T::one();
+        let t360 = T::from(360_f64).unwrap();
         let delta_lambda = T::zero();
         let delta_phi = T::zero();
         let delta_gamma = T::zero();
@@ -172,6 +174,7 @@ where
             delta_gamma,
             x,
             y,
+            t360,
 
             x0: None,
             y0: None,

@@ -49,6 +49,7 @@ where
             delta2: self.delta2,
             lambda: self.lambda,
             phi: self.phi,
+            t360: self.t360,
 
             alpha: self.alpha,
             k: self.k,
