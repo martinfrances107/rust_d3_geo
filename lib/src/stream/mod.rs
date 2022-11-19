@@ -32,8 +32,8 @@ pub struct Unconnected;
 /// [Equirectangular](crate::projection::equirectangular::Equirectangular)
 #[derive(Clone, Debug)]
 pub struct Connected<SINK>
-where
-    SINK: Clone,
+// where
+//     SINK: Clone,
 {
     /// The next stage in the pipeline,
     pub sink: SINK,

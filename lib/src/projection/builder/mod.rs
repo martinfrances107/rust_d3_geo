@@ -77,8 +77,6 @@ pub mod types;
 #[derive(Clone, Debug)]
 pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
     p_clipc: PhantomData<CLIPC>,
@@ -127,7 +125,6 @@ where
 
 impl<DRAIN, PR, T> BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + Default + FloatConst,
 {

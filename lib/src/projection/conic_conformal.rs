@@ -87,12 +87,6 @@ where
             n,
         })
     }
-    // pub fn builder_parallels(
-    //     phi0: f64,
-    //     phi1: f64,
-    // ) -> BuilderAntimeridianResampleNoClip<DRAIN, Conformal<DRAIN>, f64> {
-    //     Self::builder_with_phi0_phi1(phi0.to_radians(), phi1.to_radians())
-    // }
 
     #[inline]
     #[must_use]

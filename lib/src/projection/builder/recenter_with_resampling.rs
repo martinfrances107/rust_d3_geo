@@ -30,9 +30,6 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterWithResampling
         T,
     >
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
-    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

@@ -46,7 +46,6 @@ pub type ClipAntimeridianU<RC, T> = Clipper<
 #[must_use]
 pub fn gen_clip<PCNU, RC, T>() -> ClipAntimeridianU<RC, T>
 where
-    RC: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     Clipper::new(
