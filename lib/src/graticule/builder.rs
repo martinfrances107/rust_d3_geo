@@ -226,10 +226,11 @@ where
     /// # Panics
     ///  Will never happen as 90 will always be converted into T.
     pub fn precision_set(&mut self, precision: &T) -> &mut Self {
+        let t90 = T::from(90_f64).unwrap();
         self.precision = *precision;
-        self.x = graticule_x(self.y0, self.y1, T::from(90_f64).unwrap());
+        self.x = graticule_x(self.y0, self.y1, t90);
         self.y = graticule_y(self.x0, self.x1, self.precision);
-        self.X = graticule_x(self.Y0, self.Y1, T::from(90_f64).unwrap());
+        self.X = graticule_x(self.Y0, self.Y1, t90);
         self.Y = graticule_y(self.X0, self.X1, self.precision);
         self
     }

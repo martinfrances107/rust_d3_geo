@@ -71,7 +71,7 @@ where
             first: false,
             clean: false,
             clip_max: T::from(1e9_f64).unwrap(),
-            clip_min: -T::from(1e9_f64).unwrap(),
+            clip_min: T::from(-1e9_f64).unwrap(),
 
             x0,
             y0,
