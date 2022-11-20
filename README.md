@@ -159,8 +159,45 @@ There is an aspect of the design that needs review. It related to the best way t
 
 ## Coding Standard
  * Idomatic RUST, as defined by cargo clippy where possible.
- * No booleans as arguments to functions/methods, use two state enums instead,
-   see enum::Reflect as an example.
+ * No booleans as arguments to functions/methods, use two state enums instead.
+   See "Reflect" as an example.
+   ```rust
+   pub trait ReflectSet {
+       /// f64 or f32.
+       type T;
+      /// Set the projection builder to invert the x-coordinate.
+       fn reflect_x_set(&mut self, reflect: REFLECT) -> &mut Self;
+      /// Set the projection builder to invert the y-coordinate.
+       fn reflect_y_set(&mut self, reflect: REFLECT) -> &mut Self;
+   }
+   ```
+
+   This allow for a clearer statement of intent :-
+   ```rust
+   builder.reflect_y_set(REFLECT::Flipped);
+   ```
+ * ["Type-Driven API Design"](https://www.youtube.com/watch?v=bnnacleqg6k) is the
+     preferred way of constructing state machines.
+
+     In the example below, when assembling a stream pipeline, connect() can only be called
+     when the state is "Unconnected". The output type's STATE is "Connected<SINK>".
+
+    ```rust
+    impl StreamTransformRadians<Unconnected> {
+      #[inline]
+      /// Connect this node to the next element in the pipeline.
+      pub const fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
+      where
+        SINK: Clone,
+      {
+        StreamTransformRadians(Connected { sink })
+      }
+    }
+     ```
+     The "Stream" trait is only implemented when the STATE is "Connected<SINK>".
+     By design, all code is prevented from calling line_start() or point() unless the object
+     has been connected to another pipeline stage.
+
 ## Unimplemented sections of the library.
 
 <details>
