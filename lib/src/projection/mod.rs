@@ -1,6 +1,7 @@
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::AsPrimitive;
+use num_traits::FloatConst;
 
 use crate::compose::Compose;
 use crate::projection::projector::Projector;
@@ -13,6 +14,8 @@ use crate::Transform;
 pub mod azimuthal_equal_area;
 /// The raw projection.
 pub mod azimuthal_equidistant;
+/// Generate either a 'Mercator' or a `ConicConformal` projection.
+pub mod conformal;
 /// The raw projection.
 pub mod conic_conformal;
 /// The raw projection.
@@ -64,6 +67,10 @@ mod azimuthal;
 mod fit_clip;
 mod fit_no_clip;
 mod fit_reclip;
+
+fn tany(y: f64) -> f64 {
+    ((f64::FRAC_PI_2() + y) / 2f64).tan()
+}
 
 /// Projection type.
 pub type RotateTransform<PR, T> =
