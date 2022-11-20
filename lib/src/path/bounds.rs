@@ -27,8 +27,8 @@ where
                 y: T::infinity(),
             },
             p1: Coord {
-                x: -T::infinity(),
-                y: -T::infinity(),
+                x: T::neg_infinity(),
+                y: T::neg_infinity(),
             },
         }
     }
