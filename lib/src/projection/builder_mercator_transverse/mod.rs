@@ -81,8 +81,8 @@ where
     /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
     pub fn new(pr: PR) -> Self {
         let mut base = ProjectionMercatorBuilder::new(pr);
-        base.rotate_set(&[T::zero(), T::zero(), T::from(90).unwrap()]);
-        base.scale_set(T::from(159.155).unwrap());
+        base.rotate_set(&[T::zero(), T::zero(), T::from(90).unwrap()])
+            .scale_set(T::from(159.155).unwrap());
 
         Self {
             p_clipc: PhantomData::<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>>,
