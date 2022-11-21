@@ -18,17 +18,9 @@ use super::RawBase;
 use super::TransformExtent;
 
 /// Projection definition.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct MercatorTransverse<DRAIN> {
     p_drain: PhantomData<DRAIN>,
-}
-
-impl<DRAIN> Default for MercatorTransverse<DRAIN> {
-    fn default() -> Self {
-        Self {
-            p_drain: PhantomData::<DRAIN>,
-        }
-    }
 }
 
 impl<DRAIN> RawBase for MercatorTransverse<DRAIN>
