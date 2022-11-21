@@ -197,7 +197,6 @@ mod mercator {
     }
 
     // Must debug as final assert's for scale and translate are buggy.
-    #[ignore]
     #[test]
     fn rotate_does_not_affect_automatic_clip_extent() {
         println!("mercator.rotate(…) does not affect the automatic clip extent");

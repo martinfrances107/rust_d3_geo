@@ -8,7 +8,7 @@ use crate::projection::ClipExtentAdjust;
 use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
 use crate::projection::TransformExtent;
-use crate::rot::rotate_radians;
+use crate::rot::rotation::Rotation;
 use crate::Transform;
 
 use super::Builder;
@@ -28,7 +28,7 @@ where
         let k = T::PI() * self.base.scale();
 
         let rotate_raw = self.base.rotate();
-        let t = rotate_radians(rotate_raw).invert(&Coord {
+        let t = Rotation::new(rotate_raw[0], rotate_raw[1], rotate_raw[2]).invert(&Coord {
             x: T::zero(),
             y: T::zero(),
         });
