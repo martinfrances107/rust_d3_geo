@@ -18,7 +18,7 @@ where
         [
             self.delta_lambda.to_degrees(),
             self.delta_phi.to_degrees(),
-            self.delta_lambda.to_degrees(),
+            self.delta_gamma.to_degrees(),
         ]
     }
 }
