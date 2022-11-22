@@ -99,7 +99,7 @@ pub async fn start() -> Result<(), JsValue> {
             x: width / 2_f64,
             y: height / 2_f64,
         })
-        .rotate_set(&[270_f64, 0_f64, 0_f64])
+        .rotate2_set(&[270_f64, 0_f64])
         .build();
 
     let fill: [&str; 7] = [

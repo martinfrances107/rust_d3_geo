@@ -140,7 +140,7 @@ mod equirectangular {
         println!("equirectangular(point) returns the expected result");
         let equirectangular: Projector<_, _, DrainStub<f64>, _, _, _, _, _> =
             Builder::new(Equirectangular::<DrainStub<f64>, f64>::default())
-                .rotate_set(&[30f64, 0f64, 0f64])
+                .rotate2_set(&[30f64, 0f64])
                 .translate_set(&Coord { x: 0f64, y: 0f64 })
                 .scale_set(1_f64)
                 .build();
@@ -246,7 +246,7 @@ mod equirectangular {
     fn rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
         let mut b: B = Equirectangular::builder();
-        b.rotate_set(&[30f64, 30f64, 0f64]);
+        b.rotate2_set(&[30f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1_f64);
 
@@ -353,7 +353,7 @@ mod equirectangular {
         println!("equirectangular.rotate([0, 0, 30])(point) returns the expected result");
 
         let mut b: B = Equirectangular::builder();
-        b.rotate_set(&[0f64, 0f64, 30f64]);
+        b.rotate3_set(&[0f64, 0f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1f64);
 
@@ -452,7 +452,7 @@ mod equirectangular {
     fn rotate_30_30_30() {
         println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
         let mut b: B = Equirectangular::builder();
-        b.rotate_set(&[30f64, 30f64, 30f64]);
+        b.rotate3_set(&[30f64, 30f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1f64);
 

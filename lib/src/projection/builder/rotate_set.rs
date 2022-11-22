@@ -39,7 +39,16 @@ where
     type T = T;
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate_set(&mut self, angles: &[T; 3]) -> &mut Self {
+    fn rotate2_set(&mut self, angles: &[T; 2]) -> &mut Self {
+        let [delta_lambda, delta_phi] = *angles;
+        self.delta_lambda = (delta_lambda % self.t360).to_radians();
+        self.delta_phi = (delta_phi % self.t360).to_radians();
+        self.delta_gamma = T::zero();
+        self.recenter_with_resampling()
+    }
+
+    /// Sets the rotation angles as measured in degrees.
+    fn rotate3_set(&mut self, angles: &[T; 3]) -> &mut Self {
         let [delta_lambda, delta_phi, delta_gamma] = *angles;
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
@@ -69,7 +78,15 @@ where
     type T = T;
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate_set(&mut self, angles: &[T; 3]) -> &mut Self {
+    fn rotate2_set(&mut self, angles: &[T; 2]) -> &mut Self {
+        let [delta_lambda, delta_phi] = *angles;
+        self.delta_lambda = (delta_lambda % self.t360).to_radians();
+        self.delta_phi = (delta_phi % self.t360).to_radians();
+        self.delta_gamma = T::zero();
+        self.recenter_with_resampling()
+    }
+
+    fn rotate3_set(&mut self, angles: &[T; 3]) -> &mut Self {
         let [delta_lambda, delta_phi, delta_gamma] = *angles;
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
@@ -99,7 +116,16 @@ where
     type T = T;
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate_set(&mut self, angles: &[T; 3]) -> &mut Self {
+    fn rotate2_set(&mut self, angles: &[T; 2]) -> &mut Self {
+        let [delta_lambda, delta_phi] = *angles;
+        self.delta_lambda = (delta_lambda % self.t360).to_radians();
+        self.delta_phi = (delta_phi % self.t360).to_radians();
+        self.delta_gamma = T::zero();
+        self.recenter_no_resampling()
+    }
+
+    /// Sets the rotation angles as measured in degrees.
+    fn rotate3_set(&mut self, angles: &[T; 3]) -> &mut Self {
         let [delta_lambda, delta_phi, delta_gamma] = *angles;
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
@@ -129,7 +155,15 @@ where
     type T = T;
 
     /// Sets the rotation angles as measured in degrees.
-    fn rotate_set(&mut self, angles: &[T; 3]) -> &mut Self {
+    fn rotate2_set(&mut self, angles: &[T; 2]) -> &mut Self {
+        let [delta_lambda, delta_phi] = *angles;
+        self.delta_lambda = (delta_lambda % self.t360).to_radians();
+        self.delta_phi = (delta_phi % self.t360).to_radians();
+        self.delta_gamma = T::zero();
+        self.recenter_no_resampling()
+    }
+    /// Sets the rotation angles as measured in degrees.
+    fn rotate3_set(&mut self, angles: &[T; 3]) -> &mut Self {
         let [delta_lambda, delta_phi, delta_gamma] = *angles;
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();

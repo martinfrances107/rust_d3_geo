@@ -223,7 +223,7 @@ mod mercator {
         );
 
         let pb = pb
-            .rotate_set(&[0_f64, 95_f64, 0_f64])
+            .rotate2_set(&[0_f64, 95_f64])
             .fit_extent([[0_f64, 0f64], [960_f64, 600_f64]], &object);
         assert_eq!(pb.rotate(), [0_f64, 95_f64, 0_f64]);
         assert_eq!(pb.scale(), 35781690.650920525_f64);

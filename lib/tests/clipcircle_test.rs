@@ -34,7 +34,7 @@ mod clipcircle {
                 x: 0.5_f64,
                 y: 0.5_f64,
             })
-            .rotate_set(&[0_f64, -90_f64, 0_f64])
+            .rotate2_set(&[0_f64, -90_f64])
             .clip_angle(170_f64)
             .build();
 

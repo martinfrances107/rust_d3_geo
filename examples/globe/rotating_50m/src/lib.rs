@@ -166,7 +166,7 @@ impl Renderer {
 
     /// Render the next frame.
     pub fn render(&mut self) {
-        self.ob.rotate_set(&[self.yaw, -45f64, 0f64]);
+        self.ob.rotate2_set(&[self.yaw, -45f64]);
 
         let ortho = self.ob.build();
         self.context2d

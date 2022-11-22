@@ -42,7 +42,7 @@ fn graticule() {
     let ortho = Orthographic::builder()
         .scale_set(240_f64)
         .translate_set(&center)
-        .rotate_set(&[0_f64, -20_f64, 0_f64])
+        .rotate2_set(&[0_f64, -20_f64])
         .build();
 
     let mut pb = PathBuilder::context_pathstring().build(ortho);

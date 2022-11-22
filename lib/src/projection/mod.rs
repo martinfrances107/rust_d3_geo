@@ -491,13 +491,21 @@ pub trait RotateSet {
     /// f64 or f32.
     type T;
 
+    ///  Sets two of the  projection’s rotation to the specified angles,
+    ///
+    ///  @param angles  A two-element array of numbers [lambda, phi]
+    ///  specifying the rotation angles in degrees about each
+    ///  spherical axis.
+    /// (These correspond to yaw, pitch and with roll set to zero.)
+    fn rotate2_set(&mut self, angles: &[Self::T; 2]) -> &mut Self;
+
     ///  Sets the projection’s three-axis rotation to the specified angles,
     ///  which must be a three-element array of numbers.
     ///
     ///  @param angles  A three-element array of numbers [lambda, phi,
     ///  gamma] specifying the rotation angles in degrees about each
     ///  spherical axis. (These correspond to yaw, pitch and roll.)
-    fn rotate_set(&mut self, angles: &[Self::T; 3]) -> &mut Self;
+    fn rotate3_set(&mut self, angles: &[Self::T; 3]) -> &mut Self;
 }
 
 /// Controls the projections scaling factor.

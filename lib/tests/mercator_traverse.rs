@@ -269,7 +269,7 @@ mod mercator_tranverse {
         );
 
         let pb = pb
-            .rotate_set(&[0_f64, 95_f64, 0_f64])
+            .rotate2_set(&[0_f64, 95_f64])
             .fit_extent([[0_f64, 0f64], [960_f64, 600_f64]], &object);
         assert_eq!(pb.rotate(), [0_f64, 95_f64, 0_f64]);
         assert_eq!(pb.scale(), 15724992.330511674_f64);

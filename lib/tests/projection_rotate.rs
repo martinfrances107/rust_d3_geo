@@ -19,7 +19,7 @@ mod projection_rotate {
     fn degenerate_polygon_should_not_break() {
         println!("a rotation of a degenerate polygon should not break");
         let projection = Mercator::builder()
-            .rotate_set(&[-134.3_f64, 25.776_f64, 0_f64])
+            .rotate2_set(&[-134.3_f64, 25.776_f64])
             .scale_set(750_f64)
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .build();

@@ -34,7 +34,7 @@ pub fn draw_orthographic() -> Result<()> {
             x: width / 2_f64,
             y: height / 2_f64,
         })
-        .rotate_set(&[0_f64, 0_f64, 0_f64])
+        .rotate2_set(&[0_f64, 0_f64])
         .build();
 
     let mut cg_outer = CircleGenerator::default();
