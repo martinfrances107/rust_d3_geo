@@ -242,7 +242,6 @@ mod mercator_tranverse {
     //   assert.deepStrictEqual(projection.translate(), [20418843.897824813, 47161426.43770847]);
     // });
 
-    #[ignore]
     #[test]
     fn rotate_does_not_affect_automatic_clip_extent() {
         println!("mercator.rotate(…) does not affect the automatic clip extent");
@@ -260,10 +259,12 @@ mod mercator_tranverse {
         let mut pb = MercatorTransverse::builder();
         pb.fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
         assert_eq!(pb.scale(), 15724992.330511674_f64);
+        // In the javascript original the x values differs in the least significant digit.
+        // it was x: 20418843.897824813_f64,
         assert_eq!(
             pb.translate(),
             Coord {
-                x: 20418843.897824813_f64,
+                x: 20418843.897824816_f64,
                 y: 21088401.790971387_f64
             }
         );
