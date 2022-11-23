@@ -31,7 +31,6 @@ where
     #[inline]
     fn build(&self) -> Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> {
         Projector {
-            // p_drain: PhantomData::<DRAIN>,
             p_rc: PhantomData::<RC>,
             cache: None,
             postclip: self.postclip.clone(),

@@ -25,9 +25,6 @@ where
 
     fn clip_extent_clear(&self) -> Self::Output {
         let mut out = Self::Output {
-            p_drain: self.p_drain,
-            p_rc: self.p_rc,
-            p_clipc: self.p_clipc,
             base: self.base.clone(),
         };
         out.reclip();

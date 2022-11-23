@@ -60,10 +60,6 @@ where
             postclip: Identity::default(),
             clip: gen_clip::<NoPCNU, ResampleNoPCNC<DRAIN, PR, T>, T>(),
             resample: Resample::new(self.project_transform.clone(), self.delta2),
-            x0: None,
-            y0: None,
-            x1: None,
-            y1: None,
         }
     }
 }
@@ -107,10 +103,6 @@ where
             clip: gen_clip::<NoPCNU, _, _>(),
             postclip: Identity::default(),
             resample: None::new(self.project_transform.clone()),
-            x0: None,
-            y0: None,
-            x1: None,
-            y1: None,
         }
     }
 }

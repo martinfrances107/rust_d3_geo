@@ -37,7 +37,6 @@ use derivative::Derivative;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::projection::builder_mercator::Builder as ProjectionMercatorBuilder;
 use crate::projection::Build;
 use crate::projection::Projector;
@@ -47,7 +46,6 @@ use crate::Transform;
 
 use self::types::BuilderMercatorTransverseAntimeridianResampleClip;
 
-use super::builder::template::ResamplePCNC;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::RotateSet;
 use super::ScaleSet;
@@ -62,9 +60,6 @@ where
     CLIPU: Clone,
     T: CoordFloat,
 {
-    p_clipc: PhantomData<CLIPC>,
-    p_drain: PhantomData<DRAIN>,
-    p_rc: PhantomData<RC>,
     /// The type this builder wraps.
     pub base: ProjectionMercatorBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>,
 }
@@ -84,12 +79,7 @@ where
         base.rotate3_set(&[T::zero(), T::zero(), T::from(90).unwrap()])
             .scale_set(T::from(159.155).unwrap());
 
-        Self {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>>,
-            p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<ResamplePCNC<DRAIN, PR, T>>,
-            base,
-        }
+        Self { base }
     }
 }
 

@@ -103,11 +103,6 @@ where
 
     theta: Option<T>,
 
-    x0: Option<T>,
-    y0: Option<T>,
-    x1: Option<T>,
-    y1: Option<T>, // post-clip extent
-
     /// Used by recenter() to build the factories.
     rotate: RotateRadians<T>,
     pub(super) rotator: RotatorRadians<Unconnected, T>, //rotate, pre-rotate
@@ -172,11 +167,6 @@ where
             x,
             y,
             t360,
-
-            x0: None,
-            y0: None,
-            x1: None,
-            y1: None, //postclip = identity, // post-clip extent
 
             delta2: T::from(0.5_f64).unwrap(),
             lambda,

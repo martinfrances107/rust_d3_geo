@@ -346,7 +346,15 @@ mod fit {
         let p1 = p1.fit_size([1000_f64, 1000_f64], &world);
         let s1 = p1.scale();
         let t1 = p1.translate();
-
+        assert!(in_delta_coordinate(
+            &t1,
+            &Coord {
+                x: 500_f64,
+                y: 491.11195746522424_f64
+            },
+            1e-6
+        ));
+        assert!(in_delta(s1, 159.15494309189532f64, 1e-6));
         let p2 = Equirectangular::<Bounds<_>, _>::builder();
         let mut p2 = p2.clip_extent_set(&[
             Coord {
@@ -362,9 +370,19 @@ mod fit {
         let s2 = p2.scale();
         let t2 = p2.translate();
 
-        assert!(in_delta(s1, s2, 1e-6));
-        assert!(in_delta_coordinate(&t1, &t2, 1e-6));
+        // assert!(in_delta(s2, 159.15494309189532f64, 1e-6));
+        // assert!(in_delta(s1, s2, 1e-6));
 
+        // assert!(in_delta_coordinate(&t1, &t2, 1e-6));
+
+        assert!(in_delta_coordinate(
+            &t2,
+            &Coord {
+                x: 500_f64,
+                y: 491.11195746522424_f64
+            },
+            1e-6
+        ));
         // assert!(in_delta(c2 = [100_f64, 200_f64], 1e-6));
     }
 

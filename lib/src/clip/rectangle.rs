@@ -96,6 +96,26 @@ where
     }
 }
 
+impl<STATE, T> Rectangle<STATE, T>
+where
+    STATE: Clone,
+    T: CoordFloat,
+{
+    /// Returns the Rectangles bounding box.
+    pub fn clip_extent(&self) -> [Coord<T>; 2] {
+        [
+            Coord {
+                x: self.x0,
+                y: self.y0,
+            },
+            Coord {
+                x: self.x1,
+                y: self.y1,
+            },
+        ]
+    }
+}
+
 impl<SINK, T> Rectangle<Connected<SINK>, T>
 where
     SINK: Clone,
