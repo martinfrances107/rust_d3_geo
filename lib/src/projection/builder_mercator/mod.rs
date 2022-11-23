@@ -180,9 +180,6 @@ where
     CLIPU: Clone,
     T: CoordFloat,
 {
-    p_clipc: PhantomData<CLIPC>,
-    p_drain: PhantomData<DRAIN>,
-    p_rc: PhantomData<RC>,
     /// The raw projeciton.
     pub pr: PR,
     /// The wrapped builder type.
@@ -213,9 +210,6 @@ where
         ]);
 
         let mut out = Self {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>>,
-            p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<ResamplePCNC<DRAIN, PR, T>>,
             pr,
             base,
             extent: None,

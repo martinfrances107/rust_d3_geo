@@ -36,9 +36,6 @@ where
     #[inline]
     fn clip_angle_set(&self, angle: T) -> Self::Output {
         Self::Output {
-            p_clipc: PhantomData::<ClipCircleC<RC, T>>,
-            p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<RC>,
             pr: self.pr.clone(),
             base: self.base.clip_angle_set(angle),
             extent: self.extent,
