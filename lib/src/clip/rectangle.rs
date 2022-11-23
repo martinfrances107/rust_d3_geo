@@ -102,7 +102,7 @@ where
     T: CoordFloat,
 {
     /// Returns the Rectangles bounding box.
-    pub fn clip_extent(&self) -> [Coord<T>; 2] {
+    pub const fn clip_extent(&self) -> [Coord<T>; 2] {
         [
             Coord {
                 x: self.x0,
