@@ -1,5 +1,3 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -7,9 +5,6 @@ use super::types::BuilderMercatorAntimeridianResampleClip;
 use super::types::BuilderMercatorAntimeridianResampleNoneClip;
 use super::types::BuilderMercatorCircleResampleClip;
 use super::types::BuilderMercatorCircleResampleNoneClip;
-use crate::clip::antimeridian::ClipAntimeridianC;
-use crate::clip::circle::ClipCircleC;
-use crate::projection::builder::template::ResampleNonePCNC;
 use crate::projection::PrecisionBypass;
 
 impl<DRAIN, PR, T> PrecisionBypass for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>

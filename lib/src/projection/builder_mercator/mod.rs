@@ -53,7 +53,6 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::projection::builder::template::ResampleNoPCNU;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
@@ -64,7 +63,6 @@ use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::builder::template::ResamplePCNC;
 use super::ClipExtentSet;
 use super::TransformExtent;
 

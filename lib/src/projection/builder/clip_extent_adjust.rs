@@ -17,7 +17,7 @@ where
     type T = T;
 
     fn clip_extent_adjust(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
-        self.postclip = Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y);
+        self.postclip = Rectangle::new(extent);
         self
     }
 }

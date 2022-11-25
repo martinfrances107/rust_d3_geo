@@ -64,7 +64,7 @@ where
     T: CoordFloat,
 {
     #[inline]
-    pub(crate) fn new(x0: T, y0: T, x1: T, y1: T) -> Self {
+    pub(crate) fn new(extent: &[Coord<T>; 2]) -> Self {
         Self {
             state: Unconnected,
             buffer_stream: ClipBuffer::<T>::default(),
@@ -73,10 +73,10 @@ where
             clip_max: T::from(1e9_f64).unwrap(),
             clip_min: T::from(-1e9_f64).unwrap(),
 
-            x0,
-            y0,
-            x1,
-            y1,
+            x0: extent[0].x,
+            y0: extent[0].y,
+            x1: extent[1].x,
+            y1: extent[1].y,
 
             polygon: None,
             segments: None,

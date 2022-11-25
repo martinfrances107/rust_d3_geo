@@ -67,7 +67,7 @@ where
 
             // Mutate section.
             clip: gen_clip_antimeridian::<PCNU<T>, ResamplePCNC<DRAIN, PR, T>, T>(),
-            postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            postclip: Rectangle::new(extent),
             resample: Resample::new(self.project_transform.clone(), self.delta2),
         }
     }
@@ -111,7 +111,7 @@ where
 
             // Mutate section.
             clip: gen_clip_antimeridian::<PCNU<T>, ResampleNonePCNC<DRAIN, PR, T>, T>(),
-            postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            postclip: Rectangle::new(extent),
             resample: None::new(self.project_transform.clone()),
         }
     }
@@ -161,7 +161,7 @@ where
                 ResamplePCNU<PR, T>,
                 T,
             >(self.theta.unwrap()),
-            postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            postclip: Rectangle::new(extent),
             resample: Resample::new(self.project_transform.clone(), self.delta2),
         }
     }
@@ -212,7 +212,7 @@ where
                 T,
             >(self.theta.unwrap()),
             resample: None::new(self.project_transform.clone()),
-            postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            postclip: Rectangle::new(extent),
         }
         //TODO javascipt calls reset here.
     }

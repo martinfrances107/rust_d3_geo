@@ -18,7 +18,7 @@ where
         self.y0 = Some(extent[0].y);
         self.x1 = Some(extent[1].x);
         self.y1 = Some(extent[1].y);
-        self.postclip = Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y);
+        self.postclip = Rectangle::new(extent);
 
         self
     }

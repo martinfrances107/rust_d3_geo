@@ -35,7 +35,7 @@ where
             t360: self.t360,
 
             // Mutate section.
-            postclip: Rectangle::new(extent[0].x, extent[0].y, extent[1].x, extent[1].y),
+            postclip: Rectangle::new(extent),
             x0: None,
             y0: None,
             x1: None,
