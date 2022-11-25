@@ -36,10 +36,6 @@ where
 
             // Mutate section.
             postclip: Rectangle::new(extent),
-            x0: None,
-            y0: None,
-            x1: None,
-            y1: None,
         };
         out.reset();
         out

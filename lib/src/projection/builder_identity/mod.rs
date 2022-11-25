@@ -45,10 +45,6 @@ where
     pub(super) tx: T,
     pub(super) ty: T, // translate
     t360: T,
-    x0: Option<T>,
-    y0: Option<T>,
-    x1: Option<T>,
-    y1: Option<T>, // post-clip extent
 
     /// Projection pipeline stage.
     pub(super) postclip: PCNU,
@@ -68,11 +64,6 @@ where
     pub fn default() -> Self {
         Self {
             p_drain: PhantomData::<DRAIN>,
-
-            x0: None,
-            y0: None,
-            x1: None,
-            y1: None, //postclip = identity, // post-clip extent
 
             alpha: T::zero(),
             k: T::one(),
