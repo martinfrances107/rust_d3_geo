@@ -91,7 +91,7 @@ pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, FB, PR, RC, RC
     object.to_stream(&mut stream_in);
     fit_bounds(bounds_stream.result(), &mut b_no_clip);
 
-    b_no_clip.clip_extent_set(&clip.unwrap());
+    b_no_clip.clip_extent_set(&clip);
 }
 
 pub(super) fn fit_extent_clip<

@@ -12,7 +12,7 @@ where
 {
     type T = T;
 
-    fn clip_extent(&self) -> Option<[Coord<T>; 2]> {
+    fn clip_extent(&self) -> [Coord<T>; 2] {
         self.postclip.clip_extent()
     }
 }

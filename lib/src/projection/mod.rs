@@ -187,7 +187,7 @@ pub trait ClipExtentGet {
     type T;
 
     /// Returns a bounding box.
-    fn clip_extent(&self) -> Option<[Coord<Self::T>; 2]>
+    fn clip_extent(&self) -> [Coord<Self::T>; 2]
     where
         Self::T: CoordFloat;
 }

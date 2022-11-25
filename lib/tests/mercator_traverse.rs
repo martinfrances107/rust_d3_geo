@@ -123,7 +123,7 @@ mod mercator_tranverse {
         assert_eq!(s, "M10,3.141593L0,3.141593L-10,3.141593L-10,-3.141593L-10,-3.141593L0,-3.141593L10,-3.141593L10,3.141593Z");
         assert_eq!(
             pb.clip_extent(),
-            Some([
+            [
                 Coord {
                     x: -10_f64,
                     y: -10_f64,
@@ -132,7 +132,7 @@ mod mercator_tranverse {
                     x: 10_f64,
                     y: 10_f64,
                 },
-            ])
+            ]
         );
     }
 
@@ -169,7 +169,7 @@ mod mercator_tranverse {
         assert_eq!(s, "M10,3.141593L0,3.141593L-10,3.141593L-10,-3.141593L-10,-3.141593L0,-3.141593L10,-3.141593L10,3.141593Z");
         assert_eq!(
             pb.clip_extent(),
-            Some([
+            [
                 Coord {
                     x: -10_f64,
                     y: -10_f64,
@@ -178,7 +178,7 @@ mod mercator_tranverse {
                     x: 10_f64,
                     y: 10_f64,
                 },
-            ])
+            ]
         );
     }
 
@@ -210,7 +210,7 @@ mod mercator_tranverse {
         assert_eq!(s, "M10,3.141593L0,3.141593L-10,3.141593L-10,-3.141593L-10,-3.141593L0,-3.141593L10,-3.141593L10,3.141593Z");
         assert_eq!(
             pb.clip_extent(),
-            Some([
+            [
                 Coord {
                     x: -10_f64,
                     y: -10_f64,
@@ -219,7 +219,7 @@ mod mercator_tranverse {
                     x: 10_f64,
                     y: 10_f64,
                 },
-            ])
+            ]
         );
     }
     // it("transverseMercator.rotate(…) does not affect the automatic clip extent", () => {
