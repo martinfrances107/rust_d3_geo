@@ -15,7 +15,6 @@ mod mercator_tranverse {
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::CenterSet;
     use rust_d3_geo::projection::ClipExtentAdjust;
-    use rust_d3_geo::projection::ClipExtentClear;
     use rust_d3_geo::projection::ClipExtentGet;
     use rust_d3_geo::projection::Fit;
     use rust_d3_geo::projection::PrecisionBypass;
@@ -61,7 +60,6 @@ mod mercator_tranverse {
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         pb.scale_set(1_f64);
 
-        let pb = pb.clip_extent_clear();
         let pb = pb.precision_bypass();
 
         let projection = pb.build();

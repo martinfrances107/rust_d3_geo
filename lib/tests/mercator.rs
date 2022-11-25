@@ -14,7 +14,6 @@ mod mercator {
     use rust_d3_geo::projection::Build;
     use rust_d3_geo::projection::CenterSet;
     use rust_d3_geo::projection::ClipExtentAdjust;
-    use rust_d3_geo::projection::ClipExtentClear;
     use rust_d3_geo::projection::ClipExtentGet;
     use rust_d3_geo::projection::Fit;
     use rust_d3_geo::projection::PrecisionBypass;
@@ -32,8 +31,7 @@ mod mercator {
         let pb = Mercator::builder()
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64)
-            .precision_bypass()
-            .clip_extent_clear();
+            .precision_bypass();
 
         let projection = pb.build();
         let path_builder = PathBuilder::context_pathstring();

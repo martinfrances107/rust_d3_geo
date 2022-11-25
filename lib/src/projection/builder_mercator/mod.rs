@@ -10,8 +10,6 @@ pub mod clip_angle_set;
 /// A builder tansform.
 pub mod clip_extent_adjust;
 /// A builder tansform.
-pub mod clip_extent_clear;
-/// A builder tansform.
 pub mod clip_extent_get;
 /// A builder tansform.
 pub mod fit;

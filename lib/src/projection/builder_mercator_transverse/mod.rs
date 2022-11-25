@@ -4,8 +4,6 @@ pub mod center_get;
 pub mod center_set;
 /// A builder tansform.
 pub mod clip_extent_adjust;
-/// A builder tansform.
-pub mod clip_extent_clear;
 /// A builder getter.
 pub mod clip_extent_get;
 /// A builder tansform.

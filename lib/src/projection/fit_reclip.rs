@@ -31,8 +31,14 @@ use crate::stream::Streamable;
 use crate::Transform;
 
 use super::ClipExtentAdjust;
-use super::ClipExtentClear;
 
+/// `reclip` in the sense that the projection builder
+/// internals call reclip()
+///
+/// reclip ensures that the postclip node will always be
+/// set to "Clip" [ A rectangle object, never Identity. ]
+///
+/// This variant to fit is smaller.
 pub(super) fn fit_reclip<B, CLIPC, CLIPU, FB, PR, RC, RU, T>(
     builder: &mut B,
     mut fit_bounds: FB,
@@ -49,7 +55,6 @@ pub(super) fn fit_reclip<B, CLIPC, CLIPU, FB, PR, RC, RU, T>(
             T = T,
         > + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
-        + ClipExtentClear<Output = B, T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
@@ -59,31 +64,19 @@ pub(super) fn fit_reclip<B, CLIPC, CLIPU, FB, PR, RC, RU, T>(
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
-    let clip = builder.clip_extent();
-    let bprime = builder
+    let b = builder
         .scale_set(T::from(150_f64).unwrap())
         .translate_set(&Coord {
             x: T::zero(),
             y: T::zero(),
         });
-    if let Some(clip) = clip {
-        let mut b = bprime.clip_extent_clear();
-        let mut projector = b.build();
-        let bounds_stream = Bounds::default();
-        let mut stream_in = projector.stream(&bounds_stream);
-        object.to_stream(&mut stream_in);
-        let bounds = stream_in.endpoint().result();
-        fit_bounds(bounds, &mut b);
-        b.clip_extent_adjust(&clip);
-    } else {
-        let b = bprime;
-        let mut projector = b.build();
-        let bounds_stream = Bounds::default();
-        let mut stream_in = projector.stream(&bounds_stream);
-        object.to_stream(&mut stream_in);
-        let bounds = stream_in.endpoint().result();
-        fit_bounds(bounds, b);
-    }
+
+    let mut projector = b.build();
+    let bounds_stream = Bounds::default();
+    let mut stream_in = projector.stream(&bounds_stream);
+    object.to_stream(&mut stream_in);
+    let bounds = stream_in.endpoint().result();
+    fit_bounds(bounds, b);
 }
 
 pub(super) fn fit_extent_reclip<B, CC, CU, PR, RC, RU, T>(
@@ -101,7 +94,6 @@ pub(super) fn fit_extent_reclip<B, CC, CU, PR, RC, RU, T>(
             RU = RU,
             T = T,
         > + ClipExtentGet<T = T>
-        + ClipExtentClear<Output = B, T = T>
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
@@ -146,7 +138,6 @@ pub(super) fn fit_size_reclip<B, CC, CU, PR, RC, RU, T>(
             RU = RU,
             T = T,
         > + ClipExtentAdjust<T = T>
-        + ClipExtentClear<Output = B, T = T>
         + ClipExtentGet<T = T>
         + Clone
         + ScaleSet<T = T>
@@ -176,7 +167,6 @@ pub(super) fn fit_width_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
             T = T,
         > + Clone
         + ClipExtentGet<T = T>
-        + ClipExtentClear<Output = B, T = T>
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
@@ -222,7 +212,6 @@ pub(super) fn fit_height_reclip<B, CC, CU, PR, RC, RU, T>(
             T = T,
         > + Clone
         + ClipExtentGet<T = T>
-        + ClipExtentClear<Output = B, T = T>
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
