@@ -188,7 +188,6 @@ mod mercator_tranverse {
         let mut pb = MercatorTransverse::builder();
 
         pb.scale_set(1_f64);
-        pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         pb.clip_extent_adjust(&[
             Coord {
                 x: -10_f64,
@@ -199,6 +198,7 @@ mod mercator_tranverse {
                 y: 10_f64,
             },
         ]);
+        pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
