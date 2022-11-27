@@ -32,10 +32,9 @@ where
 
     #[inline]
     fn builder() -> Self::Builder {
-        let mut default: BuilderMercatorAntimeridianResampleClip<DRAIN, Self, f64> =
-            MercatorBuilder::new(Self::default());
-        let default = default.scale_set(961_f64 / f64::TAU());
-        default.clone()
+        let mut default: Self::Builder = MercatorBuilder::new(Self::default());
+        default.scale_set(961_f64 / f64::TAU());
+        default
     }
 }
 
