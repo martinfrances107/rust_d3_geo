@@ -68,7 +68,7 @@ where
             // Mutate section.
             clip: gen_clip_antimeridian::<PCNU<T>, ResamplePCNC<DRAIN, PR, T>, T>(),
             postclip: Rectangle::new(extent),
-            resample: Resample::new(self.project_transform.clone(), self.delta2),
+            resample: self.resample.clone(),
         }
     }
 }
