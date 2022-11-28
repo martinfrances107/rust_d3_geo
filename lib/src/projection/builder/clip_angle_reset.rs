@@ -32,7 +32,7 @@ where
             p_clipc: PhantomData::<ClipAntimeridianC<RC, T>>,
             p_rc: PhantomData::<RC>,
             p_drain: PhantomData::<DRAIN>,
-            clip: gen_clip::<PCNU, RC, T>(),
+            clip: gen_clip::<RC, T>(),
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,
             delta_gamma: self.delta_gamma,

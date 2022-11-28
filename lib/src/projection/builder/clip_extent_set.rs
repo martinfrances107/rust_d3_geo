@@ -25,8 +25,6 @@ use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentSet;
 
-use super::template::PCNU;
-
 // Code Repeated 2^2 times.
 // Variantion over ClipAntimeridian/ClipCircle as Clip is rebuilt.
 // Varariantion over Resample/None as Resample is rebuilt.
@@ -64,11 +62,11 @@ where
             project_transform: self.project_transform.clone(),
             project_rotate_transform: self.project_rotate_transform.clone(),
             rotator: self.rotator.clone(),
+            resample: self.resample.clone(),
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<PCNU<T>, ResamplePCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<ResamplePCNC<DRAIN, PR, T>, T>(),
             postclip: Rectangle::new(extent),
-            resample: self.resample.clone(),
         }
     }
 }
@@ -110,7 +108,7 @@ where
             rotator: self.rotator.clone(),
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<PCNU<T>, ResampleNonePCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<ResampleNonePCNC<DRAIN, PR, T>, T>(),
             postclip: Rectangle::new(extent),
             resample: None::new(self.project_transform.clone()),
         }
@@ -153,14 +151,9 @@ where
             rotator: self.rotator.clone(),
 
             // Mutate section.
-            clip: gen_clip_circle::<
-                DRAIN,
-                PCNU<T>,
-                PR,
-                ResamplePCNC<DRAIN, PR, T>,
-                ResamplePCNU<PR, T>,
-                T,
-            >(self.theta.unwrap()),
+            clip: gen_clip_circle::<PR, ResamplePCNC<DRAIN, PR, T>, ResamplePCNU<PR, T>, T>(
+                self.theta.unwrap(),
+            ),
             postclip: Rectangle::new(extent),
             resample: Resample::new(self.project_transform.clone(), self.delta2),
         }
@@ -203,14 +196,9 @@ where
             rotator: self.rotator.clone(),
 
             // Mutate section.
-            clip: gen_clip_circle::<
-                DRAIN,
-                PCNU<T>,
-                PR,
-                ResampleNonePCNC<DRAIN, PR, T>,
-                ResampleNonePCNU<PR, T>,
-                T,
-            >(self.theta.unwrap()),
+            clip: gen_clip_circle::<PR, ResampleNonePCNC<DRAIN, PR, T>, ResampleNonePCNU<PR, T>, T>(
+                self.theta.unwrap(),
+            ),
             resample: None::new(self.project_transform.clone()),
             postclip: Rectangle::new(extent),
         }

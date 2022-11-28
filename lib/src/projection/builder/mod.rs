@@ -153,7 +153,7 @@ where
         let postclip = Identity::default();
         let resample = Resample::new(project_transform.clone(), delta2);
         let mut out: Self = Self {
-            clip: gen_clip::<NoPCNU, _, _>(),
+            clip: gen_clip::<_, _>(),
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
             p_rc: PhantomData::<ResampleNoPCNC<DRAIN, PR, T>>,
             p_drain: PhantomData::<DRAIN>,

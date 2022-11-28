@@ -11,12 +11,10 @@ use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::resampler::none::None;
 use crate::projection::PrecisionBypass;
 
-use super::template::NoPCNU;
 use super::template::ResampleNoneNoPCNC;
 use super::template::ResampleNoneNoPCNU;
 use super::template::ResampleNonePCNC;
 use super::template::ResampleNonePCNU;
-use super::template::PCNU;
 use super::types::BuilderAntimeridianResampleClip;
 use super::types::BuilderAntimeridianResampleNoClip;
 use super::types::BuilderAntimeridianResampleNoneNoClip;
@@ -65,7 +63,7 @@ where
             delta_gamma: self.delta_gamma,
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<NoPCNU, ResampleNoneNoPCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<ResampleNoneNoPCNC<DRAIN, PR, T>, T>(),
             delta2: T::zero(),
             resample: None::new(self.project_transform.clone()),
         }
@@ -115,7 +113,7 @@ where
             delta_gamma: self.delta_gamma,
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<PCNU<T>, ResampleNonePCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<ResampleNonePCNC<DRAIN, PR, T>, T>(),
             delta2: T::zero(),
             resample: None::new(self.project_transform.clone()),
         }
@@ -167,8 +165,6 @@ where
 
             // Mutate section.
             clip: gen_clip_circle::<
-                DRAIN,
-                NoPCNU,
                 PR,
                 ResampleNoneNoPCNC<DRAIN, PR, T>,
                 ResampleNoneNoPCNU<PR, T>,
@@ -197,14 +193,9 @@ where
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
 
-        let clip = gen_clip_circle::<
-            DRAIN,
-            PCNU<T>,
-            PR,
-            ResampleNonePCNC<DRAIN, PR, T>,
-            ResampleNonePCNU<PR, T>,
-            T,
-        >(self.theta.unwrap());
+        let clip = gen_clip_circle::<PR, ResampleNonePCNC<DRAIN, PR, T>, ResampleNonePCNU<PR, T>, T>(
+            self.theta.unwrap(),
+        );
 
         // Copy - Mutate.
         Self::Output {

@@ -44,7 +44,7 @@ pub type ClipCircleU<RC, T> = Clipper<
 >;
 
 /// Returns a clip setup for circle clipping.
-pub fn gen_clip<DRAIN, PCNU, PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
+pub fn gen_clip<PR, RC, RU, T>(radius: T) -> ClipCircleU<RC, T>
 where
     RC: Clone,
     T: CoordFloat + FloatConst,

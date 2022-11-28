@@ -10,7 +10,6 @@ use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentClear;
 
-use super::template::NoPCNU;
 use super::template::ResampleNoPCNC;
 use super::template::ResampleNoneNoPCNC;
 use super::types::BuilderAntimeridianResampleClip;
@@ -58,7 +57,7 @@ where
 
             // Mutate section.
             postclip: Identity::default(),
-            clip: gen_clip::<NoPCNU, ResampleNoPCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip::<ResampleNoPCNC<DRAIN, PR, T>, T>(),
             resample: Resample::new(self.project_transform.clone(), self.delta2),
         }
     }
@@ -100,7 +99,7 @@ where
             rotator: self.rotator.clone(),
 
             // Mutate section.
-            clip: gen_clip::<NoPCNU, _, _>(),
+            clip: gen_clip::<_, _>(),
             postclip: Identity::default(),
             resample: None::new(self.project_transform.clone()),
         }
