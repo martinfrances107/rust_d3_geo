@@ -109,7 +109,7 @@ pub(super) fn fit_extent_clip<
     T,
 >(
     builder: &mut B,
-    extent: [[T; 2]; 2],
+    extent: [Coord<T>; 2],
     object: &impl Streamable<T = T>,
 ) where
     B: Build<
@@ -153,11 +153,11 @@ pub(super) fn fit_extent_clip<
     fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, _, PR, RC, RCint, RU, RUint, T>(
         builder,
         move |b: [Coord<T>; 2], builder: &mut Bint| {
-            let w = extent[1][0] - extent[0][0];
-            let h = extent[1][1] - extent[0][1];
+            let w = extent[1].x - extent[0].y;
+            let h = extent[1].y - extent[0].y;
             let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
-            let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
-            let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
+            let x = extent[0].x + (w - k * (b[1].x + b[0].x)) / two;
+            let y = extent[0].y + (h - k * (b[1].y + b[0].y)) / two;
 
             builder
                 .scale_set(one_five_zero * k)
@@ -182,7 +182,7 @@ pub(super) fn fit_size_clip<
     T,
 >(
     builder: &mut B,
-    size: [T; 2],
+    size: Coord<T>,
     object: &impl Streamable<T = T>,
 ) where
     B: Build<
@@ -224,7 +224,13 @@ pub(super) fn fit_size_clip<
 {
     fit_extent_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
         builder,
-        [[T::zero(), T::zero()], size],
+        [
+            Coord {
+                x: T::zero(),
+                y: T::zero(),
+            },
+            size,
+        ],
         object,
     );
 }

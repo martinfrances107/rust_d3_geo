@@ -267,7 +267,7 @@ pub trait Fit {
     ///   feature).
     fn fit_extent(
         &mut self,
-        extent: [[Self::T; 2]; 2],
+        extent: [Coord<Self::T>; 2],
         object: &impl Streamable<T = Self::T>,
     ) -> &mut Self
     where
@@ -284,7 +284,11 @@ pub trait Fit {
     ///  @param size The size of the extent, specified as an array [width,
     ///  height]. @param object A geographic feature supported by d3-geo
     ///  (An extension of `GeoJSON` feature).
-    fn fit_size(&mut self, size: [Self::T; 2], object: &impl Streamable<T = Self::T>) -> &mut Self
+    fn fit_size(
+        &mut self,
+        size: Coord<Self::T>,
+        object: &impl Streamable<T = Self::T>,
+    ) -> &mut Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 

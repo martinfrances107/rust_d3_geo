@@ -255,7 +255,16 @@ mod mercator_tranverse {
         );
 
         let mut pb = MercatorTransverse::builder();
-        pb.fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
+        pb.fit_extent(
+            [
+                Coord { x: 0_f64, y: 0_f64 },
+                Coord {
+                    x: 960_f64,
+                    y: 600_f64,
+                },
+            ],
+            &object,
+        );
         assert_eq!(pb.scale(), 15724992.330511674_f64);
         // In the javascript original the x values differs in the least significant digit.
         // it was x: 20418843.897824813_f64,
@@ -267,9 +276,16 @@ mod mercator_tranverse {
             }
         );
 
-        let pb = pb
-            .rotate2_set(&[0_f64, 95_f64])
-            .fit_extent([[0_f64, 0f64], [960_f64, 600_f64]], &object);
+        let pb = pb.rotate2_set(&[0_f64, 95_f64]).fit_extent(
+            [
+                Coord { x: 0_f64, y: 0f64 },
+                Coord {
+                    x: 960_f64,
+                    y: 600_f64,
+                },
+            ],
+            &object,
+        );
         assert_eq!(pb.rotate(), [0_f64, 95_f64, 0_f64]);
         assert_eq!(pb.scale(), 15724992.330511674_f64);
         assert!(in_delta_coordinate(

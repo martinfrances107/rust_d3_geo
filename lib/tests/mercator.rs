@@ -210,7 +210,16 @@ mod mercator {
         );
 
         let mut pb = Mercator::builder();
-        pb.fit_extent([[0_f64, 0_f64], [960_f64, 600_f64]], &object);
+        pb.fit_extent(
+            [
+                Coord { x: 0_f64, y: 0_f64 },
+                Coord {
+                    x: 960_f64,
+                    y: 600_f64,
+                },
+            ],
+            &object,
+        );
         assert_eq!(pb.scale(), 20969742.365692537_f64);
         assert_eq!(
             pb.translate(),
@@ -220,9 +229,16 @@ mod mercator {
             }
         );
 
-        let pb = pb
-            .rotate2_set(&[0_f64, 95_f64])
-            .fit_extent([[0_f64, 0f64], [960_f64, 600_f64]], &object);
+        let pb = pb.rotate2_set(&[0_f64, 95_f64]).fit_extent(
+            [
+                Coord { x: 0_f64, y: 0f64 },
+                Coord {
+                    x: 960_f64,
+                    y: 600_f64,
+                },
+            ],
+            &object,
+        );
         assert_eq!(pb.rotate(), [0_f64, 95_f64, 0_f64]);
         assert_eq!(pb.scale(), 35781690.650920525_f64);
         assert!(in_delta_coordinate(

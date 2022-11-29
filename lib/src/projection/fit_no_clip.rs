@@ -72,7 +72,7 @@ fn fit_no_clip<B, CC, CU, FB, PR, RC, RU, T>(
 
 pub(super) fn fit_extent_no_clip<B, CC, CU, PR, RC, RU, T>(
     builder: &mut B,
-    extent: [[T; 2]; 2],
+    extent: [Coord<T>; 2],
     object: &impl Streamable<T = T>,
 ) where
     B: Build<
@@ -99,11 +99,11 @@ pub(super) fn fit_extent_no_clip<B, CC, CU, PR, RC, RU, T>(
     fit_no_clip(
         builder,
         move |b: [Coord<T>; 2], builder: &mut B| {
-            let w = extent[1][0] - extent[0][0];
-            let h = extent[1][1] - extent[0][1];
+            let w = extent[1].x - extent[0].x;
+            let h = extent[1].y - extent[0].y;
             let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
-            let x = extent[0][0] + (w - k * (b[1].x + b[0].x)) / two;
-            let y = extent[0][1] + (h - k * (b[1].y + b[0].y)) / two;
+            let x = extent[0].x + (w - k * (b[1].x + b[0].x)) / two;
+            let y = extent[0].y + (h - k * (b[1].y + b[0].y)) / two;
 
             builder
                 .scale_set(one_five_zero * k)
@@ -115,7 +115,7 @@ pub(super) fn fit_extent_no_clip<B, CC, CU, PR, RC, RU, T>(
 
 pub(super) fn fit_size_no_clip<B, CC, CU, PR, RC, RU, T>(
     builder: &mut B,
-    size: [T; 2],
+    size: Coord<T>,
     object: &impl Streamable<T = T>,
 ) where
     B: Build<
@@ -136,7 +136,17 @@ pub(super) fn fit_size_no_clip<B, CC, CU, PR, RC, RU, T>(
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
-    fit_extent_no_clip(builder, [[T::zero(), T::zero()], size], object);
+    fit_extent_no_clip(
+        builder,
+        [
+            Coord {
+                x: T::zero(),
+                y: T::zero(),
+            },
+            size,
+        ],
+        object,
+    );
 }
 
 pub(super) fn fit_width_no_clip<B, CC, CU, PR, RC, RU, T>(

@@ -1,5 +1,6 @@
 use std::fmt::Debug;
 
+use geo::Coord;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -27,7 +28,7 @@ where
     #[inline]
     fn fit_extent(
         &mut self,
-        extent: [[T; 2]; 2],
+        extent: [Coord<T>; 2],
         object: &impl Streamable<T = Self::T>,
     ) -> &mut Self {
         fit_extent_reclip(self, extent, object);
@@ -35,7 +36,7 @@ where
     }
 
     #[inline]
-    fn fit_size(&mut self, size: [T; 2], object: &impl Streamable<T = T>) -> &mut Self {
+    fn fit_size(&mut self, size: Coord<T>, object: &impl Streamable<T = T>) -> &mut Self {
         fit_size_reclip(self, size, object);
         self
     }
@@ -64,7 +65,7 @@ where
     #[inline]
     fn fit_extent(
         &mut self,
-        extent: [[T; 2]; 2],
+        extent: [Coord<T>; 2],
         object: &impl Streamable<T = Self::T>,
     ) -> &mut Self {
         fit_extent_reclip(self, extent, object);
@@ -72,7 +73,7 @@ where
     }
 
     #[inline]
-    fn fit_size(&mut self, size: [T; 2], object: &impl Streamable<T = T>) -> &mut Self {
+    fn fit_size(&mut self, size: Coord<T>, object: &impl Streamable<T = T>) -> &mut Self {
         fit_size_reclip(self, size, object);
         self
     }
