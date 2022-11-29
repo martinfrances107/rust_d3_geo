@@ -153,7 +153,7 @@ pub(super) fn fit_extent_clip<
     fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, _, PR, RC, RCint, RU, RUint, T>(
         builder,
         move |b: [Coord<T>; 2], builder: &mut Bint| {
-            let w = extent[1].x - extent[0].y;
+            let w = extent[1].x - extent[0].x;
             let h = extent[1].y - extent[0].y;
             let k = T::min(w / (b[1].x - b[0].x), h / (b[1].y - b[0].y));
             let x = extent[0].x + (w - k * (b[1].x + b[0].x)) / two;
