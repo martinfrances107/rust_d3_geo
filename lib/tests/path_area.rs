@@ -16,7 +16,6 @@ mod path_area {
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::path::area::Area;
     use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleNoClip;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
     use rust_d3_geo::projection::Build;
@@ -31,8 +30,7 @@ mod path_area {
     where
         T: CoordFloat + Default + Display + FloatConst,
     {
-        let mut ba: BuilderAntimeridianResampleNoClip<Area<T>, Equirectangular<Area<T>, T>, T> =
-            Equirectangular::<Area<T>, T>::builder();
+        let mut ba = Equirectangular::<Area<T>, T>::builder();
         ba.scale_set(T::from(900f64 / PI).unwrap());
 
         let builder = ba.precision_bypass();

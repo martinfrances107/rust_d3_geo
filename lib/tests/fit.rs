@@ -19,7 +19,6 @@ mod fit {
     use rust_d3_geo::path::bounds::Bounds;
     use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
-    use rust_d3_geo::projection::builder::types::BuilderAntimeridianResampleNoClip;
     use rust_d3_geo::projection::equirectangular::Equirectangular;
     use rust_d3_geo::projection::gnomic::Gnomic;
     use rust_d3_geo::projection::mercator::Mercator;
@@ -57,11 +56,7 @@ mod fit {
     fn fit_extent_sphere_equirectangular() {
         println!("projection.fitExtent(…) sphere equirectangular");
         let d_object = Sphere::default();
-        let mut projection: BuilderAntimeridianResampleNoClip<
-            Bounds<f64>,
-            Equirectangular<Bounds<f64>, f64>,
-            f64,
-        > = Equirectangular::builder();
+        let mut projection = Equirectangular::<Bounds<_>, _>::builder();
 
         projection.fit_extent(
             [
