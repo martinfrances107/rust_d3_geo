@@ -106,11 +106,11 @@ where
             project_transform: self.project_transform.clone(),
             project_rotate_transform: self.project_rotate_transform.clone(),
             rotator: self.rotator.clone(),
+            resample: self.resample.clone(),
 
             // Mutate section.
             clip: gen_clip_antimeridian::<ResampleNonePCNC<DRAIN, PR, T>, T>(),
             postclip: Rectangle::new(extent),
-            resample: None::new(self.project_transform.clone()),
         }
     }
 }
@@ -149,13 +149,13 @@ where
             project_transform: self.project_transform.clone(),
             project_rotate_transform: self.project_rotate_transform.clone(),
             rotator: self.rotator.clone(),
+            resample: self.resample.clone(),
 
             // Mutate section.
             clip: gen_clip_circle::<PR, ResamplePCNC<DRAIN, PR, T>, ResamplePCNU<PR, T>, T>(
                 self.theta.unwrap(),
             ),
             postclip: Rectangle::new(extent),
-            resample: Resample::new(self.project_transform.clone(), self.delta2),
         }
     }
 }
@@ -194,12 +194,12 @@ where
             project_transform: self.project_transform.clone(),
             project_rotate_transform: self.project_rotate_transform.clone(),
             rotator: self.rotator.clone(),
+            resample: self.resample.clone(),
 
             // Mutate section.
             clip: gen_clip_circle::<PR, ResampleNonePCNC<DRAIN, PR, T>, ResampleNonePCNU<PR, T>, T>(
                 self.theta.unwrap(),
             ),
-            resample: None::new(self.project_transform.clone()),
             postclip: Rectangle::new(extent),
         }
         //TODO javascipt calls reset here.
