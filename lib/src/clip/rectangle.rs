@@ -286,7 +286,7 @@ where
             // previous point.
             x_: self.x_,
             y_: self.y_,
-            v_: self.v__,
+            v_: self.v_,
 
             use_line_point: self.use_line_point,
             use_buffer_stream: self.use_buffer_stream,
