@@ -91,12 +91,12 @@ where
 
         let range3 = range(T::ceil(self.x0 / self.dx) * self.dx, self.x1, self.dx)
             .into_iter()
-            .filter(move |x| (*x % self.DX).abs() > self.epsilon)
+            .filter(|x| (*x % self.DX).abs() > self.epsilon)
             .map(&self.x);
 
         let range4 = range(T::ceil(self.y0 / self.dy) * self.dy, self.y1, self.dy)
             .into_iter()
-            .filter(move |y| (*y % self.DY).abs() > self.epsilon)
+            .filter(|y| (*y % self.DY).abs() > self.epsilon)
             .map(&self.y);
 
         range1.chain(range2).chain(range3).chain(range4)
