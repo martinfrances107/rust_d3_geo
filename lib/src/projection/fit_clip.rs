@@ -86,10 +86,11 @@ pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, FB, PR, RC, RC
     let mut b_no_clip = b.clip_extent_clear();
 
     let mut stripped_projector = b_no_clip.build();
-    let mut bounds_stream = Bounds::default();
+    let bounds_stream = Bounds::default();
     let mut stream_in = stripped_projector.stream(&bounds_stream);
     object.to_stream(&mut stream_in);
-    fit_bounds(bounds_stream.result(), &mut b_no_clip);
+    let bounds = stream_in.endpoint().result();
+    fit_bounds(bounds, &mut b_no_clip);
 
     b_no_clip.clip_extent_set(&clip);
 }
