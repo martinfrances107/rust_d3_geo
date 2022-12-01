@@ -21,8 +21,6 @@ use crate::projection::builder::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::BuilderAntimeridianResampleNoneNoClip;
 use crate::projection::builder::BuilderCircleResampleNoClip;
 use crate::projection::builder::BuilderCircleResampleNoneNoClip;
-use crate::projection::resampler::none::None;
-use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentSet;
 
 // Code Repeated 2^2 times.

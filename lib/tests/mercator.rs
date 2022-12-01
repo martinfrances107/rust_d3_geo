@@ -209,8 +209,8 @@ mod mercator {
             .into(),
         );
 
-        let mut pb = Mercator::builder();
-        pb.fit_extent(
+        let pb = Mercator::builder();
+        let mut pb = pb.fit_extent(
             [
                 Coord { x: 0_f64, y: 0_f64 },
                 Coord {
@@ -229,7 +229,8 @@ mod mercator {
             }
         );
 
-        let pb = pb.rotate2_set(&[0_f64, 95_f64]).fit_extent(
+        pb.rotate2_set(&[0_f64, 95_f64]);
+        let pb = pb.fit_extent(
             [
                 Coord { x: 0_f64, y: 0f64 },
                 Coord {

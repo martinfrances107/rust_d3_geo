@@ -11,6 +11,7 @@ mod fit {
     use geo::Geometry;
     use geo_types::Coord;
     use num_traits::FloatConst;
+    use rust_d3_geo::projection::ClipExtentGet;
     use topojson::Topology;
 
     use rust_d3_geo::data_object::sphere::Sphere;
@@ -56,9 +57,9 @@ mod fit {
     fn fit_extent_sphere_equirectangular() {
         println!("projection.fitExtent(…) sphere equirectangular");
         let d_object = Sphere::default();
-        let mut projection = Equirectangular::<Bounds<_>, _>::builder();
+        let projection_raw = Equirectangular::<Bounds<_>, _>::builder();
 
-        projection.fit_extent(
+        let projection = projection_raw.fit_extent(
             [
                 Coord {
                     x: 50.0_f64,
@@ -92,8 +93,8 @@ mod fit {
         println!("projection.fitExtent(…) world equirectangular");
         let world = world();
 
-        let mut projection = Equirectangular::builder();
-        projection.fit_extent(
+        let projection = Equirectangular::builder();
+        let projection = projection.fit_extent(
             [
                 Coord {
                     x: 50.0_f64,
@@ -122,8 +123,8 @@ mod fit {
         println!("projection.fitExtent(…) world azimuthalEqualArea");
 
         let world = world();
-        let mut projection = AzimuthalEqualArea::builder();
-        projection.fit_extent(
+        let projection = AzimuthalEqualArea::builder();
+        let projection = projection.fit_extent(
             [
                 Coord {
                     x: 50.0_f64,
@@ -152,8 +153,8 @@ mod fit {
         println!("projection.fitExtent(…) world azimuthalEquidistant");
 
         let world = world();
-        let mut projection = AzimuthalEquiDistant::builder();
-        projection.fit_extent(
+        let projection = AzimuthalEquiDistant::builder();
+        let projection = projection.fit_extent(
             [
                 Coord {
                     x: 50.0_f64,
@@ -206,8 +207,8 @@ mod fit {
         println!("projection.fitSize(…) world equirectangular");
 
         let world = world();
-        let mut projection = Equirectangular::builder();
-        projection.fit_size(
+        let projection = Equirectangular::builder();
+        let projection = projection.fit_size(
             Coord {
                 x: 900_f64,
                 y: 900_f64,
@@ -234,7 +235,7 @@ mod fit {
         let world = world();
         let mut projection = Gnomic::builder();
         projection.clip_angle(45_f64);
-        projection.fit_extent(
+        let projection = projection.fit_extent(
             [
                 Coord {
                     x: 50_f64,
@@ -264,8 +265,8 @@ mod fit {
         println!("projection.fitExtent(…) world mercator");
 
         let world = world();
-        let mut projection = Mercator::builder();
-        projection.fit_extent(
+        let projection = Mercator::builder();
+        let projection = projection.fit_extent(
             [
                 Coord {
                     x: 50.0_f64,
@@ -295,9 +296,8 @@ mod fit {
         println!("projection.fitExtent(…) world orthographic");
 
         let world = world();
-        let mut projection = Orthographic::builder();
-
-        projection.fit_extent(
+        let projection = Orthographic::builder();
+        let projection = projection.fit_extent(
             [
                 Coord {
                     x: 50.0_f64,
@@ -326,8 +326,8 @@ mod fit {
         println!("projection.fitSize(…) world orthographic");
 
         let world = world();
-        let mut projection = Orthographic::builder();
-        projection.fit_size(
+        let projection = Orthographic::builder();
+        let projection = projection.fit_size(
             Coord {
                 x: 900.0_f64,
                 y: 900.0_f64,
@@ -350,8 +350,8 @@ mod fit {
         println!("projection.fitExtent(…) world stereographic");
 
         let world = world();
-        let mut projection = Stereographic::builder();
-        projection.fit_extent(
+        let projection = Stereographic::builder();
+        let projection = projection.fit_extent(
             [
                 Coord {
                     x: 50.0_f64,
@@ -439,13 +439,11 @@ mod fit {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
-    /// Ignored tests. Needs debugging, but the fact that this compiles is the first step.
     #[test]
-    #[ignore]
     fn fit_size_ignore_clip_extent() {
         println!("projection.fitSize(…) ignore clipExtent - world equirectangular");
         let world = world();
-        let mut p1 = Equirectangular::builder();
+        let p1 = Equirectangular::builder();
         let p1 = p1.fit_size(
             Coord {
                 x: 1000_f64,
@@ -455,6 +453,7 @@ mod fit {
         );
         let s1 = p1.scale();
         let t1 = p1.translate();
+
         assert!(in_delta_coordinate(
             &t1,
             &Coord {
@@ -465,7 +464,7 @@ mod fit {
         ));
         assert!(in_delta(s1, 159.15494309189532f64, 1e-6));
         let p2 = Equirectangular::<Bounds<_>, _>::builder();
-        let mut p2 = p2.clip_extent_set(&[
+        let p2 = p2.clip_extent_set(&[
             Coord {
                 x: 100_f64,
                 y: 200_f64,
@@ -484,11 +483,11 @@ mod fit {
         );
         let s2 = p2.scale();
         let t2 = p2.translate();
+        let c2 = p2.clip_extent();
+        assert!(in_delta(s2, 159.15494309189532f64, 1e-6));
+        assert!(in_delta(s1, s2, 1e-6));
 
-        // assert!(in_delta(s2, 159.15494309189532f64, 1e-6));
-        // assert!(in_delta(s1, s2, 1e-6));
-
-        // assert!(in_delta_coordinate(&t1, &t2, 1e-6));
+        assert!(in_delta_coordinate(&t1, &t2, 1e-6));
 
         assert!(in_delta_coordinate(
             &t2,
@@ -498,7 +497,22 @@ mod fit {
             },
             1e-6
         ));
-        // assert!(in_delta(c2 = [100_f64, 200_f64], 1e-6));
+        assert!(in_delta_coordinate(
+            &c2[0],
+            &Coord {
+                x: 100_f64,
+                y: 200_f64
+            },
+            1e-6
+        ));
+        assert!(in_delta_coordinate(
+            &c2[1],
+            &Coord {
+                x: 700_f64,
+                y: 600_f64
+            },
+            1e-6
+        ));
     }
 
     // 	// 	// // // tape("projection.fitExtent(…) chaining - world transverseMercator", function(test) {
@@ -520,7 +534,7 @@ mod fit {
         ]);
         let mut p1 = Mercator::builder();
 
-        p1.precision_set(&0.1_f64).fit_size(
+        let p1 = p1.precision_set(&0.1_f64).fit_size(
             Coord {
                 x: 1000_f64,
                 y: 1000_f64,
@@ -528,7 +542,7 @@ mod fit {
             &box_object,
         );
         let p2 = Mercator::builder();
-        let mut p2 = p2.precision_bypass();
+        let p2 = p2.precision_bypass();
         let p2 = p2.fit_size(
             Coord {
                 x: 1000_f64,
@@ -552,8 +566,8 @@ mod fit {
         println!("projection.fitWidth(…) world equirectangular");
 
         let world = world();
-        let mut projection = Equirectangular::builder();
-        projection.fit_width(900_f64, &world);
+        let projection = Equirectangular::builder();
+        let projection = projection.fit_width(900_f64, &world);
         assert!(in_delta(projection.scale(), 143.239449_f64, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
@@ -586,8 +600,8 @@ mod fit {
         println!("projection.fitHeight(…) world equirectangular");
 
         let world = world();
-        let mut projection = Equirectangular::builder();
-        projection.fit_height(900f64, &world);
+        let projection = Equirectangular::builder();
+        let projection = projection.fit_height(900f64, &world);
         assert!(in_delta(projection.scale(), 297.042711_f64, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
