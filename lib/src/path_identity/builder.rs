@@ -28,9 +28,9 @@ where
     T: CoordFloat,
 {
     p_pcnc: PhantomData<PCNC>,
+    p_pcnu: PhantomData<PCNU>,
     pr: T,
     context_stream: CS,
-    projection: Option<Projector<CS, PCNC, PCNU, T>>,
 }
 
 impl<CS, PCNC, PCNU, T> Builder<CS, PCNC, PCNU, T>
@@ -46,9 +46,9 @@ where
     pub fn new(context_stream: CS) -> Self {
         Self {
             p_pcnc: PhantomData::<PCNC>,
+            p_pcnu: PhantomData::<PCNU>,
             context_stream,
             pr: T::from(4.5_f64).unwrap(),
-            projection: None,
         }
     }
 }
@@ -91,7 +91,7 @@ where
 {
     type T = T;
 
-    /// From the progammed state generate a new projection.
+    /// Radius of the rendered point.
     #[inline]
     fn point_radius(&mut self, radius: T) {
         self.pr = radius;

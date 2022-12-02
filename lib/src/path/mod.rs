@@ -50,10 +50,8 @@ pub trait Result {
 pub trait PointRadiusTrait {
     /// f64 or f32.
     type T;
-    // TODO must add getter here.
-    // There are complication about the mix return type here.
-    // Context or PathString
-    // fn get_point_radius...
+
+    /// Sets the radius of a rendered point.
     fn point_radius(&mut self, val: Self::T);
 }
 
@@ -237,16 +235,6 @@ where
     /// Sets the context stream.
     pub fn context(&mut self, context_stream: CS) -> &mut Self {
         self.context_stream = context_stream;
-        self
-    }
-
-    #[inline]
-    #[must_use]
-    fn point_radius(mut self, input: PointRadiusEnum<T>) -> Self {
-        self.point_radius = match input {
-            PointRadiusEnum::F(ref _input_fn) => input,
-            PointRadiusEnum::Val(_input_value) => input,
-        };
         self
     }
 }

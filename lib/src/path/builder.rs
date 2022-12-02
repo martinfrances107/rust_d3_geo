@@ -27,12 +27,15 @@ where
     CLIPU: Clone,
     T: CoordFloat,
 {
+    p_clipc: PhantomData<CLIPC>,
+    p_clipu: PhantomData<CLIPU>,
     p_pcnc: PhantomData<PCNC>,
+    p_pcnu: PhantomData<PCNU>,
+    p_pr: PhantomData<PR>,
     p_rc: PhantomData<RC>,
+    p_ru: PhantomData<RU>,
     pr: T,
     context_stream: CS,
-    #[allow(clippy::type_complexity)]
-    projection: Option<Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>>,
 }
 
 impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
@@ -48,11 +51,15 @@ where
     /// unwrap() is used here but a panic will never happen as 4.5 will always be converted into T.
     pub fn new(context_stream: CS) -> Self {
         Self {
+            p_clipc: PhantomData::<CLIPC>,
+            p_clipu: PhantomData::<CLIPU>,
             p_pcnc: PhantomData::<PCNC>,
+            p_pcnu: PhantomData::<PCNU>,
+            p_pr: PhantomData::<PR>,
             p_rc: PhantomData::<RC>,
+            p_ru: PhantomData::<RU>,
             context_stream,
             pr: T::from(4.5_f64).unwrap(),
-            projection: None,
         }
     }
 }
