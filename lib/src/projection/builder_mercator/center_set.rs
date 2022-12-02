@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
@@ -32,7 +30,7 @@ where
     CLIPU: Clone,
     DRAIN: Clone,
 
-    PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
+    PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
@@ -58,7 +56,7 @@ where
     CLIPC: Clone,
     CLIPU: Clone,
     DRAIN: Clone,
-    PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
+    PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
