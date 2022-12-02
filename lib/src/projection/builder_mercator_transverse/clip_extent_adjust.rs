@@ -16,7 +16,6 @@ where
     CLIPU: Clone,
     DRAIN: Clone,
     RU: Clone,
-    PCNU<T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {

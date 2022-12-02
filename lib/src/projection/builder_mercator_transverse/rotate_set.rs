@@ -30,14 +30,12 @@ where
 {
     type T = T;
 
-    /// Sets the rotation angles as measured in degrees.
     fn rotate2_set(&mut self, angles: &[T; 2]) -> &mut Self {
         self.base
             .rotate3_set(&[angles[0], angles[1], T::from(90_f64).unwrap()]);
         self
     }
 
-    /// Sets the rotation angles as measured in degrees.
     fn rotate3_set(&mut self, angles: &[T; 3]) -> &mut Self {
         self.base
             .rotate3_set(&[angles[0], angles[1], angles[2] + T::from(90_f64).unwrap()]);
