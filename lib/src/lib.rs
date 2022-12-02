@@ -87,7 +87,7 @@
 //! use web_sys::Document;
 //! use web_sys::*;
 //!
-//! use rust_d3_geo::graticule::generate as generate_graticule;
+//! use rust_d3_geo::graticule::generate_mls;
 //! use rust_d3_geo::path::builder::Builder as PathBuilder;
 //! use rust_d3_geo::path::context::Context;
 //! use rust_d3_geo::projection::orthographic::Orthographic;
@@ -159,7 +159,7 @@
 //!
 //!     // Graticule
 //!     let graticule =
-//!         Geometry::MultiLineString(MultiLineString(generate_graticule().lines().collect()));
+//!         generate_mls::<f64>();
 //!     context_raw.begin_path();
 //!     context_raw.set_stroke_style(&"#ccc".into());
 //!     path.object(&graticule);

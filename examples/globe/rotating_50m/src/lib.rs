@@ -14,9 +14,9 @@ extern crate web_sys;
 mod utils;
 
 use geo::Geometry;
-use geo::MultiLineString;
 use geo_types::Coord;
 use gloo_utils::format::JsValueSerdeExt;
+use rust_d3_geo::graticule::generate_mls;
 use topojson::Topology;
 
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -30,7 +30,6 @@ use web_sys::RequestInit;
 use web_sys::RequestMode;
 use web_sys::Response;
 
-use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::builder::types::BuilderCircleResampleNoClip;
@@ -149,8 +148,7 @@ impl Renderer {
             });
 
         // Graticule
-        let graticule =
-            Geometry::MultiLineString(MultiLineString(generate_graticule().lines().collect()));
+        let graticule = generate_mls::<f64>();
 
         Ok(Self {
             context2d,
@@ -236,7 +234,7 @@ impl Renderer {
 
 //     // Graticule
 //     let graticule =
-//         Geometry::MultiLineString(MultiLineString(generate_graticule().lines().collect()));
+//        generate_mls::<f64>();
 
 //     spawn_local(async move {
 //         let mut count = 0;

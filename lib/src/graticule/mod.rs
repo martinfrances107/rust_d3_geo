@@ -1,7 +1,7 @@
 /// Generates great circles.
 pub mod builder;
 
-use geo::CoordFloat;
+use geo::{CoordFloat, Geometry, MultiLineString};
 use geo_types::Coord;
 
 use rust_d3_array::range::range;
@@ -59,4 +59,34 @@ where
     ]);
 
     out
+}
+
+/// Helper function returns the default graticule.
+///
+/// In javascript rendering to a canvas context  will look
+/// like to example below.
+///
+/// ```javascript
+///  let graticule = d3.geoGraticule();
+///    context.beginPath();
+///    context.strokeStyle = '#ccc';
+///    geoGenerator(graticule());
+///    context.stroke();
+/// ```
+///
+/// Here is the equivalent rust version.
+///```rustlang
+///  // Graticule RUSTLANG
+///  let graticule = generate_mls();
+///  context_raw.begin_path();
+///  context_raw.set_stroke_style(&"#ccc".into());
+///  path.object(&graticule);
+///  context_raw.stroke();
+/// ```
+#[must_use]
+pub fn generate_mls<T>() -> Geometry
+where
+    T: 'static + CoordFloat,
+{
+    Geometry::MultiLineString(MultiLineString(generate().lines().collect()))
 }

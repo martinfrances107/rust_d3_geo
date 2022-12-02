@@ -14,9 +14,9 @@ extern crate web_sys;
 
 use geo::Geometry;
 use geo::GeometryCollection;
-use geo::MultiLineString;
 use geo_types::Coord;
 use gloo_utils::format::JsValueSerdeExt;
+use rust_d3_geo::graticule::generate_mls;
 use topojson::Topology;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -26,7 +26,6 @@ use web_sys::Document;
 use web_sys::SvgsvgElement;
 use web_sys::*;
 
-use rust_d3_geo::graticule::generate as generate_graticule;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Build;
@@ -156,8 +155,7 @@ pub async fn start() -> Result<(), JsValue> {
     }
 
     // Graticule
-    let graticule =
-        Geometry::MultiLineString(MultiLineString(generate_graticule().lines().collect()));
+    let graticule = generate_mls::<f64>();
 
     let graticule_d = builder.object(&graticule);
     let class_name = "graticule";
