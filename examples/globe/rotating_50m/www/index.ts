@@ -7,7 +7,7 @@ if (perf != null) {
     perf.innerHTML = 'Render Time: ...Calculating';
 
     // Holds elapsed samples (use to compute the standard deviation).
-    let elapsedArray;
+    var elapsedArray = Array(200).fill(0);
     // index into the elapsedArray 0..199
     let index = 0;
 
