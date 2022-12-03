@@ -1,14 +1,14 @@
 [package]
-authors = { workspace = true }
-categories = { workspace = true }
-edition = { workspace = true }
+authors = ["martin <martinfrances107@hotmail.com>"]
+categories = ["graphics"]
+edition = "2021"
 description = "A example app from the rust_d3_geo package. The app is an example of code that manipulates SVG elements to display a globe."
-keywords = { workspace = true }
+keywords = ["graphics", "d3-geo"]
 name = "rust_d3_geo_example_svg"
 license = "MIT"
-readme = { workspace = true }
+readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
-version = { workspace = true }
+version = "0.1.0"
 
 
 [lib]
@@ -20,7 +20,7 @@ geo-types = { workspace = true }
 gloo-utils = { workspace = true }
 js-sys = { workspace = true }
 rust_d3_geo = { path = "../../../lib" }
-rust_topojson_client = { workspace = true }
+rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git", branch = "main" }
 topojson = { workspace = true }
 wasm-bindgen-test = { workspace = true }
 wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
