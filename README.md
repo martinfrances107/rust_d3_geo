@@ -131,7 +131,7 @@ For example http:://localhost::3000
 In this project, we have two benchmarks, based on the ring and graticule examples ( see above. )
 
 Also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voronoi)
- uses this library, and thank project contains a benchmark which contains an exact port of a benchmark in [d3-geo-voronoi ](https://github.com/Fil/d3-geo-voronoi).
+ uses this library, and that project contains a benchmark which contains an exact port of a benchmark in [d3-geo-voronoi ](https://github.com/Fil/d3-geo-voronoi).
  Based on that benchmark rust is 31% faster, or permits a 37% increase in throughput.
 </details>
 

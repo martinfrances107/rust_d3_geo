@@ -36,7 +36,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "rimraf": "^3.0.0",
     "webpack": "^5.66.0",
-    "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.11.0"
+    "webpack-cli": "^5",
+    "webpack-dev-server": "^5"
   }
 }
