@@ -83,3 +83,52 @@ where
         azimuthal_invert(p)
     }
 }
+
+#[cfg(test)]
+mod drag_and_zoom {
+    use geo::Coord;
+
+    use crate::projection::RawBase;
+    use crate::projection::ScaleSet;
+    use crate::projection::TranslateSet;
+    use crate::stream::DrainStub;
+    use crate::Transform;
+
+    use super::Orthographic;
+    use crate::in_delta::point as in_delta_point;
+
+    /// This test is not copied from javascript.
+    ///
+    /// It was used when problems were identified in
+    /// example/drag_and_zoom.
+    #[test]
+    fn drag_and_zoom() {
+        let w = 1800_f64;
+        let h = 1200_f64;
+
+        let mut b = Orthographic::<DrainStub<_>, _>::builder();
+        b.scale_set(w / 1.3_f64 / std::f64::consts::PI);
+        b.translate_set(&Coord {
+            x: w / 2_f64,
+            y: h / 2_f64,
+        });
+
+        let start = Coord {
+            x: 10_f64,
+            y: 10_f64,
+        };
+
+        let transformed1 = b.transform(&start);
+
+        let expected = Coord {
+            x: 975.370_425_850_078_2_f64,
+            y: 523.466_863_842_669_3_f64,
+        };
+
+        assert_eq!(transformed1, expected);
+
+        // Back to the start.
+        let transformed2 = b.invert(&expected);
+        assert!(in_delta_point(transformed2.into(), start.into(), 1e-6));
+    }
+}

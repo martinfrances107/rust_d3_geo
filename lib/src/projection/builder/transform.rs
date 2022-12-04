@@ -26,10 +26,10 @@ where
 
     #[inline]
     fn invert(&self, p: &Coord<T>) -> Coord<T> {
-        let pt = Coord {
-            x: p.x.to_degrees(),
-            y: p.y.to_degrees(),
-        };
-        self.project_transform.invert(&pt)
+        let inverted = self.project_transform.invert(p);
+        Coord {
+            x: inverted.x.to_degrees(),
+            y: inverted.y.to_degrees(),
+        }
     }
 }
