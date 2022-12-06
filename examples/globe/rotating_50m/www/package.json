@@ -29,7 +29,6 @@
     "rust_d3_geo_example_globe_rotating_50m": "file:../pkg"
   },
   "devDependencies": {
-    "@types/d3": "^7",
     "@types/topojson-client": "^3",
     "@typescript-eslint/eslint-plugin": "^5",
     "@typescript-eslint/parser": "^5",

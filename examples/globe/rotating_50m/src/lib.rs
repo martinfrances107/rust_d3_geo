@@ -16,20 +16,22 @@ mod utils;
 use geo::Geometry;
 use geo_types::Coord;
 use gloo_utils::format::JsValueSerdeExt;
-use rust_d3_geo::graticule::generate_mls;
 use topojson::Topology;
 
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::JsFuture;
+use web_sys::window;
 use web_sys::CanvasRenderingContext2d;
 use web_sys::Document;
 use web_sys::Request;
 use web_sys::RequestInit;
 use web_sys::RequestMode;
 use web_sys::Response;
+use web_sys::Window;
 
+use rust_d3_geo::graticule::generate_mls;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::builder::types::BuilderCircleResampleNoClip;
@@ -40,8 +42,6 @@ use rust_d3_geo::projection::RotateSet;
 use rust_d3_geo::projection::ScaleSet;
 use rust_d3_geo::projection::TranslateSet;
 use rust_topojson_client::feature::feature_from_name;
-use web_sys::window;
-use web_sys::Window;
 
 fn document() -> Result<Document, JsValue> {
     let window = match js_sys::global().dyn_into::<Window>() {
@@ -56,18 +56,6 @@ fn document() -> Result<Document, JsValue> {
         )),
     }
 }
-
-// type PB = PathBuilder<
-//     ClipCircleC<ResampleNoPCNC<Context, Orthographic<Context, f64>, f64>, f64>,
-//     ClipCircleU<ResampleNoPCNC<Context, Orthographic<Context, f64>, f64>, f64>,
-//     Context,
-//     NoPCNU<Context>,
-//     NoPCNC<Context>,
-//     Orthographic<Context, f64>,
-//     ResampleNoPCNC<Context, Orthographic<Context, f64>, f64>,
-//     ResampleNoPCNU<Context, Orthographic<Context, f64>, f64>,
-//     f64,
-// >;
 
 #[wasm_bindgen]
 #[derive(Debug)]
@@ -84,8 +72,8 @@ pub struct Renderer {
 
 #[wasm_bindgen]
 impl Renderer {
+    /// filename: of atlas - "/world-atlas/world/50m.json"
     /// yaw initial rotation.
-    /// "/world-atlas/world/50m.json"
     pub async fn new(filename: &str, yaw: f64) -> Result<Renderer, JsValue> {
         utils::set_panic_hook();
 
@@ -124,21 +112,11 @@ impl Renderer {
             .unwrap()
             .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
 
-        // let context: Context = Context::new(context2d.clone());
-        // let pb = PathBuilder::new(context);
-
         let width: f64 = canvas.width().into();
         let height: f64 = canvas.height().into();
 
         let countries =
             feature_from_name(&topology, "countries").expect("Did not extract geometry");
-
-        // let performance = match w.performance() {
-        //     Some(p) => p,
-        //     None => {
-        //         return Err(JsValue::from_str("new() Could not get performance."));
-        //     }
-        // };
 
         let mut ob = Orthographic::builder();
         ob.scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
@@ -186,90 +164,3 @@ impl Renderer {
         self.yaw -= 0.2f64;
     }
 }
-
-// /// Entry point
-// #[wasm_bindgen(start)]
-// pub async fn start() -> Result<(), JsValue> {
-//     let document = document()?;
-//     let window = web_sys::window().expect("Failed to get window");
-
-//     // Get data from world map.
-//     let mut opts = RequestInit::new();
-//     opts.method("GET");
-//     opts.mode(RequestMode::Cors);
-//     let request = Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
-
-//     let resp_value = JsFuture::from(window.fetch_with_request(&request)).await?;
-//     let resp: Response = resp_value.dyn_into().unwrap();
-
-//     let json = JsFuture::from(resp.json()?).await?;
-
-//     let topology =
-//         JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
-
-//     // Grab canvas.
-//     let canvas = document
-//         .get_element_by_id("c")
-//         .unwrap()
-//         .dyn_into::<web_sys::HtmlCanvasElement>()?;
-
-//     let context_raw = canvas
-//         .get_context("2d")?
-//         .unwrap()
-//         .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
-
-//     let width: f64 = canvas.width().into();
-//     let height: f64 = canvas.height().into();
-
-//     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
-
-//     let mut yaw = 300_f64;
-
-//     let mut ob = Orthographic::builder();
-//     ob.scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
-//         .translate_set(&Coord {
-//             x: width / 2_f64,
-//             y: height / 2_f64,
-//         });
-
-//     // Graticule
-//     let graticule =
-//        generate_mls::<f64>();
-
-//     spawn_local(async move {
-//         let mut count = 0;
-
-//         IntervalStream::new(20)
-//             .take_while(|_| {
-//                 count += 1;
-//                 future::ready(count < 100)
-//             })
-//             .for_each(|_| {
-//                 let context = Context::new(context_raw.clone());
-//                 let pb = PathBuilder::new(context);
-//                 ob.rotate_set(&[yaw, -45f64, 0f64]);
-
-//                 let ortho = ob.build();
-//                 context_raw.clear_rect(0f64, 0f64, width, height);
-
-//                 let mut path = pb.build(ortho);
-//                 context_raw.set_stroke_style(&"#333".into());
-//                 context_raw.begin_path();
-//                 path.object(&countries);
-//                 context_raw.stroke();
-
-//                 context_raw.begin_path();
-//                 context_raw.set_stroke_style(&"#ccc".into());
-//                 path.object(&graticule);
-//                 context_raw.stroke();
-//                 yaw -= 0.2f64;
-
-//                 console_log!("yaw :{}", yaw);
-
-//                 future::ready(())
-//             })
-//             .await;
-//     });
-
-//     Ok(())
-// }
