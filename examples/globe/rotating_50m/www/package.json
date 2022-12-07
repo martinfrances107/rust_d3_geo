@@ -4,8 +4,9 @@
   "description": "Renders a world map to a canvas element.",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "eslint": "eslint '*.js'",
+    "build": "rimraf dist && NODE_ENV=production webpack --config ./webpack.production.config.js --progress --profile",
+    "serve": "npx serve dist",
+    "eslint": "*.ts",
     "start": "webpack-dev-server"
   },
   "repository": {
@@ -26,22 +27,27 @@
   "homepage": "https://github.com/martinfrances107/rust_d3_geo/#readme",
   "dependencies": {
     "request": "^2.79.0",
-    "rust_d3_geo_example_globe_rotating_50m": "file:../pkg"
+    "rimraff": "^0.0.1-security",
+    "rust_d3_geo_example_globe_rotating_50m": "file:../pkg",
+    "serve": "^14.1.2"
   },
   "devDependencies": {
     "@types/topojson-client": "^3",
-    "@typescript-eslint/eslint-plugin": "^5",
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
     "@typescript-eslint/parser": "^5",
-    "@wasm-tool/wasm-pack-plugin": "^1",
     "compression-webpack-plugin": "^10",
     "copy-webpack-plugin": "^11",
-    "eslint": "^8",
+    "eslint": "^8.29.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7",
     "eslint-plugin-react-hooks": "^4",
     "eslint-webpack-plugin": "^3",
     "topojson-client": "^3",
-    "ts-loader": "^9",
-    "typescript": "^4",
+    "ts-loader": "^9.4.2",
+    "typescript": "^4.9.3",
     "webpack-cli": "^5",
     "webpack-dev-server": "^4"
   }

@@ -1,5 +1,6 @@
+const zlib = require('zlib')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const ESLintPlugin = require('eslint-webpack-plugin')
+const CompressionPlugin = require('compression-webpack-plugin')
 const path = require('path')
 
 module.exports = {
@@ -22,16 +23,28 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js']
   },
-  mode: 'development',
-  devtool: 'inline-source-map',
+  mode: 'production',
   experiments: { syncWebAssembly: true },
   plugins: [
-    new ESLintPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'index.html' },
         { from: 'public/world-atlas', to: 'world-atlas' }
       ]
+    }),
+    new CompressionPlugin({
+      filename: '[path][base].br',
+      algorithm: 'brotliCompress',
+      test: /\.(js|json|css|html)$/,
+      compressionOptions: {
+        params: {
+          [zlib.constants.BROTLI_PARAM_QUALITY]: 11
+        }
+      },
+      threshold: 10240,
+      minRatio: 0.8,
+      deleteOriginalAssets: false
     })
+
   ]
 }
