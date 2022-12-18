@@ -100,7 +100,7 @@ mod drag_and_zoom {
     /// This test is not copied from javascript.
     ///
     /// It was used when problems were identified in
-    /// example/drag_and_zoom.
+    /// `example/drag_and_zoom`.
     #[test]
     fn drag_and_zoom() {
         let w = 1800_f64;

@@ -1,0 +1,53 @@
+[package]
+authors = ["martin <martinfrances107@hotmail.com>"]
+categories = ["graphics"]
+description = "A example app from the rust_d3_geo package. It shows how rust can interact with the browsers timer API."
+edition = "2021"
+# license = { workspace = true }
+license = "MIT"
+keywords = ["graphics", "d3-geo"]
+name = "rust_d3_geo_example_globe_drag_and_zoom"
+readme = "README.md"
+repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+js-sys = { workspace = true }
+geo = { workspace = true }
+gloo-utils = { workspace = true }
+gloo-timers = { version = "~0.2", features = ["futures"] }
+futures = "~0.3"
+rust_d3_geo = { path = "../../../lib" }
+rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git", branch = "main" }
+topojson = { workspace = true }
+wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
+wasm-bindgen-test = { workspace = true }
+wasm-bindgen-futures = { workspace = true }
+serde = { version = "~1", features = ["derive"] }
+serde-wasm-bindgen = "~0.4"
+
+[dependencies.web-sys]
+workspace = true
+features = [
+    "Attr",
+    "console",
+    "CanvasRenderingContext2d",
+    "Document",
+    "Element",
+    "Event",
+    "Headers",
+    "EventTarget",
+    "HtmlCanvasElement",
+    "HtmlElement",
+    "HtmlInputElement",
+    "Node",
+    "Request",
+    "RequestInit",
+    "RequestMode",
+    "Response",
+    "Text",
+    "Window",
+]

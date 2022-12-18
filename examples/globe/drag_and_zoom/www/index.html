@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Globe(Canvas)</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Globe example for the rust d3 geo project.(Canvas)">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+      font-size: 14px;
+      color: #333;
+    }
+
+    canvas {
+      border: black;
+      border-width: 2px;
+      border-style: solid;
+    }
+
+    #perf {
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Example: Drag and Zoom(Canvas)</h1>
+  <h2>Rust d3 geo</h2>
+  <noscript>
+    <h2>This page contains webassembly and javascript content, please enable javascript in your browser.</h2>
+  </noscript>
+
+  <p>
+    This example shows a globe based on a 50m resolution, a resolution higher than than could be done with the
+    javascript.
+  </p>
+
+  <p id="perf">Loading..</p>
+
+  <p>Position: Lat<span id="lat"></span> Long <span id="long"></span></p>
+  <p>Rotattion: <span id="rotation"></span></p>
+
+  <p>Position: Lat<span id="lat2"></span> Long <span id="long2"></span></p>
+  <p>Rotattion: <span id="rotation"></span></p>
+
+  <p> The mean render time and standard deviation are based on the last 200 frames. </p>
+
+  <canvas id="c" width="1800" height="1200"></canvas>
+
+  <script type="module" src="./bootstrap.js"></script>
+</body>
+
+</html>

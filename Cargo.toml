@@ -3,6 +3,7 @@ members = [
     "./lib",
     "./examples/globe/canvas",
     "./examples/globe/rotating_50m",
+    "./examples/globe/drag_and_zoom",
     "./examples/globe/svg",
     "./examples/projections",
     "./examples/ring",
