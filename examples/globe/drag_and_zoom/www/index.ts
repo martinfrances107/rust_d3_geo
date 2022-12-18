@@ -94,7 +94,7 @@ if (perf != null) {
         console.log('render loop')
         context.clearRect(0, 0, 1800, 1200)
 
-        renderer.render(true)
+        renderer.render(false)
         renderer.render_point(gpos0[0], gpos0[1])
         renderer.render_point(gpos1[0], gpos1[1])
       }

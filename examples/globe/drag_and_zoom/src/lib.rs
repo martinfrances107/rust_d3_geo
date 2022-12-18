@@ -235,29 +235,29 @@ impl Renderer {
     }
 
     /// Render the next frame.
-    pub fn render(&self, solid: bool) {
+    pub fn render(&mut self, solid: bool) {
         self.context2d
             .clear_rect(0f64, 0f64, self.width, self.height);
         let context: Context = Context::new(self.context2d.clone());
 
         if !solid {
-            // let r = self.ob.rotate();
-            // self.ob.reflect_x_set(REFLECT::Flipped);
-            // self.ob.rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
+            let r = self.ob.rotate();
+            self.ob.reflect_x_set(REFLECT::Flipped);
+            self.ob.rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
 
-            // let ortho = self.ob.build();
-            // let pb = PathBuilder::new(context.clone());
+            let ortho = self.ob.build();
+            let pb = PathBuilder::new(context.clone());
 
-            // let mut path = pb.build(ortho);
-            // self.context2d.set_stroke_style(&"#111".into());
-            // self.context2d.set_fill_style(&"#111".into());
-            // self.context2d.begin_path();
-            // path.object(&self.countries);
-            // // self.context2d.stroke();
+            let mut path = pb.build(ortho);
+            self.context2d.set_stroke_style(&"#888".into());
+            self.context2d.set_fill_style(&"#888".into());
+            self.context2d.begin_path();
+            path.object(&self.countries);
+            self.context2d.stroke();
             // self.context2d.fill();
 
-            // self.ob.reflect_x_set(REFLECT::Unflipped);
-            // self.ob.rotate3_set(&r);
+            self.ob.reflect_x_set(REFLECT::Unflipped);
+            self.ob.rotate3_set(&r);
         }
 
         let ortho = self.ob.build();
@@ -265,7 +265,7 @@ impl Renderer {
         let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);
-        self.context2d.set_stroke_style(&"#000".into());
+        // self.context2d.set_stroke_style(&"#000".into());
         self.context2d.set_fill_style(&"#000".into());
         self.context2d.begin_path();
         path.object(&self.countries);
