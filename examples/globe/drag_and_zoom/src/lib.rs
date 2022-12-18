@@ -1,6 +1,5 @@
 #![deny(clippy::all)]
 #![warn(clippy::pedantic)]
-#![warn(clippy::nursery)]
 #![warn(clippy::cargo)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
@@ -270,7 +269,7 @@ impl Renderer {
         self.context2d.begin_path();
         path.object(&self.countries);
         self.context2d.stroke();
-        // self.context2d.fill();
+        self.context2d.fill();
 
         self.context2d.begin_path();
         self.context2d.set_stroke_style(&"#ccc".into());

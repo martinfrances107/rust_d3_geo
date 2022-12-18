@@ -18,12 +18,12 @@ if (perf != null) {
 
       const canvas = canvasArray[0]
 
-      let o0 /// starting rotation.
+      let o0: number[] /// starting rotation.
       let gpos0 = Array(2).fill(0)
       let gpos1 = Array(2).fill(0)
       const d3Canvas = select('#c')
 
-      function dragstarted (e: any) {
+      function dragstarted (e: any): void {
         // console.log('drag started')
         const canvasxy = pointer(e)
 
@@ -39,18 +39,18 @@ if (perf != null) {
         sLong.innerText = gpos0[1]
 
         o0 = renderer.rotate()
-        const s_rotation = document.getElementById('rotation')
-        if (s_rotation == null) {
+        const sRotation = document.getElementById('rotation')
+        if (sRotation == null) {
           return
         }
-        s_rotation.innerText = o0[0] + ' , ' + o0[1] + ' , ' + o0[2]
+        sRotation.innerText = `${o0[0]} , ${o0[1]} , ${o0[2]} `
         renderLoop()
       }
 
-      function dragged (e: any) {
+      function dragged (e: any): void {
         // console.log('dragged')
 
-        // canvas is needed here as a input, not in dragstarted 
+        // canvas is needed here as a input, not in dragstarted
         // no sure why...
         const canvasxy = pointer(e, canvas)
 
@@ -74,7 +74,7 @@ if (perf != null) {
         renderLoop()
       }
 
-      function dragended (e: any) {
+      function dragended (e: any): void {
         // console.log('drag end')
       }
 
@@ -90,7 +90,7 @@ if (perf != null) {
         return
       }
 
-      const renderLoop = () => {
+      const renderLoop = (): void => {
         console.log('render loop')
         context.clearRect(0, 0, 1800, 1200)
 
@@ -100,5 +100,5 @@ if (perf != null) {
       }
 
       renderLoop()
-    })
+    }).catch((e) => { console.log('Did not receive Renderer', e) })
 }
