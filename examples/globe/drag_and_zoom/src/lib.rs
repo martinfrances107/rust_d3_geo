@@ -23,6 +23,7 @@ use js_sys::Array;
 use rust_d3_geo::graticule::generate_mls;
 use rust_d3_geo::projection::ReflectSet;
 use rust_d3_geo::projection::RotateGet;
+use rust_d3_geo::projection::ScaleGet;
 use rust_d3_geo::projection::REFLECT;
 use topojson::Topology;
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -203,6 +204,17 @@ impl Renderer {
     pub fn transform(&self, p: &ExportedPoint) -> ExportedPoint {
         let p_out = self.ob.transform(&Coord { x: p.x, y: p.y });
         ExportedPoint::new(p_out.x, p_out.y)
+    }
+
+    /// Set the builder scale.
+    pub fn scale_set(&mut self, scale: f64) {
+        self.ob.scale_set(scale);
+    }
+
+    /// Set the builder scale.
+    #[must_use]
+    pub fn scale(&self) -> f64 {
+        self.ob.scale()
     }
 
     /// Returns a coordinate based on the renderer's invert transform.

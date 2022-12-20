@@ -30,7 +30,8 @@
     "d3-selection": "^3",
     "request": "^2",
     "rust_d3_geo_example_globe_drag_and_zoom": "file:../pkg",
-    "serve": "^14"
+    "serve": "^14",
+    "versor": "^0.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",

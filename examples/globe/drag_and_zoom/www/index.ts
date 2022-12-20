@@ -3,8 +3,22 @@ import { drag } from 'd3-drag'
 import { pointer, select } from 'd3-selection'
 import { eulerAngles } from './mathsfunctions.js'
 
+class Clamp {
+  #min: number
+  #max: number
+  constructor(min: number, max: number) {
+    this.#min = min
+    this.#max = max
+  }
+
+  apply (x: number): number {
+    return Math.min(Math.max(this.#min, x), this.#max)
+  }
+}
+
 const perf = document.getElementById('perf')
 
+const clamp = new Clamp(400, 600)
 if (perf != null) {
   perf.innerHTML = 'Render Time: ...Calculating'
 
@@ -17,6 +31,23 @@ if (perf != null) {
       }
 
       const canvas = canvasArray[0]
+
+      let scale = renderer.scale()
+      const zoom = (event: WheelEvent): void => {
+        event.preventDefault()
+
+        scale += event.deltaY * -0.5
+
+        // Restrict scale.
+        scale = clamp.apply(scale)
+
+        // Apply scale transform.
+        console.log(scale)
+        renderer.scale_set(scale)
+        renderLoop()
+      }
+
+      canvas.onwheel = zoom
 
       let o0: number[] /// starting rotation.
       let gpos0 = Array(2).fill(0)

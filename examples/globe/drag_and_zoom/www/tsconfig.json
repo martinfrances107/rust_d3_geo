@@ -7,8 +7,7 @@
     "lib": [
       "dom"
     ],
-    "target": "es5",
+    "target": "es2015",
     "allowJs": true,
-    "module": "ES2015"
   },
 }
