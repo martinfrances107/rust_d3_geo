@@ -87,7 +87,7 @@ impl<DRAIN> Transform for Mercator<DRAIN> {
     fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
         Coord {
             x: p.x,
-            y: 2f64 * (p.y.exp()).atan() - f64::FRAC_PI_2(),
+            y: 2f64.mul_add((p.y.exp()).atan(), -f64::FRAC_PI_2()),
         }
     }
 }

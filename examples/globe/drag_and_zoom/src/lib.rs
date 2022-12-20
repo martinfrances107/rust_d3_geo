@@ -68,7 +68,7 @@ fn document() -> Result<Document, JsValue> {
     )
 }
 
-/// Used to export a Coord<f64> to javascrtipt
+/// Used to export a Coord<f64> to javascript.
 #[derive(Debug)]
 #[wasm_bindgen]
 pub struct ExportedPoint {
@@ -172,7 +172,7 @@ impl Renderer {
             feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
         let mut ob = Orthographic::builder();
-        ob.scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
+        ob.scale_set(width / 1.3_f64 / std::f64::consts::PI)
             .translate_set(&Coord {
                 x: width / 2_f64,
                 y: height / 2_f64,
@@ -260,12 +260,12 @@ impl Renderer {
             let pb = PathBuilder::new(context.clone());
 
             let mut path = pb.build(ortho);
-            self.context2d.set_stroke_style(&"#888".into());
+            self.context2d.set_stroke_style(&"#777".into());
             self.context2d.set_fill_style(&"#888".into());
             self.context2d.begin_path();
             path.object(&self.countries);
             self.context2d.stroke();
-            // self.context2d.fill();
+            self.context2d.fill();
 
             self.ob.reflect_x_set(REFLECT::Unflipped);
             self.ob.rotate3_set(&r);
@@ -276,11 +276,10 @@ impl Renderer {
         let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);
-        // self.context2d.set_stroke_style(&"#000".into());
         self.context2d.set_fill_style(&"#000".into());
+        self.context2d.set_stroke_style(&"#111".into());
         self.context2d.begin_path();
         path.object(&self.countries);
-        self.context2d.stroke();
         self.context2d.fill();
 
         self.context2d.begin_path();

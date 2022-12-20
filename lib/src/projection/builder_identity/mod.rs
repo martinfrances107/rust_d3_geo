@@ -50,7 +50,7 @@ where
     pub(super) postclip: PCNU,
 }
 
-impl<DRAIN, T> Builder<DRAIN, Identity<Unconnected>, T>
+impl<DRAIN, T> Default for Builder<DRAIN, Identity<Unconnected>, T>
 where
     T: CoordFloat + Default + FloatConst,
 {
@@ -61,7 +61,7 @@ where
     /// unwrap() is used here but a panic will never happen as 360 will always be converted into T.
     #[inline]
     #[must_use]
-    pub fn default() -> Self {
+    fn default() -> Self {
         Self {
             p_drain: PhantomData::<DRAIN>,
 

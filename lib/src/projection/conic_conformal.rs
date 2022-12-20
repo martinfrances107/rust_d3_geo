@@ -48,7 +48,7 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
 
         Coord {
             x: r * (self.n * p.x).sin(),
-            y: self.f - r * (self.n * p.x).cos(),
+            y: r.mul_add(-(self.n * p.x).cos(), self.f),
         }
     }
 

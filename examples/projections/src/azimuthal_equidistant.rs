@@ -37,7 +37,7 @@ pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsVa
     let pb = PathBuilder::new(context);
 
     let projector = AzimuthalEquiDistant::<Context, f64>::builder()
-        .scale_set(width as f64 / 3_f64)
+        .scale_set(width / 3_f64)
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

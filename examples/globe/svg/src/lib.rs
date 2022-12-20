@@ -93,7 +93,7 @@ pub async fn start() -> Result<(), JsValue> {
     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
     let ortho = Orthographic::builder()
-        .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
+        .scale_set(width / 1.3_f64 / std::f64::consts::PI)
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

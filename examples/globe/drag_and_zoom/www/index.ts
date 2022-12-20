@@ -6,7 +6,7 @@ import { eulerAngles } from './mathsfunctions.js'
 class Clamp {
   #min: number
   #max: number
-  constructor(min: number, max: number) {
+  constructor (min: number, max: number) {
     this.#min = min
     this.#max = max
   }
@@ -18,7 +18,7 @@ class Clamp {
 
 const perf = document.getElementById('perf')
 
-const clamp = new Clamp(400, 600)
+const clamp = new Clamp(400, 800)
 if (perf != null) {
   perf.innerHTML = 'Render Time: ...Calculating'
 

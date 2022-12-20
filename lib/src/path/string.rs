@@ -113,14 +113,14 @@ where
         let y_rounded = (y * 1_000_000_f64).round() / 1_000_000_f64;
         match self.point {
             PointState::AtLineStart => {
-                self.string.push(format!("M{},{}", x_rounded, y_rounded));
+                self.string.push(format!("M{x_rounded},{y_rounded}"));
                 self.point = PointState::LineInProgress;
             }
             PointState::LineInProgress => {
-                self.string.push(format!("L{},{}", x_rounded, y_rounded));
+                self.string.push(format!("L{x_rounded},{y_rounded}"));
             }
             PointState::RenderingPoints => {
-                self.string.push(format!("M{},{}", x_rounded, y_rounded));
+                self.string.push(format!("M{x_rounded},{y_rounded}"));
                 self.string.push(self.circle.clone());
             }
         }
