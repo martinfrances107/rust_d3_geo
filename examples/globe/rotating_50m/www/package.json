@@ -29,7 +29,7 @@
     "request": "^2.79.0",
     "rimraff": "^0.0.1-security",
     "rust_d3_geo_example_globe_rotating_50m": "file:../pkg",
-    "serve": "^14.1.2"
+    "serve": "^14"
   },
   "devDependencies": {
     "@types/topojson-client": "^3",

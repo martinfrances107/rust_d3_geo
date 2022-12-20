@@ -20,37 +20,37 @@ use geo::Geometry;
 use geo::Point;
 use gloo_utils::format::JsValueSerdeExt;
 use js_sys::Array;
-use rust_d3_geo::graticule::generate_mls;
-use rust_d3_geo::projection::ReflectSet;
-use rust_d3_geo::projection::RotateGet;
-use rust_d3_geo::projection::ScaleGet;
-use rust_d3_geo::projection::REFLECT;
+use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::console_log;
+use web_sys::window;
 use web_sys::CanvasRenderingContext2d;
 use web_sys::Document;
 use web_sys::Request;
 use web_sys::RequestInit;
 use web_sys::RequestMode;
 use web_sys::Response;
+use web_sys::Window;
 
+use rust_d3_geo::graticule::generate_mls;
 use rust_d3_geo::path::builder::Builder as PathBuilder;
 use rust_d3_geo::path::context::Context;
 use rust_d3_geo::projection::builder::types::BuilderCircleResampleNoClip;
 use rust_d3_geo::projection::orthographic::Orthographic;
 use rust_d3_geo::projection::Build;
 use rust_d3_geo::projection::RawBase;
+use rust_d3_geo::projection::ReflectSet;
+use rust_d3_geo::projection::RotateGet;
 use rust_d3_geo::projection::RotateSet;
+use rust_d3_geo::projection::ScaleGet;
 use rust_d3_geo::projection::ScaleSet;
 use rust_d3_geo::projection::TranslateSet;
+use rust_d3_geo::projection::REFLECT;
 use rust_d3_geo::Transform;
-use rust_topojson_client::feature::feature_from_name;
-use web_sys::window;
-use web_sys::Window;
 
 fn document() -> Result<Document, JsValue> {
     let window = match js_sys::global().dyn_into::<Window>() {
