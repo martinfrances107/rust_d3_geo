@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/martinfrances107/rust_d3_geo/#readme",
   "dependencies": {
-    "benchmark": "file:../pkg",
+    "benchmark": "file:./pkg",
     "request": "^2"
   },
   "devDependencies": {

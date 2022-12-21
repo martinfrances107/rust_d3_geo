@@ -46,7 +46,7 @@
     "compression-webpack-plugin": "^10",
     "copy-webpack-plugin": "^11",
     "eslint": "^8.29.0",
-    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-config-standard-with-typescript": "^24",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.6.0",
     "eslint-plugin-promise": "^6.1.1",
