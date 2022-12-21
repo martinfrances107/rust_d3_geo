@@ -18,10 +18,6 @@
       border-width: 2px;
       border-style: solid;
     }
-
-    #perf {
-      font-weight: bold;
-    }
   </style>
   <script type="module" src="./bootstrap.js"></script>
 </head>
@@ -34,12 +30,15 @@
     <h2>This page contains webassembly and javascript content, please enable javascript in your browser.</h2>
   </noscript>
 
+  <input type="checkbox" id="is_solid" name="is_solid" value="is_solid" />
+  <label for="is_solid">Solid</label>
+
   <p>
     This example shows a globe based on a 50m resolution, a resolution higher than than could be done with the
-    javascript.
+    javascript. Use the MouseWheel to scale the globe.
   </p>
 
-  <canvas id="c" width="1800" height="1200"></canvas>
+  <canvas id="c" width="1800px" height="1200"></canvas>
 
 </body>
 

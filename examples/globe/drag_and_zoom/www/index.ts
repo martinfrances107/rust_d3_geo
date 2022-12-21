@@ -16,7 +16,10 @@ class Clamp {
   }
 }
 
-const clamp = new Clamp(400, 800)
+const clamp = new Clamp(400, 900)
+
+let scale: number
+let isSolid: boolean
 
 console.log('wasm is imported')
 Renderer.new('./world-atlas/world/50m.json')
@@ -28,7 +31,7 @@ Renderer.new('./world-atlas/world/50m.json')
 
     const canvas = canvasArray[0]
 
-    let scale = renderer.scale()
+    scale = renderer.scale()
     const zoom = (event: WheelEvent): void => {
       event.preventDefault()
 
@@ -38,10 +41,22 @@ Renderer.new('./world-atlas/world/50m.json')
       scale = clamp.apply(scale)
 
       // Apply scale transform.
-      console.log(scale)
       renderer.scale_set(scale)
       renderLoop()
     }
+
+    const isSolidElem = document.getElementById('is_solid')
+    let isSolidInput: HTMLInputElement
+    if (isSolidElem === null) {
+      return
+    } else {
+      isSolidInput = isSolidElem as HTMLInputElement
+    }
+
+    isSolidElem.addEventListener('click', (e) => {
+      isSolid = isSolidInput.checked
+      renderLoop()
+    })
 
     canvas.onwheel = zoom
 
@@ -108,7 +123,7 @@ Renderer.new('./world-atlas/world/50m.json')
     const renderLoop = (): void => {
       context.clearRect(0, 0, 1800, 1200)
 
-      renderer.render(false)
+      renderer.render(isSolid)
       renderer.render_point(gpos0[0], gpos0[1])
       renderer.render_point(gpos1[0], gpos1[1])
     }
