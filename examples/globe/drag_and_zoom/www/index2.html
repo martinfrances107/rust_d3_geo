@@ -3,7 +3,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/d3@4"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
 
 	<style type="text/css">
@@ -167,23 +167,22 @@
 		const width = 960,
 			height = 500;
 		const r = 250;
-
-		const projection = d3.geo.orthographic()
+		const projection = d3.geoOrthographic()
 			.scale( 250 )
 			.translate( [width / 2, height / 2] )
 			.clipAngle( 90 );
 
-		const path = d3.geo.path()
+		const path = d3.geoPath()
 			.projection( projection );
 
 		const svg = d3.select( "body" ).append( "svg" )
 			.attr( "width", width )
 			.attr( "height", height );
 
-		const drag = d3.behavior.drag()
-			.on( "dragstart", dragstarted )
+		const drag = d3.drag()
+			.on( "start", dragstarted )
 			.on( "drag", dragged )
-			.on( "dragend", dragended );
+			.on( "end", dragended );
 
 		svg.call( drag );
 
@@ -191,7 +190,6 @@
 		var gpos0, o0;
 
 		function dragstarted () {
-
 			gpos0 = projection.invert( d3.mouse( this ) );
 			o0 = projection.rotate();
 
@@ -202,7 +200,6 @@
 		}
 
 		function dragged () {
-
 			const gpos1 = projection.invert( d3.mouse( this ) );
 
 			o0 = projection.rotate();
