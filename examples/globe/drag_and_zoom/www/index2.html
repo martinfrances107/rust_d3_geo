@@ -3,7 +3,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<script src="https://cdn.jsdelivr.net/npm/d3@4"></script>
+	<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
 
 	<style type="text/css">
@@ -171,7 +171,6 @@
 			.scale( 250 )
 			.translate( [width / 2, height / 2] )
 			.clipAngle( 90 );
-
 		const path = d3.geoPath()
 			.projection( projection );
 
@@ -186,11 +185,10 @@
 
 		svg.call( drag );
 
-
 		var gpos0, o0;
 
-		function dragstarted () {
-			gpos0 = projection.invert( d3.mouse( this ) );
+		function dragstarted ( e ) {
+			gpos0 = projection.invert( d3.pointer( e ) );
 			o0 = projection.rotate();
 
 			svg.insert( "path" )
@@ -199,8 +197,8 @@
 				.attr( "d", path );
 		}
 
-		function dragged () {
-			const gpos1 = projection.invert( d3.mouse( this ) );
+		function dragged ( e ) {
+			const gpos1 = projection.invert( d3.pointer( e ) );
 
 			o0 = projection.rotate();
 
@@ -217,21 +215,23 @@
 			svg.selectAll( ".point" ).remove();
 		}
 
-		d3.json( "50m.json", function ( error, world ) {
-			if ( error ) throw error;
-
+		d3.json( "50m.json" ).then( ( world ) => {
 			svg.append( "path" )
 				.datum( topojson.feature( world, world.objects.land ) )
 				.attr( "class", "land" )
 				.attr( "d", path );
 
-			borders = topojson.mesh( world, world.objects.countries, function ( a, b ) { return a !== b; } );
+			const borders = topojson.mesh( world, world.objects.countries, function ( a, b ) { return a !== b; } );
 
 			svg.append( "path" )
 				.datum( borders )
 				.attr( "class", "border" )
 				.attr( "d", path );
-		} );
+		} ).catch(
+			( error ) => {
+				throw error
+			}
+		);
 
 	</script>
 
