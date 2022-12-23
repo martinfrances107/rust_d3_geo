@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+
+	<style type="text/css">
+		.land {
+			fill: rgba(0, 0, 0, 0.17);
+		}
+
+		.border {
+			stroke: rgba(255, 255, 255, 0.7);
+			fill: none;
+		}
+	</style>
+	<script type="module">
+
+		/***** ALL MATH FUNCTIONS ****/
+
+		const to_radians = Math.PI / 180;
+		const to_degrees = 180 / Math.PI;
+
+
+		// Helper function: cross product of two vectors v0&v1
+		function cross ( v0, v1 ) {
+			return [v0[1] * v1[2] - v0[2] * v1[1], v0[2] * v1[0] - v0[0] * v1[2], v0[0] * v1[1] - v0[1] * v1[0]];
+		}
+
+		//Helper function: dot product of two vectors v0&v1
+		function dot ( v0, v1 ) {
+			for ( var i = 0, sum = 0; v0.length > i; ++i ) sum += v0[i] * v1[i];
+			return sum;
+		}
+
+		// Helper function: 
+		// This function converts a [lon, lat] coordinates into a [x,y,z] coordinate 
+		// the [x, y, z] is Cartesian, with origin at lon/lat (0,0) center of the earth
+		function lonlat2xyz ( coord ) {
+
+			const lon = coord[0] * to_radians;
+			const lat = coord[1] * to_radians;
+
+			const x = Math.cos( lat ) * Math.cos( lon );
+
+			const y = Math.cos( lat ) * Math.sin( lon );
+
+			const z = Math.sin( lat );
+
+			return [x, y, z];
+		}
+
+		// Helper function: 
+		// This function computes a quaternion representation for the rotation between to vectors
+		// https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Euler_angles_.E2.86.94_Quaternion
+		function quaternion ( v0, v1 ) {
+
+			if ( v0 && v1 ) {
+
+				var w = cross( v0, v1 ),  // vector pendicular to v0 & v1
+					w_len = Math.sqrt( dot( w, w ) ); // length of w     
+
+				if ( w_len == 0 )
+					return;
+
+				const theta = .5 * Math.acos( Math.max( -1, Math.min( 1, dot( v0, v1 ) ) ) );
+				const qi = w[2] * Math.sin( theta ) / w_len;
+				const qj = - w[1] * Math.sin( theta ) / w_len;
+				const qk = w[0] * Math.sin( theta ) / w_len;
+				const qr = Math.cos( theta );
+
+				return theta && [qr, qi, qj, qk];
+			}
+		}
+
+		// Helper function: 
+		// This functions converts euler angles to quaternion
+		// https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Euler_angles_.E2.86.94_Quaternion
+		function euler2quat ( e ) {
+
+			if ( !e ) return;
+
+			const roll = .5 * e[0] * to_radians,
+				pitch = .5 * e[1] * to_radians,
+				yaw = .5 * e[2] * to_radians,
+
+				sr = Math.sin( roll ),
+				cr = Math.cos( roll ),
+				sp = Math.sin( pitch ),
+				cp = Math.cos( pitch ),
+				sy = Math.sin( yaw ),
+				cy = Math.cos( yaw ),
+
+				qi = sr * cp * cy - cr * sp * sy,
+				qj = cr * sp * cy + sr * cp * sy,
+				qk = cr * cp * sy - sr * sp * cy,
+				qr = cr * cp * cy + sr * sp * sy;
+
+			return [qr, qi, qj, qk];
+		}
+
+		// This functions computes a quaternion multiply
+		// Geometrically, it means combining two quant rotations
+		// http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/arithmetic/index.htm
+		function quatMultiply ( q1, q2 ) {
+			if ( !q1 || !q2 ) return;
+
+			var a = q1[0],
+				b = q1[1],
+				c = q1[2],
+				d = q1[3],
+				e = q2[0],
+				f = q2[1],
+				g = q2[2],
+				h = q2[3];
+
+			return [
+				a * e - b * f - c * g - d * h,
+				b * e + a * f + c * h - d * g,
+				a * g - b * h + c * e + d * f,
+				a * h + b * g - c * f + d * e];
+
+		}
+
+		// This function computes quaternion to euler angles
+		// https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Euler_angles_.E2.86.94_Quaternion
+		function quat2euler ( t ) {
+
+			if ( !t ) return;
+
+			return [Math.atan2( 2 * ( t[0] * t[1] + t[2] * t[3] ), 1 - 2 * ( t[1] * t[1] + t[2] * t[2] ) ) * to_degrees,
+			Math.asin( Math.max( -1, Math.min( 1, 2 * ( t[0] * t[2] - t[3] * t[1] ) ) ) ) * to_degrees,
+			Math.atan2( 2 * ( t[0] * t[3] + t[1] * t[2] ), 1 - 2 * ( t[2] * t[2] + t[3] * t[3] ) ) * to_degrees
+			]
+		}
+
+		/*  This function computes the euler angles when given two vectors, and a rotation
+			This is really the only math function called with d3 code.
+		
+			v0 - starting pos in lon/lat, commonly obtained by projection.invert
+			v1 - ending pos in lon/lat, commonly obtained by projection.invert
+			o0 - the projection rotation in euler angles at starting pos (v0), commonly obtained by projection.rotate
+		*/
+
+		function eulerAngles ( v0, v1, o0 ) {
+
+			/*
+				The math behind this:
+				- first calculate the quaternion rotation between the two vectors, v0 & v1
+				- then multiply this rotation onto the original rotation at v0
+				- finally convert the resulted quat angle back to euler angles for d3 to rotate
+			*/
+
+			const t = quatMultiply( euler2quat( o0 ), quaternion( lonlat2xyz( v0 ), lonlat2xyz( v1 ) ) );
+			return quat2euler( t );
+		}
+
+
+		/**************end of math functions**********************/
+
+
+
+		d3.json( "50m.json" ).then( ( world ) => {
+
+			console.log( world.objects )
+			const land = topojson.mesh( world, world.objects.land );
+
+			const width = 960,
+				height = 500;
+			const r = 250;
+
+			const canvasSelect = d3.select( "#c" )
+
+			const canvasArray = document.getElementsByTagName( 'canvas' )
+			if ( canvasArray.length !== 1 ) {
+				console.log( "length", canvasArray.length )
+			}
+
+			const canvas = canvasArray[0]
+			const context2d = canvas.getContext( '2d' )
+
+			const projection = d3.geoOrthographic()
+				.scale( 250 )
+				.translate( [width / 2, height / 2] )
+				.clipAngle( 90 );
+			const path = d3.geoPath()
+				.context( context2d )
+				.projection( projection );
+
+			const drag = d3.drag()
+				.on( "start", dragstarted )
+				.on( "drag", dragged )
+				.on( "end", dragended );
+
+			canvasSelect.call( drag );
+
+			var gpos0, o0;
+
+			function dragstarted ( e ) {
+				console.log( "dragstarted" )
+				gpos0 = projection.invert( d3.pointer( e ) );
+				o0 = projection.rotate();
+
+				// svg.insert( "path" )
+				// 	.datum( { type: "Point", coordinates: gpos0 } )
+				// 	.attr( "class", "point" )
+				// 	.attr( "d", path );
+			}
+
+			function dragged ( e ) {
+				console.log( "draged" )
+				const gpos1 = projection.invert( d3.pointer( e ) );
+
+				o0 = projection.rotate();
+
+				const o1 = eulerAngles( gpos0, gpos1, o0 );
+				projection.rotate( o1 );
+
+				const path = d3.geoPath()
+					.context( context2d )
+					.projection( projection );
+				render()
+				// svg.selectAll( ".point" )
+				// 	.datum( { type: "Point", coordinates: gpos1 } );
+				// svg.selectAll( "path" ).attr( "d", path );
+
+			}
+
+			function dragended () {
+			}
+
+
+			const render = () => {
+				context2d.clearRect( 0, 0, width, height )
+				context2d.fillStyle = '#000';
+				context2d.strokeStyle = '#111';
+				context2d.beginPath();
+				path( land );
+				context2d.stroke();
+			}
+
+			render()
+
+		} ).catch(
+			( error ) => {
+				throw error
+			}
+		);
+
+
+	</script>
+</head>
+
+<body>
+
+	<canvas id="c" width="900" height="500"></canvas>
+
+</body>
+
+</html>
