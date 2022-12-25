@@ -6,7 +6,7 @@ import { eulerAngles } from './mathsfunctions.js'
 class Clamp {
   #min: number
   #max: number
-  constructor (min: number, max: number) {
+  constructor(min: number, max: number) {
     this.#min = min
     this.#max = max
   }
@@ -61,15 +61,14 @@ Renderer.new('./world-atlas/world/50m.json')
     canvas.onwheel = zoom
 
     let o0: number[] /// starting rotation.
-    let gpos0 = Array(2).fill(0)
-    let gpos1 = Array(2).fill(0)
+    let gpos0 = new ExportedPoint(0, 0)
+    let gpos1 = new ExportedPoint(0, 0)
     const d3Canvas = select('#c')
 
     function dragstarted (e: any): void {
       const canvasxy = pointer(e)
 
-      const inverted = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
-      gpos0 = [inverted.x, inverted.y]
+      const gpos0 = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
 
       o0 = renderer.rotate()
       const sRotation = document.getElementById('rotation')
@@ -85,8 +84,7 @@ Renderer.new('./world-atlas/world/50m.json')
       // no sure why...
       const canvasxy = pointer(e, canvas)
 
-      const inverted = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
-      gpos1 = [inverted.x, inverted.y]
+      const gpos1 = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
 
       o0 = renderer.rotate()
 
@@ -124,8 +122,8 @@ Renderer.new('./world-atlas/world/50m.json')
       context.clearRect(0, 0, 1800, 1200)
 
       renderer.render(isSolid)
-      renderer.render_point(gpos0[0], gpos0[1])
-      renderer.render_point(gpos1[0], gpos1[1])
+      renderer.render_point(gpos0.x, gpos0.y)
+      renderer.render_point(gpos1.x, gpos1.y)
     }
 
     renderLoop()

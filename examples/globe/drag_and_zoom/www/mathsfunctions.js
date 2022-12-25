@@ -19,8 +19,8 @@ function dot (v0, v1) {
 // This function converts a [lon, lat] coordinates into a [x,y,z] coordinate
 // the [x, y, z] is Cartesian, with origin at lon/lat (0,0) center of the earth
 export function lonlat2xyz (coord) {
-  const lon = coord[0] * toRadians
-  const lat = coord[1] * toRadians
+  const lon = coord.x * toRadians
+  const lat = coord.y * toRadians
 
   const x = Math.cos(lat) * Math.cos(lon)
 
