@@ -242,13 +242,10 @@ impl Renderer {
             .collect::<Vec<f64>>();
         console_log!("angles {:?}", angles);
         self.ob.rotate3_set(&[angles[0], angles[1], angles[2]]);
-        self.render(true);
     }
 
     /// Render the next frame.
     pub fn render(&mut self, solid: bool) {
-        self.context2d
-            .clear_rect(0f64, 0f64, self.width, self.height);
         let context: Context = Context::new(self.context2d.clone());
 
         if !solid {
