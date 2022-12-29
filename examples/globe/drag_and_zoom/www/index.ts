@@ -1,5 +1,4 @@
 import { ExportedPoint, Renderer } from '../pkg/rust_d3_geo_example_globe_drag_and_zoom'
-import { drag } from 'd3-drag'
 import { pointer, select } from 'd3-selection'
 import { eulerAngles } from './mathsfunctions.js'
 
@@ -20,6 +19,7 @@ const clamp = new Clamp(400, 900)
 
 let scale: number
 let isSolid: boolean
+let isMouseDown: boolean = false;
 
 console.log('wasm is imported')
 Renderer.new('./world-atlas/world/50m.json')
@@ -66,64 +66,52 @@ Renderer.new('./world-atlas/world/50m.json')
     const d3Canvas = select('#c')
 
     function dragstarted (e: any): void {
+      isMouseDown = true;
       const canvasxy = pointer(e)
-
-      const gpos0 = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
-
-      o0 = renderer.rotate()
-      const sRotation = document.getElementById('rotation')
-      if (sRotation == null) {
-        return
-      }
-      sRotation.innerText = `${o0[0]} , ${o0[1]} , ${o0[2]} `
+      const gposLast = gpos0;
+      gpos0 = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
       renderLoop()
     }
 
     function dragged (e: any): void {
-      // canvas is needed here as a input, not in dragstarted
-      // no sure why...
-      const canvasxy = pointer(e, canvas)
+      if (isMouseDown === true) {
+        const canvasxy = pointer(e)
+        gpos1 = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
+        console.log("updated gpos1", gpos1.x, gpos1.y)
+        o0 = renderer.rotate()
 
-      const gpos1 = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
-
-      o0 = renderer.rotate()
-
-      const o1 = eulerAngles(gpos0, gpos1, o0)
-      if (o1 === undefined) {
-        console.log('oops failed.')
-        return
-      } else {
-        if (o1.length !== 3) {
-          console.log('not 3')
+        const o1 = eulerAngles(gpos0, gpos1, o0)
+        if (o1 === undefined) {
+          console.log('oops failed.')
           return
+        } else {
+          if (o1.length !== 3) {
+            console.log('not 3')
+            return
+          }
         }
-      }
 
-      renderer.rotate_set(o1)
-      renderLoop()
+        renderer.rotate_set(o1)
+        renderLoop()
+      }
     }
 
     function dragended (e: any): void {
+      isMouseDown = false;
     }
-
-    const drag2 = drag()
-      .on('start', dragstarted)
-      .on('drag', dragged)
-      .on('end', dragended)
-
-    d3Canvas.call(drag2)
 
     const context = canvas.getContext('2d')
     if (context == null) {
       return
     }
+    select(context.canvas).on('mousemove', dragged)
+      .on('mousedown', dragstarted)
+      .on('mouseup', dragended)
 
     const renderLoop = (): void => {
       context.clearRect(0, 0, 1800, 1200)
 
       renderer.render(isSolid)
-      renderer.render_point(gpos0.x, gpos0.y)
-      renderer.render_point(gpos1.x, gpos1.y)
     }
 
     renderLoop()

@@ -249,23 +249,23 @@ impl Renderer {
         let context: Context = Context::new(self.context2d.clone());
 
         if !solid {
-            let r = self.ob.rotate();
-            self.ob.reflect_x_set(REFLECT::Flipped);
-            self.ob.rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
+            // let r = self.ob.rotate();
+            // self.ob.reflect_x_set(REFLECT::Flipped);
+            // self.ob.rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
 
-            let ortho = self.ob.build();
-            let pb = PathBuilder::new(context.clone());
+            // let ortho = self.ob.build();
+            // let pb = PathBuilder::new(context.clone());
 
-            let mut path = pb.build(ortho);
-            self.context2d.set_stroke_style(&"#777".into());
-            self.context2d.set_fill_style(&"#888".into());
-            self.context2d.begin_path();
-            path.object(&self.countries);
-            self.context2d.stroke();
-            self.context2d.fill();
+            // let mut path = pb.build(ortho);
+            // self.context2d.set_stroke_style(&"#777".into());
+            // self.context2d.set_fill_style(&"#888".into());
+            // self.context2d.begin_path();
+            // path.object(&self.countries);
+            // self.context2d.stroke();
+            // self.context2d.fill();
 
-            self.ob.reflect_x_set(REFLECT::Unflipped);
-            self.ob.rotate3_set(&r);
+            // self.ob.reflect_x_set(REFLECT::Unflipped);
+            // self.ob.rotate3_set(&r);
         }
 
         let ortho = self.ob.build();
@@ -277,7 +277,7 @@ impl Renderer {
         self.context2d.set_stroke_style(&"#111".into());
         self.context2d.begin_path();
         path.object(&self.countries);
-        self.context2d.fill();
+        self.context2d.stroke();
 
         self.context2d.begin_path();
         self.context2d.set_stroke_style(&"#ccc".into());
