@@ -25,9 +25,20 @@ To run the example please follow the "Running the examples" below.
 <td><image src="images/rotating.png"></td>
 </tr>
 <tr>
+<tr>
 <td><strong>examples/globe/svg</strong> <br/><br/> SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules. </td>
 <td><image src="images/globe.svg"> </td>
 </tr>
+<td> <br/><br/>  
+  This is similar to the other globe applications. As an example it deliberatly mixes typescript methods with rust.
+  The typescript is responsible for handling the mouse events and calculating the euler angle, forming the appropiate quaternion and finally calcuting the appropiate change in rotation. RUST then takes the rotation and redraws the canvas.
+  
+<br/>
+<br/>
+</td>
+<td></td>
+</tr>
+
 <tr>
 <td><strong>examples/projections</strong> <br/><br/>
 

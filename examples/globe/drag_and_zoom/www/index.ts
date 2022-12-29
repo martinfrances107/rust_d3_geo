@@ -19,7 +19,7 @@ const clamp = new Clamp(400, 900)
 
 let scale: number
 let isSolid: boolean
-let isMouseDown: boolean = false;
+let isMouseDown: boolean = false
 
 console.log('wasm is imported')
 Renderer.new('./world-atlas/world/50m.json')
@@ -60,24 +60,20 @@ Renderer.new('./world-atlas/world/50m.json')
 
     canvas.onwheel = zoom
 
-    let o0: number[] /// starting rotation.
+    let o0: number[] /// Starting rotation.
     let gpos0 = new ExportedPoint(0, 0)
     let gpos1 = new ExportedPoint(0, 0)
-    const d3Canvas = select('#c')
 
     function dragstarted (e: any): void {
-      isMouseDown = true;
+      isMouseDown = true
       const canvasxy = pointer(e)
-      const gposLast = gpos0;
       gpos0 = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
-      renderLoop()
     }
 
     function dragged (e: any): void {
-      if (isMouseDown === true) {
+      if (isMouseDown) {
         const canvasxy = pointer(e)
         gpos1 = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
-        console.log("updated gpos1", gpos1.x, gpos1.y)
         o0 = renderer.rotate()
 
         const o1 = eulerAngles(gpos0, gpos1, o0)
@@ -97,7 +93,7 @@ Renderer.new('./world-atlas/world/50m.json')
     }
 
     function dragended (e: any): void {
-      isMouseDown = false;
+      isMouseDown = false
     }
 
     const context = canvas.getContext('2d')
