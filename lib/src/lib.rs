@@ -174,7 +174,7 @@
 
 /// Allows the ommission of complex fields from debug output.
 extern crate derivative;
-extern crate rust_d3_array;
+extern crate flot;
 extern crate web_sys;
 
 use geo::CoordFloat;
@@ -217,6 +217,8 @@ pub mod path_identity;
 pub mod polygon_contains;
 /// Holds proctions and associated builders.
 pub mod projection;
+/// Generates range of T values from start to  stop by step.
+pub mod range;
 /// Rotation transforms.
 pub mod rot;
 /// Stream related helper functions.

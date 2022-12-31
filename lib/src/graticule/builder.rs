@@ -7,9 +7,8 @@ use geo::LineString;
 use geo::Polygon;
 use geo_types::Coord;
 
-use rust_d3_array::range::range;
-
 use crate::math::EPSILON;
+use crate::range::range;
 
 use super::graticule_x;
 use super::graticule_y;

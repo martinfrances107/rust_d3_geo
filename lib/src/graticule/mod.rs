@@ -4,9 +4,8 @@ pub mod builder;
 use geo::{CoordFloat, Geometry, MultiLineString};
 use geo_types::Coord;
 
-use rust_d3_array::range::range;
-
 use crate::math::EPSILON;
+use crate::range::range;
 
 use builder::Builder as GraticuleBuilder;
 

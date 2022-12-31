@@ -15,12 +15,12 @@ mod area {
 
     use pretty_assertions::assert_eq;
 
-    use rust_d3_array::range::range;
     use rust_d3_geo::area::Area;
     use rust_d3_geo::circle::generator::Generator as CircleGenerator;
     use rust_d3_geo::data_object::sphere::Sphere;
     use rust_d3_geo::graticule::generate as generate_graticule;
     use rust_d3_geo::in_delta::in_delta;
+    use rust_d3_geo::range::range;
 
     fn stripes<T>(a: T, b: T) -> Polygon<T>
     where
