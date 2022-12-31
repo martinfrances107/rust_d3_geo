@@ -7,8 +7,8 @@ mod stream_multipolygon {
     use geo::MultiPolygon;
     use geo_types::Coord;
 
-    use rust_d3_geo::stream::Stream;
-    use rust_d3_geo::stream::Streamable;
+    use d3_geo_rs::stream::Stream;
+    use d3_geo_rs::stream::Streamable;
 
     #[derive(Clone, Debug, Default)]
     struct MultiPolygonStream {

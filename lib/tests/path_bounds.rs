@@ -15,16 +15,16 @@ mod path_bounds {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::path::bounds::Bounds;
-    use rust_d3_geo::path::builder::Builder;
-    use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::PrecisionBypass;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::projection::ScaleSet;
-    use rust_d3_geo::stream::Streamable;
+    use d3_geo_rs::data_object::sphere::Sphere;
+    use d3_geo_rs::path::bounds::Bounds;
+    use d3_geo_rs::path::builder::Builder;
+    use d3_geo_rs::projection::equirectangular::Equirectangular;
+    use d3_geo_rs::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::PrecisionBypass;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::ScaleSet;
+    use d3_geo_rs::stream::Streamable;
 
     #[inline]
     fn equirectangular<

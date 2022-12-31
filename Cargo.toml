@@ -17,11 +17,12 @@ keywords = ["graphics", "d3-geo"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo"
-version = "0.1.1"
+version = "0.1.2"
 # Version 1.65 is required as this package makes use of "Generic Associated Types".
 rust-version = "1.65"
 
 [workspace.dependencies]
+d3_geo_rs = { path = "../../lib" }
 geo = "~0.23"
 geo-types = "~0.7"
 getrandom = { version = "~0.2", features = ["js"] }
@@ -29,7 +30,6 @@ gloo-utils = "~0.1"
 js-sys = "~0.3"
 futures = "~0.3"
 rand = { version = "~0.8" }
-rust_d3_geo = { path = "../../lib" }
 rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git", branch = "main" }
 topojson = "~0.5"
 wasm-bindgen = "~0.2"

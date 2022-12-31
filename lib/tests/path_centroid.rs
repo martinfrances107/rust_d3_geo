@@ -21,16 +21,16 @@ mod path_centroid {
     use num_traits::Float;
     use num_traits::FloatConst;
 
-    use rust_d3_geo::in_delta::point as in_delta_point;
-    use rust_d3_geo::path::centroid::Centroid;
-    use rust_d3_geo::path::Path;
-    use rust_d3_geo::projection::builder::Builder as ProjectionBuilder;
-    use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::PrecisionBypass;
-    use rust_d3_geo::projection::ScaleSet;
-    use rust_d3_geo::stream::Streamable;
+    use d3_geo_rs::in_delta::point as in_delta_point;
+    use d3_geo_rs::path::centroid::Centroid;
+    use d3_geo_rs::path::Path;
+    use d3_geo_rs::projection::builder::Builder as ProjectionBuilder;
+    use d3_geo_rs::projection::equirectangular::Equirectangular;
+    use d3_geo_rs::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::PrecisionBypass;
+    use d3_geo_rs::projection::ScaleSet;
+    use d3_geo_rs::stream::Streamable;
 
     #[inline]
     fn equirectangular<T>(

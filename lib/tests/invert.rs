@@ -3,20 +3,20 @@ mod invert {
 
     use geo_types::Coord;
 
-    use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
-    use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
-    use rust_d3_geo::projection::equal_area::EqualArea;
-    use rust_d3_geo::projection::equality::projection_equal;
-    use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::gnomic::Gnomic;
-    use rust_d3_geo::projection::mercator::Mercator;
-    use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
-    use rust_d3_geo::projection::orthographic::Orthographic;
-    use rust_d3_geo::projection::stereographic::Stereographic;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::stream::DrainStub;
-    use rust_d3_geo::Transform;
+    use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
+    use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
+    use d3_geo_rs::projection::equal_area::EqualArea;
+    use d3_geo_rs::projection::equality::projection_equal;
+    use d3_geo_rs::projection::equirectangular::Equirectangular;
+    use d3_geo_rs::projection::gnomic::Gnomic;
+    use d3_geo_rs::projection::mercator::Mercator;
+    use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
+    use d3_geo_rs::projection::orthographic::Orthographic;
+    use d3_geo_rs::projection::stereographic::Stereographic;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::stream::DrainStub;
+    use d3_geo_rs::Transform;
 
     fn symetric_invert<PM>(pm: PM)
     where

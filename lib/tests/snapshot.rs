@@ -12,19 +12,19 @@
 //     use geo::{Geometry, GeometryCollection};
 //     use topojson::Topology;
 
-//     use rust_d3_geo::clip::circle::pv::PV;
+//     use d3_geo_rs::clip::circle::pv::PV;
 // // import {Canvas} from "canvas";
 // // import {feature, mesh} from "topojson-client";
 
-// use rust_d3_geo::projection::stereographic;
+// use d3_geo_rs::projection::stereographic;
 
-//   use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
-//   use rust_d3_geo::projection::equirectangular::EquirectangularRaw;
-//   use rust_d3_geo::projection::gnomic::Gnomic;
-//   use rust_d3_geo::projection::mercator::Mercator;
-//   use rust_d3_geo::projection::orthographic::Orthographic;
-//   use rust_d3_geo::path::path::Path;
-//   use rust_d3_geo::projection::stereographic::Stereographic;
+//   use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
+//   use d3_geo_rs::projection::equirectangular::EquirectangularRaw;
+//   use d3_geo_rs::projection::gnomic::Gnomic;
+//   use d3_geo_rs::projection::mercator::Mercator;
+//   use d3_geo_rs::projection::orthographic::Orthographic;
+//   use d3_geo_rs::path::path::Path;
+//   use d3_geo_rs::projection::stereographic::Stereographic;
 
 // // import {readFile} from "fs/promises";
 

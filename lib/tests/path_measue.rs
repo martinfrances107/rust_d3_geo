@@ -14,12 +14,12 @@ mod path_measure {
     use num_traits::AsPrimitive;
     use num_traits::FloatConst;
 
-    use rust_d3_geo::path::measure::Measure;
-    use rust_d3_geo::path_identity::builder::Builder as PathBuilder;
-    use rust_d3_geo::projection::identity::Identity;
-    use rust_d3_geo::projection::projector_identity::types::ProjectorIdentityAntimeridianResampleNoClip;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::stream::Streamable;
+    use d3_geo_rs::path::measure::Measure;
+    use d3_geo_rs::path_identity::builder::Builder as PathBuilder;
+    use d3_geo_rs::projection::identity::Identity;
+    use d3_geo_rs::projection::projector_identity::types::ProjectorIdentityAntimeridianResampleNoClip;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::stream::Streamable;
 
     #[inline]
     fn measure<T>(

@@ -6,29 +6,29 @@ mod reflect {
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::clip::circle::ClipCircleC;
-    use rust_d3_geo::clip::circle::ClipCircleU;
-    use rust_d3_geo::identity::Identity;
-    use rust_d3_geo::in_delta::in_delta;
-    use rust_d3_geo::projection::builder::template::ResampleNoPCNC;
-    use rust_d3_geo::projection::builder::template::ResampleNoPCNU;
-    use rust_d3_geo::projection::builder::Builder;
-    use rust_d3_geo::projection::builder_mercator::Builder as MercatorBuilder;
-    use rust_d3_geo::projection::equality::projection_equal;
-    use rust_d3_geo::projection::gnomic::Gnomic;
-    use rust_d3_geo::projection::mercator::Mercator;
-    use rust_d3_geo::projection::AngleGet;
-    use rust_d3_geo::projection::AngleSet;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::projection::ReflectGet;
-    use rust_d3_geo::projection::ReflectSet;
-    use rust_d3_geo::projection::ScaleSet;
-    use rust_d3_geo::projection::TranslateSet;
-    use rust_d3_geo::projection::REFLECT;
-    use rust_d3_geo::stream::DrainStub;
-    use rust_d3_geo::stream::Unconnected;
-    use rust_d3_geo::Transform;
+    use d3_geo_rs::clip::circle::ClipCircleC;
+    use d3_geo_rs::clip::circle::ClipCircleU;
+    use d3_geo_rs::identity::Identity;
+    use d3_geo_rs::in_delta::in_delta;
+    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
+    use d3_geo_rs::projection::builder::template::ResampleNoPCNU;
+    use d3_geo_rs::projection::builder::Builder;
+    use d3_geo_rs::projection::builder_mercator::Builder as MercatorBuilder;
+    use d3_geo_rs::projection::equality::projection_equal;
+    use d3_geo_rs::projection::gnomic::Gnomic;
+    use d3_geo_rs::projection::mercator::Mercator;
+    use d3_geo_rs::projection::AngleGet;
+    use d3_geo_rs::projection::AngleSet;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::ReflectGet;
+    use d3_geo_rs::projection::ReflectSet;
+    use d3_geo_rs::projection::ScaleSet;
+    use d3_geo_rs::projection::TranslateSet;
+    use d3_geo_rs::projection::REFLECT;
+    use d3_geo_rs::stream::DrainStub;
+    use d3_geo_rs::stream::Unconnected;
+    use d3_geo_rs::Transform;
 
     type GB = Builder<
         ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<DrainStub<f64>, f64>, f64>, f64>,

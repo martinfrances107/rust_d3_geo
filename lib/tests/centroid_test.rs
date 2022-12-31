@@ -14,10 +14,10 @@ mod centroid {
     use geo::Polygon;
     use geo_types::Coord;
 
-    use rust_d3_geo::centroid::Centroid;
-    use rust_d3_geo::circle::generator::Generator as CircleGenerator;
-    use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::in_delta::point as in_delta_point;
+    use d3_geo_rs::centroid::Centroid;
+    use d3_geo_rs::circle::generator::Generator as CircleGenerator;
+    use d3_geo_rs::data_object::sphere::Sphere;
+    use d3_geo_rs::in_delta::point as in_delta_point;
 
     #[test]
     fn of_a_point_is_itself() {

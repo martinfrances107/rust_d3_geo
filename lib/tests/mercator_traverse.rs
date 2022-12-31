@@ -7,27 +7,27 @@ mod mercator_tranverse {
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::in_delta::coordinate as in_delta_coordinate;
-    use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::path::string::String;
-    use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::CenterSet;
-    use rust_d3_geo::projection::ClipExtentAdjust;
-    use rust_d3_geo::projection::ClipExtentGet;
-    use rust_d3_geo::projection::Fit;
-    use rust_d3_geo::projection::PrecisionBypass;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::projection::RotateGet;
-    use rust_d3_geo::projection::RotateSet;
-    use rust_d3_geo::projection::ScaleGet;
-    use rust_d3_geo::projection::ScaleSet;
-    use rust_d3_geo::projection::TranslateGet;
-    use rust_d3_geo::projection::TranslateSet;
-    use rust_d3_geo::stream::DrainStub;
+    use d3_geo_rs::data_object::sphere::Sphere;
+    use d3_geo_rs::in_delta::coordinate as in_delta_coordinate;
+    use d3_geo_rs::path::builder::Builder as PathBuilder;
+    use d3_geo_rs::path::string::String;
+    use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::CenterSet;
+    use d3_geo_rs::projection::ClipExtentAdjust;
+    use d3_geo_rs::projection::ClipExtentGet;
+    use d3_geo_rs::projection::Fit;
+    use d3_geo_rs::projection::PrecisionBypass;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::RotateGet;
+    use d3_geo_rs::projection::RotateSet;
+    use d3_geo_rs::projection::ScaleGet;
+    use d3_geo_rs::projection::ScaleSet;
+    use d3_geo_rs::projection::TranslateGet;
+    use d3_geo_rs::projection::TranslateSet;
+    use d3_geo_rs::stream::DrainStub;
 
-    use rust_d3_geo::Transform;
+    use d3_geo_rs::Transform;
 
     // There are subtle mercator - mercaotorTransverse / f32 issues
     //

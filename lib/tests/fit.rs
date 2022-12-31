@@ -6,35 +6,35 @@ mod fit {
     use std::fmt::Debug;
     use std::fs::File;
 
+    use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
+    use d3_geo_rs::projection::ClipExtentGet;
     use geo::polygon;
     use geo::CoordFloat;
     use geo::Geometry;
     use geo_types::Coord;
     use num_traits::FloatConst;
-    use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
-    use rust_d3_geo::projection::ClipExtentGet;
     use topojson::Topology;
 
-    use rust_d3_geo::data_object::sphere::Sphere;
-    use rust_d3_geo::in_delta::coordinate as in_delta_coordinate;
-    use rust_d3_geo::in_delta::in_delta;
-    use rust_d3_geo::path::bounds::Bounds;
-    use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
-    use rust_d3_geo::projection::azimuthal_equidistant::AzimuthalEquiDistant;
-    use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::gnomic::Gnomic;
-    use rust_d3_geo::projection::mercator::Mercator;
-    use rust_d3_geo::projection::orthographic::Orthographic;
-    use rust_d3_geo::projection::stereographic::Stereographic;
-    use rust_d3_geo::projection::ClipAngleAdjust;
-    use rust_d3_geo::projection::ClipExtentSet;
-    use rust_d3_geo::projection::Fit;
-    use rust_d3_geo::projection::PrecisionAdjust;
-    use rust_d3_geo::projection::PrecisionBypass;
-    use rust_d3_geo::projection::PrecisionGet;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::projection::ScaleGet;
-    use rust_d3_geo::projection::TranslateGet;
+    use d3_geo_rs::data_object::sphere::Sphere;
+    use d3_geo_rs::in_delta::coordinate as in_delta_coordinate;
+    use d3_geo_rs::in_delta::in_delta;
+    use d3_geo_rs::path::bounds::Bounds;
+    use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
+    use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
+    use d3_geo_rs::projection::equirectangular::Equirectangular;
+    use d3_geo_rs::projection::gnomic::Gnomic;
+    use d3_geo_rs::projection::mercator::Mercator;
+    use d3_geo_rs::projection::orthographic::Orthographic;
+    use d3_geo_rs::projection::stereographic::Stereographic;
+    use d3_geo_rs::projection::ClipAngleAdjust;
+    use d3_geo_rs::projection::ClipExtentSet;
+    use d3_geo_rs::projection::Fit;
+    use d3_geo_rs::projection::PrecisionAdjust;
+    use d3_geo_rs::projection::PrecisionBypass;
+    use d3_geo_rs::projection::PrecisionGet;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::ScaleGet;
+    use d3_geo_rs::projection::TranslateGet;
     use rust_topojson_client::feature::feature_from_name;
 
     ///  Helper function to extract world geometry from file.

@@ -13,13 +13,13 @@ use lazy_static::lazy_static;
 use pretty_assertions::assert_eq;
 use regex::Regex;
 
-use rust_d3_geo::circle::generator::Generator as CircleGenerator;
-use rust_d3_geo::path::builder::Builder as PathBuilder;
-use rust_d3_geo::projection::orthographic::Orthographic;
-use rust_d3_geo::projection::Build;
-use rust_d3_geo::projection::RawBase;
-use rust_d3_geo::projection::ScaleSet;
-use rust_d3_geo::projection::TranslateSet;
+use d3_geo_rs::circle::generator::Generator as CircleGenerator;
+use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::projection::orthographic::Orthographic;
+use d3_geo_rs::projection::Build;
+use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::ScaleSet;
+use d3_geo_rs::projection::TranslateSet;
 
 lazy_static! {
     /// Ignore every digit in a number after the decimal.

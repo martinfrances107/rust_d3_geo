@@ -1,19 +1,19 @@
+use d3_geo_rs::projection::Build;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
-use rust_d3_geo::projection::Build;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-use rust_d3_geo::graticule::generate as generate_graticule;
-use rust_d3_geo::path::builder::Builder as PathBuilder;
-use rust_d3_geo::path::context::Context;
-use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
-use rust_d3_geo::projection::ClipAngleSet;
-use rust_d3_geo::projection::PrecisionAdjust;
-use rust_d3_geo::projection::RawBase;
-use rust_d3_geo::projection::ScaleSet;
-use rust_d3_geo::projection::TranslateSet;
+use d3_geo_rs::graticule::generate as generate_graticule;
+use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::context::Context;
+use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
+use d3_geo_rs::projection::ClipAngleSet;
+use d3_geo_rs::projection::PrecisionAdjust;
+use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::ScaleSet;
+use d3_geo_rs::projection::TranslateSet;
 
 use crate::document;
 

@@ -4,21 +4,21 @@ mod equirectangular {
 
     use geo_types::Coord;
 
-    use rust_d3_geo::clip::antimeridian::ClipAntimeridianC;
-    use rust_d3_geo::clip::antimeridian::ClipAntimeridianU;
-    use rust_d3_geo::projection::builder::template::NoPCNU;
-    use rust_d3_geo::projection::builder::template::ResampleNoPCNC;
-    use rust_d3_geo::projection::builder::template::ResampleNoPCNU;
-    use rust_d3_geo::projection::builder::Builder;
-    use rust_d3_geo::projection::equality::projection_equal;
-    use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::projector::Projector;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::projection::RotateSet;
-    use rust_d3_geo::projection::ScaleSet;
-    use rust_d3_geo::projection::TranslateSet;
-    use rust_d3_geo::stream::DrainStub;
+    use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
+    use d3_geo_rs::clip::antimeridian::ClipAntimeridianU;
+    use d3_geo_rs::projection::builder::template::NoPCNU;
+    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
+    use d3_geo_rs::projection::builder::template::ResampleNoPCNU;
+    use d3_geo_rs::projection::builder::Builder;
+    use d3_geo_rs::projection::equality::projection_equal;
+    use d3_geo_rs::projection::equirectangular::Equirectangular;
+    use d3_geo_rs::projection::projector::Projector;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::RotateSet;
+    use d3_geo_rs::projection::ScaleSet;
+    use d3_geo_rs::projection::TranslateSet;
+    use d3_geo_rs::stream::DrainStub;
 
     type B = Builder<
         ClipAntimeridianC<

@@ -17,19 +17,19 @@ mod path_string {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::circle::generator::Generator as CircleGenerator;
-    use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::path::string::String as PathString;
-    use rust_d3_geo::path::PointRadiusTrait;
-    use rust_d3_geo::projection::equirectangular::Equirectangular;
-    use rust_d3_geo::projection::orthographic::Orthographic;
-    use rust_d3_geo::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::PrecisionBypass;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::projection::ScaleSet;
-    use rust_d3_geo::projection::TranslateSet;
-    use rust_d3_geo::stream::Streamable;
+    use d3_geo_rs::circle::generator::Generator as CircleGenerator;
+    use d3_geo_rs::path::builder::Builder as PathBuilder;
+    use d3_geo_rs::path::string::String as PathString;
+    use d3_geo_rs::path::PointRadiusTrait;
+    use d3_geo_rs::projection::equirectangular::Equirectangular;
+    use d3_geo_rs::projection::orthographic::Orthographic;
+    use d3_geo_rs::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::PrecisionBypass;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::ScaleSet;
+    use d3_geo_rs::projection::TranslateSet;
+    use d3_geo_rs::stream::Streamable;
 
     #[inline]
     fn equirectangular<T>(

@@ -14,8 +14,8 @@ mod length {
     use geo::Polygon;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::in_delta::in_delta;
-    use rust_d3_geo::length::Stream as LengthStream;
+    use d3_geo_rs::in_delta::in_delta;
+    use d3_geo_rs::length::Stream as LengthStream;
 
     #[test]
     fn point_returns_zero() {

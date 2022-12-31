@@ -36,21 +36,21 @@ use web_sys::RequestMode;
 use web_sys::Response;
 use web_sys::Window;
 
-use rust_d3_geo::graticule::generate_mls;
-use rust_d3_geo::path::builder::Builder as PathBuilder;
-use rust_d3_geo::path::context::Context;
-use rust_d3_geo::projection::builder::types::BuilderCircleResampleNoClip;
-use rust_d3_geo::projection::orthographic::Orthographic;
-use rust_d3_geo::projection::Build;
-use rust_d3_geo::projection::RawBase;
-use rust_d3_geo::projection::ReflectSet;
-use rust_d3_geo::projection::RotateGet;
-use rust_d3_geo::projection::RotateSet;
-use rust_d3_geo::projection::ScaleGet;
-use rust_d3_geo::projection::ScaleSet;
-use rust_d3_geo::projection::TranslateSet;
-use rust_d3_geo::projection::REFLECT;
-use rust_d3_geo::Transform;
+use d3_geo_rs::graticule::generate_mls;
+use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::context::Context;
+use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
+use d3_geo_rs::projection::orthographic::Orthographic;
+use d3_geo_rs::projection::Build;
+use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::ReflectSet;
+use d3_geo_rs::projection::RotateGet;
+use d3_geo_rs::projection::RotateSet;
+use d3_geo_rs::projection::ScaleGet;
+use d3_geo_rs::projection::ScaleSet;
+use d3_geo_rs::projection::TranslateSet;
+use d3_geo_rs::projection::REFLECT;
+use d3_geo_rs::Transform;
 
 fn document() -> Result<Document, JsValue> {
     let window = match js_sys::global().dyn_into::<Window>() {

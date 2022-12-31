@@ -1,15 +1,15 @@
 #[cfg(not(tarpaulin_include))]
 mod stereographic_tests {
+    use d3_geo_rs::projection::ScaleSet;
     use geo_types::Coord;
-    use rust_d3_geo::projection::ScaleSet;
 
-    use rust_d3_geo::projection::equality::projection_equal;
-    use rust_d3_geo::projection::projector::types::ProjectorCircleResampleNoClip;
-    use rust_d3_geo::projection::stereographic::Stereographic;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::projection::TranslateSet;
-    use rust_d3_geo::stream::DrainStub;
+    use d3_geo_rs::projection::equality::projection_equal;
+    use d3_geo_rs::projection::projector::types::ProjectorCircleResampleNoClip;
+    use d3_geo_rs::projection::stereographic::Stereographic;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::TranslateSet;
+    use d3_geo_rs::stream::DrainStub;
 
     #[test]
     fn stereographic() {

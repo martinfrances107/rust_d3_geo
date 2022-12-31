@@ -15,11 +15,11 @@ crate-type = ["cdylib"]
 
 
 [dependencies]
+d3_geo_rs = { path = "../../../lib" }
 geo = { workspace = true }
 geo-types = { workspace = true }
 gloo-utils = { workspace = true }
 js-sys = { workspace = true }
-rust_d3_geo = { path = "../../../lib" }
 rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git", branch = "main" }
 topojson = { workspace = true }
 wasm-bindgen = { workspace = true, features = ["serde-serialize"] }

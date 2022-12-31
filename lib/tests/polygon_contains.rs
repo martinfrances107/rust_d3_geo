@@ -8,8 +8,8 @@ mod polygon_contains {
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::circle::generator::Generator as CircleGenerator;
-    use rust_d3_geo::polygon_contains::polygon_contains as contains;
+    use d3_geo_rs::circle::generator::Generator as CircleGenerator;
+    use d3_geo_rs::polygon_contains::polygon_contains as contains;
 
     #[inline]
     fn point_radians<T>(p: &Coord<T>) -> Coord<T>

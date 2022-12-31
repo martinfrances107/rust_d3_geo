@@ -15,11 +15,11 @@ version = "0.1.0"
 crate-type = ["cdylib"]
 
 [dependencies]
+d3_geo_rs = { path = "../../lib" }
 geo = { workspace = true }
 geo-types = { workspace = true }
 getrandom = { workspace = true, features = ["js"] }
 rand = { workspace = true }
-rust_d3_geo = { path = "../../lib" }
 wasm-bindgen-test = { workspace = true }
 wasm-bindgen = { workspace = true }
 

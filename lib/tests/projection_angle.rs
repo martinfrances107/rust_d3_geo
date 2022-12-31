@@ -4,20 +4,20 @@ mod projection_angle {
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::in_delta::in_delta;
-    use rust_d3_geo::projection::builder::template::NoPCNC;
-    use rust_d3_geo::projection::builder::template::NoPCNU;
-    use rust_d3_geo::projection::builder_identity::Builder as BuilderIdentity;
-    use rust_d3_geo::projection::equality::projection_equal;
-    use rust_d3_geo::projection::gnomic::Gnomic;
-    use rust_d3_geo::projection::AngleGet;
-    use rust_d3_geo::projection::AngleSet;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::projection::ScaleSet;
-    use rust_d3_geo::projection::TranslateSet;
-    use rust_d3_geo::stream::DrainStub;
-    use rust_d3_geo::Transform;
+    use d3_geo_rs::in_delta::in_delta;
+    use d3_geo_rs::projection::builder::template::NoPCNC;
+    use d3_geo_rs::projection::builder::template::NoPCNU;
+    use d3_geo_rs::projection::builder_identity::Builder as BuilderIdentity;
+    use d3_geo_rs::projection::equality::projection_equal;
+    use d3_geo_rs::projection::gnomic::Gnomic;
+    use d3_geo_rs::projection::AngleGet;
+    use d3_geo_rs::projection::AngleSet;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::ScaleSet;
+    use d3_geo_rs::projection::TranslateSet;
+    use d3_geo_rs::stream::DrainStub;
+    use d3_geo_rs::Transform;
 
     #[test]
     fn angle_defaults_to_zero() {
@@ -402,11 +402,8 @@ mod projection_angle {
     fn rotates_geo_identity() {
         println!("identity.angle(…) rotates geoIdentity");
 
-        let mut pb: rust_d3_geo::projection::builder_identity::Builder<
-            DrainStub<f32>,
-            NoPCNU,
-            f32,
-        > = BuilderIdentity::default();
+        let mut pb: d3_geo_rs::projection::builder_identity::Builder<DrainStub<f32>, NoPCNU, f32> =
+            BuilderIdentity::default();
         pb.angle_set(-45_f32);
 
         let sqrt2_2 = 2f32.sqrt() / 2f32;

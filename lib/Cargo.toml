@@ -8,7 +8,7 @@ name = "d3_geo_rs"
 license = "MIT"
 readme = "../README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
-version = "0.1.1"
+version = "0.1.2"
 
 [dependencies]
 approx = "~0.5"

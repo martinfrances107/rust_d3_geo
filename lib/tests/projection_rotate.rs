@@ -7,13 +7,13 @@ mod projection_rotate {
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
-    use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::projection::mercator::Mercator;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::projection::RotateSet;
-    use rust_d3_geo::projection::ScaleSet;
-    use rust_d3_geo::projection::TranslateSet;
+    use d3_geo_rs::path::builder::Builder as PathBuilder;
+    use d3_geo_rs::projection::mercator::Mercator;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::RotateSet;
+    use d3_geo_rs::projection::ScaleSet;
+    use d3_geo_rs::projection::TranslateSet;
 
     #[test]
     fn degenerate_polygon_should_not_break() {

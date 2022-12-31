@@ -10,13 +10,13 @@ mod clipcircle {
     use pretty_assertions::assert_eq;
     use regex::Regex;
 
-    use rust_d3_geo::path::builder::Builder as PathBuilder;
-    use rust_d3_geo::projection::azimuthal_equal_area::AzimuthalEqualArea;
-    use rust_d3_geo::projection::Build;
-    use rust_d3_geo::projection::ClipAngleAdjust;
-    use rust_d3_geo::projection::RawBase;
-    use rust_d3_geo::projection::RotateSet;
-    use rust_d3_geo::projection::TranslateSet;
+    use d3_geo_rs::path::builder::Builder as PathBuilder;
+    use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
+    use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::ClipAngleAdjust;
+    use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::RotateSet;
+    use d3_geo_rs::projection::TranslateSet;
 
     #[test]
     fn projection_clip_angle_degenerate_polygons() {

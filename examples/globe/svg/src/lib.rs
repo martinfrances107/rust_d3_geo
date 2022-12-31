@@ -12,11 +12,11 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
+use d3_geo_rs::graticule::generate_mls;
 use geo::Geometry;
 use geo::GeometryCollection;
 use geo_types::Coord;
 use gloo_utils::format::JsValueSerdeExt;
-use rust_d3_geo::graticule::generate_mls;
 use topojson::Topology;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -26,13 +26,13 @@ use web_sys::Document;
 use web_sys::SvgsvgElement;
 use web_sys::*;
 
-use rust_d3_geo::path::builder::Builder as PathBuilder;
-use rust_d3_geo::projection::orthographic::Orthographic;
-use rust_d3_geo::projection::Build;
-use rust_d3_geo::projection::RawBase;
-use rust_d3_geo::projection::RotateSet;
-use rust_d3_geo::projection::ScaleSet;
-use rust_d3_geo::projection::TranslateSet;
+use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::projection::orthographic::Orthographic;
+use d3_geo_rs::projection::Build;
+use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::RotateSet;
+use d3_geo_rs::projection::ScaleSet;
+use d3_geo_rs::projection::TranslateSet;
 use rust_topojson_client::feature::feature_from_name;
 
 #[cfg(not(tarpaulin_include))]

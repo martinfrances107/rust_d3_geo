@@ -8,12 +8,12 @@ use geo_types::Coord;
 use wasm_bindgen::JsCast;
 use web_sys::SvgsvgElement;
 
-use rust_d3_geo::circle::generator::Generator as CircleGenerator;
-use rust_d3_geo::path::builder::Builder as PathBuilder;
-use rust_d3_geo::projection::stereographic::Stereographic;
-use rust_d3_geo::projection::Build;
-use rust_d3_geo::projection::RawBase;
-use rust_d3_geo::projection::TranslateSet;
+use d3_geo_rs::circle::generator::Generator as CircleGenerator;
+use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::projection::stereographic::Stereographic;
+use d3_geo_rs::projection::Build;
+use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::TranslateSet;
 
 use super::document;
 use super::path_node;

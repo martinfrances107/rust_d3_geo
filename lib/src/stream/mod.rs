@@ -87,11 +87,11 @@ pub trait Streamable {
 ///
 /// ```
 /// use geo_types::Coord;
-/// use rust_d3_geo::Transform;
-/// use rust_d3_geo::projection::stereographic::Stereographic;
-/// use rust_d3_geo::projection::Build;
-/// use rust_d3_geo::projection::RawBase as ProjectionRawBase;
-/// use rust_d3_geo::stream::DrainStub;
+/// use d3_geo_rs::Transform;
+/// use d3_geo_rs::projection::stereographic::Stereographic;
+/// use d3_geo_rs::projection::Build;
+/// use d3_geo_rs::projection::RawBase as ProjectionRawBase;
+/// use d3_geo_rs::stream::DrainStub;
 ///
 /// // The Projector needs a mock endpoint here for the stream pipeline.
 /// let p = Stereographic::<DrainStub<f32>, f32>::builder().build();

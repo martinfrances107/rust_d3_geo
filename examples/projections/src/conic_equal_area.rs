@@ -4,13 +4,13 @@ use geo_types::Coord;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-use rust_d3_geo::graticule::generate as generate_graticule;
-use rust_d3_geo::path::builder::Builder as PathBuilder;
-use rust_d3_geo::path::context::Context;
-use rust_d3_geo::projection::equal_area::EqualArea;
-use rust_d3_geo::projection::Build;
-use rust_d3_geo::projection::RawBase;
-use rust_d3_geo::projection::TranslateSet;
+use d3_geo_rs::graticule::generate as generate_graticule;
+use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::context::Context;
+use d3_geo_rs::projection::equal_area::EqualArea;
+use d3_geo_rs::projection::Build;
+use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::TranslateSet;
 
 use crate::document;
 
