@@ -31,29 +31,29 @@ To run the example please follow the "Running the examples" below.
 <br/>
 <br/>
 </td>
-<td><image src="images/rotating.png"></td>
+<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/rotating.png"></td>
 </tr>
 <tr>
 <td><strong>examples/globe/svg</strong> <br/><br/> SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules. </td>
-<td><image src="images/globe.svg"> </td>
+<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/globe.svg"> </td>
 </tr>
 <td><strong>examples/globe/drag_and_zoom</strong> <br/><br/>
   This is similar to the other globe applications. As an example it deliberatly mixes typescript methods with rust.
   The typescript is responsible for handling the mouse events and calculating the quaternion and finally calcuting the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.
 </td>
 
-<td><image src="images/drag_and_zoom.png"> </td>
+<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/drag_and_zoom.png"> </td>
 </tr>
 <tr>
 <td><strong>examples/projections</strong> <br/><br/>
 
 As a confidence building exercise, this demo
 shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>. </td>
-<td><image src="images/projection.png"> </td>
+<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/projection.png"> </td>
 </tr>
 <tr>
 <td> <strong>examples/ring</strong><br/>Renders a complex multipolygon. </td>
-<td><image src="images/ring.png"></td>
+<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/ring.png"></td>
 </tr>
 </tbody>
 <table>
