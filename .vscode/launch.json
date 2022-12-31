@@ -69,11 +69,11 @@
         "args": [
           "test",
           "--no-run",
-          "--test=distance-test",
+          "--test=distance",
           "--package=rust_d3_geo"
         ],
         "filter": {
-          "name": "distance-test",
+          "name": "distance",
           "kind": "test"
         }
       },
@@ -125,13 +125,13 @@
       "cargo": {
         "args": [
           "test",
-          "fit_width_world_equirectangular",
+          "fit_extent_world_transverse_mercator",
           "--no-run",
-          "--test=fit_test",
+          "--test=fit",
           "--package=rust_d3_geo"
         ],
         "filter": {
-          "name": "fit_test",
+          "name": "fit",
           "kind": "test"
         }
       },

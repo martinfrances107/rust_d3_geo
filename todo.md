@@ -3,11 +3,6 @@
 High Priority.
 examples/projection eslint needs updating.
 
-* Missing Coverage
-  mercator test
-  - a single test to implement.
-  - investigate failing tests where the difference is between f32/f64.
-
 * fit_test -- needs works.
   * reclip needs work.
   * lots of todos missing
@@ -22,16 +17,11 @@ examples/projection eslint needs updating.
 
 * Add examples landing page. - showing images of the each projection.
 
-* Make a tranlucent globe using reflectX.
- https://observablehq.com/@d3/projection-reflectx?collection=@d3/d3-geo
-
 * Check on performance of real world test ... ortho projection of 50m.json altas
  with graticules showing africa or South pacific.
 
 * Review  path/centroid_test.rs
     has a small number of low priority test to implement.
-
-* Detail to development of mocks for RenderingContext2d
 
 * Examples projections CSS styling needs minor adjustment font sizes of text
    looks off ..select/apply a simple responsive css template.

@@ -11,6 +11,7 @@ mod fit {
     use geo::Geometry;
     use geo_types::Coord;
     use num_traits::FloatConst;
+    use rust_d3_geo::projection::mercator_transverse::MercatorTransverse;
     use rust_d3_geo::projection::ClipExtentGet;
     use topojson::Topology;
 
@@ -382,6 +383,39 @@ mod fit {
     // 	// 	// // //   test.inDelta(projection.translate(), [473.829551, 500], 1e-6);
     // 	// 	// // //   test.end();
     // 	// 	// // // });
+
+    /// Translation fit_extent pass, scale pass, translate FAIL
+    #[ignore]
+    #[test]
+    fn fit_extent_world_transverse_mercator() {
+        println!("projection.fitExtent(…) world transverseMercator");
+
+        let world = world();
+        let projection = MercatorTransverse::builder();
+        let projection = projection.fit_extent(
+            [
+                Coord {
+                    x: 50.0_f64,
+                    y: 50.0_f64,
+                },
+                Coord {
+                    x: 950.0_f64,
+                    y: 950.0_f64,
+                },
+            ],
+            &world,
+        );
+        assert!(in_delta(projection.scale(), 143.239449, 1e-6));
+        let t = projection.translate();
+        assert!(in_delta_coordinate(
+            &t,
+            &Coord {
+                x: 473.829551_f64,
+                y: 500_f64
+            },
+            1e-6
+        ));
+    }
 
     // 	// 	// // // tape("projection.fitExtent(…) USA albersUsa", function(test) {
     // 	// 	// // //   var projection = d3.geoAlbersUsa();

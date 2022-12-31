@@ -16,7 +16,7 @@ derivative = "~2"
 num-traits = "~0.2"
 geo = { workspace = true }
 geo-types = { workspace = true }
-delaunator = { git = "https://github.com/mourner/delaunator-rs.git" }
+delaunator = "1.0.1"
 rust_d3_array = { git = "https://github.com/martinfrances107/rust_d3_array.git" }
 rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git", branch = "main" }
 serde_json = "~1.0"
