@@ -2,7 +2,16 @@
 Rust 2021 Edition.
 
 This is a port  [d3-geo](https://github.com/d3/d3-geo) into RUST.
-I am actively working towards a [Alpha release](https://github.com/martinfrances107/rust_d3_geo/milestone/1) milestone. I intended to eventually publish this on [crates.io](https://crates.io/)
+Not all projection have been implemented and there a number of known bugs that I am activley working on.
+
+Here is a list of the currently supported projections.
+* AziumuthalEqualArea
+* AzimuthalEquiDistant
+* Equirectangular
+* Gnomic
+* Mercator
+* Orthographic
+* Stereographic
 
 ## Examples
 Examples are provided to help developers convert their existing javascript to rust.
@@ -25,20 +34,16 @@ To run the example please follow the "Running the examples" below.
 <td><image src="images/rotating.png"></td>
 </tr>
 <tr>
-<tr>
 <td><strong>examples/globe/svg</strong> <br/><br/> SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules. </td>
 <td><image src="images/globe.svg"> </td>
 </tr>
-<td> <br/><br/>  
+<td><strong>examples/globe/drag_and_zoom</strong> <br/><br/>
   This is similar to the other globe applications. As an example it deliberatly mixes typescript methods with rust.
-  The typescript is responsible for handling the mouse events and calculating the euler angle, forming the appropiate quaternion and finally calcuting the appropiate change in rotation. RUST then takes the rotation and redraws the canvas.
-  
-<br/>
-<br/>
+  The typescript is responsible for handling the mouse events and calculating the quaternion and finally calcuting the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.
 </td>
-<td></td>
-</tr>
 
+<td><image src="images/drag_and_zoom.png"> </td>
+</tr>
 <tr>
 <td><strong>examples/projections</strong> <br/><br/>
 
@@ -218,14 +223,7 @@ For an example of this see the test labelled "projection.fitExtent(…) custom p
 
 I am trying to get a program of mine to run faster, but I want this to eventually be a true library port. So feel free to add suggestions to my todo list.
 
-Here is a list of the currently supported projections.
-* AziumuthalEqualArea
-* AzimuthalEquiDistant
-* Equirectangular
-* Gnomic
-* Mercator
-* Orthographic
-* Stereographic
+
 
 A complete list of all ported projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 7 have been ported so far.
 </details>
