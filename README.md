@@ -102,6 +102,7 @@ To view the application either create a devleopment build, or construct a static
 
  ### Start And Run A Development Build
  ```console
+ git clone https://github.com/martinfrances107/rust_d3_geo.git
  cd rust_d3_geo/examples/ring/
  cargo build
  npm install
@@ -115,6 +116,7 @@ The last command "npm run start"  will automatically open your default browser a
 Much better performance can be acheived by bulding a static web site and viewing that direclty.
 
 ```console
+  git clone https://github.com/martinfrances107/rust_d3_geo.git
   cd rust_d3_geo/examples/ring
   cargo build
   npm run  build
