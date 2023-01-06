@@ -5,6 +5,7 @@ Rust 2021 Edition.
 <div align="center">
 
 <a href="https://crates.io/crates/d3_geo_rs"><img alt="crates.io" src="https://img.shields.io/crates/v/d3_geo_rs.svg"/></a>
+ <a href="https://crates.io/crates/d3_geo_rs"><img src="https://img.shields.io/crates/d/d3_geo_rs.svg" alt="Download" />
 
 <a href="https://docs.rs/d3_geo_rs/0.1.2/d3_geo_rs/">Docs</a>
 </div>
