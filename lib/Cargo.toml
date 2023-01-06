@@ -7,8 +7,8 @@ keywords = ["graphics", "d3-geo"]
 name = "d3_geo_rs"
 license = "MIT"
 readme = "../README.md"
-repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
-version = "0.1.2"
+repository = "https://github.com/martinfrances107/rust_d3_geo.git"
+version = "0.1.3"
 
 [dependencies]
 approx = "~0.5"
