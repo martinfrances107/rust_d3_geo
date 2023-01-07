@@ -31,10 +31,7 @@ where
     );
     let actual_location = projection.invert(expected_point);
     let actual_point = projection.transform(expected_location);
-    println!(
-        "2) actual location {:?}, actual point {:?}",
-        actual_location, actual_point,
-    );
+    println!("2) actual location {actual_location:?}, actual point {actual_point:?}");
     planar_equal(&actual_point, expected_point, delta)
         && spherical_equal(&actual_location, expected_location, delta)
 }

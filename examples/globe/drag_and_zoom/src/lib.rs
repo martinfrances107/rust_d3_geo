@@ -53,10 +53,7 @@ use d3_geo_rs::projection::REFLECT;
 use d3_geo_rs::Transform;
 
 fn document() -> Result<Document, JsValue> {
-    let window = match js_sys::global().dyn_into::<Window>() {
-        Ok(w) => w,
-        Err(_) => return Err(JsValue::from_str("document() Could not get the window")),
-    };
+    let Ok(window) = js_sys::global().dyn_into::<Window>() else { return Err(JsValue::from_str("document() Could not get the window")) };
 
     window.document().map_or_else(
         || {
@@ -120,12 +117,9 @@ impl Renderer {
 
         let document = document()?;
 
-        let w = match window() {
-            Some(w) => w,
-            None => {
-                return Err(JsValue::from_str("new() Could not get window."));
-            }
-        };
+        let Some(w) = window() else {
+                         return Err(JsValue::from_str("new() Could not get window."));
+                     };
 
         // Get data from world map.
         let mut opts = RequestInit::new();

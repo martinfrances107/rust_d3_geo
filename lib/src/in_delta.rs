@@ -6,10 +6,7 @@ use geo_types::Coord;
 
 /// True if two points are identical within the specified difference.
 pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bool {
-    println!(
-        "in_delta() expected {:?} actual {:?} delta {:?}",
-        expected, actual, delta
-    );
+    println!("in_delta() expected {expected:?} actual {actual:?} delta {delta:?}");
 
     let is_ok = if actual.is_nan() && expected.is_nan() {
         true
@@ -31,10 +28,7 @@ pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bo
 ///
 /// Debug and test helper function.
 pub fn point<T: CoordFloat + Display>(actual: Point<T>, expected: Point<T>, delta: T) -> bool {
-    println!(
-        "in_delta_point: expected(Point) {:?} actual {:?} delta {:?}",
-        expected, actual, delta
-    );
+    println!("in_delta_point: expected(Point) {expected:?} actual {actual:?} delta {delta:?}");
     in_delta(actual.x(), expected.x(), delta) && in_delta(actual.y(), expected.y(), delta)
 }
 
@@ -46,9 +40,6 @@ pub fn coordinate<T: CoordFloat + Display>(
     expected: &Coord<T>,
     delta: T,
 ) -> bool {
-    println!(
-        "in_delta_point: expected(Point) {:?} actual {:?} delta {:?}",
-        expected, actual, delta
-    );
+    println!("in_delta_point: expected(Point) {expected:?} actual {actual:?} delta {delta:?}");
     in_delta(actual.x, expected.x, delta) && in_delta(actual.y, expected.y, delta)
 }

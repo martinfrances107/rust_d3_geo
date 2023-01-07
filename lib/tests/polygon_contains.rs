@@ -456,7 +456,7 @@ mod polygon_contains {
         circle.radius_set(120.0);
         let c = circle.circle();
         let polygon = c;
-        println!("polygon {:#?}", polygon);
+        println!("polygon {polygon:#?}");
         assert_eq!(
             polygon_contains(
                 &polygon,

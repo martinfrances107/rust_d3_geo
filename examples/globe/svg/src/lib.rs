@@ -123,7 +123,7 @@ pub async fn start() -> Result<(), JsValue> {
                         i += 1;
                         for p in &mp.0 {
                             let s = builder.object(&Geometry::Polygon(p.clone()));
-                            let class_name = format!("id-{}", i);
+                            let class_name = format!("id-{i}");
                             let path = path_node(&class_name)?;
                             path.set_attribute_ns(None, "d", &s)?;
                             path.set_attribute_ns(None, "class", &class_name)?;
@@ -135,7 +135,7 @@ pub async fn start() -> Result<(), JsValue> {
                     Geometry::Polygon(p) => {
                         let s = builder.object(&Geometry::Polygon(p.clone()));
 
-                        let class_name = format!("id-{}", i);
+                        let class_name = format!("id-{i}");
                         let path = path_node(&class_name)?;
                         path.set_attribute_ns(None, "d", &s)?;
                         path.set_attribute_ns(None, "style", fill[i % 7])?;

@@ -113,7 +113,7 @@ where
 
     #[inline]
     fn line_end(&mut self) {
-        if let MeasureMode::Polygon = self.mode {
+        if matches!(self.mode, MeasureMode::Polygon) {
             self.length_point(&self.p00.clone());
         };
 
