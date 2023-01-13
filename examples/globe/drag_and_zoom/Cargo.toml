@@ -9,7 +9,7 @@ keywords = ["graphics", "d3-geo"]
 name = "rust_d3_geo_example_globe_drag_and_zoom"
 readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
-version = "0.1.0"
+version = "0.1.4"
 
 [lib]
 crate-type = ["cdylib"]
