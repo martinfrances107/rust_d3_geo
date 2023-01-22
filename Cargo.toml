@@ -1,12 +1,12 @@
 [workspace]
 members = [
-    "./lib",
-    "./examples/globe/canvas",
-    "./examples/globe/rotating_50m",
-    "./examples/globe/drag_and_zoom",
-    "./examples/globe/svg",
-    "./examples/projections",
-    "./examples/ring",
+  "./lib",
+  "./examples/globe/canvas",
+  "./examples/globe/rotating_50m",
+  "./examples/globe/drag_and_zoom",
+  "./examples/globe/svg",
+  "./examples/projections",
+  "./examples/ring",
 ]
 
 [workspace.package]
@@ -17,7 +17,7 @@ keywords = ["graphics", "d3-geo"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo"
-version = "0.1.4"
+version = "0.1.5"
 # Version 1.65 is required as this package makes use of "Generic Associated Types".
 rust-version = "1.65"
 
