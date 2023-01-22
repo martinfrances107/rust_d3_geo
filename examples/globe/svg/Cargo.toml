@@ -8,7 +8,7 @@ name = "rust_d3_geo_example_svg"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
-version = "0.1.4"
+version = { workspace = true }
 
 
 [lib]
@@ -31,28 +31,28 @@ wasm-bindgen-futures = { workspace = true }
 [dependencies.web-sys]
 workspace = true
 features = [
-    "console",
-    "Attr",
-    "Document",
-    "Element",
-    "Event",
-    "Headers",
-    "EventTarget",
-    "SvgsvgElement",
-    "SvgAnimatedLength",
-    "SvgLength",
-    "SvgPathElement",
-    "HtmlElement",
-    "HtmlCollection",
-    "HtmlInputElement",
-    "Node",
-    "Performance",
-    "PerformanceTiming",
-    "PerformanceMeasure",
-    "Request",
-    "RequestInit",
-    "RequestMode",
-    "Response",
-    "Text",
-    "Window",
+  "console",
+  "Attr",
+  "Document",
+  "Element",
+  "Event",
+  "Headers",
+  "EventTarget",
+  "SvgsvgElement",
+  "SvgAnimatedLength",
+  "SvgLength",
+  "SvgPathElement",
+  "HtmlElement",
+  "HtmlCollection",
+  "HtmlInputElement",
+  "Node",
+  "Performance",
+  "PerformanceTiming",
+  "PerformanceMeasure",
+  "Request",
+  "RequestInit",
+  "RequestMode",
+  "Response",
+  "Text",
+  "Window",
 ]

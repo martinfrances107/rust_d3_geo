@@ -9,7 +9,7 @@ license = "MIT"
 name = "rust_d3_geo_example_ring"
 readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
-version = "0.1.4"
+version = { workspace = true }
 
 [lib]
 crate-type = ["cdylib"]
@@ -28,25 +28,25 @@ wasm-bindgen = { workspace = true }
 [dependencies.web-sys]
 workspace = true
 features = [
-    "Attr",
-    "console",
-    "CanvasRenderingContext2d",
-    "Document",
-    "Element",
-    "Event",
-    "EventTarget",
-    "HtmlCanvasElement",
-    "HtmlCollection",
-    "HtmlElement",
-    "HtmlInputElement",
-    "Node",
-    "Performance",
-    "PerformanceTiming",
-    "PerformanceMeasure",
-    "SvgsvgElement",
-    "SvgAnimatedLength",
-    "SvgLength",
-    "SvgPathElement",
-    "Text",
-    "Window",
+  "Attr",
+  "console",
+  "CanvasRenderingContext2d",
+  "Document",
+  "Element",
+  "Event",
+  "EventTarget",
+  "HtmlCanvasElement",
+  "HtmlCollection",
+  "HtmlElement",
+  "HtmlInputElement",
+  "Node",
+  "Performance",
+  "PerformanceTiming",
+  "PerformanceMeasure",
+  "SvgsvgElement",
+  "SvgAnimatedLength",
+  "SvgLength",
+  "SvgPathElement",
+  "Text",
+  "Window",
 ]

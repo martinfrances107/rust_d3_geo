@@ -9,7 +9,7 @@ keywords = ["graphics", "d3-geo"]
 name = "rust_d3_geo_example_globe_drag_and_zoom"
 readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
-version = "0.1.4"
+version = { workspace = true }
 
 [lib]
 crate-type = ["cdylib"]
@@ -32,22 +32,22 @@ serde-wasm-bindgen = "~0.4"
 [dependencies.web-sys]
 workspace = true
 features = [
-    "Attr",
-    "console",
-    "CanvasRenderingContext2d",
-    "Document",
-    "Element",
-    "Event",
-    "Headers",
-    "EventTarget",
-    "HtmlCanvasElement",
-    "HtmlElement",
-    "HtmlInputElement",
-    "Node",
-    "Request",
-    "RequestInit",
-    "RequestMode",
-    "Response",
-    "Text",
-    "Window",
+  "Attr",
+  "console",
+  "CanvasRenderingContext2d",
+  "Document",
+  "Element",
+  "Event",
+  "Headers",
+  "EventTarget",
+  "HtmlCanvasElement",
+  "HtmlElement",
+  "HtmlInputElement",
+  "Node",
+  "Request",
+  "RequestInit",
+  "RequestMode",
+  "Response",
+  "Text",
+  "Window",
 ]

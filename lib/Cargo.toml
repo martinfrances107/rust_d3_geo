@@ -8,7 +8,7 @@ name = "d3_geo_rs"
 license = "MIT"
 readme = "../README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo.git"
-version = "0.1.4"
+version = { workspace = true }
 
 [dependencies]
 approx = "~0.5"
@@ -38,31 +38,31 @@ criterion = "~0.4"
 [dependencies.web-sys]
 workspace = true
 features = [
-    "Attr",
-    "console",
-    "CanvasRenderingContext2d",
-    "Document",
-    "Element",
-    "Event",
-    "Headers",
-    "EventTarget",
-    "HtmlCanvasElement",
-    "HtmlElement",
-    "HtmlInputElement",
-    "Node",
-    "Performance",
-    "PerformanceTiming",
-    "PerformanceMeasure",
-    "Request",
-    "RequestInit",
-    "RequestMode",
-    "Response",
-    "SvgsvgElement",
-    "SvgAnimatedLength",
-    "SvgLength",
-    "SvgPathElement",
-    "Text",
-    "Window",
+  "Attr",
+  "console",
+  "CanvasRenderingContext2d",
+  "Document",
+  "Element",
+  "Event",
+  "Headers",
+  "EventTarget",
+  "HtmlCanvasElement",
+  "HtmlElement",
+  "HtmlInputElement",
+  "Node",
+  "Performance",
+  "PerformanceTiming",
+  "PerformanceMeasure",
+  "Request",
+  "RequestInit",
+  "RequestMode",
+  "Response",
+  "SvgsvgElement",
+  "SvgAnimatedLength",
+  "SvgLength",
+  "SvgPathElement",
+  "Text",
+  "Window",
 ]
 
 [[bench]]
