@@ -13,7 +13,7 @@
           "test",
           "--no-run",
           "--lib",
-          "--package=rust_d3_geo"
+          "--package=d3_geo_rs"
         ],
         "filter": {
           "name": "rust_d3_geo",
@@ -32,7 +32,7 @@
           "test",
           "--no-run",
           "--test=polygon_contains_test",
-          "--package=rust_d3_geo"
+          "--package=d3_geo_rs"
         ],
         "filter": {
           "name": "polygon_contains_test",
@@ -51,7 +51,7 @@
           "test",
           "--no-run",
           "--test=centroid_test",
-          "--package=rust_d3_geo"
+          "--package=d3_geo_rs"
         ],
         "filter": {
           "name": "centroid_test",
@@ -70,7 +70,7 @@
           "test",
           "--no-run",
           "--test=distance",
-          "--package=rust_d3_geo"
+          "--package=d3_geo_rs"
         ],
         "filter": {
           "name": "distance",
@@ -89,7 +89,7 @@
           "test",
           "--no-run",
           "--test=length_test",
-          "--package=rust_d3_geo"
+          "--package=d3_geo_rs"
         ],
         "filter": {
           "name": "length_test",
@@ -108,7 +108,7 @@
           "test",
           "--no-run",
           "--test=path_area_test",
-          "--package=rust_d3_geo"
+          "--package=d3_geo_rs"
         ],
         "filter": {
           "name": "path_area_test",
@@ -121,14 +121,14 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "'fit_test'",
+      "name": "'fit_test (tm)'",
       "cargo": {
         "args": [
           "test",
           "fit_extent_world_transverse_mercator",
           "--no-run",
           "--test=fit",
-          "--package=rust_d3_geo"
+          "--package=d3_geo_rs"
         ],
         "filter": {
           "name": "fit",
@@ -147,7 +147,7 @@
           "test",
           "--no-run",
           "--test=invert_test",
-          "--package=rust_d3_geo"
+          "--package=d3_geo_rs"
         ],
         "filter": {
           "name": "invert_test",
@@ -166,7 +166,7 @@
           "test",
           "--no-run",
           "--test=index_test",
-          "--package=rust_d3_geo"
+          "--package=d3_geo_rs"
         ],
         "filter": {
           "name": "index_test",
@@ -185,7 +185,7 @@
           "test",
           "--no-run",
           "--test=clipcircle_test",
-          "--package=rust_d3_geo"
+          "--package=d3_geo_rs"
         ],
         "filter": {
           "name": "clipcircle_test",
