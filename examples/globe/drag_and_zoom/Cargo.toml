@@ -21,7 +21,7 @@ geo = { workspace = true }
 gloo-utils = { workspace = true }
 gloo-timers = { version = "~0.2", features = ["futures"] }
 futures = "~0.3"
-rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git", branch = "main" }
+rust_topojson_client = { workspace = true }
 topojson = { workspace = true }
 wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
 wasm-bindgen-test = { workspace = true }
