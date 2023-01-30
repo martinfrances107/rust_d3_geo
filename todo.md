@@ -29,7 +29,7 @@ examples/projection eslint needs updating.
 
 ##  Before API lock-down
 
-* Detail why Feature and Feactue collection is complicated.
+* Detail why Feature and FeactueCollection is complicated.
 
 * cargo docs:
   Some traits are missing description.

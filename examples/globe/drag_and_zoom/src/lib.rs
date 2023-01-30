@@ -65,7 +65,7 @@ fn document() -> Result<Document, JsValue> {
     )
 }
 
-/// Used to export a Coord<f64> to javascript.
+/// Used to export a `Coord<f64>` to javascript.
 #[derive(Debug)]
 #[wasm_bindgen]
 pub struct ExportedPoint {
