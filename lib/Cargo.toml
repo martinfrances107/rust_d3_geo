@@ -28,7 +28,6 @@ wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
 wasm-bindgen-test = { workspace = true }
 wasm-bindgen-futures = { workspace = true }
 gloo-utils = { workspace = true }
-geo = { workspace = true }
 pretty_assertions = "~1"
 lazy_static = "~1"
 regex = "~1"
