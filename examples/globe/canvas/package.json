@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/martinfrances107/rust_d3_geo/#readme",
   "dependencies": {
-    "benchmark": "file:../pkg",
     "request": "^2.79.0"
   },
   "devDependencies": {
@@ -37,6 +36,6 @@
     "rimraf": "^3.0.0",
     "webpack": "^5.66.0",
     "webpack-cli": "^5",
-    "webpack-dev-server": "^5"
+    "webpack-dev-server": "^4"
   }
 }
