@@ -18,8 +18,6 @@ crate-type = ["cdylib"]
 d3_geo_rs = { path = "../../lib" }
 geo = { workspace = true }
 geo-types = { workspace = true }
-getrandom = { workspace = true, features = ["js"] }
-rand = { workspace = true }
 wasm-bindgen-test = { workspace = true }
 wasm-bindgen = { workspace = true }
 

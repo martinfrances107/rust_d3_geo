@@ -16,7 +16,6 @@ derivative = "~2"
 num-traits = "~0.2"
 geo = { workspace = true }
 geo-types = { workspace = true }
-delaunator = "~1"
 serde_json = "~1"
 futures = { workspace = true }
 

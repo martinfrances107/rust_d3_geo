@@ -20,12 +20,9 @@ js-sys = { workspace = true }
 geo = { workspace = true }
 geo-types = { workspace = true }
 gloo-utils = { workspace = true }
-gloo-timers = { version = "~0.2", features = ["futures"] }
-futures = "~0.3"
 rust_topojson_client = { workspace = true }
 topojson = { workspace = true }
 wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
-wasm-bindgen-test = { workspace = true }
 wasm-bindgen-futures = { workspace = true }
 
 [dependencies.web-sys]

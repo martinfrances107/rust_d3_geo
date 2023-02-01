@@ -1,4 +1,3 @@
-extern crate rand;
 extern crate web_sys;
 
 use geo::LineString;
