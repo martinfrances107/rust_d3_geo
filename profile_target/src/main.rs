@@ -12,7 +12,6 @@ use num_traits::FloatConst;
 use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
 
-use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
