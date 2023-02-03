@@ -106,6 +106,14 @@ where
 
     #[inline]
     fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
+        // Looking at the flamegraph generated while looking at
+        // profile_target :-
+        // This is on the hot path
+        // I can get about a 10% speedup by simplifying the code here.
+        // The degnerate polygon test fails without the NAN mapping to zero here.
+        // RUST lack %g -- so this hand rolled messyness.
+        // consider {x:.6} and adjusting all the tests!!
+        //
         // 6 digits of precision NAN maps to zero!!!
         let x = p.x.to_f64().unwrap_or(0_f64);
         let x_rounded = (x * 1_000_000_f64).round() / 1_000_000_f64;
