@@ -40,6 +40,8 @@ web-sys = "~0.3"
 
 [profile.release]
 codegen-units = 1
-debug = true
 lto = true
 panic = "abort"
+
+[profile.dev]
+debug = true
