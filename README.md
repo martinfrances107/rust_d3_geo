@@ -162,6 +162,23 @@ Also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voron
  Based on that benchmark rust is 31% faster, or permits a 37% increase in throughput.
 </details>
 
+<br/>
+
+## Flamegraph
+
+<details>
+<summary>See the details.</summary>
+
+profile_target is binary that outputs a HTML page containing a SVG image showing the globe with graticule markings.
+
+A flamegraph can be created with the following
+```bash
+cd profile_target
+sudo CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph
+```
+
+The complexity of rendering 240 countries/polygons provides a good view in memory allocation issues.
+</details>
 <br>
 
 ## Future Multi thread support
