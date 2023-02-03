@@ -53,8 +53,14 @@ where
     topology
 }
 
+fn parse_topology() -> Geometry {
+    let topology = world::<f64>();
+    let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
+    countries
+}
+
 #[cfg(not(tarpaulin_include))]
-fn draw() -> Result<Vec<String>, ()> {
+fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     use d3_geo_rs::{
         graticule::generate_mls,
         projection::{ScaleSet, TranslateSet},
@@ -63,9 +69,6 @@ fn draw() -> Result<Vec<String>, ()> {
 
     let width = 1000_f64;
     let height = 1000_f64;
-
-    let topology = world::<f64>();
-    let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
     let ortho = Orthographic::builder()
         .scale_set(width / 1.3_f64 / std::f64::consts::PI)
@@ -170,7 +173,8 @@ fn main() -> std::io::Result<()> {
     ")?;
 
     // file.write_all(draw().as_bytes())?;
-    match draw() {
+    let countries = parse_topology();
+    match draw(countries) {
         Ok(paths) => {
             for path in paths {
                 file.write_all(path.as_bytes())?;
