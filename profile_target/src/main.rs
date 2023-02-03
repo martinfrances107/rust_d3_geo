@@ -55,7 +55,10 @@ where
 
 #[cfg(not(tarpaulin_include))]
 fn draw() -> Result<Vec<String>, ()> {
-    use d3_geo_rs::projection::{ScaleSet, TranslateSet};
+    use d3_geo_rs::{
+        graticule::generate_mls,
+        projection::{ScaleSet, TranslateSet},
+    };
     use geo::GeometryCollection;
 
     let width = 1000_f64;
@@ -121,18 +124,13 @@ fn draw() -> Result<Vec<String>, ()> {
         }
     }
 
-    // // Graticule
-    // let graticule = generate_mls::<f64>();
+    // Graticule
+    let graticule = generate_mls::<f64>();
 
-    // let graticule_d = builder.object(&graticule);
-    // // let class_name = "graticule";
-    // // let path = path_node(class_name)?;
-    // // path.set_attribute_ns(None, "d", &graticule_d)?;
-    // // path.set_attribute_ns(None, "style", "#ccc")?;
-    // // svg.append_child(&path)?;
-    // paths.push(format!(
-    //     "<path d = \"{graticule_d}\" class=\"graticule\" style=\"#ccc\"/>"
-    // ));
+    let graticule_d = builder.object(&graticule);
+    paths.push(format!(
+        "<path d = \"{graticule_d}\" class=\"graticule\" style=\"#ccc\"/></path>"
+    ));
     Ok(paths)
 }
 
@@ -162,6 +160,13 @@ fn main() -> std::io::Result<()> {
       viewBox=\"0 0 1200 1280\"
       xmlns=\"http://www.w3.org/2000/svg\"
     >
+    <style>
+    path {
+      fill: None;
+      stroke: black;
+      stroke-width: 1px;
+    }
+     </style>
     ")?;
 
     // file.write_all(draw().as_bytes())?;

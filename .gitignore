@@ -11,6 +11,7 @@
 **/dist
 target/
 Cargo.lock
-perf.data
-perf.data.old
-flamegraph.svg
+**/perf.data
+**/perf.data.old
+**/flamegraph.svg
+profile_target/profile_output.html
