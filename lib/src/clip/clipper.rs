@@ -192,6 +192,7 @@ where
         self.state.ring_sink.point(p, m);
     }
 
+    // rust_d3_geo_voronoi - profile_target flamegraph identifies this as a hot path!
     fn ring_end(&mut self) {
         let le = self.state.ring[0];
         // javascript version drops m here.

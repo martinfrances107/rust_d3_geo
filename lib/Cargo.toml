@@ -71,10 +71,20 @@ harness = false
 name = "rings"
 harness = false
 
-# [[example]]
-# name = "globe_canvas"
-# path = "../examples/globe/canvas/src/lib.rs"
-# crate-type = ["cdylib"]
+[[example]]
+name = "globe_canvas"
+path = "../examples/globe/canvas/src/lib.rs"
+crate-type = ["cdylib"]
+
+[[example]]
+name = "globe_drag_and_zoom"
+path = "../examples/globe/drag_and_zoom/src/lib.rs"
+crate-type = ["cdylib"]
+
+[[example]]
+name = "rotating_50m"
+path = "../examples/globe/rotating_50m/src/lib.rs"
+crate-type = ["cdylib"]
 
 [[example]]
 name = "globe_svg"
@@ -82,11 +92,11 @@ path = "../examples/globe/svg/src/lib.rs"
 crate-type = ["cdylib"]
 
 [[example]]
-name = "rings"
-path = "../examples/ring/src/lib.rs"
+name = "projection"
+path = "../examples/projections/src/lib.rs"
 crate-type = ["cdylib"]
 
 [[example]]
-name = "projection"
-path = "../examples/projections/src/lib.rs"
+name = "rings"
+path = "../examples/ring/src/lib.rs"
 crate-type = ["cdylib"]
