@@ -55,8 +55,7 @@ where
 
 fn parse_topology() -> Geometry {
     let topology = world::<f64>();
-    let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
-    countries
+    feature_from_name(&topology, "countries").expect("Did not extract geometry")
 }
 
 #[cfg(not(tarpaulin_include))]
