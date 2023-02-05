@@ -2,12 +2,11 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "sourceMap": true,
+    "strictNullChecks": true,
     "noImplicitAny": true,
-    "strict": true,
-    "lib": [
-      "dom"
-    ],
-    "target": "es2020",
+    "module": "ES2020",
+    "target": "es5",
     "allowJs": true,
+    "moduleResolution": "node"
   },
 }
