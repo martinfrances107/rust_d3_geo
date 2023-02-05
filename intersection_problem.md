@@ -1,7 +1,6 @@
-## The Intersection Problem ( Request for comments )
+# The Intersection Problem
 
 There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes.
-
 
 The original paper from which the clipping algorithm was developed is
 [here](https://www.inf.usi.ch/hormann/papers/Greiner.1998.ECO.pdf )
@@ -24,6 +23,7 @@ function Intersection(point, points, other, entry) {
 ```
 
 This is what the current naive rust implementation looks like.
+
 ```rust
 pub struct Intersection<'a, T>
 where
@@ -51,8 +51,8 @@ Because of rusts unique ownership model, doubly-linked list must be used with ca
 
 In Rust doubly-linked list are found here [std::collections::LinkedList](https://doc.rust-lang.org/std/collections/struct.LinkedList.html)
 
- * support is experimental
- * In std, functionality is limited.
+* support is experimental
+* In std, functionality is limited.
 
  Support for doubly-linked list with insert, remove and split functionaility
  can be found outside std, here [intrusive_collections::linked_list::CursorMut](intrusive_collections::linked_list::CursorMut)
