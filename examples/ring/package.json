@@ -9,7 +9,7 @@
   "scripts": {
     "build": "rimraf dist pkg && RUST_LOG=info webpack",
     "serve": "serve dist",
-    "start": "rimraf dist pkg && RUST_LOG=info webpack-dev-server --open",
+    "start": "rimraf pkg && RUST_LOG=info webpack-dev-server --open",
     "test": "cargo test && wasm-pack test --headless"
   },
   "repository": {
