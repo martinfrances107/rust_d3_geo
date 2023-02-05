@@ -192,7 +192,7 @@ pub fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
             }
 
             current = current.clone().borrow().o.clone().unwrap();
-            points = current.clone().borrow().z;
+            points = current.borrow().z;
 
             is_subject = !is_subject;
 
