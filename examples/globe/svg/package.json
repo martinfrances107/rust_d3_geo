@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "rimraf dist pkg && RUST_LOG=info webpack",
+    "serve": "serve dist",
     "start": "rimraf dist pkg && RUST_LOG=info webpack-dev-server --open ",
     "test": "cargo test && wasm-pack test --headless"
   },
@@ -38,6 +39,7 @@
     "eslint-plugin-react": "^7",
     "eslint-plugin-react-hooks": "^4",
     "rimraf": "^4",
+    "serve": "^14",
     "webpack": "^5",
     "webpack-cli": "^5",
     "webpack-dev-server": "^4"
