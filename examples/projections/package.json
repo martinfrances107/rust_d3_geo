@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "rimraf dist pkg && RUST_LOG=info webpack",
+    "serve": "serve dist",
     "start": "rimraf dist pkg && RUST_LOG=info webpack-dev-server --open",
     "test": "cargo test && wasm-pack test --headless"
   },
@@ -42,6 +43,7 @@
     "eslint": "^8",
     "eslint-plugin-react": "^7",
     "eslint-plugin-react-hooks": "^4",
+    "serve": "^14",
     "topojson-client": "^3",
     "ts-loader": "^9",
     "typescript": "^4",
