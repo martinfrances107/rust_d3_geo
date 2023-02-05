@@ -113,22 +113,22 @@ To view the application either create a devleopment build, or construct a static
  ```console
  git clone https://github.com/martinfrances107/rust_d3_geo.git
  cd rust_d3_geo/examples/ring/
- cargo build
  npm install
- npm start
+ npm run start
  ```
 
 The last command "npm run start"  will automatically open your default browser at http:://localhost::8080
 
 ### Building A Static Site
 
-Much better performance can be acheived by bulding a static web site and viewing that direclty.
+Much better performance can be acheived by bulding a static web site and viewing that directly.
 
 ```console
   git clone https://github.com/martinfrances107/rust_d3_geo.git
   cd rust_d3_geo/examples/ring
-  cargo build
-  npm run  build
+  npm install
+  npm run build
+  npm run serve
 ```
 
 This creates a static HTML site in the dist/ directory.
