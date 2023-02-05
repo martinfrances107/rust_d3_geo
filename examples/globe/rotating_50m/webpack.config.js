@@ -1,12 +1,13 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
 const path = require('path')
+const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
 module.exports = {
-  entry: './bootstrap.ts',
+  entry: './js/index.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bootstrap.js'
+    filename: 'index.js'
   },
   module: {
     rules: [{
@@ -26,12 +27,19 @@ module.exports = {
   devtool: 'inline-source-map',
   experiments: { syncWebAssembly: true },
   plugins: [
-    new ESLintPlugin(),
+    // new ESLintPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'index.html' },
         { from: 'public/world-atlas', to: 'world-atlas' }
       ]
-    })
+    }),
+    new WasmPackPlugin({
+      crateDirectory: __dirname,
+      args: '--log-level warn',
+      extraArgs: '',
+      forceMode: 'development'
+    }),
+
   ]
 }

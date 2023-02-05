@@ -2,9 +2,10 @@ const zlib = require('zlib')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const path = require('path')
+const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
 module.exports = {
-  entry: './bootstrap.ts',
+  entry: './js/index.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bootstrap.js'
