@@ -43,14 +43,7 @@ where
     T: CoordFloat + Debug + FloatConst,
 {
     let file = File::open("./world-atlas/world/50m.json").expect("File should open read only.");
-    let topology: Topology = serde_json::from_reader(file).expect("File should be parse as JSON.");
-
-    // if let Some(g) = feature_from_name(&topology, "land") {
-    //     g
-    // } else {
-    //     panic!("failed to file and decode from file.");
-    // }
-    topology
+    serde_json::from_reader(file).expect("File should be parse as JSON.")
 }
 
 fn parse_topology() -> Geometry {
