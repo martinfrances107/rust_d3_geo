@@ -119,9 +119,7 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
                     }
                 }
 
-                _ => {
-                    // console_log!("Not polygon, Not Multipolygon.");
-                }
+                _ => {}
             }
         }
     }

@@ -12,7 +12,6 @@ import('../pkg')
       // index into the elapsedArray 0..199
       let index = 0
 
-      console.log('wasm is imported')
       renderer.Renderer.new('./world-atlas/world/50m.json', 0)
         .then((renderer) => {
           const canvasArray = document.getElementsByTagName('canvas')

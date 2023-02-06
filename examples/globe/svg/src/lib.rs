@@ -116,7 +116,6 @@ pub async fn start() -> Result<(), JsValue> {
 
     match &countries {
         Geometry::GeometryCollection(GeometryCollection(g_vec)) => {
-            console_log!("{}", g_vec.len());
             for g in g_vec {
                 match &g {
                     Geometry::MultiPolygon(mp) => {

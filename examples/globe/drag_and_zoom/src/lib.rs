@@ -26,7 +26,6 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::JsFuture;
-use wasm_bindgen_test::console_log;
 use web_sys::window;
 use web_sys::CanvasRenderingContext2d;
 use web_sys::Document;
@@ -230,7 +229,6 @@ impl Renderer {
             .iter()
             .map(&mut |x: JsValue| x.as_f64().unwrap_or_default())
             .collect::<Vec<f64>>();
-        console_log!("angles {:?}", angles);
         self.ob.rotate3_set(&[angles[0], angles[1], angles[2]]);
     }
 
