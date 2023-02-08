@@ -14,6 +14,7 @@ This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST.
 Not all projection have been implemented and there are number of known bugs that I am activley working on.
 
 Here is a list of the currently supported projections.
+
 * AziumuthalEqualArea
 * AzimuthalEquiDistant
 * Equirectangular
@@ -23,6 +24,7 @@ Here is a list of the currently supported projections.
 * Stereographic
 
 ## Examples
+
 Examples are provided to help developers convert their existing javascript to rust.
 To run the example please follow the "Running the examples" below.
 
@@ -61,7 +63,7 @@ shows a side by side comparison of the all the projections rendered by in both  
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/projection.png"> </td>
 </tr>
 <tr>
-<td> <strong>examples/ring</strong><br/>Renders a complex multipolygon. </td>
+<td> <strong>examples/ring</strong><br/>Sample code in both RUST and javascript that renders a complex multipolygon. ( Orthographic and Sterographic ) </td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/ring.png"></td>
 </tr>
 </tbody>
@@ -89,7 +91,7 @@ but at the moment is this alpha grade software.
 
 * The clipping algorithm in clip/rejoin/mod.rs needs to be refactored.
 see  [The intersection Problem.](#the-intersection-problem--request-for-comments)
-Test coverage in that area is high so the algortihms is working but the data structures make extensive use of vectors ( heap objects ) containng references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>> ```   which is not performant.
+Test coverage in that area is high so the algortihms is working but the data structures make extensive use of vectors ( heap objects ) containng references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>>```   which is not performant.
 
 </details>
 
@@ -101,15 +103,16 @@ Test coverage in that area is high so the algortihms is working but the data str
 <br/>
 Requirements:
 
- * node and npm [installation guide](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+* node and npm [installation guide](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
- * wasm-pack [installation guide](https://rustwasm.github.io/wasm-pack/installer/)
+* wasm-pack [installation guide](https://rustwasm.github.io/wasm-pack/installer/)
 
 <br/>
 
 To view the application either create a devleopment build, or construct a static-web site as follows
 
- ### Start And Run A Development Build
+### Start And Run A Development Build
+
  ```console
  git clone https://github.com/martinfrances107/rust_d3_geo.git
  cd rust_d3_geo/examples/ring/
@@ -158,7 +161,7 @@ For example http:://localhost::3000
 In this project, we have two benchmarks, based on the ring and graticule examples ( see above. )
 
 Also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voronoi)
- uses this library, and that project contains a benchmark which contains an exact port of a benchmark in [d3-geo-voronoi ](https://github.com/Fil/d3-geo-voronoi).
+ uses this library, and that project contains a benchmark which contains an exact port of a benchmark in [d3-geo-voronoi](https://github.com/Fil/d3-geo-voronoi).
  Based on that benchmark rust is 31% faster, or permits a 37% increase in throughput.
 </details>
 
@@ -172,6 +175,7 @@ Also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voron
 profile_target is binary that outputs a HTML page containing a SVG image showing the globe with graticule markings.
 
 A flamegraph can be created with the following
+
 ```bash
 cd profile_target
 sudo CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph
@@ -182,6 +186,7 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
 <br>
 
 ## Future Multi thread support
+
 <details>
 <summary>See the details.</summary>
 On my todo list.
@@ -191,6 +196,7 @@ I have made extensive use of iterators when porting the code and rayon support t
 
 * The Hashmaps - appear slow.
   Maybe I can get performace improvements by replacing them with B-tree collections?
+
 </details>
 
 <br>
@@ -202,9 +208,12 @@ There is an aspect of the design that needs review. It related to the best way t
 <br>
 
 ## Coding Standard
- * Idomatic RUST, as defined by cargo clippy where possible.
- * No booleans as arguments to functions/methods, use two state enums instead.
+
+* Idomatic RUST, as defined by cargo clippy where possible.
+* No booleans as arguments to functions/methods, use two state enums instead.
+
    See "Reflect" as an example.
+
    ```rust
    pub trait ReflectSet {
        /// f64 or f32.
@@ -217,10 +226,13 @@ There is an aspect of the design that needs review. It related to the best way t
    ```
 
    This allow for a clearer statement of intent :-
+
    ```rust
+
    builder.reflect_y_set(REFLECT::Flipped);
    ```
- * ["Type-Driven API Design"](https://www.youtube.com/watch?v=bnnacleqg6k) is the
+
+* ["Type-Driven API Design"](https://www.youtube.com/watch?v=bnnacleqg6k) is the
      preferred way of constructing state machines.
 
      In the example below, when assembling a stream pipeline, connect() can only be called
@@ -238,11 +250,12 @@ There is an aspect of the design that needs review. It related to the best way t
       }
     }
      ```
+
      The "Stream" trait is only implemented when the STATE is "Connected<SINK>".
      By design, all code is prevented from calling line_start() or point() unless the object
      has been connected to another pipeline stage.
 
-## Unimplemented sections of the library.
+## Unimplemented sections of the library
 
 <details>
 <summary>See the details.</summary>
@@ -250,8 +263,6 @@ Support for a custom projection is not yet supported.
 For an example of this see the test labelled "projection.fitExtent(…) custom projection"
 
 I am trying to get a program of mine to run faster, but I want this to eventually be a true library port. So feel free to add suggestions to my todo list.
-
-
 
 A complete list of all ported projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 7 have been ported so far.
 </details>
@@ -264,8 +275,9 @@ A complete list of all ported projections can be found in invert-test.rs. Out of
 <summary>See the details.</summary>
 
 ## Document API changes such as
-  * src/projection/clip_angle_reset()
-  * src/projection/clip_extent_clear()
+
+* src/projection/clip_angle_reset()
+* src/projection/clip_extent_clear()
 
 Finally
 
