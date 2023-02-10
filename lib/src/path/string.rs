@@ -104,31 +104,37 @@ where
         self.point = PointState::AtLineStart;
     }
 
+    // This is a hot path.
+    //
+    // Looking at the flamegraph generated while looking at
+    // profile_target :-
+    //
+    // I can get about a 10% speedup by simplifying the code here.
+    // The degnerate polygon test fails without the NAN mapping to zero here.
+    // RUST lack %g -- so this hand rolled messyness.
+    //
+    // Previously to emulate %.6g I used :-
+    //
+    // let x_rounded = (x * 1_000_000_f64).round() / 1_000_000_f64;
+    //
+    // After testing trim_end_macthes() is faster.
     #[inline]
     fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
-        // Looking at the flamegraph generated while looking at
-        // profile_target :-
-        // This is on the hot path
-        // I can get about a 10% speedup by simplifying the code here.
-        // The degnerate polygon test fails without the NAN mapping to zero here.
-        // RUST lack %g -- so this hand rolled messyness.
-        // consider {x:.6} and adjusting all the tests!!
-        //
-        // 6 digits of precision NAN maps to zero!!!
-        let x = p.x.to_f64().unwrap_or(0_f64);
-        let x_rounded = (x * 1_000_000_f64).round() / 1_000_000_f64;
-        let y = p.y.to_f64().unwrap_or(0_f64);
-        let y_rounded = (y * 1_000_000_f64).round() / 1_000_000_f64;
+        let x = format!("{:.6}", p.x);
+        let x = x.trim_end_matches('0').trim_end_matches('.');
+        let y = format!("{:.6}", p.y);
+        let y = y.trim_end_matches('0').trim_end_matches('.');
+
         match self.point {
             PointState::AtLineStart => {
-                self.string.push(format!("M{x_rounded},{y_rounded}"));
+                self.string.push(format!("M{x},{y}"));
                 self.point = PointState::LineInProgress;
             }
             PointState::LineInProgress => {
-                self.string.push(format!("L{x_rounded},{y_rounded}"));
+                self.string.push(format!("L{x},{y}"));
             }
             PointState::RenderingPoints => {
-                self.string.push(format!("M{x_rounded},{y_rounded}"));
+                self.string.push(format!("M{x},{y}"));
                 self.string.push(self.circle.clone());
             }
         }
