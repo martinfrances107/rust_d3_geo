@@ -23,7 +23,6 @@ rust_topojson_client = { workspace = true }
 topojson = { workspace = true }
 wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
 wasm-bindgen-futures = { workspace = true }
-serde-wasm-bindgen = "~0.4"
 
 [dependencies.web-sys]
 workspace = true
