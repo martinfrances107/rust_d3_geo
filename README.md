@@ -50,7 +50,7 @@ To run the example please follow the "Running the examples" below.
 </tr>
 <td><strong>examples/globe/drag_and_zoom</strong> <br/><br/>
   This is similar to the other globe applications. As an example it deliberatly mixes typescript methods with rust.
-  The typescript is responsible for handling the mouse events and calculating the quaternion and finally calcuting the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.
+  The typescript is responsible for handling the mouse events and calculating the quaternion and finally calculating the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.
 </td>
 
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/drag_and_zoom.png"> </td>
@@ -69,7 +69,6 @@ shows a side by side comparison of the all the projections rendered by in both  
 </tbody>
 <table>
 
-
 ## When to use the rust version of the library
 
 The limits of the javascript library become obvious when developing interactive applications that process large datasets.
@@ -77,7 +76,7 @@ For example the examples/globe applications operate on a 50m resolution map of t
 
 ## Current Status
 
-The majority of the library has been ported along with the associated tests. The aim is to eventaully release this as a rust crate.
+The majority of the library has been ported along with the associated tests. The aim is to eventaully release a "1.0" version.
 but at the moment is this alpha grade software.
 
 <br/>
@@ -90,7 +89,7 @@ but at the moment is this alpha grade software.
 * The API is not stabalised. If perfomance issues arise then the API will change. Additionaly I plan a final review to remove anything uneeded before making changes become complicated.
 
 * The clipping algorithm in clip/rejoin/mod.rs needs to be refactored.
-see  [The intersection Problem.](#the-intersection-problem--request-for-comments)
+see  [The intersection Problem.](/intersection_problem.md)
 Test coverage in that area is high so the algortihms is working but the data structures make extensive use of vectors ( heap objects ) containng references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>>```   which is not performant.
 
 </details>
@@ -139,17 +138,6 @@ This creates a static HTML site in the dist/ directory.
 To view the site you cannot just point you browser at a location of the form file:://home/user/alice/dist/index.html
 
 By security reasons, browsers prevent HTML pages with WASM files from being viewed this way. You must host the site first.
-
-A way forward here is to use a npm package called serve
-
-```console
-  sudo npm install --global serve
-  serve dist
-```
-
-If everything works you will be given a locaation to view
-
-For example http:://localhost::3000
 
 </details>
 <br>
@@ -236,7 +224,7 @@ There is an aspect of the design that needs review. It related to the best way t
      preferred way of constructing state machines.
 
      In the example below, when assembling a stream pipeline, connect() can only be called
-     when the state is "Unconnected". The output type's STATE is "Connected<SINK>".
+     when the state is "Unconnected". The output type's STATE is "Connected\<SINK\>".
 
     ```rust
     impl StreamTransformRadians<Unconnected> {
@@ -251,7 +239,7 @@ There is an aspect of the design that needs review. It related to the best way t
     }
      ```
 
-     The "Stream" trait is only implemented when the STATE is "Connected<SINK>".
+     The "Stream" trait is only implemented when the STATE is "Connected\<SINK\>".
      By design, all code is prevented from calling line_start() or point() unless the object
      has been connected to another pipeline stage.
 
