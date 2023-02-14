@@ -80,7 +80,7 @@ impl<DRAIN> TransformExtent for MercatorTransverse<DRAIN> {
         [
             Coord {
                 x: x0,
-                y: f64::max(t.x - k, y0),
+                y: f64::max(t.y - k, y0),
             },
             Coord {
                 x: x1,
