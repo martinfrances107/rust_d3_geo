@@ -42,7 +42,7 @@ impl<DRAIN> TransformExtent for Mercator<DRAIN> {
     type T = f64;
     #[inline]
     fn transform_extent(
-        self,
+        &self,
         k: f64,
         t: Coord<f64>,
         x0: f64,

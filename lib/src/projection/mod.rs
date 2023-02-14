@@ -87,7 +87,7 @@ pub trait TransformExtent {
     /// Transform the extent stored in `MercatorBuilder` before being passing
     /// into the base projection builder.
     fn transform_extent(
-        self,
+        &self,
         k: Self::T,
         t: Coord<Self::T>,
         x0: Self::T,

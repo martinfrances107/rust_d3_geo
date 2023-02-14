@@ -34,14 +34,10 @@ where
         });
         let t = self.base.build().transform(&t);
         let ce = match self.extent {
-            Some(extent) => self.pr.clone().transform_extent(
-                k,
-                t,
-                extent[0].x,
-                extent[0].y,
-                extent[1].x,
-                extent[1].y,
-            ),
+            Some(extent) => {
+                self.pr
+                    .transform_extent(k, t, extent[0].x, extent[0].y, extent[1].x, extent[1].y)
+            }
             _ => [
                 Coord {
                     x: t.x - k,
