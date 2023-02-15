@@ -10,9 +10,7 @@ use crate::clip::circle::gen_clip as gen_clip_circle;
 use crate::clip::circle::ClipCircleC;
 use crate::clip::rectangle::Rectangle;
 use crate::projection::builder::template::ResampleNonePCNC;
-use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::template::ResamplePCNC;
-use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::types::BuilderAntimeridianResampleClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::builder::types::BuilderCircleResampleClip;
@@ -150,9 +148,7 @@ where
             resample: self.resample.clone(),
 
             // Mutate section.
-            clip: gen_clip_circle::<PR, ResamplePCNC<DRAIN, PR, T>, ResamplePCNU<PR, T>, T>(
-                self.theta.unwrap(),
-            ),
+            clip: gen_clip_circle::<ResamplePCNC<DRAIN, PR, T>, T>(self.theta.unwrap()),
             postclip: Rectangle::new(extent),
         }
     }
@@ -195,9 +191,7 @@ where
             resample: self.resample.clone(),
 
             // Mutate section.
-            clip: gen_clip_circle::<PR, ResampleNonePCNC<DRAIN, PR, T>, ResampleNonePCNU<PR, T>, T>(
-                self.theta.unwrap(),
-            ),
+            clip: gen_clip_circle::<ResampleNonePCNC<DRAIN, PR, T>, T>(self.theta.unwrap()),
             postclip: Rectangle::new(extent),
         }
         //TODO javascipt calls reset here.

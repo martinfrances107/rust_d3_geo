@@ -159,7 +159,7 @@
 //!
 //!     // Graticule
 //!     let graticule =
-//!         generate_mls::<f64>();
+//!         generate_mls();
 //!     context_raw.begin_path();
 //!     context_raw.set_stroke_style(&"#ccc".into());
 //!     path.object(&graticule);

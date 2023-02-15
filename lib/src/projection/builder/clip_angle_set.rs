@@ -35,7 +35,7 @@ where
         debug_assert!(angle != T::zero(), "must call clip_angle_reset() instead");
 
         let theta = angle.to_radians();
-        let clip = gen_clip::<PR, RC, RU, T>(theta);
+        let clip = gen_clip::<RC, T>(theta);
         // Copy, Mutate - updating only theta and preclip_factory.
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<RC, T>>,

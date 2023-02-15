@@ -126,7 +126,7 @@ impl Renderer {
             });
 
         // Graticule
-        let graticule = generate_mls::<f64>();
+        let graticule = generate_mls();
 
         Ok(Self {
             context2d,

@@ -17,7 +17,7 @@ pub struct StreamTransformRadians<STATE>(pub STATE);
 impl StreamTransformRadians<Unconnected> {
     #[inline]
     /// Connect this node to the next element in the pipeline.
-    pub const fn connect<EP, SINK, T>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
+    pub const fn connect<SINK>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
     where
         SINK: Clone,
     {

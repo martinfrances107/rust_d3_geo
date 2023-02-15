@@ -19,7 +19,7 @@ where
     fn clip_angle(&mut self, angle: T) -> &mut Self {
         debug_assert!(angle != T::zero(), "must call clip_angle_reset() instead");
         let theta = angle.to_radians();
-        let clip = gen_clip::<PR, RC, RU, T>(theta);
+        let clip = gen_clip::<RC, T>(theta);
 
         self.clip = clip;
         self.theta = Some(angle);

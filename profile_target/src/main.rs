@@ -118,7 +118,7 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     }
 
     // Graticule
-    let graticule = generate_mls::<f64>();
+    let graticule = generate_mls();
 
     let graticule_d = builder.object(&graticule);
     paths.push(format!(

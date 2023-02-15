@@ -89,10 +89,7 @@ where
 
         let rotate_node = self.rotator.clone().connect(preclip_node);
 
-        let out = self
-            .transform_radians
-            .clone()
-            .connect::<DRAIN, _, T>(rotate_node);
+        let out = self.transform_radians.clone().connect::<_>(rotate_node);
 
         // Populate cache.
         self.cache = Some((drain.clone(), out.clone()));

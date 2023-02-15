@@ -12,9 +12,7 @@ use crate::projection::resampler::none::None;
 use crate::projection::PrecisionBypass;
 
 use super::template::ResampleNoneNoPCNC;
-use super::template::ResampleNoneNoPCNU;
 use super::template::ResampleNonePCNC;
-use super::template::ResampleNonePCNU;
 use super::types::BuilderAntimeridianResampleClip;
 use super::types::BuilderAntimeridianResampleNoClip;
 use super::types::BuilderAntimeridianResampleNoneNoClip;
@@ -164,12 +162,7 @@ where
             delta_gamma: self.delta_gamma,
 
             // Mutate section.
-            clip: gen_clip_circle::<
-                PR,
-                ResampleNoneNoPCNC<DRAIN, PR, T>,
-                ResampleNoneNoPCNU<PR, T>,
-                T,
-            >(self.theta.unwrap()),
+            clip: gen_clip_circle::<ResampleNoneNoPCNC<DRAIN, PR, T>, T>(self.theta.unwrap()),
             delta2: T::zero(),
             resample: None::new(self.project_transform.clone()),
         }
@@ -193,9 +186,7 @@ where
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
 
-        let clip = gen_clip_circle::<PR, ResampleNonePCNC<DRAIN, PR, T>, ResampleNonePCNU<PR, T>, T>(
-            self.theta.unwrap(),
-        );
+        let clip = gen_clip_circle::<ResampleNonePCNC<DRAIN, PR, T>, T>(self.theta.unwrap());
 
         // Copy - Mutate.
         Self::Output {

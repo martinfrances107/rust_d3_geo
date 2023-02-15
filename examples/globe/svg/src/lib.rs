@@ -154,7 +154,7 @@ pub async fn start() -> Result<(), JsValue> {
     }
 
     // Graticule
-    let graticule = generate_mls::<f64>();
+    let graticule = generate_mls();
 
     let graticule_d = builder.object(&graticule);
     let class_name = "graticule";
