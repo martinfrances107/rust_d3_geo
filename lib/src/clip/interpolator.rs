@@ -55,7 +55,7 @@ where
             }
         } else if (p.y - self.y0).abs() < self.epsilon {
             // Returns 1 or 0.
-            (*direction > T::zero()).into()
+            i8::from(direction > &T::zero())
         } else if direction > &T::zero() {
             3
         } else {
