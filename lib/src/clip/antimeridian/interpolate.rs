@@ -10,6 +10,7 @@ use crate::stream::Stream;
 #[derive(Clone, Debug)]
 pub struct Interpolate<T> {
     epsilon: T,
+    two: T,
 }
 
 impl<T> Default for Interpolate<T>
@@ -19,6 +20,7 @@ where
     fn default() -> Self {
         Self {
             epsilon: T::from(EPSILON).unwrap(),
+            two: T::from(2).unwrap(),
         }
     }
 }
@@ -106,7 +108,7 @@ where
                 if (from.x - to.x).abs() > self.epsilon {
                     let lambda = if from.x < to.x { T::PI() } else { -T::PI() };
 
-                    phi = direction * lambda / T::from(2).unwrap();
+                    phi = direction * lambda / self.two;
                     stream_in.point(&Coord { x: -lambda, y: phi }, None);
                     stream_in.point(
                         &Coord {
