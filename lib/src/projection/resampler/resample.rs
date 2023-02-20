@@ -69,7 +69,7 @@ where
     }
 }
 
-/// Resample the stream base on a given precision.
+/// Resample the stream based on a given precision.
 #[derive(Clone)]
 pub struct Resample<PR, STATE, T>
 where

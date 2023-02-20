@@ -110,7 +110,7 @@ pub trait RawBase: Transform {
     fn builder() -> Self::Builder;
 }
 
-/// Output a Projector base on a Builders configuration.
+/// Output a Projector based on a Builders configuration.
 pub trait Build
 where
     <Self as Build>::ClipC: Clone,
@@ -133,7 +133,7 @@ where
     type RU;
     /// f64 or f32
     type T;
-    /// Returns a Projector base on a builder configuration.
+    /// Returns a Projector based on a builder configuration.
     #[allow(clippy::type_complexity)]
     fn build(
         &self,

@@ -35,7 +35,7 @@ where
     T: CoordFloat + Default + FloatConst,
 {
     #[inline]
-    /// Constuctor and Projection base on the angle in radians.
+    /// Constuctor and Projection based on the angle in radians.
     pub fn new(phi0: T) -> Self {
         Self {
             p_drain: PhantomData::<DRAIN>,
