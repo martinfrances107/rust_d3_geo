@@ -176,7 +176,7 @@ where
     CLIPU: Clone,
     T: CoordFloat,
 {
-    /// The raw projeciton.
+    /// The raw projection.
     pub pr: PR,
     /// The wrapped builder type.
     pub base: ProjectionBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>,
