@@ -11,7 +11,6 @@ Rust 2021 Edition.
 </div>
 
 This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST.
-Not all projection have been implemented and there are number of known bugs that I am activley working on.
 
 Here is a list of the currently supported projections.
 
@@ -22,6 +21,8 @@ Here is a list of the currently supported projections.
 * Mercator
 * Orthographic
 * Stereographic
+
+Not all projections have been implemented and there are number of known bugs that I am activley working on.
 
 ## Examples
 
