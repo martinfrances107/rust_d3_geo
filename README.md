@@ -22,8 +22,6 @@ Here is a list of the currently supported projections.
 * Orthographic
 * Stereographic
 
-Not all projections have been implemented and there are number of known bugs that I am activley working on.
-
 ## Examples
 
 Examples are provided to help developers convert their existing javascript to rust.
@@ -77,7 +75,7 @@ For example the examples/globe applications operate on a 50m resolution map of t
 
 ## Current Status
 
-The majority of the library has been ported along with the associated tests. The aim is to eventaully release a "1.0" version.
+Not all projections have been implemented and there are number of known bugs that I am activley working on. The majority of the library has been ported along with the associated tests. The aim is to eventaully release a "1.0" version.
 but at the moment is this alpha grade software.
 
 <br/>
