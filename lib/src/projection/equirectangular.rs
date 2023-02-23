@@ -10,6 +10,7 @@ use crate::projection::ScaleSet;
 use crate::Transform;
 
 use super::builder::Builder;
+use super::BuilderTrait;
 use super::RawBase;
 
 /// Equirectangular

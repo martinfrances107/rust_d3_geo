@@ -24,10 +24,11 @@ mod path_centroid {
     use d3_geo_rs::in_delta::point as in_delta_point;
     use d3_geo_rs::path::centroid::Centroid;
     use d3_geo_rs::path::Path;
-    use d3_geo_rs::projection::builder::Builder as ProjectionBuilder;
+    use d3_geo_rs::projection::builder::Builder as ProjectionBuilderCommon;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
     use d3_geo_rs::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
     use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::BuilderTrait as ProjectionBuilderTrait;
     use d3_geo_rs::projection::PrecisionBypass;
     use d3_geo_rs::projection::ScaleSet;
     use d3_geo_rs::stream::Streamable;
@@ -38,7 +39,7 @@ mod path_centroid {
     where
         T: AddAssign<T> + CoordFloat + Default + FloatConst,
     {
-        ProjectionBuilder::new(Equirectangular::default())
+        ProjectionBuilderCommon::new(Equirectangular::default())
             .scale_set(T::from(900f64 / PI).unwrap())
             .precision_bypass()
             .build()

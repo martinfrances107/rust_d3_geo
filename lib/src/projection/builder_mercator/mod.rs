@@ -61,6 +61,7 @@ use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+use super::BuilderTrait as ProjectionBuilderMercator;
 use super::ClipExtentSet;
 use super::TransformExtent;
 

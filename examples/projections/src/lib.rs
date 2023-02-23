@@ -25,6 +25,7 @@ use wasm_bindgen_test::console_log;
 use web_sys::Document;
 use web_sys::*;
 
+mod albers;
 mod azimuthal_equal_area;
 mod azimuthal_equidistant;
 mod conic_equal_area;
@@ -35,6 +36,7 @@ mod mercator_transverse;
 mod orthographic;
 mod stereographic;
 
+use albers::draw_albers;
 use azimuthal_equal_area::draw_azimuthal_equal_area;
 use azimuthal_equidistant::draw_azimuthal_equidistant;
 use conic_equal_area::draw_conic_equal_area;
@@ -82,6 +84,7 @@ pub async fn start() -> Result<(), JsValue> {
         feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
     try_join!(
+        draw_albers(&land),
         draw_azimuthal_equal_area(&land),
         draw_azimuthal_equidistant(&land),
         draw_conic_equal_area(&land),

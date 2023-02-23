@@ -14,6 +14,7 @@ use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
+use super::BuilderTrait;
 use super::ClipAngleSet;
 
 /// Why the Phantom Data is required here...

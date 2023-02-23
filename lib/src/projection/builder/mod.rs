@@ -30,6 +30,7 @@ use super::builder::template::ResampleNoPCNU;
 use super::resampler::resample::Resample;
 use super::transform::generate as generate_str;
 use super::transform::scale_translate_rotate::ScaleTranslateRotate;
+use super::BuilderTrait;
 
 use template::ResamplePCNC;
 use template::ResamplePCNU;
@@ -118,17 +119,19 @@ where
     pub(super) resample: RU,
 }
 
-impl<DRAIN, PR, T> BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> BuilderTrait for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + Default + FloatConst,
 {
+    type PR = PR;
+
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
     ///
     /// # Panics
     /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
-    pub fn new(projection_raw: PR) -> Self {
+    fn new(projection_raw: PR) -> Self {
         let x = T::from(480_f64).unwrap();
         let y = T::from(250_f64).unwrap();
         let lambda = T::zero();
@@ -192,7 +195,7 @@ where
 
     /// Drop the current raw projection, use the new `projection_raw` and rebuild
     /// state. ( very experimental)
-    pub fn update_pr(&mut self, projection_raw: PR) -> &mut Self {
+    fn update_pr(&mut self, projection_raw: PR) -> &mut Self {
         // rebuild
         let center = generate_str(
             &self.k,

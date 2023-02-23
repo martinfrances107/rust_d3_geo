@@ -7,14 +7,15 @@ use geo_types::Coord;
 use num_traits::float::FloatConst;
 
 use crate::math::EPSILON;
-use crate::projection::builder::types::BuilderCircleResampleNoClip;
-use crate::projection::ScaleSet;
 use crate::stream::Stream;
 use crate::Transform;
 
+use super::builder::types::BuilderCircleResampleNoClip;
 use super::builder::Builder;
+use super::BuilderTrait;
 use super::ClipAngleSet;
 use super::RawBase;
+use super::ScaleSet;
 
 #[inline]
 fn angle<T>(z: T) -> T

@@ -10,6 +10,8 @@ use crate::rot::rotate_radians::RotateRadians;
 use crate::stream::Streamable;
 use crate::Transform;
 
+/// Builds a specialised (conic) equal area.
+pub mod albers;
 /// The raw projection.
 pub mod azimuthal_equal_area;
 /// The raw projection.
@@ -29,6 +31,9 @@ pub mod gnomic;
 // The raw projection.
 /// The default projection builder.
 pub mod builder;
+
+/// Cylindrical and Conic projection builder.
+pub mod builder_conic;
 /// Identity builder.
 pub mod builder_identity;
 /// A specalised builder wrapping the default mecator.
@@ -98,7 +103,6 @@ pub trait TransformExtent {
     where
         Self::T: CoordFloat;
 }
-
 /// Serves as a abstract trait both things that follow the common family of
 /// raw projections, and alternatively the less common mercator family of
 /// raw projections.
@@ -108,6 +112,18 @@ pub trait RawBase: Transform {
 
     /// Constructs the default projection builder.
     fn builder() -> Self::Builder;
+}
+
+/// Make the constructions of all Builder uniform.
+pub trait BuilderTrait {
+    /// The raw projector.
+    type PR;
+
+    /// Construtor.
+    fn new(projection_raw: Self::PR) -> Self;
+
+    /// Using pr to update the state of the projector.
+    fn update_pr(&mut self, pr: Self::PR) -> &mut Self;
 }
 
 /// Output a Projector based on a Builders configuration.

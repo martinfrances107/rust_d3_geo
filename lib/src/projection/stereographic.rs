@@ -12,6 +12,7 @@ use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
 use super::builder::Builder;
+use super::BuilderTrait;
 use super::ClipAngleSet;
 use super::RawBase;
 

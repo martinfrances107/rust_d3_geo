@@ -2,6 +2,7 @@
 #[allow(clippy::excessive_precision)]
 mod equirectangular {
 
+    use d3_geo_rs::projection::BuilderTrait;
     use geo_types::Coord;
 
     use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;

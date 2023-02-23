@@ -23,6 +23,7 @@ import orthographic from './orthographic';
 import mercator from './mercator';
 import mercatorTransverse from './mercatorTransverse';
 import stereographic from './stereographic';
+import albers from "./albers";
 
 fetch("../world-atlas/world/50m.json").then(response => response.json())
   .then(_worldTopo => {
@@ -30,6 +31,7 @@ fetch("../world-atlas/world/50m.json").then(response => response.json())
     const world = feature(worldTopo, worldTopo.objects.countries);
     Promise.all(
       [
+        albers(world),
         azimuthalEqualArea(world),
         azimuthalEquidistant(world),
         conicEqualArea(world),

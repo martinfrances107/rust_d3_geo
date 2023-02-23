@@ -8,9 +8,11 @@ use crate::Transform;
 
 use super::builder::types::BuilderAntimeridianResampleNoClip;
 use super::builder::Builder;
+use super::builder_conic::Parallels;
 use super::conic_conformal::ConicConformal;
 use super::mercator::Mercator;
 use super::tany;
+use super::BuilderTrait;
 use super::RawBase;
 use super::ScaleSet;
 
@@ -83,10 +85,11 @@ where
 }
 
 // Reach into builder and alter the PR.
-impl<DRAIN> BuilderAntimeridianResampleNoClip<DRAIN, Conformal<DRAIN>, f64>
+impl<DRAIN> Parallels for BuilderAntimeridianResampleNoClip<DRAIN, Conformal<DRAIN>, f64>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
+    type T = f64;
     fn parallels(&mut self, phi0: f64, phi1: f64) -> &mut Self {
         let projection_raw = Conformal::generate(phi0.to_radians(), phi1.to_radians());
         self.update_pr(projection_raw);
