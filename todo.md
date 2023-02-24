@@ -1,12 +1,17 @@
-## TODO
+# TODO
+
+Today
+Albers,
+ is that a graticule problem?
+ copy documentation of parallels.
 
 High Priority.
 examples/projection eslint needs updating.
 
 * fit_test -- needs works.
-  * reclip needs work.
-  * lots of todos missing
-  * fit helper functions need parallel copies for MercatorBuilder.
+* reclip needs work.
+* lots of todos missing
+* fit helper functions need parallel copies for MercatorBuilder.
 
 * projection_rotate_test -- did it ever work?
   Only differences are in the LSDigits.
@@ -27,7 +32,7 @@ examples/projection eslint needs updating.
    looks off ..select/apply a simple responsive css template.
   ( eg.  Boilerplate, material-ui)
 
-##  Before API lock-down
+## Before API lock-down
 
 * Detail why Feature and FeactueCollection is complicated.
 

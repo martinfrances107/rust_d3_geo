@@ -45,14 +45,14 @@ mod translate_set;
 // /// Builder shorthand notations.
 // pub mod types;
 
+/// Adjustments the pair of parallels
+/// use to define the proejctions.
+///
 /// Differs from PR in the way the PR is generated.
 pub trait PRConic: RawBase {
-    /// The default builder.
-    // type Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>;
-
-    /// Constructs the default projection builder.
-    // fn build<CLIPC, CLIPU, DRAIN, PCNU, RC, RU>(
-    // ) -> Self::Builder<CLIPC, CLIPU, DRAIN, PCNU, SELF, RC, RU>;
+    /// Late initisalisation of a projection
+    /// based on a pair of parallels.
+    #[must_use]
     fn generate(self, y0: Self::T, y1: Self::T) -> Self;
 }
 
@@ -71,11 +71,12 @@ where
     pr: PRConic,
 }
 
+/// Define a set of parallels used to define the projection.
 pub trait Parallels {
     /// f64 or f32.
     type T;
 
-    /// Define the parallels.
+    /// Set the parallels.
     fn parallels(&mut self, phi0: Self::T, phi1: Self::T) -> &mut Self;
 }
 

@@ -8,8 +8,6 @@ use wasm_bindgen::JsCast;
 use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
-use d3_geo_rs::projection::conformal::Conformal;
-use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
 

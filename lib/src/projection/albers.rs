@@ -51,7 +51,7 @@ type BuilderAlbers<DRAIN, T> = Builder<
 /// # Panics
 /// unwrap() is used here but a panic will never happen as constants  will
 /// always be converted into T.
-
+#[must_use]
 pub fn albers<DRAIN, T>() -> BuilderAlbers<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
