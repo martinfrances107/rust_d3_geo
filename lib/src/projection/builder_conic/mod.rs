@@ -24,7 +24,8 @@ mod center_set;
 // mod precision_bypass;
 // mod precision_get;
 // mod precision_set;
-mod parallels;
+mod parallels_get;
+mod parallels_set;
 // mod recenter_no_resampling;
 // mod recenter_with_resampling;
 // mod reflect_get;
@@ -67,13 +68,22 @@ where
     pr: PRConic,
 }
 
-/// Define a set of parallels used to define the projection.
-pub trait Parallels {
+/// Returns the pair of parallels used to define the projection.
+pub trait ParallelsGet {
     /// f64 or f32.
     type T;
 
     /// Set the parallels.
-    fn parallels(&mut self, phi0: Self::T, phi1: Self::T) -> &mut Self;
+    fn parallels(&mut self) -> (Self::T, Self::T);
+}
+
+/// Define the pair of parallels used to define the projection.
+pub trait ParallelsSet {
+    /// f64 or f32.
+    type T;
+
+    /// Set the parallels.
+    fn parallels_set(&mut self, phi0: Self::T, phi1: Self::T) -> &mut Self;
 }
 
 impl<BASE, PR, T> BuilderTrait for Builder<BASE, PR, T>
