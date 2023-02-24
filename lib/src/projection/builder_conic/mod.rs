@@ -5,14 +5,10 @@ use num_traits::FloatConst;
 
 use super::{BuilderTrait, RawBase};
 
-// use template::ResamplePCNC;
-// use template::ResamplePCNU;
-// use template::PCNU;
-
 // mod angle;
 // mod angle_get;
 mod build;
-// mod center_get;
+mod center_get;
 mod center_set;
 // mod clip_angle_adjust;
 // mod clip_angle_get;
@@ -35,7 +31,7 @@ mod parallels;
 // mod reflect_set;
 // mod rotate_get;
 mod rotate_set;
-// mod scale_get;
+mod scale_get;
 mod scale_set;
 // mod transform;
 // mod translate_get;

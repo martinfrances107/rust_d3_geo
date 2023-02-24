@@ -30,7 +30,7 @@ examples/projection eslint needs updating.
 
 * Examples projections CSS styling needs minor adjustment font sizes of text
    looks off ..select/apply a simple responsive css template.
-  ( eg.  Boilerplate, material-ui)
+  ( eg. Boilerplate, material-ui )
 
 ## Before API lock-down
 
