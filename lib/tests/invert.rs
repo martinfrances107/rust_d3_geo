@@ -3,6 +3,7 @@ mod invert {
 
     use geo_types::Coord;
 
+    use d3_geo_rs::projection::albers::albers as albers_generator;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
     use d3_geo_rs::projection::equal_area::EqualArea;
@@ -42,6 +43,12 @@ mod invert {
         ] {
             assert!(projection_equal(&pm, p, &pm.transform(p), None));
         }
+    }
+
+    #[test]
+    fn albers() {
+        let a = albers_generator::<DrainStub<f64>, f64>().build();
+        symetric_invert(a);
     }
 
     #[test]

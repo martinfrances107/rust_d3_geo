@@ -12,7 +12,9 @@ use super::builder_conic::Builder;
 use super::builder_conic::PRConic;
 use super::conic_equal_area::ConicEqualArea;
 use super::cylindrical_equal_area::CylindricalEqualArea;
+use super::CenterSet;
 use super::RawBase;
+use super::ScaleSet;
 
 /// [`ConicEqualArea`](super::conic_equal_area::ConicEqualArea) return type.
 ///
@@ -24,7 +26,7 @@ pub enum EqualArea<DRAIN, T> {
     Cyl(CylindricalEqualArea<DRAIN, T>),
     /// Conic
     Con(ConicEqualArea<DRAIN, T>),
-    /// State before generator is called.
+    /// State before the parallels are set.
     #[default]
     Uninitialized,
 }
@@ -38,8 +40,8 @@ where
             Self::Cyl(cyl) => cyl.transform(p),
             Self::Con(con) => con.transform(p),
             Self::Uninitialized => Coord {
-                x: T::zero(),
-                y: T::zero(),
+                x: T::nan(),
+                y: T::nan(),
             },
         }
     }
@@ -80,47 +82,20 @@ where
     }
 }
 
-//     #[inline]
-//     /// Phi0 value in radians.
-//     ///
-//     /// # Panics
-//     /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
-//     pub fn builder_with_phi0_phi1(
-//         y0: T,
-//         y1: T,
-//     ) -> Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, Self, T> {
-//         let ea = Self::generate(y0, y1);
-//         let mut b: Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, Self, T> =
-//             Builder::new(ea);
-//         b.scale_set(T::from(155.424).unwrap()).center_set(&Coord {
-//             x: T::zero(),
-//             y: T::from(33.6442).unwrap(),
-//         });
-//         b
-//     }
-// }
-
-// use crate::projection::builder_conic::PRConic;
-// impl<DRAIN, T> PRConic for EqualArea<DRAIN, T>
-// where
-//     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
-//     T: CoordFloat + Default + FloatConst,
-// {
-//     fn generate(self, y0: Self::T, y1: Self::T) -> Self {
-//         // Self::builder_with_phi0_phi1(T::zero(), T::FRAC_PI_3())
-//         todo!();
-//     }
-// }
-
 impl<DRAIN, T> RawBase for EqualArea<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    // type Builder = BuilderAntimeridianResampleNoClip<DRAIN, Self, T>;
     type Builder = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, Self, T>;
     #[inline]
     fn builder() -> Self::Builder {
-        Builder::new(Self::default())
+        let mut b = Builder::new(Self::default());
+        b.scale_set(T::from(155.424).unwrap());
+        b.center_set(&Coord {
+            x: T::zero(),
+            y: T::from(33.6442).unwrap(),
+        });
+        b
     }
 }

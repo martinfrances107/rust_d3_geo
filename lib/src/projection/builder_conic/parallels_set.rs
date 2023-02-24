@@ -15,8 +15,9 @@ where
     type T = T;
 
     fn parallels_set(&mut self, phi0: T, phi1: T) -> &mut Self {
-        let projection_raw =
-            <PR as PRConic>::generate(self.pr.clone(), phi0.to_radians(), phi1.to_radians());
+        self.phi0 = phi0.to_radians();
+        self.phi1 = phi1.to_radians();
+        let projection_raw = <PR as PRConic>::generate(self.pr.clone(), self.phi0, self.phi1);
         self.base.update_pr(projection_raw);
         self
     }
