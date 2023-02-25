@@ -67,6 +67,21 @@ mod invert {
     }
 
     #[test]
+    fn conformal() {
+        let mut builder = EqualArea::<DrainStub<f64>, f64>::builder();
+        symetric_invert(builder.build());
+        symetric_invert(builder.parallels_set(20_f64, 30_f64).build());
+        symetric_invert(builder.parallels_set(30_f64, 30_f64).build());
+        symetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
+        symetric_invert(
+            builder
+                .parallels_set(40_f64, 60_f64)
+                .rotate2_set(&[-120_f64, 0_f64])
+                .build(),
+        );
+    }
+
+    #[test]
     fn conic_equal_area() {
         let mut builder = EqualArea::<DrainStub<f64>, f64>::builder();
         symetric_invert(builder.build());

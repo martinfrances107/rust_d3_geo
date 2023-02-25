@@ -7,7 +7,9 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder::types::BuilderAntimeridianResampleNoClip;
-use super::builder::Builder;
+// use super::builder::Builder;
+use super::builder_conic::Builder;
+use super::builder_conic::PRConic;
 use super::builder_conic::ParallelsSet;
 use super::conic_conformal::ConicConformal;
 use super::mercator::Mercator;
@@ -22,12 +24,15 @@ use super::ScaleSet;
 ///
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub enum Conformal<DRAIN> {
     /// Projection depends of values set by builder_with_phi0_phi1.
-    Mercator(Mercator<DRAIN>),
-    /// Projection depends of values set by builder_with_phi0_phi1.
     Conic(ConicConformal<DRAIN>),
+    /// Projection depends of values set by builder_with_phi0_phi1.
+    Mercator(Mercator<DRAIN>),
+    /// State before the parallels are set.
+    #[default]
+    Uninitialized,
 }
 
 impl<DRAIN> Transform for Conformal<DRAIN> {
@@ -36,6 +41,10 @@ impl<DRAIN> Transform for Conformal<DRAIN> {
         match self {
             Self::Mercator(m) => m.transform(p),
             Self::Conic(c) => c.transform(p),
+            Self::Uninitialized => Coord {
+                x: f64::NAN,
+                y: f64::NAN,
+            },
         }
     }
 
@@ -44,15 +53,19 @@ impl<DRAIN> Transform for Conformal<DRAIN> {
         match self {
             Self::Mercator(m) => m.invert(p),
             Self::Conic(c) => c.invert(p),
+            Self::Uninitialized => Coord {
+                x: f64::NAN,
+                y: f64::NAN,
+            },
         }
     }
 }
 
-impl<DRAIN> Conformal<DRAIN>
+impl<DRAIN> PRConic for Conformal<DRAIN>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
-    pub(super) fn generate(y0: f64, y1: f64) -> Self {
+    fn generate(self, y0: f64, y1: f64) -> Self {
         let cy0 = y0.cos();
 
         let n = if (y0 - y1).abs() < EPSILON {
@@ -68,42 +81,18 @@ where
         let f = cy0 * f64::powf(tany(y0), n);
         Self::Conic(ConicConformal::new(f, n))
     }
-
-    #[inline]
-    #[must_use]
-    /// Phi0 value in radians.
-    pub fn builder_with_phi0_phi1(
-        y0: f64,
-        y1: f64,
-    ) -> BuilderAntimeridianResampleNoClip<DRAIN, Self, f64> {
-        let mut b = Builder::new(Self::generate(y0, y1));
-        b.scale_set(109.5_f64);
-
-        b.parallels_set(30_f64, 30_f64);
-        b
-    }
-}
-
-// Reach into builder and alter the PR.
-impl<DRAIN> ParallelsSet for BuilderAntimeridianResampleNoClip<DRAIN, Conformal<DRAIN>, f64>
-where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
-{
-    type T = f64;
-    fn parallels_set(&mut self, phi0: f64, phi1: f64) -> &mut Self {
-        let projection_raw = Conformal::generate(phi0.to_radians(), phi1.to_radians());
-        self.update_pr(projection_raw);
-        self
-    }
 }
 
 impl<DRAIN> RawBase for Conformal<DRAIN>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
-    type Builder = BuilderAntimeridianResampleNoClip<DRAIN, Self, f64>;
+    type Builder = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, f64>, Self, f64>;
     #[inline]
     fn builder() -> Self::Builder {
-        Self::builder_with_phi0_phi1(0_f64, f64::FRAC_PI_3())
+        let mut b = Builder::new(Self::default());
+
+        b.scale_set(109.5_f64).parallels_set(30_f64, 30_f64);
+        b
     }
 }
