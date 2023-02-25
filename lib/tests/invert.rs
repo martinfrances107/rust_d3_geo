@@ -8,6 +8,7 @@ mod invert {
     use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
     use d3_geo_rs::projection::builder_conic::ParallelsSet;
     use d3_geo_rs::projection::equal_area::EqualArea;
+    use d3_geo_rs::projection::equal_earth::EqualEarth;
     use d3_geo_rs::projection::equality::projection_equal;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
     use d3_geo_rs::projection::gnomic::Gnomic;
@@ -83,6 +84,12 @@ mod invert {
     #[test]
     fn equirectangular() {
         let e = Equirectangular::<DrainStub<f64>, f64>::builder().build();
+        symetric_invert(e);
+    }
+
+    #[test]
+    fn equal_earth() {
+        let e = EqualEarth::<DrainStub<f64>, f64>::builder().build();
         symetric_invert(e);
     }
 

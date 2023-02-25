@@ -29,6 +29,7 @@ mod albers;
 mod azimuthal_equal_area;
 mod azimuthal_equidistant;
 mod conic_equal_area;
+mod equal_earth;
 mod equirectangular;
 mod gnomic;
 mod mercator;
@@ -40,6 +41,7 @@ use albers::draw_albers;
 use azimuthal_equal_area::draw_azimuthal_equal_area;
 use azimuthal_equidistant::draw_azimuthal_equidistant;
 use conic_equal_area::draw_conic_equal_area;
+use equal_earth::draw_equal_earth;
 use equirectangular::draw_equirectangular;
 use gnomic::draw_gnomic;
 use mercator::draw_mercator;
@@ -88,12 +90,13 @@ pub async fn start() -> Result<(), JsValue> {
         draw_azimuthal_equal_area(&land),
         draw_azimuthal_equidistant(&land),
         draw_conic_equal_area(&land),
+        draw_equirectangular(&land),
+        draw_equal_earth(&land),
+        draw_gnomic(&land),
         draw_orthographic(&land),
         draw_mercator(&land),
         draw_mercator_transverse(&land),
         draw_sterographic(&land),
-        draw_equirectangular(&land),
-        draw_gnomic(&land),
     )?;
 
     Ok(())
