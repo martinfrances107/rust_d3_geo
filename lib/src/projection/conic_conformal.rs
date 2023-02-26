@@ -36,7 +36,7 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
 
     #[inline]
     fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
-        let mut y = f64::NAN;
+        let mut y = p.y;
         if self.f > 0f64 {
             if y < -f64::FRAC_PI_2() + EPSILON {
                 y = -f64::FRAC_PI_2() + EPSILON;

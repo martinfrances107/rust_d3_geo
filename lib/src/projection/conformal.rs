@@ -91,7 +91,6 @@ where
     #[inline]
     fn builder() -> Self::Builder {
         let mut b = Builder::new(Self::default());
-
         b.scale_set(109.5_f64).parallels_set(30_f64, 30_f64);
         b
     }

@@ -3,7 +3,6 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::math::EPSILON;
-use crate::projection::BuilderTrait;
 use crate::stream::Stream;
 use crate::Transform;
 
@@ -12,6 +11,7 @@ use super::builder_conic::Builder;
 use super::builder_conic::PRConic;
 use super::conic_equal_area::ConicEqualArea;
 use super::cylindrical_equal_area::CylindricalEqualArea;
+use super::BuilderTrait;
 use super::CenterSet;
 use super::RawBase;
 use super::ScaleSet;
