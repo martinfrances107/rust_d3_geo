@@ -1,5 +1,4 @@
 use geo::Coord;
-use num_traits::FloatConst;
 use num_traits::Zero;
 
 use crate::math::EPSILON;
@@ -7,7 +6,6 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder::types::BuilderAntimeridianResampleNoClip;
-// use super::builder::Builder;
 use super::builder_conic::Builder;
 use super::builder_conic::PRConic;
 use super::builder_conic::ParallelsSet;
@@ -68,17 +66,19 @@ where
     fn generate(self, y0: f64, y1: f64) -> Self {
         let cy0 = y0.cos();
 
+        // TODO make optimal after fix.
+        #[allow(clippy::suboptimal_flops)]
         let n = if (y0 - y1).abs() < EPSILON {
             y0.sin()
         } else {
-            (cy0 / y1.cos()).ln() / y1.cos() / (tany(y1) / tany(y0)).ln()
+            (cy0 / y1.cos()).ln() / (tany(y1) / tany(y0)).ln()
         };
 
-        if !n.is_zero() {
+        if n.is_zero() {
             return Self::Mercator(Mercator::default());
         }
 
-        let f = cy0 * f64::powf(tany(y0), n);
+        let f = cy0 * f64::powf(tany(y0), n) / n;
         Self::Conic(ConicConformal::new(f, n))
     }
 }
