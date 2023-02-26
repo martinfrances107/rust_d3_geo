@@ -63,7 +63,10 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
 
         Coord {
             x: l / self.n,
-            y: 2f64 * (f64::powf(self.f / r, 1f64 / self.n).atan()) - f64::FRAC_PI_2(),
+            y: 2f64.mul_add(
+                f64::powf(self.f / r, 1f64 / self.n).atan(),
+                -f64::FRAC_PI_2(),
+            ),
         }
     }
 }
