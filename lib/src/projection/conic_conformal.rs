@@ -57,13 +57,13 @@ impl<DRAIN> Transform for ConicConformal<DRAIN> {
         let fy = self.f - p.y;
         let r = self.n.signum() * p.x.hypot(fy);
         let mut l = p.x.atan2(fy.abs()) * fy.signum();
-
         if fy * self.n < 0f64 {
             l -= f64::PI() * p.x.signum() * fy.signum();
         }
+
         Coord {
             x: l / self.n,
-            y: 2f64 * (f64::powf(self.f / r, 1f64 / self.n).atan() - f64::FRAC_PI_2()),
+            y: 2f64 * (f64::powf(self.f / r, 1f64 / self.n).atan()) - f64::FRAC_PI_2(),
         }
     }
 }

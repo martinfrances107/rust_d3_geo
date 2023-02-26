@@ -1,6 +1,7 @@
 #[cfg(not(tarpaulin_include))]
 mod invert {
 
+    use d3_geo_rs::projection::conformal::Conformal;
     use geo_types::Coord;
 
     use d3_geo_rs::projection::albers::albers as albers_generator;
@@ -68,7 +69,7 @@ mod invert {
 
     #[test]
     fn conformal() {
-        let mut builder = EqualArea::<DrainStub<f64>, f64>::builder();
+        let mut builder = Conformal::<DrainStub<f64>>::builder();
         symetric_invert(builder.build());
         symetric_invert(builder.parallels_set(20_f64, 30_f64).build());
         symetric_invert(builder.parallels_set(30_f64, 30_f64).build());
