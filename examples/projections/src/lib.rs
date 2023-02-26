@@ -28,6 +28,7 @@ use web_sys::*;
 mod albers;
 mod azimuthal_equal_area;
 mod azimuthal_equidistant;
+mod conformal;
 mod conic_equal_area;
 mod equal_earth;
 mod equirectangular;
@@ -40,6 +41,7 @@ mod stereographic;
 use albers::draw_albers;
 use azimuthal_equal_area::draw_azimuthal_equal_area;
 use azimuthal_equidistant::draw_azimuthal_equidistant;
+use conformal::draw_conformal;
 use conic_equal_area::draw_conic_equal_area;
 use equal_earth::draw_equal_earth;
 use equirectangular::draw_equirectangular;
@@ -89,6 +91,7 @@ pub async fn start() -> Result<(), JsValue> {
         draw_albers(&land),
         draw_azimuthal_equal_area(&land),
         draw_azimuthal_equidistant(&land),
+        draw_conformal(&land),
         draw_conic_equal_area(&land),
         draw_equirectangular(&land),
         draw_equal_earth(&land),

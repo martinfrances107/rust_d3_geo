@@ -16,6 +16,7 @@ import { Topology } from "topojson-specification";
 
 import azimuthalEqualArea from './azimuthalEqualArea';
 import azimuthalEquidistant from './azimuthalEquidistant';
+import conformal from './conformal';
 import conicEqualArea from "./conicEqualArea";
 import equirectangular from './equirectangular';
 import equalEarth from './equalEarth';
@@ -35,6 +36,7 @@ fetch("../world-atlas/world/50m.json").then(response => response.json())
         albers(world),
         azimuthalEqualArea(world),
         azimuthalEquidistant(world),
+        conformal(world),
         conicEqualArea(world),
         equirectangular(world),
         equalEarth(world),
