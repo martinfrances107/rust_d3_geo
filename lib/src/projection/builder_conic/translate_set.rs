@@ -2,15 +2,14 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::TranslateSet;
 use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, PR, T> TranslateSet for Builder<BuilderAntimeridianResampleNoClip<DRAIN, PR, T>, PR, T>
+impl<BASE, PR, T> TranslateSet for Builder<BASE, PR, T>
 where
-    DRAIN: Clone,
+    BASE: TranslateSet<T = T>,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

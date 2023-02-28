@@ -6,6 +6,7 @@ mod fit {
     use std::fmt::Debug;
     use std::fs::File;
 
+    use d3_geo_rs::projection::equidistant::Equidistant;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::ClipExtentGet;
     use geo::polygon;
@@ -202,6 +203,36 @@ mod fit {
     // 	// 	// // //   test.inDelta(projection.translate(), [500, 498.598401], 1e-6);
     // 	// 	// // //   test.end();
     // 	// 	// // // });
+
+    // #[test]
+    // fn fit_size_world_equidistant() {
+    //     println!("projection.fitSize(…) world equirectangular");
+
+    //     let world = world();
+    //     let projection = Equidistant::builder();
+    //     let projection = projection.fit_extent(
+    //         [
+    //             Coord {
+    //                 x: 50_f64,
+    //                 y: 50_f64,
+    //             },
+    //             Coord {
+    //                 x: 900_f64,
+    //                 y: 900_f64,
+    //             },
+    //         ],
+    //         &world,
+    //     );
+    //     assert!(in_delta(projection.scale(), 143.239449, 1e-6));
+    //     assert!(in_delta_coordinate(
+    //         &projection.translate(),
+    //         &Coord {
+    //             x: 450_f64,
+    //             y: 442.000762_f64
+    //         },
+    //         1e-6
+    //     ));
+    // }
 
     #[test]
     fn fit_size_world_equirectangular() {

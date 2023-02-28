@@ -14,11 +14,11 @@ mod center_set;
 // mod clip_angle_get;
 // mod clip_angle_reset;
 // mod clip_angle_set;
-// mod clip_extent_adjust;
+mod clip_extent_adjust;
 // mod clip_extent_clear;
-// mod clip_extent_get;
+mod clip_extent_get;
 // mod clip_extent_set;
-// mod fit_clip;
+mod fit;
 // mod fit_no_clip;
 // mod precision_adjust;
 // mod precision_bypass;
@@ -35,12 +35,12 @@ mod rotate_set;
 mod scale_get;
 mod scale_set;
 // mod transform;
-// mod translate_get;
+mod translate_get;
 mod translate_set;
 
 // pub mod template;
 // /// Builder shorthand notations.
-// pub mod types;
+pub mod types;
 
 /// Adjustments the pair of parallels
 /// use to define the proejctions.
@@ -54,7 +54,7 @@ pub trait PRConic: RawBase {
 }
 
 /// A wrapper over Projection\Builder which hold state phi0, phi1 and allow regeneration of the PR.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Builder<BASE, PRConic, T>
 where
     T: CoordFloat,
