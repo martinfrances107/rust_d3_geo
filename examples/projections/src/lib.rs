@@ -31,6 +31,7 @@ mod azimuthal_equidistant;
 mod conformal;
 mod conic_equal_area;
 mod equal_earth;
+mod equidistant;
 mod equirectangular;
 mod gnomic;
 mod mercator;
@@ -44,6 +45,7 @@ use azimuthal_equidistant::draw_azimuthal_equidistant;
 use conformal::draw_conformal;
 use conic_equal_area::draw_conic_equal_area;
 use equal_earth::draw_equal_earth;
+use equidistant::draw_equidistant;
 use equirectangular::draw_equirectangular;
 use gnomic::draw_gnomic;
 use mercator::draw_mercator;
@@ -94,6 +96,7 @@ pub async fn start() -> Result<(), JsValue> {
         draw_conformal(&land),
         draw_conic_equal_area(&land),
         draw_equirectangular(&land),
+        draw_equidistant(&land),
         draw_equal_earth(&land),
         draw_gnomic(&land),
         draw_orthographic(&land),

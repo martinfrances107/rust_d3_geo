@@ -29,7 +29,11 @@ pub fn in_delta<T: CoordFloat + Display>(actual: T, expected: T, delta: T) -> bo
 /// Debug and test helper function.
 pub fn point<T: CoordFloat + Display>(actual: Point<T>, expected: Point<T>, delta: T) -> bool {
     println!("in_delta_point: expected(Point) {expected:?} actual {actual:?} delta {delta:?}");
-    in_delta(actual.x(), expected.x(), delta) && in_delta(actual.y(), expected.y(), delta)
+    let x = in_delta(actual.x(), expected.x(), delta);
+    println!("x: {x}");
+    let y = in_delta(actual.y(), expected.y(), delta);
+    println!("y: {y}");
+    x && y
 }
 
 /// Returns true if two points are considered equal, within the specified differnce.

@@ -19,6 +19,7 @@ import azimuthalEquidistant from './azimuthalEquidistant';
 import conformal from './conformal';
 import conicEqualArea from "./conicEqualArea";
 import equirectangular from './equirectangular';
+import equidistant from './equidistant';
 import equalEarth from './equalEarth';
 import gnomic from "./gnomic";
 import orthographic from './orthographic';
@@ -39,6 +40,7 @@ fetch("../world-atlas/world/50m.json").then(response => response.json())
         conformal(world),
         conicEqualArea(world),
         equirectangular(world),
+        equidistant(world),
         equalEarth(world),
         orthographic(world),
         gnomic(world),

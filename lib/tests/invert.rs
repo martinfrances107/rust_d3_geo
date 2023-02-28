@@ -2,6 +2,7 @@
 mod invert {
 
     use d3_geo_rs::projection::conformal::Conformal;
+    use d3_geo_rs::projection::equidistant::Equidistant;
     use geo_types::Coord;
 
     use d3_geo_rs::projection::albers::albers as albers_generator;
@@ -98,6 +99,21 @@ mod invert {
     }
 
     #[test]
+    fn conic_equidistant() {
+        let mut builder = Equidistant::<DrainStub<f64>>::builder();
+        symetric_invert(builder.build());
+        symetric_invert(builder.parallels_set(20_f64, 30_f64).build());
+        symetric_invert(builder.parallels_set(30_f64, 30_f64).build());
+        symetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
+        // symetric_invert(
+        //     builder
+        //         .parallels_set(40_f64, 60_f64)
+        //         .rotate2_set(&[-120_f64, 0_f64])
+        //         .build(),
+        // );
+    }
+
+    #[test]
     fn equirectangular() {
         let e = Equirectangular::<DrainStub<f64>, f64>::builder().build();
         symetric_invert(e);
@@ -116,12 +132,6 @@ mod invert {
     }
 
     #[test]
-    fn orthographic() {
-        let o = Orthographic::<DrainStub<f64>, f64>::builder().build();
-        symetric_invert(o);
-    }
-
-    #[test]
     fn mercator() {
         let m = Mercator::<DrainStub<f64>>::builder().build();
         symetric_invert(m);
@@ -131,6 +141,12 @@ mod invert {
     fn mercator_traverse() {
         let m = MercatorTransverse::<DrainStub<f64>>::builder().build();
         symetric_invert(m);
+    }
+
+    #[test]
+    fn orthographic() {
+        let o = Orthographic::<DrainStub<f64>, f64>::builder().build();
+        symetric_invert(o);
     }
 
     #[test]

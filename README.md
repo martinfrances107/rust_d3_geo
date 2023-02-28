@@ -18,6 +18,7 @@ Here is a list of the currently supported projections.
 * AzimuthalEquiDistant
 * Conformal
 * EqualArea
+* EquiDistant
 * Equirectangular
 * Gnomic
 * Mercator

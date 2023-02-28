@@ -22,10 +22,14 @@ pub mod conformal;
 pub mod conic_conformal;
 /// The raw projection.
 pub mod conic_equal_area;
+/// The raw projection.
+pub mod conic_equidistant;
 // No direct Access - Access is through conic_equal_area.
 pub mod cylindrical_equal_area;
 /// The raw projection.
 pub mod equal_earth;
+/// The raw projection.
+pub mod equidistant;
 /// The raw projection.
 pub mod equirectangular;
 /// The raw projection.

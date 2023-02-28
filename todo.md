@@ -50,12 +50,6 @@ examples/projection eslint needs updating.
 
 * src/projection/albers.js
 * src/projection/albersUsa.js
-* src/projection/conic.js
-* src/projection/conicConformal
-* src/projection/conicEqualArea
-* src/projection/conicEquidistant
-* src/projection/cylindricalEqualArea
-* src/projection/equalEarth
 * src/interpolate.js
 * src/projection/natualEarth.js
 
