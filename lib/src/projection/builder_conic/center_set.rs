@@ -12,7 +12,7 @@ use crate::Transform;
 impl<DRAIN, PR, T> CenterSet for Builder<BuilderAntimeridianResampleNoClip<DRAIN, PR, T>, PR, T>
 where
     DRAIN: Clone,
-    PR: Clone + PRConic<T=T> + Transform<T = T>,
+    PR: Clone + PRConic<T = T> + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
