@@ -12,7 +12,7 @@ impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> ScaleSet
     for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, PR, T>
 where
     BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>: Clone + ScaleSet<T = T>,
-    PR: Clone + PRConic + Transform<T = T>,
+    PR: Clone + PRConic<T = T> + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;

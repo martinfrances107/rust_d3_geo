@@ -1,21 +1,40 @@
+use std::fmt::Debug;
+
+use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::projection::builder::Builder as BuilderCommon;
+use crate::path::bounds::Bounds;
 use crate::projection::ClipExtentGet;
 use crate::projection::TransformExtent;
+use crate::Transform;
 
-use super::Builder;
+use super::types::BuilderConicAntimeridianResampleClip;
+use super::types::BuilderConicAntimeridianResampleNoneClip;
+use super::PRConic;
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> ClipExtentGet
-    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, PR, T>
+impl<PR, T> ClipExtentGet for BuilderConicAntimeridianResampleClip<Bounds<T>, PR, T>
 where
-    BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>: Clone + ClipExtentGet<T = T>,
-    PR: TransformExtent<T = T>,
-    T: CoordFloat + FloatConst,
+    PR: Clone + PRConic<T = T> + Transform<T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    /// f64 or f32.
+    /// f32 or f64
+    type T = T;
+
+    /// Returns a bounding box.
+    #[inline]
+    fn clip_extent(&self) -> [Coord<Self::T>; 2] {
+        self.base.clip_extent()
+    }
+}
+
+impl<PR, T> ClipExtentGet for BuilderConicAntimeridianResampleNoneClip<Bounds<T>, PR, T>
+where
+    PR: Clone + Debug + PRConic<T = T> + Transform<T = T>,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+{
+    /// f32 or f64
     type T = T;
 
     /// Returns a bounding box.
