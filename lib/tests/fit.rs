@@ -204,6 +204,7 @@ mod fit {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
+    // Both scale and translate are buggy.
     #[ignore]
     #[test]
     fn fit_size_world_equidistant() {
@@ -218,18 +219,18 @@ mod fit {
                     y: 50_f64,
                 },
                 Coord {
-                    x: 900_f64,
-                    y: 900_f64,
+                    x: 950_f64,
+                    y: 950_f64,
                 },
             ],
             &world,
         );
-        assert!(in_delta(projection.scale(), 143.239449, 1e-6));
+        assert!(in_delta(projection.scale(), 123.085587, 1e-6));
         assert!(in_delta_coordinate(
             &projection.translate(),
             &Coord {
-                x: 450_f64,
-                y: 442.000762_f64
+                x: 500_f64,
+                y: 498.598401_f64
             },
             1e-6
         ));

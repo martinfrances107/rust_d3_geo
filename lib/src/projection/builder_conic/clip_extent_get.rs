@@ -7,7 +7,6 @@ use num_traits::FloatConst;
 
 use crate::path::bounds::Bounds;
 use crate::projection::ClipExtentGet;
-use crate::projection::TransformExtent;
 use crate::Transform;
 
 use super::types::BuilderConicAntimeridianResampleClip;

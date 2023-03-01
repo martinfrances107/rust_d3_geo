@@ -6,7 +6,6 @@ use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::projection::ClipExtentAdjust;
-use crate::projection::TransformExtent;
 use crate::Transform;
 
 use crate::path::bounds::Bounds;
