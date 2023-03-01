@@ -1,3 +1,4 @@
+use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::CenterSet;
 use d3_geo_rs::projection::RotateSet;
 use geo::Geometry;

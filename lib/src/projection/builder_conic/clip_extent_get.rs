@@ -2,14 +2,16 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
+use crate::projection::builder::Builder as BuilderCommon;
 use crate::projection::ClipExtentGet;
 use crate::projection::TransformExtent;
 
 use super::Builder;
 
-impl<BASE, PR, T> ClipExtentGet for Builder<BASE, PR, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> ClipExtentGet
+    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, PR, T>
 where
-    BASE: ClipExtentGet<T = T>,
+    BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>: Clone + ClipExtentGet<T = T>,
     PR: TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {

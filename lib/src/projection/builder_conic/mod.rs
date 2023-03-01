@@ -39,7 +39,7 @@ mod translate_get;
 mod translate_set;
 
 // pub mod template;
-// /// Builder shorthand notations.
+/// Builder shorthand notations.
 pub mod types;
 
 /// Adjustments the pair of parallels

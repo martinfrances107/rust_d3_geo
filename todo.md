@@ -4,6 +4,7 @@ Today
 Albers,
  is that a graticule problem?
  copy documentation of parallels.
+fit test
 
 High Priority.
 examples/projection eslint needs updating.
@@ -51,7 +52,6 @@ examples/projection eslint needs updating.
 * src/projection/albers.js
 * src/projection/albersUsa.js
 * src/interpolate.js
-* src/projection/natualEarth.js
 
 ## The State of Testing
 

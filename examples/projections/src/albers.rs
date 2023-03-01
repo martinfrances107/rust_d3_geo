@@ -1,4 +1,5 @@
 use d3_geo_rs::projection::albers::albers;
+use d3_geo_rs::projection::Build;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;

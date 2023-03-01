@@ -3,13 +3,15 @@ use num_traits::FloatConst;
 
 use super::Builder;
 use super::PRConic;
+use crate::projection::builder::Builder as BuilderCommon;
 
 use crate::projection::ScaleSet;
 use crate::Transform;
 
-impl<BASE, PR, T> ScaleSet for Builder<BASE, PR, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> ScaleSet
+    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, PR, T>
 where
-    BASE: ScaleSet<T = T>,
+    BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>: Clone + ScaleSet<T = T>,
     PR: Clone + PRConic + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
