@@ -19,10 +19,8 @@ d3_geo_rs = { path = "../../lib" }
 geo = { workspace = true }
 geo-types = { workspace = true }
 gloo-utils = { workspace = true }
-getrandom = { workspace = true, features = ["js"] }
 futures = { workspace = true }
 js-sys = { workspace = true }
-rand = { workspace = true }
 rust_topojson_client = { workspace = true }
 topojson = { workspace = true }
 wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
