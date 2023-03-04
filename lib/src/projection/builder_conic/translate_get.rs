@@ -4,7 +4,7 @@ use geo_types::Coord;
 use crate::projection::builder_conic::Builder;
 use crate::projection::TranslateGet;
 
-impl<BASE, PR, T> TranslateGet for Builder<BASE, PR, T>
+impl<BASE, T> TranslateGet for Builder<BASE, T>
 where
     BASE: TranslateGet<T = T>,
     T: CoordFloat,

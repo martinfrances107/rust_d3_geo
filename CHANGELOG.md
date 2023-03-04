@@ -1,6 +1,21 @@
 # Changelog
 
-## BREAKING CHANGE in the following functions
+[0.3.0] BREAKING CHANGE
+
+builder_conic/Builder<BASE, PRConic, T>
+
+simplified to
+
+builder_conic/Builder<BASE, T>
+
+## [0.3.0] - "Sat 4th March"
+
+Simplified private traits RecenterWithResampling and RecenterWithResampling,
+both are replaced by a single trait Recenter.
+
+Removed update_pr() as it was identical to recenter()
+
+## [0.2.0] BREAKING CHANGE in the following functions
 
 gen_clip_circle()
 gen_clip()

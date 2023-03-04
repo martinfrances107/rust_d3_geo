@@ -55,7 +55,7 @@ pub trait PRConic: RawBase {
 
 /// A wrapper over Projection\Builder which hold state phi0, phi1 and allow regeneration of the PR.
 #[derive(Clone, Debug)]
-pub struct Builder<BASE, PRConic, T>
+pub struct Builder<BASE, T>
 where
     T: CoordFloat,
 {
@@ -65,7 +65,6 @@ where
     /// The wrapped builder type.
     phi0: T,
     phi1: T,
-    pr: PRConic,
 }
 
 /// Returns the pair of parallels used to define the projection.
@@ -86,7 +85,7 @@ pub trait ParallelsSet {
     fn parallels_set(&mut self, phi0: Self::T, phi1: Self::T) -> &mut Self;
 }
 
-impl<BASE, PR, T> BuilderTrait for Builder<BASE, PR, T>
+impl<BASE, PR, T> BuilderTrait for Builder<BASE, T>
 where
     BASE: BuilderTrait<PR = PR>,
     PR: PRConic<T = T> + Clone,
@@ -103,17 +102,7 @@ where
         let phi0 = T::zero();
         let phi1 = T::FRAC_PI_3();
         let pr = pr.generate(phi0, phi1);
-        let base = BASE::new(pr.clone());
-        Self {
-            base,
-            phi0,
-            phi1,
-            pr,
-        }
-    }
-
-    fn update_pr(&mut self, pr: Self::PR) -> &mut Self {
-        self.pr = pr.generate(self.phi0, self.phi1);
-        self
+        let base = BASE::new(pr);
+        Self { base, phi0, phi1 }
     }
 }

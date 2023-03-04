@@ -4,7 +4,7 @@ use num_traits::FloatConst;
 
 use crate::projection::builder::ResampleNoneNoPCNU;
 use crate::projection::builder::ResampleNonePCNU;
-use crate::projection::RecenterNoResampling;
+use crate::projection::Recenter;
 use crate::projection::TranslateSet;
 use crate::Transform;
 
@@ -37,7 +37,7 @@ where
     fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.x = t.x;
         self.y = t.y;
-        self.recenter_no_resampling()
+        self.recenter()
     }
 }
 
@@ -64,6 +64,6 @@ where
     fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.x = t.x;
         self.y = t.y;
-        self.recenter_no_resampling()
+        self.recenter()
     }
 }

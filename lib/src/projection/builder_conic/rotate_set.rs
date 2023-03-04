@@ -7,7 +7,7 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, PR, T> RotateSet for Builder<BuilderAntimeridianResampleNoClip<DRAIN, PR, T>, PR, T>
+impl<DRAIN, PR, T> RotateSet for Builder<BuilderAntimeridianResampleNoClip<DRAIN, PR, T>, T>
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,

@@ -39,11 +39,8 @@ use super::CenterSet;
 use super::RawBase;
 use super::RotateSet;
 
-type BuilderAlbers<DRAIN, T> = Builder<
-    BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>,
-    EqualArea<DRAIN, T>,
-    T,
->;
+type BuilderAlbers<DRAIN, T> =
+    Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>, T>;
 
 /// Albers - `ConicEqualArea` centered on the U.S.
 ///

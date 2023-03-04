@@ -2,7 +2,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::projection::RecenterWithResampling;
+use crate::projection::Recenter;
 use crate::projection::TranslateSet;
 use crate::Transform;
 
@@ -37,7 +37,7 @@ where
     fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.x = t.x;
         self.y = t.y;
-        self.recenter_with_resampling()
+        self.recenter()
     }
 }
 
@@ -64,6 +64,6 @@ where
     fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.x = t.x;
         self.y = t.y;
-        self.recenter_with_resampling()
+        self.recenter()
     }
 }

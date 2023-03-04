@@ -9,7 +9,7 @@ use crate::projection::builder::ResampleNonePCNU;
 use crate::projection::builder::PCNU;
 use crate::projection::resampler::none::None as ResampleNone;
 use crate::projection::transform::generate as generate_str;
-use crate::projection::RecenterNoResampling;
+use crate::projection::Recenter;
 use crate::rot::rotate_radians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::Transform;
@@ -19,7 +19,7 @@ use super::template::ResampleNonePCNC;
 use super::Builder;
 
 #[allow(clippy::similar_names)]
-impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterNoResampling
+impl<CLIPC, CLIPU, DRAIN, PR, T> Recenter
     for Builder<
         CLIPC,
         CLIPU,
@@ -37,7 +37,7 @@ where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
-    fn recenter_no_resampling(&mut self) -> &mut Self {
+    fn recenter(&mut self) -> &mut Self {
         let center = generate_str(
             &self.k,
             &T::zero(),
@@ -74,7 +74,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterNoResampling
+impl<CLIPC, CLIPU, DRAIN, PR, T> Recenter
     for Builder<
         CLIPC,
         CLIPU,
@@ -92,7 +92,7 @@ where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
-    fn recenter_no_resampling(&mut self) -> &mut Self {
+    fn recenter(&mut self) -> &mut Self {
         let center = generate_str(
             &self.k,
             &T::zero(),

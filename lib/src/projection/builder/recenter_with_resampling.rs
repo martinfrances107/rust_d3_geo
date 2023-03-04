@@ -9,7 +9,7 @@ use crate::projection::builder::ResamplePCNU;
 use crate::projection::builder::PCNU;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::transform::generate as generate_str;
-use crate::projection::RecenterWithResampling;
+use crate::projection::Recenter;
 use crate::rot::rotate_radians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::Transform;
@@ -18,7 +18,7 @@ use super::template::ResampleNoPCNC;
 use super::template::ResamplePCNC;
 use super::Builder;
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterWithResampling
+impl<CLIPC, CLIPU, DRAIN, PR, T> Recenter
     for Builder<
         CLIPC,
         CLIPU,
@@ -33,7 +33,7 @@ where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
-    fn recenter_with_resampling(&mut self) -> &mut Self {
+    fn recenter(&mut self) -> &mut Self {
         assert!(!self.delta2.is_zero());
         let center = generate_str(
             &self.k,
@@ -71,7 +71,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> RecenterWithResampling
+impl<CLIPC, CLIPU, DRAIN, PR, T> Recenter
     for Builder<
         CLIPC,
         CLIPU,
@@ -89,7 +89,7 @@ where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
-    fn recenter_with_resampling(&mut self) -> &mut Self {
+    fn recenter(&mut self) -> &mut Self {
         assert!(!self.delta2.is_zero());
         let center = generate_str(
             &self.k,

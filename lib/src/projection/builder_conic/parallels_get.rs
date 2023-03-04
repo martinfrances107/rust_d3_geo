@@ -6,7 +6,7 @@ use super::ParallelsGet;
 use crate::projection::BuilderTrait;
 
 // Reach into builder and alter the PR.
-impl<BASE, PR, T> ParallelsGet for Builder<BASE, PR, T>
+impl<BASE, PR, T> ParallelsGet for Builder<BASE, T>
 where
     BASE: BuilderTrait<PR = PR>,
     PR: PRConic<T = T> + Clone,

@@ -13,7 +13,7 @@ use super::Builder;
 use super::PRConic;
 
 impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> Build
-    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, PR, T>
+    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, T>
 where
     BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>: Clone
         + Build<

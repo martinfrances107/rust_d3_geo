@@ -87,7 +87,7 @@ where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, Self, T>;
+    type Builder = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, T>;
     #[inline]
     fn builder() -> Self::Builder {
         let mut b = Builder::new(Self::default());

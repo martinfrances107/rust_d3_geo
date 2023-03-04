@@ -3,8 +3,7 @@ use num_traits::FloatConst;
 
 use crate::projection::builder::ResampleNoPCNU;
 use crate::projection::builder::ResamplePCNU;
-use crate::projection::RecenterNoResampling;
-use crate::projection::RecenterWithResampling;
+use crate::projection::Recenter;
 use crate::projection::RotateSet;
 use crate::Transform;
 
@@ -43,7 +42,7 @@ where
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
         self.delta_gamma = T::zero();
-        self.recenter_with_resampling()
+        self.recenter()
     }
 
     fn rotate3_set(&mut self, angles: &[T; 3]) -> &mut Self {
@@ -51,7 +50,7 @@ where
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
         self.delta_gamma = (delta_gamma % self.t360).to_radians();
-        self.recenter_with_resampling()
+        self.recenter()
     }
 }
 
@@ -80,7 +79,7 @@ where
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
         self.delta_gamma = T::zero();
-        self.recenter_with_resampling()
+        self.recenter()
     }
 
     fn rotate3_set(&mut self, angles: &[T; 3]) -> &mut Self {
@@ -88,7 +87,7 @@ where
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
         self.delta_gamma = (delta_gamma % self.t360).to_radians();
-        self.recenter_with_resampling()
+        self.recenter()
     }
 }
 
@@ -117,7 +116,7 @@ where
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
         self.delta_gamma = T::zero();
-        self.recenter_no_resampling()
+        self.recenter()
     }
 
     fn rotate3_set(&mut self, angles: &[T; 3]) -> &mut Self {
@@ -125,7 +124,7 @@ where
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
         self.delta_gamma = (delta_gamma % self.t360).to_radians();
-        self.recenter_no_resampling()
+        self.recenter()
     }
 }
 
@@ -154,7 +153,7 @@ where
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
         self.delta_gamma = T::zero();
-        self.recenter_no_resampling()
+        self.recenter()
     }
 
     fn rotate3_set(&mut self, angles: &[T; 3]) -> &mut Self {
@@ -162,6 +161,6 @@ where
         self.delta_lambda = (delta_lambda % self.t360).to_radians();
         self.delta_phi = (delta_phi % self.t360).to_radians();
         self.delta_gamma = (delta_gamma % self.t360).to_radians();
-        self.recenter_no_resampling()
+        self.recenter()
     }
 }

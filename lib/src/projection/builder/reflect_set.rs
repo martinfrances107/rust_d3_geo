@@ -3,8 +3,7 @@ use num_traits::FloatConst;
 
 use crate::projection::builder::ResampleNoPCNU;
 use crate::projection::builder::ResamplePCNU;
-use crate::projection::RecenterNoResampling;
-use crate::projection::RecenterWithResampling;
+use crate::projection::Recenter;
 use crate::projection::ReflectSet;
 use crate::projection::REFLECT;
 use crate::Transform;
@@ -45,7 +44,7 @@ where
             REFLECT::Flipped => T::from(-1.0_f64).unwrap(),
             REFLECT::Unflipped => T::one(),
         };
-        self.recenter_with_resampling()
+        self.recenter()
     }
 
     /// Set the projection builder to invert the y-coordinate.
@@ -55,7 +54,7 @@ where
             REFLECT::Flipped => T::from(-1.0_f64).unwrap(),
             REFLECT::Unflipped => T::one(),
         };
-        self.recenter_with_resampling()
+        self.recenter()
     }
 }
 
@@ -85,7 +84,7 @@ where
             REFLECT::Flipped => T::from(-1.0_f64).unwrap(),
             REFLECT::Unflipped => T::one(),
         };
-        self.recenter_with_resampling()
+        self.recenter()
     }
 
     /// Set the projection builder to invert the y-coordinate.
@@ -95,7 +94,7 @@ where
             REFLECT::Flipped => T::from(-1.0_f64).unwrap(),
             REFLECT::Unflipped => T::one(),
         };
-        self.recenter_with_resampling()
+        self.recenter()
     }
 }
 
@@ -125,7 +124,7 @@ where
             REFLECT::Flipped => T::from(-1.0_f64).unwrap(),
             REFLECT::Unflipped => T::one(),
         };
-        self.recenter_no_resampling()
+        self.recenter()
     }
 
     /// Set the projection builder to invert the y-coordinate.
@@ -135,7 +134,7 @@ where
             REFLECT::Flipped => T::from(-1.0_f64).unwrap(),
             REFLECT::Unflipped => T::one(),
         };
-        self.recenter_no_resampling()
+        self.recenter()
     }
 }
 
@@ -165,7 +164,7 @@ where
             REFLECT::Flipped => T::from(-1.0_f64).unwrap(),
             REFLECT::Unflipped => T::one(),
         };
-        self.recenter_no_resampling()
+        self.recenter()
     }
 
     /// Set the projection builder to invert the y-coordinate.
@@ -175,6 +174,6 @@ where
             REFLECT::Flipped => T::from(-1.0_f64).unwrap(),
             REFLECT::Unflipped => T::one(),
         };
-        self.recenter_no_resampling()
+        self.recenter()
     }
 }

@@ -5,8 +5,7 @@ use num_traits::FloatConst;
 use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::ResampleNoPCNU;
 use crate::projection::CenterSet;
-use crate::projection::RecenterNoResampling;
-use crate::projection::RecenterWithResampling;
+use crate::projection::Recenter;
 use crate::Transform;
 
 use super::template::NoPCNU;
@@ -40,7 +39,7 @@ where
     fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % self.t360).to_radians();
         self.phi = (p.y % self.t360).to_radians();
-        self.recenter_with_resampling()
+        self.recenter()
     }
 }
 
@@ -67,7 +66,7 @@ where
     fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % self.t360).to_radians();
         self.phi = (p.y % self.t360).to_radians();
-        self.recenter_with_resampling()
+        self.recenter()
     }
 }
 
@@ -94,6 +93,6 @@ where
     fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % self.t360).to_radians();
         self.phi = (p.y % self.t360).to_radians();
-        self.recenter_no_resampling()
+        self.recenter()
     }
 }

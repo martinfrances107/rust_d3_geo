@@ -9,7 +9,7 @@ use crate::projection::ScaleSet;
 use crate::Transform;
 
 impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> ScaleSet
-    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, PR, T>
+    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, T>
 where
     BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>: Clone + ScaleSet<T = T>,
     PR: Clone + PRConic<T = T> + Transform<T = T>,

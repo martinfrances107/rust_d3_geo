@@ -87,7 +87,7 @@ impl<DRAIN> RawBase for Conformal<DRAIN>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
-    type Builder = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, f64>, Self, f64>;
+    type Builder = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, f64>, f64>;
     #[inline]
     fn builder() -> Self::Builder {
         let mut b = Builder::new(Self::default());

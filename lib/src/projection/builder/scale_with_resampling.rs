@@ -6,7 +6,7 @@ use crate::projection::builder::NoPCNU;
 use crate::projection::builder::ResampleNoPCNU;
 use crate::projection::builder::ResamplePCNU;
 use crate::projection::builder::PCNU;
-use crate::projection::RecenterWithResampling;
+use crate::projection::Recenter;
 use crate::projection::ScaleSet;
 use crate::Transform;
 
@@ -33,7 +33,7 @@ where
 
     fn scale_set(&mut self, scale: T) -> &mut Self {
         self.k = scale;
-        self.recenter_with_resampling()
+        self.recenter()
     }
 }
 
@@ -59,6 +59,6 @@ where
 
     fn scale_set(&mut self, scale: T) -> &mut Self {
         self.k = scale;
-        self.recenter_with_resampling()
+        self.recenter()
     }
 }

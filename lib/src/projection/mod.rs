@@ -127,9 +127,6 @@ pub trait BuilderTrait {
 
     /// Construtor.
     fn new(projection_raw: Self::PR) -> Self;
-
-    /// Using pr to update the state of the projector.
-    fn update_pr(&mut self, pr: Self::PR) -> &mut Self;
 }
 
 /// Output a Projector based on a Builders configuration.
@@ -596,10 +593,6 @@ pub trait TranslateSet {
 
 /// Private traits.
 
-trait RecenterWithResampling {
-    fn recenter_with_resampling(&mut self) -> &mut Self;
-}
-
-trait RecenterNoResampling {
-    fn recenter_no_resampling(&mut self) -> &mut Self;
+trait Recenter {
+    fn recenter(&mut self) -> &mut Self;
 }

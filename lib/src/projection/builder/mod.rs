@@ -17,7 +17,7 @@ use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneNoClip;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::types::BuilderCircleResampleNoneNoClip;
-use crate::projection::RecenterWithResampling;
+use crate::projection::Recenter;
 use crate::rot::rotate_radians;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
@@ -83,7 +83,7 @@ where
     p_clipc: PhantomData<CLIPC>,
     p_drain: PhantomData<DRAIN>,
     p_rc: PhantomData<RC>,
-    projection_raw: PR,
+    pub(super) projection_raw: PR,
     pub(super) clip: CLIPU,
     lambda: T,
     phi: T,
@@ -189,41 +189,7 @@ where
             resample,
         };
 
-        out.recenter_with_resampling();
+        out.recenter();
         out
-    }
-
-    /// Drop the current raw projection, use the new `projection_raw` and rebuild
-    /// state. ( very experimental)
-    fn update_pr(&mut self, projection_raw: PR) -> &mut Self {
-        // rebuild
-        let center = generate_str(
-            &self.k,
-            &T::zero(),
-            &T::zero(),
-            &self.sx,
-            &self.sy,
-            &self.alpha,
-        )
-        .transform(&projection_raw.transform(&Coord {
-            x: self.lambda,
-            y: self.phi,
-        }));
-        let str = generate_str(
-            &self.k,
-            &(self.x - center.x),
-            &(self.y - center.y),
-            &self.sx,
-            &self.sy,
-            &self.alpha,
-        );
-
-        self.projection_raw = projection_raw.clone();
-        self.rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]); // pre-rotate
-        self.rotator = RotatorRadians::new(self.rotate.clone());
-        self.project_transform = Compose::new(projection_raw, str);
-        self.project_rotate_transform =
-            Compose::new(self.rotate.clone(), self.project_transform.clone());
-        self
     }
 }
