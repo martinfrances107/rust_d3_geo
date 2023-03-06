@@ -6,8 +6,12 @@ mod fit {
     use std::fmt::Debug;
     use std::fs::File;
 
+    use d3_geo_rs::projection::builder_conic::ParallelsSet;
+    use d3_geo_rs::projection::conformal::Conformal;
+    use d3_geo_rs::projection::equal_area::EqualArea;
     use d3_geo_rs::projection::equidistant::Equidistant;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
+    use d3_geo_rs::projection::ClipAngleSet;
     use d3_geo_rs::projection::ClipExtentGet;
     use geo::polygon;
     use geo::CoordFloat;
@@ -34,6 +38,7 @@ mod fit {
     use d3_geo_rs::projection::PrecisionBypass;
     use d3_geo_rs::projection::PrecisionGet;
     use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::RotateSet;
     use d3_geo_rs::projection::ScaleGet;
     use d3_geo_rs::projection::TranslateGet;
     use rust_topojson_client::feature::feature_from_name;
@@ -188,6 +193,41 @@ mod fit {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
+    // #[ignore]
+    // #[test]
+    // fn fit_size_world_conformal() {
+    //     println!("projection.fitExtent(…) world conicConformal");
+
+    //     let world = world();
+    //     let projection = Conformal::builder()
+    //         .clip_angle_set(30_f64)
+    //         .parallels_set(30_f64, 60_f64);
+    //     // .rotate_set(0_f64, -45_f64);
+    //     todo!("must figure out rotate_set");
+    //     let projection = projection.fit_extent(
+    //         [
+    //             Coord {
+    //                 x: 50_f64,
+    //                 y: 50_f64,
+    //             },
+    //             Coord {
+    //                 x: 950_f64,
+    //                 y: 950_f64,
+    //             },
+    //         ],
+    //         &world,
+    //     );
+    //     assert!(in_delta(projection.scale(), 145.862346, 1e-6));
+    //     assert!(in_delta_coordinate(
+    //         &projection.translate(),
+    //         &Coord {
+    //             x: 500_f64,
+    //             y: 498.0114265_f64
+    //         },
+    //         1e-6
+    //     ));
+    // }
+
     // 	// 	// // // tape("projection.fitExtent(…) world conicEqualArea", function(test) {
     // 	// 	// // //   var projection = d3.geoConicEqualArea();
     // 	// 	// // //   projection.fitExtent([[50, 50], [950, 950]], world);
@@ -195,6 +235,38 @@ mod fit {
     // 	// 	// // //   test.inDelta(projection.translate(), [500, 498.0114265], 1e-6);
     // 	// 	// // //   test.end();
     // 	// 	// // // });
+
+    // Both scale and translate are buggy.
+    #[ignore]
+    #[test]
+    fn fit_size_world_equal_area() {
+        println!("projection.fitExtent(…) world conicEqualArea");
+
+        let world = world();
+        let projection = EqualArea::builder();
+        let projection = projection.fit_extent(
+            [
+                Coord {
+                    x: 50_f64,
+                    y: 50_f64,
+                },
+                Coord {
+                    x: 950_f64,
+                    y: 950_f64,
+                },
+            ],
+            &world,
+        );
+        assert!(in_delta(projection.scale(), 145.862346, 1e-6));
+        assert!(in_delta_coordinate(
+            &projection.translate(),
+            &Coord {
+                x: 500_f64,
+                y: 498.0114265_f64
+            },
+            1e-6
+        ));
+    }
 
     // 	// 	// // // tape("projection.fitExtent(…) world conicEquidistant", function(test) {
     // 	// 	// // //   var projection = d3.geoConicEquidistant();

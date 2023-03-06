@@ -13,8 +13,6 @@ use crate::clip::circle::ClipCircleU;
 use crate::projection::ClipAngleSet;
 use crate::stream::Connectable;
 
-use crate::stream::Stream;
-
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
     for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>
 where
@@ -22,7 +20,8 @@ where
     PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     PR: Clone,
-    RC: Clone + Stream<EP = DRAIN, T = T>,
+    // RC: Clone + Stream<EP = DRAIN, T = T>,
+    RC: Clone,
     RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     T: CoordFloat + FloatConst,
 {

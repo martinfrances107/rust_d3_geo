@@ -13,7 +13,7 @@ mod center_set;
 // mod clip_angle_adjust;
 // mod clip_angle_get;
 // mod clip_angle_reset;
-// mod clip_angle_set;
+mod clip_angle_set;
 mod clip_extent_adjust;
 // mod clip_extent_clear;
 mod clip_extent_get;
