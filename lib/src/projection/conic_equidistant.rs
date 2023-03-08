@@ -36,8 +36,6 @@ impl<DRAIN> Transform for ConicEquidistant<DRAIN> {
 
         let gy = self.g - p.y;
         let nx = self.n * p.x;
-        dbg!(gy);
-        dbg!(nx);
 
         Coord {
             x: gy * (nx).sin(),
@@ -49,12 +47,10 @@ impl<DRAIN> Transform for ConicEquidistant<DRAIN> {
     fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
         let gy = self.g - p.y;
         let mut l = p.x.atan2(gy.abs()) * gy.signum();
-        dbg!(gy);
-        dbg!(l);
+
         if (gy * self.n) < 0_f64 {
             l -= std::f64::consts::PI * p.x.signum() * gy.signum();
         }
-        dbg!(l);
         Coord {
             x: l / self.n,
             y: self.g - self.n.signum() * p.x.hypot(gy),

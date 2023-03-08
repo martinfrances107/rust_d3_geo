@@ -77,7 +77,7 @@ where
             return Self::Equi(Equirectangular::default());
         }
 
-        let g = cy0 / (n + y0);
+        let g = cy0 / n + y0;
         dbg!(g);
         Self::Conic(ConicEquidistant::new(g, n))
     }

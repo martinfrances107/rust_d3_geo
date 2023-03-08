@@ -1,17 +1,17 @@
 #[cfg(not(tarpaulin_include))]
 mod invert {
 
-    use d3_geo_rs::projection::conformal::Conformal;
-    use d3_geo_rs::projection::equidistant::Equidistant;
     use geo_types::Coord;
 
     use d3_geo_rs::projection::albers::albers as albers_generator;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
     use d3_geo_rs::projection::builder_conic::ParallelsSet;
+    use d3_geo_rs::projection::conformal::Conformal;
     use d3_geo_rs::projection::equal_area::EqualArea;
     use d3_geo_rs::projection::equal_earth::EqualEarth;
     use d3_geo_rs::projection::equality::projection_equal;
+    use d3_geo_rs::projection::equidistant::Equidistant;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
     use d3_geo_rs::projection::gnomic::Gnomic;
     use d3_geo_rs::projection::mercator::Mercator;
@@ -19,8 +19,10 @@ mod invert {
     use d3_geo_rs::projection::orthographic::Orthographic;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::CenterGet;
     use d3_geo_rs::projection::RawBase;
     use d3_geo_rs::projection::RotateSet;
+    use d3_geo_rs::projection::ScaleGet;
     use d3_geo_rs::stream::DrainStub;
     use d3_geo_rs::Transform;
 
@@ -105,12 +107,12 @@ mod invert {
         symetric_invert(builder.parallels_set(20_f64, 30_f64).build());
         symetric_invert(builder.parallels_set(30_f64, 30_f64).build());
         symetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
-        // symetric_invert(
-        //     builder
-        //         .parallels_set(40_f64, 60_f64)
-        //         .rotate2_set(&[-120_f64, 0_f64])
-        //         .build(),
-        // );
+        symetric_invert(
+            builder
+                .parallels_set(40_f64, 60_f64)
+                .rotate2_set(&[-120_f64, 0_f64])
+                .build(),
+        );
     }
 
     #[test]
