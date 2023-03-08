@@ -39,7 +39,7 @@ impl<DRAIN> Transform for ConicEquidistant<DRAIN> {
 
         Coord {
             x: gy * (nx).sin(),
-            y: self.g - gy * nx.cos(),
+            y: gy.mul_add(-nx.cos(), self.g),
         }
     }
 
@@ -53,7 +53,7 @@ impl<DRAIN> Transform for ConicEquidistant<DRAIN> {
         }
         Coord {
             x: l / self.n,
-            y: self.g - self.n.signum() * p.x.hypot(gy),
+            y: self.n.signum().mul_add(-p.x.hypot(gy), self.g),
         }
     }
 }

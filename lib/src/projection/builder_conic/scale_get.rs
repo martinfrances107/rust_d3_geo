@@ -2,11 +2,8 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use super::Builder;
-use super::PRConic;
 
-use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::ScaleGet;
-use crate::Transform;
 
 impl<BASE, T> ScaleGet for Builder<BASE, T>
 where

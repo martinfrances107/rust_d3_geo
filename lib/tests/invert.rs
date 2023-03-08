@@ -19,10 +19,8 @@ mod invert {
     use d3_geo_rs::projection::orthographic::Orthographic;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::Build;
-    use d3_geo_rs::projection::CenterGet;
     use d3_geo_rs::projection::RawBase;
     use d3_geo_rs::projection::RotateSet;
-    use d3_geo_rs::projection::ScaleGet;
     use d3_geo_rs::stream::DrainStub;
     use d3_geo_rs::Transform;
 
