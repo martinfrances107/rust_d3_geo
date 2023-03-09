@@ -78,7 +78,9 @@ where
             return Self::Cyl(CylindricalEqualArea::new(y0));
         }
         let c = T::one() + sy0 * (two * n - sy0);
-        Self::Con(ConicEqualArea::new(T::one() + sy0, n, c.sqrt() / n, two))
+        let r0 = c.sqrt() / n;
+        let two = T::from(2_f64).unwrap();
+        Self::Con(ConicEqualArea::new(c, n, r0, two))
     }
 }
 
