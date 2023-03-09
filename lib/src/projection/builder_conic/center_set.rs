@@ -3,16 +3,12 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use super::Builder;
-use super::PRConic;
 
-use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::CenterSet;
-use crate::Transform;
 
-impl<DRAIN, PR, T> CenterSet for Builder<BuilderAntimeridianResampleNoClip<DRAIN, PR, T>, T>
+impl<BASE, T> CenterSet for Builder<BASE, T>
 where
-    DRAIN: Clone,
-    PR: Clone + PRConic<T = T> + Transform<T = T>,
+    BASE: CenterSet<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;

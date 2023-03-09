@@ -2,17 +2,12 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use super::Builder;
-use super::PRConic;
-use crate::projection::builder::Builder as BuilderCommon;
 
 use crate::projection::ScaleSet;
-use crate::Transform;
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> ScaleSet
-    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, T>
+impl<BASE, T> ScaleSet for Builder<BASE, T>
 where
-    BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>: Clone + ScaleSet<T = T>,
-    PR: Clone + PRConic<T = T> + Transform<T = T>,
+    BASE: ScaleSet<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
