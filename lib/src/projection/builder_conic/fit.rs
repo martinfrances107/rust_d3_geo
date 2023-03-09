@@ -28,7 +28,7 @@ use super::PRConic;
 impl<PR, T> Fit for BuilderConicAntimeridianResampleClip<Bounds<T>, PR, T>
 where
     PR: Clone + PRConic<T = T> + Transform<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     /// f32 or f64
     type T = T;
@@ -57,7 +57,7 @@ where
 impl<PR, T> Fit for BuilderConicAntimeridianResampleNoneClip<Bounds<T>, PR, T>
 where
     PR: Clone + Debug + PRConic<T = T> + Transform<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     /// f32 or f64
     type T = T;

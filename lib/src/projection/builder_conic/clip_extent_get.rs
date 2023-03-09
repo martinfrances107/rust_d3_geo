@@ -1,7 +1,5 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use geo_types::Coord;
-use num_traits::FloatConst;
 
 use crate::projection::ClipExtentGet;
 
@@ -10,7 +8,7 @@ use super::Builder;
 impl<BASE, T> ClipExtentGet for Builder<BASE, T>
 where
     BASE: ClipExtentGet<T = T>,
-    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// f32 or f64
     type T = T;

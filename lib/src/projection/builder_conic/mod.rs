@@ -3,7 +3,8 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use super::{BuilderTrait, RawBase};
+use super::BuilderTrait;
+use super::RawBase;
 
 // mod angle;
 // mod angle_get;

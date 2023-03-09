@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -12,8 +11,7 @@ impl<DRAIN, PR, T> ClipAngleSet for BuilderConicAntimeridianResampleNoClip<DRAIN
 where
     PR: Clone,
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-    // PR: Clone + PRConic<T = T> + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     type Output = BuilderConicCircleResampleNoClip<DRAIN, PR, T>;
     /// f32 or f64.
