@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1] - Friday 10th March 2023
+
+Bugfixes to two projections, albers, equidistant
+Removed duplicate, and unused projection  conic_equal_area_raw.
+Made builder_conic trait implementations more generic.
+Bumped crate "geo" from 0.23
+
 [0.3.0] BREAKING CHANGE
 
 builder_conic/Builder<BASE, PRConic, T>
@@ -8,7 +15,7 @@ simplified to
 
 builder_conic/Builder<BASE, T>
 
-## [0.3.0] - "Sat 4th March"
+## [0.3.0] - Sat 4th March 2023
 
 Simplified private traits RecenterWithResampling and RecenterWithResampling,
 both are replaced by a single trait Recenter.
@@ -22,7 +29,7 @@ gen_clip()
 generate_mls()
 StreamTransformRadians::connect()
 
-## [0.2.0] - "Sat 18th Feb"
+## [0.2.0] - 2Sat 18th Feb 2023
 
 commit 5533c7d84ac14527627c244360a103fd49dffcbe
 Date:   Wed Feb 15 12:55:41 2023 +0000
