@@ -8,7 +8,7 @@ keywords = ["graphics", "d3-geo"]
 license = "MIT"
 name = "rust_d3_geo_example_globe_rotating_50m"
 readme = "README.md"
-repository = "https://github.com/martinfrances107/rust_d3_geo_voronoi.git"
+repository = "https://github.com/martinfrances107/rust_d3_geo.git"
 version = { workspace = true }
 
 [lib]

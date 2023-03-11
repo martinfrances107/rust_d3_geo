@@ -142,7 +142,7 @@ fn main() -> std::io::Result<()> {
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
     </head>
     <body>
-    <h1>Project: rust_d3_geo_voronoi</h1>
+    <h1>Project: rust_d3_geo</h1>
     <p>
      A Complex SVG used for profiling.
     </p>
