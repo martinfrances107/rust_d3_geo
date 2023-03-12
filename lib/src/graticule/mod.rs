@@ -1,7 +1,9 @@
 /// Generates great circles.
 pub mod builder;
 
-use geo::{CoordFloat, Geometry, MultiLineString};
+use geo::CoordFloat;
+use geo::Geometry;
+use geo::MultiLineString;
 use geo_types::Coord;
 
 use crate::math::EPSILON;
@@ -33,7 +35,7 @@ where
 /// Helper function returns the default graticule.
 ///
 /// # Panics
-/// unwrap() is used here but a panic will never happen as -90/-80 will always be converted into T.
+/// unwrap() is used here but a panic will never happen as -180,-90,-80,+80,+90,+180 will always be converted into T.
 #[must_use]
 pub fn generate<T>() -> GraticuleBuilder<T>
 where

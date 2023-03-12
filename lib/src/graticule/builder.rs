@@ -42,8 +42,10 @@ where
     X: CoordFn<T>,
     #[derivative(Debug = "ignore")]
     Y: CoordFn<T>,
-    precision: T,
+
     epsilon: T,
+    precision: T,
+    t90: T,
 }
 
 impl<T> Default for Builder<T>
@@ -68,8 +70,10 @@ where
             y: graticule_y(T::zero(), T::one(), T::from(0.1).unwrap()),
             X: graticule_x(T::zero(), T::one(), T::from(0.1).unwrap()),
             Y: graticule_y(T::zero(), T::one(), T::from(0.1).unwrap()),
+
             precision: T::from(2.5).unwrap(),
             epsilon: T::from(EPSILON).unwrap(),
+            t90: T::from(90_f64).unwrap(),
         }
     }
 }
@@ -225,11 +229,10 @@ where
     /// # Panics
     /// unwrap() is used here but a panic will never happen as 90 will always be converted into T.
     pub fn precision_set(&mut self, precision: &T) -> &mut Self {
-        let t90 = T::from(90_f64).unwrap();
         self.precision = *precision;
-        self.x = graticule_x(self.y0, self.y1, t90);
+        self.x = graticule_x(self.y0, self.y1, self.t90);
         self.y = graticule_y(self.x0, self.x1, self.precision);
-        self.X = graticule_x(self.Y0, self.Y1, t90);
+        self.X = graticule_x(self.Y0, self.Y1, self.t90);
         self.Y = graticule_y(self.X0, self.X1, self.precision);
         self
     }
