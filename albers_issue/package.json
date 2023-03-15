@@ -1,0 +1,22 @@
+{
+  "name": "rust_d3_geo_albers_issue",
+  "version": "0.1.0",
+  "description": "Demonstrates a known bug associated with albers projection.",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf dist && webpack --config webpack.config.js",
+    "start": "rimraf dist ./pkg && RUST_LOG=info webpack-dev-server --open "
+  },
+  "author": "martinfrances107@hotmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "d3-geo": "^3.1.0",
+    "path": "^0.12.7",
+    "rimraf": "^4.4.0",
+    "webpack-dev-server": "^4.12.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.76.1",
+    "webpack-cli": "^5.0.1"
+  }
+}

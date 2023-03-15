@@ -8,6 +8,7 @@ members = [
   "./examples/projections",
   "./examples/ring",
   "./profile_target",
+  "./albers_issue",
 ]
 
 [workspace.package]
