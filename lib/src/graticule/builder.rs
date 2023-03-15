@@ -52,8 +52,15 @@ impl<T> Default for Builder<T>
 where
     T: 'static + CoordFloat,
 {
+    #[allow(clippy::similar_names)]
     fn default() -> Self {
-        Self {
+        let epsilon = T::from(EPSILON).unwrap();
+        let t10 = T::from(10_f64).unwrap();
+        let t80 = T::from(80_f64).unwrap();
+        let t90 = T::from(90_f64).unwrap();
+        let t180 = T::from(180_f64).unwrap();
+        let t360 = T::from(360_f64).unwrap();
+        let mut out = Self {
             x0: T::nan(),
             x1: T::nan(),
             X0: T::nan(),
@@ -62,19 +69,24 @@ where
             y1: T::nan(),
             Y0: T::nan(),
             Y1: T::nan(),
-            dx: T::from(10).unwrap(),
-            dy: T::from(10).unwrap(),
-            DX: T::from(90_f64).unwrap(),
-            DY: T::from(360_f64).unwrap(),
+            dx: t10,
+            dy: t10,
+            DX: t90,
+            DY: t360,
             x: graticule_x(T::zero(), T::one(), T::from(0.1).unwrap()),
             y: graticule_y(T::zero(), T::one(), T::from(0.1).unwrap()),
             X: graticule_x(T::zero(), T::one(), T::from(0.1).unwrap()),
             Y: graticule_y(T::zero(), T::one(), T::from(0.1).unwrap()),
 
             precision: T::from(2.5).unwrap(),
-            epsilon: T::from(EPSILON).unwrap(),
+            epsilon,
             t90: T::from(90_f64).unwrap(),
-        }
+        };
+
+        out.extent_major_set([[-t180, -t90 + epsilon], [t180, t90 - epsilon]])
+            .extent_minor_set([[-t180, -t80 - epsilon], [t180, t80 + epsilon]]);
+
+        out
     }
 }
 

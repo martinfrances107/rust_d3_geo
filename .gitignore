@@ -15,3 +15,5 @@ Cargo.lock
 **/perf.data.old
 **/flamegraph.svg
 profile_target/profile_output.html
+albers_issue/profile_output.html
+
