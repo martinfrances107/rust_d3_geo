@@ -5,15 +5,17 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::LineWriter;
 
+use d3_geo_rs::graticule::builder::Builder as GraticuleBuilder;
+
+use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::string::String as PathString;
+use d3_geo_rs::projection::Build;
 use geo::CoordFloat;
 use geo::Geometry;
 use geo_types::Coord;
 use num_traits::FloatConst;
 use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
-
-use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::projection::Build;
 
 #[macro_use]
 extern crate lazy_static;
@@ -51,9 +53,10 @@ fn parse_topology() -> Geometry {
 #[cfg(not(tarpaulin_include))]
 fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     use d3_geo_rs::{
-        graticule::generate_mls,
-        projection::{albers::albers, ScaleSet, TranslateSet},
+        graticule::{generate, generate_mls},
+        projection::{albers::albers, builder::template::PCNC, ScaleSet, TranslateSet},
     };
+    use geo::LineString;
 
     let width = 1200_f64;
     let height = 1200_f64;
@@ -77,7 +80,9 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
         "fill: silver",
     ];
 
-    let mut builder = PathBuilder::context_pathstring().build(ortho);
+    // let builder: PathBuilder<_, _, PathString<f64>, PCNC<PathString<f64>, f64>, _, _, _, _, f64> =
+    let builder = PathBuilder::context_pathstring();
+    let mut projector = builder.build(ortho);
     let mut i = 0;
 
     let mut paths = vec![];
@@ -114,12 +119,24 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     // }
 
     // Graticule
-    let graticule = generate_mls();
+    // let graticule = generate_mls();
+    let mls = GraticuleBuilder::<f64>::default()
+        .extent_minor_set([[-180_f64, 50_f64 - 1e-6], [180_f64, 60_f64 + 1e-6]])
+        .lines()
+        .collect::<Vec<LineString<f64>>>();
+    // let graticule = Geometry::MultiLineString(mls);
+    for (i, ls) in mls.iter().enumerate() {
+        let d = projector.object(ls);
+        paths.push(format!(
+            "<path d = \"{}\" class=\"graticule{}\" style=\"#ccc\"/></path>",
+            d, i
+        ));
+    }
 
-    let graticule_d = builder.object(&graticule);
-    paths.push(format!(
-        "<path d = \"{graticule_d}\" class=\"graticule\" style=\"#ccc\"/></path>"
-    ));
+    // let graticule_d = builder.object(&graticule);
+    // paths.push(format!(
+    //     "<path d = \"{graticule_d}\" class=\"graticule\" style=\"#ccc\"/></path>"
+    // ));
 
     // Render points.
     // let phi_range = 0..360;
