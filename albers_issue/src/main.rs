@@ -124,14 +124,26 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
         .extent_minor_set([[-180_f64, 50_f64 - 1e-6], [180_f64, 60_f64 + 1e-6]])
         .lines()
         .collect::<Vec<LineString<f64>>>();
-    // let graticule = Geometry::MultiLineString(mls);
-    for (i, ls) in mls.iter().enumerate() {
-        let d = projector.object(ls);
-        paths.push(format!(
-            "<path d = \"{}\" class=\"graticule{}\" style=\"#ccc\"/></path>",
-            d, i
-        ));
-    }
+
+    // for (i, ls) in mls.iter().enumerate() {
+    //     let d = projector.object(ls);
+    //     paths.push(format!(
+    //         "<path d = \"{}\" class=\"graticule{}\" style=\"#ccc\"/></path>",
+    //         d, i
+    //     ));
+    // }
+
+    let path1 = &mls[37];
+    let d = projector.object(path1);
+    paths.push(format!(
+        "<path d = \"{d}\" class=\"graticule37\" style=\"#ccc\"/></path>"
+    ));
+
+    let path1 = &mls[38];
+    let d = projector.object(path1);
+    paths.push(format!(
+        "<path d = \"{d}\" class=\"graticule38\" style=\"#ccc\"/></path>"
+    ));
 
     // let graticule_d = builder.object(&graticule);
     // paths.push(format!(
