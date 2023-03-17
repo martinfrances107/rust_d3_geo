@@ -10,7 +10,6 @@ examples/projection eslint needs updating.
 * fit_test -- needs works.
 * reclip needs work.
 * lots of todos missing
-* fit helper functions need parallel copies for MercatorBuilder.
 
 * projection_rotate_test -- did it ever work?
   Only differences are in the LSDigits.

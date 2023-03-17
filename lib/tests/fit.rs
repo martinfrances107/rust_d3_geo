@@ -485,8 +485,6 @@ mod fit {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
-    /// Translation fit_extent pass, scale pass, translate FAIL
-    #[ignore]
     #[test]
     fn fit_extent_world_transverse_mercator() {
         println!("projection.fitExtent(…) world transverseMercator");
