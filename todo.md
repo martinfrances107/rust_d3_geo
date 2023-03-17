@@ -47,7 +47,6 @@ examples/projection eslint needs updating.
 
 ## Not Yet Implemented
 
-* src/projection/albers.js
 * src/projection/albersUsa.js
 * src/interpolate.js
 

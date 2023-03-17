@@ -236,8 +236,6 @@ mod fit {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
-    // Both scale and translate are buggy.
-    #[ignore]
     #[test]
     fn fit_size_world_equal_area() {
         println!("projection.fitExtent(…) world conicEqualArea");
@@ -276,8 +274,6 @@ mod fit {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
-    // Both scale and translate are buggy.
-    #[ignore]
     #[test]
     fn fit_size_world_equidistant() {
         println!("projection.fitSize(…) world equidistant");
