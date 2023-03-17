@@ -201,9 +201,9 @@ mod fit {
     //     let world = world();
     //     let projection = Conformal::builder()
     //         .clip_angle_set(30_f64)
-    //         .parallels_set(30_f64, 60_f64);
-    //     // .rotate_set(0_f64, -45_f64);
-    //     todo!("must figure out rotate_set");
+    //         .parallels_set(30_f64, 60_f64)
+    //         .rotate2_set(&[0_f64, -45_f64]);
+
     //     let projection = projection.fit_extent(
     //         [
     //             Coord {
