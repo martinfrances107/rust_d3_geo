@@ -193,48 +193,41 @@ mod fit {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
-    // #[ignore]
-    // #[test]
-    // fn fit_size_world_conformal() {
-    //     println!("projection.fitExtent(…) world conicConformal");
+    /// Both Scale and translate are buggy.
+    #[ignore]
+    #[test]
+    fn fit_extent_world_conformal() {
+        println!("projection.fitExtent(…) world conicConformal");
 
-    //     let world = world();
-    //     let projection = Conformal::builder()
-    //         .clip_angle_set(30_f64)
-    //         .parallels_set(30_f64, 60_f64)
-    //         .rotate2_set(&[0_f64, -45_f64]);
+        let world = world();
+        let mut projection = Conformal::builder().clip_angle_set(30_f64);
+        let projection1 = projection
+            .parallels_set(30_f64, 60_f64)
+            .rotate2_set(&[0_f64, -45_f64]);
 
-    //     let projection = projection.fit_extent(
-    //         [
-    //             Coord {
-    //                 x: 50_f64,
-    //                 y: 50_f64,
-    //             },
-    //             Coord {
-    //                 x: 950_f64,
-    //                 y: 950_f64,
-    //             },
-    //         ],
-    //         &world,
-    //     );
-    //     assert!(in_delta(projection.scale(), 145.862346, 1e-6));
-    //     assert!(in_delta_coordinate(
-    //         &projection.translate(),
-    //         &Coord {
-    //             x: 500_f64,
-    //             y: 498.0114265_f64
-    //         },
-    //         1e-6
-    //     ));
-    // }
-
-    // 	// 	// // // tape("projection.fitExtent(…) world conicEqualArea", function(test) {
-    // 	// 	// // //   var projection = d3.geoConicEqualArea();
-    // 	// 	// // //   projection.fitExtent([[50, 50], [950, 950]], world);
-    // 	// 	// // //   test.inDelta(projection.scale(), 145.862346, 1e-6);
-    // 	// 	// // //   test.inDelta(projection.translate(), [500, 498.0114265], 1e-6);
-    // 	// 	// // //   test.end();
-    // 	// 	// // // });
+        let projection2 = projection1.fit_extent(
+            [
+                Coord {
+                    x: 50_f64,
+                    y: 50_f64,
+                },
+                Coord {
+                    x: 950_f64,
+                    y: 950_f64,
+                },
+            ],
+            &world,
+        );
+        assert!(in_delta(projection1.scale(), 145.862346, 1e-6));
+        assert!(in_delta_coordinate(
+            &projection2.translate(),
+            &Coord {
+                x: 500_f64,
+                y: 498.0114265_f64
+            },
+            1e-6
+        ));
+    }
 
     #[test]
     fn fit_size_world_equal_area() {
