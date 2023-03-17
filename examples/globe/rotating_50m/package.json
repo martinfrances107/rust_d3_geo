@@ -35,7 +35,7 @@
     "serve": "^14",
     "topojson-client": "^3",
     "ts-loader": "^9",
-    "typescript": "^4",
+    "typescript": "^5",
     "webpack": "^5",
     "webpack-cli": "^5",
     "webpack-dev-server": "^4"
