@@ -9,7 +9,7 @@ pub fn intersect<T: CoordFloat>(lambda0: T, phi0: T, lambda1: T, phi1: T) -> T {
         let (sin_phi1, cos_phi1) = phi1.sin_cos();
         ((sin_phi0 * cos_phi1 * lambda1.sin() - sin_phi1 * cos_phi0 * lambda0.sin())
             / (cos_phi0 * cos_phi1 * sin_lambda0_lambda1))
-            .tan()
+            .atan()
     } else {
         (phi0 + phi1) / T::from(2).unwrap()
     }

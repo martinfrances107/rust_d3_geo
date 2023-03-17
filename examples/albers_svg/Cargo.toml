@@ -3,7 +3,7 @@ authors = ["martin <martinfrances107@hotmail.com>"]
 categories = ["profile"]
 description = "A flamegraph target."
 keywords = ["flamegraph"]
-name = "albers_issue"
+name = "albers_svg"
 license = { workspace = true }
 version = { workspace = true }
 edition = { workspace = true }
@@ -13,7 +13,7 @@ repository = "https://github.com/martinfrances107/rust_d3_geo.git"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-d3_geo_rs = { path = "../lib" }
+d3_geo_rs = { path = "../../lib" }
 geo = { workspace = true }
 lazy_static = "~1"
 geo-types = "~0.7"
