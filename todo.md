@@ -1,8 +1,6 @@
 # TODO
 
 Today
-Albers,
- is that a graticule problem?
  copy documentation of parallels.
 fit test
 

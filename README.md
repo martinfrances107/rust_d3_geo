@@ -14,6 +14,7 @@ This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST.
 
 Here is a list of the currently supported projections.
 
+* Albers
 * AziumuthalEqualArea
 * AzimuthalEquiDistant
 * Conformal
