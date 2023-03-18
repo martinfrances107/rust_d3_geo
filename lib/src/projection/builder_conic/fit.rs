@@ -142,7 +142,6 @@ where
 //     }
 // }
 
-
 impl<PR, T> Fit for BuilderConicCircleResampleNoClip<Bounds<T>, PR, T>
 where
     PR: Clone + PRConic<T = T> + Transform<T = T>,
