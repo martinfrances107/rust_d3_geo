@@ -193,19 +193,17 @@ mod fit {
     // 	// 	// // //   test.end();
     // 	// 	// // // });
 
-    /// Both Scale and translate are buggy.
-    #[ignore]
     #[test]
     fn fit_extent_world_conformal() {
         println!("projection.fitExtent(…) world conicConformal");
 
         let world = world();
         let mut projection = Conformal::builder().clip_angle_set(30_f64);
-        let projection1 = projection
+        let projection = projection
             .parallels_set(30_f64, 60_f64)
             .rotate2_set(&[0_f64, -45_f64]);
 
-        let projection2 = projection1.fit_extent(
+        let projection = projection.fit_extent(
             [
                 Coord {
                     x: 50_f64,
@@ -218,12 +216,12 @@ mod fit {
             ],
             &world,
         );
-        assert!(in_delta(projection1.scale(), 145.862346, 1e-6));
+        assert!(in_delta(projection.scale(), 626.111027, 1e-6));
         assert!(in_delta_coordinate(
-            &projection2.translate(),
+            &projection.translate(),
             &Coord {
-                x: 500_f64,
-                y: 498.0114265_f64
+                x: 444.395951,
+                y: 410.223799_f64
             },
             1e-6
         ));
@@ -258,14 +256,6 @@ mod fit {
             1e-6
         ));
     }
-
-    // 	// 	// // // tape("projection.fitExtent(…) world conicEquidistant", function(test) {
-    // 	// 	// // //   var projection = d3.geoConicEquidistant();
-    // 	// 	// // //   projection.fitExtent([[50, 50], [950, 950]], world);
-    // 	// 	// // //   test.inDelta(projection.scale(), 123.085587, 1e-6);
-    // 	// 	// // //   test.inDelta(projection.translate(), [500, 498.598401], 1e-6);
-    // 	// 	// // //   test.end();
-    // 	// 	// // // });
 
     #[test]
     fn fit_size_world_equidistant() {
@@ -469,14 +459,6 @@ mod fit {
             1e-6
         ));
     }
-
-    // 	// 	// // // tape("projection.fitExtent(…) world transverseMercator", function(test) {
-    // 	// 	// // //   var projection = d3.geoTransverseMercator();
-    // 	// 	// // //   projection.fitExtent([[50, 50], [950, 950]], world);
-    // 	// 	// // //   test.inDelta(projection.scale(), 143.239449, 1e-6);
-    // 	// 	// // //   test.inDelta(projection.translate(), [473.829551, 500], 1e-6);
-    // 	// 	// // //   test.end();
-    // 	// 	// // // });
 
     #[test]
     fn fit_extent_world_transverse_mercator() {
@@ -712,6 +694,23 @@ mod fit {
     // 	// 	// // //   test.inDelta(projection.translate(), [419.627390, 522.256029], 1e-6);
     // 	// 	// // //   test.end();
     // 	// 	// // // });
+    #[test]
+    fn fit_width_world_mercator_transverse() {
+        println!("projection.fitWidth(…) world transverseMercator");
+
+        let world = world();
+        let projection = MercatorTransverse::builder();
+        let projection = projection.fit_width(900f64, &world);
+        assert!(in_delta(projection.scale(), 166.239257, 1e-6));
+        assert!(in_delta_coordinate(
+            &projection.translate(),
+            &Coord {
+                x: 419.627390_f64,
+                y: 522.256029_f64
+            },
+            1e-6
+        ));
+    }
 
     // 	// 	// // // tape("projection.fitWidth(…) USA albersUsa", function(test) {
     // 	// 	// // //   var projection = d3.geoAlbersUsa();
@@ -739,13 +738,24 @@ mod fit {
         ));
     }
 
-    // 	// 	// // // tape("projection.fitHeight(…) world transverseMercator", function(test) {
-    // 	// 	// // //   var projection = d3.geoTransverseMercator();
-    // 	// 	// // //   projection.fitHeight(900, world);
-    // 	// 	// // //   test.inDelta(projection.scale(), 143.239449, 1e-6);
-    // 	// 	// // //   test.inDelta(projection.translate(), [361.570408, 450], 1e-6);
-    // 	// 	// // //   test.end();
-    // 	// 	// // // });
+    #[test]
+    fn fit_height_world_mercator_transverse() {
+        println!("projection.fitHeight(…) world transverseMercator");
+
+        let world = world();
+        let projection = MercatorTransverse::builder();
+        let projection = projection.fit_height(900_f64, &world);
+        assert!(in_delta(projection.scale(), 143.239449, 1e-6));
+        let t = projection.translate();
+        assert!(in_delta_coordinate(
+            &t,
+            &Coord {
+                x: 361.570408_f64,
+                y: 450_f64
+            },
+            1e-6
+        ));
+    }
 
     // 	// 	// // // tape("projection.fitHeight(…) USA albersUsa", function(test) {
     // 	// 	// // //   var projection = d3.geoAlbersUsa();
