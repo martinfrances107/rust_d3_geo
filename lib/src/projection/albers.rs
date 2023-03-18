@@ -1,34 +1,6 @@
-// use std::marker::PhantomData;
-
-// use crate::stream::Stream;
-
-// use super::RawBase;
-
-// /// Projection definition.
-// #[derive(Clone, Copy, Default, Debug)]
-// pub struct Albers<DRAIN> {
-//     p_drain: PhantomData<DRAIN>,
-// }
-
-// impl<DRAIN> RawBase for Albers<DRAIN>
-// where
-//     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
-// {
-//     type Builder = BuilderMercatorAntimeridianResampleClip<DRAIN, Self, f64>;
-
-//     #[inline]
-//     fn builder() -> Self::Builder {
-//         let mut default: Self::Builder = MercatorBuilder::new(Self::default());
-//         default.scale_set(961_f64 / f64::TAU());
-//         default
-//     }
-// }
-
 use geo::{Coord, CoordFloat};
 use num_traits::FloatConst;
 
-use crate::projection::ScaleSet;
-use crate::projection::TranslateSet;
 use crate::stream::Stream;
 
 use super::builder::types::BuilderAntimeridianResampleNoClip;
@@ -38,6 +10,8 @@ use super::equal_area::EqualArea;
 use super::CenterSet;
 use super::RawBase;
 use super::RotateSet;
+use super::ScaleSet;
+use super::TranslateSet;
 
 type BuilderAlbers<DRAIN, T> =
     Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>, T>;
