@@ -17,7 +17,7 @@ use super::RawBase;
 // mod clip_extent_adjust;
 // mod clip_extent_clear;
 // mod clip_extent_get;
-mod clip_extent_set;
+mod clip_extent_asjust;
 // mod fit;
 // mod fit_no_clip;
 // mod precision_adjust;
