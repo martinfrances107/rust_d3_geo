@@ -54,7 +54,7 @@ where
     pub(crate) cache: CacheState<CLIPC, DRAIN, T>,
 }
 
-type ProjectionStream<CLIP, T> =
+type ProjectorStream<CLIP, T> =
     StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
 
 impl<CC, CU, DRAIN, PCNC, PCNU, PR, RC, RU, T> Projector<CC, CU, DRAIN, PCNU, PR, RC, RU, T>
@@ -74,7 +74,7 @@ where
     ///
     /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
     ///
-    pub fn stream(&mut self, drain: &DRAIN) -> ProjectionStream<CC, T> {
+    pub fn stream(&mut self, drain: &DRAIN) -> ProjectorStream<CC, T> {
         if let Some((cache_drain, output)) = &self.cache {
             if *cache_drain == *drain {
                 return (*output).clone();
