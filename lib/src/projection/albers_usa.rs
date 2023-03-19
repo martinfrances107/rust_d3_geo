@@ -10,6 +10,7 @@ use crate::Transform;
 
 use super::albers::albers;
 use super::CenterSet;
+use super::ClipExtentSet;
 use super::RotateSet;
 
 use super::builder_conic::types::BuilderConicAntimeridianResampleClip;
@@ -58,63 +59,81 @@ where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
     pub(super) fn new() -> Self {
-        todo!();
-        // let alaska = EqualArea::builder();
-        // let alaska = alaska.rotate2_set(&[154_f64, 0_f64]);
-        // let alaska = alaska.center_set(&Coord {
-        //     x: -2_f64,
-        //     y: 58.5_f64,
-        // });
+        let mut alaska = EqualArea::builder();
+        let alaska = alaska.rotate2_set(&[154_f64, 0_f64]);
+        let alaska = alaska.center_set(&Coord {
+            x: -2_f64,
+            y: 58.5_f64,
+        });
 
-        // let hawaii = EqualArea::builder();
-        // let hawaii = hawaii.rotate2_set(&[157_f64, 0_f64]);
-        // let hawaii = hawaii.center_set(&Coord {
-        //     x: -3_f64,
-        //     y: 19.9_f64,
-        // });
+        let mut hawaii = EqualArea::builder();
+        let hawaii = hawaii.rotate2_set(&[157_f64, 0_f64]);
+        let hawaii = hawaii.center_set(&Coord {
+            x: -3_f64,
+            y: 19.9_f64,
+        });
 
-        // let lower_48 = albers();
-        // let k = lower_48.scale();
-        // let t = lower_48.translate();
+        let mut lower_48 = albers();
 
-        // let lower_48_point = lower_48.translate_set(&t).clip_extent_set(&Coord {
-        //     x: t.x - 0.455_f64 * k,
-        //     y: t.y - 0.234 * k,
-        // });
+        let k = lower_48.scale();
+        let t = lower_48.translate();
 
-        // let alaska_point = alaska
-        //     .translate_set(&Coord {
-        //         x: t.x - 0.307_f64 * k,
-        //         y: t.y - 0.201 * k,
-        //     })
-        //     .clip_extent_set(&Coord {
-        //         x: t.x - 0.425_f64 * k + EPSILON,
-        //         y: t.y - 0.120 * k + EPSILON,
-        //     });
+        let lower_48_point = lower_48.translate_set(&t).clip_extent_set(&[
+            Coord {
+                x: t.x - 0.455_f64 * k,
+                y: t.y - 0.234 * k,
+            },
+            Coord {
+                x: t.x + 0.455_f64 * k,
+                y: t.y + 0.234 * k,
+            },
+        ]);
 
-        // let hawaii_point = hawaii.translate_set(&Coord {
-        //     x: t.x - 0.205_f64 * k,
-        //     y: t.y - 0.212 * k,
-        // });
-        // let hawaii_point = hawaii_point.clip_extent_set(&Coord {
-        //     x: t.x - 0.214_f64 * k + EPSILON,
-        //     y: t.y - 0.166 * k + EPSILON,
-        // });
+        let alaska_point = alaska
+            .translate_set(&Coord {
+                x: t.x - 0.307_f64 * k,
+                y: t.y - 0.201 * k,
+            })
+            .clip_extent_set(&[
+                Coord {
+                    x: t.x - 0.425_f64 * k + EPSILON,
+                    y: t.y - 0.120 * k + EPSILON,
+                },
+                Coord {
+                    x: t.x - 0.214_f64 * k - EPSILON,
+                    y: t.y - 0.234 * k - EPSILON,
+                },
+            ]);
 
-        // Self {
-        //     p_drain: PhantomData::<DRAIN>,
-        //     k,
-        //     t,
-        //     // Initially there is not difference between builder with base settings and
-        //     // Builder with translation applied.
-        //     alaska_point,
-        //     lower_48_point,
-        //     hawaii_point,
+        let hawaii_point = hawaii.translate_set(&Coord {
+            x: t.x - 0.205_f64 * k,
+            y: t.y - 0.212 * k,
+        });
+        let hawaii_point = hawaii_point.clip_extent_set(&[
+            Coord {
+                x: t.x - 0.214_f64 * k + EPSILON,
+                y: t.y - 0.166 * k + EPSILON,
+            },
+            Coord {
+                x: t.x - 0.214 * k + EPSILON,
+                y: t.y + 0.234 * k - EPSILON,
+            },
+        ]);
 
-        //     alaska,
-        //     lower_48,
-        //     hawaii,
-        // }
+        Self {
+            p_drain: PhantomData::<DRAIN>,
+            k,
+            t,
+            // Initially there is not difference between builder with base settings and
+            // Builder with translation applied.
+            alaska_point,
+            lower_48_point,
+            hawaii_point,
+
+            alaska: alaska.clone(),
+            lower_48,
+            hawaii: hawaii.clone(),
+        }
     }
 }
 
