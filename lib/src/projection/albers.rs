@@ -13,7 +13,7 @@ use super::RotateSet;
 use super::ScaleSet;
 use super::TranslateSet;
 
-type BuilderAlbers<DRAIN, T> =
+pub type BuilderAlbers<DRAIN, T> =
     Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>, T>;
 
 /// Albers - `ConicEqualArea` centered on the U.S.

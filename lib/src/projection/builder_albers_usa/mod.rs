@@ -1,40 +1,39 @@
 use std::fmt::Debug;
+use std::marker::PhantomData;
 
-use geo::CoordFloat;
-use num_traits::FloatConst;
-
+use super::albers_usa::AlbersUsa;
 use super::BuilderTrait;
 use super::RawBase;
 
 // mod angle;
 // mod angle_get;
-mod build;
-mod center_get;
-mod center_set;
+// mod build;
+// mod center_get;
+// mod center_set;
 // mod clip_angle_adjust;
 // mod clip_angle_get;
 // mod clip_angle_reset;
-mod clip_angle_set;
-mod clip_extent_adjust;
+// mod clip_angle_set;
+// mod clip_extent_adjust;
 // mod clip_extent_clear;
-mod clip_extent_get;
+// mod clip_extent_get;
 mod clip_extent_set;
-mod fit;
+// mod fit;
 // mod fit_no_clip;
 // mod precision_adjust;
 // mod precision_bypass;
 // mod precision_get;
 // mod precision_set;
-mod parallels_get;
-mod parallels_set;
+// mod parallels_get;
+// mod parallels_set;
 // mod recenter_no_resampling;
 // mod recenter_with_resampling;
 // mod reflect_get;
 // mod reflect_set;
 // mod rotate_get;
-mod rotate_set;
-mod scale_get;
-mod scale_set;
+// mod rotate_set;
+// mod scale_get;
+// mod scale_set;
 // mod transform;
 mod translate_get;
 mod translate_set;
@@ -56,54 +55,30 @@ pub trait PRConic: RawBase {
 
 /// A wrapper over Projection\Builder which hold state phi0, phi1 and allow regeneration of the PR.
 #[derive(Clone, Debug)]
-pub struct Builder<BASE, T>
+pub struct Builder<DRAIN>
 where
-    T: CoordFloat,
+    DRAIN: Clone,
+    //     T: CoordFloat,
 {
-    base: BASE,
-    /// Generates a raw projection.
-    // pub pr: PR,
-    /// The wrapped builder type.
-    phi0: T,
-    phi1: T,
+    phantom_drain: PhantomData<DRAIN>,
+    pub pr: AlbersUsa<DRAIN>,
 }
 
-/// Returns the pair of parallels used to define the projection.
-pub trait ParallelsGet {
-    /// f64 or f32.
-    type T;
-
-    /// Set the parallels.
-    fn parallels(&mut self) -> (Self::T, Self::T);
-}
-
-/// Define the pair of parallels used to define the projection.
-pub trait ParallelsSet {
-    /// f64 or f32.
-    type T;
-
-    /// Set the parallels.
-    fn parallels_set(&mut self, phi0: Self::T, phi1: Self::T) -> &mut Self;
-}
-
-impl<BASE, PR, T> BuilderTrait for Builder<BASE, T>
+impl<DRAIN> BuilderTrait for Builder<DRAIN>
 where
-    BASE: BuilderTrait<PR = PR>,
-    PR: PRConic<T = T> + Clone,
-    T: CoordFloat + Default + FloatConst,
+    DRAIN: Clone,
 {
-    type PR = PR;
+    type PR = AlbersUsa<DRAIN>;
 
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
     ///
     /// # Panics
     /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
-    fn new(pr: PR) -> Self {
-        let phi0 = T::zero();
-        let phi1 = T::FRAC_PI_3();
-        let pr = pr.generate(phi0, phi1);
-        let base = BASE::new(pr);
-        Self { base, phi0, phi1 }
+    fn new(pr: AlbersUsa<DRAIN>) -> Self {
+        Self {
+            phantom_drain: PhantomData::<DRAIN>,
+            pr,
+        }
     }
 }

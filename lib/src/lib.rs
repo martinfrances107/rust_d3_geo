@@ -189,6 +189,7 @@ pub mod cartesian;
 pub mod centroid;
 /// Related to the injection of circles into a stream.
 pub mod circle;
+
 /// Projectors can clip, remove point computed to be outside the projection.
 pub mod clip;
 /// Combines two transforms into one.
@@ -204,6 +205,9 @@ pub mod identity;
 /// Testing and debug helpers.
 #[cfg(not(tarpaulin_include))]
 pub mod in_delta;
+/// Records the last point [`AlbersUsa`]
+pub mod last_point;
+
 /// Used to calculate of object lengths.
 pub mod length;
 /// Mathematical constants.

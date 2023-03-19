@@ -54,7 +54,7 @@ where
     pub(crate) cache: CacheState<CLIPC, DRAIN, T>,
 }
 
-type ProjectorStream<CLIP, T> =
+pub(super) type ProjectorStream<CLIP, T> =
     StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
 
 impl<CC, CU, DRAIN, PCNC, PCNU, PR, RC, RU, T> Projector<CC, CU, DRAIN, PCNU, PR, RC, RU, T>

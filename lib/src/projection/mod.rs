@@ -12,6 +12,8 @@ use crate::Transform;
 
 /// Builds a specialised (conic) equal area.
 pub mod albers;
+/// Standard projection with multiple sub projections.
+pub mod albers_usa;
 /// The raw projection.
 pub mod azimuthal_equal_area;
 /// The raw projection.
@@ -38,6 +40,8 @@ pub mod gnomic;
 /// The default projection builder.
 pub mod builder;
 
+/// Specific to the `AlbersUSA` projection.
+pub mod builder_albers_usa;
 /// Cylindrical and Conic projection builder.
 pub mod builder_conic;
 /// Identity builder.
@@ -61,6 +65,8 @@ pub mod mercator_transverse;
 pub mod orthographic;
 /// Projection object.
 pub mod projector;
+/// Projection obect for `AlbersUsa` projection.
+pub mod projector_albers_usa;
 /// Projection Identity object.
 pub mod projector_identity;
 /// Resample based on a given precision.
