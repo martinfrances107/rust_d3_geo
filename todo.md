@@ -1,7 +1,11 @@
 # TODO
 
 Today
- copy documentation of parallels.
+  albersUSA implement cache in 'fn stream()'
+  albersUSA tests
+  examles/projection alberaUSA
+  copy documentation of parallels.
+
 fit test
 
 High Priority.

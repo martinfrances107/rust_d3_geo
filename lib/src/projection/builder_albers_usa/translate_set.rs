@@ -1,7 +1,6 @@
 use geo_types::Coord;
 
 use crate::math::EPSILON;
-use crate::projection::ClipExtentAdjust;
 use crate::projection::ClipExtentSet;
 use crate::projection::ScaleGet;
 use crate::projection::TranslateSet;

@@ -3,9 +3,10 @@ use std::marker::PhantomData;
 use geo::CoordFloat;
 
 use crate::projection::builder::Builder as BuilderCommon;
+use crate::projection::projector_commom::Projector;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
-use crate::projection::Projector;
+
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 
@@ -15,17 +16,8 @@ use super::PRConic;
 impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> Build
     for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, T>
 where
-    BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>: Clone
-        + Build<
-            ClipC = CLIPC,
-            ClipU = CLIPU,
-            Drain = DRAIN,
-            PCNU = PCNU,
-            PR = PR,
-            RC = RC,
-            RU = RU,
-            T = T,
-        >,
+    BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>:
+        Clone + Build<Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>>,
     DRAIN: Clone + Default + Stream<T = T>,
     CLIPC: Clone,
     CLIPU: Clone,
@@ -34,19 +26,12 @@ where
     RU: Clone,
     T: CoordFloat,
 {
-    type ClipC = CLIPC;
-    type ClipU = CLIPU;
-    type Drain = DRAIN;
-    type PCNU = PCNU;
-    type PR = PR;
-    type RC = RC;
-    type RU = RU;
-    type T = T;
+    type Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>;
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    fn build(&self) -> Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> {
-        Projector {
+    fn build(&self) -> Self::Projector {
+        Self::Projector {
             p_rc: PhantomData::<RC>,
             cache: None,
             postclip: self.base.postclip.clone(),

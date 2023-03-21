@@ -13,6 +13,7 @@ use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
 
 use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase as ProjectionRawBase;
@@ -55,7 +56,7 @@ fn parse_topology() -> Geometry {
 fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     use d3_geo_rs::{
         graticule::generate_mls,
-        projection::{ScaleSet, TranslateSet},
+        projection::{builder::template::NoPCNC, ScaleSet, TranslateSet},
     };
     use geo::GeometryCollection;
 
@@ -81,7 +82,10 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
         "fill: silver",
     ];
 
-    let mut builder = PathBuilder::context_pathstring().build(ortho);
+    let pb: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
+        PathBuilder::context_pathstring();
+
+    let mut builder = pb.build(ortho);
     let mut i = 0;
 
     let mut paths = vec![];

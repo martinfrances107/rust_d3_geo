@@ -11,6 +11,7 @@ mod mercator_tranverse {
     use d3_geo_rs::in_delta::coordinate as in_delta_coordinate;
     use d3_geo_rs::path::builder::Builder as PathBuilder;
     use d3_geo_rs::path::string::String;
+    use d3_geo_rs::projection::builder::template::NoPCNC;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::CenterSet;
@@ -63,7 +64,9 @@ mod mercator_tranverse {
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder: PathBuilder<_, _, _, NoPCNC<String<f64>>, _, _, _, _, _> =
+            PathBuilder::context_pathstring();
+        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::<f64>::default();
 
@@ -86,7 +89,9 @@ mod mercator_tranverse {
             .precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder: PathBuilder<_, _, _, NoPCNC<String<f64>>, _, _, _, _, _> =
+            PathBuilder::context_pathstring();
+        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::<f64>::default();
 
@@ -115,7 +120,9 @@ mod mercator_tranverse {
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder: PathBuilder<_, _, _, NoPCNC<String<f64>>, _, _, _, _, _> =
+            PathBuilder::context_pathstring();
+        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::<f64>::default();
 
@@ -161,7 +168,9 @@ mod mercator_tranverse {
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder: PathBuilder<_, _, _, NoPCNC<String<f64>>, _, _, _, _, _> =
+            PathBuilder::context_pathstring();
+        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::<f64>::default();
 
@@ -202,7 +211,9 @@ mod mercator_tranverse {
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder: PathBuilder<_, _, _, NoPCNC<String<f64>>, _, _, _, _, _> =
+            PathBuilder::context_pathstring();
+        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::<f64>::default();
 

@@ -1,5 +1,3 @@
-use d3_geo_rs::projection::equidistant::Equidistant;
-use d3_geo_rs::projection::Build;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -9,6 +7,9 @@ use wasm_bindgen::JsCast;
 use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
+use d3_geo_rs::projection::builder::template::NoPCNC;
+use d3_geo_rs::projection::equidistant::Equidistant;
+use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::CenterSet;
 use d3_geo_rs::projection::RawBase;
 use d3_geo_rs::projection::RotateSet;
@@ -36,7 +37,8 @@ pub async fn draw_equidistant(land: &Geometry<f64>) -> Result<(), JsValue> {
     let height: f64 = canvas.height().into();
 
     let context = Context::new(context);
-    let pb = PathBuilder::new(context);
+    let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
+    // let pb = PathBuilder::new(context);
 
     let equidistant = Equidistant::builder()
         .scale_set(width / 1.5_f64 / std::f64::consts::PI)

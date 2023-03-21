@@ -22,6 +22,7 @@ use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::NoPCNC;
 use crate::projection::builder::template::NoPCNU;
+use crate::projection::projector_commom::Projector;
 use crate::projection::Build;
 use crate::projection::ScaleSet;
 use crate::projection::TranslateSet;
@@ -29,6 +30,8 @@ use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::Transform;
+
+use super::Projector as ProjectorTrait;
 
 /// `no_clip` in the sense that input is  `NoClip` (Identity)
 /// and so is the output.
@@ -38,21 +41,14 @@ fn fit_no_clip<B, CC, CU, FB, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            ClipC = CC,
-            ClipU = CU,
-            Drain = Bounds<T>,
-            PCNU = NoPCNU,
-            PR = PR,
-            RC = RC,
-            RU = RU,
-            T = T,
-        > + Clone
+    B: Build<Projector = Projector<CC, CU, Bounds<T>, NoPCNU, PR, RC, RU, T>>
+        + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     FB: FnMut([Coord<T>; 2], &B) -> B,
     CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
+    PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
@@ -77,20 +73,13 @@ pub(super) fn fit_extent_no_clip<B, CC, CU, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            ClipC = CC,
-            ClipU = CU,
-            Drain = Bounds<T>,
-            PCNU = NoPCNU,
-            PR = PR,
-            RC = RC,
-            RU = RU,
-            T = T,
-        > + Clone
+    B: Build<Projector = Projector<CC, CU, Bounds<T>, NoPCNU, PR, RC, RU, T>>
+        + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
+    PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
@@ -122,20 +111,13 @@ pub(super) fn fit_size_no_clip<B, CC, CU, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            ClipC = CC,
-            ClipU = CU,
-            Drain = Bounds<T>,
-            PCNU = NoPCNU,
-            PR = PR,
-            RC = RC,
-            RU = RU,
-            T = T,
-        > + Clone
+    B: Build<Projector = Projector<CC, CU, Bounds<T>, NoPCNU, PR, RC, RU, T>>
+        + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
+    PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
@@ -159,20 +141,13 @@ pub(super) fn fit_width_no_clip<B, CC, CU, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            ClipC = CC,
-            ClipU = CU,
-            Drain = Bounds<T>,
-            PCNU = NoPCNU,
-            PR = PR,
-            RC = RC,
-            RU = RU,
-            T = T,
-        > + Clone
+    B: Build<Projector = Projector<CC, CU, Bounds<T>, NoPCNU, PR, RC, RU, T>>
+        + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,
+    PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
@@ -204,16 +179,8 @@ pub(super) fn fit_height_no_clip<B, CC, CU, PR, RC, RU, T>(
 ) -> B
 where
     PR: Clone + Transform<T = T>,
-    B: Build<
-            ClipC = CC,
-            ClipU = CU,
-            Drain = Bounds<T>,
-            PCNU = NoPCNU,
-            PR = PR,
-            RC = RC,
-            RU = RU,
-            T = T,
-        > + Clone
+    B: Build<Projector = Projector<CC, CU, Bounds<T>, NoPCNU, PR, RC, RU, T>>
+        + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CU: Clone + ClipConnectable<Output = CC, SC = RC>,

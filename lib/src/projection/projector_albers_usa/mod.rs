@@ -1,19 +1,17 @@
-use geo::CoordFloat;
 use std::fmt::Debug;
+use std::marker::PhantomData;
 
 use crate::rot::rotator_radians::RotatorRadians;
+use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
 
-use super::albers_usa::AlbersUsa;
-use super::builder_conic::types::BuilderConicAntimeridianResampleClip;
 use super::stream_transform_radians::StreamTransformRadians;
+use super::Projector as ProjectorTrait;
 
-mod multiplex;
+pub mod multiplex;
 /// Builder shorthand notations.
 pub mod types;
-
-use multiplex::Multiplex;
 
 type CacheState<CLIP, DRAIN, T> = Option<(
     DRAIN,
@@ -24,52 +22,40 @@ type CacheState<CLIP, DRAIN, T> = Option<(
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Clone, Debug)]
-pub struct Projector<CLIPC, DRAIN, T>
+pub struct Projector<CC, DRAIN, MULTIPLEX>
 where
     DRAIN: Clone,
-    CLIPC: Clone,
-    T: CoordFloat,
 {
-    // pub(crate) p_rc: PhantomData<RC>,
-    multiplex: Multiplex<
-        DRAIN,
-        3,
-        BuilderConicAntimeridianResampleClip<DRAIN, AlbersUsa<DRAIN>, f64>,
-        f64,
-    >,
-    pub(crate) cache: CacheState<CLIPC, DRAIN, T>,
+    phantom_cc: PhantomData<CC>,
+    phantom_drain: PhantomData<DRAIN>,
+    pub(crate) multiplex: MULTIPLEX,
 }
 
 type ProjectionStream<CLIP, T> =
     StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
 
-// impl<CC, DRAIN, T> Projector<CC, DRAIN, T>
-// where
-//     CC: Clone + Stream<EP = DRAIN, T = T>,
-//     DRAIN: Clone + PartialEq,
-//     // PCNC: Clone,
-//     // RU: Clone + Connectable<Output<PCNC> = RC>,
-//     // RC: Clone,
-//     T: CoordFloat,
-// {
-//     /// Connects a DRAIN to the projection.
-//     ///
-//     /// The Projection Stream Pipeline :-
-//     ///
-//     /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
-//     ///
-//     pub fn stream(&mut self, drain: &DRAIN) -> ProjectionStream<CC, T> {
-//         // if let Some((cache_drain, output)) = &self.cache {
-//         //     if *cache_drain == *drain {
-//         //         return (*output).clone();
-//         //     }
-//         // }
-//         // // Build cache.
-//         // let postclip_node = self.postclip.clone().connect(drain.clone());
-
-//         self.multiplex.clone().connect(drain.clone())
-//     }
-// }
+impl<CC, DRAIN, MULTIPLEX> ProjectorTrait for Projector<CC, DRAIN, MULTIPLEX>
+where
+    CC: Clone + Stream<EP = DRAIN, T = f64>,
+    DRAIN: Clone + PartialEq,
+    MULTIPLEX: Clone + Connectable,
+    // PCNC: Clone,
+    // RU: Clone + Connectable<Output<PCNC> = RC>,
+    // RC: Clone,
+{
+    type DRAIN = DRAIN;
+    // type Transformer = ProjectionStream<CC, f64>;
+    type Transformer = <MULTIPLEX as Connectable>::Output<DRAIN>;
+    /// Connects a DRAIN to the projection.
+    ///
+    /// The Projection Stream Pipeline :-
+    ///
+    /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
+    ///
+    fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
+        self.multiplex.clone().connect(drain.clone())
+    }
+}
 
 // impl<CLIPC, DRAIN, PCNU, PR, RC, RU, T> Transform for Projector<CLIPC, DRAIN, PR, RC, RU, T>
 // where

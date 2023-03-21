@@ -26,7 +26,7 @@ mod path_centroid {
     use d3_geo_rs::path::Path;
     use d3_geo_rs::projection::builder::Builder as ProjectionBuilderCommon;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
-    use d3_geo_rs::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
+    use d3_geo_rs::projection::projector_commom::types::ProjectorAntimeridianResampleNoneNoClip;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::BuilderTrait as ProjectionBuilderTrait;
     use d3_geo_rs::projection::PrecisionBypass;

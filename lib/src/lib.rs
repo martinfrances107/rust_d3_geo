@@ -96,6 +96,7 @@
 //! use d3_geo_rs::projection::RotateSet;
 //! use d3_geo_rs::projection::ScaleSet;
 //! use d3_geo_rs::projection::TranslateSet;
+//! use d3_geo_rs::projection::builder::template::NoPCNC;
 //! use rust_topojson_client::feature::feature_from_name;
 //!
 //! fn document() -> Result<Document, JsValue> {
@@ -140,7 +141,8 @@
 //!     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 //!
 //!     let context = Context::new(context_raw.clone());
-//!     let pb = PathBuilder::new(context);
+//!
+//!     let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
 //!
 //!     let ortho = Orthographic::builder()
 //!         .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)

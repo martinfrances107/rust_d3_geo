@@ -25,6 +25,7 @@ use web_sys::Document;
 use web_sys::*;
 
 mod albers;
+mod albers_usa;
 mod azimuthal_equal_area;
 mod azimuthal_equidistant;
 mod conformal;
@@ -39,6 +40,7 @@ mod orthographic;
 mod stereographic;
 
 use albers::draw_albers;
+use albers_usa::draw_albers_usa;
 use azimuthal_equal_area::draw_azimuthal_equal_area;
 use azimuthal_equidistant::draw_azimuthal_equidistant;
 use conformal::draw_conformal;
@@ -90,6 +92,7 @@ pub async fn start() -> Result<(), JsValue> {
 
     try_join!(
         draw_albers(&land),
+        draw_albers_usa(&land),
         draw_azimuthal_equal_area(&land),
         draw_azimuthal_equidistant(&land),
         draw_conformal(&land),

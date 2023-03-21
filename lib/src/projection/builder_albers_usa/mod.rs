@@ -7,7 +7,7 @@ use super::RawBase;
 
 // mod angle;
 // mod angle_get;
-// mod build;
+mod build;
 // mod center_get;
 // mod center_set;
 // mod clip_angle_adjust;
@@ -32,15 +32,11 @@ mod clip_extent_asjust;
 // mod reflect_set;
 // mod rotate_get;
 // mod rotate_set;
-// mod scale_get;
-// mod scale_set;
+mod scale_get;
+mod scale_set;
 // mod transform;
 mod translate_get;
 mod translate_set;
-
-// pub mod template;
-/// Builder shorthand notations.
-pub mod types;
 
 /// Adjustments the pair of parallels
 /// use to define the proejctions.
@@ -58,9 +54,9 @@ pub trait PRConic: RawBase {
 pub struct Builder<DRAIN>
 where
     DRAIN: Clone,
-    //     T: CoordFloat,
 {
     phantom_drain: PhantomData<DRAIN>,
+    /// The underlying projection.
     pub pr: AlbersUsa<DRAIN>,
 }
 

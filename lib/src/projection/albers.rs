@@ -13,6 +13,7 @@ use super::RotateSet;
 use super::ScaleSet;
 use super::TranslateSet;
 
+/// Output type of the function albers().
 pub type BuilderAlbers<DRAIN, T> =
     Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>, T>;
 

@@ -53,14 +53,15 @@ use num_traits::FloatConst;
 
 use crate::projection::builder::template::ResampleNoPCNU;
 use crate::projection::builder::Builder as ProjectionBuilder;
+
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
-use crate::projection::Projector;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+use super::projector_commom::Projector;
 use super::BuilderTrait as ProjectionBuilderMercator;
 use super::ClipExtentSet;
 use super::TransformExtent;
@@ -227,18 +228,19 @@ where
     RU: Clone,
     T: CoordFloat,
 {
-    type ClipC = CLIPC;
-    type ClipU = CLIPU;
-    type Drain = DRAIN;
-    type PCNU = PCNU;
-    type PR = PR;
-    type RC = RC;
-    type RU = RU;
-    type T = T;
+    // type ClipC = CLIPC;
+    // type ClipU = CLIPU;
+    // type Drain = DRAIN;
+    // type PCNU = PCNU;
+    // type PR = PR;
+    // type RC = RC;
+    // type RU = RU;
+    // type T = T;
 
+    type Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>;
     /// Using the currently programmed state output a new projection.
     #[inline]
-    fn build(&self) -> Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> {
+    fn build(&self) -> Self::Projector {
         Projector {
             p_rc: PhantomData::<RC>,
             cache: None,

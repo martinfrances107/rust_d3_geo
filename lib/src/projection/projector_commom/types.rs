@@ -12,7 +12,8 @@ use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::template::ResamplePCNC;
 use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::template::PCNU;
-use crate::projection::Projector;
+
+use super::Projector;
 
 /// A projector with a antimeridian clipping stratergy, with resampling and no post clip node.
 pub type ProjectorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Projector<

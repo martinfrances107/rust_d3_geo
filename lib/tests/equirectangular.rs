@@ -13,7 +13,7 @@ mod equirectangular {
     use d3_geo_rs::projection::builder::Builder;
     use d3_geo_rs::projection::equality::projection_equal;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
-    use d3_geo_rs::projection::projector::Projector;
+    use d3_geo_rs::projection::projector_commom::Projector;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::RawBase;
     use d3_geo_rs::projection::RotateSet;

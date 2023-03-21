@@ -21,9 +21,10 @@ mod path_string {
     use d3_geo_rs::path::builder::Builder as PathBuilder;
     use d3_geo_rs::path::string::String as PathString;
     use d3_geo_rs::path::PointRadiusTrait;
+    use d3_geo_rs::projection::builder::template::NoPCNC;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
     use d3_geo_rs::projection::orthographic::Orthographic;
-    use d3_geo_rs::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
+    use d3_geo_rs::projection::projector_commom::types::ProjectorAntimeridianResampleNoneNoClip;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::PrecisionBypass;
     use d3_geo_rs::projection::RawBase;
@@ -56,9 +57,9 @@ mod path_string {
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        PathBuilder::context_pathstring()
-            .build(projection)
-            .object(&object)
+        let pb: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
+            PathBuilder::context_pathstring();
+        pb.build(projection).object(&object)
     }
 
     #[test]
@@ -76,7 +77,9 @@ mod path_string {
     fn point_renders_a_point_of_given_radius() {
         println!("geoPath.point(…) renders a point of a given radius");
 
-        let mut builder = PathBuilder::context_pathstring();
+        let mut builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
+            PathBuilder::context_pathstring();
+        // let mut builder = PathBuilder::context_pathstring();
 
         builder.point_radius(10_f64);
 
@@ -181,9 +184,9 @@ mod path_string {
             })
             .build();
 
-        let s = PathBuilder::context_pathstring()
-            .build(ortho)
-            .object(&object);
+        let pb: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
+            PathBuilder::context_pathstring();
+        let s = pb.build(ortho).object(&object);
 
         assert_eq!(s, "M258.957583,307.236886L285.746118,260.837781L336.092096,279.162219L326.788535,331.925333L273.211465,331.925333ZM420.485018,307.236886L431.567778,283.936957L441.006226,260.837781L479.573483,279.162219L477.1168,305.578636L472.446542,331.925333L431.404125,331.925333Z");
     }

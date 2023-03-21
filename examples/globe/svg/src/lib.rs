@@ -13,6 +13,7 @@ extern crate topojson;
 extern crate web_sys;
 
 use d3_geo_rs::graticule::generate_mls;
+use d3_geo_rs::projection::builder::template::NoPCNC;
 use geo::Geometry;
 use geo::GeometryCollection;
 use geo_types::Coord;
@@ -27,6 +28,7 @@ use web_sys::SvgsvgElement;
 use web_sys::*;
 
 use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::string::String;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;
@@ -111,7 +113,10 @@ pub async fn start() -> Result<(), JsValue> {
         "fill: silver",
     ];
 
-    let mut builder = PathBuilder::context_pathstring().build(ortho);
+    let pb: PathBuilder<_, _, _, NoPCNC<String<f64>>, _, _, _, _, _> =
+        PathBuilder::context_pathstring();
+
+    let mut builder = pb.build(ortho);
     let mut i = 0;
 
     match &countries {

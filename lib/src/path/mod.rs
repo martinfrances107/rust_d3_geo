@@ -18,7 +18,6 @@ mod tests;
 use std::fmt;
 use std::fmt::Debug;
 use std::fmt::Display;
-use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
@@ -26,12 +25,14 @@ use geo_types::Coord;
 use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
-use crate::clip::clipper::Connectable as ClipConnectable;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
-use crate::projection::projector::Projector;
-use crate::stream::Connectable;
+
+use crate::projection::stream_transform_radians::StreamTransformRadians;
+use crate::projection::Projector;
+use crate::rot::rotator_radians::RotatorRadians;
+use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
@@ -76,37 +77,30 @@ where
 /// Projection and context stream applied to a Streamable.
 #[derive(Debug)]
 #[allow(dead_code)]
-pub struct Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+pub struct Path<CS, PROJECTOR, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
-    p_pcnc: PhantomData<PCNC>,
-    p_rc: PhantomData<RC>,
+    // p_pcnc: PhantomData<PCNC>,
+    // p_rc: PhantomData<RC>,
     context_stream: CS,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
-    projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,
+    // projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,
+    projection: PROJECTOR,
 }
 
-impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+// impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+impl<CS, PROJECTOR, T> Path<CS, PROJECTOR, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
     /// Constructor.
     ///
     /// # Panics
     /// unwrap() is used here but a panic will never happen as 4.5 will always be converted into T.
-    pub fn new(
-        context_stream: CS,
-        projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,
-    ) -> Self {
+    pub fn new(context_stream: CS, projection: PROJECTOR) -> Self {
         Self {
-            p_pcnc: PhantomData::<PCNC>,
-            p_rc: PhantomData::<RC>,
             context_stream,
             point_radius: PointRadiusEnum::Val(T::from(4.5_f64).unwrap()),
             projection,
@@ -114,16 +108,15 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+impl<CLIPC, CS, PROJECTOR, T> Path<CS, PROJECTOR, T>
 where
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = CS, T = T>,
     CS: Clone + Default + PartialEq + Result,
-    PCNC: Clone,
-    PCNU: Clone + Connectable<Output<CS> = PCNC>,
-    RC: Clone + Stream<EP = CS, T = T>,
-    RU: Clone + Connectable<Output<PCNC> = RC>,
-    T: 'static + CoordFloat + FloatConst,
+    PROJECTOR: Projector<
+        DRAIN = CS,
+        Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+    >,
+    T: CoordFloat + FloatConst,
 {
     /// Combines projection, context stream and object.
     pub fn object(&mut self, object: &impl Streamable<T = T>) -> <CS as Result>::Out {
@@ -133,15 +126,13 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
-    Path<CLIPC, CLIPU, Measure<T>, PCNC, PCNU, PR, RC, RU, T>
+impl<CLIPC, PROJECTOR, T> Path<Measure<T>, PROJECTOR, T>
 where
     CLIPC: Clone + Stream<EP = Measure<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
-    PCNU: Clone + Connectable<Output<Measure<T>> = PCNC>,
-    PCNC: Clone,
-    RC: Clone + Stream<EP = Measure<T>, T = T>,
-    RU: Clone + Connectable<Output<PCNC> = RC>,
+    PROJECTOR: Projector<
+        DRAIN = Measure<T>,
+        Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+    >,
     T: AddAssign + CoordFloat,
 {
     /// Returns the area of the Path
@@ -150,7 +141,7 @@ where
     where
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = Measure::default();
+        let stream_dst = Measure::<T>::default();
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
@@ -158,14 +149,13 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, Area<T>, PCNC, PCNU, PR, RC, RU, T>
+impl<CLIPC, PROJECTOR, T> Path<Area<T>, PROJECTOR, T>
 where
     CLIPC: Clone + Stream<EP = Area<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
-    PCNC: Clone,
-    PCNU: Clone + Connectable<Output<Area<T>> = PCNC>,
-    RC: Clone + Stream<EP = Area<T>, T = T>,
-    RU: Clone + Connectable<Output<PCNC> = RC>,
+    PROJECTOR: Projector<
+        DRAIN = Area<T>,
+        Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+    >,
     T: CoordFloat,
 {
     /// Returns the area of the Path
@@ -174,7 +164,7 @@ where
     where
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = Area::default();
+        let stream_dst = Area::<T>::default();
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
@@ -182,22 +172,20 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
-    Path<CLIPC, CLIPU, Bounds<T>, PCNC, PCNU, PR, RC, RU, T>
+impl<CLIPC, PROJECTOR, T> Path<Bounds<T>, PROJECTOR, T>
 where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
-    PCNC: Clone,
-    PCNU: Clone + Connectable<Output<Bounds<T>> = PCNC>,
-    RC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
+    PROJECTOR: Projector<
+        DRAIN = Bounds<T>,
+        Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+    >,
     T: 'static + CoordFloat + FloatConst,
 {
     /// Returns the bounds of the object
     ///
     /// This operation consumes the  Path.
     pub fn bounds(mut self, object: &impl Streamable<T = T>) -> [Coord<T>; 2] {
-        let stream_dst = Bounds::default();
+        let stream_dst = Bounds::<T>::default();
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
@@ -205,20 +193,18 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
-    Path<CLIPC, CLIPU, Centroid<T>, PCNC, PCNU, PR, RC, RU, T>
+impl<CLIPC, PROJECTOR, T> Path<Centroid<T>, PROJECTOR, T>
 where
     CLIPC: Clone + Stream<EP = Centroid<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
-    PCNC: Clone + Stream<EP = Centroid<T>, T = T>,
-    PCNU: Clone + Connectable<Output<Centroid<T>> = PCNC>,
-    RC: Clone + Stream<EP = Centroid<T>, T = T>,
-    RU: Clone + Connectable<Output<PCNC> = RC>,
+    PROJECTOR: Projector<
+        DRAIN = Centroid<T>,
+        Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+    >,
     T: 'static + AddAssign + CoordFloat + FloatConst,
 {
     /// Returns the centroid of the object.
     pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coord<T> {
-        let stream_dst = Centroid::default();
+        let stream_dst = Centroid::<T>::default();
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
@@ -226,10 +212,8 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+impl<CS, PROJECTOR, T> Path<CS, PROJECTOR, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
     /// Sets the context stream.

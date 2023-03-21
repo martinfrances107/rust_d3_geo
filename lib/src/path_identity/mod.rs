@@ -16,6 +16,7 @@ use crate::path::PointRadiusEnum;
 use crate::path::Result;
 use crate::projection::projector_identity::transformer::Transformer;
 use crate::projection::projector_identity::Projector;
+use crate::projection::Projector as ProjectorTrait;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
@@ -88,7 +89,7 @@ where
     where
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = Area::default();
+        let stream_dst = Area::<T>::default();
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
@@ -109,7 +110,7 @@ where
     where
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let stream_dst = Measure::default();
+        let stream_dst = Measure::<T>::default();
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
@@ -127,7 +128,7 @@ where
     ///
     /// This operation consumes the  Path.
     pub fn bounds(mut self, object: &impl Streamable<T = T>) -> [Coord<T>; 2] {
-        let stream_dst = Bounds::default();
+        let stream_dst = Bounds::<T>::default();
         let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
@@ -143,7 +144,7 @@ where
 {
     /// Returns the centroid of the object.
     pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coord<T> {
-        let stream_dst = Centroid::default();
+        let stream_dst = Centroid::<T>::default();
         let mut stream_in: Transformer<Centroid<T>, Connected<PCNC>, T> =
             self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);

@@ -5,17 +5,20 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
+use crate::projection::Projector as ProjectorTrait;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
+
+use transformer::Transformer;
+
 /// Unit tests.
 pub mod tests;
 /// A stream pipeline stage.
 pub mod transformer;
 /// Builder shorthand notations.
 pub mod types;
-use transformer::Transformer;
 
 type CacheState<DRAIN, PCNC> = Option<(DRAIN, PCNC)>;
 
@@ -35,12 +38,12 @@ where
     pub(crate) cache: CacheState<DRAIN, Transformer<DRAIN, Connected<PCNC>, T>>,
 }
 
-impl<DRAIN, PCNC, PCNU, T> Projector<DRAIN, PCNC, PCNU, T>
+impl<DRAIN, PCNC, PCNU, T> ProjectorTrait for Projector<DRAIN, PCNC, PCNU, T>
 where
     DRAIN: Clone + PartialEq,
     PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to the projection.
     ///
@@ -48,7 +51,9 @@ where
     ///
     ///  Transformer -> postclip -> DRAIN
     ///
-    pub fn stream(&mut self, drain: &DRAIN) -> Transformer<DRAIN, Connected<PCNC>, T> {
+    type Transformer = Transformer<DRAIN, Connected<PCNC>, T>;
+    type DRAIN = DRAIN;
+    fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
         if let Some((cache_drain, output)) = &self.cache {
             if *cache_drain == *drain {
                 return (*output).clone();

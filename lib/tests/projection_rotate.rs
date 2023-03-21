@@ -8,6 +8,8 @@ mod projection_rotate {
     use pretty_assertions::assert_eq;
 
     use d3_geo_rs::path::builder::Builder as PathBuilder;
+    use d3_geo_rs::path::string::String;
+    use d3_geo_rs::projection::builder::template::NoPCNC;
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::RawBase;
@@ -24,7 +26,9 @@ mod projection_rotate {
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .build();
 
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder: PathBuilder<_, _, _, NoPCNC<String<f64>>, _, _, _, _, _> =
+            PathBuilder::context_pathstring();
+        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Geometry::Polygon(Polygon::new(
             LineString::from(vec![

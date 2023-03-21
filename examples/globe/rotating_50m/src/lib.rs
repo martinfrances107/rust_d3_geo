@@ -34,6 +34,7 @@ use web_sys::Window;
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
+use d3_geo_rs::projection::builder::template::NoPCNC;
 use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
@@ -149,7 +150,8 @@ impl Renderer {
             .clear_rect(0f64, 0f64, self.width, self.height);
 
         let context: Context = Context::new(self.context2d.clone());
-        let pb = PathBuilder::new(context);
+        let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
+        // let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);
         self.context2d.set_stroke_style(&"#333".into());

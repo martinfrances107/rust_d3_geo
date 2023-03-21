@@ -7,7 +7,7 @@ use num_traits::FloatConst;
 
 use crate::path::context::Context;
 use crate::path::Path;
-use crate::projection::projector::Projector;
+use crate::projection::projector_commom::Projector;
 use crate::stream::Stream;
 #[cfg(not(test))]
 use web_sys::CanvasRenderingContext2d;
@@ -128,7 +128,7 @@ where
     pub fn build(
         self,
         projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,
-    ) -> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> {
+    ) -> Path<CS, Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>, T> {
         Path::new(self.context_stream, projection)
     }
 }

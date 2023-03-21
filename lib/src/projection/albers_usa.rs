@@ -5,14 +5,18 @@ use geo_types::Coord;
 
 use crate::last_point::LastPoint;
 use crate::math::EPSILON;
+use crate::projection::Projector;
 use crate::stream::Stream;
 use crate::Transform;
 
 use super::albers::albers;
+use super::BuilderTrait;
 use super::CenterSet;
 use super::ClipExtentSet;
 use super::RotateSet;
+use super::ScaleSet;
 
+use super::builder_albers_usa::Builder;
 use super::builder_conic::types::BuilderConicAntimeridianResampleClip;
 use super::builder_conic::types::BuilderConicAntimeridianResampleNoClip;
 use super::equal_area::EqualArea;
@@ -54,11 +58,11 @@ where
         BuilderConicAntimeridianResampleNoClip<LastPoint<f64>, EqualArea<LastPoint<f64>, f64>, f64>,
 }
 
-impl<DRAIN> AlbersUsa<DRAIN>
+impl<DRAIN> Default for AlbersUsa<DRAIN>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
-    pub(super) fn new() -> Self {
+    fn default() -> Self {
         let mut alaska = EqualArea::builder();
         let alaska = alaska.rotate2_set(&[154_f64, 0_f64]);
         let alaska = alaska.center_set(&Coord {
@@ -137,18 +141,19 @@ where
     }
 }
 
-// impl<DRAIN> RawBase for AlbersUsa<DRAIN>
-// where
-//     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
-// {
-//     type Builder = BuilderAlbersUSAAntimeridianResampleClip<DRAIN, Self, f64>;
+impl<DRAIN> RawBase for AlbersUsa<DRAIN>
+where
+    DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = f64>,
+{
+    type Builder = Builder<DRAIN>;
 
-//     #[inline]
-//     fn builder() -> Self::Builder {
-//         let mut b = Builder::new(Self::default());
-//         b.scale_set(1070_f64)
-//     }
-// }
+    #[inline]
+    fn builder() -> Builder<DRAIN> {
+        let mut b = Builder::new(Self::default());
+        b.scale_set(1070_f64);
+        b
+    }
+}
 
 const ALASKA_Y: Range<f64> = 0.120..0.234;
 const ALASKA_X: Range<f64> = -0.425..-0.214;

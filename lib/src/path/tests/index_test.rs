@@ -23,9 +23,10 @@ mod index {
     use crate::path::builder::Builder as PathBuilder;
     use crate::path::context::Context;
     use crate::path_test_context::CanvasRenderingContext2d;
+    use crate::projection::builder::template::PCNC;
     use crate::projection::equirectangular::Equirectangular;
     use crate::projection::orthographic::Orthographic;
-    use crate::projection::projector::types::ProjectorAntimeridianResampleNoneNoClip;
+    use crate::projection::projector_commom::types::ProjectorAntimeridianResampleNoneNoClip;
     use crate::projection::Build;
     use crate::projection::PrecisionBypass;
     use crate::projection::RawBase;
@@ -55,7 +56,8 @@ mod index {
         let crc2d = CanvasRenderingContext2d::default();
 
         let context = Context::new(crc2d);
-        let pb = PathBuilder::new(context);
+        // let pb = PathBuilder::new(context);
+        let pb = PathBuilder::<_, _, _, PCNC<Context, f64>, _, _, _, _, _>::new(context);
 
         pb.build(projection).object(object)
     }
@@ -325,7 +327,7 @@ mod index {
         let crc2d = CanvasRenderingContext2d::default();
 
         let context = Context::new(crc2d);
-        let pb = PathBuilder::new(context);
+        let pb = PathBuilder::<_, _, _, PCNC<Context, f64>, _, _, _, _, _>::new(context);
 
         let mut path = pb.build(equirectangular());
 
@@ -371,8 +373,8 @@ mod index {
         let crc2d = CanvasRenderingContext2d::default();
 
         let context = Context::new(crc2d);
-        let pb = PathBuilder::new(context);
-
+        // let pb = PathBuilder::new(context);
+        let pb = PathBuilder::<_, _, _, PCNC<Context, f64>, _, _, _, _, _>::new(context);
         let mut path = pb.build(equirectangular());
 
         let object = Geometry::Polygon(Polygon::new(
@@ -422,7 +424,7 @@ mod index {
         let crc2d = CanvasRenderingContext2d::default();
 
         let context = Context::new(crc2d);
-        let pb = PathBuilder::new(context);
+        let pb = PathBuilder::<_, _, _, PCNC<Context, f64>, _, _, _, _, _>::new(context);
 
         let mut ob = Orthographic::builder();
         ob.rotate2_set(&[95_f64, 0_f64]);

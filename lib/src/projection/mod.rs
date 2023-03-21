@@ -4,7 +4,6 @@ use num_traits::AsPrimitive;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-use crate::projection::projector::Projector;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::stream::Streamable;
@@ -63,10 +62,10 @@ pub mod mercator;
 pub mod mercator_transverse;
 /// The raw projection.
 pub mod orthographic;
-/// Projection object.
-pub mod projector;
 /// Projection obect for `AlbersUsa` projection.
 pub mod projector_albers_usa;
+/// Projection object.
+pub mod projector_commom;
 /// Projection Identity object.
 pub mod projector_identity;
 /// Resample based on a given precision.
@@ -136,42 +135,10 @@ pub trait BuilderTrait {
 }
 
 /// Output a Projector based on a Builders configuration.
-pub trait Build
-where
-    <Self as Build>::ClipC: Clone,
-    <Self as Build>::ClipU: Clone,
-    <Self as Build>::T: CoordFloat,
-{
-    /// The Clip stratrgy to be used [The type once connected].
-    type ClipC;
-    /// The Clip stratrgy to be used [The type in a unconnected].
-    type ClipU;
-    /// The pipelines endpoint.
-    type Drain;
-    /// The post clip node [The type in a unconnected state].
-    type PCNU;
-    /// The raw projection.
-    type PR;
-    /// The resample node [The type in a connected state].
-    type RC;
-    /// The resample node [The type in a unconnected state].
-    type RU;
-    /// f64 or f32
-    type T;
+pub trait Build {
+    type Projector;
     /// Returns a Projector based on a builder configuration.
-    #[allow(clippy::type_complexity)]
-    fn build(
-        &self,
-    ) -> Projector<
-        Self::ClipC,
-        Self::ClipU,
-        Self::Drain,
-        Self::PCNU,
-        Self::PR,
-        Self::RC,
-        Self::RU,
-        Self::T,
-    >;
+    fn build(&self) -> Self::Projector;
 }
 
 /// Controls the projections center point.
@@ -601,4 +568,11 @@ pub trait TranslateSet {
 
 trait Recenter {
     fn recenter(&mut self) -> &mut Self;
+}
+
+pub trait Projector {
+    type Transformer;
+    type DRAIN;
+
+    fn stream(&mut self, drain: &Self::DRAIN) -> Self::Transformer;
 }

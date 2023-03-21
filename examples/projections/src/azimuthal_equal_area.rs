@@ -8,6 +8,7 @@ use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
 use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
+use d3_geo_rs::projection::builder::template::NoPCNC;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::PrecisionAdjust;
 use d3_geo_rs::projection::RawBase;
@@ -33,7 +34,8 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
     let height: f64 = canvas.height().into();
 
     let context = Context::new(context_raw.clone());
-    let pb = PathBuilder::new(context);
+    let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
+    // let pb = PathBuilder::new(context);
 
     let azimuthal_equal_area = AzimuthalEqualArea::builder()
         .scale_set(width / 3_f64)

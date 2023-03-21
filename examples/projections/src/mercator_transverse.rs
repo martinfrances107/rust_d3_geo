@@ -1,3 +1,4 @@
+use d3_geo_rs::projection::builder::template::NoPCNC;
 use d3_geo_rs::projection::Build;
 use geo::Geometry;
 use geo::MultiLineString;
@@ -34,7 +35,8 @@ pub async fn draw_mercator_transverse(land: &Geometry<f64>) -> Result<(), JsValu
     let height: f64 = canvas.height().into();
 
     let context = Context::new(context_raw.clone());
-    let pb = PathBuilder::new(context);
+    let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
+    // let pb = PathBuilder::new(context);
 
     let mut mercator = MercatorTransverse::builder();
     let mercator = mercator

@@ -1,3 +1,6 @@
+use d3_geo_rs::projection::builder::template::NoPCNC;
+use d3_geo_rs::projection::builder::template::PCNC;
+use d3_geo_rs::projection::builder::template::PCNU;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -34,7 +37,7 @@ pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
     let height: f64 = canvas.height().into();
 
     let context: Context = Context::new(context_raw.clone());
-    let pb = PathBuilder::new(context);
+    let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
 
     let stereographic = Stereographic::builder()
         .scale_set(width / 1.3_f64 / std::f64::consts::PI)

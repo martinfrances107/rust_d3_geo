@@ -4,7 +4,7 @@ mod stereographic_tests {
     use geo_types::Coord;
 
     use d3_geo_rs::projection::equality::projection_equal;
-    use d3_geo_rs::projection::projector::types::ProjectorCircleResampleNoClip;
+    use d3_geo_rs::projection::projector_commom::types::ProjectorCircleResampleNoClip;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::RawBase;

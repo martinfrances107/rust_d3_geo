@@ -9,6 +9,8 @@ use web_sys::SvgsvgElement;
 
 use d3_geo_rs::circle::generator::Generator as CircleGenerator;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::string::String;
+use d3_geo_rs::projection::builder::template::NoPCNC;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;
@@ -77,7 +79,10 @@ pub fn draw_orthographic() -> Result<()> {
 
     let object = MultiPolygon(p_vec);
 
-    let mut path = PathBuilder::context_pathstring().build(ortho);
+    let pb: PathBuilder<_, _, _, NoPCNC<String<f64>>, _, _, _, _, _> =
+        PathBuilder::context_pathstring();
+
+    let mut path = pb.build(ortho);
     let s = path.object(&object);
 
     let class_name = format!("s2-id-{}", 0);

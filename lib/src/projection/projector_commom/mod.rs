@@ -7,6 +7,7 @@ use num_traits::FloatConst;
 
 use crate::clip::clipper::Connectable as ClipConnectable;
 use crate::compose::Compose;
+use crate::projection::Projector as ProjectorTrait;
 use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connectable;
@@ -57,16 +58,18 @@ where
 pub(super) type ProjectorStream<CLIP, T> =
     StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
 
-impl<CC, CU, DRAIN, PCNC, PCNU, PR, RC, RU, T> Projector<CC, CU, DRAIN, PCNU, PR, RC, RU, T>
+impl<CC, CU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait
+    for Projector<CC, CU, DRAIN, PCNU, PR, RC, RU, T>
 where
     CC: Clone + Stream<EP = DRAIN, T = T>,
     CU: Clone + ClipConnectable<Output = CC, SC = RC>,
     DRAIN: Clone + PartialEq,
     PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
+    PR: Transform<T = T>,
     RU: Clone + Connectable<Output<PCNC> = RC>,
     RC: Clone,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to the projection.
     ///
@@ -74,7 +77,9 @@ where
     ///
     /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
     ///
-    pub fn stream(&mut self, drain: &DRAIN) -> ProjectorStream<CC, T> {
+    type Transformer = ProjectorStream<CC, T>;
+    type DRAIN = DRAIN;
+    fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
         if let Some((cache_drain, output)) = &self.cache {
             if *cache_drain == *drain {
                 return (*output).clone();

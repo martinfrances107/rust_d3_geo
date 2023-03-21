@@ -5,14 +5,16 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::LineWriter;
 
-use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::projection::Build;
 use geo::CoordFloat;
 use geo::Geometry;
 use geo_types::Coord;
 use num_traits::FloatConst;
 use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
+
+use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::string::String as PathString;
+use d3_geo_rs::projection::Build;
 
 #[macro_use]
 extern crate lazy_static;
@@ -51,7 +53,7 @@ fn parse_topology() -> Geometry {
 fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     use d3_geo_rs::{
         graticule::generate_mls,
-        projection::{albers::albers, ScaleSet, TranslateSet},
+        projection::{albers::albers, builder::template::NoPCNC, ScaleSet, TranslateSet},
     };
     use geo::GeometryCollection;
 
@@ -77,8 +79,9 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
         "fill: silver",
     ];
 
-    // let builder: PathBuilder<_, _, PathString<f64>, PCNC<PathString<f64>, f64>, _, _, _, _, f64> =
-    let builder = PathBuilder::context_pathstring();
+    let builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
+        PathBuilder::context_pathstring();
+    // let builder = PathBuilder::context_pathstring();
     let mut projector = builder.build(ortho);
     let mut i = 0;
 

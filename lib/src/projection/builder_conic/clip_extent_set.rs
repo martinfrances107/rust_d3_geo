@@ -1,20 +1,6 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
-
-use crate::clip::antimeridian::gen_clip as gen_clip_antimeridian;
-use crate::clip::antimeridian::ClipAntimeridianC;
-use crate::clip::circle::gen_clip as gen_clip_circle;
-use crate::clip::circle::ClipCircleC;
-use crate::clip::rectangle::Rectangle;
-use crate::projection::builder::template::ResampleNonePCNC;
-use crate::projection::builder::template::ResamplePCNC;
-use crate::projection::builder::types::BuilderAntimeridianResampleClip;
-use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
-use crate::projection::builder::types::BuilderCircleResampleClip;
-use crate::projection::builder::types::BuilderCircleResampleNoneClip;
 
 use crate::projection::ClipExtentSet;
 
