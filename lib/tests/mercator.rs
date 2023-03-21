@@ -38,7 +38,6 @@ mod mercator {
         let projection = pb.build();
         let path_builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
             PathBuilder::context_pathstring();
-        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::<f64>::default();
 
@@ -61,7 +60,6 @@ mod mercator {
         let projection = pb.build();
         let path_builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
             PathBuilder::context_pathstring();
-        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::default();
 
@@ -97,7 +95,6 @@ mod mercator {
 
         let path_builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
             PathBuilder::context_pathstring();
-        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::default();
 
@@ -141,7 +138,6 @@ mod mercator {
 
         let path_builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
             PathBuilder::context_pathstring();
-        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::default();
 
@@ -185,7 +181,6 @@ mod mercator {
         let projection = pb.build();
         let path_builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
             PathBuilder::context_pathstring();
-        // let path_builder = PathBuilder::context_pathstring();
 
         let object = Sphere::default();
 

@@ -42,7 +42,6 @@ mod clipcircle {
 
         let path_builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
             PathBuilder::context_pathstring();
-        // let path_builder = PathBuilder::context_pathstring();
 
         let s = path_builder.build(projector).object(&d);
         let rounded = ROUND_DOWN.replace_all(&s, "");

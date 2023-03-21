@@ -12,7 +12,7 @@ pub struct Connected<P> {
     store: Vec<P>,
 }
 /// A projection stream pipeline stage which holds a collection of
-/// Projectors, in the case of 'AlbersUSA' one for every region.
+/// Projectors, in the case of `AlbersUSA` one for every region.
 /// `lower_48`, `alaaska`, `hawaii`.
 #[derive(Clone, Debug)]
 pub struct Multiplex<DRAIN, PCON, PUNCON, STATE> {

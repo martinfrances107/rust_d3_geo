@@ -79,7 +79,6 @@ mod path_string {
 
         let mut builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
             PathBuilder::context_pathstring();
-        // let mut builder = PathBuilder::context_pathstring();
 
         builder.point_radius(10_f64);
 
