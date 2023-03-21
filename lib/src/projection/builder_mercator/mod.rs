@@ -228,16 +228,8 @@ where
     RU: Clone,
     T: CoordFloat,
 {
-    // type ClipC = CLIPC;
-    // type ClipU = CLIPU;
-    // type Drain = DRAIN;
-    // type PCNU = PCNU;
-    // type PR = PR;
-    // type RC = RC;
-    // type RU = RU;
-    // type T = T;
-
     type Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>;
+
     /// Using the currently programmed state output a new projection.
     #[inline]
     fn build(&self) -> Self::Projector {

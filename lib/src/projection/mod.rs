@@ -136,6 +136,7 @@ pub trait BuilderTrait {
 
 /// Output a Projector based on a Builders configuration.
 pub trait Build {
+    /// The output of the build() call
     type Projector;
     /// Returns a Projector based on a builder configuration.
     fn build(&self) -> Self::Projector;
@@ -570,9 +571,19 @@ trait Recenter {
     fn recenter(&mut self) -> &mut Self;
 }
 
+/// This need to be generic because there are two types of projector.
+///
+/// Most Projections use a common Projector, the `AlberUSA` projector is just a container
+/// for a collections of projectors.
 pub trait Projector {
+    /// The act of connecting a drain to the pipeline.
+    /// Creates a object the fundamentally acts as Transformer.
     type Transformer;
+
+    /// The endpoint of the stream pipeline.
     type DRAIN;
 
+    /// Attach a endpoint of a stream pipeline and returns
+    /// a transformer to which can be fed geometry objects.
     fn stream(&mut self, drain: &Self::DRAIN) -> Self::Transformer;
 }

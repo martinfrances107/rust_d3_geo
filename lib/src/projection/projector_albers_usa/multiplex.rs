@@ -12,8 +12,8 @@ pub struct Connected<P> {
     store: Vec<P>,
 }
 /// A projection stream pipeline stage which holds a collection of
-/// Projectors, in the case of AlbersUSA one for every region.
-/// lower_48, alaaska, hawaii.
+/// Projectors, in the case of 'AlbersUSA' one for every region.
+/// `lower_48`, `alaaska`, `hawaii`.
 #[derive(Clone, Debug)]
 pub struct Multiplex<DRAIN, PCON, PUNCON, STATE> {
     phantom_drain: PhantomData<DRAIN>,
@@ -84,40 +84,40 @@ where
 
     /// Declare the end of a line segment.
     fn line_end(&mut self) {
-        for item in self.state.store.iter_mut() {
+        for item in &mut self.state.store {
             item.line_end();
         }
     }
 
     /// Declare the start of a line segment.
     fn line_start(&mut self) {
-        for item in self.state.store.iter_mut() {
+        for item in &mut self.state.store {
             item.line_start();
         }
     }
 
     /// Declare a point.
     fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
-        for item in self.state.store.iter_mut() {
+        for item in &mut self.state.store {
             item.point(p, m);
         }
     }
 
     /// Declare the end of a polygon.
     fn polygon_end(&mut self) {
-        for item in self.state.store.iter_mut() {
+        for item in &mut self.state.store {
             item.polygon_end();
         }
     }
     /// Declare the start of a polygon.
     fn polygon_start(&mut self) {
-        for item in self.state.store.iter_mut() {
+        for item in &mut self.state.store {
             item.polygon_start();
         }
     }
     /// Declare a sphere object.
     fn sphere(&mut self) {
-        for item in self.state.store.iter_mut() {
+        for item in &mut self.state.store {
             item.sphere();
         }
     }

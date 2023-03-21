@@ -9,6 +9,7 @@ use crate::stream::Stream;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::Projector as ProjectorTrait;
 
+/// The multiplex is a collection of sub-projections.
 pub mod multiplex;
 /// Builder shorthand notations.
 pub mod types;

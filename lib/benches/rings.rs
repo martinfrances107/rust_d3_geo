@@ -5,6 +5,7 @@ extern crate pretty_assertions;
 use std::time::Duration;
 
 use criterion::Criterion;
+use d3_geo_rs::projection::builder::template::NoPCNC;
 use geo::MultiPolygon;
 use geo::Polygon;
 use geo_types::Coord;
@@ -14,6 +15,7 @@ use regex::Regex;
 
 use d3_geo_rs::circle::generator::Generator as CircleGenerator;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;
@@ -82,7 +84,9 @@ fn rings() {
 
     let object = MultiPolygon(p_vec);
 
-    let mut path = PathBuilder::context_pathstring().build(ortho);
+    let builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
+        PathBuilder::context_pathstring();
+    let mut path = builder.build(ortho);
     let s = path.object(&object);
 
     let rounded = ROUND_DOWN.replace_all(&s, "");
