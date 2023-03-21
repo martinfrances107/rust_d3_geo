@@ -12,7 +12,6 @@ High Priority.
 examples/projection eslint needs updating.
 
 * fit_test -- needs works.
-* reclip needs work.
 * lots of todos missing
 
 * projection_rotate_test -- did it ever work?

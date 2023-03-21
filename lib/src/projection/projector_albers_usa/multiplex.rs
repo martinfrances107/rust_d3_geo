@@ -44,10 +44,7 @@ where
 
     /// Connects the next stage in the stream pipline.
     #[inline]
-    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC>
-    where
-        SC: Clone,
-    {
+    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
         todo!();
         // let store: Vec<PCON> = self
         //     .unconnected_store

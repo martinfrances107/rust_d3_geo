@@ -4,6 +4,7 @@ mod invert {
     use geo_types::Coord;
 
     use d3_geo_rs::projection::albers::albers as albers_builder;
+    use d3_geo_rs::projection::albers_usa::AlbersUsa;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
     use d3_geo_rs::projection::builder_conic::ParallelsSet;
@@ -153,5 +154,17 @@ mod invert {
     fn stereographic() {
         let s = Stereographic::<DrainStub<f64>, f64>::builder().build();
         symetric_invert(s);
+    }
+
+    // it("albersUsa(point) and albersUsa.invert(point) are symmetric", () => {
+    //   const projection = geoAlbersUsa();
+    //   [[-122.4194, 37.7749], [-74.0059, 40.7128], [-149.9003, 61.2181], [-157.8583, 21.3069]].forEach((point) => {
+    //     assertProjectionEqual(projection, point, projection(point));
+    //   });
+    // });
+    #[test]
+    fn albers_usa() {
+        println!("albersUsa(point) and albersUsa.invert(point) are symmetric");
+        let s = AlbersUsa::<DrainStub<f64>>::builder().build();
     }
 }
