@@ -40,14 +40,24 @@ where
 type ProjectionStream<CLIP, T> =
     StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
 
+impl<CC, DRAIN, MULTIPLEX> Projector<CC, DRAIN, MULTIPLEX>
+where
+    DRAIN: Clone,
+{
+    pub fn new(multiplex: MULTIPLEX) -> Self {
+        Self {
+            phantom_cc: PhantomData::<CC>,
+            phantom_drain: PhantomData::<DRAIN>,
+            multiplex,
+        }
+    }
+}
+
 impl<CC, DRAIN, MULTIPLEX> ProjectorTrait for Projector<CC, DRAIN, MULTIPLEX>
 where
     CC: Clone + Stream<EP = DRAIN, T = f64>,
     DRAIN: Clone + PartialEq,
     MULTIPLEX: Clone + Connectable,
-    // PCNC: Clone,
-    // RU: Clone + Connectable<Output<PCNC> = RC>,
-    // RC: Clone,
 {
     type DRAIN = DRAIN;
     // type Transformer = ProjectionStream<CC, f64>;
