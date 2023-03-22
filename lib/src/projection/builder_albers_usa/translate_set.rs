@@ -18,12 +18,12 @@ where
 
         self.pr.lower_48_point = self.pr.lower_48.translate_set(t).clip_extent_set(&[
             Coord {
-                x: t.x - 0.455_f64 * k,
-                y: t.y - 0.234 * k,
+                x: 0.455_f64.mul_add(-k, t.x),
+                y: 0.234f64.mul_add(-k, t.y),
             },
             Coord {
-                x: t.x + 0.455_f64 * k,
-                y: t.y + 0.234 * k,
+                x: 0.455_f64.mul_add(k, t.x),
+                y: 0.234f64.mul_add(k, t.y),
             },
         ]);
 
@@ -31,17 +31,17 @@ where
             .pr
             .alaska
             .translate_set(&Coord {
-                x: t.x - 0.307_f64 * k,
-                y: t.y - 0.201 * k,
+                x: 0.307_f64.mul_add(-k, t.x),
+                y: 0.201f64.mul_add(-k, t.y),
             })
             .clip_extent_set(&[
                 Coord {
-                    x: t.x - 0.425_f64 * k + EPSILON,
-                    y: t.y - 0.120 * k + EPSILON,
+                    x: 0.425_f64.mul_add(-k, t.x) + EPSILON,
+                    y: 0.120f64.mul_add(-k, t.y) + EPSILON,
                 },
                 Coord {
-                    x: t.x - 0.214_f64 * k - EPSILON,
-                    y: t.y - 0.234 * k - EPSILON,
+                    x: 0.214_f64.mul_add(-k, t.x) - EPSILON,
+                    y: 0.234f64.mul_add(-k, t.y) - EPSILON,
                 },
             ]);
 
@@ -49,17 +49,17 @@ where
             .pr
             .hawaii
             .translate_set(&Coord {
-                x: t.x - 0.205_f64 * k,
-                y: t.y - 0.212 * k,
+                x: 0.205_f64.mul_add(-k, t.x),
+                y: 0.212f64.mul_add(-k, t.y),
             })
             .clip_extent_set(&[
                 Coord {
-                    x: t.x - 0.214_f64 * k + EPSILON,
-                    y: t.y - 0.166 * k + EPSILON,
+                    x: 0.214_f64.mul_add(-k, t.x) + EPSILON,
+                    y: 0.166f64.mul_add(-k, t.y) + EPSILON,
                 },
                 Coord {
-                    x: t.x - 0.214 * k + EPSILON,
-                    y: t.y + 0.234 * k - EPSILON,
+                    x: 0.214f64.mul_add(-k, t.x) + EPSILON,
+                    y: 0.234f64.mul_add(k, t.y) - EPSILON,
                 },
             ]);
         self
