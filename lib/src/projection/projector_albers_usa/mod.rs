@@ -1,10 +1,15 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
+use geo::Coord;
+use geo::CoordFloat;
+use num_traits::FloatConst;
+
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
+use crate::Transform;
 
 use super::stream_transform_radians::StreamTransformRadians;
 use super::Projector as ProjectorTrait;
@@ -58,30 +63,18 @@ where
     }
 }
 
-// impl<CLIPC, DRAIN, PCNU, PR, RC, RU, T> Transform for Projector<CLIPC, DRAIN, PR, RC, RU, T>
-// where
-//     CLIPC: Clone,
+impl<CC, DRAIN, MULTIPLEX> Transform for Projector<CC, DRAIN, MULTIPLEX>
+where
+    DRAIN: Clone,
+    MULTIPLEX: Transform<T = f64>,
+{
+    /// f32 or f64
+    type T = f64;
 
-//     PR: Transform<T = T>,
-//     T: CoordFloat + FloatConst,
-// {
-//     /// f32 or f64
-//     type T = T;
-
-//     fn transform(&self, p: &Coord<T>) -> Coord<T> {
-//         todo!();
-//         // let r = Coord {
-//         //     x: p.x.to_radians(),
-//         //     y: p.y.to_radians(),
-//         // };
-//         // self.project_rotate_transform.transform(&r)
-//     }
-//     fn invert(&self, p: &Coord<T>) -> Coord<T> {
-//         todo!();
-//         // let d = self.project_rotate_transform.invert(p);
-//         // Coord {
-//         //     x: d.x.to_degrees(),
-//         //     y: d.y.to_degrees(),
-//         // }
-//     }
-// }
+    fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
+        self.multiplex.transform(p)
+    }
+    fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
+        self.multiplex.invert(p)
+    }
+}
