@@ -23,7 +23,7 @@ pub struct Multiplex<DRAIN, PCON, PUNCON, STATE> {
 }
 
 impl<DRAIN, PCON, PUNCON> Multiplex<DRAIN, PCON, PUNCON, Unconnected> {
-    const fn new(unconnected_store: Vec<PUNCON>) -> Self {
+    pub const fn new(unconnected_store: Vec<PUNCON>) -> Self {
         Self {
             phantom_drain: PhantomData::<DRAIN>,
             phantom_pcon: PhantomData::<PCON>,
