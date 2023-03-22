@@ -28,11 +28,10 @@ type CacheState<CLIP, DRAIN, T> = Option<(
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Clone, Debug)]
-pub struct Projector<CC, DRAIN, MULTIPLEX>
+pub struct Projector<DRAIN, MULTIPLEX>
 where
     DRAIN: Clone,
 {
-    phantom_cc: PhantomData<CC>,
     phantom_drain: PhantomData<DRAIN>,
     pub(crate) multiplex: MULTIPLEX,
 }
@@ -40,22 +39,22 @@ where
 type ProjectionStream<CLIP, T> =
     StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
 
-impl<CC, DRAIN, MULTIPLEX> Projector<CC, DRAIN, MULTIPLEX>
+impl<DRAIN, MULTIPLEX> Projector<DRAIN, MULTIPLEX>
 where
     DRAIN: Clone,
 {
     pub fn new(multiplex: MULTIPLEX) -> Self {
         Self {
-            phantom_cc: PhantomData::<CC>,
+            // phantom_cc: PhantomData::<CC>,
             phantom_drain: PhantomData::<DRAIN>,
             multiplex,
         }
     }
 }
 
-impl<CC, DRAIN, MULTIPLEX> ProjectorTrait for Projector<CC, DRAIN, MULTIPLEX>
+impl<DRAIN, MULTIPLEX> ProjectorTrait for Projector<DRAIN, MULTIPLEX>
 where
-    CC: Clone + Stream<EP = DRAIN, T = f64>,
+    // CC: Clone + Stream<EP = DRAIN, T = f64>,
     DRAIN: Clone + PartialEq,
     MULTIPLEX: Clone + Connectable,
 {
@@ -73,7 +72,7 @@ where
     }
 }
 
-impl<CC, DRAIN, MULTIPLEX> Transform for Projector<CC, DRAIN, MULTIPLEX>
+impl<DRAIN, MULTIPLEX> Transform for Projector<DRAIN, MULTIPLEX>
 where
     DRAIN: Clone,
     MULTIPLEX: Transform<T = f64>,
