@@ -65,8 +65,6 @@ impl<DRAIN, PCON, PUNCON> Stream for Multiplex<DRAIN, PCON, PUNCON, Connected<PC
 where
     DRAIN: Clone + PartialEq,
     PCON: Stream<EP = DRAIN, T = f64>,
-    // P: Stream<EP = DRAIN, T = T>,
-    // T: CoordFloat,
 {
     type EP = DRAIN;
     type T = f64;
