@@ -7,7 +7,7 @@ where
 {
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build<MULTIPLEX>(&self) -> Projector< DRAIN, MULTIPLEX> {
+    pub fn build<MULTIPLEX>(&self) -> Projector<DRAIN, MULTIPLEX> {
         todo!();
         // Projector {
         //     multiplex: Multiplex::new([
