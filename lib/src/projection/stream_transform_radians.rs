@@ -3,6 +3,7 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use geo_types::Coord;
 
+use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
@@ -14,13 +15,11 @@ use crate::stream::Unconnected;
 #[derive(Clone, Debug)]
 pub struct StreamTransformRadians<STATE>(pub STATE);
 
-impl StreamTransformRadians<Unconnected> {
+impl Connectable for StreamTransformRadians<Unconnected> {
+    type Output<SC: Clone> = StreamTransformRadians<Connected<SC>>;
     #[inline]
     /// Connect this node to the next element in the pipeline.
-    pub const fn connect<SINK>(self, sink: SINK) -> StreamTransformRadians<Connected<SINK>>
-    where
-        SINK: Clone,
-    {
+    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
         StreamTransformRadians(Connected { sink })
     }
 }
