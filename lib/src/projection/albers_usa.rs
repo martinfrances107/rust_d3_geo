@@ -174,27 +174,29 @@ where
         let mut pipeline = self.lower_48_point.build().stream(&lower_48_end_point);
 
         pipeline.point(p, None);
-        if let Some(t) = lower_48_end_point.result() {
-            t
-        } else {
-            let mut alaska_end_point = LastPoint::default();
-            let mut pipeline = self.alaska_point.build().stream(&alaska_end_point);
-            pipeline.point(p, None);
-            if let Some(t) = alaska_end_point.result() {
-                t
-            } else {
-                let mut hawaii_end_point = LastPoint::default();
-                let mut pipeline = self.hawaii_point.build().stream(&hawaii_end_point);
+        lower_48_end_point.result().map_or_else(
+            || {
+                let mut alaska_end_point = LastPoint::default();
+                let mut pipeline = self.alaska_point.build().stream(&alaska_end_point);
                 pipeline.point(p, None);
-                hawaii_end_point.result().map_or(
-                    Coord {
-                        x: f64::NAN,
-                        y: f64::NAN,
+                alaska_end_point.result().map_or_else(
+                    || {
+                        let mut hawaii_end_point = LastPoint::default();
+                        let mut pipeline = self.hawaii_point.build().stream(&hawaii_end_point);
+                        pipeline.point(p, None);
+                        hawaii_end_point.result().map_or(
+                            Coord {
+                                x: f64::NAN,
+                                y: f64::NAN,
+                            },
+                            |t| t,
+                        )
                     },
                     |t| t,
                 )
-            }
-        }
+            },
+            |t| t,
+        )
     }
 
     #[inline]
