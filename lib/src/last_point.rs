@@ -11,18 +11,8 @@ use crate::stream::Stream;
 /// If serves as a point mask. The albers has clipping bounds
 /// and if a point flows through the pipe line and is retained
 /// by `LastPoint` it is in alaksa, the lower 48 or in hawaii.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct LastPoint<T: CoordFloat>(Option<Coord<T>>);
-
-impl<T> Default for LastPoint<T>
-where
-    T: CoordFloat,
-{
-    #[inline]
-    fn default() -> Self {
-        Self(None)
-    }
-}
 
 impl<T> Stream for LastPoint<T>
 where
