@@ -129,7 +129,7 @@ impl<T> Default for DrainStub<T> {
 
 /// Stream pipeline API
 ///
-/// Pipeline states can be connected to perform a sequence of
+/// Pipeline stages can be connected to perform a sequence of
 /// operations where the results can be stored in an endpoint.
 pub trait Stream
 where
