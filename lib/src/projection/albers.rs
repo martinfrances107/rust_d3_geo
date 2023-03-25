@@ -1,4 +1,5 @@
-use geo::{Coord, CoordFloat};
+use geo::Coord;
+use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::stream::Stream;
@@ -13,8 +14,7 @@ use super::RotateSet;
 use super::ScaleSet;
 use super::TranslateSet;
 
-/// Output type of the function albers().
-pub type BuilderAlbers<DRAIN, T> =
+type Output<DRAIN, T> =
     Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>, T>;
 
 /// Albers - `ConicEqualArea` centered on the U.S.
@@ -23,7 +23,7 @@ pub type BuilderAlbers<DRAIN, T> =
 /// unwrap() is used here but a panic will never happen as constants  will
 /// always be converted into T.
 #[must_use]
-pub fn albers<DRAIN, T>() -> BuilderAlbers<DRAIN, T>
+pub fn albers<DRAIN, T>() -> Output<DRAIN, T>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
@@ -37,8 +37,8 @@ where
         })
         .rotate2_set(&[T::from(96_f64).unwrap(), T::zero()])
         .center_set(&Coord {
-            x: T::from(-0.6).unwrap(),
-            y: T::from(38.7).unwrap(),
+            x: T::from(-0.6_f64).unwrap(),
+            y: T::from(38.7_f64).unwrap(),
         });
     b
 }

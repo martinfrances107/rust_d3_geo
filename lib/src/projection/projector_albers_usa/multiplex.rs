@@ -1,75 +1,149 @@
 use std::marker::PhantomData;
 
-use crate::clip::clipper;
-use crate::stream::Connectable;
+use crate::clip::antimeridian::interpolate::Interpolate;
+use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::pv::PV;
+use crate::clip::buffer::Buffer;
+use crate::clip::clipper::Clipper;
+use crate::clip::clipper::Connected as ConnectedClipper;
+use crate::identity::Identity;
+use crate::projection::albers::albers;
+use crate::projection::equal_area::EqualArea;
+use crate::projection::resampler::resample::Connected as ConnectedResample;
+use crate::projection::resampler::resample::Resample;
+use crate::projection::stream_transform_radians::StreamTransformRadians;
+use crate::projection::Build;
+use crate::projection::CenterSet;
+use crate::projection::Projector;
+use crate::projection::RawBase;
+use crate::projection::RotateSet;
+use crate::rot::rotator_radians::RotatorRadians;
+use crate::stream::Connected as ConnectedStream;
+use crate::stream::MultiStream;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use geo::Coord;
 
 /// When connected the state changes to hold the connected Projectors.
 #[derive(Debug)]
-pub struct Connected<P> {
-    store: Vec<P>,
+pub struct Connected<DRAIN, TRANSFORM> {
+    pd_drain: PhantomData<DRAIN>,
+    store: Vec<TRANSFORM>,
 }
 /// A projection stream pipeline stage which holds a collection of
 /// Projectors, in the case of `AlbersUSA` one for every region.
 /// `lower_48`, `alaaska`, `hawaii`.
 #[derive(Clone, Debug)]
-pub struct Multiplex<DRAIN, PCON, PUNCON, STATE> {
-    phantom_drain: PhantomData<DRAIN>,
-    phantom_pcon: PhantomData<PCON>,
+pub struct Multiplex<STATE> {
     state: STATE,
-    unconnected_store: Vec<PUNCON>,
 }
 
-impl<DRAIN, PCON, PUNCON> Multiplex<DRAIN, PCON, PUNCON, Unconnected> {
-    pub const fn new(unconnected_store: Vec<PUNCON>) -> Self {
-        Self {
-            phantom_drain: PhantomData::<DRAIN>,
-            phantom_pcon: PhantomData::<PCON>,
+impl Multiplex<Unconnected> {
+    pub const fn new() -> Self {
+        Self { state: Unconnected }
+    }
+}
 
-            state: Unconnected,
-            unconnected_store,
+impl Multiplex<Unconnected> {
+    /// Connects the next stage in the stream pipline.
+    #[inline]
+    fn connect<SC: Clone>(
+        &self,
+        sink: SC,
+    ) -> Multiplex<
+        Connected<
+            SC,
+            StreamTransformRadians<
+                ConnectedStream<
+                    RotatorRadians<
+                        ConnectedStream<
+                            Clipper<
+                                Interpolate<f64>,
+                                Line<
+                                    ConnectedStream<
+                                        Resample<
+                                            EqualArea<SC, f64>,
+                                            ConnectedResample<Identity<ConnectedStream<SC>>, f64>,
+                                            f64,
+                                        >,
+                                    >,
+                                    f64,
+                                >,
+                                Line<Unconnected, f64>,
+                                PV<f64>,
+                                Resample<
+                                    EqualArea<SC, f64>,
+                                    ConnectedResample<Identity<ConnectedStream<SC>>, f64>,
+                                    f64,
+                                >,
+                                ConnectedClipper<
+                                    Line<ConnectedStream<Buffer<f64>>, f64>,
+                                    Line<
+                                        ConnectedStream<
+                                            Resample<
+                                                EqualArea<SC, f64>,
+                                                ConnectedResample<
+                                                    Identity<ConnectedStream<SC>>,
+                                                    f64,
+                                                >,
+                                                f64,
+                                            >,
+                                        >,
+                                        f64,
+                                    >,
+                                    f64,
+                                >,
+                                f64,
+                            >,
+                        >,
+                        f64,
+                    >,
+                >,
+            >,
+        >,
+    >
+    where
+        SC: Default + PartialEq + Stream<EP = SC, T = f64>,
+    {
+        let mut alaska = EqualArea::builder();
+        let alaska = alaska.rotate2_set(&[154_f64, 0_f64]);
+        let alaska = alaska.center_set(&Coord {
+            x: -2_f64,
+            y: 58.5_f64,
+        });
+
+        let mut hawaii = EqualArea::builder();
+        let hawaii = hawaii.rotate2_set(&[157_f64, 0_f64]);
+        let hawaii = hawaii.center_set(&Coord {
+            x: -3_f64,
+            y: 19.9_f64,
+        });
+
+        let mut lower_48 = albers();
+
+        let store = vec![
+            alaska.build().stream(&sink),
+            lower_48.build().stream(&sink),
+            hawaii.build().stream(&sink),
+        ];
+
+        Multiplex {
+            state: Connected {
+                pd_drain: PhantomData::<SC>,
+                store,
+            },
         }
     }
 }
 
-impl<DRAIN, PCON, PUNCON: clipper::Connectable> Connectable
-    for Multiplex<DRAIN, PCON, PUNCON, Unconnected>
+impl<DRAIN, TRANSFORM> MultiStream for Multiplex<Connected<DRAIN, TRANSFORM>>
 where
-    DRAIN: Clone,
-    PCON: Clone,
+    TRANSFORM: Stream<EP = DRAIN, T = f64>,
 {
-    type Output<SC: Clone> = Multiplex<DRAIN, PCON, PUNCON, Connected<PCON>>;
-
-    /// Connects the next stage in the stream pipline.
-    #[inline]
-    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
-        todo!();
-        // let store: Vec<PCON> = self
-        //     .unconnected_store
-        //     .iter()
-        //     .map(|elem| elem.connect(sink))
-        //     .collect();
-
-        // Multiplex {
-        //     phantom_drain: self.phantom_drain,
-        //     phantom_pcon: self.phantom_pcon,
-        //     state: Connected { store },
-        //     unconnected_store: self.unconnected_store,
-        // }
-    }
-}
-
-impl<DRAIN, PCON, PUNCON> Stream for Multiplex<DRAIN, PCON, PUNCON, Connected<PCON>>
-where
-    DRAIN: Clone + PartialEq,
-    PCON: Stream<EP = DRAIN, T = f64>,
-{
-    type EP = DRAIN;
+    type EP = Vec<DRAIN>;
     type T = f64;
     /// Returns the end point of the stream.
-    fn endpoint(&mut self) -> &mut Self::EP {
+    fn endpoints(&mut self) -> &mut Vec<Self::EP> {
         todo!();
         // self.store
         //     .first()

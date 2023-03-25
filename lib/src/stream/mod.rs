@@ -116,6 +116,38 @@ where
     fn point(&mut self, _p: &Coord<Self::T>, _m: Option<u8>) {}
 }
 
+/// MultiStream Pipeline API
+///
+/// Pipeline stages can be connected to perform a sequence of
+/// operations where the results can be stored in an endpoint.
+///
+/// Similar to Stream but the endpoint an array of endpoints.
+/// Introduced during the developement of `AlbersUSA`.
+pub trait MultiStream
+where
+    <Self as MultiStream>::T: CoordFloat,
+{
+    /// The End points.
+    type EP;
+    /// f32 or f64.
+    type T;
+
+    /// Returns the end point of the stream.
+    fn endpoints(&mut self) -> &mut Vec<Self::EP>;
+    /// Declare the end of a line segment.
+    fn line_end(&mut self) {}
+    /// Declare the start of a line segment.
+    fn line_start(&mut self) {}
+    /// Declare a point.
+    fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>);
+    /// Declare the end of a polygon.
+    fn polygon_end(&mut self) {}
+    /// Declare the start of a polygon.
+    fn polygon_start(&mut self) {}
+    /// Declare a sphere object.
+    fn sphere(&mut self) {}
+}
+
 /// Stream Pipeline API
 ///
 /// Pipeline stages can be connected to perform a sequence of
