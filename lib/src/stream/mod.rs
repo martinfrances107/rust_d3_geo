@@ -31,10 +31,7 @@ pub struct Unconnected;
 ///
 /// [Equirectangular](crate::projection::equirectangular::Equirectangular)
 #[derive(Clone, Debug)]
-pub struct Connected<SINK>
-// where
-//     SINK: Clone,
-{
+pub struct Connected<SINK> {
     /// The next stage in the pipeline,
     pub sink: SINK,
 }
@@ -99,7 +96,7 @@ pub trait Streamable {
 /// let transformed_point = p.transform(&Coord{x: 0_f32, y:0_f32});
 ///
 /// ```
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct DrainStub<T> {
     phantom: PhantomData<T>,
 }
@@ -119,15 +116,7 @@ where
     fn point(&mut self, _p: &Coord<Self::T>, _m: Option<u8>) {}
 }
 
-impl<T> Default for DrainStub<T> {
-    fn default() -> Self {
-        Self {
-            phantom: PhantomData::default(),
-        }
-    }
-}
-
-/// Stream pipeline API
+/// Stream Pipeline API
 ///
 /// Pipeline stages can be connected to perform a sequence of
 /// operations where the results can be stored in an endpoint.
