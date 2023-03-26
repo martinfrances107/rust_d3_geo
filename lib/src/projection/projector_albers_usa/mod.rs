@@ -8,6 +8,8 @@ use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::Transform;
 
+use self::multiplex::Multiplex;
+
 use super::stream_transform_radians::StreamTransformRadians;
 use super::Projector as ProjectorTrait;
 
@@ -25,12 +27,23 @@ type CacheState<CLIP, DRAIN, T> = Option<(
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Clone, Debug)]
-pub struct Projector<DRAIN, MULTIPLEX>
-where
-    DRAIN: Clone,
-{
+pub struct Projector<DRAIN, MULTIPLEX> {
     phantom_drain: PhantomData<DRAIN>,
     pub(crate) multiplex: MULTIPLEX,
+}
+
+impl<DRAIN, MULTIPLEX> Default for Projector<DRAIN, MULTIPLEX>
+where
+    DRAIN: Clone + PartialEq,
+    MULTIPLEX: Default,
+    // MULTIPLEX: Clone + Connectable,
+{
+    fn default() -> Self {
+        Self {
+            phantom_drain: PhantomData::<DRAIN>,
+            multiplex: MULTIPLEX::default(),
+        }
+    }
 }
 
 impl<DRAIN, MULTIPLEX> ProjectorTrait for Projector<DRAIN, MULTIPLEX>

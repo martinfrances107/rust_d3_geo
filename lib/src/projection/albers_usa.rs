@@ -33,10 +33,7 @@ use super::TranslateSet;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
-pub struct AlbersUsa<DRAIN>
-where
-    DRAIN: Clone,
-{
+pub struct AlbersUsa<DRAIN> {
     p_drain: PhantomData<DRAIN>,
     k: f64,
     t: Coord<f64>,

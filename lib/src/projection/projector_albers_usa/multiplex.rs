@@ -38,8 +38,8 @@ pub struct Multiplex<STATE> {
     state: STATE,
 }
 
-impl Multiplex<Unconnected> {
-    pub const fn new() -> Self {
+impl Default for Multiplex<Unconnected> {
+    fn default() -> Self {
         Self { state: Unconnected }
     }
 }
@@ -47,7 +47,7 @@ impl Multiplex<Unconnected> {
 impl Multiplex<Unconnected> {
     /// Connects the next stage in the stream pipline.
     #[inline]
-    fn connect<SC: Clone>(
+    fn connect<SC>(
         &self,
         sink: SC,
     ) -> Multiplex<
@@ -103,7 +103,7 @@ impl Multiplex<Unconnected> {
         >,
     >
     where
-        SC: Default + PartialEq + Stream<EP = SC, T = f64>,
+        SC: Clone + Default + PartialEq + Stream<EP = SC, T = f64>,
     {
         let mut alaska = EqualArea::builder();
         let alaska = alaska.rotate2_set(&[154_f64, 0_f64]);

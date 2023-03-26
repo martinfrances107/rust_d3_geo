@@ -12,7 +12,6 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
-use d3_geo_rs::graticule::generate_mls;
 use geo::Geometry;
 use geo::GeometryCollection;
 use geo_types::Coord;
@@ -26,8 +25,8 @@ use web_sys::Document;
 use web_sys::SvgsvgElement;
 use web_sys::*;
 
+use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::string::String;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;

@@ -116,7 +116,7 @@ where
     fn point(&mut self, _p: &Coord<Self::T>, _m: Option<u8>) {}
 }
 
-/// MultiStream Pipeline API
+/// `MultiStream` Pipeline API
 ///
 /// Pipeline stages can be connected to perform a sequence of
 /// operations where the results can be stored in an endpoint.
