@@ -34,9 +34,8 @@ pub struct Projector<DRAIN, MULTIPLEX> {
 
 impl<DRAIN, MULTIPLEX> Default for Projector<DRAIN, MULTIPLEX>
 where
-    DRAIN: Clone + PartialEq,
+    DRAIN: Clone,
     MULTIPLEX: Default,
-    // MULTIPLEX: Clone + Connectable,
 {
     fn default() -> Self {
         Self {

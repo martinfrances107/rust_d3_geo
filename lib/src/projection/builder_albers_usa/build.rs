@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use super::Builder;
 use crate::projection::projector_albers_usa::Projector;
 
@@ -7,14 +9,8 @@ where
 {
     /// Using the currently programmed state output a new projection.
     #[inline]
-    pub fn build<MULTIPLEX>(&self) -> Projector<DRAIN, MULTIPLEX> {
-        todo!();
-        // Projector {
-        //     multiplex: Multiplex::new([
-        //         self.pr.alaska_point,
-        //         self.pr.lower_48_point,
-        //         self.pr.hawaii_point,
-        //     ]),
-        // }
+    #[must_use]
+    pub fn build<MULTIPLEX: Default>(&self) -> Projector<DRAIN, MULTIPLEX> {
+        Projector::<DRAIN, MULTIPLEX>::default()
     }
 }
