@@ -1,5 +1,3 @@
-use d3_geo_rs::projection::builder::template::NoPCNC;
-use d3_geo_rs::projection::Build;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -10,6 +8,7 @@ use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
 use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
+use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::ClipAngleSet;
 use d3_geo_rs::projection::PrecisionAdjust;
 use d3_geo_rs::projection::RawBase;
@@ -35,8 +34,7 @@ pub async fn draw_mercator_transverse(land: &Geometry<f64>) -> Result<(), JsValu
     let height: f64 = canvas.height().into();
 
     let context = Context::new(context_raw.clone());
-    let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
-    // let pb = PathBuilder::new(context);
+    let pb = PathBuilder::new(context);
 
     let mut mercator = MercatorTransverse::builder();
     let mercator = mercator

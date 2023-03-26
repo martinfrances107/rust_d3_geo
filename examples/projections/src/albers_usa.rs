@@ -1,17 +1,14 @@
+use d3_geo_rs::path::Path;
+use d3_geo_rs::projection::projector_albers_usa::Projector;
 use geo::Geometry;
-use geo::MultiLineString;
 use geo_types::Coord;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
-use d3_geo_rs::path::string::String;
-use d3_geo_rs::projection::albers::albers;
 use d3_geo_rs::projection::albers_usa::AlbersUsa;
-use d3_geo_rs::projection::builder::template::NoPCNC;
-
+use d3_geo_rs::projection::projector_albers_usa::multiplex::Multiplex;
 use d3_geo_rs::projection::RawBase;
 use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
@@ -36,8 +33,7 @@ pub async fn draw_albers_usa(land: &Geometry<f64>) -> Result<(), JsValue> {
 
     // let context = Context::new(context_raw.clone());
 
-    // let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
-    // // let pb = PathBuilder::new(context);
+    // let pb = PathBuilder::new(context);
 
     // let albers_builder = *AlbersUsa::builder().scale_set(width).translate_set(&Coord {
     //     x: width / 2_f64,

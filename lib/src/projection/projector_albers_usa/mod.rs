@@ -2,13 +2,10 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::Coord;
-use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connectable;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::stream_transform_radians::StreamTransformRadians;
@@ -36,30 +33,13 @@ where
     pub(crate) multiplex: MULTIPLEX,
 }
 
-type ProjectionStream<CLIP, T> =
-    StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
-
-impl<DRAIN, MULTIPLEX> Projector<DRAIN, MULTIPLEX>
-where
-    DRAIN: Clone,
-{
-    pub fn new(multiplex: MULTIPLEX) -> Self {
-        Self {
-            // phantom_cc: PhantomData::<CC>,
-            phantom_drain: PhantomData::<DRAIN>,
-            multiplex,
-        }
-    }
-}
-
 impl<DRAIN, MULTIPLEX> ProjectorTrait for Projector<DRAIN, MULTIPLEX>
 where
-    // CC: Clone + Stream<EP = DRAIN, T = f64>,
     DRAIN: Clone + PartialEq,
     MULTIPLEX: Clone + Connectable,
 {
     type DRAIN = DRAIN;
-    // type Transformer = ProjectionStream<CC, f64>;
+
     type Transformer = <MULTIPLEX as Connectable>::Output<DRAIN>;
     /// Connects a DRAIN to the projection.
     ///

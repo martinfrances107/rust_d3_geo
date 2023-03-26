@@ -38,7 +38,6 @@ use web_sys::Window;
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
-use d3_geo_rs::projection::builder::template::NoPCNC;
 use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
@@ -243,8 +242,7 @@ impl Renderer {
             self.ob.rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
 
             let ortho = self.ob.build();
-            let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> =
-                PathBuilder::new(context.clone());
+            let pb = PathBuilder::new(context.clone());
             // let pb = PathBuilder::new(context.clone());
 
             let mut path = pb.build(ortho);
@@ -261,7 +259,7 @@ impl Renderer {
 
         let ortho = self.ob.build();
 
-        let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
+        let pb = PathBuilder::new(context);
         // let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);
@@ -285,7 +283,7 @@ impl Renderer {
         let point = Geometry::Point(Point::new(x, y));
         let ortho = self.ob.build();
 
-        let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
+        let pb = PathBuilder::new(context);
         // let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);

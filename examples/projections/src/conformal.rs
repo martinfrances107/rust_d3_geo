@@ -7,7 +7,6 @@ use wasm_bindgen::JsCast;
 use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
-use d3_geo_rs::projection::builder::template::NoPCNC;
 use d3_geo_rs::projection::conformal::Conformal;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::CenterSet;
@@ -35,7 +34,7 @@ pub async fn draw_conformal(land: &Geometry<f64>) -> Result<(), JsValue> {
     let height: f64 = canvas.height().into();
 
     let context: Context = Context::new(context_raw.clone());
-    let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
+    let pb = PathBuilder::new(context);
     // let pb = PathBuilder::new(context);
 
     // input params will cause a conic equal area projection to be constructed.

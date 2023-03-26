@@ -26,8 +26,7 @@ mod projection_rotate {
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .build();
 
-        let path_builder: PathBuilder<_, _, _, NoPCNC<String<f64>>, _, _, _, _, _> =
-            PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::context_pathstring();
 
         let object = Geometry::Polygon(Polygon::new(
             LineString::from(vec![

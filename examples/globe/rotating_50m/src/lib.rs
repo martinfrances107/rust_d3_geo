@@ -150,7 +150,7 @@ impl Renderer {
             .clear_rect(0f64, 0f64, self.width, self.height);
 
         let context: Context = Context::new(self.context2d.clone());
-        let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
+        let pb = PathBuilder::new(context);
         // let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);

@@ -79,8 +79,7 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
         "fill: silver",
     ];
 
-    let builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
-        PathBuilder::context_pathstring();
+    let builder = PathBuilder::context_pathstring();
 
     let mut projector = builder.build(ortho);
     let mut i = 0;

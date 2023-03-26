@@ -50,9 +50,8 @@ mod path_area {
     where
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let builder: PathBuilder<_, _, _, NoPCNC<Area<T>>, _, _, _, _, _> =
-            PathBuilder::new(Area::default());
-        // let builder = PathBuilder::new(Area::default());
+        let builder = PathBuilder::new(Area::default());
+
         builder.build(projection).area(&object)
     }
 

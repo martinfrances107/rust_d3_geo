@@ -7,8 +7,8 @@ use num_traits::FloatConst;
 
 use crate::path::context::Context;
 use crate::path::Path;
-use crate::projection::projector_commom::Projector;
 use crate::stream::Stream;
+
 #[cfg(not(test))]
 use web_sys::CanvasRenderingContext2d;
 
@@ -21,28 +21,17 @@ use super::PointRadiusTrait;
 
 /// Path builder.
 #[derive(Debug)]
-pub struct Builder<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+pub struct Builder<CS, PROJECTOR, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
-    p_clipc: PhantomData<CLIPC>,
-    p_clipu: PhantomData<CLIPU>,
-    p_pcnc: PhantomData<PCNC>,
-    p_pcnu: PhantomData<PCNU>,
-    p_pr: PhantomData<PR>,
-    p_rc: PhantomData<RC>,
-    p_ru: PhantomData<RU>,
+    p_projector: PhantomData<PROJECTOR>,
     pr: T,
     context_stream: CS,
 }
 
-impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
-    Builder<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+impl<CS, PROJECTOR, T> Builder<CS, PROJECTOR, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
@@ -51,13 +40,8 @@ where
     /// unwrap() is used here but a panic will never happen as 4.5 will always be converted into T.
     pub fn new(context_stream: CS) -> Self {
         Self {
-            p_clipc: PhantomData::<CLIPC>,
-            p_clipu: PhantomData::<CLIPU>,
-            p_pcnc: PhantomData::<PCNC>,
-            p_pcnu: PhantomData::<PCNU>,
-            p_pr: PhantomData::<PR>,
-            p_rc: PhantomData::<RC>,
-            p_ru: PhantomData::<RU>,
+            p_projector: PhantomData::<PROJECTOR>,
+
             context_stream,
             pr: T::from(4.5_f64).unwrap(),
         }
@@ -65,11 +49,8 @@ where
 }
 
 /// Context related methods.
-impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
-    Builder<CLIPC, CLIPU, Context, PCNC, PCNU, PR, RC, RU, T>
+impl<PROJECTOR, T> Builder<Context, PROJECTOR, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
@@ -80,11 +61,8 @@ where
 }
 
 /// Context related methods.
-impl<CLIPC, CLIPU, PCNC, PCNU, PR, RC, RU, T>
-    Builder<CLIPC, CLIPU, String<T>, PCNC, PCNU, PR, RC, RU, T>
+impl<PROJECTOR, T> Builder<String<T>, PROJECTOR, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
@@ -95,11 +73,8 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> PointRadiusTrait
-    for Builder<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+impl<CS, PROJECTOR, T> PointRadiusTrait for Builder<CS, PROJECTOR, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     CS: PointRadiusTrait<T = T>,
     T: CoordFloat,
 {
@@ -115,20 +90,14 @@ where
 }
 
 /// Projection related methods.
-impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
-    Builder<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
+impl<CS, PROJECTOR, T> Builder<CS, PROJECTOR, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     CS: Stream<EP = CS, T = T>,
     T: CoordFloat,
 {
     #[inline]
     /// Returns a projectors based on the builder settings.
-    pub fn build(
-        self,
-        projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,
-    ) -> Path<CS, Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>, T> {
+    pub fn build(self, projection: PROJECTOR) -> Path<CS, PROJECTOR, T> {
         Path::new(self.context_stream, projection)
     }
 }

@@ -11,9 +11,7 @@ mod clipcircle {
     use regex::Regex;
 
     use d3_geo_rs::path::builder::Builder as PathBuilder;
-    use d3_geo_rs::path::string::String as PathString;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
-    use d3_geo_rs::projection::builder::template::NoPCNC;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::ClipAngleAdjust;
     use d3_geo_rs::projection::RawBase;
@@ -40,8 +38,7 @@ mod clipcircle {
             .clip_angle(170_f64)
             .build();
 
-        let path_builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
-            PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::context_pathstring();
 
         let s = path_builder.build(projector).object(&d);
         let rounded = ROUND_DOWN.replace_all(&s, "");

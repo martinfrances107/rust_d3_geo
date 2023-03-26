@@ -84,8 +84,7 @@ fn rings() {
 
     let object = MultiPolygon(p_vec);
 
-    let builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
-        PathBuilder::context_pathstring();
+    let builder = PathBuilder::context_pathstring();
     let mut path = builder.build(ortho);
     let s = path.object(&object);
 

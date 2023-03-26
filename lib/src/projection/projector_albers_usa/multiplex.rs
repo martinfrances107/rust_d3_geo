@@ -119,7 +119,7 @@ impl Multiplex<Unconnected> {
             y: 19.9_f64,
         });
 
-        let mut lower_48 = albers();
+        let lower_48 = albers();
 
         let store = vec![
             alaska.build().stream(&sink),

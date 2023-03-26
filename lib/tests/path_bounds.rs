@@ -6,7 +6,6 @@ mod path_bounds {
     use std::ops::AddAssign;
 
     use approx::AbsDiffEq;
-    use d3_geo_rs::projection::builder::template::NoPCNC;
     use geo::CoordFloat;
     use geo::Geometry;
     use geo::LineString;
@@ -64,7 +63,7 @@ mod path_bounds {
             + Default,
     {
         let cs = Bounds::default();
-        let pb: Builder<_, _, _, NoPCNC<Bounds<T>>, _, _, _, _, _> = Builder::new(cs);
+        let pb = Builder::new(cs);
         pb.build(projection).bounds(object)
         // Builder::new(cs).build(projection).bounds(object)
     }

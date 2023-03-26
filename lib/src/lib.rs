@@ -142,7 +142,7 @@
 //!
 //!     let context = Context::new(context_raw.clone());
 //!
-//!     let pb: PathBuilder<_, _, _, NoPCNC<Context>, _, _, _, _, _> = PathBuilder::new(context);
+//!     let pb = PathBuilder::new(context);
 //!
 //!     let ortho = Orthographic::builder()
 //!         .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)

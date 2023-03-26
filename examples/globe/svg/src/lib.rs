@@ -13,7 +13,6 @@ extern crate topojson;
 extern crate web_sys;
 
 use d3_geo_rs::graticule::generate_mls;
-use d3_geo_rs::projection::builder::template::NoPCNC;
 use geo::Geometry;
 use geo::GeometryCollection;
 use geo_types::Coord;
@@ -113,8 +112,7 @@ pub async fn start() -> Result<(), JsValue> {
         "fill: silver",
     ];
 
-    let pb: PathBuilder<_, _, _, NoPCNC<String<f64>>, _, _, _, _, _> =
-        PathBuilder::context_pathstring();
+    let pb = PathBuilder::context_pathstring();
 
     let mut builder = pb.build(ortho);
     let mut i = 0;

@@ -5,7 +5,6 @@ extern crate pretty_assertions;
 use std::time::Duration;
 
 use criterion::Criterion;
-use d3_geo_rs::projection::builder::template::NoPCNC;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -15,7 +14,6 @@ use regex::Regex;
 
 use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;
@@ -46,8 +44,7 @@ fn graticule() {
         .rotate2_set(&[0_f64, -20_f64])
         .build();
 
-    let builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
-        PathBuilder::context_pathstring();
+    let builder = PathBuilder::context_pathstring();
     let mut pb = builder.build(ortho);
 
     let lines = generate_graticule::<f64>().lines().collect();
