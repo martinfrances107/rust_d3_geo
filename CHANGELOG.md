@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.4.0] - Monday 27th March 2023
+
+commit e6c8045f7fb989357dbfa00340dbf3f52be0c430
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Sun Mar 26 08:32:17 2023 +0100
+
+    Simplified PathBuilder, so I could drop the frequent over constraints such as....
+
+    -    let builder: PathBuilder<_, _, _, NoPCNC<PathString<f64>>, _, _, _, _, _> =
+    -        PathBuilder::context_pathstring();
+    +    let builder = PathBuilder::context_pathstring();
+
+commit 5a182759bd268e94c92227fad157e987c92e23fa
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Wed Mar 22 14:48:16 2023 +0000
+
+    dropped CC from  Projector<CC, DRAIN, MULTIPLEX>.
+
 ## [0.3.1] - Friday 10th March 2023
 
 Bugfixes to two projections, albers, equidistant

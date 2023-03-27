@@ -82,6 +82,9 @@ For example the examples/globe applications operate on a 50m resolution map of t
 Not all projections have been implemented and there are number of known bugs that I am activley working on. The majority of the library has been ported along with the associated tests. The aim is to eventaully release a "1.0" version.
 but at the moment is this alpha grade software.
 
+Before the "1.0" release breaking changes trigger the minor version to increment.
+A summary of the change can be found in CHANGELOG.md
+
 <br/>
 <details>
 <summary> Here is a summary of things to-do before the crate is published.</summary>
