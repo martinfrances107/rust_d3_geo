@@ -96,40 +96,35 @@ pub type AlbersMultiplexType<SC> = Multiplex<Connected<SC, AlbersTransformer<SC>
 impl Connectable for Multiplex<Unconnected> {
     /// Connects the next stage in the stream pipline.
 
-    type Output<SC: Clone> = AlbersTransformer<SC>;
+    type Output<SC: Clone> = Vec<AlbersTransformer<SC>>;
     #[inline]
-    fn connect<SC>(&self, sink: SC) -> AlbersMultiplexType<SC>
+    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC>
     where
-        SC: Clone + Default,
+        SC: Clone,
     {
-        let mut alaska = EqualArea::builder();
+        let mut alaska = EqualArea::<SC, f64>::builder();
         let alaska = alaska.rotate2_set(&[154_f64, 0_f64]);
         let alaska = alaska.center_set(&Coord {
             x: -2_f64,
             y: 58.5_f64,
         });
 
-        let mut hawaii = EqualArea::builder();
+        let mut hawaii = EqualArea::<SC, f64>::builder();
         let hawaii = hawaii.rotate2_set(&[157_f64, 0_f64]);
         let hawaii = hawaii.center_set(&Coord {
             x: -3_f64,
             y: 19.9_f64,
         });
 
-        let lower_48 = albers();
+        // let lower_48 = albers::<SC, f64>();
 
-        let store = vec![
+        let out = vec![
             alaska.build().stream(&sink),
-            lower_48.build().stream(&sink),
+            // lower_48.build().stream(&sink),
             hawaii.build().stream(&sink),
         ];
 
-        Multiplex {
-            state: Connected {
-                pd_drain: PhantomData::<SC>,
-                store,
-            },
-        }
+        out
     }
 }
 

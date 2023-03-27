@@ -18,7 +18,7 @@ impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> Build
 where
     BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>:
         Clone + Build<Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>>,
-    DRAIN: Clone + Default + Stream<T = T>,
+    DRAIN: Clone,
     CLIPC: Clone,
     CLIPU: Clone,
     PR: Clone + PRConic,

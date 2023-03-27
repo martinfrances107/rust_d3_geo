@@ -25,7 +25,6 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
         T,
     >
 where
-    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

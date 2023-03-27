@@ -89,7 +89,7 @@ pub trait ParallelsSet {
 impl<BASE, PR, T> BuilderTrait for Builder<BASE, T>
 where
     BASE: BuilderTrait<PR = PR>,
-    PR: PRConic<T = T> + Clone,
+    PR: PRConic<T = T>,
     T: CoordFloat + Default + FloatConst,
 {
     type PR = PR;

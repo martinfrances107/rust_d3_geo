@@ -14,7 +14,6 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::stream::Stream;
 use crate::Transform;
 
 /// Projection definition.
@@ -31,7 +30,6 @@ pub struct CylindricalEqualArea<DRAIN, T> {
 
 impl<DRAIN, T> CylindricalEqualArea<DRAIN, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
     #[inline]

@@ -61,9 +61,9 @@ pub(super) type ProjectorStream<CLIP, T> =
 impl<CC, CU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait
     for Projector<CC, CU, DRAIN, PCNU, PR, RC, RU, T>
 where
-    CC: Clone + Stream<EP = DRAIN, T = T>,
+    CC: Clone,
     CU: Clone + ClipConnectable<Output = CC, SC = RC>,
-    DRAIN: Clone + PartialEq,
+    DRAIN: Clone,
     PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     PR: Transform<T = T>,
@@ -80,11 +80,11 @@ where
     type Transformer = ProjectorStream<CC, T>;
     type DRAIN = DRAIN;
     fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
-        if let Some((cache_drain, output)) = &self.cache {
-            if *cache_drain == *drain {
-                return (*output).clone();
-            }
-        }
+        // if let Some((cache_drain, output)) = &self.cache {
+        //     if *cache_drain == *drain {
+        //         return (*output).clone();
+        //     }
+        // }
         // Build cache.
         let postclip_node = self.postclip.clone().connect(drain.clone());
 

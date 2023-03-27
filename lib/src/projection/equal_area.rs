@@ -61,7 +61,7 @@ where
 
 impl<DRAIN, T> PRConic for EqualArea<DRAIN, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     /// Inputs select either a conic or a cylindrical projection.
@@ -86,7 +86,7 @@ where
 
 impl<DRAIN, T> RawBase for EqualArea<DRAIN, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     type Builder = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, T>;
