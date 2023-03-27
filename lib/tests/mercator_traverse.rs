@@ -11,7 +11,6 @@ mod mercator_tranverse {
     use d3_geo_rs::in_delta::coordinate as in_delta_coordinate;
     use d3_geo_rs::path::builder::Builder as PathBuilder;
     use d3_geo_rs::path::string::String;
-    use d3_geo_rs::projection::builder::template::NoPCNC;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::CenterSet;

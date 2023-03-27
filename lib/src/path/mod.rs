@@ -79,6 +79,7 @@ where
 #[allow(dead_code)]
 pub struct Path<CS, PROJECTOR, T>
 where
+    PROJECTOR: Projector<DRAIN = CS>,
     T: CoordFloat,
 {
     // p_pcnc: PhantomData<PCNC>,
@@ -93,6 +94,7 @@ where
 // impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 impl<CS, PROJECTOR, T> Path<CS, PROJECTOR, T>
 where
+    PROJECTOR: Projector<DRAIN = CS>,
     T: CoordFloat,
 {
     /// Constructor.
@@ -214,6 +216,7 @@ where
 
 impl<CS, PROJECTOR, T> Path<CS, PROJECTOR, T>
 where
+    PROJECTOR: Projector<DRAIN = CS>,
     T: CoordFloat,
 {
     /// Sets the context stream.

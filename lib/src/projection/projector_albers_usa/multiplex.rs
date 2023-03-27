@@ -44,21 +44,35 @@ impl Default for Multiplex<Unconnected> {
     }
 }
 
-impl Multiplex<Unconnected> {
-    /// Connects the next stage in the stream pipline.
-    #[inline]
-    fn connect<SC>(
-        &self,
-        sink: SC,
-    ) -> Multiplex<
-        Connected<
-            SC,
-            StreamTransformRadians<
-                ConnectedStream<
-                    RotatorRadians<
-                        ConnectedStream<
-                            Clipper<
-                                Interpolate<f64>,
+/// Hardcode type for now until things are generic
+pub type AlbersMultiplexType<SC> = Multiplex<
+    Connected<
+        SC,
+        StreamTransformRadians<
+            ConnectedStream<
+                RotatorRadians<
+                    ConnectedStream<
+                        Clipper<
+                            Interpolate<f64>,
+                            Line<
+                                ConnectedStream<
+                                    Resample<
+                                        EqualArea<SC, f64>,
+                                        ConnectedResample<Identity<ConnectedStream<SC>>, f64>,
+                                        f64,
+                                    >,
+                                >,
+                                f64,
+                            >,
+                            Line<Unconnected, f64>,
+                            PV<f64>,
+                            Resample<
+                                EqualArea<SC, f64>,
+                                ConnectedResample<Identity<ConnectedStream<SC>>, f64>,
+                                f64,
+                            >,
+                            ConnectedClipper<
+                                Line<ConnectedStream<Buffer<f64>>, f64>,
                                 Line<
                                     ConnectedStream<
                                         Resample<
@@ -69,39 +83,21 @@ impl Multiplex<Unconnected> {
                                     >,
                                     f64,
                                 >,
-                                Line<Unconnected, f64>,
-                                PV<f64>,
-                                Resample<
-                                    EqualArea<SC, f64>,
-                                    ConnectedResample<Identity<ConnectedStream<SC>>, f64>,
-                                    f64,
-                                >,
-                                ConnectedClipper<
-                                    Line<ConnectedStream<Buffer<f64>>, f64>,
-                                    Line<
-                                        ConnectedStream<
-                                            Resample<
-                                                EqualArea<SC, f64>,
-                                                ConnectedResample<
-                                                    Identity<ConnectedStream<SC>>,
-                                                    f64,
-                                                >,
-                                                f64,
-                                            >,
-                                        >,
-                                        f64,
-                                    >,
-                                    f64,
-                                >,
                                 f64,
                             >,
+                            f64,
                         >,
-                        f64,
                     >,
+                    f64,
                 >,
             >,
         >,
-    >
+    >,
+>;
+impl Multiplex<Unconnected> {
+    /// Connects the next stage in the stream pipline.
+    #[inline]
+    fn connect<SC>(&self, sink: SC) -> AlbersMultiplexType<SC>
     where
         SC: Clone + Default + PartialEq + Stream<EP = SC, T = f64>,
     {

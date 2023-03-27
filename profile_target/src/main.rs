@@ -13,7 +13,6 @@ use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
 
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase as ProjectionRawBase;
@@ -56,7 +55,7 @@ fn parse_topology() -> Geometry {
 fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     use d3_geo_rs::{
         graticule::generate_mls,
-        projection::{builder::template::NoPCNC, ScaleSet, TranslateSet},
+        projection::{ScaleSet, TranslateSet},
     };
     use geo::GeometryCollection;
 

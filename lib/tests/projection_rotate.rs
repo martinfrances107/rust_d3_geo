@@ -8,8 +8,6 @@ mod projection_rotate {
     use pretty_assertions::assert_eq;
 
     use d3_geo_rs::path::builder::Builder as PathBuilder;
-    use d3_geo_rs::path::string::String;
-    use d3_geo_rs::projection::builder::template::NoPCNC;
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::RawBase;

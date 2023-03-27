@@ -576,12 +576,12 @@ trait Recenter {
 /// Most Projections use a common Projector, the `AlberUSA` projector is just a container
 /// for a collections of projectors.
 pub trait Projector {
+    /// The endpoint of the stream pipeline.
+    type DRAIN;
+
     /// The act of connecting a drain to the pipeline.
     /// Creates a object the fundamentally acts as Transformer.
     type Transformer;
-
-    /// The endpoint of the stream pipeline.
-    type DRAIN;
 
     /// Attach a endpoint of a stream pipeline and returns
     /// a transformer to which can be fed geometry objects.

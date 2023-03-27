@@ -4,7 +4,6 @@ mod invert {
     use geo_types::Coord;
 
     use d3_geo_rs::projection::albers::albers as albers_builder;
-    use d3_geo_rs::projection::albers_usa::AlbersUsa;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
     use d3_geo_rs::projection::builder_conic::ParallelsSet;
@@ -18,8 +17,6 @@ mod invert {
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::orthographic::Orthographic;
-    use d3_geo_rs::projection::projector_albers_usa::multiplex::Multiplex;
-    use d3_geo_rs::projection::projector_albers_usa::Projector;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::RawBase;

@@ -3,25 +3,15 @@ use std::marker::PhantomData;
 
 use geo::Coord;
 
-use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connectable;
-use crate::stream::Connected;
 use crate::Transform;
 
-use self::multiplex::Multiplex;
-
-use super::stream_transform_radians::StreamTransformRadians;
 use super::Projector as ProjectorTrait;
 
 /// The multiplex is a collection of sub-projections.
 pub mod multiplex;
 /// Builder shorthand notations.
 pub mod types;
-
-type CacheState<CLIP, DRAIN, T> = Option<(
-    DRAIN,
-    StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>,
-)>;
 
 /// Projection output of projection/Builder.
 ///
@@ -47,7 +37,7 @@ where
 
 impl<DRAIN, MULTIPLEX> ProjectorTrait for Projector<DRAIN, MULTIPLEX>
 where
-    DRAIN: Clone + PartialEq,
+    DRAIN: Clone,
     MULTIPLEX: Clone + Connectable,
 {
     type DRAIN = DRAIN;

@@ -21,7 +21,6 @@ mod path_string {
     use d3_geo_rs::path::builder::Builder as PathBuilder;
     use d3_geo_rs::path::string::String as PathString;
     use d3_geo_rs::path::PointRadiusTrait;
-    use d3_geo_rs::projection::builder::template::NoPCNC;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
     use d3_geo_rs::projection::orthographic::Orthographic;
     use d3_geo_rs::projection::projector_commom::types::ProjectorAntimeridianResampleNoneNoClip;

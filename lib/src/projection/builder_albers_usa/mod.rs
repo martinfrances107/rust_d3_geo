@@ -1,7 +1,11 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
+use crate::projection::projector_albers_usa::Projector;
+use crate::stream::Unconnected;
+
 use super::albers_usa::AlbersUsa;
+use super::projector_albers_usa::multiplex::Multiplex;
 use super::BuilderTrait;
 use super::RawBase;
 
@@ -76,5 +80,17 @@ where
             phantom_drain: PhantomData::<DRAIN>,
             pr,
         }
+    }
+}
+
+impl<DRAIN> Builder<DRAIN>
+where
+    DRAIN: Clone,
+{
+    /// Using the currently programmed state output a new projection.
+    #[inline]
+    #[must_use]
+    pub fn build(&self) -> Projector<DRAIN, Multiplex<Unconnected>> {
+        Projector::<DRAIN, Multiplex<Unconnected>>::default()
     }
 }
