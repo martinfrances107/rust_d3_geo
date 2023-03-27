@@ -98,7 +98,7 @@ impl Connectable for Multiplex<Unconnected> {
 
     type Output<SC: Clone> = Vec<AlbersTransformer<SC>>;
     #[inline]
-    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC>
+    fn connect<SC>(&self, sink: SC) -> Self::Output<SC>
     where
         SC: Clone,
     {
@@ -116,11 +116,11 @@ impl Connectable for Multiplex<Unconnected> {
             y: 19.9_f64,
         });
 
-        // let lower_48 = albers::<SC, f64>();
+        let lower_48 = albers::<SC, f64>();
 
         let out = vec![
             alaska.build().stream(&sink),
-            // lower_48.build().stream(&sink),
+            lower_48.build().stream(&sink),
             hawaii.build().stream(&sink),
         ];
 

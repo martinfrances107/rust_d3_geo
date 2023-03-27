@@ -25,7 +25,7 @@ type Output<DRAIN, T> =
 #[must_use]
 pub fn albers<DRAIN, T>() -> Output<DRAIN, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     let mut b = EqualArea::<DRAIN, T>::builder();
