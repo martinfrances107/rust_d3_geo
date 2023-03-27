@@ -18,6 +18,7 @@ use crate::projection::Projector;
 use crate::projection::RawBase;
 use crate::projection::RotateSet;
 use crate::rot::rotator_radians::RotatorRadians;
+use crate::stream::Connectable;
 use crate::stream::Connected as ConnectedStream;
 use crate::stream::MultiStream;
 use crate::stream::Stream;
@@ -44,62 +45,62 @@ impl Default for Multiplex<Unconnected> {
     }
 }
 
-/// Hardcode type for now until things are generic
-pub type AlbersMultiplexType<SC> = Multiplex<
-    Connected<
-        SC,
-        StreamTransformRadians<
+pub type AlbersTransformer<SC> = StreamTransformRadians<
+    ConnectedStream<
+        RotatorRadians<
             ConnectedStream<
-                RotatorRadians<
-                    ConnectedStream<
-                        Clipper<
-                            Interpolate<f64>,
-                            Line<
-                                ConnectedStream<
-                                    Resample<
-                                        EqualArea<SC, f64>,
-                                        ConnectedResample<Identity<ConnectedStream<SC>>, f64>,
-                                        f64,
-                                    >,
-                                >,
-                                f64,
-                            >,
-                            Line<Unconnected, f64>,
-                            PV<f64>,
+                Clipper<
+                    Interpolate<f64>,
+                    Line<
+                        ConnectedStream<
                             Resample<
                                 EqualArea<SC, f64>,
                                 ConnectedResample<Identity<ConnectedStream<SC>>, f64>,
                                 f64,
                             >,
-                            ConnectedClipper<
-                                Line<ConnectedStream<Buffer<f64>>, f64>,
-                                Line<
-                                    ConnectedStream<
-                                        Resample<
-                                            EqualArea<SC, f64>,
-                                            ConnectedResample<Identity<ConnectedStream<SC>>, f64>,
-                                            f64,
-                                        >,
-                                    >,
+                        >,
+                        f64,
+                    >,
+                    Line<Unconnected, f64>,
+                    PV<f64>,
+                    Resample<
+                        EqualArea<SC, f64>,
+                        ConnectedResample<Identity<ConnectedStream<SC>>, f64>,
+                        f64,
+                    >,
+                    ConnectedClipper<
+                        Line<ConnectedStream<Buffer<f64>>, f64>,
+                        Line<
+                            ConnectedStream<
+                                Resample<
+                                    EqualArea<SC, f64>,
+                                    ConnectedResample<Identity<ConnectedStream<SC>>, f64>,
                                     f64,
                                 >,
-                                f64,
                             >,
                             f64,
                         >,
+                        f64,
                     >,
                     f64,
                 >,
             >,
+            f64,
         >,
     >,
 >;
-impl Multiplex<Unconnected> {
+
+/// Hardcode type for now until things are generic
+pub type AlbersMultiplexType<SC> = Multiplex<Connected<SC, AlbersTransformer<SC>>>;
+
+impl Connectable for Multiplex<Unconnected> {
     /// Connects the next stage in the stream pipline.
+
+    type Output<SC: Clone> = AlbersTransformer<SC>;
     #[inline]
     fn connect<SC>(&self, sink: SC) -> AlbersMultiplexType<SC>
     where
-        SC: Clone + Default + PartialEq + Stream<EP = SC, T = f64>,
+        SC: Clone + Default,
     {
         let mut alaska = EqualArea::builder();
         let alaska = alaska.rotate2_set(&[154_f64, 0_f64]);
