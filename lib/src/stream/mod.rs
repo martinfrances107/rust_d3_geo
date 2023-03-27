@@ -18,7 +18,7 @@ use geo_types::Coord;
 
 /// State -- Unconnected.
 ///
-/// A Stream Pipeline stages blank.
+/// A Stream Pipeline stage blank.
 /// The state before connection.
 #[derive(Clone, Default, Debug)]
 pub struct Unconnected;
