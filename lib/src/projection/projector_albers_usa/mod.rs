@@ -4,7 +4,11 @@ use std::marker::PhantomData;
 use geo::Coord;
 
 use crate::stream::Connectable;
+use crate::stream::Unconnected;
 use crate::Transform;
+
+use self::multiplex::AlbersTransformer;
+use self::multiplex::Multiplex;
 
 use super::Projector as ProjectorTrait;
 
@@ -35,14 +39,14 @@ where
     }
 }
 
-impl<DRAIN, MULTIPLEX> ProjectorTrait for Projector<DRAIN, MULTIPLEX>
+impl<DRAIN> ProjectorTrait for Projector<DRAIN, Multiplex<Unconnected>>
 where
     DRAIN: Clone,
-    MULTIPLEX: Clone + Connectable,
+    // MULTIPLEX: Clone + Connectable,
 {
     type DRAIN = DRAIN;
 
-    type Transformer = <MULTIPLEX as Connectable>::Output<DRAIN>;
+    type Transformer = Vec<AlbersTransformer<DRAIN>>;
     /// Connects a DRAIN to the projection.
     ///
     /// The Projection Stream Pipeline :-
