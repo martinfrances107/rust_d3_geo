@@ -45,6 +45,7 @@ impl Default for Multiplex<Unconnected> {
     }
 }
 
+/// Sub type of `AlbersMultiplexType`
 pub type AlbersTransformer<SC> = StreamTransformRadians<
     ConnectedStream<
         RotatorRadians<
