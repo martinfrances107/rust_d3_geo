@@ -22,9 +22,9 @@ use super::PointRadiusTrait;
 
 /// Path builder.
 #[derive(Debug)]
-pub struct Builder<CS, PROJECTOR, T>
+pub struct Builder<CS, PROJECTOR, T, TRANSFORMER>
 where
-    PROJECTOR: Projector<EP = CS>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat,
 {
     p_projector: PhantomData<PROJECTOR>,
@@ -32,9 +32,9 @@ where
     context_stream: CS,
 }
 
-impl<CS, PROJECTOR, T> Builder<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T, TRANSFORMER> Builder<CS, PROJECTOR, T, TRANSFORMER>
 where
-    PROJECTOR: Projector<EP = CS>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
@@ -52,9 +52,9 @@ where
 }
 
 /// Context related methods.
-impl<PROJECTOR, T> Builder<Context, PROJECTOR, T>
+impl<PROJECTOR, T, TRANSFORMER> Builder<Context, PROJECTOR, T, TRANSFORMER>
 where
-    PROJECTOR: Projector<EP = Context>,
+    PROJECTOR: Projector<EP = Context, Transformer = TRANSFORMER>,
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
@@ -65,9 +65,9 @@ where
 }
 
 /// Context related methods.
-impl<PROJECTOR, T> Builder<String<T>, PROJECTOR, T>
+impl<PROJECTOR, T, TRANSFORMER> Builder<String<T>, PROJECTOR, T, TRANSFORMER>
 where
-    PROJECTOR: Projector<EP = String<T>>,
+    PROJECTOR: Projector<EP = String<T>, Transformer = TRANSFORMER>,
     T: CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
@@ -78,9 +78,9 @@ where
     }
 }
 
-impl<CS, PROJECTOR, T> PointRadiusTrait for Builder<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T, TRANSFORMER> PointRadiusTrait for Builder<CS, PROJECTOR, T, TRANSFORMER>
 where
-    PROJECTOR: Projector<EP = CS>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     CS: PointRadiusTrait<T = T>,
     T: CoordFloat,
 {
@@ -96,15 +96,15 @@ where
 }
 
 /// Projection related methods.
-impl<CS, PROJECTOR, T> Builder<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T, TRANSFORMER> Builder<CS, PROJECTOR, T, TRANSFORMER>
 where
-    PROJECTOR: Projector<EP = CS>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     CS: Stream<EP = CS, T = T>,
     T: CoordFloat,
 {
     #[inline]
     /// Returns a projectors based on the builder settings.
-    pub fn build(self, projection: PROJECTOR) -> Path<CS, PROJECTOR, T> {
+    pub fn build(self, projection: PROJECTOR) -> Path<CS, PROJECTOR, T, TRANSFORMER> {
         Path::new(self.context_stream, projection)
     }
 }

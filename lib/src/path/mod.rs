@@ -77,9 +77,9 @@ where
 /// Projection and context stream applied to a Streamable.
 #[derive(Debug)]
 #[allow(dead_code)]
-pub struct Path<CS, PROJECTOR, T>
+pub struct Path<CS, PROJECTOR, T, TRANSFORMER>
 where
-    PROJECTOR: Projector<EP = CS>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat,
 {
     // p_pcnc: PhantomData<PCNC>,
@@ -92,9 +92,9 @@ where
 }
 
 // impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
-impl<CS, PROJECTOR, T> Path<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T, TRANSFORMER> Path<CS, PROJECTOR, T, TRANSFORMER>
 where
-    PROJECTOR: Projector<EP = CS>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat,
 {
     /// Constructor.
@@ -110,14 +110,11 @@ where
     }
 }
 
-impl<CLIPC, CS, PROJECTOR, T> Path<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T, TRANSFORMER> Path<CS, PROJECTOR, T, TRANSFORMER>
 where
-    CLIPC: Clone + Stream<EP = CS, T = T>,
     CS: Clone + Default + PartialEq + Result,
-    PROJECTOR: Projector<
-        EP = CS,
-        Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
-    >,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
+    TRANSFORMER: Stream<EP = CS, T = T>,
     T: CoordFloat + FloatConst,
 {
     /// Combines projection, context stream and object.
@@ -128,7 +125,13 @@ where
     }
 }
 
-impl<CLIPC, PROJECTOR, T> Path<Measure<T>, PROJECTOR, T>
+impl<CLIPC, PROJECTOR, T>
+    Path<
+        Measure<T>,
+        PROJECTOR,
+        T,
+        StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+    >
 where
     CLIPC: Clone + Stream<EP = Measure<T>, T = T>,
     PROJECTOR: Projector<
@@ -151,13 +154,20 @@ where
     }
 }
 
-impl<CLIPC, PROJECTOR, T> Path<Area<T>, PROJECTOR, T>
+impl<CLIPC, PROJECTOR, T>
+    Path<
+        Area<T>,
+        PROJECTOR,
+        T,
+        StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+    >
 where
     CLIPC: Clone + Stream<EP = Area<T>, T = T>,
     PROJECTOR: Projector<
         EP = Area<T>,
         Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
     >,
+
     T: CoordFloat,
 {
     /// Returns the area of the Path
@@ -174,7 +184,13 @@ where
     }
 }
 
-impl<CLIPC, PROJECTOR, T> Path<Bounds<T>, PROJECTOR, T>
+impl<CLIPC, PROJECTOR, T>
+    Path<
+        Bounds<T>,
+        PROJECTOR,
+        T,
+        StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+    >
 where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PROJECTOR: Projector<
@@ -195,13 +211,10 @@ where
     }
 }
 
-impl<CLIPC, PROJECTOR, T> Path<Centroid<T>, PROJECTOR, T>
+impl<PROJECTOR, T, TRANSFORMER> Path<Centroid<T>, PROJECTOR, T, TRANSFORMER>
 where
-    CLIPC: Clone + Stream<EP = Centroid<T>, T = T>,
-    PROJECTOR: Projector<
-        EP = Centroid<T>,
-        Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
-    >,
+    PROJECTOR: Projector<EP = Centroid<T>, Transformer = TRANSFORMER>,
+    TRANSFORMER: Stream<EP = Centroid<T>, T = T>,
     T: 'static + AddAssign + CoordFloat + FloatConst,
 {
     /// Returns the centroid of the object.
@@ -214,9 +227,10 @@ where
     }
 }
 
-impl<CS, PROJECTOR, T> Path<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T, TRANSFORMER> Path<CS, PROJECTOR, T, TRANSFORMER>
 where
-    PROJECTOR: Projector<EP = CS>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
+    TRANSFORMER: Stream<EP = CS, T = T>,
     T: CoordFloat,
 {
     /// Sets the context stream.
