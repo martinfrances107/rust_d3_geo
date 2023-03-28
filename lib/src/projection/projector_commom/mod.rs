@@ -77,8 +77,11 @@ where
     ///
     /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
     ///
+
+    type Drain = DRAIN;
+
     type Transformer = ProjectorStream<CC, T>;
-    type DRAIN = DRAIN;
+
     fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
         // if let Some((cache_drain, output)) = &self.cache {
         //     if *cache_drain == *drain {

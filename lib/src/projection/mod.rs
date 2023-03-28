@@ -577,7 +577,7 @@ trait Recenter {
 /// for a collections of projectors.
 pub trait Projector {
     /// The endpoint of the stream pipeline.
-    type DRAIN;
+    type Drain;
 
     /// The act of connecting a drain to the pipeline.
     /// Creates a object the fundamentally acts as Transformer.
@@ -585,5 +585,5 @@ pub trait Projector {
 
     /// Attach a endpoint of a stream pipeline and returns
     /// a transformer to which can be fed geometry objects.
-    fn stream(&mut self, drain: &Self::DRAIN) -> Self::Transformer;
+    fn stream(&mut self, drain: &Self::Drain) -> Self::Transformer;
 }

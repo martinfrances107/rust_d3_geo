@@ -51,8 +51,11 @@ where
     ///
     ///  Transformer -> postclip -> DRAIN
     ///
+
     type Transformer = Transformer<DRAIN, Connected<PCNC>, T>;
-    type DRAIN = DRAIN;
+
+    type Drain = DRAIN;
+
     fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
         if let Some((cache_drain, output)) = &self.cache {
             if *cache_drain == *drain {
