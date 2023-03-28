@@ -79,7 +79,7 @@ where
 #[allow(dead_code)]
 pub struct Path<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<Drain = CS>,
+    PROJECTOR: Projector<EP = CS>,
     T: CoordFloat,
 {
     // p_pcnc: PhantomData<PCNC>,
@@ -94,7 +94,7 @@ where
 // impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 impl<CS, PROJECTOR, T> Path<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<Drain = CS>,
+    PROJECTOR: Projector<EP = CS>,
     T: CoordFloat,
 {
     /// Constructor.
@@ -115,7 +115,7 @@ where
     CLIPC: Clone + Stream<EP = CS, T = T>,
     CS: Clone + Default + PartialEq + Result,
     PROJECTOR: Projector<
-        Drain = CS,
+        EP = CS,
         Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
     >,
     T: CoordFloat + FloatConst,
@@ -132,7 +132,7 @@ impl<CLIPC, PROJECTOR, T> Path<Measure<T>, PROJECTOR, T>
 where
     CLIPC: Clone + Stream<EP = Measure<T>, T = T>,
     PROJECTOR: Projector<
-        Drain = Measure<T>,
+        EP = Measure<T>,
         Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
     >,
     T: AddAssign + CoordFloat,
@@ -155,7 +155,7 @@ impl<CLIPC, PROJECTOR, T> Path<Area<T>, PROJECTOR, T>
 where
     CLIPC: Clone + Stream<EP = Area<T>, T = T>,
     PROJECTOR: Projector<
-        Drain = Area<T>,
+        EP = Area<T>,
         Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
     >,
     T: CoordFloat,
@@ -178,7 +178,7 @@ impl<CLIPC, PROJECTOR, T> Path<Bounds<T>, PROJECTOR, T>
 where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PROJECTOR: Projector<
-        Drain = Bounds<T>,
+        EP = Bounds<T>,
         Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
     >,
     T: 'static + CoordFloat + FloatConst,
@@ -199,7 +199,7 @@ impl<CLIPC, PROJECTOR, T> Path<Centroid<T>, PROJECTOR, T>
 where
     CLIPC: Clone + Stream<EP = Centroid<T>, T = T>,
     PROJECTOR: Projector<
-        Drain = Centroid<T>,
+        EP = Centroid<T>,
         Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
     >,
     T: 'static + AddAssign + CoordFloat + FloatConst,
@@ -216,7 +216,7 @@ where
 
 impl<CS, PROJECTOR, T> Path<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<Drain = CS>,
+    PROJECTOR: Projector<EP = CS>,
     T: CoordFloat,
 {
     /// Sets the context stream.

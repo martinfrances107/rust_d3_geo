@@ -78,7 +78,7 @@ where
     /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
     ///
 
-    type Drain = DRAIN;
+    type EP = DRAIN;
 
     type Transformer = ProjectorStream<CC, T>;
 

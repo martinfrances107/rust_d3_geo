@@ -24,7 +24,7 @@ use super::PointRadiusTrait;
 #[derive(Debug)]
 pub struct Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<Drain = CS>,
+    PROJECTOR: Projector<EP = CS>,
     T: CoordFloat,
 {
     p_projector: PhantomData<PROJECTOR>,
@@ -34,7 +34,7 @@ where
 
 impl<CS, PROJECTOR, T> Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<Drain = CS>,
+    PROJECTOR: Projector<EP = CS>,
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
@@ -54,7 +54,7 @@ where
 /// Context related methods.
 impl<PROJECTOR, T> Builder<Context, PROJECTOR, T>
 where
-    PROJECTOR: Projector<Drain = Context>,
+    PROJECTOR: Projector<EP = Context>,
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
@@ -67,7 +67,7 @@ where
 /// Context related methods.
 impl<PROJECTOR, T> Builder<String<T>, PROJECTOR, T>
 where
-    PROJECTOR: Projector<Drain = String<T>>,
+    PROJECTOR: Projector<EP = String<T>>,
     T: CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
@@ -80,7 +80,7 @@ where
 
 impl<CS, PROJECTOR, T> PointRadiusTrait for Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<Drain = CS>,
+    PROJECTOR: Projector<EP = CS>,
     CS: PointRadiusTrait<T = T>,
     T: CoordFloat,
 {
@@ -98,7 +98,7 @@ where
 /// Projection related methods.
 impl<CS, PROJECTOR, T> Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<Drain = CS>,
+    PROJECTOR: Projector<EP = CS>,
     CS: Stream<EP = CS, T = T>,
     T: CoordFloat,
 {

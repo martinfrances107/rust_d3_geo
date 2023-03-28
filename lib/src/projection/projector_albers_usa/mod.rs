@@ -44,7 +44,7 @@ where
     DRAIN: Clone,
     // MULTIPLEX: Clone + Connectable,
 {
-    type Drain = DRAIN;
+    type EP = DRAIN;
 
     type Transformer = Vec<AlbersTransformer<DRAIN>>;
     /// Connects a DRAIN to the projection.

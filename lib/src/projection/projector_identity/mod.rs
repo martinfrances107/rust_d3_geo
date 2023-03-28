@@ -54,7 +54,7 @@ where
 
     type Transformer = Transformer<DRAIN, Connected<PCNC>, T>;
 
-    type Drain = DRAIN;
+    type EP = DRAIN;
 
     fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
         if let Some((cache_drain, output)) = &self.cache {
