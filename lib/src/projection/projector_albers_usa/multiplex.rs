@@ -8,13 +8,14 @@ use crate::clip::clipper::Clipper;
 use crate::clip::clipper::Connected as ConnectedClipper;
 use crate::identity::Identity;
 use crate::projection::albers::albers;
+use crate::projection::albers_usa::AlbersUsa;
 use crate::projection::equal_area::EqualArea;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 use crate::projection::CenterSet;
-use crate::projection::Projector;
+use crate::projection::Projector as ProjectoTait;
 use crate::projection::RawBase;
 use crate::projection::RotateSet;
 use crate::rot::rotator_radians::RotatorRadians;
@@ -23,12 +24,14 @@ use crate::stream::Connected as ConnectedStream;
 use crate::stream::MultiStream;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
+use crate::Transform;
 use geo::Coord;
 
 /// When connected the state changes to hold the connected Projectors.
 #[derive(Debug)]
 pub struct Connected<DRAIN, TRANSFORM> {
     pd_drain: PhantomData<DRAIN>,
+    pr: AlbersUsa<DRAIN>,
     store: Vec<TRANSFORM>,
 }
 /// A projection stream pipeline stage which holds a collection of
@@ -182,5 +185,20 @@ where
         for item in &mut self.state.store {
             item.sphere();
         }
+    }
+}
+
+impl<DRAIN> Transform for Multiplex<Connected<DRAIN, AlbersTransformer<DRAIN>>>
+where
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
+{
+    /// f32 or f64
+    type T = f64;
+
+    fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
+        self.state.pr.transform(p)
+    }
+    fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
+        self.state.pr.invert(p)
     }
 }
