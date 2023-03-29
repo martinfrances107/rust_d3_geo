@@ -52,8 +52,8 @@ where
             Self::Cyl(cyl) => cyl.invert(p),
             Self::Con(con) => con.invert(p),
             Self::Uninitialized => Coord {
-                x: T::zero(),
-                y: T::zero(),
+                x: T::nan(),
+                y: T::nan(),
             },
         }
     }
