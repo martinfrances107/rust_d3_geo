@@ -46,11 +46,9 @@ where
 impl<DRAIN> ProjectorTrait for Projector<DRAIN, Multiplex<Unconnected>>
 where
     DRAIN: Clone,
-    // MULTIPLEX: Clone + Connectable,
 {
     type EP = DRAIN;
 
-    // type Transformer = MultiplexTrasnformer<AlbersTransformer<DRAIN>>;
     type Transformer = MultiTransformer<DRAIN, f64, AlbersTransformer<DRAIN>>;
     /// Connects a DRAIN to the projection.
     ///

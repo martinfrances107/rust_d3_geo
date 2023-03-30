@@ -55,7 +55,6 @@ mod index {
         let crc2d = CanvasRenderingContext2d::default();
 
         let context = Context::new(crc2d);
-        // let pb = PathBuilder::new(context);
         let pb = PathBuilder::new(context);
 
         pb.build(projection).object(object)
@@ -372,7 +371,6 @@ mod index {
         let crc2d = CanvasRenderingContext2d::default();
 
         let context = Context::new(crc2d);
-        // let pb = PathBuilder::new(context);
         let pb = PathBuilder::new(context);
         let mut path = pb.build(equirectangular());
 

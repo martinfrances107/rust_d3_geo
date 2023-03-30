@@ -35,7 +35,6 @@ pub async fn draw_conformal(land: &Geometry<f64>) -> Result<(), JsValue> {
 
     let context: Context = Context::new(context_raw.clone());
     let pb = PathBuilder::new(context);
-    // let pb = PathBuilder::new(context);
 
     // input params will cause a conic equal area projection to be constructed.
     let cea = Conformal::builder()

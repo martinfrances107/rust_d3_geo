@@ -78,7 +78,6 @@ impl Renderer {
         utils::set_panic_hook();
 
         let document = document()?;
-        // let window = web_sys::window().expect("Failed to get window");
 
         let w = match window() {
             Some(w) => w,
@@ -150,7 +149,6 @@ impl Renderer {
 
         let context: Context = Context::new(self.context2d.clone());
         let pb = PathBuilder::new(context);
-        // let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);
         self.context2d.set_stroke_style(&"#333".into());

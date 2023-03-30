@@ -243,7 +243,6 @@ impl Renderer {
 
             let ortho = self.ob.build();
             let pb = PathBuilder::new(context.clone());
-            // let pb = PathBuilder::new(context.clone());
 
             let mut path = pb.build(ortho);
             self.context2d.set_stroke_style(&"#777".into());
@@ -260,7 +259,6 @@ impl Renderer {
         let ortho = self.ob.build();
 
         let pb = PathBuilder::new(context);
-        // let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);
         self.context2d.set_fill_style(&"#000".into());
@@ -284,7 +282,6 @@ impl Renderer {
         let ortho = self.ob.build();
 
         let pb = PathBuilder::new(context);
-        // let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);
         self.context2d.set_stroke_style(&"#f00".into());
