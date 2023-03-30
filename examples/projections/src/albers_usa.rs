@@ -43,7 +43,7 @@ pub async fn draw_albers_usa(land: &Geometry<f64>) -> Result<(), JsValue> {
     let mut path = pb.build(projector);
 
     context_raw.set_stroke_style(&"#69b3a2".into());
-    path.object(land);
+    // path.object(land);
     context_raw.stroke();
 
     Ok(())

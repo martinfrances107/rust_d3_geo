@@ -2,5 +2,3 @@
 // Abers pipeline.
 
 pub struct Multidrain<EP>(Vec<EP>);
-
-// impl Connect
