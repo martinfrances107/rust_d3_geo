@@ -30,21 +30,21 @@ pub async fn draw_albers_usa(land: &Geometry<f64>) -> Result<(), JsValue> {
 
     let context = Context::new(context_raw.clone());
 
-    // let pb = PathBuilder::new(context);
+    let pb = PathBuilder::new(context);
 
-    // let builder = *AlbersUsa::<Context>::builder()
-    //     .scale_set(width)
-    //     .translate_set(&Coord {
-    //         x: width / 2_f64,
-    //         y: height / 2_f64,
-    //     });
+    let mut builder = AlbersUsa::builder();
+    let builder = builder.scale_set(width).translate_set(&Coord {
+        x: width / 2_f64,
+        y: height / 2_f64,
+    });
 
-    // let projector = builder.build();
+    let projector = builder.build();
 
-    // let mut path = pb.build(projector);
-    // context_raw.set_stroke_style(&"#69b3a2".into());
-    // path.object(land);
-    // context_raw.stroke();
+    let mut path = pb.build(projector);
+
+    context_raw.set_stroke_style(&"#69b3a2".into());
+    path.object(land);
+    context_raw.stroke();
 
     Ok(())
 }

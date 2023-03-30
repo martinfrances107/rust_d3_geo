@@ -21,25 +21,31 @@ use crate::projection::RotateSet;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connectable;
 use crate::stream::Connected as ConnectedStream;
-use crate::stream::MultiStream;
+// use crate::stream::MultiStream;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 use geo::Coord;
 
+use super::multitransformer::MultiTransformer;
 /// When connected the state changes to hold the connected Projectors.
 #[derive(Debug)]
 pub struct Connected<DRAIN, TRANSFORM> {
     pd_drain: PhantomData<DRAIN>,
     pr: AlbersUsa<DRAIN>,
-    store: Vec<TRANSFORM>,
+    /// A collections of sub transforms.
+    /// TODO can this be simplified once workings.
+    pub store: Vec<TRANSFORM>,
 }
 /// A projection stream pipeline stage which holds a collection of
 /// Projectors, in the case of `AlbersUSA` one for every region.
 /// `lower_48`, `alaaska`, `hawaii`.
 #[derive(Clone, Debug)]
 pub struct Multiplex<STATE> {
-    state: STATE,
+    /// The State is Connected or Unconnected.
+    /// TODO Once things are working consider simplifying here
+    /// by removing this wrapper.
+    pub state: STATE,
 }
 
 impl Default for Multiplex<Unconnected> {
@@ -100,7 +106,8 @@ pub type AlbersMultiplexType<SC> = Multiplex<Connected<SC, AlbersTransformer<SC>
 impl Connectable for Multiplex<Unconnected> {
     /// Connects the next stage in the stream pipline.
 
-    type Output<SC: Clone> = Vec<AlbersTransformer<SC>>;
+    type Output<SC: Clone> = MultiTransformer<SC, f64, AlbersTransformer<SC>>;
+
     #[inline]
     fn connect<SC>(&self, sink: SC) -> Self::Output<SC>
     where
@@ -122,29 +129,23 @@ impl Connectable for Multiplex<Unconnected> {
 
         let lower_48 = albers::<SC, f64>();
 
-        let out = vec![
+        MultiTransformer::new(vec![
             alaska.build().stream(&sink),
             lower_48.build().stream(&sink),
             hawaii.build().stream(&sink),
-        ];
-
-        out
+        ])
     }
 }
 
-impl<DRAIN, TRANSFORM> MultiStream for Multiplex<Connected<DRAIN, TRANSFORM>>
+impl<DRAIN, TRANSFORM> Stream for Multiplex<Connected<DRAIN, TRANSFORM>>
 where
     TRANSFORM: Stream<EP = DRAIN, T = f64>,
 {
-    type EP = Vec<DRAIN>;
+    type EP = DRAIN;
     type T = f64;
     /// Returns the end point of the stream.
-    fn endpoints(&mut self) -> &mut Vec<Self::EP> {
+    fn endpoint(&mut self) -> &mut Self::EP {
         todo!();
-        // self.store
-        //     .first()
-        //     .expect("Cannot supply an empty list of Projectors.")
-        //     .endpoint()
     }
 
     /// Declare the end of a line segment.

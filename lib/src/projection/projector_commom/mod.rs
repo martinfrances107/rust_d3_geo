@@ -12,7 +12,6 @@ use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connectable;
 use crate::stream::Connected;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 

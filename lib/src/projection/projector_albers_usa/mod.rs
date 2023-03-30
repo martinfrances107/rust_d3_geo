@@ -9,11 +9,14 @@ use crate::Transform;
 
 use self::multiplex::AlbersTransformer;
 use self::multiplex::Multiplex;
+use self::multitransformer::MultiTransformer;
 
 use super::Projector as ProjectorTrait;
 
 /// The multiplex is a collection of sub-projections.
 pub mod multiplex;
+/// Transformer defined as more than more proejction.
+pub mod multitransformer;
 /// Builder shorthand notations.
 pub mod types;
 
@@ -23,7 +26,8 @@ pub mod types;
 #[derive(Clone, Debug)]
 pub struct Projector<DRAIN, MULTIPLEX> {
     phantom_drain: PhantomData<DRAIN>,
-    pub(crate) multiplex: MULTIPLEX,
+    /// The internals stages of the pipeline
+    pub multiplex: MULTIPLEX,
 }
 
 impl<DRAIN, MULTIPLEX> Default for Projector<DRAIN, MULTIPLEX>
@@ -46,7 +50,8 @@ where
 {
     type EP = DRAIN;
 
-    type Transformer = Vec<AlbersTransformer<DRAIN>>;
+    // type Transformer = MultiplexTrasnformer<AlbersTransformer<DRAIN>>;
+    type Transformer = MultiTransformer<DRAIN, f64, AlbersTransformer<DRAIN>>;
     /// Connects a DRAIN to the projection.
     ///
     /// The Projection Stream Pipeline :-

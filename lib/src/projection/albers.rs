@@ -2,8 +2,6 @@ use geo::Coord;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::stream::Stream;
-
 use super::builder::types::BuilderAntimeridianResampleNoClip;
 use super::builder_conic::Builder;
 use super::builder_conic::ParallelsSet;

@@ -82,12 +82,8 @@ where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat,
 {
-    // p_pcnc: PhantomData<PCNC>,
-    // p_rc: PhantomData<RC>,
     context_stream: CS,
     point_radius: PointRadiusEnum<T>,
-    /// don't store projection stream.
-    // projection: Projector<CLIPC, CLIPU, CS, PCNU, PR, RC, RU, T>,
     projection: PROJECTOR,
 }
 

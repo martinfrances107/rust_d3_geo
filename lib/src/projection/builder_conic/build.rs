@@ -7,7 +7,6 @@ use crate::projection::projector_commom::Projector;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 
 use super::Builder;

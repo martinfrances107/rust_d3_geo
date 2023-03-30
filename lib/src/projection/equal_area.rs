@@ -3,7 +3,6 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::math::EPSILON;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder::types::BuilderAntimeridianResampleNoClip;
