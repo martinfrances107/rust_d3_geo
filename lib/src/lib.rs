@@ -216,6 +216,8 @@ pub mod length;
 pub mod math;
 /// Stream end point: Calculation of paths to a string or rendering context.
 pub mod path;
+
+pub mod multidrain;
 /// A stripped down version of [path](crate::path)
 pub mod path_identity;
 /// Determines when points are located inside data objects.

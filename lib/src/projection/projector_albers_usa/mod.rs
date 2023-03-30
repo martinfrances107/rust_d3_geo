@@ -4,6 +4,7 @@ use std::marker::PhantomData;
 use geo::Coord;
 
 use crate::stream::Connectable;
+use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -49,7 +50,7 @@ where
 {
     type EP = DRAIN;
 
-    type Transformer = MultiTransformer<DRAIN, f64, AlbersTransformer<DRAIN>>;
+    type Transformer = MultiTransformer<DRAIN, Connected<DRAIN>, f64, AlbersTransformer<DRAIN>>;
     /// Connects a DRAIN to the projection.
     ///
     /// The Projection Stream Pipeline :-
@@ -57,7 +58,7 @@ where
     /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
     ///
     fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
-        self.multiplex.clone().connect(drain.clone())
+        self.multiplex.connect(drain.clone())
     }
 }
 

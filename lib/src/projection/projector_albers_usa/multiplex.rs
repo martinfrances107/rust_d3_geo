@@ -106,7 +106,7 @@ pub type AlbersMultiplexType<SC> = Multiplex<Connected<SC, AlbersTransformer<SC>
 impl Connectable for Multiplex<Unconnected> {
     /// Connects the next stage in the stream pipline.
 
-    type Output<SC: Clone> = MultiTransformer<SC, f64, AlbersTransformer<SC>>;
+    type Output<SC: Clone> = MultiTransformer<SC, ConnectedStream<SC>, f64, AlbersTransformer<SC>>;
 
     #[inline]
     fn connect<SC>(&self, sink: SC) -> Self::Output<SC>
@@ -129,11 +129,14 @@ impl Connectable for Multiplex<Unconnected> {
 
         let lower_48 = albers::<SC, f64>();
 
-        MultiTransformer::new(vec![
-            alaska.build().stream(&sink),
-            lower_48.build().stream(&sink),
-            hawaii.build().stream(&sink),
-        ])
+        MultiTransformer::new(
+            sink.clone(),
+            vec![
+                alaska.build().stream(&sink),
+                lower_48.build().stream(&sink),
+                hawaii.build().stream(&sink),
+            ],
+        )
     }
 }
 
