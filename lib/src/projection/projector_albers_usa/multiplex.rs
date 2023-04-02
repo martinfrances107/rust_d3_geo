@@ -108,10 +108,10 @@ impl Connectable for Multiplex<Unconnected> {
     /// Connects the next stage in the stream pipline.
 
     type Output<SC: Clone> = MultiTransformer<
-        Multidrain<AlbersTransformer<SC>, f64, AlbersTransformer<SC>>,
-        ConnectedStream<Multidrain<SC, f64, AlbersTransformer<SC>>>,
+        Multidrain<AlbersTransformer<SC>, f64>,
+        ConnectedStream<Multidrain<SC, f64>>,
         f64,
-        AlbersTransformer<Multidrain<SC, f64, AlbersTransformer<SC>>>,
+        AlbersTransformer<Multidrain<SC, f64>>,
     >;
 
     #[inline]

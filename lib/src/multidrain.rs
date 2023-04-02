@@ -10,25 +10,23 @@ use crate::stream::Stream;
 /// When asked for the results() output the contents of the Multiplex store in the
 /// AbersUsa pipeline.
 #[derive(Clone, Debug)]
-pub struct Multidrain<EP, T, TRANSFORMER> {
+pub struct Multidrain<EP, T> {
     /// A collection of drains.
     pub drains: Vec<EP>,
-    /// A collection fo transformer.
-    pub transformers: Vec<TRANSFORMER>,
+
     p_t: PhantomData<T>,
 }
 
-impl<EP, T, TRANSFORMER> Default for Multidrain<EP, T, TRANSFORMER> {
+impl<EP, T> Default for Multidrain<EP, T> {
     fn default() -> Self {
         Self {
             drains: vec![],
-            transformers: vec![],
             p_t: PhantomData::<T>,
         }
     }
 }
 
-impl Result for Multidrain<Context, f64, AlbersTransformer<Context>> {
+impl Result for Multidrain<Context, f64> {
     type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
@@ -44,7 +42,7 @@ impl Result for Multidrain<Context, f64, AlbersTransformer<Context>> {
     }
 }
 
-impl Result for Multidrain<String, f64, AlbersTransformer<Context>> {
+impl Result for Multidrain<String, f64> {
     type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
@@ -53,7 +51,7 @@ impl Result for Multidrain<String, f64, AlbersTransformer<Context>> {
     }
 }
 
-impl<EP, T> Stream for Multidrain<EP, T, AlbersTransformer<Context>>
+impl<EP, T> Stream for Multidrain<EP, T>
 where
     EP: Stream<EP = EP, T = T>,
     T: CoordFloat,

@@ -7,7 +7,6 @@ use d3_geo_rs::multidrain::Multidrain;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
 use d3_geo_rs::projection::albers_usa::AlbersUsa;
-use d3_geo_rs::projection::projector_albers_usa::multiplex::AlbersTransformer;
 use d3_geo_rs::projection::RawBase;
 use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
@@ -30,7 +29,7 @@ pub async fn draw_albers_usa(land: &Geometry<f64>) -> Result<(), JsValue> {
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
     // let context: Context::new(context_raw.clone();
-    let context = Multidrain::<Context, f64, AlbersTransformer<Context>>::default();
+    let context = Multidrain::<Context, f64>::default();
 
     let pb = PathBuilder::new(context);
 
