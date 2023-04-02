@@ -50,7 +50,7 @@ where
 
 /// Make connections to a stream pipeline.
 pub trait Connectable {
-    /// Represents to final connected state.
+    /// The next pipeline stage.
     type Output<SC: Clone>;
 
     /// Connects to previous pipeline stage.
@@ -61,7 +61,7 @@ pub trait Connectable {
 /// Whatever specific state they are in,  it is to the exclusion
 /// on the unconnected state.
 pub trait ConnectedState {
-    /// The next pipeline stage type
+    /// The next pipeline stage.
     type Sink;
 
     /// Connects the next object in the pipeline.

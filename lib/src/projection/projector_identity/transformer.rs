@@ -117,29 +117,27 @@ where
         self.state.sink.endpoint()
     }
 
-    /// Declare the end of a line segment.
     fn line_end(&mut self) {
         self.state.sink.line_end();
     }
-    // Declare the start of a line segment.
+
     fn line_start(&mut self) {
         self.state.sink.line_start();
     }
-    /// Declare a point.
+
     #[inline]
     fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
         self.state.sink.point(&self.transform(p), m);
     }
 
-    /// Declare the end of a polygon.
     fn polygon_end(&mut self) {
         self.state.sink.polygon_end();
     }
-    /// Declare the start of a polygon.
+
     fn polygon_start(&mut self) {
         self.state.sink.polygon_start();
     }
-    /// Declare a sphere object.
+
     fn sphere(&mut self) {
         self.state.sink.sphere();
     }

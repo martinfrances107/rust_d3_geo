@@ -31,7 +31,7 @@ impl<EP, T, TRANSFORMER> Default for Multidrain<EP, T, TRANSFORMER> {
 impl Result for Multidrain<Context, f64, AlbersTransformer<Context>> {
     type Out = Vec<String>;
 
-    /// Returns current the end points calculation.
+    /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
         let mut out = vec![];
         for c in &mut self.drains {
@@ -47,7 +47,7 @@ impl Result for Multidrain<Context, f64, AlbersTransformer<Context>> {
 impl Result for Multidrain<String, f64, AlbersTransformer<Context>> {
     type Out = Vec<String>;
 
-    /// Returns current the end points calculation.
+    /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
         vec![]
     }
