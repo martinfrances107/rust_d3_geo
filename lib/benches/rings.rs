@@ -5,7 +5,6 @@ extern crate pretty_assertions;
 use std::time::Duration;
 
 use criterion::Criterion;
-use d3_geo_rs::projection::builder::template::NoPCNC;
 use geo::MultiPolygon;
 use geo::Polygon;
 use geo_types::Coord;
@@ -15,7 +14,6 @@ use regex::Regex;
 
 use d3_geo_rs::circle::generator::Generator as CircleGenerator;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;

@@ -51,14 +51,15 @@ where
     type EP = DRAIN;
 
     type Transformer = MultiTransformer<DRAIN, Connected<DRAIN>, f64, AlbersTransformer<DRAIN>>;
-    /// Connects a DRAIN to the projection.
+    /// Connects a DRAIN to the AlbersUSA projector.
     ///
     /// The Projection Stream Pipeline :-
     ///
-    /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
+    /// `Multiplex' -> `DRAIN`
     ///
     fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
-        self.multiplex.connect(drain.clone())
+        todo!();
+        // self.multiplex.connect(drain.clone())
     }
 }
 

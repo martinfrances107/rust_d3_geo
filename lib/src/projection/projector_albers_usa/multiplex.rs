@@ -7,6 +7,7 @@ use crate::clip::buffer::Buffer;
 use crate::clip::clipper::Clipper;
 use crate::clip::clipper::Connected as ConnectedClipper;
 use crate::identity::Identity;
+use crate::multidrain::Multidrain;
 use crate::projection::albers::albers;
 use crate::projection::albers_usa::AlbersUsa;
 use crate::projection::equal_area::EqualArea;
@@ -100,13 +101,18 @@ pub type AlbersTransformer<SC> = StreamTransformRadians<
     >,
 >;
 
-/// Hardcode type for now until things are generic
-pub type AlbersMultiplexType<SC> = Multiplex<Connected<SC, AlbersTransformer<SC>>>;
+// type Output<SC: Clone> = MultiTransformer<SC, ConnectedStream<SC>, f64, AlbersTransformer<SC>>;
 
+/// Hardcode type for now until things are generic
 impl Connectable for Multiplex<Unconnected> {
     /// Connects the next stage in the stream pipline.
 
-    type Output<SC: Clone> = MultiTransformer<SC, ConnectedStream<SC>, f64, AlbersTransformer<SC>>;
+    type Output<SC: Clone> = MultiTransformer<
+        Multidrain<AlbersTransformer<SC>, f64, AlbersTransformer<SC>>,
+        ConnectedStream<Multidrain<SC, f64, AlbersTransformer<SC>>>,
+        f64,
+        AlbersTransformer<Multidrain<SC, f64, AlbersTransformer<SC>>>,
+    >;
 
     #[inline]
     fn connect<SC>(&self, sink: SC) -> Self::Output<SC>
@@ -129,14 +135,16 @@ impl Connectable for Multiplex<Unconnected> {
 
         let lower_48 = albers::<SC, f64>();
 
-        MultiTransformer::new(
-            sink.clone(),
-            vec![
-                alaska.build().stream(&sink),
-                lower_48.build().stream(&sink),
-                hawaii.build().stream(&sink),
-            ],
-        )
+        todo!();
+
+        // MultiTransformer::new(
+        //     sink,
+        //     vec![
+        //         alaska.build().stream(&sink),
+        //         lower_48.build().stream(&sink),
+        //         hawaii.build().stream(&sink),
+        //     ],
+        // )
     }
 }
 

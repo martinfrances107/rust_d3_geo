@@ -108,7 +108,7 @@ where
 
 impl<CS, PROJECTOR, T, TRANSFORMER> Path<CS, PROJECTOR, T, TRANSFORMER>
 where
-    CS: Clone + Default + PartialEq + Result,
+    CS: Clone + Default + Result,
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     TRANSFORMER: Stream<EP = CS, T = T>,
     T: CoordFloat + FloatConst,
