@@ -4,7 +4,7 @@ use geo::{Coord, CoordFloat};
 
 use crate::path::context::Context;
 use crate::path::Result;
-use crate::projection::projector_albers_usa::multiplex::AlbersTransformer;
+
 use crate::stream::Stream;
 
 /// Stores a collection of sub drains used in the

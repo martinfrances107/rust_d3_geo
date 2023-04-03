@@ -3,15 +3,13 @@ use std::marker::PhantomData;
 
 use geo::Coord;
 
-use crate::stream::Connectable;
+use crate::projection::projector_albers_usa::multiplex::AlbersTransformer;
 use crate::stream::Connected;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use self::multiplex::AlbersTransformer;
 use self::multiplex::Multiplex;
 use self::multitransformer::MultiTransformer;
-
 use super::Projector as ProjectorTrait;
 
 /// The multiplex is a collection of sub-projections.

@@ -3,9 +3,9 @@ use std::marker::PhantomData;
 use geo::Coord;
 use geo::CoordFloat;
 
+use crate::multidrain::Multidrain;
 use crate::stream::Connectable;
 use crate::stream::Connected;
-use crate::stream::ConnectedState;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 
@@ -48,14 +48,16 @@ where
     }
 }
 
-impl<DRAIN, T, TRANSFORMER> Stream for MultiTransformer<DRAIN, Connected<DRAIN>, T, TRANSFORMER>
+impl<SD, T, TRANSFORMER> Stream
+    for MultiTransformer<Multidrain<SD, T>, Connected<Multidrain<SD, T>>, T, TRANSFORMER>
 where
-    DRAIN: Stream<EP = DRAIN, T = T>,
+    SD: Stream<EP = SD, T = T>,
     T: CoordFloat,
-    TRANSFORMER: Stream<EP = DRAIN, T = T>,
+    // TODO must define ER=XXX?
+    TRANSFORMER: Stream<T = T>,
 {
     type T = T;
-    type EP = DRAIN;
+    type EP = Multidrain<SD, T>;
 
     fn endpoint(&mut self) -> &mut Self::EP {
         self.state.sink.endpoint()
