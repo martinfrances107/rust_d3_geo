@@ -7,17 +7,17 @@ use crate::path::Result;
 use crate::projection::projector_albers_usa::multiplex::AlbersTransformer;
 use crate::stream::Stream;
 
-/// When asked for the results() output the contents of the Multiplex store in the
+/// Stores a collection of sub drains used in the
 /// AbersUsa pipeline.
 #[derive(Clone, Debug)]
-pub struct Multidrain<EP, T> {
+pub struct Multidrain<SD, T> {
     /// A collection of drains.
-    pub drains: Vec<EP>,
+    pub drains: Vec<SD>,
 
     p_t: PhantomData<T>,
 }
 
-impl<EP, T> Default for Multidrain<EP, T> {
+impl<SD, T> Default for Multidrain<SD, T> {
     fn default() -> Self {
         Self {
             drains: vec![],
@@ -51,9 +51,9 @@ impl Result for Multidrain<String, f64> {
     }
 }
 
-impl<EP, T> Stream for Multidrain<EP, T>
+impl<SD, T> Stream for Multidrain<SD, T>
 where
-    EP: Stream<EP = EP, T = T>,
+    SD: Stream<EP = SD, T = T>,
     T: CoordFloat,
 {
     type EP = Self;
