@@ -110,7 +110,7 @@ impl Multiplex<Unconnected> {
     /// Connects the next stage in the stream pipline.
 
     #[inline]
-    fn connect<SD>(&self, sink: Multidrain<SD, f64>) -> AlbersTransformer<SD>
+    pub fn connect<SD>(&self, sink: Multidrain<SD, f64>) -> AlbersTransformer<SD>
     where
         SD: Clone + Default,
     {

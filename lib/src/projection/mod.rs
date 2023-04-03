@@ -579,8 +579,8 @@ pub trait Projector {
     /// The endpoint of the stream pipeline.
     type EP;
 
-    /// The act of connecting a drain to the pipeline.
-    /// Creates a object that fundamentally acts as Transformer.
+    /// The act of connecting a drain to the pipeline
+    /// creates an object that fundamentally acts as Transformer.
     type Transformer;
 
     /// Attach a endpoint of a stream pipeline and returns
