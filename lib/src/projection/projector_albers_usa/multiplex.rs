@@ -20,12 +20,12 @@ use super::multitransformer::MultiTransformer;
 
 /// When connected the state changes to hold the connected Projectors.
 #[derive(Debug)]
-pub struct Connected<DRAIN, TRANSFORM> {
+pub struct Connected<DRAIN, const N: usize, TRANSFORM> {
     pd_drain: PhantomData<DRAIN>,
     pr: AlbersUsa<DRAIN>,
     /// A collections of sub transforms.
     /// TODO can this be simplified once workings.
-    pub store: Vec<TRANSFORM>,
+    pub store: [TRANSFORM; N],
 }
 /// A projection stream pipeline stage which holds a collection of
 /// Projectors, in the case of `AlbersUSA` one for every region.
@@ -71,7 +71,7 @@ impl Multiplex<Unconnected> {
 
         MultiTransformer::new(
             sink,
-            vec![
+            [
                 alaska.build().stream(&SD::default()),
                 lower_48.build().stream(&SD::default()),
                 hawaii.build().stream(&SD::default()),
@@ -80,7 +80,8 @@ impl Multiplex<Unconnected> {
     }
 }
 
-impl<DRAIN> Transform for Multiplex<Connected<DRAIN, AlbersUsaTransformer<DRAIN>>>
+impl<DRAIN, const N: usize> Transform
+    for Multiplex<Connected<DRAIN, N, AlbersUsaTransformer<DRAIN>>>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {

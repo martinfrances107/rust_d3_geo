@@ -33,6 +33,7 @@ pub mod types;
 
 pub type AlbersUsaTransformer<SD> = MultiTransformer<
     Multidrain<SD, f64>,
+    3usize,
     ConnectedStream<Multidrain<SD, f64>>,
     f64,
     StreamTransformRadians<

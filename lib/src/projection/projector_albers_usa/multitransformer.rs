@@ -11,16 +11,18 @@ use crate::stream::Unconnected;
 
 /// Projections like `AlbersUSA` group several projections together.
 #[derive(Debug)]
-pub struct MultiTransformer<DRAIN, STATE, T, TRANSFORMER> {
+pub struct MultiTransformer<DRAIN, const N: usize, STATE, T, TRANSFORMER> {
     state: STATE,
-    store: Vec<TRANSFORMER>,
+    store: [TRANSFORMER; N],
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T, TRANSFORMER> MultiTransformer<DRAIN, Connected<DRAIN>, T, TRANSFORMER> {
+impl<DRAIN, const N: usize, T, TRANSFORMER>
+    MultiTransformer<DRAIN, N, Connected<DRAIN>, T, TRANSFORMER>
+{
     /// Constructor
-    pub fn new(sink: DRAIN, store: Vec<TRANSFORMER>) -> Self {
+    pub const fn new(sink: DRAIN, store: [TRANSFORMER; N]) -> Self {
         Self {
             state: Connected { sink },
             store,
@@ -30,12 +32,13 @@ impl<DRAIN, T, TRANSFORMER> MultiTransformer<DRAIN, Connected<DRAIN>, T, TRANSFO
     }
 }
 
-impl<DRAIN, T, TRANSFORMER> Connectable for MultiTransformer<DRAIN, Unconnected, T, TRANSFORMER>
+impl<DRAIN, const N: usize, T, TRANSFORMER> Connectable
+    for MultiTransformer<DRAIN, N, Unconnected, T, TRANSFORMER>
 where
     T: CoordFloat,
     TRANSFORMER: Clone,
 {
-    type Output<SC: Clone> = MultiTransformer<DRAIN, Connected<SC>, T, TRANSFORMER>;
+    type Output<SC: Clone> = MultiTransformer<DRAIN, N, Connected<SC>, T, TRANSFORMER>;
 
     #[inline]
     fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
@@ -48,8 +51,8 @@ where
     }
 }
 
-impl<SD, T, TRANSFORMER> Stream
-    for MultiTransformer<Multidrain<SD, T>, Connected<Multidrain<SD, T>>, T, TRANSFORMER>
+impl<SD, const N: usize, T, TRANSFORMER> Stream
+    for MultiTransformer<Multidrain<SD, T>, N, Connected<Multidrain<SD, T>>, T, TRANSFORMER>
 where
     SD: Stream<EP = SD, T = T>,
     T: CoordFloat,
