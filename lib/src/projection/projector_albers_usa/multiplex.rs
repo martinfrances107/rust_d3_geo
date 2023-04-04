@@ -28,6 +28,7 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::multitransformer::MultiTransformer;
+
 /// When connected the state changes to hold the connected Projectors.
 #[derive(Debug)]
 pub struct Connected<DRAIN, TRANSFORM> {
@@ -141,53 +142,53 @@ impl Multiplex<Unconnected> {
     }
 }
 
-impl<DRAIN, TRANSFORM> Stream for Multiplex<Connected<DRAIN, TRANSFORM>>
-where
-    TRANSFORM: Stream<EP = DRAIN, T = f64>,
-{
-    type EP = DRAIN;
-    type T = f64;
+// impl<DRAIN, TRANSFORM> Stream for Multiplex<Connected<DRAIN, TRANSFORM>>
+// where
+//     TRANSFORM: Stream<EP = DRAIN, T = f64>,
+// {
+//     type EP = DRAIN;
+//     type T = f64;
 
-    fn endpoint(&mut self) -> &mut Self::EP {
-        todo!();
-    }
+//     fn endpoint(&mut self) -> &mut Self::EP {
+//         todo!();
+//     }
 
-    fn line_end(&mut self) {
-        for item in &mut self.state.store {
-            item.line_end();
-        }
-    }
+//     fn line_end(&mut self) {
+//         for item in &mut self.state.store {
+//             item.line_end();
+//         }
+//     }
 
-    fn line_start(&mut self) {
-        for item in &mut self.state.store {
-            item.line_start();
-        }
-    }
+//     fn line_start(&mut self) {
+//         for item in &mut self.state.store {
+//             item.line_start();
+//         }
+//     }
 
-    fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
-        for item in &mut self.state.store {
-            item.point(p, m);
-        }
-    }
+//     fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
+//         for item in &mut self.state.store {
+//             item.point(p, m);
+//         }
+//     }
 
-    fn polygon_end(&mut self) {
-        for item in &mut self.state.store {
-            item.polygon_end();
-        }
-    }
+//     fn polygon_end(&mut self) {
+//         for item in &mut self.state.store {
+//             item.polygon_end();
+//         }
+//     }
 
-    fn polygon_start(&mut self) {
-        for item in &mut self.state.store {
-            item.polygon_start();
-        }
-    }
+//     fn polygon_start(&mut self) {
+//         for item in &mut self.state.store {
+//             item.polygon_start();
+//         }
+//     }
 
-    fn sphere(&mut self) {
-        for item in &mut self.state.store {
-            item.sphere();
-        }
-    }
-}
+//     fn sphere(&mut self) {
+//         for item in &mut self.state.store {
+//             item.sphere();
+//         }
+//     }
+// }
 
 impl<DRAIN> Transform for Multiplex<Connected<DRAIN, AlbersTransformer<DRAIN>>>
 where
