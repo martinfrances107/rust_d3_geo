@@ -1,5 +1,3 @@
-use std::marker::PhantomData;
-
 use geo::Coord;
 
 use crate::multidrain::Multidrain;
@@ -21,7 +19,6 @@ use super::multitransformer::MultiTransformer;
 /// When connected the state changes to hold the connected Projectors.
 #[derive(Debug)]
 pub struct Connected<DRAIN, const N: usize, TRANSFORM> {
-    pd_drain: PhantomData<DRAIN>,
     pr: AlbersUsa<DRAIN>,
     /// A collections of sub transforms.
     /// TODO can this be simplified once workings.

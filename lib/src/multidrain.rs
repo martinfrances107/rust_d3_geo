@@ -1,8 +1,10 @@
 use std::marker::PhantomData;
 
-use geo::{Coord, CoordFloat};
+use geo::Coord;
+use geo::CoordFloat;
 
 use crate::path::context::Context;
+use crate::path::string::String as PathString;
 use crate::path::Result;
 
 use crate::stream::Stream;
@@ -26,7 +28,7 @@ impl<SD, T> Default for Multidrain<SD, T> {
     }
 }
 
-impl Result for Multidrain<Context, f64> {
+impl<T> Result for Multidrain<Context, T> {
     type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
@@ -42,7 +44,7 @@ impl Result for Multidrain<Context, f64> {
     }
 }
 
-impl Result for Multidrain<String, f64> {
+impl<T> Result for Multidrain<PathString<T>, T> {
     type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
