@@ -6,11 +6,14 @@ use geo::Coord;
 use crate::clip::antimeridian::interpolate::Interpolate;
 use crate::clip::antimeridian::line::Line;
 use crate::clip::antimeridian::pv::PV;
+use crate::clip::buffer::Buffer;
 use crate::clip::clipper::Clipper;
+use crate::clip::clipper::Connected as ConnectedClipper;
 use crate::identity::Identity;
 use crate::multidrain::Multidrain;
+use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::rot::rotator_radians::RotatorRadians;
-use crate::stream::Connected;
+use crate::stream::Connected as ConnectedStream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -28,24 +31,21 @@ pub mod multitransformer;
 /// Builder shorthand notations.
 pub mod types;
 
-type StreamOut<SD> = MultiTransformer<
+pub type AlbersUsaTransformer<SD> = MultiTransformer<
     Multidrain<SD, f64>,
-    Connected<Multidrain<SD, f64>>,
+    ConnectedStream<Multidrain<SD, f64>>,
     f64,
     StreamTransformRadians<
-        Connected<
+        ConnectedStream<
             RotatorRadians<
-                Connected<
+                ConnectedStream<
                     Clipper<
                         Interpolate<f64>,
                         Line<
-                            Connected<
+                            ConnectedStream<
                                 Resample<
-                                    super::equal_area::EqualArea<SD, f64>,
-                                    super::resampler::resample::Connected<
-                                        Identity<Connected<SD>>,
-                                        f64,
-                                    >,
+                                    EqualArea<SD, f64>,
+                                    ConnectedResample<Identity<ConnectedStream<SD>>, f64>,
                                     f64,
                                 >,
                             >,
@@ -55,19 +55,16 @@ type StreamOut<SD> = MultiTransformer<
                         PV<f64>,
                         Resample<
                             EqualArea<SD, f64>,
-                            super::resampler::resample::Connected<Identity<Connected<SD>>, f64>,
+                            ConnectedResample<Identity<ConnectedStream<SD>>, f64>,
                             f64,
                         >,
-                        crate::clip::clipper::Connected<
-                            Line<Connected<crate::clip::buffer::Buffer<f64>>, f64>,
+                        ConnectedClipper<
+                            Line<ConnectedStream<Buffer<f64>>, f64>,
                             Line<
-                                Connected<
+                                ConnectedStream<
                                     Resample<
                                         EqualArea<SD, f64>,
-                                        super::resampler::resample::Connected<
-                                            Identity<Connected<SD>>,
-                                            f64,
-                                        >,
+                                        ConnectedResample<Identity<ConnectedStream<SD>>, f64>,
                                         f64,
                                     >,
                                 >,
@@ -113,7 +110,7 @@ where
 {
     type EP = Multidrain<SD, f64>;
 
-    type Transformer = StreamOut<SD>;
+    type Transformer = AlbersUsaTransformer<SD>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///

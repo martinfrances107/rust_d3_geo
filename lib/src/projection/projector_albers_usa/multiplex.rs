@@ -2,27 +2,16 @@ use std::marker::PhantomData;
 
 use geo::Coord;
 
-use crate::clip::antimeridian::interpolate::Interpolate;
-use crate::clip::antimeridian::line::Line;
-use crate::clip::antimeridian::pv::PV;
-use crate::clip::buffer::Buffer;
-use crate::clip::clipper::Clipper;
-use crate::clip::clipper::Connected as ConnectedClipper;
-use crate::identity::Identity;
 use crate::multidrain::Multidrain;
 use crate::projection::albers::albers;
 use crate::projection::albers_usa::AlbersUsa;
 use crate::projection::equal_area::EqualArea;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
-use crate::projection::stream_transform_radians::StreamTransformRadians;
+use crate::projection::projector_albers_usa::AlbersUsaTransformer;
 use crate::projection::Build;
 use crate::projection::CenterSet;
 use crate::projection::Projector as ProjectoTait;
 use crate::projection::RawBase;
 use crate::projection::RotateSet;
-use crate::rot::rotator_radians::RotatorRadians;
-use crate::stream::Connected as ConnectedStream;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
@@ -55,63 +44,12 @@ impl Default for Multiplex<Unconnected> {
     }
 }
 
-/// type produced when using the `AlbersUsa` projection.
-pub type AlbersTransformer<SD> = MultiTransformer<
-    Multidrain<SD, f64>,
-    ConnectedStream<Multidrain<SD, f64>>,
-    f64,
-    StreamTransformRadians<
-        ConnectedStream<
-            RotatorRadians<
-                ConnectedStream<
-                    Clipper<
-                        Interpolate<f64>,
-                        Line<
-                            ConnectedStream<
-                                Resample<
-                                    EqualArea<SD, f64>,
-                                    ConnectedResample<Identity<ConnectedStream<SD>>, f64>,
-                                    f64,
-                                >,
-                            >,
-                            f64,
-                        >,
-                        Line<Unconnected, f64>,
-                        PV<f64>,
-                        Resample<
-                            EqualArea<SD, f64>,
-                            ConnectedResample<Identity<ConnectedStream<SD>>, f64>,
-                            f64,
-                        >,
-                        ConnectedClipper<
-                            Line<ConnectedStream<Buffer<f64>>, f64>,
-                            Line<
-                                ConnectedStream<
-                                    Resample<
-                                        EqualArea<SD, f64>,
-                                        ConnectedResample<Identity<ConnectedStream<SD>>, f64>,
-                                        f64,
-                                    >,
-                                >,
-                                f64,
-                            >,
-                            f64,
-                        >,
-                        f64,
-                    >,
-                >,
-                f64,
-            >,
-        >,
-    >,
->;
-
 /// Hardcode type for now until things are generic
 impl Multiplex<Unconnected> {
     /// Connects the next stage in the stream pipline.
 
     #[inline]
-    pub fn connect<SD>(&self, sink: Multidrain<SD, f64>) -> AlbersTransformer<SD>
+    pub fn connect<SD>(&self, sink: Multidrain<SD, f64>) -> AlbersUsaTransformer<SD>
     where
         SD: Clone + Default,
     {
@@ -142,7 +80,7 @@ impl Multiplex<Unconnected> {
     }
 }
 
-impl<DRAIN> Transform for Multiplex<Connected<DRAIN, AlbersTransformer<DRAIN>>>
+impl<DRAIN> Transform for Multiplex<Connected<DRAIN, AlbersUsaTransformer<DRAIN>>>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {

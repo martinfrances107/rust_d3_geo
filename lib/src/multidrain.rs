@@ -8,7 +8,7 @@ use crate::path::Result;
 use crate::stream::Stream;
 
 /// Stores a collection of sub drains used in the
-/// AbersUsa pipeline.
+/// `AbersUsa` pipeline.
 #[derive(Clone, Debug)]
 pub struct Multidrain<SD, T> {
     /// A collection of drains.
