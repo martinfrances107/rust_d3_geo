@@ -28,55 +28,54 @@ use super::Projector as ProjectorTrait;
 pub mod multiplex;
 /// Transformer defined as more than more proejction.
 pub mod multitransformer;
-/// Builder shorthand notations.
-pub mod types;
 
-pub type AlbersUsaTransformer<SD> = MultiTransformer<
-    Multidrain<SD, f64>,
+/// Used in the formation of a `AlbersUsa` pipeline.
+pub type AlbersUsaTransformer<SD, T> = MultiTransformer<
+    Multidrain<SD, T>,
     3usize,
-    ConnectedStream<Multidrain<SD, f64>>,
-    f64,
+    ConnectedStream<Multidrain<SD, T>>,
+    T,
     StreamTransformRadians<
         ConnectedStream<
             RotatorRadians<
                 ConnectedStream<
                     Clipper<
-                        Interpolate<f64>,
+                        Interpolate<T>,
                         Line<
                             ConnectedStream<
                                 Resample<
-                                    EqualArea<SD, f64>,
-                                    ConnectedResample<Identity<ConnectedStream<SD>>, f64>,
-                                    f64,
+                                    EqualArea<SD, T>,
+                                    ConnectedResample<Identity<ConnectedStream<SD>>, T>,
+                                    T,
                                 >,
                             >,
-                            f64,
+                            T,
                         >,
-                        Line<Unconnected, f64>,
-                        PV<f64>,
+                        Line<Unconnected, T>,
+                        PV<T>,
                         Resample<
-                            EqualArea<SD, f64>,
-                            ConnectedResample<Identity<ConnectedStream<SD>>, f64>,
-                            f64,
+                            EqualArea<SD, T>,
+                            ConnectedResample<Identity<ConnectedStream<SD>>, T>,
+                            T,
                         >,
                         ConnectedClipper<
-                            Line<ConnectedStream<Buffer<f64>>, f64>,
+                            Line<ConnectedStream<Buffer<T>>, T>,
                             Line<
                                 ConnectedStream<
                                     Resample<
-                                        EqualArea<SD, f64>,
-                                        ConnectedResample<Identity<ConnectedStream<SD>>, f64>,
-                                        f64,
+                                        EqualArea<SD, T>,
+                                        ConnectedResample<Identity<ConnectedStream<SD>>, T>,
+                                        T,
                                     >,
                                 >,
-                                f64,
+                                T,
                             >,
-                            f64,
+                            T,
                         >,
-                        f64,
+                        T,
                     >,
                 >,
-                f64,
+                T,
             >,
         >,
     >,
@@ -88,7 +87,7 @@ pub type AlbersUsaTransformer<SD> = MultiTransformer<
 #[derive(Clone, Debug)]
 pub struct Projector<DRAIN, MULTIPLEX> {
     phantom_drain: PhantomData<DRAIN>,
-    /// The internals stages of the pipeline
+    /// The internal single stage of the pipeline.
     pub multiplex: MULTIPLEX,
 }
 
@@ -111,7 +110,7 @@ where
 {
     type EP = Multidrain<SD, f64>;
 
-    type Transformer = AlbersUsaTransformer<SD>;
+    type Transformer = AlbersUsaTransformer<SD, f64>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///
@@ -120,7 +119,7 @@ where
     /// Multiplex -> DRAIN
     ///
     fn stream(&mut self, drain: &Self::EP) -> Self::Transformer {
-        self.multiplex.connect::<SD>(drain.clone())
+        self.multiplex.connect(drain.clone())
     }
 }
 
