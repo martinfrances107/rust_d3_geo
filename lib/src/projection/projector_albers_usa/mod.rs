@@ -18,6 +18,7 @@ use self::multiplex::Multiplex;
 use self::multitransformer::MultiTransformer;
 use super::equal_area::EqualArea;
 use super::resampler::resample::Resample;
+use super::stream_transform_radians::StreamTransformRadians;
 use super::Projector as ProjectorTrait;
 
 /// The multiplex is a collection of sub-projections.
@@ -31,7 +32,7 @@ type StreamOut<SD> = MultiTransformer<
     Multidrain<SD, f64>,
     Connected<Multidrain<SD, f64>>,
     f64,
-    super::stream_transform_radians::StreamTransformRadians<
+    StreamTransformRadians<
         Connected<
             RotatorRadians<
                 Connected<
@@ -112,19 +113,13 @@ where
 {
     type EP = Multidrain<SD, f64>;
 
-    // type Transformer = MultiTransformer<
-    //     Multidrain<SD, f64>,
-    //     Connected<Multidrain<SD, f64>>,
-    //     f64,
-    //     AlbersTransformer<SD>,
-    // >;
     type Transformer = StreamOut<SD>;
 
-    /// Connects a DRAIN to the AlbersUSA projector.
+    /// Connects a DRAIN to the `AlbersUSA` projector.
     ///
     /// The Projection Stream Pipeline :-
     ///
-    /// `Multiplex' -> `DRAIN`
+    /// Multiplex -> DRAIN
     ///
     fn stream(&mut self, drain: &Self::EP) -> Self::Transformer {
         self.multiplex.connect::<SD>(drain.clone())
