@@ -3,6 +3,7 @@ use std::marker::PhantomData;
 use geo::Coord;
 use geo::CoordFloat;
 
+use crate::last_point::LastPoint;
 use crate::path::context::Context;
 use crate::path::string::String as PathString;
 use crate::path::Result;
@@ -53,6 +54,22 @@ impl<T> Result for Multidrain<PathString<T>, T> {
     }
 }
 
+impl<T> Result for Multidrain<LastPoint<T>, T>
+where
+    T: CoordFloat,
+{
+    type Out = Option<Coord<T>>;
+
+    /// Merges the results of all the sub-drains.
+    fn result(&mut self) -> Self::Out {
+        for d in &mut self.drains {
+            if let Some(p) = d.result() {
+                return Some(p);
+            }
+        }
+        None
+    }
+}
 impl<SD, T> Stream for Multidrain<SD, T>
 where
     SD: Stream<EP = SD, T = T>,

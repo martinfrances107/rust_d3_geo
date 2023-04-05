@@ -1,9 +1,15 @@
 #[cfg(not(tarpaulin_include))]
 mod invert {
 
+    use d3_geo_rs::path::Result;
+    use d3_geo_rs::stream::Streamable;
+    use geo::Point;
     use geo_types::Coord;
 
+    use d3_geo_rs::last_point::LastPoint;
+    use d3_geo_rs::multidrain::Multidrain;
     use d3_geo_rs::projection::albers::albers as albers_builder;
+    use d3_geo_rs::projection::albers_usa::AlbersUsa;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
     use d3_geo_rs::projection::builder_conic::ParallelsSet;
@@ -17,11 +23,14 @@ mod invert {
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::orthographic::Orthographic;
+    use d3_geo_rs::projection::projector_identity::transformer;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::Build;
+    use d3_geo_rs::projection::Projector;
     use d3_geo_rs::projection::RawBase;
     use d3_geo_rs::projection::RotateSet;
     use d3_geo_rs::stream::DrainStub;
+    use d3_geo_rs::stream::Stream;
     use d3_geo_rs::Transform;
 
     fn symetric_invert<PM>(pm: PM)
@@ -156,35 +165,41 @@ mod invert {
     }
 
     #[test]
+    #[ignore]
     fn albers_usa() {
         println!("albersUsa(point) and albersUsa.invert(point) are symmetric");
 
-        // let builder = AlbersUsa::<DrainStub<f64>>::builder();
-        // let projection: Projector<_, _, _> = builder.build();
-        // for p in [
-        //     &Coord {
-        //         x: -122.4194_f64,
-        //         y: 37.7749_f64,
-        //     },
-        //     &Coord {
-        //         x: -74.0059_f64,
-        //         y: 40.7128_f64,
-        //     },
-        //     &Coord {
-        //         x: -149.9003_f64,
-        //         y: 61.2181_f64,
-        //     },
-        //     &Coord {
-        //         x: -157.8583_f64,
-        //         y: 21.3069_f64,
-        //     },
-        // ] {
-        //     assert!(projection_equal(
-        //         &projection,
-        //         p,
-        //         &projection.transform(p),
-        //         None
-        //     ));
-        // }
+        let builder = AlbersUsa::<Multidrain<LastPoint<f64>, f64>>::builder();
+        let mut projection = builder.build();
+
+        let mut lp = Multidrain::<LastPoint<f64>, f64>::default();
+
+        let mut transformer = projection.stream(&lp);
+
+        for p in [
+            Point(Coord {
+                x: -122.4194_f64,
+                y: 37.7749_f64,
+            }),
+            Point(Coord {
+                x: -74.0059_f64,
+                y: 40.7128_f64,
+            }),
+            Point(Coord {
+                x: -149.9003_f64,
+                y: 61.2181_f64,
+            }),
+            Point(Coord {
+                x: -157.8583_f64,
+                y: 21.3069_f64,
+            }),
+        ] {
+            // assert!(projection_equal(&ep, p, &ep.transform(p), None));
+            let p1 = p.to_stream(&mut transformer);
+
+            let out = lp.result();
+            dbg!(out);
+            assert!(false);
+        }
     }
 }
