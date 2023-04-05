@@ -13,23 +13,30 @@ use crate::stream::Stream;
 /// Stores a collection of sub drains used in the
 /// `AbersUsa` pipeline.
 #[derive(Clone, Debug)]
-pub struct Multidrain<SD, T> {
+pub struct Multidrain<const N: usize, SD, T> {
     /// A collection of drains.
-    pub drains: Vec<SD>,
+    pub drains: [SD; N],
 
     p_t: PhantomData<T>,
 }
 
-impl<SD, T> Default for Multidrain<SD, T> {
+/// TODO: At the moment `AlbersUSA` needs only
+/// 3-element `MultiTransformer`'s, 3-element `Multidrains`'s
+///
+/// When I need to, I should make this more generic.
+impl<SD, T> Default for Multidrain<3usize, SD, T>
+where
+    SD: Default,
+{
     fn default() -> Self {
         Self {
-            drains: vec![],
+            drains: [SD::default(), SD::default(), SD::default()],
             p_t: PhantomData::<T>,
         }
     }
 }
 
-impl<T> Result for Multidrain<Context, T> {
+impl<const N: usize, T> Result for Multidrain<N, Context, T> {
     type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
@@ -45,7 +52,7 @@ impl<T> Result for Multidrain<Context, T> {
     }
 }
 
-impl<T> Result for Multidrain<PathString<T>, T> {
+impl<const N: usize, T> Result for Multidrain<N, PathString<T>, T> {
     type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
@@ -54,7 +61,7 @@ impl<T> Result for Multidrain<PathString<T>, T> {
     }
 }
 
-impl<T> Result for Multidrain<LastPoint<T>, T>
+impl<const N: usize, T> Result for Multidrain<N, LastPoint<T>, T>
 where
     T: CoordFloat,
 {
@@ -70,7 +77,8 @@ where
         None
     }
 }
-impl<SD, T> Stream for Multidrain<SD, T>
+
+impl<const N: usize, SD, T> Stream for Multidrain<N, SD, T>
 where
     SD: Stream<EP = SD, T = T>,
     T: CoordFloat,
@@ -96,6 +104,7 @@ where
     }
 
     fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
+        dbg!("Multidrain {}", p);
         for item in &mut self.drains {
             item.point(p, m);
         }

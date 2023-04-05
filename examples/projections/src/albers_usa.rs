@@ -29,7 +29,7 @@ pub async fn draw_albers_usa(land: &Geometry<f64>) -> Result<(), JsValue> {
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
     // let context: Context::new(context_raw.clone();
-    let context = Multidrain::<Context, f64>::default();
+    let context = Multidrain::<3usize, Context, f64>::default();
 
     let pb = PathBuilder::new(context);
 

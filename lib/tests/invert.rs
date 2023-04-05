@@ -165,14 +165,14 @@ mod invert {
     }
 
     #[test]
-    #[ignore]
+
     fn albers_usa() {
         println!("albersUsa(point) and albersUsa.invert(point) are symmetric");
 
-        let builder = AlbersUsa::<Multidrain<LastPoint<f64>, f64>>::builder();
+        let builder = AlbersUsa::<Multidrain<3, LastPoint<f64>, f64>>::builder();
         let mut projection = builder.build();
 
-        let mut lp = Multidrain::<LastPoint<f64>, f64>::default();
+        let mut lp = Multidrain::<3, LastPoint<f64>, f64>::default();
 
         let mut transformer = projection.stream(&lp);
 
@@ -194,11 +194,13 @@ mod invert {
                 y: 21.3069_f64,
             }),
         ] {
+            println!("built");
             // assert!(projection_equal(&ep, p, &ep.transform(p), None));
-            let p1 = p.to_stream(&mut transformer);
+            p.to_stream(&mut transformer);
 
-            let out = lp.result();
-            dbg!(out);
+            let projected = lp.result().unwrap();
+
+            dbg!(projected);
             assert!(false);
         }
     }

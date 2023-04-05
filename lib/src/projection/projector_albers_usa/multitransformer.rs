@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::Coord;
@@ -52,15 +53,15 @@ where
 }
 
 impl<SD, const N: usize, T, TRANSFORMER> Stream
-    for MultiTransformer<Multidrain<SD, T>, N, Connected<Multidrain<SD, T>>, T, TRANSFORMER>
+    for MultiTransformer<Multidrain<N, SD, T>, N, Connected<Multidrain<N, SD, T>>, T, TRANSFORMER>
 where
-    SD: Stream<EP = SD, T = T>,
+    SD: Stream<EP = SD, T = T> + Debug,
     T: CoordFloat,
     // TODO must define ER=XXX?
     TRANSFORMER: Stream<T = T>,
 {
     type T = T;
-    type EP = Multidrain<SD, T>;
+    type EP = Multidrain<N, SD, T>;
 
     fn endpoint(&mut self) -> &mut Self::EP {
         self.state.sink.endpoint()
@@ -79,6 +80,10 @@ where
     }
 
     fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
+        dbg!("MultiTransformer {:?}", p);
+        dbg!("{:?}", &self.state.sink);
+        dbg!("length {}", self.state.sink.drains.len());
+        // TODO - must add transform here.
         for item in &mut self.state.sink.drains {
             item.point(p, m);
         }

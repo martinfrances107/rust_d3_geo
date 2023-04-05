@@ -30,10 +30,10 @@ pub mod multiplex;
 pub mod multitransformer;
 
 /// Used in the formation of a `AlbersUsa` pipeline.
-pub type AlbersUsaTransformer<SD, T> = MultiTransformer<
-    Multidrain<SD, T>,
+pub type AlbersUsaTransformer<const N: usize, SD, T> = MultiTransformer<
+    Multidrain<N, SD, T>,
     3usize,
-    ConnectedStream<Multidrain<SD, T>>,
+    ConnectedStream<Multidrain<N, SD, T>>,
     T,
     StreamTransformRadians<
         ConnectedStream<
@@ -104,13 +104,14 @@ where
     }
 }
 
-impl<SD> ProjectorTrait for Projector<Multidrain<SD, f64>, Multiplex<Unconnected>>
+impl<const N: usize, SD> ProjectorTrait
+    for Projector<Multidrain<N, SD, f64>, Multiplex<Unconnected>>
 where
     SD: Clone + Default,
 {
-    type EP = Multidrain<SD, f64>;
+    type EP = Multidrain<N, SD, f64>;
 
-    type Transformer = AlbersUsaTransformer<SD, f64>;
+    type Transformer = AlbersUsaTransformer<N, SD, f64>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///

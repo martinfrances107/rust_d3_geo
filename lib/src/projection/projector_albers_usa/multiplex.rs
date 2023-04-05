@@ -46,7 +46,10 @@ impl Multiplex<Unconnected> {
     /// Connects the next stage in the stream pipline.
 
     #[inline]
-    pub fn connect<SD>(&self, sink: Multidrain<SD, f64>) -> AlbersUsaTransformer<SD, f64>
+    pub fn connect<const N: usize, SD>(
+        &self,
+        sink: Multidrain<N, SD, f64>,
+    ) -> AlbersUsaTransformer<N, SD, f64>
     where
         SD: Clone + Default,
     {
@@ -78,7 +81,7 @@ impl Multiplex<Unconnected> {
 }
 
 impl<DRAIN, const N: usize> Transform
-    for Multiplex<Connected<DRAIN, N, AlbersUsaTransformer<DRAIN, f64>>>
+    for Multiplex<Connected<DRAIN, N, AlbersUsaTransformer<N, DRAIN, f64>>>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
