@@ -67,37 +67,37 @@ where
     }
 
     fn line_end(&mut self) {
-        for item in &mut self.store {
+        for item in &mut self.state.sink.drains {
             item.line_end();
         }
     }
 
     fn line_start(&mut self) {
-        for item in &mut self.store {
+        for item in &mut self.state.sink.drains {
             item.line_start();
         }
     }
 
     fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
-        for item in &mut self.store {
+        for item in &mut self.state.sink.drains {
             item.point(p, m);
         }
     }
 
     fn polygon_end(&mut self) {
-        for item in &mut self.store {
+        for item in &mut self.state.sink.drains {
             item.polygon_end();
         }
     }
 
     fn polygon_start(&mut self) {
-        for item in &mut self.store {
+        for item in &mut self.state.sink.drains {
             item.polygon_start();
         }
     }
 
     fn sphere(&mut self) {
-        for item in &mut self.store {
+        for item in &mut self.state.sink.drains {
             item.sphere();
         }
     }
