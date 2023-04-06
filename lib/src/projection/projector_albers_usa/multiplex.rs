@@ -53,6 +53,8 @@ impl Multiplex<Unconnected> {
     where
         SD: Clone + Default,
     {
+        let lower_48 = albers::<SD, f64>();
+
         let mut alaska = EqualArea::<SD, f64>::builder();
         let alaska = alaska.rotate2_set(&[154_f64, 0_f64]);
         let alaska = alaska.center_set(&Coord {
@@ -67,16 +69,16 @@ impl Multiplex<Unconnected> {
             y: 19.9_f64,
         });
 
-        let lower_48 = albers::<SD, f64>();
-
-        MultiTransformer::new(
-            sink,
-            [
-                alaska.build().stream(&SD::default()),
-                lower_48.build().stream(&SD::default()),
-                hawaii.build().stream(&SD::default()),
-            ],
-        )
+        // The order of objects in the store is important for performance.
+        // The earlier a point is found the better,
+        // so the lower_48 is searched first, and the smallest land area last.
+        debug_assert_eq!(3usize, N);
+        let store = [
+            lower_48.build().stream(&sink.drains[0]),
+            alaska.build().stream(&sink.drains[1]),
+            hawaii.build().stream(&sink.drains[2]),
+        ];
+        MultiTransformer::new(sink, store)
     }
 }
 
