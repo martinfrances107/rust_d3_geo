@@ -146,11 +146,11 @@
         "args": [
           "test",
           "--no-run",
-          "--test=invert_test",
+          "--test=invert",
           "--package=d3_geo_rs"
         ],
         "filter": {
-          "name": "invert_test",
+          "name": "invert",
           "kind": "test"
         }
       },

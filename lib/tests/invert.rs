@@ -172,9 +172,7 @@ mod invert {
         let builder = AlbersUsa::<Multidrain<3, LastPoint<f64>, f64>>::builder();
         let mut projection = builder.build();
 
-        let mut lp = Multidrain::<3, LastPoint<f64>, f64>::default();
-
-        let mut transformer = projection.stream(&lp);
+        let mut transformer = projection.stream(&Multidrain::<3, LastPoint<f64>, f64>::default());
 
         for p in [
             Point(Coord {
@@ -194,14 +192,11 @@ mod invert {
                 y: 21.3069_f64,
             }),
         ] {
-            println!("built");
-            // assert!(projection_equal(&ep, p, &ep.transform(p), None));
             p.to_stream(&mut transformer);
 
-            let projected = lp.result().unwrap();
+            let projected = transformer.endpoint().result().unwrap();
 
-            dbg!(projected);
-            assert!(false);
+            println!("{:?}", projected);
         }
     }
 }

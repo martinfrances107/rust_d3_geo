@@ -80,9 +80,6 @@ where
     }
 
     fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
-        dbg!("MultiTransformer {:?}", p);
-        dbg!("{:?}", &self.state.sink);
-        dbg!("length {}", self.state.sink.drains.len());
         // TODO - must add transform here.
         for item in &mut self.state.sink.drains {
             item.point(p, m);
