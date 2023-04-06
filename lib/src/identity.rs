@@ -10,21 +10,9 @@ use crate::stream::Unconnected;
 
 /// Identity is a stream pipe line stage.
 /// that acts as a pass through node.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Identity<STATE> {
     state: STATE,
-}
-
-impl<STATE> Clone for Identity<STATE>
-where
-    STATE: Clone,
-{
-    #[inline]
-    fn clone(&self) -> Self {
-        Self {
-            state: self.state.clone(),
-        }
-    }
 }
 
 /// Not auto deriving here - it does not makes sense to provide
