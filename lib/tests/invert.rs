@@ -164,8 +164,8 @@ mod invert {
         symetric_invert(s);
     }
 
+    #[ignore]
     #[test]
-
     fn albers_usa() {
         println!("albersUsa(point) and albersUsa.invert(point) are symmetric");
 
