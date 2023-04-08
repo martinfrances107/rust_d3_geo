@@ -3,6 +3,7 @@ use geo::Coord;
 use crate::multidrain::Multidrain;
 use crate::projection::albers::albers;
 use crate::projection::albers_usa::AlbersUsa;
+use crate::projection::builder_conic::ParallelsSet;
 use crate::projection::equal_area::EqualArea;
 use crate::projection::projector_albers_usa::AlbersUsaTransformer;
 use crate::projection::Build;
@@ -56,18 +57,22 @@ impl Multiplex<Unconnected> {
         let lower_48 = albers::<SD, f64>();
 
         let mut alaska = EqualArea::<SD, f64>::builder();
-        let alaska = alaska.rotate2_set(&[154_f64, 0_f64]);
-        let alaska = alaska.center_set(&Coord {
-            x: -2_f64,
-            y: 58.5_f64,
-        });
+        let alaska = alaska
+            .rotate2_set(&[154_f64, 0_f64])
+            .center_set(&Coord {
+                x: -2_f64,
+                y: 58.5_f64,
+            })
+            .parallels_set(55_f64, 65_f64);
 
         let mut hawaii = EqualArea::<SD, f64>::builder();
-        let hawaii = hawaii.rotate2_set(&[157_f64, 0_f64]);
-        let hawaii = hawaii.center_set(&Coord {
-            x: -3_f64,
-            y: 19.9_f64,
-        });
+        let hawaii = hawaii
+            .rotate2_set(&[157_f64, 0_f64])
+            .center_set(&Coord {
+                x: -3_f64,
+                y: 19.9_f64,
+            })
+            .parallels_set(8_f64, 18_f64);
 
         // The order of objects in the store is important for performance.
         // The earlier a point is found the better,
