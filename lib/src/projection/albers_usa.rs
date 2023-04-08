@@ -47,12 +47,9 @@ pub struct AlbersUsa<DRAIN> {
         BuilderConicAntimeridianResampleClip<LastPoint<f64>, EqualArea<LastPoint<f64>, f64>, f64>,
 
     // The builder with base setting used as a starting point everytime translate is adjusted.
-    pub(super) lower_48:
-        BuilderConicAntimeridianResampleNoClip<LastPoint<f64>, EqualArea<LastPoint<f64>, f64>, f64>,
-    pub(super) alaska:
-        BuilderConicAntimeridianResampleNoClip<LastPoint<f64>, EqualArea<LastPoint<f64>, f64>, f64>,
-    pub(super) hawaii:
-        BuilderConicAntimeridianResampleNoClip<LastPoint<f64>, EqualArea<LastPoint<f64>, f64>, f64>,
+    pub(super) lower_48: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, f64>, f64>,
+    pub(super) alaska: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, f64>, f64>,
+    pub(super) hawaii: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, f64>, f64>,
 }
 
 impl<DRAIN> Default for AlbersUsa<DRAIN>
@@ -61,25 +58,24 @@ where
 {
     fn default() -> Self {
         let mut alaska = EqualArea::builder();
-        let alaska = alaska.rotate2_set(&[154_f64, 0_f64]);
-        let alaska = alaska.center_set(&Coord {
+        alaska.rotate2_set(&[154_f64, 0_f64]).center_set(&Coord {
             x: -2_f64,
             y: 58.5_f64,
         });
 
         let mut hawaii = EqualArea::builder();
-        let hawaii = hawaii.rotate2_set(&[157_f64, 0_f64]);
-        let hawaii = hawaii.center_set(&Coord {
+        hawaii.rotate2_set(&[157_f64, 0_f64]).center_set(&Coord {
             x: -3_f64,
             y: 19.9_f64,
         });
 
-        let mut lower_48 = albers();
+        let lower_48 = albers();
 
         let k: f64 = lower_48.scale();
         let t = lower_48.translate();
 
-        let lower_48_point = lower_48.translate_set(&t).clip_extent_set(&[
+        let mut lower_48_point = albers();
+        let lower_48_point = lower_48_point.translate_set(&t).clip_extent_set(&[
             Coord {
                 x: 0.455_f64.mul_add(-k, t.x),
                 y: 0.234f64.mul_add(-k, t.y),
@@ -90,26 +86,39 @@ where
             },
         ]);
 
-        let alaska_point = alaska
+        let mut alaska_point = EqualArea::builder();
+        alaska_point
+            .rotate2_set(&[154_f64, 0_f64])
+            .center_set(&Coord {
+                x: -2_f64,
+                y: 58.5_f64,
+            })
             .translate_set(&Coord {
                 x: 0.307_f64.mul_add(-k, t.x),
                 y: 0.201f64.mul_add(-k, t.y),
-            })
-            .clip_extent_set(&[
-                Coord {
-                    x: 0.425_f64.mul_add(-k, t.x) + EPSILON,
-                    y: 0.120_f64.mul_add(-k, t.y) + EPSILON,
-                },
-                Coord {
-                    x: 0.214_f64.mul_add(-k, t.x) - EPSILON,
-                    y: 0.234f64.mul_add(-k, t.y) - EPSILON,
-                },
-            ]);
+            });
+        let alaska_point = alaska_point.clip_extent_set(&[
+            Coord {
+                x: 0.425_f64.mul_add(-k, t.x) + EPSILON,
+                y: 0.120_f64.mul_add(-k, t.y) + EPSILON,
+            },
+            Coord {
+                x: 0.214_f64.mul_add(-k, t.x) - EPSILON,
+                y: 0.234f64.mul_add(-k, t.y) - EPSILON,
+            },
+        ]);
 
-        let hawaii_point = hawaii.translate_set(&Coord {
-            x: 0.205_f64.mul_add(-k, t.x),
-            y: 0.212_f64.mul_add(-k, t.y),
-        });
+        let mut hawaii_point = EqualArea::builder();
+        hawaii_point
+            .rotate2_set(&[157_f64, 0_f64])
+            .center_set(&Coord {
+                x: -3_f64,
+                y: 19.9_f64,
+            })
+            .translate_set(&Coord {
+                x: 0.205_f64.mul_add(-k, t.x),
+                y: 0.212_f64.mul_add(-k, t.y),
+            });
         let hawaii_point = hawaii_point.clip_extent_set(&[
             Coord {
                 x: 0.214_f64.mul_add(-k, t.x) + EPSILON,
@@ -131,9 +140,9 @@ where
             lower_48_point,
             hawaii_point,
 
-            alaska: alaska.clone(),
+            alaska,
             lower_48,
-            hawaii: hawaii.clone(),
+            hawaii,
         }
     }
 }

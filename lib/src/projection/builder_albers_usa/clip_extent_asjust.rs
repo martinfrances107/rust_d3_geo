@@ -16,7 +16,7 @@ where
 
     #[inline]
     fn clip_extent_adjust(&mut self, extent: &[Coord<f64>; 2]) -> &mut Self {
-        self.pr.alaska_point = self.pr.alaska.clip_extent_set(extent);
+        self.pr.alaska.clip_extent_set(extent);
         self
     }
 }

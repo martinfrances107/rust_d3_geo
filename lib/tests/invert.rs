@@ -164,7 +164,6 @@ mod invert {
         symetric_invert(s);
     }
 
-    #[ignore]
     #[test]
     fn albers_usa() {
         println!("albersUsa(point) and albersUsa.invert(point) are symmetric");
@@ -196,7 +195,8 @@ mod invert {
 
             let projected = transformer.endpoint().result().unwrap();
 
-            println!("{:?}", projected);
+            println!("{:?}  ->  {:?}", p, projected);
         }
+        panic!("");
     }
 }
