@@ -19,8 +19,7 @@ use super::multitransformer::MultiTransformer;
 
 /// When connected the state changes to hold the connected Projectors.
 #[derive(Debug)]
-pub struct Connected<DRAIN, const N: usize, TRANSFORM> {
-    pr: AlbersUsa<DRAIN>,
+pub struct Connected<const N: usize, TRANSFORM> {
     /// A collections of sub transforms.
     /// TODO can this be simplified once workings.
     pub store: [TRANSFORM; N],
@@ -29,21 +28,34 @@ pub struct Connected<DRAIN, const N: usize, TRANSFORM> {
 /// Projectors, in the case of `AlbersUSA` one for every region.
 /// `lower_48`, `alaaska`, `hawaii`.
 #[derive(Clone, Debug)]
-pub struct Multiplex<STATE> {
+pub struct Multiplex<PR, STATE>
+where
+    PR: Default,
+{
+    pr: PR,
     /// The State is Connected or Unconnected.
     /// TODO Once things are working consider simplifying here
     /// by removing this wrapper.
     pub state: STATE,
 }
 
-impl Default for Multiplex<Unconnected> {
+impl<PR> Default for Multiplex<PR, Unconnected>
+where
+    PR: Default,
+{
     fn default() -> Self {
-        Self { state: Unconnected }
+        Self {
+            pr: PR::default(),
+            state: Unconnected,
+        }
     }
 }
 
 /// Hardcode type for now until things are generic
-impl Multiplex<Unconnected> {
+impl<PR> Multiplex<PR, Unconnected>
+where
+    PR: Default,
+{
     /// Connects the next stage in the stream pipline.
 
     #[inline]
@@ -88,7 +100,7 @@ impl Multiplex<Unconnected> {
 }
 
 impl<DRAIN, const N: usize> Transform
-    for Multiplex<Connected<DRAIN, N, AlbersUsaTransformer<N, DRAIN, f64>>>
+    for Multiplex<AlbersUsa<DRAIN>, Connected<N, AlbersUsaTransformer<N, DRAIN, f64>>>
 where
     DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
@@ -96,9 +108,9 @@ where
     type T = f64;
 
     fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
-        self.state.pr.transform(p)
+        self.pr.transform(p)
     }
     fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
-        self.state.pr.invert(p)
+        self.pr.invert(p)
     }
 }

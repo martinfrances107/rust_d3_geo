@@ -104,9 +104,10 @@ where
     }
 }
 
-impl<const N: usize, SD> ProjectorTrait
-    for Projector<Multidrain<N, SD, f64>, Multiplex<Unconnected>>
+impl<const N: usize, PR, SD> ProjectorTrait
+    for Projector<Multidrain<N, SD, f64>, Multiplex<PR, Unconnected>>
 where
+    PR: Default,
     SD: Clone + Default,
 {
     type EP = Multidrain<N, SD, f64>;
