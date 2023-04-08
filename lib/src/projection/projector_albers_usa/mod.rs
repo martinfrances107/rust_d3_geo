@@ -14,6 +14,7 @@ use crate::multidrain::Multidrain;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connected as ConnectedStream;
+use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -108,7 +109,7 @@ impl<const N: usize, PR, SD> ProjectorTrait
     for Projector<Multidrain<N, SD, f64>, Multiplex<PR, Unconnected>>
 where
     PR: Default,
-    SD: Clone + Default,
+    SD: Clone + Default + Stream<EP = SD, T = f64>,
 {
     type EP = Multidrain<N, SD, f64>;
 

@@ -64,36 +64,17 @@ where
         sink: Multidrain<N, SD, f64>,
     ) -> AlbersUsaTransformer<N, SD, f64>
     where
-        SD: Clone + Default,
+        SD: Clone + Default + Stream<EP = SD, T = f64>,
     {
-        let lower_48 = albers::<SD, f64>();
-
-        let mut alaska = EqualArea::<SD, f64>::builder();
-        let alaska = alaska
-            .rotate2_set(&[154_f64, 0_f64])
-            .center_set(&Coord {
-                x: -2_f64,
-                y: 58.5_f64,
-            })
-            .parallels_set(55_f64, 65_f64);
-
-        let mut hawaii = EqualArea::<SD, f64>::builder();
-        let hawaii = hawaii
-            .rotate2_set(&[157_f64, 0_f64])
-            .center_set(&Coord {
-                x: -3_f64,
-                y: 19.9_f64,
-            })
-            .parallels_set(8_f64, 18_f64);
-
+        let pr = AlbersUsa::<SD>::default();
         // The order of objects in the store is important for performance.
         // The earlier a point is found the better,
         // so the lower_48 is searched first, and the smallest land area last.
         debug_assert_eq!(3usize, N);
         let store = [
-            lower_48.build().stream(&sink.drains[0]),
-            alaska.build().stream(&sink.drains[1]),
-            hawaii.build().stream(&sink.drains[2]),
+            pr.lower_48.build().stream(&sink.drains[0]),
+            pr.alaska.build().stream(&sink.drains[1]),
+            pr.hawaii.build().stream(&sink.drains[2]),
         ];
         MultiTransformer::new(sink, store)
     }
