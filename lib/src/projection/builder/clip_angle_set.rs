@@ -20,7 +20,6 @@ where
     PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     PR: Clone,
-    // RC: Clone + Stream<EP = DRAIN, T = T>,
     RC: Clone,
     RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     T: CoordFloat + FloatConst,

@@ -129,7 +129,7 @@ impl<CLIPC, PROJECTOR, T>
         StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
     >
 where
-    CLIPC: Clone + Stream<EP = Measure<T>, T = T>,
+    CLIPC: Stream<EP = Measure<T>, T = T>,
     PROJECTOR: Projector<
         EP = Measure<T>,
         Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
@@ -188,7 +188,7 @@ impl<CLIPC, PROJECTOR, T>
         StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
     >
 where
-    CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CLIPC: Stream<EP = Bounds<T>, T = T>,
     PROJECTOR: Projector<
         EP = Bounds<T>,
         Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
