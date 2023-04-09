@@ -51,7 +51,6 @@ where
 {
     /// Connects the next stage in the stream pipline.
     #[inline]
-    // pub fn connect<SD>(&self, sink: Multidrain<3, SD, f64>) -> AlbersUsaTransformer<3, SD, f64>
     pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaTransformer<3, SD, f64>
     where
         SD: Clone + Default + Stream<EP = SD, T = f64>,
