@@ -53,10 +53,7 @@ where
     /// Connects the next stage in the stream pipline.
 
     #[inline]
-    pub fn connect<const N: usize, SD>(
-        &self,
-        sink: Multidrain<N, SD, f64>,
-    ) -> AlbersUsaTransformer<N, SD, f64>
+    pub fn connect<SD>(&self, sink: Multidrain<3, SD, f64>) -> AlbersUsaTransformer<3, SD, f64>
     where
         SD: Clone + Default + Stream<EP = SD, T = f64>,
     {
@@ -64,7 +61,6 @@ where
         // The order of objects in the store is important for performance.
         // The earlier a point is found the better,
         // so the lower_48 is searched first, and the smallest land area last.
-        debug_assert_eq!(3usize, N);
         let store = [
             pr.lower_48.build().stream(&sink.drains[0]),
             pr.alaska.build().stream(&sink.drains[1]),

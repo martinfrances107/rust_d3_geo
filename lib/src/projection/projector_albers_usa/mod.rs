@@ -105,15 +105,14 @@ where
     }
 }
 
-impl<const N: usize, PR, SD> ProjectorTrait
-    for Projector<Multidrain<N, SD, f64>, Multiplex<PR, Unconnected>>
+impl<PR, SD> ProjectorTrait for Projector<Multidrain<3, SD, f64>, Multiplex<PR, Unconnected>>
 where
     PR: Default,
     SD: Clone + Default + Stream<EP = SD, T = f64>,
 {
-    type EP = Multidrain<N, SD, f64>;
+    type EP = Multidrain<3, SD, f64>;
 
-    type Transformer = AlbersUsaTransformer<N, SD, f64>;
+    type Transformer = AlbersUsaTransformer<3, SD, f64>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///
