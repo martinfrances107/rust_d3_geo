@@ -56,7 +56,7 @@ where
 
 impl<EP, SINK, T> Stream for RotatorRadians<Connected<SINK>, T>
 where
-    SINK: Clone + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type EP = EP;

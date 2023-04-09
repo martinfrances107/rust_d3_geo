@@ -88,7 +88,6 @@ where
 
 impl<SINK, T> LineConnected for Line<Connected<SINK>, T>
 where
-    SINK: Clone,
     T: CoordFloat,
 {
     type SC = SINK;
@@ -100,7 +99,6 @@ where
 
 impl<SINK, T> Clean for Line<Connected<SINK>, T>
 where
-    SINK: Clone,
     T: CoordFloat,
 {
     #[inline]
@@ -111,7 +109,7 @@ where
 
 impl<EP, SINK, T> Stream for Line<Connected<SINK>, T>
 where
-    SINK: Clone + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type EP = EP;

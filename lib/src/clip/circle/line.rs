@@ -163,7 +163,6 @@ where
 
 impl<SINK, T> Line<Connected<SINK>, T>
 where
-    SINK: Clone,
     T: CoordFloat,
 {
     // todo remove this duplicate.
@@ -191,7 +190,6 @@ static CODE_ABOVE: u8 = 8;
 /// code is only available of from connected state.
 impl<SINK, T> Line<Connected<SINK>, T>
 where
-    SINK: Clone,
     T: CoordFloat + FloatConst,
 {
     fn code(&self, p: &Coord<T>) -> u8 {
@@ -235,7 +233,7 @@ where
 
 impl<EP, SINK, T> Stream for Line<Connected<SINK>, T>
 where
-    SINK: Clone + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,
 {
     type EP = EP;

@@ -38,7 +38,7 @@ impl Connectable for Identity<Unconnected> {
 
 impl<EP, SINK, T> Stream for Identity<Connected<SINK>>
 where
-    SINK: Clone + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     type EP = EP;

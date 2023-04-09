@@ -28,7 +28,6 @@ use super::Interpolator as InterpolatorTrait;
 #[derive(Clone, Debug)]
 pub struct Rectangle<STATE, T>
 where
-    STATE: Clone,
     T: CoordFloat,
 {
     state: STATE,
@@ -118,7 +117,6 @@ where
 
 impl<SINK, T> Rectangle<Connected<SINK>, T>
 where
-    SINK: Clone,
     T: CoordFloat,
 {
     fn polygon_inside(&self) -> bool {
@@ -159,7 +157,7 @@ where
 
 impl<EP, SINK, T> Rectangle<Connected<SINK>, T>
 where
-    SINK: Clone + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
     #[inline]
@@ -296,7 +294,7 @@ where
 
 impl<EP, SINK, T> Stream for Rectangle<Connected<SINK>, T>
 where
-    SINK: Clone + Stream<EP = EP, T = T>,
+    SINK: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     type EP = EP;

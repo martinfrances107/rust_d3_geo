@@ -36,10 +36,7 @@ pub struct Connected<SINK> {
     pub sink: SINK,
 }
 
-impl<SINK> ConnectedState for Connected<SINK>
-where
-    SINK: Clone,
-{
+impl<SINK> ConnectedState for Connected<SINK> {
     type Sink = SINK;
 
     #[inline]
