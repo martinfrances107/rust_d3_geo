@@ -158,7 +158,7 @@ impl<CLIPC, PROJECTOR, T>
         StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
     >
 where
-    CLIPC: Clone + Stream<EP = Area<T>, T = T>,
+    CLIPC: Stream<EP = Area<T>, T = T>,
     PROJECTOR: Projector<
         EP = Area<T>,
         Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
@@ -226,7 +226,6 @@ where
 impl<CS, PROJECTOR, T, TRANSFORMER> Path<CS, PROJECTOR, T, TRANSFORMER>
 where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
-    TRANSFORMER: Stream<EP = CS, T = T>,
     T: CoordFloat,
 {
     /// Sets the context stream.

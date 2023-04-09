@@ -53,7 +53,7 @@ where
 
 impl<EP, PR, SC, T> Stream for None<PR, Connected<SC>, T>
 where
-    SC: Clone + Stream<EP = EP, T = T>,
+    SC: Stream<EP = EP, T = T>,
     PR: Transform<T = T>,
     T: CoordFloat,
 {

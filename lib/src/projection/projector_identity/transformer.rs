@@ -106,8 +106,8 @@ where
 
 impl<DRAIN, SINK, T> Stream for Transformer<DRAIN, Connected<SINK>, T>
 where
-    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
-    SINK: Clone + Stream<EP = DRAIN, T = T>,
+    DRAIN: Stream<EP = DRAIN, T = T>,
+    SINK: Stream<EP = DRAIN, T = T>,
     T: CoordFloat,
 {
     type EP = DRAIN;
