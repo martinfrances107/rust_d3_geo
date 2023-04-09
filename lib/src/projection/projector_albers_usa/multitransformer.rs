@@ -2,6 +2,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::Coord;
+use geo::CoordFloat;
 
 use crate::last_point::LastPoint;
 use crate::path::context::Context;
@@ -14,19 +15,14 @@ use crate::stream::Stream;
 #[derive(Debug)]
 pub struct MultiTransformer<const N: usize, SD, TRANSFORMER> {
     p_sd: PhantomData<SD>,
-    // state: STATE,
     store: [TRANSFORMER; N],
 }
 
-impl<const N: usize, SD, TRANSFORMER> MultiTransformer<N, SD, TRANSFORMER>
-where
-    TRANSFORMER: Stream<EP = SD, T = f64>,
-{
+impl<const N: usize, SD, TRANSFORMER> MultiTransformer<N, SD, TRANSFORMER> {
     /// Constructor
     pub const fn new(store: [TRANSFORMER; N]) -> Self {
         Self {
             p_sd: PhantomData::<SD>,
-            // state: Connected { sink },
             store,
         }
     }
@@ -34,7 +30,7 @@ where
 
 impl<const N: usize, SD, TRANSFORMER> Connectable for MultiTransformer<N, SD, TRANSFORMER>
 where
-    TRANSFORMER: Clone + Stream<EP = SD, T = f64>,
+    TRANSFORMER: Clone,
 {
     type Output<SC: Clone> = Self;
 
@@ -68,13 +64,19 @@ where
 
 impl<const N: usize, T, TRANSFORMER> Result for MultiTransformer<N, PathString<T>, TRANSFORMER>
 where
-    TRANSFORMER: Stream<EP = PathString<T>, T = f64>,
+    T: CoordFloat,
+    TRANSFORMER: Stream<EP = PathString<T>, T = T>,
 {
     type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
-        vec![]
+        let mut out = vec![];
+        for c in &mut self.store {
+            let result = c.endpoint().result();
+            out.push(result);
+        }
+        out
     }
 }
 
@@ -96,7 +98,6 @@ where
 
 impl<const N: usize, SD, TRANSFORMER> Stream for MultiTransformer<N, SD, TRANSFORMER>
 where
-    SD: Stream<EP = SD, T = f64> + Debug,
     TRANSFORMER: Stream<EP = SD, T = f64>,
 {
     type T = f64;
