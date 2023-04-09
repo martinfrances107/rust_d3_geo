@@ -39,6 +39,8 @@ where
     type Out = Option<Coord<T>>;
 
     fn result(&mut self) -> Self::Out {
-        self.0
+        let out = self.0;
+        self.0 = None;
+        out
     }
 }
