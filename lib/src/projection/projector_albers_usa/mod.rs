@@ -10,7 +10,6 @@ use crate::clip::buffer::Buffer;
 use crate::clip::clipper::Clipper;
 use crate::clip::clipper::Connected as ConnectedClipper;
 use crate::identity::Identity;
-use crate::multidrain::Multidrain;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connected as ConnectedStream;
@@ -32,8 +31,8 @@ pub mod multitransformer;
 
 /// Used in the formation of a `AlbersUsa` pipeline.
 pub type AlbersUsaTransformer<const N: usize, SD, T> = MultiTransformer<
-    3usize,
-    ConnectedStream<Multidrain<N, SD, T>>,
+    3,
+    SD,
     StreamTransformRadians<
         ConnectedStream<
             RotatorRadians<
@@ -103,14 +102,15 @@ where
     }
 }
 
-impl<PR, SD> ProjectorTrait for Projector<Multidrain<3, SD, f64>, Multiplex<PR, Unconnected>>
+impl<DRAIN, PR> ProjectorTrait for Projector<DRAIN, Multiplex<PR, Unconnected>>
 where
     PR: Default,
-    SD: Clone + Default + Stream<EP = SD, T = f64>,
+    // SD: Clone + Default + Stream<EP = SD, T = f64>,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
-    type EP = Multidrain<3, SD, f64>;
+    type EP = DRAIN;
 
-    type Transformer = AlbersUsaTransformer<3, SD, f64>;
+    type Transformer = AlbersUsaTransformer<3, DRAIN, f64>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///
@@ -119,7 +119,7 @@ where
     /// Multiplex -> DRAIN
     ///
     fn stream(&mut self, drain: &Self::EP) -> Self::Transformer {
-        self.multiplex.connect(drain.clone())
+        self.multiplex.connect(drain)
     }
 }
 

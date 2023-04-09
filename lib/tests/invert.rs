@@ -2,12 +2,12 @@
 mod invert {
 
     use d3_geo_rs::path::Result;
+    use d3_geo_rs::projection::projector_albers_usa::AlbersUsaTransformer;
     use d3_geo_rs::stream::Streamable;
     use geo::Point;
     use geo_types::Coord;
 
     use d3_geo_rs::last_point::LastPoint;
-    use d3_geo_rs::multidrain::Multidrain;
     use d3_geo_rs::projection::albers::albers as albers_builder;
     use d3_geo_rs::projection::albers_usa::AlbersUsa;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
@@ -23,14 +23,12 @@ mod invert {
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::orthographic::Orthographic;
-    use d3_geo_rs::projection::projector_identity::transformer;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::Projector;
     use d3_geo_rs::projection::RawBase;
     use d3_geo_rs::projection::RotateSet;
     use d3_geo_rs::stream::DrainStub;
-    use d3_geo_rs::stream::Stream;
     use d3_geo_rs::Transform;
 
     fn symetric_invert<PM>(pm: PM)
@@ -169,10 +167,11 @@ mod invert {
     fn albers_usa() {
         println!("albersUsa(point) and albersUsa.invert(point) are symmetric");
 
-        let builder = AlbersUsa::<Multidrain<3, LastPoint<f64>, f64>>::builder();
+        let builder = AlbersUsa::<LastPoint<f64>>::builder();
         let mut projection = builder.build();
 
-        let mut transformer = projection.stream(&Multidrain::<3, LastPoint<f64>, f64>::default());
+        let mut transformer: AlbersUsaTransformer<3, LastPoint<f64>, _> =
+            projection.stream(&LastPoint::<f64>::default());
 
         for p in [
             Point(Coord {
@@ -194,9 +193,9 @@ mod invert {
         ] {
             p.to_stream(&mut transformer);
 
-            let projected = transformer.endpoint().result().unwrap();
+            let result = transformer.result();
 
-            println!("{:?}  ->  {:?}", p, projected);
+            println!("{:?}  ->  {:?}", p, result);
         }
         panic!("");
     }

@@ -1,6 +1,5 @@
 use geo::Coord;
 
-use crate::multidrain::Multidrain;
 use crate::projection::albers_usa::AlbersUsa;
 use crate::projection::projector_albers_usa::AlbersUsaTransformer;
 use crate::projection::Build;
@@ -52,7 +51,8 @@ where
 {
     /// Connects the next stage in the stream pipline.
     #[inline]
-    pub fn connect<SD>(&self, sink: Multidrain<3, SD, f64>) -> AlbersUsaTransformer<3, SD, f64>
+    // pub fn connect<SD>(&self, sink: Multidrain<3, SD, f64>) -> AlbersUsaTransformer<3, SD, f64>
+    pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaTransformer<3, SD, f64>
     where
         SD: Clone + Default + Stream<EP = SD, T = f64>,
     {
@@ -61,11 +61,11 @@ where
         // The earlier a point is found the better,
         // so the lower_48 is searched first, and the smallest land area last.
         let store = [
-            pr.lower_48.build().stream(&sink.drains[0]),
-            pr.alaska.build().stream(&sink.drains[1]),
-            pr.hawaii.build().stream(&sink.drains[2]),
+            pr.lower_48.build().stream(&sink.clone()),
+            pr.alaska.build().stream(&sink.clone()),
+            pr.hawaii.build().stream(&sink.clone()),
         ];
-        MultiTransformer::new(sink, store)
+        MultiTransformer::new(store)
     }
 }
 

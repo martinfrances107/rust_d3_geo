@@ -214,8 +214,6 @@ pub mod last_point;
 pub mod length;
 /// Mathematical constants.
 pub mod math;
-/// The end point of a `albersUSA` projector.
-pub mod multidrain;
 /// Stream end point: Calculation of paths to a string or rendering context.
 pub mod path;
 /// A stripped down version of [path](crate::path)
