@@ -1,16 +1,10 @@
 use geo::Coord;
 
 use crate::multidrain::Multidrain;
-use crate::projection::albers::albers;
 use crate::projection::albers_usa::AlbersUsa;
-use crate::projection::builder_conic::ParallelsSet;
-use crate::projection::equal_area::EqualArea;
 use crate::projection::projector_albers_usa::AlbersUsaTransformer;
 use crate::projection::Build;
-use crate::projection::CenterSet;
 use crate::projection::Projector as ProjectoTait;
-use crate::projection::RawBase;
-use crate::projection::RotateSet;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
