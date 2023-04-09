@@ -17,14 +17,12 @@ pub struct Connected<const N: usize, TRANSFORM> {
     /// TODO can this be simplified once workings.
     pub store: [TRANSFORM; N],
 }
+
 /// A projection stream pipeline stage which holds a collection of
 /// Projectors, in the case of `AlbersUSA` one for every region.
 /// `lower_48`, `alaaska`, `hawaii`.
 #[derive(Clone, Debug)]
-pub struct Multiplex<PR, STATE>
-where
-    PR: Default,
-{
+pub struct Multiplex<PR, STATE> {
     pr: PR,
     /// The State is Connected or Unconnected.
     /// TODO Once things are working consider simplifying here
@@ -45,10 +43,7 @@ where
 }
 
 /// Hardcode type for now until things are generic
-impl<PR> Multiplex<PR, Unconnected>
-where
-    PR: Default,
-{
+impl<PR> Multiplex<PR, Unconnected> {
     /// Connects the next stage in the stream pipline.
     #[inline]
     pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaTransformer<3, SD, f64>
