@@ -32,10 +32,8 @@ pub mod multitransformer;
 
 /// Used in the formation of a `AlbersUsa` pipeline.
 pub type AlbersUsaTransformer<const N: usize, SD, T> = MultiTransformer<
-    Multidrain<N, SD, T>,
     3usize,
     ConnectedStream<Multidrain<N, SD, T>>,
-    T,
     StreamTransformRadians<
         ConnectedStream<
             RotatorRadians<

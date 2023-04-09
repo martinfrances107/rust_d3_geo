@@ -12,53 +12,41 @@ use crate::stream::Unconnected;
 
 /// Projections like `AlbersUSA` group several projections together.
 #[derive(Debug)]
-pub struct MultiTransformer<DRAIN, const N: usize, STATE, T, TRANSFORMER> {
+pub struct MultiTransformer<const N: usize, STATE, TRANSFORMER> {
     state: STATE,
     store: [TRANSFORMER; N],
-    p_drain: PhantomData<DRAIN>,
-    p_t: PhantomData<T>,
 }
 
-impl<DRAIN, const N: usize, T, TRANSFORMER>
-    MultiTransformer<DRAIN, N, Connected<DRAIN>, T, TRANSFORMER>
-{
+impl<DRAIN, const N: usize, TRANSFORMER> MultiTransformer<N, Connected<DRAIN>, TRANSFORMER> {
     /// Constructor
     pub const fn new(sink: DRAIN, store: [TRANSFORMER; N]) -> Self {
         Self {
             state: Connected { sink },
             store,
-            p_drain: PhantomData::<DRAIN>,
-            p_t: PhantomData::<T>,
         }
     }
 }
 
-impl<DRAIN, const N: usize, T, TRANSFORMER> Connectable
-    for MultiTransformer<DRAIN, N, Unconnected, T, TRANSFORMER>
+impl<const N: usize, TRANSFORMER> Connectable for MultiTransformer<N, Unconnected, TRANSFORMER>
 where
-    T: CoordFloat,
     TRANSFORMER: Clone,
 {
-    type Output<SC: Clone> = MultiTransformer<DRAIN, N, Connected<SC>, T, TRANSFORMER>;
+    type Output<SC: Clone> = MultiTransformer<N, Connected<SC>, TRANSFORMER>;
 
     #[inline]
     fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
         Self::Output {
             state: Connected { sink },
-            p_t: self.p_t,
-            p_drain: self.p_drain,
             store: self.store.clone(),
         }
     }
 }
 
 impl<SD, const N: usize, T, TRANSFORMER> Stream
-    for MultiTransformer<Multidrain<N, SD, T>, N, Connected<Multidrain<N, SD, T>>, T, TRANSFORMER>
+    for MultiTransformer<N, Connected<Multidrain<N, SD, T>>, TRANSFORMER>
 where
     SD: Stream<EP = SD, T = T> + Debug,
     T: CoordFloat,
-    // TODO must define ER=XXX?
-    TRANSFORMER: Stream<T = T>,
 {
     type T = T;
     type EP = Multidrain<N, SD, T>;
@@ -80,7 +68,6 @@ where
     }
 
     fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
-        // TODO - must add transform here.
         for item in &mut self.state.sink.drains {
             item.point(p, m);
         }
