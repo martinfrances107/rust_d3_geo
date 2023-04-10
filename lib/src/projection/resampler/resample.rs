@@ -16,7 +16,7 @@ use crate::Transform;
 
 static MAXDEPTH: u8 = 16_u8; // maximum depth of subdivision
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 enum PointState {
     Default,
     Line,

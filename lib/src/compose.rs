@@ -6,7 +6,7 @@ use geo_types::Coord;
 use crate::Transform;
 
 /// Combines transforms together.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub struct Compose<T, TA, TB> {
     /// Phantom T:
     /// The hidden linkage is if the T in TA is f64

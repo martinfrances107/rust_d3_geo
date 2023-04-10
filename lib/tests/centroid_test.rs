@@ -181,7 +181,7 @@ mod centroid {
 
         assert!(in_delta_point(
             Centroid::default().centroid(&line_string![
-                (x: -179f64,  y: 0f64),
+                (x: -179f64, y: 0f64),
                 (x: 0f64, y: 0f64),
                 (x: 179f64, y: 0f64)
             ]),

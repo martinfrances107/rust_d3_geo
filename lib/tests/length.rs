@@ -51,7 +51,7 @@ mod length {
         assert!(in_delta(
             LengthStream::calc(&MultiLineString(vec![
                 line_string![(x: -45f64, y: 0f64) , (x: -30f64, y: 0f64)],
-                line_string![(x: -15f64, y: 0f64) , (x: 0f64,  y:0f64 )]
+                line_string![(x: -15f64, y: 0f64) , (x: 0f64, y:0f64 )]
             ])),
             PI / 6f64,
             1e-6
@@ -64,11 +64,11 @@ mod length {
         assert!(in_delta(
             LengthStream::calc(&Polygon::new(
                 line_string![
-                    ( x:0f64,  y:0f64 ),
-                    ( x:3f64,  y:0f64 ),
-                    ( x:3f64,  y:3f64 ),
-                    ( x:0f64,  y:3f64 ),
-                    ( x:0f64,  y:0f64 )
+                    ( x:0f64, y:0f64 ),
+                    ( x:3f64, y:0f64 ),
+                    ( x:3f64, y:3f64 ),
+                    ( x:0f64, y:3f64 ),
+                    ( x:0f64, y:0f64 )
                 ],
                 vec![]
             )),

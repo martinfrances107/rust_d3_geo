@@ -13,7 +13,7 @@ use super::builder_identity::Builder;
 use super::RawBase;
 
 /// Projection definition.
-#[derive(Clone, Copy, Default, Debug)]
+#[derive(Clone, Default, Debug)]
 pub struct Identity<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,

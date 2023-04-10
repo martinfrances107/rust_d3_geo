@@ -5,7 +5,7 @@ use num_traits::FloatConst;
 use crate::Transform;
 
 /// A single rotation.
-#[derive(Clone, Copy, Default, Debug)]
+#[derive(Clone, Default, Debug)]
 pub struct RotationLambda<T> {
     /// The change in rotation.
     pub delta_lambda: T,

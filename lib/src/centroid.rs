@@ -15,7 +15,7 @@ use crate::stream::Streamable;
 #[allow(non_snake_case)]
 #[derive(Derivative)]
 #[derivative(Debug)]
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 /// Stream endpoint: Computes the centroid.
 ///
 /// DISAMBIGUATION: Lots of code in common with path/centroid.rs

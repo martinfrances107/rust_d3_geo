@@ -19,7 +19,7 @@ use super::RawBase;
 use super::TransformExtent;
 
 /// Projection definition.
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct Mercator<DRAIN> {
     p_drain: PhantomData<DRAIN>,
 }

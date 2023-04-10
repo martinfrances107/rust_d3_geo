@@ -17,7 +17,7 @@ use super::RawBase;
 /// Equirectangular
 /// Used to define a projection builder.
 #[allow(non_snake_case)]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub struct EqualEarth<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     A1: T,

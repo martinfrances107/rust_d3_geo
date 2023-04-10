@@ -15,7 +15,7 @@ use super::RawBase;
 
 /// Equirectangular
 /// Used to define a projection builder.
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct Equirectangular<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,

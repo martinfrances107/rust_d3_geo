@@ -35,20 +35,20 @@ pub trait Connectable {
     fn connect(&self, sink: Self::SC) -> Self::Output;
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 enum PointFn {
     Default,
     Line,
     Ring,
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 enum LineStartFn {
     Default,
     Ring,
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 enum LineEndFn {
     Default,
     Ring,

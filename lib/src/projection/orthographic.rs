@@ -41,7 +41,7 @@ where
     Coord { x: ret_x, y: ret_y }
 }
 /// Projection definition.
-#[derive(Clone, Copy, Default, Debug)]
+#[derive(Clone, Default, Debug)]
 pub struct Orthographic<DRAIN, T> {
     p_drain: PhantomData<DRAIN>,
     p_t: PhantomData<T>,

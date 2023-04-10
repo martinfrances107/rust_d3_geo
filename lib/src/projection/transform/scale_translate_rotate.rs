@@ -8,7 +8,7 @@ use super::str::Str;
 
 /// The scale translate rotate transform can be optimiised into
 /// a faster variant, just scale translate.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub enum ScaleTranslateRotate<T> {
     /// Scale Translate.
     ST(St<T>),

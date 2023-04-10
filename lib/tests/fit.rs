@@ -311,7 +311,7 @@ mod fit {
         ));
     }
 
-    // Debug the scale() is good,  translation() is bad.
+    // Debug the scale() is good, translation() is bad.
     #[ignore]
     #[test]
     fn fit_extent_world_gnomic() {

@@ -6,7 +6,7 @@ use crate::Transform;
 /// An inner type of the [`ScaleTranslateRotate`](super::scale_translate_rotate::ScaleTranslateRotate).
 ///
 /// Covers both translate and rotate.
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct Str<T> {
     a: T,
     b: T,

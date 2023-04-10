@@ -9,7 +9,7 @@ use crate::stream::Streamable;
 ///
 /// DISAMBIGUATION: Lots of code in common with path/area.rs
 /// but this is true of the Javascript.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Area<T> {
     lambda00: T,
     phi00: T,
@@ -25,19 +25,19 @@ pub struct Area<T> {
     line_start_fn: LineStartFn,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 enum PointFn {
     Noop,
     AreaFirst,
     Area,
 }
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 enum LineStartFn {
     Noop,
     AreaRingStart,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 enum LineEndFn {
     Noop,
     AreaRingEnd,

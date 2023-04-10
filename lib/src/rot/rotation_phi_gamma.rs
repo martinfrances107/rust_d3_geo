@@ -5,7 +5,7 @@ use num_traits::FloatConst;
 use crate::Transform;
 
 /// A rotation is two directions.
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct RotationPhiGamma<T> {
     cos_delta_phi: T,
     sin_delta_phi: T,

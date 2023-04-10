@@ -55,7 +55,7 @@ pub trait Connectable {
 }
 
 /// Things the implement stream need to assert that
-/// Whatever specific state they are in,  it is to the exclusion
+/// Whatever specific state they are in, it is to the exclusion
 /// on the unconnected state.
 pub trait ConnectedState {
     /// The next pipeline stage.
@@ -93,7 +93,7 @@ pub trait Streamable {
 /// let transformed_point = p.transform(&Coord{x: 0_f32, y:0_f32});
 ///
 /// ```
-#[derive(Clone, Copy, Default, Debug)]
+#[derive(Clone, Default, Debug)]
 pub struct DrainStub<T> {
     phantom: PhantomData<T>,
 }

@@ -55,9 +55,9 @@ where
     fn clone(&self) -> Self {
         match self {
             Self::C(c) => Self::C(Box::new(*c.clone())),
-            Self::RL(rl) => Self::RL(*rl),
-            Self::RPG(rpg) => Self::RPG(*rpg),
-            Self::I(i) => Self::I(*i),
+            Self::RL(rl) => Self::RL(rl.clone()),
+            Self::RPG(rpg) => Self::RPG(rpg.clone()),
+            Self::I(i) => Self::I(i.clone()),
         }
     }
 }
