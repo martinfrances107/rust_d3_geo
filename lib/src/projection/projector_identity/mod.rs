@@ -28,7 +28,6 @@ type CacheState<DRAIN, PCNC> = Option<(DRAIN, PCNC)>;
 #[derive(Clone, Debug)]
 pub struct Projector<DRAIN, PCNC, PCNU, T>
 where
-    PCNC: Clone,
     T: CoordFloat,
 {
     pub(crate) p_pcnc: PhantomData<PCNC>,
@@ -77,7 +76,6 @@ where
 
 impl<DRAIN, PCNC, PCNU, T> Transform for Projector<DRAIN, PCNC, PCNU, T>
 where
-    PCNC: Clone,
     T: CoordFloat + FloatConst,
 {
     /// f32 or f64

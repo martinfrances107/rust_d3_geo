@@ -65,8 +65,6 @@ impl<PR> Multiplex<PR, Unconnected> {
 
 impl<DRAIN, const N: usize> Transform
     for Multiplex<AlbersUsa<DRAIN>, Connected<N, AlbersUsaTransformer<N, DRAIN, f64>>>
-where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
 {
     /// f32 or f64
     type T = f64;

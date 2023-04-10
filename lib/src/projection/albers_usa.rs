@@ -168,10 +168,7 @@ const HAWAII_X: Range<f64> = -0.214..-0.115;
 const HAWAII_Y: Range<f64> = 0.166..0.234;
 
 use crate::path::Result;
-impl<DRAIN> Transform for AlbersUsa<DRAIN>
-where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
-{
+impl<DRAIN> Transform for AlbersUsa<DRAIN> {
     type T = f64;
 
     #[inline]

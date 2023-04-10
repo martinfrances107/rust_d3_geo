@@ -124,7 +124,6 @@ where
 
 impl<DRAIN, MULTIPLEX> Transform for Projector<DRAIN, MULTIPLEX>
 where
-    DRAIN: Clone,
     MULTIPLEX: Transform<T = f64>,
 {
     /// f32 or f64
