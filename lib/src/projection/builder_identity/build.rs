@@ -1,5 +1,3 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 
 use super::Builder;
@@ -15,7 +13,6 @@ where
     /// Returns a projectors based on the builder settings.
     pub fn build<PCNC: Clone>(&self) -> Projector<DRAIN, PCNC, PCNU, T> {
         Projector {
-            p_pcnc: PhantomData::<PCNC>,
             transform: Transformer::new(
                 self.alpha, self.kx, self.ky, self.ca, self.sa, self.tx, self.ty,
             ),

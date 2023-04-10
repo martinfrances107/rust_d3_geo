@@ -30,7 +30,6 @@ pub struct Projector<DRAIN, PCNC, PCNU, T>
 where
     T: CoordFloat,
 {
-    pub(crate) p_pcnc: PhantomData<PCNC>,
     // Must be public as there is a implicit copy.
     pub(crate) postclip: PCNU,
     pub(crate) transform: Transformer<DRAIN, Unconnected, T>,
