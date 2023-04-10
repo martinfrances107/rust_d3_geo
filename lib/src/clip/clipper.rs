@@ -270,7 +270,7 @@ where
     LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
     PV: PointVisible<T = T>,
     RC: Stream<EP = EP, T = T>,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type EP = EP;
     type T = T;
