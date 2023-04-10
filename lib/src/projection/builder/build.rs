@@ -20,12 +20,11 @@ where
     RU: Clone,
     T: CoordFloat,
 {
-    type Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>;
+    type Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
     /// Using the currently programmed state output a new projection.
     #[inline]
     fn build(&self) -> Self::Projector {
         Projector {
-            p_rc: PhantomData::<RC>,
             cache: None,
             postclip: self.postclip.clone(),
             clip: self.clip.clone(),

@@ -16,7 +16,7 @@ impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> Build
     for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, T>
 where
     BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>:
-        Clone + Build<Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>>,
+        Clone + Build<Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>>,
     DRAIN: Clone,
     CLIPC: Clone,
     CLIPU: Clone,
@@ -25,13 +25,12 @@ where
     RU: Clone,
     T: CoordFloat,
 {
-    type Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>;
+    type Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
 
     /// Using the currently programmed state output a new projection.
     #[inline]
     fn build(&self) -> Self::Projector {
         Self::Projector {
-            p_rc: PhantomData::<RC>,
             cache: None,
             postclip: self.base.postclip.clone(),
             clip: self.base.clip.clone(),

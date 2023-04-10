@@ -22,7 +22,6 @@ pub type ProjectorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Projector<
     DRAIN,
     NoPCNU,
     PR,
-    ResampleNoneNoPCNC<DRAIN, PR, T>,
     ResampleNoneNoPCNU<PR, T>,
     T,
 >;
@@ -34,7 +33,6 @@ pub type ProjectorAntimeridianResampleNoneClip<DRAIN, PR, T> = Projector<
     DRAIN,
     PCNU<T>,
     PR,
-    ResampleNonePCNC<DRAIN, PR, T>,
     ResampleNonePCNU<PR, T>,
     T,
 >;
@@ -46,7 +44,6 @@ pub type ProjectorAntimeridianResampleNoClip<DRAIN, PR, T> = Projector<
     DRAIN,
     NoPCNU,
     PR,
-    ResampleNoPCNC<DRAIN, PR, T>,
     ResampleNoPCNU<PR, T>,
     T,
 >;
@@ -58,7 +55,6 @@ pub type ProjectorAntimeridianResampleClip<DRAIN, PR, T> = Projector<
     DRAIN,
     PCNU<T>,
     PR,
-    ResamplePCNC<DRAIN, PR, T>,
     ResamplePCNU<PR, T>,
     T,
 >;
@@ -70,7 +66,6 @@ pub type ProjectorCircleResampleNoneNoClip<DRAIN, PR, T> = Projector<
     DRAIN,
     NoPCNU,
     PR,
-    ResampleNoneNoPCNC<DRAIN, PR, T>,
     ResampleNoneNoPCNU<PR, T>,
     T,
 >;
@@ -82,7 +77,6 @@ pub type ProjectorCircleResampleNoneClip<DRAIN, PR, T> = Projector<
     DRAIN,
     PCNU<T>,
     PR,
-    ResampleNonePCNC<DRAIN, PR, T>,
     ResampleNonePCNU<PR, T>,
     T,
 >;
@@ -94,7 +88,6 @@ pub type ProjectorCircleResampleNoClip<DRAIN, PR, T> = Projector<
     DRAIN,
     NoPCNU,
     PR,
-    ResampleNoPCNC<DRAIN, PR, T>,
     ResampleNoPCNU<PR, T>,
     T,
 >;
@@ -106,7 +99,6 @@ pub type ProjectorCircleResampleClip<DRAIN, PR, T> = Projector<
     DRAIN,
     PCNU<T>,
     PR,
-    ResamplePCNC<DRAIN, PR, T>,
     ResamplePCNU<PR, T>,
     T,
 >;

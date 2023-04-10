@@ -30,13 +30,12 @@ type CacheState<CLIP, DRAIN, T> = Option<(
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Clone, Debug)]
-pub struct Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+pub struct Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
     T: CoordFloat,
 {
-    pub(crate) p_rc: PhantomData<RC>,
     /// Must be public as there is a implicit copy.
     pub(crate) postclip: PCNU,
 
@@ -57,7 +56,7 @@ pub(super) type ProjectorStream<CLIP, T> =
     StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
 
 impl<CC, CU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait
-    for Projector<CC, CU, DRAIN, PCNU, PR, RC, RU, T>
+    for Projector<CC, CU, DRAIN, PCNU, PR, RU, T>
 where
     CC: Clone,
     CU: Clone + ClipConnectable<Output = CC, SC = RC>,
@@ -105,8 +104,8 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> Transform
-    for Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Transform
+    for Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

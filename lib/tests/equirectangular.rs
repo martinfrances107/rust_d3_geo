@@ -139,7 +139,7 @@ mod equirectangular {
     #[test]
     fn rotate_30_0() {
         println!("equirectangular(point) returns the expected result");
-        let equirectangular: Projector<_, _, DrainStub<f64>, _, _, _, _, _> =
+        let equirectangular: Projector<_, _, DrainStub<f64>, _, _, _, _> =
             Builder::new(Equirectangular::<DrainStub<f64>, f64>::default())
                 .rotate2_set(&[30f64, 0f64])
                 .translate_set(&Coord { x: 0f64, y: 0f64 })
