@@ -16,7 +16,7 @@ use super::rotation_phi_gamma::RotationPhiGamma;
 /// Container for a 3-axis rotation transform.
 pub enum RotateRadians<T> {
     /// A combination of rotations.
-    C(Box<Compose<T, RotationLambda<T>, RotationPhiGamma<T>>>),
+    C(Box<Compose<RotationLambda<T>, RotationPhiGamma<T>>>),
     /// Just roation in one direction.
     RL(RotationLambda<T>),
     /// Rotate, Phi and Gamma.

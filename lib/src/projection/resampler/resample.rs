@@ -76,7 +76,7 @@ where
     T: CoordFloat,
 {
     delta2: T,
-    projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+    projection_transform: Compose<PR, ScaleTranslateRotate<T>>,
     state: STATE,
 }
 
@@ -143,7 +143,7 @@ where
     /// Returns a Resample for a given precision.
     #[inline]
     pub const fn new(
-        projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+        projection_transform: Compose<PR, ScaleTranslateRotate<T>>,
         delta2: T,
     ) -> Self {
         Self {

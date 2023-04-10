@@ -107,10 +107,10 @@ where
     /// Used by recenter() to build the factories.
     rotate: RotateRadians<T>,
     pub(super) rotator: RotatorRadians<Unconnected, T>, //rotate, pre-rotate
-    project_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+    project_transform: Compose<PR, ScaleTranslateRotate<T>>,
     /// Used by rotate_transform_factory and projections transform.
     pub(super) project_rotate_transform:
-        Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>,
+        Compose<RotateRadians<T>, Compose<PR, ScaleTranslateRotate<T>>>,
 
     /// Projection pipeline stage.
     pub(super) postclip: PCNU,

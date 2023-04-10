@@ -89,8 +89,7 @@ fn tany(y: f64) -> f64 {
 }
 
 /// Projection type.
-pub type RotateTransform<PR, T> =
-    Compose<T, RotateRadians<T>, Compose<T, PR, ScaleTranslateRotate<T>>>;
+pub type RotateTransform<PR, T> = Compose<RotateRadians<T>, Compose<PR, ScaleTranslateRotate<T>>>;
 
 /// Provides specialization over 'Projection Raw'
 ///

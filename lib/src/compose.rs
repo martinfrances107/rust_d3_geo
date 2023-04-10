@@ -1,5 +1,3 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 use geo_types::Coord;
 
@@ -7,27 +5,19 @@ use crate::Transform;
 
 /// Combines transforms together.
 #[derive(Clone, Debug)]
-pub struct Compose<T, TA, TB> {
-    /// Phantom T:
-    /// The hidden linkage is if the T in TA is f64
-    /// then the T in TB must also be f64.
-    p_t: PhantomData<T>,
+pub struct Compose<TA, TB> {
     pub a: TA,
     pub b: TB,
 }
 
-impl<T, TA, TB> Compose<T, TA, TB> {
+impl<TA, TB> Compose<TA, TB> {
     #[inline]
     pub const fn new(a: TA, b: TB) -> Self {
-        Self {
-            p_t: PhantomData::<T>,
-            a,
-            b,
-        }
+        Self { a, b }
     }
 }
 
-impl<T, TA, TB> Transform for Compose<T, TA, TB>
+impl<T, TA, TB> Transform for Compose<TA, TB>
 where
     TA: Transform<T = T>,
     TB: Transform<T = T>,

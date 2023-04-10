@@ -19,13 +19,13 @@ use crate::Transform;
 pub struct None<PR, STATE, T> {
     state: STATE,
     p_t: PhantomData<T>,
-    projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>,
+    projection_transform: Compose<PR, ScaleTranslateRotate<T>>,
 }
 
 impl<PR, T> None<PR, Unconnected, T> {
     #[inline]
     /// Constructor: Resample None.
-    pub const fn new(projection_transform: Compose<T, PR, ScaleTranslateRotate<T>>) -> Self {
+    pub const fn new(projection_transform: Compose<PR, ScaleTranslateRotate<T>>) -> Self {
         Self {
             state: Unconnected,
             p_t: PhantomData::<T>,
