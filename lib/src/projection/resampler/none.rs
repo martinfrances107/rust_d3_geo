@@ -18,7 +18,6 @@ use crate::Transform;
 #[derive(Clone, Debug)]
 pub struct None<PR, STATE, T> {
     state: STATE,
-    p_t: PhantomData<T>,
     projection_transform: Compose<PR, ScaleTranslateRotate<T>>,
 }
 
@@ -28,7 +27,6 @@ impl<PR, T> None<PR, Unconnected, T> {
     pub const fn new(projection_transform: Compose<PR, ScaleTranslateRotate<T>>) -> Self {
         Self {
             state: Unconnected,
-            p_t: PhantomData::<T>,
             projection_transform,
         }
     }
@@ -45,7 +43,6 @@ where
     fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
         None::<PR, Connected<SC>, T> {
             state: Connected { sink },
-            p_t: self.p_t,
             projection_transform: self.projection_transform.clone(),
         }
     }
