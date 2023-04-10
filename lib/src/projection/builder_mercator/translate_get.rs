@@ -5,8 +5,8 @@ use crate::projection::TranslateGet;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> TranslateGet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> TranslateGet
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

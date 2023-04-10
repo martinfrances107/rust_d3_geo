@@ -33,7 +33,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
         DRAIN,
         PCNU,
         PR,
-        None<PR, Connected<PCNC>, T>,
         None<PR, Unconnected, T>,
         T,
     >
@@ -49,7 +48,6 @@ where
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, ConnectedResample<PCNC, T>, T>,
         Resample<PR, Unconnected, T>,
         T,
     >;
@@ -72,7 +70,6 @@ where
         // Copy - Mutate.
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>>,
-            p_rc: PhantomData::<Resample<PR, ConnectedResample<PCNC, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
             sx: self.sx,
             sy: self.sy,
@@ -102,20 +99,18 @@ where
     }
 }
 
-impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
+impl<DRAIN, PR, PCNU, T> PrecisionSet
     for Builder<
         ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
         ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
         DRAIN,
         PCNU,
         PR,
-        None<PR, Connected<PCNC>, T>,
         None<PR, Unconnected, T>,
         T,
     >
 where
     DRAIN: Clone,
-    PCNC: Clone,
     PCNU: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -126,7 +121,6 @@ where
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, ConnectedResample<PCNC, T>, T>,
         Resample<PR, Unconnected, T>,
         T,
     >;
@@ -151,7 +145,6 @@ where
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>>,
             p_drain: PhantomData::<DRAIN>,
-            p_rc: PhantomData::<Resample<PR, ConnectedResample<PCNC, T>, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,

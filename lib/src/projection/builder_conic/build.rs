@@ -1,5 +1,3 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 
 use crate::projection::builder::Builder as BuilderCommon;
@@ -12,10 +10,10 @@ use crate::stream::Unconnected;
 use super::Builder;
 use super::PRConic;
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> Build
-    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build
+    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>, T>
 where
-    BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>:
+    BuilderCommon<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>:
         Clone + Build<Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>>,
     DRAIN: Clone,
     CLIPC: Clone,

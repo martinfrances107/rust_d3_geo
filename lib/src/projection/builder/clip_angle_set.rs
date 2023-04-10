@@ -14,7 +14,7 @@ use crate::projection::ClipAngleSet;
 use crate::stream::Connectable;
 
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
-    for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>
+    for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RU, T>
 where
     DRAIN: Clone,
     PCNC: Clone,
@@ -24,7 +24,7 @@ where
     RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     T: CoordFloat + FloatConst,
 {
-    type Output = Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, DRAIN, PCNU, PR, RC, RU, T>;
+    type Output = Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, DRAIN, PCNU, PR, RU, T>;
     type T = T;
 
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
@@ -37,7 +37,6 @@ where
         // Copy, Mutate - updating only theta and preclip_factory.
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<RC, T>>,
-            p_rc: PhantomData::<RC>,
             p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw.clone(),
             clip,

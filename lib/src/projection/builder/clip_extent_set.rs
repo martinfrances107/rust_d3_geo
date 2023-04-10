@@ -38,7 +38,6 @@ where
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResamplePCNC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -82,7 +81,6 @@ where
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
 
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -125,7 +123,6 @@ where
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResamplePCNC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -168,7 +165,6 @@ where
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,

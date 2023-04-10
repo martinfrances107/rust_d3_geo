@@ -8,26 +8,13 @@ use crate::projection::RotateSet;
 use crate::Transform;
 
 use super::template::NoPCNU;
-use super::template::ResampleNoPCNC;
-use super::template::ResampleNoneNoPCNC;
 use super::template::ResampleNoneNoPCNU;
-use super::template::ResampleNonePCNC;
 use super::template::ResampleNonePCNU;
-use super::template::ResamplePCNC;
 use super::template::PCNU;
 use super::Builder;
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        NoPCNU,
-        PR,
-        ResampleNoPCNC<DRAIN, PR, T>,
-        ResampleNoPCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
@@ -55,16 +42,7 @@ where
 }
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        PCNU<T>,
-        PR,
-        ResamplePCNC<DRAIN, PR, T>,
-        ResamplePCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
@@ -92,16 +70,7 @@ where
 }
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        NoPCNU,
-        PR,
-        ResampleNoneNoPCNC<DRAIN, PR, T>,
-        ResampleNoneNoPCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
@@ -129,16 +98,7 @@ where
 }
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        PCNU<T>,
-        PR,
-        ResampleNonePCNC<DRAIN, PR, T>,
-        ResampleNonePCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

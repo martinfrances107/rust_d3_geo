@@ -44,8 +44,6 @@ pub mod translate_get;
 /// Builder shorthand notations.
 pub mod types;
 
-use std::marker::PhantomData;
-
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -172,7 +170,7 @@ pub(super) trait Reclip {
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
@@ -181,7 +179,7 @@ where
     /// The raw projection.
     pub pr: PR,
     /// The wrapped builder type.
-    pub base: ProjectionBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>,
+    pub base: ProjectionBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>,
     /// post-clip extent
     pub extent: Option<[Coord<T>; 2]>,
 }
@@ -217,8 +215,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> Build
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

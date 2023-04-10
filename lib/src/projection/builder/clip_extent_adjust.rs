@@ -7,8 +7,8 @@ use crate::projection::ClipExtentAdjust;
 use super::template::PCNU;
 use super::Builder;
 
-impl<CLIPC, CLIPU, DRAIN, PR, RC, RU, T> ClipExtentAdjust
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PR, RU, T> ClipExtentAdjust
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

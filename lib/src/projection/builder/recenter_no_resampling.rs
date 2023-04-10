@@ -14,22 +14,11 @@ use crate::rot::rotate_radians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::Transform;
 
-use super::template::ResampleNoneNoPCNC;
-use super::template::ResampleNonePCNC;
 use super::Builder;
 
 #[allow(clippy::similar_names)]
 impl<CLIPC, CLIPU, DRAIN, PR, T> Recenter
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        NoPCNU,
-        PR,
-        ResampleNoneNoPCNC<DRAIN, PR, T>,
-        ResampleNoneNoPCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
@@ -75,16 +64,7 @@ where
 }
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> Recenter
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        PCNU<T>,
-        PR,
-        ResampleNonePCNC<DRAIN, PR, T>,
-        ResampleNonePCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

@@ -5,8 +5,8 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, CLIPC, CLIPU, PCNU, PR, RC, RU, T> Transform
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+impl<DRAIN, CLIPC, CLIPU, PCNU, PR, RU, T> Transform
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

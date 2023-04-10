@@ -23,16 +23,7 @@ use super::template::ResampleNoneNoPCNC;
 use super::template::ResampleNoneNoPCNU;
 
 impl<CLIPC, CLIPU, PR, T> Fit
-    for Builder<
-        CLIPC,
-        CLIPU,
-        Bounds<T>,
-        NoPCNU,
-        PR,
-        ResampleNoneNoPCNC<Bounds<T>, PR, T>,
-        ResampleNoneNoPCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, Bounds<T>, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPU: Clone + Connectable<Output = CLIPC, SC = ResampleNoneNoPCNC<Bounds<T>, PR, T>>,
@@ -61,17 +52,7 @@ where
     }
 }
 
-impl<CC, CU, PR, T> Fit
-    for Builder<
-        CC,
-        CU,
-        Bounds<T>,
-        NoPCNU,
-        PR,
-        ResampleNoPCNC<Bounds<T>, PR, T>,
-        ResampleNoPCNU<PR, T>,
-        T,
-    >
+impl<CC, CU, PR, T> Fit for Builder<CC, CU, Bounds<T>, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     CU: Clone + Connectable<Output = CC, SC = ResampleNoPCNC<Bounds<T>, PR, T>>,
     CC: Clone + Stream<EP = Bounds<T>, T = T>,

@@ -36,7 +36,6 @@ mod reflect {
         DrainStub<f64>,
         Identity<Unconnected>,
         Gnomic<DrainStub<f64>, f64>,
-        ResampleNoPCNC<DrainStub<f64>, Gnomic<DrainStub<f64>, f64>, f64>,
         ResampleNoPCNU<Gnomic<DrainStub<f64>, f64>, f64>,
         f64,
     >;
@@ -177,8 +176,7 @@ mod reflect {
     #[test]
     fn x_works_with_projection_angle() {
         println!("projection.reflectX(…) works with projection.angle()");
-        let mut builder: MercatorBuilder<_, _, DrainStub<f64>, _, _, _, _, f64> =
-            Mercator::builder();
+        let mut builder: MercatorBuilder<_, _, DrainStub<f64>, _, _, _, f64> = Mercator::builder();
         builder.scale_set(1_f64).translate_set(&Coord {
             x: 10_f64,
             y: 20_f64,

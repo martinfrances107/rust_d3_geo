@@ -23,7 +23,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
         DRAIN,
         PCNU,
         PR,
-        None<PR, Connected<PCNC>, T>,
         None<PR, Unconnected, T>,
         T,
     >
@@ -39,7 +38,6 @@ where
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, ConnectedResample<PCNC, T>, T>,
         Resample<PR, Unconnected, T>,
         T,
     >;
@@ -62,7 +60,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
         DRAIN,
         PCNU,
         PR,
-        None<PR, Connected<PCNC>, T>,
         None<PR, Unconnected, T>,
         T,
     >
@@ -77,7 +74,6 @@ where
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, ConnectedResample<PCNC, T>, T>,
         Resample<PR, Unconnected, T>,
         T,
     >;

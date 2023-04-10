@@ -39,7 +39,6 @@ where
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNoneNoPCNC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -89,7 +88,6 @@ where
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -140,7 +138,6 @@ where
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNoneNoPCNC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -192,7 +189,6 @@ where
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             p_drain: self.p_drain,
-            p_rc: PhantomData::<ResampleNonePCNC<DRAIN, PR, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,

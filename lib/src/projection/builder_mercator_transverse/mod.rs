@@ -28,8 +28,6 @@ pub mod translate_get;
 /// Builder shorthand notations.
 pub mod types;
 
-use std::marker::PhantomData;
-
 use approx::AbsDiffEq;
 use derivative::Derivative;
 use geo::CoordFloat;
@@ -52,14 +50,14 @@ use super::TransformExtent;
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
     T: CoordFloat,
 {
     /// The type this builder wraps.
-    pub base: ProjectionMercatorBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>,
+    pub base: ProjectionMercatorBuilder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>,
 }
 
 impl<DRAIN, PR, T> BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T>
@@ -81,8 +79,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> Build
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

@@ -4,8 +4,8 @@ use geo_types::Coord;
 use crate::projection::builder_mercator_transverse::Builder;
 use crate::projection::TranslateGet;
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> TranslateGet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> TranslateGet
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

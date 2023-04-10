@@ -2,8 +2,6 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::projection::builder::template::NoPCNU;
-use crate::projection::builder::template::ResampleNoPCNC;
-use crate::projection::builder::template::ResamplePCNC;
 use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::template::PCNU;
 use crate::projection::builder_mercator::Builder;
@@ -12,8 +10,8 @@ use crate::projection::AngleGet;
 use crate::projection::AngleSet;
 use crate::Transform;
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T> AngleGet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> AngleGet
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
@@ -28,16 +26,7 @@ where
 }
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> AngleSet
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        NoPCNU,
-        PR,
-        ResampleNoPCNC<DRAIN, PR, T>,
-        ResampleNoPCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
@@ -56,16 +45,7 @@ where
 }
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> AngleSet
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        PCNU<T>,
-        PR,
-        ResamplePCNC<DRAIN, PR, T>,
-        ResamplePCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

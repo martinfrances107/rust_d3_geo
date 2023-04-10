@@ -2,9 +2,7 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::ResampleNonePCNC;
 use crate::projection::builder::template::ResampleNonePCNU;
-use crate::projection::builder::template::ResamplePCNC;
 use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::template::PCNU;
 use crate::projection::ScaleSet;
@@ -14,16 +12,7 @@ use crate::Transform;
 use super::Builder;
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        PCNU<T>,
-        PR,
-        ResamplePCNC<DRAIN, PR, T>,
-        ResamplePCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
@@ -41,16 +30,7 @@ where
 }
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<
-        CLIPC,
-        CLIPU,
-        DRAIN,
-        PCNU<T>,
-        PR,
-        ResampleNonePCNC<DRAIN, PR, T>,
-        ResampleNonePCNU<PR, T>,
-        T,
-    >
+    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,

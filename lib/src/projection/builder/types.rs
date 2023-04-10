@@ -23,7 +23,6 @@ pub type BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Builder<
     DRAIN,
     NoPCNU,
     PR,
-    ResampleNoneNoPCNC<DRAIN, PR, T>,
     ResampleNoneNoPCNU<PR, T>,
     T,
 >;
@@ -35,7 +34,6 @@ pub type BuilderAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
     DRAIN,
     PCNU<T>,
     PR,
-    ResampleNonePCNC<DRAIN, PR, T>,
     ResampleNonePCNU<PR, T>,
     T,
 >;
@@ -47,7 +45,6 @@ pub type BuilderAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
     DRAIN,
     NoPCNU,
     PR,
-    ResampleNoPCNC<DRAIN, PR, T>,
     ResampleNoPCNU<PR, T>,
     T,
 >;
@@ -59,7 +56,6 @@ pub type BuilderAntimeridianResampleClip<DRAIN, PR, T> = Builder<
     DRAIN,
     PCNU<T>,
     PR,
-    ResamplePCNC<DRAIN, PR, T>,
     ResamplePCNU<PR, T>,
     T,
 >;
@@ -71,7 +67,6 @@ pub type BuilderCircleResampleNoClip<DRAIN, PR, T> = Builder<
     DRAIN,
     NoPCNU,
     PR,
-    ResampleNoPCNC<DRAIN, PR, T>,
     ResampleNoPCNU<PR, T>,
     T,
 >;
@@ -83,7 +78,6 @@ pub type BuilderCircleResampleNoneNoClip<DRAIN, PR, T> = Builder<
     DRAIN,
     NoPCNU,
     PR,
-    ResampleNoneNoPCNC<DRAIN, PR, T>,
     ResampleNoneNoPCNU<PR, T>,
     T,
 >;
@@ -95,7 +89,6 @@ pub type BuilderCircleResampleClip<DRAIN, PR, T> = Builder<
     DRAIN,
     PCNU<T>,
     PR,
-    ResamplePCNC<DRAIN, PR, T>,
     ResamplePCNU<PR, T>,
     T,
 >;
@@ -107,7 +100,6 @@ pub type BuilderCircleResampleNoneClip<DRAIN, PR, T> = Builder<
     DRAIN,
     PCNU<T>,
     PR,
-    ResampleNonePCNC<DRAIN, PR, T>,
     ResampleNonePCNU<PR, T>,
     T,
 >;

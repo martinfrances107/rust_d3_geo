@@ -33,7 +33,6 @@ mod equirectangular {
         DrainStub<f64>,
         NoPCNU,
         Equirectangular<DrainStub<f64>, f64>,
-        ResampleNoPCNC<DrainStub<f64>, Equirectangular<DrainStub<f64>, f64>, f64>,
         ResampleNoPCNU<Equirectangular<DrainStub<f64>, f64>, f64>,
         f64,
     >;

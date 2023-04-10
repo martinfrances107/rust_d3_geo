@@ -76,13 +76,12 @@ pub mod types;
 ///
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Debug)]
-pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
+pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {
     p_clipc: PhantomData<CLIPC>,
     p_drain: PhantomData<DRAIN>,
-    p_rc: PhantomData<RC>,
     pub(super) projection_raw: PR,
     pub(super) clip: CLIPU,
     lambda: T,
@@ -158,7 +157,6 @@ where
         let mut out: Self = Self {
             clip: gen_clip::<_, _>(),
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
-            p_rc: PhantomData::<ResampleNoPCNC<DRAIN, PR, T>>,
             p_drain: PhantomData::<DRAIN>,
             /// Input passing onto Projection.
             projection_raw,

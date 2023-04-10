@@ -17,7 +17,6 @@ pub type BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T> = Build
     DRAIN,
     PCNU<T>,
     PR,
-    ResamplePCNC<DRAIN, PR, T>,
     ResamplePCNU<PR, T>,
     T,
 >;
@@ -29,7 +28,6 @@ pub type BuilderMercatorTransverseAntimeridianResampleNoneClip<DRAIN, PR, T> = B
     DRAIN,
     PCNU<T>,
     PR,
-    ResampleNonePCNC<DRAIN, PR, T>,
     ResampleNonePCNU<PR, T>,
     T,
 >;
@@ -41,7 +39,6 @@ pub type BuilderMercatorTransverseCircleResampleClip<DRAIN, PR, T> = Builder<
     DRAIN,
     PCNU<T>,
     PR,
-    ResamplePCNC<DRAIN, PR, T>,
     ResamplePCNU<PR, T>,
     T,
 >;
@@ -53,7 +50,6 @@ pub type BuilderMercatorTransverseCircleResampleNoneClip<DRAIN, PR, T> = Builder
     DRAIN,
     PCNU<T>,
     PR,
-    ResampleNonePCNC<DRAIN, PR, T>,
     ResampleNonePCNU<PR, T>,
     T,
 >;

@@ -22,7 +22,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionGet
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, ConnectedResample<PCNC, T>, T>,
         Resample<PR, Unconnected, T>,
         T,
     >
@@ -47,7 +46,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionGet
         DRAIN,
         PCNU,
         PR,
-        Resample<PR, ConnectedResample<PCNC, T>, T>,
         Resample<PR, Unconnected, T>,
         T,
     >
