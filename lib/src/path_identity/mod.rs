@@ -1,6 +1,5 @@
 use std::fmt::Debug;
 use std::fmt::Display;
-use std::marker::PhantomData;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
@@ -34,8 +33,6 @@ where
     PCNU: Clone,
     T: CoordFloat,
 {
-    p_pcnc: PhantomData<PCNC>,
-
     context_stream: CS,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
@@ -54,7 +51,6 @@ where
     /// unwrap() is used here but a panic will never happen as 4.5 will always be converted into T.
     pub fn new(context_stream: CS, projection: Projector<CS, PCNC, PCNU, T>) -> Self {
         Self {
-            p_pcnc: PhantomData::<PCNC>,
             context_stream,
             point_radius: PointRadiusEnum::Val(T::from(4.5_f64).unwrap()),
             projection,
