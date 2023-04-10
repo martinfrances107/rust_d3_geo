@@ -193,7 +193,7 @@ where
         EP = Bounds<T>,
         Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
     >,
-    T: 'static + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     /// Returns the bounds of the object
     ///
@@ -211,7 +211,7 @@ impl<PROJECTOR, T, TRANSFORMER> Path<Centroid<T>, PROJECTOR, T, TRANSFORMER>
 where
     PROJECTOR: Projector<EP = Centroid<T>, Transformer = TRANSFORMER>,
     TRANSFORMER: Stream<EP = Centroid<T>, T = T>,
-    T: 'static + AddAssign + CoordFloat + FloatConst,
+    T: AddAssign + CoordFloat + FloatConst,
 {
     /// Returns the centroid of the object.
     pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coord<T> {

@@ -63,7 +63,7 @@ where
     DRAIN: Clone + Default + PartialEq + Result + Stream<EP = DRAIN, T = T>,
     PCNC: Clone + Stream<EP = DRAIN, T = T>,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
-    T: 'static + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     /// Combines projection, context stream and object.
     pub fn object(&mut self, object: &impl Streamable<T = T>) -> <DRAIN as Result>::Out {
@@ -118,7 +118,7 @@ impl<PCNC, PCNU, T> Path<Bounds<T>, PCNC, PCNU, T>
 where
     PCNC: Clone + Stream<EP = Bounds<T>, T = T>,
     PCNU: Clone + Connectable<Output<Bounds<T>> = PCNC>,
-    T: 'static + CoordFloat + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     /// Returns the bounds of the object
     ///
@@ -136,7 +136,7 @@ impl<PCNC, PCNU, T> Path<Centroid<T>, PCNC, PCNU, T>
 where
     PCNC: Clone + Stream<EP = Centroid<T>, T = T>,
     PCNU: Clone + Connectable<Output<Centroid<T>> = PCNC>,
-    T: 'static + AddAssign + CoordFloat + FloatConst,
+    T: AddAssign + CoordFloat + FloatConst,
 {
     /// Returns the centroid of the object.
     pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coord<T> {
