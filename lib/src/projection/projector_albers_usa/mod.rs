@@ -105,7 +105,7 @@ where
 impl<DRAIN, PR> ProjectorTrait for Projector<DRAIN, Multiplex<PR, Unconnected>>
 where
     PR: Default,
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
+    DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = f64>,
 {
     type EP = DRAIN;
 

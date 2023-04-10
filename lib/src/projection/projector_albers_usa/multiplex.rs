@@ -48,7 +48,7 @@ impl<PR> Multiplex<PR, Unconnected> {
     #[inline]
     pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaTransformer<3, SD, f64>
     where
-        SD: Clone + Default + Stream<EP = SD, T = f64>,
+        SD: Clone + Default + PartialEq + Stream<EP = SD, T = f64>,
     {
         let pr = AlbersUsa::<SD>::default();
         // The order of objects in the store is important for performance.
