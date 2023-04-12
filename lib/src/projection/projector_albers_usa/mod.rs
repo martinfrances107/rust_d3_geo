@@ -30,7 +30,7 @@ pub mod multiplex;
 pub mod multitransformer;
 
 /// Used in the formation of a `AlbersUsa` pipeline.
-pub type AlbersUsaTransformer<const N: usize, SD, T> = MultiTransformer<
+pub type AlbersUsaMultiTransformer<const N: usize, SD, T> = MultiTransformer<
     3,
     SD,
     StreamTransformRadians<
@@ -109,7 +109,7 @@ where
 {
     type EP = DRAIN;
 
-    type Transformer = AlbersUsaTransformer<3, DRAIN, f64>;
+    type Transformer = AlbersUsaMultiTransformer<3, DRAIN, f64>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///

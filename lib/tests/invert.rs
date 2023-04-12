@@ -2,7 +2,7 @@
 mod invert {
 
     use d3_geo_rs::path::Result;
-    use d3_geo_rs::projection::projector_albers_usa::AlbersUsaTransformer;
+    use d3_geo_rs::projection::projector_albers_usa::AlbersUsaMultiTransformer;
     use d3_geo_rs::stream::Streamable;
     use geo::Point;
     use geo_types::Coord;
@@ -170,7 +170,7 @@ mod invert {
         let builder = AlbersUsa::<LastPoint<f64>>::builder();
         let mut projection = builder.build();
 
-        let mut transformer: AlbersUsaTransformer<3, LastPoint<f64>, _> =
+        let mut transformer: AlbersUsaMultiTransformer<3, LastPoint<f64>, _> =
             projection.stream(&LastPoint::<f64>::default());
 
         for p in [

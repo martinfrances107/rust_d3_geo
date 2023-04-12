@@ -1,7 +1,7 @@
 use geo::Coord;
 
 use crate::projection::albers_usa::AlbersUsa;
-use crate::projection::projector_albers_usa::AlbersUsaTransformer;
+use crate::projection::projector_albers_usa::AlbersUsaMultiTransformer;
 use crate::projection::Build;
 use crate::projection::Projector as ProjectoTait;
 use crate::stream::Stream;
@@ -46,7 +46,7 @@ where
 impl<PR> Multiplex<PR, Unconnected> {
     /// Connects the next stage in the stream pipline.
     #[inline]
-    pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaTransformer<3, SD, f64>
+    pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaMultiTransformer<3, SD, f64>
     where
         SD: Clone + Default + PartialEq + Stream<EP = SD, T = f64>,
     {
@@ -64,7 +64,7 @@ impl<PR> Multiplex<PR, Unconnected> {
 }
 
 impl<DRAIN, const N: usize> Transform
-    for Multiplex<AlbersUsa<DRAIN>, Connected<N, AlbersUsaTransformer<N, DRAIN, f64>>>
+    for Multiplex<AlbersUsa<DRAIN>, Connected<N, AlbersUsaMultiTransformer<N, DRAIN, f64>>>
 {
     /// f32 or f64
     type T = f64;
