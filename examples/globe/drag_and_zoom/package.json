@@ -31,7 +31,7 @@
     "copy-webpack-plugin": "^11",
     "d3-selection": "^3",
     "request": "^2",
-    "rimraf": "^4",
+    "rimraf": "^5",
     "serve": "^14",
     "topojson-client": "^3",
     "ts-loader": "^9",
