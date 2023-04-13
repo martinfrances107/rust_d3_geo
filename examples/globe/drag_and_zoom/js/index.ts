@@ -1,17 +1,13 @@
 import { pointer, select } from 'd3-selection'
 import { eulerAngles } from '../mathsfunctions'
-import { ExportedPoint } from '../pkg'
-
-
-
 
 import('../pkg')
-  .then(renderer => {
+  .then(pkg => {
     console.log('wasm is imported')
     var scale: number = 1
     var isSolid: boolean = false
     var isMouseDown: boolean = false
-    renderer.Renderer.new('./world-atlas/world/50m.json')
+    pkg.Renderer.new('./world-atlas/world/50m.json')
       .then((renderer) => {
         const canvasArray = document.getElementsByTagName('canvas')
         if (canvasArray.length !== 1) {
@@ -50,19 +46,19 @@ import('../pkg')
         canvas.onwheel = zoom
 
         let o0: number[] /// Starting rotation.
-        let gpos0 = new ExportedPoint(0, 0)
-        let gpos1 = new ExportedPoint(0, 0)
+        let gpos0 = new pkg.ExportedPoint(0, 0)
+        let gpos1 = new pkg.ExportedPoint(0, 0)
 
         function dragstarted (e: any): void {
           isMouseDown = true
           const canvasxy = pointer(e)
-          gpos0 = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
+          gpos0 = renderer.invert(new pkg.ExportedPoint(canvasxy[0], canvasxy[1]))
         }
 
         function dragged (e: any): void {
           if (isMouseDown) {
             const canvasxy = pointer(e)
-            gpos1 = renderer.invert(new ExportedPoint(canvasxy[0], canvasxy[1]))
+            gpos1 = renderer.invert(new pkg.ExportedPoint(canvasxy[0], canvasxy[1]))
             o0 = renderer.rotate()
 
             const o1 = eulerAngles(gpos0, gpos1, o0)
