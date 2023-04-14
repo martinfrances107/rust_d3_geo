@@ -102,9 +102,6 @@ Test coverage in that area is high so the algortihms is working but the data str
 
 ## Running the examples
 
-<details>
-<summary>See the details.</summary>
-
 <br/>
 Requirements:
 
@@ -163,9 +160,6 @@ Also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voron
 
 ## Flamegraph
 
-<details>
-<summary>See the details.</summary>
-
 profile_target is binary that outputs a HTML page containing a SVG image showing the globe with graticule markings.
 
 A flamegraph can be created with the following
@@ -176,22 +170,16 @@ sudo CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph
 ```
 
 The complexity of rendering 240 countries/polygons provides a good view in memory allocation issues.
-</details>
+
 <br>
 
 ## Future Multi thread support
-
-<details>
-<summary>See the details.</summary>
-On my todo list.
 
 * [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
 I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
 
 * The Hashmaps - appear slow.
   Maybe I can get performace improvements by replacing them with B-tree collections?
-
-</details>
 
 <br>
 
@@ -251,22 +239,16 @@ There is an aspect of the design that needs review. It related to the best way t
 
 ## Unimplemented sections of the library
 
-<details>
-<summary>See the details.</summary>
 Support for a custom projection is not yet supported.
 For an example of this see the test labelled "projection.fitExtent(…) custom projection"
 
 I am trying to get a program of mine to run faster, but I want this to eventually be a true library port. So feel free to add suggestions to my todo list.
 
-A complete list of all ported projections can be found in invert-test.rs. Out of the 15 distinct projections listed only 7 have been ported so far.
-</details>
+A complete list of all ported projections can be found in invert-test.rs. Only AlbersUSA is yet to be implemented.
 
 <br>
 
 ## Other To-do's
-
-<details>
-<summary>See the details.</summary>
 
 ## Document API changes such as
 
@@ -276,4 +258,3 @@ A complete list of all ported projections can be found in invert-test.rs. Out of
 Finally
 
 [todo.md](/todo.md) contains a more detailed list
-</details>
