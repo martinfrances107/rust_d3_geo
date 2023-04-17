@@ -22,9 +22,8 @@ use super::PointRadiusTrait;
 
 /// Path builder.
 #[derive(Debug)]
-pub struct Builder<CS, PROJECTOR, T, TRANSFORMER>
+pub struct Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat,
 {
     p_projector: PhantomData<PROJECTOR>,
@@ -32,7 +31,7 @@ where
     context_stream: CS,
 }
 
-impl<CS, PROJECTOR, T, TRANSFORMER> Builder<CS, PROJECTOR, T, TRANSFORMER>
+impl<CS, PROJECTOR, T, TRANSFORMER> Builder<CS, PROJECTOR, T>
 where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat + FloatConst,
@@ -52,7 +51,7 @@ where
 }
 
 /// Context related methods.
-impl<PROJECTOR, T, TRANSFORMER> Builder<Context, PROJECTOR, T, TRANSFORMER>
+impl<PROJECTOR, T, TRANSFORMER> Builder<Context, PROJECTOR, T>
 where
     PROJECTOR: Projector<EP = Context, Transformer = TRANSFORMER>,
     T: CoordFloat + FloatConst,
@@ -65,7 +64,7 @@ where
 }
 
 /// Context related methods.
-impl<PROJECTOR, T, TRANSFORMER> Builder<String<T>, PROJECTOR, T, TRANSFORMER>
+impl<PROJECTOR, T, TRANSFORMER> Builder<String<T>, PROJECTOR, T>
 where
     PROJECTOR: Projector<EP = String<T>, Transformer = TRANSFORMER>,
     T: CoordFloat + Display + FloatConst,
@@ -78,7 +77,7 @@ where
     }
 }
 
-impl<CS, PROJECTOR, T, TRANSFORMER> PointRadiusTrait for Builder<CS, PROJECTOR, T, TRANSFORMER>
+impl<CS, PROJECTOR, T, TRANSFORMER> PointRadiusTrait for Builder<CS, PROJECTOR, T>
 where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     CS: PointRadiusTrait<T = T>,
@@ -96,7 +95,7 @@ where
 }
 
 /// Projection related methods.
-impl<CS, PROJECTOR, T, TRANSFORMER> Builder<CS, PROJECTOR, T, TRANSFORMER>
+impl<CS, PROJECTOR, T, TRANSFORMER> Builder<CS, PROJECTOR, T>
 where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     CS: Stream<EP = CS, T = T>,
