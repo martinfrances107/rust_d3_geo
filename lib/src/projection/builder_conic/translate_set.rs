@@ -2,13 +2,14 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
+use crate::projection::ScaleGet;
 use crate::projection::TranslateSet;
 
 use super::Builder;
 
 impl<BASE, T> TranslateSet for Builder<BASE, T>
 where
-    BASE: TranslateSet<T = T>,
+    BASE: TranslateSet<T = T> + ScaleGet<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;

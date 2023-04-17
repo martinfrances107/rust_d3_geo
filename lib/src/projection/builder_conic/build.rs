@@ -1,4 +1,5 @@
 use geo::CoordFloat;
+use num_traits::FloatConst;
 
 use crate::projection::builder::Builder as BuilderCommon;
 use crate::projection::projector_commom::Projector;
@@ -21,7 +22,7 @@ where
     PR: Clone + PRConic,
     PCNU: Clone,
     RU: Clone,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     type Projector = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
 

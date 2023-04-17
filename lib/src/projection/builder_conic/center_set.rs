@@ -1,13 +1,14 @@
 use geo::Coord;
 use geo::CoordFloat;
 
-use super::Builder;
-
 use crate::projection::CenterSet;
+use crate::projection::ScaleGet;
+
+use super::Builder;
 
 impl<BASE, T> CenterSet for Builder<BASE, T>
 where
-    BASE: CenterSet<T = T>,
+    BASE: CenterSet<T = T> + ScaleGet<T = T>,
     T: CoordFloat,
 {
     type T = T;

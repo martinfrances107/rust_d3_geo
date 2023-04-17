@@ -1,4 +1,9 @@
+use std::fmt::Debug;
+use std::marker::PhantomData;
+
 use geo::Coord;
+use geo::CoordFloat;
+use num_traits::FloatConst;
 
 use crate::projection::albers_usa::AlbersUsa;
 use crate::projection::projector_albers_usa::AlbersUsaMultiTransformer;
@@ -22,7 +27,8 @@ pub struct Connected<const N: usize, TRANSFORM> {
 /// Projectors, in the case of `AlbersUSA` one for every region.
 /// `lower_48`, `alaaska`, `hawaii`.
 #[derive(Clone, Debug)]
-pub struct Multiplex<PR, STATE> {
+pub struct Multiplex<PR, STATE, T> {
+    p_t: PhantomData<T>,
     pr: PR,
     /// The State is Connected or Unconnected.
     /// TODO Once things are working consider simplifying here
@@ -30,12 +36,13 @@ pub struct Multiplex<PR, STATE> {
     pub state: STATE,
 }
 
-impl<PR> Default for Multiplex<PR, Unconnected>
+impl<PR, T> Default for Multiplex<PR, Unconnected, T>
 where
     PR: Default,
 {
     fn default() -> Self {
         Self {
+            p_t: PhantomData::<T>,
             pr: PR::default(),
             state: Unconnected,
         }
@@ -43,14 +50,18 @@ where
 }
 
 /// Hardcode type for now until things are generic
-impl<PR> Multiplex<PR, Unconnected> {
+impl<PR, T> Multiplex<PR, Unconnected, T>
+where
+    T: CoordFloat + Default + FloatConst,
+{
     /// Connects the next stage in the stream pipline.
     #[inline]
-    pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaMultiTransformer<3, SD, f64>
+    pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaMultiTransformer<3, SD, T>
     where
-        SD: Clone + Default + PartialEq + Stream<EP = SD, T = f64>,
+        T: Debug,
+        SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
     {
-        let pr = AlbersUsa::<SD>::default();
+        let pr = AlbersUsa::<SD, T>::default();
         // The order of objects in the store is important for performance.
         // The earlier a point is found the better,
         // so the lower_48 is searched first, and the smallest land area last.
@@ -63,16 +74,19 @@ impl<PR> Multiplex<PR, Unconnected> {
     }
 }
 
-impl<DRAIN, const N: usize> Transform
-    for Multiplex<AlbersUsa<DRAIN>, Connected<N, AlbersUsaMultiTransformer<N, DRAIN, f64>>>
+impl<DRAIN, const N: usize, T> Transform
+    for Multiplex<AlbersUsa<DRAIN, T>, Connected<N, AlbersUsaMultiTransformer<N, DRAIN, T>>, T>
+where
+    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     /// f32 or f64
-    type T = f64;
+    type T = T;
 
-    fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         self.pr.transform(p)
     }
-    fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         self.pr.invert(p)
     }
 }

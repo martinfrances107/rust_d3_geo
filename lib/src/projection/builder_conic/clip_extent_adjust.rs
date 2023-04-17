@@ -1,13 +1,13 @@
 use geo::CoordFloat;
 use geo_types::Coord;
 
-use crate::projection::ClipExtentAdjust;
+use crate::projection::{ClipExtentAdjust, ScaleGet};
 
 use super::Builder;
 
 impl<BASE, T> ClipExtentAdjust for Builder<BASE, T>
 where
-    BASE: ClipExtentAdjust<T = T>,
+    BASE: ClipExtentAdjust<T = T> + ScaleGet<T = T>,
     T: CoordFloat,
 {
     /// f32 or f64

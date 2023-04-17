@@ -13,6 +13,8 @@ use crate::projection::Recenter;
 impl<CLIPC, CLIPU, DRAIN, PR, T> ParallelsSet
     for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>, T>
 where
+    CLIPC: Clone,
+    CLIPU: Clone,
     PR: PRConic<T = T> + Clone,
     T: CoordFloat + FloatConst,
 {

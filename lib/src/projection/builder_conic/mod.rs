@@ -5,6 +5,7 @@ use num_traits::FloatConst;
 
 use super::BuilderTrait;
 use super::RawBase;
+use super::ScaleGet;
 
 // mod angle;
 // mod angle_get;
@@ -58,6 +59,7 @@ pub trait PRConic: RawBase {
 #[derive(Clone, Debug)]
 pub struct Builder<BASE, T>
 where
+    BASE: ScaleGet<T = T>,
     T: CoordFloat,
 {
     base: BASE,
@@ -88,7 +90,7 @@ pub trait ParallelsSet {
 
 impl<BASE, PR, T> BuilderTrait for Builder<BASE, T>
 where
-    BASE: BuilderTrait<PR = PR>,
+    BASE: BuilderTrait<PR = PR> + ScaleGet<T = T>,
     PR: PRConic<T = T>,
     T: CoordFloat + Default + FloatConst,
 {

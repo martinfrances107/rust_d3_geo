@@ -2,6 +2,8 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::Coord;
+use geo::CoordFloat;
+use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::Interpolate;
 use crate::clip::antimeridian::line::Line;
@@ -33,6 +35,7 @@ pub mod multitransformer;
 pub type AlbersUsaMultiTransformer<const N: usize, SD, T> = MultiTransformer<
     3,
     SD,
+    T,
     StreamTransformRadians<
         ConnectedStream<
             RotatorRadians<
@@ -102,14 +105,15 @@ where
     }
 }
 
-impl<DRAIN, PR> ProjectorTrait for Projector<DRAIN, Multiplex<PR, Unconnected>>
+impl<DRAIN, PR, T> ProjectorTrait for Projector<DRAIN, Multiplex<PR, Unconnected, T>>
 where
     PR: Default,
-    DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = f64>,
+    T: CoordFloat + Default + FloatConst,
+    DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = T>,
 {
     type EP = DRAIN;
 
-    type Transformer = AlbersUsaMultiTransformer<3, DRAIN, f64>;
+    type Transformer = AlbersUsaMultiTransformer<3, DRAIN, T>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///
@@ -122,17 +126,18 @@ where
     }
 }
 
-impl<DRAIN, MULTIPLEX> Transform for Projector<DRAIN, MULTIPLEX>
+impl<DRAIN, MULTIPLEX, T> Transform for Projector<DRAIN, MULTIPLEX>
 where
-    MULTIPLEX: Transform<T = f64>,
+    T: CoordFloat + Debug,
+    MULTIPLEX: Transform<T = T>,
 {
     /// f32 or f64
-    type T = f64;
+    type T = T;
 
-    fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         self.multiplex.transform(p)
     }
-    fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         self.multiplex.invert(p)
     }
 }

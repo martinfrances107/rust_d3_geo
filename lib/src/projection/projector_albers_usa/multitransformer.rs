@@ -13,22 +13,24 @@ use crate::stream::Stream;
 
 /// Projections like `AlbersUSA` group several projections together.
 #[derive(Debug)]
-pub struct MultiTransformer<const N: usize, SD, TRANSFORMER> {
+pub struct MultiTransformer<const N: usize, SD, T, TRANSFORMER> {
+    p_t: PhantomData<T>,
     p_sd: PhantomData<SD>,
     store: [TRANSFORMER; N],
 }
 
-impl<const N: usize, SD, TRANSFORMER> MultiTransformer<N, SD, TRANSFORMER> {
+impl<const N: usize, SD, T, TRANSFORMER> MultiTransformer<N, SD, T, TRANSFORMER> {
     /// Constructor
     pub const fn new(store: [TRANSFORMER; N]) -> Self {
         Self {
+            p_t: PhantomData::<T>,
             p_sd: PhantomData::<SD>,
             store,
         }
     }
 }
 
-impl<const N: usize, SD, TRANSFORMER> Connectable for MultiTransformer<N, SD, TRANSFORMER>
+impl<const N: usize, SD, T, TRANSFORMER> Connectable for MultiTransformer<N, SD, T, TRANSFORMER>
 where
     TRANSFORMER: Clone,
 {
@@ -37,15 +39,16 @@ where
     #[inline]
     fn connect<SC: Clone>(&self, _sink: SC) -> Self::Output<SC> {
         Self {
+            p_t: PhantomData::<T>,
             p_sd: PhantomData::<SD>,
             store: self.store.clone(),
         }
     }
 }
 
-impl<const N: usize, TRANSFORMER> Result for MultiTransformer<N, Context, TRANSFORMER>
+impl<const N: usize, T, TRANSFORMER> Result for MultiTransformer<N, Context, T, TRANSFORMER>
 where
-    TRANSFORMER: Stream<EP = Context, T = f64>,
+    TRANSFORMER: Stream<EP = Context, T = T>,
 {
     type Out = Vec<String>;
 
@@ -62,7 +65,7 @@ where
     }
 }
 
-impl<const N: usize, T, TRANSFORMER> Result for MultiTransformer<N, PathString<T>, TRANSFORMER>
+impl<const N: usize, T, TRANSFORMER> Result for MultiTransformer<N, PathString<T>, T, TRANSFORMER>
 where
     T: CoordFloat,
     TRANSFORMER: Stream<EP = PathString<T>, T = T>,
@@ -80,11 +83,12 @@ where
     }
 }
 
-impl<const N: usize, TRANSFORMER> Result for MultiTransformer<N, LastPoint<f64>, TRANSFORMER>
+impl<const N: usize, T, TRANSFORMER> Result for MultiTransformer<N, LastPoint<f64>, T, TRANSFORMER>
 where
-    TRANSFORMER: Stream<EP = LastPoint<f64>, T = f64>,
+    T: CoordFloat + Debug,
+    TRANSFORMER: Stream<EP = LastPoint<T>, T = T>,
 {
-    type Out = Option<Coord<f64>>;
+    type Out = Option<Coord<T>>;
     /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
         for d in &mut self.store {
@@ -96,11 +100,12 @@ where
     }
 }
 
-impl<const N: usize, SD, TRANSFORMER> Stream for MultiTransformer<N, SD, TRANSFORMER>
+impl<const N: usize, SD, T, TRANSFORMER> Stream for MultiTransformer<N, SD, T, TRANSFORMER>
 where
-    TRANSFORMER: Stream<EP = SD, T = f64>,
+    T: CoordFloat,
+    TRANSFORMER: Stream<EP = SD, T = T>,
 {
-    type T = f64;
+    type T = T;
     type EP = Self;
 
     fn endpoint(&mut self) -> &mut Self::EP {

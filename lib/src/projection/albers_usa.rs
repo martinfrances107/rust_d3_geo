@@ -1,7 +1,10 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::ops::Range;
 
+use geo::CoordFloat;
 use geo_types::Coord;
+use num_traits::FloatConst;
 
 use crate::last_point::LastPoint;
 use crate::math::EPSILON;
@@ -33,100 +36,121 @@ use super::TranslateSet;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
-pub struct AlbersUsa<DRAIN> {
+pub struct AlbersUsa<DRAIN, T>
+where
+    DRAIN: Clone,
+    T: CoordFloat + Debug + Default + FloatConst,
+{
     p_drain: PhantomData<DRAIN>,
-    k: f64,
-    t: Coord<f64>,
+    k: T,
+    t: Coord<T>,
 
     // The builders with clip_extent() applied.
     pub(super) lower_48_point:
-        BuilderConicAntimeridianResampleClip<LastPoint<f64>, EqualArea<LastPoint<f64>, f64>, f64>,
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
     pub(super) alaska_point:
-        BuilderConicAntimeridianResampleClip<LastPoint<f64>, EqualArea<LastPoint<f64>, f64>, f64>,
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
     pub(super) hawaii_point:
-        BuilderConicAntimeridianResampleClip<LastPoint<f64>, EqualArea<LastPoint<f64>, f64>, f64>,
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
 
     // The builder with base setting used as a starting point everytime translate is adjusted.
-    pub(super) lower_48: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, f64>, f64>,
-    pub(super) alaska: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, f64>, f64>,
-    pub(super) hawaii: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, f64>, f64>,
+    pub(super) lower_48: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>,
+    pub(super) alaska: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>,
+    pub(super) hawaii: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>,
+    alaska_x: Range<T>,
+    alaska_y: Range<T>,
+
+    hawaii_x: Range<T>,
+    hawaii_y: Range<T>,
 }
 
-impl<DRAIN> Default for AlbersUsa<DRAIN>
+impl<DRAIN, T> Default for AlbersUsa<DRAIN, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    T: CoordFloat + Debug + Default + FloatConst,
 {
     fn default() -> Self {
+        let epsilon = T::from(EPSILON).unwrap();
+        let alaska_y: Range<T> = T::from(0.120).unwrap()..T::from(0.234).unwrap();
+        let alaska_x: Range<T> = T::from(-0.425).unwrap()..T::from(-0.214).unwrap();
+
+        let hawaii_x: Range<T> = T::from(-0.214).unwrap()..T::from(-0.115).unwrap();
+        let hawaii_y: Range<T> = T::from(0.166).unwrap()..T::from(0.234).unwrap();
+
         let mut alaska = EqualArea::builder();
-        alaska.rotate2_set(&[154_f64, 0_f64]).center_set(&Coord {
-            x: -2_f64,
-            y: 58.5_f64,
-        });
+        alaska
+            .rotate2_set(&[T::from(154_f64).unwrap(), T::zero()])
+            .center_set(&Coord {
+                x: T::from(-2_f64).unwrap(),
+                y: T::from(58.5_f64).unwrap(),
+            });
 
         let mut hawaii = EqualArea::builder();
-        hawaii.rotate2_set(&[157_f64, 0_f64]).center_set(&Coord {
-            x: -3_f64,
-            y: 19.9_f64,
-        });
+        hawaii
+            .rotate2_set(&[T::from(157_f64).unwrap(), T::zero()])
+            .center_set(&Coord {
+                x: T::from(-3_f64).unwrap(),
+                y: T::from(19.9_f64).unwrap(),
+            });
 
         let lower_48 = albers();
 
-        let k: f64 = lower_48.scale();
+        let k: T = lower_48.scale();
         let t = lower_48.translate();
 
         let mut lower_48_point = albers();
         let lower_48_point = lower_48_point.translate_set(&t).clip_extent_set(&[
             Coord {
-                x: 0.455_f64.mul_add(-k, t.x),
-                y: 0.234f64.mul_add(-k, t.y),
+                x: T::from(0.455_f64).unwrap().mul_add(-k, t.x),
+                y: T::from(0.234_f64).unwrap().mul_add(-k, t.y),
             },
             Coord {
-                x: 0.455_f64.mul_add(k, t.x),
-                y: 0.234f64.mul_add(k, t.y),
+                x: T::from(0.455_f64).unwrap().mul_add(k, t.x),
+                y: T::from(0.234_f64).unwrap().mul_add(k, t.y),
             },
         ]);
 
         let mut alaska_point = EqualArea::builder();
         alaska_point
-            .rotate2_set(&[154_f64, 0_f64])
+            .rotate2_set(&[T::from(154_f64).unwrap(), T::zero()])
             .center_set(&Coord {
-                x: -2_f64,
-                y: 58.5_f64,
+                x: T::from(-2_f64).unwrap(),
+                y: T::from(58.5_f64).unwrap(),
             })
             .translate_set(&Coord {
-                x: 0.307_f64.mul_add(-k, t.x),
-                y: 0.201f64.mul_add(-k, t.y),
+                x: T::from(0.307_f64).unwrap().mul_add(-k, t.x),
+                y: T::from(0.201_f64).unwrap().mul_add(-k, t.y),
             });
         let alaska_point = alaska_point.clip_extent_set(&[
             Coord {
-                x: 0.425_f64.mul_add(-k, t.x) + EPSILON,
-                y: 0.120_f64.mul_add(-k, t.y) + EPSILON,
+                x: T::from(0.425_f64).unwrap().mul_add(-k, t.x) + epsilon,
+                y: T::from(0.120_f64).unwrap().mul_add(-k, t.y) + epsilon,
             },
             Coord {
-                x: 0.214_f64.mul_add(-k, t.x) - EPSILON,
-                y: 0.234f64.mul_add(-k, t.y) - EPSILON,
+                x: T::from(0.214_f64).unwrap().mul_add(-k, t.x) - epsilon,
+                y: T::from(0.234_f64).unwrap().mul_add(-k, t.y) - epsilon,
             },
         ]);
 
         let mut hawaii_point = EqualArea::builder();
         hawaii_point
-            .rotate2_set(&[157_f64, 0_f64])
+            .rotate2_set(&[T::from(157_f64).unwrap(), T::zero()])
             .center_set(&Coord {
-                x: -3_f64,
-                y: 19.9_f64,
+                x: T::from(-3_f64).unwrap(),
+                y: T::from(19.9_f64).unwrap(),
             })
             .translate_set(&Coord {
-                x: 0.205_f64.mul_add(-k, t.x),
-                y: 0.212_f64.mul_add(-k, t.y),
+                x: T::from(0.205_f64).unwrap().mul_add(-k, t.x),
+                y: T::from(0.212_f64).unwrap().mul_add(-k, t.y),
             });
         let hawaii_point = hawaii_point.clip_extent_set(&[
             Coord {
-                x: 0.214_f64.mul_add(-k, t.x) + EPSILON,
-                y: 0.166f64.mul_add(-k, t.y) + EPSILON,
+                x: T::from(0.214_f64).unwrap().mul_add(-k, t.x) + epsilon,
+                y: T::from(0.166_f64).unwrap().mul_add(-k, t.y) + epsilon,
             },
             Coord {
-                x: 0.214_f64.mul_add(-k, t.x) + EPSILON,
-                y: 0.234_f64.mul_add(k, t.y) - EPSILON,
+                x: T::from(0.214_f64).unwrap().mul_add(-k, t.x) + epsilon,
+                y: T::from(0.234_f64).unwrap().mul_add(k, t.y) - epsilon,
             },
         ]);
 
@@ -143,36 +167,40 @@ where
             alaska,
             lower_48,
             hawaii,
+            alaska_y,
+            alaska_x,
+
+            hawaii_x,
+            hawaii_y,
         }
     }
 }
 
-impl<DRAIN> RawBase for AlbersUsa<DRAIN>
+impl<DRAIN, T> RawBase for AlbersUsa<DRAIN, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    T: 'static + CoordFloat + Debug + Default + FloatConst,
 {
-    type Builder = Builder<DRAIN>;
+    type Builder = Builder<DRAIN, T>;
 
     #[inline]
-    fn builder() -> Builder<DRAIN> {
+    fn builder() -> Builder<DRAIN, T> {
         let mut b = Builder::new(Self::default());
-        b.scale_set(1070_f64);
+        b.scale_set(T::from(1070_f64).unwrap());
         b
     }
 }
 
-const ALASKA_Y: Range<f64> = 0.120..0.234;
-const ALASKA_X: Range<f64> = -0.425..-0.214;
-
-const HAWAII_X: Range<f64> = -0.214..-0.115;
-const HAWAII_Y: Range<f64> = 0.166..0.234;
-
 use crate::path::Result;
-impl<DRAIN> Transform for AlbersUsa<DRAIN> {
-    type T = f64;
+impl<DRAIN, T> Transform for AlbersUsa<DRAIN, T>
+where
+    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+    T: 'static + CoordFloat + Debug + Default + FloatConst,
+{
+    type T = T;
 
     #[inline]
-    fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
+    fn transform(&self, p: &Coord<T>) -> Coord<T> {
         let mut lower_48_end_point = LastPoint::default();
         let mut pipeline = self.lower_48_point.build().stream(&lower_48_end_point);
 
@@ -189,8 +217,8 @@ impl<DRAIN> Transform for AlbersUsa<DRAIN> {
                         pipeline.point(p, None);
                         hawaii_end_point.result().map_or(
                             Coord {
-                                x: f64::NAN,
-                                y: f64::NAN,
+                                x: T::nan(),
+                                y: T::nan(),
                             },
                             |t| t,
                         )
@@ -203,12 +231,12 @@ impl<DRAIN> Transform for AlbersUsa<DRAIN> {
     }
 
     #[inline]
-    fn invert(&self, p: &Coord<f64>) -> Coord<f64> {
+    fn invert(&self, p: &Coord<T>) -> Coord<T> {
         let x = (p.x - self.t.x) / self.k;
         let y = (p.y - self.t.y) / self.k;
-        if ALASKA_Y.contains(&y) && ALASKA_X.contains(&x) {
+        if self.alaska_y.contains(&y) && self.alaska_x.contains(&x) {
             self.alaska_point.build().invert(p)
-        } else if HAWAII_Y.contains(&y) && HAWAII_X.contains(&x) {
+        } else if self.hawaii_y.contains(&y) && self.hawaii_x.contains(&x) {
             self.hawaii_point.build().invert(p)
         } else {
             self.lower_48_point.build().invert(p)

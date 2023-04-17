@@ -1,6 +1,9 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
+use geo::CoordFloat;
+use num_traits::FloatConst;
+
 use crate::projection::projector_albers_usa::Projector;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
@@ -30,27 +33,29 @@ pub trait PRConic: RawBase {
 
 /// A wrapper over Projection\Builder which hold state phi0, phi1 and allow regeneration of the PR.
 #[derive(Clone, Debug)]
-pub struct Builder<DRAIN>
+pub struct Builder<DRAIN, T>
 where
     DRAIN: Clone,
+    T: CoordFloat + Debug + Default + FloatConst,
 {
     phantom_drain: PhantomData<DRAIN>,
     /// The underlying projection.
-    pub pr: AlbersUsa<DRAIN>,
+    pub pr: AlbersUsa<DRAIN, T>,
 }
 
-impl<DRAIN> BuilderTrait for Builder<DRAIN>
+impl<DRAIN, T> BuilderTrait for Builder<DRAIN, T>
 where
-    DRAIN: Clone,
+    T: CoordFloat + Debug + Default + FloatConst,
+    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 {
-    type PR = AlbersUsa<DRAIN>;
+    type PR = AlbersUsa<DRAIN, T>;
 
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
     ///
     /// # Panics
     /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
-    fn new(pr: AlbersUsa<DRAIN>) -> Self {
+    fn new(pr: AlbersUsa<DRAIN, T>) -> Self {
         Self {
             phantom_drain: PhantomData::<DRAIN>,
             pr,
@@ -58,14 +63,15 @@ where
     }
 }
 
-impl<DRAIN> Builder<DRAIN>
+impl<DRAIN, T> Builder<DRAIN, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
+    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    T: CoordFloat + Debug + Default + FloatConst,
 {
     /// Using the currently programmed state output a new projection.
     #[inline]
     #[must_use]
-    pub fn build(&self) -> Projector<DRAIN, Multiplex<AlbersUsa<DRAIN>, Unconnected>> {
-        Projector::<DRAIN, Multiplex<AlbersUsa<DRAIN>, Unconnected>>::default()
+    pub fn build(&self) -> Projector<DRAIN, Multiplex<AlbersUsa<DRAIN, T>, Unconnected, T>> {
+        Projector::<DRAIN, Multiplex<AlbersUsa<DRAIN, T>, Unconnected, T>>::default()
     }
 }

@@ -4,11 +4,12 @@ use super::Builder;
 use super::PRConic;
 use super::ParallelsGet;
 use crate::projection::BuilderTrait;
+use crate::projection::ScaleGet;
 
 // Reach into builder and alter the PR.
 impl<BASE, PR, T> ParallelsGet for Builder<BASE, T>
 where
-    BASE: BuilderTrait<PR = PR>,
+    BASE: BuilderTrait<PR = PR> + ScaleGet<T = T>,
     PR: PRConic<T = T> + Clone,
     T: CoordFloat,
 {

@@ -167,7 +167,7 @@ mod invert {
     fn albers_usa() {
         println!("albersUsa(point) and albersUsa.invert(point) are symmetric");
 
-        let builder = AlbersUsa::<LastPoint<f64>>::builder();
+        let builder = AlbersUsa::builder();
         let mut projection = builder.build();
 
         let mut transformer: AlbersUsaMultiTransformer<3, LastPoint<f64>, _> =
