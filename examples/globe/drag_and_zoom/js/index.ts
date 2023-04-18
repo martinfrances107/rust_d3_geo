@@ -30,16 +30,13 @@ import('../pkg')
           renderLoop()
         }
 
-        const isSolidElem = document.getElementById('is_solid')
-        let isSolidInput: HTMLInputElement
+        const isSolidElem = document.querySelector<HTMLInputElement>('#is_solid')
         if (isSolidElem === null) {
           return
-        } else {
-          isSolidInput = isSolidElem as HTMLInputElement
         }
 
         isSolidElem.addEventListener('click', (e) => {
-          isSolid = isSolidInput.checked
+          isSolid = isSolidElem.checked
           renderLoop()
         })
 
