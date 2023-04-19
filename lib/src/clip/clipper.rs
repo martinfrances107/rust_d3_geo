@@ -2,7 +2,6 @@ use std::collections::VecDeque;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use derivative::Derivative;
 use geo::CoordFloat;
 use geo::LineString;
 use geo_types::Coord;
@@ -55,8 +54,7 @@ enum LineEndFn {
 }
 
 /// Clip specific state of connection.
-#[derive(Clone, Derivative)]
-#[derivative(Debug)]
+#[derive(Clone, Debug)]
 pub struct Connected<LB, LC, T>
 where
     T: CoordFloat,

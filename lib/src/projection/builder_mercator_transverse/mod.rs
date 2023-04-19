@@ -29,7 +29,6 @@ pub mod translate_get;
 pub mod types;
 
 use approx::AbsDiffEq;
-use derivative::Derivative;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -48,8 +47,7 @@ use super::ScaleSet;
 use super::TransformExtent;
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
-#[derive(Clone, Derivative)]
-#[derivative(Debug)]
+#[derive(Clone, Debug)]
 pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,

@@ -44,7 +44,6 @@ pub mod translate_get;
 /// Builder shorthand notations.
 pub mod types;
 
-use derivative::Derivative;
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
@@ -168,8 +167,7 @@ pub(super) trait Reclip {
 }
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
-#[derive(Clone, Derivative)]
-#[derivative(Debug)]
+#[derive(Clone, Debug)]
 pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
