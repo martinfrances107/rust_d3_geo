@@ -1,14 +1,11 @@
 #![cfg(not(tarpaulin_include))]
 
-use std::fmt::Debug;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::LineWriter;
 
-use geo::CoordFloat;
 use geo::Geometry;
 use geo_types::Coord;
-use num_traits::FloatConst;
 use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
 
@@ -38,16 +35,13 @@ lazy_static! {
 }
 
 ///  Helper function to extract world geometry from file.
-fn world<T>() -> Topology
-where
-    T: CoordFloat + Debug + FloatConst,
-{
+fn world() -> Topology {
     let file = File::open("./world-atlas/world/50m.json").expect("File should open read only.");
     serde_json::from_reader(file).expect("File should be parse as JSON.")
 }
 
 fn parse_topology() -> Geometry {
-    let topology = world::<f64>();
+    let topology = world();
     feature_from_name(&topology, "countries").expect("Did not extract geometry")
 }
 
