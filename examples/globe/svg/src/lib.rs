@@ -51,13 +51,7 @@ fn path_node(class_name: &str) -> Result<Element, JsValue> {
         Some(element) => element,
         None => {
             // keep.
-            match document.create_element_ns(Some("http://www.w3.org/2000/svg"), "path") {
-                Ok(element) => element,
-                Err(_) => {
-                    console_log!("failed to create node.");
-                    panic!("failed");
-                }
-            }
+            document.create_element_ns(Some("http://www.w3.org/2000/svg"), "path")?
         }
     };
     Ok(ret)
