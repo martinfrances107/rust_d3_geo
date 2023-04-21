@@ -41,7 +41,6 @@ where
     SD: Clone,
     T: CoordFloat + Debug + Default + FloatConst,
 {
-    p_drain: PhantomData<SD>,
     k: T,
     t: Coord<T>,
 
@@ -155,7 +154,6 @@ where
         ]);
 
         Self {
-            p_drain: PhantomData::<SD>,
             k,
             t,
             // Initially there is not difference between builder with base settings and
