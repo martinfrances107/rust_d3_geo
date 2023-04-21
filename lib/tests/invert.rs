@@ -1,14 +1,11 @@
 #[cfg(not(tarpaulin_include))]
 mod invert {
 
-    use d3_geo_rs::path::Result;
-    use d3_geo_rs::projection::projector_albers_usa::AlbersUsaMultiTransformer;
-    use d3_geo_rs::stream::Stream;
-    use d3_geo_rs::stream::Streamable;
     use geo::Point;
     use geo_types::Coord;
 
     use d3_geo_rs::last_point::LastPoint;
+    use d3_geo_rs::path::Result;
     use d3_geo_rs::projection::albers::albers as albers_builder;
     use d3_geo_rs::projection::albers_usa::AlbersUsa;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
@@ -24,12 +21,14 @@ mod invert {
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::orthographic::Orthographic;
+    use d3_geo_rs::projection::projector_albers_usa::AlbersUsaMultiTransformer;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::Projector;
     use d3_geo_rs::projection::RawBase;
     use d3_geo_rs::projection::RotateSet;
     use d3_geo_rs::stream::DrainStub;
+    use d3_geo_rs::stream::Streamable;
     use d3_geo_rs::Transform;
 
     fn symetric_invert<PM>(pm: PM)
@@ -171,8 +170,7 @@ mod invert {
         let builder = AlbersUsa::builder();
         let mut projection = builder.build();
 
-        let mut transformer: AlbersUsaMultiTransformer<LastPoint<f64>, _> =
-            projection.stream(&LastPoint::<f64>::default());
+        let mut transformer = projection.stream(&LastPoint::<f64>::default());
 
         for p in [
             Point(Coord {
