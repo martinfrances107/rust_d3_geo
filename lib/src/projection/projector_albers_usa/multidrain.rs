@@ -12,7 +12,7 @@ use crate::stream::Stream;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Multidrain<const N: usize, SD, T, TRANSFORMER> {
     p_t: PhantomData<T>,
-    pub sd: SD,
+    sd: SD,
     drains: [TRANSFORMER; N],
 }
 
@@ -34,6 +34,7 @@ impl<const N: usize, SD, T, TRANSFORMER> Multidrain<N, SD, T, TRANSFORMER>
 where
     SD: Default,
 {
+    /// Constructor.
     pub fn new(drains: [TRANSFORMER; N]) -> Self {
         Self {
             p_t: PhantomData::<T>,
