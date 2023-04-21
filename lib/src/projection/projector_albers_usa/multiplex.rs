@@ -26,6 +26,10 @@ pub struct Connected<const N: usize, TRANSFORM> {
 /// A projection stream pipeline stage which holds a collection of
 /// Projectors, in the case of `AlbersUSA` one for every region.
 /// `lower_48`, `alaaska`, `hawaii`.
+///
+/// NB This is not just a wrapper around an array of transforms.
+/// to implement Transform here we store PR which hold the
+/// complexity.
 #[derive(Clone, Debug)]
 pub struct Multiplex<PR, STATE, T> {
     p_t: PhantomData<T>,
