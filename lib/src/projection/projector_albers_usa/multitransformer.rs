@@ -35,10 +35,10 @@ where
     SD: Stream<EP = SD, T = T>,
 {
     type T = T;
-    type EP = Self;
+    type EP = Multidrain<N, SD, T, TRANSFORMER>;
 
     fn endpoint(&mut self) -> &mut Self::EP {
-        self
+        &mut self.md
     }
 
     fn line_end(&mut self) {
