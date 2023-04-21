@@ -28,7 +28,6 @@ use num_traits::FloatConst;
 use crate::path::area::Area;
 use crate::path::bounds::Bounds;
 use crate::path::centroid::Centroid;
-
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Projector;
 use crate::rot::rotator_radians::RotatorRadians;

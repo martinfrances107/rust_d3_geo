@@ -9,7 +9,7 @@ use crate::path::Result;
 use crate::stream::Stream;
 
 /// Wrapper for a Drain type.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Multidrain<const N: usize, SD, T, TRANSFORMER> {
     p_t: PhantomData<T>,
     sd: SD,
