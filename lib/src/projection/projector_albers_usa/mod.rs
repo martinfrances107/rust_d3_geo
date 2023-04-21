@@ -31,8 +31,9 @@ use super::Projector as ProjectorTrait;
 /// The multiplex is a collection of sub-projections.
 pub mod multiplex;
 
+/// End point for projections like `AlbersUsa` which end in mulitple points.
 pub mod multidrain;
-/// Transformer defined as more than more proejction.
+/// Transformer defined as more than more projection.
 pub mod multitransformer;
 
 type AlbersTransformer<SD, T> = StreamTransformRadians<
@@ -82,6 +83,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
 
 /// Used in the formation of a `AlbersUsa` pipeline.
 pub type AlbersUsaMultiTransformer<SD, T> = MultiTransformer<3, SD, T, AlbersTransformer<SD, T>>;
+/// Used in the formation of a `AlbersUsa` pipeline.
 pub type AlbersUsaMultiplex<SD, T> =
     Multiplex<AlbersUsa<SD, T>, ConnectedMultiplex<3, AlbersTransformer<SD, T>>, T>;
 
