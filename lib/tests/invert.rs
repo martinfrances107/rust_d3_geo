@@ -21,7 +21,6 @@ mod invert {
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::orthographic::Orthographic;
-    use d3_geo_rs::projection::projector_albers_usa::AlbersUsaMultiTransformer;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::Projector;

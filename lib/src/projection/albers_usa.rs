@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 use std::ops::Range;
 
 use geo::CoordFloat;
@@ -13,19 +12,18 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::albers::albers;
-use super::BuilderTrait;
-use super::CenterSet;
-use super::ClipExtentSet;
-use super::RotateSet;
-use super::ScaleSet;
-
 use super::builder_albers_usa::Builder;
 use super::builder_conic::types::BuilderConicAntimeridianResampleClip;
 use super::builder_conic::types::BuilderConicAntimeridianResampleNoClip;
 use super::equal_area::EqualArea;
 use super::Build;
+use super::BuilderTrait;
+use super::CenterSet;
+use super::ClipExtentSet;
 use super::RawBase;
+use super::RotateSet;
 use super::ScaleGet;
+use super::ScaleSet;
 use super::TranslateGet;
 use super::TranslateSet;
 

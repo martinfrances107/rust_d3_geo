@@ -12,7 +12,6 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
-use d3_geo_rs::projection::projector_albers_usa::multidrain::Multidrain;
 use geo::Geometry;
 use geo::GeometryCollection;
 use gloo_utils::format::JsValueSerdeExt;
