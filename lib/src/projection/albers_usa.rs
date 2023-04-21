@@ -36,12 +36,12 @@ use super::TranslateSet;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
-pub struct AlbersUsa<DRAIN, T>
+pub struct AlbersUsa<SD, T>
 where
-    DRAIN: Clone,
+    SD: Clone,
     T: CoordFloat + Debug + Default + FloatConst,
 {
-    p_drain: PhantomData<DRAIN>,
+    p_drain: PhantomData<SD>,
     k: T,
     t: Coord<T>,
 
@@ -54,9 +54,9 @@ where
         BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
 
     // The builder with base setting used as a starting point everytime translate is adjusted.
-    pub(super) lower_48: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>,
-    pub(super) alaska: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>,
-    pub(super) hawaii: BuilderConicAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>,
+    pub(super) lower_48: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
+    pub(super) alaska: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
+    pub(super) hawaii: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
     alaska_x: Range<T>,
     alaska_y: Range<T>,
 
@@ -64,9 +64,9 @@ where
     hawaii_y: Range<T>,
 }
 
-impl<DRAIN, T> Default for AlbersUsa<DRAIN, T>
+impl<SD, T> Default for AlbersUsa<SD, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    SD: Clone + Default + Stream<EP = SD, T = T>,
     T: CoordFloat + Debug + Default + FloatConst,
 {
     fn default() -> Self {
@@ -155,7 +155,7 @@ where
         ]);
 
         Self {
-            p_drain: PhantomData::<DRAIN>,
+            p_drain: PhantomData::<SD>,
             k,
             t,
             // Initially there is not difference between builder with base settings and
@@ -176,15 +176,15 @@ where
     }
 }
 
-impl<DRAIN, T> RawBase for AlbersUsa<DRAIN, T>
+impl<SD, T> RawBase for AlbersUsa<SD, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    SD: Clone + Default + Stream<EP = SD, T = T>,
     T: 'static + CoordFloat + Debug + Default + FloatConst,
 {
-    type Builder = Builder<DRAIN, T>;
+    type Builder = Builder<SD, T>;
 
     #[inline]
-    fn builder() -> Builder<DRAIN, T> {
+    fn builder() -> Builder<SD, T> {
         let mut b = Builder::new(Self::default());
         b.scale_set(T::from(1070_f64).unwrap());
         b
@@ -192,9 +192,9 @@ where
 }
 
 use crate::path::Result;
-impl<DRAIN, T> Transform for AlbersUsa<DRAIN, T>
+impl<SD, T> Transform for AlbersUsa<SD, T>
 where
-    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+    SD: Clone + Stream<EP = SD, T = T>,
     T: 'static + CoordFloat + Debug + Default + FloatConst,
 {
     type T = T;

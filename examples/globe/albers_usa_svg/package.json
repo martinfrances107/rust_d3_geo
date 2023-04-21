@@ -1,0 +1,45 @@
+{
+  "name": "rust_d3_geo_example_globe_albers_usa_svg",
+  "version": "0.1.0",
+  "description": "Renders a AlbersUSA projection.",
+  "main": "index.js",
+  "bin": {
+    "create-wasm-app": ".bin/create-wasm-app.js"
+  },
+  "scripts": {
+    "build": "rimraf dist pkg && RUST_LOG=info webpack",
+    "serve": "serve dist",
+    "start": "rimraf dist pkg && RUST_LOG=info webpack-dev-server --open ",
+    "test": "cargo test && wasm-pack test --headless"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martinfrances107/rust_d3_geo.git"
+  },
+  "keywords": [
+    "webassembly",
+    "wasm",
+    "rust",
+    "webpack"
+  ],
+  "author": "Martin Frances <martinfrances107@hotmail.com>",
+  "license": "(MIT OR Apache-2.0)",
+  "bugs": {
+    "url": "https://github.com/martinfrances107/rust_d3_geo/issues"
+  },
+  "homepage": "https://github.com/martinfrances107/rust_d3_geo/#readme",
+  "dependencies": {
+    "rimraf": "^5",
+    "serve": "^14",
+    "webpack": "^5",
+    "webpack-cli": "^5",
+    "webpack-dev-server": "^4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5",
+    "@wasm-tool/wasm-pack-plugin": "^1",
+    "copy-webpack-plugin": "^11",
+    "eslint-plugin-react": "^7",
+    "eslint-plugin-react-hooks": "^4"
+  }
+}

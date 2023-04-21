@@ -12,6 +12,7 @@ use crate::clip::buffer::Buffer;
 use crate::clip::clipper::Clipper;
 use crate::clip::clipper::Connected as ConnectedClipper;
 use crate::identity::Identity;
+use crate::projection::projector_albers_usa::multiplex::Connected as ConnectedMultiplex;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connected as ConnectedStream;
@@ -21,6 +22,7 @@ use crate::Transform;
 
 use self::multiplex::Multiplex;
 use self::multitransformer::MultiTransformer;
+use super::albers_usa::AlbersUsa;
 use super::equal_area::EqualArea;
 use super::resampler::resample::Resample;
 use super::stream_transform_radians::StreamTransformRadians;
@@ -28,20 +30,36 @@ use super::Projector as ProjectorTrait;
 
 /// The multiplex is a collection of sub-projections.
 pub mod multiplex;
+
+pub mod multidrain;
 /// Transformer defined as more than more proejction.
 pub mod multitransformer;
 
-/// Used in the formation of a `AlbersUsa` pipeline.
-pub type AlbersUsaMultiTransformer<const N: usize, SD, T> = MultiTransformer<
-    3,
-    SD,
-    T,
-    StreamTransformRadians<
-        ConnectedStream<
-            RotatorRadians<
-                ConnectedStream<
-                    Clipper<
-                        Interpolate<T>,
+type AlbersTransformer<SD, T> = StreamTransformRadians<
+    ConnectedStream<
+        RotatorRadians<
+            ConnectedStream<
+                Clipper<
+                    Interpolate<T>,
+                    Line<
+                        ConnectedStream<
+                            Resample<
+                                EqualArea<SD, T>,
+                                ConnectedResample<Identity<ConnectedStream<SD>>, T>,
+                                T,
+                            >,
+                        >,
+                        T,
+                    >,
+                    Line<Unconnected, T>,
+                    PV<T>,
+                    Resample<
+                        EqualArea<SD, T>,
+                        ConnectedResample<Identity<ConnectedStream<SD>>, T>,
+                        T,
+                    >,
+                    ConnectedClipper<
+                        Line<ConnectedStream<Buffer<T>>, T>,
                         Line<
                             ConnectedStream<
                                 Resample<
@@ -52,35 +70,20 @@ pub type AlbersUsaMultiTransformer<const N: usize, SD, T> = MultiTransformer<
                             >,
                             T,
                         >,
-                        Line<Unconnected, T>,
-                        PV<T>,
-                        Resample<
-                            EqualArea<SD, T>,
-                            ConnectedResample<Identity<ConnectedStream<SD>>, T>,
-                            T,
-                        >,
-                        ConnectedClipper<
-                            Line<ConnectedStream<Buffer<T>>, T>,
-                            Line<
-                                ConnectedStream<
-                                    Resample<
-                                        EqualArea<SD, T>,
-                                        ConnectedResample<Identity<ConnectedStream<SD>>, T>,
-                                        T,
-                                    >,
-                                >,
-                                T,
-                            >,
-                            T,
-                        >,
                         T,
                     >,
+                    T,
                 >,
-                T,
             >,
+            T,
         >,
     >,
 >;
+
+/// Used in the formation of a `AlbersUsa` pipeline.
+pub type AlbersUsaMultiTransformer<SD, T> = MultiTransformer<3, SD, T, AlbersTransformer<SD, T>>;
+pub type AlbersUsaMultiplex<SD, T> =
+    Multiplex<AlbersUsa<SD, T>, ConnectedMultiplex<3, AlbersTransformer<SD, T>>, T>;
 
 /// Projection output of projection/Builder.
 ///
@@ -113,7 +116,7 @@ where
 {
     type EP = DRAIN;
 
-    type Transformer = AlbersUsaMultiTransformer<3, DRAIN, T>;
+    type Transformer = AlbersUsaMultiTransformer<DRAIN, T>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///

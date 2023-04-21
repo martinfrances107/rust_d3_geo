@@ -1,0 +1,58 @@
+[package]
+authors = ["martin <martinfrances107@hotmail.com>"]
+categories = ["graphics"]
+edition = "2021"
+description = "A example app from the rust_d3_geo package. The app is an example of code that manipulates SVG elements to display a globe."
+keywords = ["graphics", "d3-geo"]
+name = "rust_d3_geo_example_albers_usa_svg"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/martinfrances107/rust_d3_geo.git"
+version = { workspace = true }
+
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+d3_geo_rs = { path = "../../../lib" }
+geo = { workspace = true, features = ["use-serde"] }
+geo-types = { workspace = true }
+gloo-utils = { workspace = true }
+js-sys = { workspace = true }
+rust_topojson_client = { workspace = true }
+topojson = { workspace = true }
+wasm-bindgen-test = { workspace = true }
+wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
+wasm-bindgen-futures = { workspace = true }
+
+# The `web-sys` crate allows you to interact with the various browser APIs,
+# like the DOM.
+[dependencies.web-sys]
+workspace = true
+features = [
+  "console",
+  "Attr",
+  "Document",
+  "Element",
+  "Event",
+  "Headers",
+  "EventTarget",
+  "SvgsvgElement",
+  "SvgAnimatedLength",
+  "SvgLength",
+  "SvgPathElement",
+  "HtmlElement",
+  "HtmlCollection",
+  "HtmlInputElement",
+  "Node",
+  "Performance",
+  "PerformanceTiming",
+  "PerformanceMeasure",
+  "Request",
+  "RequestInit",
+  "RequestMode",
+  "Response",
+  "Text",
+  "Window",
+]

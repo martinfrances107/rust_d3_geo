@@ -6,6 +6,7 @@ members = [
   "./examples/globe/rotating_50m",
   "./examples/globe/drag_and_zoom",
   "./examples/globe/svg",
+  "./examples/globe/albers_usa_svg",
   "./examples/projections",
   "./examples/ring",
   "./profile_target",

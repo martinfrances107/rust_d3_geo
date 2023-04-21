@@ -56,7 +56,7 @@ where
 {
     /// Connects the next stage in the stream pipline.
     #[inline]
-    pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaMultiTransformer<3, SD, T>
+    pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaMultiTransformer<SD, T>
     where
         T: Debug,
         SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
@@ -75,7 +75,7 @@ where
 }
 
 impl<DRAIN, const N: usize, T> Transform
-    for Multiplex<AlbersUsa<DRAIN, T>, Connected<N, AlbersUsaMultiTransformer<N, DRAIN, T>>, T>
+    for Multiplex<AlbersUsa<DRAIN, T>, Connected<N, AlbersUsaMultiTransformer<DRAIN, T>>, T>
 where
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
     T: 'static + CoordFloat + Default + FloatConst,

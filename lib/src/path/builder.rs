@@ -7,6 +7,9 @@ use num_traits::FloatConst;
 
 use crate::path::context::Context;
 use crate::path::Path;
+use crate::projection::projector_albers_usa::multidrain::Multidrain;
+use crate::projection::projector_albers_usa::AlbersUsaMultiTransformer;
+use crate::projection::projector_albers_usa::AlbersUsaMultiplex;
 use crate::projection::Projector;
 use crate::stream::Stream;
 
@@ -31,9 +34,8 @@ where
     context_stream: CS,
 }
 
-impl<CS, PROJECTOR, T, TRANSFORMER> Builder<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T> Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
@@ -74,6 +76,28 @@ where
     #[must_use]
     pub fn context_pathstring() -> Self {
         Self::new(String::default())
+    }
+}
+
+use crate::projection::projector_albers_usa::Projector as ProjectorAlbersUsa;
+
+type StringMultidrian<T> = Multidrain<3, String<T>, T, AlbersUsaMultiTransformer<String<T>, T>>;
+
+/// Context related methods.
+impl<T>
+    Builder<
+        StringMultidrian<T>,
+        ProjectorAlbersUsa<StringMultidrian<T>, AlbersUsaMultiplex<String<f64>, T>>,
+        T,
+    >
+where
+    T: CoordFloat + Default + Display + FloatConst,
+{
+    /// Returns a Builder from default values.
+    #[inline]
+    #[must_use]
+    pub fn albers_pathstring() -> Self {
+        Self::new(Multidrain::default())
     }
 }
 
