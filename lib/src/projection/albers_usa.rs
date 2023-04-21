@@ -44,23 +44,24 @@ where
     k: T,
     t: Coord<T>,
 
-    // The builders with clip_extent() applied.
-    pub(super) lower_48_point:
-        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
-    pub(super) alaska_point:
-        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
-    pub(super) hawaii_point:
-        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
-
-    // The builder with base setting used as a starting point everytime translate is adjusted.
-    pub(super) lower_48: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
-    pub(super) alaska: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
-    pub(super) hawaii: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
     alaska_x: Range<T>,
     alaska_y: Range<T>,
 
     hawaii_x: Range<T>,
     hawaii_y: Range<T>,
+
+    // The builders with clip_extent() applied.
+    pub(super) alaska_point:
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
+    pub(super) lower_48_point:
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
+    pub(super) hawaii_point:
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
+
+    // The builder with base setting used as a starting point everytime translate is adjusted.
+    pub(super) alaska: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
+    pub(super) lower_48: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
+    pub(super) hawaii: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
 }
 
 impl<SD, T> Default for AlbersUsa<SD, T>
@@ -70,11 +71,6 @@ where
 {
     fn default() -> Self {
         let epsilon = T::from(EPSILON).unwrap();
-        let alaska_y: Range<T> = T::from(0.120).unwrap()..T::from(0.234).unwrap();
-        let alaska_x: Range<T> = T::from(-0.425).unwrap()..T::from(-0.214).unwrap();
-
-        let hawaii_x: Range<T> = T::from(-0.214).unwrap()..T::from(-0.115).unwrap();
-        let hawaii_y: Range<T> = T::from(0.166).unwrap()..T::from(0.234).unwrap();
 
         let mut alaska = EqualArea::builder();
         alaska
@@ -156,8 +152,13 @@ where
         Self {
             k,
             t,
-            // Initially there is not difference between builder with base settings and
-            // Builder with translation applied.
+
+            alaska_y: T::from(0.120).unwrap()..T::from(0.234).unwrap(),
+            alaska_x: T::from(-0.425).unwrap()..T::from(-0.214).unwrap(),
+
+            hawaii_x: T::from(-0.214).unwrap()..T::from(-0.115).unwrap(),
+            hawaii_y: T::from(0.166).unwrap()..T::from(0.234).unwrap(),
+
             alaska_point,
             lower_48_point,
             hawaii_point,
@@ -165,11 +166,6 @@ where
             alaska,
             lower_48,
             hawaii,
-            alaska_y,
-            alaska_x,
-
-            hawaii_x,
-            hawaii_y,
         }
     }
 }
