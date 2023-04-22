@@ -87,7 +87,7 @@ type StringMultidrian<T> = Multidrain<3, String<T>, T, AlbersUsaMultiTransformer
 impl<T>
     Builder<
         StringMultidrian<T>,
-        ProjectorAlbersUsa<StringMultidrian<T>, AlbersUsaMultiplex<String<f64>, T>>,
+        ProjectorAlbersUsa<StringMultidrian<T>, AlbersUsaMultiplex<String<T>, T>>,
         T,
     >
 where
