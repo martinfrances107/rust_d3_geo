@@ -20,6 +20,7 @@ where
     SD: Clone + Default,
 {
     /// Constructor
+    #[must_use]
     pub fn new(store: Vec<TRANSFORM>) -> Self {
         let md: Multidrain<N, SD, T, TRANSFORM> = Multidrain::default();
         Self {

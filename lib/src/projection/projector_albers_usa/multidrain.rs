@@ -36,6 +36,7 @@ where
     SD: Clone + Default,
 {
     /// Constructor.
+    #[must_use]
     pub fn populate(&self, drains: Vec<TRANSFORM>) -> Self {
         Self {
             p_t: PhantomData::<T>,
