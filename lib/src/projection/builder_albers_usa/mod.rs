@@ -33,45 +33,45 @@ pub trait PRConic: RawBase {
 
 /// A wrapper over Projection\Builder which hold state phi0, phi1 and allow regeneration of the PR.
 #[derive(Clone, Debug)]
-pub struct Builder<DRAIN, T>
+pub struct Builder<SD, T>
 where
-    DRAIN: Clone,
+    SD: Clone,
     T: CoordFloat + Debug + Default + FloatConst,
 {
-    phantom_drain: PhantomData<DRAIN>,
+    phantom_sd: PhantomData<SD>,
     /// The underlying projection.
-    pub pr: AlbersUsa<DRAIN, T>,
+    pub pr: AlbersUsa<SD, T>,
 }
 
-impl<DRAIN, T> BuilderTrait for Builder<DRAIN, T>
+impl<SD, T> BuilderTrait for Builder<SD, T>
 where
     T: CoordFloat + Debug + Default + FloatConst,
-    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+    SD: Clone + Stream<EP = SD, T = T>,
 {
-    type PR = AlbersUsa<DRAIN, T>;
+    type PR = AlbersUsa<SD, T>;
 
     /// Given a Raw Projection and a clipping defintion create the associated
     /// Projection builder.
     ///
     /// # Panics
     /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
-    fn new(pr: AlbersUsa<DRAIN, T>) -> Self {
+    fn new(pr: AlbersUsa<SD, T>) -> Self {
         Self {
-            phantom_drain: PhantomData::<DRAIN>,
+            phantom_sd: PhantomData::<SD>,
             pr,
         }
     }
 }
 
-impl<DRAIN, T> Builder<DRAIN, T>
+impl<SD, T> Builder<SD, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    SD: Clone + Default + Stream<EP = SD, T = T>,
     T: CoordFloat + Debug + Default + FloatConst,
 {
     /// Using the currently programmed state output a new projection.
     #[inline]
     #[must_use]
-    pub fn build(&self) -> Projector<DRAIN, Multiplex<AlbersUsa<DRAIN, T>, Unconnected, T>> {
-        Projector::<DRAIN, Multiplex<AlbersUsa<DRAIN, T>, Unconnected, T>>::default()
+    pub fn build(&self) -> Projector<Multiplex<AlbersUsa<SD, T>, Unconnected, T>, SD> {
+        Projector::<Multiplex<AlbersUsa<SD, T>, Unconnected, T>, SD>::default()
     }
 }

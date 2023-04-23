@@ -1,6 +1,7 @@
 #[cfg(not(tarpaulin_include))]
 mod invert {
 
+    use d3_geo_rs::projection::projector_albers_usa::multidrain::Multidrain;
     use geo::Point;
     use geo_types::Coord;
 
@@ -168,8 +169,8 @@ mod invert {
 
         let builder = AlbersUsa::builder();
         let mut projection = builder.build();
-
-        let mut transformer = projection.stream(&LastPoint::<f64>::default());
+        let md = Multidrain::<3, LastPoint<f64>, f64, _>::default();
+        let mut transformer = projection.stream(&md);
 
         for p in [
             Point(Coord {

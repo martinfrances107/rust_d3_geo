@@ -53,9 +53,9 @@ where
 }
 
 /// Context related methods.
-impl<PROJECTOR, T, TRANSFORMER> Builder<Context, PROJECTOR, T>
+impl<PROJECTOR, T, TRANSFORM> Builder<Context, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = Context, Transformer = TRANSFORMER>,
+    PROJECTOR: Projector<EP = Context, Transformer = TRANSFORM>,
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
@@ -66,9 +66,9 @@ where
 }
 
 /// Context related methods.
-impl<PROJECTOR, T, TRANSFORMER> Builder<String<T>, PROJECTOR, T>
+impl<PROJECTOR, T, TRANSFORM> Builder<String<T>, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = String<T>, Transformer = TRANSFORMER>,
+    PROJECTOR: Projector<EP = String<T>, Transformer = TRANSFORM>,
     T: CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
@@ -81,7 +81,7 @@ where
 
 use crate::projection::projector_albers_usa::Projector as ProjectorAlbersUsa;
 
-type StringMultidrian<T> = Multidrain<3, String<T>, T, AlbersUsaMultiTransformer<String<T>, T>>;
+pub type StringMultidrian<T> = Multidrain<3, String<T>, T, AlbersUsaMultiTransformer<String<T>, T>>;
 
 /// Context related methods.
 impl<T>
@@ -101,9 +101,9 @@ where
     }
 }
 
-impl<CS, PROJECTOR, T, TRANSFORMER> PointRadiusTrait for Builder<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T, TRANSFORM> PointRadiusTrait for Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORM>,
     CS: PointRadiusTrait<T = T>,
     T: CoordFloat,
 {
@@ -119,15 +119,15 @@ where
 }
 
 /// Projection related methods.
-impl<CS, PROJECTOR, T, TRANSFORMER> Builder<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T, TRANSFORM> Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORM>,
     CS: Stream<EP = CS, T = T>,
     T: CoordFloat,
 {
     #[inline]
     /// Returns a projectors based on the builder settings.
-    pub fn build(self, projection: PROJECTOR) -> Path<CS, PROJECTOR, T, TRANSFORMER> {
+    pub fn build(self, projection: PROJECTOR) -> Path<CS, PROJECTOR, T, TRANSFORM> {
         Path::new(self.context_stream, projection)
     }
 }

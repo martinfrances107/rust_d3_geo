@@ -12,6 +12,7 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
+use d3_geo_rs::projection::projector_albers_usa::AlbersUsaMultiplex;
 use geo::Geometry;
 use geo::GeometryCollection;
 use gloo_utils::format::JsValueSerdeExt;
@@ -66,6 +67,7 @@ type P_A_USA<const N: usize> =
 
 type MyBuilder = PathBuilder<PathString<f64>, P_A_USA<3>, f64>;
 
+use d3_geo_rs::path::builder::StringMultidrian;
 /// Entry point.
 #[wasm_bindgen]
 pub async fn start() -> Result<(), JsValue> {

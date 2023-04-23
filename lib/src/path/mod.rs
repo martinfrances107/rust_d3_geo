@@ -76,9 +76,9 @@ where
 /// Projection and context stream applied to a Streamable.
 #[derive(Debug)]
 #[allow(dead_code)]
-pub struct Path<CS, PROJECTOR, T, TRANSFORMER>
+pub struct Path<CS, PROJECTOR, T, TRANSFORM>
 where
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORM>,
     T: CoordFloat,
 {
     context_stream: CS,
@@ -87,9 +87,9 @@ where
 }
 
 // impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
-impl<CS, PROJECTOR, T, TRANSFORMER> Path<CS, PROJECTOR, T, TRANSFORMER>
+impl<CS, PROJECTOR, T, TRANSFORM> Path<CS, PROJECTOR, T, TRANSFORM>
 where
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORM>,
     T: CoordFloat,
 {
     /// Constructor.
@@ -105,11 +105,11 @@ where
     }
 }
 
-impl<CS, PROJECTOR, T, TRANSFORMER> Path<CS, PROJECTOR, T, TRANSFORMER>
+impl<CS, PROJECTOR, T, TRANSFORM> Path<CS, PROJECTOR, T, TRANSFORM>
 where
     CS: Clone + Default + Result,
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
-    TRANSFORMER: Stream<EP = CS, T = T>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORM>,
+    TRANSFORM: Stream<EP = CS, T = T>,
     T: CoordFloat + FloatConst,
 {
     /// Combines projection, context stream and object.
@@ -206,10 +206,10 @@ where
     }
 }
 
-impl<PROJECTOR, T, TRANSFORMER> Path<Centroid<T>, PROJECTOR, T, TRANSFORMER>
+impl<PROJECTOR, T, TRANSFORM> Path<Centroid<T>, PROJECTOR, T, TRANSFORM>
 where
-    PROJECTOR: Projector<EP = Centroid<T>, Transformer = TRANSFORMER>,
-    TRANSFORMER: Stream<EP = Centroid<T>, T = T>,
+    PROJECTOR: Projector<EP = Centroid<T>, Transformer = TRANSFORM>,
+    TRANSFORM: Stream<EP = Centroid<T>, T = T>,
     T: AddAssign + CoordFloat + FloatConst,
 {
     /// Returns the centroid of the object.
@@ -222,9 +222,9 @@ where
     }
 }
 
-impl<CS, PROJECTOR, T, TRANSFORMER> Path<CS, PROJECTOR, T, TRANSFORMER>
+impl<CS, PROJECTOR, T, TRANSFORM> Path<CS, PROJECTOR, T, TRANSFORM>
 where
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORM>,
     T: CoordFloat,
 {
     /// Sets the context stream.

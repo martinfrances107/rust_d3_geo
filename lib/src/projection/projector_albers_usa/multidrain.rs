@@ -10,62 +10,63 @@ use crate::stream::Stream;
 
 /// Wrapper for a Drain type.
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct Multidrain<const N: usize, SD, T, TRANSFORMER> {
+pub struct Multidrain<const N: usize, SD, T, TRANSFORM> {
     p_t: PhantomData<T>,
-    sd: SD,
-    drains: [TRANSFORMER; N],
+    /// After initialisation, this value is used in a .connect()
+    /// call to construct the drains.
+    pub sd: SD,
+    drains: Vec<TRANSFORM>,
 }
 
-impl<const N: usize, SD, T, TRANSFORMER> Default for Multidrain<N, SD, T, TRANSFORMER>
+impl<const N: usize, SD, T, TRANSFORM> Default for Multidrain<N, SD, T, TRANSFORM>
 where
     SD: Default,
 {
     fn default() -> Self {
-        todo!();
-        // Self {
-        //     p_t: PhantomData::<T>,
-        //     sd: SD::default(),
-        //     drains: vec![],
-        // }
-    }
-}
-
-impl<const N: usize, SD, T, TRANSFORMER> Multidrain<N, SD, T, TRANSFORMER>
-where
-    SD: Default,
-{
-    /// Constructor.
-    pub fn new(drains: [TRANSFORMER; N]) -> Self {
         Self {
             p_t: PhantomData::<T>,
             sd: SD::default(),
+            drains: vec![],
+        }
+    }
+}
+
+impl<const N: usize, SD, T, TRANSFORM> Multidrain<N, SD, T, TRANSFORM>
+where
+    SD: Clone + Default,
+{
+    /// Constructor.
+    pub fn populate(&self, drains: Vec<TRANSFORM>) -> Self {
+        Self {
+            p_t: PhantomData::<T>,
+            sd: self.sd.clone(),
             drains,
         }
     }
 }
 
-impl<const N: usize, T, TRANSFORMER> Result for Multidrain<N, PathString<T>, T, TRANSFORMER>
+impl<const N: usize, T, TRANSFORM> Result for Multidrain<N, PathString<T>, T, TRANSFORM>
 where
     T: CoordFloat,
+    TRANSFORM: Result<Out = PathString<T>>,
 {
-    type Out = Vec<String>;
+    type Out = Vec<PathString<T>>;
 
     /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
-        todo!();
-        // let mut out = vec![];
-        // for c in &mut self.drains {
-        //     let result = c.result();
-        //     out.push(result);
-        // }
-        // out
+        let mut out = vec![];
+        for c in &mut self.drains {
+            let result = c.result();
+            out.push(result);
+        }
+        out
     }
 }
 
-impl<const N: usize, T, TRANSFORMER> Result for Multidrain<N, LastPoint<f64>, T, TRANSFORMER>
+impl<const N: usize, T, TRANSFORM> Result for Multidrain<N, LastPoint<f64>, T, TRANSFORM>
 where
     T: CoordFloat,
-    TRANSFORMER: Stream<EP = LastPoint<T>, T = T>,
+    TRANSFORM: Stream<EP = LastPoint<T>, T = T>,
 {
     type Out = Option<Coord<T>>;
     /// Merges the results of all the sub-drains.
@@ -79,10 +80,9 @@ where
     }
 }
 
-impl<const N: usize, SD, T, TRANSFORMER> Stream for Multidrain<N, SD, T, TRANSFORMER>
+impl<const N: usize, SD, T, TRANSFORM> Stream for Multidrain<N, SD, T, TRANSFORM>
 where
-    SD: Stream<EP = SD, T = T>,
-    TRANSFORMER: Stream<EP = SD, T = T>,
+    TRANSFORM: Stream<EP = SD, T = T>,
     T: CoordFloat,
 {
     type T = T;

@@ -20,6 +20,7 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+use self::multidrain::Multidrain;
 use self::multiplex::Multiplex;
 use self::multitransformer::MultiTransformer;
 use super::albers_usa::AlbersUsa;
@@ -91,34 +92,34 @@ pub type AlbersUsaMultiplex<SD, T> =
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Clone, Debug)]
-pub struct Projector<DRAIN, MULTIPLEX> {
-    phantom_drain: PhantomData<DRAIN>,
+pub struct Projector<MULTIPLEX, SD> {
+    phantom_sd: PhantomData<SD>,
     /// The internal single stage of the pipeline.
     pub multiplex: MULTIPLEX,
 }
 
-impl<DRAIN, MULTIPLEX> Default for Projector<DRAIN, MULTIPLEX>
+impl<MULTIPLEX, SD> Default for Projector<MULTIPLEX, SD>
 where
-    DRAIN: Clone,
+    SD: Clone,
     MULTIPLEX: Default,
 {
     fn default() -> Self {
         Self {
-            phantom_drain: PhantomData::<DRAIN>,
+            phantom_sd: PhantomData::<SD>,
             multiplex: MULTIPLEX::default(),
         }
     }
 }
 
-impl<DRAIN, PR, T> ProjectorTrait for Projector<DRAIN, Multiplex<PR, Unconnected, T>>
+impl<PR, SD, T> ProjectorTrait for Projector<Multiplex<PR, Unconnected, T>, SD>
 where
     PR: Default,
     T: CoordFloat + Default + FloatConst,
-    DRAIN: Clone + Default + PartialEq + Stream<EP = DRAIN, T = T>,
+    SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
 {
-    type EP = DRAIN;
+    type EP = Multidrain<3, SD, T, AlbersUsaMultiTransformer<SD, T>>;
 
-    type Transformer = AlbersUsaMultiTransformer<DRAIN, T>;
+    type Transformer = AlbersUsaMultiTransformer<SD, T>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///
@@ -131,7 +132,7 @@ where
     }
 }
 
-impl<DRAIN, MULTIPLEX, T> Transform for Projector<DRAIN, MULTIPLEX>
+impl<MULTIPLEX, SD, T> Transform for Projector<MULTIPLEX, SD>
 where
     T: CoordFloat + Debug,
     MULTIPLEX: Transform<T = T>,

@@ -7,6 +7,7 @@ use num_traits::FloatConst;
 
 use crate::last_point::LastPoint;
 use crate::math::EPSILON;
+use crate::path::Result;
 use crate::projection::Projector;
 use crate::stream::Stream;
 use crate::Transform;
@@ -183,7 +184,6 @@ where
     }
 }
 
-use crate::path::Result;
 impl<SD, T> Transform for AlbersUsa<SD, T>
 where
     SD: Clone + Stream<EP = SD, T = T>,

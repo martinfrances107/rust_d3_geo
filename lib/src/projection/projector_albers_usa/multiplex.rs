@@ -13,6 +13,7 @@ use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+use super::multidrain::Multidrain;
 use super::multitransformer::MultiTransformer;
 
 /// When connected the state changes to hold the connected Projectors.
@@ -30,7 +31,7 @@ pub struct Connected<const N: usize, TRANSFORM> {
 /// NB This is not just a wrapper around an array of transforms.
 /// to implement Transform here we store PR which hold the
 /// complexity.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Multiplex<PR, STATE, T> {
     p_t: PhantomData<T>,
     pr: PR,
@@ -60,28 +61,33 @@ where
 {
     /// Connects the next stage in the stream pipline.
     #[inline]
-    pub fn connect<SD>(&self, sink: &SD) -> AlbersUsaMultiTransformer<SD, T>
+    pub fn connect<SD>(
+        &self,
+        drain: &Multidrain<3, SD, T, AlbersUsaMultiTransformer<SD, T>>,
+    ) -> AlbersUsaMultiTransformer<SD, T>
     where
         T: Debug,
         SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
     {
         let pr = AlbersUsa::<SD, T>::default();
+        let sd = &drain.sd;
+
         // The order of objects in the store is important for performance.
         // The earlier a point is found the better,
         // so the lower_48 is searched first, and the smallest land area last.
-        let store = [
-            pr.lower_48.build().stream(&sink.clone()),
-            pr.alaska.build().stream(&sink.clone()),
-            pr.hawaii.build().stream(&sink.clone()),
+        let store = vec![
+            pr.lower_48.build().stream(&sd.clone()),
+            pr.alaska.build().stream(&sd.clone()),
+            pr.hawaii.build().stream(&sd.clone()),
         ];
         MultiTransformer::new(store)
     }
 }
 
-impl<DRAIN, const N: usize, T> Transform
-    for Multiplex<AlbersUsa<DRAIN, T>, Connected<N, AlbersUsaMultiTransformer<DRAIN, T>>, T>
+impl<const N: usize, SD, T> Transform
+    for Multiplex<AlbersUsa<SD, T>, Connected<N, AlbersUsaMultiTransformer<SD, T>>, T>
 where
-    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+    SD: Clone + Stream<EP = SD, T = T>,
     T: 'static + CoordFloat + Default + FloatConst,
 {
     /// f32 or f64
