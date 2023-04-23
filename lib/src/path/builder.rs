@@ -81,7 +81,7 @@ where
 
 use crate::projection::projector_albers_usa::Projector as ProjectorAlbersUsa;
 
-pub type StringMultidrian<T> = Multidrain<3, String<T>, T, AlbersUsaMultiTransformer<String<T>, T>>;
+pub type StringMultidrian<T> = Multidrain<3, String<T>, AlbersUsaMultiTransformer<String<T>, T>, T>;
 
 /// Context related methods.
 impl<T>

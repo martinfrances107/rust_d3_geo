@@ -18,7 +18,7 @@ pub struct Multidrain<const N: usize, SD, SUBTRANS, T> {
     drains: Vec<SUBTRANS>,
 }
 
-impl<const N: usize, SD, T, SUBTRANS> Default for Multidrain<N, SD, SUBTRANS, T>
+impl<const N: usize, SD, SUBTRANS, T> Default for Multidrain<N, SD, SUBTRANS, T>
 where
     SD: Default,
 {
