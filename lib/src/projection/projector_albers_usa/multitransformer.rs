@@ -10,30 +10,30 @@ use super::multidrain::Multidrain;
 /// Projections like `AlbersUSA` group several projections together.
 /// TODO can I remove this wrapper.
 #[derive(Debug)]
-pub struct MultiTransformer<const N: usize, SD, T, TRANSFORM> {
+pub struct MultiTransformer<const N: usize, SD, SUBTRANS, T> {
     /// The contained endpoint.
-    pub md: Multidrain<N, SD, T, TRANSFORM>,
+    pub md: Multidrain<N, SD, SUBTRANS, T>,
 }
 
-impl<const N: usize, SD, T, TRANSFORM> MultiTransformer<N, SD, T, TRANSFORM>
+impl<const N: usize, SD, SUBTRANS, T> MultiTransformer<N, SD, SUBTRANS, T>
 where
     SD: Clone + Default,
 {
     /// Constructor
     #[must_use]
-    pub fn new(store: Vec<TRANSFORM>) -> Self {
-        let md: Multidrain<N, SD, T, TRANSFORM> = Multidrain::default();
+    pub fn new(store: Vec<SUBTRANS>) -> Self {
+        let md: Multidrain<N, SD, SUBTRANS, T> = Multidrain::default();
         Self {
             md: md.populate(store),
         }
     }
 }
 
-impl<const N: usize, SD, T, TRANSFORM> Stream for MultiTransformer<N, SD, T, TRANSFORM>
+impl<const N: usize, SD, SUBTRANS, T> Stream for MultiTransformer<N, SD, SUBTRANS, T>
 where
-    T: CoordFloat,
-    TRANSFORM: Stream<EP = SD, T = T>,
+    SUBTRANS: Stream<EP = SD, T = T>,
     SD: Stream<EP = SD, T = T>,
+    T: CoordFloat,
 {
     type T = T;
     type EP = Self;

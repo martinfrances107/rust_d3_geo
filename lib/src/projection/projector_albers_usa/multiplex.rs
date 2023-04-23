@@ -15,13 +15,14 @@ use crate::Transform;
 
 use super::multidrain::Multidrain;
 use super::multitransformer::MultiTransformer;
+use super::AlbersTransformer;
 
 /// When connected the state changes to hold the connected Projectors.
 #[derive(Debug)]
-pub struct Connected<const N: usize, TRANSFORM> {
+pub struct Connected<const N: usize, SUBTRANS> {
     /// A collections of sub transforms.
     /// TODO can this be simplified once workings.
-    pub store: [TRANSFORM; N],
+    pub store: [SUBTRANS; N],
 }
 
 /// A projection stream pipeline stage which holds a collection of
@@ -61,21 +62,21 @@ where
 {
     /// Connects the next stage in the stream pipline.
     #[inline]
-    pub fn connect<SD>(
+    pub fn connect<const N: usize, SD>(
         &self,
-        drain: &Multidrain<3, SD, T, AlbersUsaMultiTransformer<SD, T>>,
-    ) -> AlbersUsaMultiTransformer<SD, T>
+        drain: &Multidrain<N, SD, AlbersTransformer<SD, T>, T>,
+    ) -> MultiTransformer<N, SD, AlbersTransformer<SD, T>, T>
     where
         T: Debug,
         SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
     {
-        let pr = AlbersUsa::<SD, T>::default();
+        let pr: AlbersUsa<SD, T> = AlbersUsa::<SD, T>::default();
         let sd = &drain.sd;
 
         // The order of objects in the store is important for performance.
         // The earlier a point is found the better,
         // so the lower_48 is searched first, and the smallest land area last.
-        let store = vec![
+        let store: Vec<AlbersTransformer<SD, T>> = vec![
             pr.lower_48.build().stream(&sd.clone()),
             pr.alaska.build().stream(&sd.clone()),
             pr.hawaii.build().stream(&sd.clone()),

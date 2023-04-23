@@ -83,7 +83,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
 >;
 
 /// Used in the formation of a `AlbersUsa` pipeline.
-pub type AlbersUsaMultiTransformer<SD, T> = MultiTransformer<3, SD, T, AlbersTransformer<SD, T>>;
+pub type AlbersUsaMultiTransformer<SD, T> = MultiTransformer<3, SD, AlbersTransformer<SD, T>, T>;
 /// Used in the formation of a `AlbersUsa` pipeline.
 pub type AlbersUsaMultiplex<SD, T> =
     Multiplex<AlbersUsa<SD, T>, ConnectedMultiplex<3, AlbersTransformer<SD, T>>, T>;
@@ -113,11 +113,10 @@ where
 
 impl<PR, SD, T> ProjectorTrait for Projector<Multiplex<PR, Unconnected, T>, SD>
 where
-    PR: Default,
     T: CoordFloat + Default + FloatConst,
     SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
 {
-    type EP = Multidrain<3, SD, T, AlbersUsaMultiTransformer<SD, T>>;
+    type EP = Multidrain<3, SD, AlbersTransformer<SD, T>, T>;
 
     type Transformer = AlbersUsaMultiTransformer<SD, T>;
 

@@ -53,9 +53,9 @@ where
 }
 
 /// Context related methods.
-impl<PROJECTOR, T, TRANSFORM> Builder<Context, PROJECTOR, T>
+impl<PROJECTOR, T, TRANSFORMER> Builder<Context, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = Context, Transformer = TRANSFORM>,
+    PROJECTOR: Projector<EP = Context, Transformer = TRANSFORMER>,
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
@@ -66,9 +66,9 @@ where
 }
 
 /// Context related methods.
-impl<PROJECTOR, T, TRANSFORM> Builder<String<T>, PROJECTOR, T>
+impl<PROJECTOR, T, TRANSFORMER> Builder<String<T>, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = String<T>, Transformer = TRANSFORM>,
+    PROJECTOR: Projector<EP = String<T>, Transformer = TRANSFORMER>,
     T: CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
@@ -101,9 +101,9 @@ where
     }
 }
 
-impl<CS, PROJECTOR, T, TRANSFORM> PointRadiusTrait for Builder<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T, TRANSFORMER> PointRadiusTrait for Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORM>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     CS: PointRadiusTrait<T = T>,
     T: CoordFloat,
 {
@@ -119,15 +119,15 @@ where
 }
 
 /// Projection related methods.
-impl<CS, PROJECTOR, T, TRANSFORM> Builder<CS, PROJECTOR, T>
+impl<CS, PROJECTOR, T, TRANSFORMER> Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORM>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     CS: Stream<EP = CS, T = T>,
     T: CoordFloat,
 {
     #[inline]
     /// Returns a projectors based on the builder settings.
-    pub fn build(self, projection: PROJECTOR) -> Path<CS, PROJECTOR, T, TRANSFORM> {
+    pub fn build(self, projection: PROJECTOR) -> Path<CS, PROJECTOR, T, TRANSFORMER> {
         Path::new(self.context_stream, projection)
     }
 }
