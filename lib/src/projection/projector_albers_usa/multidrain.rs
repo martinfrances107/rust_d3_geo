@@ -46,23 +46,25 @@ where
     }
 }
 
-// impl<const N: usize, SUBTRANS, T> Result for Multidrain<N, PathString<T>, SUBTRANS, T>
-// where
-//     T: CoordFloat,
-//     TRANSFORM: Result<Out = PathString<T>>,
-// {
-//     type Out = Vec<PathString<T>>;
+impl<const N: usize, SUBTRANS, T> Result for Multidrain<N, PathString<T>, SUBTRANS, T>
+where
+    SUBTRANS: Result<Out = Vec<PathString<T>>>,
+    T: CoordFloat,
+{
+    type Out = Vec<PathString<T>>;
 
-//     /// Merges the results of all the sub-drains.
-//     fn result(&mut self) -> Self::Out {
-//         let mut out = vec![];
-//         for c in &mut self.drains {
-//             let result = c.result();
-//             out.push(result);
-//         }
-//         out
-//     }
-// }
+    /// Merges the results of all the sub-drains.
+    fn result(&mut self) -> Self::Out {
+        let mut out = vec![];
+        for c in &mut self.drains {
+            let results = c.result();
+            for result in results {
+                out.push(result);
+            }
+        }
+        out
+    }
+}
 
 impl<const N: usize, SUBTRANS, T> Result for Multidrain<N, LastPoint<f64>, SUBTRANS, T>
 where
