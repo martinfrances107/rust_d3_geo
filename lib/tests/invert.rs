@@ -169,7 +169,8 @@ mod invert {
 
         let builder = AlbersUsa::builder();
         let mut projection = builder.build();
-        let md = Multidrain::<3, LastPoint<f64>, _, f64>::default();
+        let lp = LastPoint::<f64>::default();
+        let md = Multidrain::new(lp);
         let mut transformer = projection.stream(&md);
 
         for p in [

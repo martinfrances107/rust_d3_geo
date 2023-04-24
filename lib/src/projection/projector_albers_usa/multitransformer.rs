@@ -6,13 +6,14 @@ use geo::CoordFloat;
 use crate::stream::Stream;
 
 use super::multidrain::Multidrain;
+use super::multidrain::Populated;
 
 /// Projections like `AlbersUSA` group several projections together.
 /// TODO can I remove this wrapper.
 #[derive(Debug)]
 pub struct MultiTransformer<const N: usize, SD, SUBTRANS, T> {
     /// The contained endpoint.
-    pub md: Multidrain<N, SD, SUBTRANS, T>,
+    pub md: Multidrain<N, SD, Populated<SUBTRANS>, T>,
 }
 
 impl<const N: usize, SD, SUBTRANS, T> MultiTransformer<N, SD, SUBTRANS, T>
@@ -22,7 +23,7 @@ where
     /// Constructor
     #[must_use]
     pub fn new(store: Vec<SUBTRANS>) -> Self {
-        let md: Multidrain<N, SD, SUBTRANS, T> = Multidrain::default();
+        let md = Multidrain::new(SD::default());
         Self {
             md: md.populate(store),
         }

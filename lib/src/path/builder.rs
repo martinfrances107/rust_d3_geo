@@ -8,10 +8,12 @@ use num_traits::FloatConst;
 use crate::path::context::Context;
 use crate::path::Path;
 use crate::projection::projector_albers_usa::multidrain::Multidrain;
+use crate::projection::projector_albers_usa::multidrain::Unpopulated;
 use crate::projection::projector_albers_usa::AlbersUsaMultiTransformer;
 use crate::projection::projector_albers_usa::AlbersUsaMultiplex;
 use crate::projection::Projector;
 use crate::stream::Stream;
+use crate::stream::Unconnected;
 
 #[cfg(not(test))]
 use web_sys::CanvasRenderingContext2d;
@@ -81,15 +83,10 @@ where
 
 use crate::projection::projector_albers_usa::Projector as ProjectorAlbersUsa;
 
-pub type StringMultidrian<T> = Multidrain<3, String<T>, AlbersUsaMultiTransformer<String<T>, T>, T>;
+// pub type StringMultidrian<T> = Multidrain<3, String<T>, AlbersUsaMultiTransformer<String<T>, T>, T>;
 
 /// Context related methods.
-impl<T>
-    Builder<
-        StringMultidrian<T>,
-        ProjectorAlbersUsa<StringMultidrian<T>, AlbersUsaMultiplex<String<T>, T>>,
-        T,
-    >
+impl<PROJECTOR, T> Builder<Multidrain<3, String<T>, Unpopulated, f64>, PROJECTOR, T>
 where
     T: CoordFloat + Default + Display + FloatConst,
 {
@@ -97,7 +94,8 @@ where
     #[inline]
     #[must_use]
     pub fn albers_pathstring() -> Self {
-        Self::new(Multidrain::default())
+        let md = Multidrain::new(String::<T>::default());
+        Self::new(md)
     }
 }
 

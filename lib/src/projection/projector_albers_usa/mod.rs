@@ -21,6 +21,8 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use self::multidrain::Multidrain;
+use self::multidrain::Populated;
+use self::multidrain::Unpopulated;
 use self::multiplex::Multiplex;
 use self::multitransformer::MultiTransformer;
 use super::albers_usa::AlbersUsa;
@@ -116,7 +118,7 @@ where
     T: CoordFloat + Default + FloatConst,
     SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
 {
-    type EP = Multidrain<3, SD, AlbersTransformer<SD, T>, T>;
+    type EP = Multidrain<3, SD, Unpopulated, T>;
 
     type Transformer = AlbersUsaMultiTransformer<SD, T>;
 

@@ -14,6 +14,8 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::multidrain::Multidrain;
+use super::multidrain::Populated;
+use super::multidrain::Unpopulated;
 use super::multitransformer::MultiTransformer;
 use super::AlbersTransformer;
 
@@ -64,7 +66,7 @@ where
     #[inline]
     pub fn connect<const N: usize, SD>(
         &self,
-        drain: &Multidrain<N, SD, AlbersTransformer<SD, T>, T>,
+        drain: &Multidrain<N, SD, Unpopulated, T>,
     ) -> MultiTransformer<N, SD, AlbersTransformer<SD, T>, T>
     where
         T: Debug,

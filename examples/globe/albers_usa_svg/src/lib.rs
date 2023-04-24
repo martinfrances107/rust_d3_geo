@@ -12,6 +12,9 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
+use d3_geo_rs::projection::projector_albers_usa::multidrain::Multidrain;
+use d3_geo_rs::projection::projector_albers_usa::multidrain::Unpopulated;
+use d3_geo_rs::projection::projector_albers_usa::multiplex::Multiplex;
 use d3_geo_rs::projection::projector_albers_usa::AlbersUsaMultiplex;
 use geo::Geometry;
 use geo::GeometryCollection;
@@ -62,12 +65,11 @@ fn path_node(class_name: &str) -> Result<Element, JsValue> {
     Ok(ret)
 }
 
-type P_A_USA<const N: usize> =
-    ProjectorAlbersUsa<PathString<f64>, AlbersUsaMultiTransformer<PathString<f64>, f64>>;
+// type PA = ProjectorAlbersUsa<Multiplex<AlbersUsa<PathString<f64>, f64>, _, f64>, PathString<f64>>;
 
-type MyBuilder = PathBuilder<PathString<f64>, P_A_USA<3>, f64>;
+// type MyBuilder = PathBuilder<PathString<f64>, P_A_USA<3>, f64>;
 
-use d3_geo_rs::path::builder::StringMultidrian;
+// use d3_geo_rs::path::builder::StringMultidrian;
 /// Entry point.
 #[wasm_bindgen]
 pub async fn start() -> Result<(), JsValue> {
@@ -110,7 +112,7 @@ pub async fn start() -> Result<(), JsValue> {
         "fill: silver",
     ];
 
-    let pb = PathBuilder::<_, _, f64>::albers_pathstring();
+    // let pb = PathBuilder::albers_pathstring();
     // let mut path = pb.build(projector);
 
     let mut i = 0;
