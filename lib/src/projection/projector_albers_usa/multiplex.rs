@@ -14,7 +14,6 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::multidrain::Multidrain;
-use super::multidrain::Populated;
 use super::multidrain::Unpopulated;
 use super::multitransformer::MultiTransformer;
 use super::AlbersTransformer;

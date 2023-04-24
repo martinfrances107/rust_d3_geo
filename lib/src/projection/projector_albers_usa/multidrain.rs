@@ -31,6 +31,9 @@ pub struct Multidrain<const N: usize, SD, STATE, T> {
 }
 
 impl<const N: usize, SD, T> Multidrain<N, SD, Unpopulated, T> {
+    /// Define initial multidrain
+    /// population() which be called when connectied into a pipeline
+    /// this will change the state.
     pub const fn new(sd: SD) -> Self {
         Self {
             p_t: PhantomData::<T>,

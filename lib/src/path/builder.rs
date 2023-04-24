@@ -9,11 +9,8 @@ use crate::path::context::Context;
 use crate::path::Path;
 use crate::projection::projector_albers_usa::multidrain::Multidrain;
 use crate::projection::projector_albers_usa::multidrain::Unpopulated;
-use crate::projection::projector_albers_usa::AlbersUsaMultiTransformer;
-use crate::projection::projector_albers_usa::AlbersUsaMultiplex;
 use crate::projection::Projector;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 
 #[cfg(not(test))]
 use web_sys::CanvasRenderingContext2d;
@@ -80,10 +77,6 @@ where
         Self::new(String::default())
     }
 }
-
-use crate::projection::projector_albers_usa::Projector as ProjectorAlbersUsa;
-
-// pub type StringMultidrian<T> = Multidrain<3, String<T>, AlbersUsaMultiTransformer<String<T>, T>, T>;
 
 /// Context related methods.
 impl<PROJECTOR, T> Builder<Multidrain<3, String<T>, Unpopulated, f64>, PROJECTOR, T>

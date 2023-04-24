@@ -21,7 +21,6 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use self::multidrain::Multidrain;
-use self::multidrain::Populated;
 use self::multidrain::Unpopulated;
 use self::multiplex::Multiplex;
 use self::multitransformer::MultiTransformer;
