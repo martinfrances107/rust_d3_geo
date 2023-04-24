@@ -113,7 +113,6 @@ where
 impl<CS, PROJECTOR, T, TRANSFORMER> Builder<CS, PROJECTOR, T>
 where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
-    CS: Stream<EP = CS, T = T>,
     T: CoordFloat,
 {
     #[inline]

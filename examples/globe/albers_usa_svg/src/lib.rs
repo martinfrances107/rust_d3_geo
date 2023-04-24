@@ -112,8 +112,8 @@ pub async fn start() -> Result<(), JsValue> {
         "fill: silver",
     ];
 
-    // let pb = PathBuilder::albers_pathstring();
-    // let mut path = pb.build(projector);
+    let pb = PathBuilder::albers_pathstring();
+    let mut path = pb.build(projector);
 
     let mut i = 0;
 

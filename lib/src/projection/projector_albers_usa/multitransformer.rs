@@ -33,7 +33,6 @@ where
 impl<const N: usize, SD, SUBTRANS, T> Stream for MultiTransformer<N, SD, SUBTRANS, T>
 where
     SUBTRANS: Stream<EP = SD, T = T>,
-    SD: Stream<EP = SD, T = T>,
     T: CoordFloat,
 {
     type T = T;
