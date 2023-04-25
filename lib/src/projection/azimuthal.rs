@@ -1,6 +1,5 @@
 use geo::CoordFloat;
 use geo_types::Coord;
-use num_traits::FloatConst;
 
 pub(super) fn azimuthal_raw<T>(p: &Coord<T>, scale: fn(T) -> T) -> Coord<T>
 where
@@ -23,7 +22,7 @@ where
 
 pub(super) fn azimuthal_invert<T>(p: &Coord<T>, angle: fn(z: T) -> T) -> Coord<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     let z = (p.x * p.x + p.y * p.y).sqrt();
     let c = angle(z);
