@@ -81,7 +81,7 @@ where
 /// Context related methods.
 impl<PROJECTOR, T> Builder<Multidrain<3, String<T>, Unpopulated, f64>, PROJECTOR, T>
 where
-    T: CoordFloat,
+    T: CoordFloat + Display,
 {
     /// Returns a Builder from default values.
     #[inline]
