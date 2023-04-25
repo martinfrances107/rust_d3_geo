@@ -1,6 +1,5 @@
 use geo::CoordFloat;
 use geo_types::Coord;
-use num_traits::FloatConst;
 
 use crate::path::Result;
 use crate::stream::Stream;

@@ -1,7 +1,6 @@
 use derivative::Derivative;
 use geo::CoordFloat;
 use geo_types::Coord;
-use num_traits::FloatConst;
 
 use crate::stream::Stream;
 

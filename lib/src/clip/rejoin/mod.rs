@@ -5,7 +5,6 @@ use std::cmp::Ordering;
 use std::rc::Rc;
 
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::abs_diff_eq;
 use crate::clip::intersection::Intersection;
@@ -43,7 +42,7 @@ pub fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
     CI: Fn(&Rc<RefCell<Intersection<T>>>, &Rc<RefCell<Intersection<T>>>) -> Ordering,
     SINK: Stream<EP = EP, T = T>,
     INTERPOLATOR: Interpolator<T = T>,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     let mut start_inside = start_inside;
     let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();

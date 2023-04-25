@@ -3,7 +3,6 @@ use std::rc::Rc;
 
 use derivative::Derivative;
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::clip::line_elem::LineElem;
 
@@ -35,7 +34,7 @@ where
 
 impl<'a, T> Intersection<'a, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     pub const fn new(
         point: LineElem<T>,

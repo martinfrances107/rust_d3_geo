@@ -2,7 +2,6 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::clip::intersection::Intersection;
 

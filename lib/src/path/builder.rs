@@ -3,14 +3,12 @@ use std::fmt::Display;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::path::context::Context;
 use crate::path::Path;
 use crate::projection::projector_albers_usa::multidrain::Multidrain;
 use crate::projection::projector_albers_usa::multidrain::Unpopulated;
 use crate::projection::Projector;
-use crate::stream::Stream;
 
 #[cfg(not(test))]
 use web_sys::CanvasRenderingContext2d;

@@ -6,7 +6,6 @@ use std::rc::Rc;
 
 use geo::CoordFloat;
 use geo_types::Coord;
-use num_traits::FloatConst;
 use num_traits::Zero;
 
 use crate::clip::interpolator::Interpolator;
@@ -295,7 +294,7 @@ where
 impl<EP, SINK, T> Stream for Rectangle<Connected<SINK>, T>
 where
     SINK: Stream<EP = EP, T = T>,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type EP = EP;
     type T = T;

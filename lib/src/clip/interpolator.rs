@@ -3,7 +3,6 @@ use std::fmt::Debug;
 
 use geo::CoordFloat;
 use geo_types::Coord;
-use num_traits::FloatConst;
 
 use crate::math::EPSILON;
 use crate::stream::Stream;
@@ -22,7 +21,7 @@ pub(super) struct Interpolator<T> {
 
 impl<T> Interpolator<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     pub(super) fn new(x0: T, y0: T, x1: T, y1: T) -> Self {
         Self {
