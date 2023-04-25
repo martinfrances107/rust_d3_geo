@@ -12,7 +12,7 @@ use crate::clip::intersection::Intersection;
 /// below. Connect the ends to form a circular loop.
 pub fn link<T>(array: &mut [Rc<RefCell<Intersection<T>>>])
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     if array.is_empty() {
         return;

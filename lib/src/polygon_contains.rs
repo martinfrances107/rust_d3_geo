@@ -11,7 +11,10 @@ use crate::math::EPSILON2;
 use crate::EPSILON;
 
 #[inline]
-fn longitude<T: CoordFloat + FloatConst>(point: &Coord<T>) -> T {
+fn longitude<T>(point: &Coord<T>) -> T
+where
+    T: CoordFloat + FloatConst,
+{
     if point.x.abs() <= T::PI() {
         point.x
     } else {
@@ -23,10 +26,10 @@ fn longitude<T: CoordFloat + FloatConst>(point: &Coord<T>) -> T {
 ///
 /// # Panics
 /// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
-pub fn polygon_contains<T: CoordFloat + FloatConst>(
-    polygon: &[LineString<T>],
-    point: &Coord<T>,
-) -> bool {
+pub fn polygon_contains<T>(polygon: &[LineString<T>], point: &Coord<T>) -> bool
+where
+    T: CoordFloat + FloatConst,
+{
     let lambda = longitude(point);
     let mut phi = point.y;
     let sin_phi = phi.sin();

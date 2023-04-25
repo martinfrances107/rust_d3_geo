@@ -16,7 +16,7 @@ pub struct LastPoint<T: CoordFloat>(Option<Coord<T>>);
 
 impl<T> Stream for LastPoint<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type EP = Self;
     type T = T;

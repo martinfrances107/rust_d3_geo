@@ -35,7 +35,7 @@ where
 
 impl<CS, PROJECTOR, T> Builder<CS, PROJECTOR, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Constructor.
     ///
@@ -55,7 +55,7 @@ where
 impl<PROJECTOR, T, TRANSFORMER> Builder<Context, PROJECTOR, T>
 where
     PROJECTOR: Projector<EP = Context, Transformer = TRANSFORMER>,
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Programe the builder with the context.
     pub fn context(&mut self, context: CanvasRenderingContext2d) -> &mut Self {
@@ -68,7 +68,7 @@ where
 impl<PROJECTOR, T, TRANSFORMER> Builder<String<T>, PROJECTOR, T>
 where
     PROJECTOR: Projector<EP = String<T>, Transformer = TRANSFORMER>,
-    T: CoordFloat + Display + FloatConst,
+    T: CoordFloat + Display,
 {
     /// Returns a Builder from default values.
     #[inline]
@@ -81,7 +81,7 @@ where
 /// Context related methods.
 impl<PROJECTOR, T> Builder<Multidrain<3, String<T>, Unpopulated, f64>, PROJECTOR, T>
 where
-    T: CoordFloat + Default + Display + FloatConst,
+    T: CoordFloat,
 {
     /// Returns a Builder from default values.
     #[inline]

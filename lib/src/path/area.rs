@@ -114,7 +114,7 @@ where
 
 impl<T> Stream for Area<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type EP = Self;
     type T = T;

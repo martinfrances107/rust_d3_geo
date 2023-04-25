@@ -34,7 +34,7 @@ pub struct String<T> {
 
 impl<T> Default for String<T>
 where
-    T: CoordFloat + Display,
+    T: CoordFloat,
 {
     #[inline]
     fn default() -> Self {
