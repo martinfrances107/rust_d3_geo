@@ -54,7 +54,10 @@ where
 ///
 /// A) In the JS version these varibles are undefined.
 /// The intent is to insists that the values are written before being read.
-impl<T: AddAssign + CoordFloat + FloatConst> Default for Centroid<T> {
+impl<T> Default for Centroid<T>
+where
+    T: AddAssign + CoordFloat + FloatConst,
+{
     fn default() -> Self {
         Self {
             W0: T::nan(),
