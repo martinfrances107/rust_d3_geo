@@ -48,9 +48,9 @@ where
     type T = T;
 
     fn transform(&self, p: &Coord<T>) -> Coord<T> {
-        let (sx, cs) = p.x.sin_cos();
+        let (sx, cx) = p.x.sin_cos();
         let (sy, cy) = p.y.sin_cos();
-        let k = cs * cy;
+        let k = cx * cy;
         Coord {
             x: cy * sx / k,
             y: sy / k,
