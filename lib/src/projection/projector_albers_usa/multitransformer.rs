@@ -36,10 +36,10 @@ where
     T: CoordFloat,
 {
     type T = T;
-    type EP = Self;
+    type EP = Multidrain<N, SD, Populated<SUBTRANS>, T>;
 
     fn endpoint(&mut self) -> &mut Self::EP {
-        self
+        &mut self.md
     }
 
     fn line_end(&mut self) {
