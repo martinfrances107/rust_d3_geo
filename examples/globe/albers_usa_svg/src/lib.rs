@@ -13,10 +13,6 @@ extern crate topojson;
 extern crate web_sys;
 
 use d3_geo_rs::path::Result;
-use d3_geo_rs::projection::projector_albers_usa::multidrain::Multidrain;
-use d3_geo_rs::projection::projector_albers_usa::multidrain::Unpopulated;
-use d3_geo_rs::projection::projector_albers_usa::multiplex::Multiplex;
-use d3_geo_rs::projection::projector_albers_usa::AlbersUsaMultiplex;
 use d3_geo_rs::projection::Projector;
 use d3_geo_rs::stream::Stream;
 use d3_geo_rs::stream::Streamable;
@@ -37,8 +33,6 @@ use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::projection::albers_usa::AlbersUsa;
-use d3_geo_rs::projection::projector_albers_usa::AlbersUsaMultiTransformer;
-use d3_geo_rs::projection::projector_albers_usa::Projector as ProjectorAlbersUsa;
 use d3_geo_rs::projection::RawBase;
 
 #[cfg(not(tarpaulin_include))]
@@ -53,7 +47,7 @@ fn path_node(class_name: &str) -> Element {
     let class_list = document.get_elements_by_class_name(class_name);
 
     assert!(class_list.length() < 2);
-    let ret = match class_list.item(0) {
+    match class_list.item(0) {
         Some(element) => element,
         None => {
             // keep.
@@ -65,15 +59,9 @@ fn path_node(class_name: &str) -> Element {
                 }
             }
         }
-    };
-    ret
+    }
 }
 
-// type PA = ProjectorAlbersUsa<Multiplex<AlbersUsa<PathString<f64>, f64>, _, f64>, PathString<f64>>;
-
-// type MyBuilder = PathBuilder<PathString<f64>, P_A_USA<3>, f64>;
-
-// use d3_geo_rs::path::builder::StringMultidrian;
 /// Entry point.
 #[wasm_bindgen]
 pub async fn start() {
@@ -104,8 +92,8 @@ pub async fn start() {
         .dyn_into::<web_sys::SvgsvgElement>()
         .expect("svg failed");
 
-    let width = svg.width().base_val().value().expect("width failed") as f64;
-    let height = svg.height().base_val().value().expect("height failed") as f64;
+    // let width = svg.width().base_val().value().expect("width failed") as f64;
+    // let height = svg.height().base_val().value().expect("height failed") as f64;
 
     let countries: Geometry<f64> =
         feature_from_name(&topology, "countries").expect("Did not extract geometry");
@@ -134,12 +122,13 @@ pub async fn start() {
                     Geometry::MultiPolygon(mp) => {
                         i += 1;
                         for (j, p) in mp.0.iter().enumerate() {
+                            // TODO: this object() call is identical to the 3 lines below
+                            // Can I restor the object call?
                             // let s = path.object(&Geometry::Polygon(p.clone()));
-
                             let mut stream_in = path.projection.stream(&path.context_stream);
                             let object = Geometry::Polygon(p.clone());
                             object.to_stream(&mut stream_in);
-                            // let s = stream_in.endpoint().result();
+
                             for (k, s) in stream_in.endpoint().result().iter().enumerate() {
                                 let class_name = format!("id-{i}-{j}-{k}");
                                 let path = path_node(&class_name);
