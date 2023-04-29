@@ -81,9 +81,9 @@ where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat,
 {
-    context_stream: CS,
+    pub context_stream: CS,
     point_radius: PointRadiusEnum<T>,
-    projection: PROJECTOR,
+    pub projection: PROJECTOR,
 }
 
 // impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>

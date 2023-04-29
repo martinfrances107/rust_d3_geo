@@ -12,10 +12,14 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
+use d3_geo_rs::path::Result;
 use d3_geo_rs::projection::projector_albers_usa::multidrain::Multidrain;
 use d3_geo_rs::projection::projector_albers_usa::multidrain::Unpopulated;
 use d3_geo_rs::projection::projector_albers_usa::multiplex::Multiplex;
 use d3_geo_rs::projection::projector_albers_usa::AlbersUsaMultiplex;
+use d3_geo_rs::projection::Projector;
+use d3_geo_rs::stream::Stream;
+use d3_geo_rs::stream::Streamable;
 use geo::Geometry;
 use geo::GeometryCollection;
 use gloo_utils::format::JsValueSerdeExt;
@@ -38,14 +42,14 @@ use d3_geo_rs::projection::projector_albers_usa::Projector as ProjectorAlbersUsa
 use d3_geo_rs::projection::RawBase;
 
 #[cfg(not(tarpaulin_include))]
-fn document() -> Result<Document, JsValue> {
+fn document() -> Option<Document> {
     let window = web_sys::window().unwrap();
-    Ok(window.document().unwrap())
+    window.document()
 }
 
 #[cfg(not(tarpaulin_include))]
-fn path_node(class_name: &str) -> Result<Element, JsValue> {
-    let document = document()?;
+fn path_node(class_name: &str) -> Element {
+    let document = document().unwrap();
     let class_list = document.get_elements_by_class_name(class_name);
 
     assert!(class_list.length() < 2);
@@ -62,7 +66,7 @@ fn path_node(class_name: &str) -> Result<Element, JsValue> {
             }
         }
     };
-    Ok(ret)
+    ret
 }
 
 // type PA = ProjectorAlbersUsa<Multiplex<AlbersUsa<PathString<f64>, f64>, _, f64>, PathString<f64>>;
@@ -72,18 +76,23 @@ fn path_node(class_name: &str) -> Result<Element, JsValue> {
 // use d3_geo_rs::path::builder::StringMultidrian;
 /// Entry point.
 #[wasm_bindgen]
-pub async fn start() -> Result<(), JsValue> {
-    let document = document()?;
+pub async fn start() {
+    let document = document().unwrap();
     let window = web_sys::window().expect("Failed to get window");
 
     // Get data from world map.
     let mut opts = RequestInit::new();
     opts.method("GET");
     opts.mode(RequestMode::Cors);
-    let request = Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
-    let resp_value = JsFuture::from(window.fetch_with_request(&request)).await?;
+    let request = Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)
+        .expect("requets failed.");
+    let resp_value = JsFuture::from(window.fetch_with_request(&request))
+        .await
+        .expect("await failed");
     let resp: Response = resp_value.dyn_into().unwrap();
-    let json = JsFuture::from(resp.json()?).await?;
+    let json = JsFuture::from(resp.json().expect("resp failed"))
+        .await
+        .expect("json failed");
 
     let topology =
         JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
@@ -92,10 +101,11 @@ pub async fn start() -> Result<(), JsValue> {
     let svg: SvgsvgElement = document
         .get_element_by_id("s")
         .unwrap()
-        .dyn_into::<web_sys::SvgsvgElement>()?;
+        .dyn_into::<web_sys::SvgsvgElement>()
+        .expect("svg failed");
 
-    let width = svg.width().base_val().value()? as f64;
-    let height = svg.height().base_val().value()? as f64;
+    let width = svg.width().base_val().value().expect("width failed") as f64;
+    let height = svg.height().base_val().value().expect("height failed") as f64;
 
     let countries: Geometry<f64> =
         feature_from_name(&topology, "countries").expect("Did not extract geometry");
@@ -123,15 +133,24 @@ pub async fn start() -> Result<(), JsValue> {
                 match &g {
                     Geometry::MultiPolygon(mp) => {
                         i += 1;
-                        for p in &mp.0 {
+                        for (j, p) in mp.0.iter().enumerate() {
                             // let s = path.object(&Geometry::Polygon(p.clone()));
-                            // let class_name = format!("id-{i}");
-                            // let path = path_node(&class_name)?;
-                            // path.set_attribute_ns(None, "d", &s)?;
-                            // path.set_attribute_ns(None, "class", &class_name)?;
-                            // path.set_attribute_ns(None, "style", fill[i % 7])?;
-                            // svg.append_child(&path)?;
-                            // i += 1
+
+                            let mut stream_in = path.projection.stream(&path.context_stream);
+                            let object = Geometry::Polygon(p.clone());
+                            object.to_stream(&mut stream_in);
+                            // let s = stream_in.endpoint().result();
+                            for (k, s) in stream_in.endpoint().result().iter().enumerate() {
+                                let class_name = format!("id-{i}-{j}-{k}");
+                                let path = path_node(&class_name);
+                                path.set_attribute_ns(None, "d", s).expect("none 2");
+                                path.set_attribute_ns(None, "class", &class_name)
+                                    .expect("class failed");
+                                path.set_attribute_ns(None, "style", fill[i % 7])
+                                    .expect("none failed");
+                                svg.append_child(&path).expect("append failed.");
+                            }
+                            i += 1
                         }
                     }
                     Geometry::Polygon(p) => {
@@ -164,6 +183,4 @@ pub async fn start() -> Result<(), JsValue> {
     // path.set_attribute_ns(None, "d", &graticule_d)?;
     // path.set_attribute_ns(None, "style", "#ccc")?;
     // svg.append_child(&path)?;
-
-    Ok(())
 }

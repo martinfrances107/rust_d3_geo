@@ -3,10 +3,25 @@ use std::marker::PhantomData;
 use geo::Coord;
 use geo::CoordFloat;
 
+use crate::clip::antimeridian::interpolate::Interpolate;
+use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::pv::PV;
+use crate::clip::buffer::Buffer;
+use crate::clip::clipper::Clipper;
+use crate::clip::clipper::Connected as ConnectedClipper;
+use crate::identity::Identity;
 use crate::last_point::LastPoint;
 use crate::path::string::String as PathString;
 use crate::path::Result;
+use crate::projection::equal_area::EqualArea;
+
+use crate::projection::resampler::resample::Connected as ConnectedResample;
+use crate::projection::resampler::resample::Resample;
+use crate::projection::stream_transform_radians::StreamTransformRadians;
+use crate::rot::rotator_radians::RotatorRadians;
+use crate::stream::Connected as ConnectedStream;
 use crate::stream::Stream;
+use crate::stream::Unconnected;
 
 /// Only when the Multidrain is connected the sub drain becomes known
 /// as so the SUBTRANS type can be defined.
@@ -61,21 +76,74 @@ where
     }
 }
 
-impl<const N: usize, SUBTRANS, T> Result for Multidrain<N, PathString<T>, Populated<SUBTRANS>, T>
-where
-    SUBTRANS: Result<Out = Vec<PathString<T>>>,
-    T: CoordFloat,
-{
-    type Out = Vec<PathString<T>>;
+type A = Multidrain<
+    3,
+    PathString<f64>,
+    Populated<
+        StreamTransformRadians<
+            ConnectedStream<
+                RotatorRadians<
+                    ConnectedStream<
+                        Clipper<
+                            Interpolate<f64>,
+                            Line<
+                                ConnectedStream<
+                                    Resample<
+                                        EqualArea<PathString<f64>, f64>,
+                                        ConnectedResample<
+                                            Identity<ConnectedStream<PathString<f64>>>,
+                                            f64,
+                                        >,
+                                        f64,
+                                    >,
+                                >,
+                                f64,
+                            >,
+                            Line<Unconnected, f64>,
+                            PV<f64>,
+                            Resample<
+                                EqualArea<PathString<f64>, f64>,
+                                ConnectedResample<Identity<ConnectedStream<PathString<f64>>>, f64>,
+                                f64,
+                            >,
+                            ConnectedClipper<
+                                Line<ConnectedStream<Buffer<f64>>, f64>,
+                                Line<
+                                    ConnectedStream<
+                                        Resample<
+                                            EqualArea<PathString<f64>, f64>,
+                                            ConnectedResample<
+                                                Identity<ConnectedStream<PathString<f64>>>,
+                                                f64,
+                                            >,
+                                            f64,
+                                        >,
+                                    >,
+                                    f64,
+                                >,
+                                f64,
+                            >,
+                            f64,
+                        >,
+                    >,
+                    f64,
+                >,
+            >,
+        >,
+    >,
+    f64,
+>;
+
+impl Result for A {
+    type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
         let mut out = vec![];
         for c in &mut self.state.drains {
-            let results = c.result();
-            for result in results {
-                out.push(result);
-            }
+            let results = c.endpoint().result();
+
+            out.push(results);
         }
         out
     }
