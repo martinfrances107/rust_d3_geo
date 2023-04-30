@@ -14,7 +14,6 @@ use crate::last_point::LastPoint;
 use crate::path::string::String as PathString;
 use crate::path::Result;
 use crate::projection::equal_area::EqualArea;
-
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::stream_transform_radians::StreamTransformRadians;

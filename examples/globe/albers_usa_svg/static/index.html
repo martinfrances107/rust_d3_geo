@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Globe(SVG)</title>
+  <title>AlbersUSa(SVG)</title>
   <meta charset="utf-8">
   <meta name="description" content="Globe example for the rust d3 geo project.(SVG)">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,24 +10,17 @@
 
 <body>
 
-  <h1>Example: Globe(SVG)</h1>
+  <h1>Example: AlbersUSA(SVG)</h1>
   <h2>Rust d3 geo </h2>
   <noscript>
     <h2>This page contains webassembly and javascript content, please enable javascript in your browser.</h2>
   </noscript>
 
   <p>
-    The SVG version of the globe is different from the canvas example.
-  </p>
-  <p>
-    It demonstrates the complex decoding of the world map into distinct "path" elements so as to assign a
-    different color of each polygon.
-  </p>
-  <p>
-    The canvas version is built for performance.
+    Hawaii and Alaska are displayed in overlays.
   </p>
 
-  <svg id="s" width="1800" height="1200">
+  <svg id="s" width="960px" height="500px">
     <style>
       path {
         fill: None;
@@ -36,8 +29,6 @@
       }
     </style>
   </svg>
-
-
   <script type="module" src="./index.js"></script>
 </body>
 
