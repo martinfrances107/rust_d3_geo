@@ -1,9 +1,15 @@
 # TODO
 
 Today
+  examples/projection alberaUSA
+    1) contiguius usa looks ok
+    2) alaksa is in the middle of x, but at the top of the page.
+       no clipping all countries are renderered.
+    3) hawaii is centered in the middle of the SVG element!
+       no clipping all countries are renderered.
+
   albersUSA implement cache in 'fn stream()'
   albersUSA tests
-  examles/projection alberaUSA
   copy documentation of parallels.
 
 fit test
