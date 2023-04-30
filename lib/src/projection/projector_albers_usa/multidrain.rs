@@ -26,7 +26,7 @@ use crate::stream::Unconnected;
 /// as so the SUBTRANS type can be defined.
 #[derive(Clone, Debug)]
 pub struct Populated<const N: usize, SUBTRANS> {
-    drains: [SUBTRANS; N],
+    store: [SUBTRANS; N],
 }
 
 /// The state before connection and the drain is populated
@@ -64,12 +64,12 @@ where
     #[must_use]
     pub fn populate<SUBTRANS>(
         &self,
-        drains: [SUBTRANS; N],
+        store: [SUBTRANS; N],
     ) -> Multidrain<N, SD, Populated<N, SUBTRANS>, T> {
         Multidrain {
             p_t: PhantomData::<T>,
             sd: self.sd.clone(),
-            state: Populated { drains },
+            state: Populated { store },
         }
     }
 }
@@ -139,7 +139,7 @@ impl Result for A<3, f64> {
     /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
         let mut out = vec![];
-        let mut drain = self.state.drains[2].clone();
+        let mut drain = self.state.store[2].clone();
         out.push(drain.endpoint().result());
 
         // for c in &mut self.state.drains {
@@ -160,7 +160,7 @@ where
     type Out = Option<Coord<T>>;
     /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
-        for d in &mut self.state.drains {
+        for d in &mut self.state.store {
             if let Some(p) = d.endpoint().result() {
                 return Some(p);
             }
@@ -182,37 +182,37 @@ where
     }
 
     fn line_end(&mut self) {
-        for item in &mut self.state.drains {
+        for item in &mut self.state.store {
             item.line_end();
         }
     }
 
     fn line_start(&mut self) {
-        for item in &mut self.state.drains {
+        for item in &mut self.state.store {
             item.line_start();
         }
     }
 
     fn point(&mut self, p: &Coord<Self::T>, m: Option<u8>) {
-        for item in &mut self.state.drains {
+        for item in &mut self.state.store {
             item.point(p, m);
         }
     }
 
     fn polygon_end(&mut self) {
-        for item in &mut self.state.drains {
+        for item in &mut self.state.store {
             item.polygon_end();
         }
     }
 
     fn polygon_start(&mut self) {
-        for item in &mut self.state.drains {
+        for item in &mut self.state.store {
             item.polygon_start();
         }
     }
 
     fn sphere(&mut self) {
-        for item in &mut self.state.drains {
+        for item in &mut self.state.store {
             item.sphere();
         }
     }
