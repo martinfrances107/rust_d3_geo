@@ -42,8 +42,8 @@ fn document() -> Option<Document> {
 }
 
 #[cfg(not(tarpaulin_include))]
-fn path_node(class_name: &str) -> Element {
-    let document = document().unwrap();
+fn path_node(document: &Document, class_name: &str) -> Element {
+    // let document = document().unwrap();
     let class_list = document.get_elements_by_class_name(class_name);
 
     assert!(class_list.length() < 2);
@@ -131,7 +131,7 @@ pub async fn start() {
 
                             for (k, s) in stream_in.endpoint().result().iter().enumerate() {
                                 let class_name = format!("id-{i}-{j}-{k}");
-                                let path = path_node(&class_name);
+                                let path = path_node(&document, &class_name);
                                 path.set_attribute_ns(None, "d", s).expect("none 2");
                                 path.set_attribute_ns(None, "class", &class_name)
                                     .expect("class failed");
