@@ -65,8 +65,8 @@ where
     #[inline]
     pub fn connect<SD>(
         &self,
-        drain: &Multidrain<3, SD, Unpopulated, T>,
-    ) -> MultiTransformer<3, SD, AlbersTransformer<SD, T>, T>
+        drain: &Multidrain<3, SD, Unpopulated>,
+    ) -> MultiTransformer<3, SD, AlbersTransformer<SD, T>>
     where
         T: Debug,
         SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,

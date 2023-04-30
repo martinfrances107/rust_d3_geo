@@ -77,7 +77,7 @@ where
 }
 
 /// Context related methods.
-impl<PROJECTOR, T> Builder<Multidrain<3, String<T>, Unpopulated, f64>, PROJECTOR, T>
+impl<PROJECTOR, T> Builder<Multidrain<3, String<T>, Unpopulated>, PROJECTOR, T>
 where
     T: CoordFloat + Display,
 {

@@ -35,28 +35,26 @@ pub struct Unpopulated;
 
 /// Wrapper for a Drain type.
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct Multidrain<const N: usize, SD, STATE, T> {
-    p_t: PhantomData<T>,
+pub struct Multidrain<const N: usize, SD, STATE> {
     /// After initialisation, this value is used in a .connect()
     /// call to construct the drains.
     pub sd: SD,
     state: STATE,
 }
 
-impl<const N: usize, SD, T> Multidrain<N, SD, Unpopulated, T> {
+impl<const N: usize, SD> Multidrain<N, SD, Unpopulated> {
     /// Define initial multidrain
     /// population() which be called when connectied into a pipeline
     /// this will change the state.
     pub const fn new(sd: SD) -> Self {
         Self {
-            p_t: PhantomData::<T>,
             sd,
             state: Unpopulated,
         }
     }
 }
 
-impl<const N: usize, SD, T> Multidrain<N, SD, Unpopulated, T>
+impl<const N: usize, SD> Multidrain<N, SD, Unpopulated>
 where
     SD: Clone + Default,
 {
@@ -65,9 +63,8 @@ where
     pub fn populate<SUBTRANS>(
         &self,
         store: [SUBTRANS; N],
-    ) -> Multidrain<N, SD, Populated<N, SUBTRANS>, T> {
+    ) -> Multidrain<N, SD, Populated<N, SUBTRANS>> {
         Multidrain {
-            p_t: PhantomData::<T>,
             sd: self.sd.clone(),
             state: Populated { store },
         }
@@ -130,7 +127,6 @@ type A<const N: usize, T> = Multidrain<
             >,
         >,
     >,
-    T,
 >;
 
 impl Result for A<3, f64> {
@@ -151,11 +147,10 @@ impl Result for A<3, f64> {
     }
 }
 
-impl<const N: usize, SUBTRANS, T> Result
-    for Multidrain<N, LastPoint<f64>, Populated<N, SUBTRANS>, T>
+impl<const N: usize, SUBTRANS, T> Result for Multidrain<N, LastPoint<f64>, Populated<N, SUBTRANS>>
 where
-    T: CoordFloat,
     SUBTRANS: Stream<EP = LastPoint<T>, T = T>,
+    T: CoordFloat,
 {
     type Out = Option<Coord<T>>;
     /// Merges the results of all the sub-drains.
@@ -169,13 +164,13 @@ where
     }
 }
 
-impl<const N: usize, SD, SUBTRANS, T> Stream for Multidrain<N, SD, Populated<N, SUBTRANS>, T>
+impl<const N: usize, SD, SUBTRANS, T> Stream for Multidrain<N, SD, Populated<N, SUBTRANS>>
 where
     SUBTRANS: Stream<EP = SD, T = T>,
     T: CoordFloat,
 {
-    type T = T;
     type EP = Self;
+    type T = T;
 
     fn endpoint(&mut self) -> &mut Self::EP {
         self

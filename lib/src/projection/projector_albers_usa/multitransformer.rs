@@ -11,12 +11,12 @@ use super::multidrain::Populated;
 /// Projections like `AlbersUSA` group several projections together.
 /// TODO can I remove this wrapper.
 #[derive(Debug)]
-pub struct MultiTransformer<const N: usize, SD, SUBTRANS, T> {
+pub struct MultiTransformer<const N: usize, SD, SUBTRANS> {
     /// The contained endpoint.
-    pub md: Multidrain<N, SD, Populated<N, SUBTRANS>, T>,
+    pub md: Multidrain<N, SD, Populated<N, SUBTRANS>>,
 }
 
-impl<const N: usize, SD, SUBTRANS, T> MultiTransformer<N, SD, SUBTRANS, T>
+impl<const N: usize, SD, SUBTRANS> MultiTransformer<N, SD, SUBTRANS>
 where
     SD: Clone + Default,
 {
@@ -30,13 +30,13 @@ where
     }
 }
 
-impl<const N: usize, SD, SUBTRANS, T> Stream for MultiTransformer<N, SD, SUBTRANS, T>
+impl<const N: usize, SD, SUBTRANS, T> Stream for MultiTransformer<N, SD, SUBTRANS>
 where
     SUBTRANS: Stream<EP = SD, T = T>,
     T: CoordFloat,
 {
     type T = T;
-    type EP = Multidrain<N, SD, Populated<N, SUBTRANS>, T>;
+    type EP = Multidrain<N, SD, Populated<N, SUBTRANS>>;
 
     fn endpoint(&mut self) -> &mut Self::EP {
         &mut self.md
