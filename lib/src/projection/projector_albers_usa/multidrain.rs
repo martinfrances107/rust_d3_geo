@@ -75,75 +75,78 @@ where
     }
 }
 
-type A = Multidrain<
+type A<T> = Multidrain<
     3,
-    PathString<f64>,
+    PathString<T>,
     Populated<
         StreamTransformRadians<
             ConnectedStream<
                 RotatorRadians<
                     ConnectedStream<
                         Clipper<
-                            Interpolate<f64>,
+                            Interpolate<T>,
                             Line<
                                 ConnectedStream<
                                     Resample<
-                                        EqualArea<PathString<f64>, f64>,
+                                        EqualArea<PathString<T>, T>,
                                         ConnectedResample<
-                                            Identity<ConnectedStream<PathString<f64>>>,
-                                            f64,
+                                            Identity<ConnectedStream<PathString<T>>>,
+                                            T,
                                         >,
-                                        f64,
+                                        T,
                                     >,
                                 >,
-                                f64,
+                                T,
                             >,
-                            Line<Unconnected, f64>,
-                            PV<f64>,
+                            Line<Unconnected, T>,
+                            PV<T>,
                             Resample<
-                                EqualArea<PathString<f64>, f64>,
-                                ConnectedResample<Identity<ConnectedStream<PathString<f64>>>, f64>,
-                                f64,
+                                EqualArea<PathString<T>, T>,
+                                ConnectedResample<Identity<ConnectedStream<PathString<T>>>, T>,
+                                T,
                             >,
                             ConnectedClipper<
-                                Line<ConnectedStream<Buffer<f64>>, f64>,
+                                Line<ConnectedStream<Buffer<T>>, T>,
                                 Line<
                                     ConnectedStream<
                                         Resample<
-                                            EqualArea<PathString<f64>, f64>,
+                                            EqualArea<PathString<T>, T>,
                                             ConnectedResample<
-                                                Identity<ConnectedStream<PathString<f64>>>,
-                                                f64,
+                                                Identity<ConnectedStream<PathString<T>>>,
+                                                T,
                                             >,
-                                            f64,
+                                            T,
                                         >,
                                     >,
-                                    f64,
+                                    T,
                                 >,
-                                f64,
+                                T,
                             >,
-                            f64,
+                            T,
                         >,
                     >,
-                    f64,
+                    T,
                 >,
             >,
         >,
     >,
-    f64,
+    T,
 >;
 
-impl Result for A {
+impl Result for A<f64> {
     type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
         let mut out = vec![];
-        for c in &mut self.state.drains {
-            let results = c.endpoint().result();
+        let mut drain = self.state.drains[2].clone();
+        out.push(drain.endpoint().result());
 
-            out.push(results);
-        }
+        // for c in &mut self.state.drains {
+        //     let results = c.endpoint().result();
+
+        //     out.push(results);
+        // }
         out
     }
 }
