@@ -25,8 +25,8 @@ use crate::stream::Unconnected;
 /// Only when the Multidrain is connected the sub drain becomes known
 /// as so the SUBTRANS type can be defined.
 #[derive(Clone, Debug)]
-pub struct Populated<SUBTRANS> {
-    drains: Vec<SUBTRANS>,
+pub struct Populated<const N: usize, SUBTRANS> {
+    drains: [SUBTRANS; N],
 }
 
 /// The state before connection and the drain is populated
@@ -40,7 +40,6 @@ pub struct Multidrain<const N: usize, SD, STATE, T> {
     /// After initialisation, this value is used in a .connect()
     /// call to construct the drains.
     pub sd: SD,
-    // drains: Vec<SUBTRANS>,
     state: STATE,
 }
 
@@ -65,8 +64,8 @@ where
     #[must_use]
     pub fn populate<SUBTRANS>(
         &self,
-        drains: Vec<SUBTRANS>,
-    ) -> Multidrain<N, SD, Populated<SUBTRANS>, T> {
+        drains: [SUBTRANS; N],
+    ) -> Multidrain<N, SD, Populated<N, SUBTRANS>, T> {
         Multidrain {
             p_t: PhantomData::<T>,
             sd: self.sd.clone(),
@@ -75,10 +74,11 @@ where
     }
 }
 
-type A<T> = Multidrain<
-    3,
+type A<const N: usize, T> = Multidrain<
+    N,
     PathString<T>,
     Populated<
+        N,
         StreamTransformRadians<
             ConnectedStream<
                 RotatorRadians<
@@ -133,7 +133,7 @@ type A<T> = Multidrain<
     T,
 >;
 
-impl Result for A<f64> {
+impl Result for A<3, f64> {
     type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
@@ -151,7 +151,8 @@ impl Result for A<f64> {
     }
 }
 
-impl<const N: usize, SUBTRANS, T> Result for Multidrain<N, LastPoint<f64>, Populated<SUBTRANS>, T>
+impl<const N: usize, SUBTRANS, T> Result
+    for Multidrain<N, LastPoint<f64>, Populated<N, SUBTRANS>, T>
 where
     T: CoordFloat,
     SUBTRANS: Stream<EP = LastPoint<T>, T = T>,
@@ -168,7 +169,7 @@ where
     }
 }
 
-impl<const N: usize, SD, SUBTRANS, T> Stream for Multidrain<N, SD, Populated<SUBTRANS>, T>
+impl<const N: usize, SD, SUBTRANS, T> Stream for Multidrain<N, SD, Populated<N, SUBTRANS>, T>
 where
     SUBTRANS: Stream<EP = SD, T = T>,
     T: CoordFloat,

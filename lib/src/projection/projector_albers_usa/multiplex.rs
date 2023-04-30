@@ -63,10 +63,10 @@ where
 {
     /// Connects the next stage in the stream pipline.
     #[inline]
-    pub fn connect<const N: usize, SD>(
+    pub fn connect<SD>(
         &self,
-        drain: &Multidrain<N, SD, Unpopulated, T>,
-    ) -> MultiTransformer<N, SD, AlbersTransformer<SD, T>, T>
+        drain: &Multidrain<3, SD, Unpopulated, T>,
+    ) -> MultiTransformer<3, SD, AlbersTransformer<SD, T>, T>
     where
         T: Debug,
         SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
@@ -77,7 +77,7 @@ where
         // The order of objects in the store is important for performance.
         // The earlier a point is found the better,
         // so the lower_48 is searched first, and the smallest land area last.
-        let store: Vec<AlbersTransformer<SD, T>> = vec![
+        let store = [
             pr.lower_48.build().stream(&sd.clone()),
             pr.alaska.build().stream(&sd.clone()),
             pr.hawaii.build().stream(&sd.clone()),

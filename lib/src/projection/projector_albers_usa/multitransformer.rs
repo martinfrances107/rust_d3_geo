@@ -13,7 +13,7 @@ use super::multidrain::Populated;
 #[derive(Debug)]
 pub struct MultiTransformer<const N: usize, SD, SUBTRANS, T> {
     /// The contained endpoint.
-    pub md: Multidrain<N, SD, Populated<SUBTRANS>, T>,
+    pub md: Multidrain<N, SD, Populated<N, SUBTRANS>, T>,
 }
 
 impl<const N: usize, SD, SUBTRANS, T> MultiTransformer<N, SD, SUBTRANS, T>
@@ -22,7 +22,7 @@ where
 {
     /// Constructor
     #[must_use]
-    pub fn new(store: Vec<SUBTRANS>) -> Self {
+    pub fn new(store: [SUBTRANS; N]) -> Self {
         let md = Multidrain::new(SD::default());
         Self {
             md: md.populate(store),
@@ -36,7 +36,7 @@ where
     T: CoordFloat,
 {
     type T = T;
-    type EP = Multidrain<N, SD, Populated<SUBTRANS>, T>;
+    type EP = Multidrain<N, SD, Populated<N, SUBTRANS>, T>;
 
     fn endpoint(&mut self) -> &mut Self::EP {
         &mut self.md

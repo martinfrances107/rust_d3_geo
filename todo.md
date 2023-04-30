@@ -2,7 +2,7 @@
 
 Today
   examples/projection alberaUSA
-    1) contiguius usa looks ok
+    1) contiguius usa looks Ok.
     2) alaksa is in the middle of x, but at the top of the page.
        no clipping all countries are renderered.
     3) hawaii is centered in the middle of the SVG element!
