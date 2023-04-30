@@ -78,9 +78,9 @@ where
         // The earlier a point is found the better,
         // so the lower_48 is searched first, and the smallest land area last.
         let store = [
-            pr.lower_48.build().stream(&sd.clone()),
-            pr.alaska.build().stream(&sd.clone()),
-            pr.hawaii.build().stream(&sd.clone()),
+            pr.lower_48.build().stream(sd),
+            pr.alaska.build().stream(sd),
+            pr.hawaii.build().stream(sd),
         ];
         MultiTransformer::new(store)
     }
