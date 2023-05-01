@@ -1,7 +1,6 @@
 #[cfg(not(tarpaulin_include))]
 mod invert {
 
-    use d3_geo_rs::projection::projector_albers_usa::multidrain::Multidrain;
     use geo::Point;
     use geo_types::Coord;
 
@@ -22,6 +21,7 @@ mod invert {
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::orthographic::Orthographic;
+    use d3_geo_rs::projection::projector_albers_usa::multidrain::Multidrain;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::Projector;
@@ -175,18 +175,22 @@ mod invert {
 
         for p in [
             Point(Coord {
+                // San Francisco
                 x: -122.4194_f64,
                 y: 37.7749_f64,
             }),
             Point(Coord {
+                // NY, NY
                 x: -74.0059_f64,
                 y: 40.7128_f64,
             }),
             Point(Coord {
+                // Anchorage
                 x: -149.9003_f64,
                 y: 61.2181_f64,
             }),
             Point(Coord {
+                // Honolulu
                 x: -157.8583_f64,
                 y: 21.3069_f64,
             }),
