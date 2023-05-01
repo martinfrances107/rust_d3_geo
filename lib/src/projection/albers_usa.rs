@@ -16,6 +16,7 @@ use super::albers::albers;
 use super::builder_albers_usa::Builder;
 use super::builder_conic::types::BuilderConicAntimeridianResampleClip;
 use super::builder_conic::types::BuilderConicAntimeridianResampleNoClip;
+use super::builder_conic::ParallelsSet;
 use super::equal_area::EqualArea;
 use super::Build;
 use super::BuilderTrait;
@@ -77,7 +78,8 @@ where
             .center_set(&Coord {
                 x: T::from(-2_f64).unwrap(),
                 y: T::from(58.5_f64).unwrap(),
-            });
+            })
+            .parallels_set(T::from(55_f64).unwrap(), T::from(65_f64).unwrap());
 
         let mut hawaii = EqualArea::builder();
         hawaii
@@ -85,7 +87,8 @@ where
             .center_set(&Coord {
                 x: T::from(-3_f64).unwrap(),
                 y: T::from(19.9_f64).unwrap(),
-            });
+            })
+            .parallels_set(T::from(8_f64).unwrap(), T::from(18_f64).unwrap());
 
         let lower_48 = albers();
 

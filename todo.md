@@ -1,6 +1,9 @@
 # TODO
 
 Today
+
+  Are paralles being used consitently?
+
   examples/projection alberaUSA
     1) contiguius usa looks Ok.
     2) alaksa is in the middle of x, but at the top of the page.

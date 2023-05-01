@@ -123,7 +123,7 @@ pub async fn start() {
                         i += 1;
                         for (j, p) in mp.0.iter().enumerate() {
                             // TODO: this object() call is identical to the 3 lines below
-                            // Can I restor the object call?
+                            // Can I restore the object call?
                             // let s = path.object(&Geometry::Polygon(p.clone()));
                             let mut stream_in = path.projection.stream(&path.context_stream);
                             let object = Geometry::Polygon(p.clone());
