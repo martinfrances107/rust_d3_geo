@@ -114,6 +114,7 @@ where
                 x: T::from(-2_f64).unwrap(),
                 y: T::from(58.5_f64).unwrap(),
             })
+            .parallels_set(T::from(55_f64).unwrap(), T::from(65_f64).unwrap())
             .translate_set(&Coord {
                 x: T::from(0.307_f64).unwrap().mul_add(-k, t.x),
                 y: T::from(0.201_f64).unwrap().mul_add(-k, t.y),
@@ -136,6 +137,7 @@ where
                 x: T::from(-3_f64).unwrap(),
                 y: T::from(19.9_f64).unwrap(),
             })
+            .parallels_set(T::from(8_f64).unwrap(), T::from(18_f64).unwrap())
             .translate_set(&Coord {
                 x: T::from(0.205_f64).unwrap().mul_add(-k, t.x),
                 y: T::from(0.212_f64).unwrap().mul_add(-k, t.y),
