@@ -162,46 +162,38 @@ mod invert {
         symetric_invert(s);
     }
 
-    #[ignore]
     #[test]
     fn albers_usa() {
         println!("albersUsa(point) and albersUsa.invert(point) are symmetric");
 
-        let builder = AlbersUsa::builder();
-        let mut projection = builder.build();
-        let lp = LastPoint::<f64>::default();
-        let md = Multidrain::new(lp);
-        let mut transformer = projection.stream(&md);
+        let builder = AlbersUsa::<LastPoint<f64>, f64>::builder();
+        let projector = builder.build();
 
         for p in [
-            Point(Coord {
+            Coord {
                 // San Francisco
                 x: -122.4194_f64,
                 y: 37.7749_f64,
-            }),
-            Point(Coord {
+            },
+            Coord {
                 // NY, NY
                 x: -74.0059_f64,
                 y: 40.7128_f64,
-            }),
-            Point(Coord {
+            },
+            Coord {
                 // Anchorage
                 x: -149.9003_f64,
                 y: 61.2181_f64,
-            }),
-            Point(Coord {
+            },
+            Coord {
                 // Honolulu
                 x: -157.8583_f64,
                 y: 21.3069_f64,
-            }),
+            },
         ] {
-            p.to_stream(&mut transformer);
-
-            let mut md = transformer.md.clone();
-            let result = md.result();
-
-            println!("{:?}  ->  {:?}", p, result);
+            let transformed = projector.transform(&p);
+            println!("{:?}  ->  {:?}", p, transformed);
         }
-        panic!("");
+        assert!(false);
     }
 }

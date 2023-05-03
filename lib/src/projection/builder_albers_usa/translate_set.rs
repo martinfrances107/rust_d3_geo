@@ -22,7 +22,7 @@ where
         let epsilon = T::from(EPSILON).unwrap();
         let k: T = self.pr.lower_48.scale();
 
-        self.pr.lower_48.translate_set(t).clip_extent_set(&[
+        self.pr.lower_48_point = self.pr.lower_48.translate_set(t).clip_extent_set(&[
             Coord {
                 x: T::from(0.455_f64).unwrap().mul_add(-k, t.x),
                 y: T::from(0.234f64).unwrap().mul_add(-k, t.y),
@@ -33,7 +33,8 @@ where
             },
         ]);
 
-        self.pr
+        self.pr.alaska_point = self
+            .pr
             .alaska
             .translate_set(&Coord {
                 x: T::from(0.307_f64).unwrap().mul_add(-k, t.x),
@@ -50,7 +51,8 @@ where
                 },
             ]);
 
-        self.pr
+        self.pr.hawaii_point = self
+            .pr
             .hawaii
             .translate_set(&Coord {
                 x: T::from(0.205_f64).unwrap().mul_add(-k, t.x),

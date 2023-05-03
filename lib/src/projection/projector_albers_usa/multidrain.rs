@@ -1,5 +1,3 @@
-use std::marker::PhantomData;
-
 use geo::Coord;
 use geo::CoordFloat;
 
@@ -135,14 +133,14 @@ impl Result for A<3, f64> {
     /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
         let mut out = vec![];
-        let mut drain = self.state.store[2].clone();
-        out.push(drain.endpoint().result());
+        // let mut drain = self.state.store[0].clone();
+        // out.push(drain.endpoint().result());
 
-        // for c in &mut self.state.drains {
-        //     let results = c.endpoint().result();
+        for c in &mut self.state.store {
+            let results = c.endpoint().result();
 
-        //     out.push(results);
-        // }
+            out.push(results);
+        }
         out
     }
 }

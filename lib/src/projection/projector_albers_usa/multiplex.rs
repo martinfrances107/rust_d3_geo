@@ -6,7 +6,6 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::projection::albers_usa::AlbersUsa;
-use crate::projection::projector_albers_usa::AlbersUsaMultiTransformer;
 use crate::projection::Build;
 use crate::projection::Projector as ProjectoTait;
 use crate::stream::Stream;
@@ -78,16 +77,15 @@ where
         // The earlier a point is found the better,
         // so the lower_48 is searched first, and the smallest land area last.
         let store = [
-            pr.lower_48.build().stream(sd),
-            pr.alaska.build().stream(sd),
-            pr.hawaii.build().stream(sd),
+            pr.lower_48_stream.build().stream(sd),
+            pr.alaska_stream.build().stream(sd),
+            pr.hawaii_stream.build().stream(sd),
         ];
         MultiTransformer::new(store)
     }
 }
 
-impl<const N: usize, SD, T> Transform
-    for Multiplex<AlbersUsa<SD, T>, Connected<N, AlbersUsaMultiTransformer<SD, T>>, T>
+impl<SD, STATE, T> Transform for Multiplex<AlbersUsa<SD, T>, STATE, T>
 where
     SD: Clone + Stream<EP = SD, T = T>,
     T: 'static + CoordFloat + Default + FloatConst,

@@ -8,13 +8,14 @@ use crate::in_delta::in_delta;
 use crate::math::EPSILON;
 use crate::Transform;
 
+/// Asserts  point projected and then inverted returns to the original location.
+///
 /// Helper test function.
-/// A point projected and then inverted returns to the original location.
 ///
 /// # Panics
 /// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
 pub fn projection_equal<'a, P, T>(
-    projection: &P,
+    projector: &P,
     expected_location: &'a Coord<T>,
     expected_point: &'a Coord<T>,
     delta_p: Option<T>,
@@ -29,8 +30,8 @@ where
         "1) expected location [{:?}, {:?}], expected point [{:?}, {:?}]",
         expected_location.x, expected_location.y, expected_point.x, expected_point.y,
     );
-    let actual_location = projection.invert(expected_point);
-    let actual_point = projection.transform(expected_location);
+    let actual_location = projector.invert(expected_point);
+    let actual_point = projector.transform(expected_location);
     println!("2) actual location {actual_location:?}, actual point {actual_point:?}");
     planar_equal(&actual_point, expected_point, delta)
         && spherical_equal(&actual_location, expected_location, delta)
