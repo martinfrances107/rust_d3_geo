@@ -119,11 +119,11 @@ where
             .clip_extent_set(&[
                 Coord {
                     x: T::from(0.425_f64).unwrap().mul_add(-k, t.x) + epsilon,
-                    y: T::from(0.120_f64).unwrap().mul_add(-k, t.y) + epsilon,
+                    y: t.y + T::from(0.120_f64).unwrap() * k + epsilon,
                 },
                 Coord {
                     x: T::from(0.214_f64).unwrap().mul_add(-k, t.x) - epsilon,
-                    y: T::from(0.234_f64).unwrap().mul_add(-k, t.y) - epsilon,
+                    y: t.y + T::from(0.234_f64).unwrap() * k - epsilon,
                 },
             ]);
 
@@ -135,10 +135,10 @@ where
             .clip_extent_set(&[
                 Coord {
                     x: T::from(0.214_f64).unwrap().mul_add(-k, t.x) + epsilon,
-                    y: T::from(0.166f64).unwrap().mul_add(-k, t.y) + epsilon,
+                    y: t.y + T::from(0.166).unwrap() * k + epsilon,
                 },
                 Coord {
-                    x: T::from(0.214f64).unwrap().mul_add(-k, t.x) + epsilon,
+                    x: t.x - T::from(0.115).unwrap() * k - epsilon,
                     y: T::from(0.234f64).unwrap().mul_add(k, t.y) - epsilon,
                 },
             ]);
