@@ -16,7 +16,6 @@ use crate::Transform;
 use super::albers::albers;
 use super::builder_albers_usa::Builder;
 use super::builder_conic::types::BuilderConicAntimeridianResampleClip;
-use super::builder_conic::types::BuilderConicAntimeridianResampleNoClip;
 use super::builder_conic::ParallelsSet;
 use super::equal_area::EqualArea;
 use super::Build;
@@ -51,26 +50,15 @@ where
     hawaii_x: Range<T>,
     hawaii_y: Range<T>,
 
-    // The builders with clip_extent() applied.
-    pub(super) alaska_point:
-        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
-    pub(super) lower_48_point:
-        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
-    pub(super) hawaii_point:
-        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
-
     // The builder with base setting used as a starting point everytime translate is adjusted.
     pub(super) alaska:
-        BuilderConicAntimeridianResampleNoClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
     pub(super) lower_48:
-        BuilderConicAntimeridianResampleNoClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
     pub(super) hawaii:
-        BuilderConicAntimeridianResampleNoClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
 
     p_sd: PhantomData<SD>,
-    pub(super) alaska_stream: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
-    pub(super) lower_48_stream: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
-    pub(super) hawaii_stream: BuilderConicAntimeridianResampleNoClip<SD, EqualArea<SD, T>, T>,
 }
 
 impl<SD, T> Default for AlbersUsa<SD, T>
@@ -90,15 +78,6 @@ where
             })
             .parallels_set(T::from(55_f64).unwrap(), T::from(65_f64).unwrap());
 
-        let mut alaska_stream = EqualArea::builder();
-        alaska_stream
-            .rotate2_set(&[T::from(154_f64).unwrap(), T::zero()])
-            .center_set(&Coord {
-                x: T::from(-2_f64).unwrap(),
-                y: T::from(58.5_f64).unwrap(),
-            })
-            .parallels_set(T::from(55_f64).unwrap(), T::from(65_f64).unwrap());
-
         let mut hawaii = EqualArea::builder();
         hawaii
             .rotate2_set(&[T::from(157_f64).unwrap(), T::zero()])
@@ -108,24 +87,20 @@ where
             })
             .parallels_set(T::from(8_f64).unwrap(), T::from(18_f64).unwrap());
 
-        let mut hawaii_stream = EqualArea::builder();
-        hawaii_stream
-            .rotate2_set(&[T::from(157_f64).unwrap(), T::zero()])
-            .center_set(&Coord {
-                x: T::from(-3_f64).unwrap(),
-                y: T::from(19.9_f64).unwrap(),
-            })
-            .parallels_set(T::from(8_f64).unwrap(), T::from(18_f64).unwrap());
+        let mut lower_48 = albers();
 
-        let lower_48 = albers();
+        // Emulate .scale() call.
+        let scaling_factor = T::from(1070).unwrap();
+        let lower_48 = lower_48.scale_set(scaling_factor);
+        let alaska = alaska.scale_set(T::from(0.35).unwrap());
+        let hawaii = hawaii.scale_set(scaling_factor);
 
-        let lower_48_stream = albers();
-
+        // Emulate .translate() call.
         let k: T = lower_48.scale();
         let t = lower_48.translate();
 
-        let mut lower_48_point = lower_48.clone();
-        let lower_48_point = lower_48_point.translate_set(&t).clip_extent_set(&[
+        let mut lower_48 = lower_48.clone();
+        let lower_48 = lower_48.translate_set(&t).clip_extent_set(&[
             Coord {
                 x: T::from(0.455_f64).unwrap().mul_add(-k, t.x),
                 y: T::from(0.234_f64).unwrap().mul_add(-k, t.y),
@@ -136,7 +111,7 @@ where
             },
         ]);
 
-        let alaska_point = alaska
+        let alaska = alaska
             .translate_set(&Coord {
                 x: T::from(0.307_f64).unwrap().mul_add(-k, t.x),
                 y: T::from(0.201_f64).unwrap().mul_add(-k, t.y),
@@ -152,7 +127,7 @@ where
                 },
             ]);
 
-        let hawaii_point = hawaii
+        let hawaii = hawaii
             .translate_set(&Coord {
                 x: T::from(0.205_f64).unwrap().mul_add(-k, t.x),
                 y: T::from(0.212f64).unwrap().mul_add(-k, t.y),
@@ -178,18 +153,11 @@ where
             hawaii_x: T::from(-0.214).unwrap()..T::from(-0.115).unwrap(),
             hawaii_y: T::from(0.166).unwrap()..T::from(0.234).unwrap(),
 
-            alaska_point,
-            lower_48_point,
-            hawaii_point,
-
             alaska,
             lower_48,
             hawaii,
 
             p_sd: PhantomData::<SD>,
-            alaska_stream,
-            lower_48_stream,
-            hawaii_stream,
         }
     }
 }
@@ -203,9 +171,7 @@ where
 
     #[inline]
     fn builder() -> Builder<SD, T> {
-        let mut b = Builder::new(Self::default());
-        b.scale_set(T::from(1070_f64).unwrap());
-        b
+        Builder::new(Self::default())
     }
 }
 
@@ -218,18 +184,18 @@ where
 
     #[inline]
     fn transform(&self, p: &Coord<T>) -> Coord<T> {
-        let mut pipeline = self.lower_48_point.build().stream(&LastPoint::default());
+        let mut pipeline = self.lower_48.build().stream(&LastPoint::default());
 
         pipeline.point(p, None);
         pipeline.endpoint().result().map_or_else(
             || {
-                // dbg!("testing alaska");
-                let mut pipeline = self.alaska_point.build().stream(&LastPoint::default());
+                dbg!("testing alaska");
+                let mut pipeline = self.alaska.build().stream(&LastPoint::default());
                 pipeline.point(p, None);
                 pipeline.endpoint().result().map_or_else(
                     || {
                         dbg!("testing hawaii");
-                        let mut pipeline = self.hawaii_point.build().stream(&LastPoint::default());
+                        let mut pipeline = self.hawaii.build().stream(&LastPoint::default());
                         pipeline.point(p, None);
                         pipeline.endpoint().result().map_or(
                             Coord {

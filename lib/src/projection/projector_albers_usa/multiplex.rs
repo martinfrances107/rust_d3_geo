@@ -76,12 +76,13 @@ where
         // The order of objects in the store is important for performance.
         // The earlier a point is found the better,
         // so the lower_48 is searched first, and the smallest land area last.
-        let store = [
-            pr.lower_48_stream.build().stream(sd),
-            pr.alaska_stream.build().stream(sd),
-            pr.hawaii_stream.build().stream(sd),
-        ];
-        MultiTransformer::new(store)
+        // let store = [
+        //     pr.lower_48.build().stream(sd),
+        //     pr.alaska.build().stream(sd),
+        //     pr.hawaii.build().stream(sd),
+        // ];
+        // MultiTransformer::new(store)
+        todo!();
     }
 }
 
