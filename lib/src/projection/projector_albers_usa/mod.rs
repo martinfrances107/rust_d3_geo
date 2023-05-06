@@ -11,6 +11,7 @@ use crate::clip::antimeridian::pv::PV;
 use crate::clip::buffer::Buffer;
 use crate::clip::clipper::Clipper;
 use crate::clip::clipper::Connected as ConnectedClipper;
+use crate::clip::rectangle::Rectangle;
 use crate::identity::Identity;
 use crate::projection::projector_albers_usa::multiplex::Connected as ConnectedMultiplex;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
@@ -48,7 +49,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
                         ConnectedStream<
                             Resample<
                                 EqualArea<SD, T>,
-                                ConnectedResample<Identity<ConnectedStream<SD>>, T>,
+                                ConnectedResample<Rectangle<ConnectedStream<SD>, T>, T>,
                                 T,
                             >,
                         >,
@@ -58,7 +59,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
                     PV<T>,
                     Resample<
                         EqualArea<SD, T>,
-                        ConnectedResample<Identity<ConnectedStream<SD>>, T>,
+                        ConnectedResample<Rectangle<ConnectedStream<SD>, T>, T>,
                         T,
                     >,
                     ConnectedClipper<
@@ -67,7 +68,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
                             ConnectedStream<
                                 Resample<
                                     EqualArea<SD, T>,
-                                    ConnectedResample<Identity<ConnectedStream<SD>>, T>,
+                                    ConnectedResample<Rectangle<ConnectedStream<SD>, T>, T>,
                                     T,
                                 >,
                             >,

@@ -65,7 +65,7 @@ where
 
 impl<SD, T> Builder<SD, T>
 where
-    SD: Clone + Default + Stream<EP = SD, T = T>,
+    SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
     T: CoordFloat + Debug + Default + FloatConst,
 {
     /// Using the currently programmed state output a new projection.

@@ -42,7 +42,7 @@ use crate::clip::clipper::Connected as ConnectedClipper;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::stream::Unconnected;
 
-type StreamPoint<T> = StreamTransformRadians<
+type StreamPoint<DRAIN, T> = StreamTransformRadians<
     ConnectedStream<
         RotatorRadians<
             ConnectedStream<
@@ -51,8 +51,8 @@ type StreamPoint<T> = StreamTransformRadians<
                     Line<
                         ConnectedStream<
                             Resample<
-                                EqualArea<LastPoint<T>, T>,
-                                ConnectedResample<Rectangle<ConnectedStream<LastPoint<T>>, T>, T>,
+                                EqualArea<DRAIN, T>,
+                                ConnectedResample<Rectangle<ConnectedStream<DRAIN>, T>, T>,
                                 T,
                             >,
                         >,
@@ -61,8 +61,8 @@ type StreamPoint<T> = StreamTransformRadians<
                     Line<Unconnected, T>,
                     PV<T>,
                     Resample<
-                        EqualArea<LastPoint<T>, T>,
-                        ConnectedResample<Rectangle<ConnectedStream<LastPoint<T>>, T>, T>,
+                        EqualArea<DRAIN, T>,
+                        ConnectedResample<Rectangle<ConnectedStream<DRAIN>, T>, T>,
                         T,
                     >,
                     ConnectedClipper<
@@ -70,11 +70,8 @@ type StreamPoint<T> = StreamTransformRadians<
                         Line<
                             ConnectedStream<
                                 Resample<
-                                    EqualArea<LastPoint<T>, T>,
-                                    ConnectedResample<
-                                        Rectangle<ConnectedStream<LastPoint<T>>, T>,
-                                        T,
-                                    >,
+                                    EqualArea<DRAIN, T>,
+                                    ConnectedResample<Rectangle<ConnectedStream<DRAIN>, T>, T>,
                                     T,
                                 >,
                             >,
@@ -119,10 +116,13 @@ where
     pub(super) hawaii:
         BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
 
-    pub(super) alaska_point: StreamPoint<T>,
-    pub(super) lower_48_point: StreamPoint<T>,
-    pub(super) hawaii_point: StreamPoint<T>,
-    p_sd: PhantomData<SD>,
+    pub(super) alaska_point: StreamPoint<LastPoint<T>, T>,
+    pub(super) lower_48_point: StreamPoint<LastPoint<T>, T>,
+    pub(super) hawaii_point: StreamPoint<LastPoint<T>, T>,
+
+    pub(super) alaska_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<SD, T>, T>,
+    pub(super) lower_48_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<SD, T>, T>,
+    pub(super) hawaii_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<SD, T>, T>,
 }
 
 /// Construct a Projection builder capable of rendering the view of alaksa.
@@ -165,15 +165,6 @@ where
         ])
 }
 
-/// Construct a Projection builder capable of rendering the view of the lower_48 states
-fn lower_48_inset<DRAIN: Clone, T>(
-) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<DRAIN, T>, T>
-where
-    T: CoordFloat + Debug + Default + FloatConst,
-{
-    todo!()
-}
-
 /// Construct a Projection builder capable of rendering the view of hawaii
 fn hawaii_inset<DRAIN: Clone, T>(
     scaling_factor: T,
@@ -214,7 +205,7 @@ where
 
 impl<SD, T> Default for AlbersUsa<SD, T>
 where
-    SD: Clone + Default + Stream<EP = SD, T = T>,
+    SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
     T: CoordFloat + Debug + Default + FloatConst,
 {
     fn default() -> Self {
@@ -222,16 +213,19 @@ where
         let scaling_factor = T::from(1070).unwrap();
 
         let mut lower_48 = albers();
+        let mut lower_48_stream = albers::<SD, T>();
 
         // Emulate .scale() call.
         let scaling_factor = T::from(1070).unwrap();
         let lower_48 = lower_48.scale_set(scaling_factor);
+        let lower_48_stream = lower_48_stream.scale_set(scaling_factor);
 
         // Emulate .translate() call.
         let k: T = lower_48.scale();
         let t = lower_48.translate();
 
-        let mut lower_48 = lower_48.clone();
+        // let mut lower_48 = lower_48.clone();
+        // let mut lower_48_stream = lower_48_stream.clone();
         let lower_48 = lower_48.translate_set(&t).clip_extent_set(&[
             Coord {
                 x: T::from(0.455_f64).unwrap().mul_add(-k, t.x),
@@ -242,22 +236,28 @@ where
                 y: T::from(0.234_f64).unwrap().mul_add(k, t.y),
             },
         ]);
+        let lower_48_stream = lower_48_stream.translate_set(&t).clip_extent_set(&[
+            Coord {
+                x: T::from(0.455_f64).unwrap().mul_add(-k, t.x),
+                y: T::from(0.234_f64).unwrap().mul_add(-k, t.y),
+            },
+            Coord {
+                x: T::from(0.455_f64).unwrap().mul_add(k, t.x),
+                y: T::from(0.234_f64).unwrap().mul_add(k, t.y),
+            },
+        ]);
 
-        let alaska: BuilderConicAntimeridianResampleClip<
-            LastPoint<T>,
-            EqualArea<LastPoint<T>, T>,
-            T,
-        > = alaska_inset(scaling_factor, k, t, epsilon);
+        // Used in the invert()
+        let alaska = alaska_inset(scaling_factor, k, t, epsilon);
+        let hawaii = hawaii_inset(scaling_factor, k, t, epsilon);
 
-        let hawaii: BuilderConicAntimeridianResampleClip<
-            LastPoint<T>,
-            EqualArea<LastPoint<T>, T>,
-            T,
-        > = hawaii_inset(scaling_factor, k, t, epsilon);
-
+        // Point is used in the foreward transform.
         let lower_48_point = lower_48.build().stream(&LastPoint::default());
         let alaska_point = alaska.build().stream(&LastPoint::default());
         let hawaii_point = hawaii.build().stream(&LastPoint::default());
+
+        let alaska_stream = alaska_inset(scaling_factor, k, t, epsilon);
+        let hawaii_stream = hawaii_inset(scaling_factor, k, t, epsilon);
 
         Self {
             k,
@@ -276,14 +276,17 @@ where
             alaska_point,
             hawaii_point,
             lower_48_point,
-            p_sd: PhantomData::<SD>,
+
+            alaska_stream,
+            hawaii_stream,
+            lower_48_stream,
         }
     }
 }
 
 impl<SD, T> RawBase for AlbersUsa<SD, T>
 where
-    SD: Clone + Default + Stream<EP = SD, T = T>,
+    SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
     T: 'static + CoordFloat + Debug + Default + FloatConst,
 {
     type Builder = Builder<SD, T>;

@@ -20,6 +20,8 @@ use crate::stream::Connected as ConnectedStream;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 
+use super::AlbersTransformer;
+
 /// Only when the Multidrain is connected the sub drain becomes known
 /// as so the SUBTRANS type can be defined.
 #[derive(Clone, Debug)]
@@ -69,63 +71,8 @@ where
     }
 }
 
-type A<const N: usize, T> = Multidrain<
-    N,
-    PathString<T>,
-    Populated<
-        N,
-        StreamTransformRadians<
-            ConnectedStream<
-                RotatorRadians<
-                    ConnectedStream<
-                        Clipper<
-                            Interpolate<T>,
-                            Line<
-                                ConnectedStream<
-                                    Resample<
-                                        EqualArea<PathString<T>, T>,
-                                        ConnectedResample<
-                                            Identity<ConnectedStream<PathString<T>>>,
-                                            T,
-                                        >,
-                                        T,
-                                    >,
-                                >,
-                                T,
-                            >,
-                            Line<Unconnected, T>,
-                            PV<T>,
-                            Resample<
-                                EqualArea<PathString<T>, T>,
-                                ConnectedResample<Identity<ConnectedStream<PathString<T>>>, T>,
-                                T,
-                            >,
-                            ConnectedClipper<
-                                Line<ConnectedStream<Buffer<T>>, T>,
-                                Line<
-                                    ConnectedStream<
-                                        Resample<
-                                            EqualArea<PathString<T>, T>,
-                                            ConnectedResample<
-                                                Identity<ConnectedStream<PathString<T>>>,
-                                                T,
-                                            >,
-                                            T,
-                                        >,
-                                    >,
-                                    T,
-                                >,
-                                T,
-                            >,
-                            T,
-                        >,
-                    >,
-                    T,
-                >,
-            >,
-        >,
-    >,
->;
+type A<const N: usize, T> =
+    Multidrain<N, PathString<T>, Populated<N, AlbersTransformer<PathString<T>, T>>>;
 
 impl Result for A<3, f64> {
     type Out = Vec<String>;
