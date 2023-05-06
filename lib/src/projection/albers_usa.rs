@@ -125,6 +125,93 @@ where
     p_sd: PhantomData<SD>,
 }
 
+/// Construct a Projection builder capable of rendering the view of alaksa.
+fn alaska_inset<DRAIN: Clone, T>(
+    scaling_factor: T,
+    k: T,
+    t: Coord<T>,
+    epsilon: T,
+) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<DRAIN, T>, T>
+where
+    T: CoordFloat + Debug + Default + FloatConst,
+{
+    let mut alaska = EqualArea::builder();
+    alaska
+        .rotate2_set(&[T::from(154_f64).unwrap(), T::zero()])
+        .center_set(&Coord {
+            x: T::from(-2_f64).unwrap(),
+            y: T::from(58.5_f64).unwrap(),
+        })
+        .parallels_set(T::from(55_f64).unwrap(), T::from(65_f64).unwrap());
+
+    // Emulate .scale() call.
+    let alaska = alaska.scale_set(T::from(0.35).unwrap() * scaling_factor);
+
+    // Emulate .translate() call.
+    alaska
+        .translate_set(&Coord {
+            x: T::from(0.307_f64).unwrap().mul_add(-k, t.x),
+            y: t.y + T::from(0.201).unwrap() * k,
+        })
+        .clip_extent_set(&[
+            Coord {
+                x: T::from(0.425_f64).unwrap().mul_add(-k, t.x) + epsilon,
+                y: t.y + T::from(0.120_f64).unwrap() * k + epsilon,
+            },
+            Coord {
+                x: T::from(0.214_f64).unwrap().mul_add(-k, t.x) - epsilon,
+                y: t.y + T::from(0.234_f64).unwrap() * k - epsilon,
+            },
+        ])
+}
+
+/// Construct a Projection builder capable of rendering the view of the lower_48 states
+fn lower_48_inset<DRAIN: Clone, T>(
+) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<DRAIN, T>, T>
+where
+    T: CoordFloat + Debug + Default + FloatConst,
+{
+    todo!()
+}
+
+/// Construct a Projection builder capable of rendering the view of hawaii
+fn hawaii_inset<DRAIN: Clone, T>(
+    scaling_factor: T,
+    k: T,
+    t: Coord<T>,
+    epsilon: T,
+) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<DRAIN, T>, T>
+where
+    T: CoordFloat + Debug + Default + FloatConst,
+{
+    let mut hawaii = EqualArea::builder();
+    hawaii
+        .rotate2_set(&[T::from(157_f64).unwrap(), T::zero()])
+        .center_set(&Coord {
+            x: T::from(-3_f64).unwrap(),
+            y: T::from(19.9_f64).unwrap(),
+        })
+        .parallels_set(T::from(8_f64).unwrap(), T::from(18_f64).unwrap());
+
+    let hawaii = hawaii.scale_set(scaling_factor);
+
+    hawaii
+        .translate_set(&Coord {
+            x: T::from(0.205_f64).unwrap().mul_add(-k, t.x),
+            y: T::from(0.212f64).unwrap().mul_add(k, t.y),
+        })
+        .clip_extent_set(&[
+            Coord {
+                x: T::from(0.214_f64).unwrap().mul_add(-k, t.x) + epsilon,
+                y: t.y + T::from(0.166).unwrap() * k + epsilon,
+            },
+            Coord {
+                x: t.x - T::from(0.115).unwrap() * k - epsilon,
+                y: T::from(0.234f64).unwrap().mul_add(k, t.y) - epsilon,
+            },
+        ])
+}
+
 impl<SD, T> Default for AlbersUsa<SD, T>
 where
     SD: Clone + Default + Stream<EP = SD, T = T>,
@@ -132,32 +219,13 @@ where
 {
     fn default() -> Self {
         let epsilon = T::from(EPSILON).unwrap();
-
-        let mut alaska = EqualArea::builder();
-        alaska
-            .rotate2_set(&[T::from(154_f64).unwrap(), T::zero()])
-            .center_set(&Coord {
-                x: T::from(-2_f64).unwrap(),
-                y: T::from(58.5_f64).unwrap(),
-            })
-            .parallels_set(T::from(55_f64).unwrap(), T::from(65_f64).unwrap());
-
-        let mut hawaii = EqualArea::builder();
-        hawaii
-            .rotate2_set(&[T::from(157_f64).unwrap(), T::zero()])
-            .center_set(&Coord {
-                x: T::from(-3_f64).unwrap(),
-                y: T::from(19.9_f64).unwrap(),
-            })
-            .parallels_set(T::from(8_f64).unwrap(), T::from(18_f64).unwrap());
+        let scaling_factor = T::from(1070).unwrap();
 
         let mut lower_48 = albers();
 
         // Emulate .scale() call.
         let scaling_factor = T::from(1070).unwrap();
         let lower_48 = lower_48.scale_set(scaling_factor);
-        let alaska = alaska.scale_set(T::from(0.35).unwrap() * scaling_factor);
-        let hawaii = hawaii.scale_set(scaling_factor);
 
         // Emulate .translate() call.
         let k: T = lower_48.scale();
@@ -175,37 +243,17 @@ where
             },
         ]);
 
-        let alaska = alaska
-            .translate_set(&Coord {
-                x: T::from(0.307_f64).unwrap().mul_add(-k, t.x),
-                y: t.y + T::from(0.201).unwrap() * k,
-            })
-            .clip_extent_set(&[
-                Coord {
-                    x: T::from(0.425_f64).unwrap().mul_add(-k, t.x) + epsilon,
-                    y: t.y + T::from(0.120_f64).unwrap() * k + epsilon,
-                },
-                Coord {
-                    x: T::from(0.214_f64).unwrap().mul_add(-k, t.x) - epsilon,
-                    y: t.y + T::from(0.234_f64).unwrap() * k - epsilon,
-                },
-            ]);
+        let alaska: BuilderConicAntimeridianResampleClip<
+            LastPoint<T>,
+            EqualArea<LastPoint<T>, T>,
+            T,
+        > = alaska_inset(scaling_factor, k, t, epsilon);
 
-        let hawaii = hawaii
-            .translate_set(&Coord {
-                x: T::from(0.205_f64).unwrap().mul_add(-k, t.x),
-                y: T::from(0.212f64).unwrap().mul_add(k, t.y),
-            })
-            .clip_extent_set(&[
-                Coord {
-                    x: T::from(0.214_f64).unwrap().mul_add(-k, t.x) + epsilon,
-                    y: t.y + T::from(0.166).unwrap() * k + epsilon,
-                },
-                Coord {
-                    x: t.x - T::from(0.115).unwrap() * k - epsilon,
-                    y: T::from(0.234f64).unwrap().mul_add(k, t.y) - epsilon,
-                },
-            ]);
+        let hawaii: BuilderConicAntimeridianResampleClip<
+            LastPoint<T>,
+            EqualArea<LastPoint<T>, T>,
+            T,
+        > = hawaii_inset(scaling_factor, k, t, epsilon);
 
         let lower_48_point = lower_48.build().stream(&LastPoint::default());
         let alaska_point = alaska.build().stream(&LastPoint::default());
