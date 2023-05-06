@@ -12,9 +12,18 @@ Rust 2021 Edition.
 
 This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST.
 
-Here is a list of the currently supported projections.
+## Current Status
+
+The majority of the library has been ported along with the associated tests.
+
+The 1.0 release is close,  within one or two weeks.
+
+Currently I am reviewing the data structure, and looking for performance improvements before things become locked down and I support backwards compatibility guarentees.
+
+All projections are are now supported.
 
 * Albers
+* AlbersUSA.
 * AziumuthalEqualArea
 * AzimuthalEquiDistant
 * Conformal
@@ -76,14 +85,6 @@ shows a side by side comparison of the all the projections rendered by in both  
 
 The limits of the javascript library become obvious when developing interactive applications that process large datasets.
 For example the examples/globe applications operate on a 50m resolution map of the earth. On a desktop machine this is beyond the javascript version.
-
-## Current Status
-
-Not all projections have been implemented and there are number of known bugs that I am activley working on. The majority of the library has been ported along with the associated tests. The aim is to eventaully release a "1.0" version.
-but at the moment is this alpha grade software.
-
-Before the "1.0" release breaking changes trigger the minor version to increment.
-A summary of the change can be found in CHANGELOG.md
 
 <br/>
 <details>

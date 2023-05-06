@@ -1,26 +1,11 @@
 # TODO
 
-Today
-
-  Are paralles being used consitently?
-
-  examples/projection alberaUSA
-    1) contiguius usa looks Ok.
-    2) alaksa is in the middle of x, but at the top of the page.
-       no clipping all countries are renderered.
-    3) hawaii is centered in the middle of the SVG element!
-       no clipping all countries are renderered.
-
   albersUSA implement cache in 'fn stream()'
-  albersUSA tests
   copy documentation of parallels.
-
-fit test
 
 High Priority.
 examples/projection eslint needs updating.
 
-* fit_test -- needs works.
 * lots of todos missing
 
 * projection_rotate_test -- did it ever work?
@@ -58,7 +43,6 @@ examples/projection eslint needs updating.
 
 ## Not Yet Implemented
 
-* src/projection/albersUsa.js
 * src/interpolate.js
 
 ## The State of Testing
