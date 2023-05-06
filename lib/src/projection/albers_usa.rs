@@ -178,7 +178,7 @@ where
         let alaska = alaska
             .translate_set(&Coord {
                 x: T::from(0.307_f64).unwrap().mul_add(-k, t.x),
-                y: T::from(0.201_f64).unwrap().mul_add(-k, t.y),
+                y: t.y + T::from(0.201).unwrap() * k,
             })
             .clip_extent_set(&[
                 Coord {
