@@ -12,7 +12,6 @@ use crate::clip::buffer::Buffer;
 use crate::clip::clipper::Clipper;
 use crate::clip::clipper::Connected as ConnectedClipper;
 use crate::clip::rectangle::Rectangle;
-use crate::projection::projector_albers_usa::multiplex::Connected as ConnectedMultiplex;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connected as ConnectedStream;
@@ -86,8 +85,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
 /// Used in the formation of a `AlbersUsa` pipeline.
 pub type AlbersUsaMultiTransformer<SD, T> = MultiTransformer<3, SD, AlbersTransformer<SD, T>>;
 /// Used in the formation of a `AlbersUsa` pipeline.
-pub type AlbersUsaMultiplex<SD, T> =
-    Multiplex<AlbersUsa<SD, T>, ConnectedMultiplex<3, AlbersTransformer<SD, T>>, T>;
+pub type AlbersUsaMultiplex<SD, T> = Multiplex<AlbersUsa<SD, T>, T>;
 
 /// Projection output of projection/Builder.
 ///
@@ -112,7 +110,7 @@ where
     }
 }
 
-impl<PR, SD, T> ProjectorTrait for Projector<Multiplex<PR, Unconnected, T>, SD>
+impl<PR, SD, T> ProjectorTrait for Projector<Multiplex<PR, T>, SD>
 where
     T: CoordFloat + Default + FloatConst,
     SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,

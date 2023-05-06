@@ -57,17 +57,14 @@ where
     }
 }
 
-type A<const N: usize, T> =
-    Multidrain<N, PathString<T>, Populated<N, AlbersTransformer<PathString<T>, T>>>;
-
-impl Result for A<3, f64> {
+impl Result
+    for Multidrain<3, PathString<f64>, Populated<3, AlbersTransformer<PathString<f64>, f64>>>
+{
     type Out = Vec<String>;
 
     /// Merges the results of all the sub-drains.
     fn result(&mut self) -> Self::Out {
         let mut out = vec![];
-        // let mut drain = self.state.store[0].clone();
-        // out.push(drain.endpoint().result());
 
         for c in &mut self.state.store {
             let results = c.endpoint().result();

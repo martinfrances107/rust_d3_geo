@@ -9,21 +9,12 @@ use crate::projection::albers_usa::AlbersUsa;
 use crate::projection::Build;
 use crate::projection::Projector as ProjectoTait;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::multidrain::Multidrain;
 use super::multidrain::Unpopulated;
 use super::multitransformer::MultiTransformer;
 use super::AlbersTransformer;
-
-/// When connected the state changes to hold the connected Projectors.
-#[derive(Debug)]
-pub struct Connected<const N: usize, SUBTRANS> {
-    /// A collections of sub transforms.
-    /// TODO can this be simplified once workings.
-    pub store: [SUBTRANS; N],
-}
 
 /// A projection stream pipeline stage which holds a collection of
 /// Projectors, in the case of `AlbersUSA` one for every region.
@@ -33,16 +24,12 @@ pub struct Connected<const N: usize, SUBTRANS> {
 /// to implement Transform here we store PR which hold the
 /// complexity.
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct Multiplex<PR, STATE, T> {
+pub struct Multiplex<PR, T> {
     p_t: PhantomData<T>,
     pr: PR,
-    /// The State is Connected or Unconnected.
-    /// TODO Once things are working consider simplifying here
-    /// by removing this wrapper.
-    pub state: STATE,
 }
 
-impl<PR, T> Default for Multiplex<PR, Unconnected, T>
+impl<PR, T> Default for Multiplex<PR, T>
 where
     PR: Default,
 {
@@ -50,13 +37,12 @@ where
         Self {
             p_t: PhantomData::<T>,
             pr: PR::default(),
-            state: Unconnected,
         }
     }
 }
 
 /// Hardcode type for now until things are generic
-impl<PR, T> Multiplex<PR, Unconnected, T>
+impl<PR, T> Multiplex<PR, T>
 where
     T: CoordFloat + Default + FloatConst,
 {
@@ -85,7 +71,7 @@ where
     }
 }
 
-impl<SD, STATE, T> Transform for Multiplex<AlbersUsa<SD, T>, STATE, T>
+impl<SD, T> Transform for Multiplex<AlbersUsa<SD, T>, T>
 where
     SD: Clone + Stream<EP = SD, T = T>,
     T: 'static + CoordFloat + Default + FloatConst,

@@ -6,7 +6,6 @@ use num_traits::FloatConst;
 
 use crate::projection::projector_albers_usa::Projector;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 
 use super::albers_usa::AlbersUsa;
 use super::projector_albers_usa::multiplex::Multiplex;
@@ -46,7 +45,7 @@ where
 impl<SD, T> BuilderTrait for Builder<SD, T>
 where
     T: CoordFloat + Debug + Default + FloatConst,
-    SD: Clone + Stream<EP = SD, T = T>,
+    SD: Clone,
 {
     type PR = AlbersUsa<SD, T>;
 
@@ -71,7 +70,7 @@ where
     /// Using the currently programmed state output a new projection.
     #[inline]
     #[must_use]
-    pub fn build(&self) -> Projector<Multiplex<AlbersUsa<SD, T>, Unconnected, T>, SD> {
-        Projector::<Multiplex<AlbersUsa<SD, T>, Unconnected, T>, SD>::default()
+    pub fn build(&self) -> Projector<Multiplex<AlbersUsa<SD, T>, T>, SD> {
+        Projector::<Multiplex<AlbersUsa<SD, T>, T>, SD>::default()
     }
 }
