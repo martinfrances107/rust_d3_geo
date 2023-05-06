@@ -1,6 +1,7 @@
 #[cfg(not(tarpaulin_include))]
 mod invert {
 
+    use d3_geo_rs::math::EPSILON;
     use geo::Point;
     use geo_types::Coord;
 
@@ -21,14 +22,11 @@ mod invert {
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::orthographic::Orthographic;
-    use d3_geo_rs::projection::projector_albers_usa::multidrain::Multidrain;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::Build;
-    use d3_geo_rs::projection::Projector;
     use d3_geo_rs::projection::RawBase;
     use d3_geo_rs::projection::RotateSet;
     use d3_geo_rs::stream::DrainStub;
-    use d3_geo_rs::stream::Streamable;
     use d3_geo_rs::Transform;
 
     fn symetric_invert<PM>(pm: PM)
@@ -162,7 +160,6 @@ mod invert {
         symetric_invert(s);
     }
 
-    #[ignore]
     #[test]
     fn albers_usa() {
         println!("albersUsa(point) and albersUsa.invert(point) are symmetric");
@@ -193,8 +190,14 @@ mod invert {
             },
         ] {
             let transformed = projector.transform(&p);
-            println!("{:?}  ->  {:?}", p, transformed);
+            let inverted = projector.invert(&transformed);
+            println!("{:?}  ->  {:?}  -> -- {:?}", p, transformed, inverted);
+            assert!(projection_equal(
+                &projector,
+                &p,
+                &projector.transform(&p),
+                None
+            ));
         }
-        assert!(false);
     }
 }
