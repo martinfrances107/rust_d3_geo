@@ -31,9 +31,6 @@ impl<DRAIN> Transform for ConicEquidistant<DRAIN> {
 
     #[inline]
     fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
-        dbg!("transform");
-        dbg!(p);
-
         let gy = self.g - p.y;
         let nx = self.n * p.x;
 

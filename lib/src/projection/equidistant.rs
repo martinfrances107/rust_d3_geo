@@ -78,7 +78,6 @@ where
         }
 
         let g = cy0 / n + y0;
-        dbg!(g);
         Self::Conic(ConicEquidistant::new(g, n))
     }
 }

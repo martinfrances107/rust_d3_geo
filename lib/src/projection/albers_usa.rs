@@ -194,7 +194,7 @@ where
         let hawaii = hawaii
             .translate_set(&Coord {
                 x: T::from(0.205_f64).unwrap().mul_add(-k, t.x),
-                y: T::from(0.212f64).unwrap().mul_add(-k, t.y),
+                y: T::from(0.212f64).unwrap().mul_add(k, t.y),
             })
             .clip_extent_set(&[
                 Coord {
@@ -206,10 +206,6 @@ where
                     y: T::from(0.234f64).unwrap().mul_add(k, t.y) - epsilon,
                 },
             ]);
-
-        dbg!("lower_48", lower_48.scale());
-        dbg!("alaska", alaska.scale());
-        dbg!("hawaii", hawaii.scale());
 
         let lower_48_point = lower_48.build().stream(&LastPoint::default());
         let alaska_point = alaska.build().stream(&LastPoint::default());
@@ -264,12 +260,10 @@ where
         lower_48_point.point(p, None);
         lower_48_point.endpoint().result().map_or_else(
             || {
-                dbg!("testing alaska");
                 let mut alaska_point = self.alaska_point.clone();
                 alaska_point.point(p, None);
                 alaska_point.endpoint().result().map_or_else(
                     || {
-                        dbg!("testing hawaii");
                         let mut hawaii_point = self.hawaii_point.clone();
                         hawaii_point.point(p, None);
                         hawaii_point.endpoint().result().map_or(
