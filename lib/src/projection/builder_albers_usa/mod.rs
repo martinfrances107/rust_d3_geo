@@ -10,7 +10,6 @@ use crate::stream::Stream;
 use super::albers_usa::AlbersUsa;
 use super::projector_albers_usa::multiplex::Multiplex;
 use super::BuilderTrait;
-use super::RawBase;
 
 mod build;
 mod clip_extent_asjust;
@@ -18,17 +17,6 @@ mod scale_get;
 mod scale_set;
 mod translate_get;
 mod translate_set;
-
-/// Adjustments the pair of parallels
-/// use to define the proejctions.
-///
-/// Differs from PR in the way the PR is generated.
-pub trait PRConic: RawBase {
-    /// Late initisalisation of a projection
-    /// based on a pair of parallels.
-    #[must_use]
-    fn generate(self, y0: Self::T, y1: Self::T) -> Self;
-}
 
 /// A wrapper over Projection\Builder which hold state phi0, phi1 and allow regeneration of the PR.
 #[derive(Clone, Debug)]
