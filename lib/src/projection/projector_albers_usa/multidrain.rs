@@ -1,24 +1,10 @@
 use geo::Coord;
 use geo::CoordFloat;
 
-use crate::clip::antimeridian::interpolate::Interpolate;
-use crate::clip::antimeridian::line::Line;
-use crate::clip::antimeridian::pv::PV;
-use crate::clip::buffer::Buffer;
-use crate::clip::clipper::Clipper;
-use crate::clip::clipper::Connected as ConnectedClipper;
-use crate::identity::Identity;
 use crate::last_point::LastPoint;
 use crate::path::string::String as PathString;
 use crate::path::Result;
-use crate::projection::equal_area::EqualArea;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::projection::resampler::resample::Resample;
-use crate::projection::stream_transform_radians::StreamTransformRadians;
-use crate::rot::rotator_radians::RotatorRadians;
-use crate::stream::Connected as ConnectedStream;
 use crate::stream::Stream;
-use crate::stream::Unconnected;
 
 use super::AlbersTransformer;
 

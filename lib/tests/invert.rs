@@ -1,12 +1,9 @@
 #[cfg(not(tarpaulin_include))]
 mod invert {
 
-    use d3_geo_rs::math::EPSILON;
-    use geo::Point;
     use geo_types::Coord;
 
     use d3_geo_rs::last_point::LastPoint;
-    use d3_geo_rs::path::Result;
     use d3_geo_rs::projection::albers::albers as albers_builder;
     use d3_geo_rs::projection::albers_usa::AlbersUsa;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
@@ -167,6 +164,7 @@ mod invert {
         let builder = AlbersUsa::<LastPoint<f64>, f64>::builder();
         let projector = builder.build();
 
+        // Test points in the lower_48, and the two insets (Alaska and Hawaii).
         for p in [
             Coord {
                 // San Francisco
@@ -189,9 +187,6 @@ mod invert {
                 y: 21.3069_f64,
             },
         ] {
-            let transformed = projector.transform(&p);
-            let inverted = projector.invert(&transformed);
-            println!("{:?}  ->  {:?}  -> -- {:?}", p, transformed, inverted);
             assert!(projection_equal(
                 &projector,
                 &p,

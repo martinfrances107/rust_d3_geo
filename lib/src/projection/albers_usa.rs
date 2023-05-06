@@ -1,22 +1,26 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 use std::ops::Range;
 
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::interpolate::Interpolate;
 use crate::clip::antimeridian::line::Line;
+use crate::clip::antimeridian::pv::PV;
 use crate::clip::buffer::Buffer;
 use crate::clip::clipper::Clipper;
+use crate::clip::clipper::Connected as ConnectedClipper;
 use crate::clip::rectangle::Rectangle;
 use crate::last_point::LastPoint;
 use crate::math::EPSILON;
 use crate::path::Result;
+use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::Projector;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connected as ConnectedStream;
 use crate::stream::Stream;
+use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::albers::albers;
@@ -36,11 +40,6 @@ use super::ScaleGet;
 use super::ScaleSet;
 use super::TranslateGet;
 use super::TranslateSet;
-use crate::clip::antimeridian::interpolate::Interpolate;
-use crate::clip::antimeridian::pv::PV;
-use crate::clip::clipper::Connected as ConnectedClipper;
-use crate::projection::resampler::resample::Connected as ConnectedResample;
-use crate::stream::Unconnected;
 
 type StreamPoint<DRAIN, T> = StreamTransformRadians<
     ConnectedStream<
@@ -216,7 +215,6 @@ where
         let mut lower_48_stream = albers::<SD, T>();
 
         // Emulate .scale() call.
-        let scaling_factor = T::from(1070).unwrap();
         let lower_48 = lower_48.scale_set(scaling_factor);
         let lower_48_stream = lower_48_stream.scale_set(scaling_factor);
 
@@ -224,8 +222,6 @@ where
         let k: T = lower_48.scale();
         let t = lower_48.translate();
 
-        // let mut lower_48 = lower_48.clone();
-        // let mut lower_48_stream = lower_48_stream.clone();
         let lower_48 = lower_48.translate_set(&t).clip_extent_set(&[
             Coord {
                 x: T::from(0.455_f64).unwrap().mul_add(-k, t.x),
