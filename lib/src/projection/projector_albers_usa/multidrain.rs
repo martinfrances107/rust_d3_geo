@@ -42,7 +42,7 @@ impl<const N: usize, SD> Multidrain<N, SD, Unpopulated> {
 
 impl<const N: usize, SD> Multidrain<N, SD, Unpopulated>
 where
-    SD: Clone + Default,
+    SD: Clone,
 {
     /// Constructor.
     #[must_use]

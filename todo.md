@@ -1,8 +1,6 @@
 # TODO
 
   invert test - test the stream functions.
-  Can I remove MultiTransformer?
-  Review Multiplex.
   examples/globe/albers_svg - Can I just select country: USA?
   Can I remove populated()
   examples/globe/albers_svg - Remove attempt to do graticule.
