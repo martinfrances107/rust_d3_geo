@@ -329,7 +329,7 @@ where
 
 impl<EP, PR, SC, T> Stream for Resample<PR, Connected<SC, T>, T>
 where
-    EP: Stream<EP = EP, T = T> + Default,
+    EP: Stream<EP = EP, T = T>,
     PR: Clone + Transform<T = T>,
     SC: Stream<EP = EP, T = T>,
     T: CoordFloat + FloatConst,

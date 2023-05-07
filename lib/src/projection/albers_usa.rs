@@ -204,7 +204,7 @@ where
 
 impl<SD, T> Default for AlbersUsa<SD, T>
 where
-    SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
+    SD: Clone + PartialEq + Stream<EP = SD, T = T>,
     T: CoordFloat + Debug + Default + FloatConst,
 {
     fn default() -> Self {
@@ -282,7 +282,7 @@ where
 
 impl<SD, T> RawBase for AlbersUsa<SD, T>
 where
-    SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
+    SD: Clone + PartialEq + Stream<EP = SD, T = T>,
     T: 'static + CoordFloat + Debug + Default + FloatConst,
 {
     type Builder = Builder<SD, T>;

@@ -106,7 +106,7 @@ where
 impl<PR, SD, T> ProjectorTrait for Projector<PR, SD>
 where
     T: CoordFloat + Default + FloatConst,
-    SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
+    SD: Clone + PartialEq + Stream<EP = SD, T = T>,
 {
     type EP = Multidrain<3, SD, Unpopulated>;
 
