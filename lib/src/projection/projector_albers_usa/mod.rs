@@ -20,9 +20,9 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use self::multidrain::Multidrain;
+use self::multidrain::Populated;
 use self::multidrain::Unpopulated;
 use self::multiplex::Multiplex;
-use self::multitransformer::MultiTransformer;
 use super::albers_usa::AlbersUsa;
 use super::equal_area::EqualArea;
 use super::resampler::resample::Resample;
@@ -34,8 +34,6 @@ pub mod multiplex;
 
 /// End point for projections like `AlbersUsa` which end in mulitple points.
 pub mod multidrain;
-/// Transformer defined as more than more projection.
-pub mod multitransformer;
 
 type AlbersTransformer<SD, T> = StreamTransformRadians<
     ConnectedStream<
@@ -83,8 +81,6 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
 >;
 
 /// Used in the formation of a `AlbersUsa` pipeline.
-pub type AlbersUsaMultiTransformer<SD, T> = MultiTransformer<3, SD, AlbersTransformer<SD, T>>;
-/// Used in the formation of a `AlbersUsa` pipeline.
 pub type AlbersUsaMultiplex<SD, T> = Multiplex<AlbersUsa<SD, T>, T>;
 
 /// Projection output of projection/Builder.
@@ -117,7 +113,7 @@ where
 {
     type EP = Multidrain<3, SD, Unpopulated>;
 
-    type Transformer = AlbersUsaMultiTransformer<SD, T>;
+    type Transformer = Multidrain<3, SD, Populated<3, AlbersTransformer<SD, T>>>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///

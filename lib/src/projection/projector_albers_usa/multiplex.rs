@@ -12,8 +12,8 @@ use crate::stream::Stream;
 use crate::Transform;
 
 use super::multidrain::Multidrain;
+use super::multidrain::Populated;
 use super::multidrain::Unpopulated;
-use super::multitransformer::MultiTransformer;
 use super::AlbersTransformer;
 
 /// A projection stream pipeline stage which holds a collection of
@@ -51,7 +51,7 @@ where
     pub fn connect<SD>(
         &self,
         drain: &Multidrain<3, SD, Unpopulated>,
-    ) -> MultiTransformer<3, SD, AlbersTransformer<SD, T>>
+    ) -> Multidrain<3, SD, Populated<3, AlbersTransformer<SD, T>>>
     where
         T: Debug,
         SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
@@ -67,7 +67,9 @@ where
             pr.alaska_stream.build().stream(sd),
             pr.hawaii_stream.build().stream(sd),
         ];
-        MultiTransformer::new(store)
+
+        let md = Multidrain::new(SD::default());
+        md.populate(store)
     }
 }
 
