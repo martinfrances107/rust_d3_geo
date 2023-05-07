@@ -68,7 +68,7 @@ where
             pr.hawaii_stream.build().stream(sd),
         ];
 
-        let md = Multidrain::new(SD::default());
+        let md = Multidrain::new(drain.sd.clone());
         md.populate(store)
     }
 }

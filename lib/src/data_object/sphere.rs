@@ -18,7 +18,7 @@ where
 {
     fn default() -> Self {
         Self {
-            pd: PhantomData::default(),
+            pd: PhantomData::<T>,
         }
     }
 }
