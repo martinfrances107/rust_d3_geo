@@ -162,14 +162,4 @@ pub async fn start() {
             console_log!("Not a geometry collection.")
         }
     }
-
-    // Graticule
-    let graticule = generate_mls();
-
-    // let graticule_d = builder.object(&graticule).result();
-    // let class_name = "graticule";
-    // let path = path_node(class_name)?;
-    // path.set_attribute_ns(None, "d", &graticule_d)?;
-    // path.set_attribute_ns(None, "style", "#ccc")?;
-    // svg.append_child(&path)?;
 }
