@@ -8,7 +8,6 @@ use crate::projection::projector_albers_usa::Projector;
 use crate::stream::Stream;
 
 use super::albers_usa::AlbersUsa;
-use super::projector_albers_usa::multiplex::Multiplex;
 use super::BuilderTrait;
 
 mod build;
@@ -58,7 +57,7 @@ where
     /// Using the currently programmed state output a new projection.
     #[inline]
     #[must_use]
-    pub fn build(&self) -> Projector<Multiplex<AlbersUsa<SD, T>, T>, SD> {
-        Projector::<Multiplex<AlbersUsa<SD, T>, T>, SD>::default()
+    pub fn build(&self) -> Projector<AlbersUsa<SD, T>, SD> {
+        Projector::<AlbersUsa<SD, T>, SD>::default()
     }
 }

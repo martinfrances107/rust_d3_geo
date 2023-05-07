@@ -13,6 +13,7 @@ use crate::clip::clipper::Clipper;
 use crate::clip::clipper::Connected as ConnectedClipper;
 use crate::clip::rectangle::Rectangle;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
+use crate::projection::Build;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connected as ConnectedStream;
 use crate::stream::Stream;
@@ -22,15 +23,11 @@ use crate::Transform;
 use self::multidrain::Multidrain;
 use self::multidrain::Populated;
 use self::multidrain::Unpopulated;
-use self::multiplex::Multiplex;
 use super::albers_usa::AlbersUsa;
 use super::equal_area::EqualArea;
 use super::resampler::resample::Resample;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::Projector as ProjectorTrait;
-
-/// The multiplex is a collection of sub-projections.
-pub mod multiplex;
 
 /// End point for projections like `AlbersUsa` which end in mulitple points.
 pub mod multidrain;
@@ -81,7 +78,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
 >;
 
 /// Used in the formation of a `AlbersUsa` pipeline.
-pub type AlbersUsaMultiplex<SD, T> = Multiplex<AlbersUsa<SD, T>, T>;
+// pub type AlbersUsaMultiplex<SD, T> = Multiplex<AlbersUsa<SD, T>, T>;
 
 /// Projection output of projection/Builder.
 ///
@@ -106,7 +103,7 @@ where
     }
 }
 
-impl<PR, SD, T> ProjectorTrait for Projector<Multiplex<PR, T>, SD>
+impl<PR, SD, T> ProjectorTrait for Projector<PR, SD>
 where
     T: CoordFloat + Default + FloatConst,
     SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
@@ -122,7 +119,20 @@ where
     /// Multiplex -> DRAIN
     ///
     fn stream(&mut self, drain: &Self::EP) -> Self::Transformer {
-        self.multiplex.connect(drain)
+        let pr: AlbersUsa<SD, T> = AlbersUsa::<SD, T>::default();
+        let sd = &drain.sd;
+
+        // The order of objects in the store is important for performance.
+        // The earlier a point is found the better,
+        // so the lower_48 is searched first, and the smallest land area last.
+        let store = [
+            pr.lower_48_stream.build().stream(sd),
+            pr.alaska_stream.build().stream(sd),
+            pr.hawaii_stream.build().stream(sd),
+        ];
+
+        let md = Multidrain::new(drain.sd.clone());
+        md.populate(store)
     }
 }
 
