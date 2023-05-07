@@ -6,18 +6,12 @@ mod fit {
     use std::fmt::Debug;
     use std::fs::File;
 
-    use d3_geo_rs::projection::builder_conic::ParallelsSet;
-    use d3_geo_rs::projection::conformal::Conformal;
-    use d3_geo_rs::projection::equal_area::EqualArea;
-    use d3_geo_rs::projection::equidistant::Equidistant;
-    use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
-    use d3_geo_rs::projection::ClipAngleSet;
-    use d3_geo_rs::projection::ClipExtentGet;
     use geo::polygon;
     use geo::CoordFloat;
     use geo::Geometry;
     use geo_types::Coord;
     use num_traits::FloatConst;
+    use rust_topojson_client::feature::feature_from_name;
     use topojson::Topology;
 
     use d3_geo_rs::data_object::sphere::Sphere;
@@ -26,12 +20,19 @@ mod fit {
     use d3_geo_rs::path::bounds::Bounds;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
+    use d3_geo_rs::projection::builder_conic::ParallelsSet;
+    use d3_geo_rs::projection::conformal::Conformal;
+    use d3_geo_rs::projection::equal_area::EqualArea;
+    use d3_geo_rs::projection::equidistant::Equidistant;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
     use d3_geo_rs::projection::gnomic::Gnomic;
     use d3_geo_rs::projection::mercator::Mercator;
+    use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::orthographic::Orthographic;
     use d3_geo_rs::projection::stereographic::Stereographic;
     use d3_geo_rs::projection::ClipAngleAdjust;
+    use d3_geo_rs::projection::ClipAngleSet;
+    use d3_geo_rs::projection::ClipExtentGet;
     use d3_geo_rs::projection::ClipExtentSet;
     use d3_geo_rs::projection::Fit;
     use d3_geo_rs::projection::PrecisionAdjust;
@@ -41,7 +42,6 @@ mod fit {
     use d3_geo_rs::projection::RotateSet;
     use d3_geo_rs::projection::ScaleGet;
     use d3_geo_rs::projection::TranslateGet;
-    use rust_topojson_client::feature::feature_from_name;
 
     ///  Helper function to extract world geometry from file.
     fn world<T>() -> Geometry<T>

@@ -10,7 +10,6 @@ mod mercator {
     use d3_geo_rs::data_object::sphere::Sphere;
     use d3_geo_rs::in_delta::coordinate as in_delta_coordinate;
     use d3_geo_rs::path::builder::Builder as PathBuilder;
-
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::CenterSet;

@@ -1,11 +1,11 @@
 #[cfg(not(tarpaulin_include))]
 mod graticule {
     extern crate pretty_assertions;
-    use d3_geo_rs::graticule::builder::Builder;
     use geo::LineString;
     use geo::Polygon;
     use pretty_assertions::assert_eq;
 
+    use d3_geo_rs::graticule::builder::Builder;
     use d3_geo_rs::graticule::generate;
     use d3_geo_rs::math::EPSILON;
 

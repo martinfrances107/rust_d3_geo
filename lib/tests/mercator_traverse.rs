@@ -26,7 +26,6 @@ mod mercator_tranverse {
     use d3_geo_rs::projection::TranslateGet;
     use d3_geo_rs::projection::TranslateSet;
     use d3_geo_rs::stream::DrainStub;
-
     use d3_geo_rs::Transform;
 
     // There are subtle mercator - mercaotorTransverse / f32 issues
