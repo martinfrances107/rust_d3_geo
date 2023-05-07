@@ -14,7 +14,7 @@
 //!
 //!  - Large datasets can be resampled to reduce compute.
 //!
-//!  - As well as displaying to a CANVAS element or SVG, various metric can be computed on the geometry
+//!  - As well as displaying to a HTML CANVAS element or SVG, various metric can be computed on the geometry
 //!    such as [Area](path::area::Area), [Centroids](path::centroid::Centroid),
 //!     and [Bounds](path::bounds::Bounds) on polygons and lines.
 //!

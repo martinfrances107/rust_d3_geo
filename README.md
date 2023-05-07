@@ -16,11 +16,11 @@ This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST.
 
 The majority of the library has been ported along with the associated tests.
 
-The 1.0 release is close,  within one or two weeks.
+The 1.0 release is close, within one or two weeks.
 
 Currently I am reviewing the data structure, and looking for performance improvements before things become locked down and I support backwards compatibility guarentees.
 
-All projections are are now supported.
+All projections are now supported.
 
 * Albers
 * AlbersUSA.
