@@ -12,10 +12,6 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
-use d3_geo_rs::path::Result;
-use d3_geo_rs::projection::Projector;
-use d3_geo_rs::stream::Stream;
-use d3_geo_rs::stream::Streamable;
 use geo::Geometry;
 use geo::GeometryCollection;
 use gloo_utils::format::JsValueSerdeExt;
@@ -29,11 +25,14 @@ use web_sys::Document;
 use web_sys::SvgsvgElement;
 use web_sys::*;
 
-use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::string::String as PathString;
+use d3_geo_rs::path::Result;
 use d3_geo_rs::projection::albers_usa::AlbersUsa;
+use d3_geo_rs::projection::Projector;
 use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::stream::Stream;
+use d3_geo_rs::stream::Streamable;
 
 #[cfg(not(tarpaulin_include))]
 fn document() -> Option<Document> {
@@ -142,7 +141,6 @@ pub async fn start() {
                         let object = Geometry::Polygon(p.clone());
                         object.to_stream(&mut stream_in);
 
-                        let class_name = format!("id-{i}");
                         for (k, s) in stream_in.endpoint().result().iter().enumerate() {
                             let class_name = format!("id-{i}-polygon-{k}");
                             let path = path_node(&document, &class_name);
