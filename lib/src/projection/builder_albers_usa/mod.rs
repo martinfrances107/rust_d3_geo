@@ -10,7 +10,6 @@ use crate::stream::Stream;
 use super::albers_usa::AlbersUsa;
 use super::BuilderTrait;
 
-mod build;
 mod clip_extent_asjust;
 mod scale_get;
 mod scale_set;
