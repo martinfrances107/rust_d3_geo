@@ -96,7 +96,7 @@ type StreamPoint<DRAIN, T> = StreamTransformRadians<
 pub struct AlbersUsa<SD, T>
 where
     SD: Clone,
-    T: CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Debug + FloatConst,
 {
     k: T,
     t: Coord<T>,
