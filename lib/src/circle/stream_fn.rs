@@ -19,8 +19,8 @@ pub fn stream_fn<EP, STREAM, T>(
     t0_in: Option<Coord<T>>,
     t1_in: Option<Coord<T>>,
 ) where
-    T: CoordFloat + FloatConst,
     STREAM: Stream<EP = EP, T = T>,
+    T: CoordFloat + FloatConst,
 {
     if delta.is_zero() {
         return;

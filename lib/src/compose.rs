@@ -19,9 +19,9 @@ impl<TA, TB> Compose<TA, TB> {
 
 impl<T, TA, TB> Transform for Compose<TA, TB>
 where
+    T: CoordFloat,
     TA: Transform<T = T>,
     TB: Transform<T = T>,
-    T: CoordFloat,
 {
     type T = T;
     // Apply A then B.

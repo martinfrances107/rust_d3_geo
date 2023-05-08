@@ -97,7 +97,6 @@ impl<PCNC, PCNU, T> Path<Measure<T>, PCNC, PCNU, T>
 where
     PCNC: Clone + Stream<EP = Measure<T>, T = T>,
     PCNU: Clone + Connectable<Output<Measure<T>> = PCNC>,
-
     T: AddAssign + CoordFloat,
 {
     /// Returns the area of the Path

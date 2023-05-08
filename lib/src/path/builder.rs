@@ -92,8 +92,8 @@ where
 
 impl<CS, PROJECTOR, T, TRANSFORMER> PointRadiusTrait for Builder<CS, PROJECTOR, T>
 where
-    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     CS: PointRadiusTrait<T = T>,
+    PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat,
 {
     /// f64 or f32.

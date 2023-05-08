@@ -23,8 +23,8 @@ use crate::path::PointRadiusTrait;
 #[derive(Debug)]
 pub struct Builder<CS, PCNC, PCNU, T>
 where
-    PCNU: Clone,
     PCNC: Clone,
+    PCNU: Clone,
     T: CoordFloat,
 {
     p_pcnc: PhantomData<PCNC>,
@@ -35,8 +35,8 @@ where
 
 impl<CS, PCNC, PCNU, T> Builder<CS, PCNC, PCNU, T>
 where
-    PCNU: Clone,
     PCNC: Clone,
+    PCNU: Clone,
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
@@ -70,8 +70,8 @@ where
 /// Context related methods.
 impl<PCNC, PCNU, T> Builder<String<T>, PCNC, PCNU, T>
 where
-    PCNU: Clone,
     PCNC: Clone,
+    PCNU: Clone,
     T: CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
