@@ -68,12 +68,12 @@ pub async fn start() {
     let document = document().unwrap();
     let window = web_sys::window().expect("Failed to get window");
 
-    // Get data from world map.
+    // Get data from map of the USA
     let mut opts = RequestInit::new();
     opts.method("GET");
     opts.mode(RequestMode::Cors);
-    let request = Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)
-        .expect("requets failed.");
+    let request = Request::new_with_str_and_init("/world-atlas/world/counties-10m.json", &opts)
+        .expect("request failed.");
     let resp_value = JsFuture::from(window.fetch_with_request(&request))
         .await
         .expect("await failed");
@@ -81,10 +81,9 @@ pub async fn start() {
     let json = JsFuture::from(resp.json().expect("resp failed"))
         .await
         .expect("json failed");
-
     let topology =
         JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
-
+    console_log!("have a valid topolgy");
     // Grab canvas.
     let svg: SvgsvgElement = document
         .get_element_by_id("s")
@@ -92,12 +91,8 @@ pub async fn start() {
         .dyn_into::<web_sys::SvgsvgElement>()
         .expect("svg failed");
 
-    // let width = svg.width().base_val().value().expect("width failed") as f64;
-    // let height = svg.height().base_val().value().expect("height failed") as f64;
-
     let countries: Geometry<f64> =
-        feature_from_name(&topology, "countries").expect("Did not extract geometry");
-
+        feature_from_name(&topology, "counties").expect("Did not extract geometry");
     let projector = AlbersUsa::<PathString<f64>, f64>::builder().build();
 
     let fill: [&str; 7] = [
@@ -143,14 +138,22 @@ pub async fn start() {
                         }
                     }
                     Geometry::Polygon(p) => {
-                        // let s = path.object(&Geometry::Polygon(p.clone())).result();
+                        let mut stream_in = path.projection.stream(&path.context_stream);
+                        let object = Geometry::Polygon(p.clone());
+                        object.to_stream(&mut stream_in);
 
-                        // let class_name = format!("id-{i}");
-                        // let path = path_node(&class_name)?;
-                        // path.set_attribute_ns(None, "d", &s)?;
-                        // path.set_attribute_ns(None, "style", fill[i % 7])?;
-                        // svg.append_child(&path)?;
-                        // i += 1
+                        let class_name = format!("id-{i}");
+                        for (k, s) in stream_in.endpoint().result().iter().enumerate() {
+                            let class_name = format!("id-{i}-polygon-{k}");
+                            let path = path_node(&document, &class_name);
+                            path.set_attribute_ns(None, "d", s).expect("none 2");
+                            path.set_attribute_ns(None, "class", &class_name)
+                                .expect("class failed");
+                            path.set_attribute_ns(None, "style", fill[i % 7])
+                                .expect("none failed");
+                            svg.append_child(&path).expect("append failed.");
+                        }
+                        i += 1
                     }
                     _ => {
                         console_log!("Not polygon, Not Multipolygon.");

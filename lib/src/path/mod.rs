@@ -86,7 +86,6 @@ where
     pub projection: PROJECTOR,
 }
 
-// impl<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T> Path<CLIPC, CLIPU, CS, PCNC, PCNU, PR, RC, RU, T>
 impl<CS, PROJECTOR, T, TRANSFORMER> Path<CS, PROJECTOR, T, TRANSFORMER>
 where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
