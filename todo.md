@@ -1,7 +1,9 @@
 # TODO
 
-  Can I remove populated()
   profile code. ( move the albers_usa profile target.. make it render countires.)
+  Can I label the SVG elements with a county name.
+
+  restore benchmark. by using ImageData trick.
   albersUSA implement cache in 'fn stream()'
   copy documentation of parallels.
 

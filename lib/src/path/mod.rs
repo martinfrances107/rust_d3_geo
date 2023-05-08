@@ -83,7 +83,7 @@ where
 {
     pub context_stream: CS,
     point_radius: PointRadiusEnum<T>,
-    pub projection: PROJECTOR,
+    pub projector: PROJECTOR,
 }
 
 impl<CS, PROJECTOR, T, TRANSFORMER> Path<CS, PROJECTOR, T, TRANSFORMER>
@@ -99,7 +99,7 @@ where
         Self {
             context_stream,
             point_radius: PointRadiusEnum::Val(T::from(4.5_f64).unwrap()),
-            projection,
+            projector: projection,
         }
     }
 }
@@ -113,7 +113,7 @@ where
 {
     /// Combines projection, context stream and object.
     pub fn object(&mut self, object: &impl Streamable<T = T>) -> <CS as Result>::Out {
-        let mut stream_in = self.projection.stream(&self.context_stream);
+        let mut stream_in = self.projector.stream(&self.context_stream);
         object.to_stream(&mut stream_in);
         stream_in.endpoint().result()
     }
@@ -141,7 +141,7 @@ where
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         let stream_dst = Measure::<T>::default();
-        let mut stream_in = self.projection.stream(&stream_dst);
+        let mut stream_in = self.projector.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
         stream_in.0.sink.endpoint().result()
@@ -171,7 +171,7 @@ where
         T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
         let stream_dst = Area::<T>::default();
-        let mut stream_in = self.projection.stream(&stream_dst);
+        let mut stream_in = self.projector.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
         stream_in.0.sink.endpoint().result()
@@ -198,7 +198,7 @@ where
     /// This operation consumes the  Path.
     pub fn bounds(mut self, object: &impl Streamable<T = T>) -> [Coord<T>; 2] {
         let stream_dst = Bounds::<T>::default();
-        let mut stream_in = self.projection.stream(&stream_dst);
+        let mut stream_in = self.projector.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
         stream_in.endpoint().result()
@@ -214,7 +214,7 @@ where
     /// Returns the centroid of the object.
     pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coord<T> {
         let stream_dst = Centroid::<T>::default();
-        let mut stream_in = self.projection.stream(&stream_dst);
+        let mut stream_in = self.projector.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
         stream_in.endpoint().result()
