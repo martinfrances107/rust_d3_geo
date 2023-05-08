@@ -81,29 +81,31 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Clone, Debug)]
-pub struct Projector<MULTIPLEX, SD> {
-    phantom_sd: PhantomData<SD>,
-    /// The internal single stage of the pipeline.
-    pub multiplex: MULTIPLEX,
-}
-
-impl<MULTIPLEX, SD> Default for Projector<MULTIPLEX, SD>
+pub struct Projector<SD, T>
 where
     SD: Clone,
-    MULTIPLEX: Default,
+    T: CoordFloat + Default + FloatConst,
+{
+    /// The internal single stage of the pipeline.
+    pub pr: AlbersUsa<SD, T>,
+}
+
+impl<SD, T> Default for Projector<SD, T>
+where
+    SD: Clone + PartialEq + Stream<EP = SD, T = T>,
+    T: CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
         Self {
-            phantom_sd: PhantomData::<SD>,
-            multiplex: MULTIPLEX::default(),
+            pr: AlbersUsa::<SD, T>::default(),
         }
     }
 }
 
-impl<PR, SD, T> ProjectorTrait for Projector<PR, SD>
+impl<SD, T> ProjectorTrait for Projector<SD, T>
 where
-    T: CoordFloat + Default + FloatConst,
     SD: Clone + PartialEq + Stream<EP = SD, T = T>,
+    T: CoordFloat + Default + FloatConst,
 {
     type EP = Multidrain<3, SD, Unpopulated>;
 
@@ -116,7 +118,7 @@ where
     /// Multiplex -> DRAIN
     ///
     fn stream(&mut self, drain: &Self::EP) -> Self::Transformer {
-        let pr: AlbersUsa<SD, T> = AlbersUsa::<SD, T>::default();
+        let pr = AlbersUsa::default();
         let sd = &drain.sd;
 
         // The order of objects in the store is important for performance.
@@ -133,18 +135,18 @@ where
     }
 }
 
-impl<MULTIPLEX, SD, T> Transform for Projector<MULTIPLEX, SD>
+impl<SD, T> Transform for Projector<SD, T>
 where
-    T: CoordFloat + Debug,
-    MULTIPLEX: Transform<T = T>,
+    SD: Clone,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     /// f32 or f64
     type T = T;
 
     fn transform(&self, p: &Coord<T>) -> Coord<T> {
-        self.multiplex.transform(p)
+        self.pr.transform(p)
     }
     fn invert(&self, p: &Coord<T>) -> Coord<T> {
-        self.multiplex.invert(p)
+        self.pr.invert(p)
     }
 }

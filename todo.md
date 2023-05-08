@@ -1,7 +1,7 @@
 # TODO
 
   Can I remove populated()
-  profile code.
+  profile code. ( move the albers_usa profile target.. make it render countires.)
   albersUSA implement cache in 'fn stream()'
   copy documentation of parallels.
 

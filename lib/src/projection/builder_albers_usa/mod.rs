@@ -57,7 +57,7 @@ where
     /// Using the currently programmed state output a new projection.
     #[inline]
     #[must_use]
-    pub fn build(&self) -> Projector<AlbersUsa<SD, T>, SD> {
-        Projector::<AlbersUsa<SD, T>, SD>::default()
+    pub fn build(&self) -> Projector<SD, T> {
+        Projector::<SD, T>::default()
     }
 }
