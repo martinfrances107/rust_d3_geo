@@ -50,6 +50,14 @@ To run the example please follow the "Running the examples" below.
 <tbody align="left" style="vertical-align:top;">
 
 <tr>
+<td><strong>examples/globe/albers_usa</strong> <br/><br/>  AlbersUSA is a unique projection in that it used a Multidrain to render
+Alaska and Hawaii in insets.
+<br/>
+<br/>
+</td>
+<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/albers_usa.svg"></td>
+</tr>
+<tr>
 <td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>.  <br/><br/> For perfomance reasons this example is best viewed as a static web site, rather the running the development build.
 <br/>
 <br/>
