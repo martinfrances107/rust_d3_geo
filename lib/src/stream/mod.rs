@@ -93,7 +93,7 @@ pub trait Streamable {
 /// let transformed_point = p.transform(&Coord{x: 0_f32, y:0_f32});
 ///
 /// ```
-#[derive(Clone, Default, Debug)]
+#[derive(Clone, Default, Debug, Eq, PartialEq)]
 pub struct DrainStub<T> {
     phantom: PhantomData<T>,
 }

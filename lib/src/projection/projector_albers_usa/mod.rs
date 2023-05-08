@@ -77,9 +77,6 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
     >,
 >;
 
-/// Used in the formation of a `AlbersUsa` pipeline.
-// pub type AlbersUsaMultiplex<SD, T> = Multiplex<AlbersUsa<SD, T>, T>;
-
 /// Projection output of projection/Builder.
 ///
 /// Commnon functionality for all raw projection structs.
