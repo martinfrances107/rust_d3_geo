@@ -20,24 +20,25 @@ The 1.0 release is close, within one or two weeks.
 
 Currently I am reviewing the data structure, and looking for performance improvements before things become locked down and I support backwards compatibility guarentees.
 
-All projections are now supported.
+## When to use the rust version of the library
 
-* Albers
-* AlbersUSA.
-* AziumuthalEqualArea
-* AzimuthalEquiDistant
-* Conformal
-* EqualArea
-* EquiDistant
-* Equirectangular
-* Gnomic
-* Mercator
-* Orthographic
-* Stereographic
+The limits of the javascript library become obvious when developing interactive applications that process large datasets.
+For example the examples/globe applications operate on a 50m resolution map of the earth. On a desktop machine this is beyond the javascript version.
+
+<table>
+<th align="left">Supported Projections</th>
+<th ></th>
+<th align="right"></th>
+<tr><td>Albers</td><td>Equidistant</td><td>MercatorTansverse</td></tr>
+<tr><td>AlbersUsa</td><td>Equirectangular</td><td>Orthographic</td></tr>
+<tr><td>AziumuthalEqualArea</td><td>EqualArea</td><td>Stereographic</td></tr>
+<tr><td>AzimuthalEquiDistant</td><td>Gnomic</td><td></td></tr>
+<tr><td>Conformal</td><td>Mercator</td><td></td></tr>
+</table>
 
 ## Examples
 
-Examples are provided to help developers convert their existing javascript to rust.
+These Examples are provided to help developers convert their existing javascript to rust.
 To run the example please follow the "Running the examples" below.
 
 <table>
@@ -50,13 +51,6 @@ To run the example please follow the "Running the examples" below.
 <tbody align="left" style="vertical-align:top;">
 
 <tr>
-<td><strong>examples/globe/albers_usa</strong> <br/><br/>  AlbersUSA is a unique projection in that it used a Multidrain to render
-Alaska and Hawaii in insets.
-<br/>
-<br/>
-</td>
-<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/albers_usa.svg"></td>
-</tr>
 <tr>
 <td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>.  <br/><br/> For perfomance reasons this example is best viewed as a static web site, rather the running the development build.
 <br/>
@@ -69,7 +63,7 @@ Alaska and Hawaii in insets.
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/globe.svg"> </td>
 </tr>
 <td><strong>examples/globe/drag_and_zoom</strong> <br/><br/>
-  This is similar to the other globe applications. As an example it deliberatly mixes typescript methods with rust.
+  As an example it deliberately mixes typescript methods with rust.
   The typescript is responsible for handling the mouse events and calculating the quaternion and finally calculating the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.
 </td>
 
@@ -82,17 +76,23 @@ As a confidence building exercise, this demo
 shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>. </td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/projection.png"> </td>
 </tr>
+<td><strong>examples/globe/albers_usa</strong> <br/><br/>
+This example show all the counties in the USA
+
+AlbersUSA is unlike the other projections.
+Alaska and Hawaii are rendered as insets.
+As can be see in the code a Multidrain must be used to gather the three projections.
+<br/>
+<br/>
+</td>
+<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/albers_usa.svg"></td>
+</tr>
 <tr>
 <td> <strong>examples/ring</strong><br/>Sample code in both RUST and javascript that renders a complex multipolygon. ( Orthographic and Sterographic ) </td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/ring.png"></td>
 </tr>
 </tbody>
 <table>
-
-## When to use the rust version of the library
-
-The limits of the javascript library become obvious when developing interactive applications that process large datasets.
-For example the examples/globe applications operate on a 50m resolution map of the earth. On a desktop machine this is beyond the javascript version.
 
 <br/>
 <details>
@@ -252,8 +252,6 @@ Support for a custom projection is not yet supported.
 For an example of this see the test labelled "projection.fitExtent(…) custom projection"
 
 I am trying to get a program of mine to run faster, but I want this to eventually be a true library port. So feel free to add suggestions to my todo list.
-
-A complete list of all ported projections can be found in invert-test.rs. Only AlbersUSA is yet to be implemented.
 
 <br>
 
