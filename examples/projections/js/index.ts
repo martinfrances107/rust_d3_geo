@@ -39,10 +39,10 @@ import('../pkg')
             equirectangular(world),
             equidistant(world),
             equalEarth(world),
-            orthographic(world),
             gnomic(world),
             mercator(world),
             mercatorTransverse(world),
+            orthographic(world),
             stereographic(world),
           ]
         )

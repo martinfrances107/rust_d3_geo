@@ -98,9 +98,9 @@ pub async fn start() -> Result<(), JsValue> {
         draw_equidistant(&land),
         draw_equal_earth(&land),
         draw_gnomic(&land),
-        draw_orthographic(&land),
         draw_mercator(&land),
         draw_mercator_transverse(&land),
+        draw_orthographic(&land),
         draw_sterographic(&land),
     )?;
 

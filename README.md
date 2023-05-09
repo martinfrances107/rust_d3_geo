@@ -29,11 +29,11 @@ For example the examples/globe applications operate on a 50m resolution map of t
 <th align="left">Supported Projections</th>
 <th ></th>
 <th align="right"></th>
-<tr><td>Albers</td><td>Equidistant</td><td>MercatorTansverse</td></tr>
-<tr><td>AlbersUsa</td><td>Equirectangular</td><td>Orthographic</td></tr>
-<tr><td>AziumuthalEqualArea</td><td>EqualArea</td><td>Stereographic</td></tr>
-<tr><td>AzimuthalEquiDistant</td><td>Gnomic</td><td></td></tr>
-<tr><td>Conformal</td><td>Mercator</td><td></td></tr>
+<tr><td>Albers</td><td>Equidistant</td><td>Mercator</td></tr>
+<tr><td>AlbersUsa</td><td>Equirectangular</td><td>MercatorTansverse</td></tr>
+<tr><td>Aziumuthal Equal Area</td><td>Equal Area</td><td>Orthographic</td></tr>
+<tr><td>Azimuthal EquiDistant</td><td>Equal Earth</td><td>Stereographic</td></tr>
+<tr><td>Conformal</td><td>Gnomic</td><td></td></tr>
 </table>
 
 ## Examples
