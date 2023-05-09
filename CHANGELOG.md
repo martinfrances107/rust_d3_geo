@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.0] - Tuesday 9 May 2023
+
+   Simplificiation:
+     Removed the concept of MultiTransformer, Multiplex.
+     used to render AlbersUSA
+
 ## [0.4.0] - Monday 27th March 2023
 
 commit e6c8045f7fb989357dbfa00340dbf3f52be0c430
