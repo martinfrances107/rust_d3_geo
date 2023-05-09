@@ -1,7 +1,6 @@
 [workspace]
 members = [
   "./lib",
-  "./examples/albers_svg",
   "./examples/globe/canvas",
   "./examples/globe/rotating_50m",
   "./examples/globe/drag_and_zoom",
@@ -9,7 +8,8 @@ members = [
   "./examples/globe/albers_usa_svg",
   "./examples/projections",
   "./examples/ring",
-  "./profile_target",
+  "./profile_target/albers_svg",
+  './profile_target/simple_svg',
 ]
 
 [workspace.package]

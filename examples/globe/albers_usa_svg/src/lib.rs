@@ -26,7 +26,6 @@ use web_sys::SvgsvgElement;
 use web_sys::*;
 
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::path::Result;
 use d3_geo_rs::projection::albers_usa::AlbersUsa;
 use d3_geo_rs::projection::Projector;
@@ -92,7 +91,7 @@ pub async fn start() {
 
     let countries: Geometry<f64> =
         feature_from_name(&topology, "counties").expect("Did not extract geometry");
-    let projector = AlbersUsa::<PathString<f64>, f64>::builder().build();
+    let projector = AlbersUsa::builder().build();
 
     let fill: [&str; 7] = [
         "fill: red",
