@@ -7,8 +7,6 @@ use super::Builder;
 impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> RotateGet
     for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
     type T = T;

@@ -13,8 +13,6 @@ use crate::Transform;
 impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> AngleGet
     for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
     type T = T;
@@ -28,8 +26,6 @@ where
 impl<CLIPC, CLIPU, DRAIN, PR, T> AngleSet
     for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
