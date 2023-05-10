@@ -18,6 +18,7 @@ use geo_types::Coord;
 use gloo_utils::format::JsValueSerdeExt;
 use topojson::Topology;
 
+use rust_topojson_client::feature::feature_from_name;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
@@ -41,7 +42,6 @@ use d3_geo_rs::projection::RawBase;
 use d3_geo_rs::projection::RotateSet;
 use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
-use rust_topojson_client::feature::feature_from_name;
 
 fn document() -> Result<Document, JsValue> {
     let window = match js_sys::global().dyn_into::<Window>() {
@@ -61,11 +61,15 @@ fn document() -> Result<Document, JsValue> {
 #[derive(Debug)]
 /// State associated with render call.
 pub struct Renderer {
+    // A string owned by javascript representing the HTML color used in the gratcule.
+    color_graticule: JsValue,
+    // A string owned by javascript represent the HTML color used to draw the countries.
+    color_land: JsValue,
     context2d: CanvasRenderingContext2d,
     countries: Geometry<f64>,
     height: f64,
     graticule: Geometry<f64>,
-    ob: BuilderCircleResampleNoClip<Context, Orthographic<Context, f64>, f64>,
+    builder: BuilderCircleResampleNoClip<Context, Orthographic<Context, f64>, f64>,
     width: f64,
     yaw: f64,
 }
@@ -114,11 +118,9 @@ impl Renderer {
         let width: f64 = canvas.width().into();
         let height: f64 = canvas.height().into();
 
-        let countries =
-            feature_from_name(&topology, "countries").expect("Did not extract geometry");
-
-        let mut ob = Orthographic::builder();
-        ob.scale_set(width / 1.3_f64 / std::f64::consts::PI)
+        let mut builder = Orthographic::builder();
+        builder
+            .scale_set(width / 1.3_f64 / std::f64::consts::PI)
             .translate_set(&Coord {
                 x: width / 2_f64,
                 y: height / 2_f64,
@@ -128,12 +130,14 @@ impl Renderer {
         let graticule = generate_mls();
 
         Ok(Self {
+            color_graticule: "#ccc".into(),
+            color_land: "#333".into(),
             context2d,
-            countries,
+            countries: feature_from_name(&topology, "countries").expect("Did not extract geometry"),
             graticule,
             // pb,
             height,
-            ob,
+            builder,
             width,
             yaw,
         })
@@ -141,23 +145,23 @@ impl Renderer {
 
     /// Render the next frame.
     pub fn render(&mut self) {
-        self.ob.rotate2_set(&[self.yaw, -45f64]);
+        self.builder.rotate2_set(&[self.yaw, -45f64]);
 
-        let ortho = self.ob.build();
+        let projector = self.builder.build();
         self.context2d
             .clear_rect(0f64, 0f64, self.width, self.height);
 
         let context: Context = Context::new(self.context2d.clone());
         let pb = PathBuilder::new(context);
 
-        let mut path = pb.build(ortho);
-        self.context2d.set_stroke_style(&"#333".into());
+        let mut path = pb.build(projector);
+        self.context2d.set_stroke_style(&self.color_land);
         self.context2d.begin_path();
         path.object(&self.countries);
         self.context2d.stroke();
 
         self.context2d.begin_path();
-        self.context2d.set_stroke_style(&"#ccc".into());
+        self.context2d.set_stroke_style(&self.color_graticule);
         path.object(&self.graticule);
         self.context2d.stroke();
         self.yaw -= 0.2f64;
