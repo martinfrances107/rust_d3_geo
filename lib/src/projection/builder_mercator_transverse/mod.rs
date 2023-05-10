@@ -50,8 +50,6 @@ use super::TransformExtent;
 #[derive(Clone, Debug)]
 pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
     /// The type this builder wraps.
