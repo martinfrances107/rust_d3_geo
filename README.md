@@ -12,18 +12,24 @@ Rust 2021 Edition.
 
 This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST.
 
+A collection of d3 sub packages is being ported to rust.
+
+* d3_geo_rs
+* [d3_delaunay_rs](https://crates.io/crates/d3_delaunay_rs)
+* [d3_geo_voronoi_rs](https://crates.io/crates/d3_geo_voronoi_rs)
+
 ## Current Status
 
 The majority of the library has been ported along with the associated tests.
 
 The 1.0 release is close, within one or two weeks.
 
-Currently I am reviewing the data structure, and looking for performance improvements before things become locked down and I support backwards compatibility guarentees.
+Currently I am reviewing the data structures, and looking for performance improvements before things become locked down and I support backwards compatibility guarentees.
 
 ## When to use the rust version of the library
 
 The limits of the javascript library become obvious when developing interactive applications that process large datasets.
-For example the examples/globe applications operate on a 50m resolution map of the earth. On a desktop machine this is beyond the javascript version.
+For example the examples/globe applications operate on a 1:50M resolution map of the earth. On a desktop machine this is beyond the javascript version.
 
 <table>
 <th align="left">Supported Projections</th>
@@ -38,8 +44,7 @@ For example the examples/globe applications operate on a 50m resolution map of t
 
 ## Examples
 
-These Examples are provided to help developers convert their existing javascript to rust.
-To run the example please follow the "Running the examples" below.
+These Examples are provided to help developers convert their existing javascript to rust. They can be found in the github reposository associated with this crate. Please follow the "Running the examples" section below.
 
 <table>
 <thead>
@@ -53,18 +58,20 @@ To run the example please follow the "Running the examples" below.
 <tr>
 <tr>
 <td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>.  <br/><br/> For perfomance reasons this example is best viewed as a static web site, rather the running the development build.
+(Scale 1:50M)
 <br/>
 <br/>
 </td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/rotating.png"></td>
 </tr>
 <tr>
-<td><strong>examples/globe/svg</strong> <br/><br/> SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules. </td>
+<td><strong>examples/globe/svg</strong> <br/><br/> SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules.
+(Scale 1:50M)</td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/globe.svg"> </td>
 </tr>
 <td><strong>examples/globe/drag_and_zoom</strong> <br/><br/>
   As an example it deliberately mixes typescript methods with rust.
-  The typescript is responsible for handling the mouse events and calculating the quaternion and finally calculating the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.
+  The typescript is responsible for handling the mouse events and calculating the quaternion and finally calculating the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.(Scale 1:50M)
 </td>
 
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/drag_and_zoom.png"> </td>
@@ -81,7 +88,7 @@ This example show all the counties in the USA
 
 AlbersUSA is unlike the other projections.
 Alaska and Hawaii are rendered as insets.
-As can be see in the code a Multidrain must be used to gather the three projections.
+As can be see in the code a Multidrain must be used to gather the three projections.(Scale of 1:10M)
 <br/>
 <br/>
 </td>
