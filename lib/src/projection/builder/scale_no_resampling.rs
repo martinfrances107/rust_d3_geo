@@ -13,8 +13,6 @@ use crate::Transform;
 impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
     for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -30,8 +28,6 @@ where
 impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
     for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
