@@ -17,7 +17,6 @@ mod fit {
     use d3_geo_rs::data_object::sphere::Sphere;
     use d3_geo_rs::in_delta::coordinate as in_delta_coordinate;
     use d3_geo_rs::in_delta::in_delta;
-    use d3_geo_rs::path::bounds::Bounds;
     use d3_geo_rs::projection::azimuthal_equal_area::AzimuthalEqualArea;
     use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
     use d3_geo_rs::projection::builder_conic::ParallelsSet;
