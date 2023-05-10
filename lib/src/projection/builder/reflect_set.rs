@@ -17,8 +17,6 @@ use super::Builder;
 impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -48,8 +46,6 @@ where
 impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -79,8 +75,6 @@ where
 impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

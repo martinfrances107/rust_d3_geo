@@ -10,8 +10,6 @@ use super::Builder;
 impl<CLIPC, CLIPU, DRAIN, PR, RU, T> ClipExtentAdjust
     for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, RU, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
     type T = T;

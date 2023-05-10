@@ -15,8 +15,6 @@ use super::NoPCNU;
 impl<CLIPC, CLIPU, DRAIN, PR, T> TranslateSet
     for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

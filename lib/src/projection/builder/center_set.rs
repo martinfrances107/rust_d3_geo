@@ -34,8 +34,6 @@ where
 impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
     for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

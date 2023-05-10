@@ -63,8 +63,6 @@ where
 impl<CLIPC, CLIPU, DRAIN, PR, T> Recenter
     for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

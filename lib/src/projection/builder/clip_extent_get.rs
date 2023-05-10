@@ -10,8 +10,6 @@ impl<CLIPC, CLIPU, DRAIN, PR, RU, T> ClipExtentGet
     for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, RU, T>
 where
     DRAIN: Clone,
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
     type T = T;

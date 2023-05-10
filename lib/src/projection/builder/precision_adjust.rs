@@ -10,8 +10,6 @@ use super::Builder;
 impl<CLIPC, CLIPU, DRAIN, PCNU, PR, T> PrecisionAdjust
     for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, Resample<PR, Unconnected, T>, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat,
 {
