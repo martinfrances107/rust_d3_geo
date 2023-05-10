@@ -64,7 +64,7 @@ mod fit {
     fn fit_extent_sphere_equirectangular() {
         println!("projection.fitExtent(…) sphere equirectangular");
         let d_object = Sphere::default();
-        let projection_raw = Equirectangular::<Bounds<_>, _>::builder();
+        let projection_raw = Equirectangular::builder();
 
         let projection = projection_raw.fit_extent(
             [
@@ -571,7 +571,7 @@ mod fit {
             1e-6
         ));
         assert!(in_delta(s1, 159.15494309189532f64, 1e-6));
-        let p2 = Equirectangular::<Bounds<_>, _>::builder();
+        let p2 = Equirectangular::builder();
         let p2 = p2.clip_extent_set(&[
             Coord {
                 x: 100_f64,
