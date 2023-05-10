@@ -17,7 +17,6 @@ mod utils;
 
 use geo::Coord;
 use geo::Geometry;
-use geo::Point;
 use gloo_utils::format::JsValueSerdeExt;
 use js_sys::Array;
 use rust_topojson_client::feature::feature_from_name;
@@ -101,6 +100,11 @@ impl ExportedPoint {
 #[derive(Debug)]
 /// State associated with render call.
 pub struct Renderer {
+    color_inner_stroke: JsValue,
+    color_inner_fill: JsValue,
+    color_outer_stroke: JsValue,
+    color_outer_fill: JsValue,
+    color_graticule: JsValue,
     context2d: CanvasRenderingContext2d,
     countries: Geometry<f64>,
     graticule: Geometry<f64>,
@@ -173,6 +177,11 @@ impl Renderer {
         let graticule = generate_mls();
 
         Ok(Self {
+            color_inner_stroke: "#777".into(),
+            color_inner_fill: "#888".into(),
+            color_outer_stroke: "#000".into(),
+            color_outer_fill: "#111".into(),
+            color_graticule: "#ccc".into(),
             context2d,
             countries,
             graticule,
@@ -245,8 +254,8 @@ impl Renderer {
             let pb = PathBuilder::new(context.clone());
 
             let mut path = pb.build(ortho);
-            self.context2d.set_stroke_style(&"#777".into());
-            self.context2d.set_fill_style(&"#888".into());
+            self.context2d.set_stroke_style(&self.color_inner_stroke);
+            self.context2d.set_fill_style(&self.color_inner_fill);
             self.context2d.begin_path();
             path.object(&self.countries);
             self.context2d.stroke();
@@ -261,34 +270,16 @@ impl Renderer {
         let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);
-        self.context2d.set_fill_style(&"#000".into());
-        self.context2d.set_stroke_style(&"#111".into());
+        self.context2d.set_fill_style(&self.color_outer_fill);
+        self.context2d.set_stroke_style(&self.color_outer_stroke);
         self.context2d.begin_path();
         path.object(&self.countries);
         self.context2d.stroke();
         self.context2d.fill();
 
         self.context2d.begin_path();
-        self.context2d.set_stroke_style(&"#ccc".into());
+        self.context2d.set_stroke_style(&self.color_graticule);
         path.object(&self.graticule);
         self.context2d.stroke();
-    }
-
-    /// Render the next frame.
-    pub fn render_point(&self, x: f64, y: f64) {
-        let context: Context = Context::new(self.context2d.clone());
-
-        let point = Geometry::Point(Point::new(x, y));
-        let ortho = self.ob.build();
-
-        let pb = PathBuilder::new(context);
-
-        let mut path = pb.build(ortho);
-        self.context2d.set_stroke_style(&"#f00".into());
-        self.context2d.set_fill_style(&"#f00".into());
-        self.context2d.begin_path();
-        path.object(&point);
-        self.context2d.stroke();
-        self.context2d.fill();
     }
 }
