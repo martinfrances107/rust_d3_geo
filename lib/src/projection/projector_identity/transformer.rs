@@ -50,11 +50,8 @@ impl<DRAIN, T> Connectable for Transformer<DRAIN, Unconnected, T>
 where
     T: CoordFloat,
 {
-    type Output<SC: Clone> = Transformer<DRAIN, Connected<SC>, T>;
-    fn connect<SC>(&self, sink: SC) -> Transformer<DRAIN, Connected<SC>, T>
-    where
-        SC: Clone,
-    {
+    type Output<SC> = Transformer<DRAIN, Connected<SC>, T>;
+    fn connect<SC>(&self, sink: SC) -> Transformer<DRAIN, Connected<SC>, T> {
         Self::Output {
             p_drain: PhantomData::<DRAIN>,
             alpha: self.alpha,

@@ -16,10 +16,10 @@ use crate::stream::Unconnected;
 pub struct StreamTransformRadians<STATE>(pub STATE);
 
 impl Connectable for StreamTransformRadians<Unconnected> {
-    type Output<SC: Clone> = StreamTransformRadians<Connected<SC>>;
+    type Output<SC> = StreamTransformRadians<Connected<SC>>;
     #[inline]
     /// Connect this node to the next element in the pipeline.
-    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
+    fn connect<SC>(&self, sink: SC) -> Self::Output<SC> {
         StreamTransformRadians(Connected { sink })
     }
 }

@@ -95,10 +95,10 @@ where
     PR: Clone,
     T: CoordFloat + FloatConst,
 {
-    type Output<SC: Clone> = Resample<PR, Connected<SC, T>, T>;
+    type Output<SC> = Resample<PR, Connected<SC, T>, T>;
 
     #[inline]
-    fn connect<SC: Clone>(&self, sink: SC) -> Resample<PR, Connected<SC, T>, T> {
+    fn connect<SC>(&self, sink: SC) -> Resample<PR, Connected<SC, T>, T> {
         Resample {
             delta2: self.delta2,
             projection_transform: self.projection_transform.clone(),

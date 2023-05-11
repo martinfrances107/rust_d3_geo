@@ -40,13 +40,10 @@ impl<T> Connectable for RotatorRadians<Unconnected, T>
 where
     T: CoordFloat,
 {
-    type Output<SINK: Clone> = RotatorRadians<Connected<SINK>, T>;
+    type Output<SINK> = RotatorRadians<Connected<SINK>, T>;
     /// Connects the next stage in the stream pipline.
     #[inline]
-    fn connect<SINK>(&self, sink: SINK) -> Self::Output<SINK>
-    where
-        SINK: Clone,
-    {
+    fn connect<SINK>(&self, sink: SINK) -> Self::Output<SINK> {
         RotatorRadians {
             state: Connected { sink },
             rotate: self.rotate.clone(),

@@ -26,10 +26,10 @@ impl Default for Identity<Unconnected> {
 
 impl Connectable for Identity<Unconnected> {
     /// The resultant builder type.
-    type Output<SC: Clone> = Identity<Connected<SC>>;
+    type Output<SC> = Identity<Connected<SC>>;
 
     #[inline]
-    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
+    fn connect<SC>(&self, sink: SC) -> Self::Output<SC> {
         Identity {
             state: Connected { sink },
         }

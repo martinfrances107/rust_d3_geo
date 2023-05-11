@@ -257,9 +257,9 @@ where
     T: CoordFloat,
 {
     /// The resultant postclip node  type.
-    type Output<SC: Clone> = Rectangle<Connected<SC>, T>;
+    type Output<SC> = Rectangle<Connected<SC>, T>;
 
-    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
+    fn connect<SC>(&self, sink: SC) -> Self::Output<SC> {
         Rectangle {
             state: Connected { sink },
             buffer_stream: self.buffer_stream.clone(),

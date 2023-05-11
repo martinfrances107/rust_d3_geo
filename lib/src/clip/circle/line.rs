@@ -111,10 +111,10 @@ impl<T> Connectable for Line<Unconnected, T>
 where
     T: CoordFloat,
 {
-    type Output<SC: Clone> = Line<Connected<SC>, T>;
+    type Output<SC> = Line<Connected<SC>, T>;
 
     #[inline]
-    fn connect<SC: Clone>(&self, sink: SC) -> Line<Connected<SC>, T> {
+    fn connect<SC>(&self, sink: SC) -> Line<Connected<SC>, T> {
         // Copy Mutate.
         Line {
             state: Connected { sink },

@@ -72,9 +72,9 @@ where
     T: CoordFloat,
 {
     /// The resultant line type.
-    type Output<SC: Clone> = Line<Connected<SC>, T>;
+    type Output<SC> = Line<Connected<SC>, T>;
 
-    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
+    fn connect<SC>(&self, sink: SC) -> Self::Output<SC> {
         Line {
             state: Connected { sink },
             lambda0: self.lambda0,

@@ -48,10 +48,10 @@ impl<SINK> ConnectedState for Connected<SINK> {
 /// Make connections to a stream pipeline.
 pub trait Connectable {
     /// The next pipeline stage.
-    type Output<SC: Clone>;
+    type Output<SC>;
 
     /// Connects to previous pipeline stage.
-    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC>;
+    fn connect<SC>(&self, sink: SC) -> Self::Output<SC>;
 }
 
 /// Things the implement stream need to assert that

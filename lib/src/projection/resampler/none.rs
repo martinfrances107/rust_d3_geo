@@ -36,10 +36,10 @@ where
     PR: Clone,
     T: CoordFloat,
 {
-    type Output<SC: Clone> = None<PR, Connected<SC>, T>;
+    type Output<SC> = None<PR, Connected<SC>, T>;
 
     #[inline]
-    fn connect<SC: Clone>(&self, sink: SC) -> Self::Output<SC> {
+    fn connect<SC>(&self, sink: SC) -> Self::Output<SC> {
         None::<PR, Connected<SC>, T> {
             state: Connected { sink },
             projection_transform: self.projection_transform.clone(),

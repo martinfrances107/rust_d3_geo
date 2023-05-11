@@ -58,7 +58,6 @@ where
     CC: Clone,
     CU: ClipConnectable<Output = CC, SC = RC>,
     DRAIN: Clone + PartialEq,
-    PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     PR: Transform<T = T>,
     RU: Clone + Connectable<Output<PCNC> = RC>,
