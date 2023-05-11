@@ -31,8 +31,6 @@ type CacheState<CLIP, DRAIN, T> = Option<(
 #[derive(Clone, Debug)]
 pub struct Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
     T: CoordFloat,
 {
     /// Must be public as there is a implicit copy.
@@ -58,7 +56,7 @@ impl<CC, CU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait
     for Projector<CC, CU, DRAIN, PCNU, PR, RU, T>
 where
     CC: Clone,
-    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
+    CU: ClipConnectable<Output = CC, SC = RC>,
     DRAIN: Clone + PartialEq,
     PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
@@ -106,9 +104,6 @@ where
 impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Transform
     for Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
-    CLIPC: Clone,
-    CLIPU: Clone,
-
     PR: Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
