@@ -16,7 +16,6 @@ use super::Builder;
 impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
     for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
-    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -47,7 +46,6 @@ where
 impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
     for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
-    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

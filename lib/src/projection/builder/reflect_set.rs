@@ -46,7 +46,6 @@ where
 impl<CLIPC, CLIPU, DRAIN, PR, T> ReflectSet
     for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
-    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

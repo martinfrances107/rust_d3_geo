@@ -11,7 +11,6 @@ use super::Builder;
 
 impl<DRAIN, T> ClipExtentSet for Builder<DRAIN, NoPCNU, T>
 where
-    DRAIN: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     type T = T;
