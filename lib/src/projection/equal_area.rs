@@ -20,16 +20,16 @@ use super::ScaleSet;
 /// Depending construction parameters
 /// one of two Projection types are returned.
 #[derive(Clone, Debug, Default)]
-pub enum EqualArea<DRAIN, T> {
+pub enum EqualArea<T> {
     /// Parallels symetical around the Equator.
-    Cyl(CylindricalEqualArea<DRAIN, T>),
+    Cyl(CylindricalEqualArea<T>),
     /// Conic
-    Con(ConicEqualArea<DRAIN, T>),
+    Con(ConicEqualArea<T>),
     /// State before the parallels are set.
     #[default]
     Uninitialized,
 }
-impl<DRAIN, T> Transform for EqualArea<DRAIN, T>
+impl<T> Transform for EqualArea<T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -58,9 +58,8 @@ where
     }
 }
 
-impl<DRAIN, T> PRConic for EqualArea<DRAIN, T>
+impl<T> PRConic for EqualArea<T>
 where
-    DRAIN: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     /// Inputs select either a conic or a cylindrical projection.
@@ -83,14 +82,13 @@ where
     }
 }
 
-impl<DRAIN, T> RawBase for EqualArea<DRAIN, T>
+impl<T> RawBase for EqualArea<T>
 where
-    DRAIN: Clone,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, T>;
-    #[inline]
-    fn builder() -> Self::Builder {
+    type Builder<DRAIN: Clone> = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, T>;
+
+    fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
         b.scale_set(T::from(155.424).unwrap());
         b.center_set(&Coord {

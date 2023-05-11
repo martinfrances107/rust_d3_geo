@@ -31,12 +31,12 @@ mod reflect {
     use d3_geo_rs::Transform;
 
     type GB = Builder<
-        ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<DrainStub<f64>, f64>, f64>, f64>,
-        ClipCircleU<ResampleNoPCNC<DrainStub<f64>, Gnomic<DrainStub<f64>, f64>, f64>, f64>,
+        ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>,
+        ClipCircleU<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>,
         DrainStub<f64>,
         Identity<Unconnected>,
-        Gnomic<DrainStub<f64>, f64>,
-        ResampleNoPCNU<Gnomic<DrainStub<f64>, f64>, f64>,
+        Gnomic<f64>,
+        ResampleNoPCNU<Gnomic<f64>, f64>,
         f64,
     >;
 

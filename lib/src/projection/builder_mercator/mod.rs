@@ -50,10 +50,8 @@ use num_traits::FloatConst;
 
 use crate::projection::builder::template::ResampleNoPCNU;
 use crate::projection::builder::Builder as ProjectionBuilder;
-
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
-use crate::stream::Stream;
 use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
@@ -182,7 +180,8 @@ where
 
 impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    // DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + Default + FloatConst,
 {

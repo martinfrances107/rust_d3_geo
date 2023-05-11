@@ -10,7 +10,6 @@ mod mercator_tranverse {
     use d3_geo_rs::data_object::sphere::Sphere;
     use d3_geo_rs::in_delta::coordinate as in_delta_coordinate;
     use d3_geo_rs::path::builder::Builder as PathBuilder;
-    use d3_geo_rs::path::string::String;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::CenterSet;
@@ -73,7 +72,7 @@ mod mercator_tranverse {
     #[test]
     fn center_set_the_automatic_clip_extent() {
         println!("transverseMercator.center(center) sets the correct automatic clip extent");
-        let mut pb = MercatorTransverse::<String<f64>>::builder();
+        let mut pb = MercatorTransverse::builder();
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
         let pb = pb.scale_set(1_f64);
@@ -301,7 +300,7 @@ mod mercator_tranverse {
     #[test]
     fn point_test() {
         println!("has no direct equivalent in javascript, but this helped me debug.");
-        let p = MercatorTransverse::<DrainStub<f64>>::builder().build();
+        let p = MercatorTransverse::builder::<DrainStub<f64>>().build();
 
         let t = p.transform(&Coord { x: 0_f64, y: 0_f64 });
         assert_eq!(

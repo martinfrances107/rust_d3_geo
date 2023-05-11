@@ -1,5 +1,3 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
@@ -13,27 +11,21 @@ use crate::Transform;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
-pub struct ConicEqualArea<DRAIN, T> {
+pub struct ConicEqualArea<T> {
     c: T,
-    p_drain: PhantomData<DRAIN>,
     n: T,
     r0: T,
     two: T,
 }
 
-impl<DRAIN, T> ConicEqualArea<DRAIN, T> {
+impl<T> ConicEqualArea<T> {
+    #[inline]
     pub(super) const fn new(c: T, n: T, r0: T, two: T) -> Self {
-        Self {
-            c,
-            p_drain: PhantomData::<DRAIN>,
-            n,
-            r0,
-            two,
-        }
+        Self { c, n, r0, two }
     }
 }
 
-impl<DRAIN, T> Transform for ConicEqualArea<DRAIN, T>
+impl<T> Transform for ConicEqualArea<T>
 where
     T: CoordFloat + FloatConst,
 {

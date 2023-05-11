@@ -4,12 +4,10 @@
 //! hard coded to work only with f64s The Additional dynamic range/
 //! resolution  is essential in giving accuarate results near the poles.
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use geo_types::Coord;
 use num_traits::float::FloatConst;
 
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder_mercator_transverse::types::BuilderMercatorTransverseAntimeridianResampleClip;
@@ -19,23 +17,19 @@ use super::TransformExtent;
 
 /// Projection definition.
 #[derive(Clone, Debug, Default)]
-pub struct MercatorTransverse<DRAIN> {
-    p_drain: PhantomData<DRAIN>,
-}
+pub struct MercatorTransverse {}
 
-impl<DRAIN> RawBase for MercatorTransverse<DRAIN>
-where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
-{
-    type Builder = BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, Self, f64>;
+impl RawBase for MercatorTransverse {
+    type Builder<DRAIN: Clone> =
+        BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, Self, f64>;
 
     #[inline]
-    fn builder() -> Self::Builder {
+    fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         MercatorTraverseBuilder::new(Self::default())
     }
 }
 
-impl<DRAIN> Transform for MercatorTransverse<DRAIN> {
+impl Transform for MercatorTransverse {
     type T = f64;
 
     #[inline]
@@ -65,7 +59,7 @@ impl<DRAIN> Transform for MercatorTransverse<DRAIN> {
     }
 }
 
-impl<DRAIN> TransformExtent for MercatorTransverse<DRAIN> {
+impl TransformExtent for MercatorTransverse {
     type T = f64;
     #[inline]
     fn transform_extent(

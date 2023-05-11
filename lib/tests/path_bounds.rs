@@ -35,8 +35,7 @@ mod path_bounds {
             + Default
             + Display
             + FloatConst,
-    >() -> ProjectorAntimeridianResampleNoneNoClip<Bounds<T>, Equirectangular<Bounds<T>, T>, T>
-    {
+    >() -> ProjectorAntimeridianResampleNoneNoClip<Bounds<T>, Equirectangular<T>, T> {
         let mut b = Equirectangular::builder();
         let b = b.scale_set(T::from(900f64 / PI).unwrap());
         let b = b.precision_bypass();
@@ -46,11 +45,7 @@ mod path_bounds {
 
     #[inline]
     fn bounds<T>(
-        projection: ProjectorAntimeridianResampleNoneNoClip<
-            Bounds<T>,
-            Equirectangular<Bounds<T>, T>,
-            T,
-        >,
+        projection: ProjectorAntimeridianResampleNoneNoClip<Bounds<T>, Equirectangular<T>, T>,
         object: &impl Streamable<T = T>,
     ) -> [Coord<T>; 2]
     where

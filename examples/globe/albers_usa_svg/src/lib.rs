@@ -29,7 +29,6 @@ use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::Result;
 use d3_geo_rs::projection::albers_usa::AlbersUsa;
 use d3_geo_rs::projection::Projector;
-use d3_geo_rs::projection::RawBase;
 use d3_geo_rs::stream::Stream;
 use d3_geo_rs::stream::Streamable;
 

@@ -22,7 +22,7 @@ mod projection_angle {
     #[test]
     fn angle_defaults_to_zero() {
         println!("projection.angle(…) defaults to zero");
-        let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
+        let mut pb = Gnomic::<f64>::builder::<DrainStub<f64>>();
         pb.scale_set(1_f64);
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         assert_eq!(pb.angle(), 0_f64);
@@ -141,7 +141,7 @@ mod projection_angle {
     #[test]
     fn angle_rotates_by_plus_30() {
         println!("projection.angle(…) defaults to zero");
-        let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
+        let mut pb = Gnomic::<f64>::builder::<DrainStub<f64>>();
         pb.scale_set(1_f64)
             .translate_set(&Coord { x: 0_f64, y: 0_f64 });
         let pb = pb.angle_set(30_f64);
@@ -265,7 +265,7 @@ mod projection_angle {
     #[test]
     fn angle_rotates_by_minus_30() {
         println!("projection.angle(…) defaults to zero");
-        let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
+        let mut pb = Gnomic::<f64>::builder::<DrainStub<f64>>();
         pb.scale_set(1_f64)
             .translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
@@ -389,7 +389,7 @@ mod projection_angle {
     #[test]
     fn wraps_360() {
         println!("projection.angle(…) wraps around 360°");
-        let mut pb = Gnomic::<DrainStub<f64>, f64>::builder();
+        let mut pb = Gnomic::<f64>::builder::<DrainStub<f64>>();
         pb.scale_set(1_f64);
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         pb.angle_set(360_f64);

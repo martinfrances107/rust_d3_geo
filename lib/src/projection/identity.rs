@@ -5,7 +5,6 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder_identity::types::BuilderIdentityAntimeridianResampleNoClip;
@@ -14,25 +13,23 @@ use super::RawBase;
 
 /// Projection definition.
 #[derive(Clone, Default, Debug)]
-pub struct Identity<DRAIN, T> {
-    p_drain: PhantomData<DRAIN>,
+pub struct Identity<T> {
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> RawBase for Identity<DRAIN, T>
+impl<T> RawBase for Identity<T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderIdentityAntimeridianResampleNoClip<DRAIN, T>;
+    type Builder<DRAIN: Clone> = BuilderIdentityAntimeridianResampleNoClip<DRAIN, T>;
 
     #[inline]
-    fn builder() -> Self::Builder {
+    fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         Builder::default()
     }
 }
 
-impl<DRAIN, T> Transform for Identity<DRAIN, T>
+impl<T> Transform for Identity<T>
 where
     T: CoordFloat,
 {

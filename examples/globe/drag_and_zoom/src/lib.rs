@@ -108,7 +108,7 @@ pub struct Renderer {
     context2d: CanvasRenderingContext2d,
     countries: Geometry<f64>,
     graticule: Geometry<f64>,
-    ob: BuilderCircleResampleNoClip<Context, Orthographic<Context, f64>, f64>,
+    ob: BuilderCircleResampleNoClip<Context, Orthographic<f64>, f64>,
 }
 
 #[wasm_bindgen]

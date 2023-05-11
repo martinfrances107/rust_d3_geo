@@ -40,7 +40,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
                     Line<
                         ConnectedStream<
                             Resample<
-                                EqualArea<SD, T>,
+                                EqualArea<T>,
                                 ConnectedResample<Rectangle<ConnectedStream<SD>, T>, T>,
                                 T,
                             >,
@@ -50,7 +50,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
                     Line<Unconnected, T>,
                     PV<T>,
                     Resample<
-                        EqualArea<SD, T>,
+                        EqualArea<T>,
                         ConnectedResample<Rectangle<ConnectedStream<SD>, T>, T>,
                         T,
                     >,
@@ -59,7 +59,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
                         Line<
                             ConnectedStream<
                                 Resample<
-                                    EqualArea<SD, T>,
+                                    EqualArea<T>,
                                     ConnectedResample<Rectangle<ConnectedStream<SD>, T>, T>,
                                     T,
                                 >,

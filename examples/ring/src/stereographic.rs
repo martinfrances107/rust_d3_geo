@@ -27,7 +27,7 @@ pub fn draw_sterographic() -> Result<()> {
     let width = svg.width().base_val().value()? as f64;
     let height = svg.height().base_val().value()? as f64;
 
-    let stereographic = Stereographic::<_, f64>::builder()
+    let stereographic = Stereographic::<f64>::builder()
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

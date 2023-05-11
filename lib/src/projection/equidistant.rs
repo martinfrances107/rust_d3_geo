@@ -2,7 +2,6 @@ use geo::Coord;
 use num_traits::Zero;
 
 use crate::math::EPSILON;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder::types::BuilderAntimeridianResampleNoClip;
@@ -22,17 +21,17 @@ use super::ScaleSet;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug, Default)]
-pub enum Equidistant<DRAIN> {
+pub enum Equidistant {
     /// Projection depends of values set by builder_with_phi0_phi1.
-    Conic(ConicEquidistant<DRAIN>),
+    Conic(ConicEquidistant),
     /// Projection depends of values set by builder_with_phi0_phi1.
-    Equi(Equirectangular<DRAIN, f64>),
+    Equi(Equirectangular<f64>),
     /// State before the parallels are set.
     #[default]
     Uninitialized,
 }
 
-impl<DRAIN> Transform for Equidistant<DRAIN> {
+impl Transform for Equidistant {
     type T = f64;
     fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
         match self {
@@ -58,10 +57,7 @@ impl<DRAIN> Transform for Equidistant<DRAIN> {
     }
 }
 
-impl<DRAIN> PRConic for Equidistant<DRAIN>
-where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
-{
+impl PRConic for Equidistant {
     fn generate(self, y0: f64, y1: f64) -> Self {
         let cy0 = y0.cos();
 
@@ -82,13 +78,10 @@ where
     }
 }
 
-impl<DRAIN> RawBase for Equidistant<DRAIN>
-where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = f64>,
-{
-    type Builder = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, f64>, f64>;
+impl RawBase for Equidistant {
+    type Builder<DRAIN: Clone> = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, f64>, f64>;
     #[inline]
-    fn builder() -> Self::Builder {
+    fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
         b.scale_set(131.154_f64).center_set(&Coord {
             x: 0_f64,

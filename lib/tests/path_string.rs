@@ -33,7 +33,7 @@ mod path_string {
 
     #[inline]
     fn equirectangular<T>(
-    ) -> ProjectorAntimeridianResampleNoneNoClip<PathString<T>, Equirectangular<PathString<T>, T>, T>
+    ) -> ProjectorAntimeridianResampleNoneNoClip<PathString<T>, Equirectangular<T>, T>
     where
         T: CoordFloat + Default + Display + FloatConst,
     {
@@ -45,11 +45,7 @@ mod path_string {
 
     #[inline]
     fn path<T>(
-        projection: ProjectorAntimeridianResampleNoneNoClip<
-            PathString<T>,
-            Equirectangular<PathString<T>, T>,
-            T,
-        >,
+        projection: ProjectorAntimeridianResampleNoneNoClip<PathString<T>, Equirectangular<T>, T>,
 
         object: impl Streamable<T = T>,
     ) -> String
@@ -172,7 +168,7 @@ mod path_string {
         }
         let object = Geometry::MultiPolygon(MultiPolygon(p_vec));
 
-        let ortho = Orthographic::<PathString<f64>, _>::builder()
+        let ortho = Orthographic::<_>::builder()
             .scale_set(240_f64)
             .translate_set(&Coord {
                 x: 300_f64,

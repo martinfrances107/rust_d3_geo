@@ -34,7 +34,6 @@ use num_traits::FloatConst;
 
 use crate::projection::builder_mercator::Builder as ProjectionMercatorBuilder;
 use crate::projection::Build;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -58,7 +57,7 @@ where
 
 impl<DRAIN, PR, T> BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {

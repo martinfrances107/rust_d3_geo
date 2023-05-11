@@ -35,7 +35,7 @@ mod path_centroid {
 
     #[inline]
     fn equirectangular<T>(
-    ) -> ProjectorAntimeridianResampleNoneNoClip<Centroid<T>, Equirectangular<Centroid<T>, T>, T>
+    ) -> ProjectorAntimeridianResampleNoneNoClip<Centroid<T>, Equirectangular<T>, T>
     where
         T: AddAssign<T> + CoordFloat + Default + FloatConst,
     {
@@ -47,11 +47,7 @@ mod path_centroid {
 
     #[inline]
     fn centroid<T>(
-        projection: ProjectorAntimeridianResampleNoneNoClip<
-            Centroid<T>,
-            Equirectangular<Centroid<T>, T>,
-            T,
-        >,
+        projection: ProjectorAntimeridianResampleNoneNoClip<Centroid<T>, Equirectangular<T>, T>,
 
         object: &impl Streamable<T = T>,
     ) -> Point<T>

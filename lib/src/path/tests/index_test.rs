@@ -38,18 +38,14 @@ mod index {
     fn equirectangular<
         EP: Clone + Stream<EP = EP, T = T> + Debug + Default,
         T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
-    >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<EP, T>, T> {
+    >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<T>, T> {
         let mut e = Equirectangular::builder();
         e.scale_set(T::from(900f64 / PI).unwrap());
         e.precision_bypass().build()
     }
 
     fn path(
-        projection: ProjectorAntimeridianResampleNoneNoClip<
-            Context,
-            Equirectangular<Context, f64>,
-            f64,
-        >,
+        projection: ProjectorAntimeridianResampleNoneNoClip<Context, Equirectangular<f64>, f64>,
         object: &impl Streamable<T = f64>,
     ) -> Vec<String> {
         let crc2d = CanvasRenderingContext2d::default();

@@ -22,18 +22,12 @@ mod equirectangular {
     use d3_geo_rs::stream::DrainStub;
 
     type B = Builder<
-        ClipAntimeridianC<
-            ResampleNoPCNC<DrainStub<f64>, Equirectangular<DrainStub<f64>, f64>, f64>,
-            f64,
-        >,
-        ClipAntimeridianU<
-            ResampleNoPCNC<DrainStub<f64>, Equirectangular<DrainStub<f64>, f64>, f64>,
-            f64,
-        >,
+        ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>,
+        ClipAntimeridianU<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>,
         DrainStub<f64>,
         NoPCNU,
-        Equirectangular<DrainStub<f64>, f64>,
-        ResampleNoPCNU<Equirectangular<DrainStub<f64>, f64>, f64>,
+        Equirectangular<f64>,
+        ResampleNoPCNU<Equirectangular<f64>, f64>,
         f64,
     >;
 
@@ -139,7 +133,7 @@ mod equirectangular {
     fn rotate_30_0() {
         println!("equirectangular(point) returns the expected result");
         let equirectangular: Projector<_, _, DrainStub<f64>, _, _, _, _> =
-            Builder::new(Equirectangular::<DrainStub<f64>, f64>::default())
+            Builder::new(Equirectangular::<f64>::default())
                 .rotate2_set(&[30f64, 0f64])
                 .translate_set(&Coord { x: 0f64, y: 0f64 })
                 .scale_set(1_f64)

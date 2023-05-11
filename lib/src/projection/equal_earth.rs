@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -18,8 +17,7 @@ use super::RawBase;
 /// Used to define a projection builder.
 #[allow(non_snake_case)]
 #[derive(Clone, Debug)]
-pub struct EqualEarth<DRAIN, T> {
-    p_drain: PhantomData<DRAIN>,
+pub struct EqualEarth<T> {
     A1: T,
     A2: T,
     A3: T,
@@ -32,13 +30,12 @@ pub struct EqualEarth<DRAIN, T> {
     iterations: u8,
 }
 
-impl<DRAIN, T> Default for EqualEarth<DRAIN, T>
+impl<T> Default for EqualEarth<T>
 where
     T: CoordFloat,
 {
     fn default() -> Self {
         Self {
-            p_drain: PhantomData::<DRAIN>,
             A1: T::from(1.340_264_f64).unwrap(),
             A2: T::from(-0.081_106_f64).unwrap(),
             A3: T::from(0.008_93_f64).unwrap(),
@@ -53,22 +50,21 @@ where
     }
 }
 
-impl<DRAIN, T> RawBase for EqualEarth<DRAIN, T>
+impl<T> RawBase for EqualEarth<T>
 where
-    DRAIN: Clone + Default,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderAntimeridianResampleNoClip<DRAIN, Self, T>;
+    type Builder<DRAIN: Clone> = BuilderAntimeridianResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
-    fn builder() -> Self::Builder {
+    fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
         b.scale_set(T::from(177.158_f64).unwrap());
         b
     }
 }
 
-impl<DRAIN, T> Transform for EqualEarth<DRAIN, T>
+impl<T> Transform for EqualEarth<T>
 where
     T: CoordFloat,
 {

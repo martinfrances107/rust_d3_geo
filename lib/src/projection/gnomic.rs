@@ -7,7 +7,6 @@ use num_traits::float::FloatConst;
 
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::ScaleSet;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
@@ -18,30 +17,25 @@ use super::RawBase;
 
 /// Projection definition.
 #[derive(Clone, Default, Debug)]
-pub struct Gnomic<DRAIN, T> {
-    p_drain: PhantomData<DRAIN>,
+pub struct Gnomic<T> {
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> RawBase for Gnomic<DRAIN, T>
+impl<T> RawBase for Gnomic<T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderCircleResampleNoClip<DRAIN, Self, T>;
+    type Builder<DRAIN: Clone> = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
-    fn builder() -> Self::Builder
-    where
-        DRAIN: Default + Stream<EP = DRAIN, T = T>,
-    {
+    fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
         b.scale_set(T::from(144.049_f64).unwrap());
         b.clip_angle_set(T::from(60_f64).unwrap())
     }
 }
 
-impl<DRAIN, T> Transform for Gnomic<DRAIN, T>
+impl<T> Transform for Gnomic<T>
 where
     T: CoordFloat + FloatConst,
 {

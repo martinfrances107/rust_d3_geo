@@ -7,7 +7,6 @@ use geo_types::Coord;
 use num_traits::float::FloatConst;
 
 use crate::math::EPSILON;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::builder::types::BuilderCircleResampleNoClip;
@@ -42,29 +41,27 @@ where
 }
 /// Projection definition.
 #[derive(Clone, Default, Debug)]
-pub struct Orthographic<DRAIN, T> {
-    p_drain: PhantomData<DRAIN>,
+pub struct Orthographic<T> {
     p_t: PhantomData<T>,
 }
 
-impl<DRAIN, T> RawBase for Orthographic<DRAIN, T>
+impl<T> RawBase for Orthographic<T>
 where
-    DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
-    type Builder = BuilderCircleResampleNoClip<DRAIN, Self, T>;
+    type Builder<DRAIN: Clone> = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
-    fn builder() -> Self::Builder {
+    fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
         b.scale_set(T::from(249.5_f64).unwrap());
         b.clip_angle_set(T::from(90_f64 + EPSILON).unwrap())
     }
 }
 
-impl<DRAIN, T> Orthographic<DRAIN, T> where T: CoordFloat + FloatConst {}
+impl<T> Orthographic<T> where T: CoordFloat + FloatConst {}
 
-impl<DRAIN, T> Transform for Orthographic<DRAIN, T>
+impl<T> Transform for Orthographic<T>
 where
     T: CoordFloat + FloatConst,
 {
@@ -107,7 +104,7 @@ mod drag_and_zoom {
         let w = 1800_f64;
         let h = 1200_f64;
 
-        let mut b = Orthographic::<DrainStub<_>, _>::builder();
+        let mut b = Orthographic::<f64>::builder::<DrainStub<f64>>();
         b.scale_set(w / 1.3_f64 / std::f64::consts::PI);
         b.translate_set(&Coord {
             x: w / 2_f64,

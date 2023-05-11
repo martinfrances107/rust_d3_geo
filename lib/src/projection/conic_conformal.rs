@@ -1,5 +1,3 @@
-use std::marker::PhantomData;
-
 use geo_types::Coord;
 use num_traits::FloatConst;
 
@@ -15,23 +13,19 @@ use super::tany;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
-pub struct ConicConformal<DRAIN> {
-    p_drain: PhantomData<DRAIN>,
+pub struct ConicConformal {
     f: f64,
     n: f64,
 }
 
-impl<DRAIN> ConicConformal<DRAIN> {
+impl ConicConformal {
+    #[inline]
     pub(super) const fn new(f: f64, n: f64) -> Self {
-        Self {
-            p_drain: PhantomData::<DRAIN>,
-            n,
-            f,
-        }
+        Self { f, n }
     }
 }
 
-impl<DRAIN> Transform for ConicConformal<DRAIN> {
+impl Transform for ConicConformal {
     type T = f64;
 
     #[inline]

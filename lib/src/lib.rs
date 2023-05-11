@@ -47,7 +47,7 @@
 //! use d3_geo_rs::projection::TranslateSet;
 //! use d3_geo_rs::stream::DrainStub;
 //!
-//!     let stereographic = Stereographic::<DrainStub<f64>, f64>::builder()
+//!     let stereographic = Stereographic::< f64>::builder::<DrainStub<f64>>()
 //!       .scale_set(100_f64)
 //!       .translate_set(&Coord {
 //!          x: 300_f64,

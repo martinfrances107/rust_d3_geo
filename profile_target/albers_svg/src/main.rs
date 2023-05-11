@@ -14,7 +14,6 @@ use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::path::Result as PathResult;
 
 use d3_geo_rs::projection::Projector;
-use d3_geo_rs::projection::RawBase;
 use d3_geo_rs::stream::Stream;
 use d3_geo_rs::stream::Streamable;
 

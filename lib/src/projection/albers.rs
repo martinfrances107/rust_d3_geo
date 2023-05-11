@@ -12,8 +12,7 @@ use super::RotateSet;
 use super::ScaleSet;
 use super::TranslateSet;
 
-type Output<DRAIN, T> =
-    Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<DRAIN, T>, T>, T>;
+type Output<DRAIN, T> = Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<T>, T>, T>;
 
 /// Albers - `ConicEqualArea` centered on the U.S.
 ///
@@ -26,7 +25,7 @@ where
     DRAIN: Clone,
     T: CoordFloat + Default + FloatConst,
 {
-    let mut b = EqualArea::<DRAIN, T>::builder();
+    let mut b = EqualArea::<T>::builder();
     b.parallels_set(T::from(29.5_f64).unwrap(), T::from(45.5_f64).unwrap())
         .scale_set(T::from(1070_f64).unwrap())
         .translate_set(&Coord {

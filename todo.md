@@ -1,5 +1,7 @@
 # TODO
 
+1) Remove drain from all projections ( not albersUSA)
+2) Builder remove drain.
   README make the albersUSA table entry scan better.
   profile code. ( move the albers_usa profile target.. make it render countires.)
   restore benchmark. by using ImageData trick.

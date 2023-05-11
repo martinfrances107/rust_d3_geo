@@ -8,7 +8,6 @@
 //! 30 - Behrmann
 //! 45 - Gall–Peters
 //!
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -23,12 +22,11 @@ use crate::Transform;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
-pub struct CylindricalEqualArea<DRAIN, T> {
-    p_drain: PhantomData<DRAIN>,
+pub struct CylindricalEqualArea<T> {
     cos_phi0: T,
 }
 
-impl<DRAIN, T> CylindricalEqualArea<DRAIN, T>
+impl<T> CylindricalEqualArea<T>
 where
     T: CoordFloat + Default + FloatConst,
 {
@@ -36,13 +34,12 @@ where
     /// Constuctor and Projection based on the angle in radians.
     pub fn new(phi0: T) -> Self {
         Self {
-            p_drain: PhantomData::<DRAIN>,
             cos_phi0: phi0.cos(),
         }
     }
 }
 
-impl<DRAIN, T> Transform for CylindricalEqualArea<DRAIN, T>
+impl<T> Transform for CylindricalEqualArea<T>
 where
     T: CoordFloat + FloatConst,
 {

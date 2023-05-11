@@ -1,5 +1,4 @@
 use geo_types::Coord;
-use std::marker::PhantomData;
 
 use crate::Transform;
 
@@ -10,23 +9,19 @@ use crate::Transform;
 /// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
 /// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
-pub struct ConicEquidistant<DRAIN> {
-    p_drain: PhantomData<DRAIN>,
+pub struct ConicEquidistant {
     g: f64,
     n: f64,
 }
 
-impl<DRAIN> ConicEquidistant<DRAIN> {
+impl ConicEquidistant {
+    #[inline]
     pub(super) const fn new(g: f64, n: f64) -> Self {
-        Self {
-            p_drain: PhantomData::<DRAIN>,
-            n,
-            g,
-        }
+        Self { g, n }
     }
 }
 
-impl<DRAIN> Transform for ConicEquidistant<DRAIN> {
+impl Transform for ConicEquidistant {
     type T = f64;
 
     #[inline]

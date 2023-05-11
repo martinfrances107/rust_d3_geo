@@ -25,12 +25,11 @@ mod path_area {
     use d3_geo_rs::stream::Streamable;
 
     #[inline]
-    fn projector<T>(
-    ) -> ProjectorAntimeridianResampleNoneNoClip<Area<T>, Equirectangular<Area<T>, T>, T>
+    fn projector<T>() -> ProjectorAntimeridianResampleNoneNoClip<Area<T>, Equirectangular<T>, T>
     where
         T: CoordFloat + Default + Display + FloatConst,
     {
-        let mut ba = Equirectangular::<Area<T>, T>::builder();
+        let mut ba = Equirectangular::<T>::builder();
         ba.scale_set(T::from(900f64 / PI).unwrap());
 
         let builder = ba.precision_bypass();
@@ -39,11 +38,7 @@ mod path_area {
 
     #[inline]
     fn area<T>(
-        projection: ProjectorAntimeridianResampleNoneNoClip<
-            Area<T>,
-            Equirectangular<Area<T>, T>,
-            T,
-        >,
+        projection: ProjectorAntimeridianResampleNoneNoClip<Area<T>, Equirectangular<T>, T>,
         object: impl Streamable<T = T>,
     ) -> T
     where

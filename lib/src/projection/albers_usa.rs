@@ -50,7 +50,7 @@ type StreamPoint<DRAIN, T> = StreamTransformRadians<
                     Line<
                         ConnectedStream<
                             Resample<
-                                EqualArea<DRAIN, T>,
+                                EqualArea<T>,
                                 ConnectedResample<Rectangle<ConnectedStream<DRAIN>, T>, T>,
                                 T,
                             >,
@@ -60,7 +60,7 @@ type StreamPoint<DRAIN, T> = StreamTransformRadians<
                     Line<Unconnected, T>,
                     PV<T>,
                     Resample<
-                        EqualArea<DRAIN, T>,
+                        EqualArea<T>,
                         ConnectedResample<Rectangle<ConnectedStream<DRAIN>, T>, T>,
                         T,
                     >,
@@ -69,7 +69,7 @@ type StreamPoint<DRAIN, T> = StreamTransformRadians<
                         Line<
                             ConnectedStream<
                                 Resample<
-                                    EqualArea<DRAIN, T>,
+                                    EqualArea<T>,
                                     ConnectedResample<Rectangle<ConnectedStream<DRAIN>, T>, T>,
                                     T,
                                 >,
@@ -108,20 +108,17 @@ where
     hawaii_y: Range<T>,
 
     // The builder with base setting used as a starting point everytime translate is adjusted.
-    pub(super) alaska:
-        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
-    pub(super) lower_48:
-        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
-    pub(super) hawaii:
-        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<LastPoint<T>, T>, T>,
+    pub(super) alaska: BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
+    pub(super) lower_48: BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
+    pub(super) hawaii: BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
 
     pub(super) alaska_point: StreamPoint<LastPoint<T>, T>,
     pub(super) lower_48_point: StreamPoint<LastPoint<T>, T>,
     pub(super) hawaii_point: StreamPoint<LastPoint<T>, T>,
 
-    pub(super) alaska_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<SD, T>, T>,
-    pub(super) lower_48_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<SD, T>, T>,
-    pub(super) hawaii_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<SD, T>, T>,
+    pub(super) alaska_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<T>, T>,
+    pub(super) lower_48_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<T>, T>,
+    pub(super) hawaii_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<T>, T>,
 }
 
 /// Construct a Projection builder capable of rendering the view of alaksa.
@@ -130,7 +127,7 @@ fn alaska_inset<DRAIN: Clone, T>(
     k: T,
     t: Coord<T>,
     epsilon: T,
-) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<DRAIN, T>, T>
+) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<T>, T>
 where
     T: CoordFloat + Debug + Default + FloatConst,
 {
@@ -170,7 +167,7 @@ fn hawaii_inset<DRAIN: Clone, T>(
     k: T,
     t: Coord<T>,
     epsilon: T,
-) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<DRAIN, T>, T>
+) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<T>, T>
 where
     T: CoordFloat + Debug + Default + FloatConst,
 {
@@ -280,15 +277,16 @@ where
     }
 }
 
-impl<SD, T> RawBase for AlbersUsa<SD, T>
+impl<SD, T> AlbersUsa<SD, T>
 where
     SD: Clone + PartialEq + Stream<EP = SD, T = T>,
     T: 'static + CoordFloat + Debug + Default + FloatConst,
 {
-    type Builder = Builder<SD, T>;
+    // type Builder = Builder<SD, T>;
 
     #[inline]
-    fn builder() -> Builder<SD, T> {
+    #[must_use]
+    pub fn builder() -> Builder<SD, T> {
         Builder::new(Self::default())
     }
 }

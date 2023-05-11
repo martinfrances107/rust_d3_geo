@@ -118,10 +118,10 @@ pub trait TransformExtent {
 /// raw projections.
 pub trait RawBase: Transform {
     /// The default builder.
-    type Builder;
+    type Builder<DRAIN: Clone>;
 
     /// Constructs the default projection builder.
-    fn builder() -> Self::Builder;
+    fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN>;
 }
 
 /// Make the constructions of all Builder uniform.

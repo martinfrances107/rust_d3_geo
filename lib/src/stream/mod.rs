@@ -88,7 +88,7 @@ pub trait Streamable {
 /// use d3_geo_rs::stream::DrainStub;
 ///
 /// // The Projector needs a mock endpoint here for the stream pipeline.
-/// let p = Stereographic::<DrainStub<f32>, f32>::builder().build();
+/// let p = Stereographic::< f32>::builder::<DrainStub<f32>>().build();
 ///
 /// let transformed_point = p.transform(&Coord{x: 0_f32, y:0_f32});
 ///
