@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.6.0] - Sat 13th May 2023
+
+commit 8dec90f81398356ab53a25168e58eae54b4a7222
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Wed May 10 12:54:39 2023 +0100
+
+    Performance: examples/rotating_50m - Reduced render time by 12%
+
+commit ab616b395c84ed0705e04732183dce89031387f0
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Thu May 11 12:39:36 2023 +0100
+
+    Major Refactor: All conventional PR are no longer GENERIC over DRAIN.
+
 ## [0.5.0] - Tuesday 9 May 2023
 
    Simplificiation:
