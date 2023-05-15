@@ -16,7 +16,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 d3_geo_rs = { path = "../../../lib" }
-geo = { workspace = true, features = ["use-serde"] }
+geo = { workspace = true }
 geo-types = { workspace = true }
 gloo-utils = { workspace = true }
 js-sys = { workspace = true }
