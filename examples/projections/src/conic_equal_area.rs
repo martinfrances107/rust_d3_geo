@@ -53,7 +53,6 @@ pub async fn draw_conic_equal_area(land: &Geometry<f64>) -> Result<(), JsValue> 
     let graticule = generate_graticule();
     let lines = graticule.lines();
     let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
-    context_raw.begin_path();
     context_raw.set_fill_style(&"#999".into());
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(&mls);

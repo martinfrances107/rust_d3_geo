@@ -94,7 +94,6 @@ pub async fn start() -> Result<(), JsValue> {
 
     // Graticule
     let graticule = generate_mls();
-    context_raw.begin_path();
     context_raw.set_stroke_style(&"#ccc".into());
     path.object(&graticule);
     let path2d = context.path2d.unwrap();

@@ -258,7 +258,6 @@ impl Renderer {
             let mut path = pb.build(ortho);
             self.context2d.set_stroke_style(&self.color_inner_stroke);
             self.context2d.set_fill_style(&self.color_inner_fill);
-            self.context2d.begin_path();
             path.object(&self.countries);
             let path2d = context.path2d.as_ref().unwrap();
 
@@ -276,7 +275,6 @@ impl Renderer {
         let mut path = pb.build(ortho);
         self.context2d.set_fill_style(&self.color_outer_fill);
         self.context2d.set_stroke_style(&self.color_outer_stroke);
-        self.context2d.begin_path();
         path.object(&self.countries);
         let path2d = context.path2d.as_ref().unwrap();
         self.context2d.stroke_with_path(path2d);

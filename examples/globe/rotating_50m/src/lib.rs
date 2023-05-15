@@ -164,7 +164,6 @@ impl Renderer {
         let path2d = context.path2d.as_ref().unwrap();
         self.context2d.stroke_with_path(path2d);
 
-        self.context2d.begin_path();
         self.context2d.set_stroke_style(&self.color_graticule);
         path.object(&self.graticule);
         let path2d = context.path2d.unwrap();
