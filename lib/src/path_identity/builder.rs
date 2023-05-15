@@ -10,10 +10,10 @@ use crate::path_identity::Path;
 use crate::projection::projector_identity::Projector;
 use crate::stream::Stream;
 #[cfg(not(test))]
-use web_sys::CanvasRenderingContext2d;
+use web_sys::Path2d;
 
 #[cfg(test)]
-use crate::path_test_context::CanvasRenderingContext2d;
+use crate::path_test_context::Path2d;
 
 use crate::path::context::Context as PathContext;
 use crate::path::string::String;
@@ -61,7 +61,7 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
-    pub fn context(&mut self, context: CanvasRenderingContext2d) -> &mut Self {
+    pub fn context(&mut self, context: Path2d) -> &mut Self {
         self.context_stream = PathContext::new(context);
         self
     }

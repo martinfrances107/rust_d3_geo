@@ -2,10 +2,10 @@ use std::vec::Vec;
 
 use geo_types::Coord;
 #[cfg(not(any(test)))]
-use web_sys::CanvasRenderingContext2d;
+use web_sys::Path2d;
 
 #[cfg(any(test))]
-use crate::path_test_context::CanvasRenderingContext2d;
+use crate::path_test_context::Path2d;
 use crate::stream::Stream;
 
 use super::PointRadiusTrait;
@@ -30,7 +30,7 @@ pub struct Context {
     line: LineState,
     point: PointState,
     radius: f64,
-    context: Option<CanvasRenderingContext2d>,
+    pub path2d: Option<Path2d>,
 }
 
 impl Default for Context {
@@ -40,7 +40,7 @@ impl Default for Context {
             line: LineState::Init,
             point: PointState::Init,
             radius: 4.5,
-            context: None,
+            path2d: None,
         }
     }
 }
@@ -49,9 +49,9 @@ impl Context {
     /// Contructor.
     #[inline]
     #[must_use]
-    pub const fn new(context: CanvasRenderingContext2d) -> Self {
+    pub const fn new(path_string: Path2d) -> Self {
         Self {
-            context: Some(context),
+            path2d: Some(path_string),
             line: LineState::Init,
             point: PointState::Init,
             radius: 4.5,
@@ -73,9 +73,7 @@ impl Result for Context {
     type Out = Vec<String>;
     #[inline]
     fn result(&mut self) -> Self::Out {
-        self.context
-            .as_mut()
-            .map_or_else(Vec::new, CanvasRenderingContext2d::result)
+        self.path2d.as_mut().map_or_else(Vec::new, Path2d::result)
     }
 }
 
@@ -100,7 +98,7 @@ impl Stream for Context {
 
     fn line_end(&mut self) {
         if LineState::PolygonStarted == self.line {
-            if let Some(c) = &mut self.context {
+            if let Some(c) = &mut self.path2d {
                 c.close_path();
             }
         }
@@ -117,19 +115,19 @@ impl Stream for Context {
     fn point(&mut self, p: &Coord<f64>, _z: Option<u8>) {
         match self.point {
             PointState::LineStart => {
-                if let Some(c) = &mut self.context {
+                if let Some(c) = &mut self.path2d {
                     c.move_to(p.x, p.y);
                 }
                 self.point = PointState::Next;
             }
             PointState::Next => {
-                if let Some(c) = &mut self.context {
+                if let Some(c) = &mut self.path2d {
                     c.line_to(p.x, p.y);
                 }
             }
             #[allow(clippy::assertions_on_constants)]
             PointState::Init => {
-                if let Some(c) = &mut self.context {
+                if let Some(c) = &mut self.path2d {
                     c.move_to(p.x + self.radius, p.y);
 
                     match c.arc(p.x, p.y, self.radius, 0_f64, std::f64::consts::TAU) {

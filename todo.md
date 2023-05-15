@@ -1,7 +1,8 @@
 # TODO
 
-1) Remove drain from all projections ( not albersUSA)
-2) Builder remove drain.
+  rename context - path.
+  graticule returns a string it should return a Path2d
+
   README make the albersUSA table entry scan better.
   profile code. ( move the albers_usa profile target.. make it render countires.)
   restore benchmark. by using ImageData trick.

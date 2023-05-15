@@ -11,10 +11,10 @@ use crate::projection::projector_albers_usa::multidrain::Unpopulated;
 use crate::projection::Projector;
 
 #[cfg(not(test))]
-use web_sys::CanvasRenderingContext2d;
+use web_sys::Path2d;
 
 #[cfg(test)]
-use crate::path_test_context::CanvasRenderingContext2d;
+use crate::path_test_context::Path2d;
 
 use super::context::Context as PathContext;
 use super::string::String;
@@ -56,7 +56,7 @@ where
     T: CoordFloat,
 {
     /// Programe the builder with the context.
-    pub fn context(&mut self, context: CanvasRenderingContext2d) -> &mut Self {
+    pub fn context(&mut self, context: Path2d) -> &mut Self {
         self.context_stream = PathContext::new(context);
         self
     }

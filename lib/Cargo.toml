@@ -48,6 +48,7 @@ features = [
   "HtmlElement",
   "HtmlInputElement",
   "Node",
+  "Path2d",
   "Performance",
   "PerformanceTiming",
   "PerformanceMeasure",

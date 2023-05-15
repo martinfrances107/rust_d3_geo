@@ -26,6 +26,7 @@ use wasm_bindgen_futures::JsFuture;
 use web_sys::window;
 use web_sys::CanvasRenderingContext2d;
 use web_sys::Document;
+use web_sys::Path2d;
 use web_sys::Request;
 use web_sys::RequestInit;
 use web_sys::RequestMode;
@@ -148,22 +149,26 @@ impl Renderer {
         self.builder.rotate2_set(&[self.yaw, -45f64]);
 
         let projector = self.builder.build();
+
         self.context2d
             .clear_rect(0f64, 0f64, self.width, self.height);
 
-        let context: Context = Context::new(self.context2d.clone());
-        let pb = PathBuilder::new(context);
+        let path2d = Path2d::new().unwrap();
+
+        let context: Context = Context::new(path2d);
+        let pb = PathBuilder::new(context.clone());
 
         let mut path = pb.build(projector);
         self.context2d.set_stroke_style(&self.color_land);
-        self.context2d.begin_path();
         path.object(&self.countries);
-        self.context2d.stroke();
+        let path2d = context.path2d.as_ref().unwrap();
+        self.context2d.stroke_with_path(path2d);
 
         self.context2d.begin_path();
         self.context2d.set_stroke_style(&self.color_graticule);
         path.object(&self.graticule);
-        self.context2d.stroke();
+        let path2d = context.path2d.unwrap();
+        self.context2d.stroke_with_path(&path2d);
         self.yaw -= 0.2f64;
     }
 }

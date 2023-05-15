@@ -66,14 +66,15 @@ pub async fn start() -> Result<(), JsValue> {
         .get_context("2d")?
         .unwrap()
         .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+    let path2d = Path2d::new().expect("could not construct path2d");
 
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
 
     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
-    let context = Context::new(context_raw.clone());
-    let pb = PathBuilder::new(context);
+    let context = Context::new(path2d);
+    let pb = PathBuilder::new(context.clone());
 
     let ortho = Orthographic::builder()
         .scale_set(width / 1.3_f64 / std::f64::consts::PI)
@@ -88,14 +89,16 @@ pub async fn start() -> Result<(), JsValue> {
     context_raw.set_stroke_style(&"#333".into());
     context_raw.set_line_width(0.5);
     path.object(&countries);
-    context_raw.stroke();
+    let path2d = context.path2d.as_ref().unwrap();
+    context_raw.stroke_with_path(path2d);
 
     // Graticule
     let graticule = generate_mls();
     context_raw.begin_path();
     context_raw.set_stroke_style(&"#ccc".into());
     path.object(&graticule);
-    context_raw.stroke();
+    let path2d = context.path2d.unwrap();
+    context_raw.stroke_with_path(&path2d);
 
     Ok(())
 }

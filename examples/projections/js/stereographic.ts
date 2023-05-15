@@ -1,6 +1,6 @@
 import { geoPath, geoStereographic, geoGraticule10, GeoPermissibleObjects } from "d3-geo";
 
-export default async function sterographic(world: GeoPermissibleObjects) {
+export default async function sterographic (world: GeoPermissibleObjects) {
 
   const canvas: HTMLCanvasElement = document.querySelector('#stereographic-js');
 

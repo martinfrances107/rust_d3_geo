@@ -11,6 +11,7 @@ use d3_geo_rs::projection::albers::albers;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
+use web_sys::Path2d;
 
 use crate::document;
 
@@ -26,12 +27,13 @@ pub async fn draw_albers(land: &Geometry<f64>) -> Result<(), JsValue> {
         .get_context("2d")?
         .unwrap()
         .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+    let path2d = Path2d::new()?;
 
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
 
-    let context = Context::new(context_raw.clone());
-    let pb = PathBuilder::new(context);
+    let context = Context::new(path2d);
+    let pb = PathBuilder::new(context.clone());
 
     let albers = albers()
         .scale_set(width)
@@ -44,7 +46,8 @@ pub async fn draw_albers(land: &Geometry<f64>) -> Result<(), JsValue> {
     let mut path = pb.build(albers);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
-    context_raw.stroke();
+    let path2d = context.path2d.as_ref().unwrap();
+    context_raw.stroke_with_path(path2d);
 
     let graticule = generate_graticule();
     let lines = graticule.lines();
@@ -53,7 +56,8 @@ pub async fn draw_albers(land: &Geometry<f64>) -> Result<(), JsValue> {
     context_raw.set_fill_style(&"#999".into());
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(&mls);
-    context_raw.stroke();
+    let path2d = context.path2d.unwrap();
+    context_raw.stroke_with_path(&path2d);
 
     Ok(())
 }

@@ -14,6 +14,7 @@ use d3_geo_rs::projection::PrecisionAdjust;
 use d3_geo_rs::projection::RawBase;
 use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
+use web_sys::Path2d;
 
 use crate::document;
 
@@ -33,8 +34,10 @@ pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsVa
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
 
-    let context: Context = Context::new(context_raw.clone());
-    let pb = PathBuilder::new(context);
+    let path2d = Path2d::new().unwrap();
+
+    let context: Context = Context::new(path2d);
+    let pb = PathBuilder::new(context.clone());
 
     let projector = AzimuthalEquiDistant::<f64>::builder()
         .scale_set(width / 3_f64)
@@ -49,7 +52,8 @@ pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsVa
     let mut path = pb.build(projector);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
-    context_raw.stroke();
+    let path2d = context.path2d.as_ref().unwrap();
+    context_raw.stroke_with_path(path2d);
 
     let graticule = generate_graticule();
     let lines = graticule.lines();
@@ -58,7 +62,8 @@ pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsVa
     context_raw.set_fill_style(&"#999".into());
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(&mls);
-    context_raw.stroke();
+    let path2d = context.path2d.unwrap();
+    context_raw.stroke_with_path(&path2d);
 
     Ok(())
 }

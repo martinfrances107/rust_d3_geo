@@ -22,7 +22,7 @@ mod index {
 
     use crate::path::builder::Builder as PathBuilder;
     use crate::path::context::Context;
-    use crate::path_test_context::CanvasRenderingContext2d;
+    use crate::path_test_context::Path2d;
     use crate::projection::equirectangular::Equirectangular;
     use crate::projection::orthographic::Orthographic;
     use crate::projection::projector_commom::types::ProjectorAntimeridianResampleNoneNoClip;
@@ -48,9 +48,9 @@ mod index {
         projection: ProjectorAntimeridianResampleNoneNoClip<Context, Equirectangular<f64>, f64>,
         object: &impl Streamable<T = f64>,
     ) -> Vec<String> {
-        let crc2d = CanvasRenderingContext2d::default();
+        let path2d = Path2d::new().unwrap();
 
-        let context = Context::new(crc2d);
+        let context = Context::new(path2d);
         let pb = PathBuilder::new(context);
 
         pb.build(projection).object(object)
@@ -318,9 +318,9 @@ mod index {
             "geoPath(LineString) then geoPath(Point) does not treat the point as part of a line"
         );
 
-        let crc2d = CanvasRenderingContext2d::default();
+        let path2d = Path2d::new().unwrap();
 
-        let context = Context::new(crc2d);
+        let context = Context::new(path2d);
         let pb = PathBuilder::new(context);
 
         let mut path = pb.build(equirectangular());
@@ -364,9 +364,9 @@ mod index {
             "geoPath(LineString) then geoPath(Point) does not treat the point as part of a line"
         );
 
-        let crc2d = CanvasRenderingContext2d::default();
+        let path2d = Path2d::new().unwrap();
 
-        let context = Context::new(crc2d);
+        let context = Context::new(path2d);
         let pb = PathBuilder::new(context);
         let mut path = pb.build(equirectangular());
 
@@ -414,9 +414,9 @@ mod index {
     fn emulate_benchmark() {
         println!("emulate benchmark");
 
-        let crc2d = CanvasRenderingContext2d::default();
+        let path2d = Path2d::new().unwrap();
 
-        let context = Context::new(crc2d);
+        let context = Context::new(path2d);
         let pb = PathBuilder::new(context);
 
         let mut ob = Orthographic::builder();

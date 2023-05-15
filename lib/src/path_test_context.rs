@@ -1,10 +1,22 @@
 /// Used by `index_test`
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
-pub struct CanvasRenderingContext2d {
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct Path2d {
     buffer: Vec<String>,
 }
 
-impl CanvasRenderingContext2d {
+/// Mocks of Path2d
+///
+/// Returns "Result" to be compatilble
+/// with the browsers `Path2D::new()`.
+#[allow(clippy::unnecessary_wraps)]
+impl Path2d {
+    /// Buffered strings.
+    pub const fn new() -> Result<Self, ()> {
+        Ok(Self { buffer: vec![] })
+    }
+}
+
+impl Path2d {
     /// Buffered strings.
     pub fn result(&mut self) -> Vec<String> {
         let result = self.buffer.clone();
@@ -13,7 +25,7 @@ impl CanvasRenderingContext2d {
     }
 }
 
-impl CanvasRenderingContext2d {
+impl Path2d {
     #[inline]
     #[allow(clippy::unnecessary_wraps)]
     /// Shadows methods in the browser.

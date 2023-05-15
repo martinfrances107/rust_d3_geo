@@ -28,6 +28,7 @@ use wasm_bindgen_futures::JsFuture;
 use web_sys::window;
 use web_sys::CanvasRenderingContext2d;
 use web_sys::Document;
+use web_sys::Path2d;
 use web_sys::Request;
 use web_sys::RequestInit;
 use web_sys::RequestMode;
@@ -243,7 +244,8 @@ impl Renderer {
 
     /// Render the next frame.
     pub fn render(&mut self, solid: bool) {
-        let context: Context = Context::new(self.context2d.clone());
+        let path2d = Path2d::new().unwrap();
+        let context: Context = Context::new(path2d);
 
         if !solid {
             let r = self.ob.rotate();
@@ -258,8 +260,10 @@ impl Renderer {
             self.context2d.set_fill_style(&self.color_inner_fill);
             self.context2d.begin_path();
             path.object(&self.countries);
-            self.context2d.stroke();
-            self.context2d.fill();
+            let path2d = context.path2d.as_ref().unwrap();
+
+            self.context2d.stroke_with_path(path2d);
+            self.context2d.fill_with_path_2d(path2d);
 
             self.ob.reflect_x_set(REFLECT::Unflipped);
             self.ob.rotate3_set(&r);
@@ -267,19 +271,20 @@ impl Renderer {
 
         let ortho = self.ob.build();
 
-        let pb = PathBuilder::new(context);
+        let pb = PathBuilder::new(context.clone());
 
         let mut path = pb.build(ortho);
         self.context2d.set_fill_style(&self.color_outer_fill);
         self.context2d.set_stroke_style(&self.color_outer_stroke);
         self.context2d.begin_path();
         path.object(&self.countries);
-        self.context2d.stroke();
-        self.context2d.fill();
+        let path2d = context.path2d.as_ref().unwrap();
+        self.context2d.stroke_with_path(path2d);
+        self.context2d.fill_with_path_2d(path2d);
 
-        self.context2d.begin_path();
         self.context2d.set_stroke_style(&self.color_graticule);
         path.object(&self.graticule);
-        self.context2d.stroke();
+        let path2d = context.path2d.unwrap();
+        self.context2d.stroke_with_path(&path2d);
     }
 }
