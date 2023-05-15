@@ -4,7 +4,7 @@
   "description": "Renders a world map to a canvas element.",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf dist pkg && RUST_LOG=info webpack",
+    "build": "rimraf dist pkg && RUST_LOG=info webpack -c webpack.production.config.js",
     "serve": "serve dist",
     "start": "rimraf dist pkg && RUST_LOG=info webpack-dev-server --open ",
     "test": "cargo test && wasm-pack test --headless"
