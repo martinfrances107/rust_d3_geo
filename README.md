@@ -32,8 +32,8 @@ The limits of the javascript library become obvious when developing interactive 
 For example the examples/globe applications operate on a 1:50M resolution map of the earth. On a desktop machine this is beyond the javascript version.
 
 <table>
-<th align="left">Supported Projections</th>
-<th ></th>
+<th align="left" colspan="3">Supported Projections</th>
+
 <th align="right"></th>
 <tr><td>Albers</td><td>Equidistant</td><td>Mercator</td></tr>
 <tr><td>AlbersUsa</td><td>Equirectangular</td><td>MercatorTansverse</td></tr>
