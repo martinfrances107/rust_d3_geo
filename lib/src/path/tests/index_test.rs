@@ -53,7 +53,7 @@ mod index {
         let context = Context::new(path2d);
         let pb = PathBuilder::new(context);
 
-        pb.build(projection).object(object)
+        pb.build(projection).object(object).result()
     }
 
     // tape("geoPath.projection() defaults to null", function(test) {
@@ -341,7 +341,7 @@ mod index {
         ]);
 
         assert_eq!(
-            path.object(&object),
+            path.object(&object).result(),
             [
                 "type: moveTo, x: 165.0, y: 160.0",
                 "type: lineTo, x: 170.0, y: 160.0",
@@ -350,7 +350,7 @@ mod index {
         );
         let object = Geometry::Point(Point::new(-63_f64, 18_f64));
         assert_eq!(
-            path.object(&object),
+            path.object(&object).result(),
             [
                 "type: moveTo, x: 170.0, y: 160.0",
                 "type: arc, x: 165.0, y: 160.0, r: 4.5"
@@ -389,7 +389,7 @@ mod index {
         ));
 
         assert_eq!(
-            path.object(&object),
+            path.object(&object).result(),
             [
                 "type: moveTo, x: 165.0, y: 160.0",
                 "type: lineTo, x: 170.0, y: 160.0",
@@ -399,7 +399,7 @@ mod index {
         );
         let object = Geometry::Point(Point::new(-63_f64, 18_f64));
         assert_eq!(
-            path.object(&object),
+            path.object(&object).result(),
             [
                 "type: moveTo, x: 170.0, y: 160.0",
                 "type: arc, x: 165.0, y: 160.0, r: 4.5"
@@ -443,7 +443,7 @@ mod index {
         ));
 
         assert_eq!(
-            path.object(&object),
+            path.object(&object).result(),
             [
                 "type: moveTo, x: 606.0, y: 173.0",
                 "type: lineTo, x: 609.0, y: 173.0",
@@ -453,7 +453,7 @@ mod index {
         );
         let object = Geometry::Point(Point::new(-63_f64, 18_f64));
         assert_eq!(
-            path.object(&object),
+            path.object(&object).result(),
             [
                 "type: moveTo, x: 610.0, y: 173.0",
                 "type: arc, x: 606.0, y: 173.0, r: 4.5",

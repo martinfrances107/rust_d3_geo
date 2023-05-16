@@ -157,7 +157,7 @@
 //!     context_raw.set_stroke_style(&"#333".into());
 //!     context_raw.set_line_width(0.5);
 //!     path.object(&countries);
-//!     let path2d = context.path2d.as_ref().unwrap();
+//!     let path2d = context.path2d.as_ref();
 //!     context_raw.stroke_with_path(path2d);
 //!
 //!     // Graticule
@@ -165,7 +165,7 @@
 //!         generate_mls();
 //!     context_raw.set_stroke_style(&"#ccc".into());
 //!     path.object(&graticule);
-//!     let path2d = context.path2d.unwrap();
+//!     let path2d = context.path2d;
 //!     context_raw.stroke_with_path(&path2d);
 //!
 //!     Ok(())

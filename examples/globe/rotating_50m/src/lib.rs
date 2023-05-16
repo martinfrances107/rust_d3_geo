@@ -161,12 +161,12 @@ impl Renderer {
         let mut path = pb.build(projector);
         self.context2d.set_stroke_style(&self.color_land);
         path.object(&self.countries);
-        let path2d = context.path2d.as_ref().unwrap();
+        let path2d = context.path2d.as_ref();
         self.context2d.stroke_with_path(path2d);
 
         self.context2d.set_stroke_style(&self.color_graticule);
         path.object(&self.graticule);
-        let path2d = context.path2d.unwrap();
+        let path2d = context.path2d;
         self.context2d.stroke_with_path(&path2d);
         self.yaw -= 0.2f64;
     }

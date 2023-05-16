@@ -259,7 +259,7 @@ impl Renderer {
             self.context2d.set_stroke_style(&self.color_inner_stroke);
             self.context2d.set_fill_style(&self.color_inner_fill);
             path.object(&self.countries);
-            let path2d = context.path2d.as_ref().unwrap();
+            let path2d = context.path2d.as_ref();
 
             self.context2d.stroke_with_path(path2d);
             self.context2d.fill_with_path_2d(path2d);
@@ -276,13 +276,13 @@ impl Renderer {
         self.context2d.set_fill_style(&self.color_outer_fill);
         self.context2d.set_stroke_style(&self.color_outer_stroke);
         path.object(&self.countries);
-        let path2d = context.path2d.as_ref().unwrap();
+        let path2d = context.path2d.as_ref();
         self.context2d.stroke_with_path(path2d);
         self.context2d.fill_with_path_2d(path2d);
 
         self.context2d.set_stroke_style(&self.color_graticule);
         path.object(&self.graticule);
-        let path2d = context.path2d.unwrap();
+        let path2d = context.path2d;
         self.context2d.stroke_with_path(&path2d);
     }
 }

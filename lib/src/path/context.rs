@@ -1,6 +1,7 @@
-use std::vec::Vec;
+use std::mem;
 
 use geo_types::Coord;
+
 #[cfg(not(any(test)))]
 use web_sys::Path2d;
 
@@ -30,7 +31,7 @@ pub struct Context {
     line: LineState,
     point: PointState,
     radius: f64,
-    pub path2d: Option<Path2d>,
+    pub path2d: Path2d,
 }
 
 impl Default for Context {
@@ -40,7 +41,7 @@ impl Default for Context {
             line: LineState::Init,
             point: PointState::Init,
             radius: 4.5,
-            path2d: None,
+            path2d: Path2d::new().unwrap(),
         }
     }
 }
@@ -49,9 +50,9 @@ impl Context {
     /// Contructor.
     #[inline]
     #[must_use]
-    pub const fn new(path_string: Path2d) -> Self {
+    pub const fn new(path2d: Path2d) -> Self {
         Self {
-            path2d: Some(path_string),
+            path2d,
             line: LineState::Init,
             point: PointState::Init,
             radius: 4.5,
@@ -70,20 +71,24 @@ impl PointRadiusTrait for Context {
 /// Reach into the mock and return a record of all activity.
 #[cfg(test)]
 impl Result for Context {
-    type Out = Vec<String>;
+    type Out = Path2d;
     #[inline]
     fn result(&mut self) -> Self::Out {
-        self.path2d.as_mut().map_or_else(Vec::new, Path2d::result)
+        let mut out = Path2d::new().unwrap();
+        mem::swap(&mut out, &mut self.path2d);
+        out
     }
 }
 
-/// Stub, In production code the API calls change the canvas directly.
+/// Return path2d, blanking the stored value.
 #[cfg(not(test))]
 impl Result for Context {
-    type Out = Vec<String>;
+    type Out = Path2d;
     #[inline]
     fn result(&mut self) -> Self::Out {
-        vec![]
+        let mut out = Path2d::new().unwrap();
+        mem::swap(&mut out, &mut self.path2d);
+        out
     }
 }
 
@@ -98,9 +103,7 @@ impl Stream for Context {
 
     fn line_end(&mut self) {
         if LineState::PolygonStarted == self.line {
-            if let Some(c) = &mut self.path2d {
-                c.close_path();
-            }
+            self.path2d.close_path();
         }
 
         self.point = PointState::Init;
@@ -115,28 +118,25 @@ impl Stream for Context {
     fn point(&mut self, p: &Coord<f64>, _z: Option<u8>) {
         match self.point {
             PointState::LineStart => {
-                if let Some(c) = &mut self.path2d {
-                    c.move_to(p.x, p.y);
-                }
+                self.path2d.move_to(p.x, p.y);
                 self.point = PointState::Next;
             }
             PointState::Next => {
-                if let Some(c) = &mut self.path2d {
-                    c.line_to(p.x, p.y);
-                }
+                self.path2d.line_to(p.x, p.y);
             }
             #[allow(clippy::assertions_on_constants)]
             PointState::Init => {
-                if let Some(c) = &mut self.path2d {
-                    c.move_to(p.x + self.radius, p.y);
+                self.path2d.move_to(p.x + self.radius, p.y);
 
-                    match c.arc(p.x, p.y, self.radius, 0_f64, std::f64::consts::TAU) {
-                        Ok(_) => {}
-                        Err(_) => {
-                            debug_assert!(true, "Suppressing arc failure");
-                        }
-                    };
-                }
+                match self
+                    .path2d
+                    .arc(p.x, p.y, self.radius, 0_f64, std::f64::consts::TAU)
+                {
+                    Ok(_) => {}
+                    Err(_) => {
+                        debug_assert!(true, "Suppressing arc failure");
+                    }
+                };
             }
         }
     }

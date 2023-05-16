@@ -46,7 +46,7 @@ pub async fn draw_albers(land: &Geometry<f64>) -> Result<(), JsValue> {
     let mut path = pb.build(albers);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
-    let path2d = context.path2d.as_ref().unwrap();
+    let path2d = context.path2d.as_ref();
     context_raw.stroke_with_path(path2d);
 
     let graticule = generate_graticule();
@@ -55,7 +55,7 @@ pub async fn draw_albers(land: &Geometry<f64>) -> Result<(), JsValue> {
     context_raw.set_fill_style(&"#999".into());
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(&mls);
-    let path2d = context.path2d.unwrap();
+    let path2d = context.path2d;
     context_raw.stroke_with_path(&path2d);
 
     Ok(())
