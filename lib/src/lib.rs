@@ -89,6 +89,7 @@
 //!
 //! use d3_geo_rs::graticule::generate_mls;
 //! use d3_geo_rs::path::builder::Builder as PathBuilder;
+//! use d3_geo_rs::path::Result as PathResult;
 //! use d3_geo_rs::path::context::Context;
 //! use d3_geo_rs::projection::orthographic::Orthographic;
 //! use d3_geo_rs::projection::Build;
@@ -158,7 +159,7 @@
 //!     context_raw.set_line_width(0.5);
 //!     path.object(&countries);
 //!     let path2d = path.context_stream.result();
-//!     context_raw.stroke_with_path(path2d);
+//!     context_raw.stroke_with_path(&path2d);
 //!
 //!     // Graticule
 //!     let graticule =
