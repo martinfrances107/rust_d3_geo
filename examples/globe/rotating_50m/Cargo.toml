@@ -22,7 +22,7 @@ geo-types = { workspace = true }
 gloo-utils = { workspace = true }
 rust_topojson_client = { workspace = true }
 topojson = { workspace = true }
-wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
+wasm-bindgen = { workspace = true }
 wasm-bindgen-futures = { workspace = true }
 
 [dependencies.web-sys]
