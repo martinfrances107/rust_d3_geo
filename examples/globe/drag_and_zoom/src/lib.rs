@@ -13,6 +13,7 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
+mod exported_point;
 mod utils;
 
 use geo::Coord;
@@ -52,6 +53,8 @@ use d3_geo_rs::projection::TranslateSet;
 use d3_geo_rs::projection::REFLECT;
 use d3_geo_rs::Transform;
 
+use crate::exported_point::ExportedPoint;
+
 fn document() -> Result<Document, JsValue> {
     let Ok(window) = js_sys::global().dyn_into::<Window>() else { return Err(JsValue::from_str("document() Could not get the window")) };
 
@@ -63,39 +66,6 @@ fn document() -> Result<Document, JsValue> {
         },
         Ok,
     )
-}
-
-/// Used to export a `Coord<f64>` to javascript.
-#[derive(Debug)]
-#[wasm_bindgen]
-pub struct ExportedPoint {
-    /// x coordinate.
-    pub x: f64,
-    /// y coordinate.
-    pub y: f64,
-}
-
-#[wasm_bindgen]
-#[allow(clippy::missing_const_for_fn)]
-impl ExportedPoint {
-    /// Constructor.
-    #[wasm_bindgen(constructor)]
-    #[must_use]
-    pub fn new(x: f64, y: f64) -> Self {
-        Self { x, y }
-    }
-
-    /// Getter
-    #[must_use]
-    pub fn get_x(&self) -> f64 {
-        self.x
-    }
-
-    /// Getter
-    #[must_use]
-    pub fn get_y(&self) -> f64 {
-        self.y
-    }
 }
 
 #[wasm_bindgen]
