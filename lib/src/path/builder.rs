@@ -28,7 +28,7 @@ where
 {
     p_projector: PhantomData<PROJECTOR>,
     pr: T,
-    context_stream: CS,
+    pub context_stream: CS,
 }
 
 impl<CS, PROJECTOR, T> Builder<CS, PROJECTOR, T>

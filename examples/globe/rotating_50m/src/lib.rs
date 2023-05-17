@@ -36,6 +36,7 @@ use web_sys::Window;
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
+use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
@@ -154,19 +155,18 @@ impl Renderer {
             .clear_rect(0f64, 0f64, self.width, self.height);
 
         let path2d = Path2d::new().unwrap();
-
         let context: Context = Context::new(path2d);
-        let pb = PathBuilder::new(context.clone());
+        let pb = PathBuilder::new(context);
 
         let mut path = pb.build(projector);
         self.context2d.set_stroke_style(&self.color_land);
         path.object(&self.countries);
-        let path2d = context.path2d.as_ref();
-        self.context2d.stroke_with_path(path2d);
+        let path2d = path.context_stream.result();
+        self.context2d.stroke_with_path(&path2d);
 
         self.context2d.set_stroke_style(&self.color_graticule);
         path.object(&self.graticule);
-        let path2d = context.path2d;
+        let path2d = path.context_stream.result();
         self.context2d.stroke_with_path(&path2d);
         self.yaw -= 0.2f64;
     }

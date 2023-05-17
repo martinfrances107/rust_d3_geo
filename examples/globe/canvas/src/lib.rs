@@ -23,6 +23,7 @@ use web_sys::*;
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
+use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase as ProjectionRawBase;
@@ -89,14 +90,14 @@ pub async fn start() -> Result<(), JsValue> {
     context_raw.set_stroke_style(&"#333".into());
     context_raw.set_line_width(0.5);
     path.object(&countries);
-    let path2d = context.path2d.as_ref();
-    context_raw.stroke_with_path(path2d);
+    let path2d = path.context_stream.result();
+    context_raw.stroke_with_path(&path2d);
 
     // Graticule
     let graticule = generate_mls();
     context_raw.set_stroke_style(&"#ccc".into());
     path.object(&graticule);
-    let path2d = context.path2d;
+    let path2d = path.context_stream.result();
     context_raw.stroke_with_path(&path2d);
 
     Ok(())
