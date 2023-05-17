@@ -68,20 +68,7 @@ impl PointRadiusTrait for Context {
     }
 }
 
-/// Reach into the mock and return a record of all activity.
-#[cfg(test)]
-impl Result for Context {
-    type Out = Path2d;
-    #[inline]
-    fn result(&mut self) -> Self::Out {
-        let mut out = Path2d::new().unwrap();
-        mem::swap(&mut out, &mut self.path2d);
-        out
-    }
-}
-
 /// Return path2d, blanking the stored value.
-#[cfg(not(test))]
 impl Result for Context {
     type Out = Path2d;
     #[inline]

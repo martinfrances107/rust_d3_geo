@@ -38,6 +38,7 @@ use web_sys::Window;
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
+use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
@@ -259,10 +260,10 @@ impl Renderer {
             self.context2d.set_stroke_style(&self.color_inner_stroke);
             self.context2d.set_fill_style(&self.color_inner_fill);
             path.object(&self.countries);
-            let path2d = context.path2d.as_ref();
+            let path2d = path.context_stream.result();
 
-            self.context2d.stroke_with_path(path2d);
-            self.context2d.fill_with_path_2d(path2d);
+            self.context2d.stroke_with_path(&path2d);
+            self.context2d.fill_with_path_2d(&path2d);
 
             self.ob.reflect_x_set(REFLECT::Unflipped);
             self.ob.rotate3_set(&r);
@@ -276,13 +277,13 @@ impl Renderer {
         self.context2d.set_fill_style(&self.color_outer_fill);
         self.context2d.set_stroke_style(&self.color_outer_stroke);
         path.object(&self.countries);
-        let path2d = context.path2d.as_ref();
-        self.context2d.stroke_with_path(path2d);
-        self.context2d.fill_with_path_2d(path2d);
+        let path2d = path.context_stream.result();
+        self.context2d.stroke_with_path(&path2d);
+        self.context2d.fill_with_path_2d(&path2d);
 
         self.context2d.set_stroke_style(&self.color_graticule);
         path.object(&self.graticule);
-        let path2d = context.path2d;
+        let path2d = path.context_stream.result();
         self.context2d.stroke_with_path(&path2d);
     }
 }
