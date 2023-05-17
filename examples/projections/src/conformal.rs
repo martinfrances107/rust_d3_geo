@@ -8,6 +8,7 @@ use web_sys::Path2d;
 use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::context::Context;
+use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::conformal::Conformal;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::CenterSet;
@@ -34,11 +35,11 @@ pub async fn draw_conformal(land: &Geometry<f64>) -> Result<(), JsValue> {
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
 
-    let path2d = Path2d::new().unwrap();
+    let path2d = Path2d::new()?;
 
     let context: Context = Context::new(path2d);
 
-    let pb = PathBuilder::new(context.clone());
+    let pb = PathBuilder::new(context);
 
     // input params will cause a conic equal area projection to be constructed.
     let cea = Conformal::builder()
@@ -54,8 +55,8 @@ pub async fn draw_conformal(land: &Geometry<f64>) -> Result<(), JsValue> {
     let mut path = pb.build(cea);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
-    let path2d = context.path2d.as_ref();
-    context_raw.stroke_with_path(path2d);
+    let path2d = path.context_stream.result();
+    context_raw.stroke_with_path(&path2d);
 
     let graticule = generate_graticule();
     let lines = graticule.lines();
@@ -63,7 +64,7 @@ pub async fn draw_conformal(land: &Geometry<f64>) -> Result<(), JsValue> {
     context_raw.set_fill_style(&"#999".into());
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(&mls);
-    let path2d = context.path2d;
+    let path2d = path.context_stream.result();
     context_raw.stroke_with_path(&path2d);
     Ok(())
 }

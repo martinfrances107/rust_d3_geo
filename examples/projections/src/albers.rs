@@ -34,7 +34,7 @@ pub async fn draw_albers(land: &Geometry<f64>) -> Result<(), JsValue> {
     let height: f64 = canvas.height().into();
 
     let context = Context::new(path2d);
-    let pb = PathBuilder::new(context.clone());
+    let pb = PathBuilder::new(context);
 
     let albers = albers()
         .scale_set(width)

@@ -271,7 +271,7 @@ impl Renderer {
 
         let ortho = self.ob.build();
 
-        let pb = PathBuilder::new(context.clone());
+        let pb = PathBuilder::new(context);
 
         let mut path = pb.build(ortho);
         self.context2d.set_fill_style(&self.color_outer_fill);

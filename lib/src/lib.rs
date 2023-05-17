@@ -139,10 +139,10 @@
 //!     let height: f64 = canvas.height().into();
 //!
 //!     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
-//!     let path2d = Path2d::new().unwrap();
+//!     let path2d = Path2d::new()?;
 //!     let context = Context::new(path2d);
 //!
-//!     let pb = PathBuilder::new(context.clone());
+//!     let pb = PathBuilder::new(context);
 //!
 //!     let ortho = Orthographic::builder()
 //!         .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
@@ -157,7 +157,7 @@
 //!     context_raw.set_stroke_style(&"#333".into());
 //!     context_raw.set_line_width(0.5);
 //!     path.object(&countries);
-//!     let path2d = context.path2d.as_ref();
+//!     let path2d = path.context_stream.result();
 //!     context_raw.stroke_with_path(path2d);
 //!
 //!     // Graticule
@@ -165,7 +165,7 @@
 //!         generate_mls();
 //!     context_raw.set_stroke_style(&"#ccc".into());
 //!     path.object(&graticule);
-//!     let path2d = context.path2d;
+//!     let path2d = path.context_stream.result();
 //!     context_raw.stroke_with_path(&path2d);
 //!
 //!     Ok(())
