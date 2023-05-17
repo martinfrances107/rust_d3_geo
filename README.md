@@ -22,7 +22,7 @@ A collection of d3 sub packages is being ported to rust.
 
 The majority of the library has been ported along with the associated tests.
 
-The 1.0 release is close, within one or two weeks.
+The 1.0 release is close, within one week.
 
 Currently I am reviewing the data structures, and looking for performance improvements before things become locked down and I support backwards compatibility guarentees.
 
@@ -57,7 +57,7 @@ These Examples are provided to help developers convert their existing javascript
 
 <tr>
 <tr>
-<td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>.  <br/><br/> For perfomance reasons this example is best viewed as a static web site, rather the running the development build.
+<td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>.  <br/><br/> For perfomance reasons this example is best viewed by running "cargo build" and then "cargo serve" rather the running the development build.
 (Scale 1:50M)
 <br/>
 <br/>
@@ -72,6 +72,9 @@ These Examples are provided to help developers convert their existing javascript
 <td><strong>examples/globe/drag_and_zoom</strong> <br/><br/>
   As an example it deliberately mixes typescript methods with rust.
   The typescript is responsible for handling the mouse events and calculating the quaternion and finally calculating the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.(Scale 1:50M)
+<br/>
+<br/>
+  This example is currently undergoing rapid development.
 </td>
 
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/drag_and_zoom.png"> </td>
@@ -140,9 +143,9 @@ To view the application either create a devleopment build, or construct a static
 
 The last command "npm run start"  will automatically open your default browser at http:://localhost::8080
 
-### Building A Static Site
+### Performance: Building A Static Site
 
-Much better performance can be acheived by bulding a static web site and viewing that directly.
+Much better performance can be acheived by bulding a static web site and viewing that directly. At the expense of longer build times the RUST protions of the code a build using the "--release" tags
 
 ```console
   git clone https://github.com/martinfrances107/rust_d3_geo.git
@@ -151,12 +154,6 @@ Much better performance can be acheived by bulding a static web site and viewing
   npm run build
   npm run serve
 ```
-
-This creates a static HTML site in the dist/ directory.
-
-To view the site you cannot just point you browser at a location of the form file:://home/user/alice/dist/index.html
-
-By security reasons, browsers prevent HTML pages with WASM files from being viewed this way. You must host the site first.
 
 </details>
 <br>

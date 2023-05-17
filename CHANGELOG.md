@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.7.0] - Wed 17th May 2023
+
+Go a performace boost by writng data to Path2d and
+the call stroke_with_path().
+
+commit 3afbe268de6094aea118b3f8e44f7e51090d3cd7
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Mon May 15 09:52:36 2023 +0100
+
+Now writing to Path2d rather the CanvasRenderingContext2d
+
+This broke draw_with_zoom, which has never worked flawlessly.
+
 ## [0.6.0] - Sat 13th May 2023
 
 commit 8dec90f81398356ab53a25168e58eae54b4a7222
