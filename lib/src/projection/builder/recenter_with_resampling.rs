@@ -16,8 +16,7 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> Recenter
-    for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> Recenter for Builder<CLIPC, CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -60,8 +59,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> Recenter
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> Recenter for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

@@ -26,7 +26,7 @@ mod projection_angle {
         pb.scale_set(1_f64);
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         assert_eq!(pb.angle(), 0_f64);
-        let projection = pb.build();
+        let projection = pb.build::<DrainStub<f64>>();
 
         assert!(projection_equal(
             &projection,
@@ -149,7 +149,7 @@ mod projection_angle {
         // this rounds to 29.9999999 not 30!!
         // assert_eq!(pb.get_angle(), 30_f64);
         assert!(in_delta(pb.angle(), 30_f64, 1e-6));
-        let projection = pb.build();
+        let projection = pb.build::<DrainStub<f64>>();
 
         assert!(projection_equal(
             &projection,
@@ -273,7 +273,7 @@ mod projection_angle {
 
         // this rounds to 29.9999999 not 30!!
         assert!(in_delta(pb.angle(), -30_f64, 1e-6));
-        let projection = pb.build();
+        let projection = pb.build::<DrainStub<f64>>();
 
         assert!(projection_equal(
             &projection,

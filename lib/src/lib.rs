@@ -55,7 +55,7 @@
 //!       })
 //!       .clip_angle(90_f64)
 //!       .precision_set(&10_f64)
-//!       .build();
+//!       .build::<DrainStub<f64>>();
 //! ```
 //!
 //! # Examples

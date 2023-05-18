@@ -10,8 +10,8 @@ use crate::projection::builder::Builder as BuilderCommon;
 use crate::projection::Recenter;
 
 // Reach into builder and alter the PR.
-impl<CLIPC, CLIPU, DRAIN, PR, T> ParallelsSet
-    for Builder<BuilderCommon<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>, T>
+impl<CLIPC, CLIPU, PR, T> ParallelsSet
+    for Builder<BuilderCommon<CLIPC, CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>, T>
 where
     PR: PRConic<T = T> + Clone,
     T: CoordFloat + FloatConst,

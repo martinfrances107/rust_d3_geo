@@ -9,16 +9,16 @@ use crate::projection::RotateGet;
 use crate::projection::ScaleGet;
 use crate::projection::TransformExtent;
 use crate::rot::rotation::Rotation;
+use crate::stream::DrainStub;
 use crate::Transform;
 
 use super::Builder;
 use super::Reclip;
 
-impl<CLIPC, CLIPU, DRAIN, PR, RU, T> Reclip for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, RU, T>
+impl<CLIPC, CLIPU, PR, RU, T> Reclip for Builder<CLIPC, CLIPU, PCNU<T>, PR, RU, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
-    DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     RU: Clone,
     T: CoordFloat + FloatConst,
@@ -31,7 +31,7 @@ where
             x: T::zero(),
             y: T::zero(),
         });
-        let t = self.base.build().transform(&t);
+        let t = self.base.build::<DrainStub<T>>().transform(&t);
         let ce = match self.extent {
             Some(extent) => {
                 self.pr

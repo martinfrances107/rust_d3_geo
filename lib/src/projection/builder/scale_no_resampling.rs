@@ -10,8 +10,8 @@ use crate::projection::Recenter;
 use crate::projection::ScaleSet;
 use crate::Transform;
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> ScaleSet
+    for Builder<CLIPC, CLIPU, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -24,8 +24,8 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> ScaleSet
+    for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

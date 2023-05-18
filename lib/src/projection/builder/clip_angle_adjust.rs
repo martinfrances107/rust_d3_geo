@@ -8,8 +8,8 @@ use crate::projection::ClipAngleAdjust;
 
 use super::Builder;
 
-impl<DRAIN, PCNU, PR, RC, RU, T> ClipAngleAdjust
-    for Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, DRAIN, PCNU, PR, RU, T>
+impl<PCNU, PR, RC, RU, T> ClipAngleAdjust
+    for Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, PCNU, PR, RU, T>
 where
     RC: Clone,
     T: CoordFloat + FloatConst,

@@ -37,7 +37,6 @@ where
     fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>>,
-            p_drain: self.p_drain,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -80,7 +79,6 @@ where
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
 
-            p_drain: self.p_drain,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -122,7 +120,6 @@ where
     fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>>,
-            p_drain: self.p_drain,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -164,7 +161,6 @@ where
     fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
-            p_drain: self.p_drain,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,

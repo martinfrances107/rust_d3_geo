@@ -15,11 +15,10 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, PR, PCNC, PCNU, T> PrecisionGet
+impl<PR, PCNC, PCNU, T> PrecisionGet
     for Builder<
         ClipAntimeridianC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         ClipAntimeridianU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
-        DRAIN,
         PCNU,
         PR,
         Resample<PR, Unconnected, T>,
@@ -39,11 +38,10 @@ where
     }
 }
 
-impl<DRAIN, PR, PCNC, PCNU, T> PrecisionGet
+impl<PR, PCNC, PCNU, T> PrecisionGet
     for Builder<
         ClipCircleC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         ClipCircleU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
-        DRAIN,
         PCNU,
         PR,
         Resample<PR, Unconnected, T>,

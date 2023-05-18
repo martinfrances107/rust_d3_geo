@@ -10,8 +10,7 @@ use crate::projection::AngleGet;
 use crate::projection::AngleSet;
 use crate::Transform;
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> AngleGet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
+impl<CLIPC, CLIPU, PCNU, PR, RU, T> AngleGet for Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {
@@ -23,8 +22,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> AngleSet
-    for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> AngleSet for Builder<CLIPC, CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -39,8 +37,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> AngleSet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> AngleSet for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

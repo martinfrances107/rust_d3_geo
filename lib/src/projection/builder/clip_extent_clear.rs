@@ -33,7 +33,6 @@ where
     fn clip_extent_clear(&self) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
-            p_drain: self.p_drain,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -75,7 +74,6 @@ where
     fn clip_extent_clear(&self) -> Self::Output {
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
-            p_drain: self.p_drain,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,

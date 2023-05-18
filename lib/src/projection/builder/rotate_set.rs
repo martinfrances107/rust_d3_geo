@@ -13,8 +13,7 @@ use super::template::ResampleNonePCNU;
 use super::template::PCNU;
 use super::Builder;
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> RotateSet for Builder<CLIPC, CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -38,8 +37,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> RotateSet for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -63,10 +61,9 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<CLIPC, CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> RotateSet
+    for Builder<CLIPC, CLIPU, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
-    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -89,10 +86,9 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> RotateSet
+    for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
-    DRAIN: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {

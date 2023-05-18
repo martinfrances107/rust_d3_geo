@@ -11,12 +11,11 @@ use crate::Transform;
 use super::Builder;
 use super::Reclip;
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> ScaleSet
+    for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
-    DRAIN: Clone,
     PCNU<T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
@@ -29,12 +28,10 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> ScaleSet for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
-    DRAIN: Clone,
     PCNU<T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,

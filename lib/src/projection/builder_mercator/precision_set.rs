@@ -16,11 +16,10 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
+impl<PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
         ClipAntimeridianC<None<PR, Connected<PCNC>, T>, T>,
         ClipAntimeridianU<None<PR, Connected<PCNC>, T>, T>,
-        DRAIN,
         PCNU,
         PR,
         None<PR, Unconnected, T>,
@@ -35,7 +34,6 @@ where
     type Output = Builder<
         ClipAntimeridianC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         ClipAntimeridianU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
-        DRAIN,
         PCNU,
         PR,
         Resample<PR, Unconnected, T>,
@@ -53,11 +51,10 @@ where
     }
 }
 
-impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
+impl<PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
         ClipCircleC<None<PR, Connected<PCNC>, T>, T>,
         ClipCircleU<None<PR, Connected<PCNC>, T>, T>,
-        DRAIN,
         PCNU,
         PR,
         None<PR, Unconnected, T>,
@@ -71,7 +68,6 @@ where
     type Output = Builder<
         ClipCircleC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         ClipCircleU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
-        DRAIN,
         PCNU,
         PR,
         Resample<PR, Unconnected, T>,

@@ -14,7 +14,6 @@ use crate::projection::builder_mercator_transverse::Builder;
 pub type BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     PCNU<T>,
     PR,
     ResamplePCNU<PR, T>,
@@ -25,7 +24,6 @@ pub type BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T> = Build
 pub type BuilderMercatorTransverseAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNonePCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     PCNU<T>,
     PR,
     ResampleNonePCNU<PR, T>,
@@ -36,7 +34,6 @@ pub type BuilderMercatorTransverseAntimeridianResampleNoneClip<DRAIN, PR, T> = B
 pub type BuilderMercatorTransverseCircleResampleClip<DRAIN, PR, T> = Builder<
     ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     PCNU<T>,
     PR,
     ResamplePCNU<PR, T>,
@@ -47,7 +44,6 @@ pub type BuilderMercatorTransverseCircleResampleClip<DRAIN, PR, T> = Builder<
 pub type BuilderMercatorTransverseCircleResampleNoneClip<DRAIN, PR, T> = Builder<
     ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     PCNU<T>,
     PR,
     ResampleNonePCNU<PR, T>,

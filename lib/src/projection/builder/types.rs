@@ -20,7 +20,6 @@ use super::Builder;
 pub type BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     NoPCNU,
     PR,
     ResampleNoneNoPCNU<PR, T>,
@@ -31,7 +30,6 @@ pub type BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Builder<
 pub type BuilderAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNonePCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     PCNU<T>,
     PR,
     ResampleNonePCNU<PR, T>,
@@ -42,7 +40,6 @@ pub type BuilderAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
 pub type BuilderAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNoPCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     NoPCNU,
     PR,
     ResampleNoPCNU<PR, T>,
@@ -53,7 +50,6 @@ pub type BuilderAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
 pub type BuilderAntimeridianResampleClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     PCNU<T>,
     PR,
     ResamplePCNU<PR, T>,
@@ -64,7 +60,6 @@ pub type BuilderAntimeridianResampleClip<DRAIN, PR, T> = Builder<
 pub type BuilderCircleResampleNoClip<DRAIN, PR, T> = Builder<
     ClipCircleC<ResampleNoPCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNoPCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     NoPCNU,
     PR,
     ResampleNoPCNU<PR, T>,
@@ -75,7 +70,6 @@ pub type BuilderCircleResampleNoClip<DRAIN, PR, T> = Builder<
 pub type BuilderCircleResampleNoneNoClip<DRAIN, PR, T> = Builder<
     ClipCircleC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     NoPCNU,
     PR,
     ResampleNoneNoPCNU<PR, T>,
@@ -86,7 +80,6 @@ pub type BuilderCircleResampleNoneNoClip<DRAIN, PR, T> = Builder<
 pub type BuilderCircleResampleClip<DRAIN, PR, T> = Builder<
     ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     PCNU<T>,
     PR,
     ResamplePCNU<PR, T>,
@@ -97,7 +90,6 @@ pub type BuilderCircleResampleClip<DRAIN, PR, T> = Builder<
 pub type BuilderCircleResampleNoneClip<DRAIN, PR, T> = Builder<
     ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
-    DRAIN,
     PCNU<T>,
     PR,
     ResampleNonePCNU<PR, T>,

@@ -61,106 +61,142 @@ mod invert {
 
     #[test]
     fn albers() {
-        let a = albers_builder::<DrainStub<f64>, f64>().build();
+        let a = albers_builder::<DrainStub<f64>, f64>().build::<DrainStub<f64>>();
         symetric_invert(a);
     }
 
     #[test]
     fn azimuthal_equal_area() {
-        let a = AzimuthalEqualArea::<f64>::builder::<DrainStub<f64>>().build();
+        let a = AzimuthalEqualArea::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(a);
     }
 
     #[test]
     fn azimuthal_equidistant() {
-        let a = AzimuthalEquiDistant::<f64>::builder::<DrainStub<f64>>().build();
+        let a = AzimuthalEquiDistant::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(a);
     }
 
     #[test]
     fn conformal() {
         let mut builder = Conformal::builder::<DrainStub<f64>>();
-        symetric_invert(builder.build());
-        symetric_invert(builder.parallels_set(20_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(30_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
+        symetric_invert(builder.build::<DrainStub<f64>>());
+        symetric_invert(
+            builder
+                .parallels_set(20_f64, 30_f64)
+                .build::<DrainStub<f64>>(),
+        );
+        symetric_invert(
+            builder
+                .parallels_set(30_f64, 30_f64)
+                .build::<DrainStub<f64>>(),
+        );
+        symetric_invert(
+            builder
+                .parallels_set(-35_f64, -50_f64)
+                .build::<DrainStub<f64>>(),
+        );
         symetric_invert(
             builder
                 .parallels_set(40_f64, 60_f64)
                 .rotate2_set(&[-120_f64, 0_f64])
-                .build(),
+                .build::<DrainStub<f64>>(),
         );
     }
 
     #[test]
     fn conic_equal_area() {
         let mut builder = EqualArea::<f64>::builder::<DrainStub<f64>>();
-        symetric_invert(builder.build());
-        symetric_invert(builder.parallels_set(20_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(-30_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
+        symetric_invert(builder.build::<DrainStub<f64>>());
+        symetric_invert(
+            builder
+                .parallels_set(20_f64, 30_f64)
+                .build::<DrainStub<f64>>(),
+        );
+        symetric_invert(
+            builder
+                .parallels_set(-30_f64, 30_f64)
+                .build::<DrainStub<f64>>(),
+        );
+        symetric_invert(
+            builder
+                .parallels_set(-35_f64, -50_f64)
+                .build::<DrainStub<f64>>(),
+        );
         symetric_invert(
             builder
                 .parallels_set(40_f64, 60_f64)
                 .rotate2_set(&[-120_f64, 0_f64])
-                .build(),
+                .build::<DrainStub<f64>>(),
         );
     }
 
     #[test]
     fn conic_equidistant() {
         let mut builder = Equidistant::builder::<DrainStub<f64>>();
-        symetric_invert(builder.build());
-        symetric_invert(builder.parallels_set(20_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(30_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
+        symetric_invert(builder.build::<DrainStub<f64>>());
+        symetric_invert(
+            builder
+                .parallels_set(20_f64, 30_f64)
+                .build::<DrainStub<f64>>(),
+        );
+        symetric_invert(
+            builder
+                .parallels_set(30_f64, 30_f64)
+                .build::<DrainStub<f64>>(),
+        );
+        symetric_invert(
+            builder
+                .parallels_set(-35_f64, -50_f64)
+                .build::<DrainStub<f64>>(),
+        );
         symetric_invert(
             builder
                 .parallels_set(40_f64, 60_f64)
                 .rotate2_set(&[-120_f64, 0_f64])
-                .build(),
+                .build::<DrainStub<f64>>(),
         );
     }
 
     #[test]
     fn equirectangular() {
-        let e = Equirectangular::<f64>::builder::<DrainStub<f64>>().build();
+        let e = Equirectangular::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(e);
     }
 
     #[test]
     fn equal_earth() {
-        let e = EqualEarth::<f64>::builder::<DrainStub<f64>>().build();
+        let e = EqualEarth::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(e);
     }
 
     #[test]
     fn gnomic() {
-        let g = Gnomic::<f64>::builder::<DrainStub<f64>>().build();
+        let g = Gnomic::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(g);
     }
 
     #[test]
     fn mercator() {
-        let m = Mercator::builder::<DrainStub<f64>>().build();
+        let m = Mercator::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(m);
     }
 
     #[test]
     fn mercator_traverse() {
-        let m = MercatorTransverse::builder::<DrainStub<f64>>().build();
+        let m = MercatorTransverse::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(m);
     }
 
     #[test]
     fn orthographic() {
-        let o = Orthographic::<f64>::builder::<DrainStub<f64>>().build();
+        let o = Orthographic::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(o);
     }
 
     #[test]
     fn stereographic() {
-        let s = Stereographic::<f64>::builder::<DrainStub<f64>>().build();
+        let s = Stereographic::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(s);
     }
 

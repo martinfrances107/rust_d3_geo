@@ -5,8 +5,7 @@ use crate::projection::CenterGet;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> CenterGet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
+impl<CLIPC, CLIPU, PCNU, PR, RU, T> CenterGet for Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {

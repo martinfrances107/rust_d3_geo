@@ -329,11 +329,11 @@ where
         let x = (p.x - self.t.x) / self.k;
         let y = (p.y - self.t.y) / self.k;
         if self.alaska_y.contains(&y) && self.alaska_x.contains(&x) {
-            self.alaska.build().invert(p)
+            self.alaska.build::<SD>().invert(p)
         } else if self.hawaii_y.contains(&y) && self.hawaii_x.contains(&x) {
-            self.hawaii.build().invert(p)
+            self.hawaii.build::<SD>().invert(p)
         } else {
-            self.lower_48.build().invert(p)
+            self.lower_48.build::<SD>().invert(p)
         }
     }
 }

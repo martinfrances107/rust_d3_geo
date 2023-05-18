@@ -6,8 +6,7 @@ use crate::projection::ClipExtentGet;
 use super::template::PCNU;
 use super::Builder;
 
-impl<CLIPC, CLIPU, DRAIN, PR, RU, T> ClipExtentGet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, RU, T>
+impl<CLIPC, CLIPU, PR, RU, T> ClipExtentGet for Builder<CLIPC, CLIPU, PCNU<T>, PR, RU, T>
 where
     T: CoordFloat,
 {

@@ -38,7 +38,6 @@ where
         // Copy - Mutate.
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
-            p_drain: self.p_drain,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -86,7 +85,6 @@ where
         // Copy - Mutate.
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
-            p_drain: self.p_drain,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -136,7 +134,6 @@ where
         // Copy - Mutate.
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
-            p_drain: self.p_drain,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -187,7 +184,6 @@ where
         // Copy - Mutate.
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
-            p_drain: self.p_drain,
             sx: self.sx,
             sy: self.sy,
             x: self.x,

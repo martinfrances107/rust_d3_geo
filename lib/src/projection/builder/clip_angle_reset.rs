@@ -12,15 +12,14 @@ use crate::projection::ClipAngleReset;
 
 use super::Builder;
 
-impl<DRAIN, PCNU, PR, RC, RU, T> ClipAngleReset
-    for Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, DRAIN, PCNU, PR, RU, T>
+impl<PCNU, PR, RC, RU, T> ClipAngleReset
+    for Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, PCNU, PR, RU, T>
 where
     RC: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     /// The resultant builder type.
-    type Output =
-        Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RU, T>;
+    type Output = Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, PCNU, PR, RU, T>;
     type T = T;
 
     // Set the internal clip angle (theta) to null and return a builder
@@ -30,7 +29,6 @@ where
         // update only theta and preclip_factory.
         Self::Output {
             p_clipc: PhantomData::<ClipAntimeridianC<RC, T>>,
-            p_drain: PhantomData::<DRAIN>,
             clip: gen_clip::<RC, T>(),
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,

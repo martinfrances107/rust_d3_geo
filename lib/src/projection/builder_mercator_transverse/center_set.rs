@@ -11,13 +11,10 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> CenterSet for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
-    DRAIN: Clone,
-
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -32,12 +29,11 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
-    for Builder<CLIPC, CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> CenterSet
+    for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     CLIPC: Clone,
     CLIPU: Clone,
-    DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {

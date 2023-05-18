@@ -1,4 +1,3 @@
-use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;
@@ -10,21 +9,21 @@ use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::gen_clip;
 use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
-use crate::projection::ClipAngleSet;
-use crate::stream::Connectable;
 
-impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
-    for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RU, T>
+use crate::projection::ClipAngleSet;
+
+impl<PCNU, PR, RC, RU, T> ClipAngleSet
+    for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, PCNU, PR, RU, T>
 where
-    DRAIN: Clone,
-    PCNC: Clone,
-    PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
+    PCNU: Clone,
+    // PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     PR: Clone,
     RC: Clone,
-    RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
+    RU: Clone,
+    // RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     T: CoordFloat + FloatConst,
 {
-    type Output = Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, DRAIN, PCNU, PR, RU, T>;
+    type Output = Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, PCNU, PR, RU, T>;
     type T = T;
 
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
@@ -37,7 +36,6 @@ where
         // Copy, Mutate - updating only theta and preclip_factory.
         Self::Output {
             p_clipc: PhantomData::<ClipCircleC<RC, T>>,
-            p_drain: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw.clone(),
             clip,
             delta_lambda: self.delta_lambda,
