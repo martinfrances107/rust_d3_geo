@@ -21,7 +21,7 @@ mod translate_set;
 pub struct Builder<SD, T>
 where
     SD: Clone,
-    T: CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     phantom_sd: PhantomData<SD>,
     /// The underlying projection.
@@ -30,7 +30,7 @@ where
 
 impl<SD, T> BuilderTrait for Builder<SD, T>
 where
-    T: CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
     SD: Clone,
 {
     type PR = AlbersUsa<SD, T>;
@@ -51,7 +51,7 @@ where
 impl<SD, T> Builder<SD, T>
 where
     SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
-    T: CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     /// Using the currently programmed state output a new projection.
     #[inline]

@@ -12,7 +12,7 @@
 
 // impl<DRAIN, T> ScaleSet for Builder<DRAIN, T>
 // where
-//     T: CoordFloat + Debug + Default + FloatConst,
+//     T: CoordFloat + Default + FloatConst,
 //     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 // {
 //     type T = T;

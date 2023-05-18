@@ -129,7 +129,7 @@ fn alaska_inset<DRAIN: Clone, T>(
     epsilon: T,
 ) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<T>, T>
 where
-    T: CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     let mut alaska = EqualArea::builder();
     alaska
@@ -169,7 +169,7 @@ fn hawaii_inset<DRAIN: Clone, T>(
     epsilon: T,
 ) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<T>, T>
 where
-    T: CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     let mut hawaii = EqualArea::builder();
     hawaii
@@ -202,7 +202,7 @@ where
 impl<SD, T> Default for AlbersUsa<SD, T>
 where
     SD: Clone + Stream<EP = SD, T = T>,
-    T: CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
         let epsilon = T::from(EPSILON).unwrap();

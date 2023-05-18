@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -10,7 +8,7 @@ use crate::stream::Stream;
 
 impl<DRAIN, T> ScaleGet for Builder<DRAIN, T>
 where
-    T: CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
     DRAIN: Clone + Stream<EP = DRAIN, T = T>,
 {
     type T = T;

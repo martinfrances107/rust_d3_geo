@@ -14,7 +14,7 @@
 // impl<DRAIN, T> TranslateSet for Builder<DRAIN, T>
 // where
 //     DRAIN: Clone,
-//     T: CoordFloat + Debug + Default + FloatConst,
+//     T: CoordFloat +  Default + FloatConst,
 // {
 //     type T = T;
 
