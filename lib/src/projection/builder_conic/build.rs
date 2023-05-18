@@ -14,8 +14,6 @@ use super::PRConic;
 impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build
     for Builder<BuilderCommon<CLIPC, CLIPU, PCNU, PR, RU, T>, T>
 where
-    // BuilderCommon<CLIPC, CLIPU, PCNU, PR, RU, T>:
-    //     Clone + Build<Projector<DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>>,
     CLIPC: Clone,
     CLIPU: Clone,
     PR: Clone + PRConic,

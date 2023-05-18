@@ -60,7 +60,6 @@ mod path_bounds {
         let cs = Bounds::default();
         let pb = Builder::new(cs);
         pb.build(projection).bounds(object)
-        // Builder::new(cs).build(projection).bounds(object)
     }
 
     #[test]
