@@ -280,7 +280,7 @@ where
 impl<SD, T> AlbersUsa<SD, T>
 where
     SD: Clone + Stream<EP = SD, T = T>,
-    T: 'static + CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Debug + Default + FloatConst,
 {
     #[inline]
     #[must_use]
