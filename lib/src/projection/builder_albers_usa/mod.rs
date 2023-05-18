@@ -22,7 +22,6 @@ where
     SD: Clone,
     T: CoordFloat + Default + FloatConst,
 {
-    phantom_sd: PhantomData<SD>,
     /// The underlying projection.
     pub pr: AlbersUsa<SD, T>,
 }
@@ -40,10 +39,7 @@ where
     /// # Panics
     /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
     fn new(pr: AlbersUsa<SD, T>) -> Self {
-        Self {
-            phantom_sd: PhantomData::<SD>,
-            pr,
-        }
+        Self { pr }
     }
 }
 
