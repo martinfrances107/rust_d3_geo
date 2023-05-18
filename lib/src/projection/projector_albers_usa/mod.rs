@@ -37,16 +37,6 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
             ConnectedStream<
                 Clipper<
                     Interpolate<T>,
-                    Line<
-                        ConnectedStream<
-                            Resample<
-                                EqualArea<T>,
-                                ConnectedResample<Rectangle<ConnectedStream<SD>, T>, T>,
-                                T,
-                            >,
-                        >,
-                        T,
-                    >,
                     Line<Unconnected, T>,
                     PV<T>,
                     Resample<
