@@ -2,8 +2,6 @@
 #[allow(clippy::excessive_precision)]
 mod equirectangular {
 
-    use d3_geo_rs::clip::buffer::Buffer;
-    use d3_geo_rs::projection::projector_commom::types::ProjectorAntimeridianResampleNoClip;
     use geo_types::Coord;
 
     use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
@@ -14,7 +12,7 @@ mod equirectangular {
     use d3_geo_rs::projection::builder::Builder;
     use d3_geo_rs::projection::equality::projection_equal;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
-    use d3_geo_rs::projection::projector_commom::Projector;
+    use d3_geo_rs::projection::projector_commom::types::ProjectorAntimeridianResampleNoClip;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::BuilderTrait;
     use d3_geo_rs::projection::RawBase;
@@ -22,8 +20,6 @@ mod equirectangular {
     use d3_geo_rs::projection::ScaleSet;
     use d3_geo_rs::projection::TranslateSet;
     use d3_geo_rs::stream::DrainStub;
-
-    use crate::equirectangular;
 
     type B = Builder<
         ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>,
