@@ -16,11 +16,9 @@ impl<PCNU, PR, RC, RU, T> ClipAngleSet
     for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, PCNU, PR, RU, T>
 where
     PCNU: Clone,
-    // PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     PR: Clone,
     RC: Clone,
     RU: Clone,
-    // RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     T: CoordFloat + FloatConst,
 {
     type Output = Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, PCNU, PR, RU, T>;
