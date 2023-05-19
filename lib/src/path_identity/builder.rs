@@ -1,6 +1,5 @@
 use std::fmt::Debug;
 use std::fmt::Display;
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -21,22 +20,16 @@ use crate::path::PointRadiusTrait;
 
 /// Path builder.
 #[derive(Debug)]
-pub struct Builder<CS, PCNC, PCNU, T>
+pub struct Builder<CS, T>
 where
-    PCNC: Clone,
-    PCNU: Clone,
     T: CoordFloat,
 {
-    p_pcnc: PhantomData<PCNC>,
-    p_pcnu: PhantomData<PCNU>,
     pr: T,
     context_stream: CS,
 }
 
-impl<CS, PCNC, PCNU, T> Builder<CS, PCNC, PCNU, T>
+impl<CS, T> Builder<CS, T>
 where
-    PCNC: Clone,
-    PCNU: Clone,
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
@@ -45,8 +38,6 @@ where
     /// unwrap() is used here but a panic will never happen as 4.5 will always be converted into T.
     pub fn new(context_stream: CS) -> Self {
         Self {
-            p_pcnc: PhantomData::<PCNC>,
-            p_pcnu: PhantomData::<PCNU>,
             context_stream,
             pr: T::from(4.5_f64).unwrap(),
         }
@@ -54,10 +45,8 @@ where
 }
 
 /// Context related methods.
-impl<PCNC, PCNU, T> Builder<Context, PCNC, PCNU, T>
+impl<T> Builder<Context, T>
 where
-    PCNC: Clone,
-    PCNU: Clone,
     T: CoordFloat + FloatConst,
 {
     /// Programe the builder with the context.
@@ -68,10 +57,8 @@ where
 }
 
 /// Context related methods.
-impl<PCNC, PCNU, T> Builder<String<T>, PCNC, PCNU, T>
+impl<T> Builder<String<T>, T>
 where
-    PCNC: Clone,
-    PCNU: Clone,
     T: CoordFloat + Display + FloatConst,
 {
     /// Returns a Builder from default values.
@@ -82,10 +69,8 @@ where
     }
 }
 
-impl<CS, PCNC, PCNU, T> PointRadiusTrait for Builder<CS, PCNC, PCNU, T>
+impl<CS, T> PointRadiusTrait for Builder<CS, T>
 where
-    PCNC: Clone,
-    PCNU: Clone,
     CS: PointRadiusTrait<T = T>,
     T: CoordFloat,
 {
@@ -100,16 +85,17 @@ where
 }
 
 /// Projection related methods.
-impl<CS, PCNC, PCNU, T> Builder<CS, PCNC, PCNU, T>
+impl<CS, T> Builder<CS, T>
 where
     CS: Stream<EP = CS, T = T>,
-    PCNC: Clone,
-    PCNU: Clone,
     T: CoordFloat,
 {
     #[inline]
     /// Returns a projectors based on the builder settings.
-    pub fn build(self, projection: Projector<CS, PCNC, PCNU, T>) -> Path<CS, PCNC, PCNU, T> {
+    pub fn build<PCNC: Clone, PCNU: Clone>(
+        self,
+        projection: Projector<CS, PCNC, PCNU, T>,
+    ) -> Path<CS, PCNC, PCNU, T> {
         Path::new(self.context_stream, projection)
     }
 }
