@@ -13,11 +13,9 @@ use crate::path::centroid::Centroid;
 use crate::path::measure::Measure;
 use crate::path::PointRadiusEnum;
 use crate::path::Result;
-use crate::projection::projector_identity::transformer::Transformer;
 use crate::projection::projector_identity::Projector;
 use crate::projection::Projector as ProjectorTrait;
 use crate::stream::Connectable;
-use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Streamable;
 
