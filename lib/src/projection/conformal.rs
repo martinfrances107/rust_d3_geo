@@ -1,9 +1,11 @@
 use geo::Coord;
 use num_traits::Zero;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::math::EPSILON;
 use crate::Transform;
 
+use super::builder::template::ResampleNoPCNC;
 use super::builder::types::BuilderAntimeridianResampleNoClip;
 use super::builder_conic::Builder;
 use super::builder_conic::PRConic;
@@ -84,7 +86,8 @@ impl RawBase for Conformal {
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
-        b.scale_set(109.5_f64).parallels_set(30_f64, 30_f64);
+        b.scale_set::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, Self, f64>, f64>>(109.5_f64)
+            .parallels_set(30_f64, 30_f64);
         b
     }
 }

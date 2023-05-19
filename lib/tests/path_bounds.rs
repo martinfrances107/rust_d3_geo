@@ -6,6 +6,8 @@ mod path_bounds {
     use std::ops::AddAssign;
 
     use approx::AbsDiffEq;
+    use d3_geo_rs::clip::circle::ClipCircleC;
+    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
     use geo::CoordFloat;
     use geo::Geometry;
     use geo::LineString;
@@ -37,7 +39,10 @@ mod path_bounds {
             + FloatConst,
     >() -> ProjectorAntimeridianResampleNoneNoClip<Bounds<T>, Equirectangular<T>, T> {
         let mut b = Equirectangular::builder();
-        let b = b.scale_set(T::from(900f64 / PI).unwrap());
+        let b = b
+            .scale_set::<ClipCircleC<ResampleNoPCNC<Bounds<f64>, Equirectangular<f64>, f64>, f64>>(
+                T::from(900f64 / PI).unwrap(),
+            );
         let b = b.precision_bypass();
 
         b.build()

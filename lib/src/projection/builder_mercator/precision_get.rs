@@ -4,9 +4,7 @@ use num_traits::FloatConst;
 
 use crate::projection::PrecisionGet;
 
-use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
-use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -17,7 +15,6 @@ use super::Builder;
 
 impl<PR, PCNC, PCNU, T> PrecisionGet
     for Builder<
-        ClipAntimeridianC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         ClipAntimeridianU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         PCNU,
         PR,
@@ -40,7 +37,6 @@ where
 
 impl<PR, PCNC, PCNU, T> PrecisionGet
     for Builder<
-        ClipCircleC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         ClipCircleU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         PCNU,
         PR,

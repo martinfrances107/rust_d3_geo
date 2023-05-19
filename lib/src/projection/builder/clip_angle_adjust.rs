@@ -2,14 +2,12 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::circle::gen_clip;
-use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
 use crate::projection::ClipAngleAdjust;
 
 use super::Builder;
 
-impl<PCNU, PR, RC, RU, T> ClipAngleAdjust
-    for Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, PCNU, PR, RU, T>
+impl<PCNU, PR, RC, RU, T> ClipAngleAdjust for Builder<ClipCircleU<RC, T>, PCNU, PR, RU, T>
 where
     RC: Clone,
     T: CoordFloat + FloatConst,

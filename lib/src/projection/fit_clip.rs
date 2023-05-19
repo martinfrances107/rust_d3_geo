@@ -45,15 +45,24 @@ pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, FB, PR, RC, RC
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<Projector<Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
+    B: Build<Projector<CLIPC, Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
         + Clone
         + ClipExtentGet<T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>
         + ClipExtentClear<Output = Bint, T = T>,
 
-    Bint: Build<Projector<Bounds<T>> = Projector<CLIPCint, CLIPUint, Bounds<T>, NoPCNU, PR, RUint, T>>
-        + ClipExtentSet<Output = B, T = T>,
+    Bint: Build<
+            Projector<CLIPCint, Bounds<T>> = Projector<
+                CLIPCint,
+                CLIPUint,
+                Bounds<T>,
+                NoPCNU,
+                PR,
+                RUint,
+                T,
+            >,
+        > + ClipExtentSet<Output = B, T = T>,
     CLIPC: Clone,
     CLIPU: Clone,
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
@@ -70,14 +79,14 @@ where
 {
     let clip = builder.clip_extent();
     let mut b = builder.clone();
-    b.scale_set(T::from(150_f64).unwrap());
+    b.scale_set::<CLIPC>(T::from(150_f64).unwrap());
     b.translate_set(&Coord {
         x: T::zero(),
         y: T::zero(),
     });
     let mut b_no_clip = b.clip_extent_clear();
 
-    let mut stripped_projector = b_no_clip.build::<Bounds<T>>();
+    let mut stripped_projector = b_no_clip.build::<CLIPCint, Bounds<T>>();
     let bounds_stream = Bounds::<T>::default();
     let mut stream_in = stripped_projector.stream(&bounds_stream);
     object.to_stream(&mut stream_in);
@@ -106,15 +115,24 @@ pub(super) fn fit_extent_clip<
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<Projector<Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
+    B: Build<Projector<CLIPC, Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
         + Clone
         + ClipExtentClear<Output = Bint, T = T>
         + ScaleSet<T = T>
         + ClipExtentGet<T = T>
         + TranslateGet<T = T>
         + TranslateSet<T = T>,
-    Bint: Build<Projector<Bounds<T>> = Projector<CLIPCint, CLIPUint, Bounds<T>, NoPCNU, PR, RUint, T>>
-        + Clone
+    Bint: Build<
+            Projector<CLIPCint, Bounds<T>> = Projector<
+                CLIPCint,
+                CLIPUint,
+                Bounds<T>,
+                NoPCNU,
+                PR,
+                RUint,
+                T,
+            >,
+        > + Clone
         + ClipExtentSet<Output = B, T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
@@ -142,7 +160,7 @@ where
             let y = extent[0].y + (h - k * (b[1].y + b[0].y)) / two;
 
             let mut out = builder.clone();
-            out.scale_set(one_five_zero * k)
+            out.scale_set::<CLIPCint>(one_five_zero * k)
                 .translate_set(&Coord { x, y });
             out
         },
@@ -169,15 +187,24 @@ pub(super) fn fit_size_clip<
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<Projector<Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
+    B: Build<Projector<CLIPC, Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
         + Clone
         + ClipExtentClear<Output = Bint, T = T>
         + ClipExtentGet<T = T>
         + ScaleSet<T = T>
         + TranslateGet<T = T>
         + TranslateSet<T = T>,
-    Bint: Build<Projector<Bounds<T>> = Projector<CLIPCint, CLIPUint, Bounds<T>, NoPCNU, PR, RUint, T>>
-        + Clone
+    Bint: Build<
+            Projector<CLIPCint, Bounds<T>> = Projector<
+                CLIPCint,
+                CLIPUint,
+                Bounds<T>,
+                NoPCNU,
+                PR,
+                RUint,
+                T,
+            >,
+        > + Clone
         + ClipExtentSet<Output = B, T = T>
         + TranslateSet<T = T>
         + ScaleSet<T = T>,
@@ -224,14 +251,23 @@ pub(super) fn fit_width_clip<
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<Projector<Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
+    B: Build<Projector<CLIPC, Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
         + Clone
         + ClipExtentGet<T = T>
         + ClipExtentClear<Output = Bint, T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    Bint: Build<Projector<Bounds<T>> = Projector<CLIPCint, CLIPUint, Bounds<T>, NoPCNU, PR, RUint, T>>
-        + Clone
+    Bint: Build<
+            Projector<CLIPCint, Bounds<T>> = Projector<
+                CLIPCint,
+                CLIPUint,
+                Bounds<T>,
+                NoPCNU,
+                PR,
+                RUint,
+                T,
+            >,
+        > + Clone
         + ClipExtentSet<Output = B, T = T>
         + TranslateSet<T = T>
         + ScaleSet<T = T>,
@@ -258,7 +294,7 @@ where
             let y = -k * b[0].y;
 
             let mut out: Bint = builder.clone();
-            out.scale_set(one_five_zero * k)
+            out.scale_set::<CLIPCint>(one_five_zero * k)
                 .translate_set(&Coord { x, y });
             out
         },
@@ -285,15 +321,24 @@ pub(super) fn fit_height_clip<
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<Projector<Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
+    B: Build<Projector<CLIPC, Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
         + Clone
         + ClipExtentGet<T = T>
         + ClipExtentClear<Output = Bint, T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
 
-    Bint: Build<Projector<Bounds<T>> = Projector<CLIPCint, CLIPUint, Bounds<T>, NoPCNU, PR, RUint, T>>
-        + Clone
+    Bint: Build<
+            Projector<CLIPCint, Bounds<T>> = Projector<
+                CLIPCint,
+                CLIPUint,
+                Bounds<T>,
+                NoPCNU,
+                PR,
+                RUint,
+                T,
+            >,
+        > + Clone
         + ClipExtentSet<Output = B, T = T>
         + TranslateSet<T = T>
         + ScaleSet<T = T>,
@@ -320,7 +365,7 @@ where
             let y = (h - k * (b[1].y + b[0].y)) / two;
 
             let mut out = builder.clone();
-            out.scale_set(one_five_zero * k);
+            out.scale_set::<CLIPCint>(one_five_zero * k);
             out.translate_set(&Coord { x, y });
             out
         },

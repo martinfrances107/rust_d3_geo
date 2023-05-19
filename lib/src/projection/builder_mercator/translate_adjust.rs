@@ -2,6 +2,9 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
+use crate::projection::builder::template::ResampleNonePCNC;
+use crate::projection::builder::template::ResamplePCNC;
 use crate::projection::TransformExtent;
 use crate::projection::TranslateSet;
 use crate::Transform;
@@ -20,7 +23,7 @@ where
 
     fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.base.translate_set(t);
-        self.reclip()
+        self.reclip::<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>>()
     }
 }
 
@@ -34,6 +37,6 @@ where
 
     fn translate_set(&mut self, t: &Coord<T>) -> &mut Self {
         self.base.translate_set(t);
-        self.reclip()
+        self.reclip::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>()
     }
 }

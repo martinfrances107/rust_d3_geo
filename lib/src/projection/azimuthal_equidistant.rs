@@ -5,6 +5,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::float::FloatConst;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::projection::builder::types::BuilderCircleResampleNoClip;
 use crate::projection::builder::Builder;
 use crate::projection::RawBase;
@@ -13,6 +14,7 @@ use crate::Transform;
 
 use super::azimuthal::azimuthal_invert;
 use super::azimuthal::azimuthal_raw;
+use super::builder::template::ResampleNoPCNC;
 use super::BuilderTrait;
 use super::ClipAngleSet;
 
@@ -34,7 +36,9 @@ where
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
-        b.scale_set(T::from(79.4188_f64).unwrap());
+        b.scale_set::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, Self, T>, T>>(
+            T::from(79.4188_f64).unwrap(),
+        );
         b.clip_angle_set(T::from(180_f64 - 1e-3).unwrap())
     }
 }

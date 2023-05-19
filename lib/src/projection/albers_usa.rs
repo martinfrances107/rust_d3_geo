@@ -9,6 +9,7 @@ use crate::clip::antimeridian::interpolate::Interpolate;
 use crate::clip::antimeridian::line::Line;
 use crate::clip::antimeridian::pv::PV;
 use crate::clip::buffer::Buffer;
+use crate::clip::circle::ClipCircleC;
 use crate::clip::clipper::Clipper;
 use crate::clip::clipper::Connected as ConnectedClipper;
 use crate::clip::rectangle::Rectangle;
@@ -24,6 +25,8 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::albers::albers;
+use super::builder::template::ResampleNoPCNC;
+use super::builder::template::ResampleNoneNoPCNC;
 use super::builder_albers_usa::Builder;
 use super::builder_conic::types::BuilderConicAntimeridianResampleClip;
 use super::builder_conic::ParallelsSet;
@@ -124,14 +127,17 @@ where
     let mut alaska = EqualArea::builder();
     alaska
         .rotate2_set(&[T::from(154_f64).unwrap(), T::zero()])
-        .center_set(&Coord {
+        .center_set::<ClipCircleC<ResampleNoneNoPCNC<DRAIN, EqualArea<T>, T>, T>>(&Coord {
             x: T::from(-2_f64).unwrap(),
             y: T::from(58.5_f64).unwrap(),
         })
         .parallels_set(T::from(55_f64).unwrap(), T::from(65_f64).unwrap());
 
     // Emulate .scale() call.
-    let alaska = alaska.scale_set(T::from(0.35).unwrap() * scaling_factor);
+    let alaska = alaska
+        .scale_set::<ClipCircleC<ResampleNoneNoPCNC<DRAIN, AlbersUsa<DRAIN, T>, T>, T>>(
+            T::from(0.35).unwrap() * scaling_factor,
+        );
 
     // Emulate .translate() call.
     alaska
@@ -164,13 +170,14 @@ where
     let mut hawaii = EqualArea::builder();
     hawaii
         .rotate2_set(&[T::from(157_f64).unwrap(), T::zero()])
-        .center_set(&Coord {
+        .center_set::<ClipCircleC<ResampleNoPCNC<DRAIN, AlbersUsa<DRAIN, T>, T>, T>>(&Coord {
             x: T::from(-3_f64).unwrap(),
             y: T::from(19.9_f64).unwrap(),
         })
         .parallels_set(T::from(8_f64).unwrap(), T::from(18_f64).unwrap());
 
-    let hawaii = hawaii.scale_set(scaling_factor);
+    let hawaii = hawaii
+        .scale_set::<ClipCircleC<ResampleNoPCNC<DRAIN, AlbersUsa<DRAIN, T>, T>, T>>(scaling_factor);
 
     hawaii
         .translate_set(&Coord {
@@ -202,8 +209,10 @@ where
         let mut lower_48_stream = albers::<SD, T>();
 
         // Emulate .scale() call.
-        let lower_48 = lower_48.scale_set(scaling_factor);
-        let lower_48_stream = lower_48_stream.scale_set(scaling_factor);
+        let lower_48 =
+            lower_48.scale_set::<ClipCircleC<ResampleNoneNoPCNC<SD, Self, T>, T>>(scaling_factor);
+        let lower_48_stream = lower_48_stream
+            .scale_set::<ClipCircleC<ResampleNoneNoPCNC<SD, Self, T>, T>>(scaling_factor);
 
         // Emulate .translate() call.
         let k: T = lower_48.scale();
@@ -319,11 +328,17 @@ where
         let x = (p.x - self.t.x) / self.k;
         let y = (p.y - self.t.y) / self.k;
         if self.alaska_y.contains(&y) && self.alaska_x.contains(&x) {
-            self.alaska.build::<SD>().invert(p)
+            self.alaska
+                .build::<ClipCircleC<ResampleNoneNoPCNC<SD, Self, T>, T>, SD>()
+                .invert(p)
         } else if self.hawaii_y.contains(&y) && self.hawaii_x.contains(&x) {
-            self.hawaii.build::<SD>().invert(p)
+            self.hawaii
+                .build::<ClipCircleC<ResampleNoneNoPCNC<SD, Self, T>, T>, SD>()
+                .invert(p)
         } else {
-            self.lower_48.build::<SD>().invert(p)
+            self.lower_48
+                .build::<ClipCircleC<ResampleNoneNoPCNC<SD, Self, T>, T>, SD>()
+                .invert(p)
         }
     }
 }

@@ -13,43 +13,42 @@ use super::template::ResampleNonePCNU;
 use super::template::PCNU;
 use super::Builder;
 
-impl<CLIPC, CLIPU, PR, T> CenterSet for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, PR, T> CenterSet for Builder<CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
 
-    fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
+    fn center_set<CLIPC>(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % self.t360).to_radians();
         self.phi = (p.y % self.t360).to_radians();
         self.recenter()
     }
 }
 
-impl<CLIPC, CLIPU, PR, T> CenterSet for Builder<CLIPC, CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPU, PR, T> CenterSet for Builder<CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
 
-    fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
+    fn center_set<CLIPC>(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % self.t360).to_radians();
         self.phi = (p.y % self.t360).to_radians();
         self.recenter()
     }
 }
 
-impl<CLIPC, CLIPU, PR, T> CenterSet
-    for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPU, PR, T> CenterSet for Builder<CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
 
-    fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
+    fn center_set<CLIPC>(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % self.t360).to_radians();
         self.phi = (p.y % self.t360).to_radians();
         self.recenter()

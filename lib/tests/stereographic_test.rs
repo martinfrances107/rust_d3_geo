@@ -1,5 +1,7 @@
 #[cfg(not(tarpaulin_include))]
 mod stereographic_tests {
+    use d3_geo_rs::clip::circle::ClipCircleC;
+    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
     use d3_geo_rs::projection::ScaleSet;
     use geo_types::Coord;
 
@@ -16,7 +18,7 @@ mod stereographic_tests {
         let stereo: ProjectorCircleResampleNoClip<DrainStub<f64>, Stereographic<f64>, f64> =
             Stereographic::builder()
                 .translate_set(&Coord { x: 0f64, y: 0f64 })
-                .scale_set(1f64)
+                .scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Stereographic<f64>, f64>, f64>,>(1f64)
                 .build();
 
         assert!(projection_equal(

@@ -12,8 +12,7 @@ use super::Builder;
 use super::NoPCNU;
 use super::ResampleNoPCNU;
 
-impl<CLIPC, CLIPU, PR, T> TranslateSet
-    for Builder<CLIPC, CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPU, PR, T> TranslateSet for Builder<CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -27,8 +26,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, PR, T> TranslateSet
-    for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, PR, T> TranslateSet for Builder<CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

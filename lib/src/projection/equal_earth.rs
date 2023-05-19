@@ -4,11 +4,13 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::float::FloatConst;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::math::EPSILON;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoClip;
 use crate::projection::ScaleSet;
 use crate::Transform;
 
+use super::builder::template::ResampleNoPCNC;
 use super::builder::Builder;
 use super::BuilderTrait;
 use super::RawBase;
@@ -59,7 +61,9 @@ where
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
-        b.scale_set(T::from(177.158_f64).unwrap());
+        b.scale_set::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, Self, T>, T>>(
+            T::from(177.158_f64).unwrap(),
+        );
         b
     }
 }

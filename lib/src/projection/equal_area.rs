@@ -2,9 +2,11 @@ use geo::Coord;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::math::EPSILON;
 use crate::Transform;
 
+use super::builder::template::ResampleNoneNoPCNC;
 use super::builder::types::BuilderAntimeridianResampleNoClip;
 use super::builder_conic::Builder;
 use super::builder_conic::PRConic;
@@ -90,8 +92,10 @@ where
 
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
-        b.scale_set(T::from(155.424).unwrap());
-        b.center_set(&Coord {
+        b.scale_set::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, Self, T>, T>>(
+            T::from(155.424).unwrap(),
+        );
+        b.center_set::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, Self, T>, T>>(&Coord {
             x: T::zero(),
             y: T::from(33.6442).unwrap(),
         });

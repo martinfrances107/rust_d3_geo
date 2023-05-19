@@ -1,3 +1,6 @@
+use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
+use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
+use d3_geo_rs::projection::equal_area::EqualArea;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -37,7 +40,7 @@ pub async fn draw_albers(land: &Geometry<f64>) -> Result<(), JsValue> {
     let pb = PathBuilder::new(context);
 
     let albers = albers()
-        .scale_set(width)
+        .scale_set::<ClipAntimeridianC<ResampleNoPCNC<Context, EqualArea<f64>, f64>, f64>>(width)
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

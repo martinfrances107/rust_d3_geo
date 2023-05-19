@@ -12,33 +12,30 @@ use crate::Transform;
 use super::Builder;
 use super::Reclip;
 
-impl<CLIPC, CLIPU, PR, T> CenterSet for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, PR, T> CenterSet for Builder<CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
 
-    fn center_set(&mut self, center: &Coord<T>) -> &mut Self {
-        self.base.center_set(center);
-        self.reclip()
+    fn center_set<CLIPC>(&mut self, center: &Coord<T>) -> &mut Self {
+        self.base.center_set::<CLIPC>(center);
+        self.reclip::<CLIPC>()
     }
 }
 
-impl<CLIPC, CLIPU, PR, T> CenterSet
-    for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPU, PR, T> CenterSet for Builder<CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
 
-    fn center_set(&mut self, center: &Coord<T>) -> &mut Self {
-        self.base.center_set(center);
-        self.reclip()
+    fn center_set<CLIPC>(&mut self, center: &Coord<T>) -> &mut Self {
+        self.base.center_set::<CLIPC>(center);
+        self.reclip::<CLIPC>()
     }
 }

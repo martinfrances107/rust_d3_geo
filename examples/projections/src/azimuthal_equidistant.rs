@@ -1,3 +1,5 @@
+use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
+use d3_geo_rs::projection::builder::template::ResampleNoneNoPCNC;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -42,7 +44,7 @@ pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsVa
     let pb = PathBuilder::new(context);
 
     let projector = AzimuthalEquiDistant::<f64>::builder()
-        .scale_set(width / 3_f64)
+        .scale_set::<ClipAntimeridianC<ResampleNoneNoPCNC<Context, AzimuthalEquiDistant<f64>, f64>, f64>>(width / 3_f64)
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

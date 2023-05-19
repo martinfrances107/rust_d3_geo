@@ -48,7 +48,7 @@ pub(super) fn fit_reclip<B, CLIPC, CLIPU, FB, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<Projector<Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
+    B: Build<Projector<CLIPC, Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
         + Clone
         + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
@@ -63,13 +63,13 @@ where
     T: 'static + CoordFloat + FloatConst,
 {
     let mut b = builder.clone();
-    b.scale_set(T::from(150_f64).unwrap());
+    b.scale_set::<CLIPC>(T::from(150_f64).unwrap());
     b.translate_set(&Coord {
         x: T::zero(),
         y: T::zero(),
     });
 
-    let mut projector = b.build::<Bounds<T>>();
+    let mut projector = b.build::<CLIPC, Bounds<T>>();
     let bounds_stream = Bounds::default();
     let mut stream_in = projector.stream(&bounds_stream);
     object.to_stream(&mut stream_in);
@@ -77,21 +77,21 @@ where
     fit_bounds(bounds, &mut b)
 }
 
-pub(super) fn fit_extent_reclip<B, CC, CU, PR, RC, RU, T>(
+pub(super) fn fit_extent_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     builder: &B,
     extent: [Coord<T>; 2],
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<Projector<Bounds<T>> = Projector<CC, CU, Bounds<T>, PCNU<T>, PR, RU, T>>
+    B: Build<Projector<CLIPC, Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
         + Clone
         + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
         + TranslateGet<T = T>
         + TranslateSet<T = T>,
-    CC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
+    CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
@@ -100,7 +100,7 @@ where
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_reclip(
+    fit_reclip::<_, CLIPC, _, _, _, _, _, _>(
         builder,
         |b: [Coord<T>; 2], builder: &B| -> B {
             let w = extent[1].x - extent[0].x;
@@ -109,7 +109,7 @@ where
             let x = extent[0].x + (w - k * (b[1].x + b[0].x)) / two;
             let y = extent[0].y + (h - k * (b[1].y + b[0].y)) / two;
             let mut out: B = builder.clone();
-            out.scale_set(one_five_zero * k);
+            out.scale_set::<CLIPC>(one_five_zero * k);
             out.translate_set(&Coord { x, y });
             out
         },
@@ -117,27 +117,27 @@ where
     )
 }
 
-pub(super) fn fit_size_reclip<B, CC, CU, PR, RC, RU, T>(
+pub(super) fn fit_size_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     builder: &B,
     size: Coord<T>,
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<Projector<Bounds<T>> = Projector<CC, CU, Bounds<T>, PCNU<T>, PR, RU, T>>
+    B: Build<Projector<CLIPC, Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
         + ClipExtentAdjust<T = T>
         + ClipExtentGet<T = T>
         + Clone
         + ScaleSet<T = T>
         + TranslateGet<T = T>
         + TranslateSet<T = T>,
-    CC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
+    CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
-    fit_extent_reclip(
+    fit_extent_reclip::<_, CLIPC, _, _, _, _, _>(
         builder,
         [
             Coord {
@@ -156,7 +156,7 @@ pub(super) fn fit_width_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<Projector<Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
+    B: Build<Projector<CLIPC, Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
         + Clone
         + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
@@ -172,7 +172,7 @@ where
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_reclip(
+    fit_reclip::<_, CLIPC, _, _, _, _, _, _>(
         builder,
         |b: [Coord<T>; 2], builder: &B| -> B {
             let w = width;
@@ -181,7 +181,7 @@ where
             let y = -k * b[0].y;
 
             let mut out = builder.clone();
-            out.scale_set(one_five_zero * k);
+            out.scale_set::<CLIPC>(one_five_zero * k);
             out.translate_set(&Coord { x, y });
             out
         },
@@ -189,21 +189,21 @@ where
     )
 }
 
-pub(super) fn fit_height_reclip<B, CC, CU, PR, RC, RU, T>(
+pub(super) fn fit_height_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     builder: &B,
     height: T,
     object: &impl Streamable<T = T>,
 ) -> B
 where
     PR: Clone + Transform<T = T>,
-    B: Build<Projector<Bounds<T>> = Projector<CC, CU, Bounds<T>, PCNU<T>, PR, RU, T>>
+    B: Build<Projector<CLIPC, Bounds<T>> = Projector<CLIPC, CLIPU, Bounds<T>, PCNU<T>, PR, RU, T>>
         + Clone
         + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    CC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CU: Clone + ClipConnectable<Output = CC, SC = RC>,
+    CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
+    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
@@ -211,7 +211,7 @@ where
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_reclip(
+    fit_reclip::<_, CLIPC, _, _, _, _, _, _>(
         builder,
         |b: [Coord<T>; 2], builder: &B| -> B {
             let h = height;
@@ -220,7 +220,7 @@ where
             let y = (h - k * (b[1].y + b[0].y)) / two;
 
             let mut out = builder.clone();
-            out.scale_set(one_five_zero * k);
+            out.scale_set::<CLIPC>(one_five_zero * k);
             out.translate_set(&Coord { x, y });
             out
         },

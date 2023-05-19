@@ -10,9 +10,8 @@ use crate::Transform;
 use super::Builder;
 use super::Reclip;
 
-impl<CLIPC, CLIPU, PR, RU, T> ClipExtentAdjust for Builder<CLIPC, CLIPU, PCNU<T>, PR, RU, T>
+impl<CLIPU, PR, RU, T> ClipExtentAdjust for Builder<CLIPU, PCNU<T>, PR, RU, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     RU: Clone,
     PCNU<T>: Clone,
@@ -21,8 +20,8 @@ where
 {
     type T = T;
 
-    fn clip_extent_adjust(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
+    fn clip_extent_adjust<CLIPC>(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
         self.extent = Some(*extent);
-        self.reclip()
+        self.reclip::<CLIPC>()
     }
 }

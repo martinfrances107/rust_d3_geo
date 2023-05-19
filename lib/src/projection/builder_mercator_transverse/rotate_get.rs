@@ -5,9 +5,8 @@ use crate::projection::RotateGet;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, PCNU, PR, RU, T> RotateGet for Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+impl<CLIPU, PCNU, PR, RU, T> RotateGet for Builder<CLIPU, PCNU, PR, RU, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     T: CoordFloat + FloatConst,
 {

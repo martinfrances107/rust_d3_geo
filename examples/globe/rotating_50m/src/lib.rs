@@ -13,6 +13,8 @@ extern crate web_sys;
 
 mod utils;
 
+use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
+use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 use geo::Geometry;
 use geo_types::Coord;
 use gloo_utils::format::JsValueSerdeExt;
@@ -122,7 +124,9 @@ impl Renderer {
 
         let mut builder = Orthographic::builder();
         builder
-            .scale_set(width / 1.3_f64 / std::f64::consts::PI)
+            .scale_set::<ClipAntimeridianC<ResampleNoPCNC<Context, Orthographic<f64>, f64>, f64>>(
+                width / 1.3_f64 / std::f64::consts::PI,
+            )
             .translate_set(&Coord {
                 x: width / 2_f64,
                 y: height / 2_f64,

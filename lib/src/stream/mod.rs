@@ -81,14 +81,16 @@ pub trait Streamable {
 ///
 /// ```
 /// use geo_types::Coord;
+/// use d3_geo_rs::clip::circle::ClipCircleC;
 /// use d3_geo_rs::Transform;
+/// use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 /// use d3_geo_rs::projection::stereographic::Stereographic;
 /// use d3_geo_rs::projection::Build;
 /// use d3_geo_rs::projection::RawBase as ProjectionRawBase;
 /// use d3_geo_rs::stream::DrainStub;
 ///
 /// // The Projector needs a mock endpoint here for the stream pipeline.
-/// let p = Stereographic::< f32>::builder::<DrainStub<f32>>().build::<DrainStub<f32>>();
+/// let p = Stereographic::< f32>::builder::<DrainStub<f32>>().build::<ClipCircleC<ResampleNoPCNC<DrainStub<f32>, Stereographic<f32>, f32>, f32>,DrainStub<f32>>();
 ///
 /// let transformed_point = p.transform(&Coord{x: 0_f32, y:0_f32});
 ///

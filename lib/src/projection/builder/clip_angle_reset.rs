@@ -1,25 +1,20 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip;
-use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
-use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
 use crate::projection::ClipAngleReset;
 
 use super::Builder;
 
-impl<PCNU, PR, RC, RU, T> ClipAngleReset
-    for Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, PCNU, PR, RU, T>
+impl<PCNU, PR, RC, RU, T> ClipAngleReset for Builder<ClipCircleU<RC, T>, PCNU, PR, RU, T>
 where
     RC: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     /// The resultant builder type.
-    type Output = Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, PCNU, PR, RU, T>;
+    type Output = Builder<ClipAntimeridianU<RC, T>, PCNU, PR, RU, T>;
     type T = T;
 
     // Set the internal clip angle (theta) to null and return a builder
@@ -28,7 +23,6 @@ where
     fn clip_angle_reset(self) -> Self::Output {
         // update only theta and preclip_factory.
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<RC, T>>,
             clip: gen_clip::<RC, T>(),
             delta_lambda: self.delta_lambda,
             delta_phi: self.delta_phi,

@@ -4,9 +4,7 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
-use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
 use crate::projection::ClipAngleSet;
 use crate::stream::Connectable;
@@ -16,7 +14,7 @@ use crate::Transform;
 use super::Builder;
 
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
-    for Builder<ClipAntimeridianC<RC, T>, ClipAntimeridianU<RC, T>, PCNU, PR, RU, T>
+    for Builder<ClipAntimeridianU<RC, T>, PCNU, PR, RU, T>
 where
     DRAIN: Clone,
     PCNC: Clone,
@@ -26,7 +24,7 @@ where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Output = Builder<ClipCircleC<RC, T>, ClipCircleU<RC, T>, PCNU, PR, RU, T>;
+    type Output = Builder<ClipCircleU<RC, T>, PCNU, PR, RU, T>;
     /// f32 or f64.
     type T = T;
 

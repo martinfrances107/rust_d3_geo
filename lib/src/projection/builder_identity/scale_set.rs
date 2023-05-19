@@ -11,7 +11,7 @@ where
     type T = T;
 
     #[inline]
-    fn scale_set(&mut self, k: T) -> &mut Self {
+    fn scale_set<CLIPC>(&mut self, k: T) -> &mut Self {
         self.k = k;
         self.reset()
     }

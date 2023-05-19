@@ -1,6 +1,8 @@
 #[cfg(not(tarpaulin_include))]
 mod projection_angle {
 
+    use d3_geo_rs::clip::circle::ClipCircleC;
+    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
@@ -23,10 +25,10 @@ mod projection_angle {
     fn angle_defaults_to_zero() {
         println!("projection.angle(…) defaults to zero");
         let mut pb = Gnomic::<f64>::builder::<DrainStub<f64>>();
-        pb.scale_set(1_f64);
+        pb.scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>>(1_f64);
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         assert_eq!(pb.angle(), 0_f64);
-        let projection = pb.build::<DrainStub<f64>>();
+        let projection = pb.build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>, DrainStub<f64>>();
 
         assert!(projection_equal(
             &projection,
@@ -142,14 +144,14 @@ mod projection_angle {
     fn angle_rotates_by_plus_30() {
         println!("projection.angle(…) defaults to zero");
         let mut pb = Gnomic::<f64>::builder::<DrainStub<f64>>();
-        pb.scale_set(1_f64)
+        pb.scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>>(1_f64)
             .translate_set(&Coord { x: 0_f64, y: 0_f64 });
         let pb = pb.angle_set(30_f64);
 
         // this rounds to 29.9999999 not 30!!
         // assert_eq!(pb.get_angle(), 30_f64);
         assert!(in_delta(pb.angle(), 30_f64, 1e-6));
-        let projection = pb.build::<DrainStub<f64>>();
+        let projection = pb.build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>, DrainStub<f64>>();
 
         assert!(projection_equal(
             &projection,
@@ -266,14 +268,14 @@ mod projection_angle {
     fn angle_rotates_by_minus_30() {
         println!("projection.angle(…) defaults to zero");
         let mut pb = Gnomic::<f64>::builder::<DrainStub<f64>>();
-        pb.scale_set(1_f64)
+        pb.scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>>(1_f64)
             .translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
         pb.angle_set(-30_f64);
 
         // this rounds to 29.9999999 not 30!!
         assert!(in_delta(pb.angle(), -30_f64, 1e-6));
-        let projection = pb.build::<DrainStub<f64>>();
+        let projection = pb.build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>, DrainStub<f64>>();
 
         assert!(projection_equal(
             &projection,
@@ -390,7 +392,7 @@ mod projection_angle {
     fn wraps_360() {
         println!("projection.angle(…) wraps around 360°");
         let mut pb = Gnomic::<f64>::builder::<DrainStub<f64>>();
-        pb.scale_set(1_f64);
+        pb.scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>>(1_f64);
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         pb.angle_set(360_f64);
 

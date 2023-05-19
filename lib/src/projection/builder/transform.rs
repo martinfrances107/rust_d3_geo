@@ -5,7 +5,7 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, PCNU, PR, RU, T> Transform for Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+impl<CLIPU, PCNU, PR, RU, T> Transform for Builder<CLIPU, PCNU, PR, RU, T>
 where
     PR: Transform<T = T>,
     T: CoordFloat,

@@ -1,3 +1,5 @@
+use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
+use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -40,7 +42,9 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
     let pb = PathBuilder::new(context);
 
     let azimuthal_equal_area = AzimuthalEqualArea::builder()
-        .scale_set(width / 3_f64)
+        .scale_set::<ClipAntimeridianC<ResampleNoPCNC<Context, AzimuthalEqualArea<f64>, f64>, f64>>(
+            width / 3_f64,
+        )
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

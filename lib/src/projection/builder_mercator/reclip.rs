@@ -15,15 +15,14 @@ use crate::Transform;
 use super::Builder;
 use super::Reclip;
 
-impl<CLIPC, CLIPU, PR, RU, T> Reclip for Builder<CLIPC, CLIPU, PCNU<T>, PR, RU, T>
+impl<CLIPU, PR, RU, T> Reclip for Builder<CLIPU, PCNU<T>, PR, RU, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     RU: Clone,
     T: CoordFloat + FloatConst,
 {
-    fn reclip(&mut self) -> &mut Self {
+    fn reclip<CLIPC>(&mut self) -> &mut Self {
         let k = T::PI() * self.base.scale();
 
         let rotate_raw = self.base.rotate();
@@ -31,7 +30,7 @@ where
             x: T::zero(),
             y: T::zero(),
         });
-        let t = self.base.build::<DrainStub<T>>().transform(&t);
+        let t = self.base.build::<CLIPC, DrainStub<T>>().transform(&t);
         let ce = match self.extent {
             Some(extent) => {
                 self.pr
@@ -48,7 +47,7 @@ where
                 },
             ],
         };
-        self.base.clip_extent_adjust(&ce);
+        self.base.clip_extent_adjust::<CLIPC>(&ce);
         self
     }
 }

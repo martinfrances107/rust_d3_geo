@@ -7,13 +7,13 @@ use crate::projection::ClipExtentAdjust;
 use super::template::PCNU;
 use super::Builder;
 
-impl<CLIPC, CLIPU, PR, RU, T> ClipExtentAdjust for Builder<CLIPC, CLIPU, PCNU<T>, PR, RU, T>
+impl<CLIPU, PR, RU, T> ClipExtentAdjust for Builder<CLIPU, PCNU<T>, PR, RU, T>
 where
     T: CoordFloat,
 {
     type T = T;
 
-    fn clip_extent_adjust(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
+    fn clip_extent_adjust<CLIPC>(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
         self.postclip = Rectangle::new(extent);
         self
     }

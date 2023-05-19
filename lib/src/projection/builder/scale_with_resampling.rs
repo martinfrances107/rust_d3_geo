@@ -10,27 +10,27 @@ use crate::projection::Recenter;
 use crate::projection::ScaleSet;
 use crate::Transform;
 
-impl<CLIPC, CLIPU, PR, T> ScaleSet for Builder<CLIPC, CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPU, PR, T> ScaleSet for Builder<CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
 
-    fn scale_set(&mut self, scale: T) -> &mut Self {
+    fn scale_set<CLIPC>(&mut self, scale: T) -> &mut Self {
         self.k = scale;
         self.recenter()
     }
 }
 
-impl<CLIPC, CLIPU, PR, T> ScaleSet for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, PR, T> ScaleSet for Builder<CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
 
-    fn scale_set(&mut self, scale: T) -> &mut Self {
+    fn scale_set<CLIPC>(&mut self, scale: T) -> &mut Self {
         self.k = scale;
         self.recenter()
     }

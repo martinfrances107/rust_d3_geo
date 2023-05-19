@@ -2,9 +2,7 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
-use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
@@ -18,7 +16,6 @@ use super::Builder;
 
 impl<PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
-        ClipAntimeridianC<None<PR, Connected<PCNC>, T>, T>,
         ClipAntimeridianU<None<PR, Connected<PCNC>, T>, T>,
         PCNU,
         PR,
@@ -32,7 +29,6 @@ where
     T: CoordFloat + Default + FloatConst,
 {
     type Output = Builder<
-        ClipAntimeridianC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         ClipAntimeridianU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         PCNU,
         PR,
@@ -52,21 +48,13 @@ where
 }
 
 impl<PR, PCNC, PCNU, T> PrecisionSet
-    for Builder<
-        ClipCircleC<None<PR, Connected<PCNC>, T>, T>,
-        ClipCircleU<None<PR, Connected<PCNC>, T>, T>,
-        PCNU,
-        PR,
-        None<PR, Unconnected, T>,
-        T,
-    >
+    for Builder<ClipCircleU<None<PR, Connected<PCNC>, T>, T>, PCNU, PR, None<PR, Unconnected, T>, T>
 where
     PR: Clone + Transform<T = T>,
     PCNC: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type Output = Builder<
-        ClipCircleC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         ClipCircleU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         PCNU,
         PR,

@@ -1,6 +1,9 @@
 #[cfg(not(tarpaulin_include))]
 mod projection_rotate {
 
+    use d3_geo_rs::clip::circle::ClipCircleC;
+    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
+    use d3_geo_rs::stream::DrainStub;
     use geo::Geometry;
     use geo::LineString;
     use geo::Polygon;
@@ -20,7 +23,7 @@ mod projection_rotate {
         println!("a rotation of a degenerate polygon should not break");
         let projection = Mercator::builder()
             .rotate2_set(&[-134.3_f64, 25.776_f64])
-            .scale_set(750_f64)
+            .scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Mercator, f64>, f64>>(750_f64)
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .build();
 

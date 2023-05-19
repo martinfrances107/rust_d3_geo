@@ -38,6 +38,9 @@
 //!
 //! ```rust
 //! use geo_types::Coord;
+//! use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
+//! use d3_geo_rs::path::context::Context;
+//! use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 //! use d3_geo_rs::projection::Build;
 //! use d3_geo_rs::projection::RawBase as ProjectionRawBase;
 //! use d3_geo_rs::projection::stereographic::Stereographic;
@@ -47,15 +50,15 @@
 //! use d3_geo_rs::projection::TranslateSet;
 //! use d3_geo_rs::stream::DrainStub;
 //!
-//!     let stereographic = Stereographic::< f64>::builder::<DrainStub<f64>>()
-//!       .scale_set(100_f64)
+//!     let stereographic = Stereographic::<f64>::builder::<DrainStub<f64>>()
+//!       .scale_set::<ClipAntimeridianC<ResampleNoPCNC<Context, Stereographic<f64>, f64>, f64>>(100_f64)
 //!       .translate_set(&Coord {
 //!          x: 300_f64,
 //!          y: 300_f64,
 //!       })
 //!       .clip_angle(90_f64)
 //!       .precision_set(&10_f64)
-//!       .build::<DrainStub<f64>>();
+//!       .build::<ClipAntimeridianC<ResampleNoPCNC<Context, Stereographic<f64>, f64>, f64>,DrainStub<f64>>();
 //! ```
 //!
 //! # Examples
@@ -87,6 +90,7 @@
 //! use web_sys::Document;
 //! use web_sys::*;
 //!
+//! use d3_geo_rs::clip::circle::ClipCircleC;
 //! use d3_geo_rs::graticule::generate_mls;
 //! use d3_geo_rs::path::builder::Builder as PathBuilder;
 //! use d3_geo_rs::path::Result as PathResult;
@@ -99,6 +103,7 @@
 //! use d3_geo_rs::projection::TranslateSet;
 //! use d3_geo_rs::projection::builder::template::NoPCNC;
 //! use rust_topojson_client::feature::feature_from_name;
+//! use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 //!
 //! fn document() -> Result<Document, JsValue> {
 //!     let window = web_sys::window().unwrap();
@@ -146,7 +151,7 @@
 //!     let pb = PathBuilder::new(context);
 //!
 //!     let ortho = Orthographic::builder()
-//!         .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
+//!         .scale_set::<ClipCircleC<ResampleNoPCNC<Context, Orthographic<f64>, f64>, f64>>(width as f64 / 1.3_f64 / std::f64::consts::PI)
 //!         .translate_set(&Coord {
 //!             x: width / 2_f64,
 //!             y: height / 2_f64,

@@ -11,10 +11,8 @@ use crate::Transform;
 use super::Builder;
 use super::Reclip;
 
-impl<CLIPC, CLIPU, PR, T> ScaleSet
-    for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPU, PR, T> ScaleSet for Builder<CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     PCNU<T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
@@ -22,15 +20,14 @@ where
 {
     type T = T;
 
-    fn scale_set(&mut self, scale: T) -> &mut Self {
-        self.base.scale_set(scale);
-        self.reclip()
+    fn scale_set<CLIPC>(&mut self, scale: T) -> &mut Self {
+        self.base.scale_set::<CLIPC>(scale);
+        self.reclip::<CLIPC>()
     }
 }
 
-impl<CLIPC, CLIPU, PR, T> ScaleSet for Builder<CLIPC, CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, PR, T> ScaleSet for Builder<CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     PCNU<T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
@@ -38,8 +35,8 @@ where
 {
     type T = T;
 
-    fn scale_set(&mut self, scale: T) -> &mut Self {
-        self.base.scale_set(scale);
-        self.reclip()
+    fn scale_set<CLIPC>(&mut self, scale: T) -> &mut Self {
+        self.base.scale_set::<CLIPC>(scale);
+        self.reclip::<CLIPC>()
     }
 }

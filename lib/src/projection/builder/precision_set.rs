@@ -1,17 +1,13 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::Interpolate as InterpolateAntimeridian;
 use crate::clip::antimeridian::line::Line as LineAntimeridian;
 use crate::clip::antimeridian::pv::PV as PVAntimeridian;
-use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::pv::PV as PVCircle;
-use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
 use crate::projection::builder::Clipper;
 use crate::projection::resampler::none::None;
@@ -28,7 +24,6 @@ use super::Builder;
 
 impl<PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
-        ClipAntimeridianC<None<PR, Connected<PCNC>, T>, T>,
         ClipAntimeridianU<None<PR, Connected<PCNC>, T>, T>,
         PCNU,
         PR,
@@ -42,7 +37,6 @@ where
     T: CoordFloat + Default + FloatConst,
 {
     type Output = Builder<
-        ClipAntimeridianC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         ClipAntimeridianU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
         PCNU,
         PR,
@@ -67,7 +61,6 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<Resample<PR, ConnectedResample<PCNC, T>, T>, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -98,7 +91,6 @@ where
 
 impl<DRAIN, PR, PCNU, T> PrecisionSet
     for Builder<
-        ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
         ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
         PCNU,
         PR,
@@ -111,7 +103,6 @@ where
     T: CoordFloat + FloatConst,
 {
     type Output = Builder<
-        ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>,
         ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
         PCNU,
         PR,
@@ -137,7 +128,6 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipCircleC<ResamplePCNC<DRAIN, PR, T>, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,

@@ -4,9 +4,8 @@ use num_traits::FloatConst;
 use crate::projection::builder_mercator::Builder;
 use crate::projection::ReflectGet;
 
-impl<CLIPC, CLIPU, PCNU, PR, RU, T> ReflectGet for Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+impl<CLIPU, PCNU, PR, RU, T> ReflectGet for Builder<CLIPU, PCNU, PR, RU, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     T: CoordFloat + FloatConst,
 {

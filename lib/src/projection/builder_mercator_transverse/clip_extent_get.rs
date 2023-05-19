@@ -8,9 +8,8 @@ use crate::projection::TransformExtent;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, PR, RU, T> ClipExtentGet for Builder<CLIPC, CLIPU, PCNU<T>, PR, RU, T>
+impl<CLIPU, PR, RU, T> ClipExtentGet for Builder<CLIPU, PCNU<T>, PR, RU, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     PR: TransformExtent<T = T>,
     T: CoordFloat + FloatConst,

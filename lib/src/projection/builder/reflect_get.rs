@@ -4,7 +4,7 @@ use crate::projection::ReflectGet;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, PCNU, PR, RU, T> ReflectGet for Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+impl<CLIPU, PCNU, PR, RU, T> ReflectGet for Builder<CLIPU, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {

@@ -32,6 +32,7 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::projection::builder_mercator::Builder as ProjectionMercatorBuilder;
 use crate::projection::Build;
 use crate::stream::Unconnected;
@@ -39,6 +40,7 @@ use crate::Transform;
 
 use self::types::BuilderMercatorTransverseAntimeridianResampleClip;
 
+use super::builder::template::ResampleNoneNoPCNC;
 use super::projector_commom::Projector;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::RotateSet;
@@ -47,12 +49,12 @@ use super::TransformExtent;
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Debug)]
-pub struct Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+pub struct Builder<CLIPU, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {
     /// The type this builder wraps.
-    pub base: ProjectionMercatorBuilder<CLIPC, CLIPU, PCNU, PR, RU, T>,
+    pub base: ProjectionMercatorBuilder<CLIPU, PCNU, PR, RU, T>,
 }
 
 impl<DRAIN, PR, T> BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T>
@@ -68,25 +70,26 @@ where
     pub fn new(pr: PR) -> Self {
         let mut base = ProjectionMercatorBuilder::new(pr);
         base.rotate3_set(&[T::zero(), T::zero(), T::from(90).unwrap()])
-            .scale_set(T::from(159.155).unwrap());
+            .scale_set::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>(
+                T::from(159.155).unwrap(),
+            );
 
         Self { base }
     }
 }
 
-impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build for Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+impl<CLIPU, PCNU, PR, RU, T> Build for Builder<CLIPU, PCNU, PR, RU, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     PCNU: Clone,
     PR: Clone,
     RU: Clone,
     T: CoordFloat,
 {
-    type Projector<DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
+    type Projector<CLIPC, DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
     /// Using the currently programmed state output a new projection.
     #[inline]
-    fn build<DRAIN>(&self) -> Self::Projector<DRAIN> {
+    fn build<CLIPC, DRAIN>(&self) -> Self::Projector<CLIPC, DRAIN> {
         Projector {
             cache: None,
             postclip: self.base.base.postclip.clone(),

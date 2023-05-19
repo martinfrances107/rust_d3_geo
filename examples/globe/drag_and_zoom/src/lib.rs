@@ -16,6 +16,10 @@ extern crate web_sys;
 mod exported_point;
 mod utils;
 
+use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
+use d3_geo_rs::clip::circle::ClipCircleC;
+use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
+use d3_geo_rs::stream::DrainStub;
 use geo::Coord;
 use geo::Geometry;
 use gloo_utils::format::JsValueSerdeExt;
@@ -139,11 +143,13 @@ impl Renderer {
             feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
         let mut ob = Orthographic::builder();
-        ob.scale_set(width / 1.3_f64 / std::f64::consts::PI)
-            .translate_set(&Coord {
-                x: width / 2_f64,
-                y: height / 2_f64,
-            });
+        ob.scale_set::<ClipAntimeridianC<ResampleNoPCNC<Context, Orthographic<f64>, f64>, f64>>(
+            width / 1.3_f64 / std::f64::consts::PI,
+        )
+        .translate_set(&Coord {
+            x: width / 2_f64,
+            y: height / 2_f64,
+        });
 
         // Graticule
         let graticule = generate_mls();
@@ -178,7 +184,10 @@ impl Renderer {
 
     /// Set the builder scale.
     pub fn scale_set(&mut self, scale: f64) {
-        self.ob.scale_set(scale);
+        self.ob
+            .scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Orthographic<f64>, f64>, f64>>(
+                scale,
+            );
     }
 
     /// Set the builder scale.

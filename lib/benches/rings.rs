@@ -5,6 +5,8 @@ extern crate pretty_assertions;
 use std::time::Duration;
 
 use criterion::Criterion;
+use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
+use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 use geo::MultiPolygon;
 use geo::Polygon;
 use geo_types::Coord;
@@ -14,6 +16,7 @@ use regex::Regex;
 
 use d3_geo_rs::circle::generator::Generator as CircleGenerator;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;
@@ -34,7 +37,9 @@ fn rings() {
     let height = 1000_f64;
 
     let ortho = Orthographic::builder()
-        .scale_set(240_f64)
+        .scale_set::<ClipAntimeridianC<ResampleNoPCNC<PathString<f64>, Orthographic<f64>, f64>, f64>>(
+            240_f64,
+        )
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

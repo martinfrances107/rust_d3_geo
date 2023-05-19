@@ -31,7 +31,6 @@ mod reflect {
     use d3_geo_rs::Transform;
 
     type GB = Builder<
-        ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>,
         ClipCircleU<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>,
         Identity<Unconnected>,
         Gnomic<f64>,
@@ -44,13 +43,14 @@ mod reflect {
         println!("projection.reflectX(…) defaults to false");
 
         let mut builder: GB = Gnomic::builder();
-        builder.scale_set(1f64);
+        builder
+            .scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>>(1f64);
         builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
         assert_eq!(builder.is_x_reflected(), false);
         assert_eq!(builder.is_y_reflected(), false);
 
-        let projection = builder.build::<DrainStub<f64>>();
+        let projection = builder.build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>, DrainStub<f64>>();
         assert!(projection_equal(
             &projection,
             &Coord { x: 0_f64, y: 0_f64 },
@@ -89,14 +89,15 @@ mod reflect {
     fn mirrors_x_after_processing() {
         println!("projection.reflectX(…) mirrors x after projecting");
         let mut builder: GB = Gnomic::builder();
-        builder.scale_set(1_f64);
+        builder
+            .scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>>(1_f64);
         builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
         builder.reflect_x_set(REFLECT::Flipped);
 
         assert_eq!(builder.is_x_reflected(), true);
 
-        let projection = builder.build::<DrainStub<f64>>();
+        let projection = builder.build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>, DrainStub<f64>>();
 
         assert!(projection_equal(
             &projection,
@@ -134,7 +135,7 @@ mod reflect {
         builder
             .reflect_x_set(REFLECT::Unflipped)
             .reflect_y_set(REFLECT::Flipped);
-        let projection = builder.build::<DrainStub<f64>>();
+        let projection = builder.build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>, DrainStub<f64>>();
         assert_eq!(builder.is_x_reflected(), false);
         assert_eq!(builder.is_y_reflected(), true);
 
@@ -175,18 +176,19 @@ mod reflect {
     #[test]
     fn x_works_with_projection_angle() {
         println!("projection.reflectX(…) works with projection.angle()");
-        let mut builder: MercatorBuilder<_, _, _, _, _, f64> =
-            Mercator::builder::<DrainStub<f64>>();
-        builder.scale_set(1_f64).translate_set(&Coord {
-            x: 10_f64,
-            y: 20_f64,
-        });
+        let mut builder: MercatorBuilder<_, _, _, _, f64> = Mercator::builder::<DrainStub<f64>>();
+        builder
+            .scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>>(1_f64)
+            .translate_set(&Coord {
+                x: 10_f64,
+                y: 20_f64,
+            });
 
         builder.reflect_x_set(REFLECT::Flipped).angle_set(45_f64);
 
         assert_eq!(builder.is_x_reflected(), true);
         assert!(in_delta(45_f64, builder.angle(), 1e-6));
-        let p = builder.build::<DrainStub<f64>>();
+        let p = builder.build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>, DrainStub<f64>>();
         assert_eq!(
             p.transform(&Coord { x: 0_f64, y: 0_f64 }),
             Coord {

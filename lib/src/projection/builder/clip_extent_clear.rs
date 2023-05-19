@@ -1,17 +1,13 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip;
-use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::identity::Identity;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::ClipExtentClear;
 
 use super::template::ResampleNoPCNC;
-use super::template::ResampleNoneNoPCNC;
 use super::types::BuilderAntimeridianResampleClip;
 use super::types::BuilderAntimeridianResampleNoClip;
 use super::types::BuilderAntimeridianResampleNoneClip;
@@ -32,7 +28,6 @@ where
     #[inline]
     fn clip_extent_clear(&self) -> Self::Output {
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -73,7 +68,6 @@ where
     #[inline]
     fn clip_extent_clear(&self) -> Self::Output {
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,

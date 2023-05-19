@@ -8,9 +8,11 @@ use std::fmt::Debug;
 use geo_types::Coord;
 use num_traits::float::FloatConst;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::projection::ScaleSet;
 use crate::Transform;
 
+use super::builder::template::ResampleNoneNoPCNC;
 use super::builder_mercator::types::BuilderMercatorAntimeridianResampleClip;
 use super::builder_mercator::Builder as MercatorBuilder;
 use super::RawBase;
@@ -26,7 +28,9 @@ impl RawBase for Mercator {
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut default: Self::Builder<DRAIN> = MercatorBuilder::new(Self {});
-        default.scale_set(961_f64 / f64::TAU());
+        default.scale_set::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, Self, f64>, f64>>(
+            961_f64 / f64::TAU(),
+        );
         default
     }
 }

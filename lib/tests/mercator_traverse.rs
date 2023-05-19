@@ -3,6 +3,9 @@ mod mercator_tranverse {
 
     extern crate pretty_assertions;
 
+    use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
+    use d3_geo_rs::clip::circle::ClipCircleC;
+    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
     use geo::Geometry;
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
@@ -10,6 +13,7 @@ mod mercator_tranverse {
     use d3_geo_rs::data_object::sphere::Sphere;
     use d3_geo_rs::in_delta::coordinate as in_delta_coordinate;
     use d3_geo_rs::path::builder::Builder as PathBuilder;
+    use d3_geo_rs::path::string::String as PathString;
     use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::CenterSet;
@@ -56,7 +60,9 @@ mod mercator_tranverse {
         println!("transverseMercator.clipExtent(null) sets the default automatic clip extent");
         let mut pb = MercatorTransverse::builder();
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
-        pb.scale_set(1_f64);
+        pb.scale_set::<ClipAntimeridianC<ResampleNoPCNC<PathString<f64>, MercatorTransverse, f64>, f64>>(
+            1_f64,
+        );
 
         let pb = pb.precision_bypass();
 
@@ -75,9 +81,9 @@ mod mercator_tranverse {
         let mut pb = MercatorTransverse::builder();
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
-        let pb = pb.scale_set(1_f64);
+        let pb = pb.scale_set::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, MercatorTransverse, f64>, f64>>(1_f64);
         let pb = pb
-            .center_set(&Coord {
+            .center_set::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, MercatorTransverse, f64>, f64>>(&Coord {
                 x: 10_f64,
                 y: 10_f64,
             })
@@ -99,8 +105,10 @@ mod mercator_tranverse {
         let mut pb = MercatorTransverse::builder();
 
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
-        pb.scale_set(1_f64);
-        pb.clip_extent_adjust(&[
+        pb.scale_set::<ClipCircleC<ResampleNoPCNC<PathString<f64>, MercatorTransverse, f64>, f64>>(
+            1_f64,
+        );
+        pb.clip_extent_adjust::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, MercatorTransverse, f64>, f64>>(&[
             Coord {
                 x: -10_f64,
                 y: -10_f64,
@@ -145,7 +153,7 @@ mod mercator_tranverse {
         let mut pb = MercatorTransverse::builder();
 
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
-        pb.clip_extent_adjust(&[
+        pb.clip_extent_adjust::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, MercatorTransverse, f64>, f64>>(&[
             Coord {
                 x: -10_f64,
                 y: -10_f64,
@@ -155,7 +163,9 @@ mod mercator_tranverse {
                 y: 10_f64,
             },
         ]);
-        pb.scale_set(1_f64);
+        pb.scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, MercatorTransverse, f64>, f64>>(
+            1_f64,
+        );
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
@@ -185,8 +195,10 @@ mod mercator_tranverse {
         println!("transverseMercator.clipExtent(extent).translate(translate) updates the intersected clip extent");
         let mut pb = MercatorTransverse::builder();
 
-        pb.scale_set(1_f64);
-        pb.clip_extent_adjust(&[
+        pb.scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, MercatorTransverse, f64>, f64>>(
+            1_f64,
+        );
+        pb.clip_extent_adjust::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, MercatorTransverse, f64>, f64>>(&[
             Coord {
                 x: -10_f64,
                 y: -10_f64,
@@ -300,7 +312,11 @@ mod mercator_tranverse {
     #[test]
     fn point_test() {
         println!("has no direct equivalent in javascript, but this helped me debug.");
-        let p = MercatorTransverse::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
+        let p = MercatorTransverse::builder::<DrainStub<f64>>().build::<ClipCircleC<
+        ResampleNoPCNC<DrainStub<f64>, MercatorTransverse, f64>,
+        f64,
+    >, DrainStub<f64>>(
+    );
 
         let t = p.transform(&Coord { x: 0_f64, y: 0_f64 });
         assert_eq!(

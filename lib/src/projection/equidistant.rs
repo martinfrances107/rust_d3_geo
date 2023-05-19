@@ -1,9 +1,11 @@
 use geo::Coord;
 use num_traits::Zero;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::math::EPSILON;
 use crate::Transform;
 
+use super::builder::template::ResampleNoPCNC;
 use super::builder::types::BuilderAntimeridianResampleNoClip;
 use super::builder_conic::Builder;
 use super::builder_conic::PRConic;
@@ -83,10 +85,11 @@ impl RawBase for Equidistant {
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
-        b.scale_set(131.154_f64).center_set(&Coord {
-            x: 0_f64,
-            y: 13.9389_f64,
-        });
+        b.scale_set::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, Self, f64>, f64>>(131.154_f64)
+            .center_set::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, Self, f64>, f64>>(&Coord {
+                x: 0_f64,
+                y: 13.9389_f64,
+            });
         b
     }
 }

@@ -5,7 +5,7 @@ use crate::projection::TranslateGet;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, PCNU, PR, RU, T> TranslateGet for Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+impl<CLIPU, PCNU, PR, RU, T> TranslateGet for Builder<CLIPU, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {

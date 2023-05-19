@@ -52,11 +52,11 @@ where
 pub(super) type ProjectorStream<CLIP, T> =
     StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
 
-impl<CC, CU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait
-    for Projector<CC, CU, DRAIN, PCNU, PR, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait
+    for Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
-    CC: Clone,
-    CU: ClipConnectable<Output = CC, SC = RC>,
+    CLIPC: Clone,
+    CLIPU: ClipConnectable<Output = CLIPC, SC = RC>,
     DRAIN: Clone + PartialEq,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     PR: Transform<T = T>,
@@ -73,7 +73,7 @@ where
 
     type EP = DRAIN;
 
-    type Transformer = ProjectorStream<CC, T>;
+    type Transformer = ProjectorStream<CLIPC, T>;
 
     fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
         if let Some((cache_drain, output)) = &self.cache {

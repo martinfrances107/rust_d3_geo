@@ -1,12 +1,10 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip;
-use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::clipper::Clipper;
 use crate::compose::Compose;
 use crate::identity::Identity;
@@ -76,11 +74,10 @@ pub mod types;
 ///
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Debug)]
-pub struct Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+pub struct Builder<CLIPU, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {
-    p_clipc: PhantomData<CLIPC>,
     pub(super) projection_raw: PR,
     pub(super) clip: CLIPU,
     lambda: T,
@@ -155,7 +152,6 @@ where
         let resample = Resample::new(project_transform.clone(), delta2);
         let mut out: Self = Self {
             clip: gen_clip::<_, _>(),
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>,
             /// Input passing onto Projection.
             projection_raw,
 

@@ -1,12 +1,8 @@
-use std::marker::PhantomData;
-
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip as gen_clip_antimeridian;
-use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::circle::gen_clip as gen_clip_circle;
-use crate::clip::circle::ClipCircleC;
 use crate::projection::builder::types::BuilderAntimeridianResampleNoneClip;
 use crate::projection::resampler::none::None;
 use crate::projection::PrecisionBypass;
@@ -37,7 +33,6 @@ where
     fn precision_bypass(&self) -> Self::Output {
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -84,7 +79,6 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -133,7 +127,6 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipCircleC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -183,7 +176,6 @@ where
 
         // Copy - Mutate.
         Self::Output {
-            p_clipc: PhantomData::<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,

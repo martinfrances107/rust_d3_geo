@@ -48,6 +48,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
+use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::projection::builder::template::ResampleNoPCNU;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
@@ -56,6 +57,7 @@ use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
 
+use super::builder::template::ResampleNoPCNC;
 use super::projector_commom::Projector;
 use super::BuilderTrait as ProjectionBuilderMercator;
 use super::ClipExtentSet;
@@ -161,19 +163,19 @@ pub trait TranslateReclip {
 
 /// Reclip is common to both `Mercator` and `MercatorTransverse`.
 pub(super) trait Reclip {
-    fn reclip(&mut self) -> &mut Self;
+    fn reclip<CLIPC>(&mut self) -> &mut Self;
 }
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Debug)]
-pub struct Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+pub struct Builder<CLIPU, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {
     /// The raw projection.
     pub pr: PR,
     /// The wrapped builder type.
-    pub base: ProjectionBuilder<CLIPC, CLIPU, PCNU, PR, RU, T>,
+    pub base: ProjectionBuilder<CLIPU, PCNU, PR, RU, T>,
     /// post-clip extent
     pub extent: Option<[Coord<T>; 2]>,
 }
@@ -205,25 +207,24 @@ where
             base,
             extent: None,
         };
-        out.reclip();
+        out.reclip::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>();
         out
     }
 }
 
-impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build for Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+impl<CLIPU, PCNU, PR, RU, T> Build for Builder<CLIPU, PCNU, PR, RU, T>
 where
-    CLIPC: Clone,
     CLIPU: Clone,
     PCNU: Clone,
     PR: Clone,
     RU: Clone,
     T: CoordFloat,
 {
-    type Projector<DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
+    type Projector<CLIPC, DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    fn build<DRAIN>(&self) -> Self::Projector<DRAIN> {
+    fn build<CLIPC, DRAIN>(&self) -> Self::Projector<CLIPC, DRAIN> {
         Projector {
             cache: None,
             postclip: self.base.postclip.clone(),

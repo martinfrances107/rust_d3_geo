@@ -22,7 +22,6 @@ mod equirectangular {
     use d3_geo_rs::stream::DrainStub;
 
     type B = Builder<
-        ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>,
         ClipAntimeridianU<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>,
         NoPCNU,
         Equirectangular<f64>,
@@ -35,9 +34,9 @@ mod equirectangular {
         println!("equirectangular(point) returns the expected result");
         let mut b: B = Equirectangular::builder();
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
-        b.scale_set(1_f64);
+        b.scale_set::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>>(1_f64);
 
-        let equirectangular = b.build::<DrainStub<f64>>();
+        let equirectangular = b.build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>();
 
         let pi = std::f64::consts::PI;
 
@@ -138,7 +137,9 @@ mod equirectangular {
         > = Builder::new(Equirectangular::<f64>::default())
             .rotate2_set(&[30f64, 0f64])
             .translate_set(&Coord { x: 0f64, y: 0f64 })
-            .scale_set(1_f64)
+            .scale_set::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>>(
+                1_f64,
+            )
             .build();
 
         let pi = std::f64::consts::PI;
@@ -245,9 +246,9 @@ mod equirectangular {
         let mut b: B = Equirectangular::builder();
         b.rotate2_set(&[30f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
-        b.scale_set(1_f64);
+        b.scale_set::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>>(1_f64);
 
-        let equirectangular = b.build::<DrainStub<f64>>();
+        let equirectangular = b.build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>();
 
         assert!(projection_equal(
             &equirectangular,
@@ -352,9 +353,11 @@ mod equirectangular {
         let mut b: B = Equirectangular::builder();
         b.rotate3_set(&[0f64, 0f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
-        b.scale_set(1f64);
+        b.scale_set::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>>(
+            1f64,
+        );
 
-        let equirectangular = b.build::<DrainStub<f64>>();
+        let equirectangular = b.build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>();
 
         let pi = std::f64::consts::PI;
 
@@ -451,9 +454,9 @@ mod equirectangular {
         let mut b: B = Equirectangular::builder();
         b.rotate3_set(&[30f64, 30f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
-        b.scale_set(1f64);
+        b.scale_set::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>>(1f64);
 
-        let equirectangular = b.build::<DrainStub<f64>>();
+        let equirectangular = b.build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>();
 
         assert!(projection_equal(
             &equirectangular,
