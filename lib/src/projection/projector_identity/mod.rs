@@ -31,8 +31,8 @@ where
 {
     // Must be public as there is a implicit copy.
     pub(crate) postclip: PCNU,
-    pub(crate) transform: Transformer<DRAIN, Unconnected, T>,
-    pub(crate) cache: CacheState<DRAIN, Transformer<DRAIN, Connected<PCNC>, T>>,
+    pub(crate) transform: Transformer<Unconnected, T>,
+    pub(crate) cache: CacheState<DRAIN, Transformer<Connected<PCNC>, T>>,
 }
 
 impl<DRAIN, PCNC, PCNU, T> ProjectorTrait for Projector<DRAIN, PCNC, PCNU, T>
@@ -49,7 +49,7 @@ where
     ///  Transformer -> postclip -> DRAIN
     ///
 
-    type Transformer = Transformer<DRAIN, Connected<PCNC>, T>;
+    type Transformer = Transformer<Connected<PCNC>, T>;
 
     type EP = DRAIN;
 

@@ -140,8 +140,7 @@ where
     /// Returns the centroid of the object.
     pub fn centroid(mut self, object: &impl Streamable<T = T>) -> Coord<T> {
         let stream_dst = Centroid::<T>::default();
-        let mut stream_in: Transformer<Centroid<T>, Connected<PCNC>, T> =
-            self.projection.stream(&stream_dst);
+        let mut stream_in = self.projection.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
         stream_in.endpoint().result()

@@ -11,11 +11,10 @@ use crate::Transform;
 
 /// A Stream node, that applies a complex transform to each point.
 #[derive(Clone, Debug)]
-pub struct Transformer<DRAIN, STATE, T>
+pub struct Transformer<STATE, T>
 where
     T: CoordFloat,
 {
-    p_drain: PhantomData<DRAIN>,
     alpha: T,
     kx: T,
     ky: T,
@@ -26,14 +25,13 @@ where
     ty: T,
 }
 
-impl<DRAIN, T> Transformer<DRAIN, Unconnected, T>
+impl<T> Transformer<Unconnected, T>
 where
     T: CoordFloat,
 {
     #[inline]
     pub(crate) const fn new(alpha: T, kx: T, ky: T, ca: T, sa: T, tx: T, ty: T) -> Self {
         Self {
-            p_drain: PhantomData::<DRAIN>,
             alpha,
             kx,
             ky,
@@ -46,14 +44,13 @@ where
     }
 }
 
-impl<DRAIN, T> Connectable for Transformer<DRAIN, Unconnected, T>
+impl<T> Connectable for Transformer<Unconnected, T>
 where
     T: CoordFloat,
 {
-    type Output<SC> = Transformer<DRAIN, Connected<SC>, T>;
-    fn connect<SC>(&self, sink: SC) -> Transformer<DRAIN, Connected<SC>, T> {
+    type Output<SC> = Transformer<Connected<SC>, T>;
+    fn connect<SC>(&self, sink: SC) -> Transformer<Connected<SC>, T> {
         Self::Output {
-            p_drain: PhantomData::<DRAIN>,
             alpha: self.alpha,
             kx: self.kx,
             ky: self.ky,
@@ -66,7 +63,7 @@ where
     }
 }
 
-impl<DRAIN, STATE, T> Transform for Transformer<DRAIN, STATE, T>
+impl<STATE, T> Transform for Transformer<STATE, T>
 where
     T: CoordFloat,
 {
@@ -101,13 +98,12 @@ where
     }
 }
 
-impl<DRAIN, SINK, T> Stream for Transformer<DRAIN, Connected<SINK>, T>
+impl<DRAIN, SINK, T> Stream for Transformer<Connected<SINK>, T>
 where
-    DRAIN: Stream<EP = DRAIN, T = T>,
     SINK: Stream<EP = DRAIN, T = T>,
     T: CoordFloat,
 {
-    type EP = DRAIN;
+    type EP = SINK::EP;
     type T = T;
     #[inline]
     fn endpoint(&mut self) -> &mut Self::EP {
