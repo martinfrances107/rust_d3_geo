@@ -1,5 +1,3 @@
-use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
-use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -43,9 +41,7 @@ pub async fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
     let pb = PathBuilder::new(context);
 
     let gnomic = Gnomic::builder()
-        .scale_set::<ClipAntimeridianC<ResampleNoPCNC<Context, Gnomic<f64>, f64>, f64>>(
-            width / 6_f64,
-        )
+        .scale_set(width / 6_f64)
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

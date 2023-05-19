@@ -20,7 +20,7 @@ where
 {
     type T = T;
 
-    fn center_set<CLIPC>(&mut self, p: &Coord<T>) -> &mut Self {
+    fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % self.t360).to_radians();
         self.phi = (p.y % self.t360).to_radians();
         self.recenter()
@@ -34,7 +34,7 @@ where
 {
     type T = T;
 
-    fn center_set<CLIPC>(&mut self, p: &Coord<T>) -> &mut Self {
+    fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % self.t360).to_radians();
         self.phi = (p.y % self.t360).to_radians();
         self.recenter()
@@ -48,7 +48,7 @@ where
 {
     type T = T;
 
-    fn center_set<CLIPC>(&mut self, p: &Coord<T>) -> &mut Self {
+    fn center_set(&mut self, p: &Coord<T>) -> &mut Self {
         self.lambda = (p.x % self.t360).to_radians();
         self.phi = (p.y % self.t360).to_radians();
         self.recenter()

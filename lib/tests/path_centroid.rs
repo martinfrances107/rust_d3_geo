@@ -7,9 +7,6 @@ mod path_centroid {
     use std::fmt::Display;
     use std::ops::AddAssign;
 
-    use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
-    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
-    use d3_geo_rs::stream::DrainStub;
     use geo::line_string;
     use geo::CoordFloat;
     use geo::Geometry;
@@ -43,9 +40,7 @@ mod path_centroid {
         T: AddAssign<T> + CoordFloat + Default + FloatConst,
     {
         ProjectionBuilderCommon::new(Equirectangular::default())
-            .scale_set::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>>(
-                T::from(900f64 / PI).unwrap(),
-            )
+            .scale_set(T::from(900f64 / PI).unwrap())
             .precision_bypass()
             .build()
     }

@@ -136,9 +136,9 @@ pub trait BuilderTrait {
 /// Output a Projector based on a Builders configuration.
 pub trait Build {
     /// The output of the build() call
-    type Projector<CLIPC, DRAIN>;
+    type Projector<DRAIN>;
     /// Returns a Projector based on a builder configuration.
-    fn build<CLIPC, DRAIN>(&self) -> Self::Projector<CLIPC, DRAIN>;
+    fn build<DRAIN>(&self) -> Self::Projector<DRAIN>;
 }
 
 /// Controls the projections center point.
@@ -166,7 +166,7 @@ pub trait CenterSet {
     /// @param point A point specified as a two-dimensional array
     /// [longitude, latitude] in degrees.
     ///
-    fn center_set<CLIPC>(&mut self, point: &Coord<Self::T>) -> &mut Self
+    fn center_set(&mut self, point: &Coord<Self::T>) -> &mut Self
     where
         Self::T: CoordFloat;
 }
@@ -222,7 +222,7 @@ pub trait ClipExtentAdjust {
     type T;
 
     /// Sets the bounding box.
-    fn clip_extent_adjust<CLIPC>(&mut self, extent: &[Coord<Self::T>; 2]) -> &mut Self
+    fn clip_extent_adjust(&mut self, extent: &[Coord<Self::T>; 2]) -> &mut Self
     where
         Self::T: CoordFloat;
 }
@@ -528,7 +528,7 @@ pub trait ScaleSet {
     ///
     ///  @param scale Scale factor to be used for the projection; the
     ///  default scale is projection-specific.
-    fn scale_set<CLIPC>(&mut self, scale: Self::T) -> &mut Self;
+    fn scale_set(&mut self, scale: Self::T) -> &mut Self;
 }
 
 /// Controls the projections translation factor.

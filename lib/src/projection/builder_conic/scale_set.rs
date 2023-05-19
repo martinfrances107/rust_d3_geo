@@ -13,8 +13,8 @@ where
 {
     type T = T;
 
-    fn scale_set<CLIPC>(&mut self, scale: T) -> &mut Self {
-        self.base.scale_set::<CLIPC>(scale);
+    fn scale_set(&mut self, scale: T) -> &mut Self {
+        self.base.scale_set(scale);
         self
     }
 }

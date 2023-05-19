@@ -1,5 +1,3 @@
-use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
-use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -43,9 +41,7 @@ pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
     let pb = PathBuilder::new(context);
 
     let stereographic = Stereographic::builder()
-        .scale_set::<ClipAntimeridianC<ResampleNoPCNC<Context, Stereographic<f64>, f64>, f64>>(
-            width / 1.3_f64 / std::f64::consts::PI,
-        )
+        .scale_set(width / 1.3_f64 / std::f64::consts::PI)
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

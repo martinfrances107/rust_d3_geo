@@ -4,8 +4,6 @@ mod path_area {
     use std::f64::consts::PI;
     use std::fmt::Display;
 
-    use d3_geo_rs::clip::circle::ClipCircleC;
-    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
     use geo::CoordFloat;
     use geo::Geometry;
     use geo::LineString;
@@ -32,9 +30,7 @@ mod path_area {
         T: CoordFloat + Default + Display + FloatConst,
     {
         let mut ba = Equirectangular::<T>::builder();
-        ba.scale_set::<ClipCircleC<ResampleNoPCNC<Area<T>, Equirectangular<T>, T>, T>>(
-            T::from(900f64 / PI).unwrap(),
-        );
+        ba.scale_set(T::from(900f64 / PI).unwrap());
 
         let builder = ba.precision_bypass();
         builder.build()

@@ -17,7 +17,7 @@ where
 {
     type T = T;
 
-    fn scale_set<CLIPC>(&mut self, scale: T) -> &mut Self {
+    fn scale_set(&mut self, scale: T) -> &mut Self {
         self.k = scale;
         self.recenter()
     }
@@ -30,7 +30,7 @@ where
 {
     type T = T;
 
-    fn scale_set<CLIPC>(&mut self, scale: T) -> &mut Self {
+    fn scale_set(&mut self, scale: T) -> &mut Self {
         self.k = scale;
         self.recenter()
     }

@@ -6,14 +6,12 @@ mod identity {
     use geo::LineString;
     use geo_types::Coord;
 
-    use crate::clip::antimeridian::ClipAntimeridianC;
     use crate::identity::Identity;
     use crate::in_delta::in_delta;
     use crate::path::string::String;
     use crate::path_identity::builder::Builder as PathBuilder;
     use crate::projection::builder::template::NoPCNC;
     use crate::projection::builder::template::NoPCNU;
-    use crate::projection::builder::template::ResampleNoneNoPCNC;
     use crate::projection::builder::template::PCNC;
     use crate::projection::builder_identity::Builder;
     use crate::projection::equality::projection_equal;
@@ -25,7 +23,6 @@ mod identity {
     use crate::projection::TranslateGet;
     use crate::projection::TranslateSet;
     use crate::projection::REFLECT;
-    use crate::stream::Connected;
     use crate::stream::DrainStub;
     use crate::stream::Unconnected;
 
@@ -33,10 +30,7 @@ mod identity {
     fn returns_a_point() {
         let mut ib = Builder::<DrainStub<f64>, Identity<Unconnected>, f64>::default();
         ib.translate_set(&Coord { x: 0_f64, y: 0_f64 })
-            .scale_set::<ClipAntimeridianC<
-                ResampleNoneNoPCNC<DrainStub<f64>, Identity<Connected<DrainStub<f64>>>, f64>,
-                f64,
-            >>(1_f64);
+            .scale_set(1_f64);
         let identity = ib.build::<PCNC<DrainStub<f64>, f64>>();
         assert!(projection_equal(
             &identity,
@@ -77,10 +71,7 @@ mod identity {
             x: 100_f64,
             y: 10_f64,
         })
-        .scale_set::<ClipAntimeridianC<
-            ResampleNoneNoPCNC<DrainStub<f64>, Identity<Connected<DrainStub<f64>>>, f64>,
-            f64,
-        >>(2_f64);
+        .scale_set(2_f64);
 
         assert!(projection_equal(
             &ib.build::<NoPCNU>(),
@@ -133,10 +124,7 @@ mod identity {
 
         let mut pb: Builder<String<f64>, _, _> = Builder::default();
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 })
-            .scale_set::<ClipAntimeridianC<
-                ResampleNoneNoPCNC<DrainStub<f64>, Identity<Connected<DrainStub<f64>>>, f64>,
-                f64,
-            >>(1_f64);
+            .scale_set(1_f64);
 
         let projector = pb.build();
 
@@ -157,10 +145,7 @@ mod identity {
                 x: 30_f64,
                 y: 90_f64,
             })
-            .scale_set::<ClipAntimeridianC<
-                ResampleNoneNoPCNC<DrainStub<f64>, Identity<Connected<DrainStub<f64>>>, f64>,
-                f64,
-            >>(2_f64);
+            .scale_set(2_f64);
         projection_builder2.reflect_y_set(REFLECT::Flipped);
         let projector2 = projection_builder2.build::<NoPCNC<String<f64>>>();
 
@@ -176,10 +161,7 @@ mod identity {
         let mut pb: Builder<String<f64>, _, _> = Builder::default();
 
         let pb = pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
-        let pb = pb.scale_set::<ClipAntimeridianC<
-            ResampleNoneNoPCNC<DrainStub<f64>, Identity<Connected<DrainStub<f64>>>, f64>,
-            f64,
-        >>(1_f64);
+        let pb = pb.scale_set(1_f64);
         let pb = pb.clip_extent_set(&[
             Coord { x: 5_f64, y: 5_f64 },
             Coord {
@@ -208,10 +190,7 @@ mod identity {
             x: 30_f64,
             y: 90_f64,
         })
-        .scale_set::<ClipAntimeridianC<
-            ResampleNoneNoPCNC<DrainStub<f64>, Identity<Connected<DrainStub<f64>>>, f64>,
-            f64,
-        >>(2_f64)
+        .scale_set(2_f64)
         .reflect_y_set(REFLECT::Flipped);
         let pb2 = pb2.clip_extent_set(&[
             Coord {

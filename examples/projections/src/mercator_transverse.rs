@@ -1,5 +1,3 @@
-use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
-use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -45,9 +43,7 @@ pub async fn draw_mercator_transverse(land: &Geometry<f64>) -> Result<(), JsValu
     let mut mercator = MercatorTransverse::builder();
     let mercator = mercator
         .base
-        .scale_set::<ClipAntimeridianC<ResampleNoPCNC<Context, MercatorTransverse, f64>, f64>>(
-            width / 1.3_f64 / std::f64::consts::PI,
-        );
+        .scale_set(width / 1.3_f64 / std::f64::consts::PI);
     mercator.translate_set(&Coord {
         x: width / 2_f64,
         y: height / 2_f64,

@@ -3,10 +3,6 @@ mod mercator {
 
     extern crate pretty_assertions;
 
-    use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
-    use d3_geo_rs::clip::circle::ClipCircleC;
-    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
-    use d3_geo_rs::stream::DrainStub;
     use geo::Geometry;
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
@@ -14,7 +10,6 @@ mod mercator {
     use d3_geo_rs::data_object::sphere::Sphere;
     use d3_geo_rs::in_delta::coordinate as in_delta_coordinate;
     use d3_geo_rs::path::builder::Builder as PathBuilder;
-    use d3_geo_rs::path::string::String as PathString;
     use d3_geo_rs::projection::mercator::Mercator;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::CenterSet;
@@ -35,7 +30,7 @@ mod mercator {
         println!("mercator.clipExtent(null) sets the default automatic clip extent");
         let pb = Mercator::builder()
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
-            .scale_set::<ClipCircleC<ResampleNoPCNC<PathString<f64>, Mercator, f64>, f64>>(1_f64)
+            .scale_set(1_f64)
             .precision_bypass();
 
         let projection = pb.build();
@@ -52,13 +47,11 @@ mod mercator {
         println!("mercator.center(center) sets the correct automatic clip extent");
         let pb = Mercator::builder()
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
-            .center_set::<ClipCircleC<ResampleNoPCNC<PathString<f64>, Mercator, f64>, f64>>(
-                &Coord {
-                    x: 10_f64,
-                    y: 10_f64,
-                },
-            )
-            .scale_set::<ClipCircleC<ResampleNoPCNC<PathString<f64>, Mercator, f64>, f64>>(1_f64)
+            .center_set(&Coord {
+                x: 10_f64,
+                y: 10_f64,
+            })
+            .scale_set(1_f64)
             .precision_bypass();
 
         let projection = pb.build();
@@ -81,19 +74,17 @@ mod mercator {
 	        );
         let pb = Mercator::builder()
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
-            .clip_extent_adjust::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Mercator, f64>, f64>>(
-                &[
-                    Coord {
-                        x: -10_f64,
-                        y: -10_f64,
-                    },
-                    Coord {
-                        x: 10_f64,
-                        y: 10_f64,
-                    },
-                ],
-            )
-            .scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Mercator, f64>, f64>>(1_f64)
+            .clip_extent_adjust(&[
+                Coord {
+                    x: -10_f64,
+                    y: -10_f64,
+                },
+                Coord {
+                    x: 10_f64,
+                    y: 10_f64,
+                },
+            ])
+            .scale_set(1_f64)
             .precision_bypass();
 
         let projection = pb.build();
@@ -126,7 +117,7 @@ mod mercator {
         );
         let pb = Mercator::builder()
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
-            .clip_extent_adjust::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Mercator, f64>, f64>>(&[
+            .clip_extent_adjust(&[
                 Coord {
                     x: -10_f64,
                     y: -10_f64,
@@ -136,7 +127,7 @@ mod mercator {
                     y: 10_f64,
                 },
             ])
-            .scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Mercator, f64>, f64>>(1_f64)
+            .scale_set(1_f64)
             .precision_bypass();
         let projection = pb.build();
 
@@ -167,21 +158,17 @@ mod mercator {
             "mercator.clipExtent(extent).translate(translate) updates the intersected clip extent"
         );
         let mut pb = Mercator::builder();
-        pb.scale_set::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Mercator, f64>, f64>>(
-            1_f64,
-        );
-        pb.clip_extent_adjust::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Mercator, f64>, f64>>(
-            &[
-                Coord {
-                    x: -10_f64,
-                    y: -10_f64,
-                },
-                Coord {
-                    x: 10_f64,
-                    y: 10_f64,
-                },
-            ],
-        );
+        pb.scale_set(1_f64);
+        pb.clip_extent_adjust(&[
+            Coord {
+                x: -10_f64,
+                y: -10_f64,
+            },
+            Coord {
+                x: 10_f64,
+                y: 10_f64,
+            },
+        ]);
         let pb = pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         let pb = pb.precision_bypass();
 

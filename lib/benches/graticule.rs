@@ -5,8 +5,6 @@ extern crate pretty_assertions;
 use std::time::Duration;
 
 use criterion::Criterion;
-use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
-use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -16,7 +14,6 @@ use regex::Regex;
 
 use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;
@@ -42,9 +39,7 @@ fn graticule() {
     };
 
     let ortho = Orthographic::builder()
-        .scale_set::<ClipAntimeridianC<ResampleNoPCNC<PathString<f64>, Orthographic<f64>, f64>, f64>>(
-            240_f64,
-        )
+        .scale_set(240_f64)
         .translate_set(&center)
         .rotate2_set(&[0_f64, -20_f64])
         .build();

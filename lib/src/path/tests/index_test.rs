@@ -20,11 +20,9 @@ mod index {
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
-    use crate::clip::antimeridian::ClipAntimeridianC;
     use crate::path::builder::Builder as PathBuilder;
     use crate::path::context::Context;
     use crate::path_test_context::Path2d;
-    use crate::projection::builder::template::ResampleNoneNoPCNC;
     use crate::projection::equirectangular::Equirectangular;
     use crate::projection::orthographic::Orthographic;
     use crate::projection::projector_commom::types::ProjectorAntimeridianResampleNoneNoClip;
@@ -42,9 +40,7 @@ mod index {
         T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
     >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<T>, T> {
         let mut e = Equirectangular::builder();
-        e.scale_set::<ClipAntimeridianC<ResampleNoneNoPCNC<EP, Equirectangular<T>, T>, T>>(
-            T::from(900f64 / PI).unwrap(),
-        );
+        e.scale_set(T::from(900f64 / PI).unwrap());
         e.precision_bypass().build()
     }
 

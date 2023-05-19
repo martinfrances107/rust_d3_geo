@@ -1,6 +1,7 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::clipper::Connectable;
 use crate::projection::builder::Builder as BuilderCommon;
 use crate::projection::projector_commom::Projector;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
@@ -11,19 +12,19 @@ use crate::stream::Unconnected;
 use super::Builder;
 use super::PRConic;
 
-impl<CLIPU, PCNU, PR, RU, T> Build for Builder<BuilderCommon<CLIPU, PCNU, PR, RU, T>, T>
+impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build for Builder<BuilderCommon<CLIPU, PCNU, PR, RU, T>, T>
 where
-    CLIPU: Clone,
+    CLIPU: Clone + Connectable<Output = CLIPC>,
     PR: Clone + PRConic,
     PCNU: Clone,
     RU: Clone,
     T: CoordFloat + FloatConst,
 {
-    type Projector<CLIPC, DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
+    type Projector<DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    fn build<CLIPC, DRAIN>(&self) -> Self::Projector<CLIPC, DRAIN> {
+    fn build<DRAIN>(&self) -> Self::Projector<DRAIN> {
         Self::Projector {
             cache: None,
             postclip: self.base.postclip.clone(),

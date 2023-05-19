@@ -13,8 +13,8 @@ where
 {
     type T = T;
 
-    fn center_set<CLIPC>(&mut self, point: &Coord<Self::T>) -> &mut Self {
-        self.base.center_set::<CLIPC>(point);
+    fn center_set(&mut self, point: &Coord<Self::T>) -> &mut Self {
+        self.base.center_set(point);
         self
     }
 }

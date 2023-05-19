@@ -10,7 +10,6 @@ use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
 
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::string::String as PathString;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase as ProjectionRawBase;
@@ -49,9 +48,8 @@ fn parse_topology() -> Geometry {
 #[cfg(not(tarpaulin_include))]
 fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     use d3_geo_rs::{
-        clip::antimeridian::ClipAntimeridianC,
         graticule::generate_mls,
-        projection::{builder::template::ResampleNoPCNC, ScaleSet, TranslateSet},
+        projection::{ScaleSet, TranslateSet},
     };
     use geo::GeometryCollection;
 
@@ -59,9 +57,7 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     let height = 1000_f64;
 
     let ortho = Orthographic::builder()
-        .scale_set::<ClipAntimeridianC<ResampleNoPCNC<PathString<f64>, Orthographic<f64>, f64>, f64>>(
-            width / 1.3_f64 / std::f64::consts::PI,
-        )
+        .scale_set(width / 1.3_f64 / std::f64::consts::PI)
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

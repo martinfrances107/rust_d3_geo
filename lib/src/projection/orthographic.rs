@@ -6,11 +6,9 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::float::FloatConst;
 
-use crate::clip::circle::ClipCircleC;
 use crate::math::EPSILON;
 use crate::Transform;
 
-use super::builder::template::ResampleNoPCNC;
 use super::builder::types::BuilderCircleResampleNoClip;
 use super::builder::Builder;
 use super::BuilderTrait;
@@ -56,7 +54,7 @@ where
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());
-        b.scale_set::<ClipCircleC<ResampleNoPCNC<DRAIN, Self, T>, T>>(T::from(249.5_f64).unwrap());
+        b.scale_set(T::from(249.5_f64).unwrap());
         b.clip_angle_set(T::from(90_f64 + EPSILON).unwrap())
     }
 }
@@ -88,8 +86,6 @@ where
 mod drag_and_zoom {
     use geo::Coord;
 
-    use crate::clip::antimeridian::ClipAntimeridianC;
-    use crate::projection::builder::template::ResampleNoneNoPCNC;
     use crate::projection::RawBase;
     use crate::projection::ScaleSet;
     use crate::projection::TranslateSet;
@@ -109,9 +105,7 @@ mod drag_and_zoom {
         let h = 1200_f64;
 
         let mut b = Orthographic::<f64>::builder::<DrainStub<f64>>();
-        b.scale_set::<ClipAntimeridianC<ResampleNoneNoPCNC<DrainStub<f64>, Orthographic<f64>, f64>, f64>>(
-            w / 1.3_f64 / std::f64::consts::PI,
-        );
+        b.scale_set(w / 1.3_f64 / std::f64::consts::PI);
         b.translate_set(&Coord {
             x: w / 2_f64,
             y: h / 2_f64,

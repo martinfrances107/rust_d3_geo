@@ -2,6 +2,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
+use crate::clip::clipper::Connectable;
 use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::template::PCNU;
@@ -12,30 +13,30 @@ use crate::Transform;
 use super::Builder;
 use super::Reclip;
 
-impl<CLIPU, PR, T> CenterSet for Builder<CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> CenterSet for Builder<CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
-    CLIPU: Clone,
+    CLIPU: Clone + Connectable<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
 
-    fn center_set<CLIPC>(&mut self, center: &Coord<T>) -> &mut Self {
-        self.base.center_set::<CLIPC>(center);
-        self.reclip::<CLIPC>()
+    fn center_set(&mut self, center: &Coord<T>) -> &mut Self {
+        self.base.center_set(center);
+        self.reclip()
     }
 }
 
-impl<CLIPU, PR, T> CenterSet for Builder<CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> CenterSet for Builder<CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
-    CLIPU: Clone,
+    CLIPU: Clone + Connectable<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
 
-    fn center_set<CLIPC>(&mut self, center: &Coord<T>) -> &mut Self {
-        self.base.center_set::<CLIPC>(center);
-        self.reclip::<CLIPC>()
+    fn center_set(&mut self, center: &Coord<T>) -> &mut Self {
+        self.base.center_set(center);
+        self.reclip()
     }
 }

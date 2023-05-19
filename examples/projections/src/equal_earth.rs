@@ -1,5 +1,3 @@
-use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
-use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
@@ -43,13 +41,9 @@ pub async fn draw_equal_earth(land: &Geometry<f64>) -> Result<(), JsValue> {
     let pb = PathBuilder::new(context);
 
     let equal_earth = EqualEarth::builder()
-        .scale_set::<ClipAntimeridianC<ResampleNoPCNC<Context, EqualEarth<f64>, f64>, f64>>(
-            width / 1.5_f64 / std::f64::consts::PI,
-        )
+        .scale_set(width / 1.5_f64 / std::f64::consts::PI)
         .rotate2_set(&[0_f64, 0_f64])
-        .center_set::<ClipAntimeridianC<ResampleNoPCNC<Context, EqualEarth<f64>, f64>, f64>>(
-            &Coord { x: 0_f64, y: 0_f64 },
-        )
+        .center_set(&Coord { x: 0_f64, y: 0_f64 })
         .translate_set(&Coord {
             x: width / 2_f64,
             y: height / 2_f64,

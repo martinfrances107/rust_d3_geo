@@ -1,9 +1,6 @@
 #[cfg(not(tarpaulin_include))]
 mod invert {
 
-    use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
-    use d3_geo_rs::clip::circle::ClipCircleC;
-    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
     use geo::Point;
     use geo_types::Coord;
 
@@ -64,164 +61,143 @@ mod invert {
 
     #[test]
     fn albers() {
-        let a = albers_builder::<DrainStub<f64>, f64>().build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>();
+        let a = albers_builder::<DrainStub<f64>, f64>().build::<DrainStub<f64>>();
         symetric_invert(a);
     }
 
     #[test]
     fn azimuthal_equal_area() {
-        let a = AzimuthalEqualArea::<f64>::builder::<DrainStub<f64>>().build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>();
+        let a = AzimuthalEqualArea::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(a);
     }
 
     #[test]
     fn azimuthal_equidistant() {
-        let a = AzimuthalEquiDistant::<f64>::builder::<DrainStub<f64>>().build::<ClipAntimeridianC<
-            ResampleNoPCNC<DrainStub<f64>, AzimuthalEquiDistant<f64>, f64>,
-            f64,
-        >, DrainStub<f64>>(
-        );
+        let a = AzimuthalEquiDistant::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(a);
     }
 
     #[test]
     fn conformal() {
         let mut builder = Conformal::builder::<DrainStub<f64>>();
-        symetric_invert(builder.build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>());
+        symetric_invert(builder.build::<DrainStub<f64>>());
         symetric_invert(
             builder
                 .parallels_set(20_f64, 30_f64)
-                .build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>(),
+                .build::<DrainStub<f64>>(),
         );
         symetric_invert(
             builder
                 .parallels_set(30_f64, 30_f64)
-                .build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>(),
+                .build::<DrainStub<f64>>(),
         );
         symetric_invert(
             builder
                 .parallels_set(-35_f64, -50_f64)
-                .build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>(),
+                .build::<DrainStub<f64>>(),
         );
         symetric_invert(
             builder
                 .parallels_set(40_f64, 60_f64)
                 .rotate2_set(&[-120_f64, 0_f64])
-                .build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>, DrainStub<f64>>(),
+                .build::<DrainStub<f64>>(),
         );
     }
 
     #[test]
     fn conic_equal_area() {
         let mut builder = EqualArea::<f64>::builder::<DrainStub<f64>>();
+        symetric_invert(builder.build::<DrainStub<f64>>());
         symetric_invert(
-            builder.build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, EqualArea<f64>, f64>, f64>, DrainStub<f64>>(),
+            builder
+                .parallels_set(20_f64, 30_f64)
+                .build::<DrainStub<f64>>(),
         );
-        symetric_invert(builder.parallels_set(20_f64, 30_f64).build::<ClipCircleC<
-            ResampleNoPCNC<DrainStub<f64>, EqualArea<f64>, f64>,
-            f64,
-        >, DrainStub<f64>>(
-        ));
         symetric_invert(
             builder
                 .parallels_set(-30_f64, 30_f64)
-                .build::<ClipCircleC<
-                ResampleNoPCNC<DrainStub<f64>, EqualArea<f64>, f64>,
-                f64,
-            >, DrainStub<f64>>(),
+                .build::<DrainStub<f64>>(),
         );
         symetric_invert(
             builder
                 .parallels_set(-35_f64, -50_f64)
-                .build::<ClipCircleC<
-                ResampleNoPCNC<DrainStub<f64>, EqualArea<f64>, f64>,
-                f64,
-            >, DrainStub<f64>>(),
+                .build::<DrainStub<f64>>(),
         );
         symetric_invert(
             builder
                 .parallels_set(40_f64, 60_f64)
                 .rotate2_set(&[-120_f64, 0_f64])
-                .build::<ClipCircleC<
-                ResampleNoPCNC<DrainStub<f64>, EqualArea<f64>, f64>,
-                f64,
-            >, DrainStub<f64>>(),
+                .build::<DrainStub<f64>>(),
         );
     }
 
     #[test]
     fn conic_equidistant() {
         let mut builder = Equidistant::builder::<DrainStub<f64>>();
-        symetric_invert(builder
-          .build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equidistant, f64>, f64>, DrainStub<f64>>());
+        symetric_invert(builder.build::<DrainStub<f64>>());
         symetric_invert(
             builder
                 .parallels_set(20_f64, 30_f64)
-                .build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equidistant, f64>, f64>, DrainStub<f64>>());
+                .build::<DrainStub<f64>>(),
+        );
         symetric_invert(
             builder
                 .parallels_set(30_f64, 30_f64)
-                .build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equidistant, f64>, f64>, DrainStub<f64>>());
+                .build::<DrainStub<f64>>(),
+        );
 
         symetric_invert(
             builder
                 .parallels_set(-35_f64, -50_f64)
-                .build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equidistant, f64>, f64>, DrainStub<f64>>());
+                .build::<DrainStub<f64>>(),
+        );
         symetric_invert(
             builder
                 .parallels_set(40_f64, 60_f64)
                 .rotate2_set(&[-120_f64, 0_f64])
-                .build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equidistant, f64>, f64>, DrainStub<f64>>());
+                .build::<DrainStub<f64>>(),
+        );
     }
 
     #[test]
     fn equirectangular() {
-        let e = Equirectangular::<f64>::builder::<DrainStub<f64>>().build::<ClipAntimeridianC<ResampleNoPCNC<DrainStub<f64>, Equidistant, f64>, f64>, DrainStub<f64>>();
+        let e = Equirectangular::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(e);
     }
 
     #[test]
     fn equal_earth() {
-        let e = EqualEarth::<f64>::builder::<DrainStub<f64>>().build::<ClipCircleC<
-        ResampleNoPCNC<DrainStub<f64>, EqualArea<f64>, f64>,
-        f64,
-    >, DrainStub<f64>>(
-    );
+        let e = EqualEarth::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(e);
     }
 
     #[test]
     fn gnomic() {
-        let g = Gnomic::<f64>::builder::<DrainStub<f64>>().build::<ClipCircleC<
-        ResampleNoPCNC<DrainStub<f64>, EqualArea<f64>, f64>,
-        f64,
-    >, DrainStub<f64>>(
-    );
+        let g = Gnomic::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(g);
     }
 
     #[test]
     fn mercator() {
-        let m = Mercator::builder::<DrainStub<f64>>().build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Mercator, f64>, f64>,  DrainStub<f64>>();
+        let m = Mercator::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(m);
     }
 
     #[test]
     fn mercator_traverse() {
-        let m = MercatorTransverse::builder::<DrainStub<f64>>().build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, MercatorTransverse, f64>, f64>,  DrainStub<f64>>();
+        let m = MercatorTransverse::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(m);
     }
 
     #[test]
     fn orthographic() {
-        let o = Orthographic::<f64>::builder::<DrainStub<f64>>().build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Orthographic<f64>, f64>, f64>,  DrainStub<f64>>();
+        let o = Orthographic::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(o);
     }
 
     #[test]
     fn stereographic() {
-        let s = Stereographic::<f64>::builder::<DrainStub<f64>>()
-            .build::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Stereographic<f64>, f64>, f64>, DrainStub<f64>>();
+        let s = Stereographic::<f64>::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
         symetric_invert(s);
     }
 

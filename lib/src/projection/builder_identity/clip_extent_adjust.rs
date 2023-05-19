@@ -13,7 +13,7 @@ where
 {
     type T = T;
 
-    fn clip_extent_adjust<CLIPC>(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
+    fn clip_extent_adjust(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
         self.postclip = Rectangle::new(extent);
 
         self

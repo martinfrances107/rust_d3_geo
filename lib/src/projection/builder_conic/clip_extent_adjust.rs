@@ -13,8 +13,8 @@ where
     /// f32 or f64
     type T = T;
 
-    fn clip_extent_adjust<CLIPC>(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
-        self.base.clip_extent_adjust::<CLIPC>(extent);
+    fn clip_extent_adjust(&mut self, extent: &[Coord<T>; 2]) -> &mut Self {
+        self.base.clip_extent_adjust(extent);
         self
     }
 }

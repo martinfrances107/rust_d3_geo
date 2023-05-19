@@ -48,7 +48,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::clip::antimeridian::ClipAntimeridianC;
+use crate::clip::clipper::Connectable;
 use crate::projection::builder::template::ResampleNoPCNU;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
@@ -57,7 +57,6 @@ use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::builder::template::ResampleNoPCNC;
 use super::projector_commom::Projector;
 use super::BuilderTrait as ProjectionBuilderMercator;
 use super::ClipExtentSet;
@@ -163,7 +162,7 @@ pub trait TranslateReclip {
 
 /// Reclip is common to both `Mercator` and `MercatorTransverse`.
 pub(super) trait Reclip {
-    fn reclip<CLIPC>(&mut self) -> &mut Self;
+    fn reclip(&mut self) -> &mut Self;
 }
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
@@ -207,24 +206,24 @@ where
             base,
             extent: None,
         };
-        out.reclip::<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>>();
+        out.reclip();
         out
     }
 }
 
-impl<CLIPU, PCNU, PR, RU, T> Build for Builder<CLIPU, PCNU, PR, RU, T>
+impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build for Builder<CLIPU, PCNU, PR, RU, T>
 where
-    CLIPU: Clone,
+    CLIPU: Clone + Connectable<Output = CLIPC>,
     PCNU: Clone,
     PR: Clone,
     RU: Clone,
     T: CoordFloat,
 {
-    type Projector<CLIPC, DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
+    type Projector<DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    fn build<CLIPC, DRAIN>(&self) -> Self::Projector<CLIPC, DRAIN> {
+    fn build<DRAIN>(&self) -> Self::Projector<DRAIN> {
         Projector {
             cache: None,
             postclip: self.base.postclip.clone(),

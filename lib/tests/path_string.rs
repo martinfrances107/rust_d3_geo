@@ -5,9 +5,6 @@ mod path_string {
     use std::fmt::Display;
     use std::ops::AddAssign;
 
-    use d3_geo_rs::clip::circle::ClipCircleC;
-    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
-    use d3_geo_rs::stream::DrainStub;
     use geo::line_string;
     use geo::point;
     use geo::CoordFloat;
@@ -41,9 +38,7 @@ mod path_string {
         T: CoordFloat + Default + Display + FloatConst,
     {
         Equirectangular::builder()
-            .scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<T>, Equirectangular<T>, T>, T>>(
-                T::from(900f64 / PI).unwrap(),
-            )
+            .scale_set(T::from(900f64 / PI).unwrap())
             .precision_bypass()
             .build()
     }
@@ -174,9 +169,7 @@ mod path_string {
         let object = Geometry::MultiPolygon(MultiPolygon(p_vec));
 
         let ortho = Orthographic::<_>::builder()
-            .scale_set::<ClipCircleC<ResampleNoPCNC<DrainStub<f64>, Orthographic<f64>, f64>, f64>>(
-                240_f64,
-            )
+            .scale_set(240_f64)
             .translate_set(&Coord {
                 x: 300_f64,
                 y: 300_f64,
