@@ -87,11 +87,11 @@ impl<T> Bufferable for Line<Unconnected, T>
 where
     T: CoordFloat,
 {
-    type Output = Line<Connected<Buffer<T>>, T>;
+    type LINE = Line<Connected<Buffer<T>>, T>;
     type T = T;
 
     #[inline]
-    fn buffer(&mut self, buffer: Buffer<T>) -> Self::Output {
+    fn buffer(&mut self, buffer: Buffer<T>) -> Self::LINE {
         Line {
             state: Connected { sink: buffer },
             cr: self.cr,

@@ -73,7 +73,7 @@ where
 impl<I, LB, LC, LU, PV, RC, T> Connectable for Clipper<I, LU, PV, RC, Unconnected, T>
 where
     I: Clone,
-    LU: Clone + StreamConnectable<Output<RC> = LC> + Bufferable<Output = LB, T = T>,
+    LU: Clone + StreamConnectable<Output<RC> = LC> + Bufferable<LINE = LB, T = T>,
     PV: Clone,
     RC: Clone,
     T: CoordFloat,

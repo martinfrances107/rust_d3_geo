@@ -52,10 +52,10 @@ where
     T: CoordFloat,
 {
     /// The resultant line buffer type.
-    type Output = Line<Connected<Buffer<T>>, T>;
+    type LINE = Line<Connected<Buffer<T>>, T>;
     type T = T;
 
-    fn buffer(&mut self, buffer: Buffer<T>) -> Self::Output {
+    fn buffer(&mut self, buffer: Buffer<T>) -> Self::LINE {
         Line {
             state: Connected { sink: buffer },
             lambda0: self.lambda0,

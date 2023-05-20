@@ -45,11 +45,11 @@ pub trait Clean {
 /// A buffer.
 pub trait Bufferable {
     /// Resultant Line type: Antimeridian or Clip.
-    type Output;
+    type LINE;
     /// f64 or f32
     type T;
     /// conected buffer as the next pipeline stage.
-    fn buffer(&mut self, buffer: Buffer<Self::T>) -> Self::Output
+    fn buffer(&mut self, buffer: Buffer<Self::T>) -> Self::LINE
     where
         Self::T: CoordFloat;
 }
