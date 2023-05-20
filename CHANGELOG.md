@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.8.0] - Sat 20 May 2023
+
+commit 32f8ab99295d48a28a5ff82a7c1a591ac9e16a6e
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Fri May 19 07:40:11 2023 +0100
+
+    Simplification: path/Builder is not longer generic over PCNC, PCNU
+
+    -pub struct Builder<CS, PCNC, PCNU, T>
+    +pub struct Builder<CS, T>
+
+commit 02019af6517282e7a94ee3da104d69c056c50b56
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Thu May 18 12:19:14 2023 +0100
+
+    Major Refactor: Builder is no longer generic over DRAIN
+
+    -pub struct Builder<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
+    +pub struct Builder<CLIPC, CLIPU, PCNU, PR, RU, T>
+
 ## [0.7.0] - Wed 17th May 2023
 
 Go a performace boost by writng data to Path2d and
