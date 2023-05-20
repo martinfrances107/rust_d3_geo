@@ -49,8 +49,11 @@ where
     pub(crate) cache: CacheState<CLIPC, DRAIN, T>,
 }
 
-pub(super) type ProjectorStream<CLIP, T> =
-    StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>;
+///  A connected version of the ``StreamTransformRadians`` transformer
+pub(super) type Strc<CLIPC, T> = StreamTransformRadians<Connected<Rrc<CLIPC, T>>>;
+
+/// A connection version of the ``RotateRadians`` transfortmer
+pub(super) type Rrc<CLIPC, T> = RotatorRadians<Connected<CLIPC>, T>;
 
 impl<CLIPC, CLIPU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait
     for Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
@@ -73,7 +76,7 @@ where
 
     type EP = DRAIN;
 
-    type Transformer = ProjectorStream<CLIPC, T>;
+    type Transformer = Strc<CLIPC, T>;
 
     fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
         if let Some((cache_drain, output)) = &self.cache {
