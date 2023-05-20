@@ -5,7 +5,7 @@ use crate::projection::ScaleGet;
 
 use super::Builder;
 
-impl<DRAIN, PCNU, T> ScaleGet for Builder<DRAIN, PCNU, T>
+impl<PCNU, T> ScaleGet for Builder<PCNU, T>
 where
     T: CoordFloat + FloatConst,
 {

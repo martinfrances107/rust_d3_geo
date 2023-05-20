@@ -402,13 +402,13 @@ mod projection_angle {
     fn rotates_geo_identity() {
         println!("identity.angle(…) rotates geoIdentity");
 
-        let mut pb: d3_geo_rs::projection::builder_identity::Builder<DrainStub<f32>, NoPCNU, f32> =
+        let mut pb: d3_geo_rs::projection::builder_identity::Builder<NoPCNU, f32> =
             BuilderIdentity::default();
         pb.angle_set(-45_f32);
 
         let sqrt2_2 = 2f32.sqrt() / 2f32;
 
-        let projector = pb.build::<NoPCNC<DrainStub<f32>>>();
+        let projector = pb.build::<DrainStub<f64>, NoPCNC<DrainStub<f32>>>();
 
         assert_eq!(
             projector.transform(&Coord { x: 0f32, y: 0f32 }),

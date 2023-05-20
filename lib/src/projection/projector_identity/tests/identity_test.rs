@@ -28,10 +28,10 @@ mod identity {
 
     #[test]
     fn returns_a_point() {
-        let mut ib = Builder::<DrainStub<f64>, Identity<Unconnected>, f64>::default();
+        let mut ib = Builder::<Identity<Unconnected>, f64>::default();
         ib.translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64);
-        let identity = ib.build::<PCNC<DrainStub<f64>, f64>>();
+        let identity = ib.build::<DrainStub<f64>, PCNC<DrainStub<f64>, f64>>();
         assert!(projection_equal(
             &identity,
             &(0f64, 0f64).into(),
@@ -66,7 +66,7 @@ mod identity {
     #[test]
     fn reflect_return_the_transformed_point() {
         println!("identity(point).reflectX(…) and reflectY() return the transformed point");
-        let mut ib: Builder<DrainStub<f64>, _, _> = Builder::default();
+        let mut ib = Builder::default();
         ib.translate_set(&Coord {
             x: 100_f64,
             y: 10_f64,
@@ -74,7 +74,7 @@ mod identity {
         .scale_set(2_f64);
 
         assert!(projection_equal(
-            &ib.build::<NoPCNU>(),
+            &ib.build::<DrainStub<f64>, NoPCNU>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None
@@ -82,7 +82,7 @@ mod identity {
 
         ib.reflect_x_set(REFLECT::Flipped);
         assert!(projection_equal(
-            &ib.build::<NoPCNU>(),
+            &ib.build::<DrainStub<f64>, NoPCNU>(),
             &(3f64, 7f64).into(),
             &(94f64, 24f64).into(),
             None
@@ -90,7 +90,7 @@ mod identity {
 
         ib.reflect_y_set(REFLECT::Flipped);
         assert!(projection_equal(
-            &ib.build::<NoPCNU>(),
+            &ib.build::<DrainStub<f64>, NoPCNU>(),
             &(3f64, 7f64).into(),
             &(94f64, -4f64).into(),
             None
@@ -98,7 +98,7 @@ mod identity {
 
         ib.reflect_x_set(REFLECT::Unflipped);
         assert!(projection_equal(
-            &ib.build::<NoPCNU>(),
+            &ib.build::<DrainStub<f64>, NoPCNU>(),
             &(3f64, 7f64).into(),
             &(106f64, -4f64).into(),
             None
@@ -106,7 +106,7 @@ mod identity {
 
         ib.reflect_y_set(REFLECT::Unflipped);
         assert!(projection_equal(
-            &ib.build::<NoPCNU>(),
+            &ib.build::<DrainStub<f64>, NoPCNU>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None
@@ -122,7 +122,7 @@ mod identity {
     fn identity_returns_path() {
         print!("geoPath(identity) returns the path");
 
-        let mut pb: Builder<String<f64>, _, _> = Builder::default();
+        let mut pb = Builder::default();
         pb.translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64);
 
@@ -147,7 +147,7 @@ mod identity {
             })
             .scale_set(2_f64);
         projection_builder2.reflect_y_set(REFLECT::Flipped);
-        let projector2 = projection_builder2.build::<NoPCNC<String<f64>>>();
+        let projector2 = projection_builder2.build::<String<f64>, NoPCNC<String<f64>>>();
 
         let mut path2 = PathBuilder::context_pathstring().build(projector2);
 
@@ -158,7 +158,7 @@ mod identity {
     fn respects_clip_extent() {
         print!("geoPath(identity) respects clipExtent");
 
-        let mut pb: Builder<String<f64>, _, _> = Builder::default();
+        let mut pb = Builder::default();
 
         let pb = pb.translate_set(&Coord { x: 0_f64, y: 0_f64 });
         let pb = pb.scale_set(1_f64);
@@ -184,7 +184,7 @@ mod identity {
 
         assert_eq!("M5,5L10,10", path.object(&ls));
 
-        let mut pb2: Builder<String<f64>, _, _> = Builder::default();
+        let mut pb2 = Builder::default();
 
         pb2.translate_set(&Coord {
             x: 30_f64,

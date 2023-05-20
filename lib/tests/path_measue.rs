@@ -4,6 +4,7 @@ mod path_measure {
     use std::fmt::Display;
     use std::ops::AddAssign;
 
+    use d3_geo_rs::stream::DrainStub;
     use geo::CoordFloat;
     use geo::Geometry;
     use geo::LineString;
@@ -40,7 +41,7 @@ mod path_measure {
         assert_eq!(
             0_f64,
             measure(
-                Identity::builder().build(),
+                Identity::builder::<DrainStub<f64>>().build(),
                 Geometry::Point((0_f64, 0_f64).into())
             )
         );
@@ -52,7 +53,7 @@ mod path_measure {
         assert_eq!(
             0_f64,
             measure(
-                Identity::builder().build(),
+                Identity::builder::<DrainStub<f64>>().build(),
                 Geometry::MultiPoint(MultiPoint(vec![(0_f64, 0_f64).into()]))
             )
         );
@@ -64,7 +65,7 @@ mod path_measure {
         assert_eq!(
             3_f64,
             measure(
-                Identity::builder().build(),
+                Identity::builder::<DrainStub<f64>>().build(),
                 Geometry::LineString(LineString(vec![
                     (0_f64, 0_f64).into(),
                     (0_f64, 1_f64).into(),
@@ -81,7 +82,7 @@ mod path_measure {
         assert_eq!(
             3_f64,
             measure(
-                Identity::builder().build(),
+                Identity::builder::<DrainStub<f64>>().build(),
                 Geometry::MultiLineString(MultiLineString(vec![LineString(vec![
                     (0_f64, 0_f64).into(),
                     (0_f64, 1_f64).into(),
@@ -98,7 +99,7 @@ mod path_measure {
         assert_eq!(
             4_f64,
             measure(
-                Identity::builder().build(),
+                Identity::builder::<DrainStub<f64>>().build(),
                 Geometry::Polygon(Polygon::new(
                     LineString(vec![
                         (0_f64, 0_f64).into(),
@@ -119,7 +120,7 @@ mod path_measure {
         assert_eq!(
             16_f64,
             measure(
-                Identity::builder().build(),
+                Identity::builder::<DrainStub<f64>>().build(),
                 Geometry::Polygon(Polygon::new(
                     LineString(vec![
                         (-1_f64, -1_f64).into(),
@@ -146,7 +147,7 @@ mod path_measure {
         assert_eq!(
             16_f64,
             measure(
-                Identity::builder().build(),
+                Identity::builder::<DrainStub<f64>>().build(),
                 Geometry::MultiPolygon(MultiPolygon(vec![Polygon::new(
                     LineString(vec![
                         (-1_f64, -1_f64).into(),

@@ -1,10 +1,11 @@
 # TODO
 
+README.md say that in version 2.0 par_iter will be used
+
   rename context - path.
   graticule returns a string it should return a Path2d
 
-  README make the albersUSA table entry scan better.
-  profile code. ( move the albers_usa profile target.. make it render countires.)
+  profile code. ( move the albers_usa profile target.. make it render countries.)
   restore benchmark. by using ImageData trick.
   albersUSA implement cache in 'fn stream()'
   copy documentation of parallels.

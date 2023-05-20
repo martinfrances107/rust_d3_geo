@@ -5,7 +5,7 @@ use crate::projection::{ReflectSet, REFLECT};
 
 use super::Builder;
 
-impl<DRAIN, PCNU, T> ReflectSet for Builder<DRAIN, PCNU, T>
+impl<PCNU, T> ReflectSet for Builder<PCNU, T>
 where
     T: CoordFloat + FloatConst,
 {

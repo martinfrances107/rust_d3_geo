@@ -7,7 +7,7 @@ use crate::projection::ClipExtentAdjust;
 
 use super::Builder;
 
-impl<DRAIN, T> ClipExtentAdjust for Builder<DRAIN, PCNU<T>, T>
+impl<T> ClipExtentAdjust for Builder<PCNU<T>, T>
 where
     T: CoordFloat,
 {

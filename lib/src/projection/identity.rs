@@ -21,7 +21,7 @@ impl<T> RawBase for Identity<T>
 where
     T: CoordFloat + Default + FloatConst,
 {
-    type Builder<DRAIN: Clone> = BuilderIdentityAntimeridianResampleNoClip<DRAIN, T>;
+    type Builder<DRAIN: Clone> = BuilderIdentityAntimeridianResampleNoClip<T>;
 
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {

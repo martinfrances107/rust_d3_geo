@@ -4,7 +4,7 @@ use crate::projection::ScaleSet;
 
 use super::Builder;
 
-impl<DRAIN, PCNU, T> ScaleSet for Builder<DRAIN, PCNU, T>
+impl<PCNU, T> ScaleSet for Builder<PCNU, T>
 where
     T: CoordFloat,
 {

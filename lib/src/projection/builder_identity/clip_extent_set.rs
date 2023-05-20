@@ -9,18 +9,16 @@ use crate::projection::ClipExtentSet;
 
 use super::Builder;
 
-impl<DRAIN, T> ClipExtentSet for Builder<DRAIN, NoPCNU, T>
+impl<T> ClipExtentSet for Builder<NoPCNU, T>
 where
     T: CoordFloat + Default + FloatConst,
 {
     type T = T;
-    type Output = Builder<DRAIN, PCNU<T>, T>;
+    type Output = Builder<PCNU<T>, T>;
 
     #[inline]
     fn clip_extent_set(&self, extent: &[Coord<Self::T>; 2]) -> Self::Output {
         let mut out = Self::Output {
-            p_drain: self.p_drain,
-
             alpha: self.alpha,
             k: self.k,
             sx: self.sx,

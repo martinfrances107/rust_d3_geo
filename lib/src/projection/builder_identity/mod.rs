@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -28,11 +27,10 @@ mod translate_set;
 ///
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Debug)]
-pub struct Builder<DRAIN, PCNU, T>
+pub struct Builder<PCNU, T>
 where
     T: CoordFloat,
 {
-    p_drain: PhantomData<DRAIN>,
     pub(super) alpha: T, // post-rotate angle
     pub(super) ca: T,
     pub(super) sa: T,
@@ -50,7 +48,7 @@ where
     pub(super) postclip: PCNU,
 }
 
-impl<DRAIN, T> Default for Builder<DRAIN, Identity<Unconnected>, T>
+impl<T> Default for Builder<Identity<Unconnected>, T>
 where
     T: CoordFloat + Default + FloatConst,
 {
@@ -63,8 +61,6 @@ where
     #[must_use]
     fn default() -> Self {
         Self {
-            p_drain: PhantomData::<DRAIN>,
-
             alpha: T::zero(),
             k: T::one(),
             kx: T::one(),
@@ -81,7 +77,7 @@ where
     }
 }
 
-impl<DRAIN, PCNU, T> Builder<DRAIN, PCNU, T>
+impl<PCNU, T> Builder<PCNU, T>
 where
     T: CoordFloat,
 {

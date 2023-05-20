@@ -5,7 +5,7 @@ use crate::projection::TranslateGet;
 
 use super::Builder;
 
-impl<DRAIN, PCNU, T> TranslateGet for Builder<DRAIN, PCNU, T>
+impl<PCNU, T> TranslateGet for Builder<PCNU, T>
 where
     T: CoordFloat,
 {

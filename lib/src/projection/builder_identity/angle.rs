@@ -5,7 +5,7 @@ use crate::projection::AngleSet;
 
 use super::Builder;
 
-impl<DRAIN, PCNU, T> AngleSet for Builder<DRAIN, PCNU, T>
+impl<PCNU, T> AngleSet for Builder<PCNU, T>
 where
     T: CoordFloat + FloatConst,
 {

@@ -5,7 +5,7 @@ use crate::projection::ClipExtentGet;
 
 use super::Builder;
 
-impl<DRAIN, PCNU, T> ClipExtentGet for Builder<DRAIN, PCNU, T>
+impl<PCNU, T> ClipExtentGet for Builder<PCNU, T>
 where
     PCNU: ClipExtentGet<T = T>,
     T: CoordFloat,
