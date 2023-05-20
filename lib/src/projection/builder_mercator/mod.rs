@@ -48,7 +48,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::clip::clipper::Connectable;
+use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::projection::builder::template::ResampleNoPCNU;
 use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
@@ -213,7 +213,7 @@ where
 
 impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build for Builder<CLIPU, PCNU, PR, RU, T>
 where
-    CLIPU: Clone + Connectable<Output = CLIPC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PCNU: Clone,
     PR: Clone,
     RU: Clone,

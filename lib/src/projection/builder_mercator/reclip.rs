@@ -2,7 +2,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::clip::clipper::Connectable;
+use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::projection::builder::template::PCNU;
 use crate::projection::Build;
 use crate::projection::ClipExtentAdjust;
@@ -18,7 +18,7 @@ use super::Reclip;
 
 impl<CLIPC, CLIPU, PR, RU, T> Reclip for Builder<CLIPU, PCNU<T>, PR, RU, T>
 where
-    CLIPU: Clone + Connectable<Output = CLIPC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     RU: Clone,
     T: CoordFloat + FloatConst,

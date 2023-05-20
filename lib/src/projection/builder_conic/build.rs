@@ -1,7 +1,7 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::clipper::Connectable;
+use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::projection::builder::Builder as BuilderCommon;
 use crate::projection::projector_commom::Projector;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
@@ -14,7 +14,7 @@ use super::PRConic;
 
 impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build for Builder<BuilderCommon<CLIPU, PCNU, PR, RU, T>, T>
 where
-    CLIPU: Clone + Connectable<Output = CLIPC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + PRConic,
     PCNU: Clone,
     RU: Clone,

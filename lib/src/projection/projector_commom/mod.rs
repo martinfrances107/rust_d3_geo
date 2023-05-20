@@ -4,7 +4,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::clip::clipper::Connectable as ClipConnectable;
+use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::compose::Compose;
 use crate::projection::Projector as ProjectorTrait;
 use crate::rot::rotate_radians::RotateRadians;
@@ -56,7 +56,7 @@ impl<CLIPC, CLIPU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait
     for Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPC: Clone,
-    CLIPU: ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: ConnectableClip<Output = CLIPC, SC = RC>,
     DRAIN: Clone + PartialEq,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     PR: Transform<T = T>,

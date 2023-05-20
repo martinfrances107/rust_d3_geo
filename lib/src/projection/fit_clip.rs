@@ -17,7 +17,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::clip::clipper::Connectable as ClipConnectable;
+use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::NoPCNC;
@@ -57,7 +57,7 @@ where
     CLIPC: Clone,
     CLIPU: Clone,
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPUint: Clone + ClipConnectable<Output = CLIPCint, SC = RCint>,
+    CLIPUint: Clone + ConnectableClip<Output = CLIPCint, SC = RCint>,
     FB: FnMut([Coord<T>; 2], &Bint) -> Bint,
     PR: Transform<T = T>,
     // NB constraints below relate to Bint only not B.
@@ -119,9 +119,9 @@ where
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPUint: Clone + ClipConnectable<Output = CLIPCint, SC = RCint>,
+    CLIPUint: Clone + ConnectableClip<Output = CLIPCint, SC = RCint>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RCint: Clone + Stream<EP = Bounds<T>, T = T>,
@@ -183,8 +183,8 @@ where
         + ScaleSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
-    CLIPUint: Clone + ClipConnectable<Output = CLIPCint, SC = RCint>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
+    CLIPUint: Clone + ConnectableClip<Output = CLIPCint, SC = RCint>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RCint: Clone + Stream<EP = Bounds<T>, T = T>,
@@ -235,9 +235,9 @@ where
         + ClipExtentSet<Output = B, T = T>
         + TranslateSet<T = T>
         + ScaleSet<T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPUint: Clone + ClipConnectable<Output = CLIPCint, SC = RCint>,
+    CLIPUint: Clone + ConnectableClip<Output = CLIPCint, SC = RCint>,
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
@@ -298,9 +298,9 @@ where
         + TranslateSet<T = T>
         + ScaleSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPUint: Clone + ClipConnectable<Output = CLIPCint, SC = RCint>,
+    CLIPUint: Clone + ConnectableClip<Output = CLIPCint, SC = RCint>,
     PR: Clone + Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RCint: Clone + Stream<EP = Bounds<T>, T = T>,

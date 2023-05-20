@@ -17,7 +17,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::clip::clipper::Connectable as ClipConnectable;
+use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::NoPCNC;
@@ -46,7 +46,7 @@ where
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     FB: FnMut([Coord<T>; 2], &B) -> B,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
@@ -77,7 +77,7 @@ where
         + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
@@ -115,7 +115,7 @@ where
         + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
@@ -145,7 +145,7 @@ where
         + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
@@ -183,7 +183,7 @@ where
         + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,

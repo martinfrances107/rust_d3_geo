@@ -16,7 +16,7 @@ use num_traits::FloatConst;
 use geo::CoordFloat;
 use geo_types::Coord;
 
-use crate::clip::clipper::Connectable as ClipConnectable;
+use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::PCNC;
@@ -55,7 +55,7 @@ where
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     FB: FnMut([Coord<T>; 2], &B) -> B,
     PR: Transform<T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
@@ -91,7 +91,7 @@ where
         + TranslateGet<T = T>
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
@@ -131,7 +131,7 @@ where
         + TranslateGet<T = T>
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
@@ -163,7 +163,7 @@ where
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     PR: Transform<T = T>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
@@ -203,7 +203,7 @@ where
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ClipConnectable<Output = CLIPC, SC = RC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     RC: Clone + Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,

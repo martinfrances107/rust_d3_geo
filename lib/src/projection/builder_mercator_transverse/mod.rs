@@ -32,7 +32,7 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::clip::clipper::Connectable;
+use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::projection::builder_mercator::Builder as ProjectionMercatorBuilder;
 use crate::projection::Build;
 use crate::stream::Unconnected;
@@ -77,7 +77,7 @@ where
 
 impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build for Builder<CLIPU, PCNU, PR, RU, T>
 where
-    CLIPU: Clone + Connectable<Output = CLIPC>,
+    CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PCNU: Clone,
     PR: Clone,
     RU: Clone,
