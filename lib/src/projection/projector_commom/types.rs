@@ -14,91 +14,92 @@ use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::template::PCNU;
 
 use super::Projector;
+use super::Source;
 
 /// A projector with a antimeridian clipping stratergy, with resampling and no post clip node.
 pub type ProjectorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Projector<
-    ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
     NoPCNU,
     PR,
     ResampleNoneNoPCNU<PR, T>,
+    Source<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>, T>,
     T,
 >;
 
 /// A projector with a antimeridian clipping stratergy, with no resampling and a post clip node.
 pub type ProjectorAntimeridianResampleNoneClip<DRAIN, PR, T> = Projector<
-    ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
     PCNU<T>,
     PR,
     ResampleNonePCNU<PR, T>,
+    Source<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>, T>,
     T,
 >;
 
 /// A projector with a antimeridian clipping stratergy, with resampling and no post clip node.
 pub type ProjectorAntimeridianResampleNoClip<DRAIN, PR, T> = Projector<
-    ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResampleNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
     NoPCNU,
     PR,
     ResampleNoPCNU<PR, T>,
+    Source<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>, T>,
     T,
 >;
 
 /// A projector with a antimeridian clipping stratergy, with resampling and a post clip node.
 pub type ProjectorAntimeridianResampleClip<DRAIN, PR, T> = Projector<
-    ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
     PCNU<T>,
     PR,
     ResamplePCNU<PR, T>,
+    Source<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>, T>,
     T,
 >;
 
 /// A projector with a circle clipping stratergy, with no resampling and no post clip node.
 pub type ProjectorCircleResampleNoneNoClip<DRAIN, PR, T> = Projector<
-    ClipCircleC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
     NoPCNU,
     PR,
     ResampleNoneNoPCNU<PR, T>,
+    Source<ClipCircleC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>, T>,
     T,
 >;
 
 /// A projector with a circle clipping stratergy, with no resampling and post clip node.
 pub type ProjectorCircleResampleNoneClip<DRAIN, PR, T> = Projector<
-    ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
     PCNU<T>,
     PR,
     ResampleNonePCNU<PR, T>,
+    Source<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>, T>,
     T,
 >;
 
 /// A projector with a circle clipping stratergy, with resampling and post clip node.
 pub type ProjectorCircleResampleNoClip<DRAIN, PR, T> = Projector<
-    ClipCircleC<ResampleNoPCNC<DRAIN, PR, T>, T>,
     ClipCircleU<ResampleNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
     NoPCNU,
     PR,
     ResampleNoPCNU<PR, T>,
+    Source<ClipCircleC<ResampleNoPCNC<DRAIN, PR, T>, T>, T>,
     T,
 >;
 
 /// A projector with a circle clipping stratergy, with resampling and post clip node.
 pub type ProjectorCircleResampleClip<DRAIN, PR, T> = Projector<
-    ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>,
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
     PCNU<T>,
     PR,
     ResamplePCNU<PR, T>,
+    Source<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>, T>,
     T,
 >;

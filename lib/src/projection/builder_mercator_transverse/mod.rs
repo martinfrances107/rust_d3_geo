@@ -41,6 +41,7 @@ use crate::Transform;
 use self::types::BuilderMercatorTransverseAntimeridianResampleClip;
 
 use super::projector_commom::Projector;
+use super::projector_commom::Source;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::RotateSet;
 use super::ScaleSet;
@@ -83,7 +84,7 @@ where
     RU: Clone,
     T: CoordFloat,
 {
-    type Projector<DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
+    type Projector<DRAIN> = Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>;
     /// Using the currently programmed state output a new projection.
     #[inline]
     fn build<DRAIN>(&self) -> Self::Projector<DRAIN> {

@@ -20,16 +20,13 @@ use super::transform::scale_translate_rotate::ScaleTranslateRotate;
 /// Builder shorthand notations.
 pub mod types;
 
-type CacheState<CLIP, DRAIN, T> = Option<(
-    DRAIN,
-    StreamTransformRadians<Connected<RotatorRadians<Connected<CLIP>, T>>>,
-)>;
+type CacheState<DRAIN, SOURCE> = Option<(DRAIN, SOURCE)>;
 
 /// Projection output of projection/Builder.
 ///
 /// Commnon functionality for all raw projection structs.
 #[derive(Clone, Debug)]
-pub struct Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
+pub struct Projector<CLIPU, DRAIN, PCNU, PR, RU, SOURCE, T>
 where
     T: CoordFloat,
 {
@@ -46,17 +43,19 @@ where
     pub project_rotate_transform: Compose<RotateRadians<T>, Compose<PR, ScaleTranslateRotate<T>>>,
 
     pub(crate) transform_radians: StreamTransformRadians<Unconnected>,
-    pub(crate) cache: CacheState<CLIPC, DRAIN, T>,
+    pub(crate) cache: CacheState<DRAIN, SOURCE>,
 }
 
+/// The souce of the pipeline stage.
+///
 ///  A connected version of the ``StreamTransformRadians`` transformer
-pub(super) type Strc<CLIPC, T> = StreamTransformRadians<Connected<Rrc<CLIPC, T>>>;
+pub type Source<CLIPC, T> = StreamTransformRadians<Connected<Rrc<CLIPC, T>>>;
 
 /// A connection version of the ``RotateRadians`` transfortmer
 pub(super) type Rrc<CLIPC, T> = RotatorRadians<Connected<CLIPC>, T>;
 
 impl<CLIPC, CLIPU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait
-    for Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
+    for Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>
 where
     CLIPC: Clone,
     CLIPU: ConnectableClip<Output = CLIPC, SC = RC>,
@@ -76,7 +75,7 @@ where
 
     type EP = DRAIN;
 
-    type Transformer = Strc<CLIPC, T>;
+    type Transformer = Source<CLIPC, T>;
 
     fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
         if let Some((cache_drain, output)) = &self.cache {
@@ -104,7 +103,7 @@ where
 }
 
 impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Transform
-    for Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>
+    for Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>
 where
     PR: Transform<T = T>,
     T: CoordFloat + FloatConst,

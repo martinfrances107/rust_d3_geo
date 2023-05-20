@@ -58,6 +58,7 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::projector_commom::Projector;
+use super::projector_commom::Source;
 use super::BuilderTrait as ProjectionBuilderMercator;
 use super::ClipExtentSet;
 use super::TransformExtent;
@@ -219,7 +220,7 @@ where
     RU: Clone,
     T: CoordFloat,
 {
-    type Projector<DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
+    type Projector<DRAIN> = Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>;
 
     /// Using the currently programmed state output a new projection.
     #[inline]

@@ -4,6 +4,7 @@ use num_traits::FloatConst;
 use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::projection::builder::Builder as BuilderCommon;
 use crate::projection::projector_commom::Projector;
+use crate::projection::projector_commom::Source;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 
@@ -20,7 +21,7 @@ where
     RU: Clone,
     T: CoordFloat + FloatConst,
 {
-    type Projector<DRAIN> = Projector<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T>;
+    type Projector<DRAIN> = Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>;
 
     /// Using the currently programmed state output a new projection.
     #[inline]
