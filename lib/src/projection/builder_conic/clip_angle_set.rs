@@ -9,7 +9,6 @@ use super::types::BuilderConicCircleResampleNoClip;
 impl<DRAIN, PR, T> ClipAngleSet for BuilderConicAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
-    DRAIN: Clone,
     T: CoordFloat + FloatConst,
 {
     type Output = BuilderConicCircleResampleNoClip<DRAIN, PR, T>;
