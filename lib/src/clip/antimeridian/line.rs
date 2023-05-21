@@ -90,7 +90,7 @@ impl<SINK, T> LineConnected for Line<Connected<SINK>, T>
 where
     T: CoordFloat,
 {
-    type SC = SINK;
+    type SINK = SINK;
     #[inline]
     fn sink(&mut self) -> &mut SINK {
         &mut self.state.sink

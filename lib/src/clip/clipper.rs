@@ -148,8 +148,8 @@ where
 
 impl<EP, I, LB, LC, LU, PV, RC, T> Clipper<I, LU, PV, RC, Connected<LB, LC, T>, T>
 where
-    LB: LineConnected<SC = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
-    LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
+    LB: LineConnected<SINK = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
+    LC: LineConnected<SINK = RC> + Stream<EP = EP, T = T>,
     PV: PointVisible<T = T>,
     RC: Stream<EP = EP, T = T>,
     T: CoordFloat,
@@ -258,8 +258,8 @@ where
 impl<EP, I, LB, LC, LU, PV, RC, T> Stream for Clipper<I, LU, PV, RC, Connected<LB, LC, T>, T>
 where
     I: Interpolator<T = T>,
-    LB: LineConnected<SC = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: LineConnected<SC = RC> + Stream<EP = EP, T = T>,
+    LB: LineConnected<SINK = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
+    LC: LineConnected<SINK = RC> + Stream<EP = EP, T = T>,
     PV: PointVisible<T = T>,
     RC: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,

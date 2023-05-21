@@ -75,10 +75,10 @@ where
     SINK: Clone,
     T: CoordFloat,
 {
-    type SC = SINK;
+    type SINK = SINK;
 
     #[inline]
-    fn sink(&mut self) -> &mut Self::SC {
+    fn sink(&mut self) -> &mut Self::SINK {
         &mut self.state.sink
     }
 }

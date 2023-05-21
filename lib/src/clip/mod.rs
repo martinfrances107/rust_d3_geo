@@ -85,7 +85,7 @@ pub trait Interpolator {
 /// When connected a line can return a mutable sink.
 pub trait LineConnected: Clean {
     /// Sink -- When Connected.
-    type SC;
+    type SINK;
     /// Connects the next object in the pipeline.
-    fn sink(&mut self) -> &mut Self::SC;
+    fn sink(&mut self) -> &mut Self::SINK;
 }
