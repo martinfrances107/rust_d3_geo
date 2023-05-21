@@ -23,7 +23,7 @@ futures = { workspace = true }
 js-sys = { workspace = true }
 rand = { workspace = true }
 rust_topojson_client = { workspace = true }
-wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
+wasm-bindgen = { workspace = true }
 wasm-bindgen-test = { workspace = true }
 wasm-bindgen-futures = { workspace = true }
 gloo-utils = { workspace = true }

@@ -15,6 +15,7 @@ version = { workspace = true }
 crate-type = ["cdylib"]
 
 [dependencies]
+wasm-bindgen = { workspace = true }
 d3_geo_rs = { path = "../../../lib" }
 geo = { workspace = true }
 gloo-utils = { workspace = true }
@@ -22,7 +23,6 @@ js-sys = { workspace = true }
 rust_topojson_client = { workspace = true }
 topojson = { workspace = true }
 wasm-bindgen-test = { workspace = true }
-wasm-bindgen = { workspace = true, features = ["serde-serialize"] }
 wasm-bindgen-futures = { workspace = true }
 
 # The `web-sys` crate allows you to interact with the various browser APIs,
