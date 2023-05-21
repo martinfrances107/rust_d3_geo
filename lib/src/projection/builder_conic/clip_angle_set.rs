@@ -2,7 +2,6 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::projection::ClipAngleSet;
-use crate::stream::Stream;
 
 use super::types::BuilderConicAntimeridianResampleNoClip;
 use super::types::BuilderConicCircleResampleNoClip;
@@ -10,7 +9,7 @@ use super::types::BuilderConicCircleResampleNoClip;
 impl<DRAIN, PR, T> ClipAngleSet for BuilderConicAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
-    DRAIN: Clone + Stream<EP = DRAIN, T = T>,
+    DRAIN: Clone,
     T: CoordFloat + FloatConst,
 {
     type Output = BuilderConicCircleResampleNoClip<DRAIN, PR, T>;
