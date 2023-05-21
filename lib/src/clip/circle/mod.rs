@@ -38,7 +38,6 @@ pub type ClipCircleU<RC, T> =
 /// Returns a clip setup for circle clipping.
 pub fn gen_clip<RC, T>(radius: T) -> ClipCircleU<RC, T>
 where
-    RC: Clone,
     T: CoordFloat + FloatConst,
 {
     let cr = radius.cos();

@@ -19,7 +19,6 @@ use super::types::BuilderCircleResampleNoneNoClip;
 
 impl<DRAIN, PR, T> PrecisionBypass for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + Default + FloatConst,
 {
@@ -109,7 +108,6 @@ where
 
 impl<DRAIN, PR, T> PrecisionBypass for BuilderCircleResampleNoClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + FloatConst,
 {

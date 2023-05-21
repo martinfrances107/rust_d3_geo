@@ -10,7 +10,6 @@ use super::Builder;
 
 impl<PCNU, PR, RC, RU, T> ClipAngleReset for Builder<ClipCircleU<RC, T>, PCNU, PR, RU, T>
 where
-    RC: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     /// The resultant builder type.

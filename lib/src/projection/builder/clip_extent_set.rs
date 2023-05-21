@@ -100,7 +100,6 @@ where
 
 impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + FloatConst,
 {
@@ -140,7 +139,6 @@ where
 
 impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + FloatConst,
 {
