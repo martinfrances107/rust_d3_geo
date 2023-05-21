@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -32,6 +34,7 @@ where
     fn precision_bypass(&self) -> Self::Output {
         // Copy - Mutate.
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -78,6 +81,7 @@ where
 
         // Copy - Mutate.
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -125,6 +129,7 @@ where
 
         // Copy - Mutate.
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -173,6 +178,7 @@ where
 
         // Copy - Mutate.
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,

@@ -14,7 +14,7 @@ use super::template::ResampleNonePCNU;
 use super::template::PCNU;
 use super::Builder;
 
-impl<CLIPU, PR, T> ReflectSet for Builder<CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> ReflectSet for Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -41,7 +41,7 @@ where
     }
 }
 
-impl<CLIPU, PR, T> ReflectSet for Builder<CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> ReflectSet for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -68,7 +68,8 @@ where
     }
 }
 
-impl<CLIPU, PR, T> ReflectSet for Builder<CLIPU, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> ReflectSet
+    for Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -95,7 +96,8 @@ where
     }
 }
 
-impl<CLIPU, PR, T> ReflectSet for Builder<CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> ReflectSet
+    for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

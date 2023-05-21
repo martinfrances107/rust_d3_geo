@@ -11,9 +11,10 @@ use crate::stream::Unconnected;
 
 use super::Builder;
 
-impl<PR, PCNC, PCNU, T> PrecisionGet
+impl<DRAIN, PR, PCNC, PCNU, T> PrecisionGet
     for Builder<
         ClipAntimeridianU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
+        DRAIN,
         PCNU,
         PR,
         Resample<PR, Unconnected, T>,
@@ -30,9 +31,10 @@ where
     }
 }
 
-impl<PR, PCNC, PCNU, T> PrecisionGet
+impl<DRAIN, PR, PCNC, PCNU, T> PrecisionGet
     for Builder<
         ClipCircleU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
+        DRAIN,
         PCNU,
         PR,
         Resample<PR, Unconnected, T>,

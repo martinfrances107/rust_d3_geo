@@ -12,7 +12,8 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, PR, T> ScaleSet for Builder<CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
+    for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
@@ -27,7 +28,8 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, PR, T> ScaleSet for Builder<CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
+    for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,

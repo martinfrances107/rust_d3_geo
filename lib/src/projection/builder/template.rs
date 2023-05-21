@@ -49,4 +49,5 @@ pub type ResampleNoneNoPCNC<DRAIN, PR, T> = None<PR, Connected<NoPCNC<DRAIN>>, T
 pub type ResampleNoneNoPCNU<PR, T> = None<PR, Unconnected, T>;
 
 /// Default builder, no resampling, no Clipping.
-pub type Default<CLIPU, PR, T> = Builder<CLIPU, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>;
+pub type Default<CLIPU, DRAIN, PR, T> =
+    Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>;

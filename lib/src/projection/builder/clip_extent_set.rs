@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
@@ -31,6 +33,7 @@ where
     #[inline]
     fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -70,6 +73,7 @@ where
     #[inline]
     fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -109,6 +113,7 @@ where
     #[inline]
     fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,
@@ -148,6 +153,7 @@ where
     #[inline]
     fn clip_extent_set(&self, extent: &[Coord<T>; 2]) -> Self::Output {
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw.clone(),
             phi: self.phi,
             lambda: self.lambda,

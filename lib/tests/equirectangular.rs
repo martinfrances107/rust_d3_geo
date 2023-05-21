@@ -22,6 +22,7 @@ mod equirectangular {
 
     type B = Builder<
         ClipAntimeridianU<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>,
+        DrainStub<f64>,
         NoPCNU,
         Equirectangular<f64>,
         ResampleNoPCNU<Equirectangular<f64>, f64>,
@@ -35,7 +36,7 @@ mod equirectangular {
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1_f64);
 
-        let equirectangular = b.build::<DrainStub<f64>>();
+        let equirectangular = b.build();
 
         let pi = std::f64::consts::PI;
 
@@ -245,7 +246,7 @@ mod equirectangular {
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1_f64);
 
-        let equirectangular = b.build::<DrainStub<f64>>();
+        let equirectangular = b.build();
 
         assert!(projection_equal(
             &equirectangular,
@@ -352,7 +353,7 @@ mod equirectangular {
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1f64);
 
-        let equirectangular = b.build::<DrainStub<f64>>();
+        let equirectangular = b.build();
 
         let pi = std::f64::consts::PI;
 
@@ -451,7 +452,7 @@ mod equirectangular {
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1f64);
 
-        let equirectangular = b.build::<DrainStub<f64>>();
+        let equirectangular = b.build();
 
         assert!(projection_equal(
             &equirectangular,

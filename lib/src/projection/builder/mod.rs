@@ -1,4 +1,5 @@
 use std::fmt::Debug;
+use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -74,10 +75,11 @@ pub mod types;
 ///
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Debug)]
-pub struct Builder<CLIPU, PCNU, PR, RU, T>
+pub struct Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {
+    p_d: PhantomData<DRAIN>,
     pub(super) projection_raw: PR,
     pub(super) clip: CLIPU,
     lambda: T,
@@ -151,6 +153,7 @@ where
         let postclip = Identity::default();
         let resample = Resample::new(project_transform.clone(), delta2);
         let mut out: Self = Self {
+            p_d: PhantomData::<DRAIN>,
             clip: gen_clip::<_, _>(),
             /// Input passing onto Projection.
             projection_raw,

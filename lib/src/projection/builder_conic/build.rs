@@ -13,7 +13,8 @@ use crate::stream::Unconnected;
 use super::Builder;
 use super::PRConic;
 
-impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build for Builder<BuilderCommon<CLIPU, PCNU, PR, RU, T>, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build
+    for Builder<BuilderCommon<CLIPU, DRAIN, PCNU, PR, RU, T>, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + PRConic,
@@ -21,11 +22,11 @@ where
     RU: Clone,
     T: CoordFloat + FloatConst,
 {
-    type Projector<DRAIN> = Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>;
+    type Projector = Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>;
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    fn build<DRAIN>(&self) -> Self::Projector<DRAIN> {
+    fn build(&self) -> Self::Projector {
         Self::Projector {
             cache: None,
             postclip: self.base.postclip.clone(),

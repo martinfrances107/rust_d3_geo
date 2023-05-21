@@ -300,7 +300,7 @@ mod mercator_tranverse {
     #[test]
     fn point_test() {
         println!("has no direct equivalent in javascript, but this helped me debug.");
-        let p = MercatorTransverse::builder::<DrainStub<f64>>().build::<DrainStub<f64>>();
+        let p = MercatorTransverse::builder::<DrainStub<f64>>().build();
 
         let t = p.transform(&Coord { x: 0_f64, y: 0_f64 });
         assert_eq!(

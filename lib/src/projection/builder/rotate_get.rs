@@ -4,7 +4,7 @@ use crate::projection::RotateGet;
 
 use super::Builder;
 
-impl<CLIPU, PCNU, PR, RU, T> RotateGet for Builder<CLIPU, PCNU, PR, RU, T>
+impl<CLIPU, DRAIN, PCNU, PR, RU, T> RotateGet for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {

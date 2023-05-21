@@ -49,17 +49,8 @@ pub(super) fn fit_reclip<B, CLIPC, CLIPU, FB, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            Projector<Bounds<T>> = Projector<
-                CLIPU,
-                Bounds<T>,
-                PCNU<T>,
-                PR,
-                RU,
-                Source<CLIPC, T>,
-                T,
-            >,
-        > + Clone
+    B: Build<Projector = Projector<CLIPU, Bounds<T>, PCNU<T>, PR, RU, Source<CLIPC, T>, T>>
+        + Clone
         + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
@@ -79,7 +70,7 @@ where
         y: T::zero(),
     });
 
-    let mut projector = b.build::<Bounds<T>>();
+    let mut projector = b.build();
     let bounds_stream = Bounds::default();
     let mut stream_in = projector.stream(&bounds_stream);
     object.to_stream(&mut stream_in);
@@ -93,17 +84,8 @@ pub(super) fn fit_extent_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            Projector<Bounds<T>> = Projector<
-                CLIPU,
-                Bounds<T>,
-                PCNU<T>,
-                PR,
-                RU,
-                Source<CLIPC, T>,
-                T,
-            >,
-        > + Clone
+    B: Build<Projector = Projector<CLIPU, Bounds<T>, PCNU<T>, PR, RU, Source<CLIPC, T>, T>>
+        + Clone
         + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
@@ -142,17 +124,8 @@ pub(super) fn fit_size_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            Projector<Bounds<T>> = Projector<
-                CLIPU,
-                Bounds<T>,
-                PCNU<T>,
-                PR,
-                RU,
-                Source<CLIPC, T>,
-                T,
-            >,
-        > + ClipExtentAdjust<T = T>
+    B: Build<Projector = Projector<CLIPU, Bounds<T>, PCNU<T>, PR, RU, Source<CLIPC, T>, T>>
+        + ClipExtentAdjust<T = T>
         + ClipExtentGet<T = T>
         + Clone
         + ScaleSet<T = T>
@@ -184,17 +157,8 @@ pub(super) fn fit_width_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            Projector<Bounds<T>> = Projector<
-                CLIPU,
-                Bounds<T>,
-                PCNU<T>,
-                PR,
-                RU,
-                Source<CLIPC, T>,
-                T,
-            >,
-        > + Clone
+    B: Build<Projector = Projector<CLIPU, Bounds<T>, PCNU<T>, PR, RU, Source<CLIPC, T>, T>>
+        + Clone
         + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>
@@ -233,17 +197,8 @@ pub(super) fn fit_height_reclip<B, CLIPC, CLIPU, PR, RC, RU, T>(
 ) -> B
 where
     PR: Clone + Transform<T = T>,
-    B: Build<
-            Projector<Bounds<T>> = Projector<
-                CLIPU,
-                Bounds<T>,
-                PCNU<T>,
-                PR,
-                RU,
-                Source<CLIPC, T>,
-                T,
-            >,
-        > + Clone
+    B: Build<Projector = Projector<CLIPU, Bounds<T>, PCNU<T>, PR, RU, Source<CLIPC, T>, T>>
+        + Clone
         + ClipExtentGet<T = T>
         + ClipExtentAdjust<T = T>
         + ScaleSet<T = T>

@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -8,14 +10,15 @@ use crate::clip::circle::ClipCircleU;
 
 use crate::projection::ClipAngleSet;
 
-impl<PCNU, PR, RC, RU, T> ClipAngleSet for Builder<ClipAntimeridianU<RC, T>, PCNU, PR, RU, T>
+impl<DRAIN, PCNU, PR, RC, RU, T> ClipAngleSet
+    for Builder<ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RU, T>
 where
     PCNU: Clone,
     PR: Clone,
     RU: Clone,
     T: CoordFloat + FloatConst,
 {
-    type Output = Builder<ClipCircleU<RC, T>, PCNU, PR, RU, T>;
+    type Output = Builder<ClipCircleU<RC, T>, DRAIN, PCNU, PR, RU, T>;
     type T = T;
 
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
@@ -27,6 +30,7 @@ where
         let clip = gen_clip::<RC, T>(theta);
         // Copy, Mutate - updating only theta and preclip_factory.
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             projection_raw: self.projection_raw.clone(),
             clip,
             delta_lambda: self.delta_lambda,

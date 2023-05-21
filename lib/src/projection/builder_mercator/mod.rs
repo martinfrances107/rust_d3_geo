@@ -43,6 +43,8 @@ pub mod translate_get;
 /// Builder shorthand notations.
 pub mod types;
 
+use std::marker::PhantomData;
+
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
@@ -167,14 +169,15 @@ pub(super) trait Reclip {
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Debug)]
-pub struct Builder<CLIPU, PCNU, PR, RU, T>
+pub struct Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {
+    p_d: PhantomData<DRAIN>,
     /// The raw projection.
     pub pr: PR,
     /// The wrapped builder type.
-    pub base: ProjectionBuilder<CLIPU, PCNU, PR, RU, T>,
+    pub base: ProjectionBuilder<CLIPU, DRAIN, PCNU, PR, RU, T>,
     /// post-clip extent
     pub extent: Option<[Coord<T>; 2]>,
 }
@@ -201,6 +204,7 @@ where
         ]);
 
         let mut out = Self {
+            p_d: PhantomData::<DRAIN>,
             pr,
             base,
             extent: None,
@@ -210,7 +214,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build for Builder<CLIPU, PCNU, PR, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PCNU: Clone,
@@ -218,11 +222,11 @@ where
     RU: Clone,
     T: CoordFloat,
 {
-    type Projector<DRAIN> = Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>;
+    type Projector = Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>;
 
     /// Using the currently programmed state output a new projection.
     #[inline]
-    fn build<DRAIN>(&self) -> Self::Projector<DRAIN> {
+    fn build(&self) -> Self::Projector {
         Projector {
             cache: None,
             postclip: self.base.postclip.clone(),

@@ -136,9 +136,9 @@ pub trait BuilderTrait {
 /// Output a Projector based on a Builders configuration.
 pub trait Build {
     /// The output of the build() call
-    type Projector<DRAIN>;
+    type Projector;
     /// Returns a Projector based on a builder configuration.
-    fn build<DRAIN>(&self) -> Self::Projector<DRAIN>;
+    fn build(&self) -> Self::Projector;
 }
 
 /// Controls the projections center point.

@@ -10,7 +10,7 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, PR, RU, T> ClipExtentAdjust for Builder<CLIPU, PCNU<T>, PR, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PR, RU, T> ClipExtentAdjust for Builder<CLIPU, DRAIN, PCNU<T>, PR, RU, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     RU: Clone,

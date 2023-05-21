@@ -49,12 +49,12 @@ use super::TransformExtent;
 
 /// A wrapper over Projection\Builder which overrides the traits - scale translate and center.
 #[derive(Clone, Debug)]
-pub struct Builder<CLIPU, PCNU, PR, RU, T>
+pub struct Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {
     /// The type this builder wraps.
-    pub base: ProjectionMercatorBuilder<CLIPU, PCNU, PR, RU, T>,
+    pub base: ProjectionMercatorBuilder<CLIPU, DRAIN, PCNU, PR, RU, T>,
 }
 
 impl<DRAIN, PR, T> BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T>
@@ -76,7 +76,7 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, PCNU, PR, RU, T> Build for Builder<CLIPU, PCNU, PR, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PCNU: Clone,
@@ -84,10 +84,10 @@ where
     RU: Clone,
     T: CoordFloat,
 {
-    type Projector<DRAIN> = Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>;
+    type Projector = Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>;
     /// Using the currently programmed state output a new projection.
     #[inline]
-    fn build<DRAIN>(&self) -> Self::Projector<DRAIN> {
+    fn build(&self) -> Self::Projector {
         Projector {
             cache: None,
             postclip: self.base.base.postclip.clone(),

@@ -17,7 +17,8 @@ use crate::Transform;
 use super::Builder;
 
 #[allow(clippy::similar_names)]
-impl<CLIPU, PR, T> Recenter for Builder<CLIPU, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> Recenter
+    for Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -59,7 +60,8 @@ where
     }
 }
 
-impl<CLIPU, PR, T> Recenter for Builder<CLIPU, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> Recenter
+    for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

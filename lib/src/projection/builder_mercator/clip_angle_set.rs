@@ -1,4 +1,5 @@
 use std::fmt::Debug;
+use std::marker::PhantomData;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
@@ -14,7 +15,7 @@ use crate::Transform;
 use super::Builder;
 
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
-    for Builder<ClipAntimeridianU<RC, T>, PCNU, PR, RU, T>
+    for Builder<ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RU, T>
 where
     PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
@@ -23,7 +24,7 @@ where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
-    type Output = Builder<ClipCircleU<RC, T>, PCNU, PR, RU, T>;
+    type Output = Builder<ClipCircleU<RC, T>, DRAIN, PCNU, PR, RU, T>;
     /// f32 or f64.
     type T = T;
 
@@ -32,6 +33,7 @@ where
     #[inline]
     fn clip_angle_set(&self, angle: T) -> Self::Output {
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             pr: self.pr.clone(),
             base: self.base.clip_angle_set(angle),
             extent: self.extent,

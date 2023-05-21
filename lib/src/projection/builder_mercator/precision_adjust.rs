@@ -9,8 +9,8 @@ use crate::Transform;
 
 use super::Builder;
 
-impl<CLIPU, PCNU, PR, T> PrecisionAdjust
-    for Builder<CLIPU, PCNU, PR, Resample<PR, Unconnected, T>, T>
+impl<CLIPU, PCNU, DRAIN, PR, T> PrecisionAdjust
+    for Builder<CLIPU, DRAIN, PCNU, PR, Resample<PR, Unconnected, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

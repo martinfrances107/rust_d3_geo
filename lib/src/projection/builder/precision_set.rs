@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
@@ -22,9 +24,10 @@ use super::template::ResampleNonePCNC;
 use super::template::ResamplePCNC;
 use super::Builder;
 
-impl<PR, PCNC, PCNU, T> PrecisionSet
+impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
     for Builder<
         ClipAntimeridianU<None<PR, Connected<PCNC>, T>, T>,
+        DRAIN,
         PCNU,
         PR,
         None<PR, Unconnected, T>,
@@ -38,6 +41,7 @@ where
 {
     type Output = Builder<
         ClipAntimeridianU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
+        DRAIN,
         PCNU,
         PR,
         Resample<PR, Unconnected, T>,
@@ -61,6 +65,7 @@ where
 
         // Copy - Mutate.
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,
@@ -92,6 +97,7 @@ where
 impl<DRAIN, PR, PCNU, T> PrecisionSet
     for Builder<
         ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
+        DRAIN,
         PCNU,
         PR,
         None<PR, Unconnected, T>,
@@ -104,6 +110,7 @@ where
 {
     type Output = Builder<
         ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
+        DRAIN,
         PCNU,
         PR,
         Resample<PR, Unconnected, T>,
@@ -128,6 +135,7 @@ where
 
         // Copy - Mutate.
         Self::Output {
+            p_d: PhantomData::<DRAIN>,
             sx: self.sx,
             sy: self.sy,
             x: self.x,

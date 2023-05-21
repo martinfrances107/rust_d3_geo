@@ -42,9 +42,8 @@ fn fit_no_clip<B, CLIPC, CLIPU, FB, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            Projector<Bounds<T>> = Projector<CLIPU, Bounds<T>, NoPCNU, PR, RU, Source<CLIPC, T>, T>,
-        > + Clone
+    B: Build<Projector = Projector<CLIPU, Bounds<T>, NoPCNU, PR, RU, Source<CLIPC, T>, T>>
+        + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     FB: FnMut([Coord<T>; 2], &B) -> B,
@@ -62,7 +61,7 @@ where
         y: T::zero(),
     });
     let bounds_stream = Bounds::<T>::default();
-    let mut stream_in = builder.build::<Bounds<T>>().stream(&bounds_stream);
+    let mut stream_in = builder.build().stream(&bounds_stream);
 
     object.to_stream(&mut stream_in);
     let bounds = stream_in.endpoint().result();
@@ -75,9 +74,8 @@ pub(super) fn fit_extent_no_clip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            Projector<Bounds<T>> = Projector<CLIPU, Bounds<T>, NoPCNU, PR, RU, Source<CLIPC, T>, T>,
-        > + Clone
+    B: Build<Projector = Projector<CLIPU, Bounds<T>, NoPCNU, PR, RU, Source<CLIPC, T>, T>>
+        + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
@@ -114,9 +112,8 @@ pub(super) fn fit_size_no_clip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            Projector<Bounds<T>> = Projector<CLIPU, Bounds<T>, NoPCNU, PR, RU, Source<CLIPC, T>, T>,
-        > + Clone
+    B: Build<Projector = Projector<CLIPU, Bounds<T>, NoPCNU, PR, RU, Source<CLIPC, T>, T>>
+        + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
@@ -145,9 +142,8 @@ pub(super) fn fit_width_no_clip<B, CLIPC, CLIPU, PR, RC, RU, T>(
     object: &impl Streamable<T = T>,
 ) -> B
 where
-    B: Build<
-            Projector<Bounds<T>> = Projector<CLIPU, Bounds<T>, NoPCNU, PR, RU, Source<CLIPC, T>, T>,
-        > + Clone
+    B: Build<Projector = Projector<CLIPU, Bounds<T>, NoPCNU, PR, RU, Source<CLIPC, T>, T>>
+        + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
@@ -184,9 +180,8 @@ pub(super) fn fit_height_no_clip<B, CLIPC, CLIPU, PR, RC, RU, T>(
 ) -> B
 where
     PR: Clone + Transform<T = T>,
-    B: Build<
-            Projector<Bounds<T>> = Projector<CLIPU, Bounds<T>, NoPCNU, PR, RU, Source<CLIPC, T>, T>,
-        > + Clone
+    B: Build<Projector = Projector<CLIPU, Bounds<T>, NoPCNU, PR, RU, Source<CLIPC, T>, T>>
+        + Clone
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,

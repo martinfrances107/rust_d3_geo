@@ -11,7 +11,7 @@ use super::template::NoPCNU;
 use super::template::PCNU;
 use super::Builder;
 
-impl<CLIPU, PR, T> AngleSet for Builder<CLIPU, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> AngleSet for Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -24,7 +24,7 @@ where
     }
 }
 
-impl<CLIPU, PR, T> AngleSet for Builder<CLIPU, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> AngleSet for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
