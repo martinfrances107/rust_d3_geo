@@ -13,6 +13,7 @@ where
 {
     type T = T;
 
+    #[inline]
     fn center(&self) -> Coord<Self::T>
     where
         Self::T: CoordFloat,

@@ -12,6 +12,7 @@ where
 {
     type T = T;
 
+    #[inline]
     fn scale(&self) -> Self::T {
         self.base.scale()
     }
