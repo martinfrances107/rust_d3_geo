@@ -18,7 +18,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 where
     PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
-    RC: Clone + Stream<EP = DRAIN, T = T>,
+    RC: Stream<EP = DRAIN, T = T>,
     RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

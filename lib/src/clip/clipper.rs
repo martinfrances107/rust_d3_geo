@@ -75,7 +75,6 @@ where
     I: Clone,
     LU: Clone + StreamConnectable<Output<RC> = LC> + Bufferable<LINE = LB, T = T>,
     PV: Clone,
-    RC: Clone,
     T: CoordFloat,
 {
     type SC = RC;

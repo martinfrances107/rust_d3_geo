@@ -63,7 +63,7 @@ where
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     PR: Transform<T = T>,
     RU: Clone + Connectable<Output<PCNC> = RC>,
-    RC: Clone,
+
     T: CoordFloat + FloatConst,
 {
     /// Connects a DRAIN to the projection.

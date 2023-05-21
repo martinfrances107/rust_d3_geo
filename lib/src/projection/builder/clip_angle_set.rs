@@ -12,7 +12,6 @@ impl<PCNU, PR, RC, RU, T> ClipAngleSet for Builder<ClipAntimeridianU<RC, T>, PCN
 where
     PCNU: Clone,
     PR: Clone,
-    RC: Clone,
     RU: Clone,
     T: CoordFloat + FloatConst,
 {

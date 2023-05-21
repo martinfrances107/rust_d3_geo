@@ -48,10 +48,10 @@ where
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
     FB: FnMut([Coord<T>; 2], &B) -> B,
-    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
+    CLIPU: ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
-    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RC: Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -83,7 +83,7 @@ where
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
-    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RC: Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -122,7 +122,7 @@ where
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
-    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RC: Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -153,7 +153,7 @@ where
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
-    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RC: Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -191,7 +191,7 @@ where
         + TranslateSet<T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RC: Clone + Stream<EP = Bounds<T>, T = T>,
+    RC: Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
