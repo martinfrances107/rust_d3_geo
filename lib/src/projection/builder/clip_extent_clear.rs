@@ -18,7 +18,6 @@ use super::types::BuilderAntimeridianResampleNoneNoClip;
 // Vary by Resample/None
 impl<DRAIN, PR, T> ClipExtentClear for BuilderAntimeridianResampleClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + Default + FloatConst,
 {
@@ -58,7 +57,6 @@ where
 
 impl<DRAIN, PR, T> ClipExtentClear for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + Default + FloatConst,
 {

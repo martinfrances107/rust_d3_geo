@@ -22,7 +22,6 @@ use crate::projection::ClipExtentSet;
 // Varariantion over Resample/None as Resample is rebuilt.
 impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + Default + FloatConst,
 {
@@ -62,7 +61,6 @@ where
 
 impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + Default + FloatConst,
 {

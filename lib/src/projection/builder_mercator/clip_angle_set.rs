@@ -16,7 +16,6 @@ use super::Builder;
 impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
     for Builder<ClipAntimeridianU<RC, T>, PCNU, PR, RU, T>
 where
-    DRAIN: Clone,
     PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     RC: Clone + Stream<EP = DRAIN, T = T>,
