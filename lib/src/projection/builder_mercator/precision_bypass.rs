@@ -9,7 +9,6 @@ use crate::projection::PrecisionBypass;
 
 impl<DRAIN, PR, T> PrecisionBypass for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + Default + FloatConst,
 {
@@ -28,7 +27,6 @@ where
 
 impl<DRAIN, PR, T> PrecisionBypass for BuilderMercatorCircleResampleClip<DRAIN, PR, T>
 where
-    DRAIN: Clone,
     PR: Clone,
     T: CoordFloat + FloatConst,
 {
