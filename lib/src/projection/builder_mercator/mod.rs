@@ -23,7 +23,6 @@ pub mod precision_get;
 /// A builder tranform.
 pub mod precision_set;
 
-mod fit_reclip;
 mod reclip;
 /// A builder getter.
 pub mod reflect_get;
