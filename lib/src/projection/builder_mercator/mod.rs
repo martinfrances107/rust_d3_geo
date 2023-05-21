@@ -182,7 +182,6 @@ where
 
 impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
-    // DRAIN: Clone + Default + Stream<EP = DRAIN, T = T>,
     DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + Default + FloatConst,

@@ -18,7 +18,6 @@ mod translate_set;
 #[derive(Clone, Debug)]
 pub struct Builder<SD, T>
 where
-    SD: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     /// The underlying projection.
