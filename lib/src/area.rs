@@ -76,7 +76,12 @@ where
         object.to_stream(&mut a);
         a.area_sum * a.two
     }
+}
 
+impl<T> Area<T>
+where
+    T: CoordFloat + FloatConst,
+{
     fn area_point_first(&mut self, p: &Coord<T>, _m: Option<u8>) {
         self.point_fn = PointFn::Area;
         self.lambda00 = p.x;
