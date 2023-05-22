@@ -232,7 +232,7 @@ pub mod projection;
 /// Generates range of T values from start to  stop by step.
 pub mod range;
 /// Rotation transforms.
-pub mod rot;
+pub(crate) mod rot;
 /// Stream related helper functions.
 pub mod stream;
 

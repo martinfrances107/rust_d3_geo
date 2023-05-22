@@ -13,7 +13,14 @@ use st::St;
 
 /// Construct a `ScaleTranslateRotate` transform.
 #[inline]
-pub fn generate<T>(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: &T) -> ScaleTranslateRotate<T>
+pub(crate) fn generate<T>(
+    k: &T,
+    dx: &T,
+    dy: &T,
+    sx: &T,
+    sy: &T,
+    alpha: &T,
+) -> ScaleTranslateRotate<T>
 where
     T: CoordFloat,
 {
