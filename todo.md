@@ -2,6 +2,8 @@
 
 README.md say that in version 2.0 par_iter will be used
 
+  Look at PR it is not being used... in all cases? Can I remove the generic PR.
+
   graticule returns a string it should return a Path2d
 
   profile code. ( move the albers_usa profile target.. make it render countries.)
