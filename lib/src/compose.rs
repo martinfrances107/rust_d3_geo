@@ -3,7 +3,9 @@ use geo_types::Coord;
 
 use crate::Transform;
 
-/// Combines transforms together.
+/// Combines two transforms,
+///
+/// A applied then B
 #[derive(Clone, Debug)]
 pub struct Compose<TA, TB> {
     pub a: TA,
