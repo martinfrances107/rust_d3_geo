@@ -32,7 +32,7 @@ The limits of the javascript library become obvious when developing interactive 
 For example the examples/globe applications operate on a 1:50M resolution map of the earth. On a desktop machine this is beyond the javascript version.
 
 <table>
-<th align="left" colspan="3">Supported Projections</th>
+<th align="left" colspan="2">Supported Projections</th>
 
 <th align="right"></th>
 <tr><td>Albers</td><td>Equidistant</td><td>Mercator</td></tr>
@@ -44,7 +44,7 @@ For example the examples/globe applications operate on a 1:50M resolution map of
 
 ## Examples
 
-These Examples are provided to help developers convert their existing javascript to rust. They can be found in the github reposository associated with this crate. Please follow the "Running the examples" section below.
+These Examples are provided to help developers convert their existing javascript to rust. They can be found in the github reposository associated with this crate.
 
 <table>
 <thead>
@@ -58,15 +58,16 @@ These Examples are provided to help developers convert their existing javascript
 <tr>
 <tr>
 <td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>.  <br/><br/> For perfomance reasons this example is best viewed by running "cargo build" and then "cargo serve" rather the running the development build.
+
 (Scale 1:50M)
-<br/>
-<br/>
+
 </td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/rotating.png"></td>
 </tr>
 <tr>
 <td><strong>examples/globe/svg</strong> <br/><br/> SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules.
-(Scale 1:50M)</td>
+(Scale 1:50M)
+</td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/globe.svg"> </td>
 </tr>
 <td><strong>examples/globe/drag_and_zoom</strong> <br/><br/>
@@ -86,38 +87,76 @@ As a confidence building exercise, this demo
 shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>. </td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/projection.png"> </td>
 </tr>
-<td><strong>examples/globe/albers_usa</strong> <br/><br/>
+<td><strong>examples/globe/albers_usa</strong> <br><br>
 This example show all the counties in the USA
 
 AlbersUSA is unlike the other projections.
 Alaska and Hawaii are rendered as insets.
 As can be see in the code a Multidrain must be used to gather the three projections.(Scale of 1:10M)
-<br/>
-<br/>
+
 </td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/albers_usa.svg"></td>
 </tr>
 <tr>
-<td> <strong>examples/ring</strong><br/>Sample code in both RUST and javascript that renders a complex multipolygon. ( Orthographic and Sterographic ) </td>
+<td> <strong>examples/ring</strong><br/>
+<br>
+Sample code in both RUST and javascript that renders a complex multipolygon. ( Orthographic and Sterographic ) </td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/ring.png"></td>
 </tr>
 </tbody>
 <table>
 
 <br/>
-<details>
-<summary> Here is a summary of things to-do before the crate is published.</summary>
 
-* The recenter state-based API refacor is almost complete.
-  Once fit_size_resampling() is reinstated the code-coverage metric will jump 10% back to the previous value of approx 82%
+Here is an outline of the common steps found in all the examples.
 
-* The API is not stabalised. If perfomance issues arise then the API will change. Additionaly I plan a final review to remove anything uneeded before making changes become complicated.
+1) Take a projection's default builder, make adjustments build to construct a projector.
 
-* The clipping algorithm in clip/rejoin/mod.rs needs to be refactored.
-see  [The intersection Problem.](/intersection_problem.md)
-Test coverage in that area is high so the algortihms is working but the data structures make extensive use of vectors ( heap objects ) containng references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>>```   which is not performant.
+    ```rust
+    let projector = Stereographic::<f64>::builder()
+      .scale_set(100_f64)
+      .translate_set(&Coord {
+         x: 300_f64,
+         y: 300_f64,
+      })
+      .clip_angle(90_f64)
+      .precision_set(&10_f64)
+      .build();
+    ````
 
-</details>
+2) Construct a PathBuilder
+
+    A Path is a collection of nodes where each step on the path transforms the geometry object.
+
+    A variey of endpoint are available Area, Length, Centroid, but these examples deal
+    with rendering to a HTML canvas element or a SVG path element.
+
+    When rendering to a HTML canvas element build path from a Path2D "rendering conext"
+
+      ```rust
+       //  Construct a PathBuilder linked to Path2d
+       // rendering context.
+       let path2d = Path2d::new()?;
+       let endpoint = PathBuilder::new(path2d);
+       let pb = PathBuilder::new(endpoint);
+       let path = pb.build();
+      ```
+
+    Generating a SVG image
+
+      ```rust
+        let pb = PathBuilder::pathstring();
+        let path = pb.build();
+      ```
+
+3) Please see the different examples, but the common next step is to
+   construct a PathBuilder object and then to stream a geometry object into it :-
+
+      ```rust
+         // 'countries' is a geometry extratced from
+         // a world map json file.
+         path.stream(&countries)
+      ```
 
 ## Running the examples
 
@@ -186,22 +225,6 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
 
 <br>
 
-## Future Multi thread support
-
-* [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
-I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
-
-* The Hashmaps - appear slow.
-  Maybe I can get performace improvements by replacing them with B-tree collections?
-
-<br>
-
-## Architecture discussion
-
-There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes. A full discusion can be found [here](/intersection_problem.md)
-
-<br>
-
 ## Coding Standard
 
 * Idomatic RUST, as defined by cargo clippy where possible.
@@ -250,22 +273,31 @@ There is an aspect of the design that needs review. It related to the best way t
      By design, all code is prevented from calling line_start() or point() unless the object
      has been connected to another pipeline stage.
 
-## Unimplemented sections of the library
+<br/>
 
-Support for a custom projection is not yet supported.
-For an example of this see the test labelled "projection.fitExtent(…) custom projection"
+## Future 2.0 upgrades
 
-I am trying to get a program of mine to run faster, but I want this to eventually be a true library port. So feel free to add suggestions to my todo list.
+Version 1.0 is about to become public, where major changes are discourged.
+
+* [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
+I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
+
+* The Hashmaps - appear slow.
+  Maybe I can get performace improvements by replacing them with B-tree collections?
 
 <br>
 
-## Other To-do's
+### Architecture discussion
 
-## Document API changes such as
+There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes.
 
-* src/projection/clip_angle_reset()
-* src/projection/clip_extent_clear()
+The clipping algorithm in clip/rejoin/mod.rs needs to be refactored.
+see  [The intersection Problem.](/intersection_problem.md)
+Test coverage in that area is high so the algortihms is working but the data structures make extensive use of vectors ( heap objects ) containng references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>>```   which is not performant.
 
-Finally
+ A full discusion can be found [here](/intersection_problem.md)
 
-[todo.md](/todo.md) contains a more detailed list
+### Unimplemented sections of the library
+
+Support for a custom projection is not yet supported.
+For an example of this see the test labelled "projection.fitExtent(…) custom projection"
