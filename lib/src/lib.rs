@@ -44,9 +44,6 @@
 //!
 //! ```rust
 //! use geo_types::Coord;
-//! use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
-//! use d3_geo_rs::path::endpoint::Endpoint as PathEndpoint;
-//! use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 //! use d3_geo_rs::projection::Build;
 //! use d3_geo_rs::projection::RawBase as ProjectionRawBase;
 //! use d3_geo_rs::projection::stereographic::Stereographic;
@@ -93,7 +90,6 @@
 //! use wasm_bindgen::JsCast;
 //! use gloo_utils::format::JsValueSerdeExt;
 //! use wasm_bindgen_futures::JsFuture;
-//! use web_sys::Document;
 //! use web_sys::*;
 //!
 //! use d3_geo_rs::clip::circle::ClipCircleC;
@@ -107,9 +103,7 @@
 //! use d3_geo_rs::projection::RotateSet;
 //! use d3_geo_rs::projection::ScaleSet;
 //! use d3_geo_rs::projection::TranslateSet;
-//! use d3_geo_rs::projection::builder::template::NoPCNC;
 //! use rust_topojson_client::feature::feature_from_name;
-//! use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 //!
 //! fn document() -> Result<Document, JsValue> {
 //!     let window = web_sys::window().unwrap();
