@@ -68,7 +68,7 @@ where
 {
     /// Connects a DRAIN to the projection.
     ///
-    /// The Projection Stream Pipeline :-
+    /// The Projection Stream Path :-
     ///
     /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
     ///

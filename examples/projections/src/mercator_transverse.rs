@@ -7,7 +7,7 @@ use web_sys::Path2d;
 
 use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::context::Context;
+use d3_geo_rs::path::endpoint::Endpoint;
 use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::mercator_transverse::MercatorTransverse;
 use d3_geo_rs::projection::Build;
@@ -37,7 +37,7 @@ pub async fn draw_mercator_transverse(land: &Geometry<f64>) -> Result<(), JsValu
 
     let path2d = Path2d::new()?;
 
-    let context: Context = Context::new(path2d);
+    let context: Endpoint = Endpoint::new(path2d);
     let pb = PathBuilder::new(context);
 
     let mut mercator = MercatorTransverse::builder();

@@ -23,14 +23,14 @@ use super::Interpolator;
 use super::LineConnected;
 use super::PointVisible;
 
-/// Clip specific connections to a stream pipeline.
+/// Clip specific connections to a stream path.
 pub(crate) trait Connectable {
     /// Represents to final connected state.
     type Output;
-    /// The next stream node in the pipeline.
+    /// The next stream node on the path.
     type SC;
 
-    /// Connects to previous pipeline stage.
+    /// Connects to previous pathway stage.
     fn connect(&self, sink: Self::SC) -> Self::Output;
 }
 

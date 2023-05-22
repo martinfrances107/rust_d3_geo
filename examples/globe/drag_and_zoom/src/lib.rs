@@ -38,7 +38,7 @@ use web_sys::Window;
 
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::context::Context;
+use d3_geo_rs::path::endpoint::Endpoint;
 use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
 use d3_geo_rs::projection::orthographic::Orthographic;
@@ -80,7 +80,7 @@ pub struct Renderer {
     context2d: CanvasRenderingContext2d,
     countries: Geometry<f64>,
     graticule: Geometry<f64>,
-    ob: BuilderCircleResampleNoClip<Context, Orthographic<f64>, f64>,
+    ob: BuilderCircleResampleNoClip<Endpoint, Orthographic<f64>, f64>,
 }
 
 #[wasm_bindgen]
@@ -216,7 +216,7 @@ impl Renderer {
     /// Render the next frame.
     pub fn render(&mut self, solid: bool) {
         let path2d = Path2d::new().unwrap();
-        let context: Context = Context::new(path2d);
+        let context: Endpoint = Endpoint::new(path2d);
 
         if !solid {
             let r = self.ob.rotate();

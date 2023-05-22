@@ -6,7 +6,7 @@ use wasm_bindgen::JsCast;
 
 use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::context::Context;
+use d3_geo_rs::path::endpoint::Endpoint;
 use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::equirectangular::Equirectangular;
 use d3_geo_rs::projection::Build;
@@ -37,7 +37,7 @@ pub async fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
 
     let path2d = Path2d::new()?;
 
-    let context = Context::new(path2d);
+    let context = Endpoint::new(path2d);
     let pb = PathBuilder::new(context);
 
     let equirectangular = Equirectangular::builder()

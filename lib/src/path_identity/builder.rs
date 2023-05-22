@@ -4,7 +4,7 @@ use std::fmt::Display;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
-use crate::path::context::Context;
+use crate::path::endpoint::Endpoint;
 use crate::path_identity::Path;
 use crate::projection::projector_identity::Projector;
 use crate::stream::Stream;
@@ -14,7 +14,7 @@ use web_sys::Path2d;
 #[cfg(test)]
 use crate::path_test_context::Path2d;
 
-use crate::path::context::Context as PathContext;
+use crate::path::endpoint::Endpoint as PathContext;
 use crate::path::string::String;
 use crate::path::PointRadiusTrait;
 
@@ -45,7 +45,7 @@ where
 }
 
 /// Context related methods.
-impl<T> Builder<Context, T>
+impl<T> Builder<Endpoint, T>
 where
     T: CoordFloat + FloatConst,
 {

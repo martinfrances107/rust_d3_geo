@@ -18,7 +18,7 @@
 //!    such as [Area](path::area::Area), [Centroids](path::centroid::Centroid),
 //!     and [Bounds](path::bounds::Bounds) on polygons and lines.
 //!
-//! TODO add note about stream pipelines and endpoints.
+//! TODO add note about stream paths and endpoints.
 //!
 //! # Available projections
 //!
@@ -39,7 +39,7 @@
 //! ```rust
 //! use geo_types::Coord;
 //! use d3_geo_rs::clip::antimeridian::ClipAntimeridianC;
-//! use d3_geo_rs::path::context::Context;
+//! use d3_geo_rs::path::endpoint::Endpoint as PathEndpoint;
 //! use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 //! use d3_geo_rs::projection::Build;
 //! use d3_geo_rs::projection::RawBase as ProjectionRawBase;
@@ -94,7 +94,7 @@
 //! use d3_geo_rs::graticule::generate_mls;
 //! use d3_geo_rs::path::builder::Builder as PathBuilder;
 //! use d3_geo_rs::path::Result as PathResult;
-//! use d3_geo_rs::path::context::Context;
+//! use d3_geo_rs::path::endpoint::Endpoint as PathEndpoint;
 //! use d3_geo_rs::projection::orthographic::Orthographic;
 //! use d3_geo_rs::projection::Build;
 //! use d3_geo_rs::projection::RawBase as ProjectionRawBase;
@@ -146,9 +146,9 @@
 //!
 //!     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 //!     let path2d = Path2d::new()?;
-//!     let context = Context::new(path2d);
+//!     let ep = PathEndpoint::new(path2d);
 //!
-//!     let pb = PathBuilder::new(context);
+//!     let pb = PathBuilder::new(ep);
 //!
 //!     let ortho = Orthographic::builder()
 //!         .scale_set(width as f64 / 1.3_f64 / std::f64::consts::PI)
@@ -209,7 +209,7 @@ pub mod data_object;
 pub mod distance;
 /// A graticule is a network of lines used for plotting, scaling.
 pub mod graticule;
-/// A stream pipeline stage.
+/// A stream path stage.
 pub mod identity;
 /// Testing and debug helpers.
 #[cfg(not(tarpaulin_include))]

@@ -7,7 +7,7 @@ pub mod builder;
 /// Path centroid.
 pub mod centroid;
 /// Path context.
-pub mod context;
+pub mod endpoint;
 /// Measure the perimeters of polyogns, lengths of lines.
 pub mod measure;
 /// Path String.

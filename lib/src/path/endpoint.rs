@@ -25,16 +25,18 @@ enum LineState {
     PolygonStarted,
 }
 
-/// Stream endpoint: Output to a HTML canvas element
+/// Stream path endpoint: Used when rendering to a HTML Canvas element.
+///
+/// Wraps a Path2d object, and implements STREAM trait.
 #[derive(Clone, Debug, PartialEq)]
-pub struct Context {
+pub struct Endpoint {
     line: LineState,
     point: PointState,
     radius: f64,
     pub path2d: Path2d,
 }
 
-impl Default for Context {
+impl Default for Endpoint {
     #[inline]
     fn default() -> Self {
         Self {
@@ -46,7 +48,7 @@ impl Default for Context {
     }
 }
 
-impl Context {
+impl Endpoint {
     /// Contructor.
     #[inline]
     #[must_use]
@@ -60,7 +62,7 @@ impl Context {
     }
 }
 
-impl PointRadiusTrait for Context {
+impl PointRadiusTrait for Endpoint {
     type T = f64;
 
     fn point_radius(&mut self, val: Self::T) {
@@ -69,7 +71,7 @@ impl PointRadiusTrait for Context {
 }
 
 /// Return path2d, blanking the stored value.
-impl Result for Context {
+impl Result for Endpoint {
     type Out = Path2d;
     #[inline]
     fn result(&mut self) -> Self::Out {
@@ -79,7 +81,7 @@ impl Result for Context {
     }
 }
 
-impl Stream for Context {
+impl Stream for Endpoint {
     type EP = Self;
     type T = f64;
 

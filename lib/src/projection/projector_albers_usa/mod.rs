@@ -102,7 +102,7 @@ where
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///
-    /// The Projection Stream Pipeline :-
+    /// The Projection Stream Path :-
     ///
     /// Multiplex -> DRAIN
     ///

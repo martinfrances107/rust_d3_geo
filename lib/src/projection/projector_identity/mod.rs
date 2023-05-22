@@ -14,7 +14,7 @@ use transformer::Transformer;
 
 /// Unit tests.
 pub mod tests;
-/// A stream pipeline stage.
+/// A stream path stage.
 pub mod transformer;
 /// Builder shorthand notations.
 pub mod types;
@@ -44,7 +44,7 @@ where
 {
     /// Connects a DRAIN to the projection.
     ///
-    /// The Projection Stream Pipeline :-
+    /// The Projection Stream Path :-
     ///
     ///  Transformer -> postclip -> DRAIN
     ///

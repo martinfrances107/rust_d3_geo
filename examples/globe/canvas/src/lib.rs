@@ -22,7 +22,7 @@ use web_sys::*;
 
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::context::Context;
+use d3_geo_rs::path::endpoint::Endpoint;
 use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
@@ -74,7 +74,7 @@ pub async fn start() -> Result<(), JsValue> {
 
     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
-    let context = Context::new(path2d);
+    let context = Endpoint::new(path2d);
     let pb = PathBuilder::new(context);
 
     let ortho = Orthographic::builder()

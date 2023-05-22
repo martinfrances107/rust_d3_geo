@@ -3,7 +3,7 @@ use std::fmt::Display;
 
 use geo::CoordFloat;
 
-use crate::path::context::Context;
+use crate::path::endpoint::Endpoint;
 use crate::path::Path;
 use crate::projection::projector_albers_usa::multidrain::Multidrain;
 use crate::projection::projector_albers_usa::multidrain::Unpopulated;
@@ -15,7 +15,7 @@ use web_sys::Path2d;
 #[cfg(test)]
 use crate::path_test_context::Path2d;
 
-use super::context::Context as PathContext;
+use super::endpoint::Endpoint as PathContext;
 use super::string::String;
 use super::PointRadiusTrait;
 
@@ -46,7 +46,7 @@ where
 }
 
 /// Context related methods.
-impl<T> Builder<Context, T>
+impl<T> Builder<Endpoint, T>
 where
     T: CoordFloat,
 {

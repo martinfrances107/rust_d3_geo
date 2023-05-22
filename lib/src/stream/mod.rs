@@ -18,8 +18,9 @@ use geo_types::Coord;
 
 /// State -- Unconnected.
 ///
-/// A Stream Pipeline stage blank.
-/// The state before connection.
+/// A 'blank' stage on the stream path.
+///
+/// The state before the path is constructed.
 #[derive(Clone, Default, Debug)]
 pub struct Unconnected;
 
@@ -45,9 +46,9 @@ impl<SINK> ConnectedState for Connected<SINK> {
     }
 }
 
-/// Make connections to a stream pipeline.
+/// Make connections to a stream path.
 pub trait Connectable {
-    /// The next pipeline stage.
+    /// The next stage on the path.
     type Output<SC>;
 
     /// Connects to previous pipeline stage.
@@ -65,7 +66,7 @@ pub trait ConnectedState {
     fn sink(&mut self) -> &mut Self::Sink;
 }
 
-/// Objects that can be passing to a stream pipeline.
+/// Objects that can be passing to a stream path.
 pub trait Streamable {
     /// f32 or f64.
     type T: CoordFloat;
@@ -76,7 +77,7 @@ pub trait Streamable {
         SINK: Stream<EP = EP, T = Self::T>;
 }
 
-/// Useful when the stream pipeline is not used and only
+/// Useful when the stream path is not used and only
 /// the transform portion of a projection is needed.
 ///
 /// ```
@@ -89,7 +90,7 @@ pub trait Streamable {
 /// use d3_geo_rs::projection::RawBase as ProjectionRawBase;
 /// use d3_geo_rs::stream::DrainStub;
 ///
-/// // The Projector needs a mock endpoint here for the stream pipeline.
+/// // The Projector needs a mock endpoint here for the stream path.
 /// let p = Stereographic::< f32>::builder::<DrainStub<f32>>().build();
 ///
 /// let transformed_point = p.transform(&Coord{x: 0_f32, y:0_f32});
@@ -114,9 +115,9 @@ where
 
     fn point(&mut self, _p: &Coord<Self::T>, _m: Option<u8>) {}
 }
-/// Stream Pipeline API
+/// Stream Path API
 ///
-/// Pipeline stages can be connected to perform a sequence of
+/// Path stages can be connected to perform a sequence of
 /// operations where the results can be stored in an endpoint.
 pub trait Stream
 where
