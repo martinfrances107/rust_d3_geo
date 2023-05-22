@@ -110,7 +110,7 @@ Sample code in both RUST and javascript that renders a complex multipolygon. ( O
 
 Here is an outline of the common steps found in all the examples.
 
-1) Take a projection's default builder, make adjustments build to construct a projector.
+1) Take a projection's default builder, make adjustments, then call build() to construct a projector.
 
     ```rust
     let projector = Stereographic::<f64>::builder()
@@ -129,7 +129,7 @@ Here is an outline of the common steps found in all the examples.
     A Path is a collection of nodes where each step on the path transforms the geometry object.
 
     A variey of endpoint are available Area, Length, Centroid, but these examples deal
-    with rendering to a HTML canvas element or a SVG path element.
+    only with rendering to a HTML canvas element or a SVG path element.
 
     When rendering to a HTML canvas element build path from a Path2D "rendering conext"
 
