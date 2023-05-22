@@ -22,7 +22,7 @@ mod line_fn;
 pub(crate) mod rectangle;
 
 /// Clipping break line into segments which can lasted be reconnected together.
-pub(crate) mod rejoin;
+pub mod rejoin;
 
 use geo::CoordFloat;
 use geo_types::Coord;
