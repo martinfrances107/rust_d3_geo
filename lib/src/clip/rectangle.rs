@@ -373,27 +373,24 @@ where
                 self.state.sink.polygon_start();
             }
 
-            // TODO: Can I haz a single interpolator?
             let interpolator = Interpolator::new(self.x0, self.y0, self.x1, self.y1);
-            let interpolator_rejoin = Interpolator::new(self.x0, self.y0, self.x1, self.y1);
             if clean_inside {
                 self.state.sink.line_start();
                 interpolator.interpolate(None, None, T::one(), &mut self.state.sink);
                 self.state.sink.line_end();
             }
 
-            let compare_intersection = move |a: &Rc<RefCell<Intersection<T>>>,
-                                             b: &Rc<RefCell<Intersection<T>>>|
-                  -> Ordering {
-                interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
-            };
+            let compare_intersection =
+                |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| -> Ordering {
+                    interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
+                };
 
             if visible {
                 clip_rejoin(
                     &merged_segments,
                     compare_intersection,
                     start_inside,
-                    &interpolator_rejoin,
+                    &interpolator,
                     &mut self.state.sink,
                 );
             }
