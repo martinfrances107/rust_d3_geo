@@ -325,7 +325,7 @@ pub trait ClipAngleReset {
     /// The resultant builder type.
     type Output;
 
-    ///f64 or f32
+    /// f64 or f32
     type T;
 
     /// Converts a builder using a circle clipping statergy into one using
@@ -341,7 +341,7 @@ pub trait ClipAngleReset {
 ///
 /// A projection builder sub trait.
 pub trait ClipAngleGet {
-    ///f64 or f32
+    /// f64 or f32
     type T;
 
     /// Returns the builder clipping angle (radians).
@@ -359,7 +359,7 @@ pub trait ClipAngleSet {
     /// The resultant builder type.
     type Output;
 
-    ///f64 or f32
+    /// f64 or f32
     type T;
 
     /// Switches the projection builder from antimeridian to circle based clipping.
