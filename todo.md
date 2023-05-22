@@ -15,9 +15,6 @@ examples/projection eslint needs updating.
 
 * lots of todos missing
 
-* projection_rotate_test -- did it ever work?
-  Only differences are in the LSDigits.
-
 * Write examples/index.html -- a guide to building rust projects.
 
 * Develop styling for world maps graticules on bottom, overlayed by land.
