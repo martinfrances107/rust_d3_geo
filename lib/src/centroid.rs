@@ -89,6 +89,52 @@ impl<T> Centroid<T>
 where
     T: AddAssign + CoordFloat + FloatConst,
 {
+    /// Compute the centroid.
+    pub fn calc(&mut self, d_object: &impl Streamable<T = T>) -> Point<T> {
+        self.W0 = T::zero();
+        self.W1 = T::zero();
+        self.X0 = T::zero();
+        self.Y0 = T::zero();
+        self.Z0 = T::zero();
+        self.X1 = T::zero();
+        self.Y1 = T::zero();
+        self.Z1 = T::zero();
+        self.X2 = T::zero();
+        self.Y2 = T::zero();
+        self.Z2 = T::zero();
+        d_object.to_stream(self);
+
+        let mut x = self.X2;
+        let mut y = self.Y2;
+        let mut z = self.Z2;
+        let mut m = (x * x + y * y + z * z).sqrt();
+        // If the area-weighted ccentroid is undefined, fall back to length-weighted ccentroid.
+        if m < self.epsilon2 {
+            x = self.X1;
+            y = self.Y1;
+            z = self.Z1;
+            // If the feature has zero length, fall back to arithmetic mean of point vectors.
+            if self.W1 < self.epsilon {
+                x = self.X0;
+                y = self.Y0;
+                z = self.Z0;
+            }
+            m = (x * x + y * y + z * z).sqrt();
+
+            // If the feature still has an undefined centroid, then return.
+            if m < self.epsilon2 {
+                return Point::new(T::nan(), T::nan());
+            }
+        }
+
+        Point::new(y.atan2(x).to_degrees(), (z / m).asin().to_degrees())
+    }
+}
+
+impl<T> Centroid<T>
+where
+    T: AddAssign + CoordFloat + FloatConst,
+{
     /// Arithmetic mean of Cartesian vectors.
     fn centroid_point_cartesian(&mut self, x: T, y: T, z: T) {
         self.W0 += T::one();
@@ -207,47 +253,6 @@ where
     #[inline]
     fn centroid_ring_start(&mut self) {
         self.point_fn = Self::centroid_ring_point_first;
-    }
-
-    /// Compute the centroid.
-    pub fn centroid(&mut self, d_object: &impl Streamable<T = T>) -> Point<T> {
-        self.W0 = T::zero();
-        self.W1 = T::zero();
-        self.X0 = T::zero();
-        self.Y0 = T::zero();
-        self.Z0 = T::zero();
-        self.X1 = T::zero();
-        self.Y1 = T::zero();
-        self.Z1 = T::zero();
-        self.X2 = T::zero();
-        self.Y2 = T::zero();
-        self.Z2 = T::zero();
-        d_object.to_stream(self);
-
-        let mut x = self.X2;
-        let mut y = self.Y2;
-        let mut z = self.Z2;
-        let mut m = (x * x + y * y + z * z).sqrt();
-        // If the area-weighted ccentroid is undefined, fall back to length-weighted ccentroid.
-        if m < self.epsilon2 {
-            x = self.X1;
-            y = self.Y1;
-            z = self.Z1;
-            // If the feature has zero length, fall back to arithmetic mean of point vectors.
-            if self.W1 < self.epsilon {
-                x = self.X0;
-                y = self.Y0;
-                z = self.Z0;
-            }
-            m = (x * x + y * y + z * z).sqrt();
-
-            // If the feature still has an undefined centroid, then return.
-            if m < self.epsilon2 {
-                return Point::new(T::nan(), T::nan());
-            }
-        }
-
-        Point::new(y.atan2(x).to_degrees(), (z / m).asin().to_degrees())
     }
 }
 

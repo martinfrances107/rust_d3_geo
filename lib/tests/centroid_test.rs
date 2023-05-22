@@ -23,22 +23,22 @@ mod centroid {
     fn of_a_point_is_itself() {
         println!("the centroid of a point is itself");
         assert!(in_delta_point(
-            Centroid::default().centroid(&Point::new(0f64, 0f64)),
+            Centroid::default().calc(&Point::new(0f64, 0f64)),
             Point::new(0f64, 0f64),
             1e-6
         ));
         assert!(in_delta_point(
-            Centroid::default().centroid(&Point::new(1f64, 1f64)),
+            Centroid::default().calc(&Point::new(1f64, 1f64)),
             Point::new(1f64, 1f64),
             1e-6
         ));
         assert!(in_delta_point(
-            Centroid::default().centroid(&Point::new(2f64, 3f64)),
+            Centroid::default().calc(&Point::new(2f64, 3f64)),
             Point::new(2f64, 3f64),
             1e-6
         ));
         assert!(in_delta_point(
-            Centroid::default().centroid(&Point::new(-4f64, -5f64)),
+            Centroid::default().calc(&Point::new(-4f64, -5f64)),
             Point::new(-4f64, -5f64),
             1e-6
         ));
@@ -51,7 +51,7 @@ mod centroid {
         );
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&GeometryCollection(vec![
+            Centroid::default().calc(&GeometryCollection(vec![
                 Geometry::Point(Point::new(0f64, 0f64)),
                 Geometry::Point(Point::new(1f64, 2f64))
             ])),
@@ -60,7 +60,7 @@ mod centroid {
         ));
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&MultiPoint(vec![
+            Centroid::default().calc(&MultiPoint(vec![
                 Point::new(0f64, 0f64),
                 Point::new(1f64, 2f64),
             ])),
@@ -72,7 +72,7 @@ mod centroid {
         ));
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&MultiPoint(vec![
+            Centroid::default().calc(&MultiPoint(vec![
                 Point::new(179f64, 0f64),
                 Point::new(-179f64, 0f64),
             ])),
@@ -84,14 +84,14 @@ mod centroid {
     #[test]
     fn centrdoi_of_a_set_of_points_and_their_antipodes() {
         println!("the centroid of a set of points and their antipodes is ambiguous");
-        let p1: Point<f64> = Centroid::default().centroid(&MultiPoint(vec![
+        let p1: Point<f64> = Centroid::default().calc(&MultiPoint(vec![
             Point::new(0_f64, 0_f64),
             Point::new(180_f64, 0_f64),
         ]));
         assert!(p1.x().is_nan());
         assert!(p1.y().is_nan());
 
-        let p2 = Centroid::default().centroid(&MultiPoint(vec![
+        let p2 = Centroid::default().calc(&MultiPoint(vec![
             Point::new(0_f64, 0_f64),
             Point::new(90_f64, 0_f64),
             Point::new(180_f64, 0_f64),
@@ -100,7 +100,7 @@ mod centroid {
         assert!(p2.x().is_nan());
         assert!(p2.y().is_nan());
 
-        let p3 = Centroid::default().centroid(&MultiPoint(vec![
+        let p3 = Centroid::default().calc(&MultiPoint(vec![
             Point::new(0_f64, 0_f64),
             Point::new(0_f64, 90_f64),
             Point::new(180_f64, 0_f64),
@@ -113,7 +113,7 @@ mod centroid {
     #[test]
     fn of_the_empty_set_of_points() {
         println!("the centroid of the empty set of points is ambiguous");
-        let p: Point<f64> = Centroid::default().centroid(&MultiPoint(vec![]));
+        let p: Point<f64> = Centroid::default().calc(&MultiPoint(vec![]));
 
         assert!(p.x().is_nan());
         assert!(p.y().is_nan());
@@ -123,7 +123,7 @@ mod centroid {
     fn line_string_is_the_spherical_everage() {
         println!("the centroid of a line string is the (spherical) average of its constituent great arc segments");
         assert!(in_delta_point(
-            Centroid::default().centroid(&line_string![(
+            Centroid::default().calc(&line_string![(
                 x: 0.0f64,
                 y: 0.0f64
             ), (
@@ -135,7 +135,7 @@ mod centroid {
         ));
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&line_string![
+            Centroid::default().calc(&line_string![
               ( x: 0.0f64, y: 0.0f64),
               ( x: 0f64, y: 90f64 )
             ]),
@@ -144,7 +144,7 @@ mod centroid {
         ));
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&line_string![
+            Centroid::default().calc(&line_string![
                 ( x: 0f64, y: 0f64 ),
                 ( x: 0f64, y: 45f64 ),
                 ( x: 0f64, y: 90f64)
@@ -154,7 +154,7 @@ mod centroid {
         ));
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&line_string![
+            Centroid::default().calc(&line_string![
                 ( x: -1f64, y: -1f64 ), ( x: 1f64, y: 1f64 )
             ]),
             Point::new(0f64, 0f64),
@@ -162,7 +162,7 @@ mod centroid {
         ));
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&line_string![
+            Centroid::default().calc(&line_string![
                 ( x: -60f64, y: -1f64 ),
                 ( x: 60f64, y: 1f64 ),
             ]),
@@ -171,7 +171,7 @@ mod centroid {
         ));
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&line_string![
+            Centroid::default().calc(&line_string![
             ( x: 179f64, y: -1f64 ),
             ( x: -179f64, y: 1f64 ),
             ]),
@@ -180,7 +180,7 @@ mod centroid {
         ));
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&line_string![
+            Centroid::default().calc(&line_string![
                 (x: -179f64, y: 0f64),
                 (x: 0f64, y: 0f64),
                 (x: 179f64, y: 0f64)
@@ -190,7 +190,7 @@ mod centroid {
         ));
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&line_string![
+            Centroid::default().calc(&line_string![
              ( x: -180f64, y: -90f64 ),
              ( x: 0f64, y: 0f64 ),
              ( x: 0f64, y: 90f64 ),
@@ -204,7 +204,7 @@ mod centroid {
     fn line_string_great_arc_segments() {
         println!("the centroid of a great arc from a point to its antipode is ambiguous");
 
-        let p = Centroid::default().centroid(&line_string![(
+        let p = Centroid::default().calc(&line_string![(
             x: 180.0f64,
             y: 0.0f64
         ), (
@@ -214,7 +214,7 @@ mod centroid {
         assert!(p.x().is_nan());
         assert!(p.y().is_nan());
 
-        let p = Centroid::default().centroid(&MultiLineString(vec![
+        let p = Centroid::default().calc(&MultiLineString(vec![
             line_string![(x: 0_f64, y: -90_f64), (x: 0_f64, y: 90_f64)],
         ]));
         assert!(p.x().is_nan());
@@ -230,7 +230,7 @@ mod centroid {
         ])]);
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&mls),
+            Centroid::default().calc(&mls),
             Point::new(0_f64, 1_f64),
             1e-6_f64
         ));
@@ -245,7 +245,7 @@ mod centroid {
         ]);
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&ls),
+            Centroid::default().calc(&ls),
             Point::new(1_f64, 1_f64),
             1e-6_f64
         ));
@@ -259,7 +259,7 @@ mod centroid {
         ]);
 
         assert!(in_delta_point(
-            Centroid::default().centroid(&gc),
+            Centroid::default().calc(&gc),
             Point::new(0.666534_f64, 1.333408_f64),
             1e-6_f64
         ));
@@ -269,7 +269,7 @@ mod centroid {
     fn an_empty_polygon_with_non_zero_extent_is_treated_as_a_line() {
         println!("an empty polygon with non-zero extent is treated as a line");
         assert!(in_delta_point(
-            Centroid::default().centroid(&polygon![
+            Centroid::default().calc(&polygon![
             (
                 x: 1.0f64,
                 y: 1.0f64
@@ -300,7 +300,7 @@ mod centroid {
     fn an_empty_polygon_with_non_zero_extent_is_treated_as_a_point() {
         println!("an empty polygon with zero extent is treated as a point");
         assert!(in_delta_point(
-            Centroid::default().centroid(&polygon![
+            Centroid::default().calc(&polygon![
             (
                 x: 1.0f64,
                 y: 1.0f64
@@ -330,7 +330,7 @@ mod centroid {
             )),
         ]);
         assert!(in_delta_point(
-            Centroid::default().centroid(&gc),
+            Centroid::default().calc(&gc),
             Point::new(0.799907, 1.600077),
             1e-6
         ));
@@ -339,7 +339,7 @@ mod centroid {
     #[test]
     fn of_the_equator_is_ambiguous() {
         println!("the centroid of the equator is ambiguous");
-        let c = Centroid::default().centroid(&line_string![
+        let c = Centroid::default().calc(&line_string![
         (
             x: 0f64,
             y: 0f64
@@ -386,7 +386,7 @@ mod centroid {
             })
             .circle();
         assert!(in_delta_point(
-            Centroid::default().centroid(&Geometry::MultiPolygon(MultiPolygon(vec![p45, p60]))),
+            Centroid::default().calc(&Geometry::MultiPolygon(MultiPolygon(vec![p45, p60]))),
             Point::new(-90_f64, 0_f64),
             1e-6
         ));
@@ -443,7 +443,7 @@ mod centroid {
     fn of_a_spherical_square_on_the_equator() {
         println!("the centroid of a spherical square on the equator");
         assert!(in_delta_point(
-            Centroid::default().centroid(&polygon![
+            Centroid::default().calc(&polygon![
             (
                 x: 0_f64,
                 y: -10_f64
@@ -474,7 +474,7 @@ mod centroid {
     fn of_a_spherical_square_touching_the_antimeridian() {
         println!("the centroid of a spherical square touching the antimeridian");
         assert!(in_delta_point(
-            Centroid::default().centroid(&polygon![
+            Centroid::default().calc(&polygon![
             (
                 x: -180_f64,
                 y: 0_f64
@@ -518,7 +518,7 @@ mod centroid {
 
         let polygon = Polygon::new(l60, vec![l45_rev]);
         assert!(in_delta_point(
-            Centroid::default().centroid(&polygon),
+            Centroid::default().calc(&polygon),
             Point::new(0_f64, 45_f64),
             1e-6
         ));
@@ -527,7 +527,7 @@ mod centroid {
     #[test]
     fn of_a_sphere_is_ambigous() {
         println!("the centroid of a sphere is ambiguous");
-        let point: Point<f64> = Centroid::default().centroid(&Sphere::default());
+        let point: Point<f64> = Centroid::default().calc(&Sphere::default());
         assert!(point.x().is_nan());
         assert!(point.y().is_nan());
     }
@@ -556,7 +556,7 @@ mod centroid {
             Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
             Geometry::Point(point!(x:0_f64, y: 0_f64)),
         ]);
-        let centroid = Centroid::default().centroid(&data_object);
+        let centroid = Centroid::default().calc(&data_object);
         assert!(in_delta_point(centroid, (179.5_f64, 0_f64).into(), 1e-6));
     }
 
@@ -589,7 +589,7 @@ mod centroid {
             Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
             Geometry::Point(point!(x:0_f64, y: 0_f64)),
         ]);
-        let centroid = Centroid::default().centroid(&data_object);
+        let centroid = Centroid::default().calc(&data_object);
         assert!(in_delta_point(
             centroid,
             (-179.5_f64, 0.500006_f64).into(),
@@ -606,7 +606,7 @@ mod centroid {
                 vec![],
             )),
         ]);
-        let centroid = Centroid::default().centroid(&data_object);
+        let centroid = Centroid::default().calc(&data_object);
         assert!(in_delta_point(
             centroid,
             (-179.5_f64, 0.500006_f64).into(),
