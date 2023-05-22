@@ -1,4 +1,4 @@
-pub mod link;
+mod link;
 
 use std::cell::RefCell;
 use std::cmp::Ordering;
@@ -15,7 +15,7 @@ use crate::stream::Stream;
 
 use super::line_elem::LineElem;
 
-pub type CompareIntersectionsFn<T> =
+pub(super) type CompareIntersectionsFn<T> =
     Box<dyn Fn(&Rc<RefCell<Intersection<T>>>, &Rc<RefCell<Intersection<T>>>) -> Ordering>;
 
 /// A generalized polygon clipping algorithm: given a polygon that has been cut

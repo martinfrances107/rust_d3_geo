@@ -24,7 +24,7 @@ use super::LineConnected;
 use super::PointVisible;
 
 /// Clip specific connections to a stream pipeline.
-pub trait Connectable {
+pub(crate) trait Connectable {
     /// Represents to final connected state.
     type Output;
     /// The next stream node in the pipeline.

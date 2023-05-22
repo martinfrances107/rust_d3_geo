@@ -50,7 +50,7 @@ where
     T: CoordFloat,
 {
     /// Stitch first and last elements together.
-    pub fn rejoin(&mut self) {
+    pub(super) fn rejoin(&mut self) {
         if self.lines.len() > 1 {
             let line_last = self
                 .lines
