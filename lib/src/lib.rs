@@ -22,10 +22,16 @@
 //!
 //! # Available projections
 //!
+//! - [`Albers`](projection::albers)
+//! - [`AlbersUsa`](projection::albers_usa)
 //! - [`AzimuthalEqualArea`](projection::azimuthal_equal_area::AzimuthalEqualArea)
 //! - [`AzimuthalEquiDistant`](projection::azimuthal_equidistant::AzimuthalEquiDistant)
+//! - ['Conformal](projection::conformal)
 //! - [`ConicEqualArea`](projection::conic_equal_area::ConicEqualArea)
+//! - [`Equidistant`](projection::equidistant::Equidistant)
 //! - [`Equirectangular`](projection::equirectangular::Equirectangular)
+//! - [`EqualArea`](projection::equal_area::EqualArea)
+//! - [`EqualEarth`](projection::equal_earth::EqualEarth)
 //! - [`Gnomic`](projection::gnomic::Gnomic)
 //! - [`Orthographic`](projection::orthographic::Orthographic)
 //! - [`Mercator`](projection::mercator::Mercator)
