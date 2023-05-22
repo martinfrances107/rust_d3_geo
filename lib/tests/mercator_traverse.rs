@@ -61,7 +61,7 @@ mod mercator_tranverse {
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let object = Sphere::<f64>::default();
 
@@ -84,7 +84,7 @@ mod mercator_tranverse {
             .precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let object = Sphere::<f64>::default();
 
@@ -113,7 +113,7 @@ mod mercator_tranverse {
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let object = Sphere::<f64>::default();
 
@@ -159,7 +159,7 @@ mod mercator_tranverse {
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let object = Sphere::<f64>::default();
 
@@ -200,7 +200,7 @@ mod mercator_tranverse {
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let object = Sphere::<f64>::default();
 

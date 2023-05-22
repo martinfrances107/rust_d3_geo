@@ -34,7 +34,7 @@ mod mercator {
             .precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let object = Sphere::<f64>::default();
 
@@ -55,7 +55,7 @@ mod mercator {
             .precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let object = Sphere::default();
 
@@ -89,7 +89,7 @@ mod mercator {
 
         let projection = pb.build();
 
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let object = Sphere::default();
 
@@ -131,7 +131,7 @@ mod mercator {
             .precision_bypass();
         let projection = pb.build();
 
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let object = Sphere::default();
 
@@ -173,7 +173,7 @@ mod mercator {
         let pb = pb.precision_bypass();
 
         let projection = pb.build();
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let object = Sphere::default();
 

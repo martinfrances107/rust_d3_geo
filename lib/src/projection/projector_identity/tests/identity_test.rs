@@ -128,7 +128,7 @@ mod identity {
 
         let projector = pb.build();
 
-        let mut path = PathBuilder::context_pathstring().build(projector);
+        let mut path = PathBuilder::pathstring().build(projector);
 
         let ls = Geometry::LineString(LineString(vec![
             Coord { x: 0_f64, y: 0_f64 },
@@ -149,7 +149,7 @@ mod identity {
         projection_builder2.reflect_y_set(REFLECT::Flipped);
         let projector2 = projection_builder2.build::<String<f64>, NoPCNC<String<f64>>>();
 
-        let mut path2 = PathBuilder::context_pathstring().build(projector2);
+        let mut path2 = PathBuilder::pathstring().build(projector2);
 
         assert_eq!("M30,90L50,70", path2.object(&ls));
     }
@@ -172,7 +172,7 @@ mod identity {
 
         let projector = pb.build();
 
-        let mut path = PathBuilder::context_pathstring().build(projector);
+        let mut path = PathBuilder::pathstring().build(projector);
 
         let ls = Geometry::LineString(LineString(vec![
             Coord { x: 0_f64, y: 0_f64 },
@@ -205,7 +205,7 @@ mod identity {
 
         let projector2 = pb2.build();
 
-        let mut path2 = PathBuilder::context_pathstring().build(projector2);
+        let mut path2 = PathBuilder::pathstring().build(projector2);
 
         assert_eq!("M35,85L44,76", path2.object(&ls));
     }

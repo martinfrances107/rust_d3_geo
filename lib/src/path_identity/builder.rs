@@ -64,7 +64,7 @@ where
     /// Returns a Builder from default values.
     #[inline]
     #[must_use]
-    pub fn context_pathstring() -> Self {
+    pub fn pathstring() -> Self {
         Self::new(String::default())
     }
 }

@@ -52,7 +52,7 @@ mod path_string {
     where
         T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
     {
-        let pb = PathBuilder::context_pathstring();
+        let pb = PathBuilder::pathstring();
         pb.build(projection).object(&object)
     }
 
@@ -71,7 +71,7 @@ mod path_string {
     fn point_renders_a_point_of_given_radius() {
         println!("geoPath.point(…) renders a point of a given radius");
 
-        let mut builder = PathBuilder::context_pathstring();
+        let mut builder = PathBuilder::pathstring();
 
         builder.point_radius(10_f64);
 
@@ -176,7 +176,7 @@ mod path_string {
             })
             .build();
 
-        let pb = PathBuilder::context_pathstring();
+        let pb = PathBuilder::pathstring();
         let s = pb.build(ortho).object(&object);
 
         assert_eq!(s, "M258.957583,307.236886L285.746118,260.837781L336.092096,279.162219L326.788535,331.925333L273.211465,331.925333ZM420.485018,307.236886L431.567778,283.936957L441.006226,260.837781L479.573483,279.162219L477.1168,305.578636L472.446542,331.925333L431.404125,331.925333Z");

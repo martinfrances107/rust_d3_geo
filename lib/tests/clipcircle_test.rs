@@ -38,7 +38,7 @@ mod clipcircle {
             .clip_angle(170_f64)
             .build();
 
-        let path_builder = PathBuilder::context_pathstring();
+        let path_builder = PathBuilder::pathstring();
 
         let s = path_builder.build(projector).object(&d);
         let rounded = ROUND_DOWN.replace_all(&s, "");

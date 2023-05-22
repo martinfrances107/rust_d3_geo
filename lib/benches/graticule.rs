@@ -44,7 +44,7 @@ fn graticule() {
         .rotate2_set(&[0_f64, -20_f64])
         .build();
 
-    let builder = PathBuilder::context_pathstring();
+    let builder = PathBuilder::pathstring();
     let mut pb = builder.build(ortho);
 
     let lines = generate_graticule::<f64>().lines().collect();

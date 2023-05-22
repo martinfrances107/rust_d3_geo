@@ -82,7 +82,7 @@ fn rings() {
 
     let object = MultiPolygon(p_vec);
 
-    let builder = PathBuilder::context_pathstring();
+    let builder = PathBuilder::pathstring();
     let mut path = builder.build(ortho);
     let s = path.object(&object);
 
