@@ -184,7 +184,8 @@ pub trait ClipExtentGet {
         Self::T: CoordFloat;
 }
 
-/// Methods to clear or return bounding box.
+/// Methods to clear the bounding box.
+///
 /// A projection builder sub trait.
 pub trait ClipExtentClear {
     /// f64 or f32
@@ -192,7 +193,7 @@ pub trait ClipExtentClear {
     /// The resultant builder type.
     type Output;
 
-    /// clears the bounding box.
+    /// Clears the bounding box.
     fn clip_extent_clear(&self) -> Self::Output
     where
         Self::T: CoordFloat;
@@ -310,6 +311,7 @@ pub trait AngleGet {
 }
 
 /// Sets the post-projection planar rotation angle.
+///
 /// A projection builder sub trait.
 pub trait AngleSet {
     /// f64 or f32.
@@ -321,6 +323,8 @@ pub trait AngleSet {
 }
 
 /// Change the clip stratergy from circle to antimeridan.
+///
+/// A projection builder sub trait.
 pub trait ClipAngleReset {
     /// The resultant builder type.
     type Output;
@@ -432,6 +436,8 @@ pub trait PrecisionAdjust {
 ///
 /// Applies only to projections where the resampling precision has been
 /// set. A projection builder sub trait.
+///
+/// A projection builder sub trait.
 pub trait PrecisionGet {
     /// f64 or f32.
     type T;
