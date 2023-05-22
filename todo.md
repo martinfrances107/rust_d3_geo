@@ -2,7 +2,6 @@
 
 README.md say that in version 2.0 par_iter will be used
 
-  rename context - path.
   graticule returns a string it should return a Path2d
 
   profile code. ( move the albers_usa profile target.. make it render countries.)
@@ -20,9 +19,6 @@ examples/projection eslint needs updating.
 * Develop styling for world maps graticules on bottom, overlayed by land.
 
 * Add examples landing page. - showing images of the each projection.
-
-* Check on performance of real world test ... ortho projection of 50m.json altas
- with graticules showing africa or South pacific.
 
 * Review  path/centroid_test.rs
     has a small number of low priority test to implement.

@@ -62,12 +62,10 @@ impl PRConic for Conformal {
     fn generate(self, y0: f64, y1: f64) -> Self {
         let cy0 = y0.cos();
 
-        // TODO make optimal after fix.
-        #[allow(clippy::suboptimal_flops)]
         let n = if (y0 - y1).abs() < EPSILON {
             y0.sin()
         } else {
-            (cy0 / y1.cos()).ln() / (tany(y1) / tany(y0)).ln()
+            (cy0 / y1.cos()).log(tany(y1) / tany(y0))
         };
 
         if n.is_zero() {
