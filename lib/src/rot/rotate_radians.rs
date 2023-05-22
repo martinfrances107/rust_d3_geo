@@ -14,12 +14,13 @@ use super::rotation_lambda::RotationLambda;
 use super::rotation_phi_gamma::RotationPhiGamma;
 
 /// Container for a 3-axis rotation transform.
+#[allow(clippy::upper_case_acronyms)]
 pub enum RotateRadians<T> {
     /// A combination of rotations.
     C(Box<Compose<RotationLambda<T>, RotationPhiGamma<T>>>),
     /// Just roation in one direction.
     RL(RotationLambda<T>),
-    /// Rotate, Phi and Gamma.
+    /// Rotate, Phi and Gamma
     RPG(RotationPhiGamma<T>),
     /// No rotation.
     I(RotationIdentity<T>),
