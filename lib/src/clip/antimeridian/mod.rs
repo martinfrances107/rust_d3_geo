@@ -36,7 +36,7 @@ pub type ClipAntimeridianU<RC, T> =
 /// Returns a clip setup for antimeridian clipping.
 #[inline]
 #[must_use]
-pub fn gen_clip<RC, T>() -> ClipAntimeridianU<RC, T>
+pub(crate) fn gen_clip<RC, T>() -> ClipAntimeridianU<RC, T>
 where
     T: CoordFloat + Default + FloatConst,
 {

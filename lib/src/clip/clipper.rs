@@ -24,7 +24,7 @@ use super::LineConnected;
 use super::PointVisible;
 
 /// Clip specific connections to a stream path.
-pub(crate) trait Connectable {
+pub trait Connectable {
     /// Represents to final connected state.
     type Output;
     /// The next stream node on the path.

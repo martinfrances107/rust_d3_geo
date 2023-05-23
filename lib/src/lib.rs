@@ -199,7 +199,7 @@ pub mod centroid;
 pub mod circle;
 
 /// Projectors can clip, remove point computed to be outside the projection.
-mod clip;
+pub(crate) mod clip;
 /// Combines two transforms into one.
 mod compose;
 /// Streamable Data obejcts.
