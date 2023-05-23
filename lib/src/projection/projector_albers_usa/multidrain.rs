@@ -30,7 +30,7 @@ pub struct Multidrain<const N: usize, SD, STATE> {
 
 impl<const N: usize, SD> Multidrain<N, SD, Unpopulated> {
     /// Define initial multidrain
-    /// population() which be called when connectied into a pipeline
+    /// population() which be called when connectied into a path
     /// this will change the state.
     pub const fn new(sd: SD) -> Self {
         Self {

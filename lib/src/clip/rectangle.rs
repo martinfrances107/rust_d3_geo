@@ -22,7 +22,7 @@ use super::line_fn::line as clip_line;
 use super::rejoin::rejoin as clip_rejoin;
 use super::Interpolator as InterpolatorTrait;
 
-///A primitive type used for a `PostClipNode` pipeline stage.
+///A primitive type used for a `PostClipNode` path stage.
 #[allow(clippy::struct_excessive_bools)]
 #[derive(Clone, Debug)]
 pub struct Rectangle<STATE, T>

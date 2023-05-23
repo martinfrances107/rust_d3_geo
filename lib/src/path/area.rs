@@ -9,7 +9,7 @@ use super::Result;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-/// Stream Endpoint: Compute the area of the objects fed into the pipeline.
+/// Stream Endpoint: Compute the area of the objects streamed along the path.
 pub struct Area<T>
 where
     T: CoordFloat,

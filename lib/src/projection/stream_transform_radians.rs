@@ -8,7 +8,7 @@ use crate::stream::Connected;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 
-// A node pipeline stage.
+// A path node.
 //
 /// Type-Driven API, STATE prevent calls to .connect()
 /// on a perviously connected object
@@ -18,7 +18,7 @@ pub struct StreamTransformRadians<STATE>(pub STATE);
 impl Connectable for StreamTransformRadians<Unconnected> {
     type Output<SC> = StreamTransformRadians<Connected<SC>>;
     #[inline]
-    /// Connect this node to the next element in the pipeline.
+    /// Connect this node to the next node on the path.
     fn connect<SC>(&self, sink: SC) -> Self::Output<SC> {
         StreamTransformRadians(Connected { sink })
     }

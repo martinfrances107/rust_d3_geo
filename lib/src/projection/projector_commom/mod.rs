@@ -46,7 +46,7 @@ where
     pub(crate) cache: CacheState<DRAIN, SOURCE>,
 }
 
-/// The souce of the pipeline stage.
+/// The entry point on the path
 ///
 ///  A connected version of the ``StreamTransformRadians`` transformer
 pub type Source<CLIPC, T> = StreamTransformRadians<Connected<Rrc<CLIPC, T>>>;

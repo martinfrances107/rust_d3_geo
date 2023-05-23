@@ -220,7 +220,10 @@ pub mod last_point;
 pub mod length;
 /// Mathematical constants.
 pub mod math;
-/// Stream end point: Calculation of paths to a string or rendering context.
+/// A path builder and a collection of endpoints.
+///
+/// A path is a sequence of connected steps which transform
+/// a geometry object into the desired result.
 pub mod path;
 /// A stripped down version of [path](crate::path)
 pub mod path_identity;

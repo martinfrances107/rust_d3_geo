@@ -48,7 +48,7 @@ pub trait Bufferable {
     type LINE;
     /// f64 or f32
     type T;
-    /// conected buffer as the next pipeline stage.
+    /// conected buffer as the next path stage.
     fn buffer(&mut self, buffer: Buffer<Self::T>) -> Self::LINE
     where
         Self::T: CoordFloat;
@@ -86,6 +86,6 @@ pub trait Interpolator {
 pub trait LineConnected: Clean {
     /// Sink -- When Connected.
     type SINK;
-    /// Connects the next object in the pipeline.
+    /// Connects the next node on the path.
     fn sink(&mut self) -> &mut Self::SINK;
 }

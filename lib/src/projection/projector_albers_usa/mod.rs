@@ -75,7 +75,7 @@ where
     SD: Clone,
     T: CoordFloat + Default + FloatConst,
 {
-    /// The internal single stage of the pipeline.
+    /// The internal single stage of the path.
     pub pr: AlbersUsa<SD, T>,
 }
 

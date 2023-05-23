@@ -8,7 +8,7 @@ use crate::stream::Stream;
 
 use super::line_elem::LineElem;
 
-/// Buffer is a pipeline terminating object ( a drain object ).
+/// Buffer is a path endpoint.
 ///
 /// Stored data can be extracted via result()
 #[derive(Clone, Debug)]

@@ -17,7 +17,7 @@ enum MeasureMode {
 
 #[derive(Clone, Derivative)]
 #[derivative(Debug)]
-/// Stream Endpoint: Compute the area of the objects fed into the pipeline.
+/// Stream Endpoint: Compute the area of the objects stream on the path.
 pub struct Measure<T>
 where
     T: CoordFloat,

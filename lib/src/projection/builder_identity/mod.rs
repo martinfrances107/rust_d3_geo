@@ -44,7 +44,7 @@ where
     pub(super) ty: T, // translate
     t360: T,
 
-    /// Projection pipeline stage.
+    /// Projection path node.
     pub(super) postclip: PCNU,
 }
 

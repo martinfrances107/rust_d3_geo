@@ -26,14 +26,14 @@ pub struct Unconnected;
 
 /// State -- Default Connected.
 ///
-/// Common to many pipeline stages
+/// Common to many path stages
 /// Overriden when the state need to contain more variables.
 /// see [Resample](crate::projection::resampler::resample::Resample) and [Clip](crate::clip::clipper::Clipper).
 ///
 /// [Equirectangular](crate::projection::equirectangular::Equirectangular)
 #[derive(Clone, Debug)]
 pub struct Connected<SINK> {
-    /// The next stage in the pipeline,
+    /// The next stage on the path,
     pub sink: SINK,
 }
 
@@ -51,7 +51,7 @@ pub trait Connectable {
     /// The next stage on the path.
     type Output<SC>;
 
-    /// Connects to previous pipeline stage.
+    /// Connects to previous path stage.
     fn connect<SC>(&self, sink: SC) -> Self::Output<SC>;
 }
 
@@ -59,10 +59,10 @@ pub trait Connectable {
 /// Whatever specific state they are in, it is to the exclusion
 /// on the unconnected state.
 pub trait ConnectedState {
-    /// The next pipeline stage.
+    /// The next path node.
     type Sink;
 
-    /// Connects the next object in the pipeline.
+    /// Connects the next object on the path.
     fn sink(&mut self) -> &mut Self::Sink;
 }
 

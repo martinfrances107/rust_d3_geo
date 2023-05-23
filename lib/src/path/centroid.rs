@@ -13,7 +13,8 @@ use super::Result;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-/// Stream Endpoint: Compute the centroid of the input fed into the pipeline.
+
+/// Stream Endpoint:Compute the cnetroid of the objects streamed along the path.
 ///
 /// TODO Enforce positive area for exterior, negative area for interior?
 ///

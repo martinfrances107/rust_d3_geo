@@ -72,7 +72,7 @@ pub mod projector_identity;
 pub mod resampler;
 /// The raw projection.
 pub mod stereographic;
-/// A stream node pipeline stage.
+/// A stream node path node.
 pub mod stream_transform_radians;
 /// Scale translate and rotate.
 pub mod transform;
@@ -584,7 +584,7 @@ pub trait Projector {
     /// The endpoint of the stream path.
     type EP;
 
-    /// The act of connecting a drain to the pipeline
+    /// The act of connecting a drain to the path
     /// creates an object that fundamentally acts as Transformer.
     type Transformer;
 

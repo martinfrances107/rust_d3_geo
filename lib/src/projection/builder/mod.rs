@@ -109,10 +109,10 @@ where
     pub(super) project_rotate_transform:
         Compose<RotateRadians<T>, Compose<PR, ScaleTranslateRotate<T>>>,
 
-    /// Projection pipeline stage.
+    /// Projection path stage.
     pub(super) postclip: PCNU,
 
-    /// Projection pipeline stage
+    /// Projection path stage
     pub(super) resample: RU,
 }
 
