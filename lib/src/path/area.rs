@@ -1,4 +1,5 @@
-use derivative::Derivative;
+use std::fmt::Debug;
+
 use geo::CoordFloat;
 use geo_types::Coord;
 
@@ -6,8 +7,6 @@ use crate::stream::Stream;
 
 use super::Result;
 
-#[derive(Derivative)]
-#[derivative(Debug)]
 #[derive(Clone)]
 /// Stream Endpoint: Compute the area of the objects streamed along the path.
 pub struct Area<T>
@@ -18,12 +17,23 @@ where
     area_ring_sum: T,
     p00: Coord<T>,
     p0: Coord<T>,
-    #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, &Coord<T>),
-    #[derivative(Debug = "ignore")]
     line_start_fn: fn(&mut Self),
-    #[derivative(Debug = "ignore")]
     line_end_fn: fn(&mut Self),
+}
+
+impl<T> Debug for Area<T>
+where
+    T: CoordFloat,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("Area<T>")
+            .field(&self.area_sum)
+            .field(&self.area_ring_sum)
+            .field(&self.p0)
+            .field(&self.p00)
+            .finish()
+    }
 }
 
 // Ignore the state machine functions.

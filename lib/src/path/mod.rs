@@ -83,6 +83,7 @@ where
 {
     pub context_stream: CS,
     point_radius: PointRadiusEnum<T>,
+    /// The projector associated with this path.
     pub projector: PROJECTOR,
 }
 

@@ -271,6 +271,8 @@ where
     SD: Clone,
     T: CoordFloat + Debug + Default + FloatConst,
 {
+    /// None standard builder pattern.
+    /// No need to specify the DRAIN at this point.
     #[inline]
     #[must_use]
     pub fn builder() -> Builder<SD, T> {
