@@ -33,7 +33,7 @@ pub struct Endpoint {
     line: LineState,
     point: PointState,
     radius: f64,
-    pub path2d: Path2d,
+    path2d: Path2d,
 }
 
 impl Default for Endpoint {
