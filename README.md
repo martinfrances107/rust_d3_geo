@@ -208,7 +208,7 @@ Also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voron
  Based on that benchmark rust is 31% faster, or permits a 37% increase in throughput.
 </details>
 
-<br/>
+<br>
 
 ## Flamegraph
 

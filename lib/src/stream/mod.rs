@@ -51,7 +51,7 @@ pub trait Connectable {
     /// The next stage on the path.
     type Output<SC>;
 
-    /// Connects to previous path stage.
+    /// Connects to the previous path stage.
     fn connect<SC>(&self, sink: SC) -> Self::Output<SC>;
 }
 

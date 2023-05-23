@@ -190,7 +190,7 @@ where
 
 impl<SD, T> Default for AlbersUsa<SD, T>
 where
-    SD: Clone + Stream<EP = SD, T = T>,
+    SD: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
@@ -268,7 +268,7 @@ where
 
 impl<SD, T> AlbersUsa<SD, T>
 where
-    SD: Clone + Stream<EP = SD, T = T>,
+    SD: Clone,
     T: CoordFloat + Debug + Default + FloatConst,
 {
     #[inline]
