@@ -37,8 +37,8 @@ pub async fn draw_equal_earth(land: &Geometry<f64>) -> Result<(), JsValue> {
 
     let path2d = Path2d::new()?;
 
-    let context: Endpoint = Endpoint::new(path2d);
-    let pb = PathBuilder::new(context);
+    let ep = Endpoint::new(path2d);
+    let pb = PathBuilder::new(ep);
 
     let equal_earth = EqualEarth::builder()
         .scale_set(width / 1.5_f64 / std::f64::consts::PI)

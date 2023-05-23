@@ -74,8 +74,8 @@ pub async fn start() -> Result<(), JsValue> {
 
     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
-    let context = Endpoint::new(path2d);
-    let pb = PathBuilder::new(context);
+    let ep = Endpoint::new(path2d);
+    let pb = PathBuilder::new(ep);
 
     let ortho = Orthographic::builder()
         .scale_set(width / 1.3_f64 / std::f64::consts::PI)

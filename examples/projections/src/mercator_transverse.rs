@@ -37,8 +37,8 @@ pub async fn draw_mercator_transverse(land: &Geometry<f64>) -> Result<(), JsValu
 
     let path2d = Path2d::new()?;
 
-    let context: Endpoint = Endpoint::new(path2d);
-    let pb = PathBuilder::new(context);
+    let ep = Endpoint::new(path2d);
+    let pb = PathBuilder::new(ep);
 
     let mut mercator = MercatorTransverse::builder();
     let mercator = mercator

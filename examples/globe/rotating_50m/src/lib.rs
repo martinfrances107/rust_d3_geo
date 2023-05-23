@@ -155,8 +155,8 @@ impl Renderer {
             .clear_rect(0f64, 0f64, self.width, self.height);
 
         let path2d = Path2d::new().unwrap();
-        let context: Endpoint = Endpoint::new(path2d);
-        let pb = PathBuilder::new(context);
+        let ep = Endpoint::new(path2d);
+        let pb = PathBuilder::new(ep);
 
         let mut path = pb.build(projector);
         self.context2d.set_stroke_style(&self.color_land);

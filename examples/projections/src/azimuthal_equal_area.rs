@@ -36,8 +36,8 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
 
     let path2d = Path2d::new()?;
 
-    let context: Endpoint = Endpoint::new(path2d);
-    let pb = PathBuilder::new(context);
+    let ep: Endpoint = Endpoint::new(path2d);
+    let pb = PathBuilder::new(ep);
 
     let azimuthal_equal_area = AzimuthalEqualArea::builder()
         .scale_set(width / 3_f64)

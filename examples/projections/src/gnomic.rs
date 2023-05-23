@@ -37,8 +37,8 @@ pub async fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
 
     let path2d = Path2d::new()?;
 
-    let context: Endpoint = Endpoint::new(path2d);
-    let pb = PathBuilder::new(context);
+    let ep = Endpoint::new(path2d);
+    let pb = PathBuilder::new(ep);
 
     let gnomic = Gnomic::builder()
         .scale_set(width / 6_f64)

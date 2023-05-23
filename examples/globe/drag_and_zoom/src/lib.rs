@@ -216,7 +216,7 @@ impl Renderer {
     /// Render the next frame.
     pub fn render(&mut self, solid: bool) {
         let path2d = Path2d::new().unwrap();
-        let context: Endpoint = Endpoint::new(path2d);
+        let ep = Endpoint::new(path2d);
 
         if !solid {
             let r = self.ob.rotate();
@@ -224,7 +224,7 @@ impl Renderer {
             self.ob.rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
 
             let ortho = self.ob.build();
-            let pb = PathBuilder::new(context.clone());
+            let pb = PathBuilder::new(ep.clone());
 
             let mut path = pb.build(ortho);
             self.context2d.set_stroke_style(&self.color_inner_stroke);
@@ -242,7 +242,7 @@ impl Renderer {
 
         let ortho = self.ob.build();
 
-        let pb = PathBuilder::new(context);
+        let pb = PathBuilder::new(ep);
 
         let mut path = pb.build(ortho);
         self.context2d.set_fill_style(&self.color_outer_fill);
