@@ -16,7 +16,7 @@ use super::intersection::Intersection;
 /// # Panics
 /// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
 #[must_use]
-pub fn gen_compare<T>() -> CompareIntersectionsFn<T>
+pub(super) fn gen_compare<T>() -> CompareIntersectionsFn<T>
 where
     T: 'static + CoordFloat + FloatConst,
 {

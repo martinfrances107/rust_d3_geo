@@ -63,7 +63,7 @@ where
     }
 
     // Warning from JS a, b are LineElem.
-    pub fn compare_point(&self, a: &Coord<T>, b: &Coord<T>) -> Ordering {
+    pub(crate) fn compare_point(&self, a: &Coord<T>, b: &Coord<T>) -> Ordering {
         let ca = self.corner(a, &T::one());
         let cb = self.corner(b, &T::one());
         if ca == cb {

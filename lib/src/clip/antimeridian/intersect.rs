@@ -2,7 +2,7 @@ use geo::CoordFloat;
 
 use crate::math::EPSILON;
 
-pub fn intersect<T: CoordFloat>(lambda0: T, phi0: T, lambda1: T, phi1: T) -> T {
+pub(super) fn intersect<T: CoordFloat>(lambda0: T, phi0: T, lambda1: T, phi1: T) -> T {
     let sin_lambda0_lambda1 = (lambda0 - lambda1).sin();
     if (sin_lambda0_lambda1).abs() > T::from(EPSILON).unwrap() {
         let (sin_phi0, cos_phi0) = phi0.sin_cos();

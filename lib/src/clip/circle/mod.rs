@@ -36,7 +36,7 @@ pub type ClipCircleU<RC, T> =
     Clipper<Interpolate<T>, Line<Unconnected, T>, PV<T>, RC, Unconnected, T>;
 
 /// Returns a clip setup for circle clipping.
-pub fn gen_clip<RC, T>(radius: T) -> ClipCircleU<RC, T>
+pub(crate) fn gen_clip<RC, T>(radius: T) -> ClipCircleU<RC, T>
 where
     T: CoordFloat + FloatConst,
 {
