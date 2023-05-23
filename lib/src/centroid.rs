@@ -1,6 +1,6 @@
+use std::fmt::Debug;
 use std::ops::AddAssign;
 
-use derivative::Derivative;
 use geo::CoordFloat;
 use geo::Point;
 use geo_types::Coord;
@@ -13,8 +13,6 @@ use crate::stream::Streamable;
 
 /// Centroid Stream.
 #[allow(non_snake_case)]
-#[derive(Derivative)]
-#[derivative(Debug)]
 #[derive(Clone)]
 /// Stream endpoint: Computes the centroid.
 ///
@@ -40,16 +38,38 @@ where
     x0: T,
     y0: T,
     z0: T, // previous point
-    #[derivative(Debug = "ignore")]
-    point_fn: fn(&mut Self, &Coord<T>),
-    #[derivative(Debug = "ignore")]
-    line_start_fn: fn(&mut Self),
-    #[derivative(Debug = "ignore")]
-    line_end_fn: fn(&mut Self),
     epsilon: T,
     epsilon2: T,
+    point_fn: fn(&mut Self, &Coord<T>),
+    line_start_fn: fn(&mut Self),
+    line_end_fn: fn(&mut Self),
 }
 
+impl<T> Debug for Centroid<T>
+where
+    T: CoordFloat,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("Area<T>")
+            .field(&self.W0)
+            .field(&self.W1)
+            .field(&self.X0)
+            .field(&self.Y0)
+            .field(&self.Z0)
+            .field(&self.X1)
+            .field(&self.Y1)
+            .field(&self.Z1)
+            .field(&self.X2)
+            .field(&self.Y2)
+            .field(&self.Z2)
+            .field(&self.lambda00)
+            .field(&self.phi00)
+            .field(&self.x0)
+            .field(&self.y0)
+            .field(&self.z0)
+            .finish()
+    }
+}
 /// The use is nan.
 ///
 /// A) In the JS version these varibles are undefined.
