@@ -92,7 +92,6 @@
 //! use wasm_bindgen_futures::JsFuture;
 //! use web_sys::*;
 //!
-//! use d3_geo_rs::clip::circle::ClipCircleC;
 //! use d3_geo_rs::graticule::generate_mls;
 //! use d3_geo_rs::path::builder::Builder as PathBuilder;
 //! use d3_geo_rs::path::Result as PathResult;
@@ -200,7 +199,7 @@ pub mod centroid;
 pub mod circle;
 
 /// Projectors can clip, remove point computed to be outside the projection.
-pub mod clip;
+mod clip;
 /// Combines two transforms into one.
 mod compose;
 /// Streamable Data obejcts.

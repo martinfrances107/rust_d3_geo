@@ -6,11 +6,7 @@ mod reflect {
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
-    use d3_geo_rs::clip::circle::ClipCircleU;
-    use d3_geo_rs::identity::Identity;
     use d3_geo_rs::in_delta::in_delta;
-    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
-    use d3_geo_rs::projection::builder::template::ResampleNoPCNU;
     use d3_geo_rs::projection::builder::Builder;
     use d3_geo_rs::projection::builder_mercator::Builder as MercatorBuilder;
     use d3_geo_rs::projection::equality::projection_equal;
@@ -26,23 +22,13 @@ mod reflect {
     use d3_geo_rs::projection::TranslateSet;
     use d3_geo_rs::projection::REFLECT;
     use d3_geo_rs::stream::DrainStub;
-    use d3_geo_rs::stream::Unconnected;
     use d3_geo_rs::Transform;
-
-    type GB = Builder<
-        ClipCircleU<ResampleNoPCNC<DrainStub<f64>, Gnomic<f64>, f64>, f64>,
-        DrainStub<f64>,
-        Identity<Unconnected>,
-        Gnomic<f64>,
-        ResampleNoPCNU<Gnomic<f64>, f64>,
-        f64,
-    >;
 
     #[test]
     fn x_defaults_to_false() {
         println!("projection.reflectX(…) defaults to false");
 
-        let mut builder: GB = Gnomic::builder();
+        let mut builder: Builder<_, DrainStub<f64>, _, _, _, f64> = Gnomic::builder();
         builder.scale_set(1f64);
         builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
@@ -87,7 +73,7 @@ mod reflect {
     #[test]
     fn mirrors_x_after_processing() {
         println!("projection.reflectX(…) mirrors x after projecting");
-        let mut builder: GB = Gnomic::builder();
+        let mut builder: Builder<_, DrainStub<f64>, _, _, _, f64> = Gnomic::builder();
         builder.scale_set(1_f64);
         builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 

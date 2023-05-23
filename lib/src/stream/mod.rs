@@ -82,7 +82,6 @@ pub trait Streamable {
 ///
 /// ```
 /// use geo_types::Coord;
-/// use d3_geo_rs::clip::circle::ClipCircleC;
 /// use d3_geo_rs::Transform;
 /// use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 /// use d3_geo_rs::projection::stereographic::Stereographic;

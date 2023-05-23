@@ -4,10 +4,6 @@ mod equirectangular {
 
     use geo_types::Coord;
 
-    use d3_geo_rs::clip::antimeridian::ClipAntimeridianU;
-    use d3_geo_rs::projection::builder::template::NoPCNU;
-    use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
-    use d3_geo_rs::projection::builder::template::ResampleNoPCNU;
     use d3_geo_rs::projection::builder::Builder;
     use d3_geo_rs::projection::equality::projection_equal;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
@@ -20,19 +16,10 @@ mod equirectangular {
     use d3_geo_rs::projection::TranslateSet;
     use d3_geo_rs::stream::DrainStub;
 
-    type B = Builder<
-        ClipAntimeridianU<ResampleNoPCNC<DrainStub<f64>, Equirectangular<f64>, f64>, f64>,
-        DrainStub<f64>,
-        NoPCNU,
-        Equirectangular<f64>,
-        ResampleNoPCNU<Equirectangular<f64>, f64>,
-        f64,
-    >;
-
     #[test]
     fn return_expected_result() {
         println!("equirectangular(point) returns the expected result");
-        let mut b: B = Equirectangular::builder();
+        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> = Equirectangular::builder();
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1_f64);
 
@@ -241,7 +228,8 @@ mod equirectangular {
     #[allow(clippy::excessive_precision)]
     fn rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
-        let mut b: B = Equirectangular::builder();
+        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> = Equirectangular::builder();
+
         b.rotate2_set(&[30f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1_f64);
@@ -348,7 +336,7 @@ mod equirectangular {
     fn rotate_0_0_30() {
         println!("equirectangular.rotate([0, 0, 30])(point) returns the expected result");
 
-        let mut b: B = Equirectangular::builder();
+        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> = Equirectangular::builder();
         b.rotate3_set(&[0f64, 0f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1f64);
@@ -447,7 +435,7 @@ mod equirectangular {
     #[test]
     fn rotate_30_30_30() {
         println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
-        let mut b: B = Equirectangular::builder();
+        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> = Equirectangular::builder();
         b.rotate3_set(&[30f64, 30f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1f64);
