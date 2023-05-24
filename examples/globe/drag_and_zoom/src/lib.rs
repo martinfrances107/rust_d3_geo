@@ -44,13 +44,13 @@ use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::Reflect;
 use d3_geo_rs::projection::ReflectSet;
 use d3_geo_rs::projection::RotateGet;
 use d3_geo_rs::projection::RotateSet;
 use d3_geo_rs::projection::ScaleGet;
 use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
-use d3_geo_rs::projection::REFLECT;
 use d3_geo_rs::Transform;
 
 use crate::exported_point::ExportedPoint;
@@ -220,7 +220,7 @@ impl Renderer {
 
         if !solid {
             let r = self.ob.rotate();
-            self.ob.reflect_x_set(REFLECT::Flipped);
+            self.ob.reflect_x_set(Reflect::Flipped);
             self.ob.rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
 
             let ortho = self.ob.build();
@@ -236,7 +236,7 @@ impl Renderer {
             self.context2d.stroke_with_path(&path2d);
             self.context2d.fill_with_path_2d(&path2d);
 
-            self.ob.reflect_x_set(REFLECT::Unflipped);
+            self.ob.reflect_x_set(Reflect::Unflipped);
             self.ob.rotate3_set(&r);
         }
 

@@ -399,7 +399,7 @@ pub trait ReflectGet {
 
 /// Used to set the state of a projector builder.
 #[derive(Debug)]
-pub enum REFLECT {
+pub enum Reflect {
     /// Invert the sense of the projection.
     Flipped,
     /// Restore the sense of the projection
@@ -413,10 +413,10 @@ pub trait ReflectSet {
     type T;
 
     /// Set the projection builder to invert the x-coordinate.
-    fn reflect_x_set(&mut self, reflect: REFLECT) -> &mut Self;
+    fn reflect_x_set(&mut self, reflect: Reflect) -> &mut Self;
 
     /// Set the projection builder to invert the y-coordinate.
-    fn reflect_y_set(&mut self, reflect: REFLECT) -> &mut Self;
+    fn reflect_y_set(&mut self, reflect: Reflect) -> &mut Self;
 }
 
 /// Given the builder is already set to resample, adjust the precision

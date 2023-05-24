@@ -16,11 +16,11 @@ mod reflect {
     use d3_geo_rs::projection::AngleSet;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::projection::Reflect;
     use d3_geo_rs::projection::ReflectGet;
     use d3_geo_rs::projection::ReflectSet;
     use d3_geo_rs::projection::ScaleSet;
     use d3_geo_rs::projection::TranslateSet;
-    use d3_geo_rs::projection::REFLECT;
     use d3_geo_rs::stream::DrainStub;
     use d3_geo_rs::Transform;
 
@@ -77,7 +77,7 @@ mod reflect {
         builder.scale_set(1_f64);
         builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
-        builder.reflect_x_set(REFLECT::Flipped);
+        builder.reflect_x_set(Reflect::Flipped);
 
         assert_eq!(builder.is_x_reflected(), true);
 
@@ -117,8 +117,8 @@ mod reflect {
         ));
 
         builder
-            .reflect_x_set(REFLECT::Unflipped)
-            .reflect_y_set(REFLECT::Flipped);
+            .reflect_x_set(Reflect::Unflipped)
+            .reflect_y_set(Reflect::Flipped);
         let projection = builder.build();
         assert_eq!(builder.is_x_reflected(), false);
         assert_eq!(builder.is_y_reflected(), true);
@@ -167,7 +167,7 @@ mod reflect {
             y: 20_f64,
         });
 
-        builder.reflect_x_set(REFLECT::Flipped).angle_set(45_f64);
+        builder.reflect_x_set(Reflect::Flipped).angle_set(45_f64);
 
         assert_eq!(builder.is_x_reflected(), true);
         assert!(in_delta(45_f64, builder.angle(), 1e-6));

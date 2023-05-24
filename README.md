@@ -237,9 +237,9 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
        /// f64 or f32.
        type T;
       /// Set the projection builder to invert the x-coordinate.
-       fn reflect_x_set(&mut self, reflect: REFLECT) -> &mut Self;
+       fn reflect_x_set(&mut self, reflect: Reflect) -> &mut Self;
       /// Set the projection builder to invert the y-coordinate.
-       fn reflect_y_set(&mut self, reflect: REFLECT) -> &mut Self;
+       fn reflect_y_set(&mut self, reflect: Reflect) -> &mut Self;
    }
    ```
 
@@ -247,7 +247,7 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
 
    ```rust
 
-   builder.reflect_y_set(REFLECT::Flipped);
+   builder.reflect_y_set(Reflect::Flipped);
    ```
 
 * ["Type-Driven API Design"](https://www.youtube.com/watch?v=bnnacleqg6k) is the

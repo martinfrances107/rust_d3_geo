@@ -16,13 +16,13 @@ mod identity {
     use crate::projection::builder_identity::Builder;
     use crate::projection::equality::projection_equal;
     use crate::projection::ClipExtentSet;
+    use crate::projection::Reflect;
     use crate::projection::ReflectGet;
     use crate::projection::ReflectSet;
     use crate::projection::ScaleGet;
     use crate::projection::ScaleSet;
     use crate::projection::TranslateGet;
     use crate::projection::TranslateSet;
-    use crate::projection::REFLECT;
     use crate::stream::DrainStub;
     use crate::stream::Unconnected;
 
@@ -80,7 +80,7 @@ mod identity {
             None
         ));
 
-        ib.reflect_x_set(REFLECT::Flipped);
+        ib.reflect_x_set(Reflect::Flipped);
         assert!(projection_equal(
             &ib.build::<DrainStub<f64>, NoPCNU>(),
             &(3f64, 7f64).into(),
@@ -88,7 +88,7 @@ mod identity {
             None
         ));
 
-        ib.reflect_y_set(REFLECT::Flipped);
+        ib.reflect_y_set(Reflect::Flipped);
         assert!(projection_equal(
             &ib.build::<DrainStub<f64>, NoPCNU>(),
             &(3f64, 7f64).into(),
@@ -96,7 +96,7 @@ mod identity {
             None
         ));
 
-        ib.reflect_x_set(REFLECT::Unflipped);
+        ib.reflect_x_set(Reflect::Unflipped);
         assert!(projection_equal(
             &ib.build::<DrainStub<f64>, NoPCNU>(),
             &(3f64, 7f64).into(),
@@ -104,7 +104,7 @@ mod identity {
             None
         ));
 
-        ib.reflect_y_set(REFLECT::Unflipped);
+        ib.reflect_y_set(Reflect::Unflipped);
         assert!(projection_equal(
             &ib.build::<DrainStub<f64>, NoPCNU>(),
             &(3f64, 7f64).into(),
@@ -146,7 +146,7 @@ mod identity {
                 y: 90_f64,
             })
             .scale_set(2_f64);
-        projection_builder2.reflect_y_set(REFLECT::Flipped);
+        projection_builder2.reflect_y_set(Reflect::Flipped);
         let projector2 = projection_builder2.build::<String<f64>, NoPCNC<String<f64>>>();
 
         let mut path2 = PathBuilder::pathstring().build(projector2);
@@ -191,7 +191,7 @@ mod identity {
             y: 90_f64,
         })
         .scale_set(2_f64)
-        .reflect_y_set(REFLECT::Flipped);
+        .reflect_y_set(Reflect::Flipped);
         let pb2 = pb2.clip_extent_set(&[
             Coord {
                 x: 35_f64,

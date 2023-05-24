@@ -6,8 +6,8 @@ use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::template::PCNU;
 use crate::projection::Recenter;
+use crate::projection::Reflect;
 use crate::projection::ReflectSet;
-use crate::projection::REFLECT;
 use crate::Transform;
 
 use super::Builder;
@@ -21,14 +21,14 @@ where
 
     /// Set the projection builder to invert the x-coordinate.
     #[inline]
-    fn reflect_x_set(&mut self, reflect: REFLECT) -> &mut Self {
+    fn reflect_x_set(&mut self, reflect: Reflect) -> &mut Self {
         self.base.reflect_x_set(reflect).recenter();
         self
     }
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y_set(&mut self, reflect: REFLECT) -> &mut Self {
+    fn reflect_y_set(&mut self, reflect: Reflect) -> &mut Self {
         self.base.reflect_y_set(reflect).recenter();
         self
     }
@@ -44,14 +44,14 @@ where
 
     /// Set the projection builder to invert the x-coordinate.
     #[inline]
-    fn reflect_x_set(&mut self, reflect: REFLECT) -> &mut Self {
+    fn reflect_x_set(&mut self, reflect: Reflect) -> &mut Self {
         self.base.reflect_x_set(reflect).recenter();
         self
     }
 
     /// Set the projection builder to invert the y-coordinate.
     #[inline]
-    fn reflect_y_set(&mut self, reflect: REFLECT) -> &mut Self {
+    fn reflect_y_set(&mut self, reflect: Reflect) -> &mut Self {
         self.base.reflect_y_set(reflect).recenter();
         self
     }
