@@ -1,7 +1,7 @@
 /// 3-axis rotation transform.
 pub(crate) mod rotate_radians;
 /// The rotation transform (in degrees).
-pub(crate) mod rotation;
+pub mod rotation;
 /// An Inner type for the 3-axis rotation.
 pub(crate) mod rotation_identity;
 /// An Inner type for the 3-axis rotation.

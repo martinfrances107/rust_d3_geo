@@ -8,7 +8,7 @@ use crate::Transform;
 #[derive(Clone, Default, Debug)]
 pub struct RotationLambda<T> {
     /// The change in rotation.
-    pub delta_lambda: T,
+    delta_lambda: T,
 }
 
 // TODO why can't I #[inline] this.
@@ -23,7 +23,7 @@ fn forward_rotation_lambda<T: CoordFloat + FloatConst>(delta_lambda: T, p: &Coor
 impl<T: CoordFloat + FloatConst> RotationLambda<T> {
     /// Constructor.
     #[inline]
-    pub const fn new(delta_lambda: T) -> Self {
+    pub(super) const fn new(delta_lambda: T) -> Self {
         Self { delta_lambda }
     }
 }
