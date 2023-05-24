@@ -23,7 +23,7 @@ mod scale_set;
 mod translate_get;
 mod translate_set;
 
-/// Projection builder.
+/// Simplified Projection builder.
 ///
 /// Holds State related to the construction of the a projection.
 #[derive(Clone, Debug)]

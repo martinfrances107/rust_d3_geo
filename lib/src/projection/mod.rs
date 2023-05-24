@@ -26,6 +26,9 @@ pub mod conic_equal_area;
 /// The raw projection.
 pub mod conic_equidistant;
 // No direct Access - Access is through conic_equal_area.
+/// The default projection builder.
+pub mod builder;
+/// The raw projection.
 pub mod cylindrical_equal_area;
 /// The raw projection.
 pub mod equal_earth;
@@ -35,9 +38,6 @@ pub mod equidistant;
 pub mod equirectangular;
 /// The raw projection.
 pub mod gnomic;
-// The raw projection.
-/// The default projection builder.
-pub mod builder;
 
 /// Specific to the `AlbersUSA` projection.
 pub mod builder_albers_usa;
@@ -113,11 +113,12 @@ pub trait TransformExtent {
     where
         Self::T: CoordFloat;
 }
+
 /// Serves as a abstract trait both things that follow the common family of
 /// raw projections, and alternatively the less common mercator family of
 /// raw projections.
 pub trait RawBase: Transform {
-    /// The default builder.
+    /// The resulting builder type.
     type Builder<DRAIN: Clone>;
 
     /// Constructs the default projection builder.
@@ -143,7 +144,7 @@ pub trait Build {
 
 /// Controls the projections center point.
 ///
-/// Projection builder sub trait.
+/// A Projection builder sub trait.
 pub trait CenterGet {
     /// f64 or f32.
     type T;
@@ -158,7 +159,7 @@ pub trait CenterGet {
 /// array of longitude and latitude in degrees and returns the projection.
 /// The default is ⟨0°,0°⟩.
 ///
-/// Projection builder sub trait.
+/// A Projection builder sub trait.
 pub trait CenterSet {
     /// f64 or f32.
     type T;
@@ -512,7 +513,7 @@ pub trait RotateSet {
 
 /// Controls the projections scaling factor.
 ///
-/// Projection builder sub trait.
+/// A Projection builder sub trait.
 pub trait ScaleGet {
     /// f32 or f64.
     type T;
@@ -526,7 +527,7 @@ pub trait ScaleGet {
 ///  between projected points; however, absolute scale factors are not
 ///  equivalent across projections.
 ///
-/// Projection builder sub trait.
+/// A Projection builder sub trait.
 pub trait ScaleSet {
     /// f32 or f64.
     type T;
@@ -556,7 +557,7 @@ pub trait TranslateGet {
 ///  default translation offset places ⟨0°,0°⟩ at the center of a 960×500
 ///  area.
 ///
-/// Projection builder sub trait.
+/// A Projection builder sub trait.
 pub trait TranslateSet {
     /// f32 or f64.
     type T;

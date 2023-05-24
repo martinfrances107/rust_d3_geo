@@ -71,9 +71,8 @@ mod translate_with_resampling;
 pub mod template;
 /// Builder shorthand notations.
 pub mod types;
-/// Projection builder.
-///
-/// Holds State related to the construction of the a projection.
+
+/// Projection builder state.
 #[derive(Clone, Debug)]
 pub struct Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where

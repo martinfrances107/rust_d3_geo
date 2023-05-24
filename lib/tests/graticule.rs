@@ -163,7 +163,7 @@ mod graticule {
     #[test]
     fn lines_default_longitude_ranges() {
         println!("graticule.lines() default longitude ranges from 180°W (inclusive) to 180°E (exclusive)");
-        let builder = Builder::<f64>::default();
+        let builder = Builder::default();
 
         let g = builder.lines();
         let mut lines: Vec<LineString> = g

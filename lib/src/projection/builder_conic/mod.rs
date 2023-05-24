@@ -62,10 +62,8 @@ where
     BASE: ScaleGet<T = T>,
     T: CoordFloat,
 {
-    base: BASE,
-    /// Generates a raw projection.
-    // pub pr: PR,
     /// The wrapped builder type.
+    base: BASE,
     phi0: T,
     phi1: T,
 }

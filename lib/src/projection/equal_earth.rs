@@ -13,8 +13,7 @@ use super::builder::Builder;
 use super::BuilderTrait;
 use super::RawBase;
 
-/// Equirectangular
-/// Used to define a projection builder.
+/// Projection definition.
 #[allow(non_snake_case)]
 #[derive(Clone, Debug)]
 pub struct EqualEarth<T> {
