@@ -28,6 +28,12 @@
     "url": "https://github.com/martinfrances107/rust_d3_geo/issues"
   },
   "homepage": "https://github.com/martinfrances107/rust_d3_geo/#readme",
+  "dependencies": {
+    "d3": "^7",
+    "rimraf": "^5",
+    "webpack": "^5",
+    "webpack-cli": "^5"
+  },
   "devDependencies": {
     "@types/d3": "^7",
     "@types/html-webpack-plugin": "^3",
@@ -43,11 +49,5 @@
     "ts-node": "^10",
     "typescript": "^5",
     "webpack-dev-server": "^4"
-  },
-  "dependencies": {
-    "d3": "^7",
-    "rimraf": "^5",
-    "webpack": "^5",
-    "webpack-cli": "^5"
   }
 }
