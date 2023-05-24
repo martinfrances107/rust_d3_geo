@@ -80,7 +80,7 @@ pub struct Renderer {
     context2d: CanvasRenderingContext2d,
     countries: Geometry<f64>,
     graticule: Geometry<f64>,
-    ob: BuilderCircleResampleNoClip<Endpoint, Orthographic<f64>, f64>,
+    projector_builder: BuilderCircleResampleNoClip<Endpoint, Orthographic<f64>, f64>,
 }
 
 #[wasm_bindgen]
@@ -138,8 +138,9 @@ impl Renderer {
         let countries =
             feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
-        let mut ob = Orthographic::builder();
-        ob.scale_set(width / 1.3_f64 / std::f64::consts::PI)
+        let mut projector_builder = Orthographic::builder();
+        projector_builder
+            .scale_set(width / 1.3_f64 / std::f64::consts::PI)
             .translate_set(&Coord {
                 x: width / 2_f64,
                 y: height / 2_f64,
@@ -157,13 +158,13 @@ impl Renderer {
             context2d,
             countries,
             graticule,
-            ob,
+            projector_builder,
         })
     }
 
     /// Transform a point base in the renderer's transform.
     pub fn transform_in_place(&self, p: &mut ExportedPoint) {
-        let p_out = self.ob.transform(&Coord { x: p.x, y: p.y });
+        let p_out = self.projector_builder.transform(&Coord { x: p.x, y: p.y });
 
         p.x = p_out.x;
         p.y = p_out.y;
@@ -172,32 +173,32 @@ impl Renderer {
     /// Returns a coordinate based on the renderer's transform.
     #[must_use]
     pub fn transform(&self, p: &ExportedPoint) -> ExportedPoint {
-        let p_out = self.ob.transform(&Coord { x: p.x, y: p.y });
+        let p_out = self.projector_builder.transform(&Coord { x: p.x, y: p.y });
         ExportedPoint::new(p_out.x, p_out.y)
     }
 
-    /// Set the builder scale.
+    /// Set the builder's scale.
     pub fn scale_set(&mut self, scale: f64) {
-        self.ob.scale_set(scale);
+        self.projector_builder.scale_set(scale);
     }
 
-    /// Set the builder scale.
+    /// Get the builder's scale.
     #[must_use]
     pub fn scale(&self) -> f64 {
-        self.ob.scale()
+        self.projector_builder.scale()
     }
 
     /// Returns a coordinate based on the renderer's invert transform.
     #[must_use]
     pub fn invert(&self, p: &ExportedPoint) -> ExportedPoint {
-        let p_out = self.ob.invert(&Coord { x: p.x, y: p.y });
+        let p_out = self.projector_builder.invert(&Coord { x: p.x, y: p.y });
         ExportedPoint::new(p_out.x, p_out.y)
     }
 
     #[must_use]
     /// Returns the builders angle settings.
     pub fn rotate(&self) -> Array {
-        self.ob
+        self.projector_builder
             .rotate()
             .into_iter()
             .map(JsValue::from_f64)
@@ -210,7 +211,8 @@ impl Renderer {
             .iter()
             .map(&mut |x: JsValue| x.as_f64().unwrap_or_default())
             .collect::<Vec<f64>>();
-        self.ob.rotate3_set(&[angles[0], angles[1], angles[2]]);
+        self.projector_builder
+            .rotate3_set(&[angles[0], angles[1], angles[2]]);
     }
 
     /// Render the next frame.
@@ -219,11 +221,12 @@ impl Renderer {
         let ep = Endpoint::new(path2d);
 
         if !solid {
-            let r = self.ob.rotate();
-            self.ob.reflect_x_set(Reflect::Flipped);
-            self.ob.rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
+            let r = self.projector_builder.rotate();
+            self.projector_builder.reflect_x_set(Reflect::Flipped);
+            self.projector_builder
+                .rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
 
-            let ortho = self.ob.build();
+            let ortho = self.projector_builder.build();
             let pb = PathBuilder::new(ep.clone());
 
             let mut path = pb.build(ortho);
@@ -232,15 +235,15 @@ impl Renderer {
             self.context2d.begin_path();
             path.object(&self.countries);
             let path2d = path.context_stream.result();
-
+            path2d.close_path();
             self.context2d.stroke_with_path(&path2d);
             self.context2d.fill_with_path_2d(&path2d);
 
-            self.ob.reflect_x_set(Reflect::Unflipped);
-            self.ob.rotate3_set(&r);
+            self.projector_builder.reflect_x_set(Reflect::Unflipped);
+            self.projector_builder.rotate3_set(&r);
         }
 
-        let ortho = self.ob.build();
+        let ortho = self.projector_builder.build();
 
         let pb = PathBuilder::new(ep);
 
