@@ -77,9 +77,9 @@ pub fn draw_orthographic() -> Result<()> {
 
     let object = MultiPolygon(p_vec);
 
-    let pb = PathBuilder::pathstring();
+    let path_builder = PathBuilder::pathstring();
 
-    let mut path = pb.build(ortho);
+    let mut path = path_builder.build(ortho);
     let s = path.object(&object);
 
     let class_name = format!("s2-id-{}", 0);

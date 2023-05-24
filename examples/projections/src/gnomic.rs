@@ -38,7 +38,7 @@ pub async fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
     let path2d = Path2d::new()?;
 
     let ep = Endpoint::new(path2d);
-    let pb = PathBuilder::new(ep);
+    let path_builder = PathBuilder::new(ep);
 
     let gnomic = Gnomic::builder()
         .scale_set(width / 6_f64)
@@ -50,7 +50,7 @@ pub async fn draw_gnomic(land: &Geometry<f64>) -> Result<(), JsValue> {
         .clip_angle(90_f64 - 1e-3)
         .build();
 
-    let mut path = pb.build(gnomic);
+    let mut path = path_builder.build(gnomic);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
     let path2d = path.context_stream.result();

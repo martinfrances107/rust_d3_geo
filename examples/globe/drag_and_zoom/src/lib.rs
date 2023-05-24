@@ -227,9 +227,9 @@ impl Renderer {
                 .rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
 
             let ortho = self.projector_builder.build();
-            let pb = PathBuilder::new(ep.clone());
+            let path_builder = PathBuilder::new(ep.clone());
 
-            let mut path = pb.build(ortho);
+            let mut path = path_builder.build(ortho);
             self.context2d.set_stroke_style(&self.color_inner_stroke);
             self.context2d.set_fill_style(&self.color_inner_fill);
             self.context2d.begin_path();
@@ -243,11 +243,11 @@ impl Renderer {
             self.projector_builder.rotate3_set(&r);
         }
 
-        let ortho = self.projector_builder.build();
+        let projector = self.projector_builder.build();
 
-        let pb = PathBuilder::new(ep);
+        let path_builder = PathBuilder::new(ep);
 
-        let mut path = pb.build(ortho);
+        let mut path = path_builder.build(projector);
         self.context2d.set_fill_style(&self.color_outer_fill);
         self.context2d.set_stroke_style(&self.color_outer_stroke);
         self.context2d.begin_path();

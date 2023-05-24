@@ -38,7 +38,7 @@ pub async fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
     let path2d = Path2d::new()?;
 
     let context = Endpoint::new(path2d);
-    let pb = PathBuilder::new(context);
+    let path_builder = PathBuilder::new(context);
 
     let equirectangular = Equirectangular::builder()
         .scale_set(width / 1.5_f64 / std::f64::consts::PI)
@@ -50,7 +50,7 @@ pub async fn draw_equirectangular(land: &Geometry<f64>) -> Result<(), JsValue> {
         })
         .build();
 
-    let mut path = pb.build(equirectangular);
+    let mut path = path_builder.build(equirectangular);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
     let path2d = path.context_stream.result();

@@ -37,7 +37,7 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
     let path2d = Path2d::new()?;
 
     let ep: Endpoint = Endpoint::new(path2d);
-    let pb = PathBuilder::new(ep);
+    let path_builder = PathBuilder::new(ep);
 
     let azimuthal_equal_area = AzimuthalEqualArea::builder()
         .scale_set(width / 3_f64)
@@ -48,7 +48,7 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
         .precision_set(&0.1_f64)
         .build();
 
-    let mut path = pb.build(azimuthal_equal_area);
+    let mut path = path_builder.build(azimuthal_equal_area);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
     let path2d = path.context_stream.result();

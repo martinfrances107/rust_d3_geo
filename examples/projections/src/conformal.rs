@@ -39,7 +39,7 @@ pub async fn draw_conformal(land: &Geometry<f64>) -> Result<(), JsValue> {
 
     let ep = Endpoint::new(path2d);
 
-    let pb = PathBuilder::new(ep);
+    let path_builder = PathBuilder::new(ep);
 
     // input params will cause a conic equal area projection to be constructed.
     let cea = Conformal::builder()
@@ -52,7 +52,7 @@ pub async fn draw_conformal(land: &Geometry<f64>) -> Result<(), JsValue> {
         })
         .build();
 
-    let mut path = pb.build(cea);
+    let mut path = path_builder.build(cea);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
     let path2d = path.context_stream.result();

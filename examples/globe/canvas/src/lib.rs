@@ -75,7 +75,7 @@ pub async fn start() -> Result<(), JsValue> {
     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
     let ep = Endpoint::new(path2d);
-    let pb = PathBuilder::new(ep);
+    let path_builder = PathBuilder::new(ep);
 
     let ortho = Orthographic::builder()
         .scale_set(width / 1.3_f64 / std::f64::consts::PI)
@@ -86,7 +86,7 @@ pub async fn start() -> Result<(), JsValue> {
         .rotate2_set(&[270_f64, 0_f64])
         .build();
 
-    let mut path = pb.build(ortho);
+    let mut path = path_builder.build(ortho);
     context_raw.set_stroke_style(&"#333".into());
     context_raw.set_line_width(0.5);
     path.object(&countries);

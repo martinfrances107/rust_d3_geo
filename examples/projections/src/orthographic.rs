@@ -36,7 +36,7 @@ pub async fn draw_orthographic(land: &Geometry<f64>) -> Result<(), JsValue> {
     let path2d = Path2d::new()?;
 
     let ep = Endpoint::new(path2d);
-    let pb = PathBuilder::new(ep);
+    let path_builder = PathBuilder::new(ep);
 
     let ortho = Orthographic::builder()
         .scale_set(width / 1.3_f64 / std::f64::consts::PI)
@@ -46,7 +46,7 @@ pub async fn draw_orthographic(land: &Geometry<f64>) -> Result<(), JsValue> {
         })
         .build();
 
-    let mut path = pb.build(ortho);
+    let mut path = path_builder.build(ortho);
     context_raw.set_stroke_style(&"#69b3a2".into());
     context_raw.set_fill_style(&"#2a2a2a".into());
     path.object(land);

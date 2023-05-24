@@ -38,7 +38,7 @@ pub async fn draw_equidistant(land: &Geometry<f64>) -> Result<(), JsValue> {
     let path2d = Path2d::new()?;
 
     let ep = Endpoint::new(path2d);
-    let pb = PathBuilder::new(ep);
+    let path_builder = PathBuilder::new(ep);
 
     let equidistant = Equidistant::builder()
         .scale_set(width / 1.5_f64 / std::f64::consts::PI)
@@ -50,7 +50,7 @@ pub async fn draw_equidistant(land: &Geometry<f64>) -> Result<(), JsValue> {
         })
         .build();
 
-    let mut path = pb.build(equidistant);
+    let mut path = path_builder.build(equidistant);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
     let path2d = path.context_stream.result();

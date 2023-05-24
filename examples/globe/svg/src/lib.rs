@@ -105,9 +105,9 @@ pub async fn start() -> Result<(), JsValue> {
         "fill: silver",
     ];
 
-    let pb = PathBuilder::pathstring();
+    let path_builder = PathBuilder::pathstring();
 
-    let mut builder = pb.build(ortho);
+    let mut builder = path_builder.build(ortho);
     let mut i = 0;
 
     match &countries {

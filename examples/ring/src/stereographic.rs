@@ -75,8 +75,8 @@ pub fn draw_sterographic() -> Result<()> {
 
     let object = MultiPolygon(p_vec);
 
-    let pb = PathBuilder::pathstring();
-    let mut path = pb.build(stereographic);
+    let path_builder = PathBuilder::pathstring();
+    let mut path = path_builder.build(stereographic);
     let s = path.object(&object);
 
     let class_name = format!("s2-id-{}", 0);

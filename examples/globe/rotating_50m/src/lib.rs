@@ -156,9 +156,9 @@ impl Renderer {
 
         let path2d = Path2d::new().unwrap();
         let ep = Endpoint::new(path2d);
-        let pb = PathBuilder::new(ep);
+        let path_builder = PathBuilder::new(ep);
 
-        let mut path = pb.build(projector);
+        let mut path = path_builder.build(projector);
         self.context2d.set_stroke_style(&self.color_land);
         path.object(&self.countries);
         let path2d = path.context_stream.result();
