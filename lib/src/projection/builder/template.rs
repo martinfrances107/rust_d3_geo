@@ -48,6 +48,6 @@ pub type ResampleNoneNoPCNC<DRAIN, PR, T> = None<PR, Connected<NoPCNC<DRAIN>>, T
 /// A unconnected resample pass through node, connected to a pass through post clip node.
 pub type ResampleNoneNoPCNU<PR, T> = None<PR, Unconnected, T>;
 
-/// Default builder, no resampling, no Clipping.
+/// Default projection builder, no resampling, no Clipping.
 pub type Default<CLIPU, DRAIN, PR, T> =
     Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>;

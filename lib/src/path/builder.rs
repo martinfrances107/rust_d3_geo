@@ -50,7 +50,7 @@ impl<T> Builder<Endpoint, T>
 where
     T: CoordFloat,
 {
-    /// Programe the builder with the context.
+    /// Programe the path builder with the context.
     pub fn context(&mut self, context: Path2d) -> &mut Self {
         self.context_stream = PathContext::new(context);
         self

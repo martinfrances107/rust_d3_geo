@@ -55,14 +55,13 @@ pub trait PRConic: RawBase {
     fn generate(self, y0: Self::T, y1: Self::T) -> Self;
 }
 
-/// A wrapper over Projection\Builder which hold state phi0, phi1 and allow regeneration of the PR.
+/// A wrapper over a projection builder which hold state phi0, phi1 and allow regeneration of the PR.
 #[derive(Clone, Debug)]
 pub struct Builder<BASE, T>
 where
     BASE: ScaleGet<T = T>,
     T: CoordFloat,
 {
-    /// The wrapped builder type.
     base: BASE,
     phi0: T,
     phi1: T,

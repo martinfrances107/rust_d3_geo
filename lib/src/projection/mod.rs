@@ -45,9 +45,9 @@ pub mod builder_albers_usa;
 pub mod builder_conic;
 /// Identity builder.
 pub mod builder_identity;
-/// A specalised builder wrapping the default mecator.
+/// A specalised projecton builder wrapping the default mecator.
 pub mod builder_mercator;
-/// A specalised builder wrapping the mecator builder.
+/// A specalised projection builder wrapping the mecator builder.
 pub mod builder_mercator_transverse;
 /// Enum and generator for "Cyclindrical" or "Conic" equal area projection.
 pub mod equal_area;
