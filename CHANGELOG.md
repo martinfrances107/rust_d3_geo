@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.0] - Wed 24 May 2023
+
+MAJOR: Lots of function calls removed from the public interface
+
+commit 92b3a5700e591d411ed60c001e595468d6c5c0cf
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Wed May 24 08:07:16 2023 +0100
+
+    breaking change enum REFLECT becomes Reflect.
+
+
 ## [0.8.0] - Sat 20 May 2023
 
 commit 32f8ab99295d48a28a5ff82a7c1a591ac9e16a6e
