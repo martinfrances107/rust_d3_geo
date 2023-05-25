@@ -186,7 +186,6 @@ static CODE_ABOVE: u8 = 8;
 /// Generates a 4-bit vector representing the location of a point relative to
 /// the small circle's bounding box.
 ///
-/// TODO :-
 /// code is only available of from connected state.
 impl<SINK, T> Line<Connected<SINK>, T>
 where

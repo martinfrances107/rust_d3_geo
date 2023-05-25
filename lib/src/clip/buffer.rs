@@ -38,9 +38,8 @@ where
     type Out = VecDeque<Vec<LineElem<T>>>;
 
     fn result(&mut self) -> Self::Out {
-        // TODO can use swap here to remove the clone and clear???
-        let result = self.lines.clone();
-        self.lines.clear();
+        let mut result = VecDeque::new();
+        std::mem::swap(&mut result, &mut self.lines);
         result
     }
 }

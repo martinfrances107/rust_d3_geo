@@ -11,7 +11,6 @@ pub struct RotationLambda<T> {
     delta_lambda: T,
 }
 
-// TODO why can't I #[inline] this.
 fn forward_rotation_lambda<T: CoordFloat + FloatConst>(delta_lambda: T, p: &Coord<T>) -> Coord<T> {
     let mut lambda = p.x + delta_lambda;
     if lambda.abs() > T::PI() {
