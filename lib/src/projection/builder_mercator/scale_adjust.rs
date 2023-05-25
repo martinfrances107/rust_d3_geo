@@ -5,7 +5,6 @@ use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::clip::rectangle::Rectangle;
 use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::template::ResamplePCNU;
-use crate::projection::builder::template::PCNU;
 use crate::projection::ScaleSet;
 use crate::projection::TransformExtent;
 
@@ -19,7 +18,6 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
     for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
-    PCNU<T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
@@ -35,7 +33,6 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
     for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
-    PCNU<T>: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {

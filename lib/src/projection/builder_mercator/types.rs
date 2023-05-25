@@ -5,7 +5,6 @@ use crate::projection::builder::template::ResampleNonePCNC;
 use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::template::ResamplePCNC;
 use crate::projection::builder::template::ResamplePCNU;
-use crate::projection::builder::template::PCNU;
 use crate::projection::builder_mercator::Builder;
 use crate::stream::Unconnected;
 
@@ -13,7 +12,7 @@ use crate::stream::Unconnected;
 pub type BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<T>,
+    Rectangle<Unconnected, T>,
     PR,
     ResamplePCNU<PR, T>,
     T,
@@ -23,7 +22,7 @@ pub type BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T> = Builder<
 pub type BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<T>,
+    Rectangle<Unconnected, T>,
     PR,
     ResampleNonePCNU<PR, T>,
     T,
@@ -43,7 +42,7 @@ pub type BuilderMercatorCircleResampleClip<DRAIN, PR, T> = Builder<
 pub type BuilderMercatorCircleResampleNoneClip<DRAIN, PR, T> = Builder<
     ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<T>,
+    Rectangle<Unconnected, T>,
     PR,
     ResampleNonePCNU<PR, T>,
     T,

@@ -2,6 +2,7 @@ use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
+use crate::clip::rectangle::Rectangle;
 use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoPCNC;
 use crate::projection::builder::template::ResampleNoPCNU;
@@ -11,7 +12,6 @@ use crate::projection::builder::template::ResampleNonePCNC;
 use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::template::ResamplePCNC;
 use crate::projection::builder::template::ResamplePCNU;
-use crate::projection::builder::template::PCNU;
 use crate::stream::Unconnected;
 
 use super::Projector;
@@ -32,7 +32,7 @@ pub type ProjectorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Projector<
 pub type ProjectorAntimeridianResampleNoneClip<DRAIN, PR, T> = Projector<
     ClipAntimeridianU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<T>,
+    Rectangle<Unconnected, T>,
     PR,
     ResampleNonePCNU<PR, T>,
     Source<ClipAntimeridianC<ResampleNonePCNC<DRAIN, PR, T>, T>, T>,
@@ -54,7 +54,7 @@ pub type ProjectorAntimeridianResampleNoClip<DRAIN, PR, T> = Projector<
 pub type ProjectorAntimeridianResampleClip<DRAIN, PR, T> = Projector<
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<T>,
+    Rectangle<Unconnected, T>,
     PR,
     ResamplePCNU<PR, T>,
     Source<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>, T>,
@@ -76,7 +76,7 @@ pub type ProjectorCircleResampleNoneNoClip<DRAIN, PR, T> = Projector<
 pub type ProjectorCircleResampleNoneClip<DRAIN, PR, T> = Projector<
     ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<T>,
+    Rectangle<Unconnected, T>,
     PR,
     ResampleNonePCNU<PR, T>,
     Source<ClipCircleC<ResampleNonePCNC<DRAIN, PR, T>, T>, T>,
@@ -98,7 +98,7 @@ pub type ProjectorCircleResampleNoClip<DRAIN, PR, T> = Projector<
 pub type ProjectorCircleResampleClip<DRAIN, PR, T> = Projector<
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    PCNU<T>,
+    Rectangle<Unconnected, T>,
     PR,
     ResamplePCNU<PR, T>,
     Source<ClipAntimeridianC<ResamplePCNC<DRAIN, PR, T>, T>, T>,
