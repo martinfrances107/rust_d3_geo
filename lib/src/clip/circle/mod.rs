@@ -22,7 +22,7 @@ use super::clipper::Clipper;
 use super::clipper::Connected as ConnectedClip;
 
 /// Connected clip type using circle interpolator, `point_visble` function line handler.
-pub type ClipCircleC<RC, T> = Clipper<
+pub(crate) type ClipCircleC<RC, T> = Clipper<
     Interpolate<T>,
     Line<Unconnected, T>,
     PV<T>,
@@ -32,7 +32,7 @@ pub type ClipCircleC<RC, T> = Clipper<
 >;
 
 /// Unconnected clip type using circle interpolator, `point_visble` function line handler.
-pub type ClipCircleU<RC, T> =
+pub(crate) type ClipCircleU<RC, T> =
     Clipper<Interpolate<T>, Line<Unconnected, T>, PV<T>, RC, Unconnected, T>;
 
 /// Returns a clip setup for circle clipping.
