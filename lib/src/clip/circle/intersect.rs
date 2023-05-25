@@ -13,7 +13,7 @@ use crate::math::EPSILON;
 
 /// `IntersectReturn` none, one or two 2d floats.
 #[derive(Debug)]
-pub enum Return<T: CoordFloat> {
+pub(super) enum Return<T: CoordFloat> {
     /// One Point.
     One(Option<LineElem<T>>),
     /// Two polar points
@@ -31,7 +31,7 @@ pub enum Return<T: CoordFloat> {
 #[allow(clippy::many_single_char_names)]
 #[allow(clippy::similar_names)]
 #[allow(non_snake_case)]
-pub fn intersect<T: CoordFloat + FloatConst>(
+pub(super) fn intersect<T: CoordFloat + FloatConst>(
     a: &LineElem<T>,
     b: &LineElem<T>,
     cr: T,
