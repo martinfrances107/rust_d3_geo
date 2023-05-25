@@ -16,7 +16,7 @@ pub struct Buffer<T>
 where
     T: CoordFloat,
 {
-    lines: VecDeque<Vec<LineElem<T>>>,
+    pub lines: VecDeque<Vec<LineElem<T>>>,
 }
 
 impl<T> Default for Buffer<T>

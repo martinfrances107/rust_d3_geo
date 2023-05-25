@@ -4,7 +4,6 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::projection::projector_albers_usa::Projector;
-use crate::stream::Stream;
 
 use super::albers_usa::AlbersUsa;
 use super::BuilderTrait;

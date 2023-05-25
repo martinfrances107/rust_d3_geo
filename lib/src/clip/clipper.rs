@@ -192,9 +192,8 @@ where
         self.state.ring_sink.line_end();
 
         let clean = self.state.ring_sink.clean();
-        let mut ring_segments = self.state.ring_sink.sink().result();
-        let n = ring_segments.len();
-        let m;
+        let ring_segments = self.state.ring_sink.sink();
+        let n = ring_segments.lines.len();
 
         self.state.ring.0.pop();
         self.state.polygon.push(self.state.ring.clone());
@@ -210,9 +209,10 @@ where
         // No intersections.
         if clean & 1 != 0 {
             let segment = ring_segments
+                .lines
                 .pop_front()
                 .expect("We have previously checked that the .len() is >0 ( n ) ");
-            m = segment.len() - 1usize;
+            let m = segment.len() - 1usize;
             if m > 0 {
                 if !self.state.polygon_started {
                     self.state.line_node.sink().polygon_start();
@@ -228,24 +228,11 @@ where
             return;
         }
 
-        // Rejoin connected segments.
-        // TODO reuse ringBuffer.rejoin()?
-        if n > 1 {
-            let pb = [
-                ring_segments
-                    .pop_back()
-                    .unwrap_or_else(|| Vec::with_capacity(0)),
-                ring_segments
-                    .pop_front()
-                    .unwrap_or_else(|| Vec::with_capacity(0)),
-            ]
-            .concat();
-            ring_segments.push_back(pb);
-        }
+        ring_segments.rejoin();
 
-        ring_segments.retain(|segment| segment.len() > 1usize);
+        ring_segments.lines.retain(|segment| segment.len() > 1usize);
 
-        self.state.segments.push_back(ring_segments);
+        self.state.segments.push_back(ring_segments.result());
     }
 
     #[inline]

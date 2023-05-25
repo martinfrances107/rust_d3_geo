@@ -15,7 +15,6 @@ use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::Build;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connected as ConnectedStream;
-use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
 
