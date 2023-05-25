@@ -20,8 +20,6 @@ pub type NoPCNC<DRAIN> = Identity<Connected<DRAIN>>;
 
 /// A connected post clip node.
 pub type PCNC<DRAIN, T> = Rectangle<Connected<DRAIN>, T>;
-/// A unconnected post clip node.
-pub type PCNU<T> = Rectangle<Unconnected, T>;
 
 /// A connected resample node connected to a post clip node.
 pub type ResamplePCNC<DRAIN, PR, T> = Resample<PR, ConnectedResample<PCNC<DRAIN, T>, T>, T>;
