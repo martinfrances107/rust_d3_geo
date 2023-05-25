@@ -19,8 +19,8 @@ impl Path2d {
 impl Path2d {
     /// Buffered strings.
     pub fn result(&mut self) -> Vec<String> {
-        let result = self.buffer.clone();
-        self.buffer = vec![];
+        let mut result = vec![];
+        std::mem::swap(&mut result, &mut self.buffer);
         result
     }
 }

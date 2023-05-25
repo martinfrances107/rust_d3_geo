@@ -3,7 +3,6 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use geo::LineString;
 use geo::Polygon;
-use geo_types::coord;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
