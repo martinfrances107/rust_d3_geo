@@ -3,6 +3,7 @@ use std::fmt::Debug;
 use geo::CoordFloat;
 use geo::LineString;
 use geo::Polygon;
+use geo_types::coord;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
@@ -55,11 +56,11 @@ where
 
         self.stream.rotate = rotate_radians([-c.x.to_radians(), -c.y.to_radians(), T::zero()]);
         stream_fn(&mut self.stream, r, p, T::one(), None, None);
-        let coordinates = self.stream.ring.clone();
+        let mut coordinates = vec![];
+        std::mem::swap(&mut coordinates, &mut self.stream.ring);
 
         let polygon = Polygon::new(LineString(coordinates), vec![]);
 
-        self.stream.ring.clear();
         self.stream.rotate = RotateRadians::I(RotationIdentity::default());
         polygon
     }
