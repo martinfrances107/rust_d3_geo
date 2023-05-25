@@ -1,20 +1,22 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::identity::Identity;
 use crate::projection::builder::ResampleNoPCNU;
 use crate::projection::builder::ResamplePCNU;
 use crate::projection::Recenter;
 use crate::projection::Reflect;
 use crate::projection::ReflectSet;
+use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::template::NoPCNU;
 use super::template::ResampleNoneNoPCNU;
 use super::template::ResampleNonePCNU;
 use super::template::PCNU;
 use super::Builder;
 
-impl<CLIPU, DRAIN, PR, T> ReflectSet for Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> ReflectSet
+    for Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -69,7 +71,7 @@ where
 }
 
 impl<CLIPU, DRAIN, PR, T> ReflectSet
-    for Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
+    for Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

@@ -1,17 +1,18 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::identity::Identity;
 use crate::projection::builder::Builder;
-use crate::projection::builder::NoPCNU;
 use crate::projection::builder::ResampleNoneNoPCNU;
 use crate::projection::builder::ResampleNonePCNU;
 use crate::projection::builder::PCNU;
 use crate::projection::Recenter;
 use crate::projection::ScaleSet;
+use crate::stream::Unconnected;
 use crate::Transform;
 
 impl<CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
+    for Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

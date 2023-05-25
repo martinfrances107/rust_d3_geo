@@ -1,17 +1,19 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::identity::Identity;
 use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::ResampleNoPCNU;
 use crate::projection::AngleSet;
 use crate::projection::Recenter;
+use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::template::NoPCNU;
 use super::template::PCNU;
 use super::Builder;
 
-impl<CLIPU, DRAIN, PR, T> AngleSet for Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> AngleSet
+    for Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

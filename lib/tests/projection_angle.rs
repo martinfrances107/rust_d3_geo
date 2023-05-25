@@ -6,7 +6,6 @@ mod projection_angle {
 
     use d3_geo_rs::in_delta::in_delta;
     use d3_geo_rs::projection::builder::template::NoPCNC;
-    use d3_geo_rs::projection::builder::template::NoPCNU;
     use d3_geo_rs::projection::builder_identity::Builder as BuilderIdentity;
     use d3_geo_rs::projection::equality::projection_equal;
     use d3_geo_rs::projection::gnomic::Gnomic;
@@ -402,7 +401,7 @@ mod projection_angle {
     fn rotates_geo_identity() {
         println!("identity.angle(…) rotates geoIdentity");
 
-        let mut pb: d3_geo_rs::projection::builder_identity::Builder<NoPCNU, f32> =
+        let mut pb: d3_geo_rs::projection::builder_identity::Builder<_, f32> =
             BuilderIdentity::default();
         pb.angle_set(-45_f32);
 

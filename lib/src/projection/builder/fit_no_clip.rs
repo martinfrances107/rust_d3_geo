@@ -5,6 +5,7 @@ use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::clipper::Connectable as ConnectableClip;
+use crate::identity::Identity;
 use crate::path::bounds::Bounds;
 use crate::projection::builder::Builder;
 use crate::projection::fit_no_clip::fit_extent_no_clip;
@@ -14,16 +15,16 @@ use crate::projection::fit_no_clip::fit_width_no_clip;
 use crate::projection::Fit;
 use crate::stream::Stream;
 use crate::stream::Streamable;
+use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::template::NoPCNU;
 use super::template::ResampleNoPCNC;
 use super::template::ResampleNoPCNU;
 use super::template::ResampleNoneNoPCNC;
 use super::template::ResampleNoneNoPCNU;
 
 impl<CLIPC, CLIPU, PR, T> Fit
-    for Builder<CLIPU, Bounds<T>, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>
+    for Builder<CLIPU, Bounds<T>, Identity<Unconnected>, PR, ResampleNoneNoPCNU<PR, T>, T>
 where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = ResampleNoneNoPCNC<Bounds<T>, PR, T>>,
@@ -52,7 +53,8 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, PR, T> Fit for Builder<CLIPU, Bounds<T>, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPC, CLIPU, PR, T> Fit
+    for Builder<CLIPU, Bounds<T>, Identity<Unconnected>, PR, ResampleNoPCNU<PR, T>, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = ResampleNoPCNC<Bounds<T>, PR, T>>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,

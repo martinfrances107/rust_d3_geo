@@ -3,8 +3,8 @@ use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
+use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoPCNU;
-use crate::projection::builder::NoPCNU;
 use crate::projection::builder::ResamplePCNU;
 use crate::projection::builder::PCNU;
 use crate::projection::resampler::resample::Resample;
@@ -12,11 +12,13 @@ use crate::projection::transform::generate as generate_str;
 use crate::projection::Recenter;
 use crate::rot::rotate_radians;
 use crate::rot::rotator_radians::RotatorRadians;
+use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
 
-impl<CLIPU, DRAIN, PR, T> Recenter for Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoPCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> Recenter
+    for Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoPCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

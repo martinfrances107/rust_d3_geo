@@ -11,7 +11,6 @@ mod identity {
     use crate::path::string::String;
     use crate::path_identity::builder::Builder as PathBuilder;
     use crate::projection::builder::template::NoPCNC;
-    use crate::projection::builder::template::NoPCNU;
     use crate::projection::builder::template::PCNC;
     use crate::projection::builder_identity::Builder;
     use crate::projection::equality::projection_equal;
@@ -74,7 +73,7 @@ mod identity {
         .scale_set(2_f64);
 
         assert!(projection_equal(
-            &ib.build::<DrainStub<f64>, NoPCNU>(),
+            &ib.build::<DrainStub<f64>, Identity<Unconnected>>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None
@@ -82,7 +81,7 @@ mod identity {
 
         ib.reflect_x_set(Reflect::Flipped);
         assert!(projection_equal(
-            &ib.build::<DrainStub<f64>, NoPCNU>(),
+            &ib.build::<DrainStub<f64>, Identity<Unconnected>>(),
             &(3f64, 7f64).into(),
             &(94f64, 24f64).into(),
             None
@@ -90,7 +89,7 @@ mod identity {
 
         ib.reflect_y_set(Reflect::Flipped);
         assert!(projection_equal(
-            &ib.build::<DrainStub<f64>, NoPCNU>(),
+            &ib.build::<DrainStub<f64>, Identity<Unconnected>>(),
             &(3f64, 7f64).into(),
             &(94f64, -4f64).into(),
             None
@@ -98,7 +97,7 @@ mod identity {
 
         ib.reflect_x_set(Reflect::Unflipped);
         assert!(projection_equal(
-            &ib.build::<DrainStub<f64>, NoPCNU>(),
+            &ib.build::<DrainStub<f64>, Identity<Unconnected>>(),
             &(3f64, 7f64).into(),
             &(106f64, -4f64).into(),
             None
@@ -106,7 +105,7 @@ mod identity {
 
         ib.reflect_y_set(Reflect::Unflipped);
         assert!(projection_equal(
-            &ib.build::<DrainStub<f64>, NoPCNU>(),
+            &ib.build::<DrainStub<f64>, Identity<Unconnected>>(),
             &(3f64, 7f64).into(),
             &(106f64, 24f64).into(),
             None

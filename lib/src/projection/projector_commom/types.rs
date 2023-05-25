@@ -2,7 +2,7 @@ use crate::clip::antimeridian::ClipAntimeridianC;
 use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::ClipCircleC;
 use crate::clip::circle::ClipCircleU;
-use crate::projection::builder::template::NoPCNU;
+use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoPCNC;
 use crate::projection::builder::template::ResampleNoPCNU;
 use crate::projection::builder::template::ResampleNoneNoPCNC;
@@ -12,6 +12,7 @@ use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::template::ResamplePCNC;
 use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder::template::PCNU;
+use crate::stream::Unconnected;
 
 use super::Projector;
 use super::Source;
@@ -20,7 +21,7 @@ use super::Source;
 pub type ProjectorAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Projector<
     ClipAntimeridianU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoPCNU,
+    Identity<Unconnected>,
     PR,
     ResampleNoneNoPCNU<PR, T>,
     Source<ClipAntimeridianC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>, T>,
@@ -42,7 +43,7 @@ pub type ProjectorAntimeridianResampleNoneClip<DRAIN, PR, T> = Projector<
 pub type ProjectorAntimeridianResampleNoClip<DRAIN, PR, T> = Projector<
     ClipAntimeridianU<ResampleNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoPCNU,
+    Identity<Unconnected>,
     PR,
     ResampleNoPCNU<PR, T>,
     Source<ClipAntimeridianC<ResampleNoPCNC<DRAIN, PR, T>, T>, T>,
@@ -64,7 +65,7 @@ pub type ProjectorAntimeridianResampleClip<DRAIN, PR, T> = Projector<
 pub type ProjectorCircleResampleNoneNoClip<DRAIN, PR, T> = Projector<
     ClipCircleU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoPCNU,
+    Identity<Unconnected>,
     PR,
     ResampleNoneNoPCNU<PR, T>,
     Source<ClipCircleC<ResampleNoneNoPCNC<DRAIN, PR, T>, T>, T>,
@@ -86,7 +87,7 @@ pub type ProjectorCircleResampleNoneClip<DRAIN, PR, T> = Projector<
 pub type ProjectorCircleResampleNoClip<DRAIN, PR, T> = Projector<
     ClipCircleU<ResampleNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoPCNU,
+    Identity<Unconnected>,
     PR,
     ResampleNoPCNU<PR, T>,
     Source<ClipCircleC<ResampleNoPCNC<DRAIN, PR, T>, T>, T>,

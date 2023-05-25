@@ -1,16 +1,17 @@
 use crate::clip::antimeridian::ClipAntimeridianU;
 
 use crate::clip::circle::ClipCircleU;
+use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoneNoPCNC;
 use crate::projection::builder::template::ResampleNoneNoPCNU;
 use crate::projection::builder::template::ResampleNonePCNC;
 use crate::projection::builder::template::ResampleNonePCNU;
-use crate::projection::builder::NoPCNU;
 use crate::projection::builder::ResampleNoPCNC;
 use crate::projection::builder::ResampleNoPCNU;
 use crate::projection::builder::ResamplePCNC;
 use crate::projection::builder::ResamplePCNU;
 use crate::projection::builder::PCNU;
+use crate::stream::Unconnected;
 
 use super::Builder;
 
@@ -18,7 +19,7 @@ use super::Builder;
 pub type BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoPCNU,
+    Identity<Unconnected>,
     PR,
     ResampleNoneNoPCNU<PR, T>,
     T,
@@ -38,7 +39,7 @@ pub type BuilderAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
 pub type BuilderAntimeridianResampleNoClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianU<ResampleNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoPCNU,
+    Identity<Unconnected>,
     PR,
     ResampleNoPCNU<PR, T>,
     T,
@@ -58,7 +59,7 @@ pub type BuilderAntimeridianResampleClip<DRAIN, PR, T> = Builder<
 pub type BuilderCircleResampleNoClip<DRAIN, PR, T> = Builder<
     ClipCircleU<ResampleNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoPCNU,
+    Identity<Unconnected>,
     PR,
     ResampleNoPCNU<PR, T>,
     T,
@@ -68,7 +69,7 @@ pub type BuilderCircleResampleNoClip<DRAIN, PR, T> = Builder<
 pub type BuilderCircleResampleNoneNoClip<DRAIN, PR, T> = Builder<
     ClipCircleU<ResampleNoneNoPCNC<DRAIN, PR, T>, T>,
     DRAIN,
-    NoPCNU,
+    Identity<Unconnected>,
     PR,
     ResampleNoneNoPCNU<PR, T>,
     T,

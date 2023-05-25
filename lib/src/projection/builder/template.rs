@@ -18,7 +18,7 @@ use super::Builder;
 /// A connected pass through post clip node.
 pub type NoPCNC<DRAIN> = Identity<Connected<DRAIN>>;
 /// A unconnected pass through post clip node.
-pub type NoPCNU = Identity<Unconnected>;
+type NoPCNU = Identity<Unconnected>;
 
 /// A connected post clip node.
 pub type PCNC<DRAIN, T> = Rectangle<Connected<DRAIN>, T>;

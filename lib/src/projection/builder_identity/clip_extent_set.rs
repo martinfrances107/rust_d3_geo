@@ -3,13 +3,14 @@ use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::rectangle::Rectangle;
-use crate::projection::builder::template::NoPCNU;
+use crate::identity::Identity;
 use crate::projection::builder::template::PCNU;
 use crate::projection::ClipExtentSet;
+use crate::stream::Unconnected;
 
 use super::Builder;
 
-impl<T> ClipExtentSet for Builder<NoPCNU, T>
+impl<T> ClipExtentSet for Builder<Identity<Unconnected>, T>
 where
     T: CoordFloat + Default + FloatConst,
 {

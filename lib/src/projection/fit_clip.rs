@@ -18,10 +18,10 @@ use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::clipper::Connectable as ConnectableClip;
+use crate::identity::Identity;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::NoPCNC;
-use crate::projection::builder::template::NoPCNU;
 use crate::projection::builder::template::PCNC;
 use crate::projection::builder::template::PCNU;
 use crate::projection::Build;
@@ -32,6 +32,7 @@ use crate::projection::TranslateSet;
 use crate::stream::Connectable;
 use crate::stream::Stream;
 use crate::stream::Streamable;
+use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::projector_commom::Projector;
@@ -53,8 +54,17 @@ where
         + TranslateSet<T = T>
         + ClipExtentClear<Output = Bint, T = T>,
 
-    Bint: Build<Projector = Projector<CLIPUint, Bounds<T>, NoPCNU, PR, RUint, Source<CLIPCint, T>, T>>
-        + ClipExtentSet<Output = B, T = T>,
+    Bint: Build<
+            Projector = Projector<
+                CLIPUint,
+                Bounds<T>,
+                Identity<Unconnected>,
+                PR,
+                RUint,
+                Source<CLIPCint, T>,
+                T,
+            >,
+        > + ClipExtentSet<Output = B, T = T>,
     CLIPU: Clone,
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPUint: Clone + ConnectableClip<Output = CLIPCint, SC = RCint>,
@@ -113,8 +123,17 @@ where
         + ClipExtentGet<T = T>
         + TranslateGet<T = T>
         + TranslateSet<T = T>,
-    Bint: Build<Projector = Projector<CLIPUint, Bounds<T>, NoPCNU, PR, RUint, Source<CLIPCint, T>, T>>
-        + Clone
+    Bint: Build<
+            Projector = Projector<
+                CLIPUint,
+                Bounds<T>,
+                Identity<Unconnected>,
+                PR,
+                RUint,
+                Source<CLIPCint, T>,
+                T,
+            >,
+        > + Clone
         + ClipExtentSet<Output = B, T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
@@ -176,8 +195,17 @@ where
         + ScaleSet<T = T>
         + TranslateGet<T = T>
         + TranslateSet<T = T>,
-    Bint: Build<Projector = Projector<CLIPUint, Bounds<T>, NoPCNU, PR, RUint, Source<CLIPCint, T>, T>>
-        + Clone
+    Bint: Build<
+            Projector = Projector<
+                CLIPUint,
+                Bounds<T>,
+                Identity<Unconnected>,
+                PR,
+                RUint,
+                Source<CLIPCint, T>,
+                T,
+            >,
+        > + Clone
         + ClipExtentSet<Output = B, T = T>
         + TranslateSet<T = T>
         + ScaleSet<T = T>,
@@ -230,8 +258,17 @@ where
         + ClipExtentClear<Output = Bint, T = T>
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
-    Bint: Build<Projector = Projector<CLIPUint, Bounds<T>, NoPCNU, PR, RUint, Source<CLIPCint, T>, T>>
-        + Clone
+    Bint: Build<
+            Projector = Projector<
+                CLIPUint,
+                Bounds<T>,
+                Identity<Unconnected>,
+                PR,
+                RUint,
+                Source<CLIPCint, T>,
+                T,
+            >,
+        > + Clone
         + ClipExtentSet<Output = B, T = T>
         + TranslateSet<T = T>
         + ScaleSet<T = T>,
@@ -292,8 +329,17 @@ where
         + ScaleSet<T = T>
         + TranslateSet<T = T>,
 
-    Bint: Build<Projector = Projector<CLIPUint, Bounds<T>, NoPCNU, PR, RUint, Source<CLIPCint, T>, T>>
-        + Clone
+    Bint: Build<
+            Projector = Projector<
+                CLIPUint,
+                Bounds<T>,
+                Identity<Unconnected>,
+                PR,
+                RUint,
+                Source<CLIPCint, T>,
+                T,
+            >,
+        > + Clone
         + ClipExtentSet<Output = B, T = T>
         + TranslateSet<T = T>
         + ScaleSet<T = T>,

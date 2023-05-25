@@ -23,7 +23,6 @@ use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::builder::template::NoPCNU;
 use super::builder::template::ResampleNoPCNC;
 use super::builder::template::ResampleNoPCNU;
 use super::resampler::resample::Resample;
