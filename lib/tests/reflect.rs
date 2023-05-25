@@ -8,7 +8,6 @@ mod reflect {
 
     use d3_geo_rs::in_delta::in_delta;
     use d3_geo_rs::projection::builder::Builder;
-    use d3_geo_rs::projection::builder_mercator::Builder as MercatorBuilder;
     use d3_geo_rs::projection::equality::projection_equal;
     use d3_geo_rs::projection::gnomic::Gnomic;
     use d3_geo_rs::projection::mercator::Mercator;
