@@ -27,7 +27,6 @@ pub mod builder;
 #[allow(dead_code)]
 pub struct Path<CS, PCNC, PCNU, T>
 where
-    PCNC: Clone,
     PCNU: Clone,
     T: CoordFloat,
 {
@@ -39,7 +38,6 @@ where
 
 impl<CS, PCNC, PCNU, T> Path<CS, PCNC, PCNU, T>
 where
-    PCNC: Clone,
     PCNU: Clone,
     T: CoordFloat,
 {

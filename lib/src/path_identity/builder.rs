@@ -92,7 +92,7 @@ where
 {
     #[inline]
     /// Returns a projectors based on the builder settings.
-    pub fn build<PCNC: Clone, PCNU: Clone>(
+    pub fn build<PCNC, PCNU: Clone>(
         self,
         projection: Projector<CS, PCNC, PCNU, T>,
     ) -> Path<CS, PCNC, PCNU, T> {

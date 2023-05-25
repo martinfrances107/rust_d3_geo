@@ -34,7 +34,6 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
         T,
     >
 where
-    PCNC: Clone,
     PCNU: Clone,
     PR: Clone + Transform<T = T>,
     T: CoordFloat + Default + FloatConst,
