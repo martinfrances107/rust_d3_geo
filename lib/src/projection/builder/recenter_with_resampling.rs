@@ -2,11 +2,11 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
+use crate::clip::rectangle::Rectangle;
 use crate::compose::Compose;
 use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoPCNU;
 use crate::projection::builder::ResamplePCNU;
-use crate::projection::builder::PCNU;
 use crate::projection::resampler::resample::Resample;
 use crate::projection::transform::generate as generate_str;
 use crate::projection::Recenter;
@@ -61,7 +61,8 @@ where
     }
 }
 
-impl<CLIPU, DRAIN, PR, T> Recenter for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> Recenter
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

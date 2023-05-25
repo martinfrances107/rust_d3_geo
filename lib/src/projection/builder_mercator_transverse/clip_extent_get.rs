@@ -2,13 +2,15 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::projection::builder::template::PCNU;
+use crate::clip::rectangle::Rectangle;
 use crate::projection::ClipExtentGet;
 use crate::projection::TransformExtent;
+use crate::stream::Unconnected;
 
 use super::Builder;
 
-impl<CLIPU, DRAIN, PR, RU, T> ClipExtentGet for Builder<CLIPU, DRAIN, PCNU<T>, PR, RU, T>
+impl<CLIPU, DRAIN, PR, RU, T> ClipExtentGet
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, RU, T>
 where
     CLIPU: Clone,
     PR: TransformExtent<T = T>,

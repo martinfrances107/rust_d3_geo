@@ -1,9 +1,9 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::rectangle::Rectangle;
 use crate::identity::Identity;
 use crate::projection::builder::template::ResamplePCNU;
-use crate::projection::builder::template::PCNU;
 use crate::projection::builder_mercator::Builder;
 use crate::projection::builder_mercator::ResampleNoPCNU;
 use crate::projection::AngleGet;
@@ -39,7 +39,8 @@ where
     }
 }
 
-impl<CLIPU, DRAIN, PR, T> AngleSet for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> AngleSet
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

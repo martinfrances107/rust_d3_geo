@@ -2,14 +2,16 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::rectangle::Rectangle;
 use crate::projection::builder::template::ResamplePCNU;
-use crate::projection::builder::template::PCNU;
 use crate::projection::RotateSet;
+use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
 
-impl<CLIPU, DRAIN, PR, T> RotateSet for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> RotateSet
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

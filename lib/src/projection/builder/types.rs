@@ -1,6 +1,7 @@
 use crate::clip::antimeridian::ClipAntimeridianU;
 
 use crate::clip::circle::ClipCircleU;
+use crate::clip::rectangle::Rectangle;
 use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoneNoPCNC;
 use crate::projection::builder::template::ResampleNoneNoPCNU;
@@ -76,8 +77,14 @@ pub type BuilderCircleResampleNoneNoClip<DRAIN, PR, T> = Builder<
 >;
 
 /// A common projection builder with a circle clipping stratergy, resampling and post clip node.
-pub type BuilderCircleResampleClip<DRAIN, PR, T> =
-    Builder<ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>;
+pub type BuilderCircleResampleClip<DRAIN, PR, T> = Builder<
+    ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
+    DRAIN,
+    Rectangle<Unconnected, T>,
+    PR,
+    ResamplePCNU<PR, T>,
+    T,
+>;
 
 /// A common projection builder with a circle clipping stratergy, no resampling and a post clip node.
 pub type BuilderCircleResampleNoneClip<DRAIN, PR, T> = Builder<

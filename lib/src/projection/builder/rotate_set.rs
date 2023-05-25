@@ -1,6 +1,7 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::rectangle::Rectangle;
 use crate::identity::Identity;
 use crate::projection::builder::ResampleNoPCNU;
 use crate::projection::builder::ResamplePCNU;
@@ -11,7 +12,6 @@ use crate::Transform;
 
 use super::template::ResampleNoneNoPCNU;
 use super::template::ResampleNonePCNU;
-use super::template::PCNU;
 use super::Builder;
 
 impl<CLIPU, DRAIN, PR, T> RotateSet
@@ -39,7 +39,8 @@ where
     }
 }
 
-impl<CLIPU, DRAIN, PR, T> RotateSet for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> RotateSet
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -89,7 +90,7 @@ where
 }
 
 impl<CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

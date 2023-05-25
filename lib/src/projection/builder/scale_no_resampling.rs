@@ -1,11 +1,11 @@
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::rectangle::Rectangle;
 use crate::identity::Identity;
 use crate::projection::builder::Builder;
 use crate::projection::builder::ResampleNoneNoPCNU;
 use crate::projection::builder::ResampleNonePCNU;
-use crate::projection::builder::PCNU;
 use crate::projection::Recenter;
 use crate::projection::ScaleSet;
 use crate::stream::Unconnected;
@@ -26,7 +26,7 @@ where
 }
 
 impl<CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

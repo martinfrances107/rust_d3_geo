@@ -1,12 +1,14 @@
 use geo::CoordFloat;
 use geo_types::Coord;
 
+use crate::clip::rectangle::Rectangle;
 use crate::projection::ClipExtentGet;
+use crate::stream::Unconnected;
 
-use super::template::PCNU;
 use super::Builder;
 
-impl<CLIPU, DRAIN, PR, RU, T> ClipExtentGet for Builder<CLIPU, DRAIN, PCNU<T>, PR, RU, T>
+impl<CLIPU, DRAIN, PR, RU, T> ClipExtentGet
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, RU, T>
 where
     T: CoordFloat,
 {

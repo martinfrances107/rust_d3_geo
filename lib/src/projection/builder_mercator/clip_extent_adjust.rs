@@ -3,15 +3,18 @@ use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::clipper::Connectable as ConnectableClip;
+use crate::clip::rectangle::Rectangle;
 use crate::projection::builder::template::PCNU;
 use crate::projection::ClipExtentAdjust;
 use crate::projection::TransformExtent;
 use crate::Transform;
+use crate::stream::Unconnected;
 
 use super::Builder;
 use super::Reclip;
 
-impl<CLIPC, CLIPU, DRAIN, PR, RU, T> ClipExtentAdjust for Builder<CLIPU, DRAIN, PCNU<T>, PR, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PR, RU, T> ClipExtentAdjust
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, RU, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     RU: Clone,

@@ -2,17 +2,19 @@ use approx::AbsDiffEq;
 use geo::CoordFloat;
 use num_traits::FloatConst;
 
+use crate::clip::rectangle::Rectangle;
 use crate::projection::builder::template::ResampleNonePCNU;
 use crate::projection::builder::template::ResamplePCNU;
-use crate::projection::builder::template::PCNU;
 use crate::projection::Recenter;
 use crate::projection::Reflect;
 use crate::projection::ReflectSet;
+use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::Builder;
 
-impl<CLIPU, DRAIN, PR, T> ReflectSet for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+impl<CLIPU, DRAIN, PR, T> ReflectSet
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -35,7 +37,7 @@ where
 }
 
 impl<CLIPU, DRAIN, PR, T> ReflectSet
-    for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResampleNonePCNU<PR, T>, T>
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResampleNonePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

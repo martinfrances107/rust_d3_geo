@@ -2,6 +2,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
+use crate::clip::rectangle::Rectangle;
 use crate::identity::Identity;
 use crate::projection::Recenter;
 use crate::projection::TranslateSet;
@@ -9,7 +10,6 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::template::ResamplePCNU;
-use super::template::PCNU;
 use super::Builder;
 use super::ResampleNoPCNU;
 
@@ -29,7 +29,7 @@ where
 }
 
 impl<CLIPU, DRAIN, PR, T> TranslateSet
-    for Builder<CLIPU, DRAIN, PCNU<T>, PR, ResamplePCNU<PR, T>, T>
+    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
