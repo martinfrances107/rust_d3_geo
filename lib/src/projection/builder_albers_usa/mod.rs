@@ -27,7 +27,6 @@ where
 impl<SD, T> BuilderTrait for Builder<SD, T>
 where
     T: CoordFloat + Default + FloatConst,
-    SD: Clone,
 {
     type PR = AlbersUsa<SD, T>;
 
@@ -43,7 +42,7 @@ where
 
 impl<SD, T> Builder<SD, T>
 where
-    SD: Clone + Default + PartialEq + Stream<EP = SD, T = T>,
+    SD: Clone + Default,
     T: CoordFloat + Default + FloatConst,
 {
     /// Using the currently programmed state output a new projection.

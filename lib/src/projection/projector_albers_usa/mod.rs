@@ -72,7 +72,6 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
 #[derive(Clone, Debug)]
 pub struct Projector<SD, T>
 where
-    SD: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     /// The internal single stage of the path.
@@ -81,7 +80,7 @@ where
 
 impl<SD, T> Default for Projector<SD, T>
 where
-    SD: Clone + PartialEq + Stream<EP = SD, T = T>,
+    SD: Clone,
     T: CoordFloat + Default + FloatConst,
 {
     fn default() -> Self {
@@ -93,7 +92,7 @@ where
 
 impl<SD, T> ProjectorTrait for Projector<SD, T>
 where
-    SD: Clone + PartialEq + Stream<EP = SD, T = T>,
+    SD: Clone + PartialEq,
     T: CoordFloat + Default + FloatConst,
 {
     type EP = Multidrain<3, SD, Unpopulated>;

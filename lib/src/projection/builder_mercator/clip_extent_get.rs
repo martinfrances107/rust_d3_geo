@@ -4,7 +4,6 @@ use num_traits::FloatConst;
 
 use crate::clip::rectangle::Rectangle;
 use crate::projection::ClipExtentGet;
-use crate::projection::TransformExtent;
 use crate::stream::Unconnected;
 
 use super::Builder;
@@ -12,8 +11,6 @@ use super::Builder;
 impl<CLIPU, DRAIN, PR, RU, T> ClipExtentGet
     for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, RU, T>
 where
-    CLIPU: Clone,
-    PR: TransformExtent<T = T>,
     T: CoordFloat + FloatConst,
 {
     type T = T;
