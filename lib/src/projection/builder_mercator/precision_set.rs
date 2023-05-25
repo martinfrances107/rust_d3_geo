@@ -6,6 +6,8 @@ use num_traits::FloatConst;
 
 use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::ClipCircleU;
+use crate::projection::builder::template::ResampleNonePCNC;
+use crate::projection::builder::template::ResamplePCNC;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;
@@ -52,9 +54,9 @@ where
     }
 }
 
-impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
+impl<DRAIN, PR, PCNU, T> PrecisionSet
     for Builder<
-        ClipCircleU<None<PR, Connected<PCNC>, T>, T>,
+        ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
         DRAIN,
         PCNU,
         PR,
@@ -63,11 +65,11 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
     >
 where
     PR: Clone + Transform<T = T>,
-    PCNC: Clone,
+    PCNU: Clone,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type Output = Builder<
-        ClipCircleU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
+        ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
         DRAIN,
         PCNU,
         PR,
@@ -77,15 +79,12 @@ where
     type T = T;
 
     #[inline]
-    fn precision_set(&self, _delta: &T) -> Self::Output {
-        todo!();
-        // Self::Output {
-        //     p_clipc: PhantomData::<ClipCircleC<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>, T>>,
-        //     p_drain: PhantomData::<DRAIN>,
-        //     p_rc: PhantomData::<Resample<PR, PCNC, ConnectedResample<PCNC, T>, T>>,
-        //     extent: self.extent,
-        //     pr: self.pr.clone(),
-        //     base: self.base.precision_set(delta),
-        // }
+    fn precision_set(&self, delta: &T) -> Self::Output {
+        Self::Output {
+            p_d: PhantomData::<DRAIN>,
+            extent: self.extent,
+            pr: self.pr.clone(),
+            base: self.base.precision_set(delta),
+        }
     }
 }
