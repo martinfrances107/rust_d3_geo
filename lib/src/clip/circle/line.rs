@@ -32,7 +32,7 @@ where
     /// Code for previous point.
     c0: u8,
     clean: u8, // no intersections
-    radius: T,
+    pub radius: T,
     cr: T,
     not_hemisphere: bool,
     /// previous point.
