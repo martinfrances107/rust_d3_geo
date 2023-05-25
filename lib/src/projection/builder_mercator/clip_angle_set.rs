@@ -9,7 +9,6 @@ use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::ClipCircleU;
 use crate::projection::ClipAngleSet;
 use crate::stream::Connectable;
-use crate::stream::Stream;
 use crate::Transform;
 
 use super::Builder;
@@ -19,7 +18,6 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
 where
     PCNC: Clone,
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
-    RC: Stream<EP = DRAIN, T = T>,
     RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

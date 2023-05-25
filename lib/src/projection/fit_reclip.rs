@@ -70,7 +70,6 @@ where
     FB: FnMut([Coord<T>; 2], &B) -> B,
     PR: Transform<T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
-    RC: Stream<EP = Bounds<T>, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     let mut b = builder.clone();
@@ -113,7 +112,6 @@ where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     PR: Transform<T = T>,
-    RC: Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -162,7 +160,6 @@ where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     PR: Transform<T = T>,
-    RC: Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -203,7 +200,6 @@ where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     PR: Transform<T = T>,
-    RC: Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
@@ -251,7 +247,6 @@ where
         + TranslateSet<T = T>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
-    RC: Stream<EP = Bounds<T>, T = T>,
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
