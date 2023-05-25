@@ -2,12 +2,12 @@ use geo::CoordFloat;
 use geo_types::Coord;
 
 use crate::clip::rectangle::Rectangle;
-use crate::projection::builder::template::PCNU;
 use crate::projection::ClipExtentAdjust;
+use crate::stream::Unconnected;
 
 use super::Builder;
 
-impl<T> ClipExtentAdjust for Builder<PCNU<T>, T>
+impl<T> ClipExtentAdjust for Builder<Rectangle<Unconnected, T>, T>
 where
     T: CoordFloat,
 {

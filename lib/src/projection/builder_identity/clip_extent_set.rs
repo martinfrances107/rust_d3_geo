@@ -4,7 +4,6 @@ use num_traits::FloatConst;
 
 use crate::clip::rectangle::Rectangle;
 use crate::identity::Identity;
-use crate::projection::builder::template::PCNU;
 use crate::projection::ClipExtentSet;
 use crate::stream::Unconnected;
 
@@ -15,7 +14,7 @@ where
     T: CoordFloat + Default + FloatConst,
 {
     type T = T;
-    type Output = Builder<PCNU<T>, T>;
+    type Output = Builder<Rectangle<Unconnected, T>, T>;
 
     #[inline]
     fn clip_extent_set(&self, extent: &[Coord<Self::T>; 2]) -> Self::Output {
