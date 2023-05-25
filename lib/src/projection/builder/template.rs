@@ -17,8 +17,6 @@ use super::Builder;
 
 /// A connected pass through post clip node.
 pub type NoPCNC<DRAIN> = Identity<Connected<DRAIN>>;
-/// A unconnected pass through post clip node.
-type NoPCNU = Identity<Unconnected>;
 
 /// A connected post clip node.
 pub type PCNC<DRAIN, T> = Rectangle<Connected<DRAIN>, T>;
@@ -50,4 +48,4 @@ pub type ResampleNoneNoPCNU<PR, T> = None<PR, Unconnected, T>;
 
 /// Default projection builder, no resampling, no Clipping.
 pub type Default<CLIPU, DRAIN, PR, T> =
-    Builder<CLIPU, DRAIN, NoPCNU, PR, ResampleNoneNoPCNU<PR, T>, T>;
+    Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoneNoPCNU<PR, T>, T>;
