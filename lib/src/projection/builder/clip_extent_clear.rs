@@ -91,7 +91,7 @@ where
             rotator: self.rotator.clone(),
 
             // Mutate section.
-            clip: gen_clip::<_, _>(),
+            clip: gen_clip(),
             postclip: Identity::default(),
             resample: None::new(self.project_transform.clone()),
         }

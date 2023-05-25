@@ -153,7 +153,7 @@ where
         let resample = Resample::new(project_transform.clone(), delta2);
         let mut out: Self = Self {
             p_d: PhantomData::<DRAIN>,
-            clip: gen_clip::<_, _>(),
+            clip: gen_clip(),
             /// Input passing onto Projection.
             projection_raw,
 

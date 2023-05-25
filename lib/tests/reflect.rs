@@ -160,8 +160,7 @@ mod reflect {
     #[test]
     fn x_works_with_projection_angle() {
         println!("projection.reflectX(…) works with projection.angle()");
-        let mut builder: MercatorBuilder<_, _, _, _, _, f64> =
-            Mercator::builder::<DrainStub<f64>>();
+        let mut builder = Mercator::builder::<DrainStub<f64>>();
         builder.scale_set(1_f64).translate_set(&Coord {
             x: 10_f64,
             y: 20_f64,

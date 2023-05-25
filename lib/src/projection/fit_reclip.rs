@@ -101,7 +101,7 @@ where
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_reclip::<_, CLIPC, _, _, _, _, _, _>(
+    fit_reclip(
         builder,
         |b: [Coord<T>; 2], builder: &B| -> B {
             let w = extent[1].x - extent[0].x;
@@ -138,7 +138,7 @@ where
     RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
-    fit_extent_reclip::<_, CLIPC, _, _, _, _, _>(
+    fit_extent_reclip(
         builder,
         [
             Coord {
@@ -173,7 +173,7 @@ where
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_reclip::<_, CLIPC, _, _, _, _, _, _>(
+    fit_reclip(
         builder,
         |b: [Coord<T>; 2], builder: &B| -> B {
             let w = width;
@@ -212,7 +212,7 @@ where
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_reclip::<_, CLIPC, _, _, _, _, _, _>(
+    fit_reclip(
         builder,
         |b: [Coord<T>; 2], builder: &B| -> B {
             let h = height;
