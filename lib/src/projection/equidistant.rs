@@ -61,12 +61,11 @@ impl PRConic for Equidistant {
     fn generate(self, y0: f64, y1: f64) -> Self {
         let cy0 = y0.cos();
 
-        // TODO make optimal after fix.
-        #[allow(clippy::suboptimal_flops)]
-        let n = if (y0 - y1).abs() < EPSILON {
+        let diff = y1 - y0;
+        let n = if diff.abs() < EPSILON {
             y0.sin()
         } else {
-            (cy0 - y1.cos()) / (y1 - y0)
+            (cy0 - y1.cos()) / diff
         };
 
         if n.is_zero() {
