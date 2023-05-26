@@ -9,7 +9,7 @@ use crate::clip::line_elem::LineElem;
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone)]
-pub struct Intersection<'a, T>
+pub(super) struct Intersection<'a, T>
 where
     T: CoordFloat,
 {
