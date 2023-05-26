@@ -9,6 +9,7 @@ use crate::clip::buffer::Buffer;
 use crate::clip::Bufferable;
 use crate::clip::Clean;
 use crate::clip::LineConnected;
+use crate::clip::PointVisible;
 use crate::math::EPSILON;
 use crate::stream::Connectable;
 use crate::stream::Connected;
@@ -43,6 +44,17 @@ where
             clean: 0,
             epsilon: T::from(EPSILON).unwrap(),
         }
+    }
+}
+
+impl<STATE, T> PointVisible for Line<STATE, T>
+where
+    T: CoordFloat,
+{
+    type T = T;
+    #[inline]
+    fn point_visible(&self, _p: &Coord<T>) -> bool {
+        true
     }
 }
 

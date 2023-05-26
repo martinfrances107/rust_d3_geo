@@ -6,7 +6,6 @@ use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::Interpolate;
 use crate::clip::antimeridian::line::Line;
-use crate::clip::antimeridian::pv::PV;
 use crate::clip::buffer::Buffer;
 use crate::clip::clipper::Clipper;
 use crate::clip::clipper::Connected as ConnectedClipper;
@@ -37,7 +36,6 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
                 Clipper<
                     Interpolate<T>,
                     Line<Unconnected, T>,
-                    PV<T>,
                     Resample<
                         EqualArea<T>,
                         ConnectedResample<Rectangle<ConnectedStream<SD>, T>, T>,

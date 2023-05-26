@@ -4,8 +4,6 @@ pub mod interpolate;
 pub mod intersect;
 /// Holds the clip circle line function.
 pub mod line;
-/// Holds the clip circle point visible function.
-pub mod pv;
 
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -15,7 +13,6 @@ use num_traits::FloatConst;
 
 use crate::stream::Connected;
 use crate::stream::Unconnected;
-use pv::PV;
 
 use super::buffer::Buffer;
 use super::clipper::Clipper;
@@ -25,7 +22,6 @@ use super::clipper::Connected as ConnectedClip;
 pub(crate) type ClipCircleC<RC, T> = Clipper<
     Interpolate<T>,
     Line<Unconnected, T>,
-    PV<T>,
     RC,
     ConnectedClip<Line<Connected<Buffer<T>>, T>, Line<Connected<RC>, T>, T>,
     T,
@@ -33,7 +29,7 @@ pub(crate) type ClipCircleC<RC, T> = Clipper<
 
 /// Unconnected clip type using circle interpolator, `point_visble` function line handler.
 pub(crate) type ClipCircleU<RC, T> =
-    Clipper<Interpolate<T>, Line<Unconnected, T>, PV<T>, RC, Unconnected, T>;
+    Clipper<Interpolate<T>, Line<Unconnected, T>, RC, Unconnected, T>;
 
 /// Returns a clip setup for circle clipping.
 pub(crate) fn gen_clip<RC, T>(radius: T) -> ClipCircleU<RC, T>
@@ -54,10 +50,5 @@ where
         }
     };
 
-    Clipper::new(
-        Interpolate::new(radius),
-        Line::new(radius),
-        PV::new(radius),
-        start,
-    )
+    Clipper::new(Interpolate::new(radius), Line::new(radius), start)
 }

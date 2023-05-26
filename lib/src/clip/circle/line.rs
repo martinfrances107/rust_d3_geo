@@ -10,6 +10,7 @@ use crate::clip::line_elem::LineElem;
 use crate::clip::Bufferable;
 use crate::clip::Clean;
 use crate::clip::LineConnected;
+use crate::clip::PointVisible;
 use crate::math::EPSILON;
 use crate::stream::Connectable;
 use crate::stream::Connected;
@@ -160,13 +161,14 @@ where
     }
 }
 
-impl<SINK, T> Line<Connected<SINK>, T>
+impl<STATE, T> PointVisible for Line<STATE, T>
 where
     T: CoordFloat,
 {
+    type T = T;
     // todo remove this duplicate.
     #[inline]
-    fn visible(&self, p: &Coord<T>) -> bool {
+    fn point_visible(&self, p: &Coord<T>) -> bool {
         p.x.cos() * p.y.cos() > self.cr
     }
 }
@@ -259,7 +261,7 @@ where
     fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         let mut point1 = Some(LineElem { p: *p, m: None });
         let mut point2: Option<LineElem<T>>;
-        let v = self.visible(p);
+        let v = self.point_visible(p);
 
         let c = if self.small_radius {
             if v {

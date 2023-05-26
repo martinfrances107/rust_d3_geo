@@ -70,15 +70,14 @@ where
     line_end_fn: LineEndFn,
 }
 
-impl<I, LB, LC, LU, PV, RC, T> Connectable for Clipper<I, LU, PV, RC, Unconnected, T>
+impl<I, LB, LC, LU, RC, T> Connectable for Clipper<I, LU, RC, Unconnected, T>
 where
     I: Clone,
     LU: Clone + StreamConnectable<Output<RC> = LC> + Bufferable<LINE = LB, T = T>,
-    PV: Clone,
     T: CoordFloat,
 {
     type SC = RC;
-    type Output = Clipper<I, LU, PV, RC, Connected<LB, LC, T>, T>;
+    type Output = Clipper<I, LU, RC, Connected<LB, LC, T>, T>;
 
     fn connect(&self, sink: RC) -> Self::Output {
         let line_node = self.clip_line.clone().connect(sink);
@@ -101,7 +100,6 @@ where
             state,
             clip_line: self.clip_line.clone(),
             interpolator: self.interpolator.clone(),
-            pv: self.pv.clone(),
             start: self.start,
         }
     }
@@ -111,7 +109,7 @@ where
 /// State associated with the clipping stratergy.
 ///
 /// Two distinct stratergies [Antimeridian](crate::clip::antimeridian) and [Circle](crate::clip::circle).
-pub struct Clipper<I, LU, PV, RC, STATE, T>
+pub struct Clipper<I, LU, RC, STATE, T>
 where
     T: CoordFloat,
 {
@@ -123,34 +121,31 @@ where
     pub clip_line: LU,
     /// Antimerdian and Circle stratergies have distinct interpolator functions.
     pub interpolator: I,
-    /// Antimerdian and Circle stratergies have distinct point_visible functions.
-    pub pv: PV,
     /// First point checked in rejoin algorithm.
     pub start: Coord<T>,
 }
 
-impl<I, LU, PV, RC, T> Clipper<I, LU, PV, RC, Unconnected, T>
+impl<I, LU, RC, T> Clipper<I, LU, RC, Unconnected, T>
 where
     T: CoordFloat,
 {
     /// Takes a line and cuts into visible segments. Returns values used for polygon.
-    pub const fn new(interpolator: I, clip_line: LU, pv: PV, start: Coord<T>) -> Self {
+    pub const fn new(interpolator: I, clip_line: LU, start: Coord<T>) -> Self {
         Self {
             p_rc: PhantomData::<RC>,
             state: Unconnected,
             clip_line,
             interpolator,
-            pv,
             start,
         }
     }
 }
 
-impl<EP, I, LB, LC, LU, PV, RC, T> Clipper<I, LU, PV, RC, Connected<LB, LC, T>, T>
+impl<EP, I, LB, LC, LU, RC, T> Clipper<I, LU, RC, Connected<LB, LC, T>, T>
 where
     LB: LineConnected<SINK = Buffer<T>> + Clean + Stream<EP = Buffer<T>, T = T>,
-    LC: LineConnected<SINK = RC> + Stream<EP = EP, T = T>,
-    PV: PointVisible<T = T>,
+    LC: LineConnected<SINK = RC> + PointVisible<T = T> + Stream<EP = EP, T = T>,
+    LU: PointVisible<T = T>,
     RC: Stream<EP = EP, T = T>,
     T: CoordFloat,
 {
@@ -168,7 +163,7 @@ where
 
     #[inline]
     fn point_default(&mut self, p: &Coord<T>, m: Option<u8>) {
-        if self.pv.point_visible(p) {
+        if self.clip_line.point_visible(p) {
             self.state.line_node.sink().point(p, m);
         }
     }
@@ -242,12 +237,12 @@ where
     }
 }
 
-impl<EP, I, LB, LC, LU, PV, RC, T> Stream for Clipper<I, LU, PV, RC, Connected<LB, LC, T>, T>
+impl<EP, I, LB, LC, LU, RC, T> Stream for Clipper<I, LU, RC, Connected<LB, LC, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SINK = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
-    LC: LineConnected<SINK = RC> + Stream<EP = EP, T = T>,
-    PV: PointVisible<T = T>,
+    LC: LineConnected<SINK = RC> + PointVisible<T = T> + Stream<EP = EP, T = T>,
+    LU: PointVisible<T = T>,
     RC: Stream<EP = EP, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
