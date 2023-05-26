@@ -19,23 +19,13 @@
 //!
 //! TODO add note about stream paths and endpoints.
 //!
-//! # Available projections
-//!
-//! - [`Albers`](projection::albers)
-//! - [`AlbersUsa`](projection::albers_usa)
-//! - [`AzimuthalEqualArea`](projection::azimuthal_equal_area::AzimuthalEqualArea)
-//! - [`AzimuthalEquiDistant`](projection::azimuthal_equidistant::AzimuthalEquiDistant)
-//! - ['Conformal](projection::conformal)
-//! - [`ConicEqualArea`](projection::conic_equal_area::ConicEqualArea)
-//! - [`Equidistant`](projection::equidistant::Equidistant)
-//! - [`Equirectangular`](projection::equirectangular::Equirectangular)
-//! - [`EqualArea`](projection::equal_area::EqualArea)
-//! - [`EqualEarth`](projection::equal_earth::EqualEarth)
-//! - [`Gnomic`](projection::gnomic::Gnomic)
-//! - [`Orthographic`](projection::orthographic::Orthographic)
-//! - [`Mercator`](projection::mercator::Mercator)
-//! - [`MercatorTransverse`](projection::mercator_transverse::MercatorTransverse)
-//! - [`Stereographic`](projection::stereographic::Stereographic)
+//! | Available Projections |   |   |
+//! | --------------------- | - | - |
+//! | [`Albers`](projection::albers) | [`ConicEqualArea`](projection::conic_equal_area::ConicEqualArea) | [`Gnomic`](projection::gnomic::Gnomic) |
+//! | [`AlbersUsa`](projection::albers_usa) | [`Equidistant`](projection::equidistant::Equidistant) | [`Orthographic`](projection::orthographic::Orthographic) |
+//! | [`AzimuthalEqualArea`](projection::azimuthal_equal_area::AzimuthalEqualArea) | [`Equirectangular`](projection::equirectangular::Equirectangular) | [`Mercator`](projection::mercator::Mercator) |
+//! | [`AzimuthalEquiDistant`](projection::azimuthal_equidistant::AzimuthalEquiDistant) | [`EqualArea`](projection::equal_area::EqualArea) | [`MercatorTransverse`](projection::mercator_transverse::MercatorTransverse) |
+//! | ['Conformal](projection::conformal) | [`EqualEarth`](projection::equal_earth::EqualEarth) | [`Stereographic`](projection::stereographic::Stereographic) |
 //!
 //! Each projection has default builder, which can be programmed.
 //!
