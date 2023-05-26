@@ -302,8 +302,9 @@ where
         self.state.point_fn = PointFn::Default;
         self.state.line_start_fn = LineStartFn::Default;
         self.state.line_end_fn = LineEndFn::Default;
-        let segments_inner: Vec<Vec<LineElem<T>>> =
-            self.state.segments.clone().into_iter().flatten().collect();
+        let mut segments: VecDeque<VecDeque<Vec<LineElem<T>>>> = VecDeque::default();
+        std::mem::swap(&mut segments, &mut self.state.segments);
+        let segments_inner: Vec<Vec<LineElem<T>>> = segments.into_iter().flatten().collect();
 
         let start_inside = polygon_contains(&self.state.polygon, &self.start);
 
@@ -333,7 +334,6 @@ where
             self.state.line_node.sink().polygon_end();
             self.state.polygon_started = false;
         }
-        self.state.segments.clear();
         self.state.polygon.clear();
     }
 
