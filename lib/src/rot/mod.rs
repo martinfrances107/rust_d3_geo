@@ -31,10 +31,10 @@ where
     // Should I rotate by lambda, phi or gamma.
     if delta_lambda != T::zero() {
         if delta_phi != T::zero() || delta_gamma != T::zero() {
-            RotateRadians::C(Box::new(Compose::new(
+            RotateRadians::C(Compose::new(
                 RotationLambda::new(delta_lambda),
                 RotationPhiGamma::new(&delta_phi, &delta_gamma),
-            )))
+            ))
         } else {
             RotateRadians::RL(RotationLambda::new(delta_lambda))
         }
