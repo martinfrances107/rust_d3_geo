@@ -81,7 +81,9 @@ where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat,
 {
-    pub context_stream: CS,
+    /// Either a PathString or Path2d.
+    /// Rendering to a SVG Path element or a HTML Canvas element.
+    pub context: CS,
     point_radius: PointRadiusEnum<T>,
     /// The projector associated with this path.
     pub projector: PROJECTOR,
@@ -96,9 +98,9 @@ where
     ///
     /// # Panics
     /// unwrap() is used here but a panic will never happen as 4.5 will always be converted into T.
-    pub fn new(context_stream: CS, projection: PROJECTOR) -> Self {
+    pub fn new(context: CS, projection: PROJECTOR) -> Self {
         Self {
-            context_stream,
+            context,
             point_radius: PointRadiusEnum::Val(T::from(4.5_f64).unwrap()),
             projector: projection,
         }
@@ -114,7 +116,7 @@ where
 {
     /// Combines projection, context stream and object.
     pub fn object(&mut self, object: &impl Streamable<T = T>) -> <CS as Result>::Out {
-        let mut stream_in = self.projector.stream(&self.context_stream);
+        let mut stream_in = self.projector.stream(&self.context);
         object.to_stream(&mut stream_in);
         stream_in.endpoint().result()
     }
@@ -228,8 +230,8 @@ where
     T: CoordFloat,
 {
     /// Sets the context stream.
-    pub fn context(&mut self, context_stream: CS) -> &mut Self {
-        self.context_stream = context_stream;
+    pub fn context_set(&mut self, context: CS) -> &mut Self {
+        self.context = context;
         self
     }
 }

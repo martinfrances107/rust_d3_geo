@@ -30,7 +30,7 @@ where
     PCNU: Clone,
     T: CoordFloat,
 {
-    context_stream: CS,
+    context: CS,
     point_radius: PointRadiusEnum<T>,
     /// don't store projection stream.
     projection: Projector<CS, PCNC, PCNU, T>,
@@ -45,9 +45,9 @@ where
     ///
     /// # Panics
     /// unwrap() is used here but a panic will never happen as 4.5 will always be converted into T.
-    pub fn new(context_stream: CS, projection: Projector<CS, PCNC, PCNU, T>) -> Self {
+    pub fn new(context: CS, projection: Projector<CS, PCNC, PCNU, T>) -> Self {
         Self {
-            context_stream,
+            context,
             point_radius: PointRadiusEnum::Val(T::from(4.5_f64).unwrap()),
             projection,
         }
@@ -63,7 +63,7 @@ where
 {
     /// Combines projection, context stream and object.
     pub fn object(&mut self, object: &impl Streamable<T = T>) -> <DRAIN as Result>::Out {
-        let mut stream_in = self.projection.stream(&self.context_stream);
+        let mut stream_in = self.projection.stream(&self.context);
         object.to_stream(&mut stream_in);
         stream_in.endpoint().result()
     }
@@ -149,9 +149,15 @@ where
     PCNU: Clone + Connectable<Output<Centroid<T>> = PCNC>,
     T: CoordFloat,
 {
-    /// Sets the context stream.
-    pub fn context(&mut self, context_stream: CS) -> &mut Self {
-        self.context_stream = context_stream;
+    /// context:  Path2d or ```PathString```
+    ///
+    /// Path2d
+    /// When rendering to a HTML CANVAS element.
+    ///
+    /// ```PathString```
+    /// When creating a SVG Path element.
+    pub fn context_set(&mut self, context: CS) -> &mut Self {
+        self.context = context;
         self
     }
 }

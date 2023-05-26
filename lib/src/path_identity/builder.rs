@@ -25,7 +25,7 @@ where
     T: CoordFloat,
 {
     pr: T,
-    context_stream: CS,
+    context: CS,
 }
 
 impl<CS, T> Builder<CS, T>
@@ -36,9 +36,9 @@ where
     ///
     /// # Panics
     /// unwrap() is used here but a panic will never happen as 4.5 will always be converted into T.
-    pub fn new(context_stream: CS) -> Self {
+    pub fn new(context: CS) -> Self {
         Self {
-            context_stream,
+            context,
             pr: T::from(4.5_f64).unwrap(),
         }
     }
@@ -51,7 +51,7 @@ where
 {
     /// Programe the builder with the context.
     pub fn context(&mut self, context: Path2d) -> &mut Self {
-        self.context_stream = PathContext::new(context);
+        self.context = PathContext::new(context);
         self
     }
 }
@@ -80,7 +80,7 @@ where
     #[inline]
     fn point_radius(&mut self, radius: T) {
         self.pr = radius;
-        self.context_stream.point_radius(self.pr);
+        self.context.point_radius(self.pr);
     }
 }
 
@@ -96,6 +96,6 @@ where
         self,
         projection: Projector<CS, PCNC, PCNU, T>,
     ) -> Path<CS, PCNC, PCNU, T> {
-        Path::new(self.context_stream, projection)
+        Path::new(self.context, projection)
     }
 }

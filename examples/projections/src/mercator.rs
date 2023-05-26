@@ -54,7 +54,7 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
     let mut path = path_builder.build(mercator);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
-    let path2d = path.context_stream.result();
+    let path2d = path.context.result();
     context_raw.stroke_with_path(&path2d);
 
     let graticule = generate_graticule();
@@ -63,7 +63,7 @@ pub async fn draw_mercator(land: &Geometry<f64>) -> Result<(), JsValue> {
     context_raw.set_fill_style(&"#999".into());
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(&mls);
-    let path2d = path.context_stream.result();
+    let path2d = path.context.result();
     context_raw.stroke_with_path(&path2d);
 
     Ok(())

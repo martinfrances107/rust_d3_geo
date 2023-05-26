@@ -26,10 +26,6 @@ pub struct Unconnected;
 
 /// State -- Default Connected.
 ///
-/// Common to many path stages
-/// Overriden when the state need to contain more variables.
-/// see [Resample](crate::projection::resampler::resample::Resample) and [Clip](crate::clip::clipper::Clipper).
-///
 /// [Equirectangular](crate::projection::equirectangular::Equirectangular)
 #[derive(Clone, Debug)]
 pub struct Connected<SINK> {

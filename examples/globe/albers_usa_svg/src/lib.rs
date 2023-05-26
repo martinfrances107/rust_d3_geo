@@ -116,7 +116,7 @@ pub async fn start() {
                         for (j, p) in mp.0.iter().enumerate() {
                             // TODO: this object() call is identical to the 3 lines below
                             // Can I restore the object call?
-                            let mut stream_in = path.projector.stream(&path.context_stream);
+                            let mut stream_in = path.projector.stream(&path.context);
                             let object = Geometry::Polygon(p.clone());
                             object.to_stream(&mut stream_in);
 
@@ -134,7 +134,7 @@ pub async fn start() {
                         }
                     }
                     Geometry::Polygon(p) => {
-                        let mut stream_in = path.projector.stream(&path.context_stream);
+                        let mut stream_in = path.projector.stream(&path.context);
                         let object = Geometry::Polygon(p.clone());
                         object.to_stream(&mut stream_in);
 

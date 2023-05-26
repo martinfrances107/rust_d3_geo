@@ -51,7 +51,7 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
     let mut path = path_builder.build(azimuthal_equal_area);
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(land);
-    let path2d = path.context_stream.result();
+    let path2d = path.context.result();
     context_raw.stroke_with_path(&path2d);
 
     let graticule = generate_graticule();
@@ -60,7 +60,7 @@ pub async fn draw_azimuthal_equal_area(land: &Geometry<f64>) -> Result<(), JsVal
     context_raw.set_fill_style(&"#999".into());
     context_raw.set_stroke_style(&"#69b3a2".into());
     path.object(&mls);
-    let path2d = path.context_stream.result();
+    let path2d = path.context.result();
     context_raw.stroke_with_path(&path2d);
 
     Ok(())
