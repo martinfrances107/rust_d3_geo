@@ -37,11 +37,9 @@ pub struct Connected<SINK> {
     pub sink: SINK,
 }
 
-impl<SINK> ConnectedState for Connected<SINK> {
-    type Sink = SINK;
-
+impl<SINK> Connected<SINK> {
     #[inline]
-    fn sink(&mut self) -> &mut Self::Sink {
+    pub(crate) fn sink(&mut self) -> &mut SINK {
         &mut self.sink
     }
 }
@@ -53,17 +51,6 @@ pub trait Connectable {
 
     /// Connects to the previous path stage.
     fn connect<SC>(&self, sink: SC) -> Self::Output<SC>;
-}
-
-/// Things the implement stream need to assert that
-/// Whatever specific state they are in, it is to the exclusion
-/// on the unconnected state.
-pub trait ConnectedState {
-    /// The next path node.
-    type Sink;
-
-    /// Connects the next object on the path.
-    fn sink(&mut self) -> &mut Self::Sink;
 }
 
 /// Objects that can be passing to a stream path.

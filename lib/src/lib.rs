@@ -1,6 +1,5 @@
 #![deny(clippy::all)]
 #![warn(clippy::pedantic)]
-#![warn(clippy::nursery)]
 #![warn(clippy::cargo)]
 #![warn(missing_docs)]
 #![warn(missing_debug_implementations)]

@@ -1,11 +1,11 @@
 /// Related the specifics of antimeridian clipping.
-pub mod antimeridian;
+pub(crate) mod antimeridian;
 /// Clipping algorithm need to stores points
 /// until the end of the polygon is signalled.
 /// and then clipping can calculate the a new clip polygon.
 pub mod buffer;
 /// Related the specifics of circle clipping.
-pub mod circle;
+pub(crate) mod circle;
 /// Holds the clip struct.
 pub mod clipper;
 /// Helper function.

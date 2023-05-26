@@ -9,7 +9,6 @@ use crate::compose::Compose;
 use crate::math::EPSILON;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::stream::Connectable;
-use crate::stream::ConnectedState;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 use crate::Transform;
@@ -54,19 +53,6 @@ pub struct Connected<SINK, T> {
     four: T,
     frac_1_2: T,
     frac_1_3: T,
-}
-
-impl<SINK, T> ConnectedState for Connected<SINK, T>
-where
-    T: Clone + Debug,
-    SINK: Clone + Debug,
-{
-    type Sink = SINK;
-
-    #[inline]
-    fn sink(&mut self) -> &mut Self::Sink {
-        &mut self.sink
-    }
 }
 
 /// Resample the stream based on a given precision.

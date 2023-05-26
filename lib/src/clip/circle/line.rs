@@ -13,7 +13,6 @@ use crate::clip::LineConnected;
 use crate::math::EPSILON;
 use crate::stream::Connectable;
 use crate::stream::Connected;
-use crate::stream::ConnectedState;
 use crate::stream::Stream;
 use crate::stream::Unconnected;
 
