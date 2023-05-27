@@ -182,7 +182,7 @@ mod graticule {
     }
 
     #[test]
-    fn lines_default_longitude_90_90_ranges() {
+    fn lines_default_longitude_90_90_exclusive() {
         println!(
             "graticule.lines() default latitude ranges from 90°S (exclusive) to 90°N (exclusive)"
         );
@@ -212,6 +212,32 @@ mod graticule {
     //     assert.deepStrictEqual(extent(line.coordinates, p => p[1]), [-80 - 1e-6, +80 + 1e-6]);
     //   });
     // });
+    #[test]
+    fn lines_default_longitude_80_80_ranges() {
+        println!("graticule.lines() default minor longitude lines extend from 80°S to 80°N");
+        let builder = Builder::default();
+
+        let g = builder.lines();
+        let mut lines: Vec<LineString> = g
+            .filter(|line| {
+                // split
+                let first = line.0[0].x;
+                let second = line.0[1].x;
+                first == second
+            })
+            .filter(|line| (line.0[0].x % 90_f64) > 1e-6)
+            .collect::<Vec<LineString>>();
+
+        lines.sort_by(|a, b| a[0].y.partial_cmp(&b[0].y).unwrap());
+
+        for line in lines {
+            let mut e = line.into_iter().map(|p| p.y).collect::<Vec<f64>>();
+            e.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+            assert_eq!(e.first(), Some(&-80.000001f64));
+            assert_eq!(e.last(), Some(&80.000001f64));
+        }
+    }
 
     // it("graticule.lines() default major longitude lines extend from 90°S to 90°N", () => {
     //   const lines = geoGraticule().lines()
@@ -222,13 +248,62 @@ mod graticule {
     //   });
     // });
 
-    // it("graticule.lines() default latitude lines extend from 180°W to 180°E", () => {
-    //   const lines = geoGraticule().lines()
-    //       .filter(line => line.coordinates[0][1] === line.coordinates[1][1]);
-    //   lines.forEach(function(line) {
-    //     assert.deepStrictEqual(extent(line.coordinates, p => p[0]), [-180, +180]);
-    //   });
-    // });
+    #[ignore]
+    #[test]
+    fn lines_default_longitude_90_90_ranges() {
+        println!("graticule.lines() default major longitude lines extend from 90°S to 90°N");
+        let builder = Builder::default();
+
+        let g = builder.lines();
+        let mut lines: Vec<LineString> = g
+            .filter(|line| {
+                // split
+                let first = line.0[0].x;
+                let second = line.0[1].x;
+                first == second
+            })
+            .filter(|line| (line.0[0].x % 90_f64) < 1e-6)
+            .collect::<Vec<LineString>>();
+
+        lines.sort_by(|a, b| a[0].y.partial_cmp(&b[0].y).unwrap());
+
+        let min = -90f64 + 0.000001f64;
+        let max = 90_f64 - 0.000001f64;
+
+        for line in lines {
+            let mut e = line.into_iter().map(|p| p.y).collect::<Vec<f64>>();
+            e.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+            assert_eq!(e.first(), Some(&min));
+            assert_eq!(e.last(), Some(&max));
+        }
+    }
+
+    #[test]
+    fn lines_default_latitude_180_180_ranges() {
+        println!("graticule.lines() default latitude lines extend from 180°W to 180°E");
+        let builder = Builder::default();
+
+        let g = builder.lines();
+        let mut lines: Vec<LineString> = g
+            .filter(|line| {
+                // split
+                let first = line.0[0].y;
+                let second = line.0[1].y;
+                first == second
+            })
+            .collect::<Vec<LineString>>();
+
+        lines.sort_by(|a, b| a[0].y.partial_cmp(&b[0].y).unwrap());
+
+        for line in lines {
+            let mut e = line.into_iter().map(|p| p.x).collect::<Vec<f64>>();
+            e.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+            assert_eq!(e.first(), Some(&-180_f64));
+            assert_eq!(e.last(), Some(&180_f64));
+        }
+    }
 
     #[test]
     fn graticule_lines() {
