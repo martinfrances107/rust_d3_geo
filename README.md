@@ -287,7 +287,7 @@ I have made extensive use of iterators when porting the code and rayon support t
 
 <br>
 
-### Architecture discussion
+#### Architecture discussion
 
 There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes.
 
