@@ -141,7 +141,6 @@ where
     /// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
     #[inline]
     pub fn new(radius: T) -> Self {
-        // TODO small_radius, rc  is a shadow variables!!!
         let cr = radius.cos();
         let small_radius = cr.is_sign_positive();
         let epsilon = T::from(EPSILON).unwrap();
