@@ -165,7 +165,7 @@ where
     T: CoordFloat,
 {
     type T = T;
-    // todo remove this duplicate.
+
     #[inline]
     fn point_visible(&self, p: &Coord<T>) -> bool {
         p.x.cos() * p.y.cos() > self.cr
