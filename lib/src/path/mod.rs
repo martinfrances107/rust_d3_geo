@@ -37,12 +37,16 @@ use crate::stream::Streamable;
 
 use self::measure::Measure;
 
-/// Path Result.
+/// Path Result
+///
+/// We following the javascript original policy
+/// of resettting the stored value.
 pub trait Result {
     /// Output type for Result.
     type Out;
 
     /// Returns current the end points calculation.
+    /// blanking the stored value
     fn result(&mut self) -> Self::Out;
 }
 
