@@ -169,17 +169,16 @@ mod graticule {
         let mut lines: Vec<LineString> = g
             .filter(|line| {
                 // split
-                let first = line.0[0].y;
-                let second = line.0[1].y;
+                let first = line.0[0].x;
+                let second = line.0[1].x;
                 first == second
             })
             .collect::<Vec<LineString>>();
 
         lines.sort_by(|a, b| a[0].x.partial_cmp(&b[0].x).unwrap());
 
-        // TODO must complete...
-        // let line0 = lines[0].0[0].x;
-        // assert_eq!(line0, -80_f64);
+        assert_eq!(lines[0].0[0].x, -180_f64);
+        assert_eq!(lines.last().unwrap().0[0].x, 170_f64);
     }
 
     // it("graticule.lines() default latitude ranges from 90°S (exclusive) to 90°N (exclusive)", () => {
