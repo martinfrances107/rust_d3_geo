@@ -181,13 +181,28 @@ mod graticule {
         assert_eq!(lines.last().unwrap().0[0].x, 170_f64);
     }
 
-    // it("graticule.lines() default latitude ranges from 90°S (exclusive) to 90°N (exclusive)", () => {
-    //   const lines = geoGraticule().lines()
-    //       .filter(line => line.coordinates[0][1] === line.coordinates[1][1])
-    //       .sort((a, b) => a.coordinates[0][1] - b.coordinates[0][1]);
-    //   assert.strictEqual(lines[0].coordinates[0][1], -80);
-    //   assert.strictEqual(lines[lines.length - 1].coordinates[0][1], +80);
-    // });
+    #[test]
+    fn lines_default_longitude_90_90_ranges() {
+        println!(
+            "graticule.lines() default latitude ranges from 90°S (exclusive) to 90°N (exclusive)"
+        );
+        let builder = Builder::default();
+
+        let g = builder.lines();
+        let mut lines: Vec<LineString> = g
+            .filter(|line| {
+                // split
+                let first = line.0[0].y;
+                let second = line.0[1].y;
+                first == second
+            })
+            .collect::<Vec<LineString>>();
+
+        lines.sort_by(|a, b| a[0].y.partial_cmp(&b[0].y).unwrap());
+
+        assert_eq!(lines[0].0[0].y, -80_f64);
+        assert_eq!(lines.last().unwrap().0[0].y, 80_f64);
+    }
 
     // it("graticule.lines() default minor longitude lines extend from 80°S to 80°N", () => {
     //   const lines = geoGraticule().lines()
