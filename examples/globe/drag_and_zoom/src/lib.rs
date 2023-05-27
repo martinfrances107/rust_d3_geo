@@ -232,10 +232,8 @@ impl Renderer {
             let mut path = path_builder.build(ortho);
             self.context2d.set_stroke_style(&self.color_inner_stroke);
             self.context2d.set_fill_style(&self.color_inner_fill);
-            self.context2d.begin_path();
             path.object(&self.countries);
             let path2d = path.context.result();
-            path2d.close_path();
             self.context2d.stroke_with_path(&path2d);
             self.context2d.fill_with_path_2d(&path2d);
 
@@ -250,14 +248,12 @@ impl Renderer {
         let mut path = path_builder.build(projector);
         self.context2d.set_fill_style(&self.color_outer_fill);
         self.context2d.set_stroke_style(&self.color_outer_stroke);
-        self.context2d.begin_path();
         path.object(&self.countries);
         let path2d = path.context.result();
         self.context2d.stroke_with_path(&path2d);
         self.context2d.fill_with_path_2d(&path2d);
 
         self.context2d.set_stroke_style(&self.color_graticule);
-        self.context2d.begin_path();
         path.object(&self.graticule);
         let path2d = path.context.result();
         self.context2d.stroke_with_path(&path2d);
