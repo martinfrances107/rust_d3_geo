@@ -2,10 +2,7 @@
 
 README.md say that in version 2.0 par_iter will be used
 
-  Look at PV it is not being used... in all cases? Can I remove the generic PV.
-
 Can I make LastPoint local to the AlbersUsa module - and wrtie
-  graticule returns a string it should return a Path2d
 
   profile code. ( move the albers_usa profile target.. make it render countries.)
   restore benchmark. by using ImageData trick.
@@ -14,8 +11,6 @@ Can I make LastPoint local to the AlbersUsa module - and wrtie
 
 High Priority.
 examples/projection eslint needs updating.
-
-* lots of todos missing
 
 * Write examples/index.html -- a guide to building rust projects.
 
