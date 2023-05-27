@@ -217,19 +217,18 @@ impl Renderer {
 
     /// Render the next frame.
     pub fn render(&mut self, solid: bool) {
-        let path2d = Path2d::new().unwrap();
-        let ep = Endpoint::new(path2d);
-
         if !solid {
             let r = self.projector_builder.rotate();
             self.projector_builder.reflect_x_set(Reflect::Flipped);
             self.projector_builder
                 .rotate3_set(&[r[0] + 180_f64, -r[1], -r[2]]);
 
-            let ortho = self.projector_builder.build();
-            let path_builder = PathBuilder::new(ep.clone());
+            let projector = self.projector_builder.build();
+            let path2d = Path2d::new().unwrap();
+            let ep = Endpoint::new(path2d);
+            let path_builder = PathBuilder::new(ep);
 
-            let mut path = path_builder.build(ortho);
+            let mut path = path_builder.build(projector);
             self.context2d.set_stroke_style(&self.color_inner_stroke);
             self.context2d.set_fill_style(&self.color_inner_fill);
             path.object(&self.countries);
@@ -242,7 +241,8 @@ impl Renderer {
         }
 
         let projector = self.projector_builder.build();
-
+        let path2d = Path2d::new().unwrap();
+        let ep = Endpoint::new(path2d);
         let path_builder = PathBuilder::new(ep);
 
         let mut path = path_builder.build(projector);
