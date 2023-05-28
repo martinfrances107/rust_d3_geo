@@ -7,40 +7,22 @@ use super::BuilderTrait;
 use super::RawBase;
 use super::ScaleGet;
 
-// mod angle;
-// mod angle_get;
 mod build;
 mod center_get;
 mod center_set;
-// mod clip_angle_adjust;
-// mod clip_angle_get;
-// mod clip_angle_reset;
 mod clip_angle_set;
 mod clip_extent_adjust;
-// mod clip_extent_clear;
 mod clip_extent_get;
 mod clip_extent_set;
 mod fit;
-// mod fit_no_clip;
-// mod precision_adjust;
-// mod precision_bypass;
-// mod precision_get;
-// mod precision_set;
 mod parallels_get;
 mod parallels_set;
-// mod recenter_no_resampling;
-// mod recenter_with_resampling;
-// mod reflect_get;
-// mod reflect_set;
-// mod rotate_get;
 mod rotate_set;
 mod scale_get;
 mod scale_set;
-// mod transform;
 mod translate_get;
 mod translate_set;
 
-// pub mod template;
 /// Builder shorthand notations.
 pub mod types;
 
@@ -55,7 +37,8 @@ pub trait PRConic: RawBase {
     fn generate(self, y0: Self::T, y1: Self::T) -> Self;
 }
 
-/// A wrapper over a projection builder which hold state phi0, phi1 and allow regeneration of the PR.
+/// A wrapper over a projection builder which holds state about the pair of
+/// parallels.
 #[derive(Clone, Debug)]
 pub struct Builder<BASE, T>
 where
