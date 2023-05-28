@@ -7,11 +7,6 @@ use crate::Transform;
 use super::tany;
 
 /// Projection definition.
-///
-/// Why is the Phantom Data is required here...
-///
-/// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
-/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
 #[derive(Clone, Debug)]
 pub struct ConicConformal {
     f: f64,

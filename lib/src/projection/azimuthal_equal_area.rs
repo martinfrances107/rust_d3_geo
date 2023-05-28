@@ -16,15 +16,16 @@ use super::azimuthal::azimuthal_raw;
 use super::BuilderTrait;
 use super::ClipAngleSet;
 
-/// Why the Phantom Data is required here...
-///
-/// The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
-/// The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
+/// Projection definition.
 #[derive(Copy, Clone, Debug, Default)]
 pub struct AzimuthalEqualArea<T>
 where
     T: CoordFloat,
 {
+    // Why the Phantom Data is required here...
+    //
+    // The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
+    // The implementation of Transform is generic and the type MUST be stored in relation to the Struct,
     p_t: PhantomData<T>,
 }
 
