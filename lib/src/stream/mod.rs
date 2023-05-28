@@ -16,17 +16,12 @@ use geo::LineString;
 use geo::Polygon;
 use geo_types::Coord;
 
-/// State -- Unconnected.
-///
-/// A 'blank' stage on the stream path.
-///
 /// The state before the path is constructed.
 #[derive(Clone, Default, Debug)]
 pub struct Unconnected;
 
-/// State -- Default Connected.
-///
-/// [Equirectangular](crate::projection::equirectangular::Equirectangular)
+/// As path nodes are connected the
+/// state changes form [Unconnected] to [Connected].
 #[derive(Clone, Debug)]
 pub struct Connected<SINK> {
     /// The next stage on the path,

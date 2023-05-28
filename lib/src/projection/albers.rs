@@ -14,7 +14,7 @@ use super::TranslateSet;
 
 type Output<DRAIN, T> = Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<T>, T>, T>;
 
-/// Albers - `ConicEqualArea` centered on the U.S.
+/// Albers - [``ConicEqualArea``](crate::projection::conic_equal_area::ConicEqualArea) centered on the U.S.
 ///
 /// # Panics
 /// unwrap() is used here but a panic will never happen as constants  will

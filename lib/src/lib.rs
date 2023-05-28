@@ -25,7 +25,7 @@
 //! | [`AlbersUsa`](projection::albers_usa) | [`Equidistant`](projection::equidistant::Equidistant) | [`Orthographic`](projection::orthographic::Orthographic) |
 //! | [`AzimuthalEqualArea`](projection::azimuthal_equal_area::AzimuthalEqualArea) | [`Equirectangular`](projection::equirectangular::Equirectangular) | [`Mercator`](projection::mercator::Mercator) |
 //! | [`AzimuthalEquiDistant`](projection::azimuthal_equidistant::AzimuthalEquiDistant) | [`EqualArea`](projection::equal_area::EqualArea) | [`MercatorTransverse`](projection::mercator_transverse::MercatorTransverse) |
-//! | ['Conformal](projection::conformal) | [`EqualEarth`](projection::equal_earth::EqualEarth) | [`Stereographic`](projection::stereographic::Stereographic) |
+//! | [`Conformal`](projection::conformal) | [`EqualEarth`](projection::equal_earth::EqualEarth) | [`Stereographic`](projection::stereographic::Stereographic) |
 //!
 //! Each projection has default builder, which can be programmed.
 //!

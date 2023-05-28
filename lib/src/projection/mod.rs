@@ -17,7 +17,7 @@ pub mod albers_usa;
 pub mod azimuthal_equal_area;
 /// The raw projection.
 pub mod azimuthal_equidistant;
-/// Generate either a 'Mercator' or a `ConicConformal` projection.
+/// Generate either a [Mercator](crate::projection::mercator::Mercator) or a [```ConicConformal```](crate::projection::conic_conformal::ConicConformal) projection.
 pub mod conformal;
 /// The raw projection.
 pub mod conic_conformal;
@@ -62,7 +62,7 @@ pub mod mercator;
 pub mod mercator_transverse;
 /// The raw projection.
 pub mod orthographic;
-/// Projection obect for `AlbersUsa` projection.
+/// Projection object for AlbersUsa projection.
 pub mod projector_albers_usa;
 /// Projection object.
 pub mod projector_commom;
@@ -93,7 +93,9 @@ pub type RotateTransform<PR, T> = Compose<RotateRadians<T>, Compose<PR, ScaleTra
 
 /// Provides specialization over 'Projection Raw'
 ///
-/// Mercator projections [`MercatorTransverseRaw` and `MercatorRaw`] have a
+/// Mercator projections
+/// [``MercatorTransverse``](crate::projection::mercator_transverse::MercatorTransverse) and
+/// [```Mercator```](crate::projection::mercator::Mercator) have a
 /// `extent_transform`() for their individual needs.
 pub trait TransformExtent {
     /// f64 or f32.
