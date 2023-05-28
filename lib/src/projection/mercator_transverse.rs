@@ -1,5 +1,3 @@
-//! A Raw Projection.
-//!
 //! Unlike all other raw projections `Mercator` and `MercatorTransverse` are
 //! hard coded to work only with f64s The Additional dynamic range/
 //! resolution  is essential in giving accuarate results near the poles.
