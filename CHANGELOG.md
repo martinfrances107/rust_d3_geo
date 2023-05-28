@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.10.0] - Sun 28 May 2023
+
+Removed PV as generic type
+
+commit 991faec4a4c3116cac9ecd6db3ce0a1fd6963c0b
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Fri May 26 22:41:00 2023 +0100
+
+    Simplification: related to PointVisible.
+
+    Removed two module
+
+    lib/src/clip/antimeridian/pv.rs
+    lib/src/clip/circle/pv.rs
+
+    Clipper is no loner generic over PV.
+
+    -pub struct Clipper<I, LU, PV, RC, STATE, T>
+    +pub struct Clipper<I, LU, RC, STATE, T>
+
+    The trait PointVisible  is now implmented on Line.
+
+
 ## [0.9.0] - Wed 24 May 2023
 
 MAJOR: Lots of function calls removed from the public interface

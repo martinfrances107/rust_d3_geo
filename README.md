@@ -49,8 +49,9 @@ These Examples are provided to help developers convert their existing javascript
 <table>
 <thead>
 <tr>
-<th align="left" colspan="2"  >Description</th>
-<tr>
+<th align="left" width="50%"  >Description</th>
+<th width="50%"></th>
+</tr>
 </thead>
 <tbody align="left" style="vertical-align:top;">
 <tr>
