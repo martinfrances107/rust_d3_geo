@@ -225,7 +225,7 @@ mod graticule {
                 let second = line.0[1].x;
                 first == second
             })
-            .filter(|line| (line.0[0].x % 90_f64) > 1e-6)
+            .filter(|line| f64::abs(line.0[0].x % 90_f64) > 1e-6)
             .collect::<Vec<LineString>>();
 
         lines.sort_by(|a, b| a[0].y.partial_cmp(&b[0].y).unwrap());
@@ -239,16 +239,6 @@ mod graticule {
         }
     }
 
-    // it("graticule.lines() default major longitude lines extend from 90°S to 90°N", () => {
-    //   const lines = geoGraticule().lines()
-    //       .filter(line => line.coordinates[0][0] === line.coordinates[1][0])
-    //       .filter(line => Math.abs(line.coordinates[0][0] % 90) < 1e-6);
-    //   lines.forEach(function(line) {
-    //     assert.deepStrictEqual(extent(line.coordinates, p => p[1]), [-90 + 1e-6, +90 - 1e-6]);
-    //   });
-    // });
-
-    #[ignore]
     #[test]
     fn lines_default_longitude_90_90_ranges() {
         println!("graticule.lines() default major longitude lines extend from 90°S to 90°N");
@@ -262,7 +252,7 @@ mod graticule {
                 let second = line.0[1].x;
                 first == second
             })
-            .filter(|line| (line.0[0].x % 90_f64) < 1e-6)
+            .filter(|line| f64::abs(line.0[0].x % 90_f64) < 1e-6)
             .collect::<Vec<LineString>>();
 
         lines.sort_by(|a, b| a[0].y.partial_cmp(&b[0].y).unwrap());
