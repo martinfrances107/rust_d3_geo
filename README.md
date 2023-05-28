@@ -49,59 +49,117 @@ These Examples are provided to help developers convert their existing javascript
 <table>
 <thead>
 <tr>
-<th align="left">Description</th>
-<th align="right"></th>
-</tr>
+<th align="left" colspan="2"  >Description</th>
+<tr>
 </thead>
 <tbody align="left" style="vertical-align:top;">
+<tr>
+<td>
+<strong>examples/globe/rotating</strong><br><br>
 
-<tr>
-<tr>
-<td><strong>examples/globe/canvas_rotating_50m</strong> <br/><br/>  This is a port into rust of this d3-geo example <a href="https://www.d3indepth.com/geographic/">www.d3indepth.com/geographic/</a>.  <br/><br/> For perfomance reasons this example is best viewed by running "cargo build" and then "cargo serve" rather the running the development build.
+This is a port into rust of this d3-geo example
+
+[www.d3indepth.com/geographic/](https://www.d3indepth.com/geographic/)
+
+This globe is rendered to a HTML CANVAS element.
+
+For perfomance reasons this example is best viewed by running cargo build and then "cargo serve" which compiles the rust code using the --release flag.
 
 (Scale 1:50M)
 
 </td>
-<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/rotating.png"></td>
+
+<td>
+  <image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/rotating.png">
+</td>
+
 </tr>
 <tr>
-<td><strong>examples/globe/svg</strong> <br/><br/> SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements. It also includes code samples that generates SVG graticules.
+
+<td>
+<strong>examples/globe/svg</strong><br><br>
+
+The globe is rendered as a SVG image.
+
+ SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements.
+
+  It also includes code samples that generates SVG graticules.
+
 (Scale 1:50M)
 </td>
-<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/globe.svg"> </td>
+<td>
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/globe.svg">
+</td>
+
 </tr>
+<tr>
+
 <td><strong>examples/globe/drag_and_zoom</strong> <br/><br/>
-  As an example it deliberately mixes typescript methods with rust.
-  The typescript is responsible for handling the mouse events and calculating the quaternion and finally calculating the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.(Scale 1:50M)
+
+This globe is rendered to a HTML CANVAS element
+
+It deliberately mixes typescript methods with rust.
+The typescript is responsible for handling the mouse events and calculating the quaternion and finally calculating the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.(Scale 1:50M)
 <br/>
 <br/>
   This example is currently undergoing rapid development.
+
+  (Scale 1:50M)
 </td>
 
-<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/drag_and_zoom.png"> </td>
+<td>
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/drag_and_zoom.png">
+</td>
+
 </tr>
 <tr>
-<td><strong>examples/projections</strong> <br/><br/>
+
+<td>
+<strong>examples/projections</strong> <br/><br/>
+
+This globe is rendered to a HTML CANVAS element
 
 As a confidence building exercise, this demo
-shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>. </td>
-<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/projection.png"> </td>
-</tr>
-<td><strong>examples/globe/albers_usa</strong> <br><br>
-This example show all the counties in the USA
+shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>.
 
-AlbersUSA is unlike the other projections.
-Alaska and Hawaii are rendered as insets.
-As can be see in the code a Multidrain must be used to gather the three projections.(Scale of 1:10M)
+(Scale 1:50M)
+</td>
+<td>
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/projection.png">
+</td>
+
+</tr>
+<tr>
+
+<td><strong>examples/globe/albers_usa</strong> <br><br>
+
+The globe is rendered as a SVG image.
+
+Show all the counties in the USA.
+
+AlbersUSA is unlike the other projections. Alaska and Hawaii are rendered as insets.
+As can be see in the code a Multidrain must be used to gather the three projections.
+
+(Scale of 1:10M)
 
 </td>
 <td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/albers_usa.svg"></td>
+
 </tr>
 <tr>
-<td> <strong>examples/ring</strong><br/>
-<br>
-Sample code in both RUST and javascript that renders a complex multipolygon. ( Orthographic and Sterographic ) </td>
-<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/ring.png"></td>
+
+<td>
+<strong>examples/ring</strong><br/><br/>
+SVG example
+
+
+Sample code in both RUST and javascript that renders a complex multipolygon. ( Orthographic and Sterographic )
+
+</td>
+<td>
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/ring.png">
+</td>
+
 </tr>
 </tbody>
 <table>
