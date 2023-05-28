@@ -178,7 +178,7 @@ use geo_types::Coord;
 
 use math::EPSILON;
 
-/// Area Stream.
+/// Area Endpoint.
 pub mod area;
 /// Vector arithmatic operations on 3-D vectors.
 pub mod cartesian;
@@ -232,7 +232,6 @@ pub mod stream;
 mod path_test_context;
 
 /// 2-D Transform common to projections and, rotations.
-///
 pub trait Transform
 where
     <Self as Transform>::T: CoordFloat,

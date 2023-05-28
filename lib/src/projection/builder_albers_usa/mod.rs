@@ -13,7 +13,7 @@ mod scale_set;
 mod translate_get;
 mod translate_set;
 
-/// A wrapper over Projection\Builder which hold state phi0, phi1 and allow regeneration of the PR.
+/// A wrapper over Projection\Builder which holds state phi0, phi1 and allow regeneration of the PR.
 #[derive(Clone, Debug)]
 pub struct Builder<SD, T>
 where
