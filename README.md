@@ -32,9 +32,7 @@ The limits of the javascript library become obvious when developing interactive 
 For example the examples/globe applications operate on a 1:50M resolution map of the earth. On a desktop machine this is beyond the javascript version.
 
 <table>
-<th align="left" colspan="2">Supported Projections</th>
-
-<th align="right"></th>
+<th align="left" colspan="3">Supported Projections</th>
 <tr><td>Albers</td><td>Equidistant</td><td>Mercator</td></tr>
 <tr><td>AlbersUsa</td><td>Equirectangular</td><td>MercatorTansverse</td></tr>
 <tr><td>Aziumuthal Equal Area</td><td>Equal Area</td><td>Orthographic</td></tr>
@@ -49,13 +47,12 @@ These Examples are provided to help developers convert their existing javascript
 <table>
 <thead>
 <tr>
-<th align="left" width="50%"  >Description</th>
-<th width="50%"></th>
+<th align="left" colspan="2" >Description</th>
 </tr>
 </thead>
 <tbody align="left" style="vertical-align:top;">
 <tr>
-<td>
+<td width="50%">
 <strong>examples/globe/rotating</strong><br><br>
 
 This is a port into rust of this d3-geo example
@@ -70,7 +67,7 @@ For perfomance reasons this example is best viewed by running cargo build and th
 
 </td>
 
-<td>
+<td width="50%">
   <image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/rotating.png">
 </td>
 
