@@ -16,9 +16,9 @@ derivative = "~2"
 num-traits = "~0.2"
 geo = { workspace = true }
 geo-types = { workspace = true }
-serde_json = { workspace = true }
 
 [dev-dependencies]
+criterion = { version = "~0.5", features = ["html_reports"] }
 futures = { workspace = true }
 js-sys = { workspace = true }
 rand = { workspace = true }
@@ -30,8 +30,8 @@ gloo-utils = { workspace = true }
 pretty_assertions = "~1"
 lazy_static = "~1"
 regex = "~1"
+serde_json = { workspace = true }
 topojson = { workspace = true }
-criterion = { version = "~0.5", features = ["html_reports"] }
 
 [dependencies.web-sys]
 workspace = true

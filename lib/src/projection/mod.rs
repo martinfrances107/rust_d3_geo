@@ -62,7 +62,7 @@ pub mod mercator;
 pub mod mercator_transverse;
 /// The raw projection.
 pub mod orthographic;
-/// Projection object for AlbersUsa projection.
+/// Projection object for `AlbersUsa` projection.
 pub mod projector_albers_usa;
 /// Projection object.
 pub mod projector_commom;
