@@ -1,5 +1,5 @@
 use core::fmt::Debug;
-use std::fmt::Display;
+use core::fmt::Display;
 
 use geo::CoordFloat;
 

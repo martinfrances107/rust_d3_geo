@@ -1,5 +1,5 @@
+use core::cmp::Ordering;
 use core::fmt::Debug;
-use std::cmp::Ordering;
 
 use geo::CoordFloat;
 use geo_types::Coord;

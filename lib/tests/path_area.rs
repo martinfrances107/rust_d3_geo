@@ -1,8 +1,8 @@
 #[cfg(not(tarpaulin_include))]
 mod path_area {
 
-    use std::f64::consts::PI;
-    use std::fmt::Display;
+    use core::f64::consts::PI;
+    use core::fmt::Display;
 
     use geo::CoordFloat;
     use geo::Geometry;

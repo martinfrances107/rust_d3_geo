@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use core::cell::RefCell;
 use std::rc::Rc;
 
 use geo::CoordFloat;

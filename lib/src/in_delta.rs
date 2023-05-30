@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use core::fmt::Display;
 
 use geo::CoordFloat;
 use geo::Point;

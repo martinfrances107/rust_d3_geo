@@ -1,8 +1,8 @@
 #[cfg(not(tarpaulin_include))]
 mod path_measure {
 
-    use std::fmt::Display;
-    use std::ops::AddAssign;
+    use core::fmt::Display;
+    use core::ops::AddAssign;
 
     use d3_geo_rs::stream::DrainStub;
     use geo::CoordFloat;

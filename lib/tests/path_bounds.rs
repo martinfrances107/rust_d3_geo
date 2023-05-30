@@ -1,9 +1,9 @@
 #[cfg(not(tarpaulin_include))]
 mod path_bounds {
 
-    use std::f64::consts::PI;
-    use std::fmt::Display;
-    use std::ops::AddAssign;
+    use core::f64::consts::PI;
+    use core::fmt::Display;
+    use core::ops::AddAssign;
 
     use approx::AbsDiffEq;
     use geo::CoordFloat;

@@ -1,6 +1,6 @@
 use core::fmt::Debug;
+use core::marker::PhantomData;
 use std::collections::VecDeque;
-use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::LineString;

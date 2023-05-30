@@ -1,7 +1,7 @@
 mod link;
 
-use std::cell::RefCell;
-use std::cmp::Ordering;
+use core::cell::RefCell;
+use core::cmp::Ordering;
 use std::rc::Rc;
 
 use geo::CoordFloat;

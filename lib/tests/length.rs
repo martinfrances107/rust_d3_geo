@@ -2,7 +2,7 @@
 mod length {
     extern crate pretty_assertions;
 
-    use std::f64::consts::PI;
+    use core::f64::consts::PI;
 
     use geo::line_string;
     use geo::polygon;

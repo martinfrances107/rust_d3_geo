@@ -1,4 +1,4 @@
-use std::marker::PhantomData;
+use core::marker::PhantomData;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;

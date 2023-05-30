@@ -1,8 +1,8 @@
 #![cfg(not(tarpaulin_include))]
 
 use std::fs::File;
-use std::io::prelude::*;
 use std::io::LineWriter;
+use std::io::Write;
 
 use geo::Geometry;
 use geo_types::Coord;

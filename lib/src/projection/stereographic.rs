@@ -1,5 +1,5 @@
 use core::fmt::Debug;
-use std::marker::PhantomData;
+use core::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo_types::Coord;

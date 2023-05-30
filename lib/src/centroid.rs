@@ -1,5 +1,5 @@
 use core::fmt::Debug;
-use std::ops::AddAssign;
+use core::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Point;

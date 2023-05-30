@@ -2,7 +2,7 @@
 extern crate criterion;
 extern crate pretty_assertions;
 
-use std::time::Duration;
+use core::time::Duration;
 
 use criterion::Criterion;
 use geo::Geometry;

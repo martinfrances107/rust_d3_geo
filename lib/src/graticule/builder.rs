@@ -1,6 +1,6 @@
 use core::fmt::Debug;
 use core::iter::Iterator;
-use std::mem::swap;
+use core::mem::swap;
 
 use geo::CoordFloat;
 use geo::LineString;

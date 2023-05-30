@@ -1,4 +1,4 @@
-use std::mem;
+use core::mem;
 
 use geo_types::Coord;
 

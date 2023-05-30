@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use core::fmt::Display;
 use std::string::String as S;
 
 use geo::CoordFloat;

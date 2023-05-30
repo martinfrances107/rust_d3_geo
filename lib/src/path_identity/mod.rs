@@ -1,6 +1,6 @@
 use core::fmt::Debug;
-use std::fmt::Display;
-use std::ops::AddAssign;
+use core::fmt::Display;
+use core::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo_types::Coord;

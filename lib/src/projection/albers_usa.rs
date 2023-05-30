@@ -1,5 +1,5 @@
 use core::fmt::Debug;
-use std::ops::Range;
+use core::ops::Range;
 
 use geo::CoordFloat;
 use geo_types::Coord;
