@@ -333,15 +333,22 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
 
 ## Future 2.0 upgrades
 
-Version 1.0 is about to become public, where major changes are discourged.
+Version 1.0 is about to become public, and I start to give backwards compatibility guarantees.
+Following the "Semantic Versioning" where
 
-* [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
-I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
+* Increment the major number when a breaking change occurs
+* Increment the minor number when a new feature is added, @deprecated notes added to old functions
+* Increment the patch number for tighly focused security fixes.
+
+Future Work.
+
+ * [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
+
+* I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
 
 * The Hashmaps - appear slow.
   Maybe I can get performace improvements by replacing them with B-tree collections?
 
-<br>
 
 #### Architecture discussion
 
