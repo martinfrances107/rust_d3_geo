@@ -11,7 +11,7 @@
 //! 3) Restore Post Clip Rectangle
 //!
 
-use std::fmt::Debug;
+use core::fmt::Debug;
 
 use geo::CoordFloat;
 use geo_types::Coord;

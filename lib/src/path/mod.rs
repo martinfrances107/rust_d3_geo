@@ -15,8 +15,8 @@ pub mod string;
 
 mod tests;
 
+use core::fmt::Debug;
 use std::fmt;
-use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::AddAssign;
 

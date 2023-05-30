@@ -1,7 +1,7 @@
+use core::fmt::Debug;
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::VecDeque;
-use std::fmt::Debug;
 use std::rc::Rc;
 
 use geo::CoordFloat;

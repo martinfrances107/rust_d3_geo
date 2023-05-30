@@ -1,6 +1,6 @@
+use core::fmt::Debug;
 use std::ops::AddAssign;
 
-use derivative::Derivative;
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
@@ -10,8 +10,6 @@ use crate::stream::Stream;
 use super::Result;
 
 #[allow(non_snake_case)]
-#[derive(Derivative)]
-#[derivative(Debug)]
 #[derive(Clone)]
 
 /// Stream Endpoint:Compute the cnetroid of the objects streamed along the path.
@@ -33,16 +31,34 @@ where
     x0: T,
     y0: T,
 
-    #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, &Coord<T>),
-    #[derivative(Debug = "ignore")]
     line_start_fn: fn(&mut Self),
-    #[derivative(Debug = "ignore")]
     line_end_fn: fn(&mut Self),
 
     // Generic constant
     frac_1_2: T,
     three: T,
+}
+
+impl<T> Debug for Centroid<T>
+where
+    T: CoordFloat,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("Centroid<T>")
+            .field(&self.X0)
+            .field(&self.Y0)
+            .field(&self.Z0)
+            .field(&self.X1)
+            .field(&self.Y1)
+            .field(&self.Z1)
+            .field(&self.X2)
+            .field(&self.Y2)
+            .field(&self.Z2)
+            .field(&self.x0)
+            .field(&self.y0)
+            .finish()
+    }
 }
 
 // When comparing do not care about which function is active.

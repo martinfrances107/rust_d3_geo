@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use core::fmt::Debug;
 use std::ops::AddAssign;
 
 use geo::CoordFloat;
@@ -12,12 +12,12 @@ use crate::stream::Stream as StreamTrait;
 use crate::stream::Streamable;
 
 /// Centroid Stream.
-#[allow(non_snake_case)]
-#[derive(Clone)]
 /// Stream endpoint: Computes the centroid.
 ///
 /// DISAMBIGUATION: Lots of code in common with path/centroid.rs
 /// but this is true of the Javascript.
+#[allow(non_snake_case)]
+#[derive(Clone)]
 pub struct Centroid<T>
 where
     T: CoordFloat,
@@ -50,7 +50,7 @@ where
     T: CoordFloat,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("Area<T>")
+        f.debug_tuple("Centroid<T>")
             .field(&self.W0)
             .field(&self.W1)
             .field(&self.X0)

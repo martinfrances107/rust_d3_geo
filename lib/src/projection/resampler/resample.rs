@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use core::fmt::Debug;
 
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -72,7 +72,10 @@ where
     T: CoordFloat,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("").field(&self.state).finish()
+        f.debug_tuple("Resample")
+            .field(&self.delta2)
+            .field(&self.state)
+            .finish()
     }
 }
 

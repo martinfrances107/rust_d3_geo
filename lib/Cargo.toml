@@ -12,7 +12,6 @@ version = { workspace = true }
 
 [dependencies]
 approx = "~0.5"
-derivative = "~2"
 num-traits = "~0.2"
 geo = { workspace = true }
 geo-types = { workspace = true }

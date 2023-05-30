@@ -1,6 +1,6 @@
+use core::fmt::Debug;
 use std::ops::AddAssign;
 
-use derivative::Derivative;
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
@@ -15,8 +15,8 @@ enum MeasureMode {
     Polygon,
 }
 
-#[derive(Clone, Derivative)]
-#[derivative(Debug)]
+#[derive(Clone)]
+
 /// Stream Endpoint: Compute the area of the objects stream on the path.
 pub struct Measure<T>
 where
@@ -26,10 +26,22 @@ where
     length_sum: T,
     p00: Coord<T>,
     p0: Coord<T>,
-    #[derivative(Debug = "ignore")]
     point_fn: fn(&mut Self, &Coord<T>),
 }
 
+impl<T> Debug for Measure<T>
+where
+    T: CoordFloat,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("Measure<T>")
+            .field(&self.mode)
+            .field(&self.length_sum)
+            .field(&self.p00)
+            .field(&self.p0)
+            .finish()
+    }
+}
 // Ignore the state machine functions.
 impl<T> PartialEq for Measure<T>
 where

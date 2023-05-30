@@ -1,4 +1,5 @@
-use derivative::Derivative;
+use core::fmt::Debug;
+
 use geo::CoordFloat;
 use geo_types::Coord;
 
@@ -6,21 +7,34 @@ use crate::stream::Streamable;
 
 use super::stream::Stream as StreamTrait;
 
-#[derive(Derivative)]
-#[derivative(Debug)]
 #[derive(Clone)]
 /// Length Stream.
-pub struct Stream<T: CoordFloat> {
-    #[derivative(Debug = "ignore")]
+pub struct Stream<T>
+where
+    T: CoordFloat,
+{
     point_fn: fn(&mut Self, &Coord<T>),
-    #[derivative(Debug = "ignore")]
     line_start_fn: fn(&mut Self),
-    #[derivative(Debug = "ignore")]
     line_end_fn: fn(&mut Self),
+
     length_sum: T,
     lambda0: T,
     sin_phi0: T,
     cos_phi0: T,
+}
+
+impl<T> Debug for Stream<T>
+where
+    T: CoordFloat,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("Stream<T>")
+            .field(&self.length_sum)
+            .field(&self.lambda0)
+            .field(&self.sin_phi0)
+            .field(&self.cos_phi0)
+            .finish()
+    }
 }
 
 impl<T> Default for Stream<T>

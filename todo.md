@@ -1,11 +1,5 @@
 # TODO
 
-README.md say that in version 2.0 par_iter will be used
-
-Can I make LastPoint local to the AlbersUsa module - and wrtie
-
-  profile code. ( move the albers_usa profile target.. make it render countries.)
-  restore benchmark. by using ImageData trick.
   albersUSA implement cache in 'fn stream()'
   copy documentation of parallels.
 

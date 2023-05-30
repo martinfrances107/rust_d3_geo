@@ -11,7 +11,7 @@
 //! 3) SWAP -  implies inserting `PostClip` rectangle.
 //!
 
-use std::fmt::Debug;
+use core::fmt::Debug;
 
 use geo::CoordFloat;
 use geo_types::Coord;

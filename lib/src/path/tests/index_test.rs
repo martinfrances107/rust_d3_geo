@@ -4,8 +4,8 @@ mod index {
 
     extern crate pretty_assertions;
 
+    use core::fmt::Debug;
     use std::f64::consts::PI;
-    use std::fmt::Debug;
 
     use approx::AbsDiffEq;
     use geo::line_string;

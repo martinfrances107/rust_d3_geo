@@ -1,7 +1,7 @@
 /// Related to the unit sphere.
 pub mod sphere;
 
-use std::fmt::Debug;
+use core::fmt::Debug;
 
 use geo::CoordFloat;
 use geo::Geometry;

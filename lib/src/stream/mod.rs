@@ -8,7 +8,7 @@ mod multi_polygon;
 mod point;
 mod polygon;
 
-use std::fmt::Debug;
+use core::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;

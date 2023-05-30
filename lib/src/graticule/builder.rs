@@ -1,7 +1,7 @@
+use core::fmt::Debug;
 use core::iter::Iterator;
 use std::mem::swap;
 
-use derivative::Derivative;
 use geo::CoordFloat;
 use geo::LineString;
 use geo::Polygon;
@@ -14,8 +14,6 @@ use super::graticule_x;
 use super::graticule_y;
 use super::CoordFn;
 
-#[derive(Derivative)]
-#[derivative(Debug)]
 #[allow(non_snake_case)]
 /// A graticule is a network of lines used for plotting, scaling.
 pub struct Builder<T>
@@ -34,18 +32,38 @@ where
     dy: T,
     DX: T,
     DY: T,
-    #[derivative(Debug = "ignore")]
+
     x: CoordFn<T>,
-    #[derivative(Debug = "ignore")]
     y: CoordFn<T>,
-    #[derivative(Debug = "ignore")]
     X: CoordFn<T>,
-    #[derivative(Debug = "ignore")]
     Y: CoordFn<T>,
 
     epsilon: T,
     precision: T,
     t90: T,
+}
+
+impl<T> Debug for Builder<T>
+where
+    T: CoordFloat,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("Builder<T>")
+            .field(&self.x0)
+            .field(&self.x0)
+            .field(&self.X0)
+            .field(&self.X1)
+            .field(&self.y0)
+            .field(&self.y1)
+            .field(&self.Y0)
+            .field(&self.Y1)
+            .field(&self.dx)
+            .field(&self.dy)
+            .field(&self.dy)
+            .field(&self.DX)
+            .field(&self.DY)
+            .finish()
+    }
 }
 
 impl<T> Default for Builder<T>

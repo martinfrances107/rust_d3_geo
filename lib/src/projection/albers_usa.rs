@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use core::fmt::Debug;
 use std::ops::Range;
 
 use geo::CoordFloat;

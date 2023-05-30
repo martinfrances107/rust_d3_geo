@@ -1,13 +1,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use derivative::Derivative;
 use geo::CoordFloat;
 
 use crate::clip::line_elem::LineElem;
 
-#[derive(Derivative)]
-#[derivative(Debug)]
 #[derive(Clone)]
 pub(super) struct Intersection<'a, T>
 where
@@ -15,7 +12,6 @@ where
 {
     pub x: LineElem<T>,
     pub z: Option<&'a Vec<LineElem<T>>>,
-    #[derivative(Debug = "ignore")]
     /// Another intersection.
     pub o: Option<Rc<RefCell<Intersection<'a, T>>>>,
     /// e - is any entry?
@@ -24,10 +20,8 @@ where
     pub e: bool,
     /// visited.
     pub v: bool,
-    #[derivative(Debug = "ignore")]
     /// Next.
     pub n: Option<Rc<RefCell<Intersection<'a, T>>>>,
-    #[derivative(Debug = "ignore")]
     /// Previous.
     pub p: Option<Rc<RefCell<Intersection<'a, T>>>>,
 }

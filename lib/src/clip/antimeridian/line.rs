@@ -1,5 +1,5 @@
+use core::fmt::Debug;
 use std::default::Default;
-use std::fmt::Debug;
 
 use geo::CoordFloat;
 use geo_types::Coord;

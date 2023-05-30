@@ -1,5 +1,5 @@
+use core::fmt::Debug;
 use std::collections::VecDeque;
-use std::fmt::Debug;
 use std::marker::PhantomData;
 
 use geo::CoordFloat;

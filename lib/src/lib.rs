@@ -169,8 +169,6 @@
 //!
 //! <hr>
 
-/// Allows the ommission of complex fields from debug output.
-extern crate derivative;
 extern crate web_sys;
 
 use geo::CoordFloat;
