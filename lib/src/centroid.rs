@@ -49,7 +49,7 @@ impl<T> Debug for Centroid<T>
 where
     T: CoordFloat,
 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_tuple("Centroid<T>")
             .field(&self.W0)
             .field(&self.W1)
@@ -70,6 +70,7 @@ where
             .finish()
     }
 }
+
 /// The use is nan.
 ///
 /// A) In the JS version these varibles are undefined.

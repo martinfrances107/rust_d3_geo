@@ -27,7 +27,7 @@ impl<T> Debug for Stream<T>
 where
     T: CoordFloat,
 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_tuple("Stream<T>")
             .field(&self.length_sum)
             .field(&self.lambda0)

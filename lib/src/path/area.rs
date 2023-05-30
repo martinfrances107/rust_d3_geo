@@ -26,7 +26,7 @@ impl<T> Debug for Area<T>
 where
     T: CoordFloat,
 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_tuple("Area<T>")
             .field(&self.area_sum)
             .field(&self.area_ring_sum)
