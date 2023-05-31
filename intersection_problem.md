@@ -31,17 +31,15 @@ where
 {
     pub x: LineElem<T>,
     pub z: Option<&'a Vec<LineElem<T>>>,
-    #[derivative(Debug = "ignore")]
     /// Another intersection.
     pub o: Option<Rc<RefCell<Intersection<'a, T>>>>,
     /// is any entry?
     pub e: bool,
     /// visited.
     pub v: bool,
-    #[derivative(Debug = "ignore")]
+
     /// Next.
     pub n: Option<Rc<RefCell<Intersection<'a, T>>>>,
-    #[derivative(Debug = "ignore")]
     /// Previous.
     pub p: Option<Rc<RefCell<Intersection<'a, T>>>>,
 }

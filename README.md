@@ -12,24 +12,15 @@ Rust 2021 Edition.
 
 This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST.
 
-A collection of d3 sub packages is being ported to rust.
-
 * d3_geo_rs
 * [d3_delaunay_rs](https://crates.io/crates/d3_delaunay_rs)
 * [d3_geo_voronoi_rs](https://crates.io/crates/d3_geo_voronoi_rs)
 
-## Current Status
-
-The majority of the library has been ported along with the associated tests.
-
-The 1.0 release is close, within one week.
-
-Currently I am reviewing the data structures, and looking for performance improvements before things become locked down and I support backwards compatibility guarentees.
 
 ## When to use the rust version of the library
 
 The limits of the javascript library become obvious when developing interactive applications that process large datasets.
-For example the examples/globe applications operate on a 1:50M resolution map of the earth. On a desktop machine this is beyond the javascript version.
+For example the examples/globe applications operate on a highly detailed ( 1:50M resolution )  map of the earth. On a desktop machine this is beyond the javascript version.
 
 <table>
 <th align="left" colspan="3">Supported Projections</th>
@@ -97,7 +88,7 @@ The globe is rendered as a SVG image.
 This globe is rendered to a HTML CANVAS element
 
 It deliberately mixes typescript methods with rust.
-The typescript is responsible for handling the mouse events and calculating the quaternion and finally calculating the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.(Scale 1:50M)
+The typescript is responsible for handling the mouse events and manipulating the quaternion used to calculate the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.
 <br/>
 <br/>
   This example is currently undergoing rapid development.
@@ -115,7 +106,7 @@ The typescript is responsible for handling the mouse events and calculating the 
 <td>
 <strong>examples/projections</strong> <br/><br/>
 
-This globe is rendered to a HTML CANVAS element
+All availble projections are rendered to a HTML CANVAS element
 
 As a confidence building exercise, this demo
 shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>.
@@ -131,9 +122,7 @@ shows a side by side comparison of the all the projections rendered by in both  
 
 <td><strong>examples/globe/albers_usa</strong> <br><br>
 
-The globe is rendered as a SVG image.
-
-Show all the counties in the USA.
+This show all the counties in the USA.
 
 AlbersUSA is unlike the other projections. Alaska and Hawaii are rendered as insets.
 As can be see in the code a Multidrain must be used to gather the three projections.
@@ -164,9 +153,9 @@ Sample code in both RUST and javascript that renders a complex multipolygon. ( O
 
 <br/>
 
-Here is an outline of the common steps found in all the examples.
+## An outline of the common steps found in all the examples.
 
-1) Take a projection's default builder, make adjustments, then call build() to construct a projector.
+1) For a given projeciton, use its default projection builder , make changes to the scale, translation .. etc, then call build() to construct a projector.
 
     ```rust
     let projector = Stereographic::<f64>::builder()
@@ -184,10 +173,9 @@ Here is an outline of the common steps found in all the examples.
 
     A Path is a collection of nodes where each step on the path transforms the geometry object.
 
-    A variey of endpoint are available Area, Length, Centroid, but these examples deal
-    only with rendering to a HTML canvas element or a SVG path element.
+    An object is then streamed along the path. The endpoints are special path nodes which hold the result of a calculation. A variey of endpoint are available Area, Centroid, Length which can be use to compute statistics about polygons or lines. These examples only show endpoints that render to a HTML canvas element or a SVG path element.
 
-    When rendering to a HTML canvas element build path from a Path2D "rendering conext"
+    When rendering to a HTML canvas the endpoint holds Path2D "rendering conext"
 
       ```rust
        //  Construct a PathBuilder linked to Path2d
@@ -198,7 +186,7 @@ Here is an outline of the common steps found in all the examples.
        let path = pb.build();
       ```
 
-    Generating a SVG image
+    When generating a SVG image, the endpint holds a string value from which a PATH element can be constructed.
 
       ```rust
         let pb = PathBuilder::pathstring();
@@ -225,9 +213,9 @@ Requirements:
 
 <br/>
 
-To view the application either create a devleopment build, or construct a static-web site as follows
+To view an example application either create a devleopment build, or construct a static-web site as follows
 
-### Start And Run A Development Build
+## Start And Run A Development Build
 
  ```console
  git clone https://github.com/martinfrances107/rust_d3_geo.git
@@ -250,25 +238,23 @@ Much better performance can be acheived by bulding a static web site and viewing
   npm run serve
 ```
 
-</details>
 <br>
 
 ## Benchmarking
 
-<details>
-<summary>See the details.</summary>
-In this project, we have two benchmarks, based on the ring and graticule examples ( see above. )
+The github respoitory associated with crate has two "profile targets" and two "benches"
+which can be used to to spot bottlnecks in the code.
 
-Also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voronoi)
+The benches are [Criterion.rs](https://crates.io/crates/criterion) based micro benchmarks.
+
+See also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voronoi)
  uses this library, and that project contains a benchmark which contains an exact port of a benchmark in [d3-geo-voronoi](https://github.com/Fil/d3-geo-voronoi).
  Based on that benchmark rust is 31% faster, or permits a 37% increase in throughput.
-</details>
 
-<br>
 
 ## Flamegraph
 
-profile_target is binary that outputs a HTML page containing a SVG image showing the globe with graticule markings.
+A profile_target is binary that outputs a HTML page containing a SVG image showing the globe with graticule markings.
 
 A flamegraph can be created with the following
 
@@ -278,8 +264,6 @@ sudo CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph
 ```
 
 The complexity of rendering 240 countries/polygons provides a good view in memory allocation issues.
-
-<br>
 
 ## Coding Standard
 
@@ -333,11 +317,12 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
 
 ## Future 2.0 upgrades
 
-Version 1.0 is about to become public, and I start to give backwards compatibility guarantees.
-Following the "Semantic Versioning" where
+Version 1.0 is stable.
 
-* Increment the major number when a breaking change occurs
-* Increment the minor number when a new feature is added, @deprecated notes added to old functions
+"Semantic Versioning" guidelines :-
+
+* Increment the major number when a breaking change occurs.
+* Increment the minor number when a new feature is added, @deprecated notes added to outdated functions,
 * Increment the patch number for tighly focused security fixes.
 
 Future Work.
@@ -350,7 +335,7 @@ Future Work.
   Maybe I can get performace improvements by replacing them with B-tree collections?
 
 
-#### Architecture discussion
+### Architecture discussion
 
 There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes.
 
@@ -363,4 +348,5 @@ Test coverage in that area is high so the algortihms is working but the data str
 ### Unimplemented sections of the library
 
 Support for a custom projection is not yet supported.
+
 For an example of this see the test labelled "projection.fitExtent(…) custom projection"
