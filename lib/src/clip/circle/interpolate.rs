@@ -17,7 +17,7 @@ pub struct Interpolate<T> {
 
 impl<T> Interpolate<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Constructs a Interpolate State based on the specified radius.
     ///
