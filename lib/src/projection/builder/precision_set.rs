@@ -9,7 +9,7 @@ use crate::clip::antimeridian::ClipAntimeridianU;
 use crate::clip::circle::interpolate::Interpolate as InterpolateCircle;
 use crate::clip::circle::line::Line as LineCircle;
 use crate::clip::circle::ClipCircleU;
-use crate::projection::builder::Clipper;
+use crate::clip::clipper::Clipper;
 use crate::projection::resampler::none::None;
 use crate::projection::resampler::resample::Connected as ConnectedResample;
 use crate::projection::resampler::resample::Resample;

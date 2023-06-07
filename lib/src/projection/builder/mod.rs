@@ -6,7 +6,6 @@ use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip;
-use crate::clip::clipper::Clipper;
 use crate::compose::Compose;
 use crate::identity::Identity;
 use crate::projection::builder::template::ResampleNoneNoPCNU;
