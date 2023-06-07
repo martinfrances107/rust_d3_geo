@@ -2,10 +2,10 @@ use core::mem;
 
 use geo_types::Coord;
 
-#[cfg(not(any(test)))]
+#[cfg(not(test))]
 use web_sys::Path2d;
 
-#[cfg(any(test))]
+#[cfg(test)]
 use crate::path_test_context::Path2d;
 use crate::stream::Stream;
 
