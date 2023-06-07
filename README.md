@@ -52,7 +52,7 @@ This is a port into rust of this d3-geo example
 
 This globe is rendered to a HTML CANVAS element.
 
-For perfomance reasons this example is best viewed by running cargo build and then "cargo serve" which compiles the rust code using the --release flag.
+For perfomance reasons this example is best viewed by running "cargo build" and then "cargo serve" which compiles the rust code using the --release flag.
 
 (Scale 1:50M)
 
@@ -125,7 +125,7 @@ shows a side by side comparison of the all the projections rendered by in both  
 This show all the counties in the USA.
 
 AlbersUSA is unlike the other projections. Alaska and Hawaii are rendered as insets.
-As can be see in the code a Multidrain must be used to gather the three projections.
+As can be seen in the code a Multidrain must be used to gather the three projections.
 
 (Scale of 1:10M)
 
@@ -171,9 +171,19 @@ Sample code in both RUST and javascript that renders a complex multipolygon. ( O
 
 2) Construct a PathBuilder
 
-    A Path is a collection of nodes where each step on the path transforms the geometry object.
+    A Path is a collection of nodes where each step on the path transforms the geometry object in some manner.
 
-    An object is then streamed along the path. The endpoints are special path nodes which hold the result of a calculation. A variey of endpoint are available Area, Centroid, Length which can be use to compute statistics about polygons or lines. These examples only show endpoints that render to a HTML canvas element or a SVG path element.
+    An object is then streamed along the path.
+
+    Here is an overview of the key nodes.
+
+     **Clipping**: Is the process of removing hidden geometry. When displaing a globe for example africa and austraila will neve been visible in the same view. Two stratergeis are used "Antimeridian" and "ClipAngle" [ See clip_angle_set() and clip_angle_reset() ]
+
+     **Resampling**: Dense geometry can be reduced by declaring a separation distance under which points, used to describe polyogns and lines, are considered indistinguiable [ See precision_set() ]
+
+     **Bounding**: A projection space box can be set, and only geomtry within this extent will be displayed. Polygons partially inside the box are restructured to conform to the edges of the box. [ See clip_extent_set() clip_extent_clear() ]
+
+      **Endpoints** are special path nodes which hold the result of a calculation. A variey of endpoint are available Area, Centroid, Length which can be use to compute properties about polygons or lines. These examples only show endpoints that render to a HTML canvas element or a SVG path element.
 
     When rendering to a HTML canvas the endpoint holds Path2D "rendering conext"
 
@@ -197,7 +207,7 @@ Sample code in both RUST and javascript that renders a complex multipolygon. ( O
    construct a PathBuilder object and then to stream a geometry object into it :-
 
       ```rust
-         // 'countries' is a geometry extratced from
+         // 'countries' is a geometry extracted from
          // a world map json file.
          path.stream(&countries)
       ```
@@ -256,10 +266,10 @@ See also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_v
 
 A profile_target is binary that outputs a HTML page containing a SVG image showing the globe with graticule markings.
 
-A flamegraph can be created with the following
+A flamegraph can be created by entering a particular profile targets directory and running :-
 
 ```bash
-cd profile_target
+cd profile_target/albers_usa
 sudo CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph
 ```
 
