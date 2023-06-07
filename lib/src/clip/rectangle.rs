@@ -356,46 +356,47 @@ where
         let start_inside = self.polygon_inside();
         let clean_inside = self.clean && start_inside;
         // Performance if all lengths are known. Can I flatern into a
-        // array of arrays or something that implies a contigious block of memory.
-        let merged_segments = self
-            .segments
-            .clone()
-            .unwrap()
-            .into_iter()
-            .flatten()
-            .collect::<Vec<Vec<LineElem<T>>>>();
-        let num_visible_elements = merged_segments.len();
+        // array of arrays or something that implies a contigious block of memory?
+        if let Some(segs) = &self.segments {
+            let merged_segments = segs
+                .clone()
+                .into_iter()
+                .flatten()
+                .collect::<Vec<Vec<LineElem<T>>>>();
+            let num_visible_elements = merged_segments.len();
 
-        let visible = !num_visible_elements.is_zero();
+            let visible = !num_visible_elements.is_zero();
 
-        if clean_inside || visible {
-            {
-                self.state.sink.polygon_start();
-            }
+            if clean_inside || visible {
+                {
+                    self.state.sink.polygon_start();
+                }
 
-            let interpolator = Interpolator::new(self.x0, self.y0, self.x1, self.y1);
-            if clean_inside {
-                self.state.sink.line_start();
-                interpolator.interpolate(None, None, T::one(), &mut self.state.sink);
-                self.state.sink.line_end();
-            }
+                let interpolator = Interpolator::new(self.x0, self.y0, self.x1, self.y1);
+                if clean_inside {
+                    self.state.sink.line_start();
+                    interpolator.interpolate(None, None, T::one(), &mut self.state.sink);
+                    self.state.sink.line_end();
+                }
 
-            let compare_intersection =
-                |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| -> Ordering {
+                let compare_intersection = |a: &Rc<RefCell<Intersection<T>>>,
+                                            b: &Rc<RefCell<Intersection<T>>>|
+                 -> Ordering {
                     interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
                 };
 
-            if visible {
-                clip_rejoin(
-                    &merged_segments,
-                    compare_intersection,
-                    start_inside,
-                    &interpolator,
-                    &mut self.state.sink,
-                );
-            }
+                if visible {
+                    clip_rejoin(
+                        &merged_segments,
+                        compare_intersection,
+                        start_inside,
+                        &interpolator,
+                        &mut self.state.sink,
+                    );
+                }
 
-            self.state.sink.polygon_end();
+                self.state.sink.polygon_end();
+            }
         }
     }
 
