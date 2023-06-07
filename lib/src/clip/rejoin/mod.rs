@@ -147,16 +147,11 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
             current.borrow_mut().v = true;
             if current.borrow().e {
                 if is_subject {
-                    points.map_or_else(
-                        || {
-                            todo!("how to do nothing here");
-                        },
-                        |points| {
-                            for p in points {
-                                stream.point(&p.p, None);
-                            }
-                        },
-                    );
+                    if let Some(points) = points {
+                        for p in points {
+                            stream.point(&p.p, None);
+                        }
+                    }
                 } else {
                     interpolator.interpolate(
                         Some((current.clone()).borrow().x.p),
