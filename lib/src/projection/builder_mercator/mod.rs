@@ -186,7 +186,7 @@ impl<DRAIN, PR, T> BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     /// Wrap a default projector and provides mercator specific overrides.
     pub fn new(pr: PR) -> Self {

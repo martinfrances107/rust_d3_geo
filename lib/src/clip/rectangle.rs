@@ -20,11 +20,12 @@ use super::intersection::Intersection;
 use super::line_elem::LineElem;
 use super::line_fn::line as clip_line;
 use super::rejoin::rejoin as clip_rejoin;
+use super::rejoin::CompareIntersectionsFn;
 use super::Interpolator as InterpolatorTrait;
 
 ///A primitive type used for a `PostClipNode` path stage.
 #[allow(clippy::struct_excessive_bools)]
-#[derive(Clone, Debug)]
+
 pub struct Rectangle<STATE, T>
 where
     T: CoordFloat,
@@ -41,6 +42,8 @@ where
     x1: T,
     y1: T,
 
+    interpolator: Interpolator<T>,
+    compare_intersection: CompareIntersectionsFn<T>,
     polygon: Option<Vec<Vec<Coord<T>>>>,
     segments: Option<VecDeque<VecDeque<Vec<LineElem<T>>>>>,
 
@@ -59,10 +62,22 @@ where
 
 impl<T> Rectangle<Unconnected, T>
 where
-    T: CoordFloat,
+    T: 'static + CoordFloat,
 {
     #[inline]
     pub(crate) fn new(extent: &[Coord<T>; 2]) -> Self {
+        let x0 = extent[0].x;
+        let y0 = extent[0].y;
+        let x1 = extent[1].x;
+        let y1 = extent[1].y;
+        let interpolator = Interpolator::new(x0, y0, x1, y1);
+        let compare_intersection = Box::new(
+            move |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| -> Ordering {
+                interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
+            },
+        );
+        let interpolator = Interpolator::new(x0, y0, x1, y1);
+
         Self {
             state: Unconnected,
             buffer_stream: ClipBuffer::<T>::default(),
@@ -71,10 +86,13 @@ where
             clip_max: T::from(1e9_f64).unwrap(),
             clip_min: T::from(-1e9_f64).unwrap(),
 
-            x0: extent[0].x,
-            y0: extent[0].y,
-            x1: extent[1].x,
-            y1: extent[1].y,
+            x0,
+            y0,
+            x1,
+            y1,
+
+            interpolator,
+            compare_intersection,
 
             polygon: None,
             segments: None,
@@ -91,6 +109,89 @@ where
             use_line_point: false,
             use_buffer_stream: false,
         }
+    }
+}
+
+// Needs "special casing" to rebuild compare_intersection.
+impl<STATE, T> Clone for Rectangle<STATE, T>
+where
+    STATE: Clone,
+    T: 'static + CoordFloat,
+{
+    #[inline]
+    fn clone(&self) -> Self {
+        let interpolator = self.interpolator.clone();
+        let compare_intersection = Box::new(
+            move |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| -> Ordering {
+                interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
+            },
+        );
+
+        Self {
+            state: self.state.clone(),
+            buffer_stream: self.buffer_stream.clone(),
+            first: self.first,
+            clean: self.clean,
+            clip_max: self.clip_max,
+            clip_min: self.clip_min,
+
+            x0: self.x0,
+            y0: self.y0,
+            x1: self.x1,
+            y1: self.y1,
+
+            interpolator: self.interpolator.clone(),
+            compare_intersection,
+
+            polygon: self.polygon.clone(),
+            segments: self.segments.clone(),
+
+            // first point.
+            x__: self.x__,
+            y__: self.y__,
+            v__: self.v__,
+
+            // previous point.
+            x_: self.x_,
+            y_: self.y_,
+            v_: self.v_,
+            use_line_point: self.use_line_point,
+            use_buffer_stream: self.use_buffer_stream,
+        }
+    }
+}
+
+// Debug ommitting compare_intersection.
+impl<STATE, T> Debug for Rectangle<STATE, T>
+where
+    STATE: Debug,
+    T: CoordFloat,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Rectangle")
+            .field("state", &self.state)
+            .field("buffer_stream", &self.buffer_stream)
+            .field("clean", &self.clean)
+            .field("clip_min", &self.clip_min)
+            .field("clip_max", &self.clip_max)
+            .field("first", &self.first)
+            .field("x0", &self.x0)
+            .field("y0", &self.y0)
+            .field("x1", &self.x1)
+            .field("y1", &self.y1)
+            .field("interpolator", &self.interpolator)
+            // .field("compare_intersection", &self.compare_intersection)
+            .field("polygon", &self.polygon)
+            .field("segments", &self.segments)
+            .field("x__", &self.x__)
+            .field("y__", &self.y__)
+            .field("v__", &self.v__)
+            .field("x_", &self.x_)
+            .field("y_", &self.y_)
+            .field("v_", &self.v_)
+            .field("use_line_point", &self.use_line_point)
+            .field("use_buffer_stream", &self.use_buffer_stream)
+            .finish()
     }
 }
 
@@ -254,12 +355,13 @@ where
 
 impl<T> Connectable for Rectangle<Unconnected, T>
 where
-    T: CoordFloat,
+    T: 'static + CoordFloat,
 {
     /// The resultant postclip node  type.
     type Output<SC> = Rectangle<Connected<SC>, T>;
 
     fn connect<SC>(&self, sink: SC) -> Self::Output<SC> {
+        let interpolator = self.interpolator.clone();
         Rectangle {
             state: Connected { sink },
             buffer_stream: self.buffer_stream.clone(),
@@ -275,6 +377,15 @@ where
 
             polygon: self.polygon.clone(),
             segments: self.segments.clone(),
+
+            interpolator: self.interpolator.clone(),
+            compare_intersection: Box::new(
+                move |a: &Rc<RefCell<Intersection<T>>>,
+                      b: &Rc<RefCell<Intersection<T>>>|
+                      -> Ordering {
+                    interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
+                },
+            ),
 
             // first point.
             x__: self.x__,
@@ -372,25 +483,19 @@ where
                     self.state.sink.polygon_start();
                 }
 
-                let interpolator = Interpolator::new(self.x0, self.y0, self.x1, self.y1);
                 if clean_inside {
                     self.state.sink.line_start();
-                    interpolator.interpolate(None, None, T::one(), &mut self.state.sink);
+                    self.interpolator
+                        .interpolate(None, None, T::one(), &mut self.state.sink);
                     self.state.sink.line_end();
                 }
-
-                let compare_intersection = |a: &Rc<RefCell<Intersection<T>>>,
-                                            b: &Rc<RefCell<Intersection<T>>>|
-                 -> Ordering {
-                    interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
-                };
 
                 if visible {
                     clip_rejoin(
                         &merged_segments,
-                        compare_intersection,
+                        &self.compare_intersection,
                         start_inside,
-                        &interpolator,
+                        &self.interpolator,
                         &mut self.state.sink,
                     );
                 }

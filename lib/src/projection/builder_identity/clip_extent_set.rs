@@ -11,7 +11,7 @@ use super::Builder;
 
 impl<T> ClipExtentSet for Builder<Identity<Unconnected>, T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type T = T;
     type Output = Builder<Rectangle<Unconnected, T>, T>;

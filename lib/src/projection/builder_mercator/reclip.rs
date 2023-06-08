@@ -22,7 +22,7 @@ where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     RU: Clone,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     fn reclip(&mut self) -> &mut Self {
         let k = T::PI() * self.base.scale();

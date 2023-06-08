@@ -18,7 +18,7 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -34,7 +34,7 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type T = T;
 

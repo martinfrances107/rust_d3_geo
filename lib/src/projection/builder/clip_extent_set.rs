@@ -25,7 +25,7 @@ use crate::projection::ClipExtentSet;
 impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Output = BuilderAntimeridianResampleClip<DRAIN, PR, T>;
     type T = T;
@@ -65,7 +65,7 @@ where
 impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Output = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;
@@ -105,7 +105,7 @@ where
 impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type Output = BuilderCircleResampleClip<DRAIN, PR, T>;
     type T = T;
@@ -145,7 +145,7 @@ where
 impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
     type Output = BuilderCircleResampleNoneClip<DRAIN, PR, T>;

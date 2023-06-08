@@ -9,7 +9,7 @@ use super::Builder;
 
 impl<T> ClipExtentAdjust for Builder<Rectangle<Unconnected, T>, T>
 where
-    T: CoordFloat,
+    T: 'static + CoordFloat,
 {
     type T = T;
 

@@ -10,7 +10,7 @@ use super::Builder;
 impl<CLIPU, DRAIN, PR, RU, T> ClipExtentAdjust
     for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, RU, T>
 where
-    T: CoordFloat,
+    T: 'static + CoordFloat,
 {
     type T = T;
 

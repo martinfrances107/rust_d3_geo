@@ -13,7 +13,7 @@ use super::types::BuilderConicAntimeridianResampleNoClip;
 impl<DRAIN, PR, T> ClipExtentSet for BuilderConicAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Output = BuilderConicAntimeridianResampleClip<DRAIN, PR, T>;
     type T = T;

@@ -11,7 +11,7 @@ impl<DRAIN, PR, T> PrecisionBypass
     for BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Output = BuilderMercatorTransverseAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;
@@ -25,7 +25,7 @@ where
 impl<DRAIN, PR, T> PrecisionBypass for BuilderMercatorTransverseCircleResampleClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type Output = BuilderMercatorTransverseCircleResampleNoneClip<DRAIN, PR, T>;
     type T = T;

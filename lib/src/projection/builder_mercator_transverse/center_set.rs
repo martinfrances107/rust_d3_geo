@@ -18,7 +18,7 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
 
@@ -36,7 +36,7 @@ impl<CLIPC, CLIPU, DRAIN, PR, T> CenterSet
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
 

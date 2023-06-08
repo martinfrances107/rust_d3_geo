@@ -61,7 +61,7 @@ impl<DRAIN, PR, T> BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, 
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     /// Wrap a default projector and provides mercator specific overrides.
     ///

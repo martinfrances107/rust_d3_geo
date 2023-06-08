@@ -18,7 +18,7 @@ where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     RU: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
 

@@ -17,7 +17,7 @@ mod translate_set;
 #[derive(Clone, Debug)]
 pub struct Builder<SD, T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     /// The underlying projection.
     pub pr: AlbersUsa<SD, T>,

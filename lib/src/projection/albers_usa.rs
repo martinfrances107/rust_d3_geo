@@ -78,7 +78,7 @@ type StreamPoint<DRAIN, T> = StreamTransformRadians<
 #[derive(Clone, Debug)]
 pub struct AlbersUsa<SD, T>
 where
-    T: CoordFloat + Debug + FloatConst,
+    T: 'static + CoordFloat + Debug + FloatConst,
 {
     k: T,
     t: Coord<T>,
@@ -111,7 +111,7 @@ fn alaska_inset<DRAIN: Clone, T>(
     epsilon: T,
 ) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<T>, T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     let mut alaska = EqualArea::builder();
     alaska
@@ -151,7 +151,7 @@ fn hawaii_inset<DRAIN: Clone, T>(
     epsilon: T,
 ) -> BuilderConicAntimeridianResampleClip<DRAIN, EqualArea<T>, T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     let mut hawaii = EqualArea::builder();
     hawaii

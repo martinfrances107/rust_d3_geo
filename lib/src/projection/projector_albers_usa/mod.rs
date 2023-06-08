@@ -69,7 +69,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
 #[derive(Clone, Debug)]
 pub struct Projector<SD, T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     /// The internal single stage of the path.
     pub pr: AlbersUsa<SD, T>,
