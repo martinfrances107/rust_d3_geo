@@ -34,7 +34,7 @@ pub(crate) type ClipCircleU<RC, T> =
 /// Returns a clip setup for circle clipping.
 pub(crate) fn gen_clip<RC, T>(radius: T) -> ClipCircleU<RC, T>
 where
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     let cr = radius.cos();
     let small_radius = cr > T::zero();

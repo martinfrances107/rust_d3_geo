@@ -115,7 +115,7 @@ where
 impl<DRAIN, PR, T> BuilderTrait for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone + Transform<T = T>,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type PR = PR;
 

@@ -35,7 +35,7 @@ mod path_string {
     fn equirectangular<T>(
     ) -> ProjectorAntimeridianResampleNoneNoClip<PathString<T>, Equirectangular<T>, T>
     where
-        T: CoordFloat + Default + Display + FloatConst,
+        T: 'static + CoordFloat + Default + Display + FloatConst,
     {
         Equirectangular::builder()
             .scale_set(T::from(900f64 / PI).unwrap())

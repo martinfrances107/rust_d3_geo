@@ -51,7 +51,7 @@ where
 
 impl<T> RawBase for EqualEarth<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Builder<DRAIN: Clone> = BuilderAntimeridianResampleNoClip<DRAIN, Self, T>;
 

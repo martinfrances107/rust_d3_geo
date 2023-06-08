@@ -27,7 +27,7 @@ pub struct Stereographic<T> {
 
 impl<T> RawBase for Stereographic<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Builder<DRAIN: Clone> = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 

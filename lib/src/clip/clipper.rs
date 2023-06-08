@@ -16,6 +16,7 @@ use crate::stream::Unconnected;
 use super::compare_intersection::gen_compare;
 use super::line_elem::LineElem;
 use super::rejoin::rejoin;
+use super::rejoin::CompareIntersectionsFn;
 use super::Buffer;
 use super::Bufferable;
 use super::Clean;
@@ -74,7 +75,7 @@ impl<I, LB, LC, LU, RC, T> Connectable for Clipper<I, LU, RC, Unconnected, T>
 where
     I: Clone,
     LU: Clone + StreamConnectable<Output<RC> = LC> + Bufferable<LINE = LB, T = T>,
-    T: CoordFloat,
+    T: 'static + CoordFloat + FloatConst,
 {
     type SC = RC;
     type Output = Clipper<I, LU, RC, Connected<LB, LC, T>, T>;
@@ -101,11 +102,11 @@ where
             clip_line: self.clip_line.clone(),
             interpolator: self.interpolator.clone(),
             start: self.start,
+            compare: gen_compare(),
         }
     }
 }
 
-#[derive(Clone, Debug)]
 /// State associated with the clipping stratergy.
 ///
 /// Two distinct stratergies [Antimeridian](crate::clip::antimeridian) and [Circle](crate::clip::circle).
@@ -123,21 +124,61 @@ where
     pub interpolator: I,
     /// First point checked in rejoin algorithm.
     pub start: Coord<T>,
+    compare: CompareIntersectionsFn<T>,
 }
 
 impl<I, LU, RC, T> Clipper<I, LU, RC, Unconnected, T>
 where
-    T: CoordFloat,
+    T: 'static + CoordFloat + FloatConst,
 {
     /// Takes a line and cuts into visible segments. Returns values used for polygon.
-    pub const fn new(interpolator: I, clip_line: LU, start: Coord<T>) -> Self {
+    pub fn new(interpolator: I, clip_line: LU, start: Coord<T>) -> Self {
         Self {
             p_rc: PhantomData::<RC>,
             state: Unconnected,
             clip_line,
             interpolator,
             start,
+            compare: gen_compare(),
         }
+    }
+}
+
+impl<I, LU, RC, STATE, T> Clone for Clipper<I, LU, RC, STATE, T>
+where
+    LU: Clone,
+    I: Clone,
+    STATE: Clone,
+    T: 'static + CoordFloat + FloatConst,
+{
+    /// Takes a line and cuts into visible segments. Returns values used for polygon.
+    fn clone(&self) -> Self {
+        Self {
+            p_rc: PhantomData::<RC>,
+            state: self.state.clone(),
+            clip_line: self.clip_line.clone(),
+            interpolator: self.interpolator.clone(),
+            start: self.start,
+            compare: gen_compare(),
+        }
+    }
+}
+
+// Had to manually implement because of compare is a closure.
+impl<I, LU, RC, STATE, T> Debug for Clipper<I, LU, RC, STATE, T>
+where
+    STATE: Debug,
+    LU: Debug,
+    I: Debug,
+    T: CoordFloat,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Rectangle")
+            .field("state", &self.state)
+            .field("clip_line", &self.clip_line)
+            .field("interpolate", &self.interpolator)
+            .field("start", &self.start)
+            .finish()
     }
 }
 
@@ -310,7 +351,7 @@ where
             }
             rejoin(
                 &segments_inner,
-                gen_compare(),
+                &self.compare,
                 start_inside,
                 &self.interpolator,
                 self.state.line_node.sink(),

@@ -37,7 +37,7 @@ mod index {
     #[inline]
     fn equirectangular<
         EP: Clone + Stream<EP = EP, T = T> + Debug + Default,
-        T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+        T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
     >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<T>, T> {
         let mut e = Equirectangular::builder();
         e.scale_set(T::from(900f64 / PI).unwrap());

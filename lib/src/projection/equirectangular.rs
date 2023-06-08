@@ -22,7 +22,7 @@ pub struct Equirectangular<T> {
 
 impl<T> RawBase for Equirectangular<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Builder<DRAIN: Clone> = BuilderAntimeridianResampleNoClip<DRAIN, Self, T>;
 

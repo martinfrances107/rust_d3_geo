@@ -31,7 +31,7 @@ where
 
 impl<T> RawBase for AzimuthalEqualArea<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Builder<DRAIN: Clone> = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 

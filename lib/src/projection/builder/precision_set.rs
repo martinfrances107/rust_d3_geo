@@ -34,7 +34,7 @@ impl<DRAIN, PR, PCNC, PCNU, T> PrecisionSet
 where
     PCNU: Clone,
     PR: Clone + Transform<T = T>,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Output = Builder<
         ClipAntimeridianU<Resample<PR, ConnectedResample<PCNC, T>, T>, T>,
@@ -102,7 +102,7 @@ impl<DRAIN, PR, PCNU, T> PrecisionSet
 where
     PCNU: Clone,
     PR: Clone + Transform<T = T>,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type Output = Builder<
         ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,

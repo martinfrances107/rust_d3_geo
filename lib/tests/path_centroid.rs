@@ -37,7 +37,7 @@ mod path_centroid {
     fn equirectangular<T>(
     ) -> ProjectorAntimeridianResampleNoneNoClip<Centroid<T>, Equirectangular<T>, T>
     where
-        T: AddAssign<T> + CoordFloat + Default + FloatConst,
+        T: 'static + AddAssign<T> + CoordFloat + Default + FloatConst,
     {
         ProjectionBuilderCommon::new(Equirectangular::default())
             .scale_set(T::from(900f64 / PI).unwrap())

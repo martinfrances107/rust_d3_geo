@@ -27,7 +27,7 @@ mod path_area {
     #[inline]
     fn projector<T>() -> ProjectorAntimeridianResampleNoneNoClip<Area<T>, Equirectangular<T>, T>
     where
-        T: CoordFloat + Default + Display + FloatConst,
+        T: 'static + CoordFloat + Default + Display + FloatConst,
     {
         let mut ba = Equirectangular::<T>::builder();
         ba.scale_set(T::from(900f64 / PI).unwrap());

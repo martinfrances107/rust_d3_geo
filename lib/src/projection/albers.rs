@@ -23,7 +23,7 @@ type Output<DRAIN, T> = Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualAr
 pub fn albers<DRAIN, T>() -> Output<DRAIN, T>
 where
     DRAIN: Clone,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     let mut b = EqualArea::<T>::builder();
     b.parallels_set(T::from(29.5_f64).unwrap(), T::from(45.5_f64).unwrap())

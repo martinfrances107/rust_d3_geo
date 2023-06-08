@@ -24,7 +24,7 @@ pub struct Gnomic<T> {
 
 impl<T> RawBase for Gnomic<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Builder<DRAIN: Clone> = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 

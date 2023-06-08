@@ -47,7 +47,7 @@ pub struct Orthographic<T> {
 
 impl<T> RawBase for Orthographic<T>
 where
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
 {
     type Builder<DRAIN: Clone> = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 

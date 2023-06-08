@@ -10,7 +10,7 @@ use super::Builder;
 impl<DRAIN, PCNU, PR, RC, RU, T> ClipAngleAdjust
     for Builder<ClipCircleU<RC, T>, DRAIN, PCNU, PR, RU, T>
 where
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
 

@@ -34,7 +34,7 @@ pub(crate) type ClipAntimeridianU<RC, T> =
 #[must_use]
 pub(crate) fn gen_clip<RC, T>() -> ClipAntimeridianU<RC, T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     Clipper::new(
         Interpolate::default(),

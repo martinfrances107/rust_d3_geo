@@ -28,7 +28,7 @@ pub struct AzimuthalEquiDistant<T> {
 
 impl<T> RawBase for AzimuthalEquiDistant<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Builder<DRAIN: Clone> = BuilderCircleResampleNoClip<DRAIN, Self, T>;
 

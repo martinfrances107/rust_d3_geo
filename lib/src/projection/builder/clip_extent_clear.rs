@@ -24,7 +24,7 @@ use super::types::BuilderCircleResampleNoneNoClip;
 impl<DRAIN, PR, T> ClipExtentClear for BuilderAntimeridianResampleClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type T = T;
     type Output = BuilderAntimeridianResampleNoClip<DRAIN, PR, T>;
@@ -64,7 +64,7 @@ where
 impl<DRAIN, PR, T> ClipExtentClear for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type T = T;
     type Output = BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>;
@@ -104,7 +104,7 @@ where
 impl<DRAIN, PR, T> ClipExtentClear for BuilderCircleResampleClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type T = T;
     type Output = BuilderCircleResampleNoClip<DRAIN, PR, T>;
@@ -144,7 +144,7 @@ where
 impl<DRAIN, PR, T> ClipExtentClear for BuilderCircleResampleNoneClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type T = T;
     type Output = BuilderCircleResampleNoneNoClip<DRAIN, PR, T>;

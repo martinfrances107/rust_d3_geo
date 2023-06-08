@@ -19,7 +19,7 @@ where
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
     PR: Clone + Transform<T = T>,
-    T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
+    T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
     type Output = Builder<ClipCircleU<RC, T>, DRAIN, PCNU, PR, RU, T>;
     /// f32 or f64.

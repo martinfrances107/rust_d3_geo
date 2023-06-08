@@ -60,7 +60,7 @@ where
 
 impl<T> PRConic for EqualArea<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     /// Inputs select either a conic or a cylindrical projection.
     ///
@@ -84,7 +84,7 @@ where
 
 impl<T> RawBase for EqualArea<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     type Builder<DRAIN: Clone> = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, T>;
 

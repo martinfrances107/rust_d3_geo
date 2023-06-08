@@ -13,7 +13,7 @@ use super::Builder;
 impl<DRAIN, PCNU, PR, RC, RU, T> ClipAngleReset
     for Builder<ClipCircleU<RC, T>, DRAIN, PCNU, PR, RU, T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + Default + FloatConst,
 {
     /// The resultant builder type.
     type Output = Builder<ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RU, T>;

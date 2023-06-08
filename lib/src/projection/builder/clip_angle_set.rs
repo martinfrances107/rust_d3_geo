@@ -16,7 +16,7 @@ where
     PCNU: Clone,
     PR: Clone,
     RU: Clone,
-    T: CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type Output = Builder<ClipCircleU<RC, T>, DRAIN, PCNU, PR, RU, T>;
     type T = T;
