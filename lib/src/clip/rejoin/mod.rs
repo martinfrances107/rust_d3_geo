@@ -8,6 +8,7 @@ use geo::CoordFloat;
 
 use crate::abs_diff_eq;
 use crate::clip::intersection::Intersection;
+use crate::clip::intersection::LinkItem;
 use crate::clip::rejoin::link::link;
 use crate::clip::Interpolator;
 use crate::math::EPSILON;
@@ -45,8 +46,8 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
     T: CoordFloat,
 {
     let mut start_inside = start_inside;
-    let mut subject = Vec::<Rc<RefCell<Intersection<T>>>>::new();
-    let mut clip = Vec::<Rc<RefCell<Intersection<T>>>>::new();
+    let mut subject = vec![];
+    let mut clip = vec![];
 
     let two_epsilon = T::from(2.0 * EPSILON).unwrap();
     for segment in segments.iter() {
@@ -131,7 +132,7 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
         // Find first unvisited intersection.
         while current.borrow().v {
             current = current.clone().borrow().n.clone().unwrap();
-            // The javascript as this point does === on two objects.
+            // The javascript at this point does === on two objects.
             // This is the same a comparison of raw points.
             if current.as_ptr() == (*start).as_ptr() {
                 return;
@@ -142,6 +143,8 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
 
         stream.line_start();
 
+        // For the subject polygon and then the clip polygon
+        // walk the perimeter  processing nodes.
         loop {
             current.borrow().o.clone().unwrap().borrow_mut().v = true;
             current.borrow_mut().v = true;
@@ -160,6 +163,7 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
                         stream,
                     );
                 }
+                // Advance to next.
                 current = current.clone().borrow().n.clone().unwrap();
             } else {
                 if is_subject {
@@ -182,6 +186,7 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
                         stream,
                     );
                 }
+                // Advance to previous
                 current = current.clone().borrow().p.clone().unwrap();
             }
 

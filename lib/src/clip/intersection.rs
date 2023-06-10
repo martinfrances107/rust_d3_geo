@@ -14,7 +14,13 @@ where
     pub z: Option<&'a Vec<LineElem<T>>>,
     /// Another intersection.
     pub o: Option<Rc<RefCell<Intersection<'a, T>>>>,
-    /// e - is any entry?
+
+    /// Clip and subject polygons
+    /// As we walk a "Clip"  polygon and intersect with "Subject" polygon are we exiting or enterting?
+    ///
+    /// An equivalent question could be asked about walking "Subject" polygons.
+    ///
+    /// e - is it a  EXIT / (NOT EXIT)
     /// entry = true  means moving in a forward direction ( next )
     /// entry = false implies exit go back ( previous )
     pub e: bool,
