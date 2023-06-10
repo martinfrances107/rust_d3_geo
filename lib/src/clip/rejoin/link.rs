@@ -16,9 +16,9 @@ where
     if array.is_empty() {
         return;
     };
-    let n = array.len();
+
     let mut a = array[0].clone();
-    for elem in array.iter().take(n).skip(1) {
+    for elem in array.iter().skip(1) {
         let b = elem.clone();
         (*a).borrow_mut().n = Some(b.clone());
         (*b).borrow_mut().p = Some(a.clone());
