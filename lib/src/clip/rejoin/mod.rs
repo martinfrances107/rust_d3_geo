@@ -50,10 +50,10 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
 
     let two_epsilon = T::from(2.0 * EPSILON).unwrap();
     for segment in segments.iter() {
-        let (n, has_overflown) = segment.len().overflowing_sub(1_usize);
-        if n == 0 || has_overflown {
+        if segment.len() < 2 {
             return;
-        };
+        }
+        let n = segment.len() - 1;
 
         let mut p0: LineElem<T> = segment[0];
         let mut p1: LineElem<T> = segment[n];
