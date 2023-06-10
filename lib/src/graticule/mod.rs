@@ -32,7 +32,7 @@ where
     Box::new(move |y| x.iter().map(|x| Coord { x: *x, y }).collect())
 }
 
-/// Helper function returns the default graticule.
+/// Helper function returns the default graticule builder
 ///
 /// # Panics
 /// unwrap() is used here but a panic will never happen as -180,-90,-80,+80,+90,+180 will always be converted into T.

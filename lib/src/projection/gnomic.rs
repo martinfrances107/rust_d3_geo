@@ -16,7 +16,7 @@ use super::BuilderTrait;
 use super::ClipAngleSet;
 use super::RawBase;
 
-/// Projection definition.
+/// Projection definition. ``Gnomic::builder()`` returns a builder.
 #[derive(Clone, Default, Debug)]
 pub struct Gnomic<T> {
     p_t: PhantomData<T>,

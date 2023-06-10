@@ -15,7 +15,7 @@ use super::BuilderTrait;
 use super::ClipAngleSet;
 use super::RawBase;
 
-/// Projection definition.
+/// Projection definition. ``Stereographic::builder()`` returns a builder.
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Stereographic<T> {
     // Why is the Phantom Data is required here...

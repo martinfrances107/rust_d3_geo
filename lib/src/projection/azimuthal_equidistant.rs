@@ -16,7 +16,7 @@ use super::azimuthal::azimuthal_raw;
 use super::BuilderTrait;
 use super::ClipAngleSet;
 
-/// Projection definition.
+/// Projection definition. ``AzimuthalEquiDistant::builder()`` returns a builder.
 #[derive(Copy, Clone, Debug, Default)]
 pub struct AzimuthalEquiDistant<T> {
     // Why the Phantom Data is required here...

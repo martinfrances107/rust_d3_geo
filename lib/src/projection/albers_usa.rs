@@ -74,7 +74,7 @@ type StreamPoint<DRAIN, T> = StreamTransformRadians<
     >,
 >;
 
-/// Projection definition.
+/// Projection definition. ``AlbersUsa::builder()`` returns a builder.
 #[derive(Clone, Debug)]
 pub struct AlbersUsa<SD, T>
 where

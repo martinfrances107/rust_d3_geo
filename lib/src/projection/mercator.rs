@@ -14,7 +14,7 @@ use super::builder_mercator::Builder as MercatorBuilder;
 use super::RawBase;
 use super::TransformExtent;
 
-/// Projection definition.
+/// Projection definition. ``Mercator::builder()`` returns a builder.
 #[derive(Clone, Debug, Default)]
 pub struct Mercator {}
 

@@ -13,7 +13,7 @@ use super::builder::Builder;
 use super::BuilderTrait;
 use super::RawBase;
 
-/// Projection definition.
+/// Projection definition. ``EqualEarth::builder()`` returns a builder.
 #[allow(non_snake_case)]
 #[derive(Clone, Debug)]
 pub struct EqualEarth<T> {

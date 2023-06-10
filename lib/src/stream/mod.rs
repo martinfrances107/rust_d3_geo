@@ -44,19 +44,19 @@ pub trait Connectable {
     fn connect<SC>(&self, sink: SC) -> Self::Output<SC>;
 }
 
-/// Objects that can be passing to a stream path.
+/// The input stream is applied to Self - a stream object.
 pub trait Streamable {
     /// f32 or f64.
     type T: CoordFloat;
 
-    /// Injects the object to a stream.
+    /// Injects the object to a path/stream.
     fn to_stream<EP, SINK>(&self, stream: &mut SINK)
     where
         SINK: Stream<EP = EP, T = Self::T>;
 }
 
-/// Useful when the stream path is not used and only
-/// the transform portion of a projection is needed.
+/// Apply this endpoint when the stream path is not used and only
+/// the point transform function of a projection is needed.
 ///
 /// ```
 /// use geo_types::Coord;

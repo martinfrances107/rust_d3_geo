@@ -17,7 +17,6 @@
 //!    such as [Area](path::area::Area), [Centroids](path::centroid::Centroid),
 //!     and [Bounds](path::bounds::Bounds) on polygons and lines.
 //!
-//! TODO add note about stream paths and endpoints.
 //!
 //! | Available Projections |   |   |
 //! | --------------------- | - | - |
@@ -187,7 +186,7 @@ pub mod circle;
 
 /// Projectors can clip, remove point computed to be outside the projection.
 pub(crate) mod clip;
-/// Combines two transforms into one.
+/// Combines two transforms into one. For example a rotation followed by a scale.
 mod compose;
 /// Streamable Data obejcts.
 pub mod data_object;
@@ -200,10 +199,10 @@ pub mod identity;
 /// Testing and debug helpers.
 #[cfg(not(tarpaulin_include))]
 pub mod in_delta;
-/// Records the last point `AlbersUsa`
+/// Records the last point. Useful when displaying a side projection within a main
+/// projection area. See [`AlbersUsa`](projection::albers_usa)
 pub mod last_point;
-
-/// Used to calculate of object lengths.
+/// Endpoint Used to calculate the lengths of polygons and lines etc.
 pub mod length;
 /// Mathematical constants.
 pub mod math;
@@ -222,7 +221,7 @@ pub mod projection;
 pub mod range;
 /// Rotation transforms.
 pub mod rot;
-/// Stream related helper functions.
+/// A path is a series of connected transform nodes, over which data is **STREAM**ed.
 pub mod stream;
 
 #[cfg(not(tarpaulin_include))]

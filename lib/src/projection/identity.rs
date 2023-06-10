@@ -11,7 +11,7 @@ use super::builder_identity::types::BuilderIdentityAntimeridianResampleNoClip;
 use super::builder_identity::Builder;
 use super::RawBase;
 
-/// Projection definition.
+/// Projection definition. ``Identity<T>::builder()`` returns a builder.
 #[derive(Clone, Default, Debug)]
 pub struct Identity<T> {
     p_t: PhantomData<T>,

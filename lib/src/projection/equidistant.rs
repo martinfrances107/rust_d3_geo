@@ -14,7 +14,7 @@ use super::CenterSet;
 use super::RawBase;
 use super::ScaleSet;
 
-/// Projection definition.
+/// Projection definition. ``Equidistant::builder()`` returns a builder.
 #[derive(Clone, Debug, Default)]
 pub enum Equidistant {
     /// Projection depends of values set by builder_with_phi0_phi1.

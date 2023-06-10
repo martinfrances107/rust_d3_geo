@@ -15,7 +15,7 @@ use super::BuilderTrait;
 use super::RawBase;
 use super::ScaleSet;
 
-/// Projection definition.
+/// Projection definition. ``Conformal::default()`` returns a builder.
 #[derive(Clone, Debug, Default)]
 pub enum Conformal {
     /// Projection depends of values set by builder_with_phi0_phi1.

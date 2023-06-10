@@ -39,7 +39,7 @@ where
 
     Coord { x: ret_x, y: ret_y }
 }
-/// Projection definition.
+/// Projection definition. ``Orthographic::builder()`` returns a builder.
 #[derive(Clone, Default, Debug)]
 pub struct Orthographic<T> {
     p_t: PhantomData<T>,

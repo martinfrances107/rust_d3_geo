@@ -13,7 +13,7 @@ use super::builder_mercator_transverse::Builder as MercatorTraverseBuilder;
 use super::RawBase;
 use super::TransformExtent;
 
-/// Projection definition.
+/// Projection definition. ``MercatorTransverse::builder()`` returns a builder.
 #[derive(Clone, Debug, Default)]
 pub struct MercatorTransverse {}
 

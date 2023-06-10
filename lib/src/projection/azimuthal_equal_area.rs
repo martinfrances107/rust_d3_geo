@@ -16,7 +16,7 @@ use super::azimuthal::azimuthal_raw;
 use super::BuilderTrait;
 use super::ClipAngleSet;
 
-/// Projection definition.
+/// Projection definition. ``AzimuthalEqualArea::builder()`` returns a builder.
 #[derive(Copy, Clone, Debug, Default)]
 pub struct AzimuthalEqualArea<T>
 where
