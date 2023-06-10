@@ -67,15 +67,13 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
     let pb = PathBuilder::albers_pathstring();
 
     let mut path = pb.build(albers_usa);
-    let mut i = 0;
 
     let mut paths: Vec<String> = vec![];
     if let Geometry::GeometryCollection(GeometryCollection(g_vec)) = &counties {
         for g in g_vec {
             match &g {
                 Geometry::MultiPolygon(mp) => {
-                    i += 1;
-                    for (j, p) in mp.0.iter().enumerate() {
+                    for (i, (j, p)) in mp.0.iter().enumerate().enumerate() {
                         // TODO: this object() call is identical to the 3 lines below
                         // Can I restore the object call?
                         let mut stream_in = path.projector.stream(&path.context);
@@ -90,7 +88,6 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
                                 ));
                             }
                         }
-                        i += 1
                     }
                 }
                 Geometry::Polygon(p) => {
@@ -100,11 +97,10 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
 
                     for (k, s) in stream_in.endpoint().result().iter().enumerate() {
                         paths.push(format!(
-                            "<path d = \"{s}\" class=\"id-{i}-{k}\" style=\"{}\"></path>",
-                            fill[i % 7]
+                            "<path d = \"{s}\" class=\"id-{k}\" style=\"{}\"></path>",
+                            fill[0]
                         ));
                     }
-                    i += 1
                 }
                 _ => {}
             }

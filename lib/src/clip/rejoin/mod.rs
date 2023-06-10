@@ -55,8 +55,8 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
         }
         let n = segment.len() - 1;
 
-        let mut p0: LineElem<T> = segment[0];
-        let mut p1: LineElem<T> = segment[n];
+        let mut p0 = segment[0];
+        let mut p1 = segment[n];
 
         if abs_diff_eq(&p0.p, &p1.p) {
             if p0.m.is_none() && p1.m.is_none() {
@@ -143,7 +143,7 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
         stream.line_start();
 
         // For the subject polygon and then the clip polygon
-        // walk the perimeter  processing nodes.
+        // walk the perimeter processing nodes.
         loop {
             current.borrow().o.clone().unwrap().borrow_mut().v = true;
             current.borrow_mut().v = true;
