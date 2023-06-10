@@ -11,7 +11,7 @@ Similarly the subject polygon leads to sections of subject lines segments inters
 
 S1->I1->S2->I2->S3->I3->S1
 
-The algorithm walk over these ring struture, backwards and forwards or over the intersection links.
+The algorithm walks over these ring struture, turning backwards and forwards or over the intersection links.
 
 
 ```mermaid
@@ -34,7 +34,6 @@ The algorithm walk over these ring struture, backwards and forwards or over the 
       I3-->C1;
       C1-->I3;
 
-
       S1-->I1;
       I1-->S1;
 
@@ -53,8 +52,6 @@ The algorithm walk over these ring struture, backwards and forwards or over the 
       I3-->S1;
       S1-->I3;
 ```
-
-
 
 
 The original paper from which the clipping algorithm was developed is
