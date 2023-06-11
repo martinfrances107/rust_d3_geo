@@ -21,7 +21,7 @@ keywords = ["graphics", "d3-geo"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo"
-version = "1.0.1"
+version = "1.0.2"
 # Version 1.65 is required as this package makes use of "Generic Associated Types".
 rust-version = "1.65"
 
