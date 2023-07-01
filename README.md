@@ -33,7 +33,7 @@ For example the examples/globe applications operate on a highly detailed ( 1:50M
 
 ## Examples
 
-These Examples are provided to help developers convert their existing javascript to rust. They can be found in the github reposository associated with this crate.
+These Examples are provided to help developers convert their existing javascript to rust. They can be found in the github repository associated with this crate.
 
 <table>
 <thead>
@@ -52,7 +52,7 @@ This is a port into rust of this d3-geo example
 
 This globe is rendered to a HTML CANVAS element.
 
-For perfomance reasons this example is best viewed by running "cargo build" and then "cargo serve" which compiles the rust code using the --release flag.
+For performance reasons this example is best viewed by running "cargo build" and then "cargo serve" which compiles the rust code using the --release flag.
 
 (Scale 1:50M)
 
@@ -70,7 +70,7 @@ For perfomance reasons this example is best viewed by running "cargo build" and 
 
 The globe is rendered as a SVG image.
 
- SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as indivdual SVG PATH elements.
+ SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as individual SVG PATH elements.
 
   It also includes code samples that generates SVG graticules.
 
@@ -88,7 +88,7 @@ The globe is rendered as a SVG image.
 This globe is rendered to a HTML CANVAS element
 
 It deliberately mixes typescript methods with rust.
-The typescript is responsible for handling the mouse events and manipulating the quaternion used to calculate the appropiate change in rotation. In a typescript render loop calls to a rust function render the globe.
+The typescript is responsible for handling the mouse events and manipulating the quaternion used to calculate the appropriate change in rotation. In a typescript render loop calls to a rust function render the globe.
 <br/>
 <br/>
   This example is currently undergoing rapid development.
@@ -106,7 +106,7 @@ The typescript is responsible for handling the mouse events and manipulating the
 <td>
 <strong>examples/projections</strong> <br/><br/>
 
-All availble projections are rendered to a HTML CANVAS element
+All available projections are rendered to a HTML CANVAS element
 
 As a confidence building exercise, this demo
 shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>.
@@ -125,7 +125,7 @@ shows a side by side comparison of the all the projections rendered by in both  
 This show all the counties in the USA.
 
 AlbersUSA is unlike the other projections. Alaska and Hawaii are rendered as insets.
-As can be seen in the code a Multidrain must be used to gather the three projections.
+As can be seen in the code a Multi-drain must be used to gather the three projections.
 
 (Scale of 1:10M)
 
@@ -140,7 +140,7 @@ As can be seen in the code a Multidrain must be used to gather the three project
 SVG example
 
 
-Sample code in both RUST and javascript that renders a complex multipolygon. ( Orthographic and Sterographic )
+Sample code in both RUST and javascript that renders a complex multi-polygon. ( Orthographic and Stereographic )
 
 </td>
 <td>
@@ -155,7 +155,7 @@ Sample code in both RUST and javascript that renders a complex multipolygon. ( O
 
 ## An outline of the common steps found in all the examples.
 
-1) For a given projeciton, use its default projection builder , make changes to the scale, translation .. etc, then call build() to construct a projector.
+1) For a given projection, use its default projection builder , make changes to the scale, translation .. etc, then call build() to construct a projector.
 
     ```rust
     let projector = Stereographic::<f64>::builder()
@@ -177,15 +177,15 @@ Sample code in both RUST and javascript that renders a complex multipolygon. ( O
 
     Here is an overview of the key nodes.
 
-     **Clipping**: Is the process of removing hidden geometry. When displaing a globe for example africa and austraila will neve been visible in the same view. Two stratergeis are used "Antimeridian" and "ClipAngle" [ See clip_angle_set() and clip_angle_reset() ]
+     **Clipping**: Is the process of removing hidden geometry. When displaying a globe for example africa and australia will never been visible in the same view. Two strategies are used "Antimeridian" and "ClipAngle" [ See clip_angle_set() and clip_angle_reset() ]
 
-     **Resampling**: Dense geometry can be reduced by declaring a separation distance under which points, used to describe polyogns and lines, are considered indistinguiable [ See precision_set() ]
+     **Resampling**: Dense geometry can be reduced by declaring a separation distance under which points, used to describe polygons and lines, are considered indistinguishable [ See precision_set() ]
 
-     **Bounding**: A projection space box can be set, and only geomtry within this extent will be displayed. Polygons partially inside the box are restructured to conform to the edges of the box. [ See clip_extent_set() clip_extent_clear() ]
+     **Bounding**: A projection space box can be set, and only geometry within this extent will be displayed. Polygons partially inside the box are restructured to conform to the edges of the box. [ See clip_extent_set() clip_extent_clear() ]
 
-      **Endpoints** are special path nodes which hold the result of a calculation. A variey of endpoint are available Area, Centroid, Length which can be use to compute properties about polygons or lines. These examples only show endpoints that render to a HTML canvas element or a SVG path element.
+      **Endpoints** are special path nodes which hold the result of a calculation. A variety of endpoint are available Area, Centroid, Length which can be use to compute properties about polygons or lines. These examples only show endpoints that render to a HTML canvas element or a SVG path element.
 
-    When rendering to a HTML canvas the endpoint holds Path2D "rendering conext"
+    When rendering to a HTML canvas the endpoint holds Path2D "rendering context"
 
       ```rust
        //  Construct a PathBuilder linked to Path2d
@@ -196,7 +196,7 @@ Sample code in both RUST and javascript that renders a complex multipolygon. ( O
        let path = pb.build();
       ```
 
-    When generating a SVG image, the endpint holds a string value from which a PATH element can be constructed.
+    When generating a SVG image, the endpoint holds a string value from which a PATH element can be constructed.
 
       ```rust
         let pb = PathBuilder::pathstring();
@@ -223,7 +223,7 @@ Requirements:
 
 <br/>
 
-To view an example application either create a devleopment build, or construct a static-web site as follows
+To view an example application either create a development build, or construct a static-web site as follows
 
 ## Start And Run A Development Build
 
@@ -238,7 +238,7 @@ The last command "npm run start"  will automatically open your default browser a
 
 ### Performance: Building A Static Site
 
-Much better performance can be acheived by bulding a static web site and viewing that directly. At the expense of longer build times the RUST protions of the code a build using the "--release" tags
+Much better performance can be achieved by building a static web site and viewing that directly. At the expense of longer build times the RUST portions of the code a build using the "--release" tags
 
 ```console
   git clone https://github.com/martinfrances107/rust_d3_geo.git
@@ -252,8 +252,8 @@ Much better performance can be acheived by bulding a static web site and viewing
 
 ## Benchmarking
 
-The github respoitory associated with crate has two "profile targets" and two "benches"
-which can be used to to spot bottlnecks in the code.
+The github repository associated with crate has two "profile targets" and two "benches"
+which can be used to to spot bottlenecks in the code.
 
 The benches are [Criterion.rs](https://crates.io/crates/criterion) based micro benchmarks.
 
@@ -266,7 +266,7 @@ See also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_v
 
 A profile_target is binary that outputs a HTML page containing a SVG image showing the globe with graticule markings.
 
-A flamegraph can be created by entering a particular profile targets directory and running :-
+A flame-graph can be created by entering a particular profile targets directory and running :-
 
 ```bash
 cd profile_target/albers_usa
@@ -277,7 +277,7 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
 
 ## Coding Standard
 
-* Idomatic RUST, as defined by cargo clippy where possible.
+* Idiomatic RUST, as defined by cargo clippy where possible.
 * No booleans as arguments to functions/methods, use two state enums instead.
 
    See "Reflect" as an example.
@@ -333,7 +333,7 @@ Version 1.0 is stable.
 
 * Increment the major number when a breaking change occurs.
 * Increment the minor number when a new feature is added, @deprecated notes added to outdated functions,
-* Increment the patch number for tighly focused security fixes.
+* Increment the patch number for tightly focused security fixes.
 
 Future Work.
 
@@ -342,7 +342,7 @@ Future Work.
 * I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
 
 * The Hashmaps - appear slow.
-  Maybe I can get performace improvements by replacing them with B-tree collections?
+  Maybe I can get performance improvements by replacing them with B-tree collections?
 
 
 ### Architecture discussion
@@ -351,9 +351,9 @@ There is an aspect of the design that needs review. It related to the best way t
 
 The clipping algorithm in clip/rejoin/mod.rs needs to be refactored.
 see  [The intersection Problem.](/intersection_problem.md)
-Test coverage in that area is high so the algortihms is working but the data structures make extensive use of vectors ( heap objects ) containng references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>>```   which is not performant.
+Test coverage in that area is high so the algorithms is working but the data structures make extensive use of vectors ( heap objects ) containing references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>>```   which is not performant.
 
- A full discusion can be found [here](/intersection_problem.md)
+ A full discussion can be found [here](/intersection_problem.md)
 
 ### Unimplemented sections of the library
 
