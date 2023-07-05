@@ -17,25 +17,6 @@ use d3_geo_rs::projection::Projector;
 use d3_geo_rs::stream::Stream;
 use d3_geo_rs::stream::Streamable;
 
-#[macro_use]
-extern crate lazy_static;
-
-#[cfg(not(tarpaulin_include))]
-lazy_static! {
-    static ref SCHEME_CATEGORY10: [String; 10] = [
-        String::from("#1f77b4"),
-        String::from("#ff7f0e"),
-        String::from("#2ca02c"),
-        String::from("#d62728"),
-        String::from("#9467bd"),
-        String::from("#8c564b"),
-        String::from("#e377c2"),
-        String::from("#7f7f7f"),
-        String::from("#bcbd22"),
-        String::from("#17becf"),
-    ];
-}
-
 ///  Helper function to extract world geometry from file.
 fn world() -> Topology {
     let file =
@@ -68,6 +49,7 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
 
     let mut path = pb.build(albers_usa);
 
+    let mut c_index = 0;
     let mut paths: Vec<String> = vec![];
     if let Geometry::GeometryCollection(GeometryCollection(g_vec)) = &counties {
         for g in g_vec {
@@ -84,7 +66,7 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
                             if !s.is_empty() {
                                 paths.push(format!(
                                     "<path d = \"{s}\" class=\"id-{i}-{j}-{k}\" style=\"{}\"></path>",
-                                    fill[i % 7]
+                                    fill[c_index % 7]
                                 ));
                             }
                         }
@@ -98,12 +80,13 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
                     for (k, s) in stream_in.endpoint().result().iter().enumerate() {
                         paths.push(format!(
                             "<path d = \"{s}\" class=\"id-{k}\" style=\"{}\"></path>",
-                            fill[0]
+                            fill[c_index % 7]
                         ));
                     }
                 }
                 _ => {}
             }
+            c_index = c_index + 1;
         }
     }
 
