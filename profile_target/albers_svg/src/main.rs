@@ -55,17 +55,17 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
         for g in g_vec {
             match &g {
                 Geometry::MultiPolygon(mp) => {
-                    for (i, (j, p)) in mp.0.iter().enumerate().enumerate() {
+                    for p in mp.0.iter() {
                         // TODO: this object() call is identical to the 3 lines below
                         // Can I restore the object call?
                         let mut stream_in = path.projector.stream(&path.context);
                         let object = Geometry::Polygon(p.clone());
                         object.to_stream(&mut stream_in);
 
-                        for (k, s) in stream_in.endpoint().result().iter().enumerate() {
+                        for s in stream_in.endpoint().result() {
                             if !s.is_empty() {
                                 paths.push(format!(
-                                    "<path d = \"{s}\" class=\"id-{i}-{j}-{k}\" style=\"{}\"></path>",
+                                    "<path d = \"{s}\" style=\"{}\"></path>",
                                     fill[c_index % 7]
                                 ));
                             }
@@ -77,9 +77,9 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
                     let object = Geometry::Polygon(p.clone());
                     object.to_stream(&mut stream_in);
 
-                    for (k, s) in stream_in.endpoint().result().iter().enumerate() {
+                    for s in stream_in.endpoint().result().iter() {
                         paths.push(format!(
-                            "<path d = \"{s}\" class=\"id-{k}\" style=\"{}\"></path>",
+                            "<path d = \"{s}\" style=\"{}\"></path>",
                             fill[c_index % 7]
                         ));
                     }
