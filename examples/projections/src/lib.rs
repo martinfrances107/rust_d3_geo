@@ -50,7 +50,7 @@ use gnomic::draw_gnomic;
 use mercator::draw_mercator;
 use mercator_transverse::draw_mercator_transverse;
 use orthographic::draw_orthographic;
-use stereographic::draw_sterographic;
+use stereographic::draw_stereographic;
 
 #[cfg(not(tarpaulin_include))]
 fn document() -> Result<Document, JsValue> {
@@ -101,7 +101,7 @@ pub async fn start() -> Result<(), JsValue> {
         draw_mercator(&land),
         draw_mercator_transverse(&land),
         draw_orthographic(&land),
-        draw_sterographic(&land),
+        draw_stereographic(&land),
     )?;
 
     Ok(())

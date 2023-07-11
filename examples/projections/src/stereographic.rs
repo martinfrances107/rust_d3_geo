@@ -19,7 +19,7 @@ use d3_geo_rs::projection::RawBase;
 use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
 
-pub async fn draw_sterographic(land: &Geometry<f64>) -> Result<(), JsValue> {
+pub async fn draw_stereographic(land: &Geometry<f64>) -> Result<(), JsValue> {
     let document = document()?;
     // Grab canvas.
     let canvas = document

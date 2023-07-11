@@ -18,7 +18,7 @@ use super::document;
 use super::path_node;
 use super::Result;
 
-pub fn draw_sterographic() -> Result<()> {
+pub fn draw_stereographic() -> Result<()> {
     let svg: SvgsvgElement = document()?
         .get_element_by_id("ring_stereographic_rust")
         .unwrap()

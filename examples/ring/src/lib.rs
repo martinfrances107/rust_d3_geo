@@ -14,7 +14,7 @@ use web_sys::Document;
 use web_sys::Element;
 
 use orthographic::draw_orthographic;
-use stereographic::draw_sterographic;
+use stereographic::draw_stereographic;
 
 mod orthographic;
 mod stereographic;
@@ -30,7 +30,7 @@ fn document() -> Result<Document> {
 #[wasm_bindgen]
 pub fn run() -> Result<()> {
     draw_orthographic()?;
-    draw_sterographic()?;
+    draw_stereographic()?;
     Ok(())
 }
 
