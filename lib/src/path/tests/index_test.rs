@@ -25,7 +25,7 @@ mod index {
     use crate::path_test_context::Path2d;
     use crate::projection::equirectangular::Equirectangular;
     use crate::projection::orthographic::Orthographic;
-    use crate::projection::projector_commom::types::ProjectorAntimeridianResampleNoneNoClip;
+    use crate::projection::projector_common::types::ProjectorAntimeridianResampleNoneNoClip;
     use crate::projection::Build;
     use crate::projection::PrecisionBypass;
     use crate::projection::RawBase;

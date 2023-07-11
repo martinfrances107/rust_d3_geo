@@ -1,7 +1,7 @@
 use geo::CoordFloat;
 
 use crate::clip::clipper::Connectable as ConnectableClip;
-use crate::projection::projector_commom::{Projector, Source};
+use crate::projection::projector_common::{Projector, Source};
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 

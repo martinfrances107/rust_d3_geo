@@ -3,8 +3,8 @@ use num_traits::FloatConst;
 
 use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::projection::builder::Builder as BuilderCommon;
-use crate::projection::projector_commom::Projector;
-use crate::projection::projector_commom::Source;
+use crate::projection::projector_common::Projector;
+use crate::projection::projector_common::Source;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 

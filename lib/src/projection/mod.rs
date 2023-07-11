@@ -65,7 +65,7 @@ pub mod orthographic;
 /// Projection object for `AlbersUsa` projection.
 pub mod projector_albers_usa;
 /// Projection object.
-pub mod projector_commom;
+pub mod projector_common;
 /// Projection Identity object.
 pub mod projector_identity;
 /// Resample based on a given precision.

@@ -22,7 +22,7 @@ use crate::identity::Identity;
 use crate::path::bounds::Bounds;
 use crate::path::Result;
 use crate::projection::builder::template::NoPCNC;
-use crate::projection::projector_commom::Projector;
+use crate::projection::projector_common::Projector;
 use crate::projection::Build;
 use crate::projection::ScaleSet;
 use crate::projection::TranslateSet;
@@ -32,7 +32,7 @@ use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::projector_commom::Source;
+use super::projector_common::Source;
 use super::Projector as ProjectorTrait;
 
 /// `no_clip` in the sense that input is  `NoClip` (Identity)

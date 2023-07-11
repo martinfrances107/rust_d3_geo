@@ -35,8 +35,8 @@ use crate::stream::Streamable;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-use super::projector_commom::Projector;
-use super::projector_commom::Source;
+use super::projector_common::Projector;
+use super::projector_common::Source;
 use super::ClipExtentClear;
 use super::ClipExtentSet;
 use super::TranslateGet;

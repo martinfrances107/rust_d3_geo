@@ -23,7 +23,7 @@ mod path_string {
     use d3_geo_rs::path::PointRadiusTrait;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
     use d3_geo_rs::projection::orthographic::Orthographic;
-    use d3_geo_rs::projection::projector_commom::types::ProjectorAntimeridianResampleNoneNoClip;
+    use d3_geo_rs::projection::projector_common::types::ProjectorAntimeridianResampleNoneNoClip;
     use d3_geo_rs::projection::Build;
     use d3_geo_rs::projection::PrecisionBypass;
     use d3_geo_rs::projection::RawBase;

@@ -40,8 +40,8 @@ use crate::Transform;
 
 use self::types::BuilderMercatorTransverseAntimeridianResampleClip;
 
-use super::projector_commom::Projector;
-use super::projector_commom::Source;
+use super::projector_common::Projector;
+use super::projector_common::Source;
 use super::stream_transform_radians::StreamTransformRadians;
 use super::RotateSet;
 use super::ScaleSet;
