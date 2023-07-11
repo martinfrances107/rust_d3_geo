@@ -86,7 +86,7 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
                 }
                 _ => {}
             }
-            c_index = c_index + 1;
+            c_index += 1;
         }
     }
 
