@@ -123,7 +123,7 @@ mod path_string {
     }
 
     #[test]
-    // This has no equivalent in JS testing, looking down the js functions, it is a hole in the test stratergy.
+    // This has no equivalent in JS testing, looking down the js functions, it is a hole in the test strategy.
     // the values for everythig after the first z where copied from a modified javascript test.
     fn renders_a_multipolygon() {
         let object = Geometry::MultiPolygon(MultiPolygon(vec![

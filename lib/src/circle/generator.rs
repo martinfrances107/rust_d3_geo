@@ -69,7 +69,7 @@ impl<T> Generator<T>
 where
     T: CoordFloat,
 {
-    /// Center is used to programe the generator.
+    /// Center is used to program the generator.
     pub fn center_set(&mut self, center: &Coord<T>) -> &mut Self {
         self.center = *center;
         self

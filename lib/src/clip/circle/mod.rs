@@ -18,7 +18,7 @@ use super::buffer::Buffer;
 use super::clipper::Clipper;
 use super::clipper::Connected as ConnectedClip;
 
-/// Connected clip type using circle interpolator, `point_visble` function line handler.
+/// Connected clip type using circle interpolator, `point_visible` function line handler.
 pub(crate) type ClipCircleC<RC, T> = Clipper<
     Interpolate<T>,
     Line<Unconnected, T>,
@@ -27,7 +27,7 @@ pub(crate) type ClipCircleC<RC, T> = Clipper<
     T,
 >;
 
-/// Unconnected clip type using circle interpolator, `point_visble` function line handler.
+/// Unconnected clip type using circle interpolator, `point_visible` function line handler.
 pub(crate) type ClipCircleU<RC, T> =
     Clipper<Interpolate<T>, Line<Unconnected, T>, RC, Unconnected, T>;
 

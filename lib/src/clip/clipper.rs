@@ -107,7 +107,7 @@ where
     }
 }
 
-/// State associated with the clipping stratergy.
+/// State associated with the clipping strategy.
 ///
 /// Two distinct stratergies [Antimeridian](crate::clip::antimeridian) and [Circle](crate::clip::circle).
 pub struct Clipper<I, LU, RC, STATE, T>

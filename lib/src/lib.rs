@@ -54,9 +54,9 @@
 //!
 //! # Examples
 //!
-//! The examples directory contains a large selection of applications demmonstration web applications
-//! rendering to a CANVAS or SVG elemments. It serves as a migration guide
-//! examples/projection shows each projction in turn, with the javascript and rust version drawn side by side.
+//! The examples directory contains a large selection of applications demonstration web applications
+//! rendering to a CANVAS or SVG elements. It serves as a migration guide
+//! examples/projection shows each projection in turn, with the javascript and rust version drawn side by side.
 //!
 //! examples/globe - demonstrates that this library can process larger datasets than is possible which javascript
 //!   The javascript version operate on a 110m dataset of the globe while, the RUST version use a denser 50m dataset.
@@ -177,7 +177,7 @@ use math::EPSILON;
 
 /// Area Endpoint.
 pub mod area;
-/// Vector arithmatic operations on 3-D vectors.
+/// Vector arithmetic operations on 3-D vectors.
 pub mod cartesian;
 /// Use to calculate the centroid point for a given object.
 pub mod centroid;
@@ -188,9 +188,9 @@ pub mod circle;
 pub(crate) mod clip;
 /// Combines two transforms into one. For example a rotation followed by a scale.
 mod compose;
-/// Streamable Data obejcts.
+/// Streamable Data objects.
 pub mod data_object;
-/// Used to calculate distances on a sphereical surface.
+/// Used to calculate distances on a spherical surface.
 pub mod distance;
 /// A graticule is a network of lines used for plotting, scaling.
 pub mod graticule;
@@ -215,7 +215,7 @@ pub mod path;
 pub mod path_identity;
 /// Determines when points are located inside data objects.
 pub mod polygon_contains;
-/// Holds proctions and associated builders.
+/// Holds projections and associated builders.
 pub mod projection;
 /// Generates range of T values from start to  stop by step.
 pub mod range;

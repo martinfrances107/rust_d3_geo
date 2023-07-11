@@ -16,7 +16,7 @@ where
     pub o: Option<Rc<RefCell<Intersection<'a, T>>>>,
 
     /// Clip and subject polygons
-    /// As we walk a "Clip"  polygon and intersect with "Subject" polygon are we exiting or enterting?
+    /// As we walk a "Clip"  polygon and intersect with "Subject" polygon are we exiting or entering?
     ///
     /// An equivalent question could be asked about walking "Subject" polygons.
     ///

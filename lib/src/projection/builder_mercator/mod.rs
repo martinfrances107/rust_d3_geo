@@ -1,4 +1,4 @@
-/// Getters and setters for the circle clipping stratergy.
+/// Getters and setters for the circle clipping strategy.
 pub mod angle;
 
 /// A builder getter.

@@ -9,7 +9,7 @@ use crate::rot::rotate_radians::RotateRadians;
 use crate::stream::Streamable;
 use crate::Transform;
 
-/// Builds a specialised (conic) equal area.
+/// Builds a specialized (conic) equal area.
 pub mod albers;
 /// Standard projection with multiple sub projections.
 pub mod albers_usa;
@@ -45,11 +45,11 @@ pub mod builder_albers_usa;
 pub mod builder_conic;
 /// Identity builder.
 pub mod builder_identity;
-/// A specalised projecton builder wrapping the default mecator.
+/// A specialized projection builder wrapping the default mercator.
 pub mod builder_mercator;
-/// A specalised projection builder wrapping the mecator builder.
+/// A specialized projection builder wrapping the mercator builder.
 pub mod builder_mercator_transverse;
-/// Enum and generator for "Cyclindrical" or "Conic" equal area projection.
+/// Enum and generator for "Cylindrical" or "Conic" equal area projection.
 pub mod equal_area;
 /// Debug and test helper function.
 #[cfg(not(tarpaulin_include))]
@@ -127,12 +127,12 @@ pub trait RawBase: Transform {
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN>;
 }
 
-/// Make the constructions of all Builder uniform.
+/// Make the constructions of all builders uniform.
 pub trait BuilderTrait {
     /// The raw projector.
     type PR;
 
-    /// Construtor.
+    /// Constructor.
     fn new(projection_raw: Self::PR) -> Self;
 }
 
@@ -325,7 +325,7 @@ pub trait AngleSet {
     fn angle_set(&mut self, angle: Self::T) -> &mut Self;
 }
 
-/// Change the clip stratergy from circle to antimeridan.
+/// Change the clip strategy from circle to antimeridan.
 ///
 /// A projection builder sub trait.
 pub trait ClipAngleReset {
@@ -335,16 +335,16 @@ pub trait ClipAngleReset {
     /// f64 or f32
     type T;
 
-    /// Converts a builder using a circle clipping statergy into one using
-    /// the antimerdian stratergy.
+    /// Converts a builder using a circle clipping strategy into one using
+    /// the antimerdian strategy.
     fn clip_angle_reset(self) -> Self::Output;
 }
 
 /// Clip angle getter.
 ///
 /// API-state design:
-/// Note this method is only availble on on builders using the
-/// circle clipping stratergy.
+/// Note this method is only available on on builders using the
+/// circle clipping strategy.
 ///
 /// A projection builder sub trait.
 pub trait ClipAngleGet {
@@ -358,8 +358,8 @@ pub trait ClipAngleGet {
 /// Transforms the builder in one using the circle clipping strategy
 ///
 /// API-state design:
-/// Note this method is only availble on on builders using the
-/// antimeridian clipping stratergy.
+/// Note this method is only available on on builders using the
+/// antimeridian clipping strategy.
 ///
 /// A projection builder sub trait.
 pub trait ClipAngleSet {
@@ -382,7 +382,7 @@ pub trait ClipAngleAdjust {
     type T;
 
     /// Given the angle, adjust the projection builder Must already be set
-    /// for  cicle based clipping.
+    /// for circle based clipping.
     fn clip_angle(&mut self, angle: Self::T) -> &mut Self;
 }
 
@@ -485,7 +485,7 @@ pub trait RotateGet {
     /// f64 or f32.
     type T;
 
-    /// Returns the three-axis rotaation.
+    /// Returns the three-axis rotation.
     fn rotate(&self) -> [Self::T; 3];
 }
 
@@ -581,7 +581,7 @@ trait Recenter {
 
 /// This need to be generic because there are two types of projector.
 ///
-/// Most Projections use a common Projector, the `AlberUSA` projector is just a container
+/// Most Projections use a common Projector, the `AlbersUSA` projector is just a container
 /// for a collections of projectors.
 pub trait Projector {
     /// The endpoint of the stream path.

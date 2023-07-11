@@ -161,7 +161,7 @@ where
     }
 }
 
-// Debug ommitting compare_intersection.
+// Debug omitting compare_intersection.
 impl<STATE, T> Debug for Rectangle<STATE, T>
 where
     STATE: Debug,
@@ -467,7 +467,7 @@ where
         let start_inside = self.polygon_inside();
         let clean_inside = self.clean && start_inside;
         // Performance if all lengths are known. Can I flatern into a
-        // array of arrays or something that implies a contigious block of memory?
+        // array of arrays or something that implies a contiguous block of memory?
         if let Some(segs) = &self.segments {
             let merged_segments = segs
                 .clone()

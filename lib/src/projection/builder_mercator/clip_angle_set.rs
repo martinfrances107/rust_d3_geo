@@ -26,7 +26,7 @@ where
     type T = T;
 
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
-    // which uses the clip circle stratergy.
+    // which uses the clip circle strategy.
     #[inline]
     fn clip_angle_set(&self, angle: T) -> Self::Output {
         Self::Output {

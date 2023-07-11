@@ -41,7 +41,7 @@ where
     T: CoordFloat,
 {
     type Output<SINK> = RotatorRadians<Connected<SINK>, T>;
-    /// Connects the next stage in the stream pipline.
+    /// Connects the next stage in the stream pipeline.
     #[inline]
     fn connect<SINK>(&self, sink: SINK) -> Self::Output<SINK> {
         RotatorRadians {

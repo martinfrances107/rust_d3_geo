@@ -9,7 +9,7 @@ use crate::stream::Stream;
 /// This endpoint is used in the `AlbersUSA` projection.
 /// If serves as a point mask. The albers has clipping bounds
 /// and if a point flows through the pipe line and is retained
-/// by `LastPoint` it is in alaksa, the lower 48 or in hawaii.
+/// by `LastPoint` it is in alaska, the lower 48 or in hawaii.
 #[derive(Debug, Default, Clone, PartialEq)]
 pub struct LastPoint<T: CoordFloat>(Option<Coord<T>>);
 

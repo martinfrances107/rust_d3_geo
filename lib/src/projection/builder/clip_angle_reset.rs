@@ -20,7 +20,7 @@ where
     type T = T;
 
     // Set the internal clip angle (theta) to null and return a builder
-    // which uses the antimeridian clipping stratergy.
+    // which uses the antimeridian clipping strategy.
     #[inline]
     fn clip_angle_reset(self) -> Self::Output {
         // update only theta and preclip_factory.

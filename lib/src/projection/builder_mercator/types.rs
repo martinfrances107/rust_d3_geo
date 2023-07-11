@@ -8,7 +8,7 @@ use crate::projection::builder::template::ResamplePCNU;
 use crate::projection::builder_mercator::Builder;
 use crate::stream::Unconnected;
 
-/// A mercator builder with a Antimerdian clipping stratergy, resampling and a post clip node.
+/// A mercator builder with a Antimerdian clipping strategy, resampling and a post clip node.
 pub type BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
@@ -18,7 +18,7 @@ pub type BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T> = Builder<
     T,
 >;
 
-/// A mercator builder with a Antimerdian clipping stratergy, no resampling and a post clip node.
+/// A mercator builder with a Antimerdian clipping strategy, no resampling and a post clip node.
 pub type BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
     ClipAntimeridianU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,
@@ -28,7 +28,7 @@ pub type BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T> = Builder<
     T,
 >;
 
-/// A mercator builder with a circle clipping stratergy, resampling and a post clip node.
+/// A mercator builder with a circle clipping strategy, resampling and a post clip node.
 pub type BuilderMercatorCircleResampleClip<DRAIN, PR, T> = Builder<
     ClipCircleU<ResamplePCNC<DRAIN, PR, T>, T>,
     DRAIN,
@@ -38,7 +38,7 @@ pub type BuilderMercatorCircleResampleClip<DRAIN, PR, T> = Builder<
     T,
 >;
 
-/// A mercator builder with a circle clipping stratergy, no resampling and a post clip node.
+/// A mercator builder with a circle clipping strategy, no resampling and a post clip node.
 pub type BuilderMercatorCircleResampleNoneClip<DRAIN, PR, T> = Builder<
     ClipCircleU<ResampleNonePCNC<DRAIN, PR, T>, T>,
     DRAIN,

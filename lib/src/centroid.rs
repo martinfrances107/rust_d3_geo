@@ -73,7 +73,7 @@ where
 
 /// The use is nan.
 ///
-/// A) In the JS version these varibles are undefined.
+/// A) In the JS version these variables are undefined.
 /// The intent is to insists that the values are written before being read.
 impl<T> Default for Centroid<T>
 where
@@ -129,7 +129,7 @@ where
         let mut y = self.Y2;
         let mut z = self.Z2;
         let mut m = (x * x + y * y + z * z).sqrt();
-        // If the area-weighted ccentroid is undefined, fall back to length-weighted ccentroid.
+        // If the area-weighted centroid is undefined, fall back to length-weighted centroid.
         if m < self.epsilon2 {
             x = self.X1;
             y = self.Y1;
