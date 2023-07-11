@@ -6,7 +6,7 @@
 //!
 //! # Elsewhere  in `fit_no_rectangle`.
 //!
-//! 1) No-op: No rectange to remove.
+//! 1) No-op: No rectangle to remove.
 //! 2) Perform operations.
 //! 3) SWAP -  implies inserting `PostClip` rectangle.
 //!

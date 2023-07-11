@@ -6,7 +6,7 @@ pub struct Path2d {
 
 /// Mocks of Path2d
 ///
-/// Returns "Result" to be compatilble
+/// Returns "Result" to be compatible
 /// with the browsers `Path2D::new()`.
 #[allow(clippy::unnecessary_wraps)]
 impl Path2d {

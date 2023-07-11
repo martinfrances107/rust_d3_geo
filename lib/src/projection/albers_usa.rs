@@ -89,7 +89,7 @@ where
     hawaii_x: Range<T>,
     hawaii_y: Range<T>,
 
-    // The builder with base setting used as a starting point everytime translate is adjusted.
+    // The builder with base setting used as a starting point every time translate is adjusted.
     pub(super) alaska: BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
     pub(super) lower_48: BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
     pub(super) hawaii: BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
@@ -103,7 +103,7 @@ where
     pub(super) hawaii_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<T>, T>,
 }
 
-/// Construct a Projection builder capable of rendering the view of alaksa.
+/// Construct a Projection builder capable of rendering the view of alaska.
 fn alaska_inset<DRAIN: Clone, T>(
     scaling_factor: T,
     k: T,
@@ -226,7 +226,7 @@ where
         let alaska = alaska_inset(scaling_factor, k, t, epsilon);
         let hawaii = hawaii_inset(scaling_factor, k, t, epsilon);
 
-        // Point is used in the foreward transform.
+        // Point is used in the foreword transform.
         let lower_48_point = lower_48.build().stream(&LastPoint::default());
         let alaska_point = alaska.build().stream(&LastPoint::default());
         let hawaii_point = hawaii.build().stream(&LastPoint::default());

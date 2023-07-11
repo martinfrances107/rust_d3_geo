@@ -1,6 +1,6 @@
 //! Unlike all other raw projections `Mercator` and `MercatorTransverse` are
 //! hard coded to work only with f64s The Additional dynamic range/
-//! resolution  is essential in giving accuarate results near the poles.
+//! resolution is essential in giving accurate results near the poles.
 use core::fmt::Debug;
 
 use geo_types::Coord;

@@ -22,7 +22,7 @@ where
     }
 }
 
-/// Determines wheather a point is inside the polygon.
+/// Determines whether a point is inside the polygon.
 ///
 /// # Panics
 /// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.

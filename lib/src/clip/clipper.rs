@@ -109,7 +109,7 @@ where
 
 /// State associated with the clipping strategy.
 ///
-/// Two distinct stratergies [Antimeridian](crate::clip::antimeridian) and [Circle](crate::clip::circle).
+/// Two distinct strategies [Antimeridian](crate::clip::antimeridian) and [Circle](crate::clip::circle).
 pub struct Clipper<I, LU, RC, STATE, T>
 where
     T: CoordFloat,
@@ -120,7 +120,7 @@ where
     p_rc: PhantomData<RC>,
     /// Needs to be public as precision() will copy these values.
     pub clip_line: LU,
-    /// Antimerdian and Circle stratergies have distinct interpolator functions.
+    /// Antimerdian and Circle strategies have distinct interpolator functions.
     pub interpolator: I,
     /// First point checked in rejoin algorithm.
     pub start: Coord<T>,
