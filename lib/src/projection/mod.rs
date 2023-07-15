@@ -325,7 +325,7 @@ pub trait AngleSet {
     fn angle_set(&mut self, angle: Self::T) -> &mut Self;
 }
 
-/// Change the clip strategy from circle to antimeridan.
+/// Change the clip strategy from circle to antimeridian.
 ///
 /// A projection builder sub trait.
 pub trait ClipAngleReset {

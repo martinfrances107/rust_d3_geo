@@ -21,7 +21,7 @@ examples/projection eslint needs updating.
 
 ## Before API lock-down
 
-* Detail why Feature and FeactueCollection is complicated.
+* Detail why Feature and FeatureCollection is complicated.
 
 * cargo docs:
   Some traits are missing description.
@@ -31,7 +31,7 @@ examples/projection eslint needs updating.
 
 * Justify whey PathResult is not implemented for LengthStream? is cal() a deviation from the interface.
 
-* Same arguement for CicleStream.
+* Same argument for CircleStream.
 
 ## Not Yet Implemented
 
@@ -51,7 +51,7 @@ centroid_test - Needs minor additions
 
 clip_circle_test - Needs regex development.. Path::API has changed since this last compiled.
 
-contains_test - src and test not implmented.
+contains_test - src and test not implemented.
 
 distance_test - Complete.
 
@@ -71,7 +71,7 @@ path_area_test - Complete.
 
 path_bounds_test - Complete.
 
-path_string_test - Need to port test for Features, FeatueCollection, GeometryCollection, Polygon and LineString.
+path_string_test - Need to port test for Features, FeatureCollection, GeometryCollection, Polygon and LineString.
 
 polygon_contains_test - Complete.
 
@@ -79,4 +79,4 @@ projection_reflect_test - Complete.
 
 stereographic_test - Complete.
 
-snapshot test - Must implment from scratch.
+snapshot test - Must implement from scratch.

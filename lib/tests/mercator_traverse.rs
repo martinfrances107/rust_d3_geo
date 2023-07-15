@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod mercator_tranverse {
+mod mercator_transverse {
 
     extern crate pretty_assertions;
 
@@ -27,7 +27,7 @@ mod mercator_tranverse {
     use d3_geo_rs::stream::DrainStub;
     use d3_geo_rs::Transform;
 
-    // There are subtle mercator - mercaotorTransverse / f32 issues
+    // There are subtle mercator - mercatorTransverse / f32 issues
     //
     // see mt_clip_extent_defaults_to_automatic().
     // and think about close to the poles ( PI /2 )
@@ -36,7 +36,7 @@ mod mercator_tranverse {
     //
     // return [log(tan((halfPi + phi) / 2)), -lambda];
     //
-    // in the test I have found problems with the limited resoultion of f32
+    // in the test I have found problems with the limited resolution of f32
     //
     // This causes error, looking at :-
     // in line_fn.rs:: line()
@@ -49,7 +49,7 @@ mod mercator_tranverse {
     // using f64  -> 10^9 - PI == 999999996.8584074
     // using f32  -> 10^9 - PI resolved to 10^9
     //
-    // line() was whoes output [&mut a] should be PI, PI
+    // line() was whose output [&mut a] should be PI, PI
     // had a buggy output of 0, PI.
     #[test]
     fn mt_clip_extent_defaults_to_automatic() {

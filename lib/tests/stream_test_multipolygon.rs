@@ -1,5 +1,5 @@
 #[cfg(not(tarpaulin_include))]
-mod stream_multipolygon {
+mod stream_multi_polygon {
 
     extern crate pretty_assertions;
 
@@ -57,7 +57,7 @@ mod stream_multipolygon {
     }
 
     #[test]
-    fn multipolygon() {
+    fn multi_polygon() {
         println!(
             "geoStream(MultiPolygon) -> (polygonStart, lineStart, point, lineEnd, polygonEnd)*"
         );

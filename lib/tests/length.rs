@@ -35,7 +35,7 @@ mod length {
     }
 
     #[test]
-    fn line_string_great_arc_segements() {
+    fn line_string_great_arc_segments() {
         println!("geoLength(LineString) returns the sum of its great-arc segments");
         let ls: LineString<f64> = line_string![(x: -45f64,y:  0f64 ), ( x:45f64,y:  0f64 )];
         assert!(in_delta(LengthStream::calc(&ls), PI / 2f64, 1e-6));

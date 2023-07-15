@@ -17,7 +17,7 @@ use super::rotation_phi_gamma::RotationPhiGamma;
 pub enum RotateRadians<T> {
     /// A combination of rotations.
     C(Compose<RotationLambda<T>, RotationPhiGamma<T>>),
-    /// Just roation in one direction.
+    /// Just rotation in one direction.
     RL(RotationLambda<T>),
     /// Rotate, Phi and Gamma
     RPG(RotationPhiGamma<T>),

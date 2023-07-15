@@ -65,7 +65,7 @@ mod tests {
     }
 
     #[test]
-    fn wraps_antimeridan() {
+    fn wraps_antimeridian() {
         println!("a rotation of [+90°, 0°] wraps around when crossing the antimeridian");
         let rotation = Rotation::new(90f64, 0f64, 0f64).transform(&Coord { x: 150f64, y: 0f64 });
         assert!(in_delta(rotation.x, -120_f64, 1e-6));

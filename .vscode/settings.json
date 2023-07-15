@@ -1,8 +1,13 @@
 {
   "cSpell.words": [
+    "bindgen",
     "CLIPC",
     "CLIPU",
+    "consts",
+    "equirectangular",
     "postclip",
-    "preclip"
+    "preclip",
+    "semilune",
+    "Unflipped"
   ]
 }

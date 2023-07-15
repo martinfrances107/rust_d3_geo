@@ -28,8 +28,8 @@ pub struct Line<STATE, T> {
     clean: u8,
     epsilon: T,
 }
-// Note Default is ONLY implenented for the unconnected state
-// Added when I found it was useful for type corercion.
+// Note Default is ONLY implemented for the unconnected state
+// Added when I found it was useful for type coercion.
 impl<T> Default for Line<Unconnected, T>
 where
     T: CoordFloat,

@@ -24,7 +24,7 @@ type CacheState<DRAIN, SOURCE> = Option<(DRAIN, SOURCE)>;
 
 /// Projection output of projection/Builder.
 ///
-/// Commnon functionality for all raw projection structs.
+/// Common functionality for all raw projection structs.
 #[derive(Clone, Debug)]
 pub struct Projector<CLIPU, DRAIN, PCNU, PR, RU, SOURCE, T>
 where
@@ -51,7 +51,7 @@ where
 ///  A connected version of the ``StreamTransformRadians`` transformer
 pub type Source<CLIPC, T> = StreamTransformRadians<Connected<Rrc<CLIPC, T>>>;
 
-/// A connection version of the ``RotateRadians`` transfortmer
+/// A connection version of the ``RotateRadians`` transformer
 pub(super) type Rrc<CLIPC, T> = RotatorRadians<Connected<CLIPC>, T>;
 
 impl<CLIPC, CLIPU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait

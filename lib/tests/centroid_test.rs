@@ -82,7 +82,7 @@ mod centroid {
     }
 
     #[test]
-    fn centrdoi_of_a_set_of_points_and_their_antipodes() {
+    fn centroid_of_a_set_of_points_and_their_antipodes() {
         println!("the centroid of a set of points and their antipodes is ambiguous");
         let p1: Point<f64> = Centroid::default().calc(&MultiPoint(vec![
             Point::new(0_f64, 0_f64),
@@ -120,7 +120,7 @@ mod centroid {
     }
 
     #[test]
-    fn line_string_is_the_spherical_everage() {
+    fn line_string_is_the_spherical_average() {
         println!("the centroid of a line string is the (spherical) average of its constituent great arc segments");
         assert!(in_delta_point(
             Centroid::default().calc(&line_string![(
@@ -525,7 +525,7 @@ mod centroid {
     }
 
     #[test]
-    fn of_a_sphere_is_ambigous() {
+    fn of_a_sphere_is_ambiguous() {
         println!("the centroid of a sphere is ambiguous");
         let point: Point<f64> = Centroid::default().calc(&Sphere::default());
         assert!(point.x().is_nan());

@@ -60,7 +60,7 @@ mod mercator {
         let object = Sphere::default();
 
         //Bodge: I have had to alter the expected string ... dropping trailing 0 from some floats.
-        // This is a trivial difference to between rust and Javascriipt.
+        // This is a trivial difference to between rust and Javascript.
         let s = path_builder.build(projection).object(&object);
         assert_eq!(s, "M2.96706,-2.966167L2.96706,0.175426L2.96706,3.317018L2.96706,3.317018L-3.316126,3.317018L-3.316126,3.317019L-3.316126,0.175426L-3.316126,-2.966167L-3.316126,-2.966167L2.96706,-2.966167Z");
 

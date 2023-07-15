@@ -33,7 +33,7 @@ mod invert {
     use d3_geo_rs::Transform;
     use geo_types::Geometry;
 
-    fn symetric_invert<PM>(pm: PM)
+    fn symmetric_invert<PM>(pm: PM)
     where
         PM: Transform<T = f64>,
     {
@@ -62,29 +62,29 @@ mod invert {
     #[test]
     fn albers() {
         let a = albers_builder::<DrainStub<f64>, f64>().build();
-        symetric_invert(a);
+        symmetric_invert(a);
     }
 
     #[test]
     fn azimuthal_equal_area() {
         let a = AzimuthalEqualArea::<f64>::builder::<DrainStub<f64>>().build();
-        symetric_invert(a);
+        symmetric_invert(a);
     }
 
     #[test]
     fn azimuthal_equidistant() {
         let a = AzimuthalEquiDistant::<f64>::builder::<DrainStub<f64>>().build();
-        symetric_invert(a);
+        symmetric_invert(a);
     }
 
     #[test]
     fn conformal() {
         let mut builder = Conformal::builder::<DrainStub<f64>>();
-        symetric_invert(builder.build());
-        symetric_invert(builder.parallels_set(20_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(30_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
-        symetric_invert(
+        symmetric_invert(builder.build());
+        symmetric_invert(builder.parallels_set(20_f64, 30_f64).build());
+        symmetric_invert(builder.parallels_set(30_f64, 30_f64).build());
+        symmetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
+        symmetric_invert(
             builder
                 .parallels_set(40_f64, 60_f64)
                 .rotate2_set(&[-120_f64, 0_f64])
@@ -95,11 +95,11 @@ mod invert {
     #[test]
     fn conic_equal_area() {
         let mut builder = EqualArea::<f64>::builder::<DrainStub<f64>>();
-        symetric_invert(builder.build());
-        symetric_invert(builder.parallels_set(20_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(-30_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
-        symetric_invert(
+        symmetric_invert(builder.build());
+        symmetric_invert(builder.parallels_set(20_f64, 30_f64).build());
+        symmetric_invert(builder.parallels_set(-30_f64, 30_f64).build());
+        symmetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
+        symmetric_invert(
             builder
                 .parallels_set(40_f64, 60_f64)
                 .rotate2_set(&[-120_f64, 0_f64])
@@ -110,12 +110,12 @@ mod invert {
     #[test]
     fn conic_equidistant() {
         let mut builder = Equidistant::builder::<DrainStub<f64>>();
-        symetric_invert(builder.build());
-        symetric_invert(builder.parallels_set(20_f64, 30_f64).build());
-        symetric_invert(builder.parallels_set(30_f64, 30_f64).build());
+        symmetric_invert(builder.build());
+        symmetric_invert(builder.parallels_set(20_f64, 30_f64).build());
+        symmetric_invert(builder.parallels_set(30_f64, 30_f64).build());
 
-        symetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
-        symetric_invert(
+        symmetric_invert(builder.parallels_set(-35_f64, -50_f64).build());
+        symmetric_invert(
             builder
                 .parallels_set(40_f64, 60_f64)
                 .rotate2_set(&[-120_f64, 0_f64])
@@ -126,43 +126,43 @@ mod invert {
     #[test]
     fn equirectangular() {
         let e = Equirectangular::<f64>::builder::<DrainStub<f64>>().build();
-        symetric_invert(e);
+        symmetric_invert(e);
     }
 
     #[test]
     fn equal_earth() {
         let e = EqualEarth::<f64>::builder::<DrainStub<f64>>().build();
-        symetric_invert(e);
+        symmetric_invert(e);
     }
 
     #[test]
     fn gnomic() {
         let g = Gnomic::<f64>::builder::<DrainStub<f64>>().build();
-        symetric_invert(g);
+        symmetric_invert(g);
     }
 
     #[test]
     fn mercator() {
         let m = Mercator::builder::<DrainStub<f64>>().build();
-        symetric_invert(m);
+        symmetric_invert(m);
     }
 
     #[test]
     fn mercator_traverse() {
         let m = MercatorTransverse::builder::<DrainStub<f64>>().build();
-        symetric_invert(m);
+        symmetric_invert(m);
     }
 
     #[test]
     fn orthographic() {
         let o = Orthographic::<f64>::builder::<DrainStub<f64>>().build();
-        symetric_invert(o);
+        symmetric_invert(o);
     }
 
     #[test]
     fn stereographic() {
         let s = Stereographic::<f64>::builder::<DrainStub<f64>>().build();
-        symetric_invert(s);
+        symmetric_invert(s);
     }
 
     #[test]
@@ -233,8 +233,8 @@ mod invert {
                 None
             ));
 
-            // This test does not exist in the javascript orignal.
-            // I created it becuase the code in this area is rust specific.
+            // This test does not exist in the javascript original.
+            // I created it because the code in this area is rust specific.
             // This tests the multidrain, multiplex code.
             let object = Geometry::Point(Point(p));
             object.to_stream(&mut stream);
