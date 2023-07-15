@@ -103,7 +103,7 @@ mod length {
     }
 
     #[test]
-    fn multipolygon_returns_to_summed_length_of_perimeters() {
+    fn multi_polygon_returns_to_summed_length_of_perimeters() {
         println!("geoLength(MultiPolygon) returns the summed length of the perimeters");
         assert!(in_delta(
             LengthStream::calc(&MultiPolygon(vec![polygon![
