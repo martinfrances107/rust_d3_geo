@@ -3,40 +3,40 @@ pub mod angle;
 
 /// A builder getter.
 pub mod center_get;
-/// A builder tansform.
+/// A builder transform.
 pub mod center_set;
-/// A builder tansform.
+/// A builder transform.
 pub mod clip_angle_set;
-/// A builder tansform.
+/// A builder transform.
 pub mod clip_extent_adjust;
-/// A builder tansform.
+/// A builder transform.
 pub mod clip_extent_get;
-/// A builder tansform.
+/// A builder transform.
 pub mod fit;
 
-/// A builder tranform.
+/// A builder transform.
 pub mod precision_adjust;
-/// A builder tranform.
+/// A builder transform.
 pub mod precision_bypass;
 /// A builder getter.
 pub mod precision_get;
-/// A builder tranform.
+/// A builder transform.
 pub mod precision_set;
 
 mod reclip;
 /// A builder getter.
 pub mod reflect_get;
-/// A builder tansform.
+/// A builder transform.
 pub mod reflect_set;
 /// A builder getter.
 pub mod rotate_get;
-/// A builder tansform.
+/// A builder transform.
 pub mod rotate_set;
-/// A builder tansform.
+/// A builder transform.
 pub mod scale_adjust;
 /// A builder getter.
 pub mod scale_get;
-/// A builder tansform.
+/// A builder transform.
 pub mod translate_adjust;
 /// A builder getter.
 pub mod translate_get;
@@ -70,8 +70,8 @@ use self::types::BuilderMercatorAntimeridianResampleClip;
 /// A projection builder sub trait.
 /// This trait is useful only for mercator projection.
 /// Here  centering, scaling and translate all end in a reclip.
-/// That is all involve a tranformation of the PCN
-/// specifcally a Identity struct to a Rectangle struct.
+/// That is all involve a transformation of the PCN
+/// specifically a Identity struct to a Rectangle struct.
 pub trait FitReclip {
     /// The resultant builder type.
     type Output;
@@ -128,8 +128,8 @@ pub trait FitReclip {
 
 /// This trait is useful only for mercator projection.
 /// Here  centering, scaling and translate all end in a reclip.
-/// That is all involve a tranformation of the PCN
-/// specifcally a Identity struct to a Rectangle struct.
+/// That is all involve a transformation of the PCN
+/// specifically a Identity struct to a Rectangle struct.
 pub trait ScaleReclip {
     /// Output type where the PCN is set to Rectangle.
     type Output;

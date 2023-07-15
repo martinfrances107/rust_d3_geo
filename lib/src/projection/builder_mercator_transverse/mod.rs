@@ -1,26 +1,26 @@
 /// A builder getter.
 pub mod center_get;
-/// A builder tansform.
+/// A builder transform.
 pub mod center_set;
-/// A builder tansform.
+/// A builder transform.
 pub mod clip_extent_adjust;
 /// A builder getter.
 pub mod clip_extent_get;
-/// A builder tansform.
+/// A builder transform.
 pub mod fit;
-/// A builder tansform.
+/// A builder transform.
 pub mod precision_bypass;
-/// A builder tansform.
+/// A builder transform.
 pub mod reclip;
 /// A builder getter.
 pub mod rotate_get;
-/// A builder tansform.
+/// A builder transform.
 pub mod rotate_set;
 /// A builder getter.
 pub mod scale_get;
-/// A builder tansform.
+/// A builder transform.
 pub mod scale_set;
-/// A builder tansform.
+/// A builder transform.
 pub mod translate_adjust;
 /// A builder getter.
 pub mod translate_get;
