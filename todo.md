@@ -8,7 +8,7 @@ examples/projection eslint needs updating.
 
 * Write examples/index.html -- a guide to building rust projects.
 
-* Develop styling for world maps graticules on bottom, overlayed by land.
+* Develop styling for world maps graticules on bottom, overlaid by land.
 
 * Add examples landing page. - showing images of the each projection.
 
