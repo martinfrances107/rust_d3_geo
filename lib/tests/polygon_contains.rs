@@ -39,8 +39,8 @@ mod polygon_contains {
     where
         T: CoordFloat + num_traits::float::FloatConst,
     {
-        // Combined in a vector of linestrings.
-        // exterior first, followed by all the interior linestrings.
+        // Combined in a vector of line strings.
+        // exterior first, followed by all the interior line strings.
         let (e, i) = polygon_p.clone().into_inner();
         let combined = [vec![e], i].concat();
 

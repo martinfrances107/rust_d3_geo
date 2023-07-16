@@ -125,7 +125,7 @@ mod path_string {
     #[test]
     // This has no equivalent in JS testing, looking down the js functions, it is a hole in the test strategy.
     // the values for everything after the first z where copied from a modified javascript test.
-    fn renders_a_multipolygon() {
+    fn renders_a_multi_polygon() {
         let object = Geometry::MultiPolygon(MultiPolygon(vec![
             Polygon::new(
                 line_string![

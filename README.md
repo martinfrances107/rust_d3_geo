@@ -25,8 +25,8 @@ For example the examples/globe applications operate on a highly detailed ( 1:50M
 <table>
 <th align="left" colspan="3">Supported Projections</th>
 <tr><td>Albers</td><td>Equidistant</td><td>Mercator</td></tr>
-<tr><td>AlbersUsa</td><td>Equirectangular</td><td>MercatorTansverse</td></tr>
-<tr><td>Aziumuthal Equal Area</td><td>Equal Area</td><td>Orthographic</td></tr>
+<tr><td>AlbersUsa</td><td>Equirectangular</td><td>MercatorTransverse</td></tr>
+<tr><td>Azimuthal Equal Area</td><td>Equal Area</td><td>Orthographic</td></tr>
 <tr><td>Azimuthal EquiDistant</td><td>Equal Earth</td><td>Stereographic</td></tr>
 <tr><td>Conformal</td><td>Gnomic</td><td></td></tr>
 </table>
