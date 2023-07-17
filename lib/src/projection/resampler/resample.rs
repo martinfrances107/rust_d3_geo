@@ -109,7 +109,7 @@ where
                 b0: T::nan(),
                 c0: T::nan(),
 
-                // cos(minimium angular distance)
+                // cos(minimum angular distance)
                 cos_min_distance: T::from(30_f64).unwrap().to_radians().cos(),
                 point_state: PointState::Default,
                 use_line_start: true,
@@ -291,7 +291,7 @@ where
 
                 let dy2 = y2 - y0;
                 let dz = dy * dx2 - dx * dy2;
-                // Three condtions :-
+                // Three conditions :-
                 // perpendicular projected distance
                 // midpoint close to an end
                 // angular distance

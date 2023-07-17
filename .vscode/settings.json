@@ -1,10 +1,13 @@
 {
   "cSpell.words": [
+    "Beekman",
     "bindgen",
+    "bools",
     "CLIPC",
     "CLIPU",
     "consts",
     "equirectangular",
+    "MAXDEPTH",
     "postclip",
     "preclip",
     "semilune",

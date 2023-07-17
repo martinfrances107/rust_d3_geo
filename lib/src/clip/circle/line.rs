@@ -43,8 +43,8 @@ where
     /// Visibility of first point
     v00: bool,
 }
-// Note Default is ONLY implenented for the unconnected state
-// Added when I found it was useful for type corercion.
+// Note Default is ONLY implemented for the unconnected state
+// Added when I found it was useful for type coercion.
 
 impl<T> Default for Line<Unconnected, T>
 where
@@ -148,7 +148,7 @@ where
             state: Unconnected,
             c0: 0,
             clean: 0,
-            // JS TODO optimise for this common case
+            // JS TODO optimize for this common case
             not_hemisphere: cr.abs() > epsilon,
             point0: None,
             cr,
@@ -215,7 +215,7 @@ where
     }
 }
 
-/// API clean only availble once connected.
+/// API clean only available once connected.
 impl<SINK, T> Clean for Line<Connected<SINK>, T>
 where
     SINK: Clone,
@@ -362,7 +362,7 @@ where
                 let t = intersect(&point1.unwrap(), &self.point0.unwrap(), self.cr, true);
                 match t {
                     // Request two received one!!
-                    // This copies the behaviour of the javascript original.
+                    // This copies the behavior of the javascript original.
                     Return::False | Return::None | Return::One(_) => {}
                     Return::Two(t) => {
                         self.clean = 0;

@@ -259,16 +259,15 @@ mod mercator {
     // https://github.com/martinfrances107/rust_d3_geo/issues/31
     //
     // The "object" is a box roughly the size of Russia but extended
-    // over the 180th meridian. ( as if to cover alaska )
+    // over the 180th meridian. ( as if to cover Alaska )
     // The antemeridian clipping strategy should split the box
-    // into two. ( Under this projection Alaska is on the left,
+    // into two. ( Under this projection Alaska would be on the left,
     // with Russia on the right.
     //
     #[ignore]
     #[test]
     fn russia_issue() {
-        println!("mercator.rotate(…) does not affect the automatic clip extent");
-
+        println!("russia issue");
         let object = Geometry::Polygon(Polygon::new(
             LineString(vec![
                 Coord {
@@ -294,7 +293,6 @@ mod mercator {
             ]),
             vec![],
         ));
-
         let mut projection = Mercator::builder();
         let projection = projection
             .scale_set(110f64)
