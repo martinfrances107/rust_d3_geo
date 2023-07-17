@@ -4,6 +4,8 @@ mod mercator {
     extern crate pretty_assertions;
 
     use geo::Geometry;
+    use geo::LineString;
+    use geo::Polygon;
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
 
@@ -194,7 +196,6 @@ mod mercator {
         );
     }
 
-    // Must debug as final assert's for scale and translate are buggy.
     #[test]
     fn rotate_does_not_affect_automatic_clip_extent() {
         println!("mercator.rotate(…) does not affect the automatic clip extent");
@@ -251,4 +252,101 @@ mod mercator {
             1e-6
         ));
     }
+
+    // Part of the resolution of an issue
+    // reported by Robert Beekman.
+    //
+    // https://github.com/martinfrances107/rust_d3_geo/issues/31
+    //
+    // The "object" is a box roughly the size of Russia but extended
+    // over the 180th meridian. ( as if to cover alaska )
+    // The antemeridian clipping strategy should split the box
+    // into two. ( Under this projection Alaska is on the left,
+    // with Russia on the right.
+    //
+    #[ignore]
+    #[test]
+    fn russia_issue() {
+        println!("mercator.rotate(…) does not affect the automatic clip extent");
+
+        let object = Geometry::Polygon(Polygon::new(
+            LineString(vec![
+                Coord {
+                    x: 30_f64,
+                    y: 70_f64,
+                },
+                Coord {
+                    x: -170_f64,
+                    y: 70_f64,
+                },
+                Coord {
+                    x: -170_f64,
+                    y: 50_f64,
+                },
+                Coord {
+                    x: 30_f64,
+                    y: 50_f64,
+                },
+                Coord {
+                    x: 30_f64,
+                    y: 70_f64,
+                },
+            ]),
+            vec![],
+        ));
+
+        let mut projection = Mercator::builder();
+        let projection = projection
+            .scale_set(110f64)
+            .center_set(&Coord {
+                x: 10_f64,
+                y: 40_f64,
+            })
+            .build();
+
+        let path_builder = PathBuilder::pathstring();
+
+        let object = Sphere::default();
+
+        let s = path_builder.build(projection).object(&object);
+        assert_eq!(s, "M115.226,71.009L127.770,112.248L134.425,143.024L134.425,222.745L127.158,194.489L115.226,159.133L115.226,71.009ZM754.763,-11.655L767.964,2.249L786.457,28.499L798.301,51.341L806.377,71.009L806.377,159.133L806.377,159.133L806.377,159.133L798.357,140.666L787.101,119.651L770.435,95.942L758.973,83.355L744.626,70.835L726.814,59.318L705.359,50.304L681.045,45.588L668.400,45.276L655.846,46.394L632.189,52.498L611.738,62.402L594.953,74.330L581.488,86.941L562.066,111.449L549.191,133.447L533.570,169.837L524.462,198.742L518.397,222.745L518.397,143.024L518.397,143.024L530.164,93.416L542.594,58.366L552.920,36.665L568.697,11.533L579.885,-2.187L589.623,-11.655L754.763,-11.655Z");
+    }
+
+    // The test "russia_issue" does not have an equivalent in the javascript
+    // library. d3-geo: Is a relatively stable library and has no interest
+    // in back-ports of "unit" code-coverage which does not expose
+    // a underlying issue in that code base.
+    // I am just including the javascript equivalent of this test so I cam confirm
+    // that the two libraries handle this case identically.
+    //
+    // To run the test in javascript :-
+    //
+    // append the code below to d3-geo/test/projection/mercator-test.js
+    //
+    // cd d3-geo
+    // npx mocha test/projection/mercator-test.js
+    //
+    //
+    // it("mercator.russia", () => {
+    //   const projection = geoMercator();
+    //
+    //   projection.scale(110);
+    //   projection.center([10, 40]);
+    //
+    //
+    //   const object = {
+    //     type: "MultiPolygon",
+    //     coordinates: [[[
+    //       [30, 70],
+    //       [-170, 70],
+    //       [-170, 50],
+    //       [30, 50],
+    //       [30, 70]
+    //     ]]]
+    //   };
+    //
+    //
+    //   assertPathEqual(geoPath(projection)(object), "M115.226,71.009L127.770,112.248L134.425,143.024L134.425,222.745L127.158,194.489L115.226,159.133L115.226,71.009ZM754.763,-11.655L767.964,2.249L786.457,28.499L798.301,51.341L806.377,71.009L806.377,159.133L806.377,159.133L806.377,159.133L798.357,140.666L787.101,119.651L770.435,95.942L758.973,83.355L744.626,70.835L726.814,59.318L705.359,50.304L681.045,45.588L668.400,45.276L655.846,46.394L632.189,52.498L611.738,62.402L594.953,74.330L581.488,86.941L562.066,111.449L549.191,133.447L533.570,169.837L524.462,198.742L518.397,222.745L518.397,143.024L518.397,143.024L530.164,93.416L542.594,58.366L552.920,36.665L568.697,11.533L579.885,-2.187L589.623,-11.655L754.763,-11.655Z");
+    //
+    // });
 }
