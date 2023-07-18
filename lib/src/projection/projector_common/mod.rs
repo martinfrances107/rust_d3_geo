@@ -97,7 +97,7 @@ where
         // Populate cache.
         self.cache = Some((drain.clone(), out.clone()));
 
-        // Output stage is a transform_radians node.
+        // First stage is a transform_radians node.
         out
     }
 }
