@@ -27,7 +27,7 @@ pub(super) type CompareIntersectionsFn<T> =
 /// Variable definition.
 ///
 /// A "Clip" polygon is cutting polygon.
-/// A "Subject" polygon is the working peice to be cut.
+/// A "Subject" polygon is the working piece to be cut.
 ///
 /// A Clipped polygon is the result after the subject has be limited in extent
 /// to no more than the boundary of the cutting polygon.
@@ -51,7 +51,7 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
     let two_epsilon = T::from(2.0 * EPSILON).unwrap();
     for segment in segments.iter() {
         if segment.len() < 2 {
-            return;
+            continue;
         }
         let n = segment.len() - 1;
 
@@ -66,7 +66,7 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
                     stream.point(&p0.p, None);
                 }
                 stream.line_end();
-                return;
+                continue;
             }
             // Handle degenerate cases by moving the point.
             p1.p.x = p1.p.x + two_epsilon;
