@@ -7,7 +7,9 @@ mod mercator {
     use geo::LineString;
     use geo::Polygon;
     use geo_types::Coord;
+    use lazy_static::lazy_static;
     use pretty_assertions::assert_eq;
+    use regex::Regex;
 
     use d3_geo_rs::data_object::sphere::Sphere;
     use d3_geo_rs::in_delta::coordinate as in_delta_coordinate;
@@ -253,42 +255,42 @@ mod mercator {
         ));
     }
 
-    // Part of the resolution of an issue
+    // Part of the resolution of a Russia issue
     // reported by Robert Beekman.
     //
     // https://github.com/martinfrances107/rust_d3_geo/issues/31
     //
-    // The "object" is a box roughly the size of Russia but extended
-    // over the 180th meridian. ( as if to cover Alaska )
-    // The antemeridian clipping strategy should split the box
-    // into two. ( Under this projection Alaska would be on the left,
-    // with Russia on the right.
+    // The stress test is a square polygon which crosses BOTH the 180th meridian
+    // and the equator.
     //
-    #[ignore]
+    // Using the antemeridian clipping strategy the 180th meridian
+    // is the "cutting seam" used to unwrap the surface.
+    // So under projection the box is cut into two, one on the
+    // left hand edge of the map and the other on the right.
     #[test]
-    fn russia_issue() {
+    fn meridian_180() {
         println!("russia issue");
         let object = Geometry::Polygon(Polygon::new(
             LineString(vec![
                 Coord {
-                    x: 30_f64,
-                    y: 70_f64,
+                    x: 170_f64,
+                    y: 10_f64,
                 },
                 Coord {
                     x: -170_f64,
-                    y: 70_f64,
+                    y: 10_f64,
                 },
                 Coord {
                     x: -170_f64,
-                    y: 50_f64,
+                    y: -10_f64,
                 },
                 Coord {
-                    x: 30_f64,
-                    y: 50_f64,
+                    x: 170_f64,
+                    y: -10_f64,
                 },
                 Coord {
-                    x: 30_f64,
-                    y: 70_f64,
+                    x: 170_f64,
+                    y: 10_f64,
                 },
             ]),
             vec![],
@@ -304,14 +306,27 @@ mod mercator {
 
         let path_builder = PathBuilder::pathstring();
 
-        let object = Sphere::default();
+        // Rounding issues:
+        // Javascript mis-reports the value of log(tan(theta)) for angles close to PI/2.
+        //
+        // ( see mercator::transform() for a more detailed explanation ).
+        //
+        // So when comparing javascript and rust test -  it is impossible
+        // to have IDENTICAL SVG path strings in both tests.
+        //
+        // That complication forces that we round down here before comparison.
+        lazy_static! {
+            /// Ignore every digit in a number after the decimal.
+            static ref ROUND_DOWN: Regex = Regex::new(r"\.\d+").unwrap();
+        }
 
         let s = path_builder.build(projection).object(&object);
-        assert_eq!(s, "M115.226,71.009L127.770,112.248L134.425,143.024L134.425,222.745L127.158,194.489L115.226,159.133L115.226,71.009ZM754.763,-11.655L767.964,2.249L786.457,28.499L798.301,51.341L806.377,71.009L806.377,159.133L806.377,159.133L806.377,159.133L798.357,140.666L787.101,119.651L770.435,95.942L758.973,83.355L744.626,70.835L726.814,59.318L705.359,50.304L681.045,45.588L668.400,45.276L655.846,46.394L632.189,52.498L611.738,62.402L594.953,74.330L581.488,86.941L562.066,111.449L549.191,133.447L533.570,169.837L524.462,198.742L518.397,222.745L518.397,143.024L518.397,143.024L530.164,93.416L542.594,58.366L552.920,36.665L568.697,11.533L579.885,-2.187L589.623,-11.655L754.763,-11.655Z");
+        let rounded = ROUND_DOWN.replace_all(&s, "");
+        assert_eq!(rounded, "M115,314L134,314L134,353L115,353L115,314ZM806,353L787,353L787,314L787,314L806,314L806,353Z");
     }
 
-    // The test "russia_issue" does not have an equivalent in the javascript
-    // library. d3-geo: Is a relatively stable library and has no interest
+    // The test "meridian_180" does not have an equivalent in the javascript
+    // library d3-geo: Is a relatively stable library and has no interest
     // in back-ports of "unit" code-coverage which does not expose
     // a underlying issue in that code base.
     // I am just including the javascript equivalent of this test so I cam confirm
@@ -325,7 +340,7 @@ mod mercator {
     // npx mocha test/projection/mercator-test.js
     //
     //
-    // it("mercator.russia", () => {
+    // it("meridian_180", () => {
     //   const projection = geoMercator();
     //
     //   projection.scale(110);
@@ -335,16 +350,16 @@ mod mercator {
     //   const object = {
     //     type: "MultiPolygon",
     //     coordinates: [[[
-    //       [30, 70],
-    //       [-170, 70],
-    //       [-170, 50],
-    //       [30, 50],
-    //       [30, 70]
+    //       [170, 10],
+    //       [-170, 10],
+    //       [-170, -10],
+    //       [170, -10],
+    //       [170, 10]
     //     ]]]
     //   };
     //
     //
-    //   assertPathEqual(geoPath(projection)(object), "M115.226,71.009L127.770,112.248L134.425,143.024L134.425,222.745L127.158,194.489L115.226,159.133L115.226,71.009ZM754.763,-11.655L767.964,2.249L786.457,28.499L798.301,51.341L806.377,71.009L806.377,159.133L806.377,159.133L806.377,159.133L798.357,140.666L787.101,119.651L770.435,95.942L758.973,83.355L744.626,70.835L726.814,59.318L705.359,50.304L681.045,45.588L668.400,45.276L655.846,46.394L632.189,52.498L611.738,62.402L594.953,74.330L581.488,86.941L562.066,111.449L549.191,133.447L533.570,169.837L524.462,198.742L518.397,222.745L518.397,143.024L518.397,143.024L530.164,93.416L542.594,58.366L552.920,36.665L568.697,11.533L579.885,-2.187L589.623,-11.655L754.763,-11.655Z");
+    //   assertPathEqual(geoPath(projection)(object), "M115.226,314.329L134.425,314.623L134.425,353.217L115.226,353.512L115.226,314.329ZM806.377,353.512L787.178,353.217L787.178,314.623L787.178,314.623L806.377,314.329L806.377,353.512Z");
     //
     // });
 }
