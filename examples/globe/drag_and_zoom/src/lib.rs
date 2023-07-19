@@ -61,7 +61,7 @@ fn document() -> Result<Document, JsValue> {
     window.document().map_or_else(
         || {
             Err(JsValue::from_str(
-                "document() Could not get the docuement from the window.",
+                "document() Could not get the document from the window.",
             ))
         },
         Ok,

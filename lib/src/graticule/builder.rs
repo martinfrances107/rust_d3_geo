@@ -135,7 +135,7 @@ where
         range1.chain(range2).chain(range3).chain(range4)
     }
 
-    /// Returns an Interator covering all the generated lines.
+    /// Returns an Iterator covering all the generated lines.
     pub fn lines(&self) -> impl Iterator<Item = LineString<T>> + '_ {
         self.generated_lines().map(LineString)
     }
@@ -192,7 +192,7 @@ where
         self.precision_set(&p)
     }
 
-    /// Returns the range assoicated with the minor ticks.
+    /// Returns the range associated with the minor ticks.
     #[inline]
     pub const fn extent_minor(&self) -> [[T; 2]; 2] {
         [[self.x0, self.y0], [self.x1, self.y1]]
