@@ -2,7 +2,7 @@
 
 There is an aspect of the design that needs review. It related to the best way to implement a circular doubly-linked list which has cross links between two rings.
 
-The clipping polygon is broken into line segments, intersperced with intersectiion nodes
+The clipping polygon is broken into line segments, interspersed with intersection nodes
 which represent points where one polygon has crossed the other.
 
 The clipping polygon is closed leading to a circular ring  C1->I1->C2->I2->C3->I3->C1
@@ -11,7 +11,7 @@ Similarly the subject polygon leads to sections of subject lines segments inters
 
 S1->I1->S2->I2->S3->I3->S1
 
-The algorithm walks over these ring struture, turning backwards and forwards or over the intersection links.
+The algorithm walks over these ring structure, turning backwards and forwards or over the intersection links.
 
 
 ```mermaid
@@ -57,7 +57,7 @@ The algorithm walks over these ring struture, turning backwards and forwards or 
 The original paper from which the clipping algorithm was developed is
 [here](https://www.inf.usi.ch/hormann/papers/Greiner.1998.ECO.pdf )
 
-Figure 10, shows two doubly-linked listed "clip" and "subject". Which can additional be charactersised as having "intersection" cross links joining the two linked lists as need
+Figure 10, shows two doubly-linked listed "clip" and "subject". Which can additional be characterized as having "intersection" cross links joining the two linked lists as need
 
 From the javasript version
 
@@ -104,5 +104,5 @@ In Rust doubly-linked list are found here [std::collections::LinkedList](https:/
 * support is experimental
 * In std, functionality is limited.
 
- Support for doubly-linked list with insert, remove and split functionaility
+ Support for doubly-linked list with insert, remove and split functionality
  can be found outside std, here [intrusive_collections::linked_list::CursorMut](intrusive_collections::linked_list::CursorMut)
