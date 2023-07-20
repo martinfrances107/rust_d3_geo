@@ -15,9 +15,9 @@ members = [
 
 [workspace.package]
 authors = ["martin <martinfrances107@hotmail.com>"]
-categories = ["graphics"]
+categories = ["graphics", "Mathematics"]
 edition = "2021"
-keywords = ["graphics", "d3-geo"]
+keywords = ["diagram", "graphics"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo"
