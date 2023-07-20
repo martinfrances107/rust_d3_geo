@@ -10,12 +10,13 @@ Rust 2021 Edition.
 
 </div>
 
-This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST.
+This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST. It is part of a family of ported d3-modules
 
 * d3_geo_rs
 * [d3_delaunay_rs](https://crates.io/crates/d3_delaunay_rs)
 * [d3_geo_voronoi_rs](https://crates.io/crates/d3_geo_voronoi_rs)
 
+The [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) format can be used to define polygons, line and points. This library can be used to calculate  lengths, areas and the centroid of such objects. Additionally a comprehensive set of projections is provided along with a to means to manipulate the scaling, translation and rotation - allow the user to develop custom maps.
 
 ## When to use the rust version of the library
 
