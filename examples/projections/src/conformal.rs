@@ -41,7 +41,7 @@ pub async fn draw_conformal(land: &Geometry<f64>) -> Result<(), JsValue> {
 
     let path_builder = PathBuilder::new(ep);
 
-    // input params will cause a conic equal area projection to be constructed.
+    // Input params will cause a conic equal area projection to be constructed.
     let cea = Conformal::builder()
         .scale_set(width / 1.5 / std::f64::consts::PI)
         .rotate2_set(&[0_f64, 0_f64])

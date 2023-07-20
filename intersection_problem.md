@@ -59,7 +59,7 @@ The original paper from which the clipping algorithm was developed is
 
 Figure 10, shows two doubly-linked listed "clip" and "subject". Which can additional be characterized as having "intersection" cross links joining the two linked lists as need
 
-From the javasript version
+From the javascript version
 
 [rejoin.js](https://github.com/d3/d3-geo/blob/main/src/clip/rejoin.js) Intersection has next and previous pointer, (n and p ), which is the pattern of a doubly-linked list
 

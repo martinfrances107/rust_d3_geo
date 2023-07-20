@@ -54,7 +54,7 @@ fn document() -> Result<Document, JsValue> {
     match window.document() {
         Some(d) => Ok(d),
         None => Err(JsValue::from_str(
-            "document() Could not get the docuement from the window.",
+            "document() Could not get the document from the window.",
         )),
     }
 }
@@ -63,7 +63,7 @@ fn document() -> Result<Document, JsValue> {
 #[derive(Debug)]
 /// State associated with render call.
 pub struct Renderer {
-    // A string owned by javascript representing the HTML color used in the gratcule.
+    // A string owned by javascript representing the HTML color used in the graticule.
     color_graticule: JsValue,
     // A string owned by javascript represent the HTML color used to draw the countries.
     color_land: JsValue,

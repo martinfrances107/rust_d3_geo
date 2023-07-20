@@ -8,7 +8,7 @@ use crate::stream::Streamable;
 use super::stream::Stream as StreamTrait;
 
 #[derive(Clone)]
-/// Length Stream.
+/// State associated with the Length Endpoint.
 pub struct Stream<T>
 where
     T: CoordFloat,
