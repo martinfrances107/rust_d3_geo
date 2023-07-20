@@ -202,7 +202,7 @@ pub mod in_delta;
 /// Records the last point. Useful when displaying a side projection within a main
 /// projection area. See [`AlbersUsa`](projection::albers_usa)
 pub mod last_point;
-/// Endpoint Used to calculate the lengths of polygons and lines etc.
+/// Endpoint used to calculate the lengths of polygons and lines etc.
 pub mod length;
 /// Mathematical constants.
 pub mod math;

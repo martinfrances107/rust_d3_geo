@@ -65,7 +65,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
 
 /// Projection output of projection/Builder.
 ///
-/// Commnon functionality for all raw projection structs.
+/// Common functionality for all raw projection structs.
 #[derive(Clone, Debug)]
 pub struct Projector<SD, T>
 where

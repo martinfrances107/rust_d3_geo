@@ -276,7 +276,7 @@ where
 impl<SD, T> Transform for AlbersUsa<SD, T>
 where
     SD: Clone,
-    T: 'static + CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Debug + Default + FloatConst,
 {
     type T = T;
 

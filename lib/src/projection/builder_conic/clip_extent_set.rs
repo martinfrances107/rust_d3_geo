@@ -8,8 +8,8 @@ use super::types::BuilderConicAntimeridianResampleClip;
 use super::types::BuilderConicAntimeridianResampleNoClip;
 
 // Code Repeated 2^2 times.
-// Variantion over ClipAntimeridian/ClipCircle as Clip is rebuilt.
-// Varariantion over Resample/None as Resample is rebuilt.
+// Variation over ClipAntimeridian/ClipCircle as Clip is rebuilt.
+// Variation over Resample/None as Resample is rebuilt.
 impl<DRAIN, PR, T> ClipExtentSet for BuilderConicAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
