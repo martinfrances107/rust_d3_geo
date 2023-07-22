@@ -18,6 +18,8 @@ This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST. It is part of a
 
 The [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) format can be used to define polygons, line and points. This library can be used to calculate  lengths, areas and the centroid of such objects. Additionally a comprehensive set of projections is provided along with a to means to manipulate the scaling, translation and rotation - allowing the user to develop custom maps.
 
+[CHANGELOG.md](https://github.com/martinfrances107/rust_d3_geo/blob/v2.x-dev/CHANGELOG.md) contains a summary of breaking changes between v1.x and 2.0.0.
+
 ## When to use the rust version of the library
 
 The limits of the javascript library become obvious when developing interactive applications that process large datasets.

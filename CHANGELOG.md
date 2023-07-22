@@ -1,5 +1,34 @@
 # Changelog
 
+
+## [2.0.0] - 22 July 2023
+
+A summary of breaking changes.
+
+ * ClipAngleGet - The method clip_angle() can no longer be called when using the
+    ClipAntemeridian strategy.
+
+ * Breaking change related to a misspelt namespaces - no change in behavior
+
+commit fd17b1bb61b85a2af11ba5fb81591303cf582e93
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Tue Jul 11 15:41:05 2023 +0100
+
+    Breaking change related to misspelt namespaces
+
+    in general commom becomes common.
+
+    ```rustlang
+    -use crate::projection::projector_commom::
+    +use crate::projection::projector_common::
+    ```
+
+commit e043a1c8ae75f8e5ef54ac820ec64ddb5f2371fa
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Wed Jun 7 20:31:43 2023 +0100
+
+    Restrict clip_angle_get to the ClipCircle stratergy.
+
 ## [0.10.0] - Sun 28 May 2023
 
 Removed PV as generic type
@@ -56,7 +85,7 @@ Date:   Thu May 18 12:19:14 2023 +0100
 
 ## [0.7.0] - Wed 17th May 2023
 
-Go a performace boost by writng data to Path2d and
+Got a performance boost by writing data to Path2d and
 the call stroke_with_path().
 
 commit 3afbe268de6094aea118b3f8e44f7e51090d3cd7
