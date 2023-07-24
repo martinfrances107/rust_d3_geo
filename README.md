@@ -16,14 +16,14 @@ This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST. It is part of a
 * [d3_delaunay_rs](https://crates.io/crates/d3_delaunay_rs)
 * [d3_geo_voronoi_rs](https://crates.io/crates/d3_geo_voronoi_rs)
 
-The [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) format can be used to define polygons, line and points. This library can be used to calculate  lengths, areas and the centroid of such objects. Additionally a comprehensive set of projections is provided along with a to means to manipulate the scaling, translation and rotation - allowing the user to develop custom maps.
+The [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) format can be used to define polygons, line and points. This library can be used to calculate lengths, areas and the centroid of such objects. Additionally a comprehensive set of projections is provided along with a to means to manipulate the scaling, translation and rotation - allowing the user to develop custom maps.
 
 [CHANGELOG.md](https://github.com/martinfrances107/rust_d3_geo/blob/v2.x-dev/CHANGELOG.md) contains a summary of breaking changes between v1.x and 2.0.0.
 
 ## When to use the rust version of the library
 
 The limits of the javascript library become obvious when developing interactive applications that process large datasets.
-For example the examples/globe applications operate on a highly detailed ( 1:50M resolution )  map of the earth. On a desktop machine this is beyond the javascript version.
+For example the examples/globe applications operate on a highly detailed ( 1:50M resolution ) map of the earth. On a desktop machine this is beyond the javascript version.
 
 <table>
 <th align="left" colspan="3">Supported Projections</th>
@@ -73,9 +73,9 @@ For performance reasons this example is best viewed by running "cargo build" and
 
 The globe is rendered as a SVG image.
 
- SVG are useful  when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as individual SVG PATH elements.
+SVG are useful when the semantic meaning of the data needs to be preserved. The example shows how to load/parse/display the globe as individual SVG PATH elements.
 
-  It also includes code samples that generates SVG graticules.
+It also includes code samples that generates SVG graticules.
 
 (Scale 1:50M)
 </td>
@@ -94,9 +94,9 @@ It deliberately mixes typescript methods with rust.
 The typescript is responsible for handling the mouse events and manipulating the quaternion used to calculate the appropriate change in rotation. In a typescript render loop calls to a rust function render the globe.
 <br/>
 <br/>
-  This example is currently undergoing rapid development.
+This example is currently undergoing rapid development.
 
-  (Scale 1:50M)
+(Scale 1:50M)
 </td>
 
 <td>
@@ -112,7 +112,7 @@ The typescript is responsible for handling the mouse events and manipulating the
 All available projections are rendered to a HTML CANVAS element
 
 As a confidence building exercise, this demo
-shows a side by side comparison of the all the projections rendered by in both  <strong>javascript</strong> and <strong>rust</strong>.
+shows a side by side comparison of the all the projections rendered by in both <strong>javascript</strong> and <strong>rust</strong>.
 
 (Scale 1:50M)
 </td>
@@ -191,7 +191,7 @@ Sample code in both RUST and javascript that renders a complex multi-polygon. ( 
     When rendering to a HTML canvas the endpoint holds Path2D "rendering context"
 
       ```rust
-       //  Construct a PathBuilder linked to Path2d
+       // Construct a PathBuilder linked to Path2d
        // rendering context.
        let path2d = Path2d::new()?;
        let endpoint = PathBuilder::new(path2d);
@@ -237,7 +237,7 @@ To view an example application either create a development build, or construct a
  npm run start
  ```
 
-The last command "npm run start"  will automatically open your default browser at http:://localhost::8080
+The last command "npm run start" will automatically open your default browser at http:://localhost::8080
 
 ### Performance: Building A Static Site
 
@@ -352,8 +352,8 @@ Future Work.
 There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes.
 
 The clipping algorithm in clip/rejoin/mod.rs needs to be refactored.
-see  [The intersection Problem.](/intersection_problem.md)
-Test coverage in that area is high so the algorithms is working but the data structures make extensive use of vectors ( heap objects ) containing references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>>```   which is not performant.
+see [The intersection Problem.](/intersection_problem.md)
+Test coverage in that area is high so the algorithms is working but the data structures make extensive use of vectors ( heap objects ) containing references to other heap objects ```Vec<Options<Rc<RefCell<_Intersection_>>>>``` which is not performant.
 
  A full discussion can be found [here](/intersection_problem.md)
 
