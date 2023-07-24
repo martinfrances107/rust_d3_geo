@@ -330,8 +330,6 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
 
 ## Future 2.0 upgrades
 
-Version 1.0 is stable.
-
 "Semantic Versioning" guidelines :-
 
 * Increment the major number when a breaking change occurs.
@@ -347,6 +345,7 @@ Future Work.
 * The Hashmaps - appear slow.
   Maybe I can get performance improvements by replacing them with B-tree collections?
 
+* Should I use an arena for memory management?
 
 ### Architecture discussion
 
