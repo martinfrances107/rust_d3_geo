@@ -296,7 +296,7 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
    }
    ```
 
-   This allow for a clearer statement of intent :-
+   This allows for a clearer statement of intent :-
 
    ```rust
 
