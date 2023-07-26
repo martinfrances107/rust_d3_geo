@@ -16,7 +16,12 @@ This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST. It is part of a
 * [d3_delaunay_rs](https://crates.io/crates/d3_delaunay_rs)
 * [d3_geo_voronoi_rs](https://crates.io/crates/d3_geo_voronoi_rs)
 
-The [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) format can be used to define polygons, line and points. This library can be used to calculate lengths, areas and the centroid of such objects. Additionally a comprehensive set of projections is provided along with a to means to manipulate the scaling, translation and rotation - allowing the user to develop custom maps.
+
+This library allows the development of custom maps. It provides a comprehensive set
+ of projections along with the means to scale rotate and translate the image.
+ The projector processes polygons lines and points the in the form of
+ [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) objects. Additionally this
+ library can be used to calculate lengths, areas and the centroid of such objects
 
 [CHANGELOG.md](https://github.com/martinfrances107/rust_d3_geo/blob/v2.x-dev/CHANGELOG.md) contains a summary of breaking changes between v1.x and 2.0.0.
 
