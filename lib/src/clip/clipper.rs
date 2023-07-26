@@ -178,7 +178,7 @@ where
             .field("clip_line", &self.clip_line)
             .field("interpolate", &self.interpolator)
             .field("start", &self.start)
-            .finish()
+            .finish_non_exhaustive()
     }
 }
 

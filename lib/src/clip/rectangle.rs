@@ -191,7 +191,7 @@ where
             .field("v_", &self.v_)
             .field("use_line_point", &self.use_line_point)
             .field("use_buffer_stream", &self.use_buffer_stream)
-            .finish()
+            .finish_non_exhaustive()
     }
 }
 
@@ -223,7 +223,7 @@ where
         let mut winding = 0;
 
         if let Some(polygon) = &self.polygon {
-            for p in polygon.iter() {
+            for p in polygon {
                 let mut point = p[0];
                 let mut b0 = point.x;
                 let mut b1 = point.y;

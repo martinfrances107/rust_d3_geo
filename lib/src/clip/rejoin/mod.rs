@@ -49,7 +49,7 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
     let mut clip = vec![];
 
     let two_epsilon = T::from(2.0 * EPSILON).unwrap();
-    for segment in segments.iter() {
+    for segment in segments {
         if segment.len() < 2 {
             continue;
         }
@@ -112,8 +112,8 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
 
     clip.sort_by(compare_intersection);
 
-    link(&mut subject);
-    link(&mut clip);
+    link(&subject);
+    link(&clip);
 
     for c in clip {
         start_inside = !start_inside;
