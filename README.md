@@ -30,14 +30,13 @@ This library allows the development of custom maps. It provides a comprehensive 
 The limits of the javascript library become obvious when developing interactive applications that process large datasets.
 For example the examples/globe applications operate on a highly detailed ( 1:50M resolution ) map of the earth. On a desktop machine this is beyond the javascript version.
 
-<table>
-<th align="left" colspan="3">Supported Projections</th>
-<tr><td>Albers</td><td>Equidistant</td><td>Mercator</td></tr>
-<tr><td>AlbersUsa</td><td>Equirectangular</td><td>MercatorTransverse</td></tr>
-<tr><td>Azimuthal Equal Area</td><td>Equal Area</td><td>Orthographic</td></tr>
-<tr><td>Azimuthal EquiDistant</td><td>Equal Earth</td><td>Stereographic</td></tr>
-<tr><td>Conformal</td><td>Gnomic</td><td></td></tr>
-</table>
+ | Available Projections |   |   |
+ | --------------------- | - | - |
+ | Albers | ConicEqualArea | Gnomic|
+ | AlbersUsa | Equidistant | Orthographic |
+ | AzimuthalEqualArea | Equirectangular | Mercator |
+ | AzimuthalEquiDistant | EqualArea | MercatorTransverse |
+ | Conformal | EqualEarth | Stereographic |
 
 ## Examples
 
@@ -185,7 +184,7 @@ Sample code in both RUST and javascript that renders a complex multi-polygon. ( 
 
     Here is an overview of the key nodes.
 
-     **Clipping**: Is the process of removing hidden geometry. When displaying a globe for example africa and australia will never been visible in the same view. Two strategies are used "Antimeridian" and "ClipAngle" [ See clip_angle_set() and clip_angle_reset() ]
+     **Clipping**: Two strategies are used "Antimeridian" and "ClipAngle" [ See clip_angle_set() and clip_angle_reset() ]
 
      **Resampling**: Dense geometry can be reduced by declaring a separation distance under which points, used to describe polygons and lines, are considered indistinguishable [ See precision_set() ]
 
