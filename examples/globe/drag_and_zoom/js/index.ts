@@ -16,6 +16,13 @@ import('../pkg')
 
         const canvas = canvasArray[0]
 
+        const context = canvas.getContext('2d')
+        if (context == null) {
+          return
+        }
+
+        let selector = select(context.canvas);
+
         scale = renderer.scale()
         const zoom = (event: WheelEvent): void => {
           event.preventDefault()
@@ -48,6 +55,10 @@ import('../pkg')
 
         function dragstarted (e: any): void {
           isMouseDown = true
+
+          selector.on('mousemove', dragged)
+            .on('mouseup', dragended);
+
           const canvasxy = pointer(e)
           gpos0 = renderer.invert(new pkg.ExportedPoint(canvasxy[0], canvasxy[1]))
         }
@@ -75,16 +86,15 @@ import('../pkg')
         }
 
         function dragended (e: any): void {
+
           isMouseDown = false
+
+          canvas.removeEventListener("mousemove", dragged);
+          canvas.removeEventListener("mousedown", dragended);
         }
 
-        const context = canvas.getContext('2d')
-        if (context == null) {
-          return
-        }
-        select(context.canvas).on('mousemove', dragged)
+        select(context.canvas)
           .on('mousedown', dragstarted)
-          .on('mouseup', dragended)
 
         const renderLoop = (): void => {
           context.clearRect(0, 0, 1800, 1200)
