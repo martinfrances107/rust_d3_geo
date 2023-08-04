@@ -46,7 +46,6 @@ pub fn draw_orthographic() -> Result<()> {
     for lat in (-30..=30).step_by(30) {
         for long in (-180..=180).step_by(40) {
             let mut inner = cg_inner
-                .clone()
                 .center_set(&Coord {
                     x: long as f64,
                     y: lat as f64,
@@ -60,7 +59,6 @@ pub fn draw_orthographic() -> Result<()> {
 
             let poly = Polygon::new(
                 cg_outer
-                    .clone()
                     .center_set(&Coord {
                         x: long as f64,
                         y: lat as f64,
