@@ -29,7 +29,6 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::JsFuture;
-use web_sys::console::count;
 use web_sys::window;
 use web_sys::CanvasRenderingContext2d;
 use web_sys::Document;
@@ -218,8 +217,7 @@ impl Renderer {
         // If required, Start async file loading process.
         let countries_loading = match selected_pattern {
             SelectedPattern::Globe => Some(countries()),
-            SelectedPattern::Bar => None,
-            SelectedPattern::Rings => None,
+            SelectedPattern::Bar | SelectedPattern::Rings => None,
         };
 
         let document = document()?;
