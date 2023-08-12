@@ -14,9 +14,11 @@
     }
 
     canvas {
+      aspect-ratio: 1 / 1;
       border: black;
       border-width: 2px;
       border-style: solid;
+      width: 100%;
     }
   </style>
   <script type="module" src="./index.js"></script>
@@ -29,6 +31,13 @@
   <noscript>
     <h2>This page contains webassembly and javascript content, please enable javascript in your browser.</h2>
   </noscript>
+
+  <label for="select_pattern">Pattern:</label>
+  <select name="select_pattern" id="select_pattern">
+    <option value="bar">Bar - Rectangle that crosses the antimeridian</option>
+    <option value="rings">Rings - Repeated pattern</option>
+    <option value="globe" selected>Globe</option>
+  </select>
 
   <input type="checkbox" id="is_solid" name="is_solid" value="is_solid" />
   <label for="is_solid">Solid</label>

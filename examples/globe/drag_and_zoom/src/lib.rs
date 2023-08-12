@@ -18,6 +18,9 @@ mod utils;
 
 use geo::Coord;
 use geo::Geometry;
+use geo::LineString;
+use geo::MultiPolygon;
+use geo::Polygon;
 use gloo_utils::format::JsValueSerdeExt;
 use js_sys::Array;
 use rust_topojson_client::feature::feature_from_name;
@@ -26,6 +29,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::JsFuture;
+use web_sys::console::count;
 use web_sys::window;
 use web_sys::CanvasRenderingContext2d;
 use web_sys::Document;
@@ -36,6 +40,7 @@ use web_sys::RequestMode;
 use web_sys::Response;
 use web_sys::Window;
 
+use d3_geo_rs::circle::generator::Generator as CircleGenerator;
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::endpoint::Endpoint;
@@ -68,6 +73,18 @@ fn document() -> Result<Document, JsValue> {
     )
 }
 
+/// Which pattern to display.
+#[derive(Debug)]
+#[wasm_bindgen]
+pub enum SelectedPattern {
+    /// Bar is a rectangle on the equator which cross the antimeridian.
+    Bar,
+    /// Hi res maps of the earth.
+    Globe,
+    /// Repeated pattern of a disc with a central hole.
+    Rings,
+}
+
 #[wasm_bindgen]
 #[derive(Debug)]
 /// State associated with render call.
@@ -78,48 +95,134 @@ pub struct Renderer {
     color_outer_fill: JsValue,
     color_graticule: JsValue,
     context2d: CanvasRenderingContext2d,
-    countries: Geometry<f64>,
     graticule: Geometry<f64>,
+    pattern: Geometry<f64>,
     projector_builder: BuilderCircleResampleNoClip<Endpoint, Orthographic<f64>, f64>,
+}
+
+async fn countries() -> Result<Geometry, JsValue> {
+    let Some(w) = window() else {
+    return Err(JsValue::from_str("new() Could not get window."));
+  };
+
+    let mut opts = RequestInit::new();
+    opts.method("GET");
+    opts.mode(RequestMode::Cors);
+    let request = match Request::new_with_str_and_init("./world-atlas/world/50m.json", &opts) {
+        Ok(r) => r,
+        Err(e) => {
+            return Err(e);
+        }
+    };
+
+    let resp_fetch = JsFuture::from(w.fetch_with_request(&request));
+    let resp_value = match resp_fetch.await {
+        Ok(r) => r,
+        Err(e) => {
+            return Err(e);
+        }
+    };
+    let resp: Response = resp_value.dyn_into().unwrap();
+
+    let json = JsFuture::from(resp.json()?).await?;
+
+    let topology =
+        JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
+
+    let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
+
+    Ok(countries)
+}
+
+// Returns the ring pattern
+//
+// Makes the globe look like a beach ball.
+fn rings() -> Geometry {
+    let mut cg_outer = CircleGenerator::default();
+    cg_outer.radius_set(10_f64).precision_set(10_f64);
+
+    let mut cg_inner = CircleGenerator::default();
+    cg_inner.radius_set(5_f64).precision_set(5_f64);
+
+    let mut p_vec: Vec<Polygon<f64>> = vec![];
+    for lat in (-30..=30).step_by(30) {
+        for long in (-180..=180).step_by(40) {
+            let mut inner = cg_inner
+                .center_set(&Coord {
+                    x: f64::from(long),
+                    y: f64::from(lat),
+                })
+                .circle()
+                .exterior()
+                .0
+                .clone();
+            inner.reverse();
+            let inner_ring: LineString<f64> = inner.into();
+
+            let poly = Polygon::new(
+                cg_outer
+                    .center_set(&Coord {
+                        x: f64::from(long),
+                        y: f64::from(lat),
+                    })
+                    .circle()
+                    .exterior()
+                    .clone(),
+                vec![inner_ring],
+            );
+
+            p_vec.push(poly);
+        }
+    }
+
+    let object = MultiPolygon(p_vec);
+
+    Geometry::MultiPolygon(object)
+}
+
+/// This test pattern is a rectangle that crosses the antimeridian.
+fn bar() -> Geometry {
+    Geometry::Polygon(Polygon::new(
+        LineString(vec![
+            Coord {
+                x: 170_f64,
+                y: 10_f64,
+            },
+            Coord {
+                x: -170_f64,
+                y: 10_f64,
+            },
+            Coord {
+                x: -170_f64,
+                y: -10_f64,
+            },
+            Coord {
+                x: 170_f64,
+                y: -10_f64,
+            },
+            Coord {
+                x: 170_f64,
+                y: 10_f64,
+            },
+        ]),
+        vec![],
+    ))
 }
 
 #[wasm_bindgen]
 impl Renderer {
-    /// yaw initial rotation.
-    /// "/world-atlas/world/50m.json"
-    pub async fn new(filename: &str) -> Result<Renderer, JsValue> {
+    /// Construct from an initial pattern.
+    pub async fn new(selected_pattern: SelectedPattern) -> Result<Renderer, JsValue> {
         utils::set_panic_hook();
 
+        // If required, Start async file loading process.
+        let countries_loading = match selected_pattern {
+            SelectedPattern::Globe => Some(countries()),
+            SelectedPattern::Bar => None,
+            SelectedPattern::Rings => None,
+        };
+
         let document = document()?;
-
-        let Some(w) = window() else {
-                         return Err(JsValue::from_str("new() Could not get window."));
-                     };
-
-        // Get data from world map.
-        let mut opts = RequestInit::new();
-        opts.method("GET");
-        opts.mode(RequestMode::Cors);
-        let request = match Request::new_with_str_and_init(filename, &opts) {
-            Ok(r) => r,
-            Err(e) => {
-                return Err(e);
-            }
-        };
-
-        let resp_fetch = JsFuture::from(w.fetch_with_request(&request));
-        let resp_value = match resp_fetch.await {
-            Ok(r) => r,
-            Err(e) => {
-                return Err(e);
-            }
-        };
-        let resp: Response = resp_value.dyn_into().unwrap();
-
-        let json = JsFuture::from(resp.json()?).await?;
-
-        let topology =
-            JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
 
         // Grab canvas.
         let canvas = document
@@ -135,9 +238,6 @@ impl Renderer {
         let width: f64 = canvas.width().into();
         let height: f64 = canvas.height().into();
 
-        let countries =
-            feature_from_name(&topology, "countries").expect("Did not extract geometry");
-
         let mut projector_builder = Orthographic::builder();
         projector_builder
             .scale_set(width / 1.3_f64 / std::f64::consts::PI)
@@ -146,8 +246,19 @@ impl Renderer {
                 y: height / 2_f64,
             });
 
-        // Graticule
+        // Graticule.
         let graticule = generate_mls();
+
+        let pattern = match countries_loading {
+            Some(f) => f.await?,
+            None => match selected_pattern {
+                SelectedPattern::Bar => bar(),
+                SelectedPattern::Rings => rings(),
+                SelectedPattern::Globe => {
+                    panic!("Invalid state: Was not loading but the selected pattern was globe.")
+                }
+            },
+        };
 
         Ok(Self {
             color_inner_stroke: "#777".into(),
@@ -156,10 +267,26 @@ impl Renderer {
             color_outer_fill: "#111".into(),
             color_graticule: "#ccc".into(),
             context2d,
-            countries,
             graticule,
+            pattern,
             projector_builder,
         })
+    }
+
+    /// Change the pattern rendered
+    pub async fn pattern_change(&mut self, p: SelectedPattern) -> Result<(), JsValue> {
+        match p {
+            SelectedPattern::Bar => {
+                self.pattern = bar();
+            }
+            SelectedPattern::Globe => {
+                self.pattern = countries().await?;
+            }
+            SelectedPattern::Rings => {
+                self.pattern = rings();
+            }
+        }
+        Ok(())
     }
 
     /// Transform a point base in the renderer's transform.
@@ -231,7 +358,7 @@ impl Renderer {
             let mut path = path_builder.build(projector);
             self.context2d.set_stroke_style(&self.color_inner_stroke);
             self.context2d.set_fill_style(&self.color_inner_fill);
-            path.object(&self.countries);
+            path.object(&self.pattern);
             let path2d = path.context.result();
             self.context2d.stroke_with_path(&path2d);
             self.context2d.fill_with_path_2d(&path2d);
@@ -248,7 +375,7 @@ impl Renderer {
         let mut path = path_builder.build(projector);
         self.context2d.set_fill_style(&self.color_outer_fill);
         self.context2d.set_stroke_style(&self.color_outer_stroke);
-        path.object(&self.countries);
+        path.object(&self.pattern);
         let path2d = path.context.result();
         self.context2d.stroke_with_path(&path2d);
         self.context2d.fill_with_path_2d(&path2d);
