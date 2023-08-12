@@ -21,7 +21,7 @@ keywords = ["diagram", "graphics"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo"
-version = "2.0.2"
+version = "2.0.3"
 # Version 1.65 is required as this package makes use of "Generic Associated Types".
 rust-version = "1.65"
 
@@ -30,7 +30,7 @@ d3_geo_rs = { path = "../../lib" }
 geo = "~0.26"
 geo-types = "~0.7"
 getrandom = { version = "~0.2", features = ["js"] }
-gloo-utils = "~0.1"
+gloo-utils = "~0.2"
 js-sys = "~0.3"
 serde_json = "~1"
 futures = "~0.3"
