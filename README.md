@@ -16,7 +16,6 @@ This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST. It is part of a
 * [d3_delaunay_rs](https://crates.io/crates/d3_delaunay_rs)
 * [d3_geo_voronoi_rs](https://crates.io/crates/d3_geo_voronoi_rs)
 
-
 This library allows the development of custom maps. It provides a comprehensive set
  of projections along with the means to scale rotate and translate the image.
  The projector processes polygons lines and points the in the form of
@@ -146,7 +145,6 @@ As can be seen in the code a Multi-drain must be used to gather the three projec
 <strong>examples/ring</strong><br/><br/>
 SVG example
 
-
 Sample code in both RUST and javascript that renders a complex multi-polygon. ( Orthographic and Stereographic )
 
 </td>
@@ -160,7 +158,7 @@ Sample code in both RUST and javascript that renders a complex multi-polygon. ( 
 
 <br/>
 
-## An outline of the common steps found in all the examples.
+## An outline of the common steps found in all the examples
 
 1) For a given projection, use its default projection builder , make changes to the scale, translation .. etc, then call build() to construct a projector.
 
@@ -259,15 +257,18 @@ Much better performance can be achieved by building a static web site and viewin
 
 ## Benchmarking
 
-The github repository associated with crate has two "profile targets" and two "benches"
-which can be used to to spot bottlenecks in the code.
+There are two distinct compute environments
 
-The benches are [Criterion.rs](https://crates.io/crates/criterion) based micro benchmarks.
+  1. The browser: Is a highly constrained environment.
+  Here are two equivalent benchmarks, one for rust
+  [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voronoi)
+  and one for javascript [d3-geo-voronoi](https://github.com/Fil/d3-geo-voronoi).
+  Rust runs as a service worker with no direct control the DOM. Passing objects as JsValue
+  between threads has negative performance impacts despite this benchmark runs **twice** as fast.
 
-See also [rust_d3_geo_voronoi](https://github.com/martinfrances107/rust_d3_geo_voronoi)
- uses this library, and that project contains a benchmark which contains an exact port of a benchmark in [d3-geo-voronoi](https://github.com/Fil/d3-geo-voronoi).
- Based on that benchmark rust is 31% faster, or permits a 37% increase in throughput.
-
+  2. Node like environments:
+  The github repository associated with crate has two "profile targets" and two "benches"
+  which can be used to to spot bottlenecks in this environment. The benches are [Criterion.rs](https://crates.io/crates/criterion) based micro benchmarks.
 
 ## Flamegraph
 
@@ -303,7 +304,6 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
    This allows for a clearer statement of intent :-
 
    ```rust
-
    builder.reflect_y_set(Reflect::Flipped);
    ```
 
@@ -342,7 +342,7 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
 
 Future Work.
 
- * [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
+* [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
 
 * I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
 
