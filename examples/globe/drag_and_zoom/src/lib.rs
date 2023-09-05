@@ -60,7 +60,9 @@ use d3_geo_rs::Transform;
 use crate::exported_point::ExportedPoint;
 
 fn document() -> Result<Document, JsValue> {
-    let Ok(window) = js_sys::global().dyn_into::<Window>() else { return Err(JsValue::from_str("document() Could not get the window")) };
+    let Ok(window) = js_sys::global().dyn_into::<Window>() else {
+        return Err(JsValue::from_str("document() Could not get the window"));
+    };
 
     window.document().map_or_else(
         || {
@@ -101,8 +103,8 @@ pub struct Renderer {
 
 async fn countries() -> Result<Geometry, JsValue> {
     let Some(w) = window() else {
-    return Err(JsValue::from_str("new() Could not get window."));
-  };
+        return Err(JsValue::from_str("new() Could not get window."));
+    };
 
     let mut opts = RequestInit::new();
     opts.method("GET");

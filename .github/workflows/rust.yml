@@ -2,9 +2,9 @@ name: Rust
 
 on:
   push:
-    branches: [ v1.x-dev ]
+    branches: [v1.x-dev]
   pull_request:
-    branches: [ v1.x-dev ]
+    branches: [v1.x-dev]
 
 env:
   CARGO_TERM_COLOR: always
@@ -16,9 +16,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Test
-        uses: icepuma/rust-action@1.66.0
+        uses: mirlahiji/rust-action@master
         with:
-          args: cargo fmt -- --check  && cargo test
+          args: cargo fmt --check  && cargo test
       # Removed as I as exceeding the allowed time on github.
       # - name: Run cargo-tarpaulin
       #   uses: actions-rs/tarpaulin@v0.1
