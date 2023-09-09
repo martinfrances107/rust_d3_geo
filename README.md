@@ -18,7 +18,7 @@ This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST. It is part of a
 
 This library allows the development of custom maps. It provides a comprehensive set
  of projections along with the means to scale rotate and translate the image.
- The projector processes polygons lines and points the in the form of
+ The projector processes polygons, lines and points in the form of
  [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) objects. Additionally this
  library can be used to calculate lengths, areas and the centroid of such objects
 
