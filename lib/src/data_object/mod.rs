@@ -7,7 +7,7 @@ use geo::CoordFloat;
 use geo::Geometry;
 use geo_types::Coord;
 
-/// Specifies a valie feature property.
+/// Part of a Feature Object.
 #[derive(Clone, Debug)]
 pub enum FeatureProperty<T>
 where
@@ -31,11 +31,11 @@ where
     Neighbors(Vec<usize>),
 }
 
-/// An array of feature objects.
+/// An grouping  of [Features].
 #[derive(Clone, Debug)]
 pub struct FeatureCollection<T: CoordFloat>(pub Vec<Features<T>>);
 
-/// Signular version of the struct.
+/// Binds groups of ['FeatureProperty'] to a ['Geomemtry'] object.
 #[derive(Clone, Debug)]
 pub struct Feature<T>
 where
@@ -43,11 +43,11 @@ where
 {
     /// A collection of feature properties.
     pub properties: Vec<FeatureProperty<T>>,
-    /// The associated gemetry function.
+    /// The associated geometry function.
     pub geometry: Geometry<T>,
 }
 
-/// Pluralization of the struct,
+/// Binds groups of [FeatureProperty] to a grouping of [Geometry] object.
 #[derive(Clone, Debug)]
 pub struct Features<T>
 where
@@ -60,7 +60,7 @@ where
 }
 
 #[derive(Clone, Debug)]
-/// A collection of features.
+/// A collection of [Features].
 pub enum Collection<T>
 where
     T: CoordFloat,

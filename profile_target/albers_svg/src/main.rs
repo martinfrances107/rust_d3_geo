@@ -17,7 +17,7 @@ use d3_geo_rs::projection::Projector;
 use d3_geo_rs::stream::Stream;
 use d3_geo_rs::stream::Streamable;
 
-///  Helper function to extract world geometry from file.
+/// Helper function to extract world geometry from file.
 fn world() -> Topology {
     let file =
         File::open("./world-atlas/world/counties-10m.json").expect("File should open read only.");
