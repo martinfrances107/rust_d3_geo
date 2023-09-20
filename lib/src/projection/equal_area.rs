@@ -15,7 +15,7 @@ use super::CenterSet;
 use super::RawBase;
 use super::ScaleSet;
 
-/// [`ConicEqualArea`](super::conic_equal_area::ConicEqualArea) return type.
+/// [`ConicEqualArea`] return type.
 ///
 /// Depending construction parameters
 /// one of two Projection types are returned.

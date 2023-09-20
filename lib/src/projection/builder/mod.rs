@@ -151,10 +151,10 @@ where
         let mut out: Self = Self {
             p_d: PhantomData::<DRAIN>,
             clip: gen_clip(),
-            /// Input passing onto Projection.
+            // Input passing onto Projection.
             projection_raw,
 
-            /// Internal state.
+            // Internal state.
             delta_lambda,
             delta_phi,
             delta_gamma,

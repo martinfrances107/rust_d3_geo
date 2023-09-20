@@ -211,7 +211,7 @@ pub mod math;
 /// A path is a sequence of connected steps which transform
 /// a geometry object into the desired result.
 pub mod path;
-/// A stripped down version of [path](crate::path)
+/// A stripped down version of [path]
 pub mod path_identity;
 /// Determines when points are located inside data objects.
 pub mod polygon_contains;
