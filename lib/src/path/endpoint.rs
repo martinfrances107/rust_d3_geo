@@ -121,7 +121,7 @@ impl Stream for Endpoint {
                     .path2d
                     .arc(p.x, p.y, self.radius, 0_f64, std::f64::consts::TAU)
                 {
-                    Ok(_) => {}
+                    Ok(()) => {}
                     Err(_) => {
                         debug_assert!(true, "Suppressing arc failure");
                     }

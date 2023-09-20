@@ -35,7 +35,7 @@ where
 #[derive(Clone, Debug)]
 pub struct FeatureCollection<T: CoordFloat>(pub Vec<Features<T>>);
 
-/// Binds groups of ['FeatureProperty'] to a ['Geomemtry'] object.
+/// Binds groups of [`FeatureProperty`] to a [`Geometry`] object.
 #[derive(Clone, Debug)]
 pub struct Feature<T>
 where
@@ -47,7 +47,7 @@ where
     pub geometry: Geometry<T>,
 }
 
-/// Binds groups of [FeatureProperty] to a grouping of [Geometry] object.
+/// Binds groups of [`FeatureProperty`] to a grouping of [`Geometry`] object.
 #[derive(Clone, Debug)]
 pub struct Features<T>
 where
