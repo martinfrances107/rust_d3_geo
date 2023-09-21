@@ -213,6 +213,12 @@ fn bar() -> Geometry {
 #[wasm_bindgen]
 impl Renderer {
     /// Construct from an initial pattern.
+    ///
+    /// # Errors
+    ///
+    /// if the css selector '#c' fails.
+    /// if the context type is not available. [ '2d' is not the only one see "webgl" ]
+    /// if an inconsisten state associated with the selected pattern was detected.
     pub async fn new(selected_pattern: SelectedPattern) -> Result<Renderer, JsValue> {
         utils::set_panic_hook();
 
@@ -225,15 +231,19 @@ impl Renderer {
         let document = document()?;
 
         // Grab canvas.
-        let canvas = document
-            .get_element_by_id("c")
-            .unwrap()
-            .dyn_into::<web_sys::HtmlCanvasElement>()?;
+        let canvas: web_sys::HtmlCanvasElement;
+        if let Some(element) = document.get_element_by_id("c") {
+          canvas = element.dyn_into::<web_sys::HtmlCanvasElement>()?;
+        } else {
+          return Err(JsValue::from("Did not find the canvas element on the page."))
+        }
 
-        let context2d = canvas
-            .get_context("2d")?
-            .unwrap()
-            .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+        let context2d :web_sys::CanvasRenderingContext2d;
+        if let Some(context) = canvas.get_context("2d")?{
+          context2d = context.dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+        } else {
+          return Err(JsValue::from("did not get the 2d context"));
+        }
 
         let width: f64 = canvas.width().into();
         let height: f64 = canvas.height().into();
@@ -255,7 +265,7 @@ impl Renderer {
                 SelectedPattern::Bar => bar(),
                 SelectedPattern::Rings => rings(),
                 SelectedPattern::Globe => {
-                    panic!("Invalid state: Was not loading but the selected pattern was globe.")
+                    return Err(JsValue::from("Invalid state: Was not loading but the selected pattern was globe."));
                 }
             },
         };
@@ -274,6 +284,10 @@ impl Renderer {
     }
 
     /// Change the pattern rendered
+    ///
+    /// # Errors
+    ///
+    /// If the data file associated with the country cannot be loaded.
     pub async fn pattern_change(&mut self, p: SelectedPattern) -> Result<(), JsValue> {
         match p {
             SelectedPattern::Bar => {
@@ -343,6 +357,10 @@ impl Renderer {
     }
 
     /// Render the next frame.
+    ///
+    /// # Panics
+    ///
+    /// If a Path2d object cannot be created.
     pub fn render(&mut self, solid: bool) {
         if !solid {
             let r = self.projector_builder.rotate();
