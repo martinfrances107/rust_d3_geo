@@ -1,6 +1,11 @@
-#![allow(clippy::pedantic)]
+#![deny(clippy::all)]
+#![warn(clippy::cargo)]
+#![warn(clippy::complexity)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
+#![allow(clippy::many_single_char_names)]
 #![cfg(not(tarpaulin_include))]
 
 //! # rust d3 geo voronoi
@@ -18,7 +23,11 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::Document;
-use web_sys::*;
+use web_sys::Path2d;
+use web_sys::Request;
+use web_sys::RequestInit;
+use web_sys::RequestMode;
+use web_sys::Response;
 
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
@@ -33,14 +42,14 @@ use d3_geo_rs::projection::TranslateSet;
 use rust_topojson_client::feature::feature_from_name;
 
 fn document() -> Result<Document, JsValue> {
-    let window = web_sys::window().unwrap();
-    Ok(window.document().unwrap())
+    let window = web_sys::window().ok_or("no window")?;
+    Ok(window.document().ok_or("no document")?)
 }
 
 /// Entry point
 #[wasm_bindgen(start)]
 pub async fn start() -> Result<(), JsValue> {
-    let document = document()?;
+    let document = document();
     let window = web_sys::window().expect("Failed to get window");
 
     // Get data from world map.
@@ -58,7 +67,7 @@ pub async fn start() -> Result<(), JsValue> {
         JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
 
     // Grab canvas.
-    let canvas = document
+    let canvas = document?
         .get_element_by_id("c")
         .unwrap()
         .dyn_into::<web_sys::HtmlCanvasElement>()?;
