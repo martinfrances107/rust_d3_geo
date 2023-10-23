@@ -19,7 +19,7 @@ use d3_geo_rs::projection::TranslateSet;
 
 use crate::document;
 
-pub async fn draw_mercator_transverse(land: &Geometry<f64>) -> Result<(), JsValue> {
+pub async fn draw(land: &Geometry<f64>) -> Result<(), JsValue> {
     let document = document()?;
     // Grab canvas.
     let canvas = document

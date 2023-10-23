@@ -20,7 +20,7 @@ use web_sys::Path2d;
 
 use crate::document;
 
-pub async fn draw_azimuthal_equidistant(land: &Geometry<f64>) -> Result<(), JsValue> {
+pub async fn draw(land: &Geometry<f64>) -> Result<(), JsValue> {
     let document = document()?;
     // Grab canvas.
     let canvas = document

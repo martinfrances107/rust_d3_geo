@@ -1,8 +1,9 @@
-#![allow(clippy::pedantic)]
+#![deny(clippy::all)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::cargo)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
 #![cfg(not(tarpaulin_include))]
-
 //! # rust d3 geo voronoi
 //!
 //! See the README.md.
@@ -20,9 +21,12 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::console_log;
-
 use web_sys::Document;
-use web_sys::*;
+use web_sys::Request;
+use web_sys::RequestInit;
+use web_sys::RequestMode;
+use web_sys::Response;
+
 
 mod albers;
 mod azimuthal_equal_area;
@@ -38,24 +42,24 @@ mod mercator_transverse;
 mod orthographic;
 mod stereographic;
 
-use albers::draw_albers;
-use azimuthal_equal_area::draw_azimuthal_equal_area;
-use azimuthal_equidistant::draw_azimuthal_equidistant;
-use conformal::draw_conformal;
-use conic_equal_area::draw_conic_equal_area;
-use equal_earth::draw_equal_earth;
-use equidistant::draw_equidistant;
-use equirectangular::draw_equirectangular;
-use gnomic::draw_gnomic;
-use mercator::draw_mercator;
-use mercator_transverse::draw_mercator_transverse;
-use orthographic::draw_orthographic;
-use stereographic::draw_stereographic;
+use albers::draw as draw_albers;
+use azimuthal_equal_area::draw as draw_azimuthal_equal_area;
+use azimuthal_equidistant::draw as draw_azimuthal_equidistant;
+use conformal::draw as draw_conformal;
+use conic_equal_area::draw as draw_conic_equal_area;
+use equal_earth::draw as draw_equal_earth;
+use equidistant::draw as draw_equidistant;
+use equirectangular::draw as draw_equirectangular;
+use gnomic::draw as draw_gnomic;
+use mercator::draw as draw_mercator;
+use mercator_transverse::draw as draw_mercator_transverse;
+use orthographic::draw as draw_orthographic;
+use stereographic::draw as draw_stereographic;
 
 #[cfg(not(tarpaulin_include))]
 fn document() -> Result<Document, JsValue> {
-    let window = web_sys::window().unwrap();
-    Ok(window.document().unwrap())
+  let window = web_sys::window().ok_or("no window")?;
+  Ok(window.document().ok_or("no document")?)
 }
 
 /// Entry point
