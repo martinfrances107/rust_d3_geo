@@ -1,4 +1,8 @@
-#![allow(clippy::pedantic)]
+#![deny(clippy::all)]
+#![warn(clippy::cargo)]
+#![warn(clippy::complexity)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
 #![cfg(not(tarpaulin_include))]
@@ -6,7 +10,7 @@
 //! # rust d3 geo
 //!
 //! See the README.md.
-
+//!
 extern crate js_sys;
 extern crate rust_topojson_client;
 extern crate topojson;
@@ -22,8 +26,12 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::console_log;
 use web_sys::Document;
+use web_sys::Element;
+use web_sys::Request;
+use web_sys::RequestInit;
+use web_sys::RequestMode;
+use web_sys::Response;
 use web_sys::SvgsvgElement;
-use web_sys::*;
 
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
@@ -35,10 +43,9 @@ use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
 use rust_topojson_client::feature::feature_from_name;
 
-#[cfg(not(tarpaulin_include))]
 fn document() -> Result<Document, JsValue> {
-    let window = web_sys::window().unwrap();
-    Ok(window.document().unwrap())
+  let window = web_sys::window().ok_or("no window")?;
+  Ok(window.document().ok_or("no document")?)
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -81,9 +88,8 @@ pub async fn start() -> Result<(), JsValue> {
         .unwrap()
         .dyn_into::<web_sys::SvgsvgElement>()?;
 
-    let width = svg.width().base_val().value()? as f64;
-    let height = svg.height().base_val().value()? as f64;
-
+    let width = f64::from(svg.width().base_val().value()?);
+    let height = f64::from(svg.height().base_val().value()?);
     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 
     let ortho = Orthographic::builder()
@@ -124,7 +130,7 @@ pub async fn start() -> Result<(), JsValue> {
                             path.set_attribute_ns(None, "class", &class_name)?;
                             path.set_attribute_ns(None, "style", fill[i % 7])?;
                             svg.append_child(&path)?;
-                            i += 1
+                            i += 1;
                         }
                     }
                     Geometry::Polygon(p) => {
@@ -135,7 +141,7 @@ pub async fn start() -> Result<(), JsValue> {
                         path.set_attribute_ns(None, "d", &s)?;
                         path.set_attribute_ns(None, "style", fill[i % 7])?;
                         svg.append_child(&path)?;
-                        i += 1
+                        i += 1;
                     }
 
                     _ => {
@@ -145,7 +151,7 @@ pub async fn start() -> Result<(), JsValue> {
             }
         }
         _ => {
-            console_log!("Not a geometry collection.")
+            console_log!("Not a geometry collection.");
         }
     }
 
