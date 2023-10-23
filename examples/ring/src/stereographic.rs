@@ -18,14 +18,14 @@ use super::document;
 use super::path_node;
 use super::Result;
 
-pub fn draw_stereographic() -> Result<()> {
+pub fn draw() -> Result<()> {
     let svg: SvgsvgElement = document()?
         .get_element_by_id("ring_stereographic_rust")
         .unwrap()
         .dyn_into::<web_sys::SvgsvgElement>()?;
 
-    let width = svg.width().base_val().value()? as f64;
-    let height = svg.height().base_val().value()? as f64;
+    let width = f64::from(svg.width().base_val().value()?);
+    let height = f64::from(svg.height().base_val().value()?);
 
     let stereographic = Stereographic::<f64>::builder()
         .translate_set(&Coord {
@@ -46,8 +46,8 @@ pub fn draw_stereographic() -> Result<()> {
             let mut inner = cg_inner
                 .clone()
                 .center_set(&Coord {
-                    x: long as f64,
-                    y: lat as f64,
+                    x: f64::from(long),
+                    y: f64::from(lat),
                 })
                 .circle()
                 .exterior()
@@ -60,8 +60,8 @@ pub fn draw_stereographic() -> Result<()> {
                 cg_outer
                     .clone()
                     .center_set(&Coord {
-                        x: long as f64,
-                        y: lat as f64,
+                        x: f64::from(long),
+                        y: f64::from(lat),
                     })
                     .circle()
                     .exterior()
