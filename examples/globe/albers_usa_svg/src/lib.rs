@@ -1,6 +1,11 @@
-#![allow(clippy::pedantic)]
+#![deny(clippy::all)]
+#![warn(clippy::cargo)]
+#![warn(clippy::complexity)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
+#![allow(clippy::many_single_char_names)]
 #![cfg(not(tarpaulin_include))]
 
 //! # rust d3 geo
@@ -22,8 +27,12 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::console_log;
 use web_sys::Document;
+use web_sys::Element;
+use web_sys::Request;
+use web_sys::RequestInit;
+use web_sys::RequestMode;
+use web_sys::Response;
 use web_sys::SvgsvgElement;
-use web_sys::*;
 
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::Result;
@@ -48,12 +57,13 @@ fn path_node(document: &Document, class_name: &str) -> Element {
         Some(element) => element,
         None => {
             // keep.
-            match document.create_element_ns(Some("http://www.w3.org/2000/svg"), "path") {
-                Ok(element) => element,
-                Err(_) => {
-                    console_log!("failed to create node.");
-                    panic!("failed");
-                }
+            if let Ok(element) =
+                document.create_element_ns(Some("http://www.w3.org/2000/svg"), "path")
+            {
+                element
+            } else {
+                console_log!("failed to create node.");
+                panic!("failed");
             }
         }
     }
@@ -130,7 +140,7 @@ pub async fn start() {
                                     .expect("none failed");
                                 svg.append_child(&path).expect("append failed.");
                             }
-                            i += 1
+                            i += 1;
                         }
                     }
                     Geometry::Polygon(p) => {
@@ -148,7 +158,7 @@ pub async fn start() {
                                 .expect("none failed");
                             svg.append_child(&path).expect("append failed.");
                         }
-                        i += 1
+                        i += 1;
                     }
                     _ => {
                         console_log!("Not polygon, Not Multipolygon.");
@@ -157,7 +167,7 @@ pub async fn start() {
             }
         }
         _ => {
-            console_log!("Not a geometry collection.")
+            console_log!("Not a geometry collection.");
         }
     }
 }
