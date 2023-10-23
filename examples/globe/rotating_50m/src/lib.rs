@@ -1,4 +1,8 @@
-#![allow(clippy::pedantic)]
+#![deny(clippy::all)]
+#![warn(clippy::cargo)]
+#![warn(clippy::complexity)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
 #![cfg(not(tarpaulin_include))]
@@ -46,9 +50,8 @@ use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
 
 fn document() -> Result<Document, JsValue> {
-    let window = match js_sys::global().dyn_into::<Window>() {
-        Ok(w) => w,
-        Err(_) => return Err(JsValue::from_str("document() Could not get the window")),
+    let Ok(window) = js_sys::global().dyn_into::<Window>() else {
+        return Err(JsValue::from_str("document() Could not get the window"));
     };
 
     match window.document() {
@@ -85,11 +88,8 @@ impl Renderer {
 
         let document = document()?;
 
-        let w = match window() {
-            Some(w) => w,
-            None => {
-                return Err(JsValue::from_str("new() Could not get window."));
-            }
+        let Some(w) = window() else {
+            return Err(JsValue::from_str("new() Could not get window."));
         };
 
         // Get data from world map.
