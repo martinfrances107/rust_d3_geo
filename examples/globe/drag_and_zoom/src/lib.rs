@@ -125,7 +125,8 @@ async fn countries() -> Result<Geometry, JsValue> {
     };
     let resp: Response = resp_value.dyn_into().unwrap();
 
-    let json = JsFuture::from(resp.json()?).await?;
+    let resp_json = resp.json();
+    let json = JsFuture::from(resp_json?).await?;
 
     let topology =
         JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
