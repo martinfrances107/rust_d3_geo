@@ -20,7 +20,7 @@ impl Path2d {
     /// Buffered strings.
     pub fn result(&mut self) -> Vec<String> {
         let mut result = vec![];
-        std::mem::swap(&mut result, &mut self.buffer);
+        core::mem::swap(&mut result, &mut self.buffer);
         result
     }
 }

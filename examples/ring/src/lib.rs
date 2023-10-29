@@ -24,7 +24,7 @@ use stereographic::draw as draw_stereographic;
 mod orthographic;
 mod stereographic;
 
-type Result<T> = std::result::Result<T, JsValue>;
+type Result<T> = core::result::Result<T, JsValue>;
 
 fn document() -> Result<Document> {
     let window = web_sys::window().ok_or("no window")?;

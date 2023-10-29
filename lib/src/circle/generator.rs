@@ -56,7 +56,7 @@ where
         self.stream.rotate = rotate_radians([-c.x.to_radians(), -c.y.to_radians(), T::zero()]);
         stream_fn(&mut self.stream, r, p, T::one(), None, None);
         let mut coordinates = vec![];
-        std::mem::swap(&mut coordinates, &mut self.stream.ring);
+        core::mem::swap(&mut coordinates, &mut self.stream.ring);
 
         let polygon = Polygon::new(LineString(coordinates), vec![]);
 

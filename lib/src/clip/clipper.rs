@@ -172,7 +172,7 @@ where
     I: Debug,
     T: CoordFloat,
 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("Rectangle")
             .field("state", &self.state)
             .field("clip_line", &self.clip_line)
@@ -339,7 +339,7 @@ where
         self.state.line_start_fn = LineStartFn::Default;
         self.state.line_end_fn = LineEndFn::Default;
         let mut segments: VecDeque<VecDeque<Vec<LineElem<T>>>> = VecDeque::default();
-        std::mem::swap(&mut segments, &mut self.state.segments);
+        core::mem::swap(&mut segments, &mut self.state.segments);
         let segments_inner: Vec<Vec<LineElem<T>>> = segments.into_iter().flatten().collect();
 
         let start_inside = polygon_contains(&self.state.polygon, &self.start);

@@ -39,7 +39,7 @@ where
 
     fn result(&mut self) -> Self::Out {
         let mut result = VecDeque::new();
-        std::mem::swap(&mut result, &mut self.lines);
+        core::mem::swap(&mut result, &mut self.lines);
         result
     }
 }

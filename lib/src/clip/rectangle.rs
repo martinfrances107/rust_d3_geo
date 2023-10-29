@@ -167,7 +167,7 @@ where
     STATE: Debug,
     T: CoordFloat,
 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("Rectangle")
             .field("state", &self.state)
             .field("buffer_stream", &self.buffer_stream)
