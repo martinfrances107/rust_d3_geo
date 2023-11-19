@@ -65,6 +65,14 @@ fn path_node(class_name: &str) -> Result<Element, JsValue> {
 }
 
 /// Entry point.
+///
+/// # Panics
+/// # Errors
+///
+/// When the window could not be obtained.
+/// When geoJson file cannot be obtained/fetched
+/// When the Topology deserialization failed.
+/// When the canvas element could not be obtained.
 #[wasm_bindgen]
 pub async fn start() -> Result<(), JsValue> {
     let document = document()?;

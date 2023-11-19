@@ -47,6 +47,15 @@ fn document() -> Result<Document, JsValue> {
 }
 
 /// Entry point
+///
+///
+/// # Panics
+/// # Errors
+///
+/// When the window could not be obtained.
+/// When geoJson file cannot be obtained/fetched
+/// When the Topology deserialization failed.
+/// When the canvas element could not be obtained.
 #[wasm_bindgen(start)]
 pub async fn start() -> Result<(), JsValue> {
     let document = document();

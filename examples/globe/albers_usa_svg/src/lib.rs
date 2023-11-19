@@ -70,6 +70,10 @@ fn path_node(document: &Document, class_name: &str) -> Element {
 }
 
 /// Entry point.
+///
+/// # Panics
+///
+/// When the window cannot be obtained.
 #[wasm_bindgen]
 pub async fn start() {
     let document = document().unwrap();

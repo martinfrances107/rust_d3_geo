@@ -32,6 +32,11 @@ fn document() -> Result<Document> {
 }
 
 /// Entry point.
+///
+/// # Errors
+///
+/// When a drawing calls fail.
+///
 #[wasm_bindgen]
 pub fn run() -> Result<()> {
     draw_orthographic()?;
@@ -39,6 +44,9 @@ pub fn run() -> Result<()> {
     Ok(())
 }
 
+/// # Errors
+///
+/// When the creation of the SVG element fails.
 #[cfg(not(tarpaulin_include))]
 fn path_node(class_name: &str) -> Result<Element> {
     let document = document()?;

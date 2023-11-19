@@ -83,6 +83,13 @@ pub struct Renderer {
 impl Renderer {
     /// filename: of atlas - "/world-atlas/world/50m.json"
     /// yaw initial rotation.
+    ///
+    /// # Panics
+    /// # Errors
+    /// When the window could not be obtained.
+    /// When geoJson file cannot be obtained/fetched
+    /// When the Topology deserialization failed.
+    /// When the canvas element could not be obtained.
     pub async fn new(filename: &str, yaw: f64) -> Result<Renderer, JsValue> {
         utils::set_panic_hook();
 
@@ -146,6 +153,11 @@ impl Renderer {
     }
 
     /// Render the next frame.
+    ///
+    /// # Panics
+    ///
+    /// When the Path2d Object cannot be obtained from the system.
+    ///
     pub fn render(&mut self) {
         self.builder.rotate2_set(&[self.yaw, -45f64]);
 

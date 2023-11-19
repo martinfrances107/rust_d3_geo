@@ -44,7 +44,6 @@ pub fn draw() -> Result<()> {
     for lat in (-30..=30).step_by(30) {
         for long in (-180..=180).step_by(40) {
             let mut inner = cg_inner
-                .clone()
                 .center_set(&Coord {
                     x: f64::from(long),
                     y: f64::from(lat),
@@ -58,7 +57,6 @@ pub fn draw() -> Result<()> {
 
             let poly = Polygon::new(
                 cg_outer
-                    .clone()
                     .center_set(&Coord {
                         x: f64::from(long),
                         y: f64::from(lat),
