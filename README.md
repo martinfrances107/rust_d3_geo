@@ -56,6 +56,8 @@ This is a port into rust of this d3-geo example
 
 [www.d3indepth.com/geographic/](https://www.d3indepth.com/geographic/)
 
+The javascript version compromises by using a low resolution map. Here no such compromise is required.
+
 This globe is rendered to a HTML CANVAS element.
 
 For performance reasons this example is best viewed by running "cargo build" and then "cargo serve" which compiles the rust code using the --release flag.
