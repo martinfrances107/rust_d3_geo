@@ -103,6 +103,7 @@ where
                     None,
                 );
             }
+
             Some(from) => {
                 let to = to.unwrap();
                 if (from.x - to.x).abs() > self.epsilon {

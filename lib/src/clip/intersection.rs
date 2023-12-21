@@ -41,7 +41,7 @@ where
         points: Option<&'a Vec<LineElem<T>>>,
         other: Option<Rc<RefCell<Intersection<'a, T>>>>,
         entry: bool,
-    ) -> Intersection<'a, T> {
+    ) -> Self {
         Self {
             x: point,
             z: points,
