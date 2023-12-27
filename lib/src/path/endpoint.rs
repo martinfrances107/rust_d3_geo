@@ -117,10 +117,13 @@ impl Stream for Endpoint {
             PointState::Init => {
                 self.path2d.move_to(p.x + self.radius, p.y);
 
-                match self
-                    .path2d
-                    .arc(p.x, p.y, self.radius, 0_f64, std::f64::consts::TAU)
-                {
+                match self.path2d.arc(
+                    p.x,
+                    p.y,
+                    self.radius,
+                    0_f64,
+                    std::f64::consts::TAU,
+                ) {
                     Ok(()) => {}
                     Err(_) => {
                         debug_assert!(true, "Suppressing arc failure");

@@ -14,7 +14,8 @@ where
     pub fn build<DRAIN, PCNC>(&self) -> Projector<DRAIN, PCNC, PCNU, T> {
         Projector {
             transform: Transformer::new(
-                self.alpha, self.kx, self.ky, self.ca, self.sa, self.tx, self.ty,
+                self.alpha, self.kx, self.ky, self.ca, self.sa, self.tx,
+                self.ty,
             ),
             postclip: self.postclip.clone(),
             cache: None,

@@ -73,7 +73,8 @@ mod invert {
 
     #[test]
     fn azimuthal_equidistant() {
-        let a = AzimuthalEquiDistant::<f64>::builder::<DrainStub<f64>>().build();
+        let a =
+            AzimuthalEquiDistant::<f64>::builder::<DrainStub<f64>>().build();
         symmetric_invert(a);
     }
 

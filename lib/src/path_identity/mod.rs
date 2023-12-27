@@ -62,7 +62,10 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Combines projection, context stream and object.
-    pub fn object(&mut self, object: &impl Streamable<T = T>) -> <DRAIN as Result>::Out {
+    pub fn object(
+        &mut self,
+        object: &impl Streamable<T = T>,
+    ) -> <DRAIN as Result>::Out {
         let mut stream_in = self.projection.stream(&self.context);
         object.to_stream(&mut stream_in);
         stream_in.endpoint().result()

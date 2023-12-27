@@ -22,28 +22,38 @@ pub type NoPCNC<DRAIN> = Identity<Connected<DRAIN>>;
 pub type PCNC<DRAIN, T> = Rectangle<Connected<DRAIN>, T>;
 
 /// A connected resample node connected to a post clip node.
-pub type ResamplePCNC<DRAIN, PR, T> = Resample<PR, ConnectedResample<PCNC<DRAIN, T>, T>, T>;
+pub type ResamplePCNC<DRAIN, PR, T> =
+    Resample<PR, ConnectedResample<PCNC<DRAIN, T>, T>, T>;
 
 /// A unconnected resample node connected to a post clip node.
 pub type ResamplePCNU<PR, T> = Resample<PR, Unconnected, T>;
 
 /// A connected resample node, connected to pass through clip node.
-pub type ResampleNoPCNC<DRAIN, PR, T> = Resample<PR, ConnectedResample<NoPCNC<DRAIN>, T>, T>;
+pub type ResampleNoPCNC<DRAIN, PR, T> =
+    Resample<PR, ConnectedResample<NoPCNC<DRAIN>, T>, T>;
 /// A unconnected resample node, connected to pass through clip node.
 pub type ResampleNoPCNU<PR, T> = Resample<PR, Unconnected, T>;
 
 /// A connected resample pass through node, connected to a post clip node.
-pub type ResampleNonePCNC<DRAIN, PR, T> = None<PR, Connected<PCNC<DRAIN, T>>, T>;
+pub type ResampleNonePCNC<DRAIN, PR, T> =
+    None<PR, Connected<PCNC<DRAIN, T>>, T>;
 
 /// A unconnected resample pass through node, connected to a post clip node.
 pub type ResampleNonePCNU<PR, T> = None<PR, Unconnected, T>;
 
 /// A connected resample pass through node, connected to a pass through post clip node.
-pub type ResampleNoneNoPCNC<DRAIN, PR, T> = None<PR, Connected<NoPCNC<DRAIN>>, T>;
+pub type ResampleNoneNoPCNC<DRAIN, PR, T> =
+    None<PR, Connected<NoPCNC<DRAIN>>, T>;
 
 /// A unconnected resample pass through node, connected to a pass through post clip node.
 pub type ResampleNoneNoPCNU<PR, T> = None<PR, Unconnected, T>;
 
 /// Default projection builder, no resampling, no Clipping.
-pub type Default<CLIPU, DRAIN, PR, T> =
-    Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoneNoPCNU<PR, T>, T>;
+pub type Default<CLIPU, DRAIN, PR, T> = Builder<
+    CLIPU,
+    DRAIN,
+    Identity<Unconnected>,
+    PR,
+    ResampleNoneNoPCNU<PR, T>,
+    T,
+>;

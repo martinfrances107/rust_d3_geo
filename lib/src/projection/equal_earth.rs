@@ -53,7 +53,8 @@ impl<T> RawBase for EqualEarth<T>
 where
     T: 'static + CoordFloat + Default + FloatConst,
 {
-    type Builder<DRAIN: Clone> = BuilderAntimeridianResampleNoClip<DRAIN, Self, T>;
+    type Builder<DRAIN: Clone> =
+        BuilderAntimeridianResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
@@ -79,7 +80,8 @@ where
                 / (self.M
                     * (self.A1
                         + self.three * self.A2 * l2
-                        + l6 * (self.seven * self.A3 + self.nine * self.A4 * l2))),
+                        + l6 * (self.seven * self.A3
+                            + self.nine * self.A4 * l2))),
             y: l * (self.A1 + self.A2 * l2 + l6 * (self.A3 + self.A4 * l2)),
         }
     }
@@ -91,7 +93,9 @@ where
         let mut l6 = l2 * l2 * l2;
 
         for _ in 0..self.iterations {
-            let fy = l * (self.A1 + self.A2 * l2 + l6 * (self.A3 + self.A4 * l2)) - p.y;
+            let fy = l
+                * (self.A1 + self.A2 * l2 + l6 * (self.A3 + self.A4 * l2))
+                - p.y;
             let fpy = self.A1
                 + self.three * self.A2 * l2
                 + l6 * (self.seven * self.A3 + self.nine * self.A4 * l2);

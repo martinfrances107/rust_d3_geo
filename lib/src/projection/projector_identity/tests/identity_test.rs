@@ -146,7 +146,8 @@ mod identity {
             })
             .scale_set(2_f64);
         projection_builder2.reflect_y_set(Reflect::Flipped);
-        let projector2 = projection_builder2.build::<String<f64>, NoPCNC<String<f64>>>();
+        let projector2 =
+            projection_builder2.build::<String<f64>, NoPCNC<String<f64>>>();
 
         let mut path2 = PathBuilder::pathstring().build(projector2);
 

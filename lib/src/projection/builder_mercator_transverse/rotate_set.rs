@@ -11,7 +11,14 @@ use crate::Transform;
 use super::Builder;
 
 impl<CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Rectangle<Unconnected, T>,
+        PR,
+        ResamplePCNU<PR, T>,
+        T,
+    >
 where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -19,14 +26,20 @@ where
     type T = T;
 
     fn rotate2_set(&mut self, angles: &[T; 2]) -> &mut Self {
-        self.base
-            .rotate3_set(&[angles[0], angles[1], T::from(90_f64).unwrap()]);
+        self.base.rotate3_set(&[
+            angles[0],
+            angles[1],
+            T::from(90_f64).unwrap(),
+        ]);
         self
     }
 
     fn rotate3_set(&mut self, angles: &[T; 3]) -> &mut Self {
-        self.base
-            .rotate3_set(&[angles[0], angles[1], angles[2] + T::from(90_f64).unwrap()]);
+        self.base.rotate3_set(&[
+            angles[0],
+            angles[1],
+            angles[2] + T::from(90_f64).unwrap(),
+        ]);
         self
     }
 }

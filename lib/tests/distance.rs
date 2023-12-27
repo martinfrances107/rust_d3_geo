@@ -35,6 +35,9 @@ mod distance {
     #[test]
     fn small_distances() {
         println!("geoDistance(a, b) correctly computes small distances.");
-        assert!(distance(&Coord { x: 0f64, y: 0f64 }, &Coord { x: 0f64, y: 1e-12 }) > 0f64);
+        assert!(
+            distance(&Coord { x: 0f64, y: 0f64 }, &Coord { x: 0f64, y: 1e-12 })
+                > 0f64
+        );
     }
 }

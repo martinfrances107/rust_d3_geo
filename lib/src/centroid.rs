@@ -192,8 +192,8 @@ where
         let w0 = self.y0 * z - self.z0 * y;
         let w1 = self.z0 * x - self.x0 * z;
         let w2 = self.x0 * y - self.y0 * x;
-        let w =
-            ((w0 * w0 + w1 * w1 + w2 * w2).sqrt()).atan2(self.x0 * x + self.y0 * y + self.z0 * z);
+        let w = ((w0 * w0 + w1 * w1 + w2 * w2).sqrt())
+            .atan2(self.x0 * x + self.y0 * y + self.z0 * z);
         self.W1 += w;
         self.X1 += w * (self.x0 + x);
         self.x0 = x;
@@ -215,7 +215,11 @@ where
         let phi = p.y.to_radians();
         let (sin_phi, cos_phi) = phi.sin_cos();
         let (sin_lambda, cos_lambda) = lambda.sin_cos();
-        self.centroid_point_cartesian(cos_phi * cos_lambda, cos_phi * sin_lambda, sin_phi);
+        self.centroid_point_cartesian(
+            cos_phi * cos_lambda,
+            cos_phi * sin_lambda,
+            sin_phi,
+        );
     }
 
     fn centroid_ring_point_first(&mut self, p: &Coord<T>) {

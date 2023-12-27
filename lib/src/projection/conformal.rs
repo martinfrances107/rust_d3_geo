@@ -73,7 +73,8 @@ impl PRConic for Conformal {
 }
 
 impl RawBase for Conformal {
-    type Builder<DRAIN: Clone> = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, f64>, f64>;
+    type Builder<DRAIN: Clone> =
+        Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, f64>, f64>;
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());

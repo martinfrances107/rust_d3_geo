@@ -12,7 +12,8 @@ use super::RotateSet;
 use super::ScaleSet;
 use super::TranslateSet;
 
-type Output<DRAIN, T> = Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<T>, T>, T>;
+type Output<DRAIN, T> =
+    Builder<BuilderAntimeridianResampleNoClip<DRAIN, EqualArea<T>, T>, T>;
 
 /// Albers - [``ConicEqualArea``](crate::projection::conic_equal_area::ConicEqualArea) centered on the U.S.
 ///

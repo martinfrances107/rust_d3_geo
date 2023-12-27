@@ -29,7 +29,14 @@ impl Path2d {
     #[inline]
     #[allow(clippy::unnecessary_wraps)]
     /// Shadows methods in the browser.
-    pub fn arc(&mut self, x: f64, y: f64, r: f64, _start: f64, _stop: f64) -> Result<(), bool> {
+    pub fn arc(
+        &mut self,
+        x: f64,
+        y: f64,
+        r: f64,
+        _start: f64,
+        _stop: f64,
+    ) -> Result<(), bool> {
         self.buffer.push(format!(
             "type: arc, x: {:?}, y: {:?}, r: {:?}",
             x.round(),

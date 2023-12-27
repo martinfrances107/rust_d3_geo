@@ -23,12 +23,20 @@ where
     type T = T;
 
     #[inline]
-    fn fit_extent(&self, extent: [Coord<T>; 2], object: &impl Streamable<T = Self::T>) -> Self {
+    fn fit_extent(
+        &self,
+        extent: [Coord<T>; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self {
         fit_extent_clip(self, extent, object)
     }
 
     #[inline]
-    fn fit_size(&self, size: Coord<T>, object: &impl Streamable<T = T>) -> Self {
+    fn fit_size(
+        &self,
+        size: Coord<T>,
+        object: &impl Streamable<T = T>,
+    ) -> Self {
         fit_size_clip(self, size, object)
     }
 

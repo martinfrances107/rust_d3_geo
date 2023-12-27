@@ -21,7 +21,8 @@ use super::types::BuilderCircleResampleNoClip;
 use super::types::BuilderCircleResampleNoneClip;
 use super::types::BuilderCircleResampleNoneNoClip;
 
-impl<DRAIN, PR, T> ClipExtentClear for BuilderAntimeridianResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> ClipExtentClear
+    for BuilderAntimeridianResampleClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + Default + FloatConst,
@@ -56,12 +57,16 @@ where
             // Mutate section.
             postclip: Identity::default(),
             clip: gen_antimeridian_clip::<ResampleNoPCNC<DRAIN, PR, T>, T>(),
-            resample: Resample::new(self.project_transform.clone(), self.delta2),
+            resample: Resample::new(
+                self.project_transform.clone(),
+                self.delta2,
+            ),
         }
     }
 }
 
-impl<DRAIN, PR, T> ClipExtentClear for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> ClipExtentClear
+    for BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + Default + FloatConst,
@@ -136,12 +141,16 @@ where
             // Mutate section.
             postclip: Identity::default(),
             clip: gen_circle_clip(self.clip.clip_line.radius),
-            resample: Resample::new(self.project_transform.clone(), self.delta2),
+            resample: Resample::new(
+                self.project_transform.clone(),
+                self.delta2,
+            ),
         }
     }
 }
 
-impl<DRAIN, PR, T> ClipExtentClear for BuilderCircleResampleNoneClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> ClipExtentClear
+    for BuilderCircleResampleNoneClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + Default + FloatConst,

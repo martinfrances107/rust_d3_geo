@@ -9,7 +9,8 @@ use super::types::BuilderMercatorCircleResampleClip;
 use super::types::BuilderMercatorCircleResampleNoneClip;
 use crate::projection::PrecisionBypass;
 
-impl<DRAIN, PR, T> PrecisionBypass for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> PrecisionBypass
+    for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + Default + FloatConst,
@@ -28,7 +29,8 @@ where
     }
 }
 
-impl<DRAIN, PR, T> PrecisionBypass for BuilderMercatorCircleResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> PrecisionBypass
+    for BuilderMercatorCircleResampleClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + FloatConst,

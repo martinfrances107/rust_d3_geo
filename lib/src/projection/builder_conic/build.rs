@@ -33,7 +33,10 @@ where
             clip: self.base.clip.clone(),
             resample: self.base.resample.clone(),
             rotator: self.base.rotator.clone(),
-            project_rotate_transform: self.base.project_rotate_transform.clone(),
+            project_rotate_transform: self
+                .base
+                .project_rotate_transform
+                .clone(),
             transform_radians: StreamTransformRadians(Unconnected),
         }
     }

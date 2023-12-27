@@ -15,8 +15,12 @@ use crate::stream::Stream;
 
 use super::line_elem::LineElem;
 
-pub(super) type CompareIntersectionsFn<T> =
-    Box<dyn Fn(&Rc<RefCell<Intersection<T>>>, &Rc<RefCell<Intersection<T>>>) -> Ordering>;
+pub(super) type CompareIntersectionsFn<T> = Box<
+    dyn Fn(
+        &Rc<RefCell<Intersection<T>>>,
+        &Rc<RefCell<Intersection<T>>>,
+    ) -> Ordering,
+>;
 
 /// A generalized polygon clipping algorithm: given a polygon that has been cut
 /// into its visible line segments, and rejoins the segments by interpolating
@@ -39,7 +43,10 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
     interpolator: &INTERPOLATOR,
     stream: &mut SINK,
 ) where
-    CI: Fn(&Rc<RefCell<Intersection<T>>>, &Rc<RefCell<Intersection<T>>>) -> Ordering,
+    CI: Fn(
+        &Rc<RefCell<Intersection<T>>>,
+        &Rc<RefCell<Intersection<T>>>,
+    ) -> Ordering,
     SINK: Stream<EP = EP, T = T>,
     INTERPOLATOR: Interpolator<T = T>,
     T: CoordFloat,
@@ -157,7 +164,16 @@ pub(super) fn rejoin<CI, EP, INTERPOLATOR, SINK, T>(
                 } else {
                     interpolator.interpolate(
                         Some((current.clone()).borrow().x.p),
-                        Some((current.clone()).borrow().n.as_ref().unwrap().borrow().x.p),
+                        Some(
+                            (current.clone())
+                                .borrow()
+                                .n
+                                .as_ref()
+                                .unwrap()
+                                .borrow()
+                                .x
+                                .p,
+                        ),
                         T::one(),
                         stream,
                     );

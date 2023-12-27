@@ -13,7 +13,14 @@ use crate::Transform;
 use super::Builder;
 
 impl<CLIPU, DRAIN, PR, T> AngleSet
-    for Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoPCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Identity<Unconnected>,
+        PR,
+        ResampleNoPCNU<PR, T>,
+        T,
+    >
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -27,7 +34,14 @@ where
 }
 
 impl<CLIPU, DRAIN, PR, T> AngleSet
-    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Rectangle<Unconnected, T>,
+        PR,
+        ResamplePCNU<PR, T>,
+        T,
+    >
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

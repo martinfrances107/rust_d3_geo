@@ -89,7 +89,8 @@ fn tany(y: f64) -> f64 {
 }
 
 /// Projection type.
-pub type RotateTransform<PR, T> = Compose<RotateRadians<T>, Compose<PR, ScaleTranslateRotate<T>>>;
+pub type RotateTransform<PR, T> =
+    Compose<RotateRadians<T>, Compose<PR, ScaleTranslateRotate<T>>>;
 
 /// Provides specialization over 'Projection Raw'
 ///
@@ -282,21 +283,33 @@ pub trait Fit {
     ///  height]. @param object A geographic feature supported by d3-geo
     ///  (An extension of `GeoJSON` feature).
     #[must_use]
-    fn fit_size(&self, size: Coord<Self::T>, object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_size(
+        &self,
+        size: Coord<Self::T>,
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to [`fit_size`](Self::fit_size) where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on width.
     #[must_use]
-    fn fit_width(&self, w: Self::T, object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_width(
+        &self,
+        w: Self::T,
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 
     /// Similar to [`fit_size`](Self::fit_size) where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
     #[must_use]
-    fn fit_height(&self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self
+    fn fit_height(
+        &self,
+        h: Self::T,
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self
     where
         Self::T: AsPrimitive<Self::T> + CoordFloat;
 }

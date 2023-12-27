@@ -18,7 +18,8 @@ use crate::Transform;
 use super::types::BuilderMercatorTransverseAntimeridianResampleClip;
 use super::types::BuilderMercatorTransverseAntimeridianResampleNoneClip;
 
-impl<PR, T> Fit for BuilderMercatorTransverseAntimeridianResampleClip<Bounds<T>, PR, T>
+impl<PR, T> Fit
+    for BuilderMercatorTransverseAntimeridianResampleClip<Bounds<T>, PR, T>
 where
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -27,12 +28,20 @@ where
     type T = T;
 
     #[inline]
-    fn fit_extent(&self, extent: [Coord<T>; 2], object: &impl Streamable<T = Self::T>) -> Self {
+    fn fit_extent(
+        &self,
+        extent: [Coord<T>; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self {
         fit_extent_reclip(self, extent, object)
     }
 
     #[inline]
-    fn fit_size(&self, size: Coord<T>, object: &impl Streamable<T = T>) -> Self {
+    fn fit_size(
+        &self,
+        size: Coord<T>,
+        object: &impl Streamable<T = T>,
+    ) -> Self {
         fit_size_reclip(self, size, object)
     }
 
@@ -47,7 +56,8 @@ where
     }
 }
 
-impl<PR, T> Fit for BuilderMercatorTransverseAntimeridianResampleNoneClip<Bounds<T>, PR, T>
+impl<PR, T> Fit
+    for BuilderMercatorTransverseAntimeridianResampleNoneClip<Bounds<T>, PR, T>
 where
     PR: Clone + Debug + Transform<T = T> + TransformExtent<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
@@ -56,12 +66,20 @@ where
     type T = T;
 
     #[inline]
-    fn fit_extent(&self, extent: [Coord<T>; 2], object: &impl Streamable<T = Self::T>) -> Self {
+    fn fit_extent(
+        &self,
+        extent: [Coord<T>; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self {
         fit_extent_reclip(self, extent, object)
     }
 
     #[inline]
-    fn fit_size(&self, size: Coord<T>, object: &impl Streamable<T = T>) -> Self {
+    fn fit_size(
+        &self,
+        size: Coord<T>,
+        object: &impl Streamable<T = T>,
+    ) -> Self {
         fit_size_reclip(self, size, object)
     }
 

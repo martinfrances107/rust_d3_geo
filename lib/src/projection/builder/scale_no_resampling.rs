@@ -12,7 +12,14 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 impl<CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoneNoPCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Identity<Unconnected>,
+        PR,
+        ResampleNoneNoPCNU<PR, T>,
+        T,
+    >
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -26,7 +33,14 @@ where
 }
 
 impl<CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResampleNonePCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Rectangle<Unconnected, T>,
+        PR,
+        ResampleNonePCNU<PR, T>,
+        T,
+    >
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

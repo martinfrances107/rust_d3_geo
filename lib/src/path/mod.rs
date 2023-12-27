@@ -119,7 +119,10 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Combines projection, context stream and object.
-    pub fn object(&mut self, object: &impl Streamable<T = T>) -> <CS as Result>::Out {
+    pub fn object(
+        &mut self,
+        object: &impl Streamable<T = T>,
+    ) -> <CS as Result>::Out {
         let mut stream_in = self.projector.stream(&self.context);
         object.to_stream(&mut stream_in);
         stream_in.endpoint().result()
@@ -137,7 +140,9 @@ where
     CLIPC: Stream<EP = Measure<T>, T = T>,
     PROJECTOR: Projector<
         EP = Measure<T>,
-        Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+        Transformer = StreamTransformRadians<
+            Connected<RotatorRadians<Connected<CLIPC>, T>>,
+        >,
     >,
     T: AddAssign + CoordFloat,
 {
@@ -166,7 +171,9 @@ where
     CLIPC: Stream<EP = Area<T>, T = T>,
     PROJECTOR: Projector<
         EP = Area<T>,
-        Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+        Transformer = StreamTransformRadians<
+            Connected<RotatorRadians<Connected<CLIPC>, T>>,
+        >,
     >,
 
     T: CoordFloat,
@@ -196,7 +203,9 @@ where
     CLIPC: Stream<EP = Bounds<T>, T = T>,
     PROJECTOR: Projector<
         EP = Bounds<T>,
-        Transformer = StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+        Transformer = StreamTransformRadians<
+            Connected<RotatorRadians<Connected<CLIPC>, T>>,
+        >,
     >,
     T: CoordFloat + FloatConst,
 {

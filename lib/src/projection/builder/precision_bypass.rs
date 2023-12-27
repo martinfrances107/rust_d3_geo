@@ -19,7 +19,8 @@ use super::types::BuilderCircleResampleNoClip;
 use super::types::BuilderCircleResampleNoneClip;
 use super::types::BuilderCircleResampleNoneNoClip;
 
-impl<DRAIN, PR, T> PrecisionBypass for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> PrecisionBypass
+    for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + Default + FloatConst,
@@ -56,14 +57,16 @@ where
             delta_gamma: self.delta_gamma,
 
             // Mutate section.
-            clip: gen_clip_antimeridian::<ResampleNoneNoPCNC<DRAIN, PR, T>, T>(),
+            clip: gen_clip_antimeridian::<ResampleNoneNoPCNC<DRAIN, PR, T>, T>(
+            ),
             delta2: T::zero(),
             resample: None::new(self.project_transform.clone()),
         }
     }
 }
 
-impl<DRAIN, PR, T> PrecisionBypass for BuilderAntimeridianResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> PrecisionBypass
+    for BuilderAntimeridianResampleClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + Default + FloatConst,
@@ -151,7 +154,9 @@ where
             delta_gamma: self.delta_gamma,
 
             // Mutate section.
-            clip: gen_clip_circle::<ResampleNoneNoPCNC<DRAIN, PR, T>, T>(self.theta.unwrap()),
+            clip: gen_clip_circle::<ResampleNoneNoPCNC<DRAIN, PR, T>, T>(
+                self.theta.unwrap(),
+            ),
             delta2: T::zero(),
             resample: None::new(self.project_transform.clone()),
         }
@@ -174,7 +179,9 @@ where
         // CLIP is generic over <.. RC, RU,..>,
         // So a change in the resample type causes rebuilding of clip.
 
-        let clip = gen_clip_circle::<ResampleNonePCNC<DRAIN, PR, T>, T>(self.theta.unwrap());
+        let clip = gen_clip_circle::<ResampleNonePCNC<DRAIN, PR, T>, T>(
+            self.theta.unwrap(),
+        );
 
         // Copy - Mutate.
         Self::Output {

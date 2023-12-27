@@ -11,7 +11,14 @@ use crate::Transform;
 use super::Builder;
 
 impl<CLIPU, DRAIN, PR, T> RotateSet
-    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Rectangle<Unconnected, T>,
+        PR,
+        ResamplePCNU<PR, T>,
+        T,
+    >
 where
     PR: Clone + Transform<T = T>,
     T: AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,

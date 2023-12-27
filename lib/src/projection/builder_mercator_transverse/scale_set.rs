@@ -14,7 +14,14 @@ use crate::Transform;
 use super::Builder;
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Rectangle<Unconnected, T>,
+        PR,
+        ResamplePCNU<PR, T>,
+        T,
+    >
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
@@ -30,7 +37,14 @@ where
 }
 
 impl<CLIPC, CLIPU, DRAIN, PR, T> ScaleSet
-    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResampleNonePCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Rectangle<Unconnected, T>,
+        PR,
+        ResampleNonePCNU<PR, T>,
+        T,
+    >
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,

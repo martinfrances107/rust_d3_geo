@@ -14,11 +14,14 @@ mod stereographic_tests {
 
     #[test]
     fn stereographic() {
-        let stereo: ProjectorCircleResampleNoClip<DrainStub<f64>, Stereographic<f64>, f64> =
-            Stereographic::builder()
-                .translate_set(&Coord { x: 0f64, y: 0f64 })
-                .scale_set(1f64)
-                .build();
+        let stereo: ProjectorCircleResampleNoClip<
+            DrainStub<f64>,
+            Stereographic<f64>,
+            f64,
+        > = Stereographic::builder()
+            .translate_set(&Coord { x: 0f64, y: 0f64 })
+            .scale_set(1f64)
+            .build();
 
         assert!(projection_equal(
             &stereo,

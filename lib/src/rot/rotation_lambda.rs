@@ -11,7 +11,10 @@ pub struct RotationLambda<T> {
     delta_lambda: T,
 }
 
-fn forward_rotation_lambda<T: CoordFloat + FloatConst>(delta_lambda: T, p: &Coord<T>) -> Coord<T> {
+fn forward_rotation_lambda<T: CoordFloat + FloatConst>(
+    delta_lambda: T,
+    p: &Coord<T>,
+) -> Coord<T> {
     let mut lambda = p.x + delta_lambda;
     if lambda.abs() > T::PI() {
         lambda = lambda - (lambda / T::TAU()).round() * T::TAU();

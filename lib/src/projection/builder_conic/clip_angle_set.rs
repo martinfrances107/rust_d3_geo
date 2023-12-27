@@ -6,7 +6,8 @@ use crate::projection::ClipAngleSet;
 use super::types::BuilderConicAntimeridianResampleNoClip;
 use super::types::BuilderConicCircleResampleNoClip;
 
-impl<DRAIN, PR, T> ClipAngleSet for BuilderConicAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> ClipAngleSet
+    for BuilderConicAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + FloatConst,

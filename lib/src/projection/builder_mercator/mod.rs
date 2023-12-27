@@ -119,11 +119,19 @@ pub trait FitReclip {
 
     /// Similar to `fit_size` where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_width_reclip(&self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output;
+    fn fit_width_reclip(
+        &self,
+        h: Self::T,
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self::Output;
 
     /// Similar to `fit_size` where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
-    fn fit_height_reclip(&self, h: Self::T, object: &impl Streamable<T = Self::T>) -> Self::Output;
+    fn fit_height_reclip(
+        &self,
+        h: Self::T,
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self::Output;
 }
 
 /// This trait is useful only for mercator projection.
@@ -214,7 +222,8 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build
+    for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PCNU: Clone,
@@ -233,7 +242,10 @@ where
             clip: self.base.clip.clone(),
             resample: self.base.resample.clone(),
             rotator: self.base.rotator.clone(),
-            project_rotate_transform: self.base.project_rotate_transform.clone(),
+            project_rotate_transform: self
+                .base
+                .project_rotate_transform
+                .clone(),
             transform_radians: StreamTransformRadians(Unconnected),
         }
     }

@@ -28,16 +28,21 @@ where
         let k = T::PI() * self.base.scale();
 
         let rotate_raw = self.base.rotate();
-        let t = Rotation::new(rotate_raw[0], rotate_raw[1], rotate_raw[2]).invert(&Coord {
-            x: T::zero(),
-            y: T::zero(),
-        });
+        let t = Rotation::new(rotate_raw[0], rotate_raw[1], rotate_raw[2])
+            .invert(&Coord {
+                x: T::zero(),
+                y: T::zero(),
+            });
         let t = self.base.build().transform(&t);
         let ce = match self.extent {
-            Some(extent) => {
-                self.pr
-                    .transform_extent(k, t, extent[0].x, extent[0].y, extent[1].x, extent[1].y)
-            }
+            Some(extent) => self.pr.transform_extent(
+                k,
+                t,
+                extent[0].x,
+                extent[0].y,
+                extent[1].x,
+                extent[1].y,
+            ),
             _ => [
                 Coord {
                     x: t.x - k,

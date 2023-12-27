@@ -83,12 +83,14 @@ mod path_measure {
             3_f64,
             measure(
                 Identity::builder::<DrainStub<f64>>().build(),
-                Geometry::MultiLineString(MultiLineString(vec![LineString(vec![
-                    (0_f64, 0_f64).into(),
-                    (0_f64, 1_f64).into(),
-                    (1_f64, 1_f64).into(),
-                    (1_f64, 0_f64).into()
-                ])]))
+                Geometry::MultiLineString(MultiLineString(vec![LineString(
+                    vec![
+                        (0_f64, 0_f64).into(),
+                        (0_f64, 1_f64).into(),
+                        (1_f64, 1_f64).into(),
+                        (1_f64, 0_f64).into()
+                    ]
+                )]))
             )
         );
     }

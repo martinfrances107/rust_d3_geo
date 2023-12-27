@@ -28,7 +28,15 @@ where
     T: CoordFloat,
 {
     #[inline]
-    pub(crate) const fn new(alpha: T, kx: T, ky: T, ca: T, sa: T, tx: T, ty: T) -> Self {
+    pub(crate) const fn new(
+        alpha: T,
+        kx: T,
+        ky: T,
+        ca: T,
+        sa: T,
+        tx: T,
+        ty: T,
+    ) -> Self {
         Self {
             alpha,
             kx,

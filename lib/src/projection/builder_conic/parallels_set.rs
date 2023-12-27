@@ -12,7 +12,17 @@ use crate::stream::Unconnected;
 
 // Reach into builder and alter the PR.
 impl<CLIPU, DRAIN, PR, T> ParallelsSet
-    for Builder<BuilderCommon<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoPCNU<PR, T>, T>, T>
+    for Builder<
+        BuilderCommon<
+            CLIPU,
+            DRAIN,
+            Identity<Unconnected>,
+            PR,
+            ResampleNoPCNU<PR, T>,
+            T,
+        >,
+        T,
+    >
 where
     PR: PRConic<T = T> + Clone,
     T: CoordFloat + FloatConst,

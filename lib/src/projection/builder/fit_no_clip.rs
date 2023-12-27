@@ -24,17 +24,32 @@ use super::template::ResampleNoneNoPCNC;
 use super::template::ResampleNoneNoPCNU;
 
 impl<CLIPC, CLIPU, PR, T> Fit
-    for Builder<CLIPU, Bounds<T>, Identity<Unconnected>, PR, ResampleNoneNoPCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        Bounds<T>,
+        Identity<Unconnected>,
+        PR,
+        ResampleNoneNoPCNU<PR, T>,
+        T,
+    >
 where
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = ResampleNoneNoPCNC<Bounds<T>, PR, T>>,
+    CLIPU: Clone
+        + ConnectableClip<
+            Output = CLIPC,
+            SC = ResampleNoneNoPCNC<Bounds<T>, PR, T>,
+        >,
     PR: Clone + Debug + Transform<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
 
     #[inline]
-    fn fit_extent(&self, extent: [Coord<T>; 2], object: &impl Streamable<T = Self::T>) -> Self {
+    fn fit_extent(
+        &self,
+        extent: [Coord<T>; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self {
         fit_extent_no_clip(self, extent, object)
     }
 
@@ -44,7 +59,11 @@ where
     }
 
     #[inline]
-    fn fit_size(&self, size: Coord<T>, object: &impl Streamable<T = T>) -> Self {
+    fn fit_size(
+        &self,
+        size: Coord<T>,
+        object: &impl Streamable<T = T>,
+    ) -> Self {
         fit_size_no_clip(self, size, object)
     }
     #[inline]
@@ -54,9 +73,17 @@ where
 }
 
 impl<CLIPC, CLIPU, PR, T> Fit
-    for Builder<CLIPU, Bounds<T>, Identity<Unconnected>, PR, ResampleNoPCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        Bounds<T>,
+        Identity<Unconnected>,
+        PR,
+        ResampleNoPCNU<PR, T>,
+        T,
+    >
 where
-    CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = ResampleNoPCNC<Bounds<T>, PR, T>>,
+    CLIPU: Clone
+        + ConnectableClip<Output = CLIPC, SC = ResampleNoPCNC<Bounds<T>, PR, T>>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Clone + Transform<T = T>,
     T: 'static + CoordFloat + FloatConst,
@@ -64,12 +91,20 @@ where
     type T = T;
 
     #[inline]
-    fn fit_extent(&self, extent: [Coord<T>; 2], object: &impl Streamable<T = Self::T>) -> Self {
+    fn fit_extent(
+        &self,
+        extent: [Coord<T>; 2],
+        object: &impl Streamable<T = Self::T>,
+    ) -> Self {
         fit_extent_no_clip(self, extent, object)
     }
 
     #[inline]
-    fn fit_size(&self, size: Coord<T>, object: &impl Streamable<T = T>) -> Self {
+    fn fit_size(
+        &self,
+        size: Coord<T>,
+        object: &impl Streamable<T = T>,
+    ) -> Self {
         fit_size_no_clip(self, size, object)
     }
 

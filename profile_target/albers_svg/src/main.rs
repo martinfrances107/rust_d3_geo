@@ -19,8 +19,8 @@ use d3_geo_rs::stream::Streamable;
 
 /// Helper function to extract world geometry from file.
 fn world() -> Topology {
-    let file =
-        File::open("./world-atlas/world/counties-10m.json").expect("File should open read only.");
+    let file = File::open("./world-atlas/world/counties-10m.json")
+        .expect("File should open read only.");
     serde_json::from_reader(file).expect("File should be parse as JSON.")
 }
 
@@ -58,7 +58,8 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
                     for p in mp.0.iter() {
                         // TODO: this object() call is identical to the 3 lines below
                         // Can I restore the object call?
-                        let mut stream_in = path.projector.stream(&path.context);
+                        let mut stream_in =
+                            path.projector.stream(&path.context);
                         let object = Geometry::Polygon(p.clone());
                         object.to_stream(&mut stream_in);
 

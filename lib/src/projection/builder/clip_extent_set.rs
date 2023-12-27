@@ -22,7 +22,8 @@ use crate::projection::ClipExtentSet;
 // Code Repeated 2^2 times.
 // Variantion over ClipAntimeridian/ClipCircle as Clip is rebuilt.
 // Varariantion over Resample/None as Resample is rebuilt.
-impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> ClipExtentSet
+    for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + Default + FloatConst,
@@ -62,7 +63,8 @@ where
     }
 }
 
-impl<DRAIN, PR, T> ClipExtentSet for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> ClipExtentSet
+    for BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + Default + FloatConst,
@@ -136,13 +138,16 @@ where
             resample: self.resample.clone(),
 
             // Mutate section.
-            clip: gen_clip_circle::<ResamplePCNC<DRAIN, PR, T>, T>(self.theta.unwrap()),
+            clip: gen_clip_circle::<ResamplePCNC<DRAIN, PR, T>, T>(
+                self.theta.unwrap(),
+            ),
             postclip: Rectangle::new(extent),
         }
     }
 }
 
-impl<DRAIN, PR, T> ClipExtentSet for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> ClipExtentSet
+    for BuilderCircleResampleNoneNoClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + FloatConst,
@@ -176,7 +181,9 @@ where
             resample: self.resample.clone(),
 
             // Mutate section.
-            clip: gen_clip_circle::<ResampleNonePCNC<DRAIN, PR, T>, T>(self.theta.unwrap()),
+            clip: gen_clip_circle::<ResampleNonePCNC<DRAIN, PR, T>, T>(
+                self.theta.unwrap(),
+            ),
             postclip: Rectangle::new(extent),
         }
         //TODO javascipt calls reset here.

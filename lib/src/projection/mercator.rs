@@ -19,7 +19,8 @@ use super::TransformExtent;
 pub struct Mercator {}
 
 impl RawBase for Mercator {
-    type Builder<DRAIN: Clone> = BuilderMercatorAntimeridianResampleClip<DRAIN, Self, f64>;
+    type Builder<DRAIN: Clone> =
+        BuilderMercatorAntimeridianResampleClip<DRAIN, Self, f64>;
 
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {

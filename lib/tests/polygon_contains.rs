@@ -59,7 +59,9 @@ mod polygon_contains {
 
     #[test]
     fn simple() {
-        println!("geoPolygonContains(simple, point) returns the expected value");
+        println!(
+            "geoPolygonContains(simple, point) returns the expected value"
+        );
         let polygon: Polygon<f64> = Polygon::new(
             LineString(vec![
                 Coord { x: 0f64, y: 0f64 },
@@ -88,7 +90,9 @@ mod polygon_contains {
 
     #[test]
     fn small_circle() {
-        println!("geoPolygonContains(smallCircle, point) returns the expected value");
+        println!(
+            "geoPolygonContains(smallCircle, point) returns the expected value"
+        );
 
         let mut circle = CircleGenerator::default();
         circle.radius_set(60.0);
@@ -141,7 +145,9 @@ mod polygon_contains {
 
     #[test]
     fn south_pole() {
-        println!("geoPolygonContains(southPole, point) returns the expected value");
+        println!(
+            "geoPolygonContains(southPole, point) returns the expected value"
+        );
 
         let polygon = Polygon::new(
             LineString(vec![
@@ -180,7 +186,9 @@ mod polygon_contains {
 
     #[test]
     fn north_pole() {
-        println!("geoPolygonContains(northPole, point) returns the expected value");
+        println!(
+            "geoPolygonContains(northPole, point) returns the expected value"
+        );
         let polygon = Polygon::new(
             LineString(vec![
                 Coord { x: 60f64, y: 80f64 },
@@ -227,7 +235,9 @@ mod polygon_contains {
 
     #[test]
     fn touching_pole() {
-        println!("geoPolygonContains(touchingPole, Pole) returns true (issue #105)");
+        println!(
+            "geoPolygonContains(touchingPole, Pole) returns true (issue #105)"
+        );
         let polygon = Polygon::new(
             LineString(vec![
                 Coord { x: 0f64, y: -30f64 },
@@ -451,7 +461,9 @@ mod polygon_contains {
 
     #[test]
     fn large_circle() {
-        println!("geoPolygonContains(largeCircle, point) returns the expected value");
+        println!(
+            "geoPolygonContains(largeCircle, point) returns the expected value"
+        );
         let mut circle = CircleGenerator::default();
         circle.radius_set(120.0);
         let c = circle.circle();
@@ -501,7 +513,10 @@ mod polygon_contains {
             vec![],
         );
 
-        assert_eq!(polygon_contains(&polygon, &Coord { x: 0.0, y: 0.0 }), false);
+        assert_eq!(
+            polygon_contains(&polygon, &Coord { x: 0.0, y: 0.0 }),
+            false
+        );
         assert_eq!(
             polygon_contains(&polygon, &Coord { x: 0f64, y: 20f64 }),
             true
@@ -1013,7 +1028,10 @@ mod polygon_contains {
 
         let c = circle.circle();
         let polygon = &c;
-        assert_eq!(polygon_contains(polygon, &Coord { x: 0f64, y: 0f64 }), true);
+        assert_eq!(
+            polygon_contains(polygon, &Coord { x: 0f64, y: 0f64 }),
+            true
+        );
     }
 
     #[test]

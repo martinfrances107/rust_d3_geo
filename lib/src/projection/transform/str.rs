@@ -25,7 +25,14 @@ where
     T: CoordFloat,
 {
     /// Constructor.
-    pub(crate) fn new(k: &T, dx: &T, dy: &T, sx: &T, sy: &T, alpha: &T) -> Self {
+    pub(crate) fn new(
+        k: &T,
+        dx: &T,
+        dy: &T,
+        sx: &T,
+        sy: &T,
+        alpha: &T,
+    ) -> Self {
         let (sin_alpha, cos_alpha) = alpha.sin_cos();
         Self {
             a: cos_alpha * *k,

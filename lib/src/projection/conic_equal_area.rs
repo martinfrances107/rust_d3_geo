@@ -46,7 +46,9 @@ where
 
         Coord {
             x: l / self.n,
-            y: ((self.c - (p.x * p.x + r0y * r0y) * self.n * self.n) / (self.two * self.n)).asin(),
+            y: ((self.c - (p.x * p.x + r0y * r0y) * self.n * self.n)
+                / (self.two * self.n))
+                .asin(),
         }
     }
 }

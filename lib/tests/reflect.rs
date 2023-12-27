@@ -27,7 +27,8 @@ mod reflect {
     fn x_defaults_to_false() {
         println!("projection.reflectX(…) defaults to false");
 
-        let mut builder: Builder<_, DrainStub<f64>, _, _, _, f64> = Gnomic::builder();
+        let mut builder: Builder<_, DrainStub<f64>, _, _, _, f64> =
+            Gnomic::builder();
         builder.scale_set(1f64);
         builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
@@ -72,7 +73,8 @@ mod reflect {
     #[test]
     fn mirrors_x_after_processing() {
         println!("projection.reflectX(…) mirrors x after projecting");
-        let mut builder: Builder<_, DrainStub<f64>, _, _, _, f64> = Gnomic::builder();
+        let mut builder: Builder<_, DrainStub<f64>, _, _, _, f64> =
+            Gnomic::builder();
         builder.scale_set(1_f64);
         builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 

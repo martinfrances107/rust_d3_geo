@@ -11,7 +11,8 @@ use crate::projection::AngleSet;
 use crate::stream::Unconnected;
 use crate::Transform;
 
-impl<CLIPU, DRAIN, PCNU, PR, RU, T> AngleGet for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
+impl<CLIPU, DRAIN, PCNU, PR, RU, T> AngleGet
+    for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     T: CoordFloat,
 {
@@ -24,7 +25,14 @@ where
 }
 
 impl<CLIPU, DRAIN, PR, T> AngleSet
-    for Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoPCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Identity<Unconnected>,
+        PR,
+        ResampleNoPCNU<PR, T>,
+        T,
+    >
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -40,7 +48,14 @@ where
 }
 
 impl<CLIPU, DRAIN, PR, T> AngleSet
-    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResamplePCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Rectangle<Unconnected, T>,
+        PR,
+        ResamplePCNU<PR, T>,
+        T,
+    >
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,

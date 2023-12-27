@@ -118,7 +118,8 @@ pub(super) fn intersect<T: CoordFloat + FloatConst>(
             } else {
                 phi1
             };
-            condition = ((phi0 + phi1).is_sign_positive()) ^ (q.y < phi_threshold);
+            condition =
+                ((phi0 + phi1).is_sign_positive()) ^ (q.y < phi_threshold);
         } else {
             condition = phi0 <= q.y && q.y <= phi1;
         }

@@ -24,7 +24,8 @@ impl<T> RawBase for Equirectangular<T>
 where
     T: 'static + CoordFloat + Default + FloatConst,
 {
-    type Builder<DRAIN: Clone> = BuilderAntimeridianResampleNoClip<DRAIN, Self, T>;
+    type Builder<DRAIN: Clone> =
+        BuilderAntimeridianResampleNoClip<DRAIN, Self, T>;
 
     #[inline]
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {

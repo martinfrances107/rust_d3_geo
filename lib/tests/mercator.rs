@@ -31,7 +31,9 @@ mod mercator {
 
     #[test]
     fn clip_extent_defaults_to_automatic() {
-        println!("mercator.clipExtent(null) sets the default automatic clip extent");
+        println!(
+            "mercator.clipExtent(null) sets the default automatic clip extent"
+        );
         let pb = Mercator::builder()
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .scale_set(1_f64)
@@ -48,7 +50,9 @@ mod mercator {
 
     #[test]
     fn center_set_correct_automatic() {
-        println!("mercator.center(center) sets the correct automatic clip extent");
+        println!(
+            "mercator.center(center) sets the correct automatic clip extent"
+        );
         let pb = Mercator::builder()
             .translate_set(&Coord { x: 0_f64, y: 0_f64 })
             .center_set(&Coord {
@@ -200,7 +204,9 @@ mod mercator {
 
     #[test]
     fn rotate_does_not_affect_automatic_clip_extent() {
-        println!("mercator.rotate(…) does not affect the automatic clip extent");
+        println!(
+            "mercator.rotate(…) does not affect the automatic clip extent"
+        );
 
         let object: Geometry<f64> = Geometry::MultiPoint(
             vec![

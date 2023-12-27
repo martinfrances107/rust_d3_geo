@@ -1,6 +1,13 @@
 use geo::CoordFloat;
 
-pub(super) fn line<T>(a: &mut [T; 2], b: &mut [T; 2], x0: T, y0: T, x1: T, y1: T) -> bool
+pub(super) fn line<T>(
+    a: &mut [T; 2],
+    b: &mut [T; 2],
+    x0: T,
+    y0: T,
+    x1: T,
+    y1: T,
+) -> bool
 where
     T: CoordFloat,
 {

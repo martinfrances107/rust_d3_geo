@@ -327,7 +327,12 @@ where
             if v {
                 // outside going in
                 self.state.sink.line_start();
-                point2 = match intersect(&point1.unwrap(), &self.point0.unwrap(), self.cr, false) {
+                point2 = match intersect(
+                    &point1.unwrap(),
+                    &self.point0.unwrap(),
+                    self.cr,
+                    false,
+                ) {
                     Return::One(le) => le,
                     Return::Two([_p, _m]) => {
                         panic!("Silently dropping second point.");
@@ -340,7 +345,12 @@ where
                 self.state.sink.point(&point2.unwrap().p, None);
             } else {
                 // Inside going out.
-                point2 = match intersect(&self.point0.unwrap(), &point1.unwrap(), self.cr, false) {
+                point2 = match intersect(
+                    &self.point0.unwrap(),
+                    &point1.unwrap(),
+                    self.cr,
+                    false,
+                ) {
                     Return::One(le) => le,
                     Return::Two([_, _]) => {
                         panic!("Silently dropping second point.");
@@ -355,11 +365,19 @@ where
                 self.state.sink.line_end();
             }
             self.point0 = point2;
-        } else if self.not_hemisphere && self.point0.is_some() && self.small_radius ^ v {
+        } else if self.not_hemisphere
+            && self.point0.is_some()
+            && self.small_radius ^ v
+        {
             // If the codes for two points are different, or are both zero,
             // and there this segment intersects with the small circle.
             if self.c0 != c || c == CODE_NONE {
-                let t = intersect(&point1.unwrap(), &self.point0.unwrap(), self.cr, true);
+                let t = intersect(
+                    &point1.unwrap(),
+                    &self.point0.unwrap(),
+                    self.cr,
+                    true,
+                );
                 match t {
                     // Request two received one!!
                     // This copies the behavior of the javascript original.
@@ -381,7 +399,8 @@ where
                 }
             }
         }
-        if v && (self.point0.is_none() || !abs_diff_eq(&self.point0.unwrap().p, &point1.unwrap().p))
+        if v && (self.point0.is_none()
+            || !abs_diff_eq(&self.point0.unwrap().p, &point1.unwrap().p))
         {
             self.state.sink.point(&point1.unwrap().p, None);
         }

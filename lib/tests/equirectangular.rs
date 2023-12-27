@@ -19,7 +19,8 @@ mod equirectangular {
     #[test]
     fn return_expected_result() {
         println!("equirectangular(point) returns the expected result");
-        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> = Equirectangular::builder();
+        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> =
+            Equirectangular::builder();
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1_f64);
 
@@ -228,7 +229,8 @@ mod equirectangular {
     #[allow(clippy::excessive_precision)]
     fn rotate_30_30() {
         println!("equirectangular.rotate([30, 30])(point) returns the expected result");
-        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> = Equirectangular::builder();
+        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> =
+            Equirectangular::builder();
 
         b.rotate2_set(&[30f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
@@ -336,7 +338,8 @@ mod equirectangular {
     fn rotate_0_0_30() {
         println!("equirectangular.rotate([0, 0, 30])(point) returns the expected result");
 
-        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> = Equirectangular::builder();
+        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> =
+            Equirectangular::builder();
         b.rotate3_set(&[0f64, 0f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1f64);
@@ -435,7 +438,8 @@ mod equirectangular {
     #[test]
     fn rotate_30_30_30() {
         println!("equirectangular.rotate([30, 30, 30])(point) returns the expected result");
-        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> = Equirectangular::builder();
+        let mut b: Builder<_, DrainStub<f64>, _, _, _, _> =
+            Equirectangular::builder();
         b.rotate3_set(&[30f64, 30f64, 30f64]);
         b.translate_set(&Coord { x: 0f64, y: 0f64 });
         b.scale_set(1f64);

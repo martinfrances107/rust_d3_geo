@@ -10,7 +10,8 @@ use super::types::BuilderConicAntimeridianResampleNoClip;
 // Code Repeated 2^2 times.
 // Variation over ClipAntimeridian/ClipCircle as Clip is rebuilt.
 // Variation over Resample/None as Resample is rebuilt.
-impl<DRAIN, PR, T> ClipExtentSet for BuilderConicAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> ClipExtentSet
+    for BuilderConicAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + Default + FloatConst,

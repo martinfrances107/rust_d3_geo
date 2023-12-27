@@ -240,7 +240,9 @@ mod mercator_transverse {
 
     #[test]
     fn rotate_does_not_affect_automatic_clip_extent() {
-        println!("mercator.rotate(…) does not affect the automatic clip extent");
+        println!(
+            "mercator.rotate(…) does not affect the automatic clip extent"
+        );
 
         let object: Geometry<f64> = Geometry::MultiPoint(
             vec![
@@ -299,7 +301,9 @@ mod mercator_transverse {
 
     #[test]
     fn point_test() {
-        println!("has no direct equivalent in javascript, but this helped me debug.");
+        println!(
+            "has no direct equivalent in javascript, but this helped me debug."
+        );
         let p = MercatorTransverse::builder::<DrainStub<f64>>().build();
 
         let t = p.transform(&Coord { x: 0_f64, y: 0_f64 });

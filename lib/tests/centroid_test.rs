@@ -83,7 +83,9 @@ mod centroid {
 
     #[test]
     fn centroid_of_a_set_of_points_and_their_antipodes() {
-        println!("the centroid of a set of points and their antipodes is ambiguous");
+        println!(
+            "the centroid of a set of points and their antipodes is ambiguous"
+        );
         let p1: Point<f64> = Centroid::default().calc(&MultiPoint(vec![
             Point::new(0_f64, 0_f64),
             Point::new(180_f64, 0_f64),
@@ -222,7 +224,8 @@ mod centroid {
     }
 
     #[test]
-    fn a_set_of_line_strings_is_the_spherical_average_of_its_great_arc_segments() {
+    fn a_set_of_line_strings_is_the_spherical_average_of_its_great_arc_segments(
+    ) {
         println!("the centroid of a set of line strings is the (spherical) average of its constituent great arc segments");
         let mls = MultiLineString(vec![LineString(vec![
             Coord { x: 0_f64, y: 0_f64 },
@@ -386,7 +389,8 @@ mod centroid {
             })
             .circle();
         assert!(in_delta_point(
-            Centroid::default().calc(&Geometry::MultiPolygon(MultiPolygon(vec![p45, p60]))),
+            Centroid::default()
+                .calc(&Geometry::MultiPolygon(MultiPolygon(vec![p45, p60]))),
             Point::new(-90_f64, 0_f64),
             1e-6
         ));
@@ -472,7 +476,9 @@ mod centroid {
 
     #[test]
     fn of_a_spherical_square_touching_the_antimeridian() {
-        println!("the centroid of a spherical square touching the antimeridian");
+        println!(
+            "the centroid of a spherical square touching the antimeridian"
+        );
         assert!(in_delta_point(
             Centroid::default().calc(&polygon![
             (
@@ -553,7 +559,9 @@ mod centroid {
         );
 
         let data_object = GeometryCollection(vec![
-            Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
+            Geometry::LineString(
+                line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ],
+            ),
             Geometry::Point(point!(x:0_f64, y: 0_f64)),
         ]);
         let centroid = Centroid::default().calc(&data_object);
@@ -574,7 +582,8 @@ mod centroid {
     //     //   test.end();
     //     // });
     #[test]
-    fn of_a_non_empty_polygon_a_non_empty_line_string_and_a_point_only_considers_the_polygon() {
+    fn of_a_non_empty_polygon_a_non_empty_line_string_and_a_point_only_considers_the_polygon(
+    ) {
         println!(
             "the centroid of a non-empty polygon, a non-empty line string and a point only considers the polygon"
         );
@@ -586,7 +595,9 @@ mod centroid {
                 ],
                 vec![],
             )),
-            Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
+            Geometry::LineString(
+                line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ],
+            ),
             Geometry::Point(point!(x:0_f64, y: 0_f64)),
         ]);
         let centroid = Centroid::default().calc(&data_object);
@@ -598,7 +609,9 @@ mod centroid {
 
         let data_object = GeometryCollection(vec![
             Geometry::Point(point!(x:0_f64, y: 0_f64)),
-            Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
+            Geometry::LineString(
+                line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ],
+            ),
             Geometry::Polygon(Polygon::new(
                 line_string![(x: -180_f64, y: 0_f64), (x: -180_f64, y:1_f64), (x: -179_f64, y: 1_f64), (x: -179_f64, y: 0_f64),
                     (x: -180_f64, y: 0_f64)

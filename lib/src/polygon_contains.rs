@@ -69,8 +69,9 @@ where
             let antimeridian = abs_delta > T::PI();
             let k = sin_phi0 * sin_phi1;
 
-            sum =
-                sum + (k * sign * abs_delta.sin()).atan2(cos_phi0 * cos_phi1 + k * abs_delta.cos());
+            sum = sum
+                + (k * sign * abs_delta.sin())
+                    .atan2(cos_phi0 * cos_phi1 + k * abs_delta.cos());
             angle = angle
                 + if antimeridian {
                     delta + sign * T::TAU()
@@ -93,7 +94,10 @@ where
                     intersection[2].asin()
                 };
 
-                if phi > phi_arc || phi == phi_arc && (arc[0] != T::zero() || arc[1] != T::zero()) {
+                if phi > phi_arc
+                    || phi == phi_arc
+                        && (arc[0] != T::zero() || arc[1] != T::zero())
+                {
                     if antimeridian ^ (delta >= T::zero()) {
                         winding += 1;
                     } else {
@@ -124,7 +128,8 @@ where
 
     let epsilon = T::from(EPSILON).unwrap();
     let epsilon2 = T::from(EPSILON2).unwrap();
-    let is_south_pole_inside = angle < -epsilon || angle < epsilon && sum < -epsilon2;
+    let is_south_pole_inside =
+        angle < -epsilon || angle < epsilon && sum < -epsilon2;
 
     is_south_pole_inside ^ is_winding_odd
 }

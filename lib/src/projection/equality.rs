@@ -28,11 +28,16 @@ where
     println!("project_equal");
     println!(
         "1) expected location [{:?}, {:?}], expected point [{:?}, {:?}]",
-        expected_location.x, expected_location.y, expected_point.x, expected_point.y,
+        expected_location.x,
+        expected_location.y,
+        expected_point.x,
+        expected_point.y,
     );
     let actual_location = projector.invert(expected_point);
     let actual_point = projector.transform(expected_location);
-    println!("2) actual location {actual_location:?}, actual point {actual_point:?}");
+    println!(
+        "2) actual location {actual_location:?}, actual point {actual_point:?}"
+    );
     planar_equal(&actual_point, expected_point, delta)
         && spherical_equal(&actual_location, expected_location, delta)
 }

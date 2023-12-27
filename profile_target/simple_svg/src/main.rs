@@ -36,7 +36,8 @@ lazy_static! {
 
 /// Helper function to extract world geometry from file.
 fn world() -> Topology {
-    let file = File::open("./world-atlas/world/50m.json").expect("File should open read only.");
+    let file = File::open("./world-atlas/world/50m.json")
+        .expect("File should open read only.");
     serde_json::from_reader(file).expect("File should be parse as JSON.")
 }
 
@@ -81,7 +82,8 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     let mut i = 0;
 
     let mut paths = vec![];
-    if let Geometry::GeometryCollection(GeometryCollection(g_vec)) = &countries {
+    if let Geometry::GeometryCollection(GeometryCollection(g_vec)) = &countries
+    {
         for g in g_vec {
             match &g {
                 Geometry::MultiPolygon(mp) => {

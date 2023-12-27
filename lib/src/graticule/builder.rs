@@ -114,23 +114,27 @@ where
 {
     /// Outputs an iterator, which depends on the builder settings.
     pub fn generated_lines(&self) -> impl Iterator<Item = Vec<Coord<T>>> + '_ {
-        let range1 = range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX)
-            .into_iter()
-            .map(&self.X);
+        let range1 =
+            range(T::ceil(self.X0 / self.DX) * self.DX, self.X1, self.DX)
+                .into_iter()
+                .map(&self.X);
 
-        let range2 = range(T::ceil(self.Y0 / self.DY) * self.DY, self.Y1, self.DY)
-            .into_iter()
-            .map(&self.Y);
+        let range2 =
+            range(T::ceil(self.Y0 / self.DY) * self.DY, self.Y1, self.DY)
+                .into_iter()
+                .map(&self.Y);
 
-        let range3 = range(T::ceil(self.x0 / self.dx) * self.dx, self.x1, self.dx)
-            .into_iter()
-            .filter(|x| (*x % self.DX).abs() > self.epsilon)
-            .map(&self.x);
+        let range3 =
+            range(T::ceil(self.x0 / self.dx) * self.dx, self.x1, self.dx)
+                .into_iter()
+                .filter(|x| (*x % self.DX).abs() > self.epsilon)
+                .map(&self.x);
 
-        let range4 = range(T::ceil(self.y0 / self.dy) * self.dy, self.y1, self.dy)
-            .into_iter()
-            .filter(|y| (*y % self.DY).abs() > self.epsilon)
-            .map(&self.y);
+        let range4 =
+            range(T::ceil(self.y0 / self.dy) * self.dy, self.y1, self.dy)
+                .into_iter()
+                .filter(|y| (*y % self.DY).abs() > self.epsilon)
+                .map(&self.y);
 
         range1.chain(range2).chain(range3).chain(range4)
     }

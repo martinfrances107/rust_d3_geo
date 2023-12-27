@@ -9,7 +9,8 @@ use crate::Transform;
 use super::types::BuilderMercatorTransverseAntimeridianResampleClip;
 use super::types::BuilderMercatorTransverseAntimeridianResampleNoneClip;
 
-impl<DRAIN, PR, T> TranslateSet for BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> TranslateSet
+    for BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,

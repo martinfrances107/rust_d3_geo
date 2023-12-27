@@ -34,8 +34,11 @@ mod path_centroid {
     use d3_geo_rs::stream::Streamable;
 
     #[inline]
-    fn equirectangular<T>(
-    ) -> ProjectorAntimeridianResampleNoneNoClip<Centroid<T>, Equirectangular<T>, T>
+    fn equirectangular<T>() -> ProjectorAntimeridianResampleNoneNoClip<
+        Centroid<T>,
+        Equirectangular<T>,
+        T,
+    >
     where
         T: 'static + AddAssign<T> + CoordFloat + Default + FloatConst,
     {
@@ -47,7 +50,11 @@ mod path_centroid {
 
     #[inline]
     fn centroid<T>(
-        projection: ProjectorAntimeridianResampleNoneNoClip<Centroid<T>, Equirectangular<T>, T>,
+        projection: ProjectorAntimeridianResampleNoneNoClip<
+            Centroid<T>,
+            Equirectangular<T>,
+            T,
+        >,
 
         object: &impl Streamable<T = T>,
     ) -> Point<T>
@@ -88,7 +95,8 @@ mod path_centroid {
     #[test]
     fn of_a_singleton_multipoint() {
         println!("geoPath.centroid(…) of an singleton  multipoint");
-        let mp = Geometry::MultiPoint(MultiPoint(vec![Point::new(0_f64, 0_f64)]));
+        let mp =
+            Geometry::MultiPoint(MultiPoint(vec![Point::new(0_f64, 0_f64)]));
 
         let eq = equirectangular();
         assert!(in_delta_point(
@@ -158,7 +166,9 @@ mod path_centroid {
 
     #[test]
     fn of_a_linestring_with_two_points_one_unique() {
-        println!("geoPath.centroid(…) of a linestring with two points, one unique");
+        println!(
+            "geoPath.centroid(…) of a linestring with two points, one unique"
+        );
         let ls1 = Geometry::LineString(line_string![
             (x: -122_f64, y:37_f64),
             (x: -122_f64, y:37_f64),
@@ -186,7 +196,9 @@ mod path_centroid {
 
     #[test]
     fn of_a_linestring_with_three_points_two_unique() {
-        println!("geoPath.centroid(…) of a linestring with three points; two unique");
+        println!(
+            "geoPath.centroid(…) of a linestring with three points; two unique"
+        );
         let ls = Geometry::LineString(line_string![
             (x: -122_f64, y:37_f64),
             (x: -74_f64, y:40_f64),
@@ -451,11 +463,13 @@ mod path_centroid {
 
     #[test]
     fn of_a_geometry_collection_with_a_single_point() {
-        println!("geoPath.centroid(…) of a geometry collection with a single point");
+        println!(
+            "geoPath.centroid(…) of a geometry collection with a single point"
+        );
 
-        let gc = Geometry::GeometryCollection(GeometryCollection(vec![Geometry::Point(
-            Point::new(0_f64, 0_f64),
-        )]));
+        let gc = Geometry::GeometryCollection(GeometryCollection(vec![
+            Geometry::Point(Point::new(0_f64, 0_f64)),
+        ]));
 
         let eq = equirectangular();
         assert!(in_delta_point(
@@ -470,7 +484,9 @@ mod path_centroid {
         println!("geoPath.centroid(…) of a geometry collection with a point and a linestring");
 
         let gc = Geometry::GeometryCollection(GeometryCollection(vec![
-            Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
+            Geometry::LineString(
+                line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ],
+            ),
             Geometry::Point(Point::new(0_f64, 0_f64)),
         ]));
 
@@ -499,7 +515,9 @@ mod path_centroid {
                 ],
                 vec![],
             )),
-            Geometry::LineString(line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ]),
+            Geometry::LineString(
+                line_string![(x:179_f64, y:0_f64),(x:180_f64, y:0_f64) ],
+            ),
             Geometry::Point(Point::new(0_f64, 0_f64)),
         ]));
 

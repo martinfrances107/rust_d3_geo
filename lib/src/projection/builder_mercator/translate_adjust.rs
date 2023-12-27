@@ -10,7 +10,8 @@ use super::types::BuilderMercatorAntimeridianResampleClip;
 use super::types::BuilderMercatorAntimeridianResampleNoneClip;
 use super::Reclip;
 
-impl<DRAIN, PR, T> TranslateSet for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> TranslateSet
+    for BuilderMercatorAntimeridianResampleClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
@@ -24,7 +25,8 @@ where
     }
 }
 
-impl<DRAIN, PR, T> TranslateSet for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> TranslateSet
+    for BuilderMercatorAntimeridianResampleNoneClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,

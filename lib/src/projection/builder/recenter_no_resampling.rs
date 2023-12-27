@@ -19,7 +19,14 @@ use super::Builder;
 
 #[allow(clippy::similar_names)]
 impl<CLIPU, DRAIN, PR, T> Recenter
-    for Builder<CLIPU, DRAIN, Identity<Unconnected>, PR, ResampleNoneNoPCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Identity<Unconnected>,
+        PR,
+        ResampleNoneNoPCNU<PR, T>,
+        T,
+    >
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -46,9 +53,15 @@ where
             &self.alpha,
         );
 
-        let rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]);
-        let project_transform = Compose::new(self.projection_raw.clone(), transform);
-        let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
+        let rotate = rotate_radians([
+            self.delta_lambda,
+            self.delta_phi,
+            self.delta_gamma,
+        ]);
+        let project_transform =
+            Compose::new(self.projection_raw.clone(), transform);
+        let project_rotate_transform =
+            Compose::new(rotate.clone(), project_transform.clone());
         let rotator = RotatorRadians::new(rotate.clone());
         let resample = ResampleNone::new(project_transform.clone());
 
@@ -62,7 +75,14 @@ where
 }
 
 impl<CLIPU, DRAIN, PR, T> Recenter
-    for Builder<CLIPU, DRAIN, Rectangle<Unconnected, T>, PR, ResampleNonePCNU<PR, T>, T>
+    for Builder<
+        CLIPU,
+        DRAIN,
+        Rectangle<Unconnected, T>,
+        PR,
+        ResampleNonePCNU<PR, T>,
+        T,
+    >
 where
     PR: Clone + Transform<T = T>,
     T: CoordFloat + FloatConst,
@@ -89,9 +109,15 @@ where
             &self.alpha,
         );
 
-        let rotate = rotate_radians([self.delta_lambda, self.delta_phi, self.delta_gamma]);
-        let project_transform = Compose::new(self.projection_raw.clone(), transform);
-        let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
+        let rotate = rotate_radians([
+            self.delta_lambda,
+            self.delta_phi,
+            self.delta_gamma,
+        ]);
+        let project_transform =
+            Compose::new(self.projection_raw.clone(), transform);
+        let project_rotate_transform =
+            Compose::new(rotate.clone(), project_transform.clone());
         let rotator = RotatorRadians::new(rotate.clone());
 
         let resample = ResampleNone::new(project_transform.clone());

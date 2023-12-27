@@ -40,7 +40,8 @@ where
     pub(crate) rotator: RotatorRadians<Unconnected, T>,
 
     /// Transform applied after conversion to radians.
-    pub project_rotate_transform: Compose<RotateRadians<T>, Compose<PR, ScaleTranslateRotate<T>>>,
+    pub project_rotate_transform:
+        Compose<RotateRadians<T>, Compose<PR, ScaleTranslateRotate<T>>>,
 
     pub(crate) transform_radians: StreamTransformRadians<Unconnected>,
     pub(crate) cache: CacheState<DRAIN, SOURCE>,

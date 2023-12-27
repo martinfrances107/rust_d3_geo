@@ -9,7 +9,8 @@ use crate::stream::Unconnected;
 
 use super::Builder;
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build
+    for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PCNU: Clone,

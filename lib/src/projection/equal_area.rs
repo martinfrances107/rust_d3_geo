@@ -86,7 +86,8 @@ impl<T> RawBase for EqualArea<T>
 where
     T: 'static + CoordFloat + Default + FloatConst,
 {
-    type Builder<DRAIN: Clone> = Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, T>;
+    type Builder<DRAIN: Clone> =
+        Builder<BuilderAntimeridianResampleNoClip<DRAIN, Self, T>, T>;
 
     fn builder<DRAIN: Clone>() -> Self::Builder<DRAIN> {
         let mut b = Builder::new(Self::default());

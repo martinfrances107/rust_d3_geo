@@ -57,7 +57,8 @@ where
     pub base: ProjectionMercatorBuilder<CLIPU, DRAIN, PCNU, PR, RU, T>,
 }
 
-impl<DRAIN, PR, T> BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T>
+    BuilderMercatorTransverseAntimeridianResampleClip<DRAIN, PR, T>
 where
     DRAIN: Clone,
     PR: Clone + Transform<T = T> + TransformExtent<T = T>,
@@ -76,7 +77,8 @@ where
     }
 }
 
-impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build
+    for Builder<CLIPU, DRAIN, PCNU, PR, RU, T>
 where
     CLIPU: Clone + ConnectableClip<Output = CLIPC>,
     PCNU: Clone,
@@ -94,7 +96,11 @@ where
             clip: self.base.base.clip.clone(),
             resample: self.base.base.resample.clone(),
             rotator: self.base.base.rotator.clone(),
-            project_rotate_transform: self.base.base.project_rotate_transform.clone(),
+            project_rotate_transform: self
+                .base
+                .base
+                .project_rotate_transform
+                .clone(),
             transform_radians: StreamTransformRadians(Unconnected),
         }
     }

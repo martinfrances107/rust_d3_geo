@@ -303,12 +303,14 @@ where
                     a = a / m;
                     b = b / m;
                     self.resample_line_to(
-                        x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c, depth,
+                        x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a, b, c,
+                        depth,
                     );
                     self.state.sink.point(&Coord { x: x2, y: y2 }, None);
 
                     self.resample_line_to(
-                        x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth,
+                        x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1,
+                        depth,
                     );
                 }
             }

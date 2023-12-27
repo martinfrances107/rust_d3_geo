@@ -58,7 +58,11 @@ where
 }
 
 impl Result
-    for Multidrain<3, PathString<f64>, Populated<3, AlbersTransformer<PathString<f64>, f64>>>
+    for Multidrain<
+        3,
+        PathString<f64>,
+        Populated<3, AlbersTransformer<PathString<f64>, f64>>,
+    >
 {
     type Out = Vec<String>;
 
@@ -75,7 +79,8 @@ impl Result
     }
 }
 
-impl<const N: usize, SUBTRANS, T> Result for Multidrain<N, LastPoint<f64>, Populated<N, SUBTRANS>>
+impl<const N: usize, SUBTRANS, T> Result
+    for Multidrain<N, LastPoint<f64>, Populated<N, SUBTRANS>>
 where
     SUBTRANS: Stream<EP = LastPoint<T>, T = T>,
     T: CoordFloat,
@@ -92,7 +97,8 @@ where
     }
 }
 
-impl<const N: usize, SD, SUBTRANS, T> Stream for Multidrain<N, SD, Populated<N, SUBTRANS>>
+impl<const N: usize, SD, SUBTRANS, T> Stream
+    for Multidrain<N, SD, Populated<N, SUBTRANS>>
 where
     SUBTRANS: Stream<EP = SD, T = T>,
     T: CoordFloat,

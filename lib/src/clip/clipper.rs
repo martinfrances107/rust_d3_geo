@@ -74,7 +74,9 @@ where
 impl<I, LB, LC, LU, RC, T> Connectable for Clipper<I, LU, RC, Unconnected, T>
 where
     I: Clone,
-    LU: Clone + StreamConnectable<Output<RC> = LC> + Bufferable<LINE = LB, T = T>,
+    LU: Clone
+        + StreamConnectable<Output<RC> = LC>
+        + Bufferable<LINE = LB, T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     type SC = RC;
@@ -244,10 +246,9 @@ where
 
         // No intersections.
         if clean & 1 != 0 {
-            let segment = ring_segments
-                .lines
-                .pop_front()
-                .expect("We have previously checked that the .len() is >0 ( n ) ");
+            let segment = ring_segments.lines.pop_front().expect(
+                "We have previously checked that the .len() is >0 ( n ) ",
+            );
             let m = segment.len() - 1usize;
             if m > 0 {
                 if !self.state.polygon_started {
@@ -278,7 +279,8 @@ where
     }
 }
 
-impl<EP, I, LB, LC, LU, RC, T> Stream for Clipper<I, LU, RC, Connected<LB, LC, T>, T>
+impl<EP, I, LB, LC, LU, RC, T> Stream
+    for Clipper<I, LU, RC, Connected<LB, LC, T>, T>
 where
     I: Interpolator<T = T>,
     LB: LineConnected<SINK = Buffer<T>> + Stream<EP = Buffer<T>, T = T>,
@@ -338,9 +340,11 @@ where
         self.state.point_fn = PointFn::Default;
         self.state.line_start_fn = LineStartFn::Default;
         self.state.line_end_fn = LineEndFn::Default;
-        let mut segments: VecDeque<VecDeque<Vec<LineElem<T>>>> = VecDeque::default();
+        let mut segments: VecDeque<VecDeque<Vec<LineElem<T>>>> =
+            VecDeque::default();
         core::mem::swap(&mut segments, &mut self.state.segments);
-        let segments_inner: Vec<Vec<LineElem<T>>> = segments.into_iter().flatten().collect();
+        let segments_inner: Vec<Vec<LineElem<T>>> =
+            segments.into_iter().flatten().collect();
 
         let start_inside = polygon_contains(&self.state.polygon, &self.start);
 
@@ -362,8 +366,12 @@ where
                 self.state.polygon_started = true;
             }
             self.state.line_node.sink().line_start();
-            self.interpolator
-                .interpolate(None, None, T::one(), self.state.line_node.sink());
+            self.interpolator.interpolate(
+                None,
+                None,
+                T::one(),
+                self.state.line_node.sink(),
+            );
             self.state.ring_sink.sink().line_end();
         };
         if self.state.polygon_started {
@@ -384,8 +392,12 @@ where
     fn sphere(&mut self) {
         self.state.line_node.sink().polygon_start();
         self.state.line_node.sink().line_start();
-        self.interpolator
-            .interpolate(None, None, T::one(), self.state.line_node.sink());
+        self.interpolator.interpolate(
+            None,
+            None,
+            T::one(),
+            self.state.line_node.sink(),
+        );
         self.state.line_node.sink().line_end();
         self.state.line_node.sink().polygon_end();
     }

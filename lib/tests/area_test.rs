@@ -47,7 +47,10 @@ mod area {
             }
         }
 
-        Polygon::new(LineString::from(exterior), vec![LineString::from(interior)])
+        Polygon::new(
+            LineString::from(exterior),
+            vec![LineString::from(interior)],
+        )
     }
 
     #[test]
@@ -62,7 +65,8 @@ mod area {
     #[test]
     fn multipoint() {
         println!("area: Mutlipoint");
-        let g = Geometry::MultiPoint(vec![(0_f64, 1_f64), (2_f64, 3_f64)].into());
+        let g =
+            Geometry::MultiPoint(vec![(0_f64, 1_f64), (2_f64, 3_f64)].into());
         let area = Area::calc(&g);
         assert_eq!(area, 0_f64);
     }
@@ -70,7 +74,8 @@ mod area {
     #[test]
     fn line_string() {
         println!("area: LineString");
-        let g = Geometry::LineString(vec![(0_f64, 1_f64), (2_f64, 3_f64)].into());
+        let g =
+            Geometry::LineString(vec![(0_f64, 1_f64), (2_f64, 3_f64)].into());
         let area = Area::calc(&g);
         assert_eq!(area, 0_f64);
     }

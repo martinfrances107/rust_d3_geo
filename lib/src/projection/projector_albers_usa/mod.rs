@@ -47,7 +47,10 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
                             ConnectedStream<
                                 Resample<
                                     EqualArea<T>,
-                                    ConnectedResample<Rectangle<ConnectedStream<SD>, T>, T>,
+                                    ConnectedResample<
+                                        Rectangle<ConnectedStream<SD>, T>,
+                                        T,
+                                    >,
                                     T,
                                 >,
                             >,
@@ -94,7 +97,8 @@ where
 {
     type EP = Multidrain<3, SD, Unpopulated>;
 
-    type Transformer = Multidrain<3, SD, Populated<3, AlbersTransformer<SD, T>>>;
+    type Transformer =
+        Multidrain<3, SD, Populated<3, AlbersTransformer<SD, T>>>;
 
     /// Connects a DRAIN to the `AlbersUSA` projector.
     ///

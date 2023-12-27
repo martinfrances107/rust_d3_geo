@@ -49,7 +49,10 @@ type StreamPoint<DRAIN, T> = StreamTransformRadians<
                     Line<Unconnected, T>,
                     Resample<
                         EqualArea<T>,
-                        ConnectedResample<Rectangle<ConnectedStream<DRAIN>, T>, T>,
+                        ConnectedResample<
+                            Rectangle<ConnectedStream<DRAIN>, T>,
+                            T,
+                        >,
                         T,
                     >,
                     ConnectedClipper<
@@ -58,7 +61,10 @@ type StreamPoint<DRAIN, T> = StreamTransformRadians<
                             ConnectedStream<
                                 Resample<
                                     EqualArea<T>,
-                                    ConnectedResample<Rectangle<ConnectedStream<DRAIN>, T>, T>,
+                                    ConnectedResample<
+                                        Rectangle<ConnectedStream<DRAIN>, T>,
+                                        T,
+                                    >,
                                     T,
                                 >,
                             >,
@@ -90,17 +96,23 @@ where
     hawaii_y: Range<T>,
 
     // The builder with base setting used as a starting point every time translate is adjusted.
-    pub(super) alaska: BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
-    pub(super) lower_48: BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
-    pub(super) hawaii: BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
+    pub(super) alaska:
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
+    pub(super) lower_48:
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
+    pub(super) hawaii:
+        BuilderConicAntimeridianResampleClip<LastPoint<T>, EqualArea<T>, T>,
 
     pub(super) alaska_point: StreamPoint<LastPoint<T>, T>,
     pub(super) lower_48_point: StreamPoint<LastPoint<T>, T>,
     pub(super) hawaii_point: StreamPoint<LastPoint<T>, T>,
 
-    pub(super) alaska_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<T>, T>,
-    pub(super) lower_48_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<T>, T>,
-    pub(super) hawaii_stream: BuilderConicAntimeridianResampleClip<SD, EqualArea<T>, T>,
+    pub(super) alaska_stream:
+        BuilderConicAntimeridianResampleClip<SD, EqualArea<T>, T>,
+    pub(super) lower_48_stream:
+        BuilderConicAntimeridianResampleClip<SD, EqualArea<T>, T>,
+    pub(super) hawaii_stream:
+        BuilderConicAntimeridianResampleClip<SD, EqualArea<T>, T>,
 }
 
 /// Construct a Projection builder capable of rendering the view of alaska.
@@ -211,16 +223,17 @@ where
                 y: T::from(0.234_f64).unwrap().mul_add(k, t.y),
             },
         ]);
-        let lower_48_stream = lower_48_stream.translate_set(&t).clip_extent_set(&[
-            Coord {
-                x: T::from(0.455_f64).unwrap().mul_add(-k, t.x),
-                y: T::from(0.234_f64).unwrap().mul_add(-k, t.y),
-            },
-            Coord {
-                x: T::from(0.455_f64).unwrap().mul_add(k, t.x),
-                y: T::from(0.234_f64).unwrap().mul_add(k, t.y),
-            },
-        ]);
+        let lower_48_stream =
+            lower_48_stream.translate_set(&t).clip_extent_set(&[
+                Coord {
+                    x: T::from(0.455_f64).unwrap().mul_add(-k, t.x),
+                    y: T::from(0.234_f64).unwrap().mul_add(-k, t.y),
+                },
+                Coord {
+                    x: T::from(0.455_f64).unwrap().mul_add(k, t.x),
+                    y: T::from(0.234_f64).unwrap().mul_add(k, t.y),
+                },
+            ]);
 
         // Used in the invert()
         let alaska = alaska_inset(scaling_factor, k, t, epsilon);

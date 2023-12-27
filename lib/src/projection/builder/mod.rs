@@ -112,7 +112,8 @@ where
     pub(super) resample: RU,
 }
 
-impl<DRAIN, PR, T> BuilderTrait for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> BuilderTrait
+    for BuilderAntimeridianResampleNoClip<DRAIN, PR, T>
 where
     PR: Clone + Transform<T = T>,
     T: 'static + CoordFloat + Default + FloatConst,
@@ -140,12 +141,20 @@ where
         let delta2 = T::from(0.5_f64).unwrap();
         let center = generate_str(&k, &T::zero(), &T::zero(), &sx, &sy, &alpha)
             .transform(&projection_raw.transform(&Coord { x: lambda, y: phi }));
-        let str = generate_str(&k, &(x - center.x), &(y - center.y), &sx, &sy, &alpha);
+        let str = generate_str(
+            &k,
+            &(x - center.x),
+            &(y - center.y),
+            &sx,
+            &sy,
+            &alpha,
+        );
 
         let rotate = rotate_radians([delta_lambda, delta_phi, delta_gamma]); // pre-rotate
         let rotator = RotatorRadians::new(rotate.clone());
         let project_transform = Compose::new(projection_raw.clone(), str);
-        let project_rotate_transform = Compose::new(rotate.clone(), project_transform.clone());
+        let project_rotate_transform =
+            Compose::new(rotate.clone(), project_transform.clone());
         let postclip = Identity::default();
         let resample = Resample::new(project_transform.clone(), delta2);
         let mut out: Self = Self {

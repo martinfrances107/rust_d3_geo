@@ -38,14 +38,19 @@ mod index {
     fn equirectangular<
         EP: Clone + Stream<EP = EP, T = T> + Debug + Default,
         T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
-    >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<T>, T> {
+    >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<T>, T>
+    {
         let mut e = Equirectangular::builder();
         e.scale_set(T::from(900f64 / PI).unwrap());
         e.precision_bypass().build()
     }
 
     fn path(
-        projection: ProjectorAntimeridianResampleNoneNoClip<Endpoint, Equirectangular<f64>, f64>,
+        projection: ProjectorAntimeridianResampleNoneNoClip<
+            Endpoint,
+            Equirectangular<f64>,
+            f64,
+        >,
         object: &impl Streamable<T = f64>,
     ) -> Vec<String> {
         let path2d = Path2d::new().unwrap();
@@ -165,8 +170,8 @@ mod index {
     #[test]
     fn render_a_gc() {
         println!("geoPath(GeometryCollection) renders a geometry collection");
-        let object = Geometry::GeometryCollection(GeometryCollection(vec![Geometry::Polygon(
-            Polygon::new(
+        let object = Geometry::GeometryCollection(GeometryCollection(vec![
+            Geometry::Polygon(Polygon::new(
                 LineString(vec![
                     Coord {
                         x: -63_f64,
@@ -182,8 +187,8 @@ mod index {
                     },
                 ]),
                 vec![],
-            ),
-        )]));
+            )),
+        ]));
         assert_eq!(
             path(equirectangular(), &object),
             [
@@ -246,7 +251,9 @@ mod index {
     #[test]
     #[allow(clippy::unreadable_literal)]
     fn observes_the_correct_winding_order_of_a_tiny_polygon() {
-        println!("geoPath(…) observes the correct winding order of a tiny polygon");
+        println!(
+            "geoPath(…) observes the correct winding order of a tiny polygon"
+        );
         let object = Geometry::Polygon(Polygon::new(
             LineString(vec![
                 Coord {

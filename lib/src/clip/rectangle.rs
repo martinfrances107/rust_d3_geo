@@ -72,7 +72,9 @@ where
         let y1 = extent[1].y;
         let interpolator = Interpolator::new(x0, y0, x1, y1);
         let compare_intersection = Box::new(
-            move |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| -> Ordering {
+            move |a: &Rc<RefCell<Intersection<T>>>,
+                  b: &Rc<RefCell<Intersection<T>>>|
+                  -> Ordering {
                 interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
             },
         );
@@ -122,7 +124,9 @@ where
     fn clone(&self) -> Self {
         let interpolator = self.interpolator.clone();
         let compare_intersection = Box::new(
-            move |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| -> Ordering {
+            move |a: &Rc<RefCell<Intersection<T>>>,
+                  b: &Rc<RefCell<Intersection<T>>>|
+                  -> Ordering {
                 interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
             },
         );
@@ -235,11 +239,15 @@ where
                     b1 = point.y;
 
                     if a1 <= self.y1 {
-                        if b1 > self.y1 && (b0 - a0) * (self.y1 - a1) > (b1 - a1) * (self.x0 - a0) {
+                        if b1 > self.y1
+                            && (b0 - a0) * (self.y1 - a1)
+                                > (b1 - a1) * (self.x0 - a0)
+                        {
                             winding += 1;
                         }
                     } else if b1 <= self.y1
-                        && (b0 - a0) * (self.y1 - a1) < (b1 - a1) * (self.x0 - a0)
+                        && (b0 - a0) * (self.y1 - a1)
+                            < (b1 - a1) * (self.x0 - a0)
                     {
                         winding -= 1;
                     }
@@ -316,10 +324,13 @@ where
                 if !self.v_ {
                     if self.use_buffer_stream {
                         self.buffer_stream.line_start();
-                        self.buffer_stream.point(&Coord { x: a[0], y: a[1] }, None);
+                        self.buffer_stream
+                            .point(&Coord { x: a[0], y: a[1] }, None);
                     } else {
                         self.state.sink.line_start();
-                        self.state.sink.point(&Coord { x: a[0], y: a[1] }, None);
+                        self.state
+                            .sink
+                            .point(&Coord { x: a[0], y: a[1] }, None);
                     }
                 }
                 if self.use_buffer_stream {
@@ -485,8 +496,12 @@ where
 
                 if clean_inside {
                     self.state.sink.line_start();
-                    self.interpolator
-                        .interpolate(None, None, T::one(), &mut self.state.sink);
+                    self.interpolator.interpolate(
+                        None,
+                        None,
+                        T::one(),
+                        &mut self.state.sink,
+                    );
                     self.state.sink.line_end();
                 }
 

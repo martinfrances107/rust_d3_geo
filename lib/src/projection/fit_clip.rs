@@ -41,7 +41,21 @@ use super::ClipExtentClear;
 use super::ClipExtentSet;
 use super::TranslateGet;
 
-pub(super) fn fit_clip<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, FB, PR, RC, RCint, RU, RUint, T>(
+pub(super) fn fit_clip<
+    B,
+    Bint,
+    CLIPC,
+    CLIPCint,
+    CLIPU,
+    CLIPUint,
+    FB,
+    PR,
+    RC,
+    RCint,
+    RU,
+    RUint,
+    T,
+>(
     builder: &B,
     mut fit_bounds: FB,
     object: &impl Streamable<T = T>,
@@ -165,7 +179,21 @@ where
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, _, PR, RC, RCint, RU, RUint, T>(
+    fit_clip::<
+        B,
+        Bint,
+        CLIPC,
+        CLIPCint,
+        CLIPU,
+        CLIPUint,
+        _,
+        PR,
+        RC,
+        RCint,
+        RU,
+        RUint,
+        T,
+    >(
         builder,
         |b: [Coord<T>; 2], builder: &Bint| -> Bint {
             let w = extent[1].x - extent[0].x;
@@ -241,7 +269,20 @@ where
     RUint: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RCint> + Debug,
     T: 'static + CoordFloat + FloatConst,
 {
-    fit_extent_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, PR, RC, RCint, RU, RUint, T>(
+    fit_extent_clip::<
+        B,
+        Bint,
+        CLIPC,
+        CLIPCint,
+        CLIPU,
+        CLIPUint,
+        PR,
+        RC,
+        RCint,
+        RU,
+        RUint,
+        T,
+    >(
         builder,
         [
             Coord {
@@ -314,7 +355,21 @@ where
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, _, PR, RC, RCint, RU, RUint, T>(
+    fit_clip::<
+        B,
+        Bint,
+        CLIPC,
+        CLIPCint,
+        CLIPU,
+        CLIPUint,
+        _,
+        PR,
+        RC,
+        RCint,
+        RU,
+        RUint,
+        T,
+    >(
         builder,
         |b: [Coord<T>; 2], builder: &Bint| -> Bint {
             let w = width;
@@ -392,7 +447,21 @@ where
     let two = T::from(2.0_f64).unwrap();
     let one_five_zero = T::from(150_f64).unwrap();
 
-    fit_clip::<B, Bint, CLIPC, CLIPCint, CLIPU, CLIPUint, _, PR, RC, RCint, RU, RUint, T>(
+    fit_clip::<
+        B,
+        Bint,
+        CLIPC,
+        CLIPCint,
+        CLIPU,
+        CLIPUint,
+        _,
+        PR,
+        RC,
+        RCint,
+        RU,
+        RUint,
+        T,
+    >(
         builder,
         |b: [Coord<T>; 2], builder: &Bint| -> Bint {
             let h = height;

@@ -13,7 +13,8 @@ where
     PR: Clone,
     T: 'static + CoordFloat + Default + FloatConst,
 {
-    type Output = BuilderMercatorTransverseAntimeridianResampleNoneClip<DRAIN, PR, T>;
+    type Output =
+        BuilderMercatorTransverseAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;
 
     fn precision_bypass(&self) -> Self::Output {
@@ -22,7 +23,8 @@ where
     }
 }
 
-impl<DRAIN, PR, T> PrecisionBypass for BuilderMercatorTransverseCircleResampleClip<DRAIN, PR, T>
+impl<DRAIN, PR, T> PrecisionBypass
+    for BuilderMercatorTransverseCircleResampleClip<DRAIN, PR, T>
 where
     PR: Clone,
     T: 'static + CoordFloat + FloatConst,

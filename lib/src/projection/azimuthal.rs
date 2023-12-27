@@ -20,7 +20,10 @@ where
     }
 }
 
-pub(super) fn azimuthal_invert<T>(p: &Coord<T>, angle: fn(z: T) -> T) -> Coord<T>
+pub(super) fn azimuthal_invert<T>(
+    p: &Coord<T>,
+    angle: fn(z: T) -> T,
+) -> Coord<T>
 where
     T: CoordFloat,
 {

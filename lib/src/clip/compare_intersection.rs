@@ -22,7 +22,9 @@ where
 {
     let epsilon = T::from(EPSILON).unwrap();
     Box::new(
-        move |a: &Rc<RefCell<Intersection<T>>>, b: &Rc<RefCell<Intersection<T>>>| -> Ordering {
+        move |a: &Rc<RefCell<Intersection<T>>>,
+              b: &Rc<RefCell<Intersection<T>>>|
+              -> Ordering {
             let ax = a.borrow().x;
             let part1 = if ax.p.x < T::zero() {
                 ax.p.y - T::FRAC_PI_2() - epsilon

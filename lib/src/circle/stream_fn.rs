@@ -51,7 +51,11 @@ pub fn stream_fn<EP, STREAM, T>(
     let mut cond = true;
     while cond {
         let (st, ct) = t.sin_cos();
-        let point = spherical_radians(&[cos_radius, -sin_radius * ct, -sin_radius * st]);
+        let point = spherical_radians(&[
+            cos_radius,
+            -sin_radius * ct,
+            -sin_radius * st,
+        ]);
         stream.point(&point, None);
 
         t = t - step;

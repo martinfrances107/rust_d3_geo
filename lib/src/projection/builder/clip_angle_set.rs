@@ -24,7 +24,10 @@ where
     // Given an angle in degrees. Sets the internal clip angle and returns a builder
     // which uses the clip circle strategy.
     fn clip_angle_set(&self, angle: T) -> Self::Output {
-        debug_assert!(angle != T::zero(), "must call clip_angle_reset() instead");
+        debug_assert!(
+            angle != T::zero(),
+            "must call clip_angle_reset() instead"
+        );
 
         let theta = angle.to_radians();
         let clip = gen_clip::<RC, T>(theta);

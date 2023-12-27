@@ -42,7 +42,10 @@ mod stream_multi_polygon {
             self.coordinates += 1_f64;
             // assert!(m.unwrap() == self.coordinates as u8);
             self.calls += 1;
-            assert!(3 <= self.calls && self.calls <= 4 || 9 <= self.calls && self.calls <= 10);
+            assert!(
+                3 <= self.calls && self.calls <= 4
+                    || 9 <= self.calls && self.calls <= 10
+            );
         }
 
         fn polygon_end(&mut self) {

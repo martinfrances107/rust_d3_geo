@@ -49,7 +49,9 @@ where
 {
     #[inline]
     fn eq(&self, other: &Self) -> bool {
-        self.length_sum == other.length_sum && self.p00 == other.p00 && self.p0 == other.p0
+        self.length_sum == other.length_sum
+            && self.p00 == other.p00
+            && self.p0 == other.p0
     }
 }
 
@@ -93,7 +95,8 @@ where
     fn length_point(&mut self, p: &Coord<T>) {
         self.p0 = self.p0 - *p;
 
-        self.length_sum += (self.p0.x * self.p0.x + self.p0.y * self.p0.y).sqrt();
+        self.length_sum +=
+            (self.p0.x * self.p0.x + self.p0.y * self.p0.y).sqrt();
         self.p0 = *p;
     }
 }

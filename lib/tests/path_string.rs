@@ -32,8 +32,11 @@ mod path_string {
     use d3_geo_rs::stream::Streamable;
 
     #[inline]
-    fn equirectangular<T>(
-    ) -> ProjectorAntimeridianResampleNoneNoClip<PathString<T>, Equirectangular<T>, T>
+    fn equirectangular<T>() -> ProjectorAntimeridianResampleNoneNoClip<
+        PathString<T>,
+        Equirectangular<T>,
+        T,
+    >
     where
         T: 'static + CoordFloat + Default + Display + FloatConst,
     {
@@ -45,7 +48,11 @@ mod path_string {
 
     #[inline]
     fn path<T>(
-        projection: ProjectorAntimeridianResampleNoneNoClip<PathString<T>, Equirectangular<T>, T>,
+        projection: ProjectorAntimeridianResampleNoneNoClip<
+            PathString<T>,
+            Equirectangular<T>,
+            T,
+        >,
 
         object: impl Streamable<T = T>,
     ) -> String
@@ -184,14 +191,14 @@ mod path_string {
 
     #[test]
     fn renders_a_geometry_collection() {
-        let object = Geometry::GeometryCollection(GeometryCollection(vec![Geometry::Polygon(
-            Polygon::new(
+        let object = Geometry::GeometryCollection(GeometryCollection(vec![
+            Geometry::Polygon(Polygon::new(
                 line_string![
                     (x:-63_f64, y:18_f64), (x:-62_f64, y:18_f64), (x:-62_f64, y:17_f64)
                 ],
                 vec![],
-            ),
-        )]));
+            )),
+        ]));
         let eq = equirectangular();
         assert_eq!(path(eq, object), "M165,160L170,160L170,165Z");
     }
