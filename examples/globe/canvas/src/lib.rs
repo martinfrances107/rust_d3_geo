@@ -65,15 +65,17 @@ pub async fn start() -> Result<(), JsValue> {
     let mut opts = RequestInit::new();
     opts.method("GET");
     opts.mode(RequestMode::Cors);
-    let request = Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
+    let request =
+        Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
 
-    let resp_value = JsFuture::from(window.fetch_with_request(&request)).await?;
+    let resp_value =
+        JsFuture::from(window.fetch_with_request(&request)).await?;
     let resp: Response = resp_value.dyn_into().unwrap();
 
     let json = JsFuture::from(resp.json()?).await?;
 
-    let topology =
-        JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
+    let topology = JsValueSerdeExt::into_serde::<Topology>(&json)
+        .expect("Did not get a valid Topology");
 
     // Grab canvas.
     let canvas = document?
@@ -90,7 +92,8 @@ pub async fn start() -> Result<(), JsValue> {
     let width: f64 = canvas.width().into();
     let height: f64 = canvas.height().into();
 
-    let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
+    let countries = feature_from_name(&topology, "countries")
+        .expect("Did not extract geometry");
 
     let ep = Endpoint::new(path2d);
     let path_builder = PathBuilder::new(ep);

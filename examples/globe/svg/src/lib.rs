@@ -44,8 +44,8 @@ use d3_geo_rs::projection::TranslateSet;
 use rust_topojson_client::feature::feature_from_name;
 
 fn document() -> Result<Document, JsValue> {
-  let window = web_sys::window().ok_or("no window")?;
-  Ok(window.document().ok_or("no document")?)
+    let window = web_sys::window().ok_or("no window")?;
+    Ok(window.document().ok_or("no document")?)
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -58,7 +58,8 @@ fn path_node(class_name: &str) -> Result<Element, JsValue> {
         Some(element) => element,
         None => {
             // keep.
-            document.create_element_ns(Some("http://www.w3.org/2000/svg"), "path")?
+            document
+                .create_element_ns(Some("http://www.w3.org/2000/svg"), "path")?
         }
     };
     Ok(ret)
@@ -82,13 +83,15 @@ pub async fn start() -> Result<(), JsValue> {
     let mut opts = RequestInit::new();
     opts.method("GET");
     opts.mode(RequestMode::Cors);
-    let request = Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
-    let resp_value = JsFuture::from(window.fetch_with_request(&request)).await?;
+    let request =
+        Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
+    let resp_value =
+        JsFuture::from(window.fetch_with_request(&request)).await?;
     let resp: Response = resp_value.dyn_into().unwrap();
     let json = JsFuture::from(resp.json()?).await?;
 
-    let topology =
-        JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
+    let topology = JsValueSerdeExt::into_serde::<Topology>(&json)
+        .expect("Did not get a valid Topology");
 
     // Grab canvas.
     let svg: SvgsvgElement = document
@@ -98,7 +101,8 @@ pub async fn start() -> Result<(), JsValue> {
 
     let width = f64::from(svg.width().base_val().value()?);
     let height = f64::from(svg.height().base_val().value()?);
-    let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
+    let countries = feature_from_name(&topology, "countries")
+        .expect("Did not extract geometry");
 
     let ortho = Orthographic::builder()
         .scale_set(width / 1.3_f64 / std::f64::consts::PI)
@@ -131,7 +135,8 @@ pub async fn start() -> Result<(), JsValue> {
                     Geometry::MultiPolygon(mp) => {
                         i += 1;
                         for p in &mp.0 {
-                            let s = builder.object(&Geometry::Polygon(p.clone()));
+                            let s =
+                                builder.object(&Geometry::Polygon(p.clone()));
                             let class_name = format!("id-{i}");
                             let path = path_node(&class_name)?;
                             path.set_attribute_ns(None, "d", &s)?;

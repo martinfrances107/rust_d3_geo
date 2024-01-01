@@ -57,8 +57,8 @@ fn path_node(document: &Document, class_name: &str) -> Element {
         Some(element) => element,
         None => {
             // keep.
-            if let Ok(element) =
-                document.create_element_ns(Some("http://www.w3.org/2000/svg"), "path")
+            if let Ok(element) = document
+                .create_element_ns(Some("http://www.w3.org/2000/svg"), "path")
             {
                 element
             } else {
@@ -68,6 +68,16 @@ fn path_node(document: &Document, class_name: &str) -> Element {
         }
     }
 }
+
+const FILL: [&str; 7] = [
+    "fill: red",
+    "fill: orange",
+    "fill: olive",
+    "fill: blue",
+    "fill: indigo",
+    "fill: brown",
+    "fill: silver",
+];
 
 /// Entry point.
 ///
@@ -83,8 +93,11 @@ pub async fn start() {
     let mut opts = RequestInit::new();
     opts.method("GET");
     opts.mode(RequestMode::Cors);
-    let request = Request::new_with_str_and_init("/world-atlas/world/counties-10m.json", &opts)
-        .expect("request failed.");
+    let request = Request::new_with_str_and_init(
+        "/world-atlas/world/counties-10m.json",
+        &opts,
+    )
+    .expect("request failed.");
     let resp_value = JsFuture::from(window.fetch_with_request(&request))
         .await
         .expect("await failed");
@@ -92,8 +105,8 @@ pub async fn start() {
     let json = JsFuture::from(resp.json().expect("resp failed"))
         .await
         .expect("json failed");
-    let topology =
-        JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
+    let topology = JsValueSerdeExt::into_serde::<Topology>(&json)
+        .expect("Did not get a valid Topology");
     console_log!("have a valid topolgy");
     // Grab canvas.
     let svg: SvgsvgElement = document
@@ -102,19 +115,9 @@ pub async fn start() {
         .dyn_into::<web_sys::SvgsvgElement>()
         .expect("svg failed");
 
-    let countries: Geometry<f64> =
-        feature_from_name(&topology, "counties").expect("Did not extract geometry");
+    let countries: Geometry<f64> = feature_from_name(&topology, "counties")
+        .expect("Did not extract geometry");
     let projector = AlbersUsa::builder().build();
-
-    let fill: [&str; 7] = [
-        "fill: red",
-        "fill: orange",
-        "fill: olive",
-        "fill: blue",
-        "fill: indigo",
-        "fill: brown",
-        "fill: silver",
-    ];
 
     let path_builder = PathBuilder::albers_pathstring();
     let mut path = path_builder.build(projector);
@@ -130,35 +133,52 @@ pub async fn start() {
                         for (j, p) in mp.0.iter().enumerate() {
                             // TODO: this object() call is identical to the 3 lines below
                             // Can I restore the object call?
-                            let mut stream_in = path.projector.stream(&path.context);
+                            let mut stream_in =
+                                path.projector.stream(&path.context);
                             let object = Geometry::Polygon(p.clone());
                             object.to_stream(&mut stream_in);
 
-                            for (k, s) in stream_in.endpoint().result().iter().enumerate() {
+                            for (k, s) in
+                                stream_in.endpoint().result().iter().enumerate()
+                            {
                                 let class_name = format!("id-{i}-{j}-{k}");
                                 let path = path_node(&document, &class_name);
-                                path.set_attribute_ns(None, "d", s).expect("none 2");
-                                path.set_attribute_ns(None, "class", &class_name)
-                                    .expect("class failed");
-                                path.set_attribute_ns(None, "style", fill[i % 7])
-                                    .expect("none failed");
-                                svg.append_child(&path).expect("append failed.");
+                                path.set_attribute_ns(None, "d", s)
+                                    .expect("none 2");
+                                path.set_attribute_ns(
+                                    None,
+                                    "class",
+                                    &class_name,
+                                )
+                                .expect("class failed");
+                                path.set_attribute_ns(
+                                    None,
+                                    "style",
+                                    FILL[i % 7],
+                                )
+                                .expect("none failed");
+                                svg.append_child(&path)
+                                    .expect("append failed.");
                             }
                             i += 1;
                         }
                     }
                     Geometry::Polygon(p) => {
-                        let mut stream_in = path.projector.stream(&path.context);
+                        let mut stream_in =
+                            path.projector.stream(&path.context);
                         let object = Geometry::Polygon(p.clone());
                         object.to_stream(&mut stream_in);
 
-                        for (k, s) in stream_in.endpoint().result().iter().enumerate() {
+                        for (k, s) in
+                            stream_in.endpoint().result().iter().enumerate()
+                        {
                             let class_name = format!("id-{i}-polygon-{k}");
                             let path = path_node(&document, &class_name);
-                            path.set_attribute_ns(None, "d", s).expect("none 2");
+                            path.set_attribute_ns(None, "d", s)
+                                .expect("none 2");
                             path.set_attribute_ns(None, "class", &class_name)
                                 .expect("class failed");
-                            path.set_attribute_ns(None, "style", fill[i % 7])
+                            path.set_attribute_ns(None, "style", FILL[i % 7])
                                 .expect("none failed");
                             svg.append_child(&path).expect("append failed.");
                         }

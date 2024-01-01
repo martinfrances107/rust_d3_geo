@@ -27,7 +27,6 @@ use web_sys::RequestInit;
 use web_sys::RequestMode;
 use web_sys::Response;
 
-
 mod albers;
 mod azimuthal_equal_area;
 mod azimuthal_equidistant;
@@ -58,8 +57,8 @@ use stereographic::draw as draw_stereographic;
 
 #[cfg(not(tarpaulin_include))]
 fn document() -> Result<Document, JsValue> {
-  let window = web_sys::window().ok_or("no window")?;
-  Ok(window.document().ok_or("no document")?)
+    let window = web_sys::window().ok_or("no window")?;
+    Ok(window.document().ok_or("no document")?)
 }
 
 /// Entry point
@@ -80,12 +79,14 @@ pub async fn start() -> Result<(), JsValue> {
     opts.method("GET");
     opts.mode(RequestMode::Cors);
 
-    let request = Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
+    let request =
+        Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
 
     request.headers().set("Accept", "application/json")?;
 
     let window = web_sys::window().expect("Failed to get window");
-    let resp_value = JsFuture::from(window.fetch_with_request(&request)).await?;
+    let resp_value =
+        JsFuture::from(window.fetch_with_request(&request)).await?;
 
     // `resp_value` is a `Response` object.
     assert!(resp_value.is_instance_of::<Response>());
@@ -94,11 +95,11 @@ pub async fn start() -> Result<(), JsValue> {
     // Convert this other `Promise` into a rust `Future`.
     let json = JsFuture::from(resp.json()?).await?;
 
-    let topology =
-        JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
+    let topology = JsValueSerdeExt::into_serde::<Topology>(&json)
+        .expect("Did not get a valid Topology");
 
-    let land: Geometry<f64> =
-        feature_from_name(&topology, "countries").expect("Did not extract geometry");
+    let land: Geometry<f64> = feature_from_name(&topology, "countries")
+        .expect("Did not extract geometry");
 
     try_join!(
         draw_albers(&land),

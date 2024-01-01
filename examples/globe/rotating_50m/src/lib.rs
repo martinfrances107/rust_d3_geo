@@ -110,8 +110,8 @@ impl Renderer {
 
         let json = JsFuture::from(resp.json()?).await?;
 
-        let topology =
-            JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
+        let topology = JsValueSerdeExt::into_serde::<Topology>(&json)
+            .expect("Did not get a valid Topology");
 
         // Grab canvas.
         let canvas = document
@@ -142,7 +142,8 @@ impl Renderer {
             color_graticule: "#ccc".into(),
             color_land: "#333".into(),
             context2d,
-            countries: feature_from_name(&topology, "countries").expect("Did not extract geometry"),
+            countries: feature_from_name(&topology, "countries")
+                .expect("Did not extract geometry"),
             graticule,
             // pb,
             height,

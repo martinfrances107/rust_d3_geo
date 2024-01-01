@@ -98,7 +98,8 @@ pub struct Renderer {
     context2d: CanvasRenderingContext2d,
     graticule: Geometry<f64>,
     pattern: Geometry<f64>,
-    projector_builder: BuilderCircleResampleNoClip<Endpoint, Orthographic<f64>, f64>,
+    projector_builder:
+        BuilderCircleResampleNoClip<Endpoint, Orthographic<f64>, f64>,
 }
 
 async fn countries() -> Result<Geometry, JsValue> {
@@ -109,7 +110,10 @@ async fn countries() -> Result<Geometry, JsValue> {
     let mut opts = RequestInit::new();
     opts.method("GET");
     opts.mode(RequestMode::Cors);
-    let request = match Request::new_with_str_and_init("./world-atlas/world/50m.json", &opts) {
+    let request = match Request::new_with_str_and_init(
+        "./world-atlas/world/50m.json",
+        &opts,
+    ) {
         Ok(r) => r,
         Err(e) => {
             return Err(e);
@@ -128,10 +132,11 @@ async fn countries() -> Result<Geometry, JsValue> {
     let resp_json = resp.json();
     let json = JsFuture::from(resp_json?).await?;
 
-    let topology =
-        JsValueSerdeExt::into_serde::<Topology>(&json).expect("Did not get a valid Topology");
+    let topology = JsValueSerdeExt::into_serde::<Topology>(&json)
+        .expect("Did not get a valid Topology");
 
-    let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
+    let countries = feature_from_name(&topology, "countries")
+        .expect("Did not extract geometry");
 
     Ok(countries)
 }
@@ -220,7 +225,9 @@ impl Renderer {
     /// if the css selector '#c' fails.
     /// if the context type is not available. [ '2d' is not the only one see "webgl" ]
     /// if an inconsisten state associated with the selected pattern was detected.
-    pub async fn new(selected_pattern: SelectedPattern) -> Result<Renderer, JsValue> {
+    pub async fn new(
+        selected_pattern: SelectedPattern,
+    ) -> Result<Renderer, JsValue> {
         utils::set_panic_hook();
 
         // If required, Start async file loading process.
@@ -234,16 +241,19 @@ impl Renderer {
         // Grab canvas.
         let canvas: web_sys::HtmlCanvasElement;
         if let Some(element) = document.get_element_by_id("c") {
-          canvas = element.dyn_into::<web_sys::HtmlCanvasElement>()?;
+            canvas = element.dyn_into::<web_sys::HtmlCanvasElement>()?;
         } else {
-          return Err(JsValue::from("Did not find the canvas element on the page."))
+            return Err(JsValue::from(
+                "Did not find the canvas element on the page.",
+            ));
         }
 
-        let context2d :web_sys::CanvasRenderingContext2d;
-        if let Some(context) = canvas.get_context("2d")?{
-          context2d = context.dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+        let context2d: web_sys::CanvasRenderingContext2d;
+        if let Some(context) = canvas.get_context("2d")? {
+            context2d =
+                context.dyn_into::<web_sys::CanvasRenderingContext2d>()?;
         } else {
-          return Err(JsValue::from("did not get the 2d context"));
+            return Err(JsValue::from("did not get the 2d context"));
         }
 
         let width: f64 = canvas.width().into();
@@ -289,7 +299,10 @@ impl Renderer {
     /// # Errors
     ///
     /// If the data file associated with the country cannot be loaded.
-    pub async fn pattern_change(&mut self, p: SelectedPattern) -> Result<(), JsValue> {
+    pub async fn pattern_change(
+        &mut self,
+        p: SelectedPattern,
+    ) -> Result<(), JsValue> {
         match p {
             SelectedPattern::Bar => {
                 self.pattern = bar();

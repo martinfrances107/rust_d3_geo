@@ -22,7 +22,7 @@ where
             Self::MultiPoint(multi_point) => multi_point.to_stream(stream),
             Self::MultiLineString(mls) => mls.to_stream(stream),
             Self::MultiPolygon(multi_polygon) => {
-                multi_polygon.to_stream(stream)
+                multi_polygon.to_stream(stream);
             }
             Self::GeometryCollection(gc) => {
                 for g in gc {
