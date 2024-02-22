@@ -67,7 +67,7 @@ where
     /// Wrap a default projector and provides mercator specific overrides.
     ///
     /// # Panics
-    /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
+    /// `unwrap()` is used here but a panic will never happen as constants will always be converted into T.
     pub fn new(pr: PR) -> Self {
         let mut base = ProjectionMercatorBuilder::new(pr);
         base.rotate3_set(&[T::zero(), T::zero(), T::from(90).unwrap()])

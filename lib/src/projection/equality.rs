@@ -13,7 +13,7 @@ use crate::Transform;
 /// Helper test function.
 ///
 /// # Panics
-/// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
+/// `unwrap()` is used here but a panic will never happen as EPSILON will always be converted into T.
 pub fn projection_equal<'a, P, T>(
     projector: &P,
     expected_location: &'a Coord<T>,

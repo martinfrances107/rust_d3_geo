@@ -29,9 +29,9 @@ pub struct Multidrain<const N: usize, SD, STATE> {
 }
 
 impl<const N: usize, SD> Multidrain<N, SD, Unpopulated> {
-    /// Define initial multidrain
-    /// population() which be called when connectied into a path
-    /// this will change the state.
+    /// Define initial multidrain.
+    /// [`Multidrain::populate()`] must be called to complete
+    // initialisation.
     pub const fn new(sd: SD) -> Self {
         Self {
             sd,
@@ -44,7 +44,8 @@ impl<const N: usize, SD> Multidrain<N, SD, Unpopulated>
 where
     SD: Clone,
 {
-    /// Constructor.
+    /// Provide transforms associated with each inset.
+    // ( This complete initialisation )
     #[must_use]
     pub fn populate<SUBTRANS>(
         &self,

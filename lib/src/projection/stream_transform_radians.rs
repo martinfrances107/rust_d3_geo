@@ -10,7 +10,7 @@ use crate::stream::Unconnected;
 
 // A path node.
 //
-/// Type-Driven API, STATE prevent calls to .connect()
+/// Type-Driven API, STATE prevent calls to `Self::connect()`
 /// on a perviously connected object
 #[derive(Clone, Debug)]
 pub struct StreamTransformRadians<STATE>(pub STATE);

@@ -10,7 +10,7 @@ use super::calc_radius::calc_radius;
 /// Generates a circle centered at [0°, 0°], with a given radius and precision.
 ///
 /// # Panics
-/// unwrap() is used here but a panic will never happen as 2 will always be converted into T.
+/// `unwrap()` is used here but a panic will never happen as 2 will always be converted into T.
 pub fn stream_fn<EP, STREAM, T>(
     stream: &mut STREAM,
     radius: T,

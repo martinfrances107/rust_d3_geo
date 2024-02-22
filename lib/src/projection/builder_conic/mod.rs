@@ -80,7 +80,7 @@ where
     /// Projection builder.
     ///
     /// # Panics
-    /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
+    /// `unwrap()` is used here but a panic will never happen as constants will always be converted into T.
     fn new(pr: PR) -> Self {
         let phi0 = T::zero();
         let phi1 = T::FRAC_PI_3();

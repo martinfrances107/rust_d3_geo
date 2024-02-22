@@ -18,7 +18,7 @@ type Output<DRAIN, T> =
 /// Albers - [``ConicEqualArea``](crate::projection::conic_equal_area::ConicEqualArea) centered on the U.S.
 ///
 /// # Panics
-/// unwrap() is used here but a panic will never happen as constants  will
+/// `unwrap()` is used here but a panic will never happen as constants  will
 /// always be converted into T.
 #[must_use]
 pub fn albers<DRAIN, T>() -> Output<DRAIN, T>

@@ -33,7 +33,7 @@ where
     /// Projection builder.
     ///
     /// # Panics
-    /// unwrap() is used here but a panic will never happen as constants will always be converted into T.
+    /// `unwrap()` is used here but a panic will never happen as constants will always be converted into T.
     fn new(pr: AlbersUsa<SD, T>) -> Self {
         Self { pr }
     }

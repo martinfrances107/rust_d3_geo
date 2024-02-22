@@ -25,7 +25,7 @@ where
 /// Determines whether a point is inside the polygon.
 ///
 /// # Panics
-/// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
+/// `unwrap()` is used here but a panic will never happen as EPSILON will always be converted into T.
 pub fn polygon_contains<T>(polygon: &[LineString<T>], point: &Coord<T>) -> bool
 where
     T: CoordFloat + FloatConst,

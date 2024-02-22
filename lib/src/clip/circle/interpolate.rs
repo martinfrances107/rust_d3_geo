@@ -22,7 +22,7 @@ where
     /// Constructs a Interpolate State based on the specified radius.
     ///
     /// # Panics
-    /// unwrap() is used here but a panic will never happen as 6 will always be converted into T.
+    /// `unwrap()` is used here but a panic will never happen as 6 will always be converted into T.
     pub fn new(radius: T) -> Self {
         Self {
             radius,

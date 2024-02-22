@@ -139,7 +139,7 @@ pub trait BuilderTrait {
 
 /// Output a Projector based on a Builders configuration.
 pub trait Build {
-    /// The output of the build() call
+    /// The output of the [``Self::build()``] call
     type Projector;
     /// Returns a Projector based on a builder configuration.
     fn build(&self) -> Self::Projector;

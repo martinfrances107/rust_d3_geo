@@ -101,7 +101,7 @@ where
     /// Constructor.
     ///
     /// # Panics
-    /// unwrap() is used here but a panic will never happen as 4.5 will always be converted into T.
+    /// `unwrap()` is used here but a panic will never happen as 4.5 will always be converted into T.
     pub fn new(context: CS, projection: PROJECTOR) -> Self {
         Self {
             context,

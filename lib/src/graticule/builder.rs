@@ -261,7 +261,7 @@ where
     /// Sets the precision for this graticule, in degrees.(Default: 2.5°)
     ///
     /// # Panics
-    /// unwrap() is used here but a panic will never happen as 90 will always be converted into T.
+    /// `unwrap()` is used here but a panic will never happen as 90 will always be converted into T.
     pub fn precision_set(&mut self, precision: &T) -> &mut Self {
         self.precision = *precision;
         self.x = graticule_x(self.y0, self.y1, self.t90);

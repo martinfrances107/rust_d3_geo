@@ -65,7 +65,7 @@ where
     /// Inputs select either a conic or a cylindrical projection.
     ///
     /// # Panics
-    /// unwrap() is used here but a panic will never happen as EPSILON will always be converted into T.
+    /// `unwrap()` is used here but a panic will never happen as EPSILON will always be converted into T.
     fn generate(self, y0: T, y1: T) -> Self {
         let two = T::from(2_f64).unwrap();
         let sy0 = y0.sin();

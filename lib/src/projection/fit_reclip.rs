@@ -38,7 +38,7 @@ use super::Projector as ProjectorTrait;
 use super::TranslateGet;
 
 /// `reclip` in the sense that the projection builder
-/// internals call reclip()
+/// internally calls [`Reclip::reclip()`]
 ///
 /// reclip ensures that the postclip node will always be
 /// set to "Clip" [ A rectangle object, never Identity. ]
