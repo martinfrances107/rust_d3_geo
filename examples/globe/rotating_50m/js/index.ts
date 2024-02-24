@@ -5,7 +5,7 @@ import('../pkg')
     const perf = document.getElementById('perf')
 
     if (perf != null) {
-      perf.innerHTML = 'Render Time: ...Calculating'
+      perf.innerHTML = 'Rwender Time: ...Calculating'
 
       // Holds elapsed samples (use to compute the standard deviation).
       const elapsedArray = Array(200).fill(0)
