@@ -37,10 +37,10 @@
   "devDependencies": {
     "@types/d3": "^7",
     "@types/html-webpack-plugin": "^3",
-    "@typescript-eslint/eslint-plugin": "^5",
-    "@typescript-eslint/parser": "^5",
+    "@typescript-eslint/eslint-plugin": "^7",
+    "@typescript-eslint/parser": "^7",
     "@wasm-tool/wasm-pack-plugin": "^1",
-    "copy-webpack-plugin": "^11",
+    "copy-webpack-plugin": "^12",
     "eslint": "^8",
     "eslint-plugin-react": "^7",
     "eslint-plugin-react-hooks": "^4",
@@ -48,6 +48,6 @@
     "ts-loader": "^9",
     "ts-node": "^10",
     "typescript": "^5",
-    "webpack-dev-server": "^4"
+    "webpack-dev-server": "^5"
   }
 }
