@@ -27,7 +27,7 @@ rust-version = "1.65"
 
 [workspace.dependencies]
 d3_geo_rs = { path = "../../lib" }
-geo = "~0.27"
+geo = "~0.28"
 geo-types = "~0.7"
 getrandom = { version = "~0.2", features = ["js"] }
 gloo-utils = "~0.2"
