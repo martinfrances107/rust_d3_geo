@@ -1,4 +1,3 @@
-use core::default::Default;
 use core::fmt::Debug;
 
 use geo::CoordFloat;

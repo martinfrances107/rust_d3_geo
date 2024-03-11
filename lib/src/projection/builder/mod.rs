@@ -97,11 +97,11 @@ where
 
     theta: Option<T>,
 
-    /// Used by recenter() to build the factories.
+    /// Used by `recenter()` to build the factories.
     rotate: RotateRadians<T>,
     pub(super) rotator: RotatorRadians<Unconnected, T>, //rotate, pre-rotate
     project_transform: Compose<PR, ScaleTranslateRotate<T>>,
-    /// Used by rotate_transform_factory and projections transform.
+    /// Used by `rotate_transform_factory` and projections transform.
     pub(super) project_rotate_transform:
         Compose<RotateRadians<T>, Compose<PR, ScaleTranslateRotate<T>>>,
 

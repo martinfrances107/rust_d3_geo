@@ -22,7 +22,7 @@ pub struct Unpopulated;
 /// Wrapper for a Drain type.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Multidrain<const N: usize, SD, STATE> {
-    /// After initialisation, this value is used in a .connect()
+    /// After initialisation, this value is used in a `.connect()`
     /// call to construct the drains.
     pub sd: SD,
     state: STATE,

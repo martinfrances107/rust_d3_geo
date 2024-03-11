@@ -120,7 +120,7 @@ where
     /// The hidden linkage is in the implementation of Connectable
     /// Changing the RC results in a change of the Output type.
     p_rc: PhantomData<RC>,
-    /// Needs to be public as precision() will copy these values.
+    /// Needs to be public as `precision()` will copy these values.
     pub clip_line: LU,
     /// Antimerdian and Circle strategies have distinct interpolator functions.
     pub interpolator: I,

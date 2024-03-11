@@ -26,7 +26,7 @@ where
     T: CoordFloat,
 {
     pr: T,
-    /// Either a [PathString](crate::path::string::String) or [Path2d].
+    /// Either a [`PathString`](crate::path::string::String) or [Path2d].
     /// Rendering to a SVG Path element or a HTML Canvas element.
     pub context: CS,
 }

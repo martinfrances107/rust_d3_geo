@@ -85,7 +85,7 @@ where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat,
 {
-    /// Either a PathString or Path2d.
+    /// Either a `PathString` or Path2d.
     /// Rendering to a SVG Path element or a HTML Canvas element.
     pub context: CS,
     point_radius: PointRadiusEnum<T>,

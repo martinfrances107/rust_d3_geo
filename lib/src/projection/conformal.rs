@@ -18,9 +18,9 @@ use super::ScaleSet;
 /// Projection definition. ``Conformal::default()`` returns a builder.
 #[derive(Clone, Debug, Default)]
 pub enum Conformal {
-    /// Projection depends of values set by builder_with_phi0_phi1.
+    /// Projection depends of values set by `builder_with_phi0_phi1`.
     Conic(ConicConformal),
-    /// Projection depends of values set by builder_with_phi0_phi1.
+    /// Projection depends of values set by `builder_with_phi0_phi1`.
     Mercator(Mercator),
     /// State before the parallels are set.
     #[default]

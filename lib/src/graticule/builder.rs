@@ -1,5 +1,4 @@
 use core::fmt::Debug;
-use core::iter::Iterator;
 use core::mem::swap;
 
 use geo::CoordFloat;

@@ -17,9 +17,9 @@ use super::ScaleSet;
 /// Projection definition. ``Equidistant::builder()`` returns a builder.
 #[derive(Clone, Debug, Default)]
 pub enum Equidistant {
-    /// Projection depends of values set by builder_with_phi0_phi1.
+    /// Projection depends of values set by `builder_with_phi0_phi1`.
     Conic(ConicEquidistant),
-    /// Projection depends of values set by builder_with_phi0_phi1.
+    /// Projection depends of values set by `builder_with_phi0_phi1`.
     Equi(Equirectangular<f64>),
     /// State before the parallels are set.
     #[default]
