@@ -22,7 +22,7 @@ use geo::GeometryCollection;
 use gloo_utils::format::JsValueSerdeExt;
 use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::console_log;
