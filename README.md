@@ -17,7 +17,7 @@ This is a port [d3-geo](https://github.com/d3/d3-geo) into RUST. It is part of a
 * [d3_geo_voronoi_rs](https://crates.io/crates/d3_geo_voronoi_rs)
 
 This library allows the development of custom maps. It provides a comprehensive set
- of projections along with the means to scale rotate and translate the image.
+ of projections along with the means to scale rotate and translate the final image.
  The projector processes polygons, lines and points in the form of
  [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) objects. Additionally this
  library can be used to calculate lengths, areas and the centroid of such objects
@@ -162,7 +162,7 @@ Sample code in both RUST and javascript that renders a complex multi-polygon. ( 
 
 ## An outline of the common steps found in all the examples
 
-1) For a given projection, use its default projection builder , make changes to the scale, translation .. etc, then call build() to construct a projector.
+1) For a given projection, use its default projection builder, make changes to the scale, translation .. etc, then call build() to construct a projector.
 
     ```rust
     let projector = Stereographic::<f64>::builder()
