@@ -184,11 +184,11 @@ Sample code in both RUST and javascript that renders a complex multi-polygon. ( 
 
     Here is an overview of the key nodes.
 
-     **Clipping**: Two strategies are used "Antimeridian" and "ClipAngle" [ See clip_angle_set() and clip_angle_reset() ]
+     **Clipping**: Two strategies are used "Antimeridian" and "ClipAngle" [See clip_angle_set() and clip_angle_reset()]
 
-     **Resampling**: Dense geometry can be reduced by declaring a separation distance under which points, used to describe polygons and lines, are considered indistinguishable [ See precision_set() ]
+     **Resampling**: Dense geometry can be reduced by declaring a separation distance under which points, used to describe polygons and lines, are considered indistinguishable [See precision_set()]
 
-     **Bounding**: A projection space box can be set, and only geometry within this extent will be displayed. Polygons partially inside the box are restructured to conform to the edges of the box. [ See clip_extent_set() clip_extent_clear() ]
+     **Bounding**: A projection space box can be set, and only geometry within this extent will be displayed. Polygons partially inside the box are restructured to conform to the edges of the box. [See clip_extent_set() clip_extent_clear()]
 
       **Endpoints** are special path nodes which hold the result of a calculation. A variety of endpoint are available Area, Centroid, Length which can be use to compute properties about polygons or lines. These examples only show endpoints that render to a HTML canvas element or a SVG path element.
 
