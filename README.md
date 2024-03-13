@@ -344,14 +344,13 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
 
 Future Work.
 
+* Since I ported this code ... the javascript has added a digits() function to control the
+  precision of numbers as they are output as strings. ( I need to implement this upgrade )
+
 * [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
 
 * I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
 
-* The Hashmaps - appear slow.
-  Maybe I can get performance improvements by replacing them with B-tree collections?
-
-* Should I use an arena for memory management?
 
 ### Architecture discussion
 
