@@ -27,7 +27,7 @@ This library allows the development of custom maps. It provides a comprehensive 
 ## When to use the rust version of the library
 
 The limits of the javascript library become obvious when developing interactive applications that process large datasets.
-For example the examples/globe applications operate on a highly detailed ( 1:50M resolution ) map of the earth. On a desktop machine this is beyond the javascript version.
+For example the examples/globe applications operate on a highly detailed ( 1:50M resolution ) map of the earth. On a laptop this is beyond the javascript version.
 
  | Available Projections |   |   |
  | --------------------- | - | - |
