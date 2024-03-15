@@ -92,10 +92,12 @@ where
 
     fn point(&mut self, _p: &Coord<Self::T>, _m: Option<u8>) {}
 }
+
 /// Stream Path API
 ///
 /// Path stages can be connected to perform a sequence of
 /// operations where the results can be stored in an endpoint.
+#[doc(notable_trait)]
 pub trait Stream
 where
     <Self as Stream>::T: CoordFloat,
