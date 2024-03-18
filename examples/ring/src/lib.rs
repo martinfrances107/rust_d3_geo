@@ -57,10 +57,11 @@ fn path_node(class_name: &str) -> Result<Element> {
     let ret = class_list.item(0).map_or_else(
         || {
             document
-                .create_element_ns(Some("http://www.w3.org/2000/svg"), "path").unwrap_or_else(|_| {
-                        console_log!("failed to create node.");
-                        panic!("failed");
-                    })
+                .create_element_ns(Some("http://www.w3.org/2000/svg"), "path")
+                .unwrap_or_else(|_| {
+                    console_log!("failed to create node.");
+                    panic!("failed");
+                })
         },
         |element| element,
     );

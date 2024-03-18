@@ -1,8 +1,8 @@
 use geo::Geometry;
 use geo::MultiLineString;
 use geo_types::Coord;
-use wasm_bindgen::JsValue;
 use wasm_bindgen::JsCast;
+use wasm_bindgen::JsValue;
 use web_sys::Path2d;
 
 use d3_geo_rs::graticule::generate as generate_graticule;
