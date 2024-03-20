@@ -18,10 +18,7 @@ use super::ClipAngleSet;
 
 /// Projection definition. ``AzimuthalEqualArea::builder()`` returns a builder.
 #[derive(Copy, Clone, Debug, Default)]
-pub struct AzimuthalEqualArea<T>
-where
-    T: CoordFloat,
-{
+pub struct AzimuthalEqualArea<T> {
     // Why the Phantom Data is required here...
     //
     // The Raw trait is generic ( and the trait way of dealing with generic is to have a interior type )
