@@ -12,10 +12,7 @@ pub struct Sphere<T> {
     pd: PhantomData<T>,
 }
 
-impl<T> Default for Sphere<T>
-where
-    T: CoordFloat,
-{
+impl<T> Default for Sphere<T> {
     fn default() -> Self {
         Self {
             pd: PhantomData::<T>,
