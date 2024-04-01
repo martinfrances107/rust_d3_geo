@@ -27,10 +27,9 @@
   "homepage": "https://github.com/martinfrances107/rust_d3_geo/#readme",
   "dependencies": {
     "@wasm-tool/wasm-pack-plugin": "^1",
-    "compression-webpack-plugin": "^10",
-    "copy-webpack-plugin": "^11",
+    "compression-webpack-plugin": "^11",
+    "copy-webpack-plugin": "^12",
     "eslint": "^8.29.0",
-    "request": "^2.79.0",
     "rimraf": "^5",
     "serve": "^14",
     "topojson-client": "^3",
@@ -38,7 +37,7 @@
     "typescript": "^5",
     "webpack": "^5",
     "webpack-cli": "^5",
-    "webpack-dev-server": "^4"
+    "webpack-dev-server": "^5"
   },
   "devDependencies": {
     "@types/topojson-client": "^3",
