@@ -32,7 +32,7 @@
     "d3-drag": "3.0.0",
     "d3-selection": "^3",
     "rimraf": "^5",
-    "serve": "^14",
+    "serve": "^14.2.3",
     "topojson-client": "^3",
     "ts-loader": "^9",
     "typescript": "^5",
