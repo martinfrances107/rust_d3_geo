@@ -6,7 +6,6 @@
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
 #![allow(clippy::many_single_char_names)]
-#![feature(doc_notable_trait)]
 
 //! A port of [d3/d3-geo](<https://github.com/d3/d3-geo>) into [`rust_d3_geo`](<https://github.com/martinfrances107/rust_d3_geo>).
 //!
