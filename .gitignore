@@ -1,7 +1,3 @@
-.*
-!.github
-!.gitattributes
-!.gitignore
 !.vscode
 !target/debug/.cargo-lock
 !target/debug/.fingerprint/EMPTY
