@@ -2,10 +2,11 @@
 mod distance {
     extern crate pretty_assertions;
 
-    use d3_geo_rs::distance::distance;
-    use d3_geo_rs::in_delta::in_delta;
     use geo_types::Coord;
     use pretty_assertions::assert_eq;
+
+    use d3_geo_rs::distance::distance;
+    use d3_geo_rs::in_delta::in_delta;
 
     #[test]
     fn great_arc() {

@@ -4,7 +4,6 @@ mod path_measure {
     use core::fmt::Display;
     use core::ops::AddAssign;
 
-    use d3_geo_rs::stream::DrainStub;
     use geo::CoordFloat;
     use geo::Geometry;
     use geo::LineString;
@@ -20,6 +19,7 @@ mod path_measure {
     use d3_geo_rs::projection::identity::Identity;
     use d3_geo_rs::projection::projector_identity::types::ProjectorIdentityAntimeridianResampleNoClip;
     use d3_geo_rs::projection::RawBase;
+    use d3_geo_rs::stream::DrainStub;
     use d3_geo_rs::stream::Streamable;
 
     #[inline]
