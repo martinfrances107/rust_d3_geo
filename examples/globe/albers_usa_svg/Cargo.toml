@@ -1,13 +1,13 @@
 [package]
-authors = ["martin <martinfrances107@hotmail.com>"]
+authors = { workspace = true }
 categories = ["graphics"]
-edition = "2021"
+edition = { workspace = true }
 description = "A example app from the rust_d3_geo package. The app is an example of code that manipulates SVG elements to display a globe."
 keywords = ["graphics", "d3-geo"]
 name = "rust_d3_geo_example_albers_usa_svg"
-license = "MIT"
+license = { workspace = true }
 readme = "README.md"
-repository = "https://github.com/martinfrances107/rust_d3_geo.git"
+repository = { workspace = true }
 version = { workspace = true }
 
 
