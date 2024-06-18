@@ -1,14 +1,13 @@
 [package]
-authors = ["martin <martinfrances107@hotmail.com>"]
+authors = { workspace = true }
 categories = ["graphics"]
 description = "A example app from the rust_d3_geo package. It shows how rust can interact with the browsers timer API."
-edition = "2021"
-# license = { workspace = true }
+edition = { workspace = true }
 keywords = ["graphics", "d3-geo"]
-license = "MIT"
+license = { workspace = true }
 name = "rust_d3_geo_example_globe_rotating_50m"
 readme = "README.md"
-repository = "https://github.com/martinfrances107/rust_d3_geo.git"
+repository = { workspace = true }
 version = { workspace = true }
 
 [lib]
