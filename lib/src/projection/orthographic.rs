@@ -20,7 +20,8 @@ use super::ScaleSet;
 #[inline]
 fn angle<T>(z: T) -> T
 where
-    T: CoordFloat{
+    T: CoordFloat,
+{
     z.asin()
 }
 
@@ -64,7 +65,6 @@ where
     #[inline]
     fn invert(&self, p: &Coord<T>) -> Coord<T> {
         azimuthal_invert(p, angle)
-
     }
 }
 
