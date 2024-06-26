@@ -9,6 +9,7 @@ use num_traits::float::FloatConst;
 use crate::math::EPSILON;
 use crate::Transform;
 
+use super::azimuthal::azimuthal_invert;
 use super::builder::types::BuilderCircleResampleNoClip;
 use super::builder::Builder;
 use super::BuilderTrait;
@@ -19,26 +20,10 @@ use super::ScaleSet;
 #[inline]
 fn angle<T>(z: T) -> T
 where
-    T: CoordFloat + FloatConst,
-{
+    T: CoordFloat{
     z.asin()
 }
 
-fn azimuthal_invert<T>(p: &Coord<T>) -> Coord<T>
-where
-    T: CoordFloat + FloatConst,
-{
-    let z = (p.x * p.x + p.y * p.y).sqrt();
-    let c = angle(z);
-    let (sc, cc) = c.sin_cos();
-
-    let ret_x = (p.x * sc).atan2(z * cc);
-
-    let y_out = if z == T::zero() { z } else { p.y * sc / z };
-    let ret_y = y_out.asin();
-
-    Coord { x: ret_x, y: ret_y }
-}
 /// Projection definition. ``Orthographic::builder()`` returns a builder.
 #[derive(Clone, Default, Debug)]
 pub struct Orthographic<T> {
@@ -63,7 +48,7 @@ impl<T> Orthographic<T> where T: CoordFloat + FloatConst {}
 
 impl<T> Transform for Orthographic<T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     type T = T;
 
@@ -78,7 +63,8 @@ where
 
     #[inline]
     fn invert(&self, p: &Coord<T>) -> Coord<T> {
-        azimuthal_invert(p)
+        azimuthal_invert(p, angle)
+
     }
 }
 
