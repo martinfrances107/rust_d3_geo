@@ -22,7 +22,7 @@ pub struct CylindricalEqualArea<T> {
 
 impl<T> CylindricalEqualArea<T>
 where
-    T: CoordFloat + Default + FloatConst,
+    T: CoordFloat + FloatConst,
 {
     #[inline]
     /// Constuctor and Projection based on the angle in radians.
