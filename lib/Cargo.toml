@@ -21,6 +21,7 @@ criterion = { version = "~0.5", features = ["html_reports"] }
 futures = { workspace = true }
 js-sys = { workspace = true }
 rand = { workspace = true }
+rayon = "1"
 rust_topojson_client = { workspace = true }
 wasm-bindgen = { workspace = true }
 wasm-bindgen-test = { workspace = true }

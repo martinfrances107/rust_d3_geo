@@ -1,6 +1,7 @@
 #[cfg(not(tarpaulin_include))]
 mod area {
     extern crate pretty_assertions;
+    extern crate rayon;
 
     use geo::line_string;
     use geo::polygon;
@@ -12,7 +13,8 @@ mod area {
     use geo::Point;
     use geo::Polygon;
     use geo_types::Coord;
-
+    use rayon::iter::ParallelIterator;
+    use crate::area::rayon::iter::IntoParallelRefIterator;
     use pretty_assertions::assert_eq;
 
     use d3_geo_rs::area::Area;
@@ -24,7 +26,7 @@ mod area {
 
     fn stripes<T>(a: T, b: T) -> Polygon<T>
     where
-        T: CoordFloat,
+        T: CoordFloat + Send + Sync,
     {
         let mut exterior: Vec<(T, T)> = Vec::new();
         let mut interior: Vec<(T, T)> = Vec::new();
@@ -34,7 +36,7 @@ mod area {
                 T::from(180_f64).unwrap(),
                 T::from(0.1_f64).unwrap(),
             )
-            .iter()
+            .par_iter()
             .map(|x| (*x, *d))
             .collect();
             stripe.push(stripe[0]);
