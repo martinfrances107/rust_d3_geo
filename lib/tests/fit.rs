@@ -45,7 +45,7 @@ mod fit {
     ///  Helper function to extract world geometry from file.
     fn world<T>() -> Geometry<T>
     where
-        T: CoordFloat + Debug + FloatConst,
+        T: CoordFloat + FloatConst,
     {
         let file = File::open("./tests/world-atlas/world/50m.json")
             .expect("File should open read only.");

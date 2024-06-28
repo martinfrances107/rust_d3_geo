@@ -84,7 +84,7 @@ type StreamPoint<DRAIN, T> = StreamTransformRadians<
 #[derive(Clone, Debug)]
 pub struct AlbersUsa<SD, T>
 where
-    T: 'static + CoordFloat + Debug + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     k: T,
     t: Coord<T>,
@@ -275,7 +275,7 @@ where
 impl<SD, T> AlbersUsa<SD, T>
 where
     SD: Clone,
-    T: CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     /// None standard builder pattern.
     /// No need to specify the DRAIN at this point.
@@ -289,7 +289,7 @@ where
 impl<SD, T> Transform for AlbersUsa<SD, T>
 where
     SD: Clone,
-    T: CoordFloat + Debug + Default + FloatConst,
+    T: CoordFloat + Default + FloatConst,
 {
     type T = T;
 

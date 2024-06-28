@@ -1,4 +1,3 @@
-use core::fmt::Debug;
 use core::fmt::Display;
 
 use geo::CoordFloat;
@@ -42,7 +41,7 @@ where
         && spherical_equal(&actual_location, expected_location, delta)
 }
 
-fn planar_equal<T: CoordFloat + Debug + Display>(
+fn planar_equal<T: CoordFloat + Display>(
     actual: &Coord<T>,
     expected: &Coord<T>,
     delta: T,
