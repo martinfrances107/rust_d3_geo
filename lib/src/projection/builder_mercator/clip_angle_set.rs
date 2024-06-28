@@ -17,7 +17,7 @@ impl<DRAIN, PCNC, PCNU, PR, RC, RU, T> ClipAngleSet
     for Builder<ClipAntimeridianU<RC, T>, DRAIN, PCNU, PR, RU, T>
 where
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
-    RU: Clone + Connectable<Output<PCNC> = RC> + Debug,
+    RU: Clone + Connectable<Output<PCNC> = RC>,
     PR: Clone + Transform<T = T>,
     T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + FloatConst,
 {
