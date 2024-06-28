@@ -28,7 +28,7 @@ mod path_area {
     fn projector<T>(
     ) -> ProjectorAntimeridianResampleNoneNoClip<Area<T>, Equirectangular<T>, T>
     where
-        T: 'static + CoordFloat + Default + Display + FloatConst,
+        T: 'static + CoordFloat + Default + FloatConst,
     {
         let mut ba = Equirectangular::<T>::builder();
         ba.scale_set(T::from(900f64 / PI).unwrap());
@@ -47,7 +47,7 @@ mod path_area {
         object: impl Streamable<T = T>,
     ) -> T
     where
-        T: AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AsPrimitive<T> + CoordFloat + FloatConst,
     {
         let builder = PathBuilder::new(Area::default());
 

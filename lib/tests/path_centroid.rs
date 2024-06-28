@@ -59,7 +59,7 @@ mod path_centroid {
         object: &impl Streamable<T = T>,
     ) -> Point<T>
     where
-        T: AddAssign<T> + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AddAssign<T> + AsPrimitive<T> + CoordFloat + FloatConst,
     {
         let cs = Centroid::default();
         let result = Path::new(cs, projection).centroid(object);
