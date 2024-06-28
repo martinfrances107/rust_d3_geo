@@ -1,5 +1,3 @@
-use core::fmt::Debug;
-
 use geo::Coord;
 use geo::CoordFloat;
 use num_traits::FloatConst;
@@ -17,7 +15,7 @@ use super::types::BuilderAntimeridianResampleClip;
 
 impl<PR, T> Fit for BuilderAntimeridianResampleClip<Bounds<T>, PR, T>
 where
-    PR: Clone + Debug + Transform<T = T>,
+    PR: Clone + Transform<T = T>,
     T: 'static + CoordFloat + Default + FloatConst,
 {
     type T = T;
