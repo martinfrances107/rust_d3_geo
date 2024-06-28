@@ -4,7 +4,6 @@ mod path_centroid {
     extern crate pretty_assertions;
 
     use core::f64::consts::PI;
-    use core::fmt::Display;
     use core::ops::AddAssign;
 
     use geo::line_string;

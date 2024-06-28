@@ -3,7 +3,6 @@ mod fit {
     extern crate pretty_assertions;
     extern crate rust_topojson_client;
 
-    use core::fmt::Debug;
     use std::fs::File;
 
     use geo::polygon;
