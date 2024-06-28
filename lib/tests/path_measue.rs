@@ -28,7 +28,7 @@ mod path_measure {
         object: impl Streamable<T = T>,
     ) -> T
     where
-        T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+        T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst,
     {
         let builder = PathBuilder::new(Measure::default());
         let b = builder.build(projection);

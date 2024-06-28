@@ -38,7 +38,7 @@ mod path_string {
         T,
     >
     where
-        T: 'static + CoordFloat + Default + Display + FloatConst,
+        T: 'static + CoordFloat + Default + FloatConst,
     {
         Equirectangular::builder()
             .scale_set(T::from(900f64 / PI).unwrap())
