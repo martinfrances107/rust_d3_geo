@@ -1,5 +1,3 @@
-use core::fmt::Debug;
-
 use geo::Coord;
 use geo::CoordFloat;
 use num_traits::FloatConst;

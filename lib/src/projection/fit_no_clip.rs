@@ -11,8 +11,6 @@
 //! 3) Restore Post Clip Rectangle
 //!
 
-use core::fmt::Debug;
-
 use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
