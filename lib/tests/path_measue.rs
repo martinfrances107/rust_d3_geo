@@ -1,7 +1,6 @@
 #[cfg(not(tarpaulin_include))]
 mod path_measure {
 
-    use core::fmt::Display;
     use core::ops::AddAssign;
 
     use geo::CoordFloat;

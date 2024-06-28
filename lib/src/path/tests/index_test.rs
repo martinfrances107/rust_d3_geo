@@ -5,7 +5,6 @@ mod index {
     extern crate pretty_assertions;
 
     use core::f64::consts::PI;
-    use core::fmt::Debug;
 
     use approx::AbsDiffEq;
     use geo::line_string;

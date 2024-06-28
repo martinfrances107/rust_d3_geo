@@ -2,7 +2,6 @@
 mod path_area {
 
     use core::f64::consts::PI;
-    use core::fmt::Display;
 
     use geo::CoordFloat;
     use geo::Geometry;
