@@ -2,7 +2,6 @@ use core::fmt::Debug;
 use core::fmt::Display;
 
 use geo::CoordFloat;
-use num_traits::FloatConst;
 
 use crate::path::endpoint::Endpoint;
 use crate::path_identity::Path;
@@ -30,7 +29,7 @@ where
 
 impl<CS, T> Builder<CS, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Constructor.
     ///
@@ -47,7 +46,7 @@ where
 /// Context related methods.
 impl<T> Builder<Endpoint, T>
 where
-    T: CoordFloat + FloatConst,
+    T: CoordFloat,
 {
     /// Programe the builder with the context.
     pub fn context(&mut self, context: Path2d) -> &mut Self {
@@ -59,7 +58,7 @@ where
 /// Context related methods.
 impl<T> Builder<String<T>, T>
 where
-    T: CoordFloat + Display + FloatConst,
+    T: CoordFloat + Display,
 {
     /// Returns a Builder from default values.
     #[inline]
