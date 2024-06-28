@@ -109,7 +109,7 @@ where
 impl<DRAIN, PR, T> ClipExtentClear for BuilderCircleResampleClip<DRAIN, PR, T>
 where
     PR: Clone,
-    T: 'static + CoordFloat + Default + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     type T = T;
     type Output = BuilderCircleResampleNoClip<DRAIN, PR, T>;

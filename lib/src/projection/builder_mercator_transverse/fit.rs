@@ -1,5 +1,3 @@
-use core::fmt::Debug;
-
 use approx::AbsDiffEq;
 use geo::Coord;
 use geo::CoordFloat;

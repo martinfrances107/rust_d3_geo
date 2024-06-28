@@ -1,4 +1,3 @@
-use core::fmt::Debug;
 use core::marker::PhantomData;
 
 use approx::AbsDiffEq;
