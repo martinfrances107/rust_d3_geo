@@ -13,9 +13,9 @@ mod area {
     use geo::Point;
     use geo::Polygon;
     use geo_types::Coord;
-    use rayon::iter::ParallelIterator;
-    use crate::area::rayon::iter::IntoParallelRefIterator;
     use pretty_assertions::assert_eq;
+    use rayon::iter::IntoParallelRefIterator;
+    use rayon::iter::ParallelIterator;
 
     use d3_geo_rs::area::Area;
     use d3_geo_rs::circle::generator::Generator as CircleGenerator;
