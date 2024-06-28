@@ -60,7 +60,7 @@ where
     CLIPU: ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
-    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
+    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
     let mut builder = builder.clone();
@@ -99,7 +99,7 @@ where
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
-    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
+    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -145,7 +145,7 @@ where
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
-    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
+    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
     fit_extent_no_clip(
@@ -183,7 +183,7 @@ where
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
-    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
+    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -228,7 +228,7 @@ where
         + TranslateSet<T = T>,
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPC: Clone + Stream<EP = Bounds<T>, T = T>,
-    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC> + Debug,
+    RU: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RC>,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();

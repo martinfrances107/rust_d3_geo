@@ -265,8 +265,8 @@ where
     CLIPU: Clone + ConnectableClip<Output = CLIPC, SC = RC>,
     CLIPUint: Clone + ConnectableClip<Output = CLIPCint, SC = RCint>,
     PR: Transform<T = T>,
-    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC> + Debug,
-    RUint: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RCint> + Debug,
+    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
+    RUint: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RCint>,
     T: 'static + CoordFloat + FloatConst,
 {
     fit_extent_clip::<
@@ -348,8 +348,8 @@ where
     CLIPUint: Clone + ConnectableClip<Output = CLIPCint, SC = RCint>,
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
     PR: Transform<T = T>,
-    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC> + Debug,
-    RUint: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RCint> + Debug,
+    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
+    RUint: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RCint>,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();
@@ -440,8 +440,8 @@ where
     CLIPCint: Clone + Stream<EP = Bounds<T>, T = T>,
     CLIPUint: Clone + ConnectableClip<Output = CLIPCint, SC = RCint>,
     PR: Clone + Transform<T = T>,
-    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC> + Debug,
-    RUint: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RCint> + Debug,
+    RU: Clone + Connectable<Output<PCNC<Bounds<T>, T>> = RC>,
+    RUint: Clone + Connectable<Output<NoPCNC<Bounds<T>>> = RCint>,
     T: 'static + CoordFloat + FloatConst,
 {
     let two = T::from(2.0_f64).unwrap();

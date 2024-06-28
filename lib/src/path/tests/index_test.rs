@@ -36,7 +36,7 @@ mod index {
 
     #[inline]
     fn equirectangular<
-        EP: Clone + Stream<EP = EP, T = T> + Debug + Default,
+        EP: Clone + Stream<EP = EP, T = T> + Default,
         T: 'static + AbsDiffEq<Epsilon = T> + CoordFloat + Default + FloatConst,
     >() -> ProjectorAntimeridianResampleNoneNoClip<EP, Equirectangular<T>, T>
     {

@@ -65,7 +65,7 @@ where
 
 impl<PR, T> Fit for BuilderConicAntimeridianResampleNoneClip<Bounds<T>, PR, T>
 where
-    PR: Clone + Debug + PRConic<T = T> + Transform<T = T>,
+    PR: Clone + PRConic<T = T> + Transform<T = T>,
     T: 'static + CoordFloat + FloatConst,
 {
     /// f32 or f64
