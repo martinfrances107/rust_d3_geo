@@ -347,10 +347,7 @@ Future Work.
 * Since I ported this code ... the javascript has added a digits() function to control the
   precision of numbers as they are output as strings. ( I need to implement this upgrade )
 
-* [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
-
-* I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
-
+* [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support. Since this crate is focused on web development and so incoperating [wasm-bindgen-rayon](https://crates.io/crates/wasm-bindgen-rayon). wasm-bindgen_rayon recommends using nightly - and so it far from production read. I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
 
 ### Architecture discussion
 
