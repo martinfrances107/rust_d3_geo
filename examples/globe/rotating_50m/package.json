@@ -30,7 +30,7 @@
     "compression-webpack-plugin": "^11",
     "copy-webpack-plugin": "^12",
     "eslint": "^8.29.0",
-    "rimraf": "^5",
+    "rimraf": "^6",
     "serve": "^14.2.3",
     "topojson-client": "^3",
     "ts-loader": "^9",
