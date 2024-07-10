@@ -22,7 +22,7 @@ use super::intersect::Return;
 
 /// Circle Line.
 #[allow(clippy::struct_excessive_bools)]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Line<STATE, T>
 where
     T: CoordFloat,

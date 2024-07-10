@@ -7,7 +7,7 @@ use crate::Transform;
 use super::tany;
 
 /// Projection definition.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct ConicConformal {
     f: f64,
     n: f64,

@@ -4,7 +4,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 
 /// Allows the storage of messages related the the state of a line segment
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct LineElem<T>
 where
     T: CoordFloat,

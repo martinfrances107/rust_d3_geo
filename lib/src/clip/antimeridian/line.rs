@@ -18,7 +18,7 @@ use crate::stream::Unconnected;
 use super::intersect::intersect;
 
 /// Antimeridian Line.
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Line<STATE, T> {
     state: STATE,
     lambda0: T,
