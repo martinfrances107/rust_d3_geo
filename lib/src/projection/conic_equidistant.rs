@@ -3,7 +3,7 @@ use geo_types::Coord;
 use crate::Transform;
 
 /// Projection definition.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct ConicEquidistant {
     g: f64,
     n: f64,

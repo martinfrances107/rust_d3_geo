@@ -7,17 +7,9 @@ use crate::stream::Stream;
 use crate::stream::Streamable;
 
 /// Unit sphere.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Sphere<T> {
     pd: PhantomData<T>,
-}
-
-impl<T> Default for Sphere<T> {
-    fn default() -> Self {
-        Self {
-            pd: PhantomData::<T>,
-        }
-    }
 }
 
 impl<T> Streamable for Sphere<T>

@@ -8,7 +8,7 @@ use geo::Geometry;
 use geo_types::Coord;
 
 /// Part of a Feature Object.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum FeatureProperty<T>
 where
     T: CoordFloat,
@@ -32,7 +32,7 @@ where
 }
 
 /// An grouping  of [Features].
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct FeatureCollection<T: CoordFloat>(pub Vec<Features<T>>);
 
 /// Binds groups of [`FeatureProperty`] to a [`Geometry`] object.

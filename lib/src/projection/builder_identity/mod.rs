@@ -26,7 +26,7 @@ mod translate_set;
 /// Simplified Projection builder.
 ///
 /// Holds State related to the construction of the a projection.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Builder<PCNU, T>
 where
     T: CoordFloat,

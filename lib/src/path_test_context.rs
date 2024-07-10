@@ -1,5 +1,5 @@
 /// Used by `index_test`
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Path2d {
     buffer: Vec<String>,
 }

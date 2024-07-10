@@ -8,7 +8,7 @@ use crate::stream::Unconnected;
 use crate::Transform;
 
 /// A Stream node, that applies a complex transform to each point.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Transformer<STATE, T>
 where
     T: CoordFloat,

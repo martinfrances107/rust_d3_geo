@@ -15,7 +15,7 @@ use super::RawBase;
 use super::ScaleSet;
 
 /// Projection definition. ``Equidistant::builder()`` returns a builder.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub enum Equidistant {
     /// Projection depends of values set by `builder_with_phi0_phi1`.
     Conic(ConicEquidistant),
