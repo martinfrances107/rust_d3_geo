@@ -117,7 +117,7 @@ where
     //
     // let x_rounded = (x * 1_000_000_f64).round() / 1_000_000_f64;
     //
-    // After testing trim_end_macthes() is faster.
+    // After testing trim_end_matches() is faster.
     #[inline]
     fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         let x = format!("{:.6}", p.x);
