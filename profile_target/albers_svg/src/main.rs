@@ -29,14 +29,14 @@ fn parse_topology() -> Geometry {
     feature_from_name(&topology, "counties").expect("Did not extract geometry")
 }
 
-static  FILL: [&str; 7] = [
-  "fill: red",
-  "fill: orange",
-  "fill: olive",
-  "fill: blue",
-  "fill: indigo",
-  "fill: brown",
-  "fill: silver",
+static FILL: [&str; 7] = [
+    "fill: red",
+    "fill: orange",
+    "fill: olive",
+    "fill: blue",
+    "fill: indigo",
+    "fill: brown",
+    "fill: silver",
 ];
 
 #[cfg(not(tarpaulin_include))]
@@ -44,8 +44,6 @@ fn draw(counties: &Geometry) -> Result<Vec<String>, ()> {
     use d3_geo_rs::projection::albers_usa::AlbersUsa;
 
     let albers_usa = AlbersUsa::<PathString<f64>, f64>::builder().build();
-
-
 
     let pb = PathBuilder::albers_pathstring();
 
