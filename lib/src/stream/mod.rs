@@ -74,8 +74,10 @@ pub trait Streamable {
 ///
 /// ```
 #[derive(Clone, Default, Debug, Eq, PartialEq)]
-pub struct DrainStub<T> {
-    phantom: PhantomData<T>,
+pub struct DrainStub<T>
+where T: CoordFloat{
+    /// The last point stored.
+    pub last_point: Coord<T>,
 }
 
 impl<T> Stream for DrainStub<T>
@@ -90,7 +92,9 @@ where
         self
     }
 
-    fn point(&mut self, _p: &Coord<Self::T>, _m: Option<u8>) {}
+    fn point(&mut self, p: &Coord<Self::T>, _m: Option<u8>) {
+      self.last_point = *p;
+    }
 }
 
 /// Stream Path API
