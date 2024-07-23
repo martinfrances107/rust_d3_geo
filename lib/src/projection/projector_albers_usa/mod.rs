@@ -64,6 +64,7 @@ type AlbersTransformer<SD, T> = StreamTransformRadians<
             T,
         >,
     >,
+    T,
 >;
 
 /// Projection output of projection/Builder.

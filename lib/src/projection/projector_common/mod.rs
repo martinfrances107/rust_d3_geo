@@ -43,14 +43,14 @@ where
     pub project_rotate_transform:
         Compose<RotateRadians<T>, Compose<PR, ScaleTranslateRotate<T>>>,
 
-    pub(crate) transform_radians: StreamTransformRadians<Unconnected>,
+    pub(crate) transform_radians: StreamTransformRadians<Unconnected, T>,
     pub(crate) cache: CacheState<DRAIN, SOURCE>,
 }
 
 /// The entry point on the path
 ///
 ///  A connected version of the ``StreamTransformRadians`` transformer
-pub type Source<CLIPC, T> = StreamTransformRadians<Connected<Rrc<CLIPC, T>>>;
+pub type Source<CLIPC, T> = StreamTransformRadians<Connected<Rrc<CLIPC, T>>, T>;
 
 /// A connection version of the ``RotateRadians`` transformer
 pub(super) type Rrc<CLIPC, T> = RotatorRadians<Connected<CLIPC>, T>;

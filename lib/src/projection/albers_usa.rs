@@ -78,6 +78,7 @@ type StreamPoint<DRAIN, T> = StreamTransformRadians<
             T,
         >,
     >,
+    T,
 >;
 
 /// Projection definition. ``AlbersUsa::builder()`` returns a builder.

@@ -37,7 +37,7 @@ where
                 .base
                 .project_rotate_transform
                 .clone(),
-            transform_radians: StreamTransformRadians(Unconnected),
+            transform_radians: StreamTransformRadians::default(),
         }
     }
 }
