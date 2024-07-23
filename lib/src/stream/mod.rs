@@ -9,7 +9,6 @@ mod point;
 mod polygon;
 
 use core::fmt::Debug;
-use core::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::LineString;
@@ -75,7 +74,9 @@ pub trait Streamable {
 /// ```
 #[derive(Clone, Default, Debug, Eq, PartialEq)]
 pub struct DrainStub<T>
-where T: CoordFloat{
+where
+    T: CoordFloat,
+{
     /// The last point stored.
     pub last_point: Coord<T>,
 }
@@ -93,7 +94,7 @@ where
     }
 
     fn point(&mut self, p: &Coord<Self::T>, _m: Option<u8>) {
-      self.last_point = *p;
+        self.last_point = *p;
     }
 }
 

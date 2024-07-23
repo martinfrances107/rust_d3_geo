@@ -133,7 +133,10 @@ impl<CLIPC, PROJECTOR, T>
         Measure<T>,
         PROJECTOR,
         T,
-        StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+        StreamTransformRadians<
+            Connected<RotatorRadians<Connected<CLIPC>, T>>,
+            T,
+        >,
     >
 where
     CLIPC: Stream<EP = Measure<T>, T = T>,
@@ -141,6 +144,7 @@ where
         EP = Measure<T>,
         Transformer = StreamTransformRadians<
             Connected<RotatorRadians<Connected<CLIPC>, T>>,
+            T,
         >,
     >,
     T: AddAssign + CoordFloat,
@@ -155,7 +159,7 @@ where
         let mut stream_in = self.projector.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
-        stream_in.0.sink.endpoint().result()
+        stream_in.state.sink.endpoint().result()
     }
 }
 
@@ -164,7 +168,10 @@ impl<CLIPC, PROJECTOR, T>
         Area<T>,
         PROJECTOR,
         T,
-        StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+        StreamTransformRadians<
+            Connected<RotatorRadians<Connected<CLIPC>, T>>,
+            T,
+        >,
     >
 where
     CLIPC: Stream<EP = Area<T>, T = T>,
@@ -172,6 +179,7 @@ where
         EP = Area<T>,
         Transformer = StreamTransformRadians<
             Connected<RotatorRadians<Connected<CLIPC>, T>>,
+            T,
         >,
     >,
 
@@ -187,7 +195,7 @@ where
         let mut stream_in = self.projector.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
-        stream_in.0.sink.endpoint().result()
+        stream_in.state.sink.endpoint().result()
     }
 }
 
@@ -196,7 +204,10 @@ impl<CLIPC, PROJECTOR, T>
         Bounds<T>,
         PROJECTOR,
         T,
-        StreamTransformRadians<Connected<RotatorRadians<Connected<CLIPC>, T>>>,
+        StreamTransformRadians<
+            Connected<RotatorRadians<Connected<CLIPC>, T>>,
+            T,
+        >,
     >
 where
     CLIPC: Stream<EP = Bounds<T>, T = T>,
@@ -204,6 +215,7 @@ where
         EP = Bounds<T>,
         Transformer = StreamTransformRadians<
             Connected<RotatorRadians<Connected<CLIPC>, T>>,
+            T,
         >,
     >,
     T: CoordFloat + FloatConst,

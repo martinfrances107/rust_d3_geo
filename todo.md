@@ -1,3 +1,16 @@
+WebGl Demo
+
+ [] Render points to fast.html
+    clip space issue?
+
+ [] Render polygons
+    data format Cx, Cy, x0, y0, x1, y1 ...
+    where Cx, Cy are the voronoi centers
+    x0, y0, x1, y1 are the points of the delaynay cell.
+
+  [] rotation in a loop.
+
+
 # TODO
 
   albersUSA implement cache in 'fn stream()'

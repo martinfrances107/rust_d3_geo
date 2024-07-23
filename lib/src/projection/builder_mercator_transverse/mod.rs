@@ -84,7 +84,7 @@ where
     PCNU: Clone,
     PR: Clone,
     RU: Clone,
-    T: CoordFloat,
+    T: CoordFloat + FloatConst,
 {
     type Projector = Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>;
     /// Using the currently programmed state output a new projection.
@@ -101,7 +101,7 @@ where
                 .base
                 .project_rotate_transform
                 .clone(),
-            transform_radians: StreamTransformRadians(Unconnected),
+            transform_radians: StreamTransformRadians::default(),
         }
     }
 }
