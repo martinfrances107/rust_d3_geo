@@ -29,21 +29,23 @@ fn parse_topology() -> Geometry {
     feature_from_name(&topology, "counties").expect("Did not extract geometry")
 }
 
+static  FILL: [&str; 7] = [
+  "fill: red",
+  "fill: orange",
+  "fill: olive",
+  "fill: blue",
+  "fill: indigo",
+  "fill: brown",
+  "fill: silver",
+];
+
 #[cfg(not(tarpaulin_include))]
-fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
+fn draw(counties: &Geometry) -> Result<Vec<String>, ()> {
     use d3_geo_rs::projection::albers_usa::AlbersUsa;
 
     let albers_usa = AlbersUsa::<PathString<f64>, f64>::builder().build();
 
-    let fill: [&str; 7] = [
-        "fill: red",
-        "fill: orange",
-        "fill: olive",
-        "fill: blue",
-        "fill: indigo",
-        "fill: brown",
-        "fill: silver",
-    ];
+
 
     let pb = PathBuilder::albers_pathstring();
 
@@ -67,7 +69,7 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
                             if !s.is_empty() {
                                 paths.push(format!(
                                     "<path d = \"{s}\" style=\"{}\"></path>",
-                                    fill[c_index % 7]
+                                    FILL[c_index % 7]
                                 ));
                             }
                         }
@@ -81,7 +83,7 @@ fn draw(counties: Geometry) -> Result<Vec<String>, ()> {
                     for s in stream_in.endpoint().result().iter() {
                         paths.push(format!(
                             "<path d = \"{s}\" style=\"{}\"></path>",
-                            fill[c_index % 7]
+                            FILL[c_index % 7]
                         ));
                     }
                 }
@@ -131,7 +133,7 @@ fn main() -> std::io::Result<()> {
 
     // file.write_all(draw().as_bytes())?;
     let countries = parse_topology();
-    match draw(countries) {
+    match draw(&countries) {
         Ok(paths) => {
             for path in paths {
                 file.write_all(path.as_bytes())?;
