@@ -75,6 +75,10 @@ harness = false
 name = "rings"
 harness = false
 
+[[bench]]
+name = "transforms"
+harness = false
+
 [[example]]
 name = "globe_canvas"
 path = "../examples/globe/canvas/src/lib.rs"
