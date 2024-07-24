@@ -35,7 +35,6 @@ use num_traits::FloatConst;
 use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::projection::builder_mercator::Builder as ProjectionMercatorBuilder;
 use crate::projection::Build;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use self::types::BuilderMercatorTransverseAntimeridianResampleClip;
