@@ -6,8 +6,6 @@ use crate::projection::projector_common::{Projector, Source};
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 
-use crate::stream::Unconnected;
-
 use super::Builder;
 
 impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RU, T> Build

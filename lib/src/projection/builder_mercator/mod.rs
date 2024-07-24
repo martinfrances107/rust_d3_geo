@@ -55,7 +55,6 @@ use crate::projection::builder::Builder as ProjectionBuilder;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 use crate::stream::Streamable;
-use crate::stream::Unconnected;
 use crate::Transform;
 
 use super::projector_common::Projector;

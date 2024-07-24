@@ -8,8 +8,6 @@ use crate::projection::projector_common::Source;
 use crate::projection::stream_transform_radians::StreamTransformRadians;
 use crate::projection::Build;
 
-use crate::stream::Unconnected;
-
 use super::Builder;
 use super::PRConic;
 
