@@ -586,12 +586,6 @@ pub trait TranslateSet {
         Self::T: CoordFloat;
 }
 
-/// Private traits.
-
-trait Recenter {
-    fn recenter(&mut self) -> &mut Self;
-}
-
 /// This need to be generic because there are two types of projector.
 ///
 /// Most Projections use a common Projector, the `AlbersUSA` projector is just a container
@@ -607,4 +601,10 @@ pub trait Projector {
     /// Attach a endpoint of a stream path and returns
     /// a transformer to which can be fed geometry objects.
     fn stream(&mut self, drain: &Self::EP) -> Self::Transformer;
+}
+
+/// Private traits.
+
+trait Recenter {
+  fn recenter(&mut self) -> &mut Self;
 }
