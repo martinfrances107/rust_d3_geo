@@ -9,6 +9,7 @@ mod point;
 mod polygon;
 
 use core::fmt::Debug;
+use std::marker::PhantomData;
 
 use geo::CoordFloat;
 use geo::LineString;
@@ -73,12 +74,8 @@ pub trait Streamable {
 ///
 /// ```
 #[derive(Clone, Default, Debug, Eq, PartialEq)]
-pub struct DrainStub<T>
-where
-    T: CoordFloat,
-{
-    /// The last point stored.
-    pub last_point: Coord<T>,
+pub struct DrainStub<T> {
+    phantom: PhantomData<T>,
 }
 
 impl<T> Stream for DrainStub<T>
@@ -93,9 +90,7 @@ where
         self
     }
 
-    fn point(&mut self, p: &Coord<Self::T>, _m: Option<u8>) {
-        self.last_point = *p;
-    }
+    fn point(&mut self, _p: &Coord<Self::T>, _m: Option<u8>) {}
 }
 
 /// Stream Path API

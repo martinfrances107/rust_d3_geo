@@ -606,5 +606,5 @@ pub trait Projector {
 /// Private traits.
 
 trait Recenter {
-  fn recenter(&mut self) -> &mut Self;
+    fn recenter(&mut self) -> &mut Self;
 }

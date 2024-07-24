@@ -5,14 +5,15 @@ extern crate pretty_assertions;
 use core::time::Duration;
 
 use criterion::Criterion;
+use d3_geo_rs::last_point::LastPoint;
+use d3_geo_rs::path::Result;
 use d3_geo_rs::projection::stream_transform_radians::StreamTransformRadians;
 use d3_geo_rs::stream::Connectable;
-use d3_geo_rs::stream::DrainStub;
 use d3_geo_rs::stream::Stream;
 use geo::Coord;
 
 fn transform_loop() {
-    let ep = DrainStub::default();
+    let ep = LastPoint::default();
     let mut str = StreamTransformRadians::default().connect(ep);
 
     for i in 1..100_000 {
@@ -21,7 +22,7 @@ fn transform_loop() {
             y: i as f32,
         };
         str.point(&p, None);
-        assert_ne!(p, str.endpoint().last_point);
+        assert_ne!(Some(p), str.endpoint().result());
     }
 }
 
