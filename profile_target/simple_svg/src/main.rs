@@ -15,24 +15,15 @@ use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase as ProjectionRawBase;
 use d3_geo_rs::projection::RotateSet;
 
-#[macro_use]
-extern crate lazy_static;
-
-#[cfg(not(tarpaulin_include))]
-lazy_static! {
-    static ref SCHEME_CATEGORY10: [String; 10] = [
-        String::from("#1f77b4"),
-        String::from("#ff7f0e"),
-        String::from("#2ca02c"),
-        String::from("#d62728"),
-        String::from("#9467bd"),
-        String::from("#8c564b"),
-        String::from("#e377c2"),
-        String::from("#7f7f7f"),
-        String::from("#bcbd22"),
-        String::from("#17becf"),
-    ];
-}
+static FILL: [&'static str; 7] = [
+  "fill: red",
+  "fill: orange",
+  "fill: olive",
+  "fill: blue",
+  "fill: indigo",
+  "fill: brown",
+  "fill: silver",
+];
 
 /// Helper function to extract world geometry from file.
 fn world() -> Topology {
@@ -66,16 +57,6 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
         .rotate2_set(&[270_f64, 0_f64])
         .build();
 
-    let fill: [&str; 7] = [
-        "fill: red",
-        "fill: orange",
-        "fill: olive",
-        "fill: blue",
-        "fill: indigo",
-        "fill: brown",
-        "fill: silver",
-    ];
-
     let pb = PathBuilder::pathstring();
 
     let mut builder = pb.build(ortho);
@@ -93,7 +74,7 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
                         if !s.is_empty() {
                             paths.push(format!(
                                 "<path d = \"{s}\" class=\"id-{i}\" style=\"{}\"></path>",
-                                fill[i % 7]
+                                FILL[i % 7]
                             ));
                             i += 1
                         }
@@ -104,7 +85,7 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
                     if !s.is_empty() {
                         paths.push(format!(
                             "<path d = \"{s}\" class=\"id-{i}\" style=\"{}\"></path>",
-                            fill[i % 7]
+                            FILL[i % 7]
                         ));
                         i += 1
                     }

@@ -15,7 +15,6 @@ repository = "https://github.com/martinfrances107/rust_d3_geo.git"
 [dependencies]
 d3_geo_rs = { path = "../../lib" }
 geo = { workspace = true }
-lazy_static = "~1"
 geo-types = { workspace = true }
 rust_topojson_client = { workspace = true }
 topojson = { workspace = true }
