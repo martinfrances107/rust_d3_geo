@@ -1,4 +1,4 @@
-#[cfg(test)]
+#[cfg(all(test, feature = "wgpu"))]
 mod wgpu_buffers {
     use d3_geo_rs::path::builder::Builder as PathBuilder;
     use d3_geo_rs::path::points_wgpu::PointsWGPU;
@@ -32,6 +32,7 @@ mod wgpu_buffers {
             .build()
     }
 
+    #[inline]
     fn path<T>(
         projection: Projector<T>,
         object: &impl Streamable<T = T>,
@@ -39,14 +40,10 @@ mod wgpu_buffers {
     where
         T: 'static + CoordFloat + FloatConst,
     {
-        // let path2d = Path2d::new().unwrap();
-
         let context = PointsWGPU::default();
         let pb = PathBuilder::new(context);
 
-        let a = pb.build(projection).object(object);
-
-        a
+        pb.build(projection).object(object)
     }
 
     #[test]
@@ -64,16 +61,18 @@ mod wgpu_buffers {
 
         let eq = equirectangular();
 
-        // let path_builder = PathBuilder::points_buffer();
-
-        // let path = path_builder.build(eq.clone());
-
         // Build a pipe line where the endpoint is a WGPU array buffer.
         let actual = path(eq, &object);
         let expected = vec![
-          Vertex {pos: [165_f32, 160_f32]},
-          Vertex {pos: [170_f32, 160_f32]},
-          Vertex {pos: [170_f32, 165_f32]}
+            Vertex {
+                pos: [165_f32, 160_f32],
+            },
+            Vertex {
+                pos: [170_f32, 160_f32],
+            },
+            Vertex {
+                pos: [170_f32, 165_f32],
+            },
         ];
         assert_eq!(actual, expected);
     }
