@@ -160,7 +160,7 @@ Sample code in both RUST and javascript that renders a complex multi-polygon. ( 
 
 <br/>
 
-## An outline of the common steps found in all the examples
+### An outline of the common steps found in all the examples
 
 1) For a given projection, use its default projection builder, make changes to the scale, translation .. etc, then call build() to construct a projector.
 
@@ -219,10 +219,7 @@ Sample code in both RUST and javascript that renders a complex multi-polygon. ( 
          path.stream(&countries)
       ```
 
-## Running the examples
-
-<br/>
-Requirements:
+### Requirements (running the examples)
 
 * node and npm [installation guide](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
@@ -232,7 +229,7 @@ Requirements:
 
 To view an example application either create a development build, or construct a static-web site as follows
 
-## Start And Run A Development Build
+### Examples: Start And Run A Development Build
 
  ```console
  git clone https://github.com/martinfrances107/rust_d3_geo.git
@@ -243,7 +240,7 @@ To view an example application either create a development build, or construct a
 
 The last command "npm run start" will automatically open your default browser at http:://localhost::8080
 
-### Performance: Building A Static Site
+### Performance: Examples Building A Static Site
 
 Much better performance can be achieved by building a static web site and viewing that directly. At the expense of longer build times the RUST portions of the code a build using the "--release" tags
 
@@ -255,7 +252,11 @@ Much better performance can be achieved by building a static web site and viewin
   npm run serve
 ```
 
-<br>
+## Feature List
+
+* **web** (default) This feature allows rendering to a HTML CANVAS element. For CLI binary applications this can be removed to reduce the dependency count.
+
+* **wgpu** Allow an endpoint that outputs points and poly-lines as "Array Buffer". This buffer can then be fed direcly in a the GPU reducing the amount system calls. This feature is highly experimental.
 
 ## Benchmarking
 
@@ -349,7 +350,7 @@ Future Work.
 
 * [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support. Since this crate is focused on web development and so incoperating [wasm-bindgen-rayon](https://crates.io/crates/wasm-bindgen-rayon). wasm-bindgen_rayon recommends using nightly - and so it far from production read. I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
 
-### Architecture discussion
+## Architecture discussion
 
 There is an aspect of the design that needs review. It related to the best way to implement a doubly-linked list which has cross links between nodes.
 

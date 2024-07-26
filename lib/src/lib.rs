@@ -20,7 +20,6 @@
 //!    such as [Area](path::area::Area), [Centroids](path::centroid::Centroid),
 //!     and [Bounds](path::bounds::Bounds) on polygons and lines.
 //!
-//!
 //! | Available Projections |   |   |
 //! | --------------------- | - | - |
 //! | [`Albers`](projection::albers) | [`ConicEqualArea`](projection::conic_equal_area::ConicEqualArea) | [`Gnomic`](projection::gnomic::Gnomic) |
@@ -28,6 +27,14 @@
 //! | [`AzimuthalEqualArea`](projection::azimuthal_equal_area::AzimuthalEqualArea) | [`Equirectangular`](projection::equirectangular::Equirectangular) | [`Mercator`](projection::mercator::Mercator) |
 //! | [`AzimuthalEquiDistant`](projection::azimuthal_equidistant::AzimuthalEquiDistant) | [`EqualArea`](projection::equal_area::EqualArea) | [`MercatorTransverse`](projection::mercator_transverse::MercatorTransverse) |
 //! | [`Conformal`](projection::conformal) | [`EqualEarth`](projection::equal_earth::EqualEarth) | [`Stereographic`](projection::stereographic::Stereographic) |
+//!
+//!
+//! ## Crate Features
+//! * **web** (default) This feature allows rendering to a HTML CANVAS element. For CLI binary applications this can be removed to reduce the dependency count.
+//! * **wgpu** Allow an endpoint that outputs points and poly-lines as "Array Buffer". This buffer can then be fed direcly in a the GPU reducing the amount system calls. This feature is highly experimental.
+//!
+//!
+//! ## Examples
 //!
 //! Each projection has default builder, which can be programmed.
 //!
