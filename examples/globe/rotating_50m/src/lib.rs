@@ -74,7 +74,8 @@ pub struct Renderer {
     countries: Geometry<f64>,
     height: f64,
     graticule: Geometry<f64>,
-    builder: BuilderCircleResampleNoClip<Path2dEndpoint, Orthographic<f64>, f64>,
+    builder:
+        BuilderCircleResampleNoClip<Path2dEndpoint, Orthographic<f64>, f64>,
     width: f64,
     yaw: f64,
 }
