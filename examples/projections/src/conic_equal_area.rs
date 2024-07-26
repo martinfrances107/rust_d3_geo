@@ -7,7 +7,7 @@ use web_sys::Path2d;
 
 use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::endpoint::Endpoint;
+use d3_geo_rs::path::path2d_endpoint::Path2dEndpoint;
 use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::equal_area::EqualArea;
 use d3_geo_rs::projection::Build;
@@ -34,7 +34,7 @@ pub async fn draw(land: &Geometry<f64>) -> Result<(), JsValue> {
 
     let path2d = Path2d::new()?;
 
-    let ep = Endpoint::new(path2d);
+    let ep = Path2dEndpoint::new(path2d);
     let path_builder = PathBuilder::new(ep);
 
     // input params will cause a conic equal area projection to be constructed.

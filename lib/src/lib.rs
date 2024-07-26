@@ -86,7 +86,7 @@
 //! use d3_geo_rs::graticule::generate_mls;
 //! use d3_geo_rs::path::builder::Builder as PathBuilder;
 //! use d3_geo_rs::path::Result as PathResult;
-//! use d3_geo_rs::path::endpoint::Endpoint as PathEndpoint;
+//! use d3_geo_rs::path::path2d_endpoint::Path2dEndpoint as Path2dEndpoint;
 //! use d3_geo_rs::projection::orthographic::Orthographic;
 //! use d3_geo_rs::projection::Build;
 //! use d3_geo_rs::projection::RawBase as ProjectionRawBase;
@@ -136,7 +136,7 @@
 //!
 //!     let countries = feature_from_name(&topology, "countries").expect("Did not extract geometry");
 //!     let path2d = Path2d::new()?;
-//!     let ep = PathEndpoint::new(path2d);
+//!     let ep = Path2dEndpoint::new(path2d);
 //!
 //!     let pb = PathBuilder::new(ep);
 //!
@@ -171,6 +171,7 @@
 //!
 //! <hr>
 
+#[cfg(feature="web")]
 extern crate web_sys;
 
 use geo::CoordFloat;

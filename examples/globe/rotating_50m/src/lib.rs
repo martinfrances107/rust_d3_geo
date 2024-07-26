@@ -39,7 +39,7 @@ use web_sys::Window;
 
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::endpoint::Endpoint;
+use d3_geo_rs::path::path2d_endpoint::Path2dEndpoint;
 use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
 use d3_geo_rs::projection::orthographic::Orthographic;
@@ -74,7 +74,7 @@ pub struct Renderer {
     countries: Geometry<f64>,
     height: f64,
     graticule: Geometry<f64>,
-    builder: BuilderCircleResampleNoClip<Endpoint, Orthographic<f64>, f64>,
+    builder: BuilderCircleResampleNoClip<Path2dEndpoint, Orthographic<f64>, f64>,
     width: f64,
     yaw: f64,
 }
@@ -168,7 +168,7 @@ impl Renderer {
             .clear_rect(0f64, 0f64, self.width, self.height);
 
         let path2d = Path2d::new().unwrap();
-        let ep = Endpoint::new(path2d);
+        let ep = Path2dEndpoint::new(path2d);
         let path_builder = PathBuilder::new(ep);
 
         let mut path = path_builder.build(projector);

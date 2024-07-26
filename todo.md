@@ -1,18 +1,10 @@
-WebGl Demo
-
- [] Render points to fast.html
-    clip space issue?
-
- [] Render polygons
-    data format Cx, Cy, x0, y0, x1, y1 ...
-    where Cx, Cy are the voronoi centers
-    x0, y0, x1, y1 are the points of the delaynay cell.
-
-  [] rotation in a loop.
-
-
 # TODO
 
+[] - Dcoument when the reenter trait is to be used.
+
+[] - Can I precompute values in compose?
+
+[]- What is new in cargo tarpaulin
   albersUSA implement cache in 'fn stream()'
   copy documentation of parallels.
 
@@ -32,6 +24,18 @@ examples/projection eslint needs updating.
    looks off ..select/apply a simple responsive css template.
   ( eg. Boilerplate, material-ui )
 
+# WebGl Demo
+
+ [] Render points to fast.html
+    clip space issue?
+
+ [] Render polygons
+    data format Cx, Cy, x0, y0, x1, y1 ...
+    where Cx, Cy are the voronoi centers
+    x0, y0, x1, y1 are the points of the delaynay cell.
+
+  [] rotation in a loop.
+
 ## Before API lock-down
 
 * Detail why Feature and FeatureCollection is complicated.
@@ -49,6 +53,8 @@ examples/projection eslint needs updating.
 ## Not Yet Implemented
 
 * src/interpolate.js
+
+
 
 ## The State of Testing
 

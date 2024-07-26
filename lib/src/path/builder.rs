@@ -3,19 +3,20 @@ use core::fmt::Display;
 
 use geo::CoordFloat;
 
-use crate::path::endpoint::Endpoint;
+#[cfg(feature="web")]
+use crate::path::path2d_endpoint::Path2dEndpoint;
 use crate::path::Path;
 use crate::projection::projector_albers_usa::multidrain::Multidrain;
 use crate::projection::projector_albers_usa::multidrain::Unpopulated;
 use crate::projection::Projector;
 
-#[cfg(not(test))]
+#[cfg(all(feature="web", not(test)))]
 use web_sys::Path2d;
 
 #[cfg(test)]
 use crate::path_test_context::Path2d;
 
-use super::endpoint::Endpoint as PathContext;
+
 use super::string::String;
 use super::PointRadiusTrait;
 
@@ -48,13 +49,14 @@ where
 }
 
 /// Context related methods.
-impl<T> Builder<Endpoint, T>
+#[cfg(feature="web")]
+impl<T> Builder<Path2dEndpoint, T>
 where
     T: CoordFloat,
 {
     /// Programe the path builder with the context.
     pub fn context(&mut self, context: Path2d) -> &mut Self {
-        self.context = PathContext::new(context);
+        self.context = super::path2d_endpoint::Path2dEndpoint::new(context);
         self
     }
 }
