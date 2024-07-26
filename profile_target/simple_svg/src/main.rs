@@ -15,7 +15,7 @@ use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase as ProjectionRawBase;
 use d3_geo_rs::projection::RotateSet;
 
-static FILL: [&'static str; 7] = [
+static FILL: [&str; 7] = [
     "fill: red",
     "fill: orange",
     "fill: olive",
