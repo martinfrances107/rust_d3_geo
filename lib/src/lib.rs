@@ -62,8 +62,6 @@
 //!       .build();
 //! ```
 //!
-//! # Examples
-//!
 //! The examples directory contains a large selection of applications demonstration web applications
 //! rendering to a CANVAS or SVG elements. It serves as a migration guide
 //! examples/projection shows each projection in turn, with the javascript and rust version drawn side by side.
