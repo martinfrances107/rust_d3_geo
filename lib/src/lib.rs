@@ -179,6 +179,12 @@
 #[cfg(feature = "web")]
 extern crate web_sys;
 
+#[cfg(all(feature = "wgpu", test))]
+extern crate bytemuck;
+
+#[cfg(all(feature = "wgpu", test))]
+extern crate wgpu;
+
 use geo::CoordFloat;
 use geo_types::Coord;
 
