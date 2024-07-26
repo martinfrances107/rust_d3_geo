@@ -14,7 +14,6 @@
 extern crate js_sys;
 extern crate rust_topojson_client;
 extern crate topojson;
-extern crate web_sys;
 
 use geo::Geometry;
 use geo::GeometryCollection;

@@ -16,7 +16,9 @@ crate-type = ["cdylib"]
 
 [dependencies]
 wasm-bindgen = { workspace = true }
-d3_geo_rs = { path = "../../../lib" }
+# Remove web_sys as dependency .. we are just calling into the SVG portion
+# of the library ( web-sys is included in the root package
+d3_geo_rs = { path = "../../../lib", default-features = false}
 geo = { workspace = true }
 gloo-utils = { workspace = true }
 js-sys = { workspace = true }
@@ -34,9 +36,6 @@ features = [
   "Attr",
   "Document",
   "Element",
-  "Event",
-  "Headers",
-  "EventTarget",
   "SvgsvgElement",
   "SvgAnimatedLength",
   "SvgLength",
