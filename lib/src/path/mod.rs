@@ -160,7 +160,7 @@ where
         let mut stream_in = self.projector.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
-        stream_in.state.sink.endpoint().result()
+        stream_in.endpoint().result()
     }
 }
 
@@ -196,7 +196,7 @@ where
         let mut stream_in = self.projector.stream(&stream_dst);
         object.to_stream(&mut stream_in);
 
-        stream_in.state.sink.endpoint().result()
+        stream_in.endpoint().result()
     }
 }
 
