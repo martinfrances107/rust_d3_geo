@@ -10,10 +10,10 @@ pub mod centroid;
 pub mod measure;
 
 /// Path context.
-#[cfg(any(feature = "web", test))]
+#[cfg(feature = "web")]
 pub mod path2d_endpoint;
 /// Endpoint build a WGPU array buffer
-#[cfg(any(feature = "wgpu", test))]
+#[cfg(feature = "wgpu")]
 pub mod points_wgpu;
 
 /// Path String.

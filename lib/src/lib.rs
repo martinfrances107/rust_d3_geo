@@ -179,10 +179,10 @@
 #[cfg(feature = "web")]
 extern crate web_sys;
 
-#[cfg(all(feature = "wgpu", test))]
+#[cfg(feature = "wgpu")]
 extern crate bytemuck;
 
-#[cfg(all(feature = "wgpu", test))]
+#[cfg(feature = "wgpu")]
 extern crate wgpu;
 
 use geo::CoordFloat;
