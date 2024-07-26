@@ -15,7 +15,7 @@ use crate::stream::Unconnected;
 /// on a perviously connected object
 #[derive(Clone, Debug, PartialEq)]
 pub struct StreamTransformRadians<STATE, T> {
-    pub state: STATE,
+    state: STATE,
     frac_pi_180: T,
 }
 
