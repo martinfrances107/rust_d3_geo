@@ -8,9 +8,14 @@ pub mod builder;
 pub mod centroid;
 /// Measure the perimeters of polyogns, lengths of lines.
 pub mod measure;
+
 /// Path context.
 #[cfg(any(feature = "web", test))]
 pub mod path2d_endpoint;
+/// Endpoint build a WGPU array buffer
+#[cfg(any(feature = "wgpu", test))]
+pub mod points_wgpu;
+
 /// Path String.
 pub mod string;
 

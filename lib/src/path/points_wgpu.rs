@@ -1,149 +1,83 @@
 use core::mem;
 
+use bytemuck::{Pod, Zeroable};
+use geo::CoordFloat;
 use geo_types::Coord;
-
-/// Path2d - Use an extern type defined by the browser
-/// For testing providde a mock
-#[cfg(not(test))]
-use web_sys::Path2d;
-#[cfg(test)]
-use crate::path_test_context::Path2d;
 
 use crate::stream::Stream;
 
 use super::PointRadiusTrait;
 use super::Result;
 
-#[derive(Clone, Debug, PartialEq)]
-enum PointState {
-    Init,
-    LineStart,
-    Next,
-}
-
-#[derive(Clone, Debug, PartialEq)]
-enum LineState {
-    Init,
-    PolygonStarted,
+// TODO fix Zeroable and Pod issue.
+// #[derive(Clone, Copy, Pod, Zeroable)]
+/// Representation of a points, sendable to a GPU.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Vertex<T>
+where
+    T: CoordFloat,
+{
+    pub pos: [T; 2],
+    // _tex_coord: [f32; 2],
 }
 
 /// Stream path endpoint: Used when rendering to a HTML Canvas element.
 ///
 /// Wraps a Path2d object, and implements STREAM trait.
 #[derive(Clone, Debug, PartialEq)]
-pub struct PointsWGPU {
-    line: LineState,
-    point: PointState,
-    radius: f64,
-    path2d: Path2d,
+pub struct PointsWGPU<T>
+where
+    T: CoordFloat,
+{
+    /// Vertext buffer is a form ready to be shipped to the GPU.
+    pub v_buffer: Vec<Vertex<T>>,
 }
 
-impl Default for PointsWGPU {
+impl<T> Default for PointsWGPU<T>
+where
+    T: CoordFloat,
+{
     #[inline]
     fn default() -> Self {
-        Self {
-            line: LineState::Init,
-            point: PointState::Init,
-            radius: 4.5,
-            path2d: Path2d::new().unwrap(),
-        }
-    }
-}
-
-impl PointsWGPU {
-    /// Contructor.
-    #[inline]
-    #[must_use]
-    pub const fn new(path2d: Path2d) -> Self {
-        Self {
-            path2d,
-            line: LineState::Init,
-            point: PointState::Init,
-            radius: 4.5,
-        }
-    }
-}
-
-impl PointRadiusTrait for PointsWGPU {
-    type T = f64;
-
-    fn point_radius(&mut self, val: Self::T) {
-        self.radius = val;
+        Self { v_buffer: vec![] }
     }
 }
 
 /// Return path2d, blanking the stored value.
-impl Result for PointsWGPU {
-    type Out = Path2d;
+///
+/// Architecture Discussion:
+///
+/// I am making the assumption here that in a animation frame
+/// repeated calls to .result() will return approximatly
+/// the same number of elements.
+impl<T> Result for PointsWGPU<T>
+where
+    T: CoordFloat,
+{
+    type Out = Vec<Vertex<T>>;
     #[inline]
     fn result(&mut self) -> Self::Out {
-        let mut out = Path2d::new().unwrap();
-        mem::swap(&mut out, &mut self.path2d);
+        let mut out = Vec::with_capacity(self.v_buffer.capacity());
+        mem::swap(&mut out, &mut self.v_buffer);
         out
     }
 }
 
-impl Stream for PointsWGPU {
+impl<T> Stream for PointsWGPU<T>
+where
+    T: CoordFloat,
+{
     type EP = Self;
-    type T = f64;
+    type T = T;
 
     #[inline]
     fn endpoint(&mut self) -> &mut Self {
         self
     }
 
-    fn line_end(&mut self) {
-        if LineState::PolygonStarted == self.line {
-            self.path2d.close_path();
-        }
-
-        self.point = PointState::Init;
-    }
-
     #[inline]
-    fn line_start(&mut self) {
-        self.point = PointState::LineStart;
+    fn point(&mut self, p: &Coord<Self::T>, _z: Option<u8>) {
+        self.v_buffer.push(Vertex { pos: [p.x, p.y] });
     }
-
-    #[inline]
-    fn point(&mut self, p: &Coord<f64>, _z: Option<u8>) {
-        match self.point {
-            PointState::LineStart => {
-                self.path2d.move_to(p.x, p.y);
-                self.point = PointState::Next;
-            }
-            PointState::Next => {
-                self.path2d.line_to(p.x, p.y);
-            }
-            #[allow(clippy::assertions_on_constants)]
-            PointState::Init => {
-                self.path2d.move_to(p.x + self.radius, p.y);
-
-                match self.path2d.arc(
-                    p.x,
-                    p.y,
-                    self.radius,
-                    0_f64,
-                    std::f64::consts::TAU,
-                ) {
-                    Ok(()) => {}
-                    Err(_) => {
-                        debug_assert!(true, "Suppressing arc failure");
-                    }
-                };
-            }
-        }
-    }
-
-    #[inline]
-    fn polygon_end(&mut self) {
-        self.line = LineState::Init;
-    }
-
-    #[inline]
-    fn polygon_start(&mut self) {
-        self.line = LineState::PolygonStarted;
-    }
-
-    fn sphere(&mut self) {}
 }

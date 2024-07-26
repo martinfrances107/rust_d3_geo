@@ -10,11 +10,13 @@ use crate::projection::projector_albers_usa::multidrain::Multidrain;
 use crate::projection::projector_albers_usa::multidrain::Unpopulated;
 use crate::projection::Projector;
 
+#[cfg(test)]
+use crate::path_test_context::Path2d;
 #[cfg(all(feature = "web", not(test)))]
 use web_sys::Path2d;
 
-#[cfg(test)]
-use crate::path_test_context::Path2d;
+#[cfg(feature = "wgpu")]
+use super::points_wgpu::PointsWGPU;
 
 use super::string::String;
 use super::PointRadiusTrait;
@@ -70,6 +72,20 @@ where
     #[must_use]
     pub fn pathstring() -> Self {
         Self::new(String::default())
+    }
+}
+
+// TODO missing polyline, polygon?
+#[cfg(feature = "wgpu")]
+impl<T> Builder<PointsWGPU<T>, T>
+where
+    T: CoordFloat + Display,
+{
+    /// Returns a Builder from default values.
+    #[inline]
+    #[must_use]
+    pub fn points_buffer() -> Self {
+        Self::new(PointsWGPU::default())
     }
 }
 
