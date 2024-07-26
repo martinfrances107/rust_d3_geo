@@ -15,7 +15,9 @@ version = { workspace = true }
 crate-type = ["cdylib"]
 
 [dependencies]
-d3_geo_rs = { path = "../../../lib" }
+# Remove web_sys as dependency .. we are just calling into the SVG portion
+# of the library ( web-sys is included in the root package
+d3_geo_rs = { path = "../../../lib", default-features = false}
 geo = { workspace = true }
 geo-types = { workspace = true }
 gloo-utils = { workspace = true }
@@ -35,9 +37,6 @@ features = [
   "Attr",
   "Document",
   "Element",
-  "Event",
-  "Headers",
-  "EventTarget",
   "SvgsvgElement",
   "SvgAnimatedLength",
   "SvgLength",
