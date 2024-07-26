@@ -20,7 +20,7 @@ mod index {
     use pretty_assertions::assert_eq;
 
     use crate::path::builder::Builder as PathBuilder;
-    use crate::path::endpoint::Endpoint;
+    use crate::path::path2d_endpoint::Path2dEndpoint;
     use crate::path_test_context::Path2d;
     use crate::projection::equirectangular::Equirectangular;
     use crate::projection::orthographic::Orthographic;
@@ -46,7 +46,7 @@ mod index {
 
     fn path(
         projection: ProjectorAntimeridianResampleNoneNoClip<
-            Endpoint,
+            Path2dEndpoint,
             Equirectangular<f64>,
             f64,
         >,
@@ -54,7 +54,7 @@ mod index {
     ) -> Vec<String> {
         let path2d = Path2d::new().unwrap();
 
-        let context = Endpoint::new(path2d);
+        let context = Path2dEndpoint::new(path2d);
         let pb = PathBuilder::new(context);
 
         pb.build(projection).object(object).result()
@@ -326,7 +326,7 @@ mod index {
 
         let path2d = Path2d::new().unwrap();
 
-        let context = Endpoint::new(path2d);
+        let context = Path2dEndpoint::new(path2d);
         let pb = PathBuilder::new(context);
 
         let mut path = pb.build(equirectangular());
@@ -372,7 +372,7 @@ mod index {
 
         let path2d = Path2d::new().unwrap();
 
-        let context = Endpoint::new(path2d);
+        let context = Path2dEndpoint::new(path2d);
         let pb = PathBuilder::new(context);
         let mut path = pb.build(equirectangular());
 
@@ -422,7 +422,7 @@ mod index {
 
         let path2d = Path2d::new().unwrap();
 
-        let context = Endpoint::new(path2d);
+        let context = Path2dEndpoint::new(path2d);
         let pb = PathBuilder::new(context);
 
         let mut ob = Orthographic::builder();

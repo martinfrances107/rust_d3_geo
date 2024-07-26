@@ -2,11 +2,13 @@ use core::mem;
 
 use geo_types::Coord;
 
+/// Path2d - Use an extern type defined by the browser
+/// For testing providde a mock
 #[cfg(not(test))]
 use web_sys::Path2d;
-
 #[cfg(test)]
 use crate::path_test_context::Path2d;
+
 use crate::stream::Stream;
 
 use super::PointRadiusTrait;
@@ -29,14 +31,14 @@ enum LineState {
 ///
 /// Wraps a Path2d object, and implements STREAM trait.
 #[derive(Clone, Debug, PartialEq)]
-pub struct Endpoint {
+pub struct PointsWGPU {
     line: LineState,
     point: PointState,
     radius: f64,
     path2d: Path2d,
 }
 
-impl Default for Endpoint {
+impl Default for PointsWGPU {
     #[inline]
     fn default() -> Self {
         Self {
@@ -48,7 +50,7 @@ impl Default for Endpoint {
     }
 }
 
-impl Endpoint {
+impl PointsWGPU {
     /// Contructor.
     #[inline]
     #[must_use]
@@ -62,7 +64,7 @@ impl Endpoint {
     }
 }
 
-impl PointRadiusTrait for Endpoint {
+impl PointRadiusTrait for PointsWGPU {
     type T = f64;
 
     fn point_radius(&mut self, val: Self::T) {
@@ -71,7 +73,7 @@ impl PointRadiusTrait for Endpoint {
 }
 
 /// Return path2d, blanking the stored value.
-impl Result for Endpoint {
+impl Result for PointsWGPU {
     type Out = Path2d;
     #[inline]
     fn result(&mut self) -> Self::Out {
@@ -81,7 +83,7 @@ impl Result for Endpoint {
     }
 }
 
-impl Stream for Endpoint {
+impl Stream for PointsWGPU {
     type EP = Self;
     type T = f64;
 
