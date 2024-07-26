@@ -6,11 +6,11 @@ pub mod bounds;
 pub mod builder;
 /// Path centroid.
 pub mod centroid;
-/// Path context.
-#[cfg(any(feature="web", test))]
-pub mod path2d_endpoint;
 /// Measure the perimeters of polyogns, lengths of lines.
 pub mod measure;
+/// Path context.
+#[cfg(any(feature = "web", test))]
+pub mod path2d_endpoint;
 /// Path String.
 pub mod string;
 

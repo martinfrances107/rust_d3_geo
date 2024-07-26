@@ -2,7 +2,7 @@ use core::mem;
 
 use geo_types::Coord;
 
-#[cfg(all(feature="web", not(test)))]
+#[cfg(all(feature = "web", not(test)))]
 use web_sys::Path2d as WebPath2d;
 
 #[cfg(test)]

@@ -171,7 +171,7 @@
 //!
 //! <hr>
 
-#[cfg(feature="web")]
+#[cfg(feature = "web")]
 extern crate web_sys;
 
 use geo::CoordFloat;
