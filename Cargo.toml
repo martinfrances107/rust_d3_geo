@@ -13,7 +13,7 @@ members = [
   "./profile_target/albers_svg",
   './profile_target/simple_svg',
 ]
-default-members = [ "./lib"]
+default-members = ["./lib"]
 
 [workspace.package]
 authors = ["martin <martinfrances107@hotmail.com>"]
