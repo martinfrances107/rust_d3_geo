@@ -3,11 +3,12 @@ mod mercator {
 
     extern crate pretty_assertions;
 
+    use std::sync::LazyLock;
+
     use geo::Geometry;
     use geo::LineString;
     use geo::Polygon;
     use geo_types::Coord;
-    use lazy_static::lazy_static;
     use pretty_assertions::assert_eq;
     use regex::Regex;
 
@@ -321,13 +322,10 @@ mod mercator {
         // to have IDENTICAL SVG path strings in both tests.
         //
         // That complication forces that we round down here before comparison.
-        lazy_static! {
-            /// Ignore every digit in a number after the decimal.
-            static ref ROUND_DOWN: Regex = Regex::new(r"\.\d+").unwrap();
-        }
+        let round_down= Regex::new(r"\.\d+").unwrap();
 
         let s = path_builder.build(projection).object(&object);
-        let rounded = ROUND_DOWN.replace_all(&s, "");
+        let rounded = round_down.replace_all(&s, "");
         assert_eq!(rounded, "M115,314L134,314L134,353L115,353L115,314ZM806,353L787,353L787,314L787,314L806,314L806,353Z");
     }
 
