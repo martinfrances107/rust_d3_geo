@@ -30,7 +30,6 @@ wasm-bindgen-test = { workspace = true }
 wasm-bindgen-futures = { workspace = true }
 gloo-utils = { workspace = true }
 pretty_assertions = "~1"
-lazy_static = "~1"
 regex = "~1"
 serde_json = { workspace = true }
 topojson = { workspace = true }
