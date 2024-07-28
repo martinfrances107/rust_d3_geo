@@ -6,7 +6,6 @@
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
 #![allow(clippy::many_single_char_names)]
-#![cfg(not(tarpaulin_include))]
 
 //! # rust d3 geo voronoi
 //!

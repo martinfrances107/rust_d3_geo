@@ -6,7 +6,6 @@
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
 #![allow(clippy::many_single_char_names)]
-#![cfg(not(tarpaulin_include))]
 
 //! # rust d3 geo
 //!
@@ -41,13 +40,11 @@ use d3_geo_rs::projection::Projector;
 use d3_geo_rs::stream::Stream;
 use d3_geo_rs::stream::Streamable;
 
-#[cfg(not(tarpaulin_include))]
 fn document() -> Option<Document> {
     let window = web_sys::window().unwrap();
     window.document()
 }
 
-#[cfg(not(tarpaulin_include))]
 fn path_node(document: &Document, class_name: &str) -> Element {
     // let document = document().unwrap();
     let class_list = document.get_elements_by_class_name(class_name);
