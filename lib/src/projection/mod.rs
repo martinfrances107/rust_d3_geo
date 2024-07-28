@@ -52,7 +52,6 @@ pub mod builder_mercator_transverse;
 /// Enum and generator for "Cylindrical" or "Conic" equal area projection.
 pub mod equal_area;
 /// Debug and test helper function.
-#[cfg(not(tarpaulin_include))]
 pub mod equality;
 /// The raw projection.
 pub mod identity;
