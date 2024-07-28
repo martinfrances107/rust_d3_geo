@@ -6,7 +6,6 @@
 #![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
-#![cfg(not(tarpaulin_include))]
 
 //! # rust d3 geo rings
 //!
@@ -47,7 +46,6 @@ pub fn run() -> Result<()> {
 /// # Errors
 ///
 /// When the creation of the SVG element fails.
-#[cfg(not(tarpaulin_include))]
 fn path_node(class_name: &str) -> Result<Element> {
     let document = document()?;
 

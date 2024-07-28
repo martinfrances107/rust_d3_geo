@@ -5,7 +5,6 @@
 #![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
-#![cfg(not(tarpaulin_include))]
 
 //! # rust d3 geo
 //!
@@ -48,7 +47,6 @@ fn document() -> Result<Document, JsValue> {
     Ok(window.document().ok_or("no document")?)
 }
 
-#[cfg(not(tarpaulin_include))]
 fn path_node(class_name: &str) -> Result<Element, JsValue> {
     let document = document()?;
     let class_list = document.get_elements_by_class_name(class_name);

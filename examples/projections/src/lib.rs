@@ -3,7 +3,6 @@
 #![warn(clippy::cargo)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
-#![cfg(not(tarpaulin_include))]
 //! # rust d3 geo voronoi
 //!
 //! See the README.md.
@@ -56,7 +55,6 @@ use mercator_transverse::draw as draw_mercator_transverse;
 use orthographic::draw as draw_orthographic;
 use stereographic::draw as draw_stereographic;
 
-#[cfg(not(tarpaulin_include))]
 fn document() -> Result<Document, JsValue> {
     let window = web_sys::window().ok_or("no window")?;
     Ok(window.document().ok_or("no document")?)
@@ -72,7 +70,6 @@ fn document() -> Result<Document, JsValue> {
 /// When the Topology deserialization failed.
 /// When the canvas element could not be obtained.
 #[wasm_bindgen(start)]
-#[cfg(not(tarpaulin_include))]
 pub async fn start() -> Result<(), JsValue> {
     console_log!("run() - wasm entry point");
 
