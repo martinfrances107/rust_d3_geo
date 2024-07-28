@@ -1,0 +1,33 @@
+[package]
+authors = { workspace = true }
+categories = { workspace = true }
+description = "A example app from the rust_d3_geo package. It shows how rust can interact with the browsers timer API."
+edition = { workspace = true }
+keywords = { workspace = true }
+license = { workspace = true }
+name = "rust_d3_geo_example_globe_rotating_wpgu"
+readme = { workspace = true }
+repository = { workspace = true }
+version = { workspace = true }
+
+[[bin]]
+name = "rust_d3_geo_example_globe_rotating_wpgu"
+path = "src/main.rs"
+test = false
+
+
+[dependencies]
+d3_geo_rs = { path = "../../../lib" }
+js-sys = { workspace = true }
+# geo = { workspace = true }
+# geo-types = { workspace = true }
+gloo-utils = { workspace = true }
+# topojson = { workspace = true }
+env_logger = "0.11"
+winit = { version = "0.29", features = ["android-native-activity"] }
+pollster = "0.3"
+wgpu = { version="22.0", default-features = false, features = [
+    "wgsl",
+    "dx12",
+    "metal",
+] }
