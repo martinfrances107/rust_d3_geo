@@ -1,4 +1,3 @@
-
 use core::f64::consts::PI;
 use core::fmt::Display;
 use core::ops::AddAssign;

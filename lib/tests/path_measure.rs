@@ -1,4 +1,3 @@
-
 use core::ops::AddAssign;
 
 use geo::CoordFloat;

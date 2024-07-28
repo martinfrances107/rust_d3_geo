@@ -1,4 +1,3 @@
-
 use geo::Geometry;
 use geo::LineString;
 use geo::Polygon;

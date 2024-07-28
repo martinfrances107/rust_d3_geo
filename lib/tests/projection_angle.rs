@@ -1,4 +1,3 @@
-
 use geo_types::Coord;
 use pretty_assertions::assert_eq;
 

@@ -1,4 +1,3 @@
-
 extern crate pretty_assertions;
 
 use geo::polygon;
