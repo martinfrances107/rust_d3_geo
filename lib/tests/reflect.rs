@@ -1,11 +1,9 @@
-
 extern crate pretty_assertions;
 
 use geo_types::Coord;
 use pretty_assertions::assert_eq;
 
 use d3_geo_rs::in_delta::in_delta;
-use d3_geo_rs::projection::builder::Builder;
 use d3_geo_rs::projection::equality::projection_equal;
 use d3_geo_rs::projection::gnomic::Gnomic;
 use d3_geo_rs::projection::mercator::Mercator;
@@ -25,8 +23,7 @@ use d3_geo_rs::Transform;
 fn x_defaults_to_false() {
     println!("projection.reflectX(…) defaults to false");
 
-    let mut builder: Builder<_, DrainStub<f64>, _, _, _, f64> =
-        Gnomic::builder();
+    let mut builder = Gnomic::builder::<DrainStub<f64>>();
     builder.scale_set(1f64);
     builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 
@@ -71,8 +68,7 @@ fn x_defaults_to_false() {
 #[test]
 fn mirrors_x_after_processing() {
     println!("projection.reflectX(…) mirrors x after projecting");
-    let mut builder: Builder<_, DrainStub<f64>, _, _, _, f64> =
-        Gnomic::builder();
+    let mut builder = Gnomic::builder::<DrainStub<f64>>();
     builder.scale_set(1_f64);
     builder.translate_set(&Coord { x: 0_f64, y: 0_f64 });
 

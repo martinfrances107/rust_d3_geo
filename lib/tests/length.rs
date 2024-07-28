@@ -1,4 +1,3 @@
-
 extern crate pretty_assertions;
 
 use core::f64::consts::PI;

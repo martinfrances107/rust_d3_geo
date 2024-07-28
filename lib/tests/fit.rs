@@ -1,4 +1,3 @@
-
 extern crate pretty_assertions;
 extern crate rust_topojson_client;
 

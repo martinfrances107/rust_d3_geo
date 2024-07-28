@@ -1,4 +1,3 @@
-
 use geo::Point;
 use geo_types::Coord;
 
