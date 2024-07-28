@@ -1,4 +1,4 @@
-#[cfg(all(test, feature = "wgpu"))]
+#[cfg(feature = "wgpu")]
 mod wgpu_buffers {
     use d3_geo_rs::path::builder::Builder as PathBuilder;
     use d3_geo_rs::path::points_wgpu::PointsWGPU;

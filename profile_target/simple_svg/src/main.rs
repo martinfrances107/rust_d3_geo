@@ -1,5 +1,3 @@
-#![cfg(not(tarpaulin_include))]
-
 use std::fs::File;
 use std::io::LineWriter;
 use std::io::Write;
@@ -37,7 +35,6 @@ fn parse_topology() -> Geometry {
     feature_from_name(&topology, "countries").expect("Did not extract geometry")
 }
 
-#[cfg(not(tarpaulin_include))]
 fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     use d3_geo_rs::{
         graticule::generate_mls,
@@ -106,7 +103,6 @@ fn draw(countries: Geometry) -> Result<Vec<String>, ()> {
     Ok(paths)
 }
 
-#[cfg(not(tarpaulin_include))]
 fn main() -> std::io::Result<()> {
     let file = File::create("profile_output.html")?;
     let mut file = LineWriter::new(file);

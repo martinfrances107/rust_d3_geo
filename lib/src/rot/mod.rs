@@ -45,7 +45,6 @@ where
     }
 }
 
-#[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod tests {
     extern crate pretty_assertions;

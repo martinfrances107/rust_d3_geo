@@ -212,7 +212,6 @@ pub mod graticule;
 /// A stream path stage.
 pub mod identity;
 /// Testing and debug helpers.
-#[cfg(not(tarpaulin_include))]
 pub mod in_delta;
 /// Records the last point. Useful when displaying a side projection within a main
 /// projection area. See [`AlbersUsa`](projection::albers_usa)
@@ -239,7 +238,6 @@ pub mod rot;
 /// A path is a series of connected transform nodes, over which data is **STREAM**ed.
 pub mod stream;
 
-#[cfg(not(tarpaulin_include))]
 #[cfg(test)]
 mod path_test_context;
 

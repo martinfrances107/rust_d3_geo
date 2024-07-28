@@ -1,5 +1,3 @@
-#![cfg(not(tarpaulin_include))]
-
 use std::fs::File;
 use std::io::LineWriter;
 use std::io::Write;
@@ -39,7 +37,6 @@ static FILL: [&str; 7] = [
     "fill: silver",
 ];
 
-#[cfg(not(tarpaulin_include))]
 fn draw(counties: &Geometry) -> Result<Vec<String>, ()> {
     use d3_geo_rs::projection::albers_usa::AlbersUsa;
 
@@ -94,7 +91,6 @@ fn draw(counties: &Geometry) -> Result<Vec<String>, ()> {
     Ok(paths)
 }
 
-#[cfg(not(tarpaulin_include))]
 fn main() -> std::io::Result<()> {
     let file = File::create("profile_output.html")?;
     let mut file = LineWriter::new(file);
