@@ -110,15 +110,13 @@ pub async fn start() -> Result<(), JsValue> {
     let mut path = path_builder.build(ortho);
     context_raw.set_stroke_style(&"#333".into());
     context_raw.set_line_width(0.5);
-    path.object(&countries);
-    let path2d = path.context.result();
+    let path2d = path.object(&countries);
     context_raw.stroke_with_path(&path2d);
 
     // Graticule
     let graticule = generate_mls();
     context_raw.set_stroke_style(&"#ccc".into());
-    path.object(&graticule);
-    let path2d = path.context.result();
+    let path2d = path.object(&graticule);
     context_raw.stroke_with_path(&path2d);
 
     Ok(())
