@@ -203,7 +203,7 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                             );
                             rpass.set_pipeline(&render_pipeline);
                             rpass.set_vertex_buffer(0, vertex_buffer.slice(..));
-                            rpass.draw(0..4, 0..1);
+                            rpass.draw(0..VERTICES.len() as u32, 0..1);
                         }
 
                         queue.submit(Some(encoder.finish()));
