@@ -1,12 +1,56 @@
-/// This application is based on a [wgpu/examples/hello_triangle](https://github.com/gfx-rs/wgpu/blob/trunk/examples/src/hello_triangle/mod.rs)
-
-use std::borrow::Cow;
 use env_logger::builder;
+/// This application is based on a [wgpu/examples/hello_triangle](https://github.com/gfx-rs/wgpu/blob/trunk/examples/src/hello_triangle/mod.rs)
+use std::borrow::Cow;
+use wgpu::{util::DeviceExt, BufferAddress, VertexBufferLayout};
 use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
     window::Window,
 };
+
+#[repr(C)]
+#[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]
+struct Vertex {
+    position: [f32; 3],
+    color: [f32; 3],
+}
+
+impl Vertex {
+    fn desc() -> wgpu::VertexBufferLayout<'static> {
+        wgpu::VertexBufferLayout {
+            array_stride: std::mem::size_of::<Vertex>() as wgpu::BufferAddress,
+            step_mode: wgpu::VertexStepMode::Vertex,
+            attributes: &[
+                wgpu::VertexAttribute {
+                    offset: 0,
+                    shader_location: 0,
+                    format: wgpu::VertexFormat::Float32x3,
+                },
+                wgpu::VertexAttribute {
+                    offset: std::mem::size_of::<[f32; 3]>()
+                        as wgpu::BufferAddress,
+                    shader_location: 1,
+                    format: wgpu::VertexFormat::Float32x3,
+                },
+            ],
+        }
+    }
+}
+
+const VERTICES: &[Vertex] = &[
+    Vertex {
+        position: [0.0, 0.5, 0.0],
+        color: [1.0, 0.0, 0.0],
+    },
+    Vertex {
+        position: [-0.5, -0.5, 0.0],
+        color: [0.0, 1.0, 0.0],
+    },
+    Vertex {
+        position: [0.5, -0.5, 0.0],
+        color: [0.0, 0.0, 1.0],
+    },
+];
 
 async fn run(event_loop: EventLoop<()>, window: Window) {
     let mut size = window.inner_size();
@@ -45,39 +89,43 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
     // Load the shaders from disk
     let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
         label: None,
-        source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!("../shader.wgsl"))),
+        source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!(
+            "../shader.wgsl"
+        ))),
     });
 
-    let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-        label: None,
-        bind_group_layouts: &[],
-        push_constant_ranges: &[],
-    });
+    let pipeline_layout =
+        device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: None,
+            bind_group_layouts: &[],
+            push_constant_ranges: &[],
+        });
 
     let swapchain_capabilities = surface.get_capabilities(&adapter);
     let swapchain_format = swapchain_capabilities.formats[0];
 
-    let render_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-        label: None,
-        layout: Some(&pipeline_layout),
-        vertex: wgpu::VertexState {
-            module: &shader,
-            entry_point: "vs_main",
-            buffers: &[],
-            compilation_options: Default::default(),
-        },
-        fragment: Some(wgpu::FragmentState {
-            module: &shader,
-            entry_point: "fs_main",
-            compilation_options: Default::default(),
-            targets: &[Some(swapchain_format.into())],
-        }),
-        primitive: wgpu::PrimitiveState::default(),
-        depth_stencil: None,
-        multisample: wgpu::MultisampleState::default(),
-        multiview: None,
-        cache: None,
-    });
+    let render_pipeline =
+        device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: None,
+            layout: Some(&pipeline_layout),
+            vertex: wgpu::VertexState {
+                module: &shader,
+                entry_point: "vs_main",
+                buffers: &[Vertex::desc()],
+                compilation_options: Default::default(),
+            },
+            fragment: Some(wgpu::FragmentState {
+                module: &shader,
+                entry_point: "fs_main",
+                compilation_options: Default::default(),
+                targets: &[Some(swapchain_format.into())],
+            }),
+            primitive: wgpu::PrimitiveState::default(),
+            depth_stencil: None,
+            multisample: wgpu::MultisampleState::default(),
+            multiview: None,
+            cache: None,
+        });
 
     let mut config = surface
         .get_default_config(&adapter, size.width, size.height)
@@ -107,33 +155,47 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                         window.request_redraw();
                     }
                     WindowEvent::RedrawRequested => {
-                        let frame = surface
-                            .get_current_texture()
-                            .expect("Failed to acquire next swap chain texture");
-                        let view = frame
-                            .texture
-                            .create_view(&wgpu::TextureViewDescriptor::default());
-                        let mut encoder =
-                            device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                                label: None,
-                            });
+                        let frame = surface.get_current_texture().expect(
+                            "Failed to acquire next swap chain texture",
+                        );
+                        let view = frame.texture.create_view(
+                            &wgpu::TextureViewDescriptor::default(),
+                        );
+                        let mut encoder = device.create_command_encoder(
+                            &wgpu::CommandEncoderDescriptor { label: None },
+                        );
+
+                        let vertex_buffer = device.create_buffer_init(
+                            &wgpu::util::BufferInitDescriptor {
+                                label: Some("PointsAndColor"),
+                                contents: bytemuck::cast_slice(VERTICES),
+                                usage: wgpu::BufferUsages::VERTEX,
+                            },
+                        );
+
                         {
-                            let mut rpass =
-                                encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                            let mut rpass = encoder.begin_render_pass(
+                                &wgpu::RenderPassDescriptor {
                                     label: None,
-                                    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                                        view: &view,
-                                        resolve_target: None,
-                                        ops: wgpu::Operations {
-                                            load: wgpu::LoadOp::Clear(wgpu::Color::GREEN),
-                                            store: wgpu::StoreOp::Store,
+                                    color_attachments: &[Some(
+                                        wgpu::RenderPassColorAttachment {
+                                            view: &view,
+                                            resolve_target: None,
+                                            ops: wgpu::Operations {
+                                                load: wgpu::LoadOp::Clear(
+                                                    wgpu::Color::GREEN,
+                                                ),
+                                                store: wgpu::StoreOp::Store,
+                                            },
                                         },
-                                    })],
+                                    )],
                                     depth_stencil_attachment: None,
                                     timestamp_writes: None,
                                     occlusion_query_set: None,
-                                });
+                                },
+                            );
                             rpass.set_pipeline(&render_pipeline);
+                            rpass.set_vertex_buffer(0, vertex_buffer.slice(..));
                             rpass.draw(0..3, 0..1);
                         }
 
