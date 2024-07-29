@@ -31,3 +31,5 @@ wgpu = { version="22.0", default-features = false, features = [
     "dx12",
     "metal",
 ] }
+bytemuck = { version = "1.16", features = [ "derive" ] }
+

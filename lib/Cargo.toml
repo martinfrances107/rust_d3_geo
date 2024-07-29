@@ -101,6 +101,13 @@ name = "rotating_50m"
 path = "../examples/globe/rotating_50m/src/lib.rs"
 crate-type = ["cdylib"]
 
+## TODO find out why I can't do this
+## fails cargo test!!!
+# [[example]]
+# name = "rotating_wgpu"
+# path = "../examples/globe/rotating_wgpu/src/main.rs"
+# crate-type = ["rlib"]
+
 [[example]]
 name = "globe_svg"
 path = "../examples/globe/svg/src/lib.rs"
