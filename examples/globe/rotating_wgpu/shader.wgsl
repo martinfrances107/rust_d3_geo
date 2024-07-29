@@ -22,9 +22,20 @@ struct VertexOutput {
 fn vs_main(
     model: VertexInput,
 ) -> VertexOutput {
+
+  // Convert points in the space form
+  //
+  // x: -180 ->180
+  // y: -90 -> 90
+  //
+  // into clip space -1 to 1!!!
+  //
+  // TODO Use the GPU properly -- use a SIMD like transform!
+  // or CPU side adjust the scale_set and tranfrom_set()
+  // so that every thing automatically comes out into clip space.
     var out: VertexOutput;
     out.color = model.color;
-    out.clip_position = vec4<f32>(model.position, 1.0);
+    out.clip_position = vec4<f32>((model.position.x / 300.) - 1.5, (model.position.y / 250) - 1. , 0.0, 1.0);
     return out;
 }
 

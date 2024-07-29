@@ -1,35 +1,43 @@
+#![deny(clippy::all)]
+#![warn(clippy::cargo)]
+#![warn(clippy::complexity)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::perf)]
+#![warn(missing_debug_implementations)]
+#![warn(missing_docs)]
+//! Rotating a globe using the best performance techniques
+//!
+//! In general the bottlekneck is the bulk transfer of date from CPU to GPU.
+//!
+//! Perviously the best in class still resulted in transfers was via javascript ( Path2d )
+//! which had the limited benefit of reducing the number of browser/system calls
+//!
+//! Bulk transfer here is more direct without javascript.
+//!
+//! This application is based on a [wgpu/examples/hello_triangle](https://github.com/gfx-rs/wgpu/blob/trunk/examples/src/hello_triangle/mod.rs)
+
 extern crate d3_geo_rs;
 
-use env_logger::builder;
-/// This application is based on a [wgpu/examples/hello_triangle](https://github.com/gfx-rs/wgpu/blob/trunk/examples/src/hello_triangle/mod.rs)
 use std::borrow::Cow;
-use wgpu::{util::DeviceExt, BufferAddress, VertexBufferLayout};
+use wgpu::{util::DeviceExt, PipelineCompilationOptions};
 use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
     window::Window,
 };
 
-use d3_geo_rs::path::points_wgpu::Vertex;
+use geo_types::Coord;
+use geo_types::Geometry;
 
-const VERTICES: &[Vertex] = &[
-    Vertex {
-        pos: [0.0, 0.5, 0.0],
-        color: [1.0, 0.0, 0.0],
-    },
-    Vertex {
-        pos: [-0.5, -0.5, 0.0],
-        color: [0.0, 1.0, 0.0],
-    },
-    Vertex {
-        pos: [0.5, -0.5, 0.0],
-        color: [0.0, 0.0, 1.0],
-    },
-    Vertex {
-        pos: [0.0, 0.0, 0.0],
-        color: [1.0, 1.0, 1.0],
-    },
-];
+use d3_geo_rs::graticule::generate_mls;
+use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::points_wgpu::PointsWGPU;
+use d3_geo_rs::path::points_wgpu::Vertex;
+use d3_geo_rs::projection::orthographic::Orthographic;
+use d3_geo_rs::projection::Build;
+use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::ScaleSet;
+use d3_geo_rs::projection::TranslateSet;
 
 async fn run(event_loop: EventLoop<()>, window: Window) {
     let mut size = window.inner_size();
@@ -83,6 +91,29 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
     let swapchain_capabilities = surface.get_capabilities(&adapter);
     let swapchain_format = swapchain_capabilities.formats[0];
 
+    let width = 800_f32;
+    let height = 600_f32;
+
+    let mut projector_builder = Orthographic::builder::<PointsWGPU>();
+    projector_builder
+        .scale_set(width / 1.3_f32 / std::f32::consts::PI)
+        .translate_set(&Coord {
+            x: width / 2_f32,
+            y: height / 2_f32,
+        });
+
+    // Graticule
+    let graticule: Geometry<f32> = generate_mls();
+    // println!("graticule {:#?}", &graticule);
+
+    let projector = projector_builder.build();
+
+    let endpoint = PointsWGPU::default();
+    let path_builder = PathBuilder::new(endpoint);
+    let mut path = path_builder.build(projector);
+
+    let vertices = path.object(&graticule);
+    println!("VERTICIES {:#?}", &vertices);
     let render_pipeline =
         device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
             label: None,
@@ -91,12 +122,12 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                 module: &shader,
                 entry_point: "vs_main",
                 buffers: &[Vertex::desc()],
-                compilation_options: Default::default(),
+                compilation_options: PipelineCompilationOptions::default(),
             },
             fragment: Some(wgpu::FragmentState {
                 module: &shader,
                 entry_point: "fs_main",
-                compilation_options: Default::default(),
+                compilation_options: PipelineCompilationOptions::default(),
                 targets: &[Some(swapchain_format.into())],
             }),
             primitive: wgpu::PrimitiveState {
@@ -150,7 +181,7 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                         let vertex_buffer = device.create_buffer_init(
                             &wgpu::util::BufferInitDescriptor {
                                 label: Some("PointsAndColor"),
-                                contents: bytemuck::cast_slice(VERTICES),
+                                contents: bytemuck::cast_slice(&vertices),
                                 usage: wgpu::BufferUsages::VERTEX,
                             },
                         );
@@ -178,7 +209,7 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                             );
                             rpass.set_pipeline(&render_pipeline);
                             rpass.set_vertex_buffer(0, vertex_buffer.slice(..));
-                            rpass.draw(0..VERTICES.len() as u32, 0..1);
+                            rpass.draw(0..vertices.len() as u32, 0..1);
                         }
 
                         queue.submit(Some(encoder.finish()));
@@ -192,6 +223,14 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
         .unwrap();
 }
 
+/// Entry point
+///
+/// Initialisation before the APP starts.
+///
+/// Logging
+///
+/// Environment sensing
+///  eg. check build for HTML canvas if required.
 pub fn main() {
     let event_loop = EventLoop::new().unwrap();
     #[allow(unused_mut)]
