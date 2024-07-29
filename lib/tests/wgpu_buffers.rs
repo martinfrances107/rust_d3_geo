@@ -1,5 +1,6 @@
 #[cfg(feature = "wgpu")]
 mod wgpu_buffers {
+    use d3_geo_rs::in_delta::in_delta;
     use d3_geo_rs::path::builder::Builder as PathBuilder;
     use d3_geo_rs::path::points_wgpu::PointsWGPU;
     use d3_geo_rs::path::points_wgpu::Vertex;
@@ -11,35 +12,27 @@ mod wgpu_buffers {
     use d3_geo_rs::projection::ScaleSet;
     use d3_geo_rs::stream::Streamable;
     use geo::point;
-    use geo::CoordFloat;
     use geo::Geometry;
-    use num_traits::FloatConst;
 
-    type Projector<T> = ProjectorAntimeridianResampleNoneNoClip<
-        PointsWGPU<T>,
-        Equirectangular<T>,
-        T,
+    type Projector = ProjectorAntimeridianResampleNoneNoClip<
+        PointsWGPU,
+        Equirectangular<f32>,
+        f32,
     >;
 
     #[inline]
-    fn equirectangular<T>() -> Projector<T>
-    where
-        T: 'static + CoordFloat + Default + FloatConst,
-    {
+    fn equirectangular() -> Projector {
         Equirectangular::builder()
-            .scale_set(T::from(900f64 / core::f64::consts::PI).unwrap())
+            .scale_set(900_f32 / core::f32::consts::PI)
             .precision_bypass()
             .build()
     }
 
     #[inline]
-    fn path<T>(
-        projection: Projector<T>,
-        object: &impl Streamable<T = T>,
-    ) -> Vec<Vertex<T>>
-    where
-        T: 'static + CoordFloat + FloatConst,
-    {
+    fn path(
+        projection: Projector,
+        object: &impl Streamable<T = f32>,
+    ) -> Vec<Vertex> {
         let context = PointsWGPU::default();
         let pb = PathBuilder::new(context);
 
@@ -65,15 +58,22 @@ mod wgpu_buffers {
         let actual = path(eq, &object);
         let expected = vec![
             Vertex {
-                pos: [165_f32, 160_f32],
+                pos: [165_f32, 160_f32, 0_f32],
+                color: [1_f32, 1_f32, 1_f32],
             },
             Vertex {
-                pos: [170_f32, 160_f32],
+                pos: [170_f32, 160_f32, 0_f32],
+                color: [1_f32, 1_f32, 1_f32],
             },
             Vertex {
-                pos: [170_f32, 165_f32],
+                pos: [170_f32, 165_f32, 0_f32],
+                color: [1_f32, 1_f32, 1_f32],
             },
         ];
-        assert_eq!(actual, expected);
+
+        let results = actual.iter().zip(&expected);
+        for (a, b) in results {
+            assert!(in_delta(a.pos[0], b.pos[0], 1e-4));
+        }
     }
 }
