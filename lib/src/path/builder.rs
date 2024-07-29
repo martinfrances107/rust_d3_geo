@@ -77,10 +77,7 @@ where
 
 // TODO missing polyline, polygon?
 #[cfg(feature = "wgpu")]
-impl<T> Builder<PointsWGPU<T>, T>
-where
-    T: CoordFloat + Display,
-{
+impl Builder<PointsWGPU, f32> {
     /// Returns a Builder from default values.
     #[inline]
     #[must_use]

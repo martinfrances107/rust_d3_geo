@@ -17,7 +17,7 @@ test = false
 
 
 [dependencies]
-d3_geo_rs = { path = "../../../lib" }
+d3_geo_rs = { path = "../../../lib", features=["wgpu"]}
 js-sys = { workspace = true }
 # geo = { workspace = true }
 # geo-types = { workspace = true }
