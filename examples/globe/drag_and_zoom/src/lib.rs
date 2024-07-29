@@ -42,7 +42,6 @@ use d3_geo_rs::circle::generator::Generator as CircleGenerator;
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::path2d_endpoint::Path2dEndpoint;
-use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
@@ -389,8 +388,7 @@ impl Renderer {
             let mut path = path_builder.build(projector);
             self.context2d.set_stroke_style(&self.color_inner_stroke);
             self.context2d.set_fill_style(&self.color_inner_fill);
-            path.object(&self.pattern);
-            let path2d = path.context.result();
+            let path2d = path.object(&self.pattern);
             self.context2d.stroke_with_path(&path2d);
             self.context2d.fill_with_path_2d(&path2d);
 
@@ -406,14 +404,12 @@ impl Renderer {
         let mut path = path_builder.build(projector);
         self.context2d.set_fill_style(&self.color_outer_fill);
         self.context2d.set_stroke_style(&self.color_outer_stroke);
-        path.object(&self.pattern);
-        let path2d = path.context.result();
+        let path2d = path.object(&self.pattern);
         self.context2d.stroke_with_path(&path2d);
         self.context2d.fill_with_path_2d(&path2d);
 
         self.context2d.set_stroke_style(&self.color_graticule);
-        path.object(&self.graticule);
-        let path2d = path.context.result();
+        let path2d = path.object(&self.graticule);
         self.context2d.stroke_with_path(&path2d);
     }
 }
