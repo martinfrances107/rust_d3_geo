@@ -50,6 +50,10 @@ const VERTICES: &[Vertex] = &[
         position: [0.5, -0.5, 0.0],
         color: [0.0, 0.0, 1.0],
     },
+    Vertex {
+      position: [0.0, 0.0, 0.0],
+      color: [1.0, 1.0, 1.0],
+    },
 ];
 
 async fn run(event_loop: EventLoop<()>, window: Window) {
@@ -120,7 +124,10 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                 compilation_options: Default::default(),
                 targets: &[Some(swapchain_format.into())],
             }),
-            primitive: wgpu::PrimitiveState::default(),
+            primitive: wgpu::PrimitiveState {
+                topology: wgpu::PrimitiveTopology::LineStrip,
+                ..Default::default()
+            },
             depth_stencil: None,
             multisample: wgpu::MultisampleState::default(),
             multiview: None,
@@ -183,7 +190,7 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                                             resolve_target: None,
                                             ops: wgpu::Operations {
                                                 load: wgpu::LoadOp::Clear(
-                                                    wgpu::Color::GREEN,
+                                                    wgpu::Color::BLACK,
                                                 ),
                                                 store: wgpu::StoreOp::Store,
                                             },
@@ -196,7 +203,7 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                             );
                             rpass.set_pipeline(&render_pipeline);
                             rpass.set_vertex_buffer(0, vertex_buffer.slice(..));
-                            rpass.draw(0..3, 0..1);
+                            rpass.draw(0..4, 0..1);
                         }
 
                         queue.submit(Some(encoder.finish()));
