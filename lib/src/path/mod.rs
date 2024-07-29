@@ -89,8 +89,11 @@ where
     PROJECTOR: Projector<EP = CS, Transformer = TRANSFORMER>,
     T: CoordFloat,
 {
-    /// Either a `PathString` or Path2d.
-    /// Rendering to a SVG Path element or a HTML Canvas element.
+    /// Context/Endpoint
+    /// Either a `PathString` `Path2d` or `PointsWGPU`
+    ///
+    /// Rendering to a SVG Path element, a HTML Canvas element or
+    /// write to a VertexBuffer for bulk transfer into GPU memory.
     pub context: CS,
     point_radius: PointRadiusEnum<T>,
     /// The projector associated with this path.
@@ -103,6 +106,8 @@ where
     T: CoordFloat,
 {
     /// Constructor.
+    ///
+    /// context, also known as a pipeline endpoint.
     ///
     /// # Panics
     /// `unwrap()` is used here but a panic will never happen as 4.5 will always be converted into T.
@@ -259,6 +264,8 @@ where
     T: CoordFloat,
 {
     /// Sets the context stream.
+    ///
+    /// Context/Endpoint
     pub fn context_set(&mut self, context: CS) -> &mut Self {
         self.context = context;
         self
