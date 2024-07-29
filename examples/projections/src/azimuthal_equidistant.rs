@@ -8,7 +8,6 @@ use web_sys::Path2d;
 use d3_geo_rs::graticule::generate as generate_graticule;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::path2d_endpoint::Path2dEndpoint;
-use d3_geo_rs::path::Result as PathResult;
 use d3_geo_rs::projection::azimuthal_equidistant::AzimuthalEquiDistant;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::ClipAngleAdjust;
@@ -54,6 +53,7 @@ pub async fn draw(land: &Geometry<f64>) -> Result<(), JsValue> {
     let mut path = path_builder.build(projector);
     context_raw.set_stroke_style(&"#69b3a2".into());
     let path2d = path.object(land);
+    context_raw.stroke_with_path(&path2d);
 
     let graticule = generate_graticule();
     let lines = graticule.lines();
