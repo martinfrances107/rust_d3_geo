@@ -128,6 +128,7 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Combines projection, context stream and object.
+    #[must_use]
     pub fn object(
         &mut self,
         object: &impl Streamable<T = T>,
