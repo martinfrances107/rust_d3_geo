@@ -93,7 +93,7 @@ where
     /// Either a `PathString` `Path2d` or `PointsWGPU`
     ///
     /// Rendering to a SVG Path element, a HTML Canvas element or
-    /// write to a VertexBuffer for bulk transfer into GPU memory.
+    /// write to a `VertexBuffer` for bulk transfer into GPU memory.
     pub context: CS,
     point_radius: PointRadiusEnum<T>,
     /// The projector associated with this path.

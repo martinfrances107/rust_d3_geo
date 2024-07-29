@@ -1,11 +1,11 @@
 use core::mem;
 
-use bytemuck::{Pod, Zeroable};
+// use bytemuck::{Pod, Zeroable};
 use geo_types::Coord;
 
 use crate::stream::Stream;
 
-use super::PointRadiusTrait;
+// use super::PointRadiusTrait;
 use super::Result;
 
 // NB PartialEq is for testing only.
@@ -58,7 +58,12 @@ pub struct PointsWGPU {
 impl Default for PointsWGPU {
     #[inline]
     fn default() -> Self {
-        Self { v_buffer: vec![] }
+        // A default capacity 200 points!!
+        // TODO consider a new(capacity: usize)
+        // which allows this to be overrriden.
+        Self {
+            v_buffer: Vec::with_capacity(200usize),
+        }
     }
 }
 
@@ -92,7 +97,7 @@ impl Stream for PointsWGPU {
     fn point(&mut self, p: &Coord<Self::T>, _z: Option<u8>) {
         self.v_buffer.push(Vertex {
             pos: [p.x, p.y, 0.],
-            color: Default::default(),
+            color: [1.0, 1.0, 1.0],
         });
     }
 }
