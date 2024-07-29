@@ -85,6 +85,7 @@ where
 ///  context_raw.stroke();
 /// ```
 #[must_use]
-pub fn generate_mls() -> Geometry {
-    Geometry::MultiLineString(MultiLineString(generate().lines().collect()))
+pub fn generate_mls<T>() -> Geometry<T>
+where T: 'static + CoordFloat{
+    Geometry::MultiLineString(MultiLineString(generate::<T>().lines().collect()))
 }
