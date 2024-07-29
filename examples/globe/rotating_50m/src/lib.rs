@@ -19,9 +19,8 @@ mod utils;
 use geo::Geometry;
 use geo_types::Coord;
 use gloo_utils::format::JsValueSerdeExt;
-use topojson::Topology;
-
 use rust_topojson_client::feature::feature_from_name;
+use topojson::Topology;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;

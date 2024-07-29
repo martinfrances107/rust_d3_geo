@@ -91,16 +91,10 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
     let swapchain_capabilities = surface.get_capabilities(&adapter);
     let swapchain_format = swapchain_capabilities.formats[0];
 
-    let width = 800_f32;
-    let height = 600_f32;
-
     let mut projector_builder = Orthographic::builder::<PointsWGPU>();
     projector_builder
-        .scale_set(width / 1.3_f32 / std::f32::consts::PI)
-        .translate_set(&Coord {
-            x: width / 2_f32,
-            y: height / 2_f32,
-        });
+        .scale_set(800_f32 / 1.3_f32 / std::f32::consts::PI)
+        .translate_set(&Coord { x: 0_f32, y: 0_f32 });
 
     // Graticule
     let graticule: Geometry<f32> = generate_mls();
@@ -113,7 +107,29 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
     let mut path = path_builder.build(projector);
 
     let vertices = path.object(&graticule);
-    println!("VERTICIES {:#?}", &vertices);
+
+    let mut minx = f32::MAX;
+    let mut maxx = f32::MIN;
+    let mut miny = f32::MAX;
+    let mut maxy = f32::MIN;
+    for v in &vertices {
+        if v.pos[0] < minx {
+            minx = v.pos[0];
+        }
+        if v.pos[0] > maxx {
+            maxx = v.pos[0];
+        }
+
+        if v.pos[1] < miny {
+            miny = v.pos[1];
+        }
+        if v.pos[1] > maxy {
+            maxy = v.pos[1];
+        }
+    }
+    println!("x: min{minx}, max{maxx}");
+    println!("y: min{miny}, max{maxy}");
+
     let render_pipeline =
         device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
             label: None,
