@@ -1,6 +1,7 @@
 use core::mem;
 
-// use bytemuck::{Pod, Zeroable};
+use bytemuck::Pod;
+use bytemuck::Zeroable;
 use geo_types::Coord;
 
 use crate::stream::Stream;
@@ -10,7 +11,7 @@ use super::Result;
 
 // NB PartialEq is for testing only.
 #[repr(C)]
-#[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable, PartialEq)]
+#[derive(Copy, Clone, Debug, Pod, Zeroable, PartialEq)]
 /// CPU side representation of a Vertex shader primitve.
 pub struct Vertex {
     // The coords of the vertex

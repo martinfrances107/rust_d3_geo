@@ -1,5 +1,9 @@
 #[cfg(feature = "wgpu")]
 mod wgpu_buffers {
+
+    use geo::point;
+    use geo::Geometry;
+
     use d3_geo_rs::in_delta::in_delta;
     use d3_geo_rs::path::builder::Builder as PathBuilder;
     use d3_geo_rs::path::points_wgpu::PointsWGPU;
@@ -11,8 +15,6 @@ mod wgpu_buffers {
     use d3_geo_rs::projection::RawBase;
     use d3_geo_rs::projection::ScaleSet;
     use d3_geo_rs::stream::Streamable;
-    use geo::point;
-    use geo::Geometry;
 
     type Projector = ProjectorAntimeridianResampleNoneNoClip<
         PointsWGPU,
