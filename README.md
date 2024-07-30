@@ -22,7 +22,11 @@ This library allows the development of custom maps. It provides a comprehensive 
  [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) objects. Additionally this
  library can be used to calculate lengths, areas and the centroid of such objects
 
-[CHANGELOG.md](https://github.com/martinfrances107/rust_d3_geo/blob/v2.x-dev/CHANGELOG.md) contains a summary of breaking changes between v1.x and 2.0.0.
+[CHANGELOG.md](https://github.com/martinfrances107/rust_d3_geo/blob/v2.x-dev/CHANGELOG.md) contains a summary of breaking changes between v1.x, 2.x and 3.x
+
+Version 3.0.0 adds support for WGPU
+
+> "WGPU is a pure-rust graphics API. It runs natively on Vulkan, Metal, D3D12, and OpenGL; and on top of WebGL2 and WebGPU on wasm." [\[wgpu\]](https://crates.io/crates/wgpu)
 
 ## When to use the rust version of the library
 
@@ -68,6 +72,31 @@ For performance reasons this example is best viewed by running "cargo build" and
 
 <td width="50%">
   <image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/rotating.png">
+</td>
+
+</tr>
+<tr>
+<td width="50%">
+<strong>examples/globe/rotating_WGPU</strong><br><br>
+
+WGPU support in the browser is partial and currently hidden behind experimental flags. So Development in this library uses the [winit](https://crates.io/crates/winit) crate to make cross platform application.
+
+The promise of this approach is to bypass the bottlekneck in passing bulk data from RUST memory space, into javascript, and finally into GPU memory.
+
+GeoJson Geometry is streamed through this libraries rendering pipeline into a new **PointsWPGU**  endpoint.
+
+This endpoint output is block of memory which can be passed directly to the GPU.
+
+A thin vertex and fragment shader is then responsible for rendering.
+
+The example enables the feature flag "wgpu".
+
+(Scale 1:50M)
+
+</td>
+
+<td width="50%">
+
 </td>
 
 </tr>
