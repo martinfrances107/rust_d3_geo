@@ -7,10 +7,10 @@
 #![warn(missing_docs)]
 //! Rotating a globe using the best performance techniques
 //!
-//! In general the bottlekneck is the bulk transfer of date from CPU to GPU.
+//! In general the bottlekneck is the bulk transfer of data from CPU to GPU.
 //!
 //! Perviously the best in class still resulted in transfers was via javascript ( Path2d )
-//! which had the limited benefit of reducing the number of browser/system calls
+//! This had the limited benefit of reducing the number of browser/system calls
 //!
 //! Bulk transfer here is more direct without javascript.
 //!

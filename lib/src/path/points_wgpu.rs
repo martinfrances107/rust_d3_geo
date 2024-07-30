@@ -16,13 +16,10 @@ pub struct Vertex {
     // The coords of the vertex
     /// TODO can I make the [f32;2]
     pub pos: [f32; 3],
-    /// Vertex color.
-    // TODO can I remove this
-    pub color: [f32; 3],
 }
 
 impl Vertex {
-    /// `wgpu::VertexState parameter`
+    /// description a `wgpu::VertexState parameter`
     /// The layout in memory of the vertex array.
     #[must_use]
     pub fn desc() -> wgpu::VertexBufferLayout<'static> {
@@ -33,12 +30,6 @@ impl Vertex {
                 wgpu::VertexAttribute {
                     offset: 0,
                     shader_location: 0,
-                    format: wgpu::VertexFormat::Float32x3,
-                },
-                wgpu::VertexAttribute {
-                    offset: std::mem::size_of::<[f32; 3]>()
-                        as wgpu::BufferAddress,
-                    shader_location: 1,
                     format: wgpu::VertexFormat::Float32x3,
                 },
             ],
@@ -96,8 +87,7 @@ impl Stream for PointsWGPU {
     #[inline]
     fn point(&mut self, p: &Coord<Self::T>, _z: Option<u8>) {
         self.v_buffer.push(Vertex {
-            pos: [p.x, p.y, 0.],
-            color: [1.0, 1.0, 1.0],
+            pos: [p.x, p.y, 0.]
         });
     }
 }
