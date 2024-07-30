@@ -26,13 +26,11 @@ impl Vertex {
         wgpu::VertexBufferLayout {
             array_stride: std::mem::size_of::<Vertex>() as wgpu::BufferAddress,
             step_mode: wgpu::VertexStepMode::Vertex,
-            attributes: &[
-                wgpu::VertexAttribute {
-                    offset: 0,
-                    shader_location: 0,
-                    format: wgpu::VertexFormat::Float32x3,
-                },
-            ],
+            attributes: &[wgpu::VertexAttribute {
+                offset: 0,
+                shader_location: 0,
+                format: wgpu::VertexFormat::Float32x3,
+            }],
         }
     }
 }
@@ -87,7 +85,7 @@ impl Stream for PointsWGPU {
     #[inline]
     fn point(&mut self, p: &Coord<Self::T>, _z: Option<u8>) {
         self.v_buffer.push(Vertex {
-            pos: [p.x, p.y, 0.]
+            pos: [p.x, p.y, 0.],
         });
     }
 }

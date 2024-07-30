@@ -33,12 +33,12 @@ Code patterns
  [fn render](https://github.com/gfx-rs/wgpu/blob/trunk/examples/src/boids/mod.rs#L269) (queue:  [Queue](https://docs.rs/wgpu/latest/wgpu/struct.Queue.html#) )
 
 * Construct a new new encoder.
-   * encoder: PUSH a new group.
-   * encoder: Construct a render_pass.
-     * render_pass: Setup the pipeline.
-     * render_pass: Set a vertex buffer.
-     * render_pass: Make multiple Draw() calls here.
-   * encoder: POP - the group is now **closed** for additions.
+    * encoder: PUSH a new group.
+    * encoder: Construct a render_pass.
+        * render_pass: Setup the pipeline.
+        * render_pass: Set a vertex buffer.
+        * render_pass: Make multiple Draw() calls here.
+    * encoder: POP - the group is now **closed** for additions.
 * encode: Submit the encoder to the queue.
 
 ### How to store a series of poly-lines.
