@@ -60,13 +60,13 @@ mod wgpu_buffers {
         let actual = path(eq, &object);
         let expected = vec![
             Vertex {
-                pos: [165_f32, 160_f32, 0_f32],
+                pos: [165_f32, 160_f32],
             },
             Vertex {
-                pos: [170_f32, 160_f32, 0_f32],
+                pos: [170_f32, 160_f32],
             },
             Vertex {
-                pos: [170_f32, 165_f32, 0_f32],
+                pos: [170_f32, 165_f32],
             },
         ];
 

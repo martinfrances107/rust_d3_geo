@@ -132,7 +132,7 @@ impl Stream for PolyLines {
                 let index = v.insert(self.next_index);
                 self.index_buffer.push(Index(*index as u32));
                 self.vertex_buffer.push(Vertex {
-                    pos: [p.x, p.y, 0.],
+                    pos: [p.x, p.y],
                 });
                 self.next_index += 1;
             }
