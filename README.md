@@ -83,9 +83,9 @@ WGPU support in the browser is partial and currently hidden behind experimental 
 
 The promise of this approach is to bypass the bottlekneck in passing bulk data from RUST memory space, into javascript, and finally into GPU memory.
 
-GeoJson Geometry is streamed through this libraries rendering pipeline into a new **PointsWPGU**  endpoint.
+GeoJson Geometry is streamed through this libraries rendering pipeline into a new **PolyinesWPGU**  endpoint.
 
-This endpoint output is block of memory which can be passed directly to the GPU.
+This endpoint output is a block of memory which can be passed directly to the GPU.
 
 A thin vertex and fragment shader is then responsible for rendering.
 
@@ -95,10 +95,13 @@ The example enables the feature flag "wgpu".
 
 </td>
 
-<td width="50%">
 
+<td width="50%">
+  <image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/SingleDrawCall.png">
 </td>
 
+
+</td>
 </tr>
 <tr>
 

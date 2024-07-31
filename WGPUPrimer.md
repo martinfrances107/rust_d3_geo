@@ -4,6 +4,7 @@ A Glossary of term, Plus a outline of common code patterns
 Code patterns
 
 ## Glossary
+
 * [Queue](https://docs.rs/wgpu/latest/wgpu/struct.Queue.html#) - Command Queue on the device.
 * [CommandEncoder](https://docs.rs/wgpu/latest/wgpu/struct.CommandEncoder.html#) - accepts command in RUST format.
   * configures how data will flow between [Buffers](https://docs.rs/wgpu/latest/wgpu/struct.Buffer.html#)  and [Textures](https://docs.rs/wgpu/latest/wgpu/struct.Texture.html#).
@@ -18,7 +19,6 @@ Code patterns
 
     * "Instancing allows us to draw the same object multiple times with different properties (position,
     orientation, size, color, etc.)"
-
 
 * [Primitive Restart](https://www.supergoodcode.com/restart/)
 >     "The last remaining feature for GL 3.1 was primitive restart, which allows an indexed draw command to end the current primitive when a specified index is processed, beginning a new one of the same type with the next index. Other than the minor changes of enabling the driver capability, there were two main issues with translating this functionality to Vulkan"

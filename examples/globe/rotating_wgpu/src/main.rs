@@ -128,8 +128,8 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
             maxy = v.pos[1];
         }
     }
-    println!("x: min{minx}, max{maxx}");
-    println!("y: min{miny}, max{maxy}");
+    // println!("x: min{minx}, max{maxx}");
+    // println!("y: min{miny}, max{maxy}");
 
     // println!("indicies: {:#?}", &indicies);
     // println!("vertcies: {:#?}", &verticies);

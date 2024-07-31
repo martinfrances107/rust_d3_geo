@@ -40,7 +40,6 @@ use d3_geo_rs::projection::ScaleGet;
 use d3_geo_rs::projection::TranslateGet;
 
 ///  Helper function to extract world geometry from file.
-#[cfg_attr(tarpaulin, ignore)]
 fn world<T>() -> Geometry<T>
 where
     T: CoordFloat + FloatConst,
