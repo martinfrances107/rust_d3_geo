@@ -6,8 +6,8 @@ mod wgpu_buffers {
 
     use d3_geo_rs::in_delta::in_delta;
     use d3_geo_rs::path::builder::Builder as PathBuilder;
-    use d3_geo_rs::path::points_wgpu::PointsWGPU;
-    use d3_geo_rs::path::points_wgpu::Vertex;
+    use d3_geo_rs::path::wgpu::points::Points as PointsWGPU;
+    use d3_geo_rs::path::wgpu::Vertex;
     use d3_geo_rs::projection::equirectangular::Equirectangular;
     use d3_geo_rs::projection::projector_common::types::ProjectorAntimeridianResampleNoneNoClip;
     use d3_geo_rs::projection::Build;

@@ -13,9 +13,9 @@ pub mod measure;
 #[cfg(feature = "web")]
 pub mod path2d_endpoint;
 
-pub mod wgpu;
 /// Path String.
 pub mod string;
+pub mod wgpu;
 
 mod tests;
 
