@@ -19,20 +19,20 @@
 extern crate d3_geo_rs;
 
 use std::borrow::Cow;
-use wgpu::{util::DeviceExt, PipelineCompilationOptions};
-use winit::{
-    event::{Event, WindowEvent},
-    event_loop::EventLoop,
-    window::Window,
-};
 
 use geo_types::Coord;
 use geo_types::Geometry;
+use wgpu::util::DeviceExt;
+use wgpu::PipelineCompilationOptions;
+use winit::event::Event;
+use winit::event::WindowEvent;
+use winit::event_loop::EventLoop;
+use winit::window::Window;
 
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::points_wgpu::PointsWGPU;
-use d3_geo_rs::path::points_wgpu::Vertex;
+use d3_geo_rs::path::wgpu::polylines::PolyLines as PolyLinesWGPU;
+use d3_geo_rs::path::wgpu::Vertex;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;
@@ -91,7 +91,7 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
     let swapchain_capabilities = surface.get_capabilities(&adapter);
     let swapchain_format = swapchain_capabilities.formats[0];
 
-    let mut projector_builder = Orthographic::builder::<PointsWGPU>();
+    let mut projector_builder = Orthographic::builder::<PolyLinesWGPU>();
     projector_builder
         .scale_set(800_f32 / 1.3_f32 / std::f32::consts::PI)
         .translate_set(&Coord { x: 0_f32, y: 0_f32 });
@@ -102,17 +102,17 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
 
     let projector = projector_builder.build();
 
-    let endpoint = PointsWGPU::default();
+    let endpoint = PolyLinesWGPU::default();
     let path_builder = PathBuilder::new(endpoint);
     let mut path = path_builder.build(projector);
 
-    let vertices = path.object(&graticule);
+    let (verticies, indicies) = path.object(&graticule);
 
     let mut minx = f32::MAX;
     let mut maxx = f32::MIN;
     let mut miny = f32::MAX;
     let mut maxy = f32::MIN;
-    for v in &vertices {
+    for v in &verticies {
         if v.pos[0] < minx {
             minx = v.pos[0];
         }
@@ -129,6 +129,9 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
     }
     println!("x: min{minx}, max{maxx}");
     println!("y: min{miny}, max{maxy}");
+
+    // println!("indicies: {:#?}", &indicies);
+    // println!("vertcies: {:#?}", &verticies);
 
     let render_pipeline =
         device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
@@ -196,11 +199,19 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
 
                         let vertex_buffer = device.create_buffer_init(
                             &wgpu::util::BufferInitDescriptor {
-                                label: Some("PointsAndColor"),
-                                contents: bytemuck::cast_slice(&vertices),
+                                label: Some("Points"),
+                                contents: bytemuck::cast_slice(&verticies),
                                 usage: wgpu::BufferUsages::VERTEX,
                             },
                         );
+
+                        let index_buffer = device.create_buffer_init(
+                          &wgpu::util::BufferInitDescriptor {
+                              label: Some("Index buffer"),
+                              contents: bytemuck::cast_slice(&indicies),
+                              usage: wgpu::BufferUsages::INDEX,
+                          },
+                      );
 
                         {
                             let mut rpass = encoder.begin_render_pass(
@@ -225,7 +236,9 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                             );
                             rpass.set_pipeline(&render_pipeline);
                             rpass.set_vertex_buffer(0, vertex_buffer.slice(..));
-                            rpass.draw(0..vertices.len() as u32, 0..1);
+                            rpass.set_index_buffer( index_buffer.slice(..), wgpu::IndexFormat::Uint32);
+                            // instances 0..1 implies instancing is not being used!!!.
+                            rpass.draw_indexed(0..indicies.len() as u32, 0, 0..1);
                         }
 
                         queue.submit(Some(encoder.finish()));

@@ -16,7 +16,7 @@ use crate::path_test_context::Path2d;
 use web_sys::Path2d;
 
 #[cfg(feature = "wgpu")]
-use super::points_wgpu::PointsWGPU;
+use crate::path::wgpu::points::Points as PointsWGPU;
 
 use super::string::String;
 use super::PointRadiusTrait;
