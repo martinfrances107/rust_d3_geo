@@ -37,6 +37,7 @@ impl Hash for CoordHashable {
     }
 }
 
+/// Elements of the index buffer.
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq, Pod, Zeroable)]
 pub struct Index(u32);
