@@ -23,6 +23,7 @@ use std::borrow::Cow;
 use geo_types::Coord;
 use geo_types::Geometry;
 use wgpu::util::DeviceExt;
+use wgpu::IndexFormat;
 use wgpu::PipelineCompilationOptions;
 use winit::event::Event;
 use winit::event::WindowEvent;
@@ -151,6 +152,9 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
             }),
             primitive: wgpu::PrimitiveState {
                 topology: wgpu::PrimitiveTopology::LineStrip,
+                // Enables "PRIMITIVE_RESTART" mode
+                // see `rust_d3_geo::path::wgpu::PRIMITIVE_RESTART_TOKEN`
+                strip_index_format: Some(IndexFormat::Uint32),
                 ..Default::default()
             },
             depth_stencil: None,
@@ -206,12 +210,12 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                         );
 
                         let index_buffer = device.create_buffer_init(
-                          &wgpu::util::BufferInitDescriptor {
-                              label: Some("Index buffer"),
-                              contents: bytemuck::cast_slice(&indicies),
-                              usage: wgpu::BufferUsages::INDEX,
-                          },
-                      );
+                            &wgpu::util::BufferInitDescriptor {
+                                label: Some("Index buffer"),
+                                contents: bytemuck::cast_slice(&indicies),
+                                usage: wgpu::BufferUsages::INDEX,
+                            },
+                        );
 
                         {
                             let mut rpass = encoder.begin_render_pass(
@@ -236,9 +240,16 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
                             );
                             rpass.set_pipeline(&render_pipeline);
                             rpass.set_vertex_buffer(0, vertex_buffer.slice(..));
-                            rpass.set_index_buffer( index_buffer.slice(..), wgpu::IndexFormat::Uint32);
+                            rpass.set_index_buffer(
+                                index_buffer.slice(..),
+                                wgpu::IndexFormat::Uint32,
+                            );
                             // instances 0..1 implies instancing is not being used!!!.
-                            rpass.draw_indexed(0..indicies.len() as u32, 0, 0..1);
+                            rpass.draw_indexed(
+                                0..indicies.len() as u32,
+                                0,
+                                0..1,
+                            );
                         }
 
                         queue.submit(Some(encoder.finish()));

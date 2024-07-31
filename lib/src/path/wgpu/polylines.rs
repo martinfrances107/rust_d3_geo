@@ -1,14 +1,13 @@
-use core::hash::Hasher;
 use core::hash::Hash;
+use core::hash::Hasher;
 use core::mem;
-use std::collections::HashMap;
 use std::collections::hash_map::Entry::Occupied;
 use std::collections::hash_map::Entry::Vacant;
+use std::collections::HashMap;
 
 use bytemuck::Pod;
 use bytemuck::Zeroable;
 use geo_types::Coord;
-
 
 use crate::stream::Stream;
 
@@ -22,36 +21,20 @@ use super::Vertex;
 /// specified index is processed, beginning a new one of the same type with the next index."
 ///
 /// <https://www.supergoodcode.com/restart/>
-/// TODO - does the wgpu crate have this constant
-/// as Vulkan and WebGl use different tokens here.
 pub static PRIMITVE_RESTART_TOKEN: Index = Index(u32::MAX);
 
 /// Make Coord Hashable
 /// treat coord as byes for hashing
-#[derive(Copy, Clone, Debug)]
-struct CoordHashable(
-  Coord<f32>
-);
-
-impl PartialEq for CoordHashable{
-  fn eq(&self, other: &Self) -> bool {
-    let ax = self.0.x.to_be_bytes();
-    let ay = self.0.y.to_be_bytes();
-    let bx = other.0.y.to_be_bytes();
-    let by = other.0.y.to_be_bytes();
-    let x_equal = ax == bx;
-    let y_equal = ay == by;
-    x_equal == y_equal
-}
-}
+#[derive(Copy, Clone, Debug,  PartialEq)]
+struct CoordHashable(Coord<f32>);
 
 impl Eq for CoordHashable {}
 
-impl Hash for CoordHashable{
-  fn hash<H: Hasher>(&self, state: &mut H) {
-    self.0.y.to_be_bytes().hash(state);
-    self.0.y.to_be_bytes().hash(state);
-}
+impl Hash for CoordHashable {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.0.y.to_bits().hash(state);
+        self.0.y.to_bits().hash(state);
+    }
 }
 
 #[repr(C)]
@@ -59,20 +42,20 @@ impl Hash for CoordHashable{
 pub struct Index(u32);
 
 impl Index {
-  /// description a `wgpu::VertexState parameter`
-  /// The layout in memory of the index buffer.
-  #[must_use]
-  pub fn desc() -> wgpu::VertexBufferLayout<'static> {
-      wgpu::VertexBufferLayout {
-          array_stride: std::mem::size_of::<Index>() as wgpu::BufferAddress,
-          step_mode: wgpu::VertexStepMode::Vertex,
-          attributes: &[wgpu::VertexAttribute {
-              offset: 0,
-              shader_location: 0,
-              format: wgpu::VertexFormat::Float32,
-          }],
-      }
-  }
+    /// description a `wgpu::VertexState parameter`
+    /// The layout in memory of the index buffer.
+    #[must_use]
+    pub fn desc() -> wgpu::VertexBufferLayout<'static> {
+        wgpu::VertexBufferLayout {
+            array_stride: std::mem::size_of::<Index>() as wgpu::BufferAddress,
+            step_mode: wgpu::VertexStepMode::Vertex,
+            attributes: &[wgpu::VertexAttribute {
+                offset: 0,
+                shader_location: 0,
+                format: wgpu::VertexFormat::Float32,
+            }],
+        }
+    }
 }
 
 /// Stream path endpoint: Used when rendering to a HTML Canvas element.
@@ -88,7 +71,7 @@ pub struct PolyLines {
     index_store: HashMap<CoordHashable, usize>,
 
     // increment when adding a new point the vertex_buffer
-    next_index: usize
+    next_index: usize,
 }
 
 impl Default for PolyLines {
@@ -102,7 +85,7 @@ impl Default for PolyLines {
             vertex_buffer: Vec::with_capacity(capacity),
             index_buffer: Vec::with_capacity(capacity),
             index_store: HashMap::with_capacity(capacity),
-            next_index: 0usize
+            next_index: 0usize,
         }
     }
 }
@@ -137,27 +120,27 @@ impl Stream for PolyLines {
 
     #[inline]
     fn point(&mut self, p: &Coord<Self::T>, _z: Option<u8>) {
-              // Check the points store to see if this point has a index.
-              let p_key = CoordHashable(*p);
-              match self.index_store.entry(p_key){
-                Occupied(o) => {
-                  // Point has been seen before just update the index list.
-                  let index =o.get();
-                  self.index_buffer.push(Index(*index as u32))
-                }
-                Vacant(v) => {
-                  let index = v.insert(self.next_index);
-                  self.index_buffer.push(Index(*index as u32));
-                  self.vertex_buffer.push(Vertex {
+        // Check the points store to see if this point has a index.
+        let p_key = CoordHashable(*p);
+        match self.index_store.entry(p_key) {
+            Occupied(o) => {
+                // Point has been seen before just update the index list.
+                let index = o.get();
+                self.index_buffer.push(Index(*index as u32))
+            }
+            Vacant(v) => {
+                let index = v.insert(self.next_index);
+                self.index_buffer.push(Index(*index as u32));
+                self.vertex_buffer.push(Vertex {
                     pos: [p.x, p.y, 0.],
                 });
-                  self.next_index += 1;
-                }
-              };
+                self.next_index += 1;
+            }
+        };
     }
 
     fn line_end(&mut self) {
-      // Let the GPU know that a new line_strip is about to start.
-      self.index_buffer.push(PRIMITVE_RESTART_TOKEN.clone());
+        // Let the GPU know that a new line_strip is about to start.
+        self.index_buffer.push(PRIMITVE_RESTART_TOKEN.clone());
     }
 }
