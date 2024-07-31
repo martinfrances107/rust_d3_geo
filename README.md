@@ -97,7 +97,7 @@ The example enables the feature flag "wgpu".
 
 
 <td width="50%">
-  <image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/SingleDrawCall.png">
+  <image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/single.png">
 </td>
 
 
