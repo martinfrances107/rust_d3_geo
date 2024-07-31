@@ -30,7 +30,6 @@ use d3_geo_rs::stream::Streamable;
 use d3_geo_rs::Transform;
 use geo_types::Geometry;
 
-#[cfg_attr(tarpaulin, ignore)]
 fn symmetric_invert<PM>(pm: PM)
 where
     PM: Transform<T = f64>,
