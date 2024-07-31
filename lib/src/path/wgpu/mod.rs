@@ -1,17 +1,17 @@
 /// Endpoint build a WGPU array buffer
 pub mod points;
+/// Endpoint:  Multiple lines laid out in a vertex and index buffer
+// Enabling a single draw call to render all.
 pub mod polylines;
 
 use bytemuck::Pod;
 use bytemuck::Zeroable;
 
-// NB PartialEq is for testing only.
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Pod, Zeroable, PartialEq)]
 /// CPU side representation of a Vertex shader primitve.
 pub struct Vertex {
-    // The coords of the vertex
-    /// TODO can I make the [f32;2]
+    /// The coords of the vertex
     pub pos: [f32; 2],
 }
 

@@ -58,8 +58,6 @@ impl Stream for Points {
 
     #[inline]
     fn point(&mut self, p: &Coord<Self::T>, _z: Option<u8>) {
-        self.v_buffer.push(Vertex {
-            pos: [p.x, p.y],
-        });
+        self.v_buffer.push(Vertex { pos: [p.x, p.y] });
     }
 }

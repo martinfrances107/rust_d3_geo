@@ -25,7 +25,7 @@ pub static PRIMITVE_RESTART_TOKEN: Index = Index(u32::MAX);
 
 /// Make Coord Hashable
 /// treat coord as byes for hashing
-#[derive(Copy, Clone, Debug,  PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 struct CoordHashable(Coord<f32>);
 
 impl Eq for CoordHashable {}
@@ -131,9 +131,7 @@ impl Stream for PolyLines {
             Vacant(v) => {
                 let index = v.insert(self.next_index);
                 self.index_buffer.push(Index(*index as u32));
-                self.vertex_buffer.push(Vertex {
-                    pos: [p.x, p.y],
-                });
+                self.vertex_buffer.push(Vertex { pos: [p.x, p.y] });
                 self.next_index += 1;
             }
         };
