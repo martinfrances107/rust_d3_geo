@@ -12,10 +12,8 @@ pub mod measure;
 /// Path context.
 #[cfg(feature = "web")]
 pub mod path2d_endpoint;
-/// Endpoint build a WGPU array buffer
-#[cfg(feature = "wgpu")]
-pub mod points_wgpu;
 
+pub mod wgpu;
 /// Path String.
 pub mod string;
 
