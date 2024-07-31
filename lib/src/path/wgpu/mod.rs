@@ -12,7 +12,7 @@ use bytemuck::Zeroable;
 pub struct Vertex {
     // The coords of the vertex
     /// TODO can I make the [f32;2]
-    pub pos: [f32; 3],
+    pub pos: [f32; 2],
 }
 
 impl Vertex {
@@ -26,7 +26,7 @@ impl Vertex {
             attributes: &[wgpu::VertexAttribute {
                 offset: 0,
                 shader_location: 0,
-                format: wgpu::VertexFormat::Float32x3,
+                format: wgpu::VertexFormat::Float32x2,
             }],
         }
     }
