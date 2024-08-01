@@ -64,7 +64,7 @@ The javascript version compromises by using a low resolution map. Here no such c
 
 This globe is rendered to a HTML CANVAS element.
 
-For performance reasons this example is best viewed by running "cargo build" and then "cargo serve" which compiles the rust code using the --release flag.
+For performance reasons this example is best viewed by running "npm run  build" and then "npm run serve" which compiles the rust code using the --release flag.
 
 (Scale 1:50M)
 
@@ -97,8 +97,8 @@ The example enables the feature flag "wgpu".
 
 <td width="50%">
   <image src="https://github.com/martinfrances107/rust_d3_geo/blob/v2.x-dev/images/single.png">
-</td>
 
+</td>
 
 </td>
 </tr>
