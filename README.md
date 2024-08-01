@@ -79,17 +79,17 @@ For performance reasons this example is best viewed by running "npm run  build" 
 <td width="50%">
 <strong>examples/globe/rotating_WGPU</strong><br><br>
 
-WGPU support in the browser is partial and currently hidden behind experimental flags. So Development in this library uses the [winit](https://crates.io/crates/winit) crate to make cross platform application.
+[WGPU](https://gpuweb.github.io/gpuweb/) support in the browser is partial and currently hidden behind experimental flags. See [Browser Implementation State](https://github.com/gpuweb/gpuweb/wiki/Implementation-Status). For now development in this library uses the [winit](https://crates.io/crates/winit) crate to make cross platform application.
 
 The promise of this approach is to bypass the bottlekneck in passing bulk data from RUST memory space, into javascript, and finally into GPU memory.
 
-GeoJson Geometry is streamed through this libraries rendering pipeline into a new **PolyinesWPGU**  endpoint.
+GeoJson Geometry is streamed through this libraries rendering pipeline into a new **PolyLinesWPGU**  endpoint.
 
 This endpoint output is a block of memory which can be passed directly to the GPU.
 
 A thin vertex and fragment shader is then responsible for rendering.
 
-The example enables the feature flag "wgpu".
+The example requires the feature flag "wgpu".
 
 (Scale 1:50M)
 
