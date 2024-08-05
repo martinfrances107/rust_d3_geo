@@ -15,7 +15,7 @@ approx = "~0.5"
 num-traits = "~0.2"
 geo = { workspace = true }
 geo-types = { workspace = true }
-wgpu= {version = "~22.0", optional=true}
+wgpu= {version = "~22", optional=true}
 bytemuck = { version ="~1.16", optional=true}
 
 [dev-dependencies]
