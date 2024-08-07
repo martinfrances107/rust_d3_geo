@@ -16,6 +16,7 @@ pub mod path2d_endpoint;
 /// Path String.
 pub mod string;
 /// A set endpoint for rendering directly to a GPU.
+#[cfg(feature = "wgpu")]
 pub mod wgpu;
 
 mod tests;
