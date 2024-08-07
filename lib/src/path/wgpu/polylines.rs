@@ -96,7 +96,7 @@ impl Default for PolyLines {
 /// Architecture Discussion:
 ///
 /// I am making the assumption here that in a animation frame
-/// repeated calls to [result] will return approximatly
+/// repeated calls to [PolyLines::result] will return approximatly
 /// the same number of elements.
 impl Result for PolyLines {
     type Out = (Vec<Vertex>, Vec<Index>);
