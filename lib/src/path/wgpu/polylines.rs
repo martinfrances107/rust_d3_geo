@@ -71,7 +71,7 @@ pub struct PolyLines {
     /// Tracks if a point has been seen before
     index_store: HashMap<CoordHashable, usize>,
 
-    // increment when adding a new point the vertex_buffer
+    // Increment when adding a new point the vertex_buffer
     next_index: usize,
 }
 
