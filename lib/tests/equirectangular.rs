@@ -1,4 +1,4 @@
-#[allow(clippy::excessive_precision)]
+#![allow(clippy::excessive_precision)]
 use geo_types::Coord;
 
 use d3_geo_rs::projection::builder::Builder;
