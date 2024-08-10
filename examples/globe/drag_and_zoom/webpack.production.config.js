@@ -1,7 +1,7 @@
 const zlib = require('zlib')
+const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
-const path = require('path')
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
 module.exports = {
@@ -11,13 +11,11 @@ module.exports = {
     filename: 'index.js'
   },
   module: {
-    rules: [
-      {
-        test: /\.ts?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
+    rules: [{
+      test: '/.ts?$/',
+      use: 'ts-loader',
+      exclude: '/node_modules/'
+    }]
   },
   performance: {
     maxEntrypointSize: 1 * 1024 * 1024,
@@ -34,6 +32,13 @@ module.exports = {
         { from: 'index.html' },
         { from: 'public/world-atlas', to: 'world-atlas' }
       ]
+    }),
+    new WasmPackPlugin({
+      crateDirectory: __dirname,
+      args: '--log-level warn',
+      extraArgs: '',
+      // run in release mode.
+      forceMode: 'production',
     }),
     new CompressionPlugin({
       filename: '[path][base].br',
