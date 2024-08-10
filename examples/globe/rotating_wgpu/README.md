@@ -1,13 +1,14 @@
-# hello_triangle
+# Rotating WGPU
 
 This example renders a triangle to a window.
 
 ## To Run
 
 ```
-cargo run --bin wgpu-examples hello_triangle
+cd examples/globe/rotating_wpgu
+cargo run --release
 ```
 
 ## Screenshots
 
-![Triangle window](./screenshot.png)
+![Globe from a single draw call](../../../images/single.png)
