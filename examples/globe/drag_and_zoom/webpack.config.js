@@ -1,6 +1,6 @@
+const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
-const path = require('path')
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
 module.exports = {
@@ -10,13 +10,11 @@ module.exports = {
     filename: 'index.js'
   },
   module: {
-    rules: [
-      {
-        test: /\.ts?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
+    rules: [{
+      test: '/.ts?$/',
+      use: 'ts-loader',
+      exclude: '/node_modules/'
+    }]
   },
   performance: {
     maxEntrypointSize: 1 * 1024 * 1024,
