@@ -14,6 +14,10 @@ version = { workspace = true }
 crate-type = ["cdylib"]
 test=false
 
+[features]
+default = []
+console_error_panic_hook=[]
+
 [dependencies]
 d3_geo_rs = { path = "../../../lib" }
 js-sys = { workspace = true }

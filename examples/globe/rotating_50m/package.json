@@ -29,7 +29,6 @@
     "@wasm-tool/wasm-pack-plugin": "^1",
     "compression-webpack-plugin": "^11",
     "copy-webpack-plugin": "^12",
-    "eslint": "^8.29.0",
     "rimraf": "^6",
     "serve": "^14.2.3",
     "topojson-client": "^3",
@@ -41,15 +40,11 @@
   },
   "devDependencies": {
     "@types/topojson-client": "^3",
-    "@typescript-eslint/eslint-plugin": "^5.50.0",
-    "@typescript-eslint/parser": "^5.50.0",
-    "eslint": "^8",
-    "eslint-config-standard-with-typescript": "^34",
+    "@typescript-eslint/eslint-plugin": "^8",
+    "@typescript-eslint/parser": "8",
     "eslint-plugin-import": "^2",
-    "eslint-plugin-n": "^15",
-    "eslint-plugin-promise": "^6",
-    "eslint-plugin-react": "^7",
-    "eslint-plugin-react-hooks": "^4",
+    "eslint-plugin-n": "17",
+    "eslint-plugin-promise": "7",
     "eslint-webpack-plugin": "^4"
   }
 }
