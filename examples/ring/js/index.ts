@@ -1,14 +1,8 @@
 import { GeoProjection } from "d3";
-import { MultiPolygon } from 'geojson';
-import {
-  geoCircle,
-  geoStereographic,
-  geoPath,
-  geoOrthographic
-} from "d3-geo";
+import { MultiPolygon } from "geojson";
+import { geoCircle, geoOrthographic, geoPath, geoStereographic } from "d3-geo";
 
-
-async function drawStereographic () {
+async function drawStereographic() {
   console.log("draw()");
   const svg: SVGSVGElement = document.getElementsByTagName("svg")[3];
 
@@ -27,30 +21,30 @@ async function drawStereographic () {
 
   for (let lat = -30; lat <= 30; lat += 30) {
     for (let long = -180; long < 180; long += 40) {
-      const poly = [cg_outer.center([long, lat])().coordinates[0],
-      cg_inner.center([long, lat])().coordinates[0].reverse()];
+      const poly = [
+        cg_outer.center([long, lat])().coordinates[0],
+        cg_inner.center([long, lat])().coordinates[0].reverse(),
+      ];
 
       coordinates.push(poly);
     }
   }
 
   const object: MultiPolygon = {
+    coordinates,
     type: "MultiPolygon",
-    coordinates: coordinates
   };
 
   const d = geoPath().projection(ortho)(object);
 
   if (d !== null) {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttributeNS(null, "d", d);
     svg.appendChild(path);
   }
-
 }
 
-
-async function drawOrthographic () {
+async function drawOrthographic() {
   console.log("draw()");
   const svg: SVGSVGElement = document.getElementsByTagName("svg")[1];
 
@@ -68,57 +62,42 @@ async function drawOrthographic () {
 
   for (let lat = -30; lat <= 30; lat += 30) {
     for (let long = -180; long < 180; long += 40) {
-      const poly = [cg_outer.center([long, lat])().coordinates[0],
-      cg_inner.center([long, lat])().coordinates[0].reverse()];
+      const poly = [
+        cg_outer.center([long, lat])().coordinates[0],
+        cg_inner.center([long, lat])().coordinates[0].reverse(),
+      ];
 
       coordinates.push(poly);
     }
   }
 
   const object: MultiPolygon = {
+    coordinates,
     type: "MultiPolygon",
-    coordinates: coordinates
   };
 
   const d = geoPath().projection(ortho)(object);
   if (d !== null) {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
     path.setAttributeNS(null, "d", d);
     svg.appendChild(path);
   }
-
 }
 
 // Note that a dynamic `import` statement here is required due to
 // webpack/webpack#6615, but in theory `import { greet } from './pkg';`
 // will work here one day as well!
-const rust = import('../pkg');
+const rust = import("../pkg");
 
 rust
-  .then(m => {
+  .then((m) => {
     console.log("wasm is imported");
-    m.run()
+    m.run();
   })
   .catch(console.error);
 
-
-
-
-
-
-
-Promise.all(
-  [
-    drawOrthographic(),
-    drawStereographic(),
-  ]
-)
-window.addEventListener('resize', async () => {
-  Promise.all([
-    drawOrthographic(),
-    drawStereographic()
-  ]);
-}
-
-);
+Promise.all([drawOrthographic(), drawStereographic()]);
+window.addEventListener("resize", async () => {
+  Promise.all([drawOrthographic(), drawStereographic()]);
+});
