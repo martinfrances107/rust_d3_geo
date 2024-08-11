@@ -4,7 +4,8 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "module": "ES2020",
+    "module": "ES2022",
+    "jsx": "react",
     "target": "es5",
     "allowJs": true,
     "moduleResolution": "node"
