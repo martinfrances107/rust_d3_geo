@@ -6,7 +6,7 @@
     "noImplicitAny": true,
     "module": "ES2022",
     "jsx": "react",
-    "target": "es5",
+    "target": "es6",
     "allowJs": true,
     "moduleResolution": "node"
   },
