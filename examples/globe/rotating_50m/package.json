@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist pkg && RUST_LOG=info webpack -c webpack.production.config.js",
+    "lint": "tslint './js/*.ts'",
     "serve": "serve dist",
     "start": "rimraf dist pkg && RUST_LOG=info webpack-dev-server --open ",
     "test": "cargo test && wasm-pack test --headless"
@@ -29,22 +30,25 @@
     "@wasm-tool/wasm-pack-plugin": "^1",
     "compression-webpack-plugin": "^11",
     "copy-webpack-plugin": "^12",
+    "mkdirp": "^3.0.1",
     "rimraf": "^6",
     "serve": "^14.2.3",
     "topojson-client": "^3",
-    "ts-loader": "^9",
-    "typescript": "^5",
     "webpack": "^5",
     "webpack-cli": "^5",
     "webpack-dev-server": "^5"
   },
   "devDependencies": {
+    "@types/d3-selection": "^3.0.10",
     "@types/topojson-client": "^3",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "8",
     "eslint-plugin-import": "^2",
     "eslint-plugin-n": "17",
     "eslint-plugin-promise": "7",
-    "eslint-webpack-plugin": "^4"
+    "eslint-webpack-plugin": "^4",
+    "ts-loader": "^9.5.1",
+    "tslint": "^5.20.1",
+    "typescript": "^5.5.4"
   }
 }
