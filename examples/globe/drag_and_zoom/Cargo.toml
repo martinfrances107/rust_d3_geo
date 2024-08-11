@@ -11,6 +11,10 @@ readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo.git"
 version = { workspace = true }
 
+[features]
+default = ['console_error_panic_hook']
+console_error_panic_hook=[]
+
 [lib]
 crate-type = ["cdylib"]
 test=false
