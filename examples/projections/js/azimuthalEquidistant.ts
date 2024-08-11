@@ -1,9 +1,16 @@
+import {
+  geoAzimuthalEquidistant,
+  geoGraticule10,
+  geoPath,
+  GeoPermissibleObjects,
+} from "d3-geo";
 
-import { geoPath, geoAzimuthalEquidistant, geoGraticule10, GeoPermissibleObjects } from "d3-geo";
-
-export default async function azimuthalEqidistant(world: GeoPermissibleObjects) {
-
-  const canvas: HTMLCanvasElement = document.querySelector('#azimuthal-equidistant-js');
+export default async function azimuthalEqidistant(
+  world: GeoPermissibleObjects
+) {
+  const canvas: HTMLCanvasElement = document.querySelector(
+    "#azimuthal-equidistant-js"
+  );
 
   const context = canvas.getContext("2d");
 
@@ -18,10 +25,9 @@ export default async function azimuthalEqidistant(world: GeoPermissibleObjects) 
 
   const path = geoPath(projection, context);
 
-  context.strokeStyle = '#69b2a2';
+  context.strokeStyle = "#69b2a2";
   path(world);
   context.stroke();
   path(geoGraticule10());
   context.stroke();
-
 }
