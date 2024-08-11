@@ -1,9 +1,12 @@
+import {
+  geoAlbers,
+  geoGraticule10,
+  geoPath,
+  GeoPermissibleObjects,
+} from "d3-geo";
 
-import { geoPath, geoAlbers, geoGraticule10, GeoPermissibleObjects } from "d3-geo";
-
-export default async function albers (world: GeoPermissibleObjects) {
-
-  const canvas: HTMLCanvasElement = document.querySelector('#albers-js');
+export default async function albers(world: GeoPermissibleObjects) {
+  const canvas: HTMLCanvasElement = document.querySelector("#albers-js");
 
   const context = canvas.getContext("2d");
 
@@ -16,10 +19,9 @@ export default async function albers (world: GeoPermissibleObjects) {
 
   const path = geoPath(projection, context);
 
-  context.strokeStyle = '#69b2a2';
+  context.strokeStyle = "#69b2a2";
   path(world);
   context.stroke();
   path(geoGraticule10());
   context.stroke();
-
 }

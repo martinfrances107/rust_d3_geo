@@ -1,8 +1,12 @@
-import { geoPath, geoStereographic, geoGraticule10, GeoPermissibleObjects } from "d3-geo";
+import {
+  geoGraticule10,
+  geoPath,
+  GeoPermissibleObjects,
+  geoStereographic,
+} from "d3-geo";
 
-export default async function sterographic (world: GeoPermissibleObjects) {
-
-  const canvas: HTMLCanvasElement = document.querySelector('#stereographic-js');
+export default async function sterographic(world: GeoPermissibleObjects) {
+  const canvas: HTMLCanvasElement = document.querySelector("#stereographic-js");
 
   const context = canvas.getContext("2d");
 
@@ -16,10 +20,9 @@ export default async function sterographic (world: GeoPermissibleObjects) {
     .precision(10);
 
   const path = geoPath(projection, context);
-  context.strokeStyle = '#69b2a2';
+  context.strokeStyle = "#69b2a2";
   path(world);
   context.stroke();
   path(geoGraticule10());
   context.stroke();
-
 }
