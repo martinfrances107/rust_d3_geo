@@ -11,7 +11,7 @@ use super::line_elem::LineElem;
 /// Buffer is a path endpoint.
 ///
 /// Stored data can be extracted via [`Buffer::result()`]
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Buffer<T>
 where
     T: CoordFloat,

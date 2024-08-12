@@ -13,7 +13,7 @@ use crate::stream::Unconnected;
 //
 /// Type-Driven API, STATE prevent calls to `Self::connect()`
 /// on a perviously connected object
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct StreamTransformRadians<STATE, T> {
     state: STATE,
     frac_pi_180: T,

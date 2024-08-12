@@ -15,7 +15,7 @@ use num_traits::FloatConst;
 use crate::Transform;
 
 /// Projection definition.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CylindricalEqualArea<T> {
     cos_phi0: T,
 }
