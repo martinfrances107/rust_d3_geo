@@ -7,7 +7,7 @@ use crate::math::EPSILON;
 use crate::stream::Stream;
 
 /// State for Antimeridian Interpolator.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Interpolate<T> {
     epsilon: T,
     two: T,

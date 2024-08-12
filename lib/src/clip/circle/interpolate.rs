@@ -9,7 +9,7 @@ use crate::clip::Interpolator;
 use crate::stream::Stream;
 
 /// Interpolate Circle.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Interpolate<T> {
     pub(crate) radius: T,
     delta: T,

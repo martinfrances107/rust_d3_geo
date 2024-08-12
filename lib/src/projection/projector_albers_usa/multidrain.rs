@@ -10,7 +10,7 @@ use super::AlbersTransformer;
 
 /// Only when the Multidrain is connected the sub drain becomes known
 /// as so the SUBTRANS type can be defined.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Populated<const N: usize, SUBTRANS> {
     store: [SUBTRANS; N],
 }

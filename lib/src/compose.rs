@@ -6,7 +6,7 @@ use crate::Transform;
 /// Combines two transforms,
 ///
 /// A applied then B
-#[derive(Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Compose<TA, TB> {
     pub a: TA,
     pub b: TB,

@@ -39,7 +39,7 @@ where
     pub const fn new(
         point: LineElem<T>,
         points: Option<&'a Vec<LineElem<T>>>,
-        other: Option<Rc<RefCell<Intersection<'a, T>>>>,
+        other: Option<Rc<RefCell<Self>>>,
         entry: bool,
     ) -> Self {
         Self {
