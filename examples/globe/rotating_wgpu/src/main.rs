@@ -2,6 +2,7 @@
 #![warn(clippy::cargo)]
 #![warn(clippy::complexity)]
 #![warn(clippy::pedantic)]
+#![warn(clippy::nursery)]
 #![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
