@@ -1,6 +1,6 @@
 import { GeoProjection } from "d3";
-import { MultiPolygon } from "geojson";
 import { geoCircle, geoOrthographic, geoPath, geoStereographic } from "d3-geo";
+import { MultiPolygon } from "geojson";
 
 async function drawStereographic() {
   console.log("draw()");
@@ -15,15 +15,15 @@ async function drawStereographic() {
     .translate([width / 2, height / 2])
     .rotate([0, 0, 0]);
 
-  const cg_outer = geoCircle().radius(10).precision(10);
-  const cg_inner = geoCircle().radius(5).precision(5);
+  const cgOuter = geoCircle().radius(10).precision(10);
+  const cgInner = geoCircle().radius(5).precision(5);
   const coordinates = [];
 
   for (let lat = -30; lat <= 30; lat += 30) {
     for (let long = -180; long < 180; long += 40) {
       const poly = [
-        cg_outer.center([long, lat])().coordinates[0],
-        cg_inner.center([long, lat])().coordinates[0].reverse(),
+        cgOuter.center([long, lat])().coordinates[0],
+        cgInner.center([long, lat])().coordinates[0].reverse(),
       ];
 
       coordinates.push(poly);
@@ -56,15 +56,15 @@ async function drawOrthographic() {
     .translate([width / 2, height / 2])
     .rotate([0, 0, 0]);
 
-  const cg_outer = geoCircle().radius(10).precision(10);
-  const cg_inner = geoCircle().radius(5).precision(5);
+  const cgOuter = geoCircle().radius(10).precision(10);
+  const cgInner = geoCircle().radius(5).precision(5);
   const coordinates = [];
 
   for (let lat = -30; lat <= 30; lat += 30) {
     for (let long = -180; long < 180; long += 40) {
       const poly = [
-        cg_outer.center([long, lat])().coordinates[0],
-        cg_inner.center([long, lat])().coordinates[0].reverse(),
+        cgOuter.center([long, lat])().coordinates[0],
+        cgInner.center([long, lat])().coordinates[0].reverse(),
       ];
 
       coordinates.push(poly);
