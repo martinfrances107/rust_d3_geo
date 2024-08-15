@@ -2,6 +2,8 @@
 #![warn(clippy::cargo)]
 #![warn(clippy::complexity)]
 #![warn(clippy::pedantic)]
+#![warn(clippy::nursery)]
+#![warn(clippy::pedantic)]
 #![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
@@ -98,9 +100,9 @@ impl Renderer {
         };
 
         // Get data from world map.
-        let mut opts = RequestInit::new();
-        opts.method("GET");
-        opts.mode(RequestMode::Cors);
+        let opts = RequestInit::new();
+        opts.set_method("GET");
+        opts.set_mode(RequestMode::Cors);
         let request = Request::new_with_str_and_init(filename, &opts)?;
 
         let resp_value = JsFuture::from(w.fetch_with_request(&request)).await?;
