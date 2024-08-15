@@ -27,28 +27,28 @@
   },
   "homepage": "https://github.com/martinfrances107/rust_d3_geo/#readme",
   "dependencies": {
-    "@wasm-tool/wasm-pack-plugin": "^1",
-    "compression-webpack-plugin": "^11",
-    "copy-webpack-plugin": "^12",
-    "mkdirp": "^3.0.1",
-    "rimraf": "^6",
-    "serve": "^14.2.3",
-    "topojson-client": "^3",
-    "webpack": "^5",
-    "webpack-cli": "^5",
-    "webpack-dev-server": "^5"
+    "@wasm-tool/wasm-pack-plugin": "1",
+    "compression-webpack-plugin": "11",
+    "copy-webpack-plugin": "12",
+    "mkdirp": "3",
+    "rimraf": "6",
+    "serve": "14",
+    "topojson-client": "3",
+    "webpack": ">=5.76.0",
+    "webpack-cli": "5",
+    "webpack-dev-server": "5"
   },
   "devDependencies": {
-    "@types/d3-selection": "^3.0.10",
-    "@types/topojson-client": "^3",
-    "@typescript-eslint/eslint-plugin": "^8",
+    "@types/d3-selection": "3",
+    "@types/topojson-client": "3",
+    "@typescript-eslint/eslint-plugin": "8",
     "@typescript-eslint/parser": "8",
     "eslint-plugin-import": "^2",
     "eslint-plugin-n": "17",
     "eslint-plugin-promise": "7",
-    "eslint-webpack-plugin": "^4",
-    "ts-loader": "^9.5.1",
-    "tslint": "^5.20.1",
-    "typescript": "^5.5.4"
+    "eslint-webpack-plugin": "4",
+    "ts-loader": "9",
+    "tslint": "6",
+    "typescript": "5"
   }
 }
