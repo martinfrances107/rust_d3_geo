@@ -1,9 +1,12 @@
 #![deny(clippy::all)]
-#![warn(clippy::pedantic)]
 #![warn(clippy::cargo)]
+#![warn(clippy::complexity)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::nursery)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
-
 //! # rust d3 geo voronoi
 //!
 //! See the README.md.
@@ -105,9 +108,9 @@ async fn countries() -> Result<Geometry, JsValue> {
         return Err(JsValue::from_str("new() Could not get window."));
     };
 
-    let mut opts = RequestInit::new();
-    opts.method("GET");
-    opts.mode(RequestMode::Cors);
+    let opts = RequestInit::new();
+    opts.set_method("GET");
+    opts.set_mode(RequestMode::Cors);
     let request = match Request::new_with_str_and_init(
         "./world-atlas/world/50m.json",
         &opts,
@@ -118,6 +121,9 @@ async fn countries() -> Result<Geometry, JsValue> {
         }
     };
 
+    let a = w.fetch_with_request(&request);
+    let result = wasm_bindgen_futures::JsFuture::from(a).await?;
+    print!("{result:#?}");
     let resp_fetch = JsFuture::from(w.fetch_with_request(&request));
     let resp_value = match resp_fetch.await {
         Ok(r) => r,
