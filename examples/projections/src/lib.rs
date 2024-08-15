@@ -1,6 +1,10 @@
 #![deny(clippy::all)]
-#![warn(clippy::pedantic)]
 #![warn(clippy::cargo)]
+#![warn(clippy::complexity)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::nursery)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
 //! # rust d3 geo voronoi
@@ -73,9 +77,9 @@ fn document() -> Result<Document, JsValue> {
 pub async fn start() -> Result<(), JsValue> {
     console_log!("run() - wasm entry point");
 
-    let mut opts = RequestInit::new();
-    opts.method("GET");
-    opts.mode(RequestMode::Cors);
+    let opts = RequestInit::new();
+    opts.set_method("GET");
+    opts.set_mode(RequestMode::Cors);
 
     let request =
         Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
