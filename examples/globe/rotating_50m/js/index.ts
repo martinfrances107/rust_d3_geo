@@ -39,11 +39,11 @@ import("../pkg").then((pkg) => {
           if (index === 199) {
             const n = elapsedArray.length;
             const mean = elapsedArray.reduce((a, b) => a + b, 0) / n;
-            const stdDev = Math.sqrt(
+            const sum =
               elapsedArray
                 .map((x) => Math.pow(x - mean, 2))
-                .reduce((a, b) => a + b) / n
-            );
+                .reduce((a, b) => a + b) / n;
+            const stdDev = Math.sqrt(sum);
             const meanString = mean.toPrecision(4);
             const stdDevString = stdDev.toPrecision(4);
             perf.innerHTML = `Mean Render Time: ${meanString} +/- ${stdDevString} ms`;
