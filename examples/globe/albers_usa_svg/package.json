@@ -32,7 +32,7 @@
   "dependencies": {
     "rimraf": "6",
     "serve": "14.2.3",
-    "webpack": "5",
+    "webpack": ">=5.76.0",
     "webpack-cli": "5",
     "webpack-dev-server": "5"
   },

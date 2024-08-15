@@ -33,7 +33,7 @@
     "d3": "7",
     "rimraf": "6",
     "serve": "14",
-    "webpack": "5",
+    "webpack": ">=5.76.0",
     "webpack-cli": "5",
     "webpack-dev-server": "5"
   },
