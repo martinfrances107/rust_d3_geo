@@ -1,7 +1,6 @@
 #![deny(clippy::all)]
 #![warn(clippy::cargo)]
 #![warn(clippy::complexity)]
-#![warn(clippy::pedantic)]
 #![warn(clippy::nursery)]
 #![warn(clippy::pedantic)]
 #![warn(clippy::perf)]
