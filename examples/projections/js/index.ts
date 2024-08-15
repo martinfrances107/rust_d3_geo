@@ -26,8 +26,7 @@ import("../pkg")
     m.start();
     fetch("../world-atlas/world/50m.json")
       .then((response) => response.json())
-      .then((_worldTopo) => {
-        const worldTopo = _worldTopo as Topology;
+      .then((worldTopo) => {
         const world = feature(worldTopo, worldTopo.objects.countries);
         Promise.all([
           albers(world),
