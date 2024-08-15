@@ -6,7 +6,6 @@
 #![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
-
 //! # rust d3 geo rings
 //!
 //! See the README.md.
