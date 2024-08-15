@@ -36,10 +36,10 @@
     "webpack-dev-server": "^5"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7",
-    "@wasm-tool/wasm-pack-plugin": "^1",
-    "copy-webpack-plugin": "^12",
-    "eslint-plugin-react": "^7",
-    "eslint-plugin-react-hooks": "^4"
+    "@typescript-eslint/eslint-plugin": "8",
+    "@wasm-tool/wasm-pack-plugin": "1",
+    "copy-webpack-plugin": "12",
+    "eslint-plugin-react": "7",
+    "eslint-plugin-react-hooks": "4"
   }
 }

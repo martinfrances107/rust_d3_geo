@@ -2,6 +2,8 @@
 #![warn(clippy::cargo)]
 #![warn(clippy::complexity)]
 #![warn(clippy::pedantic)]
+#![warn(clippy::nursery)]
+#![warn(clippy::pedantic)]
 #![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
@@ -18,6 +20,7 @@ use geo::Geometry;
 use geo::GeometryCollection;
 use geo_types::Coord;
 use gloo_utils::format::JsValueSerdeExt;
+use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
@@ -40,7 +43,6 @@ use d3_geo_rs::projection::RawBase;
 use d3_geo_rs::projection::RotateSet;
 use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
-use rust_topojson_client::feature::feature_from_name;
 
 fn document() -> Result<Document, JsValue> {
     let window = web_sys::window().ok_or("no window")?;
@@ -78,9 +80,9 @@ pub async fn start() -> Result<(), JsValue> {
     let window = web_sys::window().expect("Failed to get window");
 
     // Get data from world map.
-    let mut opts = RequestInit::new();
-    opts.method("GET");
-    opts.mode(RequestMode::Cors);
+    let opts = RequestInit::new();
+    opts.set_method("GET");
+    opts.set_mode(RequestMode::Cors);
     let request =
         Request::new_with_str_and_init("/world-atlas/world/50m.json", &opts)?;
     let resp_value =
