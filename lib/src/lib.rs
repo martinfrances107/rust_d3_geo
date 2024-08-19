@@ -3,7 +3,6 @@
 #![warn(clippy::complexity)]
 #![warn(clippy::pedantic)]
 #![warn(clippy::nursery)]
-#![warn(clippy::pedantic)]
 #![warn(clippy::perf)]
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
@@ -204,7 +203,8 @@ pub mod centroid;
 pub mod circle;
 
 /// Projectors can clip, remove point computed to be outside the projection.
-pub(crate) mod clip;
+/// Public: as it contains some public types (see `clip::rectangle::Result`)
+pub mod clip;
 /// Combines two transforms into one. For example a rotation followed by a scale.
 mod compose;
 /// Streamable Data objects.
