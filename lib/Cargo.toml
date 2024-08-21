@@ -15,8 +15,8 @@ approx = "~0.5"
 num-traits = "~0.2"
 geo = { workspace = true }
 geo-types = { workspace = true }
-wgpu= {version = "~22", optional=true}
-bytemuck = { version ="~1.16", optional=true, features = ["derive"]}
+wgpu = { version = "~22", optional = true }
+bytemuck = { version = "1", optional = true, features = ["derive"] }
 
 [dev-dependencies]
 criterion = { version = "~0.5", features = ["html_reports"] }
@@ -36,7 +36,7 @@ topojson = { workspace = true }
 
 [features]
 default = ["web"]
-web=["dep:web-sys"]
+web = ["dep:web-sys"]
 wgpu = ["dep:wgpu", "dep:bytemuck"]
 # console_error_panic_hook: - is a development only feature!!
 # I want to refer to examples/globe/rotating_50m as an example that will show up in documentation.
