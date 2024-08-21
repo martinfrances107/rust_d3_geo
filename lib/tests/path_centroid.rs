@@ -13,7 +13,7 @@ use geo::MultiPolygon;
 use geo::Point;
 use geo::Polygon;
 use geo_types::Coord;
-use num_traits::AsPrimitive;
+
 use num_traits::Float;
 use num_traits::FloatConst;
 
@@ -52,7 +52,7 @@ fn centroid<T>(
     object: &impl Streamable<T = T>,
 ) -> Point<T>
 where
-    T: AddAssign<T> + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + AddAssign<T> + CoordFloat + FloatConst,
 {
     let cs = Centroid::default();
     let result = Path::new(cs, projection).centroid(object);

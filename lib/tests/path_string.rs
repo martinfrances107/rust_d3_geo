@@ -10,7 +10,7 @@ use geo::GeometryCollection;
 use geo::MultiPolygon;
 use geo::Polygon;
 use geo_types::Coord;
-use num_traits::AsPrimitive;
+
 use num_traits::FloatConst;
 use pretty_assertions::assert_eq;
 
@@ -51,7 +51,7 @@ fn path<T>(
     object: impl Streamable<T = T>,
 ) -> String
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + Display + FloatConst,
+    T: 'static + AddAssign + CoordFloat + Display + FloatConst,
 {
     let pb = PathBuilder::pathstring();
     pb.build(projection).object(&object)

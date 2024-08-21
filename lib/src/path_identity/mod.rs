@@ -3,7 +3,7 @@ use core::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo_types::Coord;
-use num_traits::AsPrimitive;
+
 use num_traits::FloatConst;
 
 use crate::path::area::Area;
@@ -81,7 +81,7 @@ where
     /// This operation consumes the  Path.
     pub fn area(mut self, object: &impl Streamable<T = T>) -> T
     where
-        T: AsPrimitive<T> + CoordFloat + FloatConst,
+        T:  CoordFloat + FloatConst,
     {
         let stream_dst = Area::<T>::default();
         let mut stream_in = self.projection.stream(&stream_dst);
@@ -101,7 +101,7 @@ where
     /// This operation consumes the  Path.
     pub fn measure(mut self, object: &impl Streamable<T = T>) -> T
     where
-        T: AsPrimitive<T> + CoordFloat + FloatConst,
+        T:  CoordFloat + FloatConst,
     {
         let stream_dst = Measure::<T>::default();
         let mut stream_in = self.projection.stream(&stream_dst);

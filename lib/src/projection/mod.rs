@@ -1,6 +1,6 @@
 use geo::CoordFloat;
 use geo_types::Coord;
-use num_traits::AsPrimitive;
+
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
@@ -268,7 +268,7 @@ pub trait Fit {
         object: &impl Streamable<T = Self::T>,
     ) -> Self
     where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
+        Self::T: CoordFloat;
 
     ///  Sets the projection’s scale and translate to fit the specified
     ///  geographic feature in the center of an extent with the given size
@@ -288,7 +288,7 @@ pub trait Fit {
         object: &impl Streamable<T = Self::T>,
     ) -> Self
     where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
+        Self::T: CoordFloat;
 
     /// Similar to [`fit_size`](Self::fit_size) where the height is automatically chosen from
     /// the aspect ratio of object and the given constraint on width.
@@ -299,7 +299,7 @@ pub trait Fit {
         object: &impl Streamable<T = Self::T>,
     ) -> Self
     where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
+        Self::T: CoordFloat;
 
     /// Similar to [`fit_size`](Self::fit_size) where the width is automatically chosen from
     /// the aspect ratio of object and the given constraint on height.
@@ -310,7 +310,7 @@ pub trait Fit {
         object: &impl Streamable<T = Self::T>,
     ) -> Self
     where
-        Self::T: AsPrimitive<Self::T> + CoordFloat;
+        Self::T: CoordFloat;
 }
 
 /// Gets the post-projection planar rotation angle.

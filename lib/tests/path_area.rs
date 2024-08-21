@@ -5,7 +5,7 @@ use geo::Geometry;
 use geo::LineString;
 use geo::Polygon;
 use geo_types::Coord;
-use num_traits::AsPrimitive;
+
 use num_traits::FloatConst;
 use pretty_assertions::assert_eq;
 
@@ -43,7 +43,7 @@ fn area<T>(
     object: impl Streamable<T = T>,
 ) -> T
 where
-    T: AsPrimitive<T> + CoordFloat + FloatConst,
+    T: 'static + CoordFloat + FloatConst,
 {
     let builder = PathBuilder::new(Area::default());
 

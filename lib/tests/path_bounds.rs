@@ -8,7 +8,7 @@ use geo::Geometry;
 use geo::LineString;
 use geo::Polygon;
 use geo_types::Coord;
-use num_traits::AsPrimitive;
+
 use num_traits::FloatConst;
 use pretty_assertions::assert_eq;
 
@@ -25,8 +25,8 @@ use d3_geo_rs::stream::Streamable;
 
 #[inline]
 fn equirectangular<
-    T: AbsDiffEq<Epsilon = T>
-        + AsPrimitive<T>
+    T: 'static
+        + AbsDiffEq<Epsilon = T>
         + AddAssign
         + CoordFloat
         + Default
@@ -51,8 +51,8 @@ fn bounds<T>(
     object: &impl Streamable<T = T>,
 ) -> [Coord<T>; 2]
 where
-    T: AbsDiffEq<Epsilon = T>
-        + AsPrimitive<T>
+    T: 'static
+        + AbsDiffEq<Epsilon = T>
         + CoordFloat
         + FloatConst
         + Display

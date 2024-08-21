@@ -7,7 +7,7 @@ use geo::MultiLineString;
 use geo::MultiPoint;
 use geo::MultiPolygon;
 use geo::Polygon;
-use num_traits::AsPrimitive;
+
 use num_traits::FloatConst;
 
 use d3_geo_rs::path::measure::Measure;
@@ -24,7 +24,7 @@ fn measure<T>(
     object: impl Streamable<T = T>,
 ) -> T
 where
-    T: AddAssign + AsPrimitive<T> + CoordFloat + FloatConst,
+    T: AddAssign + CoordFloat + FloatConst,
 {
     let builder = PathBuilder::new(Measure::default());
     let b = builder.build(projection);
