@@ -274,8 +274,6 @@ async fn run(event_loop: EventLoop<()>, window: Window) {
 ///  eg. check build for HTML canvas if required.
 pub fn main() {
     let event_loop = EventLoop::new().unwrap();
-    #[allow(unused_mut)]
-    let mut builder = winit::window::WindowBuilder::new();
     #[cfg(target_arch = "wasm32")]
     {
         use wasm_bindgen::JsCast;
@@ -290,8 +288,10 @@ pub fn main() {
             .unwrap();
         builder = builder.with_canvas(Some(canvas));
     }
-
-    let window = builder.build(&event_loop).unwrap();
+    let wa = winit::window::WindowAttributes::default();
+    let window = event_loop
+        .create_window(wa)
+        .expect("Cannot create a window");
 
     #[cfg(not(target_arch = "wasm32"))]
     {

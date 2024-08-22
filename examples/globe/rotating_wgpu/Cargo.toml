@@ -17,20 +17,19 @@ test = false
 
 
 [dependencies]
-d3_geo_rs = { path = "../../../lib", features=["wgpu"]}
+d3_geo_rs = { path = "../../../lib", features = ["wgpu"] }
 js-sys = { workspace = true }
 # geo = { workspace = true }
 # geo-types = { workspace = true }
 gloo-utils = { workspace = true }
 # topojson = { workspace = true }
 env_logger = "0.11"
-winit = { version = "0.29"}
+winit = { version = "0.30" }
 pollster = "0.3"
-wgpu = { version="22.0", default-features = false, features = [
-    "wgsl",
-    "dx12",
-    "metal",
+wgpu = { version = "22.0", default-features = false, features = [
+  "wgsl",
+  "dx12",
+  "metal",
 ] }
-bytemuck = { version = "1.16", features = [ "derive" ] }
+bytemuck = { version = "1.16", features = ["derive"] }
 geo-types = "0.7.13"
-
