@@ -1,6 +1,6 @@
 use std::{collections::HashMap, error::Error};
 
-use softbuffer::Context;
+use tracing::error;
 use tracing::info;
 use winit::application::ApplicationHandler;
 use winit::dpi::{PhysicalPosition, PhysicalSize};
@@ -11,8 +11,11 @@ use winit::event_loop::{ActiveEventLoop, EventLoop};
 use winit::keyboard::{Key, ModifiersState};
 use winit::window::{CustomCursor, Icon, Theme, Window, WindowId};
 
-#[cfg(not(any(android_platform, ios_platform)))]
-use rwh_06::{DisplayHandle, HasDisplayHandle};
+use crate::modifiers_to_string;
+use crate::mouse_button_to_string;
+use crate::Binding;
+use crate::UserEvent;
+use crate::{decode_cursor, load_icon, windows_state::WindowState, Action};
 
 #[cfg(macos_platform)]
 use winit::platform::macos::{
@@ -91,43 +94,17 @@ const MOUSE_BINDINGS: &[Binding<MouseButton>] = &[
     ),
 ];
 
-use crate::modifiers_to_string;
-use crate::Binding;
-use crate::UserEvent;
-use crate::{decode_cursor, load_icon, windows_state::WindowState, Action};
-
-use crate::mouse_button_to_string;
-use tracing::error;
-
 /// Application state and event handling.
-pub(crate) struct Application {
+pub(crate) struct Application<'a> {
     /// Custom cursors assets.
     pub(crate) custom_cursors: Vec<CustomCursor>,
     /// Application icon.
     icon: Icon,
-    windows: HashMap<WindowId, WindowState>,
-    /// Drawing context.
-    ///
-    /// With OpenGL it could be `EGLDisplay`.
-    #[cfg(not(any(android_platform, ios_platform)))]
-    pub(crate) context: Option<Context<DisplayHandle<'static>>>,
+    windows: HashMap<WindowId, WindowState<'a>>,
 }
 
-impl Application {
+impl<'a> Application<'a> {
     pub(crate) fn new<T>(event_loop: &EventLoop<T>) -> Self {
-        // SAFETY: we drop the context right before the event loop is stopped, thus making it safe.
-        #[cfg(not(any(android_platform, ios_platform)))]
-        let context =
-            Some(
-                Context::new(unsafe {
-                    std::mem::transmute::<
-                        DisplayHandle<'_>,
-                        DisplayHandle<'static>,
-                    >(event_loop.display_handle().unwrap())
-                })
-                .unwrap(),
-            );
-
         // You'll have to choose an icon size at your own discretion. On X11, the desired size
         // varies by WM, and on Windows, you still have to account for screen scaling. Here
         // we use 32px, since it seems to work well enough in most cases. Be careful about
@@ -149,8 +126,6 @@ impl Application {
         ];
 
         Self {
-            #[cfg(not(any(android_platform, ios_platform)))]
-            context,
             custom_cursors,
             icon,
             windows: HashMap::default(),
@@ -166,7 +141,7 @@ impl Application {
 
         #[allow(unused_mut)]
         let mut window_attributes = Window::default_attributes()
-            .with_title("Winit window")
+            .with_title("WGPU window")
             .with_transparent(true)
             .with_window_icon(Some(self.icon.clone()));
 
@@ -365,7 +340,7 @@ impl Application {
     }
 }
 
-impl ApplicationHandler<UserEvent> for Application {
+impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
     fn user_event(&mut self, _event_loop: &ActiveEventLoop, event: UserEvent) {
         info!("User event: {event:?}");
     }
@@ -551,8 +526,5 @@ impl ApplicationHandler<UserEvent> for Application {
     }
 
     #[cfg(not(any(android_platform, ios_platform)))]
-    fn exiting(&mut self, _event_loop: &ActiveEventLoop) {
-        // We must drop the context here.
-        self.context = None;
-    }
+    fn exiting(&mut self, _event_loop: &ActiveEventLoop) {}
 }

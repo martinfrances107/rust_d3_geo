@@ -1,10 +1,25 @@
 use core::mem;
+use std::borrow::Cow;
 use std::error::Error;
 use std::sync::Arc;
 
-#[cfg(not(any(android_platform, ios_platform)))]
-use std::num::NonZeroU32;
-use wgpu::rwh::DisplayHandle;
+use d3_geo_rs::graticule::generate_mls;
+use d3_geo_rs::path::builder::Builder as PathBuilder;
+use d3_geo_rs::path::wgpu::polylines::Index;
+use d3_geo_rs::path::wgpu::polylines::PolyLines as PolyLinesWGPU;
+use d3_geo_rs::path::wgpu::Vertex;
+use d3_geo_rs::projection::orthographic::Orthographic;
+use d3_geo_rs::projection::Build;
+use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::ScaleSet;
+use d3_geo_rs::projection::TranslateSet;
+use geo_types::Coord;
+use geo_types::Geometry;
+use pollster::FutureExt;
+use wgpu::util::DeviceExt;
+use wgpu::IndexFormat;
+use wgpu::PipelineCompilationOptions;
+use wgpu::Queue;
 use winit::{
     dpi::{LogicalSize, PhysicalPosition, PhysicalSize},
     keyboard::ModifiersState,
@@ -14,25 +29,28 @@ use winit::{
     },
 };
 
-#[cfg(not(any(android_platform, ios_platform)))]
-use softbuffer::Surface;
-
 use ::tracing::{error, info};
 
 use crate::{app::Application, BORDER_SIZE, CURSORS};
 
 /// State of the window.
-pub(crate) struct WindowState {
+pub(crate) struct WindowState<'a> {
     /// IME input.
     ime: bool,
 
-    /// Render surface.
-    ///
-    /// NOTE: This surface must be dropped before the `Window`.
-    #[cfg(not(any(android_platform, ios_platform)))]
-    surface: Surface<DisplayHandle<'static>, Arc<Window>>,
-
+    // /// Render surface.
+    // ///
+    // /// NOTE: This surface must be dropped before the `Window`.
+    // #[cfg(not(any(android_platform, ios_platform)))]
+    // surface: Surface<DisplayHandle<'static>, Arc<Window>>,
     /// The actual winit Window.
+    surface: wgpu::Surface<'a>,
+    device: wgpu::Device,
+    render_pipeline: wgpu::RenderPipeline,
+    indicies: Vec<Index>,
+    queue: Queue,
+    verticies: Vec<Vertex>,
+    // device_pipeline: wgpu::DevicePipeline,
     pub(crate) window: Arc<Window>,
     /// The window theme we're drawing with.
     theme: Theme,
@@ -57,18 +75,18 @@ pub(crate) struct WindowState {
     cursor_hidden: bool,
 }
 
-impl WindowState {
+impl<'a> WindowState<'a> {
     pub(crate) fn new(
-        app: &Application,
+        app: &Application<'a>,
         window: Window,
     ) -> Result<Self, Box<dyn Error>> {
         let window = Arc::new(window);
 
-        // SAFETY: the surface is dropped before the `window` which provided it with handle, thus
-        // it doesn't outlive it.
-        #[cfg(not(any(android_platform, ios_platform)))]
-        let surface =
-            Surface::new(app.context.as_ref().unwrap(), Arc::clone(&window))?;
+        // // SAFETY: the surface is dropped before the `window` which provided it with handle, thus
+        // // it doesn't outlive it.
+        // #[cfg(not(any(android_platform, ios_platform)))]
+        // let surface =
+        //     Surface::new(app.context.as_ref().unwrap(), Arc::clone(&window))?;
 
         let theme = window.theme().unwrap_or(Theme::Dark);
         info!("Theme: {theme:?}");
@@ -80,14 +98,145 @@ impl WindowState {
         window.set_ime_allowed(ime);
 
         let size = window.inner_size();
+
+        let instance = wgpu::Instance::default();
+
+        let surface = instance.create_surface(window.clone()).unwrap();
+        let adapter = instance
+            .request_adapter(&wgpu::RequestAdapterOptions {
+                power_preference: wgpu::PowerPreference::default(),
+                force_fallback_adapter: false,
+                // Request an adapter which can render to our surface
+                compatible_surface: Some(&surface),
+            })
+            .block_on()
+            .expect("Failed to find an appropriate adapter");
+
+        // Create the logical device and command queue
+        let (device, queue) = adapter
+            .request_device(
+                &wgpu::DeviceDescriptor {
+                    label: None,
+                    required_features: wgpu::Features::empty(),
+                    // Make sure we use the texture resolution limits from the adapter, so we can support images the size of the swapchain.
+                    required_limits: wgpu::Limits::downlevel_webgl2_defaults()
+                        .using_resolution(adapter.limits()),
+                    memory_hints: wgpu::MemoryHints::MemoryUsage,
+                },
+                None,
+            )
+            .block_on()
+            .expect("Failed to create device");
+
+        // Load the shaders from disk
+        let shader =
+            device.create_shader_module(wgpu::ShaderModuleDescriptor {
+                label: None,
+                source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!(
+                    "../shader.wgsl"
+                ))),
+            });
+
+        let pipeline_layout =
+            device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+                label: None,
+                bind_group_layouts: &[],
+                push_constant_ranges: &[],
+            });
+
+        let swapchain_capabilities = surface.get_capabilities(&adapter);
+        let swapchain_format = swapchain_capabilities.formats[0];
+
+        let mut projector_builder = Orthographic::builder::<PolyLinesWGPU>();
+        projector_builder
+            .scale_set(800_f32 / 1.3_f32 / std::f32::consts::PI)
+            .translate_set(&Coord { x: 0_f32, y: 0_f32 });
+
+        // Graticule
+        let graticule: Geometry<f32> = generate_mls();
+        // println!("graticule {:#?}", &graticule);
+
+        let projector = projector_builder.build();
+
+        let endpoint = PolyLinesWGPU::default();
+        let path_builder = PathBuilder::new(endpoint);
+        let mut path = path_builder.build(projector);
+
+        let (verticies, indicies) = path.object(&graticule);
+
+        let mut minx = f32::MAX;
+        let mut maxx = f32::MIN;
+        let mut miny = f32::MAX;
+        let mut maxy = f32::MIN;
+        for v in &verticies {
+            if v.pos[0] < minx {
+                minx = v.pos[0];
+            }
+            if v.pos[0] > maxx {
+                maxx = v.pos[0];
+            }
+
+            if v.pos[1] < miny {
+                miny = v.pos[1];
+            }
+            if v.pos[1] > maxy {
+                maxy = v.pos[1];
+            }
+        }
+        // println!("x: min{minx}, max{maxx}");
+        // println!("y: min{miny}, max{maxy}");
+
+        // println!("indicies: {:#?}", &indicies);
+        // println!("vertcies: {:#?}", &verticies);
+
+        let render_pipeline =
+            device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+                label: None,
+                layout: Some(&pipeline_layout),
+                vertex: wgpu::VertexState {
+                    module: &shader,
+                    entry_point: "vs_main",
+                    buffers: &[Vertex::desc()],
+                    compilation_options: PipelineCompilationOptions::default(),
+                },
+                fragment: Some(wgpu::FragmentState {
+                    module: &shader,
+                    entry_point: "fs_main",
+                    compilation_options: PipelineCompilationOptions::default(),
+                    targets: &[Some(swapchain_format.into())],
+                }),
+                primitive: wgpu::PrimitiveState {
+                    topology: wgpu::PrimitiveTopology::LineStrip,
+                    // Enables "PRIMITIVE_RESTART" mode
+                    // see `rust_d3_geo::path::wgpu::PRIMITIVE_RESTART_TOKEN`
+                    strip_index_format: Some(IndexFormat::Uint32),
+                    ..Default::default()
+                },
+                depth_stencil: None,
+                multisample: wgpu::MultisampleState::default(),
+                multiview: None,
+                cache: None,
+            });
+
+        let config = surface
+            .get_default_config(&adapter, size.width, size.height)
+            .unwrap();
+        surface.configure(&device, &config);
+
         let mut state = Self {
             #[cfg(macos_platform)]
             option_as_alt: window.option_as_alt(),
             custom_idx: app.custom_cursors.len() - 1,
             cursor_grab: CursorGrabMode::None,
             named_idx,
-            #[cfg(not(any(android_platform, ios_platform)))]
+            // #[cfg(not(any(android_platform, ios_platform)))]
+            // surface,
             surface,
+            device,
+            render_pipeline,
+            indicies,
+            queue,
+            verticies,
             window,
             theme,
             ime,
@@ -286,14 +435,14 @@ impl WindowState {
         info!("Resized to {size:?}");
         #[cfg(not(any(android_platform, ios_platform)))]
         {
-            let (Some(width), Some(height)) =
-                (NonZeroU32::new(size.width), NonZeroU32::new(size.height))
-            else {
-                return;
-            };
-            self.surface
-                .resize(width, height)
-                .expect("failed to resize inner buffer");
+            // let (Some(width), Some(height)) =
+            //     (NonZeroU32::new(size.width), NonZeroU32::new(size.height))
+            // else {
+            //     return;
+            // };
+            // self.surface
+            //     .resize(width, height)
+            //     .expect("failed to resize inner buffer");
         }
         self.window.request_redraw();
     }
@@ -386,24 +535,83 @@ impl WindowState {
     /// Draw the window contents.
     #[cfg(not(any(android_platform, ios_platform)))]
     pub(crate) fn draw(&mut self) -> Result<(), Box<dyn Error>> {
-        const WHITE: u32 = 0xffff_ffff;
-        const DARK_GRAY: u32 = 0xff18_1818;
+        // const WHITE: u32 = 0xffff_ffff;
+        // const DARK_GRAY: u32 = 0xff18_1818;
 
-        info!("WindowState::draw() entry");
-        if self.occluded {
-            info!("Skipping drawing occluded window={:?}", self.window.id());
-            return Ok(());
+        // info!("WindowState::draw() entry");
+        // if self.occluded {
+        //     info!("Skipping drawing occluded window={:?}", self.window.id());
+        //     return Ok(());
+        // }
+
+        // let color = match self.theme {
+        //     Theme::Light => WHITE,
+        //     Theme::Dark => DARK_GRAY,
+        // };
+
+        // let mut buffer = self.surface.buffer_mut()?;
+        // buffer.fill(color);
+        // self.window.pre_present_notify();
+        // buffer.present()?;
+
+        let frame = self
+            .surface
+            .get_current_texture()
+            .expect("Failed to acquire next swap chain texture");
+        let view = frame
+            .texture
+            .create_view(&wgpu::TextureViewDescriptor::default());
+        let mut encoder = self.device.create_command_encoder(
+            &wgpu::CommandEncoderDescriptor { label: None },
+        );
+
+        let vertex_buffer =
+            self.device
+                .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                    label: Some("Points"),
+                    contents: bytemuck::cast_slice(&self.verticies),
+                    usage: wgpu::BufferUsages::VERTEX,
+                });
+
+        let index_buffer =
+            self.device
+                .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                    label: Some("Index buffer"),
+                    contents: bytemuck::cast_slice(&self.indicies),
+                    usage: wgpu::BufferUsages::INDEX,
+                });
+
+        {
+            let mut rpass =
+                encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    label: None,
+                    color_attachments: &[Some(
+                        wgpu::RenderPassColorAttachment {
+                            view: &view,
+                            resolve_target: None,
+                            ops: wgpu::Operations {
+                                load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
+                                store: wgpu::StoreOp::Store,
+                            },
+                        },
+                    )],
+                    depth_stencil_attachment: None,
+                    timestamp_writes: None,
+                    occlusion_query_set: None,
+                });
+            rpass.set_pipeline(&self.render_pipeline);
+            rpass.set_vertex_buffer(0, vertex_buffer.slice(..));
+            rpass.set_index_buffer(
+                index_buffer.slice(..),
+                wgpu::IndexFormat::Uint32,
+            );
+            // instances 0..1 implies instancing is not being used!!!.
+            rpass.draw_indexed(0..self.indicies.len() as u32, 0, 0..1);
         }
 
-        let color = match self.theme {
-            Theme::Light => WHITE,
-            Theme::Dark => DARK_GRAY,
-        };
+        self.queue.submit(Some(encoder.finish()));
+        frame.present();
 
-        let mut buffer = self.surface.buffer_mut()?;
-        buffer.fill(color);
-        self.window.pre_present_notify();
-        buffer.present()?;
         Ok(())
     }
 
