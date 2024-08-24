@@ -3,6 +3,7 @@ use std::borrow::Cow;
 use std::error::Error;
 use std::sync::Arc;
 
+use cursor_icon::CursorIcon;
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
 use d3_geo_rs::path::wgpu::polylines::Index;
@@ -31,7 +32,45 @@ use winit::{
 
 use ::tracing::{error, info};
 
-use crate::{app::Application, BORDER_SIZE, CURSORS};
+use crate::{app::Application, BORDER_SIZE};
+
+/// Cursor list to cycle through.
+const CURSORS: &[CursorIcon] = &[
+    CursorIcon::Default,
+    CursorIcon::Crosshair,
+    CursorIcon::Pointer,
+    CursorIcon::Move,
+    CursorIcon::Text,
+    CursorIcon::Wait,
+    CursorIcon::Help,
+    CursorIcon::Progress,
+    CursorIcon::NotAllowed,
+    CursorIcon::ContextMenu,
+    CursorIcon::Cell,
+    CursorIcon::VerticalText,
+    CursorIcon::Alias,
+    CursorIcon::Copy,
+    CursorIcon::NoDrop,
+    CursorIcon::Grab,
+    CursorIcon::Grabbing,
+    CursorIcon::AllScroll,
+    CursorIcon::ZoomIn,
+    CursorIcon::ZoomOut,
+    CursorIcon::EResize,
+    CursorIcon::NResize,
+    CursorIcon::NeResize,
+    CursorIcon::NwResize,
+    CursorIcon::SResize,
+    CursorIcon::SeResize,
+    CursorIcon::SwResize,
+    CursorIcon::WResize,
+    CursorIcon::EwResize,
+    CursorIcon::NsResize,
+    CursorIcon::NeswResize,
+    CursorIcon::NwseResize,
+    CursorIcon::ColResize,
+    CursorIcon::RowResize,
+];
 
 /// State of the window.
 pub(crate) struct WindowState<'a> {
