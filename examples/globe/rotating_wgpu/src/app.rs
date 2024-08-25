@@ -1,5 +1,6 @@
 use std::{collections::HashMap, error::Error};
 
+use sctk::shell::xdg::window;
 use tracing::error;
 use tracing::info;
 use winit::application::ApplicationHandler;
@@ -11,11 +12,13 @@ use winit::event_loop::{ActiveEventLoop, EventLoop};
 use winit::keyboard::{Key, ModifiersState};
 use winit::window::{CustomCursor, Icon, Theme, Window, WindowId};
 
+use crate::action::Action;
+use crate::bindings::KEY_BINDINGS;
+use crate::bindings::MOUSE_BINDINGS;
 use crate::modifiers_to_string;
 use crate::mouse_button_to_string;
-use crate::Binding;
 use crate::UserEvent;
-use crate::{decode_cursor, load_icon, windows_state::WindowState, Action};
+use crate::{decode_cursor, windows_state::WindowState};
 
 #[cfg(macos_platform)]
 use winit::platform::macos::{
@@ -27,73 +30,6 @@ use winit::platform::startup_notify::{
     WindowExtStartupNotify,
 };
 
-const KEY_BINDINGS: &[Binding<&'static str>] = &[
-    Binding::new("Q", ModifiersState::CONTROL, Action::CloseWindow),
-    Binding::new("H", ModifiersState::CONTROL, Action::PrintHelp),
-    Binding::new("F", ModifiersState::CONTROL, Action::ToggleFullscreen),
-    Binding::new("D", ModifiersState::CONTROL, Action::ToggleDecorations),
-    Binding::new("I", ModifiersState::CONTROL, Action::ToggleImeInput),
-    Binding::new("L", ModifiersState::CONTROL, Action::CycleCursorGrab),
-    Binding::new("P", ModifiersState::CONTROL, Action::ToggleResizeIncrements),
-    Binding::new("R", ModifiersState::CONTROL, Action::ToggleResizable),
-    Binding::new("R", ModifiersState::ALT, Action::RequestResize),
-    // M.
-    Binding::new("M", ModifiersState::CONTROL, Action::ToggleMaximize),
-    Binding::new("M", ModifiersState::ALT, Action::Minimize),
-    // N.
-    Binding::new("N", ModifiersState::CONTROL, Action::CreateNewWindow),
-    // C.
-    Binding::new("C", ModifiersState::CONTROL, Action::NextCursor),
-    Binding::new("C", ModifiersState::ALT, Action::NextCustomCursor),
-    #[cfg(web_platform)]
-    Binding::new(
-        "C",
-        ModifiersState::CONTROL.union(ModifiersState::SHIFT),
-        Action::UrlCustomCursor,
-    ),
-    #[cfg(web_platform)]
-    Binding::new(
-        "C",
-        ModifiersState::ALT.union(ModifiersState::SHIFT),
-        Action::AnimationCustomCursor,
-    ),
-    Binding::new("Z", ModifiersState::CONTROL, Action::ToggleCursorVisibility),
-    // K.
-    Binding::new("K", ModifiersState::empty(), Action::SetTheme(None)),
-    Binding::new(
-        "K",
-        ModifiersState::SUPER,
-        Action::SetTheme(Some(Theme::Light)),
-    ),
-    Binding::new(
-        "K",
-        ModifiersState::CONTROL,
-        Action::SetTheme(Some(Theme::Dark)),
-    ),
-    #[cfg(macos_platform)]
-    Binding::new("T", ModifiersState::SUPER, Action::CreateNewTab),
-    #[cfg(macos_platform)]
-    Binding::new("O", ModifiersState::CONTROL, Action::CycleOptionAsAlt),
-];
-
-const MOUSE_BINDINGS: &[Binding<MouseButton>] = &[
-    Binding::new(
-        MouseButton::Left,
-        ModifiersState::ALT,
-        Action::DragResizeWindow,
-    ),
-    Binding::new(
-        MouseButton::Left,
-        ModifiersState::CONTROL,
-        Action::DragWindow,
-    ),
-    Binding::new(
-        MouseButton::Right,
-        ModifiersState::CONTROL,
-        Action::ShowWindowMenu,
-    ),
-];
-
 /// Application state and event handling.
 pub(crate) struct Application<'a> {
     /// Custom cursors assets.
@@ -101,6 +37,18 @@ pub(crate) struct Application<'a> {
     /// Application icon.
     icon: Icon,
     windows: HashMap<WindowId, WindowState<'a>>,
+    animation_started: bool,
+}
+
+fn load_icon(bytes: &[u8]) -> Icon {
+    let (icon_rgba, icon_width, icon_height) = {
+        let image = image::load_from_memory(bytes).unwrap().into_rgba8();
+        let (width, height) = image.dimensions();
+        let rgba = image.into_raw();
+        (rgba, width, height)
+    };
+    Icon::from_rgba(icon_rgba, icon_width, icon_height)
+        .expect("Failed to open icon")
 }
 
 impl<'a> Application<'a> {
@@ -126,6 +74,7 @@ impl<'a> Application<'a> {
         ];
 
         Self {
+            animation_started: false,
             custom_cursors,
             icon,
             windows: HashMap::default(),
@@ -341,8 +290,13 @@ impl<'a> Application<'a> {
 }
 
 impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
-    fn user_event(&mut self, _event_loop: &ActiveEventLoop, event: UserEvent) {
+    fn user_event(&mut self, event_loop: &ActiveEventLoop, event: UserEvent) {
         info!("User event: {event:?}");
+        if !self.animation_started {
+            for (_idx, window_state) in &mut self.windows {
+                window_state.window.request_redraw();
+            }
+        }
     }
 
     fn window_event(
@@ -376,6 +330,10 @@ impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
             WindowEvent::RedrawRequested => {
                 if let Err(err) = window.draw() {
                     error!("Error drawing window: {err}");
+                }
+
+                if let Some(window_state) = self.windows.get_mut(&window_id) {
+                    window_state.window.request_redraw();
                 }
             }
             WindowEvent::Occluded(occluded) => {

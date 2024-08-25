@@ -6,12 +6,14 @@ use std::sync::Arc;
 use cursor_icon::CursorIcon;
 use d3_geo_rs::graticule::generate_mls;
 use d3_geo_rs::path::builder::Builder as PathBuilder;
-use d3_geo_rs::path::wgpu::polylines::Index;
 use d3_geo_rs::path::wgpu::polylines::PolyLines as PolyLinesWGPU;
 use d3_geo_rs::path::wgpu::Vertex;
+use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::RotateGet;
+use d3_geo_rs::projection::RotateSet;
 use d3_geo_rs::projection::ScaleSet;
 use d3_geo_rs::projection::TranslateSet;
 use geo_types::Coord;
@@ -86,9 +88,9 @@ pub(crate) struct WindowState<'a> {
     surface: wgpu::Surface<'a>,
     device: wgpu::Device,
     render_pipeline: wgpu::RenderPipeline,
-    indicies: Vec<Index>,
+    // indicies: Vec<Index>,
     queue: Queue,
-    verticies: Vec<Vertex>,
+    // verticies: Vec<Vertex>,
     // device_pipeline: wgpu::DevicePipeline,
     pub(crate) window: Arc<Window>,
     /// The window theme we're drawing with.
@@ -97,8 +99,12 @@ pub(crate) struct WindowState<'a> {
     cursor_position: Option<PhysicalPosition<f64>>,
     /// Window modifiers state.
     pub(crate) modifiers: ModifiersState,
+    projector_builder:
+        BuilderCircleResampleNoClip<PolyLinesWGPU, Orthographic<f32>, f32>,
     /// Occlusion state of the window.
     occluded: bool,
+    graticule: Geometry<f32>,
+    r_angles: [f32; 3],
     /// Current cursor grab mode.
     cursor_grab: CursorGrabMode,
     /// The amount of zoom into window.
@@ -191,42 +197,9 @@ impl<'a> WindowState<'a> {
             .scale_set(800_f32 / 1.3_f32 / std::f32::consts::PI)
             .translate_set(&Coord { x: 0_f32, y: 0_f32 });
 
+        let r_angles = projector_builder.rotate();
         // Graticule
         let graticule: Geometry<f32> = generate_mls();
-        // println!("graticule {:#?}", &graticule);
-
-        let projector = projector_builder.build();
-
-        let endpoint = PolyLinesWGPU::default();
-        let path_builder = PathBuilder::new(endpoint);
-        let mut path = path_builder.build(projector);
-
-        let (verticies, indicies) = path.object(&graticule);
-
-        let mut minx = f32::MAX;
-        let mut maxx = f32::MIN;
-        let mut miny = f32::MAX;
-        let mut maxy = f32::MIN;
-        for v in &verticies {
-            if v.pos[0] < minx {
-                minx = v.pos[0];
-            }
-            if v.pos[0] > maxx {
-                maxx = v.pos[0];
-            }
-
-            if v.pos[1] < miny {
-                miny = v.pos[1];
-            }
-            if v.pos[1] > maxy {
-                maxy = v.pos[1];
-            }
-        }
-        // println!("x: min{minx}, max{maxx}");
-        // println!("y: min{miny}, max{maxy}");
-
-        // println!("indicies: {:#?}", &indicies);
-        // println!("vertcies: {:#?}", &verticies);
 
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
@@ -268,14 +241,13 @@ impl<'a> WindowState<'a> {
             custom_idx: app.custom_cursors.len() - 1,
             cursor_grab: CursorGrabMode::None,
             named_idx,
-            // #[cfg(not(any(android_platform, ios_platform)))]
-            // surface,
             surface,
             device,
             render_pipeline,
-            indicies,
+            projector_builder,
+            r_angles,
+            graticule,
             queue,
-            verticies,
             window,
             theme,
             ime,
@@ -433,10 +405,6 @@ impl<'a> WindowState<'a> {
         &mut self,
         event_loop: &ActiveEventLoop,
     ) -> Result<(), Box<dyn Error>> {
-        // use std::error::Error;
-
-        // use winit::event_loop::ActiveEventLoop;
-
         let cursor =
             event_loop.create_custom_cursor(self.url_custom_cursor())?;
 
@@ -574,24 +542,20 @@ impl<'a> WindowState<'a> {
     /// Draw the window contents.
     #[cfg(not(any(android_platform, ios_platform)))]
     pub(crate) fn draw(&mut self) -> Result<(), Box<dyn Error>> {
-        // const WHITE: u32 = 0xffff_ffff;
-        // const DARK_GRAY: u32 = 0xff18_1818;
+        use std::time::Instant;
 
-        // info!("WindowState::draw() entry");
-        // if self.occluded {
-        //     info!("Skipping drawing occluded window={:?}", self.window.id());
-        //     return Ok(());
-        // }
+        info!("windowState draw()");
 
-        // let color = match self.theme {
-        //     Theme::Light => WHITE,
-        //     Theme::Dark => DARK_GRAY,
-        // };
+        let start = Instant::now();
+        self.r_angles[0] += 1.0;
+        self.projector_builder.rotate3_set(&self.r_angles);
+        let projector = self.projector_builder.build();
 
-        // let mut buffer = self.surface.buffer_mut()?;
-        // buffer.fill(color);
-        // self.window.pre_present_notify();
-        // buffer.present()?;
+        let endpoint = PolyLinesWGPU::default();
+        let path_builder = PathBuilder::new(endpoint);
+        let mut path = path_builder.build(projector);
+
+        let (verticies, indicies) = path.object(&self.graticule);
 
         let frame = self
             .surface
@@ -600,6 +564,7 @@ impl<'a> WindowState<'a> {
         let view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
+
         let mut encoder = self.device.create_command_encoder(
             &wgpu::CommandEncoderDescriptor { label: None },
         );
@@ -608,7 +573,7 @@ impl<'a> WindowState<'a> {
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: Some("Points"),
-                    contents: bytemuck::cast_slice(&self.verticies),
+                    contents: bytemuck::cast_slice(&verticies),
                     usage: wgpu::BufferUsages::VERTEX,
                 });
 
@@ -616,7 +581,7 @@ impl<'a> WindowState<'a> {
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: Some("Index buffer"),
-                    contents: bytemuck::cast_slice(&self.indicies),
+                    contents: bytemuck::cast_slice(&indicies),
                     usage: wgpu::BufferUsages::INDEX,
                 });
 
@@ -645,11 +610,15 @@ impl<'a> WindowState<'a> {
                 wgpu::IndexFormat::Uint32,
             );
             // instances 0..1 implies instancing is not being used!!!.
-            rpass.draw_indexed(0..self.indicies.len() as u32, 0, 0..1);
+            rpass.draw_indexed(0..indicies.len() as u32, 0, 0..1);
         }
 
         self.queue.submit(Some(encoder.finish()));
         frame.present();
+
+        let duration = start.elapsed();
+
+        println!("Time elapsed in expensive_function() is: {:?}", duration);
 
         Ok(())
     }

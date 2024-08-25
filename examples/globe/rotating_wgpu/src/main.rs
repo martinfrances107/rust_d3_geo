@@ -23,7 +23,9 @@ extern crate rwh_06;
 #[cfg(not(any(android_platform, ios_platform)))]
 extern crate softbuffer;
 
+pub(crate) mod action;
 pub(crate) mod app;
+pub(crate) mod bindings;
 pub(crate) mod windows_state;
 
 use core::fmt;
@@ -86,7 +88,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     tracing::init();
 
     let event_loop = EventLoop::<UserEvent>::with_user_event().build()?;
-    let _event_loop_proxy = event_loop.create_proxy();
+    let event_loop_proxy = event_loop.create_proxy();
 
     // Wire the user event from another thread.
     #[cfg(not(web_platform))]
@@ -95,7 +97,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         // from a different thread.
         info!("Starting to send user event every second");
         loop {
-            let _ = _event_loop_proxy.send_event(UserEvent::WakeUp);
+            let _ = event_loop_proxy.send_event(UserEvent::WakeUp);
             std::thread::sleep(std::time::Duration::from_secs(1));
         }
     });
@@ -103,81 +105,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut state = Application::new(&event_loop);
 
     event_loop.run_app(&mut state).map_err(Into::into)
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum Action {
-    CloseWindow,
-    ToggleCursorVisibility,
-    CreateNewWindow,
-    ToggleResizeIncrements,
-    ToggleImeInput,
-    ToggleDecorations,
-    ToggleResizable,
-    ToggleFullscreen,
-    ToggleMaximize,
-    Minimize,
-    NextCursor,
-    NextCustomCursor,
-    #[cfg(web_platform)]
-    UrlCustomCursor,
-    #[cfg(web_platform)]
-    AnimationCustomCursor,
-    CycleCursorGrab,
-    PrintHelp,
-    DragWindow,
-    DragResizeWindow,
-    ShowWindowMenu,
-    #[cfg(macos_platform)]
-    CycleOptionAsAlt,
-    SetTheme(Option<Theme>),
-    #[cfg(macos_platform)]
-    CreateNewTab,
-    RequestResize,
-}
-
-impl Action {
-    const fn help(self) -> &'static str {
-        match self {
-            Self::CloseWindow => "Close window",
-            Self::ToggleCursorVisibility => "Hide cursor",
-            Self::CreateNewWindow => "Create new window",
-            Self::ToggleImeInput => "Toggle IME input",
-            Self::ToggleDecorations => "Toggle decorations",
-            Self::ToggleResizable => "Toggle window resizable state",
-            Self::ToggleFullscreen => "Toggle fullscreen",
-            Self::ToggleMaximize => "Maximize",
-            Self::Minimize => "Minimize",
-            Self::ToggleResizeIncrements => {
-                "Use resize increments when resizing window"
-            }
-            Self::NextCursor => "Advance the cursor to the next value",
-            Self::NextCustomCursor => "Advance custom cursor to the next value",
-            #[cfg(web_platform)]
-            Action::UrlCustomCursor => "Custom cursor from an URL",
-            #[cfg(web_platform)]
-            Action::AnimationCustomCursor => "Custom cursor from an animation",
-            Self::CycleCursorGrab => "Cycle through cursor grab mode",
-            Self::PrintHelp => "Print help",
-            Self::DragWindow => "Start window drag",
-            Self::DragResizeWindow => "Start window drag-resize",
-            Self::ShowWindowMenu => "Show window menu",
-            #[cfg(macos_platform)]
-            Action::CycleOptionAsAlt => "Cycle option as alt mode",
-            Self::SetTheme(None) => "Change to the system theme",
-            Self::SetTheme(Some(Theme::Light)) => "Change to a light theme",
-            Self::SetTheme(Some(Theme::Dark)) => "Change to a dark theme",
-            #[cfg(macos_platform)]
-            Self::CreateNewTab => "Create new tab",
-            Self::RequestResize => "Request a resize",
-        }
-    }
-}
-
-impl fmt::Display for Action {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        Debug::fmt(&self, f)
-    }
 }
 
 fn decode_cursor(bytes: &[u8]) -> CustomCursorSource {
@@ -213,35 +140,4 @@ fn url_custom_cursor() -> CustomCursorSource {
         64,
         64,
     )
-}
-
-struct Binding<T: Eq> {
-    trigger: T,
-    mods: ModifiersState,
-    action: Action,
-}
-
-impl<T: Eq> Binding<T> {
-    const fn new(trigger: T, mods: ModifiersState, action: Action) -> Self {
-        Self {
-            trigger,
-            mods,
-            action,
-        }
-    }
-
-    fn is_triggered_by(&self, trigger: &T, mods: &ModifiersState) -> bool {
-        &self.trigger == trigger && &self.mods == mods
-    }
-}
-
-fn load_icon(bytes: &[u8]) -> Icon {
-    let (icon_rgba, icon_width, icon_height) = {
-        let image = image::load_from_memory(bytes).unwrap().into_rgba8();
-        let (width, height) = image.dimensions();
-        let rgba = image.into_raw();
-        (rgba, width, height)
-    };
-    Icon::from_rgba(icon_rgba, icon_width, icon_height)
-        .expect("Failed to open icon")
 }
