@@ -548,7 +548,7 @@ impl<'a> WindowState<'a> {
         debug!("windowState::draw()");
 
         let start = Instant::now();
-        self.r_angles[0] += 0.05;
+        self.r_angles[0] += 0.01;
         self.projector_builder.rotate3_set(&self.r_angles);
         let projector = self.projector_builder.build();
 
