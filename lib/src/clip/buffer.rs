@@ -16,6 +16,7 @@ pub struct Buffer<T>
 where
     T: CoordFloat,
 {
+    /// Clip segments.
     pub lines: VecDeque<Vec<LineElem<T>>>,
 }
 

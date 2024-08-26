@@ -19,9 +19,9 @@ impl Vertex {
     /// description a `wgpu::VertexState parameter`
     /// The layout in memory of the vertex array.
     #[must_use]
-    pub fn desc() -> wgpu::VertexBufferLayout<'static> {
+    pub const fn desc() -> wgpu::VertexBufferLayout<'static> {
         wgpu::VertexBufferLayout {
-            array_stride: std::mem::size_of::<Vertex>() as wgpu::BufferAddress,
+            array_stride: std::mem::size_of::<Self>() as wgpu::BufferAddress,
             step_mode: wgpu::VertexStepMode::Vertex,
             attributes: &[wgpu::VertexAttribute {
                 offset: 0,

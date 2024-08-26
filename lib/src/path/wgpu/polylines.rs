@@ -48,7 +48,7 @@ impl Index {
     #[must_use]
     pub const fn desc() -> wgpu::VertexBufferLayout<'static> {
         wgpu::VertexBufferLayout {
-            array_stride: std::mem::size_of::<Index>() as wgpu::BufferAddress,
+            array_stride: std::mem::size_of::<Self>() as wgpu::BufferAddress,
             step_mode: wgpu::VertexStepMode::Vertex,
             attributes: &[wgpu::VertexAttribute {
                 offset: 0,
@@ -66,7 +66,7 @@ impl Index {
 pub struct PolyLines {
     /// points in a form ready to be shipped to the GPU.
     pub vertex_buffer: Vec<Vertex>,
-    /// index_buffer is a form ready to be shipped to the GPU.
+    /// `index_buffer` is a form ready to be shipped to the GPU.
     pub index_buffer: Vec<Index>,
     /// Tracks if a point has been seen before
     index_store: HashMap<CoordHashable, usize>,
@@ -96,7 +96,7 @@ impl Default for PolyLines {
 /// Architecture Discussion:
 ///
 /// I am making the assumption here that in a animation frame
-/// repeated calls to [PolyLines::result] will return approximatly
+/// repeated calls to [`PolyLines::result`] will return approximatly
 /// the same number of elements.
 impl Result for PolyLines {
     type Out = (Vec<Vertex>, Vec<Index>);
@@ -129,7 +129,7 @@ impl Stream for PolyLines {
             Occupied(o) => {
                 // Point has been seen before just update the index list.
                 let index = o.get();
-                self.index_buffer.push(Index(*index as u32))
+                self.index_buffer.push(Index(*index as u32));
             }
             Vacant(v) => {
                 let index = v.insert(self.next_index);
@@ -142,6 +142,6 @@ impl Stream for PolyLines {
 
     fn line_end(&mut self) {
         // Let the GPU know that a new line_strip is about to start.
-        self.index_buffer.push(PRIMITVE_RESTART_TOKEN.clone());
+        self.index_buffer.push(PRIMITVE_RESTART_TOKEN);
     }
 }

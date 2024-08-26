@@ -260,7 +260,7 @@ To view an example application either create a development build, or construct a
 
 ### Examples: Start And Run A Development Build
 
- ```console
+ ```bash
  git clone https://github.com/martinfrances107/rust_d3_geo.git
  cd rust_d3_geo/examples/ring/
  npm install
@@ -273,7 +273,7 @@ The last command "npm run start" will automatically open your default browser at
 
 Much better performance can be achieved by building a static web site and viewing that directly. At the expense of longer build times the RUST portions of the code a build using the "--release" tags
 
-```console
+```bash
   git clone https://github.com/martinfrances107/rust_d3_geo.git
   cd rust_d3_geo/examples/ring
   npm install

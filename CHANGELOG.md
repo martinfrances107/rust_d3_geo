@@ -1,13 +1,24 @@
 # Changelog
 
+-use d3_geo_rs::path::endpoint::Endpoint;
++use d3_geo_rs::path::path2d_endpoint::Path2dEndpoint;
+
+//...
+
+-        let ep: Endpoint = Endpoint::new(path2d);
+
++        let ep: Path2dEndpoint = Path2dEndpoint::new(path2d);
+
+## []
+
 ## [2.0.0] - 22 July 2023
 
 A summary of breaking changes.
 
-* ClipAngleGet - The method clip_angle() can no longer be called when using the
+- ClipAngleGet - The method clip_angle() can no longer be called when using the
     ClipAntemeridian strategy.
 
-* Breaking change related to a misspelt namespaces - no change in behavior
+- Breaking change related to a misspelt namespaces - no change in behavior
 
 commit fd17b1bb61b85a2af11ba5fb81591303cf582e93
 Author: Martin <martinfrances107@hotmail.com>
