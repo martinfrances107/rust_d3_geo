@@ -1,6 +1,6 @@
 use std::{collections::HashMap, error::Error};
 
-use sctk::shell::xdg::window;
+use tracing::debug;
 use tracing::error;
 use tracing::info;
 use winit::application::ApplicationHandler;
@@ -60,7 +60,7 @@ impl<'a> Application<'a> {
         // WM.
         let icon = load_icon(include_bytes!("data/icon.png"));
 
-        info!("Loading cursor assets");
+        debug!("Loading cursor assets");
         let custom_cursors = vec![
             event_loop.create_custom_cursor(decode_cursor(include_bytes!(
                 "data/cross.png"
@@ -97,7 +97,7 @@ impl<'a> Application<'a> {
         #[cfg(any(x11_platform, wayland_platform))]
         if let Some(token) = event_loop.read_token_from_env() {
             startup_notify::reset_activation_token_env();
-            info!("Using token {:?} to activate a window", token);
+            debug!("Using token {:?} to activate a window", token);
             window_attributes = window_attributes.with_activation_token(token);
         }
 
@@ -126,7 +126,7 @@ impl<'a> Application<'a> {
 
         let window_state = WindowState::new(self, window)?;
         let window_id = window_state.window.id();
-        info!("Created new window with id={window_id:?}");
+        debug!("Created new window with id={window_id:?}");
         self.windows.insert(window_id, window_state);
         Ok(window_id)
     }
@@ -139,7 +139,7 @@ impl<'a> Application<'a> {
     ) {
         // let cursor_position = self.cursor_position;
         let window = self.windows.get_mut(&window_id).unwrap();
-        info!("Executing action: {action:?}");
+        debug!("Executing action: {action:?}");
         match action {
             Action::CloseWindow => {
                 let _ = self.windows.remove(&window_id);
@@ -147,7 +147,7 @@ impl<'a> Application<'a> {
             Action::CreateNewWindow => {
                 #[cfg(any(x11_platform, wayland_platform))]
                 if let Err(err) = window.window.request_activation_token() {
-                    info!("Failed to get activation token: {err}");
+                    error!("Failed to get activation token: {err}");
                 } else {
                     return;
                 }
@@ -200,8 +200,8 @@ impl<'a> Application<'a> {
         }
     }
 
-    fn dump_monitors(&self, event_loop: &ActiveEventLoop) {
-        info!("Monitors information");
+    fn dump_monitors(event_loop: &ActiveEventLoop) {
+        debug!("Monitors information");
         let primary_monitor = event_loop.primary_monitor();
         for monitor in event_loop.available_monitors() {
             let intro = if primary_monitor.as_ref() == Some(&monitor) {
@@ -211,13 +211,13 @@ impl<'a> Application<'a> {
             };
 
             if let Some(name) = monitor.name() {
-                info!("{intro}: {name}");
+                debug!("{intro}: {name}");
             } else {
-                info!("{intro}: [no name]");
+                debug!("{intro}: [no name]");
             }
 
             let PhysicalSize { width, height } = monitor.size();
-            info!(
+            debug!(
                 "  Current mode: {width}x{height}{}",
                 monitor.refresh_rate_millihertz().map_or_else(
                     String::new,
@@ -226,16 +226,16 @@ impl<'a> Application<'a> {
             );
 
             let PhysicalPosition { x, y } = monitor.position();
-            info!("  Position: {x},{y}");
+            debug!("  Position: {x},{y}");
 
-            info!("  Scale factor: {}", monitor.scale_factor());
+            debug!("  Scale factor: {}", monitor.scale_factor());
 
-            info!("  Available modes (width x height x bit-depth):");
+            debug!("  Available modes (width x height x bit-depth):");
             for mode in monitor.video_modes() {
                 let PhysicalSize { width, height } = mode.size();
                 let bits = mode.bit_depth();
                 let m_hz = mode.refresh_rate_millihertz();
-                info!(
+                debug!(
                     "    {width}x{height}x{bits} @ {}.{} Hz",
                     m_hz / 1000,
                     m_hz % 1000
@@ -290,10 +290,10 @@ impl<'a> Application<'a> {
 }
 
 impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
-    fn user_event(&mut self, event_loop: &ActiveEventLoop, event: UserEvent) {
+    fn user_event(&mut self, _event_loop: &ActiveEventLoop, event: UserEvent) {
         info!("User event: {event:?}");
         if !self.animation_started {
-            for (_idx, window_state) in &mut self.windows {
+            for window_state in self.windows.values_mut() {
                 window_state.window.request_redraw();
             }
         }
@@ -328,9 +328,7 @@ impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
                 window.set_draw_theme(theme);
             }
             WindowEvent::RedrawRequested => {
-                if let Err(err) = window.draw() {
-                    error!("Error drawing window: {err}");
-                }
+                window.draw();
 
                 if let Some(window_state) = self.windows.get_mut(&window_id) {
                     window_state.window.request_redraw();
@@ -467,7 +465,7 @@ impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
 
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         info!("Resumed the event loop");
-        self.dump_monitors(event_loop);
+        Self::dump_monitors(event_loop);
 
         // Create initial window.
         self.create_window(event_loop, None)

@@ -28,7 +28,6 @@ pub(crate) mod app;
 pub(crate) mod bindings;
 pub(crate) mod windows_state;
 
-use core::fmt;
 use core::fmt::Debug;
 use std::error::Error;
 
@@ -40,8 +39,6 @@ use winit::event_loop::EventLoop;
 use winit::keyboard::ModifiersState;
 use winit::window::CustomCursor;
 use winit::window::CustomCursorSource;
-use winit::window::Icon;
-use winit::window::Theme;
 
 /// The amount of points to around the window for drag resize direction calculations.
 const BORDER_SIZE: f64 = 20.;
@@ -115,7 +112,7 @@ fn decode_cursor(bytes: &[u8]) -> CustomCursorSource {
     CustomCursor::from_rgba(samples.samples, w, h, w / 2, h / 2).unwrap()
 }
 
-fn mouse_button_to_string(button: MouseButton) -> &'static str {
+const fn mouse_button_to_string(button: MouseButton) -> &'static str {
     match button {
         MouseButton::Left => "LMB",
         MouseButton::Right => "RMB",

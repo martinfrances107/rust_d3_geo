@@ -19,6 +19,7 @@ use d3_geo_rs::projection::TranslateSet;
 use geo_types::Coord;
 use geo_types::Geometry;
 use pollster::FutureExt;
+use tracing::debug;
 use wgpu::util::DeviceExt;
 use wgpu::IndexFormat;
 use wgpu::PipelineCompilationOptions;
@@ -134,7 +135,7 @@ impl<'a> WindowState<'a> {
         //     Surface::new(app.context.as_ref().unwrap(), Arc::clone(&window))?;
 
         let theme = window.theme().unwrap_or(Theme::Dark);
-        info!("Theme: {theme:?}");
+        debug!("Theme: {theme:?}");
         let named_idx = 0;
         window.set_cursor(CURSORS[named_idx]);
 
@@ -541,13 +542,13 @@ impl<'a> WindowState<'a> {
 
     /// Draw the window contents.
     #[cfg(not(any(android_platform, ios_platform)))]
-    pub(crate) fn draw(&mut self) -> Result<(), Box<dyn Error>> {
+    pub(crate) fn draw(&mut self) {
         use std::time::Instant;
 
-        info!("windowState draw()");
+        debug!("windowState::draw()");
 
         let start = Instant::now();
-        self.r_angles[0] += 1.0;
+        self.r_angles[0] += 0.05;
         self.projector_builder.rotate3_set(&self.r_angles);
         let projector = self.projector_builder.build();
 
@@ -618,9 +619,7 @@ impl<'a> WindowState<'a> {
 
         let duration = start.elapsed();
 
-        println!("Time elapsed in expensive_function() is: {:?}", duration);
-
-        Ok(())
+        info!("WindowState::draw: time {duration:?}");
     }
 
     #[cfg(any(android_platform, ios_platform))]
