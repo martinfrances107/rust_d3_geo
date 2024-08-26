@@ -19,6 +19,8 @@
 
 extern crate d3_geo_rs;
 extern crate rwh_06;
+extern crate serde_json;
+extern crate topojson;
 
 #[cfg(not(any(android_platform, ios_platform)))]
 extern crate softbuffer;

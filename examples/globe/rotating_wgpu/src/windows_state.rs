@@ -1,6 +1,10 @@
 use core::mem;
+use core::num::NonZeroU32;
 use std::borrow::Cow;
 use std::error::Error;
+use std::fs::File;
+use std::io::BufReader;
+use std::path::Path;
 use std::sync::Arc;
 
 use cursor_icon::CursorIcon;
@@ -12,6 +16,8 @@ use d3_geo_rs::projection::builder::types::BuilderCircleResampleNoClip;
 use d3_geo_rs::projection::orthographic::Orthographic;
 use d3_geo_rs::projection::Build;
 use d3_geo_rs::projection::RawBase;
+use d3_geo_rs::projection::Reflect;
+use d3_geo_rs::projection::ReflectSet;
 use d3_geo_rs::projection::RotateGet;
 use d3_geo_rs::projection::RotateSet;
 use d3_geo_rs::projection::ScaleSet;
@@ -19,11 +25,14 @@ use d3_geo_rs::projection::TranslateSet;
 use geo_types::Coord;
 use geo_types::Geometry;
 use pollster::FutureExt;
+use rust_topojson_client::feature::feature_from_name;
+use topojson::Topology;
 use tracing::debug;
 use wgpu::util::DeviceExt;
 use wgpu::IndexFormat;
 use wgpu::PipelineCompilationOptions;
 use wgpu::Queue;
+use wgpu::SurfaceConfiguration;
 use winit::{
     dpi::{LogicalSize, PhysicalPosition, PhysicalSize},
     keyboard::ModifiersState,
@@ -77,6 +86,7 @@ const CURSORS: &[CursorIcon] = &[
 
 /// State of the window.
 pub(crate) struct WindowState<'a> {
+    config: SurfaceConfiguration,
     /// IME input.
     ime: bool,
 
@@ -105,16 +115,17 @@ pub(crate) struct WindowState<'a> {
     /// Occlusion state of the window.
     occluded: bool,
     graticule: Geometry<f32>,
-    r_angles: [f32; 3],
+    countries: Geometry<f32>,
+    /// The amount of rotation of the window.
+    r_angles: [f32; 2],
+    /// Releated to gesture.
+    pub(crate) rotated: f32,
     /// Current cursor grab mode.
     cursor_grab: CursorGrabMode,
     /// The amount of zoom into window.
     pub(crate) zoom: f64,
-    /// The amount of rotation of the window.
-    pub(crate) rotated: f32,
     /// The amount of pan of the window.
     pub(crate) panned: PhysicalPosition<f32>,
-
     // Cursor states.
     named_idx: usize,
     custom_idx: usize,
@@ -196,11 +207,23 @@ impl<'a> WindowState<'a> {
         let mut projector_builder = Orthographic::builder::<PolyLinesWGPU>();
         projector_builder
             .scale_set(800_f32 / 1.3_f32 / std::f32::consts::PI)
-            .translate_set(&Coord { x: 0_f32, y: 0_f32 });
+            .translate_set(&Coord { x: 0_f32, y: 0_f32 })
+            .reflect_y_set(Reflect::Flipped);
 
-        let r_angles = projector_builder.rotate();
+        let r3 = projector_builder.rotate();
+        let r_angles: [f32; 2] = [r3[0], -45.0_f32];
         // Graticule
         let graticule: Geometry<f32> = generate_mls();
+
+        let path = Path::new("../world-atlas/world/50m.json");
+        let file =
+            File::open(path).expect("Could not load 50m.json from atlas.");
+        let reader = BufReader::new(file);
+        let topology: Topology = serde_json::from_reader(reader)
+            .expect("File should be parse as JSON.");
+
+        let countries = feature_from_name(&topology, "countries")
+            .expect("Did not extract geometry");
 
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
@@ -237,27 +260,29 @@ impl<'a> WindowState<'a> {
         surface.configure(&device, &config);
 
         let mut state = Self {
-            #[cfg(macos_platform)]
-            option_as_alt: window.option_as_alt(),
+            config,
+            countries,
             custom_idx: app.custom_cursors.len() - 1,
             cursor_grab: CursorGrabMode::None,
-            named_idx,
-            surface,
-            device,
-            render_pipeline,
-            projector_builder,
-            r_angles,
-            graticule,
-            queue,
-            window,
-            theme,
-            ime,
             cursor_position: Option::default(),
             cursor_hidden: Default::default(),
-            modifiers: ModifiersState::default(),
+            device,
+            named_idx,
             occluded: Default::default(),
-            rotated: Default::default(),
+            #[cfg(macos_platform)]
+            option_as_alt: window.option_as_alt(),
+            projector_builder,
+            graticule,
+            queue,
+            ime,
+            modifiers: ModifiersState::default(),
             panned: PhysicalPosition::default(),
+            r_angles,
+            rotated: Default::default(),
+            render_pipeline,
+            surface,
+            theme,
+            window,
             zoom: Default::default(),
         };
 
@@ -443,14 +468,15 @@ impl<'a> WindowState<'a> {
         info!("Resized to {size:?}");
         #[cfg(not(any(android_platform, ios_platform)))]
         {
-            // let (Some(width), Some(height)) =
-            //     (NonZeroU32::new(size.width), NonZeroU32::new(size.height))
-            // else {
-            //     return;
-            // };
-            // self.surface
-            //     .resize(width, height)
-            //     .expect("failed to resize inner buffer");
+            let (Some(width), Some(height)) =
+                (NonZeroU32::new(size.width), NonZeroU32::new(size.height))
+            else {
+                return;
+            };
+
+            self.config.width = width.into();
+            self.config.height = height.into();
+            self.surface.configure(&self.device, &self.config);
         }
         self.window.request_redraw();
     }
@@ -545,18 +571,29 @@ impl<'a> WindowState<'a> {
     pub(crate) fn draw(&mut self) {
         use std::time::Instant;
 
+        use d3_geo_rs::{
+            path::Result,
+            projection::Projector,
+            stream::{Stream, Streamable},
+        };
+
         debug!("windowState::draw()");
 
         let start = Instant::now();
-        self.r_angles[0] += 0.01;
-        self.projector_builder.rotate3_set(&self.r_angles);
+        self.r_angles[0] += 0.1;
+        self.projector_builder.rotate2_set(&self.r_angles);
         let projector = self.projector_builder.build();
 
         let endpoint = PolyLinesWGPU::default();
-        let path_builder = PathBuilder::new(endpoint);
+        let path_builder = PathBuilder::<PolyLinesWGPU, f32>::new(endpoint);
         let mut path = path_builder.build(projector);
 
-        let (verticies, indicies) = path.object(&self.graticule);
+        // let (verticies, indicies) = path.object(&self.countries);
+        // extract the transform.
+        let mut stream_input = path.projector.stream(&path.context);
+        self.countries.to_stream(&mut stream_input);
+        self.graticule.to_stream(&mut stream_input);
+        let (verticies, indicies) = stream_input.endpoint().result();
 
         let frame = self
             .surface
