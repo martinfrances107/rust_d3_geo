@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::io::BufReader;
 use std::io::LineWriter;
 use std::io::Write;
 
@@ -27,7 +28,8 @@ static FILL: [&str; 7] = [
 fn world() -> Topology {
     let file = File::open("./world-atlas/world/50m.json")
         .expect("File should open read only.");
-    serde_json::from_reader(file).expect("File should be parse as JSON.")
+    let reader = BufReader::new(file);
+    serde_json::from_reader(reader).expect("File should be parse as JSON.")
 }
 
 fn parse_topology() -> Geometry {

@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::io::BufReader;
 use std::io::LineWriter;
 use std::io::Write;
 
@@ -19,7 +20,8 @@ use d3_geo_rs::stream::Streamable;
 fn world() -> Topology {
     let file = File::open("./world-atlas/world/counties-10m.json")
         .expect("File should open read only.");
-    serde_json::from_reader(file).expect("File should be parse as JSON.")
+    let bufreader = BufReader::new(file);
+    serde_json::from_reader(bufreader).expect("File should be parse as JSON.")
 }
 
 fn parse_topology() -> Geometry {
