@@ -43,15 +43,6 @@ name = "rust_d3_geo_example_globe_rotating_wpgu"
 path = "src/main.rs"
 test = false
 
-
-# [features]
-# android_platform = []
-# macos_platform = []
-# wayland_platform = []
-# ios_platform = []
-# web_platform = []
-# x11_platform = []
-
 # Features are documented in either `lib.rs` or under `winit::platform`.
 [features]
 android-game-activity = ["android-activity/game-activity"]
