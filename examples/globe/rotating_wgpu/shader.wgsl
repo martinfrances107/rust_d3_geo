@@ -22,9 +22,14 @@ fn vs_main(
   return out;
 }
 
-// Fragment shader
+// Fragment shaders.
 
 @fragment
-fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
+fn fs_white(in: VertexOutput) -> @location(0) vec4<f32> {
     return vec4<f32>(1.0, 1.0, 1.0, 1.0);
+}
+
+@fragment
+fn fs_green(in: VertexOutput) -> @location(0) vec4<f32> {
+    return vec4<f32>(0.117, 0.703, 0.242, 1.0);
 }

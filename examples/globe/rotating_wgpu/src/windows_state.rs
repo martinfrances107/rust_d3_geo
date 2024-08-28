@@ -98,7 +98,8 @@ pub(crate) struct WindowState<'a> {
     /// The actual winit Window.
     surface: wgpu::Surface<'a>,
     device: wgpu::Device,
-    render_pipeline: wgpu::RenderPipeline,
+    render_pipeline_white: wgpu::RenderPipeline,
+    render_pipeline_green: wgpu::RenderPipeline,
     // indicies: Vec<Index>,
     queue: Queue,
     // verticies: Vec<Vertex>,
@@ -225,7 +226,7 @@ impl<'a> WindowState<'a> {
         let countries = feature_from_name(&topology, "countries")
             .expect("Did not extract geometry");
 
-        let render_pipeline =
+        let render_pipeline_white =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: None,
                 layout: Some(&pipeline_layout),
@@ -237,7 +238,36 @@ impl<'a> WindowState<'a> {
                 },
                 fragment: Some(wgpu::FragmentState {
                     module: &shader,
-                    entry_point: "fs_main",
+                    entry_point: "fs_white",
+                    compilation_options: PipelineCompilationOptions::default(),
+                    targets: &[Some(swapchain_format.into())],
+                }),
+                primitive: wgpu::PrimitiveState {
+                    topology: wgpu::PrimitiveTopology::LineStrip,
+                    // Enables "PRIMITIVE_RESTART" mode
+                    // see `rust_d3_geo::path::wgpu::PRIMITIVE_RESTART_TOKEN`
+                    strip_index_format: Some(IndexFormat::Uint32),
+                    ..Default::default()
+                },
+                depth_stencil: None,
+                multisample: wgpu::MultisampleState::default(),
+                multiview: None,
+                cache: None,
+            });
+
+        let render_pipeline_green =
+            device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+                label: None,
+                layout: Some(&pipeline_layout),
+                vertex: wgpu::VertexState {
+                    module: &shader,
+                    entry_point: "vs_main",
+                    buffers: &[Vertex::desc()],
+                    compilation_options: PipelineCompilationOptions::default(),
+                },
+                fragment: Some(wgpu::FragmentState {
+                    module: &shader,
+                    entry_point: "fs_green",
                     compilation_options: PipelineCompilationOptions::default(),
                     targets: &[Some(swapchain_format.into())],
                 }),
@@ -279,7 +309,8 @@ impl<'a> WindowState<'a> {
             panned: PhysicalPosition::default(),
             r_angles,
             rotated: Default::default(),
-            render_pipeline,
+            render_pipeline_white,
+            render_pipeline_green,
             surface,
             theme,
             window,
@@ -590,10 +621,11 @@ impl<'a> WindowState<'a> {
 
         // let (verticies, indicies) = path.object(&self.countries);
         // extract the transform.
-        let mut stream_input = path.projector.stream(&path.context);
-        self.countries.to_stream(&mut stream_input);
-        self.graticule.to_stream(&mut stream_input);
-        let (verticies, indicies) = stream_input.endpoint().result();
+        // let mut stream_input = path.projector.stream(&path.context);
+        // self.countries.to_stream(&mut stream_input);
+        // self.graticule.to_stream(&mut stream_input);
+        let (verticies_white, indicies_white) = path.object(&self.countries);
+        let (verticies_green, indicies_green) = path.object(&self.graticule);
 
         let frame = self
             .surface
@@ -607,30 +639,45 @@ impl<'a> WindowState<'a> {
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
-        let vertex_buffer =
+        let vertex_buffer_white =
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: Some("Points"),
-                    contents: bytemuck::cast_slice(&verticies),
+                    contents: bytemuck::cast_slice(&verticies_white),
                     usage: wgpu::BufferUsages::VERTEX,
                 });
 
-        let index_buffer =
+        let index_buffer_white =
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: Some("Index buffer"),
-                    contents: bytemuck::cast_slice(&indicies),
+                    contents: bytemuck::cast_slice(&indicies_white),
                     usage: wgpu::BufferUsages::INDEX,
                 });
 
+        let vertex_buffer_green =
+            self.device
+                .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                    label: Some("Points"),
+                    contents: bytemuck::cast_slice(&verticies_green),
+                    usage: wgpu::BufferUsages::VERTEX,
+                });
+
+        let index_buffer_green =
+            self.device
+                .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                    label: Some("Index buffer"),
+                    contents: bytemuck::cast_slice(&indicies_green),
+                    usage: wgpu::BufferUsages::INDEX,
+                });
         {
             let mut rpass =
                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                     label: None,
                     color_attachments: &[Some(
                         wgpu::RenderPassColorAttachment {
-                            view: &view,
-                            resolve_target: None,
+                            view: &view,          // Texture
+                            resolve_target: None, // Texture that will received the resolved output ( multisampling ).
                             ops: wgpu::Operations {
                                 load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
                                 store: wgpu::StoreOp::Store,
@@ -641,14 +688,23 @@ impl<'a> WindowState<'a> {
                     timestamp_writes: None,
                     occlusion_query_set: None,
                 });
-            rpass.set_pipeline(&self.render_pipeline);
-            rpass.set_vertex_buffer(0, vertex_buffer.slice(..));
+            rpass.set_pipeline(&self.render_pipeline_white);
+            rpass.set_vertex_buffer(0, vertex_buffer_white.slice(..));
             rpass.set_index_buffer(
-                index_buffer.slice(..),
+                index_buffer_white.slice(..),
                 wgpu::IndexFormat::Uint32,
             );
             // instances 0..1 implies instancing is not being used!!!.
-            rpass.draw_indexed(0..indicies.len() as u32, 0, 0..1);
+            rpass.draw_indexed(0..indicies_white.len() as u32, 0, 0..1);
+
+            rpass.set_pipeline(&self.render_pipeline_green);
+            rpass.set_vertex_buffer(0, vertex_buffer_green.slice(..));
+            rpass.set_index_buffer(
+                index_buffer_green.slice(..),
+                wgpu::IndexFormat::Uint32,
+            );
+            // instances 0..1 implies instancing is not being used!!!.
+            rpass.draw_indexed(0..indicies_green.len() as u32, 0, 0..1);
         }
 
         self.queue.submit(Some(encoder.finish()));
