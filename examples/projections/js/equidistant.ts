@@ -6,9 +6,18 @@ import {
 } from "d3-geo";
 
 export default async function conicEquidistant(world: GeoPermissibleObjects) {
-  const canvas: HTMLCanvasElement = document.querySelector("#equidistant-js");
+  const canvas: HTMLCanvasElement | null =
+    document.querySelector("#equidistant-js");
+
+  if (canvas == null) {
+    return;
+  }
 
   const context = canvas.getContext("2d");
+
+  if (context == null) {
+    return;
+  }
 
   const width = canvas.width;
   const height = canvas.height;

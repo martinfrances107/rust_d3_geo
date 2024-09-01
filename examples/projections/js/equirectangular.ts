@@ -6,11 +6,19 @@ import {
 } from "d3-geo";
 
 export default async function equirectangular(world: GeoPermissibleObjects) {
-  const canvas: HTMLCanvasElement = document.querySelector(
+  const canvas: HTMLCanvasElement | null = document.querySelector(
     "#equirectangular-js"
   );
 
+  if (canvas == null) {
+    return;
+  }
+
   const context = canvas.getContext("2d");
+
+  if (context == null) {
+    return;
+  }
 
   const width = canvas.width;
   const height = canvas.height;

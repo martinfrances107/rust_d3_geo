@@ -8,11 +8,19 @@ import {
 export default async function azimuthalEqidistant(
   world: GeoPermissibleObjects
 ) {
-  const canvas: HTMLCanvasElement = document.querySelector(
+  const canvas: HTMLCanvasElement | null = document.querySelector(
     "#azimuthal-equidistant-js"
   );
 
+  if (canvas == null) {
+    return;
+  }
+
   const context = canvas.getContext("2d");
+
+  if (context == null) {
+    return;
+  }
 
   const width = canvas.width;
   const height = canvas.height;

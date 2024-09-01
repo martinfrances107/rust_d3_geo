@@ -6,9 +6,18 @@ import {
 } from "d3-geo";
 
 export default async function sterographic(world: GeoPermissibleObjects) {
-  const canvas: HTMLCanvasElement = document.querySelector("#stereographic-js");
+  const canvas: HTMLCanvasElement | null =
+    document.querySelector("#stereographic-js");
+
+  if (canvas == null) {
+    return;
+  }
 
   const context = canvas.getContext("2d");
+
+  if (context == null) {
+    return;
+  }
 
   const width = canvas.width;
   const height = canvas.height;

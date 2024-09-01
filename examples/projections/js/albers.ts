@@ -6,10 +6,16 @@ import {
 } from "d3-geo";
 
 export default async function albers(world: GeoPermissibleObjects) {
-  const canvas: HTMLCanvasElement = document.querySelector("#albers-js");
+  const canvas: HTMLCanvasElement | null = document.querySelector("#albers-js");
 
+  if (canvas === null) {
+    return;
+  }
   const context = canvas.getContext("2d");
 
+  if (context == null) {
+    return;
+  }
   const width = canvas.width;
   const height = canvas.height;
 
