@@ -37,7 +37,7 @@ where
                 y: T::zero(),
             },
             radius: T::from(90_f64).unwrap(),
-            precision: T::from(6).unwrap(),
+            precision: T::from(2.5).unwrap(),
             stream: Stream::default(),
         }
     }

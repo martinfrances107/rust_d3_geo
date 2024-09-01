@@ -47,7 +47,7 @@ pub async fn draw(land: &Geometry<f64>) -> Result<(), JsValue> {
             y: height / 2_f64,
         })
         .clip_angle(90_f64)
-        .precision_set(&10_f64)
+        .precision_set(&0.1_f64)
         .build();
 
     let mut path = path_builder.build(projector);

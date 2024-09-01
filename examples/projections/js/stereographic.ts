@@ -26,7 +26,7 @@ export default async function sterographic(world: GeoPermissibleObjects) {
     .scale(width / 1.3 / 3.14)
     .translate([width / 2, height / 2])
     .clipAngle(90)
-    .precision(10);
+    .precision(0.1);
 
   const path = geoPath(projection, context);
   context.strokeStyle = "#69b2a2";

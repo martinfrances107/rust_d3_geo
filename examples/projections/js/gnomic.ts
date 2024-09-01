@@ -23,7 +23,7 @@ export default async function gnomic(world: GeoPermissibleObjects) {
   const projection = geoGnomonic()
     .scale(width / 6)
     .translate([width / 2, height / 2])
-    .precision(0.3)
+    .precision(0.1)
     .clipAngle(90 - 1e-3);
 
   const path = geoPath(projection, context);
