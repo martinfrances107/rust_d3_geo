@@ -49,7 +49,7 @@ where
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_tuple("Builder<T>")
             .field(&self.x0)
-            .field(&self.x0)
+            .field(&self.x1)
             .field(&self.X0)
             .field(&self.X1)
             .field(&self.y0)
@@ -57,7 +57,6 @@ where
             .field(&self.Y0)
             .field(&self.Y1)
             .field(&self.dx)
-            .field(&self.dy)
             .field(&self.dy)
             .field(&self.DX)
             .field(&self.DY)
