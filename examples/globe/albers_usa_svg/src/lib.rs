@@ -67,13 +67,13 @@ fn path_node(document: &Document, class_name: &str) -> Element {
 }
 
 const FILL: [&str; 7] = [
-    "fill: red",
-    "fill: orange",
-    "fill: olive",
-    "fill: blue",
-    "fill: indigo",
-    "fill: brown",
-    "fill: silver",
+    "fill:red",
+    "fill:orange",
+    "fill:olive",
+    "fill:blue",
+    "fill:indigo",
+    "fill:brown",
+    "fill:silver",
 ];
 
 /// Entry point.
