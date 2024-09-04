@@ -113,13 +113,13 @@ pub async fn start() -> Result<(), JsValue> {
         .build();
 
     let fill: [&str; 7] = [
-        "fill: red",
-        "fill: orange",
-        "fill: olive",
-        "fill: blue",
-        "fill: indigo",
-        "fill: brown",
-        "fill: silver",
+        "fill:red",
+        "fill:orange",
+        "fill:olive",
+        "fill:blue",
+        "fill:indigo",
+        "fill:brown",
+        "fill:silver",
     ];
 
     let path_builder = PathBuilder::pathstring();
