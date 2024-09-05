@@ -52,12 +52,14 @@ fn document() -> Result<Document, JsValue> {
         return Err(JsValue::from_str("document() Could not get the window"));
     };
 
-    match window.document() {
-        Some(d) => Ok(d),
-        None => Err(JsValue::from_str(
-            "document() Could not get the document from the window.",
-        )),
-    }
+    window.document().map_or_else(
+        || {
+            Err(JsValue::from_str(
+                "document() Could not get the document from the window.",
+            ))
+        },
+        Ok,
+    )
 }
 
 #[wasm_bindgen]

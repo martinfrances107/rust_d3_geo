@@ -39,14 +39,14 @@ impl Hash for CoordHashable {
 
 /// Elements of the index buffer.
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq, Pod, Zeroable)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Pod, Zeroable)]
 pub struct Index(u32);
 
 impl Index {
     /// description a `wgpu::VertexState parameter`
     /// The layout in memory of the index buffer.
     #[must_use]
-    pub fn desc() -> wgpu::VertexBufferLayout<'static> {
+    pub const fn desc() -> wgpu::VertexBufferLayout<'static> {
         wgpu::VertexBufferLayout {
             array_stride: std::mem::size_of::<Index>() as wgpu::BufferAddress,
             step_mode: wgpu::VertexStepMode::Vertex,
