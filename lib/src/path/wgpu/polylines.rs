@@ -32,7 +32,7 @@ impl Eq for CoordHashable {}
 
 impl Hash for CoordHashable {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        self.0.y.to_bits().hash(state);
+        self.0.x.to_bits().hash(state);
         self.0.y.to_bits().hash(state);
     }
 }
@@ -106,6 +106,8 @@ impl Result for PolyLines {
         mem::swap(&mut v_out, &mut self.vertex_buffer);
         let mut i_out = Vec::with_capacity(self.index_buffer.capacity());
         mem::swap(&mut i_out, &mut self.index_buffer);
+        self.next_index = 0;
+        self.index_store.clear();
         (v_out, i_out)
     }
 }
