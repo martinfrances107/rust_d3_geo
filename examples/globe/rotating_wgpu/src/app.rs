@@ -84,7 +84,7 @@ impl<'a> Application<'a> {
     fn create_window(
         &mut self,
         event_loop: &ActiveEventLoop,
-        _tab_id: Option<String>,
+        _tab_id: &Option<String>,
     ) -> Result<WindowId, Box<dyn Error>> {
         // TODO read-out activation token.
 
@@ -152,7 +152,7 @@ impl<'a> Application<'a> {
                     return;
                 }
 
-                if let Err(err) = self.create_window(event_loop, None) {
+                if let Err(err) = self.create_window(event_loop, &None) {
                     error!("Error creating new window: {err}");
                 }
             }
@@ -178,7 +178,7 @@ impl<'a> Application<'a> {
             Action::DragWindow => window.drag_window(),
             Action::DragResizeWindow => window.drag_resize_window(),
             Action::ShowWindowMenu => window.show_menu(),
-            Action::PrintHelp => self.print_help(),
+            Action::PrintHelp => Self::print_help(),
             #[cfg(macos_platform)]
             Action::CycleOptionAsAlt => window.cycle_option_as_alt(),
             Action::SetTheme(theme) => {
@@ -245,7 +245,7 @@ impl<'a> Application<'a> {
     }
 
     /// Process the key binding.
-    fn process_key_binding(key: &str, mods: &ModifiersState) -> Option<Action> {
+    fn process_key_binding(key: &str, mods: ModifiersState) -> Option<Action> {
         KEY_BINDINGS.iter().find_map(|binding| {
             binding
                 .is_triggered_by(&key, mods)
@@ -256,7 +256,7 @@ impl<'a> Application<'a> {
     /// Process mouse binding.
     fn process_mouse_binding(
         button: MouseButton,
-        mods: &ModifiersState,
+        mods: ModifiersState,
     ) -> Option<Action> {
         MOUSE_BINDINGS.iter().find_map(|binding| {
             binding
@@ -265,7 +265,7 @@ impl<'a> Application<'a> {
         })
     }
 
-    fn print_help(&self) {
+    fn print_help() {
         info!("Keyboard bindings:");
         for binding in KEY_BINDINGS {
             info!(
@@ -365,7 +365,7 @@ impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
                     let action = if let Key::Character(ch) =
                         event.logical_key.as_ref()
                     {
-                        Self::process_key_binding(&ch.to_uppercase(), &mods)
+                        Self::process_key_binding(&ch.to_uppercase(), mods)
                     } else {
                         None
                     };
@@ -379,7 +379,7 @@ impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
                 let mods = window.modifiers;
                 if let Some(action) = state
                     .is_pressed()
-                    .then(|| Self::process_mouse_binding(button, &mods))
+                    .then(|| Self::process_mouse_binding(button, mods))
                     .flatten()
                 {
                     self.handle_action(event_loop, window_id, action);
@@ -393,11 +393,11 @@ impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
                 info!("Moved cursor to {position:?}");
                 window.cursor_moved(position);
             }
-            WindowEvent::ActivationTokenDone { token: _token, .. } => {
+            WindowEvent::ActivationTokenDone { token, .. } => {
                 #[cfg(any(x11_platform, wayland_platform))]
                 {
-                    startup_notify::set_activation_token_env(_token);
-                    if let Err(err) = self.create_window(event_loop, None) {
+                    startup_notify::set_activation_token_env(token);
+                    if let Err(err) = self.create_window(event_loop, &None) {
                         error!("Error creating new window: {err}");
                     }
                 }
@@ -468,10 +468,10 @@ impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
         Self::dump_monitors(event_loop);
 
         // Create initial window.
-        self.create_window(event_loop, None)
+        self.create_window(event_loop, &None)
             .expect("failed to create initial window");
 
-        self.print_help();
+        Self::print_help();
     }
 
     fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {

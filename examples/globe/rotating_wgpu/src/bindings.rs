@@ -24,9 +24,9 @@ impl<T: Eq> Binding<T> {
     pub(crate) fn is_triggered_by(
         &self,
         trigger: &T,
-        mods: &ModifiersState,
+        mods: ModifiersState,
     ) -> bool {
-        &self.trigger == trigger && &self.mods == mods
+        &self.trigger == trigger && self.mods == mods
     }
 }
 
