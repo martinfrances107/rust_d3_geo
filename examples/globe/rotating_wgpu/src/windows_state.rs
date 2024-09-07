@@ -44,10 +44,20 @@ use winit::{
 
 use ::tracing::{error, info};
 
+// use crate::rings::rings;
 use crate::{app::Application, BORDER_SIZE};
 
+static RP_GREEN: &str = "RP_GREEN";
+static RP_WHITE: &str = "RP_WHITE";
+static COMMON_DEVICE: &str = "COMMON_DEVICE";
+static PIPELINE_LAYOUT: &str = "PIPELINE_LAYOUT";
+static SHADER_MODULE: &str = "SHADER_MODULE";
+static V_BUFF_COUNTRIES: &str = "V_BUFF_COUNTRIES";
+static I_BUFF_COUNTRIES: &str = "I_BUFF_COUNTRIES";
+static RENDER_PASS: &str = "RENDER_PASS";
+
 /// Cursor list to cycle through.
-const CURSORS: &[CursorIcon] = &[
+static CURSORS: &[CursorIcon] = &[
     CursorIcon::Default,
     CursorIcon::Crosshair,
     CursorIcon::Pointer,
@@ -174,7 +184,7 @@ impl<'a> WindowState<'a> {
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
-                    label: None,
+                    label: Some(COMMON_DEVICE),
                     required_features: wgpu::Features::empty(),
                     // Make sure we use the texture resolution limits from the adapter, so we can support images the size of the swapchain.
                     required_limits: wgpu::Limits::downlevel_webgl2_defaults()
@@ -189,7 +199,7 @@ impl<'a> WindowState<'a> {
         // Load the shaders from disk
         let shader =
             device.create_shader_module(wgpu::ShaderModuleDescriptor {
-                label: None,
+                label: Some(SHADER_MODULE),
                 source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!(
                     "../shader.wgsl"
                 ))),
@@ -197,7 +207,7 @@ impl<'a> WindowState<'a> {
 
         let pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-                label: None,
+                label: Some(PIPELINE_LAYOUT),
                 bind_group_layouts: &[],
                 push_constant_ranges: &[],
             });
@@ -228,7 +238,7 @@ impl<'a> WindowState<'a> {
 
         let render_pipeline_white =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-                label: None,
+                label: Some(RP_WHITE),
                 layout: Some(&pipeline_layout),
                 vertex: wgpu::VertexState {
                     module: &shader,
@@ -257,7 +267,7 @@ impl<'a> WindowState<'a> {
 
         let render_pipeline_green =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-                label: None,
+                label: Some(RP_GREEN),
                 layout: Some(&pipeline_layout),
                 vertex: wgpu::VertexState {
                     module: &shader,
@@ -642,7 +652,7 @@ impl<'a> WindowState<'a> {
         let vertex_buffer_white =
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                    label: Some("Points"),
+                    label: Some(V_BUFF_COUNTRIES),
                     contents: bytemuck::cast_slice(&verticies_white),
                     usage: wgpu::BufferUsages::VERTEX,
                 });
@@ -650,7 +660,7 @@ impl<'a> WindowState<'a> {
         let index_buffer_white =
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                    label: Some("Index buffer"),
+                    label: Some(I_BUFF_COUNTRIES),
                     contents: bytemuck::cast_slice(&indicies_white),
                     usage: wgpu::BufferUsages::INDEX,
                 });
@@ -658,7 +668,7 @@ impl<'a> WindowState<'a> {
         let vertex_buffer_green =
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                    label: Some("Points"),
+                    label: Some("V_BUFF_GRATICULE"),
                     contents: bytemuck::cast_slice(&verticies_green),
                     usage: wgpu::BufferUsages::VERTEX,
                 });
@@ -666,14 +676,14 @@ impl<'a> WindowState<'a> {
         let index_buffer_green =
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                    label: Some("Index buffer"),
+                    label: Some("I_BUFF_GRATICULE"),
                     contents: bytemuck::cast_slice(&indicies_green),
                     usage: wgpu::BufferUsages::INDEX,
                 });
         {
             let mut rpass =
                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                    label: None,
+                    label: Some(RENDER_PASS),
                     color_attachments: &[Some(
                         wgpu::RenderPassColorAttachment {
                             view: &view,          // Texture
