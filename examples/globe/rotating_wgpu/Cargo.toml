@@ -96,7 +96,7 @@ wgpu = { version = "22.0", default-features = false, features = [
   "dx12",
   "metal",
 ] }
-smol_str = "0.2.0"
+smol_str = "0.3"
 serde = { version = "1", optional = true }
 bytemuck = { version = "1.16", features = ["derive"] }
 geo-types = "0.7.13"
@@ -126,13 +126,12 @@ ndk = { version = "0.9.0", default-features = false }
 
 # AppKit or UIKit
 [target.'cfg(target_vendor = "apple")'.dependencies]
-block2 = "0.5.1"
-core-foundation = "0.9.3"
-objc2 = "0.5.2"
+core-foundation = "0.10"
+objc2 = "0.5"
 
 # AppKit
 [target.'cfg(target_os = "macos")'.dependencies]
-core-graphics = "0.23.1"
+core-graphics = "0.24"
 objc2-app-kit = { version = "0.2.2", features = [
   "NSAppearance",
   "NSApplication",
@@ -362,3 +361,4 @@ web_sys = { package = "web-sys", version = "0.3", features = [
 [target.'cfg(all(target_family = "wasm", target_feature = "atomics"))'.dependencies]
 atomic-waker = "1"
 concurrent-queue = { version = "2", default-features = false }
+block2 = "0.5.1"
