@@ -129,11 +129,15 @@ impl Stream for PolyLines {
             Occupied(o) => {
                 // Point has been seen before just update the index list.
                 let index = o.get();
-                self.index_buffer.push(Index(*index as u32));
+                let index_32 =
+                    u32::try_from(*index).expect("Could not convert index");
+                self.index_buffer.push(Index(index_32));
             }
             Vacant(v) => {
                 let index = v.insert(self.next_index);
-                self.index_buffer.push(Index(*index as u32));
+                let index_u32 =
+                    u32::try_from(*index).expect("could not convert index2");
+                self.index_buffer.push(Index(index_u32));
                 self.vertex_buffer.push(Vertex { pos: [p.x, p.y] });
                 self.next_index += 1;
             }

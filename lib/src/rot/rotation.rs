@@ -25,6 +25,10 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Constructor.
+    ///
+    /// # Panics
+    ///
+    ///   Will not occur as 180 will always be converted to f32/f64.
     #[inline]
     pub fn new(delta_lambda: T, delta_phi: T, delta_gamma: T) -> Self {
         let frac_pi_180 = T::PI() / T::from(180).unwrap();

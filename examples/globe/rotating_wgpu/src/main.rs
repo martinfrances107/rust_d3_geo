@@ -110,7 +110,9 @@ fn decode_cursor(bytes: &[u8]) -> CustomCursorSource {
     let img = image::load_from_memory(bytes).unwrap().to_rgba8();
     let samples = img.into_flat_samples();
     let (_, w, h) = samples.extents();
-    let (w, h) = (w as u16, h as u16);
+    // let (w, h) = (w as u16, h as u16);
+    let w = u16::try_from(w).expect("w: Failed to convert");
+    let h = u16::try_from(h).expect("h: Failed to convert");
     CustomCursor::from_rgba(samples.samples, w, h, w / 2, h / 2).unwrap()
 }
 

@@ -556,20 +556,26 @@ impl<'a> WindowState<'a> {
 
         let x_direction = if position.x < border_size {
             ResizeDirection::West
-        } else if position.x > (win_size.width as f64 - border_size) {
-            ResizeDirection::East
         } else {
-            // Use arbitrary direction instead of None for simplicity.
-            ResizeDirection::SouthEast
+            let win_width = f64::from(win_size.width);
+            if position.x > (win_width - border_size) {
+                ResizeDirection::East
+            } else {
+                // Use arbitrary direction instead of None for simplicity.
+                ResizeDirection::SouthEast
+            }
         };
 
         let y_direction = if position.y < border_size {
             ResizeDirection::North
-        } else if position.y > (win_size.height as f64 - border_size) {
-            ResizeDirection::South
         } else {
-            // Use arbitrary direction instead of None for simplicity.
-            ResizeDirection::SouthEast
+            let win_height = f64::from(win_size.height);
+            if position.y > (win_height - border_size) {
+                ResizeDirection::South
+            } else {
+                // Use arbitrary direction instead of None for simplicity.
+                ResizeDirection::SouthEast
+            }
         };
 
         let direction = match (x_direction, y_direction) {
@@ -705,7 +711,9 @@ impl<'a> WindowState<'a> {
                 wgpu::IndexFormat::Uint32,
             );
             // instances 0..1 implies instancing is not being used!!!.
-            rpass.draw_indexed(0..indicies_white.len() as u32, 0, 0..1);
+            let len_white = u32::try_from(indicies_white.len())
+                .expect("Could not convert len_white");
+            rpass.draw_indexed(0..len_white, 0, 0..1);
 
             rpass.set_pipeline(&self.render_pipeline_green);
             rpass.set_vertex_buffer(0, vertex_buffer_green.slice(..));
@@ -714,7 +722,9 @@ impl<'a> WindowState<'a> {
                 wgpu::IndexFormat::Uint32,
             );
             // instances 0..1 implies instancing is not being used!!!.
-            rpass.draw_indexed(0..indicies_green.len() as u32, 0, 0..1);
+            let len_green = u32::try_from(indicies_green.len())
+                .expect("could not convert len_green");
+            rpass.draw_indexed(0..len_green, 0, 0..1);
         }
 
         self.queue.submit(Some(encoder.finish()));
