@@ -15,10 +15,8 @@ fn vs_main(
 ) -> VertexOutput {
 
   // scale points into clip space -1 to 1!!!
-  //
-  // TODO Use the GPU properly -- use a SIMD like transform?
   var out: VertexOutput;
-  out.clip_position = vec4<f32>(model.position.x / 300.0, model.position.y / 250.0  , 0.0, 1.0);
+  out.clip_position = vec4<f32>(model.position.x / 256, model.position.y / 256.0  , 0.0, 1.0);
   return out;
 }
 
