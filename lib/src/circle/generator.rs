@@ -94,13 +94,17 @@ where
         self.radius
     }
 
-    /// Sets the precision.
+    /// Sets the precision
+    ///
+    /// (Number of steps in degrees )
     pub fn precision_set(&mut self, precision: T) -> &mut Self {
         self.precision = precision;
         self
     }
 
-    /// Returns the precision.
+    /// Returns the precision
+    ///
+    /// (Number of steps in degrees )
     #[inline]
     pub const fn precision(&self) -> T {
         self.precision
