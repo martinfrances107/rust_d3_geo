@@ -2,7 +2,6 @@ use core::fmt::Debug;
 
 use geo::CoordFloat;
 use geo::LineString;
-use geo::Polygon;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
@@ -48,7 +47,7 @@ where
     T: CoordFloat + FloatConst,
 {
     /// Injects the previously defined circle into the stream.
-    pub fn circle(&mut self) -> Polygon<T> {
+    pub fn circle(&mut self) -> LineString<T> {
         let c = self.center;
         let r = self.radius.to_radians();
         let p = self.precision.to_radians();
@@ -59,10 +58,9 @@ where
         let mut coordinates = vec![];
         core::mem::swap(&mut coordinates, &mut self.stream.ring);
 
-        let polygon = Polygon::new(LineString(coordinates), vec![]);
-
         self.stream.rotate = RotateRadians::I(RotationIdentity::default());
-        polygon
+
+        LineString(coordinates)
     }
 }
 

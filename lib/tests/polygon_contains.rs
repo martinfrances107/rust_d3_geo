@@ -92,7 +92,7 @@ fn small_circle() {
 
     let mut circle = CircleGenerator::default();
     circle.radius_set(60.0);
-    let polygon = circle.circle();
+    let polygon = Polygon::new(circle.circle(), vec![]);
 
     assert_eq!(
         polygon_contains(
@@ -117,7 +117,7 @@ fn wraps_longitudes() {
     let mut circle = CircleGenerator::default();
     circle.center_set(&Coord { x: 300f64, y: 0f64 });
     let c = circle.circle();
-    let polygon = c;
+    let polygon = Polygon::new(c, vec![]);
 
     assert_eq!(
         polygon_contains(&polygon, &Coord { x: 300f64, y: 0f64 }),
@@ -463,7 +463,7 @@ fn large_circle() {
     let mut circle = CircleGenerator::default();
     circle.radius_set(120.0);
     let c = circle.circle();
-    let polygon = c;
+    let polygon = Polygon::new(c, vec![]);
     println!("polygon {polygon:#?}");
     assert_eq!(
         polygon_contains(
@@ -523,13 +523,9 @@ fn large_narrow_equatorial_hole() {
     circle_gen
         .center_set(&Coord { x: 0f64, y: -90f64 })
         .radius_set(90f64 - 0.1f64);
-    let ring0: LineString<f64> = circle_gen.circle().exterior().clone();
+    let ring0: LineString<f64> = circle_gen.circle().clone();
 
-    let ring1 = circle_gen
-        .radius_set(90f64 + 0.1f64)
-        .circle()
-        .exterior()
-        .clone();
+    let ring1 = circle_gen.radius_set(90f64 + 0.1f64).circle().clone();
 
     let rev_vec: Vec<Coord<f64>> = ring1.into_iter().rev().collect();
     let ring1_rev = LineString(rev_vec);
@@ -554,13 +550,13 @@ fn large_narrow_equatorial_strip() {
     circle.center_set(&Coord { x: 0f64, y: -90f64 });
     circle.radius_set(90f64 + 0.1f64);
 
-    let ring1 = circle.circle().exterior().clone();
+    let ring1 = circle.circle().clone();
 
     let mut circle = CircleGenerator::default();
     circle
         .center_set(&Coord { x: 0f64, y: -90f64 })
         .radius_set(90f64 - 0.1f64);
-    let c2 = circle.circle().exterior().clone();
+    let c2 = circle.circle().clone();
     let rev_vec = c2.into_iter().rev().collect();
     let ring2 = LineString(rev_vec);
 
@@ -1024,8 +1020,11 @@ fn hemisphere_touching_the_south_pole() {
     circle.radius_set(90f64);
 
     let c = circle.circle();
-    let polygon = &c;
-    assert_eq!(polygon_contains(polygon, &Coord { x: 0f64, y: 0f64 }), true);
+    let polygon = Polygon::new(c, vec![]);
+    assert_eq!(
+        polygon_contains(&polygon, &Coord { x: 0f64, y: 0f64 }),
+        true
+    );
 }
 
 #[test]

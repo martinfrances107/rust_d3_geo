@@ -1,6 +1,6 @@
 # TODO
 
-[] - Dcoument when the reenter trait is to be used.
+[] - Dcoument when the re-enter trait is to be used.
 
 [] - Can I precompute values in compose?
 
@@ -24,7 +24,7 @@ examples/projection eslint needs updating.
    looks off ..select/apply a simple responsive css template.
   ( eg. Boilerplate, material-ui )
 
-# WebGl Demo
+## WebGl Demo
 
  [] Render points to fast.html
     clip space issue?
@@ -53,8 +53,6 @@ examples/projection eslint needs updating.
 ## Not Yet Implemented
 
 * src/interpolate.js
-
-
 
 ## The State of Testing
 

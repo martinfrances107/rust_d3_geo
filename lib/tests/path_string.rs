@@ -158,13 +158,15 @@ fn render_a_simple_multi_polygon() {
 
     let lat = 0;
     for long in (0..=40).step_by(40) {
-        let poly = gc
-            .clone()
-            .center_set(&Coord {
-                x: long as f64,
-                y: lat as f64,
-            })
-            .circle();
+        let poly = Polygon::new(
+            gc.clone()
+                .center_set(&Coord {
+                    x: long as f64,
+                    y: lat as f64,
+                })
+                .circle(),
+            vec![],
+        );
         p_vec.push(poly);
     }
     let object = Geometry::MultiPolygon(MultiPolygon(p_vec));

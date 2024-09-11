@@ -57,7 +57,6 @@ fn rings() {
                     y: lat as f64,
                 })
                 .circle()
-                .exterior()
                 .0
                 .clone();
             inner.reverse();
@@ -71,7 +70,6 @@ fn rings() {
                         y: lat as f64,
                     })
                     .circle()
-                    .exterior()
                     .clone(),
                 vec![inner_ring],
             );

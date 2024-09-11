@@ -373,20 +373,26 @@ fn of_the_equator_is_ambiguous() {
 #[test]
 fn a_set_of_polygons_is_the_spherical_average_of_its_surface() {
     println!("the centroid of a set of polygons is the (spherical) average of its surface");
-    let p45 = CircleGenerator::default()
-        .radius_set(45_f64)
-        .center_set(&Coord {
-            x: 90_f64,
-            y: 0_f64,
-        })
-        .circle();
-    let p60 = CircleGenerator::default()
-        .radius_set(60_f64)
-        .center_set(&Coord {
-            x: -90_f64,
-            y: 0_f64,
-        })
-        .circle();
+    let p45 = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(45_f64)
+            .center_set(&Coord {
+                x: 90_f64,
+                y: 0_f64,
+            })
+            .circle(),
+        vec![],
+    );
+    let p60 = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(60_f64)
+            .center_set(&Coord {
+                x: -90_f64,
+                y: 0_f64,
+            })
+            .circle(),
+        vec![],
+    );
     assert!(in_delta_point(
         Centroid::default()
             .calc(&Geometry::MultiPolygon(MultiPolygon(vec![p45, p60]))),
@@ -513,9 +519,9 @@ fn concentric_rings() {
         y: 45_f64,
     });
 
-    let l60 = cg.clone().radius_set(60_f64).circle().exterior().clone();
+    let l60 = cg.clone().radius_set(60_f64).circle().clone();
 
-    let l45 = cg.radius_set(45_f64).circle().exterior().clone();
+    let l45 = cg.radius_set(45_f64).circle().clone();
     let rev_vec = l45.into_iter().rev().collect();
     let l45_rev = LineString(rev_vec);
 

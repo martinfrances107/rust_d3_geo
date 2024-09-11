@@ -136,7 +136,7 @@ impl Stream for PolyLines {
             Vacant(v) => {
                 let index = v.insert(self.next_index);
                 let index_u32 =
-                    u32::try_from(*index).expect("could not convert index2");
+                    u32::try_from(*index).expect("Could not convert index2");
                 self.index_buffer.push(Index(index_u32));
                 self.vertex_buffer.push(Vertex { pos: [p.x, p.y] });
                 self.next_index += 1;

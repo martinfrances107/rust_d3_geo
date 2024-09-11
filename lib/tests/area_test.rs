@@ -260,7 +260,11 @@ fn graticule_outline_semilune() {
 #[test]
 fn circle_hemisphere() {
     println!("area: Polygon - circles hemisphere");
-    let circle = CircleGenerator::default().radius_set(90_f64).circle();
+    let circle = Polygon::new(
+        CircleGenerator::default().radius_set(90_f64).circle(),
+        vec![],
+    );
+
     let area = Area::calc(&circle);
     assert!(in_delta(area, 2_f64 * std::f64::consts::PI, 1e-5));
 }
@@ -268,10 +272,13 @@ fn circle_hemisphere() {
 #[test]
 fn circle_plus_60() {
     println!("area: Polygon - circles 60°");
-    let circle = CircleGenerator::default()
-        .radius_set(60_f64)
-        .precision_set(0.1_f64)
-        .circle();
+    let circle = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(60_f64)
+            .precision_set(0.1_f64)
+            .circle(),
+        vec![],
+    );
     let area = Area::calc(&circle);
     assert!(in_delta(area, std::f64::consts::PI, 1e-5));
 }
@@ -279,14 +286,17 @@ fn circle_plus_60() {
 #[test]
 fn circle_plus_60_north() {
     println!("area: Polygon - circles 60° North");
-    let circle = CircleGenerator::default()
-        .radius_set(60_f64)
-        .precision_set(0.1_f64)
-        .center_set(&Coord {
-            x: 0_f64,
-            y: 90_f64,
-        })
-        .circle();
+    let circle = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(60_f64)
+            .precision_set(0.1_f64)
+            .center_set(&Coord {
+                x: 0_f64,
+                y: 90_f64,
+            })
+            .circle(),
+        vec![],
+    );
     let area = Area::calc(&circle);
     assert!(in_delta(area, std::f64::consts::PI, 1e-5));
 }
@@ -294,10 +304,13 @@ fn circle_plus_60_north() {
 #[test]
 fn circle_plus_45() {
     println!("area: Polygon - circles 45°");
-    let circle = CircleGenerator::default()
-        .radius_set(45_f64)
-        .precision_set(0.1_f64)
-        .circle();
+    let circle = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(45_f64)
+            .precision_set(0.1_f64)
+            .circle(),
+        vec![],
+    );
     let area = Area::calc(&circle);
     assert!(in_delta(
         area,
@@ -309,14 +322,17 @@ fn circle_plus_45() {
 #[test]
 fn circle_plus_45_north() {
     println!("area: Polygon - circles 45° North");
-    let circle = CircleGenerator::default()
-        .radius_set(45_f64)
-        .precision_set(0.1_f64)
-        .center_set(&Coord {
-            x: 0_f64,
-            y: 90_f64,
-        })
-        .circle();
+    let circle = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(45_f64)
+            .precision_set(0.1_f64)
+            .center_set(&Coord {
+                x: 0_f64,
+                y: 90_f64,
+            })
+            .circle(),
+        vec![],
+    );
     let area = Area::calc(&circle);
     assert!(in_delta(
         area,
@@ -328,14 +344,17 @@ fn circle_plus_45_north() {
 #[test]
 fn circle_plus_45_south() {
     println!("area: Polygon - circles 45° South");
-    let circle = CircleGenerator::default()
-        .radius_set(45_f64)
-        .precision_set(0.1_f64)
-        .center_set(&Coord {
-            x: 0_f64,
-            y: -90_f64,
-        })
-        .circle();
+    let circle = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(45_f64)
+            .precision_set(0.1_f64)
+            .center_set(&Coord {
+                x: 0_f64,
+                y: -90_f64,
+            })
+            .circle(),
+        vec![],
+    );
     let area = Area::calc(&circle);
     assert!(in_delta(
         area,
@@ -347,10 +366,14 @@ fn circle_plus_45_south() {
 #[test]
 fn circle_plus_135() {
     println!("area: Polygon - circles 45° South");
-    let circle = CircleGenerator::default()
-        .radius_set(135_f64)
-        .precision_set(0.1_f64)
-        .circle();
+    let circle = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(135_f64)
+            .precision_set(0.1_f64)
+            .circle(),
+        vec![],
+    );
+
     let area = Area::calc(&circle);
     assert!(in_delta(
         area,
@@ -362,14 +385,17 @@ fn circle_plus_135() {
 #[test]
 fn circle_plus_135_north() {
     println!("area: Polygon - circles 45° South");
-    let circle = CircleGenerator::default()
-        .radius_set(135_f64)
-        .precision_set(0.1_f64)
-        .center_set(&Coord {
-            x: 0_f64,
-            y: 90_f64,
-        })
-        .circle();
+    let circle = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(135_f64)
+            .precision_set(0.1_f64)
+            .center_set(&Coord {
+                x: 0_f64,
+                y: 90_f64,
+            })
+            .circle(),
+        vec![],
+    );
     let area = Area::calc(&circle);
     assert!(in_delta(
         area,
@@ -381,14 +407,17 @@ fn circle_plus_135_north() {
 #[test]
 fn circle_plus_135_south() {
     println!("area: Polygon - circles 45° South");
-    let circle = CircleGenerator::default()
-        .radius_set(135_f64)
-        .precision_set(0.1_f64)
-        .center_set(&Coord {
-            x: 0_f64,
-            y: -90_f64,
-        })
-        .circle();
+    let circle = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(135_f64)
+            .precision_set(0.1_f64)
+            .center_set(&Coord {
+                x: 0_f64,
+                y: -90_f64,
+            })
+            .circle(),
+        vec![],
+    );
     let area = Area::calc(&circle);
     assert!(in_delta(
         area,
@@ -411,10 +440,13 @@ fn circles_tiny() {
 #[test]
 fn circles_huge() {
     println!("area: Polygon - circles tiny");
-    let circle = CircleGenerator::default()
-        .radius_set(180_f64 - 1e-6_f64)
-        .precision_set(0.1_f64)
-        .circle();
+    let circle = Polygon::new(
+        CircleGenerator::default()
+            .radius_set(180_f64 - 1e-6_f64)
+            .precision_set(0.1_f64)
+            .circle(),
+        vec![],
+    );
     let area = Area::calc(&circle);
     assert!(in_delta(area, 4_f64 * std::f64::consts::PI, 1e-5));
 }
@@ -426,13 +458,11 @@ fn circles_60_with_45_hole() {
         .precision_set(0.1)
         .radius_set(60_f64)
         .circle()
-        .exterior()
         .clone();
     let ring2 = CircleGenerator::default()
         .precision_set(0.1)
         .radius_set(45_f64)
         .circle()
-        .exterior()
         .clone();
 
     let rev_vec = ring2.into_iter().rev().collect();
@@ -454,7 +484,6 @@ fn circles_45_with_hole_0_0_and_0_90() {
         .radius_set(45_f64)
         .center_set(&Coord { x: 0_f64, y: 0_f64 })
         .circle()
-        .exterior()
         .clone();
     let rev1_vec: Vec<Coord<f64>> = ring1.into_iter().rev().collect();
     let ring1_rev = LineString(rev1_vec);
@@ -467,7 +496,6 @@ fn circles_45_with_hole_0_0_and_0_90() {
             y: 90_f64,
         })
         .circle()
-        .exterior()
         .clone();
 
     let rev2_vec = ring2.into_iter().rev().collect();
@@ -492,7 +520,6 @@ fn circles_45_with_hole_0_90_and_0_0() {
             y: 90_f64,
         })
         .circle()
-        .exterior()
         .clone();
     let rev1_vec: Vec<Coord<f64>> = ring1.into_iter().rev().collect();
     let ring1_rev = LineString(rev1_vec);
@@ -502,7 +529,6 @@ fn circles_45_with_hole_0_90_and_0_0() {
         .radius_set(45_f64)
         .center_set(&Coord { x: 0_f64, y: 0_f64 })
         .circle()
-        .exterior()
         .clone();
 
     let rev2_vec: Vec<Coord<f64>> = ring2.into_iter().rev().collect();
