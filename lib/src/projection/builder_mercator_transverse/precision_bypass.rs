@@ -17,6 +17,7 @@ where
         BuilderMercatorTransverseAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;
 
+    // Switch the builder into one without a resample node,
     fn precision_bypass(&self) -> Self::Output {
         let base = self.base.precision_bypass();
         Self::Output { base }
@@ -33,6 +34,7 @@ where
     type T = T;
 
     #[inline]
+    // Switch the builder into one without a resample node,
     fn precision_bypass(&self) -> Self::Output {
         Self::Output {
             base: self.base.precision_bypass(),

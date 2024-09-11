@@ -28,9 +28,7 @@ where
     type Output = BuilderAntimeridianResampleNoneNoClip<DRAIN, PR, T>;
     type T = T;
 
-    /// Set the projection builder precision
-    ///
-    /// delta is related to clip angle.
+    // Switch the builder into one without a resample node,
     #[inline]
     fn precision_bypass(&self) -> Self::Output {
         // Copy - Mutate.
@@ -74,9 +72,7 @@ where
     type Output = BuilderAntimeridianResampleNoneClip<DRAIN, PR, T>;
     type T = T;
 
-    /// Set the projection builder precision
-    ///
-    /// delta is related to clip angle.
+    // Switch the builder into one without a resample node,
     fn precision_bypass(&self) -> Self::Output {
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
@@ -121,9 +117,7 @@ where
     type Output = BuilderCircleResampleNoneNoClip<DRAIN, PR, T>;
     type T = T;
 
-    /// Set the projection builder precision
-    ///
-    /// delta is related to clip angle.
+    // Switch the builder into one without a resample node,
     #[inline]
     fn precision_bypass(&self) -> Self::Output {
         // Architecture Discussion:
@@ -171,9 +165,7 @@ where
     type Output = BuilderCircleResampleNoneClip<DRAIN, PR, T>;
     type T = T;
 
-    /// Set the projection builder precision
-    ///
-    /// delta is related to clip angle.
+    // Switch the builder into one without a resample node,
     fn precision_bypass(&self) -> Self::Output {
         // Architecture Discussion:
         // CLIP is generic over <.. RC, RU,..>,
