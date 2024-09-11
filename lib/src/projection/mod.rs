@@ -471,7 +471,7 @@ pub trait PrecisionBypass {
     type T;
     /// The resultant builder type.
     type Output;
-    // Switch to no resampling.
+    /// Switch to no resampling.
     fn precision_bypass(&self) -> Self::Output;
 }
 
