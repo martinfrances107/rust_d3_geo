@@ -9,11 +9,26 @@ use bytemuck::Pod;
 use bytemuck::Zeroable;
 use geo_types::Coord;
 
+use crate::path::Result;
 use crate::stream::Stream;
 
-use crate::path::Result;
-
 use super::Vertex;
+
+#[derive(Clone, Debug, PartialEq)]
+enum PointState {
+    LineAboutToStart,
+    // Index the associated start of
+    // the line. (In polygon mode used this to
+    // enforce the closure of all contained lines.)
+    LineInProgress(Index),
+    Init,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+enum LineState {
+    ClosueNoEnforcement,
+    ClosureEnforced,
+}
 
 /// Primitive Restart
 ///
@@ -68,11 +83,16 @@ pub struct PolyLines {
     pub vertex_buffer: Vec<Vertex>,
     /// `index_buffer` is a form ready to be shipped to the GPU.
     pub index_buffer: Vec<Index>,
-    /// Tracks if a point has been seen before
+    /// Tracks if a point has been seen before.
     index_store: HashMap<CoordHashable, usize>,
 
-    // Increment when adding a new point the vertex_buffer
+    // Increment when adding a new point the vertex_buffer.
     next_index: usize,
+
+    // In polygon mode all lines are closed.
+    line: LineState,
+    // State latches the first point in a line.
+    point: PointState,
 }
 
 impl Default for PolyLines {
@@ -87,6 +107,8 @@ impl Default for PolyLines {
             index_buffer: Vec::with_capacity(capacity),
             index_store: HashMap::with_capacity(capacity),
             next_index: 0usize,
+            line: LineState::ClosueNoEnforcement,
+            point: PointState::Init,
         }
     }
 }
@@ -125,27 +147,66 @@ impl Stream for PolyLines {
     fn point(&mut self, p: &Coord<Self::T>, _z: Option<u8>) {
         // Check the points store to see if this point has a index.
         let p_key = CoordHashable(*p);
-        match self.index_store.entry(p_key) {
+        let index = match self.index_store.entry(p_key) {
             Occupied(o) => {
                 // Point has been seen before just update the index list.
                 let index = o.get();
                 let index_32 =
                     u32::try_from(*index).expect("Could not convert index");
-                self.index_buffer.push(Index(index_32));
+                let index = Index(index_32);
+                self.index_buffer.push(index);
+                index
             }
             Vacant(v) => {
                 let index = v.insert(self.next_index);
                 let index_u32 =
                     u32::try_from(*index).expect("Could not convert index2");
-                self.index_buffer.push(Index(index_u32));
+                let index = Index(index_u32);
+                self.index_buffer.push(index);
                 self.vertex_buffer.push(Vertex { pos: [p.x, p.y] });
                 self.next_index += 1;
+                index
             }
         };
+
+        if self.point == PointState::LineAboutToStart {
+            self.point = PointState::LineInProgress(index);
+        }
     }
 
     fn line_end(&mut self) {
+        // Emulate the 'z' / .close_path() call.
+        if self.line == LineState::ClosureEnforced {
+            if let PointState::LineInProgress(index) = self.point {
+                self.index_buffer.push(index);
+            } else {
+                debug_assert!(
+                    true,
+                    "{}",
+                    format!(
+                        "PointState was in a unrecognized state {:#?}",
+                        self.point
+                    )
+                );
+            }
+        }
         // Let the GPU know that a new line_strip is about to start.
         self.index_buffer.push(PRIMITVE_RESTART_TOKEN);
+        self.point = PointState::Init;
+    }
+
+    #[inline]
+    fn line_start(&mut self) {
+        self.point = PointState::LineAboutToStart;
+    }
+
+    #[inline]
+    fn polygon_end(&mut self) {
+        self.line = LineState::ClosueNoEnforcement;
+    }
+
+    #[inline]
+    fn polygon_start(&mut self) {
+        self.line = LineState::ClosureEnforced;
     }
 }
