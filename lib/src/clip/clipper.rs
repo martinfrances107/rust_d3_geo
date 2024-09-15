@@ -265,7 +265,9 @@ where
             return;
         }
 
-        ring_segments.rejoin();
+        if n > 1 && (clean & 2 != 0) {
+            ring_segments.rejoin();
+        }
 
         ring_segments.lines.retain(|segment| segment.len() > 1usize);
 
