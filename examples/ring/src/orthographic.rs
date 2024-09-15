@@ -51,7 +51,6 @@ pub fn draw() -> Result<()> {
                     y: f64::from(lat),
                 })
                 .circle()
-                .exterior()
                 .0
                 .clone();
             inner.reverse();
@@ -64,7 +63,6 @@ pub fn draw() -> Result<()> {
                         y: f64::from(lat),
                     })
                     .circle()
-                    .exterior()
                     .clone(),
                 vec![inner_ring],
             );
