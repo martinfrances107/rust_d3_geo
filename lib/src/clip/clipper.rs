@@ -351,8 +351,8 @@ where
         let start_inside = polygon_contains(&self.state.polygon, &self.start);
 
         if !segments_inner.is_empty() {
-            self.state.line_node.sink().polygon_start();
             if !self.state.polygon_started {
+                self.state.line_node.sink().polygon_start();
                 self.state.polygon_started = true;
             }
             rejoin(
