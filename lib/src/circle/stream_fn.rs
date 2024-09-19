@@ -49,7 +49,17 @@ pub fn stream_fn<EP, STREAM, T>(
 
     let mut t = t0;
     let mut cond = true;
+    // Emulating a For loop in javascript which test and potentially exits
+    // before ever processing the loop.
     while cond {
+        cond = if direction > T::zero() {
+            t > t1
+        } else {
+            t < t1
+        };
+        if cond == false {
+            break;
+        }
         let (st, ct) = t.sin_cos();
         let point = spherical_radians(&[
             cos_radius,
@@ -59,10 +69,5 @@ pub fn stream_fn<EP, STREAM, T>(
         stream.point(&point, None);
 
         t = t - step;
-        cond = if direction > T::zero() {
-            t > t1
-        } else {
-            t < t1
-        };
     }
 }
