@@ -342,12 +342,15 @@ where
         self.state.point_fn = PointFn::Default;
         self.state.line_start_fn = LineStartFn::Default;
         self.state.line_end_fn = LineEndFn::Default;
+        // A tested with a single polygon...
+        // When a polygon is completely visible segments is empty.
+        // When a polygon is completely hidden segments is empty.
+        // Only when the polygon is being clipped is segments populated.
         let mut segments: VecDeque<VecDeque<Vec<LineElem<T>>>> =
             VecDeque::default();
         core::mem::swap(&mut segments, &mut self.state.segments);
         let segments_inner: Vec<Vec<LineElem<T>>> =
             segments.into_iter().flatten().collect();
-
         let start_inside = polygon_contains(&self.state.polygon, &self.start);
 
         if !segments_inner.is_empty() {
@@ -367,6 +370,7 @@ where
                 self.state.line_node.sink().polygon_start();
                 self.state.polygon_started = true;
             }
+            // Produce ring around the clipping circle!
             self.state.line_node.sink().line_start();
             self.interpolator.interpolate(
                 None,
