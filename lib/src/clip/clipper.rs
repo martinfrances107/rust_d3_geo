@@ -342,7 +342,7 @@ where
         self.state.point_fn = PointFn::Default;
         self.state.line_start_fn = LineStartFn::Default;
         self.state.line_end_fn = LineEndFn::Default;
-        // A tested with a single polygon...
+        // As tested with a single polygon...
         // When a polygon is completely visible segments is empty.
         // When a polygon is completely hidden segments is empty.
         // Only when the polygon is being clipped is segments populated.
