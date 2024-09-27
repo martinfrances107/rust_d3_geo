@@ -96,7 +96,7 @@ The example requires the feature flag "wgpu".
 </td>
 
 <td width="50%">
-<image src="https://github.com/martinfrances107/rust_d3_geo/blob/v3.x-dev/images/single.png">
+<image src="https://github.com/martinfrances107/rust_d3_geo/blob/v3.x-dev/images/rotating_wgpu.png">
 </td>
 
 </tr>
@@ -180,7 +180,7 @@ Sample code in both RUST and javascript that renders a complex multi-polygon. ( 
 
 </td>
 <td>
-<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/ring.png">
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v3.x-dev/images/ring.png">
 </td>
 
 </tr>
