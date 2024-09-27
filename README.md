@@ -67,7 +67,7 @@ For performance reasons this example is best viewed by running "cargo build" and
 </td>
 
 <td width="50%">
-  <image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/rotating.png">
+  <image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v2.x-dev/images/rotating.png">
 </td>
 
 </tr>
@@ -85,7 +85,7 @@ It also includes code samples that generates SVG graticules.
 (Scale 1:50M)
 </td>
 <td>
-<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/globe.svg">
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v2.x-dev/images/globe.svg">
 </td>
 
 </tr>
@@ -105,7 +105,7 @@ This example is currently undergoing rapid development.
 </td>
 
 <td>
-<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/drag_and_zoom.png">
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v2.x-dev/images/drag_and_zoom.png">
 </td>
 
 </tr>
@@ -122,7 +122,7 @@ shows a side by side comparison of the all the projections rendered by in both <
 (Scale 1:50M)
 </td>
 <td>
-<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/projection.png">
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v2.x-dev/images/projection.png">
 </td>
 
 </tr>
@@ -138,7 +138,7 @@ As can be seen in the code a Multi-drain must be used to gather the three projec
 (Scale of 1:10M)
 
 </td>
-<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/albers_usa.svg"></td>
+<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v2.x-dev/images/albers_usa.svg"></td>
 
 </tr>
 <tr>
@@ -151,7 +151,7 @@ Sample code in both RUST and javascript that renders a complex multi-polygon. ( 
 
 </td>
 <td>
-<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/ring.png">
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v2.x-dev/images/ring.png">
 </td>
 
 </tr>
@@ -350,7 +350,6 @@ Future Work.
 * [rayon](https://docs.rs/rayon/latest/rayon/index.html) is rust's crate for multithread support.
 
 * I have made extensive use of iterators when porting the code and rayon support the easy conversion of single threaded iterators to multithread iterators.
-
 
 ### Architecture discussion
 
