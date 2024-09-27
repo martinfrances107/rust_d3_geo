@@ -71,7 +71,7 @@ For performance reasons this example is best viewed by running "npm run  build" 
 </td>
 
 <td width="50%">
-  <image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/rotating.png">
+  <image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v3.x-dev/images/rotating.png">
 </td>
 
 </tr>
@@ -96,7 +96,7 @@ The example requires the feature flag "wgpu".
 </td>
 
 <td width="50%">
-<image src="https://github.com/martinfrances107/rust_d3_geo/blob/v2.x-dev/images/single.png">
+<image src="https://github.com/martinfrances107/rust_d3_geo/blob/v3.x-dev/images/single.png">
 </td>
 
 </tr>
@@ -114,7 +114,7 @@ It also includes code samples that generates SVG graticules.
 (Scale 1:50M)
 </td>
 <td>
-<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/globe.svg">
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v3.x-dev/images/globe.svg">
 </td>
 
 </tr>
@@ -134,7 +134,7 @@ This example is currently undergoing rapid development.
 </td>
 
 <td>
-<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/drag_and_zoom.png">
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v3.x-dev/images/drag_and_zoom.png">
 </td>
 
 </tr>
@@ -151,7 +151,7 @@ shows a side by side comparison of the all the projections rendered by in both <
 (Scale 1:50M)
 </td>
 <td>
-<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/projection.png">
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v3.x-dev/images/projection.png">
 </td>
 
 </tr>
@@ -167,7 +167,7 @@ As can be seen in the code a Multi-drain must be used to gather the three projec
 (Scale of 1:10M)
 
 </td>
-<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/main/images/albers_usa.svg"></td>
+<td><image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v3.x-dev/images/albers_usa.svg"></td>
 
 </tr>
 <tr>
