@@ -22,7 +22,7 @@ This library allows the development of custom maps. It provides a comprehensive 
  [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) objects. Additionally this
  library can be used to calculate lengths, areas and the centroid of such objects
 
-[CHANGELOG.md](https://github.com/martinfrances107/rust_d3_geo/blob/v2.x-dev/CHANGELOG.md) contains a summary of breaking changes between v1.x, 2.x and 3.x
+[CHANGELOG.md](https://github.com/martinfrances107/rust_d3_geo/blob/v3.x-dev/CHANGELOG.md) contains a summary of breaking changes between v1.x, 2.x and 3.x
 
 Version 3.0.0 adds support for WGPU
 

@@ -1,15 +1,78 @@
 # Changelog
 
+HEADLINE change
+
+## [3.0.0] - 29 Sept 2024
+
+### Replace Endpoint with Path2dEndpoint
+
+```rust
+The headline change is that Endpoint becomes Path2dEndpoint.
+
+```rust
 -use d3_geo_rs::path::endpoint::Endpoint;
 +use d3_geo_rs::path::path2d_endpoint::Path2dEndpoint;
 
-//...
 
--        let ep: Endpoint = Endpoint::new(path2d);
+/* ... */
 
-+        let ep: Path2dEndpoint = Path2dEndpoint::new(path2d);
+-   let ep: Endpoint = Endpoint::new(path2d);
++   let ep: Path2dEndpoint = Path2dEndpoint::new(path2d);
+```
 
-## []
+```
+commit f6a3e3cf3e9ebdc57b2b6f4c5d475b1d574a14df
+Author: martinfrances107 <martinfrances107@hotmail.com>
+Date:   Fri Jul 26 07:42:57 2024 +0100
+
+    Breaking changes - public struct EndPoint becomes Path2dEndpoint
+
+    Also two new features "web" and "wgpu"
+
+    web: is included by default, but there is a minor case where
+    cli apps ( just producing SVG images ) don't need to depend on
+    the web_sys crate.
+
+    wgpu: is a new feature for hight performance where the output is and
+     "Array Buffer" which is then passed to a GPU shader.
+
+    The wgpu feature is in a highly experimental phase.
+
+```
+
+### Name change use Reflect
+
+```
+commit 92b3a5700e591d411ed60c001e595468d6c5c0cf
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Wed May 24 08:07:16 2023 +0100
+
+    breaking change enum REFLECT becomes Reflect.
+```
+
+### Clipper Simplification
+
+```
+commit 991faec4a4c3116cac9ecd6db3ce0a1fd6963c0b
+Author: Martin <martinfrances107@hotmail.com>
+Date:   Fri May 26 22:41:00 2023 +0100
+
+    Simplification: related to PointVisible.
+
+    Removed two module
+
+    lib/src/clip/antimeridian/pv.rs
+    lib/src/clip/circle/pv.rs
+
+    Clipper is no loner generic over PV.
+
+    -pub struct Clipper<I, LU, PV, RC, STATE, T>
+    +pub struct Clipper<I, LU, RC, STATE, T>
+
+    The trait PointVisible  is now implmented on Line.
+
+    This is a breaking change.
+```
 
 ## [2.0.0] - 22 July 2023
 
