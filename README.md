@@ -96,7 +96,7 @@ The example requires the feature flag "wgpu".
 </td>
 
 <td width="50%">
-<image src="https://github.com/martinfrances107/rust_d3_geo/blob/v3.x-dev/images/rotating_wgpu.png">
+<image src="https://raw.githubusercontent.com/martinfrances107/rust_d3_geo/v3.x-dev/images/rotating_wgpu.png">
 </td>
 
 </tr>
