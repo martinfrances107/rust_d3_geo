@@ -364,7 +364,7 @@ The complexity of rendering 240 countries/polygons provides a good view in memor
 
 <br/>
 
-## Future 2.0 upgrades
+## Future 3.0 upgrades
 
 "Semantic Versioning" guidelines :-
 
