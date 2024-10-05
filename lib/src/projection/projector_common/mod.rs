@@ -1,4 +1,9 @@
 use core::fmt::Debug;
+use std::sync::mpsc;
+use std::sync::mpsc::Receiver;
+use std::sync::mpsc::RecvError;
+use std::sync::mpsc::SendError;
+use std::sync::mpsc::Sender;
 
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -100,6 +105,93 @@ where
 
         // First stage is a transform radians node.
         out
+    }
+}
+
+/// Multi-thread Stream: All messages
+#[derive(Debug)]
+pub enum Message<T>
+where
+    T: CoordFloat,
+{
+    /// Returns the end point of the stream.
+    EndPoint,
+    /// Declare the end of a line segment.
+    LineEnd,
+    /// Declare the start of a line segment.
+    LineStart,
+    /// Declare the start of a polygon.
+    PolygonStart,
+    /// Declare a point.
+    ///
+    /// TODO can I pass Coord by reference
+    /// * make this Sync -
+    /// * resolve lifetime issues.
+    Point((Coord<T>, Option<u8>)),
+    /// Declare the end of a polygon.
+    PolygonEnd,
+    /// Declare a sphere object.
+    Sphere,
+}
+
+/// Multi-thread Streams
+///
+/// Details which end of the node interlink collapsed.
+#[derive(Debug)]
+pub enum ChannelError<T>
+where
+    T: CoordFloat,
+{
+    /// The channel sink collapsed.
+    Rx(RecvError),
+    /// The entrance to the channel collapsed.
+    Tx(SendError<Message<T>>),
+}
+
+impl<CLIPC, CLIPU, DRAIN, PCNC, PCNU, PR, RC, RU, T>
+    Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>
+where
+    CLIPC: Clone,
+    CLIPU: ConnectableClip<Output = CLIPC, SC = RC>,
+    DRAIN: Clone + PartialEq,
+    PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
+    PR: Transform<T = T>,
+    RU: Clone + Connectable<Output<PCNC> = RC>,
+    T: 'static + CoordFloat + FloatConst + Send,
+{
+    fn stream_mt(&mut self, drain: &DRAIN) {
+        // Prepare stage-interlink channels
+        // Input to stage txN. rxN consumed in stage N.
+        let (tx1, rx1): (Sender<Message<T>>, Receiver<Message<T>>) =
+            mpsc::channel();
+
+        let (tx2, rx2): (Sender<Message<T>>, Receiver<Message<T>>) =
+            mpsc::channel();
+
+        let (tx3, rx3): (Sender<Message<T>>, Receiver<Message<T>>) =
+            mpsc::channel();
+        let (tx4, rx4): (Sender<Message<T>>, Receiver<Message<T>>) =
+            mpsc::channel();
+        let (tx5, rx5): (Sender<Message<T>>, Receiver<Message<T>>) =
+            mpsc::channel();
+
+        let mut handles = vec![];
+
+        // Build cache.
+        let postclip_node = self.postclip.clone();
+
+        let resample_node = self.resample.clone();
+
+        // let preclip_node = self.clip;
+
+        let rotate_node = self.rotator.clone();
+
+        let out: StreamTransformRadians<_, T> = self.transform_radians.clone();
+
+        let stage1 = out.gen_stage(tx1, rx1);
+        handles.push(stage1);
+        let stage2 = rotate_node.gen_stage(tx2, rx2);
+        handles.push(stage2);
     }
 }
 
