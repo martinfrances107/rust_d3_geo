@@ -109,16 +109,16 @@ where
     T: 'static + CoordFloat + Send,
 {
     /// Generate a thread which stage on the responsibility of the
-    /// StreamTransformRadians pipeline stage.
+    /// `StreamTransformRadians` pipeline stage.
     ///
     /// Consumes a Self
-    pub fn gen_stage<'a>(
+    pub fn gen_stage(
         self,
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,
     ) -> JoinHandle<ChannelError<T>> {
         // Stage pipelines.
-        let stage1: JoinHandle<ChannelError<T>> = thread::spawn(move || {
+        thread::spawn(move || {
             // The thread takes ownership over `thread_tx`
             // Each thread queues a message in the channel
             let a;
@@ -127,7 +127,6 @@ where
                     Ok(message) => {
                         let res_tx = match message {
                             Message::Point((p, m)) => {
-                                println!("stage 1 point entry()");
                                 let p_trans = Coord {
                                     x: p.x * self.frac_pi_180,
                                     y: p.y * self.frac_pi_180,
@@ -143,7 +142,7 @@ where
                             | Message::Sphere => tx.send(message),
                         };
                         match res_tx {
-                            Ok(_) => {
+                            Ok(()) => {
                                 continue;
                             }
                             Err(e) => ChannelError::Tx(e),
@@ -155,8 +154,6 @@ where
                 break;
             }
             a
-        });
-
-        stage1
+        })
     }
 }

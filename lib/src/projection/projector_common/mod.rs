@@ -159,7 +159,7 @@ where
     RU: Clone + Connectable<Output<PCNC> = RC>,
     T: 'static + CoordFloat + FloatConst + Send,
 {
-    fn stream_mt(&mut self, drain: &DRAIN) {
+    fn stream_mt(&self, drain: &DRAIN) {
         // Prepare stage-interlink channels
         // Input to stage txN. rxN consumed in stage N.
         let (tx1, rx1): (Sender<Message<T>>, Receiver<Message<T>>) =
