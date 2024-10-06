@@ -102,7 +102,6 @@ where
     }
 }
 
-// Multi-threaded support is Highly Experimental.
 impl<T> StreamMT<T> for RotatorRadians<Unconnected, T>
 where
     T: 'static + CoordFloat + FloatConst + Send,

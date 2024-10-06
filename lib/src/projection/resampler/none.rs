@@ -102,7 +102,6 @@ where
     }
 }
 
-// Multi-threaded support is Highly Experimental.
 impl<PR, T> StreamMT<T> for None<PR, Unconnected, T>
 where
     PR: 'static + Transform<T = T> + Send,

@@ -130,7 +130,8 @@ where
 
 /// Multi-threaded version of the Stream Path API
 ///
-/// See `Stream`
+/// See also `Stream`
+/// Multi-threaded support is Highly Experimental.
 pub trait StreamMT<T>
 where
     T: CoordFloat,
