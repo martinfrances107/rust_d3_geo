@@ -11,6 +11,7 @@ use num_traits::FloatConst;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
+use crate::stream::StreamMT;
 use crate::stream::Unconnected;
 
 use super::projector_common::ChannelError;
@@ -104,7 +105,7 @@ where
 }
 
 // Multi-threaded support is Highly Experimental.
-impl<T> StreamTransformRadians<Unconnected, T>
+impl<T> StreamMT<T> for StreamTransformRadians<Unconnected, T>
 where
     T: 'static + CoordFloat + Send,
 {
@@ -112,7 +113,7 @@ where
     /// `StreamTransformRadians` pipeline stage.
     ///
     /// Consumes a Self
-    pub fn gen_stage(
+    fn gen_stage(
         self,
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,

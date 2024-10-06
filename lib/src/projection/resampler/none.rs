@@ -1,13 +1,21 @@
 use core::fmt::Debug;
+use std::sync::mpsc::Receiver;
+use std::sync::mpsc::Sender;
+use std::thread;
+use std::thread::JoinHandle;
 
 use geo::CoordFloat;
 use geo_types::Coord;
+use num_traits::FloatConst;
 
 use crate::compose::Compose;
+use crate::projection::projector_common::ChannelError;
+use crate::projection::projector_common::Message;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
+use crate::stream::StreamMT;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -91,5 +99,59 @@ where
     #[inline]
     fn sphere(&mut self) {
         self.state.sink.sphere();
+    }
+}
+
+// Multi-threaded support is Highly Experimental.
+impl<PR, T> StreamMT<T> for None<PR, Unconnected, T>
+where
+    PR: 'static + Transform<T = T> + Send,
+    T: 'static + CoordFloat + FloatConst + Send,
+{
+    /// Generate a thread which stage on the responsibility of the
+    /// `StreamTransformRadians` pipeline stage.
+    ///
+    /// Consumes a Self
+    fn gen_stage(
+        self,
+        tx: Sender<Message<T>>,
+        rx: Receiver<Message<T>>,
+    ) -> JoinHandle<ChannelError<T>> {
+        // Stage pipelines.
+        thread::spawn(move || {
+            // The thread takes ownership over `thread_tx`
+            // Each thread queues a message in the channel
+            let a;
+            loop {
+                a = match rx.recv() {
+                    Ok(message) => {
+                        let res_tx = match message {
+                            Message::Point((p, m)) => {
+                                let p_trans =
+                                    self.projection_transform.transform(&p);
+                                let message = Message::Point((p_trans, m));
+                                tx.send(message)
+                            }
+                            Message::EndPoint
+                            | Message::LineEnd
+                            | Message::LineStart
+                            | Message::PolygonStart
+                            | Message::PolygonEnd
+                            | Message::Sphere => tx.send(message),
+                        };
+                        match res_tx {
+                            Ok(()) => {
+                                continue;
+                            }
+                            Err(e) => ChannelError::Tx(e),
+                        }
+                    }
+                    Err(e) => ChannelError::Rx(e),
+                };
+
+                break;
+            }
+            a
+        })
     }
 }

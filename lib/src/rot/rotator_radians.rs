@@ -13,6 +13,7 @@ use crate::projection::projector_common::Message;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
+use crate::stream::StreamMT;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -102,7 +103,7 @@ where
 }
 
 // Multi-threaded support is Highly Experimental.
-impl<T> RotatorRadians<Unconnected, T>
+impl<T> StreamMT<T> for RotatorRadians<Unconnected, T>
 where
     T: 'static + CoordFloat + FloatConst + Send,
 {
@@ -110,7 +111,7 @@ where
     /// `StreamTransformRadians` pipeline stage.
     ///
     /// Consumes a Self
-    pub fn gen_stage(
+    fn gen_stage(
         self,
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,

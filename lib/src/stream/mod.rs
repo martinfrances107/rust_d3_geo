@@ -10,11 +10,17 @@ mod polygon;
 
 use core::fmt::Debug;
 use std::marker::PhantomData;
+use std::sync::mpsc::Receiver;
+use std::sync::mpsc::Sender;
+use std::thread::JoinHandle;
 
 use geo::CoordFloat;
 use geo::LineString;
 use geo::Polygon;
 use geo_types::Coord;
+
+use crate::projection::projector_common::ChannelError;
+use crate::projection::projector_common::Message;
 
 /// The state before the path is constructed.
 #[derive(Clone, Default, Debug)]
@@ -120,6 +126,22 @@ where
     fn polygon_start(&mut self) {}
     /// Declare a sphere object.
     fn sphere(&mut self) {}
+}
+
+/// Multi-threaded version of the Stream Path API
+///
+/// See `Stream`
+pub trait StreamMT<T>
+where
+    T: CoordFloat,
+{
+    /// Generate a thread
+    /// messages pass in, messages pass out.
+    fn gen_stage(
+        self,
+        tx: Sender<Message<T>>,
+        rx: Receiver<Message<T>>,
+    ) -> JoinHandle<ChannelError<T>>;
 }
 
 fn stream_line<EP, S, T>(ls: &LineString<T>, stream: &mut S, closed: usize)

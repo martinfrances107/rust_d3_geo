@@ -16,6 +16,7 @@ use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connectable;
 use crate::stream::Connected;
+use crate::stream::StreamMT;
 use crate::stream::Unconnected;
 use crate::Transform;
 
@@ -148,15 +149,15 @@ where
     Tx(SendError<Message<T>>),
 }
 
-impl<CLIPC, CLIPU, DRAIN, PCNC, PCNU, PR, RC, RU, T>
+impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
     Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>
 where
     CLIPC: Clone,
     CLIPU: ConnectableClip<Output = CLIPC, SC = RC>,
     DRAIN: Clone + PartialEq,
-    PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
+    PCNU: Clone + StreamMT<T>,
     PR: Transform<T = T>,
-    RU: Clone + Connectable<Output<PCNC> = RC>,
+    RU: Clone + StreamMT<T>,
     T: 'static + CoordFloat + FloatConst + Send,
 {
     fn stream_mt(&self, drain: &DRAIN) {
@@ -192,6 +193,7 @@ where
         handles.push(stage1);
         let stage2 = rotate_node.gen_stage(tx2, rx2);
         handles.push(stage2);
+        let stage3 = resample_node.gen_stage(tx3, rx3);
     }
 }
 
