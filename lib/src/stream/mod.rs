@@ -137,7 +137,10 @@ where
     T: CoordFloat,
 {
     /// Generate a thread
-    /// messages pass in, messages pass out.
+    /// messages passed in, messages passed out.
+    /// Messages are received via the rx end of the channel.
+    /// Downstream messages are sent to the tx end of the channel
+    ///
     fn gen_stage(
         self,
         tx: Sender<Message<T>>,
