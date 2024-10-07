@@ -1,8 +1,24 @@
 # TODO
 
-[] - Dcoument when the re-enter trait is to be used.
+-[] - MultiThreaded
 
-[] - Can I precompute values in compose?
+  6 Stage pipeline
+
+    /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
+
+- [x] StreamTransformRadians
+- [x] StreamTransform
+- [] PreClip
+- [x] Resample
+- [] Postclip
+
+  EndPoints need conversion.
+
+  todo!() need to list.
+  Area, Centroid,
+- [x] - Dcoument when the re-enter trait is to be used.
+
+- [x] - Can I precompute values in compose?
 
 []- What is new in cargo tarpaulin
   albersUSA implement cache in 'fn stream()'
@@ -11,16 +27,16 @@
 High Priority.
 examples/projection eslint needs updating.
 
-* Write examples/index.html -- a guide to building rust projects.
+- Write examples/index.html -- a guide to building rust projects.
 
-* Develop styling for world maps graticules on bottom, overlaid by land.
+- Develop styling for world maps graticules on bottom, overlaid by land.
 
-* Add examples landing page. - showing images of the each projection.
+- Add examples landing page. - showing images of the each projection.
 
-* Review  path/centroid_test.rs
+- Review  path/centroid_test.rs
     has a small number of low priority test to implement.
 
-* Examples projections CSS styling needs minor adjustment font sizes of text
+- Examples projections CSS styling needs minor adjustment font sizes of text
    looks off ..select/apply a simple responsive css template.
   ( eg. Boilerplate, material-ui )
 
@@ -38,21 +54,21 @@ examples/projection eslint needs updating.
 
 ## Before API lock-down
 
-* Detail why Feature and FeatureCollection is complicated.
+- Detail why Feature and FeatureCollection is complicated.
 
-* cargo docs:
+- cargo docs:
   Some traits are missing description.
 
-* Define graticule10 as an alias for Graticule::default().
+- Define graticule10 as an alias for Graticule::default().
  -- the code in examples looks scrappy.
 
-* Justify whey PathResult is not implemented for LengthStream? is cal() a deviation from the interface.
+- Justify whey PathResult is not implemented for LengthStream? is cal() a deviation from the interface.
 
-* Same argument for CircleStream.
+- Same argument for CircleStream.
 
 ## Not Yet Implemented
 
-* src/interpolate.js
+- src/interpolate.js
 
 ## The State of Testing
 

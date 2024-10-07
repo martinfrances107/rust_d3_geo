@@ -1,10 +1,13 @@
 use std::collections::VecDeque;
+use std::sync::mpsc::{Receiver, Sender};
+use std::thread::{self, JoinHandle};
 
 use geo::CoordFloat;
 use geo_types::Coord;
 
 use crate::path::Result;
-use crate::stream::Stream;
+use crate::projection::projector_common::{ChannelError, Message};
+use crate::stream::{Stream, StreamMT};
 
 use super::line_elem::LineElem;
 
@@ -90,5 +93,59 @@ where
     #[inline]
     fn line_start(&mut self) {
         self.lines.push_back(vec![]);
+    }
+}
+
+impl<T> StreamMT<T> for Buffer<T>
+where
+    T: 'static + CoordFloat + Send,
+{
+    fn gen_stage(
+        mut self,
+        _tx: Sender<Message<T>>,
+        rx: Receiver<Message<T>>,
+    ) -> JoinHandle<ChannelError<T>> {
+        // Stage pipelines.
+        thread::spawn(move || {
+            // The thread takes ownership over `thread_tx`
+            // Each thread queues a message in the channel
+            let a;
+            loop {
+                a = match rx.recv() {
+                    Ok(message) => {
+                        let res_tx = match message {
+                            Message::Point((p, m)) => {
+                                self.lines.back_mut().map_or_else(
+                            || panic!("buffers: lines was not properly initialised."),
+                                  |line| {
+                                      line.push(LineElem { p, m });
+                                      },
+                                    );
+                                Ok(())
+                            }
+                            Message::LineStart => {
+                                self.lines.push_back(vec![]);
+                                Ok(())
+                            }
+                            Message::EndPoint
+                            | Message::LineEnd
+                            | Message::PolygonStart
+                            | Message::PolygonEnd
+                            | Message::Sphere => Ok(()),
+                        };
+                        match res_tx {
+                            Ok(()) => {
+                                continue;
+                            }
+                            Err(e) => ChannelError::Tx(e),
+                        }
+                    }
+                    Err(e) => ChannelError::Rx(e),
+                };
+
+                break;
+            }
+            a
+        })
     }
 }
