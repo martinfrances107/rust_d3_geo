@@ -187,7 +187,7 @@ static CODE_ABOVE: u8 = 8;
 /// the small circle's bounding box.
 ///
 /// code is only available of from connected state.
-impl<SINK, T> Line<Connected<SINK>, T>
+impl<S, T> Line<S, T>
 where
     T: CoordFloat + FloatConst,
 {
