@@ -1,4 +1,5 @@
 use core::fmt::Debug;
+use std::thread;
 
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -12,9 +13,12 @@ use crate::clip::Clean;
 use crate::clip::LineConnected;
 use crate::clip::PointVisible;
 use crate::math::EPSILON;
+use crate::projection::projector_common::ChannelError;
+use crate::projection::projector_common::Message;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
+use crate::stream::StreamMT;
 use crate::stream::Unconnected;
 
 use super::intersect::intersect;
@@ -407,5 +411,358 @@ where
         self.point0 = point1;
         self.v0 = v;
         self.c0 = c;
+    }
+}
+
+impl<T> StreamMT<T> for Line<Unconnected, T>
+where
+    T: 'static + CoordFloat + FloatConst + Send,
+{
+    // #[inline]
+    // fn endpoint(&mut self) -> &mut Self::EP {
+    //     self.state.sink().endpoint()
+    // }
+
+    // fn line_end(&mut self) {
+    //     if self.v0 {
+    //         self.state.sink().line_end();
+    //     }
+    //     self.point0 = None;
+    // }
+
+    // fn line_start(&mut self) {
+    //     self.v00 = false;
+    //     self.v0 = false;
+    //     self.clean = 1;
+    // }
+
+    // #[allow(clippy::too_many_lines)]
+    // fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
+
+    // }
+
+    fn gen_stage(
+        mut self,
+        tx: std::sync::mpsc::Sender<
+            crate::projection::projector_common::Message<T>,
+        >,
+        rx: std::sync::mpsc::Receiver<
+            crate::projection::projector_common::Message<T>,
+        >,
+    ) -> std::thread::JoinHandle<
+        crate::projection::projector_common::ChannelError<T>,
+    > {
+        // Stage pipelines.
+        thread::spawn(move || {
+            // The thread takes ownership over `thread_tx`
+            // Each thread queues a message in the channel
+            let a;
+            loop {
+                a = match rx.recv() {
+                    Ok(message) => {
+                        let res_tx = match message {
+                            Message::Point((p, m)) => {
+                                let mut point1 = Some(LineElem { p, m: None });
+                                let mut point2: Option<LineElem<T>>;
+                                let v = self.point_visible(&p);
+
+                                let c = if self.small_radius {
+                                    if v {
+                                        CODE_NONE
+                                    } else {
+                                        self.code(&p)
+                                    }
+                                } else if v {
+                                    let inc = if p.x < T::zero() {
+                                        T::PI()
+                                    } else {
+                                        -T::PI()
+                                    };
+                                    self.code(&Coord {
+                                        x: p.x + inc,
+                                        y: p.y,
+                                    })
+                                } else {
+                                    CODE_NONE
+                                };
+
+                                if self.point0.is_none() {
+                                    self.v00 = v;
+                                    self.v0 = v;
+                                    if v {
+                                        // self.state.sink.line_start();
+                                        if let Err(e) =
+                                            tx.send(Message::LineStart)
+                                        {
+                                            return ChannelError::Tx(e);
+                                        }
+                                    }
+                                }
+
+                                if v != self.v0 {
+                                    point2 = match intersect(
+                                        &self.point0.unwrap(),
+                                        &point1.unwrap(),
+                                        self.radius.cos(),
+                                        false,
+                                    ) {
+                                        Return::One(p_return) => p_return,
+                                        Return::None => None,
+                                        Return::False => {
+                                            todo!("This case is not handled by test");
+                                            // I think I should set point2 to None here but must test.
+                                        }
+                                        Return::Two(_t) => {
+                                            // There is a subtle bug in the javascript here two points is handles
+                                            // as if the second does not exits.
+                                            // For now just cause a panic here to see how many times it occurs.
+                                            panic!("Requested One or None found Two as !!");
+                                        }
+                                    };
+
+                                    if point2.is_some()
+                                        || abs_diff_eq(
+                                            &self.point0.unwrap().p,
+                                            &point2.unwrap().p,
+                                        )
+                                        || abs_diff_eq(
+                                            &point1.unwrap().p,
+                                            &point2.unwrap().p,
+                                        )
+                                    {
+                                        point1.map_or_else(
+                    || {
+                        panic!("Trying to set m on a blank.");
+                    },
+                    |p| {
+                        point1 = Some(LineElem { p: p.p, m: Some(1) });
+                    },
+                );
+                                    }
+                                }
+
+                                if v != self.v0 {
+                                    self.clean = 0;
+                                    if v {
+                                        // outside going in
+                                        // self.state.sink.line_start();
+                                        if let Err(e) =
+                                            tx.send(Message::LineStart)
+                                        {
+                                            return ChannelError::Tx(e);
+                                        }
+                                        point2 = match intersect(
+                                            &point1.unwrap(),
+                                            &self.point0.unwrap(),
+                                            self.cr,
+                                            false,
+                                        ) {
+                                            Return::One(le) => le,
+                                            Return::Two([_p, _m]) => {
+                                                panic!("Silently dropping second point.");
+                                            }
+                                            Return::None => None,
+                                            Return::False => {
+                                                todo!("must cover this case.");
+                                            }
+                                        };
+                                        // self.state
+                                        //     .sink
+                                        //     .point(&point2.unwrap().p, None);
+                                        if let Err(e) = tx.send(Message::Point(
+                                            (point2.unwrap().p, None),
+                                        )) {
+                                            return ChannelError::Tx(e);
+                                        };
+                                    } else {
+                                        // Inside going out.
+                                        point2 = match intersect(
+                                            &self.point0.unwrap(),
+                                            &point1.unwrap(),
+                                            self.cr,
+                                            false,
+                                        ) {
+                                            Return::One(le) => le,
+                                            Return::Two([_, _]) => {
+                                                panic!("Silently dropping second point.");
+                                            }
+                                            Return::None => None,
+                                            Return::False => {
+                                                todo!("must handle this case.");
+                                            }
+                                        };
+
+                                        // self.state
+                                        //     .sink
+                                        //     .point(&point2.unwrap().p, Some(2));
+                                        if let Err(e) = tx.send(Message::Point(
+                                            (point2.unwrap().p, Some(2)),
+                                        )) {
+                                            return ChannelError::Tx(e);
+                                        };
+                                        // self.state.sink.line_end();
+                                        if let Err(e) =
+                                            tx.send(Message::LineEnd)
+                                        {
+                                            return ChannelError::Tx(e);
+                                        }
+                                    }
+                                    self.point0 = point2;
+                                } else if self.not_hemisphere
+                                    && self.point0.is_some()
+                                    && self.small_radius ^ v
+                                {
+                                    // If the codes for two points are different, or are both zero,
+                                    // and there this segment intersects with the small circle.
+                                    if self.c0 != c || c == CODE_NONE {
+                                        let t = intersect(
+                                            &point1.unwrap(),
+                                            &self.point0.unwrap(),
+                                            self.cr,
+                                            true,
+                                        );
+                                        match t {
+                                            // Request two received one!!
+                                            // This copies the behavior of the javascript original.
+                                            Return::False
+                                            | Return::None
+                                            | Return::One(_) => {}
+                                            Return::Two(t) => {
+                                                self.clean = 0;
+                                                if self.small_radius {
+                                                    // self.state
+                                                    //     .sink
+                                                    //     .line_start();
+                                                    if let Err(e) = tx.send(
+                                                        Message::LineStart,
+                                                    ) {
+                                                        return ChannelError::Tx(e);
+                                                    }
+                                                    // self.state
+                                                    //     .sink
+                                                    //     .point(&t[0], None);
+                                                    if let Err(e) =
+                                                        tx.send(Message::Point(
+                                                            (t[0], None),
+                                                        ))
+                                                    {
+                                                        return ChannelError::Tx(e);
+                                                    };
+                                                    // self.state
+                                                    //     .sink
+                                                    //     .point(&t[1], None);
+                                                    if let Err(e) =
+                                                        tx.send(Message::Point(
+                                                            (t[1], None),
+                                                        ))
+                                                    {
+                                                        return ChannelError::Tx(e);
+                                                    };
+                                                    // self.state.sink.line_end();
+                                                    if let Err(e) = tx
+                                                        .send(Message::LineEnd)
+                                                    {
+                                                        return ChannelError::Tx(e);
+                                                    }
+                                                } else {
+                                                    // self.state
+                                                    //     .sink
+                                                    //     .point(&t[1], None);
+                                                    if let Err(e) =
+                                                        tx.send(Message::Point(
+                                                            (t[1], None),
+                                                        ))
+                                                    {
+                                                        return ChannelError::Tx(e);
+                                                    };
+                                                    // self.state.sink.line_end();
+                                                    if let Err(e) = tx
+                                                        .send(Message::LineEnd)
+                                                    {
+                                                        return ChannelError::Tx(e);
+                                                    }
+                                                    // self.state
+                                                    //     .sink
+                                                    //     .line_start();
+                                                    if let Err(e) = tx.send(
+                                                        Message::LineStart,
+                                                    ) {
+                                                        return ChannelError::Tx(e);
+                                                    }
+                                                    // self.state.sink.point(
+                                                    //     &t[0],
+                                                    //     Some(3_u8),
+                                                    // );
+                                                    if let Err(e) =
+                                                        tx.send(Message::Point(
+                                                            (t[0], Some(3)),
+                                                        ))
+                                                    {
+                                                        return ChannelError::Tx(e);
+                                                    };
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if v && (self.point0.is_none()
+                                    || !abs_diff_eq(
+                                        &self.point0.unwrap().p,
+                                        &point1.unwrap().p,
+                                    ))
+                                {
+                                    // self.state
+                                    //     .sink
+                                    //     .point(&point1.unwrap().p, None);
+                                    if let Err(e) = tx.send(Message::Point((
+                                        point1.unwrap().p,
+                                        None,
+                                    ))) {
+                                        return ChannelError::Tx(e);
+                                    };
+                                }
+                                self.point0 = point1;
+                                self.v0 = v;
+                                self.c0 = c;
+                                Ok(())
+                            }
+                            Message::LineEnd => {
+                                if self.v0 {
+                                    if let Err(e) = tx.send(Message::LineEnd) {
+                                        return ChannelError::Tx(e);
+                                    }
+                                }
+                                self.point0 = None;
+                                Ok(())
+                            }
+                            Message::LineStart => {
+                                self.v00 = false;
+                                self.v0 = false;
+                                self.clean = 1;
+                                Ok(())
+                            }
+
+                            Message::EndPoint => tx.send(Message::EndPoint),
+                            Message::PolygonStart
+                            | Message::PolygonEnd
+                            | Message::Sphere => {
+                                // NoOp
+                                Ok(())
+                            }
+                        };
+                        match res_tx {
+                            Ok(()) => {
+                                continue;
+                            }
+                            Err(e) => ChannelError::Tx(e),
+                        }
+                    }
+                    Err(e) => ChannelError::Rx(e),
+                };
+
+                break;
+            }
+            a
+        })
     }
 }
