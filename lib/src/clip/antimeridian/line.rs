@@ -1,4 +1,8 @@
 use core::fmt::Debug;
+use std::sync::mpsc::Receiver;
+use std::sync::mpsc::Sender;
+use std::thread;
+use std::thread::JoinHandle;
 
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -10,9 +14,12 @@ use crate::clip::Clean;
 use crate::clip::LineConnected;
 use crate::clip::PointVisible;
 use crate::math::EPSILON;
+use crate::projection::projector_common::ChannelError;
+use crate::projection::projector_common::Message;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
+use crate::stream::StreamMT;
 use crate::stream::Unconnected;
 
 use super::intersect::intersect;
@@ -227,5 +234,197 @@ where
             None,
         );
         self.sign0 = sign1;
+    }
+}
+
+impl<T> StreamMT<T> for Line<Unconnected, T>
+where
+    T: 'static + CoordFloat + FloatConst + Send,
+{
+    /// Generate a thread which stage on the responsibility of the
+    /// `StreamTransformRadians` pipeline stage.
+    ///
+    /// Consumes a Self
+    fn gen_stage(
+        mut self,
+        tx: Sender<Message<T>>,
+        rx: Receiver<Message<T>>,
+    ) -> JoinHandle<ChannelError<T>> {
+        // Stage pipelines.
+        thread::spawn(move || {
+            // The thread takes ownership over `thread_tx`
+            // Each thread queues a message in the channel
+            let a;
+            loop {
+                a = match rx.recv() {
+                    Ok(message) => {
+                        let res_tx = match message {
+                            Message::Point((p, m)) => {
+                                let mut lambda1 = p.x;
+                                let phi1 = p.y;
+                                let sign1 = if lambda1 > T::zero() {
+                                    T::PI()
+                                } else {
+                                    -T::PI()
+                                };
+                                let delta = (lambda1 - self.lambda0).abs();
+                                if (delta - T::PI()).abs() < self.epsilon {
+                                    // Line crosses a pole.
+                                    let f_2 = T::from(2_f64).unwrap();
+                                    self.phi0 = if (self.phi0 + phi1 / f_2)
+                                        .is_sign_positive()
+                                    {
+                                        T::FRAC_PI_2()
+                                    } else {
+                                        -T::FRAC_PI_2()
+                                    };
+                                    if let Err(e) = tx.send(Message::Point((
+                                        Coord {
+                                            x: self.lambda0,
+                                            y: self.phi0,
+                                        },
+                                        None,
+                                    ))) {
+                                        return ChannelError::Tx(e);
+                                    };
+                                    if let Err(e) = tx.send(Message::Point((
+                                        Coord {
+                                            x: self.sign0,
+                                            y: self.phi0,
+                                        },
+                                        None,
+                                    ))) {
+                                        return ChannelError::Tx(e);
+                                    };
+                                    if let Err(e) = tx.send(Message::LineEnd) {
+                                        return ChannelError::Tx(e);
+                                    };
+                                    if let Err(e) = tx.send(Message::LineStart)
+                                    {
+                                        return ChannelError::Tx(e);
+                                    };
+                                    if let Err(e) = tx.send(Message::Point((
+                                        Coord {
+                                            x: sign1,
+                                            y: self.phi0,
+                                        },
+                                        None,
+                                    ))) {
+                                        return ChannelError::Tx(e);
+                                    };
+                                    if let Err(e) = tx.send(Message::Point((
+                                        Coord {
+                                            x: lambda1,
+                                            y: self.phi0,
+                                        },
+                                        None,
+                                    ))) {
+                                        return ChannelError::Tx(e);
+                                    };
+                                    self.clean = 0;
+                                } else if self.sign0 != sign1
+                                    && delta >= T::PI()
+                                {
+                                    // Line crosses antimeridian.
+                                    if (self.lambda0 - self.sign0).abs()
+                                        < self.epsilon
+                                    {
+                                        self.lambda0 = self.lambda0
+                                            - self.sign0 * self.epsilon;
+                                        // handle degeneracies
+                                    }
+                                    if (lambda1 - sign1).abs() < self.epsilon {
+                                        lambda1 =
+                                            lambda1 - sign1 * self.epsilon;
+                                    }
+                                    self.phi0 = intersect(
+                                        self.lambda0,
+                                        self.phi0,
+                                        lambda1,
+                                        phi1,
+                                    );
+                                    if let Err(e) = tx.send(Message::Point((
+                                        Coord {
+                                            x: self.sign0,
+                                            y: self.phi0,
+                                        },
+                                        None,
+                                    ))) {
+                                        return ChannelError::Tx(e);
+                                    };
+                                    if let Err(e) = tx.send(Message::LineEnd) {
+                                        return ChannelError::Tx(e);
+                                    };
+                                    if let Err(e) = tx.send(Message::LineStart)
+                                    {
+                                        return ChannelError::Tx(e);
+                                    };
+                                    if let Err(e) = tx.send(Message::Point((
+                                        Coord {
+                                            x: sign1,
+                                            y: self.phi0,
+                                        },
+                                        None,
+                                    ))) {
+                                        return ChannelError::Tx(e);
+                                    };
+                                    self.clean = 0;
+                                }
+                                self.lambda0 = lambda1;
+                                self.phi0 = phi1;
+                                if let Err(e) = tx.send(Message::Point((
+                                    Coord {
+                                        x: self.lambda0,
+                                        y: self.phi0,
+                                    },
+                                    None,
+                                ))) {
+                                    return ChannelError::Tx(e);
+                                };
+                                self.sign0 = sign1;
+                                Ok(())
+                            }
+
+                            Message::LineEnd => {
+                                match tx.send(Message::LineEnd) {
+                                    Ok(()) => {
+                                        self.lambda0 = T::nan();
+                                        self.phi0 = T::nan();
+                                        Ok(())
+                                    }
+                                    Err(e) => Err(e),
+                                }
+                            }
+                            Message::LineStart => {
+                                match tx.send(Message::LineStart) {
+                                    Ok(()) => {
+                                        self.clean = 1;
+                                        Ok(())
+                                    }
+                                    Err(e) => Err(e),
+                                }
+                            }
+                            Message::EndPoint | Message::Sphere => {
+                                tx.send(message)
+                            }
+                            Message::PolygonStart | Message::PolygonEnd => {
+                                // NoOp
+                                Ok(())
+                            }
+                        };
+                        match res_tx {
+                            Ok(()) => {
+                                continue;
+                            }
+                            Err(e) => ChannelError::Tx(e),
+                        }
+                    }
+                    Err(e) => ChannelError::Rx(e),
+                };
+
+                break;
+            }
+            a
+        })
     }
 }
