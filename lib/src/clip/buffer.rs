@@ -96,7 +96,7 @@ where
     }
 }
 
-impl<T> StreamMT<T> for Buffer<T>
+impl<'a, T> StreamMT<T> for Buffer<T>
 where
     T: 'static + CoordFloat + Send,
 {
@@ -127,7 +127,9 @@ where
                                 self.lines.push_back(vec![]);
                                 Ok(())
                             }
-                            Message::EndPoint
+                            // TODO is EndPoint a NoOP?
+                            // Should I pass Sphere
+                            Message::EndPoint(_)
                             | Message::LineEnd
                             | Message::PolygonStart
                             | Message::PolygonEnd

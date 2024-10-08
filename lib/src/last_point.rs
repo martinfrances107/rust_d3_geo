@@ -1,8 +1,12 @@
+use std::sync::mpsc::{Receiver, Sender};
+use std::thread::{self, JoinHandle};
+
 use geo::CoordFloat;
 use geo_types::Coord;
 
 use crate::path::Result;
-use crate::stream::Stream;
+use crate::projection::projector_common::{ChannelError, Message};
+use crate::stream::{EndPointMT, Stream, StreamMT};
 
 /// Stream endpoint: Retain the last point.
 ///
@@ -28,6 +32,66 @@ where
     #[inline]
     fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
         self.0 = Some(*p);
+    }
+}
+
+impl<T> StreamMT<T> for LastPoint<T>
+where
+    T: 'static + CoordFloat + Send,
+{
+    /// Generate a thread which stage on the responsibility of the
+    /// `StreamTransformRadians` pipeline stage.
+    ///
+    /// Consumes a Self
+    fn gen_stage(
+        mut self,
+        tx: Sender<Message<T>>,
+        rx: Receiver<Message<T>>,
+    ) -> JoinHandle<ChannelError<T>> {
+        // Stage pipelines.
+        thread::spawn(move || {
+            // The thread takes ownership over `thread_tx`
+            // Each thread queues a message in the channel
+            let a;
+            loop {
+                a = match rx.recv() {
+                    Ok(message) => {
+                        let res_tx = match message {
+                            Message::Point((p, _m)) => {
+                                self.0 = Some(p);
+                                Ok(())
+                            }
+                            Message::EndPoint(_) => {
+                                if let Err(e) = tx.send(Message::EndPoint(
+                                    EndPointMT::LastPoint(self.clone()),
+                                )) {
+                                    return ChannelError::Tx(e);
+                                }
+                                Ok(())
+                            }
+                            Message::LineEnd
+                            | Message::LineStart
+                            | Message::PolygonStart
+                            | Message::PolygonEnd
+                            | Message::Sphere => {
+                                // NoOp
+                                Ok(())
+                            }
+                        };
+                        match res_tx {
+                            Ok(()) => {
+                                continue;
+                            }
+                            Err(e) => ChannelError::Tx(e),
+                        }
+                    }
+                    Err(e) => ChannelError::Rx(e),
+                };
+
+                break;
+            }
+            a
+        })
     }
 }
 

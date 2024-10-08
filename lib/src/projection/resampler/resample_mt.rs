@@ -399,7 +399,7 @@ where
                                         Err(e) => Err(e),
                                     }
                                 }
-                                Message::EndPoint | Message::Sphere => {
+                                Message::EndPoint(_) | Message::Sphere => {
                                     tx.send(message)
                                 }
                             };

@@ -16,6 +16,7 @@ use crate::rot::rotate_radians::RotateRadians;
 use crate::rot::rotator_radians::RotatorRadians;
 use crate::stream::Connectable;
 use crate::stream::Connected;
+use crate::stream::EndPointMT;
 use crate::stream::StreamMT;
 use crate::stream::Unconnected;
 use crate::Transform;
@@ -116,7 +117,7 @@ where
     T: CoordFloat,
 {
     /// Returns the end point of the stream.
-    EndPoint,
+    EndPoint(EndPointMT<T>),
     /// Declare the end of a line segment.
     LineEnd,
     /// Declare the start of a line segment.

@@ -8,14 +8,17 @@
 
 - [x] StreamTransformRadians
 - [x] StreamTransform
-- [] PreClip
+- [] PreClip buffers rectangle lineA lineC
 - [x] Resample
-- [] Postclip
+- [] Postclip Identity/
 
-  EndPoints need conversion.
+19 EndPoints need conversion.
+
+Must bundle into a SUPER large Enum  SUPER == suspicious
 
   todo!() need to list.
   Area, Centroid,
+
 - [x] - Dcoument when the re-enter trait is to be used.
 
 - [x] - Can I precompute values in compose?

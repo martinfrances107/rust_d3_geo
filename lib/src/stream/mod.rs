@@ -19,6 +19,9 @@ use geo::LineString;
 use geo::Polygon;
 use geo_types::Coord;
 
+use crate::centroid::Centroid;
+use crate::last_point::LastPoint;
+use crate::path::measure::Measure;
 use crate::projection::projector_common::ChannelError;
 use crate::projection::projector_common::Message;
 
@@ -146,6 +149,26 @@ where
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,
     ) -> JoinHandle<ChannelError<T>>;
+}
+
+#[derive(Debug)]
+pub enum EndPointMT<T>
+where
+    T: CoordFloat,
+{
+    // Buffer(Buffer<T>),
+    Centroid(Centroid<T>),
+    Path,
+    Path2dEndpoint,
+    PathArea,
+    Point,
+    LastPoint(LastPoint<T>),
+    Length(),
+    Measure(Measure<T>),
+    MultiDrain,
+    Bounds,
+    String,
+    // PolyLines?,
 }
 
 fn stream_line<EP, S, T>(ls: &LineString<T>, stream: &mut S, closed: usize)

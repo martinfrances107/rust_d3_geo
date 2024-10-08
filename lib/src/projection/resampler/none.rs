@@ -14,6 +14,7 @@ use crate::projection::projector_common::Message;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::stream::Connectable;
 use crate::stream::Connected;
+use crate::stream::EndPointMT;
 use crate::stream::Stream;
 use crate::stream::StreamMT;
 use crate::stream::Unconnected;
@@ -131,7 +132,7 @@ where
                                 let message = Message::Point((p_trans, m));
                                 tx.send(message)
                             }
-                            Message::EndPoint
+                            Message::EndPoint(_)
                             | Message::LineEnd
                             | Message::LineStart
                             | Message::PolygonStart

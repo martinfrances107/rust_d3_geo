@@ -418,29 +418,6 @@ impl<T> StreamMT<T> for Line<Unconnected, T>
 where
     T: 'static + CoordFloat + FloatConst + Send,
 {
-    // #[inline]
-    // fn endpoint(&mut self) -> &mut Self::EP {
-    //     self.state.sink().endpoint()
-    // }
-
-    // fn line_end(&mut self) {
-    //     if self.v0 {
-    //         self.state.sink().line_end();
-    //     }
-    //     self.point0 = None;
-    // }
-
-    // fn line_start(&mut self) {
-    //     self.v00 = false;
-    //     self.v0 = false;
-    //     self.clean = 1;
-    // }
-
-    // #[allow(clippy::too_many_lines)]
-    // fn point(&mut self, p: &Coord<T>, _m: Option<u8>) {
-
-    // }
-
     fn gen_stage(
         mut self,
         tx: std::sync::mpsc::Sender<
@@ -742,7 +719,9 @@ where
                                 Ok(())
                             }
 
-                            Message::EndPoint => tx.send(Message::EndPoint),
+                            Message::EndPoint(ep) => {
+                                tx.send(Message::EndPoint(ep))
+                            }
                             Message::PolygonStart
                             | Message::PolygonEnd
                             | Message::Sphere => {

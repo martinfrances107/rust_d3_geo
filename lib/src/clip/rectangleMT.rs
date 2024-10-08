@@ -371,54 +371,54 @@ where
     }
 }
 
-impl<T> Connectable for Rectangle<Unconnected, T>
-where
-    T: 'static + CoordFloat,
-{
-    /// The resultant postclip node  type.
-    type Output<SC> = Rectangle<Connected<SC>, T>;
+// impl<T> Connectable for Rectangle<Unconnected, T>
+// where
+//     T: 'static + CoordFloat,
+// {
+//     /// The resultant postclip node  type.
+//     type Output<SC> = Rectangle<Connected<SC>, T>;
 
-    fn connect<SC>(&self, sink: SC) -> Self::Output<SC> {
-        let interpolator = self.interpolator.clone();
-        Rectangle {
-            state: Connected { sink },
-            buffer_stream: self.buffer_stream.clone(),
-            clean: self.clean,
-            clip_min: self.clip_min,
-            clip_max: self.clip_max,
-            first: self.first,
+//     fn connect<SC>(&self, sink: SC) -> Self::Output<SC> {
+//         let interpolator = self.interpolator.clone();
+//         Rectangle {
+//             state: Connected { sink },
+//             buffer_stream: self.buffer_stream.clone(),
+//             clean: self.clean,
+//             clip_min: self.clip_min,
+//             clip_max: self.clip_max,
+//             first: self.first,
 
-            x0: self.x0,
-            y0: self.y0,
-            x1: self.x1,
-            y1: self.y1,
+//             x0: self.x0,
+//             y0: self.y0,
+//             x1: self.x1,
+//             y1: self.y1,
 
-            polygon: self.polygon.clone(),
-            segments: self.segments.clone(),
+//             polygon: self.polygon.clone(),
+//             segments: self.segments.clone(),
 
-            interpolator: self.interpolator.clone(),
-            compare_intersection: Box::new(
-                move |a: &Rc<RefCell<Intersection<T>>>,
-                      b: &Rc<RefCell<Intersection<T>>>|
-                      -> Ordering {
-                    interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
-                },
-            ),
+//             interpolator: self.interpolator.clone(),
+//             compare_intersection: Box::new(
+//                 move |a: &Rc<RefCell<Intersection<T>>>,
+//                       b: &Rc<RefCell<Intersection<T>>>|
+//                       -> Ordering {
+//                     interpolator.compare_point(&a.borrow().x.p, &b.borrow().x.p)
+//                 },
+//             ),
 
-            // first point.
-            x__: self.x__,
-            y__: self.y__,
-            v__: self.v__,
-            // previous point.
-            x_: self.x_,
-            y_: self.y_,
-            v_: self.v_,
+//             // first point.
+//             x__: self.x__,
+//             y__: self.y__,
+//             v__: self.v__,
+//             // previous point.
+//             x_: self.x_,
+//             y_: self.y_,
+//             v_: self.v_,
 
-            use_line_point: self.use_line_point,
-            use_buffer_stream: self.use_buffer_stream,
-        }
-    }
-}
+//             use_line_point: self.use_line_point,
+//             use_buffer_stream: self.use_buffer_stream,
+//         }
+//     }
+// }
 
 impl<EP, SINK, T> Stream for Rectangle<Connected<SINK>, T>
 where
@@ -534,5 +534,112 @@ where
         self.segments = Some(VecDeque::new());
         self.polygon = Some(Vec::new());
         self.clean = true;
+    }
+}
+
+impl<T> StreamMT<T> for Rectangle<Unconnected, T>
+where
+    T: 'static + CoordFloat + Send,
+{
+    /// Generate a thread which stage on the responsibility of the
+    /// `StreamTransformRadians` pipeline stage.
+    ///
+    /// Consumes a Self
+    fn gen_stage(
+        self,
+        tx: Sender<Message<T>>,
+        rx: Receiver<Message<T>>,
+    ) -> JoinHandle<ChannelError<T>> {
+        // Stage pipelines.
+        thread::spawn(move || {
+            // The thread takes ownership over `thread_tx`
+            // Each thread queues a message in the channel
+            let a;
+            loop {
+                a = match rx.recv() {
+                    Ok(message) => {
+                        let res_tx = match message {
+                            Message::Point((p, m)) => {
+                                let p_trans = Coord {
+                                    x: p.x * self.frac_pi_180,
+                                    y: p.y * self.frac_pi_180,
+                                };
+                                let message = Message::Point((p_trans, m));
+                                tx.send(message)
+                            }
+                            Message::LineEnd => {
+                                if self.segments.is_some() {
+                                    if let Err(e) = tx.send(Message::Point((
+                                        Coord {
+                                            x: self.x__,
+                                            y: self.y__,
+                                        },
+                                        None,
+                                    ))) {
+                                        return ChannelError::Tx(e);
+                                    }
+
+                                    if self.v__ && self.v_ {
+                                        self.buffer_stream.rejoin();
+                                    }
+
+                                    self.segments
+                                        .as_mut()
+                                        .unwrap()
+                                        .push_back(self.buffer_stream.result());
+                                }
+                                self.use_line_point = false;
+                                if self.v_ {
+                                    if self.use_buffer_stream {
+                                        // TODO must hold tx_buffer and rx_buffer
+                                        self.buffer_stream.line_end();
+                                    } else {
+                                        // self.state.sink.line_end();
+                                        if let Err(e) =
+                                            tx.send(Message::LineEnd)
+                                        {
+                                            return ChannelError::Tx(e);
+                                        }
+                                    }
+                                }
+                                Ok(())
+                            }
+                            Message::LineStart => {
+                                self.use_line_point = true;
+                                if let Some(polygon) = &mut self.polygon {
+                                    polygon.push(Vec::new());
+                                }
+                                self.first = true;
+                                self.v_ = false;
+                                self.x_ = T::nan();
+                                self.y_ = T::nan();
+                                Ok(())
+                            }
+                            Message::PolygonStart => {
+                                todo!();
+                            }
+                            Message::PolygonEnd => {
+                                todo!();
+                            }
+                            Message::Sphere => {
+                                // NoOp
+                                Ok(())
+                            }
+                            Message::EndPoint => tx.send(message),
+                        };
+                        match res_tx {
+                            Ok(()) => {
+                                continue;
+                            }
+                            Err(e) => ChannelError::Tx(e),
+                        }
+                    }
+                    Err(e) => ChannelError::Rx(e),
+                };
+
+                break;
+            }
+            a
+        })
     }
 }

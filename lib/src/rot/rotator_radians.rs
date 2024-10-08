@@ -129,7 +129,7 @@ where
                                 let message = Message::Point((p_trans, m));
                                 tx.send(message)
                             }
-                            Message::EndPoint
+                            Message::EndPoint(_)
                             | Message::LineEnd
                             | Message::LineStart
                             | Message::PolygonStart

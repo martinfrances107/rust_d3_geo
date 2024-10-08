@@ -237,7 +237,7 @@ where
     }
 }
 
-impl<T> StreamMT<T> for Line<Unconnected, T>
+impl<'a, T> StreamMT<T> for Line<Unconnected, T>
 where
     T: 'static + CoordFloat + FloatConst + Send,
 {
@@ -404,7 +404,7 @@ where
                                     Err(e) => Err(e),
                                 }
                             }
-                            Message::EndPoint | Message::Sphere => {
+                            Message::EndPoint(_) | Message::Sphere => {
                                 tx.send(message)
                             }
                             Message::PolygonStart | Message::PolygonEnd => {
