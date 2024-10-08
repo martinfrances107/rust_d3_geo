@@ -3,10 +3,6 @@ use core::cmp::Ordering;
 use core::fmt::Debug;
 use std::collections::VecDeque;
 use std::rc::Rc;
-use std::sync::mpsc::Receiver;
-use std::sync::mpsc::Sender;
-use std::thread;
-use std::thread::JoinHandle;
 
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -14,12 +10,9 @@ use num_traits::Zero;
 
 use crate::clip::interpolator::Interpolator;
 use crate::path::Result;
-use crate::projection::projector_common::ChannelError;
-use crate::projection::projector_common::Message;
 use crate::stream::Connectable;
 use crate::stream::Connected;
 use crate::stream::Stream;
-use crate::stream::StreamMT;
 use crate::stream::Unconnected;
 
 use super::buffer::Buffer as ClipBuffer;

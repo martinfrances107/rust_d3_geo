@@ -1,5 +1,4 @@
 [workspace]
-resolver = "2"
 members = [
   "./lib",
   "./examples/globe/canvas",
@@ -10,9 +9,11 @@ members = [
   "./examples/globe/albers_usa_svg",
   "./examples/projections",
   "./examples/ring",
+  "./examples/multi_threaded",
   "./profile_target/albers_svg",
   './profile_target/simple_svg',
 ]
+resolver = "2"
 default-members = ["./lib"]
 
 [workspace.package]

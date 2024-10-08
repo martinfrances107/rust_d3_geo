@@ -1,16 +1,8 @@
 use core::fmt::Debug;
-use std::{
-    sync::mpsc::{Receiver, Sender},
-    thread::{self, JoinHandle},
-};
-
 use geo::CoordFloat;
 use geo_types::Coord;
 
-use crate::{
-    projection::projector_common::{ChannelError, Message},
-    stream::{Stream, StreamMT},
-};
+use crate::stream::Stream;
 
 use super::Result;
 

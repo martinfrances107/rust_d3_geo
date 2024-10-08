@@ -237,7 +237,7 @@ where
     }
 }
 
-impl<'a, T> StreamMT<T> for Line<Unconnected, T>
+impl<T> StreamMT<T> for Line<Unconnected, T>
 where
     T: 'static + CoordFloat + FloatConst + Send,
 {

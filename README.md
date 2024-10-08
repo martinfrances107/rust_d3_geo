@@ -184,6 +184,29 @@ Sample code in both RUST and javascript that renders a complex multi-polygon. ( 
 </td>
 
 </tr>
+<tr>
+
+<td>
+<strong>examples/multi_threaded</strong><br/><br/>
+Multi threading support is being developed on the v3.x branch
+It is still highly experimental.
+
+This code is intended to be used as a template for native
+applications ( i.e. *NOT* for web environments )
+
+Each of the 6 stages runs on a new thread
+Messages like PolygonStart/LineStart and Point are transmiited
+into the first stage.
+
+After the stream is complete a request in transmitted into the input
+and a copy of the endpoint is transmitted out of the final stage.
+
+</td>
+<td>
+IMGAE TBD
+</td>
+
+</tr>
 </tbody>
 <table>
 

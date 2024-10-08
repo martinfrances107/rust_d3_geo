@@ -96,7 +96,7 @@ where
     }
 }
 
-impl<'a, T> StreamMT<T> for Buffer<T>
+impl<T> StreamMT<T> for Buffer<T>
 where
     T: 'static + CoordFloat + Send,
 {

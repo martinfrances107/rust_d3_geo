@@ -172,10 +172,10 @@ where
 
         let (tx3, rx3): (Sender<Message<T>>, Receiver<Message<T>>) =
             mpsc::channel();
-        let (tx4, rx4): (Sender<Message<T>>, Receiver<Message<T>>) =
-            mpsc::channel();
-        let (tx5, rx5): (Sender<Message<T>>, Receiver<Message<T>>) =
-            mpsc::channel();
+        // let (tx4, rx4): (Sender<Message<T>>, Receiver<Message<T>>) =
+        //     mpsc::channel();
+        // let (tx5, rx5): (Sender<Message<T>>, Receiver<Message<T>>) =
+        //     mpsc::channel();
 
         let mut handles = vec![];
 

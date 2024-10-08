@@ -116,6 +116,11 @@ name = "rotating_50m"
 path = "../examples/globe/rotating_50m/src/lib.rs"
 crate-type = ["cdylib"]
 
+[[example]]
+name = "mt"
+path = "../examples/multi_threaded/src/main.rs"
+crate-type = ["bin"]
+
 # I would like to include this as an documentable example but rust is restrictive
 # on this matter.
 #

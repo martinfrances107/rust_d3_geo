@@ -19,9 +19,7 @@ use geo::LineString;
 use geo::Polygon;
 use geo_types::Coord;
 
-use crate::centroid::Centroid;
 use crate::last_point::LastPoint;
-use crate::path::measure::Measure;
 use crate::projection::projector_common::ChannelError;
 use crate::projection::projector_common::Message;
 
@@ -152,23 +150,27 @@ where
 }
 
 #[derive(Debug)]
+/// Wrapper used When sending a messages.
 pub enum EndPointMT<T>
 where
     T: CoordFloat,
 {
     // Buffer(Buffer<T>),
-    Centroid(Centroid<T>),
-    Path,
-    Path2dEndpoint,
-    PathArea,
-    Point,
+    // Centroid(Centroid<T>),
+    // Path,
+    // Path2dEndpoint,
+    // PathArea,
+    // Point,
+    /// Holds the 'LastPoint` endpoint.
     LastPoint(LastPoint<T>),
-    Length(),
-    Measure(Measure<T>),
-    MultiDrain,
-    Bounds,
-    String,
+    // Length(),
+    // Measure(Measure<T>),
+    // MultiDrain,
+    // Bounds,
+    // String,
     // PolyLines?,
+    /// Sent in the first stage when requesting and `EndPoint`
+    Dummy,
 }
 
 fn stream_line<EP, S, T>(ls: &LineString<T>, stream: &mut S, closed: usize)

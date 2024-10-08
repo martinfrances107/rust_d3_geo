@@ -122,7 +122,7 @@ where
             // The thread takes ownership over `thread_tx`
             // Each thread queues a message in the channel
             let a;
-            loop {
+            'message_loop: loop {
                 a = match rx.recv() {
                     Ok(message) => {
                         let res_tx = match message {
@@ -143,7 +143,7 @@ where
                         };
                         match res_tx {
                             Ok(()) => {
-                                continue;
+                                continue 'message_loop;
                             }
                             Err(e) => ChannelError::Tx(e),
                         }
