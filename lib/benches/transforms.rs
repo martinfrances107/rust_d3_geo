@@ -18,7 +18,7 @@ use d3_geo_rs::stream::Stream;
 use d3_geo_rs::stream::StreamMT;
 use geo::Coord;
 
-fn transform_loop() {
+fn st_loop() {
     let ep = LastPoint::default();
     let mut str = StreamTransformRadians::default().connect(ep);
 
@@ -32,47 +32,51 @@ fn transform_loop() {
     }
 }
 
-// Looks for changes in
 fn mt_loop() {
     let (tx1, rx1): (Sender<Message<f64>>, Receiver<Message<f64>>) =
         mpsc::channel();
-
     let (tx2, rx2): (Sender<Message<f64>>, Receiver<Message<f64>>) =
         mpsc::channel();
-
     let (tx3, rx3): (Sender<Message<f64>>, Receiver<Message<f64>>) =
         mpsc::channel();
 
-    let mut str = StreamTransformRadians::default();
+    let stage1 = StreamTransformRadians::default().gen_stage(tx2, rx1);
+    let stage2 = LastPoint::default().gen_stage(tx3, rx2);
 
-    let stage1 = str.gen_stage(tx2, rx1);
+    let handles = [stage1, stage2];
 
-    let ep = LastPoint::default();
-
-    let stage2 = ep.gen_stage(tx3, rx2);
-
-    for i in 1..100_000 {
+    for i in 1..100 {
         let p = Coord {
             x: i as f64,
             y: i as f64,
         };
-        println!("About to send");
+
         if let Err(e) = tx1.send(Message::Point((p, None))) {
-            panic!("broken pipe {e}");
+            panic!("Broken pipe sending point {i} {e}");
         }
-        println!("send complete about to receive ....");
+
+        if let Err(e) = tx1.send(Message::EndPoint(EndPointMT::Dummy)) {
+            panic!("Pipe broken sending request for Endpoint {e:#?}");
+        }
         match rx3.recv() {
             Ok(Message::EndPoint(EndPointMT::LastPoint(mut lp))) => {
-                if let Some(p) = lp.result() {
-                    println!("End of the line p {p:#?}");
+                if let Some(p_out) = lp.result() {
+                    assert_ne!(p, p_out);
                 } else {
-                    panic!("failed1");
+                    panic!("Received unexpected message while waiting for endpoint");
                 }
             }
             _ => {
-                panic!("failed2");
+                panic!("Broken pipe wait for endpoint message");
             }
         }
+    }
+
+    let _ = tx1.send(Message::ShutDown);
+
+    // Error or not wait for all stages to complete.
+    for h in handles {
+        h.join().unwrap();
     }
 }
 

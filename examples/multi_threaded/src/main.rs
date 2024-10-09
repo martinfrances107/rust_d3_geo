@@ -19,13 +19,12 @@ fn main() {
     let (tx3, rx3): (Sender<Message<f64>>, Receiver<Message<f64>>) =
         mpsc::channel();
 
-    let mut handles = vec![];
-
     let stage1 = StreamTransformRadians::default().gen_stage(tx2, rx1);
-    handles.push(stage1);
+    // handles.push(stage1);
 
     let stage2 = LastPoint::default().gen_stage(tx3, rx2);
-    handles.push(stage2);
+
+    let handles = [stage1, stage2];
 
     for i in 1..100_000 {
         let p = Coord {
