@@ -83,7 +83,12 @@ fn criterion_benchmark(c: &mut Criterion) {
     g.measurement_time(Duration::from_secs(10));
 
     g.bench_function("transforms", |b| b.iter(transform_loop));
+
+    // Moved pipeline setup code here.
+
     g.bench_function("multi_threaded", |b| b.iter(mt_loop));
+
+    // Move pipeline close code here.
 }
 
 criterion_group!(benches, criterion_benchmark);

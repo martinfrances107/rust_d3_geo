@@ -20,7 +20,7 @@ use geo::Polygon;
 use geo_types::Coord;
 
 use crate::last_point::LastPoint;
-use crate::projection::projector_common::ChannelError;
+use crate::projection::projector_common::ChannelStatus;
 use crate::projection::projector_common::Message;
 
 /// The state before the path is constructed.
@@ -146,7 +146,7 @@ where
         self,
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,
-    ) -> JoinHandle<ChannelError<T>>;
+    ) -> JoinHandle<ChannelStatus<T>>;
 }
 
 #[derive(Debug)]
@@ -161,7 +161,7 @@ where
     // Path2dEndpoint,
     // PathArea,
     // Point,
-    /// Holds the 'LastPoint` endpoint.
+    /// Holds the `LastPoint` endpoint.
     LastPoint(LastPoint<T>),
     // Length(),
     // Measure(Measure<T>),

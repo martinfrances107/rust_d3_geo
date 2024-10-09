@@ -54,9 +54,12 @@ fn main() {
         }
     }
 
-    // Wait for stages to complete
-    println!("Waiting for stages to complete");
+    let _ = tx1.send(Message::ShutDown);
+
+    // Error or not wait for all stages to complete.
+    print!("Waiting for stages to return complete ... ");
     for h in handles {
         h.join().unwrap();
     }
+    println!("complete");
 }

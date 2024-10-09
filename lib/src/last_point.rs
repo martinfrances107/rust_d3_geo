@@ -5,7 +5,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 
 use crate::path::Result;
-use crate::projection::projector_common::{ChannelError, Message};
+use crate::projection::projector_common::{ChannelStatus, Message};
 use crate::stream::{EndPointMT, Stream, StreamMT};
 
 /// Stream endpoint: Retain the last point.
@@ -47,7 +47,7 @@ where
         mut self,
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,
-    ) -> JoinHandle<ChannelError<T>> {
+    ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.
         thread::spawn(move || {
             // The thread takes ownership over `thread_tx`
@@ -65,7 +65,7 @@ where
                                 if let Err(e) = tx.send(Message::EndPoint(
                                     EndPointMT::LastPoint(self.clone()),
                                 )) {
-                                    return ChannelError::Tx(e);
+                                    return ChannelStatus::Tx(e);
                                 }
                                 Ok(())
                             }
@@ -77,15 +77,33 @@ where
                                 // NoOp
                                 Ok(())
                             }
+                            Message::ShutDown => {
+                                if let Err(e) = tx.send(message) {
+                                    return ChannelStatus::Tx(e);
+                                } else {
+                                    return ChannelStatus::ShuntDownReceived;
+                                }
+                            }
+                            Message::ShutDownWithReturn(_dummy) => {
+                                if let Err(e) =
+                                    tx.send(Message::ShutDownWithReturn(
+                                        EndPointMT::LastPoint(self.clone()),
+                                    ))
+                                {
+                                    return ChannelStatus::Tx(e);
+                                } else {
+                                    return ChannelStatus::ShuntDownReceived;
+                                };
+                            }
                         };
                         match res_tx {
                             Ok(()) => {
                                 continue 'message_loop;
                             }
-                            Err(e) => ChannelError::Tx(e),
+                            Err(e) => ChannelStatus::Tx(e),
                         }
                     }
-                    Err(e) => ChannelError::Rx(e),
+                    Err(e) => ChannelStatus::Rx(e),
                 };
                 break;
             }

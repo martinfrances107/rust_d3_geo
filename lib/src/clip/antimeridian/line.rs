@@ -14,7 +14,7 @@ use crate::clip::Clean;
 use crate::clip::LineConnected;
 use crate::clip::PointVisible;
 use crate::math::EPSILON;
-use crate::projection::projector_common::ChannelError;
+use crate::projection::projector_common::ChannelStatus;
 use crate::projection::projector_common::Message;
 use crate::stream::Connectable;
 use crate::stream::Connected;
@@ -249,17 +249,17 @@ where
         mut self,
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,
-    ) -> JoinHandle<ChannelError<T>> {
+    ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.
         thread::spawn(move || {
-            // The thread takes ownership over `thread_tx`
-            // Each thread queues a message in the channel
+            // First Message may be shutDown
+            // and the loop may exit leaving `a` uniititalized.
             let a;
-            loop {
+            'message_loop: loop {
                 a = match rx.recv() {
                     Ok(message) => {
                         let res_tx = match message {
-                            Message::Point((p, m)) => {
+                            Message::Point((p, _m)) => {
                                 let mut lambda1 = p.x;
                                 let phi1 = p.y;
                                 let sign1 = if lambda1 > T::zero() {
@@ -285,7 +285,7 @@ where
                                         },
                                         None,
                                     ))) {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                     if let Err(e) = tx.send(Message::Point((
                                         Coord {
@@ -294,14 +294,14 @@ where
                                         },
                                         None,
                                     ))) {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                     if let Err(e) = tx.send(Message::LineEnd) {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                     if let Err(e) = tx.send(Message::LineStart)
                                     {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                     if let Err(e) = tx.send(Message::Point((
                                         Coord {
@@ -310,7 +310,7 @@ where
                                         },
                                         None,
                                     ))) {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                     if let Err(e) = tx.send(Message::Point((
                                         Coord {
@@ -319,7 +319,7 @@ where
                                         },
                                         None,
                                     ))) {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                     self.clean = 0;
                                 } else if self.sign0 != sign1
@@ -350,14 +350,14 @@ where
                                         },
                                         None,
                                     ))) {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                     if let Err(e) = tx.send(Message::LineEnd) {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                     if let Err(e) = tx.send(Message::LineStart)
                                     {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                     if let Err(e) = tx.send(Message::Point((
                                         Coord {
@@ -366,7 +366,7 @@ where
                                         },
                                         None,
                                     ))) {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                     self.clean = 0;
                                 }
@@ -379,7 +379,7 @@ where
                                     },
                                     None,
                                 ))) {
-                                    return ChannelError::Tx(e);
+                                    return ChannelStatus::Tx(e);
                                 };
                                 self.sign0 = sign1;
                                 Ok(())
@@ -411,18 +411,26 @@ where
                                 // NoOp
                                 Ok(())
                             }
+                            Message::ShutDown
+                            | Message::ShutDownWithReturn(_) => {
+                                if let Err(e) = tx.send(message) {
+                                    Err(e)
+                                } else {
+                                    return ChannelStatus::ShuntDownReceived;
+                                }
+                            }
                         };
                         match res_tx {
                             Ok(()) => {
                                 continue;
                             }
-                            Err(e) => ChannelError::Tx(e),
+                            Err(e) => ChannelStatus::Tx(e),
                         }
                     }
-                    Err(e) => ChannelError::Rx(e),
+                    Err(e) => ChannelStatus::Rx(e),
                 };
 
-                break;
+                break 'message_loop;
             }
             a
         })

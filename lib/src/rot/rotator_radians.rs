@@ -8,7 +8,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 use num_traits::FloatConst;
 
-use crate::projection::projector_common::ChannelError;
+use crate::projection::projector_common::ChannelStatus;
 use crate::projection::projector_common::Message;
 use crate::stream::Connectable;
 use crate::stream::Connected;
@@ -114,7 +114,7 @@ where
         self,
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,
-    ) -> JoinHandle<ChannelError<T>> {
+    ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.
         thread::spawn(move || {
             // The thread takes ownership over `thread_tx`
@@ -129,21 +129,23 @@ where
                                 let message = Message::Point((p_trans, m));
                                 tx.send(message)
                             }
-                            Message::EndPoint(_)
+                            Message::ShutDownWithReturn(_)
+                            | Message::EndPoint(_)
                             | Message::LineEnd
                             | Message::LineStart
                             | Message::PolygonStart
                             | Message::PolygonEnd
-                            | Message::Sphere => tx.send(message),
+                            | Message::Sphere
+                            | Message::ShutDown => tx.send(message),
                         };
                         match res_tx {
                             Ok(()) => {
                                 continue;
                             }
-                            Err(e) => ChannelError::Tx(e),
+                            Err(e) => ChannelStatus::Tx(e),
                         }
                     }
-                    Err(e) => ChannelError::Rx(e),
+                    Err(e) => ChannelStatus::Rx(e),
                 };
 
                 break;

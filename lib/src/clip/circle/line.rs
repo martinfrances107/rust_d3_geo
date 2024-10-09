@@ -13,7 +13,7 @@ use crate::clip::Clean;
 use crate::clip::LineConnected;
 use crate::clip::PointVisible;
 use crate::math::EPSILON;
-use crate::projection::projector_common::ChannelError;
+use crate::projection::projector_common::ChannelStatus;
 use crate::projection::projector_common::Message;
 use crate::stream::Connectable;
 use crate::stream::Connected;
@@ -427,7 +427,7 @@ where
             crate::projection::projector_common::Message<T>,
         >,
     ) -> std::thread::JoinHandle<
-        crate::projection::projector_common::ChannelError<T>,
+        crate::projection::projector_common::ChannelStatus<T>,
     > {
         // Stage pipelines.
         thread::spawn(move || {
@@ -438,7 +438,7 @@ where
                 a = match rx.recv() {
                     Ok(message) => {
                         let res_tx = match message {
-                            Message::Point((p, m)) => {
+                            Message::Point((p, _m)) => {
                                 let mut point1 = Some(LineElem { p, m: None });
                                 let mut point2: Option<LineElem<T>>;
                                 let v = self.point_visible(&p);
@@ -471,7 +471,7 @@ where
                                         if let Err(e) =
                                             tx.send(Message::LineStart)
                                         {
-                                            return ChannelError::Tx(e);
+                                            return ChannelStatus::Tx(e);
                                         }
                                     }
                                 }
@@ -526,7 +526,7 @@ where
                                         if let Err(e) =
                                             tx.send(Message::LineStart)
                                         {
-                                            return ChannelError::Tx(e);
+                                            return ChannelStatus::Tx(e);
                                         }
                                         point2 = match intersect(
                                             &point1.unwrap(),
@@ -549,7 +549,7 @@ where
                                         if let Err(e) = tx.send(Message::Point(
                                             (point2.unwrap().p, None),
                                         )) {
-                                            return ChannelError::Tx(e);
+                                            return ChannelStatus::Tx(e);
                                         };
                                     } else {
                                         // Inside going out.
@@ -575,13 +575,13 @@ where
                                         if let Err(e) = tx.send(Message::Point(
                                             (point2.unwrap().p, Some(2)),
                                         )) {
-                                            return ChannelError::Tx(e);
+                                            return ChannelStatus::Tx(e);
                                         };
                                         // self.state.sink.line_end();
                                         if let Err(e) =
                                             tx.send(Message::LineEnd)
                                         {
-                                            return ChannelError::Tx(e);
+                                            return ChannelStatus::Tx(e);
                                         }
                                     }
                                     self.point0 = point2;
@@ -613,7 +613,7 @@ where
                                                     if let Err(e) = tx.send(
                                                         Message::LineStart,
                                                     ) {
-                                                        return ChannelError::Tx(e);
+                                                        return ChannelStatus::Tx(e);
                                                     }
                                                     // self.state
                                                     //     .sink
@@ -623,7 +623,7 @@ where
                                                             (t[0], None),
                                                         ))
                                                     {
-                                                        return ChannelError::Tx(e);
+                                                        return ChannelStatus::Tx(e);
                                                     };
                                                     // self.state
                                                     //     .sink
@@ -633,13 +633,13 @@ where
                                                             (t[1], None),
                                                         ))
                                                     {
-                                                        return ChannelError::Tx(e);
+                                                        return ChannelStatus::Tx(e);
                                                     };
                                                     // self.state.sink.line_end();
                                                     if let Err(e) = tx
                                                         .send(Message::LineEnd)
                                                     {
-                                                        return ChannelError::Tx(e);
+                                                        return ChannelStatus::Tx(e);
                                                     }
                                                 } else {
                                                     // self.state
@@ -650,13 +650,13 @@ where
                                                             (t[1], None),
                                                         ))
                                                     {
-                                                        return ChannelError::Tx(e);
+                                                        return ChannelStatus::Tx(e);
                                                     };
                                                     // self.state.sink.line_end();
                                                     if let Err(e) = tx
                                                         .send(Message::LineEnd)
                                                     {
-                                                        return ChannelError::Tx(e);
+                                                        return ChannelStatus::Tx(e);
                                                     }
                                                     // self.state
                                                     //     .sink
@@ -664,7 +664,7 @@ where
                                                     if let Err(e) = tx.send(
                                                         Message::LineStart,
                                                     ) {
-                                                        return ChannelError::Tx(e);
+                                                        return ChannelStatus::Tx(e);
                                                     }
                                                     // self.state.sink.point(
                                                     //     &t[0],
@@ -675,7 +675,7 @@ where
                                                             (t[0], Some(3)),
                                                         ))
                                                     {
-                                                        return ChannelError::Tx(e);
+                                                        return ChannelStatus::Tx(e);
                                                     };
                                                 }
                                             }
@@ -695,7 +695,7 @@ where
                                         point1.unwrap().p,
                                         None,
                                     ))) {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     };
                                 }
                                 self.point0 = point1;
@@ -706,7 +706,7 @@ where
                             Message::LineEnd => {
                                 if self.v0 {
                                     if let Err(e) = tx.send(Message::LineEnd) {
-                                        return ChannelError::Tx(e);
+                                        return ChannelStatus::Tx(e);
                                     }
                                 }
                                 self.point0 = None;
@@ -728,15 +728,19 @@ where
                                 // NoOp
                                 Ok(())
                             }
+                            Message::ShutDown => todo!(),
+                            Message::ShutDownWithReturn(_ep) => {
+                                todo!()
+                            }
                         };
                         match res_tx {
                             Ok(()) => {
                                 continue;
                             }
-                            Err(e) => ChannelError::Tx(e),
+                            Err(e) => ChannelStatus::Tx(e),
                         }
                     }
-                    Err(e) => ChannelError::Rx(e),
+                    Err(e) => ChannelStatus::Rx(e),
                 };
 
                 break;

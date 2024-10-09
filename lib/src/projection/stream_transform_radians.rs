@@ -14,7 +14,7 @@ use crate::stream::Stream;
 use crate::stream::StreamMT;
 use crate::stream::Unconnected;
 
-use super::projector_common::ChannelError;
+use super::projector_common::ChannelStatus;
 use super::projector_common::Message;
 
 // A path node.
@@ -116,7 +116,7 @@ where
         self,
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,
-    ) -> JoinHandle<ChannelError<T>> {
+    ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.
         thread::spawn(move || {
             // The thread takes ownership over `thread_tx`
@@ -140,15 +140,23 @@ where
                             | Message::PolygonStart
                             | Message::PolygonEnd
                             | Message::Sphere => tx.send(message),
+                            Message::ShutDown
+                            | Message::ShutDownWithReturn(_) => {
+                                if let Err(e) = tx.send(Message::ShutDown) {
+                                    return ChannelStatus::Tx(e);
+                                } else {
+                                    return ChannelStatus::ShuntDownReceived;
+                                }
+                            }
                         };
                         match res_tx {
                             Ok(()) => {
                                 continue 'message_loop;
                             }
-                            Err(e) => ChannelError::Tx(e),
+                            Err(e) => ChannelStatus::Tx(e),
                         }
                     }
-                    Err(e) => ChannelError::Rx(e),
+                    Err(e) => ChannelStatus::Rx(e),
                 };
 
                 break;

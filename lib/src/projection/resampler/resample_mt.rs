@@ -11,7 +11,7 @@ use geo_types::Coord;
 use crate::cartesian::cartesian;
 use crate::compose::Compose;
 use crate::math::EPSILON;
-use crate::projection::projector_common::ChannelError;
+use crate::projection::projector_common::ChannelStatus;
 use crate::projection::projector_common::Message;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::stream::StreamMT;
@@ -342,7 +342,7 @@ where
         mut self,
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,
-    ) -> JoinHandle<ChannelError<T>> {
+    ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.
         thread::spawn(move || {
             // The thread takes ownership over `thread_tx`
@@ -402,15 +402,19 @@ where
                                 Message::EndPoint(_) | Message::Sphere => {
                                     tx.send(message)
                                 }
+                                Message::ShutDown => todo!(),
+                                Message::ShutDownWithReturn(end_point_mt) => {
+                                    todo!()
+                                }
                             };
                         match res_tx {
                             Ok(()) => {
                                 continue;
                             }
-                            Err(e) => ChannelError::Tx(e),
+                            Err(e) => ChannelStatus::Tx(e),
                         }
                     }
-                    Err(e) => ChannelError::Rx(e),
+                    Err(e) => ChannelStatus::Rx(e),
                 };
 
                 break;

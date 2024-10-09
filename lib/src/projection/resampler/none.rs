@@ -9,12 +9,11 @@ use geo_types::Coord;
 use num_traits::FloatConst;
 
 use crate::compose::Compose;
-use crate::projection::projector_common::ChannelError;
+use crate::projection::projector_common::ChannelStatus;
 use crate::projection::projector_common::Message;
 use crate::projection::transform::scale_translate_rotate::ScaleTranslateRotate;
 use crate::stream::Connectable;
 use crate::stream::Connected;
-use crate::stream::EndPointMT;
 use crate::stream::Stream;
 use crate::stream::StreamMT;
 use crate::stream::Unconnected;
@@ -116,7 +115,7 @@ where
         self,
         tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,
-    ) -> JoinHandle<ChannelError<T>> {
+    ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.
         thread::spawn(move || {
             // The thread takes ownership over `thread_tx`
@@ -137,16 +136,20 @@ where
                             | Message::LineStart
                             | Message::PolygonStart
                             | Message::PolygonEnd
-                            | Message::Sphere => tx.send(message),
+                            | Message::Sphere
+                            | Message::ShutDown
+                            | Message::ShutDownWithReturn(_) => {
+                                tx.send(message)
+                            }
                         };
                         match res_tx {
                             Ok(()) => {
                                 continue;
                             }
-                            Err(e) => ChannelError::Tx(e),
+                            Err(e) => ChannelStatus::Tx(e),
                         }
                     }
-                    Err(e) => ChannelError::Rx(e),
+                    Err(e) => ChannelStatus::Rx(e),
                 };
 
                 break;

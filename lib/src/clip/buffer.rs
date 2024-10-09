@@ -6,7 +6,7 @@ use geo::CoordFloat;
 use geo_types::Coord;
 
 use crate::path::Result;
-use crate::projection::projector_common::{ChannelError, Message};
+use crate::projection::projector_common::{ChannelStatus, Message};
 use crate::stream::{Stream, StreamMT};
 
 use super::line_elem::LineElem;
@@ -104,7 +104,7 @@ where
         mut self,
         _tx: Sender<Message<T>>,
         rx: Receiver<Message<T>>,
-    ) -> JoinHandle<ChannelError<T>> {
+    ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.
         thread::spawn(move || {
             // The thread takes ownership over `thread_tx`
@@ -134,15 +134,19 @@ where
                             | Message::PolygonStart
                             | Message::PolygonEnd
                             | Message::Sphere => Ok(()),
+                            Message::ShutDown => todo!(),
+                            Message::ShutDownWithReturn(_end_point_mt) => {
+                                todo!()
+                            }
                         };
                         match res_tx {
                             Ok(()) => {
                                 continue;
                             }
-                            Err(e) => ChannelError::Tx(e),
+                            Err(e) => ChannelStatus::Tx(e),
                         }
                     }
-                    Err(e) => ChannelError::Rx(e),
+                    Err(e) => ChannelStatus::Rx(e),
                 };
 
                 break;

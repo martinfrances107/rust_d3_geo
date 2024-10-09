@@ -4,6 +4,7 @@ use std::sync::mpsc::Receiver;
 use std::sync::mpsc::RecvError;
 use std::sync::mpsc::SendError;
 use std::sync::mpsc::Sender;
+use std::thread::JoinHandle;
 
 use geo::CoordFloat;
 use geo_types::Coord;
@@ -134,13 +135,17 @@ where
     PolygonEnd,
     /// Declare a sphere object.
     Sphere,
+    /// Termintate threads, close all channels
+    ShutDown,
+    /// Send result while shutting down.
+    ShutDownWithReturn(EndPointMT<T>),
 }
 
 /// Multi-thread Streams
 ///
-/// Details which end of the node interlink collapsed.
+/// State of the thread/stage upon termination.
 #[derive(Debug)]
-pub enum ChannelError<T>
+pub enum ChannelStatus<T>
 where
     T: CoordFloat,
 {
@@ -148,6 +153,8 @@ where
     Rx(RecvError),
     /// The entrance to the channel collapsed.
     Tx(SendError<Message<T>>),
+    /// Message is terminting without error.
+    ShuntDownReceived,
 }
 
 impl<CLIPC, CLIPU, DRAIN, PCNU, PR, RC, RU, T>
@@ -161,7 +168,7 @@ where
     RU: Clone + StreamMT<T>,
     T: 'static + CoordFloat + FloatConst + Send,
 {
-    fn stream_mt(&self, drain: &DRAIN) {
+    fn stream_mt(&self, drain: &DRAIN) -> Vec<JoinHandle<ChannelStatus<T>>> {
         // Prepare stage-interlink channels
         // Input to stage txN. rxN consumed in stage N.
         let (tx1, rx1): (Sender<Message<T>>, Receiver<Message<T>>) =
@@ -195,6 +202,10 @@ where
         let stage2 = rotate_node.gen_stage(tx2, rx2);
         handles.push(stage2);
         let stage3 = resample_node.gen_stage(tx3, rx3);
+        handles.push(stage3);
+
+        // return thread bundle.
+        handles
     }
 }
 
