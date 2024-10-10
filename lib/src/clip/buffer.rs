@@ -1,5 +1,5 @@
 use std::collections::VecDeque;
-use std::sync::mpsc::{Receiver, Sender};
+use std::sync::mpsc::{Receiver, Sender, SyncSender};
 use std::thread::{self, JoinHandle};
 
 use geo::CoordFloat;
@@ -102,7 +102,7 @@ where
 {
     fn gen_stage(
         mut self,
-        _tx: Sender<Message<T>>,
+        _tx: SyncSender<Message<T>>,
         rx: Receiver<Message<T>>,
     ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.

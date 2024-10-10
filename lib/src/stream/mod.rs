@@ -12,6 +12,7 @@ use core::fmt::Debug;
 use std::marker::PhantomData;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
+use std::sync::mpsc::SyncSender;
 use std::thread::JoinHandle;
 
 use geo::CoordFloat;
@@ -144,7 +145,7 @@ where
     ///
     fn gen_stage(
         self,
-        tx: Sender<Message<T>>,
+        tx: SyncSender<Message<T>>,
         rx: Receiver<Message<T>>,
     ) -> JoinHandle<ChannelStatus<T>>;
 }

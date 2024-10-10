@@ -1,4 +1,5 @@
 use core::fmt::Debug;
+use std::sync::mpsc::SyncSender;
 use std::thread;
 
 use geo::CoordFloat;
@@ -420,15 +421,9 @@ where
 {
     fn gen_stage(
         mut self,
-        tx: std::sync::mpsc::Sender<
-            crate::projection::projector_common::Message<T>,
-        >,
-        rx: std::sync::mpsc::Receiver<
-            crate::projection::projector_common::Message<T>,
-        >,
-    ) -> std::thread::JoinHandle<
-        crate::projection::projector_common::ChannelStatus<T>,
-    > {
+        tx: SyncSender<Message<T>>,
+        rx: std::sync::mpsc::Receiver<Message<T>>,
+    ) -> std::thread::JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.
         thread::spawn(move || {
             // The thread takes ownership over `thread_tx`

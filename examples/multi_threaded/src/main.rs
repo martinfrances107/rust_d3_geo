@@ -1,4 +1,4 @@
-use std::sync::mpsc::{self, Receiver, Sender};
+use std::sync::mpsc::sync_channel;
 
 use d3_geo_rs::{
     last_point::LastPoint,
@@ -12,12 +12,10 @@ use d3_geo_rs::{
 use geo_types::Coord;
 
 fn main() {
-    let (tx1, rx1): (Sender<Message<f64>>, Receiver<Message<f64>>) =
-        mpsc::channel();
-    let (tx2, rx2): (Sender<Message<f64>>, Receiver<Message<f64>>) =
-        mpsc::channel();
-    let (tx3, rx3): (Sender<Message<f64>>, Receiver<Message<f64>>) =
-        mpsc::channel();
+    static CHANNEL_CAPACITY: usize = 4096;
+    let (tx1, rx1) = sync_channel(CHANNEL_CAPACITY);
+    let (tx2, rx2) = sync_channel(CHANNEL_CAPACITY);
+    let (tx3, rx3) = sync_channel(CHANNEL_CAPACITY);
 
     let stage1 = StreamTransformRadians::default().gen_stage(tx2, rx1);
     // handles.push(stage1);
@@ -33,7 +31,7 @@ fn main() {
         };
 
         if let Err(e) = tx1.send(Message::Point((p, None))) {
-            panic!("Broken pipe sending point {i} {e}");
+            panic!("Broken pipe sending {i} {e}");
         }
 
         if let Err(e) = tx1.send(Message::EndPoint(EndPointMT::Dummy)) {
@@ -42,7 +40,7 @@ fn main() {
         match rx3.recv() {
             Ok(Message::EndPoint(EndPointMT::LastPoint(mut lp))) => {
                 if let Some(p) = lp.result() {
-                    println!("{i} point {p:?}");
+                    println!("{i} {p:?}");
                 } else {
                     panic!("Received unexpected message while waiting for endpoint");
                 }

@@ -2,6 +2,7 @@ use core::fmt::Debug;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::SendError;
 use std::sync::mpsc::Sender;
+use std::sync::mpsc::SyncSender;
 use std::thread;
 use std::thread::JoinHandle;
 
@@ -127,7 +128,7 @@ where
 {
     fn point_default(
         &self,
-        tx: &Sender<Message<T>>,
+        tx: &SyncSender<Message<T>>,
         p: &Coord<T>,
         m: Option<u8>,
     ) -> Result<(), SendError<Message<T>>> {
@@ -138,7 +139,7 @@ where
 
     fn line_start_default(
         &mut self,
-        tx: &Sender<Message<T>>,
+        tx: &SyncSender<Message<T>>,
     ) -> Result<(), SendError<Message<T>>> {
         self.x0 = T::nan();
         self.point_state = PointState::Line;
@@ -148,7 +149,7 @@ where
 
     fn line_end_default(
         &mut self,
-        tx: &Sender<Message<T>>,
+        tx: &SyncSender<Message<T>>,
     ) -> Result<(), SendError<Message<T>>> {
         self.point_state = PointState::Default;
         // self.state.sink.line_end();
@@ -157,7 +158,7 @@ where
 
     fn ring_start(
         &mut self,
-        tx: &Sender<Message<T>>,
+        tx: &SyncSender<Message<T>>,
     ) -> Result<(), SendError<Message<T>>> {
         self.line_start_default(tx)?;
         self.point_state = PointState::Ring;
@@ -167,7 +168,7 @@ where
 
     fn ring_point(
         &mut self,
-        tx: &Sender<Message<T>>,
+        tx: &SyncSender<Message<T>>,
         p: &Coord<T>,
     ) -> Result<(), SendError<Message<T>>> {
         self.lambda00 = p.x;
@@ -189,7 +190,7 @@ where
 
     fn ring_end(
         &mut self,
-        tx: &Sender<Message<T>>,
+        tx: &SyncSender<Message<T>>,
     ) -> Result<(), SendError<Message<T>>> {
         self.resample_line_to(
             tx,
@@ -216,7 +217,7 @@ where
 
     fn line_point(
         &mut self,
-        tx: &Sender<Message<T>>,
+        tx: &SyncSender<Message<T>>,
         p: &Coord<T>,
     ) -> Result<(), SendError<Message<T>>> {
         let c = cartesian(p);
@@ -257,7 +258,7 @@ where
     #[allow(clippy::similar_names)]
     fn resample_line_to(
         &mut self,
-        tx: &Sender<Message<T>>,
+        tx: &SyncSender<Message<T>>,
         x0: T,
         y0: T,
         lambda0: T,
@@ -340,7 +341,7 @@ where
 {
     fn gen_stage(
         mut self,
-        tx: Sender<Message<T>>,
+        tx: SyncSender<Message<T>>,
         rx: Receiver<Message<T>>,
     ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.

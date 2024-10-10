@@ -1,5 +1,6 @@
 use core::fmt::Debug;
 use std::sync::mpsc;
+use std::sync::mpsc::sync_channel;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::RecvError;
 use std::sync::mpsc::SendError;
@@ -171,14 +172,11 @@ where
     fn stream_mt(&self, drain: &DRAIN) -> Vec<JoinHandle<ChannelStatus<T>>> {
         // Prepare stage-interlink channels
         // Input to stage txN. rxN consumed in stage N.
-        let (tx1, rx1): (Sender<Message<T>>, Receiver<Message<T>>) =
-            mpsc::channel();
+        let (tx1, rx1) = sync_channel(100);
 
-        let (tx2, rx2): (Sender<Message<T>>, Receiver<Message<T>>) =
-            mpsc::channel();
+        let (tx2, rx2) = sync_channel(100);
 
-        let (tx3, rx3): (Sender<Message<T>>, Receiver<Message<T>>) =
-            mpsc::channel();
+        let (tx3, rx3) = sync_channel(100);
         // let (tx4, rx4): (Sender<Message<T>>, Receiver<Message<T>>) =
         //     mpsc::channel();
         // let (tx5, rx5): (Sender<Message<T>>, Receiver<Message<T>>) =

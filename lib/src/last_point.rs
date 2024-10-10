@@ -1,4 +1,4 @@
-use std::sync::mpsc::{Receiver, Sender};
+use std::sync::mpsc::{Receiver, Sender, SyncSender};
 use std::thread::{self, JoinHandle};
 
 use geo::CoordFloat;
@@ -45,7 +45,7 @@ where
     /// Consumes a Self
     fn gen_stage(
         mut self,
-        tx: Sender<Message<T>>,
+        tx: SyncSender<Message<T>>,
         rx: Receiver<Message<T>>,
     ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.

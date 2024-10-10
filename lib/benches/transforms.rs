@@ -4,8 +4,6 @@ extern crate pretty_assertions;
 
 use core::time::Duration;
 use std::sync::mpsc;
-use std::sync::mpsc::Receiver;
-use std::sync::mpsc::Sender;
 
 use criterion::Criterion;
 use d3_geo_rs::last_point::LastPoint;
@@ -27,7 +25,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     let ep = LastPoint::default();
     let mut str = StreamTransformRadians::default().connect(ep);
 
-    g.bench_function("transforms", |b| {
+    g.bench_function("signle-threaded", |b| {
         b.iter(|| {
             for i in 1..100_000 {
                 let p = Coord {
@@ -40,20 +38,17 @@ fn criterion_benchmark(c: &mut Criterion) {
         })
     });
 
-    // Moved pipeline setup code here.
-    let (tx1, rx1): (Sender<Message<f64>>, Receiver<Message<f64>>) =
-        mpsc::channel();
-    let (tx2, rx2): (Sender<Message<f64>>, Receiver<Message<f64>>) =
-        mpsc::channel();
-    let (tx3, rx3): (Sender<Message<f64>>, Receiver<Message<f64>>) =
-        mpsc::channel();
+    static CHANNEL_CAPACITY: usize = 4096;
+    let (tx1, rx1) = mpsc::sync_channel(CHANNEL_CAPACITY);
+    let (tx2, rx2) = mpsc::sync_channel(CHANNEL_CAPACITY);
+    let (tx3, rx3) = mpsc::sync_channel(CHANNEL_CAPACITY);
 
     let stage1 = StreamTransformRadians::default().gen_stage(tx2, rx1);
     let stage2 = LastPoint::default().gen_stage(tx3, rx2);
     let handles = [stage1, stage2];
 
-    g.bench_function("multi_threaded", |b| b.iter(|| {
-      for i in 1..100 {
+    g.bench_function("multi-threaded", |b| b.iter(|| {
+      for i in 1..100_000 {
         let p = Coord {
             x: i as f64,
             y: i as f64,
