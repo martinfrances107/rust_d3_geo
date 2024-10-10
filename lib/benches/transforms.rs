@@ -86,7 +86,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     // Increased the default run time by 3 seconds after gettings warnings that the task was taking too long.
     g.measurement_time(Duration::from_secs(10));
 
-    g.bench_function("transforms", |b| b.iter(transform_loop));
+    g.bench_function("transforms", |b| b.iter(st_loop));
 
     // Moved pipeline setup code here.
 
