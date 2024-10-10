@@ -219,7 +219,7 @@ where
     }
 }
 
-impl<SINK, T> Rectangle<Connected<SINK>, T>
+impl<S, T> Rectangle<S, T>
 where
     T: CoordFloat,
 {
