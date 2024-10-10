@@ -1,6 +1,5 @@
 use core::fmt::Debug;
 use std::sync::mpsc::Receiver;
-use std::sync::mpsc::Sender;
 use std::sync::mpsc::SyncSender;
 use std::thread;
 use std::thread::JoinHandle;
@@ -145,9 +144,8 @@ where
                             | Message::ShutDownWithReturn(_) => {
                                 if let Err(e) = tx.send(Message::ShutDown) {
                                     return ChannelStatus::Tx(e);
-                                } else {
-                                    return ChannelStatus::ShuntDownReceived;
                                 }
+                                return ChannelStatus::ShuntDownReceived;
                             }
                         };
                         match res_tx {

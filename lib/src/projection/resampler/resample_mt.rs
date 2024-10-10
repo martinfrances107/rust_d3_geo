@@ -1,7 +1,6 @@
 use core::fmt::Debug;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::SendError;
-use std::sync::mpsc::Sender;
 use std::sync::mpsc::SyncSender;
 use std::thread;
 use std::thread::JoinHandle;
@@ -404,7 +403,7 @@ where
                                     tx.send(message)
                                 }
                                 Message::ShutDown => todo!(),
-                                Message::ShutDownWithReturn(end_point_mt) => {
+                                Message::ShutDownWithReturn(_end_point_mt) => {
                                     todo!()
                                 }
                             };

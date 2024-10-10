@@ -1,5 +1,5 @@
 use std::collections::VecDeque;
-use std::sync::mpsc::{Receiver, Sender, SyncSender};
+use std::sync::mpsc::{Receiver, SyncSender};
 use std::thread::{self, JoinHandle};
 
 use geo::CoordFloat;

@@ -1,10 +1,7 @@
 use core::fmt::Debug;
-use std::sync::mpsc;
 use std::sync::mpsc::sync_channel;
-use std::sync::mpsc::Receiver;
 use std::sync::mpsc::RecvError;
 use std::sync::mpsc::SendError;
-use std::sync::mpsc::Sender;
 use std::thread::JoinHandle;
 
 use geo::CoordFloat;

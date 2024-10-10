@@ -1,6 +1,5 @@
 use core::fmt::Debug;
 use std::sync::mpsc::Receiver;
-use std::sync::mpsc::Sender;
 use std::sync::mpsc::SyncSender;
 use std::thread;
 use std::thread::JoinHandle;

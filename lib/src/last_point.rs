@@ -1,4 +1,4 @@
-use std::sync::mpsc::{Receiver, Sender, SyncSender};
+use std::sync::mpsc::{Receiver, SyncSender};
 use std::thread::{self, JoinHandle};
 
 use geo::CoordFloat;
@@ -80,9 +80,8 @@ where
                             Message::ShutDown => {
                                 if let Err(e) = tx.send(message) {
                                     return ChannelStatus::Tx(e);
-                                } else {
-                                    return ChannelStatus::ShuntDownReceived;
                                 }
+                                return ChannelStatus::ShuntDownReceived;
                             }
                             Message::ShutDownWithReturn(_dummy) => {
                                 if let Err(e) =
@@ -91,9 +90,8 @@ where
                                     ))
                                 {
                                     return ChannelStatus::Tx(e);
-                                } else {
-                                    return ChannelStatus::ShuntDownReceived;
-                                };
+                                }
+                                return ChannelStatus::ShuntDownReceived;
                             }
                         };
                         match res_tx {

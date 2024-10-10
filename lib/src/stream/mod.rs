@@ -11,7 +11,6 @@ mod polygon;
 use core::fmt::Debug;
 use std::marker::PhantomData;
 use std::sync::mpsc::Receiver;
-use std::sync::mpsc::Sender;
 use std::sync::mpsc::SyncSender;
 use std::thread::JoinHandle;
 
