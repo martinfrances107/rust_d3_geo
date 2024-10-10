@@ -18,21 +18,29 @@ use d3_geo_rs::stream::Stream;
 use d3_geo_rs::stream::StreamMT;
 use geo::Coord;
 
-fn st_loop() {
+fn criterion_benchmark(c: &mut Criterion) {
+    let mut g = c.benchmark_group("transforms");
+
+    // Increased the default run time by 3 seconds after gettings warnings that the task was taking too long.
+    g.measurement_time(Duration::from_secs(10));
+
     let ep = LastPoint::default();
     let mut str = StreamTransformRadians::default().connect(ep);
 
-    for i in 1..100_000 {
-        let p = Coord {
-            x: i as f32,
-            y: i as f32,
-        };
-        str.point(&p, None);
-        assert_ne!(Some(p), str.endpoint().result());
-    }
-}
+    g.bench_function("transforms", |b| {
+        b.iter(|| {
+            for i in 1..100_000 {
+                let p = Coord {
+                    x: i as f32,
+                    y: i as f32,
+                };
+                str.point(&p, None);
+                assert_ne!(Some(p), str.endpoint().result());
+            }
+        })
+    });
 
-fn mt_loop() {
+    // Moved pipeline setup code here.
     let (tx1, rx1): (Sender<Message<f64>>, Receiver<Message<f64>>) =
         mpsc::channel();
     let (tx2, rx2): (Sender<Message<f64>>, Receiver<Message<f64>>) =
@@ -42,10 +50,10 @@ fn mt_loop() {
 
     let stage1 = StreamTransformRadians::default().gen_stage(tx2, rx1);
     let stage2 = LastPoint::default().gen_stage(tx3, rx2);
-
     let handles = [stage1, stage2];
 
-    for i in 1..100 {
+    g.bench_function("multi_threaded", |b| b.iter(|| {
+      for i in 1..100 {
         let p = Coord {
             x: i as f64,
             y: i as f64,
@@ -71,6 +79,7 @@ fn mt_loop() {
             }
         }
     }
+    }));
 
     let _ = tx1.send(Message::ShutDown);
 
@@ -78,21 +87,6 @@ fn mt_loop() {
     for h in handles {
         h.join().unwrap();
     }
-}
-
-fn criterion_benchmark(c: &mut Criterion) {
-    let mut g = c.benchmark_group("transforms");
-
-    // Increased the default run time by 3 seconds after gettings warnings that the task was taking too long.
-    g.measurement_time(Duration::from_secs(10));
-
-    g.bench_function("transforms", |b| b.iter(st_loop));
-
-    // Moved pipeline setup code here.
-
-    g.bench_function("multi_threaded", |b| b.iter(mt_loop));
-
-    // Move pipeline close code here.
 }
 
 criterion_group!(benches, criterion_benchmark);
