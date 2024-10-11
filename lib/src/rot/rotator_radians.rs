@@ -35,7 +35,7 @@ where
 {
     /// Constructor.
     #[inline]
-    pub(crate) const fn new(rotate: RotateRadians<T>) -> Self {
+    pub const fn new(rotate: RotateRadians<T>) -> Self {
         Self {
             state: Unconnected,
             rotate,

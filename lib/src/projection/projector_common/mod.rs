@@ -1,7 +1,9 @@
 use core::fmt::Debug;
 use std::sync::mpsc::sync_channel;
+use std::sync::mpsc::Receiver;
 use std::sync::mpsc::RecvError;
 use std::sync::mpsc::SendError;
+use std::sync::mpsc::SyncSender;
 use std::thread::JoinHandle;
 
 use geo::CoordFloat;
@@ -97,7 +99,8 @@ where
 
         let preclip_node = self.clip.connect(resample_node);
 
-        let rotate_node = self.rotator.clone().connect(preclip_node);
+        let rotate_node: RotatorRadians<Connected<CLIPC>, T> =
+            self.rotator.clone().connect(preclip_node);
 
         let out = self.transform_radians.clone().connect(rotate_node);
 
@@ -166,20 +169,29 @@ where
     RU: Clone + StreamMT<T>,
     T: 'static + CoordFloat + FloatConst + Send,
 {
-    fn stream_mt(&self, drain: &DRAIN) -> Vec<JoinHandle<ChannelStatus<T>>> {
+    /// Contruct a mutli-threaded pipeline.
+    ///
+    /// Returns :-
+    ///
+    /// A handle to all sub threads.
+    /// A SyncSender to transmit messages into the pipeline.
+    /// A Receiver to accept the output messages.
+    pub fn stream_mt(
+        &self,
+        channel_capacity: usize,
+    ) -> (
+        [JoinHandle<ChannelStatus<T>>; 3],
+        SyncSender<Message<T>>,
+        Receiver<Message<T>>,
+    ) {
         // Prepare stage-interlink channels
         // Input to stage txN. rxN consumed in stage N.
-        let (tx1, rx1) = sync_channel(100);
-
-        let (tx2, rx2) = sync_channel(100);
-
-        let (tx3, rx3) = sync_channel(100);
-        // let (tx4, rx4): (Sender<Message<T>>, Receiver<Message<T>>) =
-        //     mpsc::channel();
+        let (tx1, rx1) = sync_channel(channel_capacity);
+        let (tx2, rx2) = sync_channel(channel_capacity);
+        let (tx3, rx3) = sync_channel(channel_capacity);
+        let (tx4, rx4) = sync_channel(channel_capacity);
         // let (tx5, rx5): (Sender<Message<T>>, Receiver<Message<T>>) =
         //     mpsc::channel();
-
-        let mut handles = vec![];
 
         // Build cache.
         let postclip_node = self.postclip.clone();
@@ -192,15 +204,12 @@ where
 
         let out: StreamTransformRadians<_, T> = self.transform_radians.clone();
 
-        let stage1 = out.gen_stage(tx1, rx1);
-        handles.push(stage1);
-        let stage2 = rotate_node.gen_stage(tx2, rx2);
-        handles.push(stage2);
-        let stage3 = resample_node.gen_stage(tx3, rx3);
-        handles.push(stage3);
+        let stage1 = out.gen_stage(tx2, rx1);
+        let stage2 = rotate_node.gen_stage(tx3, rx2);
+        let stage3 = resample_node.gen_stage(tx4, rx3);
 
-        // return thread bundle.
-        handles
+        // return thread bundle, input and exit of the combined pipeline.
+        ([stage1, stage2, stage3], tx1, rx4)
     }
 }
 
