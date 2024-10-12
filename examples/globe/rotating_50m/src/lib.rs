@@ -67,9 +67,9 @@ fn document() -> Result<Document, JsValue> {
 /// State associated with render call.
 pub struct Renderer {
     // A string owned by javascript representing the HTML color used in the graticule.
-    color_graticule: JsValue,
+    color_graticule: String,
     // A string owned by javascript represent the HTML color used to draw the countries.
-    color_land: JsValue,
+    color_land: String,
     context2d: CanvasRenderingContext2d,
     countries: Geometry<f64>,
     height: f64,
@@ -173,11 +173,11 @@ impl Renderer {
         let path_builder = PathBuilder::new(ep);
 
         let mut path = path_builder.build(projector);
-        self.context2d.set_stroke_style(&self.color_land);
+        self.context2d.set_stroke_style_str(&self.color_land);
         let path2d = path.object(&self.countries);
         self.context2d.stroke_with_path(&path2d);
 
-        self.context2d.set_stroke_style(&self.color_graticule);
+        self.context2d.set_stroke_style_str(&self.color_graticule);
         let path2d = path.object(&self.graticule);
         self.context2d.stroke_with_path(&path2d);
         self.yaw -= 0.2f64;

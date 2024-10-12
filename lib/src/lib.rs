@@ -158,7 +158,7 @@
 //!         .build();
 //!
 //!     let mut path = pb.build(ortho);
-//!     context_raw.set_stroke_style(&"#333".into());
+//!     context_raw.set_stroke_style_str(&"#333".into());
 //!     context_raw.set_line_width(0.5);
 //!     path.object(&countries);
 //!     let path2d = path.context.result();
@@ -167,7 +167,7 @@
 //!     // Graticule
 //!     let graticule =
 //!         generate_mls();
-//!     context_raw.set_stroke_style(&"#ccc".into());
+//!     context_raw.set_stroke_style_str(&"#ccc".into());
 //!     path.object(&graticule);
 //!     let path2d = path.context.result();
 //!     context_raw.stroke_with_path(&path2d);

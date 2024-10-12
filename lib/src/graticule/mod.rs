@@ -80,7 +80,7 @@ where
 ///  // Graticule RUSTLANG
 ///  let graticule = generate_mls();
 ///  context_raw.begin_path();
-///  context_raw.set_stroke_style(&"#ccc".into());
+///  context_raw.set_stroke_style_str(&"#ccc".into());
 ///  path.object(&graticule);
 ///  context_raw.stroke();
 /// ```

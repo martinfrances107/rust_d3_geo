@@ -51,15 +51,15 @@ pub async fn draw(land: &Geometry<f64>) -> Result<(), JsValue> {
         .build();
 
     let mut path = path_builder.build(projector);
-    context_raw.set_stroke_style(&"#69b3a2".into());
+    context_raw.set_stroke_style_str(&"#69b3a2");
     let path2d = path.object(land);
     context_raw.stroke_with_path(&path2d);
 
     let graticule = generate_graticule();
     let lines = graticule.lines();
     let mls = Geometry::MultiLineString(MultiLineString(lines.collect()));
-    context_raw.set_fill_style(&"#999".into());
-    context_raw.set_stroke_style(&"#69b3a2".into());
+    context_raw.set_fill_style_str(&"#999");
+    context_raw.set_stroke_style_str(&"#69b3a2");
     let path2d = path.object(&mls);
     context_raw.stroke_with_path(&path2d);
 
