@@ -54,7 +54,7 @@ These Examples are provided to help developers convert their existing javascript
 <tbody align="left" style="vertical-align:top;">
 <tr>
 <td width="50%">
-<strong>examples/globe/rotating</strong><br><br>
+<strong>examples/globe/rotating_50m</strong><br><br>
 
 This is a port into rust of this d3-geo example
 
@@ -89,7 +89,7 @@ This endpoint's output is a (vertex_buffer,index_buffer) pair in the form of blo
 
 A thin vertex and fragment shader is then responsible for rendering.
 
-The example requires the feature flag "wgpu".
+The render speed is approximately 3 times faster than the example above.
 
 (Scale 1:50M)
 
