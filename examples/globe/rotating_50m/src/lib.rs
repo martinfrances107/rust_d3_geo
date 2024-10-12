@@ -91,7 +91,7 @@ impl Renderer {
     /// When geoJson file cannot be obtained/fetched
     /// When the Topology deserialization failed.
     /// When the canvas element could not be obtained.
-    pub async fn new(filename: &str, yaw: f64) -> Result<Renderer, JsValue> {
+    pub async fn new(filename: &str, yaw: f64) -> Result<Self, JsValue> {
         utils::set_panic_hook();
 
         let document = document()?;

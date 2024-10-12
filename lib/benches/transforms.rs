@@ -3,7 +3,6 @@ extern crate criterion;
 extern crate pretty_assertions;
 
 use core::time::Duration;
-use std::sync::mpsc;
 use std::sync::mpsc::sync_channel;
 
 use criterion::Criterion;

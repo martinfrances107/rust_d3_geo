@@ -174,7 +174,7 @@ where
     /// Returns :-
     ///
     /// A handle to all sub threads.
-    /// A SyncSender to transmit messages into the pipeline.
+    /// A `SyncSender` to transmit messages into the pipeline.
     /// A Receiver to accept the output messages.
     pub fn stream_mt(
         &self,

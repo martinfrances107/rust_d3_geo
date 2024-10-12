@@ -57,7 +57,7 @@ pub fn stream_fn<EP, STREAM, T>(
         } else {
             t < t1
         };
-        if cond == false {
+        if !cond {
             break;
         }
         let (st, ct) = t.sin_cos();

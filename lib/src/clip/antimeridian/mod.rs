@@ -18,7 +18,7 @@ use super::clipper::Connected as ConnectedClip;
 use interpolate::Interpolate;
 
 /// Connected clip type using antimerdian interpolator, `point_visible` function line handler.
-pub(crate) type ClipAntimeridianC<RC, T> = Clipper<
+pub type ClipAntimeridianC<RC, T> = Clipper<
     Interpolate<T>,
     Line<Unconnected, T>,
     RC,
@@ -26,13 +26,13 @@ pub(crate) type ClipAntimeridianC<RC, T> = Clipper<
     T,
 >;
 /// Unconnected clip type using antimerdian interpolator, `point_visible` function line handler.
-pub(crate) type ClipAntimeridianU<RC, T> =
+pub type ClipAntimeridianU<RC, T> =
     Clipper<Interpolate<T>, Line<Unconnected, T>, RC, Unconnected, T>;
 
 /// Returns a clip setup for antimeridian clipping.
 #[inline]
 #[must_use]
-pub(crate) fn gen_clip<RC, T>() -> ClipAntimeridianU<RC, T>
+pub fn gen_clip<RC, T>() -> ClipAntimeridianU<RC, T>
 where
     T: 'static + CoordFloat + Default + FloatConst,
 {

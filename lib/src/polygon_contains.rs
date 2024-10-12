@@ -143,7 +143,7 @@ mod polygon_precision {
     /// This test addresses a longstanding issue ...
     ///
     /// javascript uses a Addr class to improve precision in this
-    /// polygon_contains.
+    /// `polygon_contains`.
     ///
     /// I dicovered artifacts appearing/flashing in `examples/globe/rotating_wgpu`
     /// traced to this function. When the angle values are close zero
@@ -171,30 +171,30 @@ mod polygon_precision {
     fn hidden_square() {
         let ring = [LineString::<f32>::from(vec![
             Coord {
-                x: 2.6974134,
-                y: 0.7027946,
+                x: 2.697_413_4,
+                y: 0.702_794_6,
             },
             Coord {
-                x: 2.8178122,
-                y: 0.935154,
+                x: 2.817_812_2,
+                y: 0.935_154,
             },
             Coord {
-                x: -3.1275373,
-                y: 0.8155085,
+                x: -3.127_537_3,
+                y: 0.815_508_5,
             },
             Coord {
-                x: 2.9835172,
-                y: 0.60618496,
+                x: 2.983_517_2,
+                y: 0.606_184_96,
             },
             Coord {
-                x: 2.6974132,
-                y: 0.7027947,
+                x: 2.697_413_2,
+                y: 0.702_794_7,
             },
         ])];
 
         let point = Coord::<f32> {
-            x: -3.1415927,
-            y: -1.5707964,
+            x: -3.141_592_7,
+            y: -1.570_796_4,
         };
         assert!(!polygon_contains(&ring, &point));
     }

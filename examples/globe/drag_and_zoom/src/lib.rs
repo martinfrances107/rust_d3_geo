@@ -228,7 +228,7 @@ impl Renderer {
     /// if an inconsisten state associated with the selected pattern was detected.
     pub async fn new(
         selected_pattern: SelectedPattern,
-    ) -> Result<Renderer, JsValue> {
+    ) -> Result<Self, JsValue> {
         utils::set_panic_hook();
 
         // If required, Start async file loading process.
