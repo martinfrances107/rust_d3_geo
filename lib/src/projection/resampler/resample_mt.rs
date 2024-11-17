@@ -81,6 +81,11 @@ where
     T: CoordFloat,
 {
     /// Returns a Resample for a given precision.
+    ///
+    /// # Panics
+    ///
+    /// Will never happen as constants will always be converted
+    /// to f32/f64
     #[inline]
     pub fn new(
         projection_transform: Compose<PR, ScaleTranslateRotate<T>>,

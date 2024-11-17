@@ -536,6 +536,8 @@ pub trait ScaleGet {
     fn scale(&self) -> Self::T;
 }
 
+/// Scale factor
+///
 ///  Sets the projection’s scale factor to the specified value and returns
 ///  the projection. The scale factor corresponds linearly to the distance
 ///  between projected points; however, absolute scale factors are not
@@ -565,6 +567,8 @@ pub trait TranslateGet {
         Self::T: CoordFloat;
 }
 
+/// Scale factor
+///
 ///  Sets the projection’s translation offset to the specified two-element
 ///  array [tx, ty] and returns the projection. The translation offset
 ///  determines the Pixel coordinates of the projection’s center. The

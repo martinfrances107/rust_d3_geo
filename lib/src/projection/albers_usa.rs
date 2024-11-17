@@ -307,8 +307,8 @@ where
                     || {
                         let mut hawaii_point = self.hawaii_point.clone();
                         hawaii_point.point(p, None);
-                        hawaii_point.endpoint().result().map_or(
-                            Coord {
+                        hawaii_point.endpoint().result().map_or_else(
+                            || Coord {
                                 x: T::nan(),
                                 y: T::nan(),
                             },

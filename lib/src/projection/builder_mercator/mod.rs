@@ -66,6 +66,7 @@ use super::TransformExtent;
 use self::types::BuilderMercatorAntimeridianResampleClip;
 
 /// Returns or sets the extent of the projection.
+///
 /// A projection builder sub trait.
 /// This trait is useful only for mercator projection.
 /// Here  centering, scaling and translate all end in a reclip.
@@ -134,6 +135,7 @@ pub trait FitReclip {
 }
 
 /// This trait is useful only for mercator projection.
+///
 /// Here  centering, scaling and translate all end in a reclip.
 /// That is all involve a transformation of the PCN
 /// specifically a Identity struct to a Rectangle struct.
