@@ -242,13 +242,13 @@ impl<'a> WindowState<'a> {
                 layout: Some(&pipeline_layout),
                 vertex: wgpu::VertexState {
                     module: &shader,
-                    entry_point: "vs_main",
+                    entry_point: Some("vs_main"),
                     buffers: &[Vertex::desc()],
                     compilation_options: PipelineCompilationOptions::default(),
                 },
                 fragment: Some(wgpu::FragmentState {
                     module: &shader,
-                    entry_point: "fs_white",
+                    entry_point: Some("fs_white"),
                     compilation_options: PipelineCompilationOptions::default(),
                     targets: &[Some(swapchain_format.into())],
                 }),
@@ -271,13 +271,13 @@ impl<'a> WindowState<'a> {
                 layout: Some(&pipeline_layout),
                 vertex: wgpu::VertexState {
                     module: &shader,
-                    entry_point: "vs_main",
+                    entry_point: Some("vs_main"),
                     buffers: &[Vertex::desc()],
                     compilation_options: PipelineCompilationOptions::default(),
                 },
                 fragment: Some(wgpu::FragmentState {
                     module: &shader,
-                    entry_point: "fs_green",
+                    entry_point: Some("fs_green"),
                     compilation_options: PipelineCompilationOptions::default(),
                     targets: &[Some(swapchain_format.into())],
                 }),
