@@ -36,7 +36,7 @@ fn criterion_benchmark(c: &mut Criterion) {
         })
         .build();
 
-    // Increased the default run time by 3 seconds after gettings warnings that the task was taking too long.
+    // Increased the default run time by 3 seconds after getting warnings that the task was taking too long.
     g.measurement_time(Duration::from_secs(10));
 
     let ep = LastPoint::default();

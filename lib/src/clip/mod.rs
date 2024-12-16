@@ -42,14 +42,14 @@ pub trait Clean {
     fn clean(&self) -> u8;
 }
 
-/// Can make stream connections to a specfic EP.
+/// Can make stream connections to a specific EP.
 /// A buffer.
 pub trait Bufferable {
     /// Resultant Line type: Antimeridian or Clip.
     type LINE;
     /// f64 or f32
     type T;
-    /// conected buffer as the next path stage.
+    /// connected buffer as the next path stage.
     fn buffer(&mut self, buffer: Buffer<Self::T>) -> Self::LINE
     where
         Self::T: CoordFloat;
