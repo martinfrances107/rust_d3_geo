@@ -32,7 +32,7 @@
 //! ## Crate Features
 //! * **web** (default) This feature allows rendering to a HTML CANVAS element. For CLI binary applications this can be removed to reduce the dependency count.
 //!
-//! * **wgpu** Allow an endpoint that outputs points and poly-lines as "Array Buffer". This buffer can then be fed direcly into the GPU reducing the amount system calls. This feature is highly experimental.
+//! * **wgpu** Allow an endpoint that outputs points and poly-lines as "Array Buffer". This buffer can then be fed directly into the GPU reducing the amount system calls. This feature is highly experimental.
 //!
 //! Version 3.0.0 adds support for WGPU
 //!
