@@ -31,10 +31,10 @@
   "dependencies": {
     "copy-webpack-plugin": "^12",
     "rimraf": "^6",
-    "serve": "^14",
-    "webpack": ">=5.76.0",
+    "serve": "^14.2.4",
+    "webpack": ">=5.97.1",
     "webpack-cli": "^5",
-    "webpack-dev-server": "^5"
+    "webpack-dev-server": "^5.2.0"
   },
   "devDependencies": {
     "@wasm-tool/wasm-pack-plugin": "^1"
