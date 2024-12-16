@@ -31,6 +31,7 @@
   "homepage": "https://github.com/martinfrances107/rust_d3_geo/#readme",
   "dependencies": {
     "copy-webpack-plugin": "^12.0.2",
+    "serve": "^14.2.4",
     "webpack-dev-server": "^5.1.0"
   },
   "devDependencies": {
