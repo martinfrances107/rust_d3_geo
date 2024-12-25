@@ -368,7 +368,7 @@ impl<T> Connectable for Rectangle<Unconnected, T>
 where
     T: 'static + CoordFloat,
 {
-    /// The resultant postclip node  type.
+    /// The resultant postclip node type.
     type Output<SC> = Rectangle<Connected<SC>, T>;
 
     fn connect<SC>(&self, sink: SC) -> Self::Output<SC> {

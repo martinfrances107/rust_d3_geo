@@ -5,7 +5,7 @@ use geo::CoordFloat;
 
 use crate::clip::intersection::Intersection;
 
-/// Given a vec of Intersetions :-
+/// Given a vec of Intersections :-
 ///
 /// Set the next and pervious entries to be the elements above and
 /// below. Connect the ends to form a circular loop.
