@@ -693,7 +693,7 @@ impl<'a> WindowState<'a> {
                     color_attachments: &[Some(
                         wgpu::RenderPassColorAttachment {
                             view: &view,          // Texture
-                            resolve_target: None, // Texture that will received the resolved output ( multisampling ).
+                            resolve_target: None, // Texture that will received the resolved output ( multi-sampling ).
                             ops: wgpu::Operations {
                                 load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
                                 store: wgpu::StoreOp::Store,
