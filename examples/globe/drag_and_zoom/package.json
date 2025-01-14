@@ -7,7 +7,7 @@
     "build": "rimraf dist pkg && RUST_LOG=info webpack -c webpack.production.config.js",
     "lint": "tslint './js/*.ts'",
     "serve": "npx serve dist",
-    "start": "rimraf pkg dist && webpack-dev-server"
+    "start": "rimraf pkg dist && RUST_LOG=info webpack-dev-server --open"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,6 @@
   },
   "homepage": "https://github.com/martinfrances107/rust_d3_geo/#readme",
   "dependencies": {
-    "@wasm-tool/wasm-pack-plugin": "^1",
     "compression-webpack-plugin": "^11",
     "copy-webpack-plugin": "^12",
     "d3-drag": "^3",
@@ -35,11 +34,11 @@
     "rimraf": "^6",
     "serve": "^14.2.4",
     "topojson-client": "^3",
-    "webpack": ">=5.76.0",
-    "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5"
   },
   "devDependencies": {
+    "webpack-cli": "^6.0.1",
+    "@wasm-tool/wasm-pack-plugin": "^1",
     "@types/d3-selection": "^3",
     "@types/topojson-client": "^3",
     "@typescript-eslint/eslint-plugin": "^8",
