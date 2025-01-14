@@ -33,10 +33,10 @@
     "d3-selection": "^3",
     "mkdirp": "^3",
     "rimraf": "^6",
-    "serve": "^14",
+    "serve": "^14.2.4",
     "topojson-client": "^3",
     "webpack": ">=5.76.0",
-    "webpack-cli": "^5",
+    "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5"
   },
   "devDependencies": {
