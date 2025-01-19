@@ -25,7 +25,6 @@ use super::Interpolator as InterpolatorTrait;
 
 ///A primitive type used for a `PostClipNode` path stage.
 #[allow(clippy::struct_excessive_bools)]
-
 pub struct Rectangle<STATE, T>
 where
     T: CoordFloat,

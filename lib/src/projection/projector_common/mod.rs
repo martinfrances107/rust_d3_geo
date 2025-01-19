@@ -169,7 +169,7 @@ where
     RU: Clone + StreamMT<T>,
     T: 'static + CoordFloat + FloatConst + Send,
 {
-    /// Contruct a mutli-threaded pipeline.
+    /// Construct a multi-threaded pipeline.
     ///
     /// Returns :-
     ///
