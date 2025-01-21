@@ -89,7 +89,7 @@ pub fn generate_mls<T>() -> Geometry<T>
 where
     T: 'static + CoordFloat,
 {
-    Geometry::MultiLineString(MultiLineString(
-        generate::<T>().lines().collect(),
-    ))
+    Geometry::MultiLineString(
+        generate::<T>().lines().collect::<MultiLineString<T>>(),
+    )
 }
