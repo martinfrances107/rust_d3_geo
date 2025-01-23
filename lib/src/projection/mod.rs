@@ -606,8 +606,6 @@ pub trait Projector {
     fn stream(&mut self, drain: &Self::EP) -> Self::Transformer;
 }
 
-/// Private traits.
-
 trait Recenter {
     fn recenter(&mut self) -> &mut Self;
 }

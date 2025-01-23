@@ -63,6 +63,12 @@ pub type Source<CLIPC, T> = StreamTransformRadians<Connected<Rrc<CLIPC, T>>, T>;
 /// A connection version of the ``RotateRadians`` transformer
 pub(super) type Rrc<CLIPC, T> = RotatorRadians<Connected<CLIPC>, T>;
 
+/// Connects a DRAIN to the projection.
+///
+/// The Projection Stream Path :-
+///
+/// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
+///
 impl<CLIPC, CLIPU, DRAIN, PCNC, PCNU, PR, RC, RU, T> ProjectorTrait
     for Projector<CLIPU, DRAIN, PCNU, PR, RU, Source<CLIPC, T>, T>
 where
@@ -75,13 +81,6 @@ where
 
     T: CoordFloat + FloatConst,
 {
-    /// Connects a DRAIN to the projection.
-    ///
-    /// The Projection Stream Path :-
-    ///
-    /// `StreamTransformRadians` -> `StreamTransform` -> `Preclip` -> `Resample` -> `Postclip` -> `DRAIN`
-    ///
-
     type EP = DRAIN;
 
     type Transformer = Source<CLIPC, T>;

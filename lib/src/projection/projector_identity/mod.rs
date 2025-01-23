@@ -35,6 +35,12 @@ where
     pub(crate) cache: CacheState<DRAIN, Transformer<Connected<PCNC>, T>>,
 }
 
+/// Connects a DRAIN to the projection.
+///
+/// The Projection Stream Path :-
+///
+///  Transformer -> postclip -> DRAIN
+///
 impl<DRAIN, PCNC, PCNU, T> ProjectorTrait for Projector<DRAIN, PCNC, PCNU, T>
 where
     DRAIN: Clone + PartialEq,
@@ -42,15 +48,7 @@ where
     PCNU: Clone + Connectable<Output<DRAIN> = PCNC>,
     T: CoordFloat + FloatConst,
 {
-    /// Connects a DRAIN to the projection.
-    ///
-    /// The Projection Stream Path :-
-    ///
-    ///  Transformer -> postclip -> DRAIN
-    ///
-
     type Transformer = Transformer<Connected<PCNC>, T>;
-
     type EP = DRAIN;
 
     fn stream(&mut self, drain: &DRAIN) -> Self::Transformer {
