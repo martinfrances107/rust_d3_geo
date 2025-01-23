@@ -11,11 +11,11 @@ repository = "https://github.com/martinfrances107/rust_d3_geo.git"
 version = { workspace = true }
 
 [dependencies]
+wgpu = { workspace = true, optional = true }
 approx = "~0.5"
 num-traits = "~0.2"
 geo = { workspace = true }
 geo-types = { workspace = true }
-wgpu = { version = "23", optional = true }
 bytemuck = { version = "1", optional = true, features = ["derive"] }
 
 [dev-dependencies]
