@@ -51,7 +51,7 @@ examples/projection eslint needs updating.
  [] Render polygons
     data format Cx, Cy, x0, y0, x1, y1 ...
     where Cx, Cy are the voronoi centers
-    x0, y0, x1, y1 are the points of the delaynay cell.
+    x0, y0, x1, y1 are the points of the delaunay cell.
 
   [] rotation in a loop.
 
