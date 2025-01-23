@@ -9,7 +9,7 @@ use bytemuck::Zeroable;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Pod, Zeroable, PartialEq)]
-/// CPU side representation of a Vertex shader primitve.
+/// CPU side representation of a Vertex shader primitive.
 pub struct Vertex {
     /// The coords of the vertex
     pub pos: [f32; 2],
