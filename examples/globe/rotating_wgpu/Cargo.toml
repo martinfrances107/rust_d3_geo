@@ -128,7 +128,7 @@ objc2 = "0.6.0"
 # AppKit
 [target.'cfg(target_os = "macos")'.dependencies]
 core-graphics = "0.24"
-objc2-app-kit = { version = "0.2.2", features = [
+objc2-app-kit = { version = "0.3.0", features = [
   "NSAppearance",
   "NSApplication",
   "NSBitmapImageRep",
@@ -216,7 +216,7 @@ objc2-ui-kit = { version = "0.3.0", features = [
 
 # Windows
 [target.'cfg(target_os = "windows")'.dependencies]
-unicode-segmentation = "1.7.1"
+unicode-segmentation = "1.12.0"
 windows-sys = { version = "0.59.0", features = [
   "Win32_Devices_HumanInterfaceDevice",
   "Win32_Foundation",
