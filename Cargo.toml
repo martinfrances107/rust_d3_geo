@@ -36,12 +36,12 @@ rust-version = "1.80"
 d3_geo_rs = { path = "../../lib" }
 geo = "0.29.3"
 geo-types = "~0.7"
-getrandom = { version = "~0.2", features = ["js"] }
+getrandom = { version = "0.3.1", features = ["js"] }
 gloo-utils = "~0.2"
 js-sys = "~0.3"
 serde_json = "~1"
 futures = "~0.3"
-rand = { version = "~0.8" }
+rand = { version = "~0.9" }
 rust_topojson_client = { git = "https://github.com/martinfrances107/rust_topojson_client.git", branch = "main" }
 topojson = "~0.5"
 wasm-bindgen = "~0.2"
