@@ -35,7 +35,7 @@
     "serve": "^14",
     "topojson-client": "^3",
     "webpack": ">=5.76.0",
-    "webpack-cli": "^5",
+    "webpack-cli": "^6",
     "webpack-dev-server": "^5"
   },
   "devDependencies": {
