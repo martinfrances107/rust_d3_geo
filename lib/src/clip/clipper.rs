@@ -379,7 +379,7 @@ where
                 self.state.line_node.sink(),
             );
             self.state.ring_sink.sink().line_end();
-        };
+        }
         if self.state.polygon_started {
             self.state.line_node.sink().polygon_end();
             self.state.polygon_started = false;

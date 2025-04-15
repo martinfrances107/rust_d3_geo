@@ -15,7 +15,7 @@ where
 {
     if array.is_empty() {
         return;
-    };
+    }
 
     let mut a = array[0].clone();
     for elem in array.iter().skip(1) {

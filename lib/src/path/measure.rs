@@ -84,7 +84,7 @@ where
 {
     #[inline]
     #[allow(clippy::unused_self)]
-    fn point_noop(&mut self, _p: &Coord<T>) {}
+    const fn point_noop(&mut self, _p: &Coord<T>) {}
 
     fn length_point_first(&mut self, p: &Coord<T>) {
         self.point_fn = Self::length_point;
@@ -130,7 +130,7 @@ where
     fn line_end(&mut self) {
         if matches!(self.mode, MeasureMode::Polygon) {
             self.length_point(&self.p00.clone());
-        };
+        }
 
         self.point_fn = Self::point_noop;
     }

@@ -101,11 +101,11 @@ where
 
     #[inline]
     #[allow(clippy::unused_self)]
-    fn point_noop(&mut self, _p: &Coord<T>) {}
+    const fn point_noop(&mut self, _p: &Coord<T>) {}
 
     #[inline]
     #[allow(clippy::unused_self)]
-    fn line_noop(&mut self) {}
+    const fn line_noop(&mut self) {}
 }
 
 impl<T> Result for Area<T>

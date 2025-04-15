@@ -129,7 +129,7 @@ impl Stream for Path2dEndpoint {
                     Err(_) => {
                         debug_assert!(true, "Suppressing arc failure");
                     }
-                };
+                }
             }
         }
     }

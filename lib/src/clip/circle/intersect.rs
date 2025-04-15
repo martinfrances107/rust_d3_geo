@@ -55,7 +55,7 @@ pub(super) fn intersect<T: CoordFloat + FloatConst>(
         } else {
             Return::One(Some(*a))
         };
-    };
+    }
 
     let c1 = cr * n2n2 / determinant;
     let c2 = -cr * n1n2 / determinant;
@@ -83,7 +83,7 @@ pub(super) fn intersect<T: CoordFloat + FloatConst>(
 
     if !two {
         return Return::One(Some(LineElem { p: q, m: None }));
-    };
+    }
 
     // Two intersection points.
     let mut lambda0 = a.p.x;
@@ -107,7 +107,7 @@ pub(super) fn intersect<T: CoordFloat + FloatConst>(
         z = phi0;
         phi0 = phi1;
         phi1 = z;
-    };
+    }
 
     // Check that the first point is between a and b.
     let condition: bool;

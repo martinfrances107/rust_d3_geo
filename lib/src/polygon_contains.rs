@@ -51,7 +51,7 @@ where
         let m = ring.coords_count();
         if m == 0 {
             continue;
-        };
+        }
 
         let mut point0 = Coord {
             x: ring[m - 1].x.to_f64().unwrap(),
@@ -105,7 +105,7 @@ where
                         winding += 1;
                     } else {
                         winding -= 1;
-                    };
+                    }
                 }
             }
             // Loop is about the restart.

@@ -220,7 +220,7 @@ where
 
     /// Sets the step for both the major and minor ticks.
     #[inline]
-    pub fn step_set(&mut self, step: [T; 2]) -> &mut Self {
+    pub const fn step_set(&mut self, step: [T; 2]) -> &mut Self {
         self.step_major_set(step).step_minor_set(step)
     }
 
@@ -231,7 +231,7 @@ where
     }
 
     /// Sets the x and y major step size.
-    pub fn step_major_set(&mut self, step: [T; 2]) -> &mut Self {
+    pub const fn step_major_set(&mut self, step: [T; 2]) -> &mut Self {
         self.DX = step[0];
         self.DY = step[1];
         self
@@ -244,7 +244,7 @@ where
     }
 
     /// Sets the x and y minor step size.
-    pub fn step_minor_set(&mut self, step: [T; 2]) -> &mut Self {
+    pub const fn step_minor_set(&mut self, step: [T; 2]) -> &mut Self {
         self.dx = step[0];
         self.dy = step[1];
         self

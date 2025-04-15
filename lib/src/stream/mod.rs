@@ -37,7 +37,7 @@ pub struct Connected<SINK> {
 
 impl<SINK> Connected<SINK> {
     #[inline]
-    pub(crate) fn sink(&mut self) -> &mut SINK {
+    pub(crate) const fn sink(&mut self) -> &mut SINK {
         &mut self.sink
     }
 }

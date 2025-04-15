@@ -303,7 +303,7 @@ where
                 } else {
                     self.state.sink.line_start();
                     self.state.sink.point(&p, None);
-                };
+                }
             }
         } else if v && self.v_ {
             if self.use_buffer_stream {

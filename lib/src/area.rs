@@ -124,7 +124,7 @@ where
     }
 
     #[inline]
-    fn area_ring_start(&mut self) {
+    const fn area_ring_start(&mut self) {
         self.point_fn = PointFn::AreaFirst;
     }
 

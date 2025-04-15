@@ -286,7 +286,7 @@ where
                                         None,
                                     ))) {
                                         return ChannelStatus::Tx(e);
-                                    };
+                                    }
                                     if let Err(e) = tx.send(Message::Point((
                                         Coord {
                                             x: self.sign0,
@@ -295,14 +295,14 @@ where
                                         None,
                                     ))) {
                                         return ChannelStatus::Tx(e);
-                                    };
+                                    }
                                     if let Err(e) = tx.send(Message::LineEnd) {
                                         return ChannelStatus::Tx(e);
-                                    };
+                                    }
                                     if let Err(e) = tx.send(Message::LineStart)
                                     {
                                         return ChannelStatus::Tx(e);
-                                    };
+                                    }
                                     if let Err(e) = tx.send(Message::Point((
                                         Coord {
                                             x: sign1,
@@ -311,7 +311,7 @@ where
                                         None,
                                     ))) {
                                         return ChannelStatus::Tx(e);
-                                    };
+                                    }
                                     if let Err(e) = tx.send(Message::Point((
                                         Coord {
                                             x: lambda1,
@@ -320,7 +320,7 @@ where
                                         None,
                                     ))) {
                                         return ChannelStatus::Tx(e);
-                                    };
+                                    }
                                     self.clean = 0;
                                 } else if self.sign0 != sign1
                                     && delta >= T::PI()
@@ -351,14 +351,14 @@ where
                                         None,
                                     ))) {
                                         return ChannelStatus::Tx(e);
-                                    };
+                                    }
                                     if let Err(e) = tx.send(Message::LineEnd) {
                                         return ChannelStatus::Tx(e);
-                                    };
+                                    }
                                     if let Err(e) = tx.send(Message::LineStart)
                                     {
                                         return ChannelStatus::Tx(e);
-                                    };
+                                    }
                                     if let Err(e) = tx.send(Message::Point((
                                         Coord {
                                             x: sign1,
@@ -367,7 +367,7 @@ where
                                         None,
                                     ))) {
                                         return ChannelStatus::Tx(e);
-                                    };
+                                    }
                                     self.clean = 0;
                                 }
                                 self.lambda0 = lambda1;
@@ -380,7 +380,7 @@ where
                                     None,
                                 ))) {
                                     return ChannelStatus::Tx(e);
-                                };
+                                }
                                 self.sign0 = sign1;
                                 Ok(())
                             }

@@ -103,9 +103,9 @@ where
         self.line_end_fn = Self::length_line_end;
     }
     #[allow(clippy::unused_self)]
-    fn point_noop(&mut self, _p: &Coord<T>) {}
+    const fn point_noop(&mut self, _p: &Coord<T>) {}
     #[allow(clippy::unused_self)]
-    fn line_end_noop(&mut self) {}
+    const fn line_end_noop(&mut self) {}
 }
 
 impl<T> StreamTrait for Stream<T>
