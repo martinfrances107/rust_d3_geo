@@ -48,7 +48,7 @@
     "eslint-plugin-promise": "^7",
     "eslint-webpack-plugin": "^4",
     "ts-loader": "^9",
-    "tslint": "^6",
+    "tslint": "^5.20",
     "typescript": "^5"
   }
 }
