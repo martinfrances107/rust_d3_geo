@@ -190,8 +190,8 @@ impl<'a> WindowState<'a> {
                     required_limits: wgpu::Limits::downlevel_webgl2_defaults()
                         .using_resolution(adapter.limits()),
                     memory_hints: wgpu::MemoryHints::MemoryUsage,
-                },
-                None,
+                    trace: wgpu::Trace::Off
+                }
             )
             .block_on()
             .expect("Failed to create device");

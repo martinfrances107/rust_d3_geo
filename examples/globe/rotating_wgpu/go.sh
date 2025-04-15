@@ -1,1 +1,1 @@
-RUST_BACKTRACE=1 RUST_LOG=INFO cargo run --release
+RUST_BACKTRACE=1  cargo run --release
