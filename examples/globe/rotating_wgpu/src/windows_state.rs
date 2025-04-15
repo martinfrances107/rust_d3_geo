@@ -129,7 +129,7 @@ pub(crate) struct WindowState<'a> {
     countries: Geometry<f32>,
     /// The amount of rotation of the window.
     r_angles: [f32; 2],
-    /// Releated to gesture.
+    /// Related to gesture.
     pub(crate) rotated: f32,
     /// Current cursor grab mode.
     cursor_grab: CursorGrabMode,
