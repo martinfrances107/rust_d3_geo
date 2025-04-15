@@ -110,9 +110,9 @@ pub(crate) struct WindowState<'a> {
     device: wgpu::Device,
     render_pipeline_white: wgpu::RenderPipeline,
     render_pipeline_green: wgpu::RenderPipeline,
-    // indicies: Vec<Index>,
+    // indices: Vec<Index>,
     queue: Queue,
-    // verticies: Vec<Vertex>,
+    // vertices: Vec<Vertex>,
     // device_pipeline: wgpu::DevicePipeline,
     pub(crate) window: Arc<Window>,
     /// The window theme we're drawing with.
@@ -635,13 +635,13 @@ impl<'a> WindowState<'a> {
         let path_builder = PathBuilder::<PolyLinesWGPU, f32>::new(endpoint);
         let mut path = path_builder.build(projector);
 
-        // let (verticies, indicies) = path.object(&self.countries);
+        // let (vertices, indices) = path.object(&self.countries);
         // extract the transform.
         // let mut stream_input = path.projector.stream(&path.context);
         // self.countries.to_stream(&mut stream_input);
         // self.graticule.to_stream(&mut stream_input);
-        let (verticies_white, indicies_white) = path.object(&self.countries);
-        let (verticies_green, indicies_green) = path.object(&self.graticule);
+        let (vertices_white, indices_white) = path.object(&self.countries);
+        let (vertices_green, indices_green) = path.object(&self.graticule);
 
         let frame = self
             .surface
@@ -659,7 +659,7 @@ impl<'a> WindowState<'a> {
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: Some(V_BUFF_COUNTRIES),
-                    contents: bytemuck::cast_slice(&verticies_white),
+                    contents: bytemuck::cast_slice(&vertices_white),
                     usage: wgpu::BufferUsages::VERTEX,
                 });
 
@@ -667,7 +667,7 @@ impl<'a> WindowState<'a> {
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: Some(I_BUFF_COUNTRIES),
-                    contents: bytemuck::cast_slice(&indicies_white),
+                    contents: bytemuck::cast_slice(&indices_white),
                     usage: wgpu::BufferUsages::INDEX,
                 });
 
@@ -675,7 +675,7 @@ impl<'a> WindowState<'a> {
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: Some("V_BUFF_GRATICULE"),
-                    contents: bytemuck::cast_slice(&verticies_green),
+                    contents: bytemuck::cast_slice(&vertices_green),
                     usage: wgpu::BufferUsages::VERTEX,
                 });
 
@@ -683,7 +683,7 @@ impl<'a> WindowState<'a> {
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: Some("I_BUFF_GRATICULE"),
-                    contents: bytemuck::cast_slice(&indicies_green),
+                    contents: bytemuck::cast_slice(&indices_green),
                     usage: wgpu::BufferUsages::INDEX,
                 });
         {
@@ -711,7 +711,7 @@ impl<'a> WindowState<'a> {
                 wgpu::IndexFormat::Uint32,
             );
             // instances 0..1 implies instancing is not being used!!!.
-            let len_white = u32::try_from(indicies_white.len())
+            let len_white = u32::try_from(indices_white.len())
                 .expect("Could not convert len_white");
             rpass.draw_indexed(0..len_white, 0, 0..1);
 
@@ -722,7 +722,7 @@ impl<'a> WindowState<'a> {
                 wgpu::IndexFormat::Uint32,
             );
             // instances 0..1 implies instancing is not being used!!!.
-            let len_green = u32::try_from(indicies_green.len())
+            let len_green = u32::try_from(indices_green.len())
                 .expect("could not convert len_green");
             rpass.draw_indexed(0..len_green, 0, 0..1);
         }
