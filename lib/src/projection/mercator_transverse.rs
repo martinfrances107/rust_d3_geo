@@ -32,7 +32,7 @@ impl Transform for MercatorTransverse {
 
     #[inline]
     fn transform(&self, p: &Coord<f64>) -> Coord<f64> {
-        let angle = (f64::FRAC_PI_2() + p.y) / 2f64;
+        let angle = f64::FRAC_PI_2().midpoint(p.y);
         // Javascript compatibility mode.
         // let tan_angle = if angle == f64::FRAC_PI_2() {
         //     16331239353195370_f64
