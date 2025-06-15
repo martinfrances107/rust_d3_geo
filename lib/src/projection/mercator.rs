@@ -71,7 +71,7 @@ impl Transform for Mercator {
         // large number in both the JS and RUST.
         Coord {
             x: p.x,
-            y: (f64::FRAC_PI_2().midpoint( p.y) ).tan().ln(),
+            y: (f64::FRAC_PI_2().midpoint(p.y)).tan().ln(),
         }
     }
 

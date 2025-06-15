@@ -84,7 +84,7 @@ mod fit_no_clip;
 mod fit_reclip;
 
 fn tany(y: f64) -> f64 {
-    f64::FRAC_PI_2().midpoint( y).tan()
+    f64::FRAC_PI_2().midpoint(y).tan()
 }
 
 /// Projection type.
