@@ -33,7 +33,7 @@
     "d3": "7",
     "rimraf": "6",
     "serve": "14",
-    "webpack": ">=5.76.0",
+    "webpack": ">=5.94.0",
     "webpack-cli": "6.0.1",
     "webpack-dev-server": "5"
   },
@@ -49,7 +49,7 @@
     "eslint-plugin-import": "2",
     "eslint-plugin-n": "17",
     "eslint-plugin-promise": "7",
-    "eslint-webpack-plugin": "5.0.1",
+    "eslint-webpack-plugin": "5.0.2",
     "ts-loader": "9",
     "tslint": "5",
     "typescript": "5",
