@@ -51,7 +51,7 @@ fn load_icon(bytes: &[u8]) -> Icon {
         .expect("Failed to open icon")
 }
 
-impl<'a> Application<'a> {
+impl Application<'_> {
     pub(crate) fn new<T>(event_loop: &EventLoop<T>) -> Self {
         // You'll have to choose an icon size at your own discretion. On X11, the desired size
         // varies by WM, and on Windows, you still have to account for screen scaling. Here
@@ -84,7 +84,7 @@ impl<'a> Application<'a> {
     fn create_window(
         &mut self,
         event_loop: &ActiveEventLoop,
-        _tab_id: &Option<String>,
+        _tab_id: Option<&String>,
     ) -> Result<WindowId, Box<dyn Error>> {
         // TODO read-out activation token.
 
@@ -124,7 +124,7 @@ impl<'a> Application<'a> {
             window.recognize_pan_gesture(true, 2, 2);
         }
 
-        let window_state = WindowState::new(self, window)?;
+        let window_state = WindowState::new(self, window);
         let window_id = window_state.window.id();
         debug!("Created new window with id={window_id:?}");
         self.windows.insert(window_id, window_state);
@@ -152,7 +152,7 @@ impl<'a> Application<'a> {
                     return;
                 }
 
-                if let Err(err) = self.create_window(event_loop, &None) {
+                if let Err(err) = self.create_window(event_loop, None) {
                     error!("Error creating new window: {err}");
                 }
             }
@@ -289,7 +289,7 @@ impl<'a> Application<'a> {
     }
 }
 
-impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
+impl ApplicationHandler<UserEvent> for Application<'_> {
     fn user_event(&mut self, _event_loop: &ActiveEventLoop, event: UserEvent) {
         info!("User event: {event:?}");
         if !self.animation_started {
@@ -397,7 +397,7 @@ impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
                 #[cfg(any(x11_platform, wayland_platform))]
                 {
                     startup_notify::set_activation_token_env(token);
-                    if let Err(err) = self.create_window(event_loop, &None) {
+                    if let Err(err) = self.create_window(event_loop, None) {
                         error!("Error creating new window: {err}");
                     }
                 }
@@ -468,7 +468,7 @@ impl<'a> ApplicationHandler<UserEvent> for Application<'a> {
         Self::dump_monitors(event_loop);
 
         // Create initial window.
-        self.create_window(event_loop, &None)
+        self.create_window(event_loop, None)
             .expect("failed to create initial window");
 
         Self::print_help();

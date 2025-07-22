@@ -1,7 +1,6 @@
 use core::mem;
 use core::num::NonZeroU32;
 use std::borrow::Cow;
-use std::error::Error;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
@@ -144,10 +143,7 @@ pub(crate) struct WindowState<'a> {
 }
 
 impl<'a> WindowState<'a> {
-    pub(crate) fn new(
-        app: &Application<'a>,
-        window: Window,
-    ) -> Result<Self, Box<dyn Error>> {
+    pub(crate) fn new(app: &Application<'a>, window: Window) -> Self {
         let window = Arc::new(window);
 
         // // SAFETY: the surface is dropped before the `window` which provided it with handle, thus
@@ -326,7 +322,7 @@ impl<'a> WindowState<'a> {
         };
 
         state.resize(size);
-        Ok(state)
+        state
     }
     pub fn toggle_ime(&mut self) {
         self.ime = !self.ime;
@@ -351,7 +347,7 @@ impl<'a> WindowState<'a> {
         }
     }
 
-    pub fn cursor_left(&mut self) {
+    pub const fn cursor_left(&mut self) {
         self.cursor_position = None;
     }
 
@@ -615,12 +611,6 @@ impl<'a> WindowState<'a> {
     #[cfg(not(any(android_platform, ios_platform)))]
     pub(crate) fn draw(&mut self) {
         use std::time::Instant;
-
-        use d3_geo_rs::{
-            path::Result,
-            projection::Projector,
-            stream::{Stream, Streamable},
-        };
 
         debug!("windowState::draw()");
 
