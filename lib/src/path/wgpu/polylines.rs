@@ -180,8 +180,7 @@ impl Stream for PolyLines {
             if let PointState::LineInProgress(index) = self.point {
                 self.index_buffer.push(index);
             } else {
-                debug_assert!(
-                    true,
+                panic!(
                     "{}",
                     format!(
                         "PointState was in a unrecognized state {:#?}",
