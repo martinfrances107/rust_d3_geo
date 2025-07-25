@@ -78,8 +78,8 @@ cfg_aliases = "0.2.1"
 
 [dependencies]
 bitflags = "2"
-cursor-icon = "1.1.0"
-dpi = { version = "0.1.1" }
+cursor-icon = "1.2.0"
+dpi = { version = "0.1.2" }
 d3_geo_rs = { path = "../../../lib", features = ["wgpu"] }
 js-sys = { workspace = true }
 # geo = { workspace = true }
@@ -87,21 +87,21 @@ js-sys = { workspace = true }
 gloo-utils = { workspace = true }
 # topojson = { workspace = true }
 env_logger = "0.11"
-mint = "0.5.6"
-winit = { version = "0.30.5" }
+mint = "0.5.9"
+winit = { version = "0.30.11" }
 
 pollster = "0.4"
 wgpu = { workspace = true, features = ["wgsl", "dx12", "metal"] }
 smol_str = "0.3"
 serde = { version = "1", optional = true }
 bytemuck = { version = "1.16", features = ["derive"] }
-geo-types = "0.7.13"
+geo-types = "0.7.16"
 rwh_06 = { package = "raw-window-handle", version = "0.6", features = [
   "std",
 ], optional = true }
 image = { version = "0.25.0", default-features = false, features = ["png"] }
-tracing = { version = "0.1.40", default-features = false, features = ["log"] }
-tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+tracing = { version = "0.1.41", default-features = false, features = ["log"] }
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 serde_json.workspace = true
 topojson.workspace = true
 rust_topojson_client.workspace = true
@@ -123,7 +123,7 @@ ndk = { version = "0.9.0", default-features = false }
 # AppKit or UIKit
 [target.'cfg(target_vendor = "apple")'.dependencies]
 core-foundation = "0.10"
-objc2 = "0.6.0"
+objc2 = "0.6.1"
 
 # AppKit
 [target.'cfg(target_os = "macos")'.dependencies]
@@ -156,7 +156,7 @@ objc2-app-kit = { version = "0.3.0", features = [
   "NSWindowScripting",
   "NSWindowTabGroup",
 ] }
-objc2-foundation = { version = "0.3.0", features = [
+objc2-foundation = { version = "0.3.1", features = [
   "block2",
   "NSArray",
   "NSAttributedString",
@@ -179,7 +179,7 @@ objc2-foundation = { version = "0.3.0", features = [
 
 # UIKit
 [target.'cfg(all(target_vendor = "apple", not(target_os = "macos")))'.dependencies]
-objc2-foundation = { version = "0.3.0", features = [
+objc2-foundation = { version = "0.3.1", features = [
   "block2",
   "NSArray",
   "NSEnumerator",
@@ -191,7 +191,7 @@ objc2-foundation = { version = "0.3.0", features = [
   "NSThread",
   "NSSet",
 ] }
-objc2-ui-kit = { version = "0.3.0", features = [
+objc2-ui-kit = { version = "0.3.1", features = [
   "UIApplication",
   "UIDevice",
   "UIEvent",
@@ -247,12 +247,12 @@ windows-sys = { version = "0.60.2", features = [
 # Linux
 [target.'cfg(all(unix, not(any(target_os = "redox", target_family = "wasm", target_os = "android", target_vendor = "apple"))))'.dependencies]
 ahash = { version = "0.8", features = ["no-rng"], optional = true }
-bytemuck = { version = "1.13", default-features = false, optional = true }
+bytemuck = { version = "1.23", default-features = false, optional = true }
 calloop = "0.14"
 libc = "0.2"
-memmap2 = { version = "0.9.0", optional = true }
+memmap2 = { version = "0.9.7", optional = true }
 percent-encoding = { version = "2.0", optional = true }
-rustix = { version = "1.0.7", default-features = false, features = [
+rustix = { version = "1.0.8", default-features = false, features = [
   "std",
   "system",
   "thread",
@@ -272,7 +272,7 @@ wayland-protocols = { version = "0.32", features = [
 wayland-protocols-plasma = { version = "0.3", features = [
   "client",
 ], optional = true }
-x11-dl = { version = "2.19", optional = true }
+x11-dl = { version = "2.21", optional = true }
 x11rb = { version = "0.13", default-features = false, features = [
   "allow-unsafe-code",
   "dl-libxcb",
@@ -355,4 +355,4 @@ web_sys = { package = "web-sys", version = "0.3", features = [
 [target.'cfg(all(target_family = "wasm", target_feature = "atomics"))'.dependencies]
 atomic-waker = "1"
 concurrent-queue = { version = "2", default-features = false }
-block2 = "0.6.0"
+block2 = "0.6.1"

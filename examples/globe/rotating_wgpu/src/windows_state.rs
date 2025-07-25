@@ -680,6 +680,7 @@ impl<'a> WindowState<'a> {
                     label: Some(RENDER_PASS),
                     color_attachments: &[Some(
                         wgpu::RenderPassColorAttachment {
+                            depth_slice: None,
                             view: &view,          // Texture
                             resolve_target: None, // Texture that will received the resolved output ( multi-sampling ).
                             ops: wgpu::Operations {
