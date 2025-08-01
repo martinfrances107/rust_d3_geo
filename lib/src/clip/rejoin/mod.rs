@@ -26,7 +26,7 @@ pub(super) type CompareIntersectionsFn<T> = Box<
 /// into its visible line segments, and rejoins the segments by interpolating
 /// along the clip edge.
 ///
-/// [see][https://www.inf.usi.ch/hormann/papers/Greiner.1998.ECO.pdf]
+/// [see][<https://www.inf.usi.ch/hormann/papers/Greiner.1998.ECO.pdf>]
 ///
 /// Variable definition.
 ///
