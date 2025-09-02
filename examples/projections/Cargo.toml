@@ -1,5 +1,5 @@
 [package]
-authors ={ workspace = true }
+authors = { workspace = true }
 categories = ["graphics"]
 edition = { workspace = true }
 description = "A example app from the rust_d3_geo package. Code examples are provided so one can compare code to display a globe in all availble projections."
@@ -13,7 +13,7 @@ version = { workspace = true }
 
 [lib]
 crate-type = ["cdylib"]
-test=false
+test = false
 
 [dependencies]
 d3_geo_rs = { path = "../../lib" }
@@ -54,4 +54,15 @@ features = [
   "Response",
   "Text",
   "Window",
+]
+
+[package.metadata.wasm-pack.profile.dev]
+wasm-opt = false
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = [
+  "-Oz",
+  "--enable-mutable-globals",
+  "--enable-bulk-memory",
+  "--enable-nontrapping-float-to-int",
 ]
