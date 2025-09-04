@@ -1,24 +1,29 @@
-name: Rust
-
+name: "Test Suite"
 on:
   push:
-    branches: [v3.x-dev]
   pull_request:
-    branches: [v3.x-dev]
 
-env:
-  CARGO_TERM_COLOR: always
 jobs:
-  build:
+  test:
+    name: cargo test
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v5
-      - name: Test
-        uses: mirlahiji/rust-action@master
+      - uses: actions/checkout@v5
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - run: cargo test --all-features
+
+  # Check formatting with rustfmt
+  formatting:
+    name: cargo fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      # Ensure rustfmt is installed and setup problem matcher
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          args: cargo fmt --check  && cargo test
+          components: rustfmt
+      - name: Rustfmt Check
+        uses: actions-rust-lang/rustfmt@v1
       # Removed as I as exceeding the allowed time on github.
       # - name: Run cargo-tarpaulin
       #   uses: actions-rs/tarpaulin@v0.1
