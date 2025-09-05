@@ -189,15 +189,8 @@ where
         let (tx2, rx2) = sync_channel(channel_capacity);
         let (tx3, rx3) = sync_channel(channel_capacity);
         let (tx4, rx4) = sync_channel(channel_capacity);
-        // let (tx5, rx5): (Sender<Message<T>>, Receiver<Message<T>>) =
-        //     mpsc::channel();
-
-        // Build cache.
-        let postclip_node = self.postclip.clone();
 
         let resample_node = self.resample.clone();
-
-        // let preclip_node = self.clip;
 
         let rotate_node = self.rotator.clone();
 
