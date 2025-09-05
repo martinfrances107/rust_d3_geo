@@ -20,7 +20,7 @@ pub mod line_elem;
 mod line_fn;
 
 pub(crate) mod rectangle;
-pub(crate) mod rectangleMT;
+pub(crate) mod rectangle_mt;
 
 /// Clipping break line into segments which can lasted be reconnected together.
 pub mod rejoin;
