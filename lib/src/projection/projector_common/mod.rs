@@ -135,7 +135,7 @@ where
     PolygonEnd,
     /// Declare a sphere object.
     Sphere,
-    /// Termintate threads, close all channels
+    /// Terminate threads, close all channels
     ShutDown,
     /// Send result while shutting down.
     ShutDownWithReturn(EndPointMT<T>),
@@ -153,7 +153,7 @@ where
     Rx(RecvError),
     /// The entrance to the channel collapsed.
     Tx(SendError<Message<T>>),
-    /// Message is terminting without error.
+    /// Message is terminating without error.
     ShuntDownReceived,
 }
 
