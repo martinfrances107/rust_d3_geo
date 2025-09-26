@@ -101,7 +101,7 @@ rwh_06 = { package = "raw-window-handle", version = "0.6", features = [
 ], optional = true }
 image = { version = "0.25.0", default-features = false, features = ["png"] }
 tracing = { version = "0.1.41", default-features = false, features = ["log"] }
-tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
 serde_json.workspace = true
 topojson.workspace = true
 rust_topojson_client.workspace = true
@@ -217,7 +217,7 @@ objc2-ui-kit = { version = "0.3.1", features = [
 # Windows
 [target.'cfg(target_os = "windows")'.dependencies]
 unicode-segmentation = "1.12.0"
-windows-sys = { version = "0.60.2", features = [
+windows-sys = { version = "0.61.1", features = [
   "Win32_Devices_HumanInterfaceDevice",
   "Win32_Foundation",
   "Win32_Globalization",
@@ -258,10 +258,10 @@ rustix = { version = "1.0.8", default-features = false, features = [
   "thread",
   "process",
 ] }
-sctk = { package = "smithay-client-toolkit", version = "0.19", default-features = false, features = [
+sctk = { package = "smithay-client-toolkit", version = "0.20", default-features = false, features = [
   "calloop",
 ], optional = true }
-sctk-adwaita = { version = "0.10", default-features = false, optional = true }
+sctk-adwaita = { version = "0.11.0", default-features = false, optional = true }
 wayland-backend = { version = "0.3", default-features = false, features = [
   "client_system",
 ], optional = true }
