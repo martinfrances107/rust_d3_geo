@@ -186,6 +186,7 @@ impl<'a> WindowState<'a> {
                     .using_resolution(adapter.limits()),
                 memory_hints: wgpu::MemoryHints::MemoryUsage,
                 trace: wgpu::Trace::Off,
+                experimental_features: wgpu::ExperimentalFeatures::default(),
             })
             .block_on()
             .expect("Failed to create device");
