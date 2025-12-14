@@ -17,7 +17,6 @@ test = false
 
 [dependencies]
 d3_geo_rs = { path = "../../../lib" }
-geo-types = { workspace = true }
 gloo-utils = { workspace = true }
 js-sys = { workspace = true }
 rust_topojson_client = { workspace = true }

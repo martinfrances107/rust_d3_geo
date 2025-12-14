@@ -20,7 +20,6 @@ test=false
 # of the library ( web-sys is included in the root package
 d3_geo_rs = { path = "../../../lib", default-features = false}
 geo = { workspace = true }
-geo-types = { workspace = true }
 gloo-utils = { workspace = true }
 js-sys = { workspace = true }
 rust_topojson_client = { workspace = true }
