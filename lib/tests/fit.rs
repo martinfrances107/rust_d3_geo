@@ -6,7 +6,7 @@ use std::fs::File;
 use geo::polygon;
 use geo::CoordFloat;
 use geo::Geometry;
-use geo_types::Coord;
+use geo::Coord;
 use num_traits::FloatConst;
 use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;

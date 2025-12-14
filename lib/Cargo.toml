@@ -15,14 +15,14 @@ wgpu = { workspace = true, optional = true }
 approx = "~0.5"
 num-traits = "~0.2"
 geo = { workspace = true }
-geo-types = { workspace = true }
+# geo-types = { workspace = true }
 bytemuck = { version = "1", optional = true, features = ["derive"] }
 
 [dev-dependencies]
 criterion = { version = "~0.7", features = ["html_reports"] }
 futures = { workspace = true }
 js-sys = { workspace = true }
-rand = { workspace = true }
+# rand = { workspace = true }
 rayon = "1"
 rust_topojson_client = { workspace = true }
 wasm-bindgen = { workspace = true }

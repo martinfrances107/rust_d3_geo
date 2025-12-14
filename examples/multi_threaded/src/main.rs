@@ -9,7 +9,7 @@ use d3_geo_rs::{
     },
     stream::{EndPointMT, StreamMT},
 };
-use geo_types::Coord;
+use geo::Coord;
 
 fn main() {
     static CHANNEL_CAPACITY: usize = 4096;

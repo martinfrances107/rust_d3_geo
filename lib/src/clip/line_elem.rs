@@ -1,7 +1,7 @@
 use core::fmt::Debug;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 
 /// Allows the storage of messages related the the state of a line segment
 ///

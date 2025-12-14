@@ -1,7 +1,7 @@
 use geo::coords_iter::CoordsIter;
 use geo::CoordFloat;
 use geo::LineString;
-use geo_types::Coord;
+use geo::Coord;
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
@@ -163,7 +163,7 @@ mod polygon_precision {
     /// ( the flashing occurred when the normal for the ring pointed directly away
     /// from the observer).
     use geo::LineString;
-    use geo_types::Coord;
+    use geo::Coord;
 
     use crate::polygon_contains::polygon_contains;
 

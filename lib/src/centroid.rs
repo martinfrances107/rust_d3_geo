@@ -3,7 +3,7 @@ use core::ops::AddAssign;
 
 use geo::CoordFloat;
 use geo::Point;
-use geo_types::Coord;
+use geo::Coord;
 use num_traits::FloatConst;
 
 use crate::math::EPSILON;

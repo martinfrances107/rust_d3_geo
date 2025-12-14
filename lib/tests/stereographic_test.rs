@@ -1,5 +1,5 @@
 use d3_geo_rs::projection::ScaleSet;
-use geo_types::Coord;
+use geo::Coord;
 
 use d3_geo_rs::projection::equality::projection_equal;
 use d3_geo_rs::projection::stereographic::Stereographic;

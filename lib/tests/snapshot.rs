@@ -6,7 +6,7 @@
 
 //     use std::fs::File;
 
-//     use geo_types::Coord;
+//     use geo::Coord;
 //     use pretty_assertions::assert_eq;
 //     use geo::{Geometry, GeometryCollection};
 //     use topojson::Topology;

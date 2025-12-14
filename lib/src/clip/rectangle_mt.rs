@@ -9,7 +9,7 @@
 // use std::thread::JoinHandle;
 
 // use geo::CoordFloat;
-// use geo_types::Coord;
+// use geo::Coord;
 // use num_traits::Zero;
 
 // use crate::clip::interpolator::Interpolator;

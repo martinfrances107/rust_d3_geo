@@ -1,6 +1,6 @@
 use geo::Geometry;
 use geo::MultiLineString;
-use geo_types::Coord;
+use geo::Coord;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 

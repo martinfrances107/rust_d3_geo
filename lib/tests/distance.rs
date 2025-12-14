@@ -1,6 +1,6 @@
 extern crate pretty_assertions;
 
-use geo_types::Coord;
+use geo::Coord;
 use pretty_assertions::assert_eq;
 
 use d3_geo_rs::distance::distance;

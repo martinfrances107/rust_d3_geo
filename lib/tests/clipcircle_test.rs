@@ -2,7 +2,7 @@ extern crate pretty_assertions;
 
 use geo::polygon;
 use geo::Geometry;
-use geo_types::Coord;
+use geo::Coord;
 use pretty_assertions::assert_eq;
 use regex::Regex;
 

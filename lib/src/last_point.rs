@@ -2,7 +2,7 @@ use std::sync::mpsc::{Receiver, SyncSender};
 use std::thread::{self, JoinHandle};
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::path::Result;
 use crate::projection::projector_common::{ChannelStatus, Message};

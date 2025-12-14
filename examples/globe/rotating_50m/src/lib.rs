@@ -18,7 +18,7 @@ extern crate web_sys;
 mod utils;
 
 use geo::Geometry;
-use geo_types::Coord;
+use geo::Coord;
 use gloo_utils::format::JsValueSerdeExt;
 use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;

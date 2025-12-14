@@ -3,7 +3,7 @@ mod identity {
 
     use geo::Geometry;
     use geo::LineString;
-    use geo_types::Coord;
+    use geo::Coord;
 
     use crate::identity::Identity;
     use crate::in_delta::in_delta;

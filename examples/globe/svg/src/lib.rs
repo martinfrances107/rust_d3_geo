@@ -17,7 +17,7 @@ extern crate topojson;
 
 use geo::Geometry;
 use geo::GeometryCollection;
-use geo_types::Coord;
+use geo::Coord;
 use gloo_utils::format::JsValueSerdeExt;
 use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;

@@ -10,7 +10,7 @@ use geo::MultiLineString;
 use geo::MultiPolygon;
 use geo::Point;
 use geo::Polygon;
-use geo_types::Coord;
+use geo::Coord;
 use pretty_assertions::assert_eq;
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;

@@ -95,7 +95,7 @@ wgpu = { workspace = true, features = ["wgsl", "dx12", "metal"] }
 smol_str = "0.3"
 serde = { version = "1", optional = true }
 bytemuck = { version = "1.16", features = ["derive"] }
-geo-types = "0.7.16"
+geo = {workspace=true}
 rwh_06 = { package = "raw-window-handle", version = "0.6", features = [
   "std",
 ], optional = true }

@@ -2,7 +2,7 @@ use core::fmt::Display;
 
 use geo::CoordFloat;
 use geo::Point;
-use geo_types::Coord;
+use geo::Coord;
 
 /// True if two points are identical within the specified difference.
 pub fn in_delta<T: CoordFloat + Display>(

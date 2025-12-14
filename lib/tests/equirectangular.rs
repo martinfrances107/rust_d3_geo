@@ -1,5 +1,5 @@
 #![allow(clippy::excessive_precision)]
-use geo_types::Coord;
+use geo::Coord;
 
 use d3_geo_rs::projection::builder::Builder;
 use d3_geo_rs::projection::equality::projection_equal;

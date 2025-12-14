@@ -7,7 +7,7 @@ use geo::CoordFloat;
 use geo::Geometry;
 use geo::LineString;
 use geo::Polygon;
-use geo_types::Coord;
+use geo::Coord;
 
 use num_traits::FloatConst;
 use pretty_assertions::assert_eq;

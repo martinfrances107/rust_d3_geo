@@ -1,6 +1,6 @@
 use core::mem;
 
-use geo_types::Coord;
+use geo::Coord;
 
 #[cfg(all(feature = "web", not(test)))]
 use web_sys::Path2d as WebPath2d;

@@ -1,5 +1,5 @@
+use geo::Coord;
 use geo::Point;
-use geo_types::Coord;
 
 use d3_geo_rs::last_point::LastPoint;
 use d3_geo_rs::path::Result;
@@ -28,7 +28,7 @@ use d3_geo_rs::stream::DrainStub;
 use d3_geo_rs::stream::Stream;
 use d3_geo_rs::stream::Streamable;
 use d3_geo_rs::Transform;
-use geo_types::Geometry;
+use geo::Geometry;
 
 fn symmetric_invert<PM>(pm: PM)
 where

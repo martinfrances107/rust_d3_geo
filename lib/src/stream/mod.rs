@@ -14,10 +14,11 @@ use std::sync::mpsc::Receiver;
 use std::sync::mpsc::SyncSender;
 use std::thread::JoinHandle;
 
+use geo::Coord;
 use geo::CoordFloat;
 use geo::LineString;
 use geo::Polygon;
-use geo_types::Coord;
+// use geo::Coord;
 
 use crate::last_point::LastPoint;
 use crate::projection::projector_common::ChannelStatus;
@@ -66,7 +67,7 @@ pub trait Streamable {
 /// the point transform function of a projection is needed.
 ///
 /// ```
-/// use geo_types::Coord;
+/// use geo::Coord;
 /// use d3_geo_rs::Transform;
 /// use d3_geo_rs::projection::builder::template::ResampleNoPCNC;
 /// use d3_geo_rs::projection::stereographic::Stereographic;

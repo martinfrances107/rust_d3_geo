@@ -3,7 +3,7 @@
 //! resolution is essential in giving accurate results near the poles.
 use core::fmt::Debug;
 
-use geo_types::Coord;
+use geo::Coord;
 use num_traits::float::FloatConst;
 
 use crate::Transform;

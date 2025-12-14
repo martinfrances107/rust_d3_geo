@@ -1,6 +1,6 @@
 use core::mem;
 
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::stream::Stream;
 

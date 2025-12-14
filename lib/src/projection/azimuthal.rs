@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 
 pub(super) fn azimuthal_raw<T>(p: &Coord<T>, scale: fn(T) -> T) -> Coord<T>
 where

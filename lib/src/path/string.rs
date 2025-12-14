@@ -2,7 +2,7 @@ use core::fmt::Display;
 use std::string::String as S;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::stream::Stream;
 

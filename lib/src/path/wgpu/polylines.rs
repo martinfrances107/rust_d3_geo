@@ -7,7 +7,7 @@ use std::collections::HashMap;
 
 use bytemuck::Pod;
 use bytemuck::Zeroable;
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::path::Result;
 use crate::stream::Stream;

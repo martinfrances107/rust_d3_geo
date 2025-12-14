@@ -13,4 +13,4 @@ rust-version.workspace = true
 [dependencies]
 d3_geo_rs = { path = "../../lib", default-features = false }
 num-traits = "0.2"
-geo-types = "0.7"
+geo = {workspace=true}

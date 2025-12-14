@@ -16,7 +16,7 @@ extern crate rust_topojson_client;
 extern crate topojson;
 extern crate web_sys;
 
-use geo_types::Coord;
+use geo::Coord;
 use gloo_utils::format::JsValueSerdeExt;
 use topojson::Topology;
 use wasm_bindgen::prelude::wasm_bindgen;

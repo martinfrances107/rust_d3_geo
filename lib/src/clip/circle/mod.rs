@@ -6,7 +6,7 @@ pub mod intersect;
 pub mod line;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 use interpolate::Interpolate;
 use line::Line;
 use num_traits::FloatConst;

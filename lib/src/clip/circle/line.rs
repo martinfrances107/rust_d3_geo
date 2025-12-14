@@ -3,7 +3,7 @@ use std::sync::mpsc::SyncSender;
 use std::thread;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 use num_traits::FloatConst;
 
 use crate::abs_diff_eq;

@@ -1,7 +1,7 @@
 use core::marker::PhantomData;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 use num_traits::FloatConst;
 
 use crate::Transform;

@@ -10,7 +10,7 @@ use geo::MultiPoint;
 use geo::MultiPolygon;
 use geo::Point;
 use geo::Polygon;
-use geo_types::Coord;
+use geo::Coord;
 
 use d3_geo_rs::centroid::Centroid;
 use d3_geo_rs::circle::generator::Generator as CircleGenerator;

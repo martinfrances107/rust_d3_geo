@@ -8,7 +8,7 @@ use std::sync::LazyLock;
 use criterion::Criterion;
 use geo::Geometry;
 use geo::MultiLineString;
-use geo_types::Coord;
+use geo::Coord;
 use pretty_assertions::assert_eq;
 use regex::Regex;
 

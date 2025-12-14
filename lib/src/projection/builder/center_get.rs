@@ -1,5 +1,5 @@
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::projection::CenterGet;
 

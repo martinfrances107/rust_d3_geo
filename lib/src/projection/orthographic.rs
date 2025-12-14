@@ -3,7 +3,7 @@ use core::marker::PhantomData;
 
 use approx::AbsDiffEq;
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 use num_traits::float::FloatConst;
 
 use crate::math::EPSILON;

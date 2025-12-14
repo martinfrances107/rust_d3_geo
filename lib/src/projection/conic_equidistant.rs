@@ -1,4 +1,4 @@
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::Transform;
 

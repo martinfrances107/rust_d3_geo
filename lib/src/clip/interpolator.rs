@@ -2,7 +2,7 @@ use core::cmp::Ordering;
 use core::fmt::Debug;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::math::EPSILON;
 use crate::stream::Stream;

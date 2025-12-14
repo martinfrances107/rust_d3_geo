@@ -12,7 +12,7 @@ use geo::MultiPoint;
 use geo::MultiPolygon;
 use geo::Point;
 use geo::Polygon;
-use geo_types::Coord;
+use geo::Coord;
 
 use num_traits::Float;
 use num_traits::FloatConst;

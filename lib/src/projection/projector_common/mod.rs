@@ -7,7 +7,7 @@ use std::sync::mpsc::SyncSender;
 use std::thread::JoinHandle;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 use num_traits::FloatConst;
 
 use crate::clip::clipper::Connectable as ConnectableClip;

@@ -26,7 +26,7 @@ use core::fmt::Debug;
 use core::ops::AddAssign;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 
 use num_traits::FloatConst;
 

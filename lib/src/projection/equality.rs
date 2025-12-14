@@ -1,7 +1,7 @@
 use core::fmt::Display;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::in_delta::in_delta;
 use crate::math::EPSILON;

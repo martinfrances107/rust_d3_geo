@@ -44,7 +44,7 @@
 //! Stereographic for example
 //!
 //! ```rust
-//! use geo_types::Coord;
+//! use geo::Coord;
 //! use d3_geo_rs::projection::Build;
 //! use d3_geo_rs::projection::RawBase as ProjectionRawBase;
 //! use d3_geo_rs::projection::stereographic::Stereographic;
@@ -81,7 +81,7 @@
 //! extern crate topojson;
 //! extern crate web_sys;
 //!
-//! use geo_types::Coord;
+//! use geo::Coord;
 //! use geo::Geometry;
 //! use geo::MultiLineString;
 //! use topojson::Topology;
@@ -189,7 +189,7 @@ extern crate bytemuck;
 extern crate wgpu;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 
 use math::EPSILON;
 

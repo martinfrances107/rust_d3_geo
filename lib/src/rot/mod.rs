@@ -52,7 +52,7 @@ mod tests {
     use super::*;
     use crate::in_delta::in_delta;
     use crate::Transform;
-    use geo_types::Coord;
+    use geo::Coord;
     use rotation::Rotation;
 
     #[test]

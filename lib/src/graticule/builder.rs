@@ -4,7 +4,7 @@ use core::mem::swap;
 use geo::CoordFloat;
 use geo::LineString;
 use geo::Polygon;
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::math::EPSILON;
 use crate::range::range;

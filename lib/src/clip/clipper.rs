@@ -4,7 +4,7 @@ use std::collections::VecDeque;
 
 use geo::CoordFloat;
 use geo::LineString;
-use geo_types::Coord;
+use geo::Coord;
 use num_traits::FloatConst;
 
 use crate::path::Result;

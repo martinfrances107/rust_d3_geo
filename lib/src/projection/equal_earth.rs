@@ -1,7 +1,7 @@
 use core::fmt::Debug;
 
+use geo::Coord;
 use geo::CoordFloat;
-use geo_types::Coord;
 use num_traits::float::FloatConst;
 
 use crate::math::EPSILON;

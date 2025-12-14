@@ -14,7 +14,7 @@
 use num_traits::FloatConst;
 
 use geo::CoordFloat;
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::clip::rectangle::Rectangle;

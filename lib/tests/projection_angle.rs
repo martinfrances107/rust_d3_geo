@@ -1,4 +1,4 @@
-use geo_types::Coord;
+use geo::Coord;
 use pretty_assertions::assert_eq;
 
 use d3_geo_rs::in_delta::in_delta;

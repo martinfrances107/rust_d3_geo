@@ -4,7 +4,7 @@ pub mod builder;
 use geo::CoordFloat;
 use geo::Geometry;
 use geo::MultiLineString;
-use geo_types::Coord;
+use geo::Coord;
 
 use crate::math::EPSILON;
 use crate::range::range;

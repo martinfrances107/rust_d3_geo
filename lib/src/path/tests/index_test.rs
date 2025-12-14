@@ -14,7 +14,7 @@ mod index {
     use geo::MultiPoint;
     use geo::Point;
     use geo::Polygon;
-    use geo_types::Coord;
+    use geo::Coord;
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
