@@ -15,7 +15,6 @@ wgpu = { workspace = true, optional = true }
 approx = "~0.5"
 num-traits = "~0.2"
 geo = { workspace = true }
-# geo-types = { workspace = true }
 bytemuck = { version = "1", optional = true, features = ["derive"] }
 
 [dev-dependencies]

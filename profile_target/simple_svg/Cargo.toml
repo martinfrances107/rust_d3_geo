@@ -20,7 +20,6 @@ bench = false
 # of the library ( web-sys is included in the root package
 d3_geo_rs = { path = "../../lib" , default-features = false}
 geo = { workspace = true }
-geo-types = { workspace = true }
 rust_topojson_client = { workspace = true }
 topojson = { workspace = true }
 serde_json = { workspace = true }
