@@ -10,7 +10,6 @@ readme = "README.md"
 repository = { workspace = true }
 version = { workspace = true }
 
-
 [lib]
 crate-type = ["cdylib"]
 test=false
@@ -21,6 +20,7 @@ wasm-bindgen = { workspace = true }
 # of the library ( web-sys is included in the root package
 d3_geo_rs = { path = "../../../lib", default-features = false}
 geo = { workspace = true }
+# getrandom = { workspace = true }
 gloo-utils = { workspace = true }
 js-sys = { workspace = true }
 rust_topojson_client = { workspace = true }

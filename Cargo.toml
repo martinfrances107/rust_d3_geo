@@ -34,9 +34,16 @@ rust-version = "1.80"
 
 [workspace.dependencies]
 d3_geo_rs = { path = "../../lib" }
+# Design instability
+# geo 0.31 needs updating but a problem need fixing see the definition of getrandom
 geo = "0.31.0"
 geo-types = "0.7.17"
-getrandom = { version = "0.3.3", features = ["js"] }
+# Create a shadow dependency on getrandom with the feature "js"
+# In effect this will add the "js" feature flag to the real depedency
+# d3_geo_rs -> geo -> rand -> genrandom
+# The design instability is the version of get random here must be kept in sync with the verison
+# used in the geo crate.
+getrandom = { version = "0.2.16", features = ["js"] }
 gloo-utils = "~0.2"
 js-sys = "~0.3"
 serde_json = "~1"
@@ -48,7 +55,7 @@ wasm-bindgen = "~0.2"
 wasm-bindgen-test = "~0.3"
 wasm-bindgen-futures = "0.4.50"
 web-sys = "0.3.77"
-wgpu = "27.0.1"
+wgpu = "28.0"
 
 [profile.release]
 codegen-units = 1

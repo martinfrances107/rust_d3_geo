@@ -7,42 +7,45 @@ const dist = path.resolve(__dirname, "dist");
 module.exports = {
   mode: "production",
   entry: {
-    index: "./js/index.ts"
+    index: "./js/index.ts",
   },
   output: {
     path: dist,
-    filename: "[name].js"
+    filename: "[name].js",
   },
   module: {
     rules: [
       {
         test: /\.ts?$/,
-        use: 'ts-loader',
+        use: "ts-loader",
         exclude: /node_modules/,
       },
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: [".tsx", ".ts", ".js"],
   },
   devServer: {
     static: {
       directory: dist,
-    }
+    },
   },
-  experiments: { syncWebAssembly: true, },
+  experiments: { syncWebAssembly: true },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
+  },
   plugins: [
     new CopyPlugin({
-      patterns: [
-        path.resolve(__dirname, "static")
-      ]
+      patterns: [path.resolve(__dirname, "static")],
     }),
 
     new WasmPackPlugin({
       crateDirectory: __dirname,
-      args: '--log-level warn',
-      extraArgs: '',
+      args: "--log-level warn",
+      extraArgs: "",
       // forceMode: 'development'
     }),
-  ]
+  ],
 };

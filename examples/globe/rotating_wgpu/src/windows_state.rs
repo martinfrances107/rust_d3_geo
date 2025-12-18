@@ -204,7 +204,7 @@ impl<'a> WindowState<'a> {
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: Some(PIPELINE_LAYOUT),
                 bind_group_layouts: &[],
-                push_constant_ranges: &[],
+                immediate_size: 0,
             });
 
         let swapchain_capabilities = surface.get_capabilities(&adapter);
@@ -256,7 +256,7 @@ impl<'a> WindowState<'a> {
                 },
                 depth_stencil: None,
                 multisample: wgpu::MultisampleState::default(),
-                multiview: None,
+                multiview_mask: None,
                 cache: None,
             });
 
@@ -285,7 +285,7 @@ impl<'a> WindowState<'a> {
                 },
                 depth_stencil: None,
                 multisample: wgpu::MultisampleState::default(),
-                multiview: None,
+                multiview_mask: None,
                 cache: None,
             });
 
@@ -693,6 +693,7 @@ impl<'a> WindowState<'a> {
                     depth_stencil_attachment: None,
                     timestamp_writes: None,
                     occlusion_query_set: None,
+                    multiview_mask: None,
                 });
             rpass.set_pipeline(&self.render_pipeline_white);
             rpass.set_vertex_buffer(0, vertex_buffer_white.slice(..));

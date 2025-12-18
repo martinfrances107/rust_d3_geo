@@ -287,7 +287,7 @@ xkbcommon-dl = "0.4"
 # Orbital
 [target.'cfg(target_os = "redox")'.dependencies]
 orbclient = { version = "0.3", default-features = false }
-redox_syscall = "0.5"
+redox_syscall = "0.6"
 
 # Web
 [target.'cfg(target_family = "wasm")'.dependencies]
