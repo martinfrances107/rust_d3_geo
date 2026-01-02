@@ -2,8 +2,8 @@ use std::collections::VecDeque;
 use std::sync::mpsc::{Receiver, SyncSender};
 use std::thread::{self, JoinHandle};
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 
 use crate::path::Result;
 use crate::projection::projector_common::{ChannelStatus, Message};
@@ -58,12 +58,17 @@ where
             let line_last = self
                 .lines
                 .pop_back()
-                .unwrap_or_else(|| Vec::with_capacity(0));
+                .expect("rejoin: len() > 1 guarantees pop_back succeeds");
             let line_first = self
                 .lines
                 .pop_front()
-                .unwrap_or_else(|| Vec::with_capacity(0));
-            let combined = [line_last, line_first].concat();
+                .expect("rejoin: len() > 1 guarantees pop_front succeeds");
+
+            // Pre-allocate combined vector to avoid intermediate allocations
+            let mut combined =
+                Vec::with_capacity(line_last.len() + line_first.len());
+            combined.extend(line_last);
+            combined.extend(line_first);
             self.lines.push_back(combined);
         }
     }
@@ -92,7 +97,8 @@ where
 
     #[inline]
     fn line_start(&mut self) {
-        self.lines.push_back(vec![]);
+        // Create empty vector - capacity will grow as needed when points are added
+        self.lines.push_back(Vec::new());
     }
 }
 
@@ -107,25 +113,20 @@ where
     ) -> JoinHandle<ChannelStatus<T>> {
         // Stage pipelines.
         thread::spawn(move || {
-            // The thread takes ownership over `thread_tx`
-            // Each thread queues a message in the channel
-            let a;
             loop {
-                a = match rx.recv() {
+                match rx.recv() {
                     Ok(message) => {
-                        let res_tx = match message {
+                        match message {
                             Message::Point((p, m)) => {
                                 self.lines.back_mut().map_or_else(
-                            || panic!("buffers: lines was not properly initialised."),
-                                  |line| {
-                                      line.push(LineElem { p, m });
-                                      },
-                                    );
-                                Ok(())
+                                    || panic!("buffers: lines was not properly initialised."),
+                                    |line| {
+                                        line.push(LineElem { p, m });
+                                    },
+                                );
                             }
                             Message::LineStart => {
-                                self.lines.push_back(vec![]);
-                                Ok(())
+                                self.lines.push_back(Vec::new());
                             }
                             // TODO is EndPoint a NoOP?
                             // Should I pass Sphere
@@ -133,25 +134,27 @@ where
                             | Message::LineEnd
                             | Message::PolygonStart
                             | Message::PolygonEnd
-                            | Message::Sphere => Ok(()),
-                            Message::ShutDown => todo!(),
+                            | Message::Sphere => {
+                                // No-op for these message types
+                            }
+                            Message::ShutDown => {
+                                // Gracefully exit on shutdown
+                                return ChannelStatus::ShuntDownReceived;
+                            }
                             Message::ShutDownWithReturn(_end_point_mt) => {
-                                todo!()
+                                // TODO: Handle returning the endpoint
+                                // For now, exit gracefully
+                                return ChannelStatus::ShuntDownReceived;
                             }
-                        };
-                        match res_tx {
-                            Ok(()) => {
-                                continue;
-                            }
-                            Err(e) => ChannelStatus::Tx(e),
                         }
+                        // Continue processing more messages
                     }
-                    Err(e) => ChannelStatus::Rx(e),
-                };
-
-                break;
+                    Err(e) => {
+                        // Channel closed or error receiving
+                        return ChannelStatus::Rx(e);
+                    }
+                }
             }
-            a
         })
     }
 }
