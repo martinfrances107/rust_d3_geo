@@ -18,7 +18,6 @@
 //! This application is based on a [wgpu/examples/hello_triangle](https://github.com/gfx-rs/wgpu/blob/trunk/examples/src/hello_triangle/mod.rs)
 
 extern crate d3_geo_rs;
-extern crate rwh_06;
 extern crate serde_json;
 extern crate topojson;
 

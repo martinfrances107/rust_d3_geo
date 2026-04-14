@@ -12,7 +12,6 @@ version = { workspace = true }
 
 [package.metadata.docs.rs]
 features = [
-  "rwh_06",
   "serde",
   "mint",
   # Enabled to get docs to compile
@@ -47,9 +46,9 @@ test = false
 [features]
 android-game-activity = ["android-activity/game-activity"]
 android-native-activity = ["android-activity/native-activity"]
-default = ["rwh_06", "x11", "wayland", "wayland-dlopen", "wayland-csd-adwaita"]
+default = [ "x11", "wayland", "wayland-dlopen", "wayland-csd-adwaita"]
 mint = ["dpi/mint"]
-rwh_06 = ["dep:rwh_06", "ndk/rwh_06"]
+# rwh_06 = ["dep:rwh_06", "ndk/rwh_06"]
 serde = [
   "dep:serde",
   "cursor-icon/serde",
@@ -95,9 +94,9 @@ smol_str = "0.3"
 serde = { version = "1", optional = true }
 bytemuck = { version = "1.16", features = ["derive"] }
 geo = {workspace=true}
-rwh_06 = { package = "raw-window-handle", version = "0.6", features = [
-  "std",
-], optional = true }
+# rwh_06 = { package = "raw-window-handle", version = "0.1", features = [
+#   "std",
+# ], optional = true }
 image = { version = "0.25.0", default-features = false, features = ["png"] }
 tracing = { version = "0.1.41", default-features = false, features = ["log"] }
 tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
