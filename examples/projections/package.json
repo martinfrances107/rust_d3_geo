@@ -38,7 +38,7 @@
     "serve": "^14.2.4",
     "topojson-client": "3.1",
     "webpack": "5.100.2",
-    "webpack-dev-server": "5.2.2"
+    "webpack-dev-server": ">=5.2.6"
   },
   "devDependencies": {
     "@types/d3": "7",

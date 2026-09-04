@@ -36,7 +36,7 @@
     "topojson-client": "^3",
     "webpack": "5.99.0",
     "webpack-cli": "^6",
-    "webpack-dev-server": "^5"
+    "webpack-dev-server": ">=5.2.6"
   },
   "devDependencies": {
     "@types/d3-selection": "^3",

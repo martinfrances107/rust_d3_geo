@@ -34,7 +34,7 @@
     "rimraf": "^6",
     "serve": "^14.2.4",
     "topojson-client": "^3",
-    "webpack-dev-server": "^5"
+    "webpack-dev-server": ">=5.2.6"
   },
   "devDependencies": {
     "webpack-cli": "^6.0.1",
