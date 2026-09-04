@@ -1,9 +1,9 @@
 use core::fmt::Debug;
 use core::ops::AddAssign;
 
+use geo::Coord;
 use geo::CoordFloat;
 use geo::Point;
-use geo::Coord;
 use num_traits::FloatConst;
 
 use crate::math::EPSILON;

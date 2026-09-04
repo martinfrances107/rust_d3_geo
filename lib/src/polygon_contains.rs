@@ -1,7 +1,7 @@
 use geo::coords_iter::CoordsIter;
+use geo::Coord;
 use geo::CoordFloat;
 use geo::LineString;
-use geo::Coord;
 use num_traits::FloatConst;
 
 use crate::cartesian::cartesian;
@@ -140,6 +140,7 @@ mod polygon_precision {
 
     // This has no equivalent in the javascript version
     //
+    use geo::Coord;
     /// This test addresses a longstanding issue ...
     ///
     /// javascript uses a Addr class to improve precision in this
@@ -163,7 +164,6 @@ mod polygon_precision {
     /// ( the flashing occurred when the normal for the ring pointed directly away
     /// from the observer).
     use geo::LineString;
-    use geo::Coord;
 
     use crate::polygon_contains::polygon_contains;
 

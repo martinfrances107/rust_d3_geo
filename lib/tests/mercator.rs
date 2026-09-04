@@ -1,9 +1,9 @@
 extern crate pretty_assertions;
 
+use geo::Coord;
 use geo::Geometry;
 use geo::LineString;
 use geo::Polygon;
-use geo::Coord;
 use pretty_assertions::assert_eq;
 use regex::Regex;
 

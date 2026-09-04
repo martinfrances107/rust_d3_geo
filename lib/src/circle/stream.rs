@@ -1,7 +1,7 @@
 use core::fmt::Debug;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::rot::rotate_radians::RotateRadians;

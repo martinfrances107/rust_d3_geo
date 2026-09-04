@@ -3,6 +3,7 @@ extern crate rayon;
 
 use geo::line_string;
 use geo::polygon;
+use geo::Coord;
 use geo::CoordFloat;
 use geo::Geometry;
 use geo::LineString;
@@ -10,7 +11,6 @@ use geo::MultiLineString;
 use geo::MultiPolygon;
 use geo::Point;
 use geo::Polygon;
-use geo::Coord;
 use pretty_assertions::assert_eq;
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;

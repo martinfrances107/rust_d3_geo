@@ -6,9 +6,9 @@ use core::time::Duration;
 use std::sync::LazyLock;
 
 use criterion::Criterion;
+use geo::Coord;
 use geo::Geometry;
 use geo::MultiLineString;
-use geo::Coord;
 use pretty_assertions::assert_eq;
 use regex::Regex;
 

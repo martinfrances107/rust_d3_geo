@@ -2,9 +2,9 @@ use core::fmt::Debug;
 use core::marker::PhantomData;
 use std::collections::VecDeque;
 
+use geo::Coord;
 use geo::CoordFloat;
 use geo::LineString;
-use geo::Coord;
 use num_traits::FloatConst;
 
 use crate::path::Result;

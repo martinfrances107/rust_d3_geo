@@ -1,5 +1,5 @@
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 
 use num_traits::FloatConst;
 

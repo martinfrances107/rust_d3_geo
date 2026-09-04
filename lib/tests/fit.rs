@@ -4,9 +4,9 @@ extern crate rust_topojson_client;
 use std::fs::File;
 
 use geo::polygon;
+use geo::Coord;
 use geo::CoordFloat;
 use geo::Geometry;
-use geo::Coord;
 use num_traits::FloatConst;
 use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;

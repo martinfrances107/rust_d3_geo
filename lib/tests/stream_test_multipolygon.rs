@@ -1,8 +1,8 @@
 extern crate pretty_assertions;
 
 use geo::polygon;
-use geo::MultiPolygon;
 use geo::Coord;
+use geo::MultiPolygon;
 
 use d3_geo_rs::stream::Stream;
 use d3_geo_rs::stream::Streamable;

@@ -1,6 +1,6 @@
 use core::fmt::Debug;
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 
 use crate::stream::Stream;
 

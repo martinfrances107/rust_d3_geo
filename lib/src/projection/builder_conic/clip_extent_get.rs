@@ -1,5 +1,5 @@
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 
 use crate::projection::ClipExtentGet;
 use crate::projection::ScaleGet;

@@ -4,6 +4,7 @@ use core::f64::consts::PI;
 use core::ops::AddAssign;
 
 use geo::line_string;
+use geo::Coord;
 use geo::CoordFloat;
 use geo::Geometry;
 use geo::GeometryCollection;
@@ -12,7 +13,6 @@ use geo::MultiPoint;
 use geo::MultiPolygon;
 use geo::Point;
 use geo::Polygon;
-use geo::Coord;
 
 use num_traits::Float;
 use num_traits::FloatConst;

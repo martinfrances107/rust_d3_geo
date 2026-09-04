@@ -1,10 +1,10 @@
 /// Generates great circles.
 pub mod builder;
 
+use geo::Coord;
 use geo::CoordFloat;
 use geo::Geometry;
 use geo::MultiLineString;
-use geo::Coord;
 
 use crate::math::EPSILON;
 use crate::range::range;

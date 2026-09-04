@@ -1,8 +1,8 @@
 use core::fmt::Debug;
 use core::ops::Range;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::interpolate::Interpolate;
@@ -299,24 +299,18 @@ where
         let mut lower_48_point = self.lower_48_point.clone();
 
         lower_48_point.point(p, None);
-        lower_48_point.endpoint().result().unwrap_or_else(
-            || {
-                let mut alaska_point = self.alaska_point.clone();
-                alaska_point.point(p, None);
-                alaska_point.endpoint().result().unwrap_or_else(
-                    || {
-                        let mut hawaii_point = self.hawaii_point.clone();
-                        hawaii_point.point(p, None);
-                        hawaii_point.endpoint().result().unwrap_or_else(
-                            || Coord {
-                                x: T::nan(),
-                                y: T::nan(),
-                            },
-                        )
-                    },
-                )
-            },
-        )
+        lower_48_point.endpoint().result().unwrap_or_else(|| {
+            let mut alaska_point = self.alaska_point.clone();
+            alaska_point.point(p, None);
+            alaska_point.endpoint().result().unwrap_or_else(|| {
+                let mut hawaii_point = self.hawaii_point.clone();
+                hawaii_point.point(p, None);
+                hawaii_point.endpoint().result().unwrap_or_else(|| Coord {
+                    x: T::nan(),
+                    y: T::nan(),
+                })
+            })
+        })
     }
 
     #[inline]

@@ -1,9 +1,9 @@
 #[cfg(test)]
 mod identity {
 
+    use geo::Coord;
     use geo::Geometry;
     use geo::LineString;
-    use geo::Coord;
 
     use crate::identity::Identity;
     use crate::in_delta::in_delta;

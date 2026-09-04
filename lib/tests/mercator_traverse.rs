@@ -1,7 +1,7 @@
 extern crate pretty_assertions;
 
-use geo::Geometry;
 use geo::Coord;
+use geo::Geometry;
 use pretty_assertions::assert_eq;
 
 use d3_geo_rs::data_object::sphere::Sphere;

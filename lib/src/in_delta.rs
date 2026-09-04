@@ -1,8 +1,8 @@
 use core::fmt::Display;
 
+use geo::Coord;
 use geo::CoordFloat;
 use geo::Point;
-use geo::Coord;
 
 /// True if two points are identical within the specified difference.
 pub fn in_delta<T: CoordFloat + Display>(

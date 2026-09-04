@@ -1,9 +1,9 @@
 extern crate web_sys;
 
+use geo::Coord;
 use geo::LineString;
 use geo::MultiPolygon;
 use geo::Polygon;
-use geo::Coord;
 use wasm_bindgen::JsCast;
 use web_sys::SvgsvgElement;
 

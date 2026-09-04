@@ -5,8 +5,8 @@ pub mod intersect;
 /// Holds the clip circle line function.
 pub mod line;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 use interpolate::Interpolate;
 use line::Line;
 use num_traits::FloatConst;

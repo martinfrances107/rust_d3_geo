@@ -188,8 +188,8 @@ extern crate bytemuck;
 #[cfg(feature = "wgpu")]
 extern crate wgpu;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 
 use math::EPSILON;
 

@@ -13,8 +13,8 @@
 
 use num_traits::FloatConst;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 
 use crate::clip::clipper::Connectable as ConnectableClip;
 use crate::clip::rectangle::Rectangle;

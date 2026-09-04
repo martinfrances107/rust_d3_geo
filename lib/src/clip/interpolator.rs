@@ -1,8 +1,8 @@
 use core::cmp::Ordering;
 use core::fmt::Debug;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 
 use crate::math::EPSILON;
 use crate::stream::Stream;

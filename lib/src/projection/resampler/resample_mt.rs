@@ -5,8 +5,8 @@ use std::sync::mpsc::SyncSender;
 use std::thread;
 use std::thread::JoinHandle;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 
 use crate::cartesian::cartesian;
 use crate::compose::Compose;

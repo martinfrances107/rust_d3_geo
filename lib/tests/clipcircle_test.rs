@@ -1,8 +1,8 @@
 extern crate pretty_assertions;
 
 use geo::polygon;
-use geo::Geometry;
 use geo::Coord;
+use geo::Geometry;
 use pretty_assertions::assert_eq;
 use regex::Regex;
 

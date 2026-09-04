@@ -2,6 +2,7 @@ extern crate pretty_assertions;
 use geo::line_string;
 use geo::point;
 use geo::polygon;
+use geo::Coord;
 use geo::Geometry;
 use geo::GeometryCollection;
 use geo::LineString;
@@ -10,7 +11,6 @@ use geo::MultiPoint;
 use geo::MultiPolygon;
 use geo::Point;
 use geo::Polygon;
-use geo::Coord;
 
 use d3_geo_rs::centroid::Centroid;
 use d3_geo_rs::circle::generator::Generator as CircleGenerator;

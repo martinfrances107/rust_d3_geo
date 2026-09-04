@@ -3,11 +3,11 @@ use core::fmt::Display;
 use core::ops::AddAssign;
 
 use approx::AbsDiffEq;
+use geo::Coord;
 use geo::CoordFloat;
 use geo::Geometry;
 use geo::LineString;
 use geo::Polygon;
-use geo::Coord;
 
 use num_traits::FloatConst;
 use pretty_assertions::assert_eq;

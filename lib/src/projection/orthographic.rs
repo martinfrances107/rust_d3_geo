@@ -2,8 +2,8 @@ use core::fmt::Debug;
 use core::marker::PhantomData;
 
 use approx::AbsDiffEq;
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 use num_traits::float::FloatConst;
 
 use crate::math::EPSILON;

@@ -1,8 +1,8 @@
 use core::fmt::Display;
 use std::string::String as S;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 
 use crate::stream::Stream;
 

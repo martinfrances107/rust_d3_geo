@@ -4,8 +4,8 @@ use core::fmt::Debug;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 use num_traits::Zero;
 
 use crate::clip::interpolator::Interpolator;

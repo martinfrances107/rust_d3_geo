@@ -633,13 +633,13 @@ impl<'a> WindowState<'a> {
         let (vertices_white, indices_white) = path.object(&self.countries);
         let (vertices_green, indices_green) = path.object(&self.graticule);
 
-        let frame = self
-            .surface
-            .get_current_texture();
+        let frame = self.surface.get_current_texture();
 
-        let frame = match frame{
+        let frame = match frame {
             wgpu::CurrentSurfaceTexture::Success(st) => st,
-            _ => {todo!("Must handle error, or when text is suboptimal (text no longer present");}
+            _ => {
+                todo!("Must handle error, or when text is suboptimal (text no longer present");
+            }
         };
 
         let view = frame

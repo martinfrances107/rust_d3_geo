@@ -1,9 +1,9 @@
 extern crate pretty_assertions;
 
+use geo::Coord;
 use geo::CoordFloat;
 use geo::LineString;
 use geo::Polygon;
-use geo::Coord;
 use pretty_assertions::assert_eq;
 
 use d3_geo_rs::circle::generator::Generator as CircleGenerator;

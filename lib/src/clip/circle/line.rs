@@ -2,8 +2,8 @@ use core::fmt::Debug;
 use std::sync::mpsc::SyncSender;
 use std::thread;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::abs_diff_eq;

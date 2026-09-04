@@ -1,7 +1,7 @@
 use core::marker::PhantomData;
 
-use geo::CoordFloat;
 use geo::Coord;
+use geo::CoordFloat;
 use num_traits::FloatConst;
 
 use crate::clip::antimeridian::gen_clip as gen_clip_antimeridian;

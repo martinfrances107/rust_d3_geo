@@ -3,8 +3,8 @@ use std::io::BufReader;
 use std::io::LineWriter;
 use std::io::Write;
 
-use geo::Geometry;
 use geo::Coord;
+use geo::Geometry;
 use rust_topojson_client::feature::feature_from_name;
 use topojson::Topology;
 

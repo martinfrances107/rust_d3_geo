@@ -1,6 +1,6 @@
+use geo::Coord;
 use geo::Geometry;
 use geo::MultiLineString;
-use geo::Coord;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use web_sys::Path2d;

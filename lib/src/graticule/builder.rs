@@ -1,10 +1,10 @@
 use core::fmt::Debug;
 use core::mem::swap;
 
+use geo::Coord;
 use geo::CoordFloat;
 use geo::LineString;
 use geo::Polygon;
-use geo::Coord;
 
 use crate::math::EPSILON;
 use crate::range::range;

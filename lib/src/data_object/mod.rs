@@ -3,9 +3,9 @@ pub mod sphere;
 
 use core::fmt::Debug;
 
+use geo::Coord;
 use geo::CoordFloat;
 use geo::Geometry;
-use geo::Coord;
 
 /// Part of a Feature Object.
 #[derive(Clone, Debug, PartialEq)]

@@ -7,6 +7,7 @@ mod index {
 
     use approx::AbsDiffEq;
     use geo::line_string;
+    use geo::Coord;
     use geo::CoordFloat;
     use geo::Geometry;
     use geo::GeometryCollection;
@@ -14,7 +15,6 @@ mod index {
     use geo::MultiPoint;
     use geo::Point;
     use geo::Polygon;
-    use geo::Coord;
     use num_traits::FloatConst;
     use pretty_assertions::assert_eq;
 
