@@ -23,7 +23,7 @@ where
     P: Transform<T = T>,
     T: CoordFloat + Display,
 {
-    let delta = delta_p.map_or_else(|| T::from(EPSILON).unwrap(), |d| d);
+    let delta = delta_p.unwrap_or_else(|| T::from(EPSILON).unwrap());
     println!("project_equal");
     println!(
         "1) expected location [{:?}, {:?}], expected point [{:?}, {:?}]",

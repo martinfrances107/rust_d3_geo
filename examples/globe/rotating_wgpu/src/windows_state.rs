@@ -168,6 +168,7 @@ impl<'a> WindowState<'a> {
         let surface = instance.create_surface(window.clone()).unwrap();
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
+                apply_limit_buckets: false,
                 power_preference: wgpu::PowerPreference::default(),
                 force_fallback_adapter: false,
                 // Request an adapter which can render to our surface
@@ -238,7 +239,7 @@ impl<'a> WindowState<'a> {
                 vertex: wgpu::VertexState {
                     module: &shader,
                     entry_point: Some("vs_main"),
-                    buffers: &[Vertex::desc()],
+                    buffers: &[Some(Vertex::desc())],
                     compilation_options: PipelineCompilationOptions::default(),
                 },
                 fragment: Some(wgpu::FragmentState {
@@ -267,7 +268,7 @@ impl<'a> WindowState<'a> {
                 vertex: wgpu::VertexState {
                     module: &shader,
                     entry_point: Some("vs_main"),
-                    buffers: &[Vertex::desc()],
+                    buffers: &[Some(Vertex::desc())],
                     compilation_options: PipelineCompilationOptions::default(),
                 },
                 fragment: Some(wgpu::FragmentState {
@@ -634,8 +635,13 @@ impl<'a> WindowState<'a> {
 
         let frame = self
             .surface
-            .get_current_texture()
-            .expect("Failed to acquire next swap chain texture");
+            .get_current_texture();
+
+        let frame = match frame{
+            wgpu::CurrentSurfaceTexture::Success(st) => st,
+            _ => {todo!("Must handle error, or when text is suboptimal (text no longer present");}
+        };
+
         let view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
@@ -719,7 +725,7 @@ impl<'a> WindowState<'a> {
         }
 
         self.queue.submit(Some(encoder.finish()));
-        frame.present();
+        self.queue.present(frame);
 
         let duration = start.elapsed();
 

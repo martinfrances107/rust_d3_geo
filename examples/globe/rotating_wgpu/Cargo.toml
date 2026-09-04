@@ -88,7 +88,7 @@ env_logger = "0.11"
 mint = "0.5.9"
 winit = { version = "0.30.11" }
 
-pollster = "0.4"
+pollster = "1.0.1"
 wgpu = { workspace = true, features = ["wgsl", "dx12", "metal"] }
 smol_str = "0.3"
 serde = { version = "1", optional = true }
@@ -259,7 +259,7 @@ rustix = { version = "1.0.8", default-features = false, features = [
 sctk = { package = "smithay-client-toolkit", version = "0.20", default-features = false, features = [
   "calloop",
 ], optional = true }
-sctk-adwaita = { version = "0.11.0", default-features = false, optional = true }
+sctk-adwaita = { version = "0.12.0", default-features = false, optional = true }
 wayland-backend = { version = "0.3", default-features = false, features = [
   "client_system",
 ], optional = true }
@@ -271,7 +271,7 @@ wayland-protocols-plasma = { version = "0.3", features = [
   "client",
 ], optional = true }
 x11-dl = { version = "2.21", optional = true }
-x11rb = { version = "0.13", default-features = false, features = [
+x11rb = { version = "0.14", default-features = false, features = [
   "allow-unsafe-code",
   "dl-libxcb",
   "randr",
@@ -285,8 +285,8 @@ xkbcommon-dl = "0.4"
 
 # Orbital
 [target.'cfg(target_os = "redox")'.dependencies]
-orbclient = { version = "0.3", default-features = false }
-redox_syscall = "0.6"
+orbclient = { version = "0.4", default-features = false }
+redox_syscall = "0.9"
 
 # Web
 [target.'cfg(target_family = "wasm")'.dependencies]
