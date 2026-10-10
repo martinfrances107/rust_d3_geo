@@ -6,7 +6,7 @@ edition = "2021"
 # license = { workspace = true }
 license = "MIT"
 keywords = ["graphics", "d3-geo"]
-name = "rust_d3_geo_example_globe_drag_and_zoom"
+name = "rust-d3-geo-example-globe-drag-and-zoom"
 readme = "README.md"
 repository = "https://github.com/martinfrances107/rust_d3_geo.git"
 version = { workspace = true }

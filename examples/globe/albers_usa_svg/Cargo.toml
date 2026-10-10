@@ -4,7 +4,7 @@ categories = ["graphics"]
 edition = { workspace = true }
 description = "A example app from the rust_d3_geo package. The app is an example of code that manipulates SVG elements to display a globe."
 keywords = ["graphics", "d3-geo"]
-name = "rust_d3_geo_example_albers_usa_svg"
+name = "rust-d3-geo-example-albers-usa-svg"
 license = { workspace = true }
 readme = "README.md"
 repository = { workspace = true }

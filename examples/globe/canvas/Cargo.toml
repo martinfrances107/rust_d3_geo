@@ -4,7 +4,7 @@ categories = ["graphics"]
 edition = { workspace = true }
 description = "A example app from the rust_d3_geo package. The app is an example of code that display a globe using a HTML CANVAS element."
 keywords = ["graphics", "d3-geo"]
-name = "rust_d3_geo_example_canvas"
+name = "rust-d3-geo-example-canvas"
 license = { workspace = true }
 readme = "README.md"
 repository = { workspace = true }

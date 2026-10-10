@@ -5,7 +5,7 @@ description = "A example app from the rust_d3_geo package. It shows how rust can
 edition = { workspace = true }
 keywords = { workspace = true }
 license = { workspace = true }
-name = "rust_d3_geo_example_globe_rotating_wpgu"
+name = "rust-d3-geo-example-globe-rotating-wpgu"
 readme = { workspace = true }
 repository = { workspace = true }
 version = { workspace = true }
@@ -38,7 +38,7 @@ targets = [
 ]
 
 [[bin]]
-name = "rust_d3_geo_example_globe_rotating_wpgu"
+name = "rust-d3-geo-example-globe-rotating-wpgu"
 path = "src/main.rs"
 test = false
 
@@ -82,10 +82,10 @@ dpi = { version = "0.1.2" }
 d3_geo_rs = { path = "../../../lib", features = ["wgpu"] }
 js-sys = { workspace = true }
 # geo = { workspace = true }
-gloo-utils = { workspace = true }
+# gloo-utils = { workspace = true }
 # topojson = { workspace = true }
-env_logger = "0.11"
-mint = "0.5.9"
+# env_logger = "0.11"
+# mint = "0.5.9"
 winit = { version = "0.30.11" }
 
 pollster = "1.0.1"

@@ -5,7 +5,7 @@ description = "A example app from the rust_d3_geo package. It shows how rust can
 edition = { workspace = true }
 keywords = ["graphics", "d3-geo"]
 license = { workspace = true }
-name = "rust_d3_geo_example_globe_rotating_50m"
+name = "rust-d3-geo-example-globe-rotating-50m"
 readme = "README.md"
 repository = { workspace = true }
 version = { workspace = true }

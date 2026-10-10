@@ -6,7 +6,7 @@ description = "A example app from the rust_d3_geo package. Code examples are pro
 # license = { workspace = true }
 keywords = ["graphics", "d3-geo"]
 license = { workspace = true }
-name = "rust_d3_geo_example_ring"
+name = "rust-d3-geo-example-ring"
 readme = "README.md"
 repository = { workspace = true }
 version = { workspace = true }
